@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Doozy.Runtime.UIManager.Components;
 using UnityEngine;
 
 namespace Doozy.Runtime.UIManager
@@ -18,6 +19,9 @@ namespace Doozy.Runtime.UIManager
         [SerializeField] private GameObject SignalSource;
         public GameObject signalSource => SignalSource;
 
+        [SerializeField] private UISelectable Selectable;
+        public UISelectable selectable => Selectable;
+        
         public UIBehaviours() : this(null) {}
 
         public UIBehaviours(GameObject signalSource)
@@ -43,8 +47,13 @@ namespace Doozy.Runtime.UIManager
 
         public UIBehaviour AddBehaviour(UIBehaviour.Name behaviourName)
         {
-            if (HasBehaviour(behaviourName)) return GetBehaviour(behaviourName);
-            var newBehaviour = new UIBehaviour(behaviourName, signalSource);
+            if (HasBehaviour(behaviourName)) 
+                return GetBehaviour(behaviourName);
+            
+            UIBehaviour newBehaviour = 
+                new UIBehaviour(behaviourName, signalSource)
+                    .SetSelectable(selectable);
+            
             Behaviours.Add(newBehaviour);
 
             var temp = (from UIBehaviour.Name name in Enum.GetValues(typeof(UIBehaviour.Name)) select GetBehaviour(name) into b where b != null select b).ToList();
@@ -75,5 +84,16 @@ namespace Doozy.Runtime.UIManager
                 behaviour.SetSignalSource(target);
             return this;
         }
+        
+        public UIBehaviours SetSelectable(UISelectable uiSelectable)
+        {
+            Selectable = uiSelectable;
+            foreach (UIBehaviour behaviour in behaviours)
+                behaviour.SetSelectable(selectable);
+            return this;
+        }
+
+        public UIBehaviours ClearSelectable() =>
+            SetSelectable(null);
     }
 }

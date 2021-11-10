@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityEngine.EventSystems;
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Runtime.UIManager.Components.Internal
 {
@@ -22,19 +24,23 @@ namespace Doozy.Runtime.UIManager.Components.Internal
 
         protected UISelectableComponent()
         {
-            Behaviours = new UIBehaviours();
+            Behaviours =
+                new UIBehaviours()
+                    .SetSelectable(this);
         }
 
         protected override void Awake()
         {
             database.Add(component = GetComponent<T>());
             base.Awake();
+            Behaviours.SetSelectable(this);
         }
 
         protected override void OnEnable()
         {
             CleanDatabase();
             base.OnEnable();
+            Behaviours.SetSelectable(this);
         }
 
         protected override void OnDestroy()

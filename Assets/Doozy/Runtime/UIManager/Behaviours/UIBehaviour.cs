@@ -5,6 +5,7 @@
 using System;
 using Doozy.Runtime.Mody;
 using Doozy.Runtime.Signals;
+using Doozy.Runtime.UIManager.Components;
 using UnityEngine;
 
 namespace Doozy.Runtime.UIManager
@@ -20,6 +21,9 @@ namespace Doozy.Runtime.UIManager
 
         [SerializeField] protected float Cooldown;
         public float cooldown => Cooldown;
+
+        [SerializeField] private UISelectable Selectable;
+        public UISelectable selectable => Selectable;
 
         public UIBehaviour() : this(Name.PointerClick, null) {}
 
@@ -48,6 +52,29 @@ namespace Doozy.Runtime.UIManager
             if (!receiver.isConnected) return;
             receiver.Disconnect();
             receiver.onSignal -= Execute;
+        }
+
+        public UIBehaviour SetSelectable(UISelectable uiSelectable)
+        {
+            Selectable = uiSelectable;
+            return this;
+        }
+
+        public UIBehaviour ClearSelectable() =>
+            SetSelectable(null);
+
+        public override void Execute(Signal signal = null)
+        {
+            if (!Enabled)
+                return;
+
+            if (selectable != null && !selectable.IsActive() | !selectable.IsInteractable())
+                return;
+
+            foreach (ModyActionRunner runner in Runners)
+                runner?.Execute();
+            
+            Event?.Invoke();
         }
     }
 

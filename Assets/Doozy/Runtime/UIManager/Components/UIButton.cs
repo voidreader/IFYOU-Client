@@ -20,7 +20,7 @@ namespace Doozy.Runtime.UIManager.Components
     [RequireComponent(typeof(RectTransform))]
     [AddComponentMenu("Doozy/UI/Components/UI Button")]
     [SelectionBase]
-    public partial class UIButton : UISelectableComponent<UIButton>, IPointerClickHandler, ISubmitHandler
+    public partial class UIButton : UISelectableComponent<UIButton>, ISubmitHandler
     {
         private static SignalStream s_stream;
         public static SignalStream stream => s_stream ??= SignalsService.GetStream(k_StreamCategory, nameof(UIButton));
@@ -29,7 +29,7 @@ namespace Doozy.Runtime.UIManager.Components
         public static IEnumerable<UIButton> availableButtons => database.Where(item => item.isActiveAndEnabled);
 
         public override SelectableType selectableType => SelectableType.Button;
-        
+
         public UIButtonId Id;
 
         protected UIButton()
@@ -40,7 +40,9 @@ namespace Doozy.Runtime.UIManager.Components
         protected override void Awake()
         {
             base.Awake();
-            behaviours.SetSignalSource(gameObject);
+            behaviours
+                .SetSelectable(this)
+                .SetSignalSource(gameObject);
         }
 
         protected override void OnEnable()
@@ -55,52 +57,35 @@ namespace Doozy.Runtime.UIManager.Components
             behaviours?.Disconnect();
         }
 
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (eventData.button != PointerEventData.InputButton.Left)
-                return;
-
-            Click();
-        }
-        
         public void OnSubmit(BaseEventData eventData)
         {
             Click();
-
-            // if the button is set disabled during the press -> ignore transition
-            if (!IsActive() || !IsInteractable())
-                return;
-
-            DoStateTransition(SelectionState.Pressed, false);
-            StartCoroutine(OnFinishSubmit());
         }
 
-        private IEnumerator OnFinishSubmit()
+        private IEnumerator RefreshSelectionState()
         {
-            float selectionDelay = 0.1f;
+            const float selectionDelay = 0.1f;
             float elapsedTime = 0f;
-
+            
             while (elapsedTime < selectionDelay)
             {
                 elapsedTime += Time.unscaledDeltaTime;
                 yield return null;
             }
-            
+
             DoStateTransition(currentSelectionState, false);
         }
-
+        
         public void Click() =>
             Click(false);
 
         public void Click(bool forced)
         {
-            if(!forced)
-            {
-                if (!IsActive() || !IsInteractable())
-                {
-                    return;
-                }
-            }
+            if (!forced && !IsActive() | !IsInteractable())
+                return;
+
+            DoStateTransition(SelectionState.Pressed, false);
+            StartCoroutine(RefreshSelectionState());
 
             UISystemProfilerApi.AddMarker($"{nameof(UIButton)}.{nameof(Click)}", this);
             behaviours.GetBehaviour(UIBehaviour.Name.PointerClick)?.Execute();

@@ -1,0 +1,134 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1037593364060526578
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8137673965539675373}
+  - component: {fileID: 115006647545548009}
+  m_Layer: 0
+  m_Name: UserManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8137673965539675373
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1037593364060526578}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5260074688592084235}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &115006647545548009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1037593364060526578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aac9185366b352a4d9fa38a49ed88b51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ListCoinIndicators: []
+  ListGemIndicators: []
+  ticketIndicators: {fileID: 0}
+  DebugProjectIllusts: []
+  DebugUserIllusts: []
+  DebugProjectChallenges: []
+  DebugUserChallenges: []
+  DebugProjectFavors: []
+  DebugUserFavors: []
+  completeReadUserData: 0
+  episodeRecordComplete: 0
+  prevIllustProgress: -1
+  useRecord: 1
+  userKey: 
+  gamebaseID: 
+  tutorialStep: 0
+  adCharge: 0
+  gem: 0
+  coin: 0
+  unreadMailCount: 0
+--- !u!1 &5260074688592084233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5260074688592084235}
+  - component: {fileID: 5260074688592084232}
+  m_Layer: 0
+  m_Name: System
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5260074688592084235
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5260074688592084233}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 8137673965539675373}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5260074688592084232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5260074688592084233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 085b8faa7370c4a43b9fbb666f64a3ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isServerValid: 0
+  isTestServerAccess: 0
+  gamebaseAPP_ID: 
+  gamebaseLogger_ID: 
+  currentGamebaseLanguageCode: en
+  currentAppLanguageCode: EN
+  networkLoadingScreen: {fileID: 0}
+  clientStatus: 200
+  clientStatusString: 
+  serverAccessAddress: 
+  gamebaseID: 
+  safeArea:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  hasSafeArea: 0
+  isServerInfoReceived: 0
+  isAppCommonResourcesReceived: 0
+  localVer: 0
+  isCoinPrizeUse: 0
+  coinPrizeURL: 
+  allowMissingResource: 1
+  maxAdCharge: 0

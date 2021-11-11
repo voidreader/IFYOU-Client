@@ -1,0 +1,28 @@
+﻿
+using UnityEngine;
+namespace PIERStory {
+
+    // 로비에서 사용하는 상수들 모음
+    public static class LobbyConst {
+
+        public const string TITLE_IMAGE_URL = "title_image_url";
+        public const string TITLE_IMAGE_KEY = "title_image_key";
+        public const string POPUP_IMAGE_URL = "popup_image_url";
+        public const string POPUP_IMAGE_KEY = "popup_image_key";
+        
+        
+        
+        
+        #region 재화 
+        public const string COIN = "coin";
+        public const string GEM = "gem";
+        public const string TICKET = "Ticket";
+        public const string ONETIME = "OneTime";
+        
+        public const string FREEPASS = "Free";
+        #endregion
+        
+        public static Color colorBlueBlue = new Color(0.384f,0.5176f,1,1);
+
+    }
+}

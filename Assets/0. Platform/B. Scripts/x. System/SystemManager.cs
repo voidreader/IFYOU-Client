@@ -1356,7 +1356,7 @@ namespace PIERStory
                 return;
                 
             // 파일 이미 있으면 다운받지 않음.
-            if(ES3.FileExists(__key))
+            if(ES3.FileExists(__key)) 
                 return;
             
             OnRequestFinishedDelegate cb = OnCompleteDownloadImage;
@@ -1371,6 +1371,9 @@ namespace PIERStory
         }
         
         static void OnCompleteDownloadImage(HTTPRequest request, HTTPResponse response) {
+            
+            if(!NetworkLoader.CheckResponseValidation(request, response))
+                return;
             
             // 이미지 로컬 저장은 여기서 수행 
                 

@@ -4,7 +4,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components.Internal;
@@ -20,7 +19,7 @@ namespace Doozy.Runtime.UIManager.Components
     [RequireComponent(typeof(RectTransform))]
     [AddComponentMenu("Doozy/UI/Components/UI Button")]
     [SelectionBase]
-    public partial class UIButton : UISelectableComponent<UIButton>, ISubmitHandler
+    public partial class UIButton : UISelectableComponent<UIButton>, IPointerClickHandler, ISubmitHandler
     {
         private static SignalStream s_stream;
         public static SignalStream stream => s_stream ??= SignalsService.GetStream(k_StreamCategory, nameof(UIButton));
@@ -45,18 +44,20 @@ namespace Doozy.Runtime.UIManager.Components
                 .SetSignalSource(gameObject);
         }
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            behaviours?.Connect();
-        }
-
         protected override void OnDisable()
         {
             base.OnDisable();
             behaviours?.Disconnect();
         }
 
+        public virtual void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.button != PointerEventData.InputButton.Left)
+                return;
+        
+            Click();
+        }
+        
         public void OnSubmit(BaseEventData eventData)
         {
             Click();
@@ -81,14 +82,13 @@ namespace Doozy.Runtime.UIManager.Components
 
         public void Click(bool forced)
         {
-            if (!forced && !IsActive() | !IsInteractable())
+            if (!forced && (!IsActive() || !IsInteractable()))
                 return;
 
             DoStateTransition(SelectionState.Pressed, false);
             StartCoroutine(RefreshSelectionState());
-
+            
             UISystemProfilerApi.AddMarker($"{nameof(UIButton)}.{nameof(Click)}", this);
-            behaviours.GetBehaviour(UIBehaviour.Name.PointerClick)?.Execute();
             stream.SendSignal(new UIButtonSignalData(Id.Category, Id.Name, ButtonTrigger.Click, playerIndex, this));
         }
 

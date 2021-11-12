@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using LitJson;
 using BestHTTP;
 using Doozy.Runtime.UIManager.Components;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory {
     public class ViewTitle : CommonView
@@ -37,7 +38,7 @@ namespace PIERStory {
                 return;
             }
             
-            Debug.Log(">> OnRequestStoryList");
+            Debug.Log(">> OnRequestStoryList : " + response.DataAsText);
             
             // 작품 리스트 받아와서 스토리 매니저에게 전달. 
             StoryManager.main.totalStoryListJson = JsonMapper.ToObject(response.DataAsText);
@@ -47,16 +48,56 @@ namespace PIERStory {
         }
         
         IEnumerator RoutinePrepareMainPage() {
+            
+            DownloadStoryMainImages(); // 다운로드 요청 
+            
+            // 다운로드 완료될때까지 기다린다.
+            yield return new WaitUntil(()=> totalDownloadingImageCount <= 0);
          
-            yield return null;   
+            // 준비 끝났으면 signal 전송 
+            Signal.Send("IFYOU", "moveMain", "open!");
         }
         
         
+        /// <summary>
+        /// 메인화면에 필요한 이미지 다운받기 
+        /// </summary>
         void DownloadStoryMainImages() {
-            
+            totalDownloadingImageCount = 0;
+            JsonData currentNode;
+            string imageURL = string.Empty;
+            string imageKey = string.Empty;
             
             for(int i=0; i<StoryManager.main.totalStoryListJson.Count;i++) {
                 
+                currentNode = StoryManager.main.totalStoryListJson[i];
+                   
+                imageURL = currentNode[LobbyConst.IFYOU_PROJECT_BANNER_URL].ToString();
+                imageKey = currentNode[LobbyConst.IFYOU_PROJECT_BANNER_KEY].ToString();
+                
+                if(string.IsNullOrEmpty(imageURL) || string.IsNullOrEmpty(imageKey))
+                    continue;
+
+                // 이미 있으면 continue;                
+                if(ES3.FileExists(imageKey))
+                    continue;
+                
+                Debug.Log(imageURL +" / " + imageKey);
+                
+                // 다운로드 요청 
+                totalDownloadingImageCount++; // 유효한 URL당 
+                SystemManager.RequestDownloadImage(imageURL, imageKey, OnDownloadEachMainImage);
+            }
+        }
+        
+        // 다운로드 이미지 콜백, 성공시에 1씩 차감한다.
+        void OnDownloadEachMainImage(HTTPRequest request, HTTPResponse response) {
+            
+            Debug.Log(string.Format("OnDownloadEachMainImage [{0}] / [{1}]", request.State, response.IsSuccess));
+            
+            // 성공시, 로컬 저장 
+            if(request.State == HTTPRequestStates.Finished && response.IsSuccess) {
+                totalDownloadingImageCount--;
             }
         }
         

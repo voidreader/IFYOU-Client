@@ -2,6 +2,7 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
@@ -33,14 +34,14 @@ namespace Doozy.Runtime.UIManager.Components.Internal
         {
             database.Add(component = GetComponent<T>());
             base.Awake();
-            Behaviours.SetSelectable(this);
+            Behaviours.SetSignalSource(gameObject);
         }
 
         protected override void OnEnable()
         {
             CleanDatabase();
             base.OnEnable();
-            Behaviours.SetSelectable(this);
+            StartCoroutine(ConnectBehaviours());
         }
 
         protected override void OnDestroy()
@@ -52,5 +53,14 @@ namespace Doozy.Runtime.UIManager.Components.Internal
 
         protected static void CleanDatabase() =>
             database.Remove(null);
+        
+        private IEnumerator ConnectBehaviours()
+        {
+            yield return null;
+            behaviours?
+                .SetSelectable(this)
+                .SetSignalSource(gameObject)
+                .Connect();
+        }
     }
 }

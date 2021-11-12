@@ -11,14 +11,14 @@ namespace PIERStory {
     {
         
         public RawImage mainImage;
-        [SerializeField] UISlider progressor;
+        
         float loadingGauge = 0f;
+        [SerializeField] int totalDownloadingImageCount = 0;
         
         public override void OnView() {
             base.OnView();
             
-            progressor.value = 0;
-            
+            // 타이틀 이미지 설정             
             SetTitleTexture();
             
             // * 메인화면 작품 리스트 요청 
@@ -37,12 +37,28 @@ namespace PIERStory {
                 return;
             }
             
+            Debug.Log(">> OnRequestStoryList");
+            
             // 작품 리스트 받아와서 스토리 매니저에게 전달. 
             StoryManager.main.totalStoryListJson = JsonMapper.ToObject(response.DataAsText);
             
-            progressor.value = 1f;
+            StartCoroutine(RoutinePrepareMainPage());
+            
         }
         
+        IEnumerator RoutinePrepareMainPage() {
+         
+            yield return null;   
+        }
+        
+        
+        void DownloadStoryMainImages() {
+            
+            
+            for(int i=0; i<StoryManager.main.totalStoryListJson.Count;i++) {
+                
+            }
+        }
         
         
         

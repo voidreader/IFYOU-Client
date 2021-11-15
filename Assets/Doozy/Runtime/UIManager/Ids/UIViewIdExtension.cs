@@ -34,7 +34,8 @@ namespace Doozy.Runtime.UIManager
     {
         public enum Common
         {
-            EpisodeStart
+            EpisodeStart,
+            Top
         }
 
         public enum Game

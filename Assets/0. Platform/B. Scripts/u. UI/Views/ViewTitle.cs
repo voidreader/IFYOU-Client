@@ -55,7 +55,8 @@ namespace PIERStory {
             yield return new WaitUntil(()=> totalDownloadingImageCount <= 0);
          
             // 준비 끝났으면 signal 전송 
-            Signal.Send("IFYOU", "moveMain", "open!");
+            Signal.Send(LobbyConst.STREAM_IFYOU, "moveMain", "open!");
+            
         }
         
         

@@ -49,7 +49,12 @@ namespace Doozy.Runtime.UIManager
         public enum IFYOU
         {
             Beginning,
+            Category,
+            IfyouPlay,
             Main,
+            Navigation,
+            Profile,
+            Shop,
             Title
         }    
     }

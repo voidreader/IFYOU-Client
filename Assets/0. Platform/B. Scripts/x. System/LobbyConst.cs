@@ -9,7 +9,6 @@ namespace PIERStory {
         public const string TITLE_IMAGE_KEY = "title_image_key";
         public const string POPUP_IMAGE_URL = "popup_image_url";
         public const string POPUP_IMAGE_KEY = "popup_image_key";
-        
         public const string IFYOU_PROJECT_BANNER_URL = "ifyou_image_url";
         public const string IFYOU_PROJECT_BANNER_KEY = "ifyou_image_key";
         
@@ -23,6 +22,11 @@ namespace PIERStory {
         public const string ONETIME = "OneTime";
         
         public const string FREEPASS = "Free";
+        #endregion
+        
+        #region 시그널
+        public const string STREAM_IFYOU = "IFYOU";
+        public const string STREAM_GAME = "Game";
         #endregion
         
         public static Color colorBlueBlue = new Color(0.384f,0.5176f,1,1);

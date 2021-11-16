@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using LitJson;
 using BestHTTP;
-
+using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
@@ -345,6 +345,46 @@ namespace PIERStory
 
         #endregion
 
+        #region 메일(우편함)
+
+        /// <summary>
+        /// 미수신 우편 리스트 호출
+        /// </summary>
+        public void CallbackNotRecievedMail(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackNotRecievedMail");
+                return;
+            }
+
+            // 미수신 mail json
+            notReceivedMailJson = JsonMapper.ToObject(res.DataAsText);
+            unreadMailCount = int.Parse(notReceivedMailJson["unreadMailCount"].ToString());
+            SetRefreshInfo(notReceivedMailJson);
+        }
+
+        #endregion
+
+        #region 미션(보상)
+        
+        /// <summary>
+        /// 개별 미션 보상 받기
+        /// </summary>
+        public void GetMissionRewared(string missionId, string currency, string quantity, OnRequestFinishedDelegate callback)
+        {
+            JsonData sending = new JsonData();
+            sending["func"] = NetworkLoader.FUNC_USER_MISSION_REWARD;
+            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            sending["mission_id"] = missionId;
+            sending["userkey"] = userKey;
+            sending["reward_currency"] = currency;
+            sending["reward_quantity"] = quantity;
+
+            NetworkLoader.main.SendPost(callback, sending, true);
+        }
+
+        #endregion
 
         #region 유저 소모성 재화 제어, 알림 정보 제어 
 
@@ -605,6 +645,54 @@ namespace PIERStory
         }
 
 
+        /// <summary>
+        /// 완료된 미션 리스트 큐에 추가
+        /// </summary>
+        public void ShowCompleteMission(JsonData __j)
+        {
+            Debug.LogError("Check ShowCompleteMission");
+            /*
+            if(__j == null && __j.Count == 0)  {
+                Debug.Log("No Clear Mission");
+                return;
+            }
+            
+            for(int i=0; i<__j.Count;i++) {
+                CompleteMissions.Enqueue(__j[i]);
+            }
+            
+            // Queue 바닥날때까지 돈다. 
+            while(CompleteMissions.Count > 0) {
+                
+                // popup 변수를 여러개가 공유할 수 없음. 매번 새로 만들어줘야된다. 
+                UIPopup popUp = UIPopupManager.GetPopup("AchieveCollection");
+                if (popUp == null)
+                {
+                    Debug.LogError("No AchieveMission Popup");
+                    return;
+                }
+                
+                JsonData currentMissionData = CompleteMissions.Dequeue(); // 하나씩 빼서 팝업을 만든다. 
+                Debug.Log("Mission : " + JsonMapper.ToStringUnicode(currentMissionData)); // 체크용도 
+             
+             
+                // 미션 썸네일과 이름 설정 
+                Texture2D t = SystemManager.GetLocalTexture2D(SystemManager.GetJsonNodeString(currentMissionData, "image_key"));
+
+                if (t != null)
+                {
+                    Sprite s = Sprite.Create(t, new Rect(0, 0, t.width, t.height), new Vector2(0.5f, 0.5f));
+                    popUp.Data.SetImagesSprites(s);
+                }
+
+                // AppsFlyerSDK.AppsFlyer.sendEvent("MISSION_CLEAR_"+ currentMissionData["mission_id"].ToString(), null);
+                popUp.Data.SetLabelsTexts(SystemManager.GetLocalizedText("5086"), currentMissionData["mission_name"].ToString(), SystemManager.GetLocalizedText("80078"));
+                UIPopupManager.ShowPopup(popUp, true, false);
+                Debug.Log("Show Mission Popup");   
+            }
+            */
+        }
+
 
         /// <summary>
         /// 유저 프로젝트별 사건 경험 히스토리
@@ -707,7 +795,7 @@ namespace PIERStory
         {
             currentStoryJson[NODE_USER_FAVOR] = __newData;
 
-            // RefreshUserFavorHistoryInspector();
+            RefreshUserFavorHistoryInspector();
         }
 
         /// <summary>
@@ -753,7 +841,7 @@ namespace PIERStory
         {
             currentStoryJson[NODE_USER_ILLUSTS] = __newData;
 
-            // RefreshUserIllustHistoryInspector();
+            RefreshUserIllustHistoryInspector();
         }
 
         
@@ -823,7 +911,7 @@ namespace PIERStory
         {
             currentStoryJson[NODE_USER_MISSIONS] = __newData;
 
-            // RefreshUserChallengeHistoryInspector();
+            RefreshUserChallengeHistoryInspector();
         }
 
         /// <summary>
@@ -1112,7 +1200,695 @@ namespace PIERStory
 
         #endregion
 
-  
+        #region 통신 콜백 
+        
+        /// <summary>
+        /// 프리패스 구매 콜백
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackPurchaseFreepass(HTTPRequest req, HTTPResponse res) {
+            
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackPurchaseFreepass");
+                return;
+            }
+
+            JsonData result = JsonMapper.ToObject(res.DataAsText); // 결과 
+            JsonData purchaseResult = result.ContainsKey("purchaseResult")?result["purchaseResult"]:null;
+            // 갱신
+            
+            // * "userProperty" (프로젝트 귀속 Property)
+            SetNodeProjectUserProperty(result[NODE_PROJECT_USER_PROPERTY]); 
+            
+            // * bank 
+            SetBankInfo(result);
+            
+            
+            
+            // StoryDetail 갱신처리 
+            OnFreepassPurchase?.Invoke();
+            
+            // View 종료를 위해 Event 처리 
+            // Doozy.Engine.GameEventMessage.SendEvent("PurchaseFreepass"); 
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_PURCHASE_FREEPASS, string.Empty);
+            SystemManager.ShowSimpleMessagePopUp(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle));
+            
+            
+            // AppsFlyer
+            if(purchaseResult == null) {
+                return;
+            }
+            
+            string eventName = "USER_PURCHASE_FREEPASS_" + StoryManager.main.CurrentProjectID;
+            Dictionary<string, string> appsFlayerParam = new Dictionary<string, string>();
+            appsFlayerParam.Add("freepass_no", SystemManager.GetJsonNodeString(purchaseResult, "freepass_no"));
+            appsFlayerParam.Add("origin_price", SystemManager.GetJsonNodeString(purchaseResult, "originPrice"));
+            appsFlayerParam.Add("sale_price", SystemManager.GetJsonNodeString(purchaseResult, "salePrice"));
+            
+            // AppsFlyerSDK.AppsFlyer.sendEvent(eventName,appsFlayerParam);
+        }
+        
+        /// <summary>
+        /// 선택지 프로그레스 업데이트 콜백
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackUpdateSelectionProgress(HTTPRequest req, HTTPResponse res)
+        {
+            // 통신 실패했을 때 갱신하지 않음. 
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackUpdateSelectionProgress");
+                return;
+            }
+
+            JsonData result = JsonMapper.ToObject(res.DataAsText); // 결과 
+
+            // 갱신
+            currentStoryJson[NODE_SELECTION_PROGRESS] = result;
+        }
+        
+        
+        /// <summary>
+        /// 프로젝트 플레이 위치 저장 콜백!
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackUpdateProjectCurrent(HTTPRequest req, HTTPResponse res)
+        {
+            // 통신 실패했을 때 갱신하지 않음. 
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackUpdateProjectCurrent");
+                return;
+            }
+
+            resultProjectCurrent = JsonMapper.ToObject(res.DataAsText); // 결과 
+
+            // 갱신
+            currentStoryJson[NODE_PROJECT_CURRENT] = resultProjectCurrent;
+        }
+        
+        
+
+        /// <summary>
+        /// 사건ID 히스토리, 진행도 업데이트 후 갱신 처리 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        void CallbackUpdateSceneRecord(HTTPRequest req, HTTPResponse res)
+        {
+            // 통신 실패했을 때 갱신하지 않음. 
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackUpdateSceneRecord");
+                return;
+            }
+
+            resultSceneRecord = JsonMapper.ToObject(res.DataAsText); // 결과 
+
+            // 갱신해서 받아온 데이터 설정
+            SetNodeProjectSceneHistory(resultSceneRecord[NODE_SCENE_HISTORY]);
+            SetNodeStorySceneProgress(resultSceneRecord[NODE_SCENE_PROGRESS]);
+
+            // 완료된 미션이 있다면 큐에 넣기
+            ShowCompleteMission(resultSceneRecord[NODE_UNLOCK_MISSION]);
+        }
+
+        /// <summary>
+        /// 유저 에피소드 기록 업데이트 콜백
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackUpdateEpisodeRecord(HTTPRequest req, HTTPResponse res)
+        {
+            // 통신 실패했을 때 갱신하지 않음. 
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackUpdateEpisodeRecord");
+                episodeRecordComplete = false;
+                return;
+            }
+            
+            Debug.Log(">> CallbackUpdateEpisodeRecord : " + res.DataAsText);
+            resultEpisodeRecord = JsonMapper.ToObject(res.DataAsText);
+
+            // 노드 저장!
+            SetNodeUserEpisodeHistory(resultEpisodeRecord[NODE_EPISODE_HISTORY]); // 히스토리 
+            SetNodeUserEpisodeProgress(resultEpisodeRecord[NODE_EPISODE_PROGRESS]); // 진행도 
+
+            ShowCompleteMission(resultEpisodeRecord[NODE_UNLOCK_MISSION]);
+
+            // 다음 에피소드 정보 
+            // SetNodeUserNextEpisode(resultEpisodeRecord[NODE_NEXT_EPISODE]);
+            
+            // played scene count 업데이트 
+            if(resultEpisodeRecord.ContainsKey("playedSceneCount")) {
+                
+                Debug.Log(JsonMapper.ToStringUnicode(resultEpisodeRecord["playedSceneCount"]));
+                Debug.Log("Check this method : CallbackUpdateEpisodeRecord"); 
+                // ViewGameEnd.UpdateCurrentEpisodeSceneCount(resultEpisodeRecord["playedSceneCount"][0]);
+                Signal.Send(LobbyConst.STREAM_GAME, LobbyConst.SIGNAL_UPDATE_EPISODE_SCENE_COUNT, resultEpisodeRecord["playedSceneCount"][0]);
+            }
+
+            episodeRecordComplete = true;
+        }
+
+        /// <summary>
+        /// 에피소드 시작 기록 업데이트 콜백 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackUpdateEpisodeStartRecord(HTTPRequest req, HTTPResponse res)
+        {
+            // 통신 실패했을 때 갱신하지 않음. 
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackUpdateEpisodeRecord");
+                return;
+            }
+
+            resultEpisodeRecord = JsonMapper.ToObject(res.DataAsText);
+
+            // Progress, 현재 에피소드 정보 저장 
+            SetNodeUserEpisodeProgress(resultEpisodeRecord[NODE_EPISODE_PROGRESS]);
+            
+        }
+
+        /// <summary>
+        /// 에피소드 리셋 프로그레스 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackResetEpisodeProgress(HTTPRequest req, HTTPResponse res)
+        {
+            // TODO 통신 실패했을 때 처리 필요해..
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackUpdateEpisodeRecord");
+                return;
+            }
+
+            resultEpisodeReset = JsonMapper.ToObject(res.DataAsText);
+            Debug.Log(JsonMapper.ToStringUnicode(resultEpisodeReset));
+
+            // ! 삭제 대상 
+            // SetNodeUserNextEpisode(resultEpisodeReset[NODE_NEXT_EPISODE]); // 다음 에피소드 
+
+            // ! 삭제 대상 아님 
+            SetNodeUserEpisodeProgress(resultEpisodeReset[NODE_EPISODE_PROGRESS]); // 에피소드 progress 
+            SetNodeStorySceneProgress(resultEpisodeReset[NODE_SCENE_PROGRESS]); // 씬 progress
+            
+            SetNodeUserProjectCurrent(resultEpisodeReset[NODE_PROJECT_CURRENT]);  // projectCurrent
+            SetNodeUserProjectSelectionProgress(resultEpisodeReset[NODE_SELECTION_PROGRESS]); // 선택지 기록 
+
+            // 다했으면 후속  처리 시작!
+            OnRequestEpisodeReset?.Invoke();
+            
+            
+            // 알림 팝업 후 목록화면 갱신처리 
+            SystemManager.ShowSimpleMessagePopUp("선택한 시점으로 이야기가 초기화 되었습니다.");
+
+            // Doozy Nody StoryDetail로 돌아가기 위한 이벤트 생성 
+            // Doozy.Engine.GameEventMessage.SendEvent("EventCloseEpisodeReset");
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CLOSE_RESET, string.Empty);
+            
+
+        }
+
+
+        /// <summary>
+        /// 에피소드 구매&대여 결과 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackPurchaseEpisode(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackPurchaseEpisode");
+                OnRequestEpisodePurchase?.Invoke(false);
+
+                return;
+            }
+
+            // 응답결과 가져오기 
+            Debug.Log("CallbackPurchaseEpisode : " + res.DataAsText);
+            JsonData responseData = JsonMapper.ToObject(res.DataAsText);
+
+            // 소모성 재화(코인, 젬)
+            if (responseData.ContainsKey("bank"))
+                SetBankInfo(responseData);
+
+            // 에피소드 구매 기록 갱신 
+            if (responseData.ContainsKey(NODE_PURCHASE_HIST))
+                SetNodeEpisodePurchaseHistory(responseData[NODE_PURCHASE_HIST]);
+                
+            // 유저 프로젝트 연결 재화 
+            if(responseData.ContainsKey(NODE_PROJECT_USER_PROPERTY)) {
+                SetNodeProjectUserProperty(responseData[NODE_PROJECT_USER_PROPERTY]);
+            }
+
+            OnRequestEpisodePurchase?.Invoke(true);
+
+        }
+
+
+        /// <summary>
+        /// 일러스트 해금 콜백
+        /// </summary>
+        public void CallbackUpdateIllustHistory(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackUpdateIllustHistory");
+
+                // 실패에 대한 추가 처리 필요!
+                return;
+            }
+
+            // 응답결과 가져오기 
+            Debug.Log("CallbackUpdateIllustHistory : " + res.DataAsText);
+            JsonData responseData = JsonMapper.ToObject(res.DataAsText);
+
+            // 노드 갱신하자.
+            
+            
+            SetNodeUserIllust(responseData[NODE_USER_ILLUSTS]);
+        }
+
+        /// <summary>
+        /// 미니컷 해금 콜백
+        /// </summary>
+        public void CallbackUpdateMinicutHistory(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackUpdateMinicutHistory");
+                return;
+            }
+
+            // Debug.Log("CallbackUpdateMinicutHistory : " + res.DataAsText);
+            JsonData responseData = JsonMapper.ToObject(res.DataAsText);
+
+            // Node 갱신
+            SetNodeUserIllust(responseData[NODE_USER_ILLUSTS]);
+        }
+
+
+        #endregion
+
+        #region 사용자 에피소드 관련 메소드
+
+
+
+        /// <summary>
+        /// 선택한 스토리에서 유저 데이터 분리해서 저장 
+        /// </summary>
+        /// <param name="__j"></param>
+        public void SetStoryUserData(JsonData __j)
+        {
+            currentStoryJson = __j;
+            // Debug.Log("SetUserEpisodeSceneHistory " + JsonMapper.ToJson(currentStoryJson));
+
+
+            /// 데이터 확인용도 
+            if (!Application.isEditor)
+                return;
+
+            DebugProjectIllusts.Clear();
+            DebugProjectChallenges.Clear();
+            DebugProjectFavors.Clear();
+            
+
+            for (int i=0; i<GetNodeProjectIllusts().Count; i++) {
+                DebugProjectIllusts.Add(JsonMapper.ToStringUnicode(GetNodeProjectIllusts()[i]));
+            }
+
+            for (int i = 0; i < GetNodeProjectChallenges().Count; i++)
+            {
+                DebugProjectChallenges.Add(JsonMapper.ToStringUnicode(GetNodeProjectChallenges()[i]));
+            }
+
+            
+           
+
+            RefreshUserIllustHistoryInspector();
+            RefreshUserChallengeHistoryInspector();
+            RefreshUserFavorHistoryInspector();
+        }
+
+        /// <summary>
+        /// 완료된 미션이었는지 체크한다
+        /// </summary>
+        /// <returns>true를 리턴하면 완료한 미션, false를 return하면 아직 미완료한 미션</returns>
+        public bool CheckCompleteMission(string missionName)
+        {
+            for(int i=0;i<GetNodeMissionProgress().Count;i++)
+            {
+                if (GetNodeMissionProgress()[i]["mission_name"].ToString().Equals(missionName))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 미션 이름을 비교하여 mission Id를 반환한다
+        /// </summary>
+        public string GetMissionId(string missionName)
+        {
+            for(int i=0;i<GetNodeProjectChallenges().Count;i++)
+            {
+                if (GetNodeProjectChallenges()[i]["mission_name"].ToString().Equals(missionName))
+                    return GetNodeProjectChallenges()[i]["mission_id"].ToString();
+            }
+
+            return string.Empty;
+        }
+
+        #region 인스펙터 체크용!
+
+        /// <summary>
+        /// 유저 호감도 인스펙터 확인용!
+        /// </summary>
+        void RefreshUserFavorHistoryInspector()
+        {
+            if (!Application.isEditor)
+                return;
+
+            DebugUserFavors.Clear();
+            for(int i=0; i<GetNodeUserFavor().Count;i++)
+            {
+                DebugUserFavors.Add(JsonMapper.ToStringUnicode(GetNodeUserFavor()[i]));
+            }
+        }
+
+
+        // 인스펙터 확인용도!
+        void RefreshUserIllustHistoryInspector()
+        {
+
+            if (!Application.isEditor)
+                return;
+            
+            DebugUserIllusts.Clear();
+            for (int i = 0; i < GetNodeUserIllust().Count; i++)
+            {
+                DebugUserIllusts.Add(JsonMapper.ToStringUnicode(GetNodeUserIllust()[i]));
+            }
+        }
+
+        void RefreshUserChallengeHistoryInspector()
+        {
+            if (!Application.isEditor)
+                return;
+
+            DebugUserChallenges.Clear();
+            for (int i = 0; i < GetNodeUserChallenges().Count; i++)
+            {
+                DebugUserChallenges.Add(JsonMapper.ToStringUnicode(GetNodeUserChallenges()[i]));
+            }
+        }
+
+        #endregion
+
+        #region 유저 의상 변경점 업데이트 
+        public void UpdateDressProgress(string __speaker, string __dress_id)
+        {
+            JsonData j = new JsonData();
+
+            j["project_id"] = StoryManager.main.CurrentProjectID;
+            j["speaker"] = __speaker;
+            j["dress_id"] = __dress_id;
+            j["func"] = NetworkLoader.FUNC_INSERT_DRESS_PROGRESS;
+
+
+            NetworkLoader.main.SendPost(OnUpdateDressProgress, j);
+        }
+
+        void OnUpdateDressProgress(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("OnUpdateDressProgress");
+                return;
+            }
+
+            // 갱신해서 받아온 데이터를 설정 
+            SetNodeDressProgress(JsonMapper.ToObject(res.DataAsText));
+        }
+        #endregion
+
+
+
+
+        /// <summary>
+        /// 현재의 사건 ID를 기록에 추가한다. 
+        /// 사건 History, 사건 Progress 같이 추가된다. 
+        /// </summary>
+        /// <param name="__project_id"></param>
+        /// <param name="__episode_id"></param>
+        /// <param name="__scene_id"></param>
+        public void UpdateSceneIDRecord(string __project_id, string __episode_id, string __scene_id)
+        {
+            
+            // * 여기도, 이어하기를 통해 진입한 경우 통신하지 않음
+            // * 마지막 지점에 도착하면 isResumePlay는 false로 변경한다. 
+            // 수집 엔딩 보는 중이어도 통신하지 않음
+            /*
+            if(GameManager.isResumePlay || !useRecord)
+                return;
+            */
+            
+            JsonData j = new JsonData();
+
+            // j["func"] = NetworkLoader.func;
+            // UserManager.main.UpdateCurrentSceneID(StoryManager.main.CurrentProjectID, StoryManager.main.CurrentEpisodeID, scene_id);
+
+            j["func"] = NetworkLoader.FUNC_UPDATE_EPISODE_SCENE_RECORD;
+            j["userkey"] = userKey;
+            j["project_id"] = __project_id;
+            j["episode_id"] = __episode_id;
+            j["scene_id"] = __scene_id;
+
+            NetworkLoader.main.SendPost(CallbackUpdateSceneRecord, j);
+        }
+
+        public void UpdateSceneIDRecord(string __scene_id)
+        {
+            UpdateSceneIDRecord(StoryManager.main.CurrentProjectID, StoryManager.main.CurrentEpisodeID, __scene_id);
+        }
+
+        
+
+
+
+
+
+
+        /// <summary>
+        /// 지정한 사건ID를 Progress에서 제거합니다.
+        /// </summary>
+        /// <param name="__scene_id"></param>
+        public void DeleteSceneID(string __scene_id, string __project_id)
+        {
+            JsonData j = new JsonData();
+
+            j["func"] = NetworkLoader.FUNC_DELETE_EPISODE_SCENE_HISTORY;
+            j["scene_id"] = __scene_id;
+            j["project_id"] = __project_id;
+
+            NetworkLoader.main.SendPost(CallbackUpdateCurrentSceneID, j);
+        }
+
+        /// <summary>
+        /// 유저별 프로젝트 기록에 대상 사건ID 추가 
+        /// </summary>
+        /// <param name="__sceneID"></param>
+        public void AddSceneToUserProjectSceneHistory(string __sceneID)
+        {
+            Debug.Log(">> AddSceneToUserProjectSceneHistory : " + __sceneID);
+
+            if (!CheckSceneHistory(__sceneID))
+            {
+                GetNodeProjectSceneHistory().Add(__sceneID);
+
+            }
+
+            Debug.Log(JsonMapper.ToStringUnicode(GetNodeProjectSceneHistory()));
+        }
+
+
+
+
+        /// <summary>
+        /// 지정한 사건ID의 업데이트 후 갱신합니다. 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        void CallbackUpdateCurrentSceneID(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req,res))
+            {
+                Debug.LogError("CallbackClearSelectedEpisodeSceneHistory");
+                return;
+            }
+
+            string requestData = Encoding.UTF8.GetString(req.RawData);
+            Debug.Log(">> CallbackUpdateCurrentSceneID : " + requestData);
+            JsonData reqJson = JsonMapper.ToObject(requestData);
+             
+
+            // 갱신해서 받아온 데이터를 설정 
+            SetNodeStorySceneProgress(JsonMapper.ToObject(res.DataAsText));
+            
+            // 히스토리에 추가한다. 
+            AddSceneToUserProjectSceneHistory(reqJson["scene_id"].ToString());
+        }
+
+
+
+        /// <summary>
+        /// 에피소드 진입시 사건 Progress 클리어 
+        /// </summary>
+        /// <param name="__project_id"></param>
+        /// <param name="__episode_id"></param>
+        /// <param name="__scene_id"></param>
+        public void ClearSelectedEpisodeSceneProgress(string __project_id, string __episode_id, System.Action __cb)
+        {
+            Debug.Log("<color=white>ClearSelectedEpisodeSceneProgress</color>");
+
+            JsonData j = new JsonData();
+            j["func"] = NetworkLoader.FUNC_CLEAR_EPISODE_SCENE_HISTORY;
+            j["project_id"] = __project_id;
+            j["episode_id"] = __episode_id;
+
+            OnCleanUserEpisodeProgress = __cb;
+            NetworkLoader.main.SendPost(CallbackClearSelectedEpisodeSceneHistory, j);
+
+
+        }
+
+        /// <summary>
+        /// ClearSelectedEpisodeSceneProgress 콜백
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        void CallbackClearSelectedEpisodeSceneHistory(HTTPRequest req, HTTPResponse res)
+        {
+            if(!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackClearSelectedEpisodeSceneHistory");
+                return;
+            }
+
+            // 대상 에피소드에 속한 scene 정보만 삭제하기 때문에.. 
+            // 리스트를 갱신해서 받아와야겠다..!!!
+            Debug.Log(res.DataAsText);
+
+            // 새로운 리스트로 갱신한다. 
+            SetNodeStorySceneProgress(JsonMapper.ToObject(res.DataAsText));
+
+            // 다 하고, 콜백 메소드 호출한다(GameManager)
+            OnCleanUserEpisodeProgress?.Invoke();
+
+        }
+
+
+        /// <summary>
+        /// 에피소드 ID 진행도에 있는지 체크. 
+        /// </summary>
+        /// <param name="__episodeID"></param>
+        /// <returns></returns>
+        public bool CheckEpisodeProgress(string __episodeID)
+        {
+            // Debug.Log(string.Format("CheckEpisodeProgress : [{0}]", __episodeID));
+
+            for(int i=0; i<GetNodeUserEpisodeProgress().Count;i++)
+            {
+                // 있어!
+                if (GetNodeUserEpisodeProgress()[i].ToString() == __episodeID)
+                    return true;
+            }
+
+
+            return false;
+        }
+
+
+        /// <summary>
+        /// 현재 진행도에 대상 씬을 클리어했는지 체크 
+        /// </summary>
+        /// <param name="__scene_id"></param>
+        /// <returns></returns>
+        public bool CheckSceneProgress(string __scene_id)
+        {
+            if (currentStoryJson == null)
+                return false;
+
+            Debug.Log(string.Format("CheckSceneProgress : [{0}]", __scene_id));
+
+            for(int i=0; i<GetNodeStorySceneProgress().Count;i++)
+            {
+                if (GetNodeStorySceneProgress()[i].ToString() == __scene_id)
+                    return true;
+            }
+
+            Debug.Log(string.Format("{0} 히스토리 없음", __scene_id));
+            return false;
+        }
+
+        /// <summary>
+        /// 유저의 사건ID 히스토리 유무 체크
+        /// </summary>
+        /// <param name="__sceneID">사건 ID</param>
+        public bool CheckSceneHistory(string __sceneID)
+        {
+            // 어드민 유저 무조건 true 
+            if(CheckAdminUser())
+                return true; 
+            
+            
+            if (currentStoryJson == null || GetNodeProjectSceneHistory() == null)
+            {
+                Debug.Log("<color=orange>GetNodeProjectSceneHistory is empty</color>");
+                return false;
+            }
+
+            for(int i=0; i<GetNodeProjectSceneHistory().Count;i++)
+            {
+                if (GetNodeProjectSceneHistory()[i].ToString() == __sceneID)
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 유저가 해당 작품의 에피소드를 구매 혹은 대여한 적이 있는지 유무 체크
+        /// </summary>
+        /// <param name="__episodeId">식별자</param>
+        /// <returns>true는 존재, false는 미구매(대여)</returns>
+        public bool CheckPurchaseEpisode(string __episodeId, ref JsonData __j)
+        {
+            for (int i = 0; i < GetNodeUserEpisodePurchase().Count; i++)
+            {
+                if (GetNodeUserEpisodePurchase()[i]["episode_id"].ToString().Equals(__episodeId))
+                {
+                    __j = GetNodeUserEpisodePurchase()[i];
+                    return true;
+                }
+            }
+
+            __j = null;
+            return false;
+        }
+
+        #endregion
+
         /// <summary>
         /// 현재 일러스트가 신규 일러스트인지 체크한다
         /// </summary>
@@ -1313,28 +2089,6 @@ namespace PIERStory
         /// <param name="__data"></param>
         public void SetUserFreepassTimedeal(JsonData __data) {
             currentStoryJson[NODE_FREEPASS_TIMEDEAL] = __data;
-        }
-        
-                /// <summary>
-        /// 현재 진행도에 대상 씬을 클리어했는지 체크 
-        /// </summary>
-        /// <param name="__scene_id"></param>
-        /// <returns></returns>
-        public bool CheckSceneProgress(string __scene_id)
-        {
-            if (currentStoryJson == null)
-                return false;
-
-            Debug.Log(string.Format("CheckSceneProgress : [{0}]", __scene_id));
-
-            for(int i=0; i<GetNodeStorySceneProgress().Count;i++)
-            {
-                if (GetNodeStorySceneProgress()[i].ToString() == __scene_id)
-                    return true;
-            }
-
-            Debug.Log(string.Format("{0} 히스토리 없음", __scene_id));
-            return false;
         }
     }
 }

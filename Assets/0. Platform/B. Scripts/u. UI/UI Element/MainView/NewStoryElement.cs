@@ -27,6 +27,9 @@ namespace PIERStory {
         /// </summary>
         /// <param name="__j"></param>
         public void InitStoryElement(JsonData __j) {
+            
+            this.gameObject.SetActive(true);
+            
             storyJSON = __j;
             
             projectID = storyJSON[LobbyConst.STORY_ID].ToString(); 

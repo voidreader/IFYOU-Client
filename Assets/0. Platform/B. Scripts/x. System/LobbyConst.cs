@@ -31,6 +31,11 @@ namespace PIERStory {
         #region 시그널
         public const string STREAM_IFYOU = "IFYOU";
         public const string STREAM_GAME = "Game";
+        
+        public const string SIGNAL_MOVE_STORY_DETAIL = "moveStoryDetail";
+        public const string SIGNAL_PURCHASE_FREEPASS = "PurchaseFreepass";
+        public const string SIGNAL_CLOSE_RESET = "closeEpisodeReset";
+        public const string SIGNAL_UPDATE_EPISODE_SCENE_COUNT = "updateEpisodeSceneCount";
         #endregion
         
         public static Color colorBlueBlue = new Color(0.384f,0.5176f,1,1);

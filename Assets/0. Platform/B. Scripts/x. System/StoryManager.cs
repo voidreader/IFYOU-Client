@@ -4,6 +4,7 @@ using LitJson;
 using BestHTTP;
 using Sirenix.OdinInspector;
 using System.Collections;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
@@ -38,12 +39,12 @@ namespace PIERStory
 
         
         JsonData CurrentProjectJson = null; // 현재 선택한 작품 Master 정보 
-        JsonData totalStoryInfoJson = null; // 조회로 가져온 작품에 대한 기준정보와 유저정보.
+        JsonData ProjectDetailJson = null; // 조회로 가져온 작품에 대한 기준정보와 유저정보.
         JsonData CurrentEpisodeJson = null; // 현재 선택한 에피소드 정보 
 
         [HideInInspector]
         public JsonData EpisodeListJson = null; // 에피소드 리스트 JSON 
-        public JsonData reverseEpisodeListJson { private set; get; }
+        public JsonData reverseEpisodeListJson { private set; get; } // 에피소드 리스트 역순 배열을 위한 JSON
         [HideInInspector]
         public JsonData SideEpisodeListJson = null; // 사이드 에피소드 리스트 JSON 
 
@@ -110,10 +111,6 @@ namespace PIERStory
         int countDownloadingLoading = 0;        // 로딩화면 다운로드 카운팅용
         bool isDownloadLoadingsSaved = false;   // 로딩화면 다운로드 1회 실행했는지 체크용 변수
 
-        public Sprite projectMainThumbnailSprite = null; // 프로젝트 메인 썸네일 
-
-        [SerializeField] List<string> ListEpisodeThumbnailURL = new List<string>(); // 프로젝트의 에피소드 썸네일 URL 모음 
-        [SerializeField] List<EpisodeThumbnail> ListEpisodeThumnailClass = new List<EpisodeThumbnail>(); // 프로젝트의 에피소드 썸네일 클래스 
         
         // 갤러리 배너 URL & KEY         
         public string galleryBannerURL = string.Empty;
@@ -152,19 +149,6 @@ namespace PIERStory
 
         // EpisodeElement prefab에서 사용될 리소스들
         
-     
-        
-
-        // 작품 상세페이지용 변수
-        string detailPageUrl = string.Empty;
-        string detailPageKey = string.Empty;
-        bool loadComplete = false;
-
-        string squareImageURL = string.Empty;
-        string squareImageKey = string.Empty;
-        string popupImageURL = string.Empty;
-        string popupImageKey = string.Empty;
-
         [SerializeField] string currentBubbleSetID = string.Empty; // 현재 말풍선 세트 ID 
         [SerializeField] int currentBubbleSetVersion = 0; // 현재 말풍선세트 버전 정보 
         JsonData currentBubbleSetJson = null;
@@ -254,7 +238,7 @@ namespace PIERStory
             EpisodeListJson = null;
             SideEpisodeListJson = null;
 
-            totalStoryInfoJson = null;
+            ProjectDetailJson = null;
             CurrentProjectID = string.Empty;
             CurrentProjectTitle = string.Empty;
         }
@@ -273,33 +257,7 @@ namespace PIERStory
             NetworkLoader.main.SendPost(__cb, sendingData);
         }
 
-        public JsonData GetStoryTotalInfo()
-        {
-            return totalStoryInfoJson;
-        }
-
-        void CallbackStoryList(HTTPRequest req, HTTPResponse res)
-        {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("Network Error in CallbackStoryList");
-                return;
-            }
-
-            // 통신이 제대로 되면 JSonData를 넣어준다.
-            Debug.Log("Total Lobby Story : " + res.DataAsText);
-            totalStoryListJson = JsonMapper.ToObject(res.DataAsText);
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void RequestStoryInfo() {
-            RequestStoryInfo(CurrentProjectID, CurrentProjectJson);
-        }
-
-        
+       
         /// <summary>
         /// 스토리 정보 요청 
         /// </summary>
@@ -375,19 +333,21 @@ namespace PIERStory
             // 작품의 기준정보, 작품과 관련된 유저 정보.. 엄청나게 많이 온다. 
             // 모든 정보는 받아와서 UserManager에게 넘겨주고 (사용자 정보가 포함되어있다.) 
             // 기준 정보만 StoryManager에서 보관하는 방식 
-            totalStoryInfoJson = JsonMapper.ToObject(res.DataAsText);
+            ProjectDetailJson = JsonMapper.ToObject(res.DataAsText);
+            // 유저 정보 할당 
+            UserManager.main.SetStoryUserData(ProjectDetailJson);
 
             #region 말풍선 밑작업
 
             // 말풍선의 경우 데이터가 많아서, 버전 관리를 통해서 신규 버전이 있을때만 서버에서 내려받도록 합니다. 
-            currentBubbleSetID = totalStoryInfoJson[NODE_BUBBLE_MASTER]["bubbleID"].ToString(); // 연결된 말풍선 세트 ID 
-            currentBubbleSetVersion = int.Parse(totalStoryInfoJson[NODE_BUBBLE_MASTER]["bubble_ver"].ToString()); // 말풍선 버전 
+            currentBubbleSetID = ProjectDetailJson[NODE_BUBBLE_MASTER]["bubbleID"].ToString(); // 연결된 말풍선 세트 ID 
+            currentBubbleSetVersion = int.Parse(ProjectDetailJson[NODE_BUBBLE_MASTER]["bubble_ver"].ToString()); // 말풍선 버전 
 
             // 말풍선 기초정보가 없는 경우, Local의 정보를 불러와서 설정 
-            if (totalStoryInfoJson.ContainsKey(UserManager.NODE_BUBBLE_SET))
+            if (ProjectDetailJson.ContainsKey(UserManager.NODE_BUBBLE_SET))
             {
                 // 말풍선 정보 있으면, 로컬에 저장하기
-                currentBubbleSetJson = totalStoryInfoJson[UserManager.NODE_BUBBLE_SET];
+                currentBubbleSetJson = ProjectDetailJson[UserManager.NODE_BUBBLE_SET];
 
                 // 저장요청 
                 SaveBubbleSetLocalInfo(currentBubbleSetID);
@@ -395,13 +355,10 @@ namespace PIERStory
             else
             {
                 // 말풍선 정보 없는 경우는 로컬에서 로드하여 노드에 할당 
-                totalStoryInfoJson[UserManager.NODE_BUBBLE_SET] = currentBubbleSetJson;
+                ProjectDetailJson[UserManager.NODE_BUBBLE_SET] = currentBubbleSetJson;
             }
             #endregion
 
-
-            // 유저 정보 할당 
-            // UserManager.main.SetStoryUserData(totalStoryInfoJson);
 
             // 말풍선 정보 세팅
             SetBubbles();
@@ -420,10 +377,10 @@ namespace PIERStory
             
 
             // 에피소드 정보 할당
-            EpisodeListJson = totalStoryInfoJson[NODE_EPISODE]; // 프로젝트의 정규 에피소드
-            SideEpisodeListJson = totalStoryInfoJson[NODE_SIDE]; // 프로젝트의 사이드 에피소드
+            EpisodeListJson = ProjectDetailJson[NODE_EPISODE]; // 프로젝트의 정규 에피소드
+            SideEpisodeListJson = ProjectDetailJson[NODE_SIDE]; // 프로젝트의 사이드 에피소드
             
-
+            #region 에피소드 역순 배열을 위한 작업 
             reverseEpisodeListJson = new JsonData();
             
             for(int i= EpisodeListJson.Count-1; i >= 0; i--)
@@ -446,204 +403,14 @@ namespace PIERStory
                 } // end of j for.
 
             } // end of i for.
+            #endregion
 
             Debug.Log(string.Format("<color=yellow>[{0}] Episodes are loaded </color>", EpisodeListJson.Count));
 
 
-            // StoryDetail에 들어갈 썸네일 이미지들 받기
-            // ! 2021.09.10 이전 버전은 썸네일 이미지를 모두 다운받으면서 화면이 열리도록 설정됨. 
-            StartCoroutine(RoutineDownloadNextViewImage());
-            
-            
-            // 여기 사용되지 않음 
-            /*
-            if (GameManager.main != null)
-                GameManager.main.CallbackIndependentlyRequestStoryInfo();
-
-
-
-            // ! 게임Scene에 있다가 돌아왔으면 여기서 View를 넘겨줍니다
-            if(enterGameScene)
-                Doozy.Engine.GameEventMessage.SendEvent(EVENT_STORY_INFO_OPEN);
-            */
-
-        }
-
-        /// <summary>
-        /// 작품 상세페이지에서의 메인썸네일을 다운로드합니다
-        /// </summary>
-        IEnumerator RoutineDownloadNextViewImage()
-        {
-            loadComplete = false;
-
-            // 에피소드 썸네일도 미리 받아놓도록 하자.
-            ListEpisodeThumnailClass.Clear();
-            ListEpisodeThumbnailURL.Clear();
-            CollectEpisodeThumbnails(); 
-
-            // 메인 썸네일를 불러온다. 
-            detailPageUrl = totalStoryInfoJson["detail"][0]["thumbnail_url"].ToString();
-            detailPageKey = totalStoryInfoJson["detail"][0]["thumbnail_key"].ToString();
-
-            if (!string.IsNullOrEmpty(detailPageKey))
-            {
-                if (ES3.FileExists(detailPageKey))
-                {
-                    Texture2D texture = ES3.LoadImage(detailPageKey);
-                    projectMainThumbnailSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                    loadComplete = true;
-                }
-                else
-                {
-                    // 다운 받은적이 없다면
-                    var req = new HTTPRequest(new System.Uri(detailPageUrl), OnMainThumbnailDownload);
-                    req.Send();
-                }
-            }
-            else
-                loadComplete = true;    // key값이 없으면 그냥 넘어가 회색 화면 보여줄거니까
-
-            yield return new WaitUntil(() => loadComplete);
-            
-            // ! 에피소드 썸네일 다운로드는 기다리지 않고 화면을 넘긴다. (2021.09.10)
-
-
             // 기초작업 완료 후 View 오픈 요청 
             OpenViewStoryDetail(); 
-        }
 
-
-
-        /// <summary>
-        /// 에피소드 썸네일을 다운로드하자. 
-        /// </summary>
-        void DownloadEpisodeThumbnails(JsonData __list)
-        {
-            // List에는 단순하게 URL만 수집했다. 
-            JsonData element = null;
-            
-
-            for(int i=0; i< __list.Count;i++)
-            {
-                element = __list[i];
-                // 목록 좌측의 사각 썸네일 처리 
-                if (element[LobbyConst.TITLE_IMAGE_URL].IsString)
-                    squareImageURL = element[LobbyConst.TITLE_IMAGE_URL].ToString();
-
-                if (element[LobbyConst.TITLE_IMAGE_KEY].IsString)
-                    squareImageKey = element[LobbyConst.TITLE_IMAGE_KEY].ToString();
-
-                // 팝업 썸네일 처리 
-                if (element[LobbyConst.POPUP_IMAGE_URL].IsString)
-                    popupImageURL = element[LobbyConst.POPUP_IMAGE_URL].ToString();
-
-                if (element[LobbyConst.POPUP_IMAGE_KEY].IsString)
-                    popupImageKey = element[LobbyConst.POPUP_IMAGE_KEY].ToString();
-
-                // 사각 이미지 
-                if (!string.IsNullOrEmpty(squareImageURL) 
-                    && !string.IsNullOrEmpty(squareImageKey)
-                    && ListEpisodeThumbnailURL.Contains(squareImageURL))
-                {
-                    // 한번 부르고 리스트에서 제거한다. 
-                    ListEpisodeThumbnailURL.Remove(squareImageURL);
-                    // 썸네일은 클래스에서 알아서 처리 
-                    ListEpisodeThumnailClass.Add(new EpisodeThumbnail(squareImageURL, squareImageKey));
-                }
-
-                // 팝업 썸네일 
-                if (!string.IsNullOrEmpty(popupImageURL)
-                    && !string.IsNullOrEmpty(popupImageKey)
-                    && ListEpisodeThumbnailURL.Contains(popupImageURL))
-                {
-                    ListEpisodeThumbnailURL.Remove(popupImageURL);
-                    ListEpisodeThumnailClass.Add(new EpisodeThumbnail(popupImageURL, popupImageKey));
-                }
-            }
-        }
-
-     
-        /// <summary>
-        /// 에피소드 썸네일 수집
-        /// </summary>
-        void CollectEpisodeThumbnails()
-        {
-            JsonData element = null;
-
-            // 사이좋게 정규, 사이드 에피소드 다. 
-            for (int i=0; i<EpisodeListJson.Count;i++)
-            {
-                element = EpisodeListJson[i];
-                AddThumbnailURL(element);
-            }
-
-            for (int i = 0; i < SideEpisodeListJson.Count; i++)
-            {
-                element = SideEpisodeListJson[i];
-                AddThumbnailURL(element);
-            }
-        }
-
-        /// <summary>
-        /// 리스트로 중복되지 않게 수집하기.
-        /// </summary>
-        /// <param name="__j"></param>
-        void AddThumbnailURL(JsonData __j)
-        {
-            // 목록 좌측의 사각 썸네일 처리 
-            if (__j[LobbyConst.TITLE_IMAGE_URL].IsString)
-                squareImageURL = __j[LobbyConst.TITLE_IMAGE_URL].ToString();
-
-
-            // 팝업 썸네일 처리 
-            if (__j[LobbyConst.POPUP_IMAGE_URL].IsString)
-                popupImageURL = __j[LobbyConst.POPUP_IMAGE_URL].ToString();
-
-
-            // 리스트에 추가 
-            if (!ListEpisodeThumbnailURL.Contains(squareImageURL))
-                ListEpisodeThumbnailURL.Add(squareImageURL);
-
-            if (!ListEpisodeThumbnailURL.Contains(popupImageURL))
-                ListEpisodeThumbnailURL.Add(popupImageURL);
-        }
-
-
-        /// <summary>
-        /// 에피소드 썸네일들이 준비가 되었는지 체크한다.
-        /// </summary>
-        /// <returns></returns>
-        bool CheckEpisodeThumbnailsReady()
-        {
-            for(int i=0; i<ListEpisodeThumnailClass.Count;i++)
-            {
-                //하나라도 불러오기 액션이 마무리 되지 않은 경우.
-                if (!ListEpisodeThumnailClass[i].isLoaded)
-                    return false;
-            }
-
-            // 통과!
-            return true;
-        }
-
-        /// <summary>
-        /// 에피소드 썸네일 주세요! 제발!
-        /// </summary>
-        /// <param name="__url"></param>
-        /// <returns></returns>
-        public Sprite GetEpisodeThumbnail(string __url)
-        {
-            for(int i=0; i<ListEpisodeThumnailClass.Count;i++)
-            {
-                // 실제로 이미지 불러오기에 실패한 경우는 continue
-                if (!ListEpisodeThumnailClass[i].isSuccess)
-                    continue;
-
-                if (ListEpisodeThumnailClass[i].image_url == __url)
-                    return ListEpisodeThumnailClass[i].sprite;
-            }
-
-            return null;
         }
 
 
@@ -657,41 +424,9 @@ namespace PIERStory
             if (!enterGameScene)
             {
                 Debug.Log("OpenViewStoryDetail");
-                // Doozy.Engine.GameEventMessage.SendEvent(EVENT_STORY_INFO_OPEN);
+                Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
             }
         }
-
-
-
-        /// <summary>
-        /// 메인 썸네일 다운로드 콜백 
-        /// </summary>
-        /// <param name="req"></param>
-        /// <param name="res"></param>
-        void OnMainThumbnailDownload(HTTPRequest req, HTTPResponse res)
-        {
-            if (req.State != HTTPRequestStates.Finished)
-            {
-                Debug.LogError("Download Failed : " + detailPageUrl);
-
-                projectMainThumbnailSprite = null;
-
-                // 다운로드 실패했어도 회색화면이야
-                // LobbyManager.main.storyDetail.titleImage.color = Color.gray;
-                // 실패했어도 true로 처리한다.
-                loadComplete = true;
-                return;
-            }
-
-            Texture2D t = new Texture2D(0, 0);
-            t.LoadImage(res.Data);
-            ES3.SaveImage(t, detailPageKey);
-
-            projectMainThumbnailSprite = Sprite.Create(t, new Rect(0, 0, t.width, t.height), new Vector2(0.5f, 0.5f));
-
-            loadComplete = true;
-        }
-
 
         #region 네임태그 관련 메소드 
 
@@ -700,13 +435,13 @@ namespace PIERStory
         /// </summary>
         void SetProjectNametag()
         {
-            if (!totalStoryInfoJson.ContainsKey(NODE_NAMETAG))
+            if (!ProjectDetailJson.ContainsKey(NODE_NAMETAG))
             {
                 Debug.Log("Nametag Info is null");
                 storyNametagJSON = null;
             }
 
-            storyNametagJSON = totalStoryInfoJson[NODE_NAMETAG];
+            storyNametagJSON = ProjectDetailJson[NODE_NAMETAG];
 
             // 편한접근을 위해서 Dictionary 구성 
             DictNametag.Clear();
@@ -775,31 +510,31 @@ namespace PIERStory
             
             illustJson = UserManager.main.GetNodeProjectIllusts(); // 일러스트 기본 정보 
             challengeJson = UserManager.main.GetNodeProjectChallenges(); // 미션 
-            dressCodeJson = totalStoryInfoJson[NODE_DRESS_CODE]; // 의상 
+            dressCodeJson = ProjectDetailJson[NODE_DRESS_CODE]; // 의상 
             
-            storyCurrencyJSON = totalStoryInfoJson[NODE_CURRENCY]; // 화폐
+            storyCurrencyJSON = ProjectDetailJson[NODE_CURRENCY]; // 화폐
             
             // 상세정보 
-            storyDetailJson = totalStoryInfoJson[NODE_DETAIL][0];
+            storyDetailJson = ProjectDetailJson[NODE_DETAIL][0];
 
             // * 바보! GetJsonNode와 RequestDownloadImage 메소드에 유효성 검사를 추가하고 여기서는 신경쓰지 않게 한다. 
             
             // 갤러리 상단 배너 
-            galleryBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(totalStoryInfoJson, NODE_GALLERY_BANNER), SystemConst.IMAGE_URL);
-            galleryBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(totalStoryInfoJson, NODE_GALLERY_BANNER), SystemConst.IMAGE_KEY);
+            galleryBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_GALLERY_BANNER), SystemConst.IMAGE_URL);
+            galleryBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_GALLERY_BANNER), SystemConst.IMAGE_KEY);
             SystemManager.RequestDownloadImage(galleryBannerURL, galleryBannerKey, null);
             
             // 갤러리 
-            bgmBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(totalStoryInfoJson,NODE_BGM_BANNER), SystemConst.IMAGE_URL);
-            bgmBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(totalStoryInfoJson,NODE_BGM_BANNER), SystemConst.IMAGE_KEY);
+            bgmBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_URL);
+            bgmBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_KEY);
             SystemManager.RequestDownloadImage(bgmBannerURL, bgmBannerKey, null);
 
-            freepassBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(totalStoryInfoJson, NODE_FREEPASS_BANNER), SystemConst.IMAGE_URL);
-            freepassBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(totalStoryInfoJson, NODE_FREEPASS_BANNER), SystemConst.IMAGE_KEY);
+            freepassBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_FREEPASS_BANNER), SystemConst.IMAGE_URL);
+            freepassBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_FREEPASS_BANNER), SystemConst.IMAGE_KEY);
             SystemManager.RequestDownloadImage(freepassBannerURL, freepassBannerKey, null);
             
-            freepassTitleURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(totalStoryInfoJson, NODE_FREEPASS_TITLE), SystemConst.IMAGE_URL);
-            freepassTitleKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(totalStoryInfoJson, NODE_FREEPASS_TITLE), SystemConst.IMAGE_KEY);
+            freepassTitleURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_FREEPASS_TITLE), SystemConst.IMAGE_URL);
+            freepassTitleKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_FREEPASS_TITLE), SystemConst.IMAGE_KEY);
             SystemManager.RequestDownloadImage(freepassBannerURL, freepassBannerKey, null);
             
         }
@@ -809,7 +544,7 @@ namespace PIERStory
         /// </summary>
         void SetProjectLiveObjects()
         {
-            liveObjectJson = totalStoryInfoJson[NODE_PROJECT_LIVE_OBJECTS];
+            liveObjectJson = ProjectDetailJson[NODE_PROJECT_LIVE_OBJECTS];
             SetProjectLiveObjectDictionary();
         }
 
@@ -837,7 +572,7 @@ namespace PIERStory
         /// </summary>
         void SetProjectLiveIllusts()
         {
-            liveIllustJson = totalStoryInfoJson[NODE_PROJECT_LIVE_ILLUSTS];
+            liveIllustJson = ProjectDetailJson[NODE_PROJECT_LIVE_ILLUSTS];
             SetProjectLiveIllustDictionary();
         }
 
@@ -1598,7 +1333,7 @@ namespace PIERStory
         /// </summary>
         public void DownloadProjectAllEpisodeLoading()
         {
-            loadingJson = SystemManager.GetJsonNode(totalStoryInfoJson, "episodeLoadingList");
+            loadingJson = SystemManager.GetJsonNode(ProjectDetailJson, "episodeLoadingList");
             DictDownloadedLoadings.Clear();
             countDownloadingLoading = 0;
             isDownloadLoadingsSaved = false;
@@ -1761,10 +1496,10 @@ namespace PIERStory
         /// </summary>
         /// <returns></returns>
         public JsonData GetProjectFreepassNode() {
-            if(!totalStoryInfoJson.ContainsKey(NODE_FREEPASS_PRICE))
+            if(!ProjectDetailJson.ContainsKey(NODE_FREEPASS_PRICE))
                 return null;
             
-            return totalStoryInfoJson[NODE_FREEPASS_PRICE];
+            return ProjectDetailJson[NODE_FREEPASS_PRICE];
             
         }
     
@@ -1778,9 +1513,9 @@ namespace PIERStory
             string value = string.Empty;
             
             if(__isOrigin)
-                value = SystemManager.GetJsonNodeString(totalStoryInfoJson[NODE_FREEPASS_PRICE], NODE_FREEPASS_ORIGIN_PRICE);
+                value = SystemManager.GetJsonNodeString(ProjectDetailJson[NODE_FREEPASS_PRICE], NODE_FREEPASS_ORIGIN_PRICE);
             else 
-                value = SystemManager.GetJsonNodeString(totalStoryInfoJson[NODE_FREEPASS_PRICE], NODE_FREEPASS_SALE_PRICE);
+                value = SystemManager.GetJsonNodeString(ProjectDetailJson[NODE_FREEPASS_PRICE], NODE_FREEPASS_SALE_PRICE);
             
                 
             int price = 0;
@@ -1797,10 +1532,10 @@ namespace PIERStory
         /// </summary>
         /// <returns></returns>
         public JsonData GetProjectFreepassProduct() {
-            if(!totalStoryInfoJson.ContainsKey(NODE_FREEPASS_PRODUCT))
+            if(!ProjectDetailJson.ContainsKey(NODE_FREEPASS_PRODUCT))
                 return null;
             
-            return totalStoryInfoJson[NODE_FREEPASS_PRODUCT];
+            return ProjectDetailJson[NODE_FREEPASS_PRODUCT];
         }
         
         /// <summary>

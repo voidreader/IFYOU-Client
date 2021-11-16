@@ -7,7 +7,7 @@ namespace PIERStory {
     public abstract class CommonView : MonoBehaviour
     {
         public virtual void OnStartView() {
-            
+            Debug.Log(string.Format("[{0}] OnStart <<", this.gameObject.name));
         }
         
         public virtual void OnView() {

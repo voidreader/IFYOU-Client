@@ -14,6 +14,7 @@ namespace PIERStory {
         
         [SerializeField] bool isLock = false;
         [SerializeField] string projectID = string.Empty;
+        [SerializeField] string title = string.Empty;
         [SerializeField] string imageURL = string.Empty;
         [SerializeField] string imageKey = string.Empty;
         [SerializeField] string colorCode = string.Empty;
@@ -28,8 +29,12 @@ namespace PIERStory {
         public void InitStoryElement(JsonData __j) {
             storyJSON = __j;
             
+            projectID = storyJSON[LobbyConst.STORY_ID].ToString(); 
+            title = storyJSON[LobbyConst.STORY_TITLE].ToString(); 
             imageURL = storyJSON[LobbyConst.IFYOU_PROJECT_BANNER_URL].ToString();
             imageKey = storyJSON[LobbyConst.IFYOU_PROJECT_BANNER_KEY].ToString();
+            
+            textTitle.text = title;
             
             colorCode = storyJSON[LobbyConst.IFYOU_PROJECT_MAIN_COLOR].ToString();
             ColorUtility.TryParseHtmlString("#" + colorCode, out mainColor);
@@ -39,6 +44,17 @@ namespace PIERStory {
             
             // 배너 이미지 처리 
             bannerImage.SetDownloadURL(imageURL, imageKey);
+        }
+        
+        public void OnClickElement() {
+            if(isLock) {
+                SystemManager.ShowAlertWithLocalize("6061");
+                return;
+            }
+            
+            // 스토리매니저에게 작품 상세정보 요청 
+            StoryManager.main.RequestStoryInfo(projectID, storyJSON);
+            
         }
     }
 }

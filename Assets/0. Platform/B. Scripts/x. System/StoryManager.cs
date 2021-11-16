@@ -299,10 +299,12 @@ namespace PIERStory
             RequestStoryInfo(CurrentProjectID, CurrentProjectJson);
         }
 
+        
         /// <summary>
-        /// 스토리의 정보를 요청합니다. 
+        /// 스토리 정보 요청 
         /// </summary>
-        /// <param name="__projectID"></param>
+        /// <param name="__projectID">프로젝트 ID </param>
+        /// <param name="__J">작품 기본 정보</param>
         public void RequestStoryInfo(string __projectID, JsonData __J)
         {
             Debug.Log(string.Format("<color=yellow>RequestStoryInfo [{0}]</color>", __projectID));
@@ -336,6 +338,24 @@ namespace PIERStory
 
         }
 
+        /// <summary>
+        /// 선택한 작품의 기본 정보 설정 
+        /// </summary>
+        /// <param name="__j"></param>
+        public void SetCurrentProjectJson(JsonData __j)
+        {
+            CurrentProjectJson = __j;
+            CurrentProjectID = CurrentProjectJson[LobbyConst.STORY_ID].ToString();
+            CurrentProjectTitle = CurrentProjectJson[LobbyConst.STORY_TITLE].ToString();
+
+
+            // 말풍선 세트 ID 
+            currentBubbleSetID = CurrentProjectJson[LobbyConst.STORY_BUBBLE_ID].ToString();
+
+            // 로컬에 저장된 정보 불러온다. 
+            LoadProjectBubbleSetID(CurrentProjectID); // 프로젝트에 연결된 말풍선 세트 ID
+            LoadBubbleSetLocalInfo(currentBubbleSetID);  // 말풍선 세트 버전 정보
+        }
 
         /// <summary>
         ///  콜백, 스토리에 관련된 정보를 모두 불러왔습니다.
@@ -1174,26 +1194,7 @@ namespace PIERStory
                 playSideEpisode = true;
         }
 
-        /// <summary>
-        /// 선택한 작품의 기본 정보 설정 
-        /// </summary>
-        /// <param name="__j"></param>
-        public void SetCurrentProjectJson(JsonData __j)
-        {
-            CurrentProjectJson = __j;
-            CurrentProjectID = CurrentProjectJson["project_id"].ToString();
-            CurrentProjectTitle = CurrentProjectJson["title"].ToString();
 
-
-            // 말풍선 세트 ID 
-            currentBubbleSetID = CurrentProjectJson["bubble_set_id"].ToString();
-
-            // 로컬에 저장된 정보 불러온다. 
-            LoadProjectBubbleSetID(CurrentProjectID); // 프로젝트에 연결된 말풍선 세트 ID
-            LoadBubbleSetLocalInfo(currentBubbleSetID);  // 말풍선 세트 버전 정보
-        }
-
-       
 
         public string GetStoryTitle()
         {

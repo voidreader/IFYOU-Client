@@ -12,6 +12,9 @@ namespace PIERStory {
         public const string IFYOU_PROJECT_BANNER_URL = "ifyou_image_url";
         public const string IFYOU_PROJECT_BANNER_KEY = "ifyou_image_key";
         public const string IFYOU_PROJECT_MAIN_COLOR = "color_rgb";
+        public const string STORY_TITLE = "title";
+        public const string STORY_ID = "project_id";
+        public const string STORY_BUBBLE_ID = "bubble_set_id";
         
         
         

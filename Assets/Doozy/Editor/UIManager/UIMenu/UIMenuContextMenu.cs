@@ -22,15 +22,6 @@ namespace Doozy.Editor.UIManager.UIMenu
             private const string TYPE_NAME = "Component";
             private const string TYPE_MENU_PATH = MENU_PATH + "/" + TYPE_NAME + "/";
 
-            public static class CategoryName
-            {
-                private const string CATEGORY_NAME = "Category Name";
-                private const string CATEGORY_MENU_PATH = TYPE_MENU_PATH + CATEGORY_NAME + "/";
-
-                [MenuItem(CATEGORY_MENU_PATH + "Prefab Name (MyTag)", false, MENU_ITEM_PRIORITY)]
-                public static void CreatePrefabNameMyTag(MenuCommand command) => UIMenuUtils.AddToScene(TYPE_NAME, CATEGORY_NAME, "PrefabNameMyTag");
-            }
-
             public static class Checkbox
             {
                 private const string CATEGORY_NAME = "Checkbox";
@@ -440,6 +431,15 @@ namespace Doozy.Editor.UIManager.UIMenu
 
                 [MenuItem(CATEGORY_MENU_PATH + "Switch (Tiny)", false, MENU_ITEM_PRIORITY)]
                 public static void CreateSwitchTiny(MenuCommand command) => UIMenuUtils.AddToScene(TYPE_NAME, CATEGORY_NAME, "SwitchTiny");
+            }
+
+            public static class Test
+            {
+                private const string CATEGORY_NAME = "Test";
+                private const string CATEGORY_MENU_PATH = TYPE_MENU_PATH + CATEGORY_NAME + "/";
+
+                [MenuItem(CATEGORY_MENU_PATH + "Game Object", false, MENU_ITEM_PRIORITY)]
+                public static void CreateGameObject(MenuCommand command) => UIMenuUtils.AddToScene(TYPE_NAME, CATEGORY_NAME, "GameObject");
             }
         }
 

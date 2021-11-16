@@ -102,6 +102,9 @@ GameObject:
   - component: {fileID: 1556417653757589422}
   - component: {fileID: 1556417653757589421}
   - component: {fileID: 8301710013196755341}
+  - component: {fileID: 2572164063092627695}
+  - component: {fileID: 9110412870739260685}
+  - component: {fileID: 1712219650164738692}
   m_Layer: 5
   m_Name: Frame
   m_TagString: Untagged
@@ -292,11 +295,11 @@ MonoBehaviour:
           Type: 0
           Category: Pointer
           Name: Click
-        ProviderReference: {fileID: 0}
+        ProviderReference: {fileID: 1712219650164738692}
         StreamId:
           Category: None
           Name: None
-          Custom: 0
+          Custom: 1
       Cooldown: 0
       Selectable: {fileID: 8301710013196755341}
     SignalSource: {fileID: 1556417653757589419}
@@ -305,6 +308,59 @@ MonoBehaviour:
     Category: None
     Name: None
     Custom: 0
+--- !u!223 &2572164063092627695
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556417653757589419}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &9110412870739260685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556417653757589419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &1712219650164738692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556417653757589419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9612023dc70c4fcc886b736aa5a8f046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ProviderCurrentState: 20
+  SignalCooldown: 0
+  SignalTimescale: 0
 --- !u!1 &1556417654674249727
 GameObject:
   m_ObjectHideFlags: 0
@@ -454,8 +510,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uBC31\uC791\uAC00\uC758 \uB9DD\uB098\uB2C8\uB85C \uCDE8\uC9C1\uD588\uB2E4."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a363381a0c34c3a4d9498e8531d83f96, type: 2}
-  m_sharedMaterial: {fileID: 1495675259068731669, guid: a363381a0c34c3a4d9498e8531d83f96, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
+  m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

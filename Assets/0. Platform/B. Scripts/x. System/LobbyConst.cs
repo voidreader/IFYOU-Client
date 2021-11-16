@@ -15,7 +15,7 @@ namespace PIERStory {
         public const string STORY_TITLE = "title";
         public const string STORY_ID = "project_id";
         public const string STORY_BUBBLE_ID = "bubble_set_id";
-        
+        public const string STORY_PROJECT_PROGRESS = "project_progress";
         
         
         

@@ -16,6 +16,8 @@ namespace PIERStory {
         public const string STORY_ID = "project_id";
         public const string STORY_BUBBLE_ID = "bubble_set_id";
         public const string STORY_PROJECT_PROGRESS = "project_progress";
+        public const string STORY_IS_PLAYING = "is_playing";
+        
         
         
         
@@ -36,6 +38,9 @@ namespace PIERStory {
         public const string SIGNAL_PURCHASE_FREEPASS = "PurchaseFreepass";
         public const string SIGNAL_CLOSE_RESET = "closeEpisodeReset";
         public const string SIGNAL_UPDATE_EPISODE_SCENE_COUNT = "updateEpisodeSceneCount";
+        public const string SIGNAL_CONNECT_SERVER = "connectingDone";
+        
+        
         #endregion
         
         public static Color colorBlueBlue = new Color(0.384f,0.5176f,1,1);

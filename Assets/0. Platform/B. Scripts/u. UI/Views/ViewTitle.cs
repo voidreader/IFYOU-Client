@@ -22,9 +22,17 @@ namespace PIERStory {
             // 타이틀 이미지 설정             
             SetTitleTexture();
             
+            
+            
+        }
+        
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void RequestStoryList() {
             // * 메인화면 작품 리스트 요청 
             StoryManager.main.RequestStoryList(OnRequestStoryList);
-            
         }
         
         

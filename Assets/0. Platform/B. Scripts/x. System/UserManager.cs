@@ -233,6 +233,7 @@ namespace PIERStory
 
             // 유저 정보 불러왔으면, Lobby로 진입을 요청합니다. 
             completeReadUserData = true;
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CONNECT_SERVER, string.Empty);
         }
 
         /// <summary>
@@ -1346,7 +1347,6 @@ namespace PIERStory
             
             // played scene count 업데이트 
             if(resultEpisodeRecord.ContainsKey("playedSceneCount")) {
-                
                 Debug.Log(JsonMapper.ToStringUnicode(resultEpisodeRecord["playedSceneCount"]));
                 Debug.Log("Check this method : CallbackUpdateEpisodeRecord"); 
                 // ViewGameEnd.UpdateCurrentEpisodeSceneCount(resultEpisodeRecord["playedSceneCount"][0]);

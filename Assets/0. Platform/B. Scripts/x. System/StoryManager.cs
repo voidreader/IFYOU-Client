@@ -470,7 +470,7 @@ namespace PIERStory
                 return string.Empty;
 
             // 임시로 한글명만. 
-            return DictNametag[__speaker][ScriptConst.COL_KO].ToString();
+            return DictNametag[__speaker][CommonConst.COL_KO].ToString();
         }
 
         /// <summary>
@@ -482,12 +482,12 @@ namespace PIERStory
         public string GetNametagColor(string __speaker, bool __isMainColor = true)
         {
             if (!DictNametag.ContainsKey(__speaker))
-                return ScriptConst.COLOR_BLACK_RGB;
+                return GameConst.COLOR_BLACK_RGB;
 
             if(__isMainColor)
-                return DictNametag[__speaker][ScriptConst.COL_MAIN_COLOR].ToString();
+                return DictNametag[__speaker][GameConst.COL_MAIN_COLOR].ToString();
             else
-                return DictNametag[__speaker][ScriptConst.COL_SUB_COLOR].ToString();
+                return DictNametag[__speaker][GameConst.COL_SUB_COLOR].ToString();
         }
 
         #endregion
@@ -750,63 +750,63 @@ namespace PIERStory
             {
 
                 // 말풍선 스프라이트 
-                currentID = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_SPRITE_ID);
+                currentID = GetNodeValue(__j[i], GameConst.COL_BUBBLE_SPRITE_ID);
                 if(currentID != "-1") {
-                    currentURL = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_SPRITE_URL);
-                    currentKEY = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_SPRITE_KEY);
+                    currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_SPRITE_URL);
+                    currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_SPRITE_KEY);
                     AddBubbleDictionary(currentID, currentURL, currentKEY);
                 }
 
                 // 말풍선 외곽선 스프라이트 
-                currentID = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_OUTLINE_ID);
+                currentID = GetNodeValue(__j[i], GameConst.COL_BUBBLE_OUTLINE_ID);
                 if(currentID != "-1") {
-                    currentURL = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_OUTLINE_URL);
-                    currentKEY = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_OUTLINE_KEY);
+                    currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_OUTLINE_URL);
+                    currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_OUTLINE_KEY);
                     AddBubbleDictionary(currentID, currentURL, currentKEY);
                 }
 
                 // 말꼬리 스프라이트
-                currentID = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_TAIL_ID);
+                currentID = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAIL_ID);
                 if(currentID != "-1") {
-                    currentURL = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_TAIL_URL);
-                    currentKEY = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_TAIL_KEY);
+                    currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAIL_URL);
+                    currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAIL_KEY);
                     AddBubbleDictionary(currentID, currentURL, currentKEY);
                 }
 
                 // 말꼬리 외곽선 
-                currentID = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_TAIL_OUTLINE_ID);
+                currentID = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAIL_OUTLINE_ID);
                 if (currentID != "-1")
                 {
-                    currentURL = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_TAIL_OUTLINE_URL);
-                    currentKEY = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_TAIL_OUTLINE_KEY);
+                    currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAIL_OUTLINE_URL);
+                    currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAIL_OUTLINE_KEY);
                     AddBubbleDictionary(currentID, currentURL, currentKEY);
                 }
 
 
 
                 // 반전 말꼬리 스프라이트
-                currentID = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_R_TAIL_ID);
+                currentID = GetNodeValue(__j[i], GameConst.COL_BUBBLE_R_TAIL_ID);
                 if(currentID != "-1") {
-                    currentURL = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_R_TAIL_URL);
-                    currentKEY = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_R_TAIL_KEY);
+                    currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_R_TAIL_URL);
+                    currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_R_TAIL_KEY);
                     AddBubbleDictionary(currentID, currentURL, currentKEY);
                 }
 
                 // 반전 말꼬리 외곽선 
-                currentID = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_R_TAIL_OUTLINE_ID);
+                currentID = GetNodeValue(__j[i], GameConst.COL_BUBBLE_R_TAIL_OUTLINE_ID);
                 if (currentID != "-1")
                 {
-                    currentURL = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_R_TAIL_OUTLINE_URL);
-                    currentKEY = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_R_TAIL_OUTLINE_KEY);
+                    currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_R_TAIL_OUTLINE_URL);
+                    currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_R_TAIL_OUTLINE_KEY);
                     AddBubbleDictionary(currentID, currentURL, currentKEY);
                 }
 
                 // 네임태그
-                currentID = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_TAG_ID);
+                currentID = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAG_ID);
                 if (currentID != "-1")
                 {
-                    currentURL = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_TAG_URL);
-                    currentKEY = GetNodeValue(__j[i], ScriptConst.COL_BUBBLE_TAG_KEY);
+                    currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAG_URL);
+                    currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAG_KEY);
                     AddBubbleDictionary(currentID, currentURL, currentKEY);
                 }
             }
@@ -853,10 +853,10 @@ namespace PIERStory
             switch (__template)
             {
                 case BUBBLE_TALK:
-                case ScriptConst.TEMPLATE_PHONE_SELF:
+                case GameConst.TEMPLATE_PHONE_SELF:
                     return GetJsonData(talkBubbleJson, __variation);
                 case BUBBLE_FEELING:
-                case ScriptConst.TEMPLATE_PHONE_PARTNER:
+                case GameConst.TEMPLATE_PHONE_PARTNER:
                     return GetJsonData(feelingBubbleJson, __variation);
                 case BUBBLE_WHISPER:
                     return GetJsonData(whisperBubbleJson, __variation);
@@ -970,10 +970,10 @@ namespace PIERStory
             for(int i=0; i<dressCodeJson.Count;i++)
             {
                 // 일치하는 모델 찾음!
-                if (dressCodeJson[i][ScriptConst.COL_DRESSMODEL_NAME].ToString() == __speaker
-                        && dressCodeJson[i][ScriptConst.COL_DRESS_ID].ToString() == __dressID)
+                if (dressCodeJson[i][GameConst.COL_DRESSMODEL_NAME].ToString() == __speaker
+                        && dressCodeJson[i][GameConst.COL_DRESS_ID].ToString() == __dressID)
                 {
-                    return dressCodeJson[i][ScriptConst.COL_MODEL_NAME].ToString();
+                    return dressCodeJson[i][GameConst.COL_MODEL_NAME].ToString();
                 }
             }
 
@@ -995,10 +995,10 @@ namespace PIERStory
             for (int i = 0; i < dressCodeJson.Count; i++)
             {
                 // 일치하는 모델 찾음!
-                if (dressCodeJson[i][ScriptConst.COL_DRESSMODEL_NAME].ToString() == __speaker
-                        && dressCodeJson[i][ScriptConst.COL_DRESS_NAME].ToString() == __dressName)
+                if (dressCodeJson[i][GameConst.COL_DRESSMODEL_NAME].ToString() == __speaker
+                        && dressCodeJson[i][GameConst.COL_DRESS_NAME].ToString() == __dressName)
                 {
-                    return dressCodeJson[i][ScriptConst.COL_MODEL_NAME].ToString();
+                    return dressCodeJson[i][GameConst.COL_MODEL_NAME].ToString();
                 }
             }
 
@@ -1018,8 +1018,8 @@ namespace PIERStory
             for (int i = 0; i < dressCodeJson.Count; i++)
             {
                 // 일치하는 모델 찾음!
-                if (dressCodeJson[i][ScriptConst.COL_DRESSMODEL_NAME].ToString() == __speaker
-                        && dressCodeJson[i][ScriptConst.COL_DRESS_NAME].ToString() == __dressName)
+                if (dressCodeJson[i][GameConst.COL_DRESSMODEL_NAME].ToString() == __speaker
+                        && dressCodeJson[i][GameConst.COL_DRESS_NAME].ToString() == __dressName)
                 {
                     return dressCodeJson[i];
                 }

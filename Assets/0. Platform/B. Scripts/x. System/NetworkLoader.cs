@@ -101,9 +101,9 @@ namespace PIERStory
         void Start()
         {
             if (SystemManager.main.isTestServerAccess)
-                _url = ScriptConst.TEST_SERVER_URL;
+                _url = CommonConst.TEST_SERVER_URL;
             else
-                _url = ScriptConst.LIVE_SERVER_URL;
+                _url = CommonConst.LIVE_SERVER_URL;
 
         }
         
@@ -371,7 +371,7 @@ namespace PIERStory
         /// <param name="__sendingData"></param>
         public void SendPost(OnRequestFinishedDelegate __cb, JsonData __sendingData, bool __isSync = false)
         {
-            _requestURL = _url + ScriptConst.CLIENT_URL; // 두개 더합니다. 
+            _requestURL = _url + CommonConst.CLIENT_URL; // 두개 더합니다. 
 
             if (__sendingData == null)
                 __sendingData = new JsonData();

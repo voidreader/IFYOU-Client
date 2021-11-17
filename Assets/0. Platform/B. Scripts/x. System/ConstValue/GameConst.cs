@@ -1,13 +1,31 @@
-﻿using UnityEngine;
+﻿
 
 namespace PIERStory
 {
-
-    public static class ScriptConst
+    /// <summary>
+    /// 게임씬에서 사용하는 상수 모음
+    /// </summary>
+    public static class GameConst
     {
-        public const string LIVE_SERVER_URL = "https://www.plop-story.xyz:443/"; // 서버 URL
-        public const string TEST_SERVER_URL = "https://pierstory.info:6370/"; // 테스트 서버 URL
-        // public const string TEST_SERVER_URL = "http://localhost:6370/"; // 테스트 서버 URL
+        
+        #region 게임씬 통신 관련
+        
+        public const string FUNC_GET_EPISODE_SCRIPT = "getEpisodeScript";
+
+        public const string NODE_LOADING = "loading";
+        public const string NODE_LOADING_DETAIL = "loadingDetail";
+        public const string NODE_SCRIPT = "script";
+        #endregion
+
+
+        #region 게임씬 플레이 관련
+        
+        public const string VOICE_MUTE = "voiceMute";
+        public const string BGM_MUTE = "bgmMute";
+        public const string SOUNDEFFECT_MUTE = "seMute";
+
+
+        #region 게임 스크립트 관련
 
         public const string LAYER_UI = "UI";
         public const string LAYER_MODEL = "Models";
@@ -17,8 +35,6 @@ namespace PIERStory
         public const string LAYER_MODEL_C = "Model-C";
         public const string LAYER_MODEL_R = "Model-R";
 
-        public const string CLIENT_URL = "client/";
-        public const string REQUEST_SCRIPT_SELECT = "script-select";
 
         public const string MODEL_TYPE_LIVE2D = "live2d";
         public const string MODEL_TYPE_SPINE = "spine";
@@ -29,9 +45,7 @@ namespace PIERStory
         public const string SPLIT_OPTIONAL_PARAM = "`"; // 옵셔널 파라매터 구분자.
         public const string TAG_TARGET_EPISODE = "#"; // 에피소드 이동 태그 구분자.
 
-        // 대괄호 구분자
-        public const string SEPARATOR_BRACKETS_L = "[";
-        public const string SEPARATOR_BRACKETS_R = "]";
+        
         // 시선 방향
         public const string VIEWDIRECTION_LEFT = "left";
         public const string VIEWDIRECTION_RIGHT = "right";
@@ -41,15 +55,9 @@ namespace PIERStory
         public const string POS_CENTER = "C";
         public const string POS_RIGHT = "R";
 
-        public const string POPUP_NETWORK_LOADING = "NetworkLoading";
-        public const string POPUP_CONFIRM = "Confirm";
-        public const string POPUP_SIMPLE_MESSAGE = "SimpleMessage";
         
-
-
         // 컬럼!
         public const string COL_SCRIPT_NO = "script_no";
-        public const string COL_EPISODE_ID = "episode_id";
         public const string COL_SCENE_ID = "scene_id";
         public const string COL_TEMPLATE = "template";
         public const string COL_SPEAKER = "speaker";
@@ -70,7 +78,6 @@ namespace PIERStory
         public const string COL_SOUND_EFFECT = "sound_effect";
         public const string COL_AUTOPLAY_ROW = "autoplay_row";
         public const string COL_CONTROL = "control";
-        public const string COL_PROJECT_ID = "project_id";
 
         public const string COL_DRESS_ID = "dress_id";
         public const string COL_DRESS_NAME = "dress_name";
@@ -80,20 +87,19 @@ namespace PIERStory
 
 
         // 제어 컬럼 기능 추가
-        public const string ROW_CONTROL_ALTERNATIVE_NAME = "화자"; // 대체 이름
-        public const string ROW_CONTROL_MAINTAIN = "유지";        // 라이브 오브제 지속시간
-        public const string ROW_CONTROL_REVERSAL = "반전";      // 배경 반전
-        
+        public const string ROW_CONTROL_ALTERNATIVE_NAME = "화자";    // 대체 이름
+        public const string ROW_CONTROL_MAINTAIN = "유지";            // 라이브 오브제 지속시간
+        public const string ROW_CONTROL_REVERSAL = "반전";            // 배경 반전
+
 
         // 스크립트 템플릿
         public const string TEMPLATE_NARRATION = "narration";
-        public const string TEMPLATE_TALK = "talk"; // 대화 
-        public const string TEMPLATE_WHISPER = "whisper"; // 속삭임 
-        public const string TEMPLATE_YELL = "yell"; // 외침 
-        public const string TEMPLATE_FEELING = "feeling"; // 속마음 
-
-        public const string TEMPLATE_MONOLOGUE = "monologue"; // 독백
-        public const string TEMPLATE_SPEECH = "speech"; // 중요대사
+        public const string TEMPLATE_TALK = "talk";                 // 대화 
+        public const string TEMPLATE_WHISPER = "whisper";           // 속삭임 
+        public const string TEMPLATE_YELL = "yell";                 // 외침 
+        public const string TEMPLATE_FEELING = "feeling";           // 속마음 
+        public const string TEMPLATE_MONOLOGUE = "monologue";       // 독백
+        public const string TEMPLATE_SPEECH = "speech";             // 중요대사
 
         public const string TEMPLATE_SELECTION = "selection";
         public const string TEMPLATE_PHONECALL = "phonecall";               //전화
@@ -125,10 +131,6 @@ namespace PIERStory
         public const string TEMPLATE_ANGLE_MOVE = "angle_move";     //앵글 이동
         public const string TEMPLATE_CLEAR_SCREEN = "clear_screen"; //화면 정리
 
-
-        public static Color COLOR_IMAGE_TRANSPARENT = new Color(1, 1, 1, 0);
-        public static Color COLOR_BLACK_TRANSPARENT = new Color(0, 0, 0, 0);
-        public static Color COLOR_GRAY_TRANSPARENT = new Color(0.26275f, 0.26275f, 0.26275f, 0);
 
         // 화면 연출
         public const string KR_SCREEN_EFFECT_TINT = "틴트스크린"; //
@@ -176,18 +178,16 @@ namespace PIERStory
 
         // 등장과 퇴장연출
         public const string INOUT_EFFECT_NONE = "none";
-        public const string INOUT_EFFECT_SCALEUP= "scaleup";
+        public const string INOUT_EFFECT_SCALEUP = "scaleup";
         public const string INOUT_EFFECT_SCALEDOWN = "scaledown";
         public const string INOUT_EFFECT_SHAKE = "shake";
         public const string INOUT_EFFECT_FADEIN = "fadein";
         public const string INOUT_EFFECT_FADEOUT = "fadeout";
 
-        // JSON COLUMN
-        public const string JSON_EPISODE_SCENE_HISTORY = "sceneProgress";
-        public const string JSON_EPISODE_PURCHASE_HISTORY = "episodePurchase";
+        
 
         // 말풍선 세트 컬럼
-        public const string COL_BUBBLE_SPRITE_ID = "bubble_sprite_id"; 
+        public const string COL_BUBBLE_SPRITE_ID = "bubble_sprite_id";
         public const string COL_BUBBLE_SPRITE_URL = "bubble_sprite_url";
         public const string COL_BUBBLE_SPRITE_KEY = "bubble_sprite_key";
         public const string COL_BUBBLE_OUTLINE_ID = "outline_sprite_id";
@@ -217,25 +217,19 @@ namespace PIERStory
         public const string COL_SUB_COLOR = "sub_color";
 
         public const string COL_DEFAULT = "default";
-        
-        public const string COL_KO = "KO";
-        public const string COL_EN = "EN";
-        public const string COL_JA = "JA";
-        public const string COL_ZH = "ZH";
-
-    
-        public const string COL_ONETIME = "onetime";
-        public const string COL_TICKET = "ticket";
-        public const string COL_FREEPASS = "freepass";
-
 
 
         public const string COLOR_BLACK_RGB = "000000FF";
         public const string COLOR_WHITE_RGB = "FFFFFFFF";
 
-        public const float MODEL_PARENT_ORIGIN_POS_Y = -13f; // Safe Area 없는 폰에서 모델 기준 좌표 
-        public const float MODEL_PARENT_SAFEAREA_POS_Y = -13.8f; // Safe Area 폰에서 위치 살짝 내림 
+        public const float MODEL_PARENT_ORIGIN_POS_Y = -13f;        // Safe Area 없는 폰에서 모델 기준 좌표 
+        public const float MODEL_PARENT_SAFEAREA_POS_Y = -13.8f;    // Safe Area 폰에서 위치 살짝 내림 
 
         public const float IMAGE_SCALE_SMALL = 0.67F; // 미니컷 이미지 게임에 맞게 고정 값
+
+        #endregion
+
+        #endregion
     }
 }
+

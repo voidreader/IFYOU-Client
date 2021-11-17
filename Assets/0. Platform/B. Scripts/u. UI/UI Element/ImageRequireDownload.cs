@@ -170,12 +170,12 @@ namespace PIERStory {
         /// </summary>
         public void InitImage() {
             if(targetRawImage) {
-                targetRawImage.color = ScriptConst.COLOR_IMAGE_TRANSPARENT;
+                targetRawImage.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
                 targetRawImage.texture = null;
             }
             
             if(targetImage) {
-                targetImage.color = ScriptConst.COLOR_IMAGE_TRANSPARENT;
+                targetImage.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
                 targetImage.sprite = null;
                 downloadedSprite = null;
              }

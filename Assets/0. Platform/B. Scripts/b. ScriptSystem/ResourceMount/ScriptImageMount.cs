@@ -242,11 +242,11 @@ namespace PIERStory
                 switch (template)
                 {
                     case GameConst.TEMPLATE_IMAGE:
-                        GameManager.main.RemoveImageFromDictionary(imageName);
+                        //GameManager.main.RemoveImageFromDictionary(imageName);
                         break;
                     case GameConst.TEMPLATE_BACKGROUND:
                     case GameConst.TEMPLATE_MOVEIN:
-                        GameManager.main.RemoveBackgroundFromDicionary(imageName);
+                        //GameManager.main.RemoveBackgroundFromDicionary(imageName);
                         break;
                     case GameConst.TEMPLATE_TALK:
                     case GameConst.TEMPLATE_SPEECH:
@@ -254,7 +254,7 @@ namespace PIERStory
                     case GameConst.TEMPLATE_YELL:
                     case GameConst.TEMPLATE_MONOLOGUE:
                     case GameConst.TEMPLATE_FEELING:
-                        GameManager.main.RemoveEmoticonFromDictionary(imageName);
+                        //GameManager.main.RemoveEmoticonFromDictionary(imageName);
                         break;
 
                     default:

@@ -24,6 +24,7 @@ namespace PIERStory
         public const string BGM_MUTE = "bgmMute";
         public const string SOUNDEFFECT_MUTE = "seMute";
 
+        
 
         #region 게임 스크립트 관련
 

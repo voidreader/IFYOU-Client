@@ -16,6 +16,10 @@ namespace PIERStory
         public const string FUNC = "func";
         public const string COL_PROJECT_ID = "project_id";
         public const string COL_EPISODE_ID = "episode_id";
+        public const string COL_EPISODE_TYPE = "episode_type";
+        public const string COL_EPISODE_NO = "episode_no";
+        public const string COL_CHAPTER = "chapter";
+        public const string COL_SIDE = "side";
 
         public const string COL_KO = "KO";
         public const string COL_EN = "EN";
@@ -26,6 +30,9 @@ namespace PIERStory
         public const string COL_FILE_KEY = "file_key";
 
         public const string MODEL3_JSON = ".model3.json";
+        public const string MOTION_NAME = "motion_name";
+
+        public const string COL_PUBLIC_NAME = "public_name";
 
         public const string COL_IMAGE_NAME = "image_name";
         public const string COL_IMAGE_URL = "image_url";

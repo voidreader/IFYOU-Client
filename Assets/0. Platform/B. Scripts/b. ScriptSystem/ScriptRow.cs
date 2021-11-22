@@ -303,7 +303,108 @@ namespace PIERStory
         {
             switch (template)
             {
-                default:
+                case GameConst.TEMPLATE_ANGLE_MOVE:
+                    rowAction = new RowActionAngleMove(this);
+                    break;
+
+                case GameConst.TEMPLATE_BACKGROUND:
+                    rowAction = new RowActionBG(this);
+                    break;
+
+                case GameConst.TEMPLATE_BGM:
+                    rowAction = new RowActionBGM(this);
+                    break;
+
+                case GameConst.TEMPLATE_BGM_REMOVE:
+                    rowAction = new RowActionBGMRemove(this);
+                    break;
+
+                case GameConst.TEMPLATE_CLEAR_SCREEN:
+                    rowAction = new RowActionClearScreen(this);
+                    break;
+
+                case GameConst.TEMPLATE_DRESS:
+                    rowAction = new RowActionDress(this);
+                    break;
+
+                case GameConst.TEMPLATE_EXIT:
+                    rowAction = new RowActionExit(this);
+                    break;
+
+                case GameConst.TEMPLATE_FAVOR:
+                    rowAction = new RowActionFavor(this);
+                    break;
+
+                case GameConst.TEMPLATE_FLOWTIME:
+                    rowAction = new RowActionFlowTime(this);
+                    break;
+
+                case GameConst.TEMPLATE_ILLUST:
+                    rowAction = new RowActionIllust(this);
+                    break;
+
+                case GameConst.TEMPLATE_IMAGE:
+                    rowAction = new RowActionImage(this);
+                    break;
+
+                case GameConst.TEMPLATE_IMAGE_REMOVE:
+                    rowAction = new RowActionImageRemove(this);
+                    break;
+
+                case GameConst.TEMPLATE_LIVE_OBJECT:
+                    rowAction = new RowActionLiveObject(this);
+                    break;
+
+                case GameConst.TEMPLATE_LIVE_OBJECT_REMOVE:
+                    rowAction = new RowActionLiveObjectRemove(this);
+                    break;
+
+                case GameConst.TEMPLATE_MESSAGE_RECEIVE:
+                case GameConst.TEMPLATE_MESSAGE_CALL:
+                case GameConst.TEMPLATE_MESSAGE_PARTNER:
+                case GameConst.TEMPLATE_MESSAGE_SELF:
+                case GameConst.TEMPLATE_MESSAGE_IMAGE:
+                case GameConst.TEMPLATE_MESSAGE_END:
+                    rowAction = new RowActionMessenger(this);
+                    break;
+
+                case GameConst.TEMPLATE_MISSION:
+                    rowAction = new RowActionMission(this);
+                    break;
+
+                case GameConst.TEMPLATE_MOVEIN:
+                    rowAction = new RowActionMoveIn(this);
+                    break;
+
+                case GameConst.TEMPLATE_MOVEOUT:
+                    rowAction = new RowActionMoveOut(this);
+                    break;
+
+                case GameConst.TEMPLATE_NARRATION:
+                    rowAction = new RowActionNarration(this);
+                    break;
+
+                case GameConst.TEMPLATE_PHONECALL:
+                case GameConst.TEMPLATE_PHONE_PARTNER:
+                case GameConst.TEMPLATE_PHONE_SELF:
+                    rowAction = new RowActionPhoneCall(this);
+                    break;
+
+                case GameConst.TEMPLATE_SCREEN_EFFECT:
+                    break;
+
+                case GameConst.TEMPLATE_SCREEN_EFFECT_REMOVE:
+                    break;
+
+                case GameConst.TEMPLATE_SELECTION:
+                    break;
+
+                case GameConst.TEMPLATE_TALK:
+                case GameConst.TEMPLATE_FEELING:
+                case GameConst.TEMPLATE_MONOLOGUE:
+                case GameConst.TEMPLATE_SPEECH:
+                case GameConst.TEMPLATE_WHISPER:
+                case GameConst.TEMPLATE_YELL:
                     break;
             }
 

@@ -54,15 +54,12 @@ namespace PIERStory {
         public Sprite spriteHiddenMissionBadge;     // 히든미션
         
         [Header("에피소드 관련 Sprite")]
-        public Sprite spritePrevEpisodeCover; 
-        public Sprite spriteFutureEpisodeCover;
-        public Sprite spriteCurrentEpisodeCover;
-        public Sprite spritePrevStateIcon;
-        public Sprite spriteFutureStateIcon;
+        public Sprite spriteEpisodePrevCover; // 과거 커버
+        public Sprite spriteEpisodeNextCover; // 미래 커버
+        public Sprite spriteEpisodeCurrentCover; // 현재 커버
         
-        public Sprite spritePurchaseFreeTag;
-        public Sprite spritePurchaseOnetimeTag;
-        public Sprite spritePurchasePremiumTag;
+        public Sprite spriteEpisodePrevIcon; // 과거 커버
+        public Sprite spriteEpisodeNextIcon; // 미래 커버 
         
         
 

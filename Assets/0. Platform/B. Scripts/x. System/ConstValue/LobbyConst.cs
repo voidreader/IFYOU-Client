@@ -17,6 +17,10 @@ namespace PIERStory {
         public const string STORY_BUBBLE_ID = "bubble_set_id";
         public const string STORY_PROJECT_PROGRESS = "project_progress";
         public const string STORY_IS_PLAYING = "is_playing";
+        
+        public const string STORY_EPISODE_ID = "episode_id";
+        public const string STORY_EPISODE_TYPE = "episode_type";
+        public const string STORY_EPISODE_TITLE = "title";
 
 
         #region 재화 
@@ -41,6 +45,19 @@ namespace PIERStory {
         #endregion
 
         public static Color colorBlueBlue = new Color(0.384f,0.5176f,1,1);
+        public static Color colorPremiumBox = Color.white;
+        public static Color colorFreeBox = Color.white;
+        public static Color colorOneTimeBox = Color.white;
+        
+        
+        /// <summary>
+        /// 색상 float로 변환하기 귀찮아서...
+        /// </summary>
+        public static void InitColors() {
+          ColorUtility.TryParseHtmlString("#888BFF", out colorPremiumBox);  
+          ColorUtility.TryParseHtmlString("#F38CA1", out colorFreeBox);  
+          ColorUtility.TryParseHtmlString("#FEA048", out colorOneTimeBox);  
+        }
 
     }
 }

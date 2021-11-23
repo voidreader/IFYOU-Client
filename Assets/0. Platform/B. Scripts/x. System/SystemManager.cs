@@ -158,6 +158,7 @@ namespace PIERStory
         /// </summary>
         void Start()
         {
+            LobbyConst.InitColors();
 
             /* TOAST 게임베이스 초기화. 아래의 순서로 진행됩니다. 
              * 1. Gamebase 초기화 (TOAST 서버와 통신합니다.)

@@ -23,6 +23,11 @@ namespace PIERStory
         public override void OnView()
         {
             base.OnView();
+        }
+
+        public override void OnStartView()
+        {
+            base.OnStartView();
 
             SetButtonSprite(voiceButton, GameConst.VOICE_MUTE);
             SetButtonSprite(bgmButton, GameConst.BGM_MUTE);
@@ -30,11 +35,6 @@ namespace PIERStory
 
 
             AutoPlayerToggleInit();
-        }
-
-        public override void OnStartView()
-        {
-            base.OnStartView();
         }
 
         /// <summary>

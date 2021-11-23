@@ -51,7 +51,9 @@ namespace Doozy.Runtime.UIManager
         {
             Beginning,
             Category,
+            Gallery,
             IfyouPlay,
+            IllustDetail,
             Main,
             Navigation,
             Profile,

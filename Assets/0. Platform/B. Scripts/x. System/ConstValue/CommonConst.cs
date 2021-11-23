@@ -20,6 +20,9 @@ namespace PIERStory
         public const string COL_EPISODE_NO = "episode_no";
         public const string COL_CHAPTER = "chapter";
         public const string COL_SIDE = "side";
+        public const string COL_TITLE = "title";
+
+        public const string COL_PURCHASE_TYPE = "purchase_type";
 
         public const string COL_KO = "KO";
         public const string COL_EN = "EN";

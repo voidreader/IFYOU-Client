@@ -24,7 +24,12 @@ namespace PIERStory
         public const string BGM_MUTE = "bgmMute";
         public const string SOUNDEFFECT_MUTE = "seMute";
 
-        
+        public const string AUTO_PLAY = "autoplay";
+
+        public const float fastDelay = 3f;
+        public const float normalDelay = 5f;
+        public const float slowDelay = 7f;
+
 
         #region 게임 스크립트 관련
 

@@ -391,12 +391,15 @@ namespace PIERStory
                     break;
 
                 case GameConst.TEMPLATE_SCREEN_EFFECT:
+                    rowAction = new RowActionScreenEffect(this);
                     break;
 
                 case GameConst.TEMPLATE_SCREEN_EFFECT_REMOVE:
+                    rowAction = new RowActionScreenEffectRemove(this);
                     break;
 
                 case GameConst.TEMPLATE_SELECTION:
+                    rowAction = new RowActionSelection(this);
                     break;
 
                 case GameConst.TEMPLATE_TALK:
@@ -405,6 +408,7 @@ namespace PIERStory
                 case GameConst.TEMPLATE_SPEECH:
                 case GameConst.TEMPLATE_WHISPER:
                 case GameConst.TEMPLATE_YELL:
+                    rowAction = new RowActionTalk(this);
                     break;
             }
 
@@ -420,8 +424,6 @@ namespace PIERStory
         /// <param name="__isInstant">즉시실행 여부. 스킵 사용여부</param>
         public void ProcessRowAction(Action __cb, bool __isInstant = false)
         {
-            // Debug.Log(string.Format("{0}, {1}, {2}, {3}, {4}", script_no, template, speaker, script_data, character_expression));
-
             // 상황에 대한 처리
             if (!string.IsNullOrEmpty(scene_id))
             {

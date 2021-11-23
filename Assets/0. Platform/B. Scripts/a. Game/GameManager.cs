@@ -11,10 +11,6 @@ namespace PIERStory
 {
     public class GameManager : MonoBehaviour
     {
-        /*
-         * 현재 아직 미생성한 클래스들에 대해서 변수들을 주석해놨음
-         */
-
         public static GameManager main = null;      // singleton
         public static List<GameSelectionCtrl> ListAppearSelection = new List<GameSelectionCtrl>();
 
@@ -43,9 +39,8 @@ namespace PIERStory
         public bool isWaitingScreenTouch = false;   // 게임 플레이 도중 스크린 터치 기다림
         public bool useSkip = false;                // 스킵을 사용했는가?
         public bool skipable = false;               // 스킵 기능 사용이 가능한가?
-        //public ViewInGameMenu inGameMenu;
+        public ViewGameMenu inGameMenu;
         public string currentSceneId = string.Empty;    // 현재 sceneId(사건ID)
-        public List<GameModelCtrl> ListMovingModels = new List<GameModelCtrl>();
 
         public int episodeDownloadableResourceCount = 0;
 
@@ -77,13 +72,11 @@ namespace PIERStory
         public Transform modelPillar;           // 캐릭터 모델의 부모 transform.
 
 
-        [Space][Space][Header("**선택지**")]
-        public List<ScriptRow> ListSelectionRows = new List<ScriptRow>();                 // 수집된 행들 
-        public List<GameSelectionCtrl> ListGameSelection = new List<GameSelectionCtrl>(); // 선택지 UI
-        public Image SelectionMain = null;                      // 선택지 메인 오브젝트
-        public bool isSelectionInputWait = false;               // 선택지 입력 기다리기!
+        [Space][Space]
         public string targetSelectionSceneID = string.Empty;    // 선택지 선택 후 이동할 사건ID
-        public GameObject screenInputBlocker = null;            // 연출중 입력막고싶다..!
+        public bool isSelectionInputWait = false;               // 선택지 입력 기다리기!
+
+
 
         [Space][Space][Header("리소스 접근을 위한 Dictionary")]
         public Dictionary<string, GameSpriteCtrl> DictIllusts = new Dictionary<string, GameSpriteCtrl>();                     // 일러스트 Dictionary
@@ -126,6 +119,9 @@ namespace PIERStory
         public Sprite spriteSelectionUnlockIcon = null;
         public Sprite spriteIllustPopup = null;             // 일러스트 획득 팝업 아이콘
 
+        // 자동 재생
+        public bool isAutoPlay = false;
+        public IEnumerator routineAutoPlay = null;
 
         #region Properties
 
@@ -198,9 +194,7 @@ namespace PIERStory
 
             // 로비에서 에피소드 선택해서 게임씬에 진입한 경우
             if(SystemManager.main.givenEpisodeData != null)
-            {
-
-            }
+                SelectEpisode(SystemManager.main.givenEpisodeData); // 바로 선택한 에피소드 할당 처리
             else
             {
                 // 단독 실행, 없을 떄는 지정받은 에피소드 ID를 통해 진행
@@ -213,6 +207,8 @@ namespace PIERStory
             SoundSetting(GameConst.BGM_MUTE, 0);
             SoundSetting(GameConst.VOICE_MUTE, 1);
             SoundSetting(GameConst.SOUNDEFFECT_MUTE, 2);
+
+            routineAutoPlay = RoutineAutoPlay();
         }
 
         static void GarbageCollect()
@@ -232,10 +228,10 @@ namespace PIERStory
                 PlayerPrefs.SetInt(key, 0);
             else
             {
-                //if (PlayerPrefs.GetInt(key) < 1)
-                //    SoundGroup[soundIndex].UnmuteAudioClip();
-                //else
-                //    SoundGroup[soundIndex].MuteAudioClip();
+                if (PlayerPrefs.GetInt(key) < 1)
+                    SoundGroup[soundIndex].UnmuteAudioClip();
+                else
+                    SoundGroup[soundIndex].MuteAudioClip();
             }
         }
 
@@ -249,9 +245,7 @@ namespace PIERStory
             j[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
             j[CommonConst.FUNC] = GameConst.FUNC_GET_EPISODE_SCRIPT;
 
-            //NetworkLoader.main.SendPost(OnFetchEpisodeScript, j);
             NetworkLoader.main.RequestEpisodeGameData(j, OnFetchEpisodeScript);
-
 
             // 로딩창을 띄우고, 통신을 시작한다.
             //Doozy.Engine.GameEventMessage.SendEvent("EventGameLoading");
@@ -305,7 +299,6 @@ namespace PIERStory
             scriptJson = __j[GameConst.NODE_SCRIPT];
 
             // 페이지를 생성하고 넘겨준다. 
-            /*
             currentPage = Instantiate(prefabScriptPage, this.transform).GetComponent<ScriptPage>();
             currentPage.InitPage(episodeElement);
 
@@ -317,12 +310,12 @@ namespace PIERStory
                 if (lastPlayScriptNo > 0 && currentPage.ListRows[i].script_no == lastPlayScriptNo)
                 {
                     // 그 해당 script_no의 template이 선택지인 경우
-                    if (currentPage.ListRows[i].template.Equals(ScriptConst.TEMPLATE_SELECTION))
+                    if (currentPage.ListRows[i].template.Equals(GameConst.TEMPLATE_SELECTION))
                     {
                         for (int j = i; j > 0; j--)
                         {
                             // 선택지가 아닌행을 찾아서 첫 선택지 도입의 위치를 찾아서 lastPlayScriptNO를 갱신해준다
-                            if (!currentPage.ListRows[j].template.Equals(ScriptConst.TEMPLATE_SELECTION))
+                            if (!currentPage.ListRows[j].template.Equals(GameConst.TEMPLATE_SELECTION))
                             {
                                 lastPlayScriptNo = currentPage.ListRows[j + 1].script_no;
                                 break;
@@ -339,7 +332,6 @@ namespace PIERStory
 
             // 코루틴 실행합니다!
             StartCoroutine(RoutineEpisodePlay());
-            */
         }
 
         /// <summary>
@@ -347,41 +339,38 @@ namespace PIERStory
         /// </summary>
         void InitGameResourceObjects()
         {
-            /*
             for (int i = 0; i < PoolSpriteBG.Count; i++)
                 PoolSpriteBG[i].gameObject.SetActive(false);
 
             for (int i = 0; i < PoolIllust.Count; i++)
                 PoolIllust[i].gameObject.SetActive(false);
-            */
+            
             indexPoolIllust = 0;
             indexPoolBG = 0;
 
 
-            //DictBackgroundMounts.Clear();
-            //DictIllusts.Clear();
-            //DictMinicutImages.Clear();
-            //DictLiveIllusts.Clear();
-            //DictLiveObjs.Clear();
+            DictBackgroundMounts.Clear();
+            DictIllusts.Clear();
+            DictMinicutImages.Clear();
+            DictLiveIllusts.Clear();
+            DictLiveObjs.Clear();
             DictModelByDress.Clear();
-            //DictModels.Clear();
-            //DictEmoticon.Clear();
+            DictModels.Clear();
+            DictEmoticon.Clear();
 
-            //currentMinicutMount = null;
+            currentMinicutMount = null;
             currentMinicut.sprite = null;
 
 
             // 모든 스크린 이펙트 제거 
-            //ScreenEffectManager.main.RemoveAllScreenEffect();
+            ScreenEffectManager.main.RemoveAllScreenEffect();
 
             //HideSelection(); // 선택지 제거 
 
             ListLoadingImageKey.Clear();
             ListLoadingModel.Clear();
 
-            //BubbleManager.main.ClearBubbleSpriteDictionary();
-
-            //ListMovingModels.Clear();
+            BubbleManager.main.ClearBubbleSpriteDictionary();
 
             // 모델 엄마 transform 위치 조정 추가 
             // 노치 폰에서는 조금더 위치를 내려준다. 
@@ -390,6 +379,27 @@ namespace PIERStory
             else
                 modelPillar.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_ORIGIN_POS_Y, 0);
 
+        }
+
+        /// <summary>
+        /// 프로그레서 값 주세요!(로딩 뷰에게 준다!)
+        /// </summary>
+        public float GetPagePrepValue()
+        {
+            // 로딩이 진행될수록 카운트가 감소한다. 
+
+            if (episodeDownloadableResourceCount == currentPage.GetCurrentLoadingCount())
+                return 0;
+
+            if (currentPage.GetCurrentLoadingCount() <= 0) // 다 된거..
+                return 1;
+
+            return 1 - (float)currentPage.GetCurrentLoadingCount() / (float)episodeDownloadableResourceCount;
+        }
+
+        public bool GetCurrentPageInitialized()
+        {
+            return currentPage.IsPageInitialized();
         }
 
         #endregion
@@ -456,6 +466,462 @@ namespace PIERStory
                     lastPlayScriptNo = 0;
             } // ? 끝 
         }
+
+        #endregion
+
+        #region 게임 로직
+
+        /// <summary>
+        /// 에피소드 플레이 코루틴 
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator RoutineEpisodePlay()
+        {
+            // 중복 실행 가능성 제거 
+            if (isPlaying)
+            {
+                Debug.LogError("RoutineEpisodePlay Double Called!!!");
+                yield break;
+            }
+
+            Debug.Log("<color=yellow> RoutineEpisodePlay </color>");
+
+            // 첫 실행히 page가 생성되어 있지 않다면 기다려준다.
+            while (currentPage == null)
+                yield return null;
+
+            // 모든 리소스 로딩을 완료할때까지 기다리기!
+            yield return new WaitUntil(() => currentPage.IsPageInitialized());
+            Debug.Log("<color=yellow> Current Page is just initialized! </color>");
+
+            // 페이지에게 실행할 Row를 요청한다.(얘는 첫번째 행)
+            ScriptRow currentRow = currentPage.GetNextRow();
+            isPlaying = true; // 플레이 시작함!
+
+            // 시작 기록 업데이트를 호출한다.
+            //NetworkLoader.main.UpdateEpisodeStartRecord();
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork()); // 통신 완료까지 대기.
+
+            Debug.Log("<<< UpdateEpisodeStartRecord done >>>");
+
+            // * 2021.08.27 이어하기에 대한 처리. isResumePlay.... 
+            // 1. 단순 스킵 useSkip = true
+            // 2. 이어하기 isResumePlay = true
+            // 3. 일반 (단순 스킵도 아니고 이어하기도 아니다) useSkip = false, isResumePlay = false
+
+            // isResumePlay는 스킵과 비슷하게 동작을 한다. 
+            // isResumePlay가 true이면, useSkkip도 true다.
+            // isResumePlay의 lastPlaySceneID, lastScriptNO를 만날때까지 계속 Skip을 수행하고, 목표치에 도달하면
+            // isResumePlay를 풀고, useSkip도 푼다. 
+            // lastScriptNO는 스크립트를 편집하면 일치하는 행이 없을 수도 있다. 실행전에 미리 유효성 검사를 하고 진행한다.
+
+            // ! 이어하기 유효성 검사 
+            CheckResumePlayValidation();
+
+
+            // 모든 라인을, 혹은 종료 명령어를 만날때까지 계속해! 
+            while (currentRow != null && isPlaying)
+            {
+                if (UserManager.main.tutorialStep < 2)
+                {
+                    //OpenTutorialPopUp();
+                    //yield return new WaitUntil(() => gamePopup != null);        // Show
+                    //yield return new WaitUntil(() => gamePopup == null);        // HIde
+                }
+
+                // * 이어하기 추가 처리
+                if (isResumePlay)
+                { // true일때만 호출해야한다.
+                    // 정지 포인트에서 useSkip을 false로 바꿔야 한다. 
+                    useSkip = CheckResumePlayStopPoint();
+                }
+                else
+                {
+                    if (currentRow.template.Equals(GameConst.TEMPLATE_SELECTION) || !string.IsNullOrEmpty(currentRow.requisite))
+                    {
+                        SystemManager.ShowNetworkLoading();
+                        yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+                        SystemManager.HideNetworkLoading();
+                    }
+                }
+
+                // 현재 '행'의 동작을 수행합니다. 
+                currentRow.ProcessRowAction(OnFinishedRowAction, useSkip);
+
+                // * 일반 플레이. 
+                if (!useSkip)
+                {
+                    yield return null;
+
+                    while (isThreadHold) // Row가 동작중에는 멈춰 있습니다. 
+                        yield return null;
+
+                    while (isWaitingScreenTouch) // 화면을 터치해줘야 다음으로 넘어갑니다.
+                        yield return null;
+                }
+
+                // 선택지 입력이 필요할때는 기다려야해..!
+                while (isSelectionInputWait)
+                    yield return null;
+
+                // 중단점 추가. 
+                if (!isPlaying)
+                    break;
+
+                // 현재 행의 액션을 종료해줍니다. 
+                currentRow.ExitRowAction();
+
+                // 조건과 이동의 처리 
+                HandleScriptJump(currentRow);
+
+                currentRow = currentPage.GetNextRow(); // 새로운 행 받아오기
+
+            }
+
+            GarbageCollect();
+
+            if (isPlaying)
+            {
+                if (UserManager.main.useRecord)
+                    ShowGameEnd(null);
+                else
+                    SystemManager.ShowConfirmPopUp("다시 보시겠습니까?", RetryPlay, EndGame, false);
+            }
+
+            isPlaying = false;
+        }
+
+        void OnFinishedRowAction()
+        {
+            isThreadHold = false;
+        }
+
+        /// <summary>
+        /// 스크립트 이동 처리 
+        /// </summary>
+        /// <param name="__row"></param>
+        void HandleScriptJump(ScriptRow __row)
+        {
+            if (string.IsNullOrEmpty(__row.target_scene_id))
+                return;
+
+            // 선택지 템플릿은 이동 컬럼 무시하도록 처리 
+            if (__row.template == GameConst.TEMPLATE_SELECTION)
+                return;
+
+            // 조건이 있을때. 
+            if (!string.IsNullOrEmpty(__row.requisite))
+            {
+                if (ScriptExpressionParser.main.ParseScriptExpression(__row.requisite))
+                    MoveToTargetSceneID(__row.target_scene_id);
+                else
+                {
+                    Debug.Log(string.Format("<color=yellow>조건불충분 {0}</color>", __row.requisite));
+                    return;
+                }
+            }
+
+            MoveToTargetSceneID(__row.target_scene_id);
+        }
+
+        /// <summary>
+        /// 타겟 상황ID로 이동시키기 
+        /// </summary>
+        void MoveToTargetSceneID(string __sceneID)
+        {
+            targetRow = -1;
+
+            if (__sceneID.Contains(GameConst.TAG_TARGET_EPISODE))
+            {
+                ShowGameEnd(__sceneID);
+                return;
+            }
+
+
+            for (int i = 0; i < currentPage.ListRows.Count; i++)
+            {
+                // 상황 ID를 찾는다
+                if (currentPage.ListRows[i].scene_id == __sceneID)
+                    targetRow = i;
+            }
+
+            if (targetRow < 0)
+            {
+                ShowMissingComponent("이동하려는 상황ID 없음", __sceneID);
+                return;
+            }
+
+            currentPage.playRow = targetRow;
+
+            if (!isPlaying)
+                StartCoroutine(RoutineEpisodePlay());
+        }
+
+        IEnumerator RoutineAutoPlay()
+        {
+            while(true)
+            {
+                if(!isThreadHold && isWaitingScreenTouch)
+                {
+                    // 보이스가 재생이 끝날때까지 대기
+
+                    if (SoundGroup[1].GetIsPlaying)
+                    {
+                        yield return new WaitUntil(() => !SoundGroup[1].GetIsPlaying);
+                        yield return new WaitForSeconds(2f);
+                    }
+                    else
+                        yield return new WaitForSeconds(PlayerPrefs.GetFloat(GameConst.AUTO_PLAY));
+
+                    isWaitingScreenTouch = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 말풍선(대화 관련 처리 시작)
+        /// </summary>
+        public void SetTalkProcess(ScriptRow __row, Action __cb)
+        {
+            // 유효한 화자가 아니면 아래 코드는 작동X
+            if (!__row.IsValidSpeaker)
+            {
+                ShowMissingComponent(__row.template, "잘못된 화자 입력");
+                __cb?.Invoke();
+                return;
+            }
+
+            // 스탠딩 표현이 없거나 화자 리소스가 존재하지 않으면 말풍선만 띄워주고 넘김
+            if (string.IsNullOrEmpty(__row.character_expression) || !CheckModelResourceExists(__row.speaker))
+            {
+                ViewGame.main.MakeTalkBubble(__row, __cb);
+                return;
+            }
+
+            #region 스탠딩 캐릭터 모델 처리
+            // * 캐릭터 모델 처리를 시작.. 
+            // speaker로 판단. 생성된 캐릭터 모델이 있고, 캐릭터 표현 있음
+            int characterIndex = -1;     //캐릭터 모델 index 0:왼쪽, 1:중앙, 2:오른쪽
+            int characterCount = CheckModelStanding(); // 현재 화면에 서있는 모델의 개수
+            bool isSameTalker = CompareWithCurrentSpeaker(__row.speaker);  // 전의 화자와 같은지 체크, 의상이 변경되도 다른 화자로 인식
+
+            // 화자에 등장 방향이 지정된 경우와 아닌 경우가 있다. 
+            // 케일:L or 케일:R 이런식으로 지정되었을 때에 대한 처리 구분될 필요 있음.
+            switch (__row.direction)
+            {
+                case GameConst.POS_LEFT:
+                case GameConst.POS_RIGHT:
+
+                    if (__row.direction.Equals(GameConst.POS_LEFT))
+                        characterIndex = 0;
+                    else
+                        characterIndex = 2;
+
+                    // 동일한 사이드 캐릭터가 계속 말하는중
+                    if (isSameTalker)
+                    {
+                        // 화면에 아직 1명 뿐인데 L or R이 들어오면 센터로
+                        // * 같은 캐릭터이고 화면에 캐릭터가 혼자인경우, 방향 지정이 되어있으면, 무시하고 그냥 중앙에서 진행. 
+                        if (characterCount < 2)
+                            characterIndex = 1;
+
+                        // 애니메이션 
+                        characterModels[characterIndex].PlayCubismAnimation(__row, characterIndex);
+                    }
+                    else // ! 다른 화자 등장!
+                    {
+                        // * 다른 캐릭터가 방향을 지정받아 등장하면, 2인스탠딩이 시작된다. 
+                        if (characterCount < 2) // 한명, 혹은 아무도 없을때. 
+                        {
+                            // * 캐릭터가 아무도 없었다. 
+                            if (characterCount < 1)
+                            {
+                                // 방향 지정을 무시하고 위치는 센터로 fix한다. 
+                                characterIndex = 1;
+
+                                // 밀어낼 캐릭터가 없으니까 아무것도 하지 않는다.
+
+                            }
+                            else
+                            { // * 다른 캐릭터 1명이 있었다. 
+
+                                // 서있던 캐릭터 친구를 오른쪽 혹은 왼쪽으로 밀어낸다.
+                                // 새등장 위치가 왼쪽이면 오른쪽으로 밀고, 새등장 위치가 오른쪽이면 왼쪽으로 민다.
+                                PushFromCenter(characterIndex == 0 ? 2 : 0);
+                                Debug.Log("Push Previous Character <<<<<");
+
+                            }
+
+                            // 동일한 캐릭터가 아니니까 캐릭터 준비시킨다.
+                            SetCharacterReady(__row.speaker, characterIndex);
+
+                            // 애니메이션 처리 
+                            characterModels[characterIndex].PlayCubismAnimation(__row, characterIndex);
+                        } // ? end of characterCount < 2
+                        else // * 이미 다른 두명의 캐릭터가 있는 경우에 대한 처리 
+                        {
+                            // 등장 위치와 row를 파라매터로 전달. 
+                            ChanageDuetSpeaker(characterIndex, __row);
+                        }
+                    } // ? 다른 화자 등장에 대한 처리 끝.
+
+                    break; // ? 방향 지정 처리 끝. 
+
+                default: // * 방향 지정이 되어있지 않은 경우에 대한 처리 시작.
+
+                    // center index fix. 
+                    characterIndex = 1;
+
+
+                    // 2인 스탠딩 중이었을때.
+                    // 새로운 화자가 등장했으면 나머지 2인은 퇴장시킨다. 
+                    // 2인 스탠딩 중 하나의 캐릭터라면, 중앙으로 옮겨준다. (나머지 한명은 퇴장)
+                    if (characterCount > 1)
+                    {
+                        // 이전 화자와 같지 않으면 전부 hide(퇴장)
+                        for (int i = 0; i < characterModels.Length; i++)
+                        {
+                            if (characterModels[i] == null)
+                                continue;
+
+                            // 중앙에 쓸건데 중앙은 건들지 말자
+                            // 조건을 걸어주지 않으면 아래 로직에서 기껏 중앙으로 옮겨놨는데 옮겨놓은 중앙까지 null처리 해버린다
+                            if (i == 1)
+                                continue;
+
+                            // 현재 화자가 2인스탠딩에서 좌,우 중 한곳에 이미 배치되어있는 경우
+                            // 중앙 index로 옮겨주고, 있던 사이드 위치는 null 로 비워준다. 
+                            if (characterModels[i].speaker.Equals(__row.speaker))
+                            {
+                                characterModels[characterIndex] = characterModels[i];
+                                characterModels[i] = null;
+                            }
+                            else // 다른 화자들은 모두 hide 처리. 
+                            {
+
+                                if (useSkip || __row.autoplay_row > 0)
+                                    characterModels[i].HideModel(i, true);
+                                else
+                                    characterModels[i].HideModel(i, false);
+
+                                // skip 사용 중에는 아예 바로 null 처리, skip 아닌 경우에는 퇴장을 기다린다. 
+                                if (useSkip)
+                                    characterModels[i] = null;
+                                else
+                                    StartCoroutine(RoutineWaitCharacterOut(i));
+                            }
+
+                        } // ? end of for
+                    } // ? end of characterCount > 0
+
+                    // 동일 화자가 아닐때에 대한 추가 처리. 
+                    if (!isSameTalker)
+                    {
+                        // 중앙에 한명만 있을 때, 이전 화자가 다르면 hide
+                        // 위의 로직을 그대로 사용하면 중앙에 왔을 때 건너 뛰어버려서 1인 스탠딩 hide가 실행이 안됨
+                        // if (characterCount > 0 && characterCount < 2) // 이건 그냥... 1이자나? 
+                        if (characterCount == 1)
+                            characterModels[characterIndex].HideModel(characterIndex, useSkip);
+
+                        // 동일한 화자가 아니라면 캐릭터 세팅
+                        SetCharacterReady(__row.speaker, characterIndex);
+                    }
+
+                    characterModels[characterIndex].PlayCubismAnimation(__row, characterIndex);
+                    break;
+            }
+
+            #endregion
+
+            ViewGame.main.MakeTalkBubble(__row, __cb, characterIndex);
+        }
+
+        /// <summary>
+        /// 모델 리소스 있는지 체크.
+        /// </summary>
+        bool CheckModelResourceExists(string __speaker)
+        {
+            if (DictModelByDress.ContainsKey(__speaker))
+                return DictModels.ContainsKey(DictModelByDress[__speaker]);
+            else
+                return DictModels.ContainsKey(__speaker);
+        }
+
+        /// <summary>
+        /// 화자가 변경될때 호출해서, 캐릭터를 지정한 인덱스에 준비시킨다. 
+        /// </summary>
+        /// <param name="speaker">화자</param>
+        /// <param name="index">0=L, 1=C, 2=R</param>
+        void SetCharacterReady(string speaker, int index)
+        {
+            standingSpeaker = GetConnectedModelMount(speaker);
+            characterModels[index] = standingSpeaker.modelController;
+        }
+
+        #region 2인 스탠딩 연출 관련
+
+        /// <summary>
+        /// 캐릭터 모델의 움직임이 완료되었는가? 
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckModelMoveComlete()
+        {
+            for(int i=0;i< characterModels.Length;i++)
+            {
+                if (!characterModels[i].moveComplete)
+                    return false;
+            }
+
+            return true;
+        }
+
+        void PushFromCenter(int index)
+        {
+            if (characterModels[1] != null)
+                characterModels[index] = characterModels[1];
+
+            characterModels[1] = null;
+            characterModels[index].PushListenerToSide(index, useSkip);
+        }
+
+        /// <summary>
+        /// 2인 스탠딩 중 1명 변경
+        /// </summary>
+        /// <param name="newSpeakerIndex">새로 등장하는 캐릭터 포지션</param>
+        /// <param name="remainSpeakerIndex">남아있는 캐릭터 포지션</param>
+        void ChanageDuetSpeaker(int newSpeakerIndex, ScriptRow __row)
+        {
+
+            // 남아있는 캐릭터 index
+            int remainSpeakerIndex = 0;
+            // * 왼쪽 혹은 오른쪽에 신규 캐릭터가 들어오면, 어차피 남아있는 index는 그 반대편 index 아닌가? 
+            // 왼쪽이면 2, 오른쪽이면 0 
+            remainSpeakerIndex = newSpeakerIndex == 0 ? 2 : 0;
+
+
+            // 새로 등장하는 위치에 다른 캐릭터가 있었으면, 있던 캐릭터는 HideModel 처리. 
+            if (!characterModels[newSpeakerIndex].speaker.Equals(__row.speaker))
+                characterModels[newSpeakerIndex].HideModel(newSpeakerIndex, useSkip);
+
+            // 남아있는 캐릭터 친구는 후위로 밀어주기. 
+            characterModels[remainSpeakerIndex].SetListener();
+
+            // 새 캐릭터 준비시키고, 애니메이션
+            SetCharacterReady(__row.speaker, newSpeakerIndex);
+            characterModels[newSpeakerIndex].PlayCubismAnimation(__row, newSpeakerIndex);
+        }
+
+        /// <summary>
+        /// 캐릭터의 퇴장연출을 기다렸다가 지정된 index를 null처리한다. 
+        /// </summary>
+        /// <param name="index">퇴장한 캐릭터</param>
+        IEnumerator RoutineWaitCharacterOut(int index)
+        {
+            yield return new WaitUntil(() => CheckModelMoveComlete());
+            characterModels[index] = null;
+        }
+
+        #endregion
 
         #endregion
 
@@ -701,7 +1167,7 @@ namespace PIERStory
             if (useSkip && !skipable)
                 useSkip = false;
 
-            //inGameMenu.ChangeSkipIcon(skipable);
+            inGameMenu.ChangeSkipIcon(skipable);
         }
 
         /// <summary>
@@ -712,6 +1178,20 @@ namespace PIERStory
         {
             if (isThreadHold)
                 Invoke("OnFinishedRowAction", delayTime);
+        }
+
+        /// <summary>
+        /// 게임 플레이 지점을 저장한다.
+        /// </summary>
+        public void SaveCurrentPlay()
+        {
+            if (currentRow == null)
+            {
+                Debug.Log("CurrentRow is Null");
+                return;
+            }
+
+            NetworkLoader.main.UpdateUserProjectCurrent(StoryManager.main.CurrentEpisodeID, currentSceneId, currentRow.script_no);
         }
 
         /// <summary>
@@ -923,6 +1403,14 @@ namespace PIERStory
             currentLiveObj.DecreaseUseCount();
 
             return currentLiveObj;
+        }
+
+        /// <summary>
+        /// 연결된 ScriptModelMount
+        /// </summary>
+        ScriptModelMount GetConnectedModelMount(string __speaker)
+        {
+            return DictModels[DictModelByDress[__speaker]];
         }
 
         public ScriptImageMount GetEmoticonSprite(string __key)

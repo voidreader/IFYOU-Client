@@ -14,7 +14,7 @@ namespace PIERStory
     public class ViewGame : CommonView, IPointerClickHandler
     {
         public static ViewGame main = null;     // UI singleton
-
+        
         [Header("말풍선")]
         public RectTransform bubbleParent;          // 말풍선 부모
         public List<GameBubbleCtrl> ListBubbles;    // 말풍선들!
@@ -35,8 +35,15 @@ namespace PIERStory
         public Transform[] modelRenderParents;  // 0 : 미사용 or 중앙 사용중, 1 : 2인스탠딩중 말 안하는 사람, 2 : 2인스탠딩중 말하는 사람
         public RawImage[] modelRenders;         // 0 : L, 1 : C, 2: R
 
-        [Space]
+        
+        [Space][Space][Header("**선택지**")]
         public Image selectionTutorialText;     // 선택지 튜토리얼 안내문구
+        public List<ScriptRow> ListSelectionRows = new List<ScriptRow>();                 // 수집된 행들 
+        public List<GameSelectionCtrl> ListGameSelection = new List<GameSelectionCtrl>(); // 선택지 UI
+        public static List<GameSelectionCtrl> ListAppearSelection = new List<GameSelectionCtrl>();
+        public Image SelectionMain = null;                      // 선택지 메인 오브젝트
+        
+        public GameObject screenInputBlocker = null;            // 연출중 입력막고싶다..!
 
         [Space][Header("Flow time")]
         public Image fadeImage;
@@ -96,9 +103,9 @@ namespace PIERStory
 
         [Header("게임로그")]
         public GameObject logPanel;
-        [SerializeField] ScrollRect logScrollRect;
+        public ScrollRect logScrollRect;
         public TextMeshProUGUI logText;
-        string prevSpeaker = string.Empty;
+        private string prevSpeaker = string.Empty;
 
         public GameObject inGameMenuBtn;        // 인게임메뉴 버튼
         public GameObject closeLogBtn;          // 로그 패널 외의 영역 버튼
@@ -137,15 +144,6 @@ namespace PIERStory
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            // 캐릭터 무빙 중에 입력 받지 않음 
-            /*
-            if (!GameManager.main.CheckModelMoveComlete())
-            {
-                Debug.Log(">> model is moving << ");
-                return;
-            }
-            */
-
             // 로그 패널 활성화 중엔 입력 받지 않음.   
             if (logPanel.activeSelf)
                 return;
@@ -166,6 +164,41 @@ namespace PIERStory
         }
 
         #region 말풍선 관련
+
+        public void MakeTalkBubble(ScriptRow __row, Action __cb, int index = -1)
+        {
+            if (bubbleIndex >= ListBubbles.Count)
+                bubbleIndex = 0;
+
+            // 아무말도 안넣으면 그냥 종료 
+            if (string.IsNullOrEmpty(__row.script_data))
+            {
+                __cb?.Invoke();
+                return;
+            }
+
+            // 말풍선 크기를 판단하기 위해 호출한다.
+            // 크기 지정을 수동으로 해놓은 경우만!
+            // * 추가 설명 : TextMesh 는 실제 화면에서 render 되어야지, TextArea를 오버했는지 안했는지를 알 수 있다.
+            if (__row.bubble_size == 0)
+                BubbleManager.main.SetFakeBubbles(__row);
+
+            // 말풍선 풀에서 하나를 골라 세팅합니다.
+            // skip을 사용했거나, 캐릭터 스탠딩이 아닐때
+            if (GameManager.main.useSkip || index < 0)
+                ListBubbles[bubbleIndex++].ShowBubble(__row, __cb);
+            else
+                StartCoroutine(RoutineMoveWait(__row, __cb));
+        }
+
+        /// <summary>
+        /// 캐릭터가 무빙 중인 경우는 무빙이 완료될때까지 기다린다. 
+        /// </summary>
+        IEnumerator RoutineMoveWait(ScriptRow __row, Action __cb)
+        {
+            yield return new WaitUntil(() => GameManager.main.CheckModelMoveComlete());
+            ListBubbles[bubbleIndex++].ShowBubble(__row, __cb);
+        }
 
         /// <summary>
         /// 화면상의 모든 말풍선(전화 말풍선 포함), 나레이션 제거 
@@ -291,6 +324,163 @@ namespace PIERStory
 
             boxImage.gameObject.SetActive(false);
         }
+
+        #endregion
+
+        #region 선택지 처리
+
+
+        /// <summary>
+        /// 선택지 쌓기 처리 
+        /// </summary>
+        /// <param name="__row"></param>
+        /// <param name="__openUI"></param>
+        public void StackSelection(ScriptRow __row, bool __openUI)
+        {
+            ListSelectionRows.Add(__row); // 쌓기!
+
+            // 마지막 선택지가 쌓였으면, UI 활성화 
+            if (__openUI)
+                OpenSelectionUI();
+        }
+
+        /// <summary>
+        /// 선택지 활성화 
+        /// </summary>
+        void OpenSelectionUI()
+        {
+            GameManager.main.isSelectionInputWait = true; // 선택지 입력을 기다려야 한다. 
+
+            // 아래 두개의 리스트 클리어 하고 시작한다.
+            ListAppearSelection.Clear();
+            GameSelectionCtrl.ListStacks.Clear();
+
+
+            SelectionMain.color = CommonConst.COLOR_BLACK_TRANSPARENT;
+            SelectionMain.gameObject.SetActive(true);
+
+            // 페이드인 처리 
+            SelectionMain.DOFade(0.5f, 1);
+
+            // 튜토리얼을 보지 않고 스킵해서 선택지 어떻게 누르는지 모르는 바보들을 위해 선택지 꾸욱 눌러야 한다고 문구를 띄워준다.
+            if (UserManager.main.tutorialStep.Equals(2))
+                selectionTutorialText.gameObject.SetActive(true);
+            else
+                selectionTutorialText.gameObject.SetActive(false);
+
+            for (int i = 0; i < ListSelectionRows.Count; i++)
+            {
+                ListGameSelection[i].enabled = true;
+                ListGameSelection[i].SetSelection(ListSelectionRows[i], i);
+                ListAppearSelection.Add(ListGameSelection[i]);
+            }
+
+            // 등장 연출이 끝날떄까지 입력을 막고싶어요.
+            SetBlockScreenActiveFlag(true);
+        }
+
+        /// <summary>
+        /// 등장하는 선택지, 등장이 완료하면 리스트에서 제거 
+        /// </summary>
+        /// <param name="__selection"></param>
+        public void RemoveListAppearSelection(GameSelectionCtrl __selection)
+        {
+            ListAppearSelection.Remove(__selection);
+
+            if (ListAppearSelection.Count == 0)
+                SetBlockScreenActiveFlag(false);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__flag"></param>
+        void SetBlockScreenActiveFlag(bool __flag)
+        {
+            screenInputBlocker.SetActive(__flag);
+        }
+
+
+        /// <summary>
+        /// 선택지 선택 완료에 대한 처리 
+        /// </summary>
+        /// <param name="__targetSceneID">이동할 사건 ID</param>
+        /// <param name="__selectionIndex">선택지 버튼 인덱스</param>
+        public void ChooseSelection(string __targetSceneID, int __selectionIndex)
+        {
+            // 연출로 인해 메소드가 분산되어서 따로 쟁여둔다.
+            SetBlockScreenActiveFlag(true); // 입력 막기.
+            GameManager.main.targetSelectionSceneID = __targetSceneID;
+
+            Debug.Log(string.Format("You Selected {0}", __targetSceneID));
+
+
+            StartCoroutine(RoutineHideSelection());
+
+            // 첫번째 선택지에서 이벤트 추가 
+            /*
+            if (UserManager.main.IsUserFirstSelection())
+            {
+                Debug.Log("!!! FIRST SELECTION !!!");
+                //AppsFlyerSDK.AppsFlyer.sendEvent("FIRST_SELECTION", null);
+            }
+            */
+        }
+
+
+        /// <summary>
+        /// 선택지 사라지는 연출. 
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator RoutineHideSelection()
+        {
+            yield return new WaitForSeconds(2);
+
+            // 틴트 없애주고. 
+            SelectionMain.DOFade(0, 0.5f).OnComplete(OnPostProcessCompleteSelection);
+        }
+
+        /// <summary>
+        /// 선택지 틴트 없어지면 바로 호출. 
+        /// </summary>
+        void OnPostProcessCompleteSelection()
+        {
+            // 이동!
+            GameManager.main.currentPage.SetCurrentRowBySceneID(GameManager.main.targetSelectionSceneID);
+
+            if (messenger.activeSelf)
+                messenger.SetActive(false);
+
+            HideSelection();
+        }
+
+
+        /// <summary>
+        /// 즉각적인 선택지 비활성화 처리 
+        /// </summary>
+        public void HideSelection()
+        {
+            SelectionMain.gameObject.SetActive(false);
+
+            for (int i = 0; i < ListGameSelection.Count; i++)
+                ListGameSelection[i].HideSelection();
+
+            ListSelectionRows.Clear();
+            StartCoroutine(ReleasingSelectionInputWait());
+        }
+
+
+        IEnumerator ReleasingSelectionInputWait()
+        {
+            yield return null;
+            yield return null;
+            yield return null;
+            GameManager.main.isSelectionInputWait = false;
+
+            SetBlockScreenActiveFlag(false);
+        }
+
 
         #endregion
 
@@ -857,7 +1047,7 @@ namespace PIERStory
             closeLogBtn.SetActive(true);
 
             // 로그 스크롤을 최하단으로 내리기
-            logScrollRect.verticalNormalizedPosition = -1f;
+            logScrollRect.verticalNormalizedPosition = 0f;
         }
 
         public void CreateNarrationLog(string __data)

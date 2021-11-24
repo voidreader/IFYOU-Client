@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using LitJson;
 using Doozy.Runtime.Signals;
+using Doozy.Runtime.UIManager.Components;
 
 namespace PIERStory {
     public class ViewStoryDetail : CommonView
@@ -30,7 +31,14 @@ namespace PIERStory {
         
         [Space]
         [Header("== Lower Controls ==")]
+        
+        [SerializeField] UIToggle toggleRegular; // 토글 정규 에피소드
+        [SerializeField] UIToggle toggleSpecial; // 토글 스페셜 에피소드 
+        
         [SerializeField] TextMeshProUGUI textSorting; // 정렬 tmp text
+        [SerializeField] TextMeshProUGUI textTotalEpisodeCount; // 총 몇개의 에피소드가 있다. 
+        [SerializeField] TextMeshProUGUI textDetailEpisodeCount; // 상세 에피소드 카운팅 
+        [SerializeField] TextMeshProUGUI textSpecialEpisodeExplain; // 스페셜 에피소드 부연설명!
         
         
         
@@ -121,10 +129,13 @@ namespace PIERStory {
             if (!StoryManager.main || string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
                 return;
                 
-            if(__isRegular)
-                SetRegularEpisodeList(StoryManager.main.RegularListJSON);
-            else 
-                SetRegularEpisodeList(StoryManager.main.SideEpisodeListJson);
+            if(__isRegular) {
+                SetEpisodeList(StoryManager.main.RegularListJSON);
+                
+            }
+            else  {
+                SetEpisodeList(StoryManager.main.SideEpisodeListJson);
+            }
             
 
         }
@@ -132,13 +143,17 @@ namespace PIERStory {
         /// <summary>
         /// 에피소드 카운트 레이블 설정
         /// </summary>
-        /// <param name="totalCount"></param>
-        /// <param name="episodeCount"></param>
-        /// <param name="endingCount"></param>
+        /// <param name="totalCount">전체 에피소드 (볼 수 있는)</param>
+        /// <param name="episodeCount">정규 에피소드 카운트</param>
+        /// <param name="endingCount">엔딩 카운트</param>
         void SetEpisodeCountText(int totalCount, int episodeCount, int endingCount = 0)
         {
+            textTotalEpisodeCount.text = string.Format(SystemManager.GetLocalizedText("10000"), totalCount);
+            textDetailEpisodeCount.text = string.Format(SystemManager.GetLocalizedText("6054"), episodeCount, endingCount);
+            
             /*   
             textEpisodeCount.text = string.Format(SystemManager.GetLocalizedText("6053"), totalCount);
+            
 
             if (toggleEpisode.isOn)
                 episodeCountDetail.text = string.Format(SystemManager.GetLocalizedText("6054"), episodeCount, endingCount);
@@ -168,13 +183,11 @@ namespace PIERStory {
         /// </summary>
         /// <param name="__listJSON">에피소드 리스트</param>
         /// <param name="__isMain">정규 에피소드 여부</param>
-        void SetRegularEpisodeList(JsonData __listJSON) {
+        void SetEpisodeList(JsonData __listJSON) {
             ResetEpisodeList();
             
             if(__listJSON == null)
                 return;
-                
-            int listIndex = 0;
             
             // * 작품개수를 3으로 나눈다. 
             int dividedThree = Mathf.FloorToInt((float)__listJSON.Count / 3f );
@@ -185,6 +198,8 @@ namespace PIERStory {
             }
                            
         }
+        
+        
         
         #endregion
         

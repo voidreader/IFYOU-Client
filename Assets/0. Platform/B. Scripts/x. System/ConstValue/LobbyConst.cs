@@ -9,6 +9,9 @@ namespace PIERStory {
         public const string TITLE_IMAGE_KEY = "title_image_key";
         public const string POPUP_IMAGE_URL = "popup_image_url";
         public const string POPUP_IMAGE_KEY = "popup_image_key";
+        
+        public const string EPISODE_SALE_PRICE = "sale_price";
+        
         public const string IFYOU_PROJECT_BANNER_URL = "ifyou_image_url";
         public const string IFYOU_PROJECT_BANNER_KEY = "ifyou_image_key";
         public const string IFYOU_PROJECT_MAIN_COLOR = "color_rgb";
@@ -41,23 +44,14 @@ namespace PIERStory {
         public const string SIGNAL_CLOSE_RESET = "closeEpisodeReset";
         public const string SIGNAL_UPDATE_EPISODE_SCENE_COUNT = "updateEpisodeSceneCount";
         public const string SIGNAL_CONNECT_SERVER = "connectingDone";
+        public const string SIGNAL_ON_BACK_BUTTON = "OnBackButton";
+        public const string SIGNAL_OFF_BACK_BUTTON = "OffBackButton";
 
         #endregion
 
         public static Color colorBlueBlue = new Color(0.384f,0.5176f,1,1);
-        public static Color colorPremiumBox = Color.white;
-        public static Color colorFreeBox = Color.white;
-        public static Color colorOneTimeBox = Color.white;
-        
-        
-        /// <summary>
-        /// 색상 float로 변환하기 귀찮아서...
-        /// </summary>
-        public static void InitColors() {
-          ColorUtility.TryParseHtmlString("#888BFF", out colorPremiumBox);  
-          ColorUtility.TryParseHtmlString("#F38CA1", out colorFreeBox);  
-          ColorUtility.TryParseHtmlString("#FEA048", out colorOneTimeBox);  
-        }
+       
+
 
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using LitJson;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory {
     public class ViewStoryDetail : CommonView
@@ -40,7 +41,8 @@ namespace PIERStory {
         
         int episodeCount = 0;           // 에피소드 갯수, 미해금된 사이드 갯수
         int openEndingCount = 0;        // 열린 엔딩 갯수
-        [SerializeField] List<EpisodeElement> listEpisodeElements; // 에피소드 리스트 (로비매니저에서 옮겨왔음 )
+        //[SerializeField] List<EpisodeElement> listEpisodeElements; // 에피소드 리스트 (로비매니저에서 옮겨왔음 )
+        [SerializeField] List<ThreeEpisodeRow> ListThreeEpisodeRows; // 에피소드 3개짜리 행 
         
         string  totalEpisodeCount = string.Empty; // 정규 에피소드 카운트
         bool isReverse = false; // 역순 리스트 
@@ -55,13 +57,25 @@ namespace PIERStory {
             RefreshStoryDetail = this.OnView;
             
             
+            
+            
         }
         
         public override void OnStartView() {
             base.OnStartView();
             
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_ON_BACK_BUTTON, string.Empty);
             
             SetProjectBaseInfo(); // 기본 프로젝트 정보
+            
+            // * 게임씬에 있다가 돌아온 경우에 대한 처리 
+            if(StoryManager.enterGameScene) {
+                StoryManager.enterGameScene = false;
+            }
+            else {
+                ShowEpisodeList(true);
+            }
+            
         }
         
         /// <summary>
@@ -86,7 +100,34 @@ namespace PIERStory {
         }
         
         
+        /// <summary>
+        /// 메인 스크롤렉트 제일 상단으로 보내기 
+        /// </summary>
+        public void SetScrollTop() {
+            mainScrollRect.verticalNormalizedPosition = 0;
+        }
+        
+        
         #region 에피소드 리스트 처리
+        
+        /// <summary>
+        /// 에피소드 리스트를 보여주세요! 제발!
+        /// </summary>
+        /// <param name="__isRegular"></param>
+        public void ShowEpisodeList(bool __isRegular) {
+            
+            Debug.Log("ShowEpisodeList : " + __isRegular);
+            
+            if (!StoryManager.main || string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
+                return;
+                
+            if(__isRegular)
+                SetRegularEpisodeList(StoryManager.main.RegularListJSON);
+            else 
+                SetRegularEpisodeList(StoryManager.main.SideEpisodeListJson);
+            
+
+        }
         
         /// <summary>
         /// 에피소드 카운트 레이블 설정
@@ -113,8 +154,8 @@ namespace PIERStory {
         /// 에피소드 리스트 리셋 
         /// </summary>
         void ResetEpisodeList() {
-            for(int i=0; i<listEpisodeElements.Count;i++) {
-                listEpisodeElements[i].gameObject.SetActive(false);
+            for(int i=0; i<ListThreeEpisodeRows.Count;i++) {
+                ListThreeEpisodeRows[i].gameObject.SetActive(false);
             }
             
             episodeCount = 0;
@@ -133,25 +174,16 @@ namespace PIERStory {
             if(__listJSON == null)
                 return;
                 
-            int listIndex = 0; 
-                
-            for (int i=0; i< __listJSON.Count;i++) {
-                
-                // 미리 만들어놓은 개수보다 많아지면 종료해놓자 
-                if(listEpisodeElements.Count -1 < i) {
-                    return;
-                }
-                
-                // * 엔딩은 따로 빼놓는다. 
-                
-                // 정규에피소드의 경우는 'chapter' 타입만 처리한다. 
-                if(!SystemManager.GetJsonNodeString(__listJSON[i], "episode_type").Equals("chapter"))
-                    continue;
-                
-                // 리스트 설정하기.
-                listEpisodeElements[listIndex++].InitElement(__listJSON[i]);
-            } // ? end for
-                            
+            int listIndex = 0;
+            
+            // * 작품개수를 3으로 나눈다. 
+            int dividedThree = Mathf.FloorToInt((float)__listJSON.Count / 3f );
+            
+            // 
+            for(int i=0; i<dividedThree; i++) {
+                ListThreeEpisodeRows[i].InitRow(__listJSON, i);
+            }
+                           
         }
         
         #endregion

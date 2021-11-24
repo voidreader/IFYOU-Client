@@ -21,6 +21,7 @@ namespace PIERStory {
             base.OnStartView();
             
             Signal.Send(LobbyConst.STREAM_IFYOU, "initNavigation", string.Empty);
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_OFF_BACK_BUTTON, string.Empty);
             
             InitPlayingStoryElements(); // 진행중인 이야기 Area 초기화 
             InitNewStoryRows(); // 새로운 이야기 Area 초기화

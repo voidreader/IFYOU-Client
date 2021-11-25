@@ -264,7 +264,7 @@ namespace PIERStory
             sending["userkey"] = UserManager.main.userKey;
             sending["project_id"] = StoryManager.main.CurrentProjectID;
             
-            sending["sound_name"] = soundName;
+            sending[CommonConst.SOUND_NAME] = soundName;
             sending["sound_id"] = soundID; // 사운드 ID 추가 
             
             sending[FUNC] = FUNC_UPDATE_USER_VOICE_HISTORY;

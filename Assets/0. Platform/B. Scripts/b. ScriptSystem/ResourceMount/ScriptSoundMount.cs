@@ -12,9 +12,6 @@ namespace PIERStory
         Action OnMountCompleted = delegate { };
 
         static readonly string SOUND_ID = "sound_id";
-        static readonly string SOUND_NAME = "sound_name";
-        static readonly string SOUND_URL = "sound_url";
-        static readonly string SOUND_KEY = "sound_key";
         static readonly string GAME_VOLUME = "game_volume";
         static readonly string SOUND_TYPE = "sound_type";
 
@@ -45,9 +42,9 @@ namespace PIERStory
             template = __type;
 
             sound_id = SystemManager.GetJsonNodeString(resourceData, SOUND_ID);
-            sound_name =  SystemManager.GetJsonNodeString(resourceData, SOUND_NAME);
-            sound_url = SystemManager.GetJsonNodeString(resourceData, SOUND_URL);
-            sound_key = SystemManager.GetJsonNodeString(resourceData, SOUND_KEY);
+            sound_name =  SystemManager.GetJsonNodeString(resourceData, CommonConst.SOUND_NAME);
+            sound_url = SystemManager.GetJsonNodeString(resourceData, CommonConst.SOUND_URL);
+            sound_key = SystemManager.GetJsonNodeString(resourceData, CommonConst.SOUND_KEY);
 
             volume = float.Parse(SystemManager.GetJsonNodeString(resourceData, GAME_VOLUME));
             type = SystemManager.GetJsonNodeString(resourceData, SOUND_TYPE);

@@ -271,7 +271,7 @@ namespace PIERStory
             // GameLiveImageCtrl attach
             liveImageController = liveImage.gameObject.AddComponent<GameLiveImageCtrl>();
             liveImageController.originScale = gameScale;
-            liveImageController.modelType = GameConst.MODEL_TYPE_LIVE2D;
+            liveImageController.modelType = CommonConst.MODEL_TYPE_LIVE2D;
             liveImageController.SetModel(liveImage); // 모델 할당.
 
             if (GameManager.main != null)

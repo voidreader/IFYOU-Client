@@ -22,6 +22,17 @@ namespace PIERStory {
         public const string STORY_EPISODE_TYPE = "episode_type";
         public const string STORY_EPISODE_TITLE = "title";
 
+        public const string THUMBNAIL_URL = "thumbnail_url";
+        public const string THUMBNAIL_KEY = "thumbnail_key";
+
+        public const string ILLUST_NAME = "illust_name";
+
+        public const string PUBLIC_NAME = "public_name";
+        public const string SUMMARY = "summary";
+
+        public const string ENDING_TYPE = "ending_type";
+        public const string COL_HIDDEN = "hidden";
+        public const string COL_FINAL = "final";
 
         #region 재화 
         public const string COIN = "coin";

@@ -74,7 +74,7 @@ namespace PIERStory
         public void SetModel(CubismModel __model, string dir)
         {
             model = __model;
-            modelType = GameConst.MODEL_TYPE_LIVE2D;
+            modelType = CommonConst.MODEL_TYPE_LIVE2D;
             direction = dir;
             // 처음 그려지는 곳은 무조건 중앙이다.
             currRenderTexture = ViewGame.main.modelRenders[1];

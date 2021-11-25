@@ -148,9 +148,6 @@ namespace PIERStory
         
         const string NODE_FREEPASS_TIMEDEAL = "userFreepassTimedeal"; // 유저 프리패스 타임딜
         
-        
-        const string KEY_SOUND_NAME = "sound_name";
-        const string KEY_OPEN = "is_open";
 
         #endregion
 
@@ -820,7 +817,7 @@ namespace PIERStory
             {
                 // 일러스트 명칭과 동일한 jsonData값을 찾아 id와 type값을 넣어서 return 해준다
                 // 4개 종류가 통합되었기 때문에 is_minicut 값도 체크한다.
-                if(GetNodeUserIllust()[i]["illust_name"].ToString().Equals(__illustName) 
+                if(GetNodeUserIllust()[i][LobbyConst.ILLUST_NAME].ToString().Equals(__illustName) 
                     && !SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], "is_minicut"))
                 {
                     JsonData data = new JsonData();
@@ -867,7 +864,7 @@ namespace PIERStory
                 
                 // 미니컷이면서, 이름 똑같은 친구
                 if(SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], "is_minicut")
-                    && SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], "illust_name") == __minicutName
+                    && SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], LobbyConst.ILLUST_NAME) == __minicutName
                     && SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], "illust_type") == illustType) {
                         
                     // id 리턴
@@ -888,7 +885,7 @@ namespace PIERStory
         public JsonData GetPublicMinicutJsonByName(string __name) {
             for(int i=0;i<GetNodeUserIllust().Count;i++)
             {
-                if(SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], "illust_name") == __name
+                if(SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], LobbyConst.ILLUST_NAME) == __name
                     && SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], "is_minicut")) 
                 {
                     return GetNodeUserIllust()[i];
@@ -1992,8 +1989,8 @@ namespace PIERStory
             // 있는지 없는지 체크가 너무 어렵다. 
             // 그래서 RawVoiceHistory를 사용하도록 한다! 
             for(int i=0; i < GetNodeUserRawVoiceHistory().Count;i++) {
-                if(SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], KEY_SOUND_NAME) == soundName 
-                    && SystemManager.GetJsonNodeBool(GetNodeUserRawVoiceHistory()[i], KEY_OPEN)) {
+                if(SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], CommonConst.SOUND_NAME) == soundName 
+                    && SystemManager.GetJsonNodeBool(GetNodeUserRawVoiceHistory()[i], CommonConst.IS_OPEN)) {
                     return true;
                 }
             }
@@ -2007,8 +2004,8 @@ namespace PIERStory
         /// <param name="soundName"></param>
         public void SetVoiceOpen(string soundName) {
             for(int i=0; i < GetNodeUserRawVoiceHistory().Count;i++) {
-                if(SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], KEY_SOUND_NAME) == soundName) {
-                    GetNodeUserRawVoiceHistory()[i][KEY_OPEN] = 1; // 오픈처리
+                if(SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], CommonConst.SOUND_NAME) == soundName) {
+                    GetNodeUserRawVoiceHistory()[i][CommonConst.IS_OPEN] = 1; // 오픈처리
                     // AppsFlyerSDK.AppsFlyer.sendEvent("VOICE_ACQUIRE_[" + SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], "speaker") + " ]_[" + SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], "sound_id") + "]", null);
                     return;
                 }
@@ -2025,12 +2022,12 @@ namespace PIERStory
             string illustType = "minicut";
             
             if(isLive2D)
-                illustType = "live2d";
+                illustType = CommonConst.MODEL_TYPE_LIVE2D;
             
             // 노드 루프돌면서 오픈된 기록이 있는지 체크한다.
             for(int i=0;i< GetNodeUserIllust().Count;i++)
             {
-                    if(SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], "illust_name") == imageName
+                    if(SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], LobbyConst.ILLUST_NAME) == imageName
                         && SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], "illust_type") == illustType
                         && SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], "is_minicut")
                         && !SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], "illust_open")) {

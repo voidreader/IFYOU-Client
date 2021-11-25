@@ -9,7 +9,7 @@ namespace PIERStory
     public class GameLiveImageCtrl : MonoBehaviour
     {
         public CubismRenderController cubismRender = null;
-        public string modelType = GameConst.MODEL_TYPE_LIVE2D;
+        public string modelType = CommonConst.MODEL_TYPE_LIVE2D;
         public CubismModel model = null;
         public RawImage textureImage;
 

@@ -20,6 +20,7 @@ namespace PIERStory
         public UIToggle normalToggle;
         public UIToggle fastToggle;
 
+
         public override void OnView()
         {
             base.OnView();

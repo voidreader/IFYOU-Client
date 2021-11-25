@@ -58,6 +58,7 @@ namespace Doozy.Runtime.UIManager
             Navigation,
             Profile,
             Shop,
+            SoundDetail,
             StoryDetail,
             Title
         }    

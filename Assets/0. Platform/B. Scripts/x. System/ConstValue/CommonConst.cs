@@ -19,6 +19,7 @@ namespace PIERStory
         public const string COL_EPISODE_TYPE = "episode_type";
         public const string COL_EPISODE_NO = "episode_no";
         public const string COL_CHAPTER = "chapter";
+        public const string COL_ENDING = "ending";
         public const string COL_SIDE = "side";
         public const string COL_TITLE = "title";
 
@@ -36,6 +37,7 @@ namespace PIERStory
         public const string MOTION_NAME = "motion_name";
 
         public const string COL_PUBLIC_NAME = "public_name";
+        public const string COL_IS_MINICUT = "is_minicut";
 
         public const string COL_IMAGE_NAME = "image_name";
         public const string COL_IMAGE_URL = "image_url";
@@ -43,6 +45,19 @@ namespace PIERStory
         public const string COL_GAME_SCALE = "game_scale";
         public const string COL_OFFSET_X = "offset_x";
         public const string COL_OFFSET_Y = "offset_y";
+
+        public const string ILLUST_TYPE = "illust_type";
+        public const string ILLUST_OPEN = "illust_open";
+
+        public const string MODEL_TYPE_LIVE2D = "live2d";
+
+        public const string SOUND_NAME = "sound_name";
+        public const string SOUND_URL = "sound_url";
+        public const string SOUND_KEY = "sound_key";
+
+        public const string IS_OPEN = "is_open";
+
+
 
         public const string COL_ONETIME = "onetime";
         public const string COL_TICKET = "ticket";

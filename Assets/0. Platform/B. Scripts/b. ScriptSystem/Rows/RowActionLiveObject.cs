@@ -26,7 +26,7 @@ namespace PIERStory
 
         public void DoAction(Action __actionCallback, bool __isInstant = false)
         {
-            if (NetworkLoader.main.UpdateUserImage(scriptRow.script_data, GameConst.MODEL_TYPE_LIVE2D))
+            if (NetworkLoader.main.UpdateUserImage(scriptRow.script_data, CommonConst.MODEL_TYPE_LIVE2D))
                 GameManager.main.ShowAchieveIllust(SystemManager.GetJsonNodeString(UserManager.main.GetPublicMinicutJsonByName(scriptRow.script_data), CommonConst.COL_PUBLIC_NAME));
 
             callback = __actionCallback;

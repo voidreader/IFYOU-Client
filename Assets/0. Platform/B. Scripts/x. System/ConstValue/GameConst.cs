@@ -42,7 +42,6 @@ namespace PIERStory
         public const string LAYER_MODEL_R = "Model-R";
 
 
-        public const string MODEL_TYPE_LIVE2D = "live2d";
         public const string MODEL_TYPE_SPINE = "spine";
 
         public const string SPLIT_SCREEN_EFFECT = ":"; // 화면연출 데이터 구분자 

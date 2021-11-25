@@ -99,6 +99,7 @@ namespace PIERStory {
             title = SystemManager.GetJsonNodeString(episodeData, "title");
             squareImageURL = SystemManager.GetJsonNodeString(episodeData, LobbyConst.TITLE_IMAGE_URL);
             squareImageKey = SystemManager.GetJsonNodeString(episodeData, LobbyConst.TITLE_IMAGE_KEY);
+            salePrice = SystemManager.GetJsonNodeString(episodeData, LobbyConst.EPISODE_SALE_PRICE);
             
             // 목록 썸네일 처리 
             thumbnailImage.SetDownloadURL(squareImageURL, squareImageKey);
@@ -174,6 +175,8 @@ namespace PIERStory {
             // * purchaseState 정한다. 
             if (UserManager.main.CheckPurchaseEpisode(episodeId, ref purchaseData))
             {
+                Debug.Log(JsonMapper.ToStringUnicode(purchaseData));
+                
                 if(purchaseData["purchase_type"].ToString() == "Permanent")
                 {
                     purchaseState = PurchaseState.Permanent; // 영구적인 구매 상태 
@@ -226,17 +229,17 @@ namespace PIERStory {
 
                 case PurchaseState.Free: // * 무료
                     episodePurchaseState = "FREE";
-                    purchaseStateBox.color = LobbyConst.colorFreeBox;
+                    purchaseStateBox.color = LobbyManager.main.colorFreeBox;
                     break;
 
                 case PurchaseState.Permanent: // * 프리미엄 
                     episodePurchaseState = SystemManager.GetLocalizedText("6006");
-                    purchaseStateBox.color = LobbyConst.colorPremiumBox;
+                    purchaseStateBox.color = LobbyManager.main.colorPremiumBox;
                     break;
 
                 case PurchaseState.OneTime: // * 1회 플레이
                     episodePurchaseState = SystemManager.GetLocalizedText("6005");
-                    purchaseStateBox.color = LobbyConst.colorOneTimeBox;
+                    purchaseStateBox.color = LobbyManager.main.colorOneTimeBox;
                     break;
                 
             } // ? end of switch

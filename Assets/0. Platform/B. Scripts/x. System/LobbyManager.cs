@@ -62,6 +62,12 @@ namespace PIERStory {
         public Sprite spriteEpisodeNextIcon; // 미래 커버 
         
         
+        
+        [Header("== 컬러 ==")]
+        public Color colorPremiumBox = Color.white;
+        public Color colorFreeBox = Color.white;
+        public Color colorOneTimeBox = Color.white;
+        
 
         public bool termView = false;
        

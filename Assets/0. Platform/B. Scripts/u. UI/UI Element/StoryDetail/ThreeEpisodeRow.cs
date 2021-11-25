@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using LitJson;
 
 namespace PIERStory {
 
@@ -14,7 +15,7 @@ namespace PIERStory {
         ///  초기화
         /// </summary>
         /// <param name="__rowIndex"></param>
-        public void InitRow(int __rowIndex) {
+        public void InitRow(JsonData __listJSON,  int __rowIndex) {
             this.gameObject.SetActive(true);
             
             int currentRowIndex = 0;
@@ -27,8 +28,7 @@ namespace PIERStory {
             
             for(int i=minEpisodeIndex; i<= maxEpisodeIndex; i++) {
                 
-                //ListRows[currentRowIndex].InitElement()
-                
+                ListRows[currentRowIndex].InitElement(__listJSON[i]);
                 currentRowIndex++;
             }
             

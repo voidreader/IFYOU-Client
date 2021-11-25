@@ -47,6 +47,9 @@ namespace PIERStory
         public JsonData reverseEpisodeListJson { private set; get; } // 에피소드 리스트 역순 배열을 위한 JSON
         [HideInInspector]
         public JsonData SideEpisodeListJson = null; // 사이드 에피소드 리스트 JSON 
+        
+        [HideInInspector] public JsonData RegularListJSON = null; // chapter(정규)만 따로 빼놓는다.
+        [HideInInspector] public JsonData ReverseRegularListJSON = null; // 정규 에피소드의 역순 
 
         [HideInInspector]
         public JsonData totalStoryListJson = null; // 조회로 가져온 작품 리스트
@@ -380,9 +383,22 @@ namespace PIERStory
             EpisodeListJson = ProjectDetailJson[NODE_EPISODE]; // 프로젝트의 정규 에피소드
             SideEpisodeListJson = ProjectDetailJson[NODE_SIDE]; // 프로젝트의 사이드 에피소드
             
+            // 정규 에피소드 수집 
+            RegularListJSON = new JsonData();
+            for(int i=0; i<EpisodeListJson.Count;i++) {
+                
+                if (EpisodeListJson[i]["episode_type"].ToString() != "chapter")
+                    continue;
+                
+                RegularListJSON.Add(EpisodeListJson[i]);
+            }
+            
+            
             #region 에피소드 역순 배열을 위한 작업 
             reverseEpisodeListJson = new JsonData();
+            ReverseRegularListJSON = new JsonData();
             
+            // * 이전 로직 
             for(int i= EpisodeListJson.Count-1; i >= 0; i--)
             {
                 if (EpisodeListJson[i]["episode_type"].ToString().Equals("ending"))
@@ -403,6 +419,12 @@ namespace PIERStory
                 } // end of j for.
 
             } // end of i for.
+            
+            // * IF YOU 로직 
+            for(int i=RegularListJSON.Count-1; i>=0; i--) {
+                ReverseRegularListJSON.Add(RegularListJSON[i]);
+            }
+            
             #endregion
 
             Debug.Log(string.Format("<color=yellow>[{0}] Episodes are loaded </color>", EpisodeListJson.Count));
@@ -420,12 +442,16 @@ namespace PIERStory
         /// </summary>
         void OpenViewStoryDetail()
         {
+            Debug.Log("OpenViewStoryDetail");
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
             // ViewStoryDetail
+            /*
             if (!enterGameScene)
             {
                 Debug.Log("OpenViewStoryDetail");
                 Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
             }
+            */
         }
 
         #region 네임태그 관련 메소드 
@@ -1556,6 +1582,7 @@ namespace PIERStory
             
             return null;
         }
+        
         
         
         #endregion

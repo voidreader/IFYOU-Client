@@ -17,6 +17,15 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textEpisodeSummary;
         
         
+        [Space]
+        [Header("== 버튼 ==")]
+        [SerializeField] GameObject btnPlay; // 플레이 
+        [SerializeField] GameObject btnConinue; // 이어서 플레이
+        [SerializeField] GameObject btnPremium; // 프리미엄
+        [SerializeField] GameObject btnOneTime; // 1회 플레이
+        
+        
+        
         
         
         public override void OnView()

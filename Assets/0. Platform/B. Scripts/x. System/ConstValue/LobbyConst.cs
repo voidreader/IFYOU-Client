@@ -49,6 +49,7 @@ namespace PIERStory {
         #region 시그널
         public const string STREAM_IFYOU = "IFYOU";
         public const string STREAM_GAME = "Game";
+        public const string STREAM_COMMON = "Common";
         
         public const string SIGNAL_MOVE_STORY_DETAIL = "moveStoryDetail";
         public const string SIGNAL_PURCHASE_FREEPASS = "PurchaseFreepass";
@@ -57,6 +58,8 @@ namespace PIERStory {
         public const string SIGNAL_CONNECT_SERVER = "connectingDone";
         public const string SIGNAL_ON_BACK_BUTTON = "OnBackButton";
         public const string SIGNAL_OFF_BACK_BUTTON = "OffBackButton";
+        
+        public const string SIGNAL_EPISODE_START = "EpisodeStart";
 
         #endregion
 

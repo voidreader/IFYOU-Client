@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using LitJson;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory {
     public class EpisodeElement : MonoBehaviour
@@ -301,6 +302,9 @@ namespace PIERStory {
         /// </summary>
         public void OnClickElement() {
             
+            Debug.Log(">> OnClickElement");
+            
+            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, "");
         }
         
         

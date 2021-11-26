@@ -13,7 +13,7 @@ namespace PIERStory
         {
             out_effect = __row.out_effect;
 
-            if (!string.IsNullOrEmpty(out_effect) && out_effect.Equals(GameConst.INOUT_EFFECT_NONE))
+            if (!string.IsNullOrEmpty(out_effect) && out_effect.Equals(CommonConst.NONE))
                 out_effect = string.Empty;
         }
 

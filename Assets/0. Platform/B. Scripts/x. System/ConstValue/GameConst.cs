@@ -182,7 +182,6 @@ namespace PIERStory
 
 
         // 등장과 퇴장연출
-        public const string INOUT_EFFECT_NONE = "none";
         public const string INOUT_EFFECT_SCALEUP = "scaleup";
         public const string INOUT_EFFECT_SCALEDOWN = "scaledown";
         public const string INOUT_EFFECT_SHAKE = "shake";

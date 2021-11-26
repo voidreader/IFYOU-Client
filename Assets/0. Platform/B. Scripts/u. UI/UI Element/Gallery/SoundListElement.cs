@@ -9,7 +9,7 @@ namespace PIERStory
     {
         public ImageRequireDownload soundThumbnail;
 
-        public TextMeshPro voiceInfo;
+        public TextMeshProUGUI voiceInfo;
 
         string image_url = string.Empty;
         string image_key = string.Empty;

@@ -960,7 +960,7 @@ namespace PIERStory
             rtransform.DOKill();
 
             // default Ã³¸®
-            if (string.IsNullOrEmpty(in_effect) || in_effect == GameConst.INOUT_EFFECT_NONE)
+            if (string.IsNullOrEmpty(in_effect) || in_effect == CommonConst.NONE)
             {
                 rtransform.localScale = Vector3.zero;
                 this.gameObject.SetActive(true);
@@ -1055,7 +1055,7 @@ namespace PIERStory
 
         void ActiveOutEffect()
         {
-            if (string.IsNullOrEmpty(out_effect) || out_effect == GameConst.INOUT_EFFECT_NONE)
+            if (string.IsNullOrEmpty(out_effect) || out_effect == CommonConst.NONE)
                 OnCompletedOffTween();
             else if (out_effect == GameConst.INOUT_EFFECT_FADEOUT)
             {

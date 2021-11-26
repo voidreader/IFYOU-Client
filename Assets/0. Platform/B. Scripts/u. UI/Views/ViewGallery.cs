@@ -56,9 +56,9 @@ namespace PIERStory
 
             soundListElements[0].SetBGMListElement();
 
-            int voiceIndex = 1;
             JsonData voiceData = UserManager.main.GetNodeUserVoiceHistory();
             JsonData voiceImageData = StoryManager.main.storyNametagJSON;
+            int voiceIndex = 1;
             int voiceMasterIndex = 0;
 
             foreach(string key in voiceData.Keys)

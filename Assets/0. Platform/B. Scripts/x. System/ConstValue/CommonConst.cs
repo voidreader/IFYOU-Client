@@ -30,6 +30,8 @@ namespace PIERStory
         public const string COL_JA = "JA";
         public const string COL_ZH = "ZH";
 
+        public const string NONE = "none";
+
         public const string COL_FILE_URL = "file_url";
         public const string COL_FILE_KEY = "file_key";
 

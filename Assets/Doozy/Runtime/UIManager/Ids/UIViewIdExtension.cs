@@ -34,6 +34,7 @@ namespace Doozy.Runtime.UIManager
     {
         public enum Common
         {
+            CurrencyTop,
             EpisodeStart,
             Top
         }
@@ -55,6 +56,7 @@ namespace Doozy.Runtime.UIManager
             IfyouPlay,
             IllustDetail,
             Main,
+            Mission,
             Navigation,
             Profile,
             Shop,

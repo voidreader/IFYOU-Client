@@ -37,6 +37,9 @@ namespace PIERStory {
         public const string COL_HIDDEN = "hidden";
         public const string COL_FINAL = "final";
 
+        public const string MISSION_NAME = "mission_name";
+
+
         #region 재화 
         public const string COIN = "coin";
         public const string GEM = "gem";

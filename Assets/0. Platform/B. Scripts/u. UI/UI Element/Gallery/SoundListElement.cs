@@ -2,6 +2,7 @@
 
 using TMPro;
 using LitJson;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
@@ -13,6 +14,8 @@ namespace PIERStory
 
         string image_url = string.Empty;
         string image_key = string.Empty;
+
+        const string SHOW_SOUND_DETAIL = "showSoundDetail";
 
         public void SetBGMListElement()
         {
@@ -42,6 +45,11 @@ namespace PIERStory
             }
 
             voiceInfo.text = string.Format("{0} 모아듣기\n<color=#A0A0A0FF>{1}개 / {2}개</color>", SystemManager.GetJsonNodeString(__nameTag, GameConst.COL_SPEAKER), unlockCount, totalCount);
+        }
+
+        public void ShowDetailSoundList()
+        {
+            Signal.Send(LobbyConst.STREAM_IFYOU, SHOW_SOUND_DETAIL, string.Empty);
         }
     }
 }

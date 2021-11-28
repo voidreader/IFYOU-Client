@@ -2,6 +2,7 @@
 
 using TMPro;
 using LitJson;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
@@ -26,6 +27,7 @@ namespace PIERStory
         
         const string APPEAR_EPISODE_ID = "appear_episode";
         const string APPEAR_EPISODE_TYPE = "appear_episode_type";
+        const string SHOW_ILLUSTDETAIL = "showIllustDetail";
 
         public void InitElementInfo(JsonData __j)
         {
@@ -113,6 +115,8 @@ namespace PIERStory
             {
 
             }
+
+            Signal.Send(LobbyConst.STREAM_IFYOU, SHOW_ILLUSTDETAIL, string.Empty);
         }
     }
 }

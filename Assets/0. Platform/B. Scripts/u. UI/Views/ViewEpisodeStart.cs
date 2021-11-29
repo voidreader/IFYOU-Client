@@ -116,6 +116,8 @@ namespace PIERStory {
                 btnPlay.gameObject.SetActive(true);
                 return;
             }
+            
+            
         }
     }
 }

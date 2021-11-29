@@ -251,8 +251,8 @@ namespace PIERStory {
         public void RequestPlatformLoadingImages() {
             
             JsonData imageData = new JsonData();
-            imageData["func"] = "mainLoadingImageRandom";
-            imageData["lang"] = "KO";
+            imageData[CommonConst.FUNC] = "mainLoadingImageRandom";
+            imageData[LobbyConst.COL_LANG] = "KO";
 
 
             NetworkLoader.main.SendPost(OnRequestPlatformLoadingImages, imageData, false);

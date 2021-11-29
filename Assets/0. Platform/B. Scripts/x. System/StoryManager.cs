@@ -163,7 +163,6 @@ namespace PIERStory
         public const string KEY_BUBBLE_VER_PREFIX = "BubbleVer";
         public const string KEY_PROJECT_BUBBLE_SET_ID = "ProjectBubbleSetID"; // 프로젝트 Bubble SET ID 
 
-        public const string NODE_DETAIL = "detail";
 
         public const string NODE_EPISODE = "episodes";
         public const string NODE_SIDE = "sides";
@@ -541,7 +540,7 @@ namespace PIERStory
             storyCurrencyJSON = ProjectDetailJson[NODE_CURRENCY]; // 화폐
             
             // 상세정보 
-            storyDetailJson = ProjectDetailJson[NODE_DETAIL][0];
+            storyDetailJson = ProjectDetailJson[LobbyConst.NODE_DETAIL][0];
 
             // * 바보! GetJsonNode와 RequestDownloadImage 메소드에 유효성 검사를 추가하고 여기서는 신경쓰지 않게 한다. 
             

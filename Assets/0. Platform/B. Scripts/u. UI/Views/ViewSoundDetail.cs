@@ -67,6 +67,11 @@ namespace PIERStory
 
         private void Update()
         {
+            if (playSound == null)
+                return;
+
+
+
             if(playSound.isPlaying)
                 playtimeBar.fillAmount = playSound.time / audioClip.length;
         }

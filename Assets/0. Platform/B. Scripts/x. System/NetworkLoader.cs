@@ -68,7 +68,6 @@ namespace PIERStory
         // * 기본 파라매터 
         const string COL_BUILD = "build";
         const string COL_USERKEY = "userkey";
-        const string COL_LANG = "lang";
         const string COL_COUNTRY = "country";
 
 
@@ -261,8 +260,8 @@ namespace PIERStory
                 return;
 
             JsonData sending = new JsonData();
-            sending["userkey"] = UserManager.main.userKey;
-            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            sending[COL_USERKEY] = UserManager.main.userKey;
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
             
             sending[CommonConst.SOUND_NAME] = soundName;
             sending["sound_id"] = soundID; // 사운드 ID 추가 
@@ -361,7 +360,7 @@ namespace PIERStory
             __j[COL_USERKEY] = UserManager.main.userKey;
             __j[COL_BUILD] = Application.identifier;
             __j[COL_COUNTRY] = Gamebase.GetCountryCodeOfDevice();
-            __j[COL_LANG] = SystemManager.main.currentAppLanguageCode;
+            __j[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
         }
 
         /// <summary>

@@ -15,20 +15,21 @@ namespace PIERStory
         string image_url = string.Empty;
         string image_key = string.Empty;
 
+        const string BGM_BANNER = "bgmBanner";
         const string SHOW_SOUND_DETAIL = "showSoundDetail";
 
         public void SetBGMListElement()
         {
-            image_url = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(UserManager.main.currentStoryJson, "bgmBanner"), CommonConst.COL_IMAGE_URL);
-            image_key = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(UserManager.main.currentStoryJson, "bgmBanner"), CommonConst.COL_IMAGE_KEY);
+            image_url = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(UserManager.main.currentStoryJson, BGM_BANNER), CommonConst.COL_IMAGE_URL);
+            image_key = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(UserManager.main.currentStoryJson, BGM_BANNER), CommonConst.COL_IMAGE_KEY);
 
             soundThumbnail.SetDownloadURL(image_url, image_key);
         }
 
         public void SetVoiceElement(JsonData __nameTag, JsonData __voiceData)
         {
-            image_url = SystemManager.GetJsonNodeString(__nameTag, "banner_url");
-            image_key = SystemManager.GetJsonNodeString(__nameTag, "banner_key");
+            image_url = SystemManager.GetJsonNodeString(__nameTag, LobbyConst.BANNER_URL);
+            image_key = SystemManager.GetJsonNodeString(__nameTag, LobbyConst.BANNER_KEY);
             
             soundThumbnail.SetDownloadURL(image_url, image_key);
 

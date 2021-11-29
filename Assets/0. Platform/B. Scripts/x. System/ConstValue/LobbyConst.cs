@@ -5,6 +5,8 @@ namespace PIERStory {
     // 로비에서 사용하는 상수들 모음
     public static class LobbyConst {
 
+        public const string COL_LANG = "lang";
+
         public const string TITLE_IMAGE_URL = "title_image_url";
         public const string TITLE_IMAGE_KEY = "title_image_key";
         public const string POPUP_IMAGE_URL = "popup_image_url";
@@ -29,6 +31,9 @@ namespace PIERStory {
         public const string THUMBNAIL_URL = "thumbnail_url";
         public const string THUMBNAIL_KEY = "thumbnail_key";
 
+        public const string BANNER_URL = "banner_url";
+        public const string BANNER_KEY = "banner_key";
+
         public const string ILLUST_NAME = "illust_name";
 
         public const string PUBLIC_NAME = "public_name";
@@ -40,6 +45,7 @@ namespace PIERStory {
 
         public const string MISSION_NAME = "mission_name";
 
+        public const string NODE_DETAIL = "detail";
 
         #region 재화 
         public const string COIN = "coin";

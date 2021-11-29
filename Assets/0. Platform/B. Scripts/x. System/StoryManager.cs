@@ -50,6 +50,15 @@ namespace PIERStory
         
         [HideInInspector] public JsonData RegularListJSON = null; // chapter(정규)만 따로 빼놓는다.
         [HideInInspector] public JsonData ReverseRegularListJSON = null; // 정규 에피소드의 역순 
+        
+        [Space]
+        [Header("== 에피소드 카운팅 ==")]
+        public int regularEpisodeCount = 0; // 엔딩을 제외한 정규 에피소드 개수
+        public int unlockEndingCount = 0; // 해금된 엔딩 개수
+        public int sideEpisodeCount = 0; // 사이드 에피소드 개수
+        public int unlockSideEpisodeCount = 0; // 해금된 사이드 에피소드 개수 
+        [Space]
+        
 
         [HideInInspector]
         public JsonData totalStoryListJson = null; // 조회로 가져온 작품 리스트
@@ -381,16 +390,36 @@ namespace PIERStory
             // 에피소드 정보 할당
             EpisodeListJson = ProjectDetailJson[NODE_EPISODE]; // 프로젝트의 정규 에피소드
             SideEpisodeListJson = ProjectDetailJson[NODE_SIDE]; // 프로젝트의 사이드 에피소드
+            sideEpisodeCount = SideEpisodeListJson.Count; // 사이드 에피소드 전체 
+            unlockSideEpisodeCount = 0; 
+            
+            // * 해금된 사이드 에피소드 개수 구하기 
+            for(int i=0; i<SideEpisodeListJson.Count;i++) {
+                if(SystemManager.GetJsonNodeBool(SideEpisodeListJson[i], "is_open"))
+                    unlockSideEpisodeCount++;
+            }
+            
             
             // 정규 에피소드 수집 
             RegularListJSON = new JsonData();
+            regularEpisodeCount = 0;
+            unlockEndingCount = 0;
+           
             for(int i=0; i<EpisodeListJson.Count;i++) {
+                
+                
+                if (SystemManager.GetJsonNodeBool(EpisodeListJson[i], "ending_open"))
+                        unlockEndingCount++;
+                
                 
                 if (EpisodeListJson[i]["episode_type"].ToString() != "chapter")
                     continue;
                 
                 RegularListJSON.Add(EpisodeListJson[i]);
             }
+            
+            regularEpisodeCount = RegularListJSON.Count; // 카운팅 
+            
             
             
             #region 에피소드 역순 배열을 위한 작업 
@@ -1586,6 +1615,7 @@ namespace PIERStory
         
         #endregion
    
+
     }
     
 }

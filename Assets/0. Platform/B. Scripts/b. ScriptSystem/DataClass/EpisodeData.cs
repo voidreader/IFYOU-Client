@@ -55,12 +55,17 @@ namespace PIERStory {
             InitData();
         }
         
+        public void SetEpisodeData(JsonData __j) {
+            episodeJSON = __j;
+            InitData();
+        }
+        
         /// <summary>
         /// 데이터 설정하기
         /// </summary>
         void InitData() {
             episodeID = SystemManager.GetJsonNodeString(episodeJSON, "episode_id");
-            episodeNO = SystemManager.GetJsonNodeString(episodeJSON, "episode_no");
+            episodeNO = SystemManager.GetJsonNodeString(episodeJSON, "chapter_number");
             episodeType = SystemManager.GetJsonNodeString(episodeJSON, "episode_type");
             episodeTitle = SystemManager.GetJsonNodeString(episodeJSON, "title");
             episodeSummary = SystemManager.GetJsonNodeString(episodeJSON, "summary");
@@ -71,7 +76,7 @@ namespace PIERStory {
             
             // 에피소드에 등장한는 갤러리 이미지
             episodeGalleryImageJSON = episodeJSON["galleryImage"];
-            episodeGalleryImageProgressValue = UserManager.main.CalcGalleryImage(episodeJSON); // Progressor용 값 
+            episodeGalleryImageProgressValue = UserManager.main.CalcGalleryImage(episodeGalleryImageJSON); // Progressor용 값 
             
             // * 이미지 
             squareImageURL = SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.TITLE_IMAGE_URL);

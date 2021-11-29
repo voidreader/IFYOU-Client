@@ -129,39 +129,37 @@ namespace PIERStory {
             if (!StoryManager.main || string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
                 return;
                 
-            if(__isRegular) {
+            if(__isRegular) { // * 정규 에피소드 
                 SetEpisodeList(StoryManager.main.RegularListJSON);
-                
+                SetRegularEpisodeCountText(StoryManager.main.regularEpisodeCount,  StoryManager.main.unlockEndingCount);
             }
-            else  {
+            else  { // * 스페셜(사이드) 에피소드
                 SetEpisodeList(StoryManager.main.SideEpisodeListJson);
+                SetSideEpisodeCountText(StoryManager.main.sideEpisodeCount, StoryManager.main.unlockSideEpisodeCount);
             }
             
 
         }
         
         /// <summary>
-        /// 에피소드 카운트 레이블 설정
+        /// 정규 에피소드 카운팅 텍스트 설정 
         /// </summary>
-        /// <param name="totalCount">전체 에피소드 (볼 수 있는)</param>
-        /// <param name="episodeCount">정규 에피소드 카운트</param>
-        /// <param name="endingCount">엔딩 카운트</param>
-        void SetEpisodeCountText(int totalCount, int episodeCount, int endingCount = 0)
+        /// <param name="episodeCount"></param>
+        /// <param name="unlockEndingCount"></param>
+        void SetRegularEpisodeCountText(int episodeCount, int unlockEndingCount)
         {
-            textTotalEpisodeCount.text = string.Format(SystemManager.GetLocalizedText("10000"), totalCount);
-            textDetailEpisodeCount.text = string.Format(SystemManager.GetLocalizedText("6054"), episodeCount, endingCount);
-            
-            /*   
-            textEpisodeCount.text = string.Format(SystemManager.GetLocalizedText("6053"), totalCount);
-            
-
-            if (toggleEpisode.isOn)
-                episodeCountDetail.text = string.Format(SystemManager.GetLocalizedText("6054"), episodeCount, endingCount);
-                //episodeCountDetail.text = string.Format("에피소드 {0}개 / 엔딩 {1}개", episodeCount, endingCount);
-
-            if (toggleSpecial.isOn)
-                episodeCountDetail.text = string.Format("");
-            */
+            textTotalEpisodeCount.text = string.Format(SystemManager.GetLocalizedText("10000"), episodeCount + unlockEndingCount);
+            textDetailEpisodeCount.text = string.Format(SystemManager.GetLocalizedText("6054"), episodeCount, unlockEndingCount);
+        }
+        
+        /// <summary>
+        /// 사이드 에피소드 카운팅 텍스트 설정 
+        /// </summary>
+        /// <param name="sideCount"></param>
+        /// <param name="unlockSideCount"></param>
+        void SetSideEpisodeCountText(int sideCount, int unlockSideCount) {
+            textTotalEpisodeCount.text = string.Format(SystemManager.GetLocalizedText("10000"), unlockSideCount);
+            textDetailEpisodeCount.text = string.Empty;
         }
         
         

@@ -6438,13 +6438,37 @@ MonoBehaviour:
   ShowAnimation:
     OnPlayCallback:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 4306705427349530792}
+          m_TargetAssemblyTypeName: PIERStory.ViewEpisodeStart, Assembly-CSharp
+          m_MethodName: OnStartView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     OnStopCallback:
       m_PersistentCalls:
         m_Calls: []
     OnFinishCallback:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 4306705427349530792}
+          m_TargetAssemblyTypeName: PIERStory.ViewEpisodeStart, Assembly-CSharp
+          m_MethodName: OnView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     AnimationType: 0
     Move:
       Settings:
@@ -6994,6 +7018,29 @@ MonoBehaviour:
   btnConinue: {fileID: 4653236705545303743}
   btnPremium: {fileID: 8328811303494500383}
   btnOneTime: {fileID: 5399426248854087826}
+  episodeData:
+    episodeID: 
+    episodeNO: 
+    episodeType: 
+    episodeTitle: 
+    episodeSummary: 
+    endingType: 
+    dependEpisode: 
+    endingOpen: 0
+    totalSceneCount: 0
+    playedSceneCount: 0
+    sceneProgressorValue: 0
+    episodeGalleryImageProgressValue: 0
+    squareImageURL: 
+    squareImageKey: 
+    popupImageURL: 
+    popupImageKey: 
+    episodeState: 0
+    purchaseState: 0
+    pricePremiumSale: 0
+    pricePremium: 0
+    currencyOneTime: 
+    priceOneTime: 0
 --- !u!1 &5399426248854087826
 GameObject:
   m_ObjectHideFlags: 0
@@ -13644,6 +13691,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1391872472780876241}
     m_Modifications:
+    - target: {fileID: 695784141902617599, guid: 09779081ffe5cf84d9fff73a00c2c4c2, type: 3}
+      propertyPath: m_text
+      value: "\uACBD\uD5D8\uD55C \uC0AC\uAC74"
+      objectReference: {fileID: 0}
     - target: {fileID: 695784143491603422, guid: 09779081ffe5cf84d9fff73a00c2c4c2, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

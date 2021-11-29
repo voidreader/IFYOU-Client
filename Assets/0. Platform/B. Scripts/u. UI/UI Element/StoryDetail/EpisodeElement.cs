@@ -75,7 +75,7 @@ namespace PIERStory {
             thumbnailImage.SetDownloadURL(episodeData.squareImageURL, episodeData.squareImageKey);
             
             // 타이틀 
-            textEpisodeTitle.text = episodeData.episodeTitle;
+            textEpisodeTitle.text = episodeData.combinedEpisodeTitle;
             
             // 에피소드 타입에 따라. 
             switch(episodeData.episodeType) {
@@ -197,7 +197,7 @@ namespace PIERStory {
             
             Debug.Log(">> OnClickElement");
             
-            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, "");
+            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, episodeData, string.Empty);
         }
         
         

@@ -23,6 +23,8 @@ namespace PIERStory {
         public string episodeTitle = string.Empty; // 에피소드 타이틀
         public string episodeSummary = string.Empty; // 에피소드 스토리 요약 
         
+        public string combinedEpisodeTitle = string.Empty; // 에피소드 순번과 타이틀의 조합 
+        
         public string endingType = string.Empty;  // 엔딩 타입 
         public string dependEpisode = string.Empty;  // 의존 에피소드 
         public bool endingOpen = false; // 엔딩 오픈 여부 
@@ -69,7 +71,7 @@ namespace PIERStory {
             episodeType = SystemManager.GetJsonNodeString(episodeJSON, "episode_type");
             episodeTitle = SystemManager.GetJsonNodeString(episodeJSON, "title");
             episodeSummary = SystemManager.GetJsonNodeString(episodeJSON, "summary");
-            
+
             endingOpen = SystemManager.GetJsonNodeBool(episodeJSON, "ending_open");
             endingType = SystemManager.GetJsonNodeString(episodeJSON, "ending_type");
             dependEpisode = SystemManager.GetJsonNodeString(episodeJSON, "depend_episode");
@@ -98,7 +100,20 @@ namespace PIERStory {
              if(totalSceneCount > 0)        
                 sceneProgressorValue = playedSceneCount / totalSceneCount;
                 
+            
+            switch(episodeType) {
+                case "chapter": 
+                combinedEpisodeTitle = string.Format(SystemManager.GetLocalizedText("6090"),  episodeNO) + episodeTitle;
+                break;
                 
+                case "side":
+                combinedEpisodeTitle = "Special. " + episodeTitle;
+                break;
+                
+                case "ending":
+                combinedEpisodeTitle = "Ending. " + episodeTitle;
+                break;
+            }
                 
             SetEpisodePlayState();
             SetPurchaseState();

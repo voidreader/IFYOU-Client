@@ -8,6 +8,7 @@ using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
+    public enum EpisodeType { Chapter, Ending, Side }; // 에피소드 타입 
     // 에피소드 상태 enum
     public enum EpisodeState { None, Prev, Current, Future, Block };    // 에피소드 진행중에는 prev, current, future, block 에피소드가 엔딩에 들어온 경우 해당 엔딩 제외 전부 block처리
     public enum PurchaseState { None, Permanent, OneTime, Rent, Free } // 에피소드 구매 상태  (구매이력 없음/영구구매/1회권/대여)
@@ -40,7 +41,7 @@ namespace PIERStory
         
         JsonData CurrentProjectJson = null; // 현재 선택한 작품 Master 정보 
         JsonData ProjectDetailJson = null; // 조회로 가져온 작품에 대한 기준정보와 유저정보.
-        JsonData CurrentEpisodeJson = null; // 현재 선택한 에피소드 정보 
+        [SerializeField] EpisodeData CurrentEpisodeData = null; // 선택한 에피소드 정보(JSON => Serializable Class)
 
         [HideInInspector]
         public JsonData EpisodeListJson = null; // 에피소드 리스트 JSON 
@@ -972,15 +973,18 @@ namespace PIERStory
         /// 선택한 에피소드 정보 저장하기.
         /// </summary>
         /// <param name="__j"></param>
-        public void SetCurrentEpisodeJson(JsonData __j)
+        public void SetCurrentEpisodeJson(EpisodeData __data)
         {
-            CurrentEpisodeJson = __j;
-            CurrentEpisodeID = CurrentEpisodeJson["episode_id"].ToString();
-            CurrentEpisodeTitle = CurrentEpisodeJson["title"].ToString();
+            CurrentEpisodeData = __data;
+            CurrentEpisodeID = CurrentEpisodeData.episodeID;
+            CurrentEpisodeTitle = CurrentEpisodeData.episodeTitle;
 
             // 진입한 에피소드가 사이드인 경우
-            if (CurrentEpisodeJson["episode_type"].ToString().Equals("side"))
+            if(CurrentEpisodeData.episodeType == EpisodeType.Side)
                 playSideEpisode = true;
+            else 
+                playSideEpisode = false;
+            
         }
 
 
@@ -1210,42 +1214,9 @@ namespace PIERStory
             return SystemManager.GetJsonNodeString(storyDetailJson, __col);
         }
         
-        /// <summary>
-        /// 작품의 에피소드 순번 혹은 타입 텍스트 가져오기 
-        /// </summary>
-        /// <param name="__j"></param>
-        public static string GetEpisodeIndexText(JsonData __j) {
-            if(__j == null)
-                return null;
-                
-            if(!__j.ContainsKey("episode_type"))
-                return null;
-                
-            if(__j["episode_type"].ToString() == "ending") 
-                return "Ending. ";
-            
-            if(__j["episode_type"].ToString() == "side") 
-                return "Special. ";
-                
-            if(__j.ContainsKey("episode_no")) {
-                return string.Format("Episode {0}. ", __j["episode_no"].ToString());
-            }
-                
-                
-            return null;
-        }
+ 
         
-        /// <summary>
-        /// 현재 에피소드의 풀 텍스트(순번, 타입을 모두 포함한) 타이틀 가져오기
-        /// </summary>
-        /// <returns></returns>
-        public static string GetCurrentEpisodeFullTitle() {
-            if(main == null || main.CurrentEpisodeJson == null)
-                return string.Empty;
-                
-            return string.Format("{0} {1}", GetEpisodeIndexText(main.CurrentEpisodeJson), main.CurrentEpisodeTitle);
-        }
-        
+
         /// <summary>
         /// 일러스트 이름으로 JSON Node 찾기 
         /// </summary>

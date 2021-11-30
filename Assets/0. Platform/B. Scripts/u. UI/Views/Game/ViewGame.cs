@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,14 +15,14 @@ namespace PIERStory
     {
         public static ViewGame main = null;     // UI singleton
         
-        [Header("¸»Ç³¼±")]
-        public RectTransform bubbleParent;          // ¸»Ç³¼± ºÎ¸ğ
-        public List<GameBubbleCtrl> ListBubbles;    // ¸»Ç³¼±µé!
-        public GameBubbleCtrl partnerBubble;        // ¹ß½ÅÀÚ ¸»Ç³¼±(ÀüÈ­¿ë)
-        public GameBubbleCtrl selfBubble;           // ¼ö½ÅÀÚ ¸»Ç³¼±(ÀüÈ­¿ë)
-        int bubbleIndex = 0;                        // ¸»Ç³¼± pooling ÀÎµ¦½º
+        [Header("ë§í’ì„ ")]
+        public RectTransform bubbleParent;          // ë§í’ì„  ë¶€ëª¨
+        public List<GameBubbleCtrl> ListBubbles;    // ë§í’ì„ ë“¤!
+        public GameBubbleCtrl partnerBubble;        // ë°œì‹ ì ë§í’ì„ (ì „í™”ìš©)
+        public GameBubbleCtrl selfBubble;           // ìˆ˜ì‹ ì ë§í’ì„ (ì „í™”ìš©)
+        int bubbleIndex = 0;                        // ë§í’ì„  pooling ì¸ë±ìŠ¤
 
-        [Header("³ª·¹ÀÌ¼Ç")]
+        [Header("ë‚˜ë ˆì´ì…˜")]
         Action OnNarraion = delegate { };
         public Sprite typeBlackSprite;
         public Sprite typeWhiteSprite;
@@ -31,35 +31,35 @@ namespace PIERStory
         public TextMeshProUGUI textNarration;
         string narrationText = string.Empty;
 
-        [Space] [Header("**½ºÅÄµù Ä³¸¯ÅÍ¿ë º¯¼ö**")]
-        public Transform[] modelRenderParents;  // 0 : ¹Ì»ç¿ë or Áß¾Ó »ç¿ëÁß, 1 : 2ÀÎ½ºÅÄµùÁß ¸» ¾ÈÇÏ´Â »ç¶÷, 2 : 2ÀÎ½ºÅÄµùÁß ¸»ÇÏ´Â »ç¶÷
+        [Space] [Header("**ìŠ¤íƒ ë”© ìºë¦­í„°ìš© ë³€ìˆ˜**")]
+        public Transform[] modelRenderParents;  // 0 : ë¯¸ì‚¬ìš© or ì¤‘ì•™ ì‚¬ìš©ì¤‘, 1 : 2ì¸ìŠ¤íƒ ë”©ì¤‘ ë§ ì•ˆí•˜ëŠ” ì‚¬ëŒ, 2 : 2ì¸ìŠ¤íƒ ë”©ì¤‘ ë§í•˜ëŠ” ì‚¬ëŒ
         public RawImage[] modelRenders;         // 0 : L, 1 : C, 2: R
 
         
-        [Space][Space][Header("**¼±ÅÃÁö**")]
-        public Image selectionTutorialText;     // ¼±ÅÃÁö Æ©Åä¸®¾ó ¾È³»¹®±¸
-        public List<ScriptRow> ListSelectionRows = new List<ScriptRow>();                 // ¼öÁıµÈ Çàµé 
-        public List<GameSelectionCtrl> ListGameSelection = new List<GameSelectionCtrl>(); // ¼±ÅÃÁö UI
+        [Space][Space][Header("**ì„ íƒì§€**")]
+        public Image selectionTutorialText;     // ì„ íƒì§€ íŠœí† ë¦¬ì–¼ ì•ˆë‚´ë¬¸êµ¬
+        public List<ScriptRow> ListSelectionRows = new List<ScriptRow>();                 // ìˆ˜ì§‘ëœ í–‰ë“¤ 
+        public List<GameSelectionCtrl> ListGameSelection = new List<GameSelectionCtrl>(); // ì„ íƒì§€ UI
         public static List<GameSelectionCtrl> ListAppearSelection = new List<GameSelectionCtrl>();
-        public Image SelectionMain = null;                      // ¼±ÅÃÁö ¸ŞÀÎ ¿ÀºêÁ§Æ®
+        public Image SelectionMain = null;                      // ì„ íƒì§€ ë©”ì¸ ì˜¤ë¸Œì íŠ¸
         
-        public GameObject screenInputBlocker = null;            // ¿¬ÃâÁß ÀÔ·Â¸·°í½Í´Ù..!
+        public GameObject screenInputBlocker = null;            // ì—°ì¶œì¤‘ ì…ë ¥ë§‰ê³ ì‹¶ë‹¤..!
 
         [Space][Header("Flow time")]
         public Image fadeImage;
         public TextMeshProUGUI flowTimeText;
 
-        [Header("**Àå¼Ò ÁøÀÔ¿ë Label**")]
+        [Header("**ì¥ì†Œ ì§„ì…ìš© Label**")]
         public Image placeTextBG;
         public TextMeshProUGUI episodeNum;
         public Image placeTagContour;
         public TextMeshProUGUI placeNameText;
 
-        [Space][Space][Header("ÈŞ´ëÆù »ç¿ë")]
-        [Tooltip("ÀüÈ­,¸Ş½ÃÁö ¿À¸é ¶ã ÀÌ¹ÌÁö")]
+        [Space][Space][Header("íœ´ëŒ€í° ì‚¬ìš©")]
+        [Tooltip("ì „í™”,ë©”ì‹œì§€ ì˜¤ë©´ ëœ° ì´ë¯¸ì§€")]
         public Image phoneImage;
 
-        [Header("***ÀüÈ­***")]
+        [Header("***ì „í™”***")]
         public GameObject phoneCall;
         public TextMeshProUGUI callName;
 
@@ -73,14 +73,14 @@ namespace PIERStory
         bool timeEnd = false;
 
 
-        [Header("***¸Ş½ÅÀú***")]
+        [Header("***ë©”ì‹ ì €***")]
         public GameObject messenger;
         public Image messengerOverlay;
         public Image messengerIcon;
         public TextMeshProUGUI messageSender;
         public TextMeshProUGUI messageAlert;
 
-        [Tooltip("¸Ş½ÅÀú ScrollView ¾È¿¡ µé¾îÀÖ´Â content")]
+        [Tooltip("ë©”ì‹ ì € ScrollView ì•ˆì— ë“¤ì–´ìˆëŠ” content")]
         public GameObject messengerContent;
 
         [Header("Messenger Prefab")]
@@ -93,29 +93,29 @@ namespace PIERStory
         public GameObject receiverBubble;
 
         GameObject speakerPrefab;
-        GameObject messengerObject;         // ¸Ş½ÅÀú¿¡¼­ »ç¿ëµÉ ¿ÀºêÁ§Æ®µé
-        Transform msgBubbleParent;          // Åå ¸»Ç³¼±ÀÇ ºÎ¸ğ transform
-        TextMeshProUGUI messengerText;      // ¸Ş½ÅÀú¿¡¼­ »ç¿ëµÇ´Â ÅØ½ºÆ®µéÀÌ ´ã±æ º¯¼ö
+        GameObject messengerObject;         // ë©”ì‹ ì €ì—ì„œ ì‚¬ìš©ë  ì˜¤ë¸Œì íŠ¸ë“¤
+        Transform msgBubbleParent;          // í†¡ ë§í’ì„ ì˜ ë¶€ëª¨ transform
+        TextMeshProUGUI messengerText;      // ë©”ì‹ ì €ì—ì„œ ì‚¬ìš©ë˜ëŠ” í…ìŠ¤íŠ¸ë“¤ì´ ë‹´ê¸¸ ë³€ìˆ˜
         List<GameObject> messengerData = new List<GameObject>();
         ScrollRect sr;
-        string msgPrevSpeaker = string.Empty;       // ¸Ş½ÅÀú¿¡¼­ Àü¿¡ ¸»Çß´ø »ç¶÷
-        string msgCurrSpeaker = string.Empty;       // ¸Ş½ÅÀú¿¡¼­ ÇöÀç ¸»ÇÏ°í ÀÖ´Â »ç¶÷
+        string msgPrevSpeaker = string.Empty;       // ë©”ì‹ ì €ì—ì„œ ì „ì— ë§í–ˆë˜ ì‚¬ëŒ
+        string msgCurrSpeaker = string.Empty;       // ë©”ì‹ ì €ì—ì„œ í˜„ì¬ ë§í•˜ê³  ìˆëŠ” ì‚¬ëŒ
 
-        [Header("°ÔÀÓ·Î±×")]
+        [Header("ê²Œì„ë¡œê·¸")]
         public GameObject logPanel;
         public ScrollRect logScrollRect;
         public TextMeshProUGUI logText;
         private string prevSpeaker = string.Empty;
 
-        public GameObject inGameMenuBtn;        // ÀÎ°ÔÀÓ¸Ş´º ¹öÆ°
-        public GameObject closeLogBtn;          // ·Î±× ÆĞ³Î ¿ÜÀÇ ¿µ¿ª ¹öÆ°
+        public GameObject inGameMenuBtn;        // ì¸ê²Œì„ë©”ë‰´ ë²„íŠ¼
+        public GameObject closeLogBtn;          // ë¡œê·¸ íŒ¨ë„ ì™¸ì˜ ì˜ì—­ ë²„íŠ¼
 
         StringBuilder logData = new StringBuilder();
         List<string> selections = new List<string>();
         string selected = string.Empty;
 
         [Space]
-        [Header("À½¼º Ç¥Ãâ")]
+        [Header("ìŒì„± í‘œì¶œ")]
         public GameObject microphoneIcon;
         Animator microphoneAnimator;
 
@@ -129,7 +129,7 @@ namespace PIERStory
             base.OnView();
             StoryManager.enterGameScene = true;
 
-            // È­¸é Å©±â¿¡ ¸ÂÃç¼­ ½ºÅÄµùÄ³¸¯ÅÍ renderer »çÀÌÁî Á¶Àı
+            // í™”ë©´ í¬ê¸°ì— ë§ì¶°ì„œ ìŠ¤íƒ ë”©ìºë¦­í„° renderer ì‚¬ì´ì¦ˆ ì¡°ì ˆ
             float rawImageSize = (float)Screen.height / (float)Screen.width * 900f;
             rawImageSize = Mathf.Clamp(rawImageSize, 1600f, 2000f);
 
@@ -144,47 +144,47 @@ namespace PIERStory
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            // ·Î±× ÆĞ³Î È°¼ºÈ­ Áß¿£ ÀÔ·Â ¹ŞÁö ¾ÊÀ½.   
+            // ë¡œê·¸ íŒ¨ë„ í™œì„±í™” ì¤‘ì—” ì…ë ¥ ë°›ì§€ ì•ŠìŒ.   
             if (logPanel.activeSelf)
                 return;
 
-            // threadHold Áß¿¡ ÀÔ·Â ¹ŞÁö ¾ÊÀ½
+            // threadHold ì¤‘ì— ì…ë ¥ ë°›ì§€ ì•ŠìŒ
             if (GameManager.main.isThreadHold)
             {
                 Debug.Log(">> holding thread now <<");
                 return;
             }
 
-            // touch waiting ¾Æ´Ñ °æ¿ì ÀÔ·Â ¹ŞÁö ¾ÊÀ½.
+            // touch waiting ì•„ë‹Œ ê²½ìš° ì…ë ¥ ë°›ì§€ ì•ŠìŒ.
             if (!GameManager.main.isWaitingScreenTouch)
                 return;
 
-            // ÀÔ·Â ¹Ş¾Ò¾î¿ä!
+            // ì…ë ¥ ë°›ì•˜ì–´ìš”!
             GameManager.main.isWaitingScreenTouch = false;
         }
 
-        #region ¸»Ç³¼± °ü·Ã
+        #region ë§í’ì„  ê´€ë ¨
 
         public void MakeTalkBubble(ScriptRow __row, Action __cb, int index = -1)
         {
             if (bubbleIndex >= ListBubbles.Count)
                 bubbleIndex = 0;
 
-            // ¾Æ¹«¸»µµ ¾È³ÖÀ¸¸é ±×³É Á¾·á 
+            // ì•„ë¬´ë§ë„ ì•ˆë„£ìœ¼ë©´ ê·¸ëƒ¥ ì¢…ë£Œ 
             if (string.IsNullOrEmpty(__row.script_data))
             {
                 __cb?.Invoke();
                 return;
             }
 
-            // ¸»Ç³¼± Å©±â¸¦ ÆÇ´ÜÇÏ±â À§ÇØ È£ÃâÇÑ´Ù.
-            // Å©±â ÁöÁ¤À» ¼öµ¿À¸·Î ÇØ³õÀº °æ¿ì¸¸!
-            // * Ãß°¡ ¼³¸í : TextMesh ´Â ½ÇÁ¦ È­¸é¿¡¼­ render µÇ¾î¾ßÁö, TextArea¸¦ ¿À¹öÇß´ÂÁö ¾ÈÇß´ÂÁö¸¦ ¾Ë ¼ö ÀÖ´Ù.
+            // ë§í’ì„  í¬ê¸°ë¥¼ íŒë‹¨í•˜ê¸° ìœ„í•´ í˜¸ì¶œí•œë‹¤.
+            // í¬ê¸° ì§€ì •ì„ ìˆ˜ë™ìœ¼ë¡œ í•´ë†“ì€ ê²½ìš°ë§Œ!
+            // * ì¶”ê°€ ì„¤ëª… : TextMesh ëŠ” ì‹¤ì œ í™”ë©´ì—ì„œ render ë˜ì–´ì•¼ì§€, TextAreaë¥¼ ì˜¤ë²„í–ˆëŠ”ì§€ ì•ˆí–ˆëŠ”ì§€ë¥¼ ì•Œ ìˆ˜ ìˆë‹¤.
             if (__row.bubble_size == 0)
                 BubbleManager.main.SetFakeBubbles(__row);
 
-            // ¸»Ç³¼± Ç®¿¡¼­ ÇÏ³ª¸¦ °ñ¶ó ¼¼ÆÃÇÕ´Ï´Ù.
-            // skipÀ» »ç¿ëÇß°Å³ª, Ä³¸¯ÅÍ ½ºÅÄµùÀÌ ¾Æ´Ò¶§
+            // ë§í’ì„  í’€ì—ì„œ í•˜ë‚˜ë¥¼ ê³¨ë¼ ì„¸íŒ…í•©ë‹ˆë‹¤.
+            // skipì„ ì‚¬ìš©í–ˆê±°ë‚˜, ìºë¦­í„° ìŠ¤íƒ ë”©ì´ ì•„ë‹ë•Œ
             if (GameManager.main.useSkip || index < 0)
                 ListBubbles[bubbleIndex++].ShowBubble(__row, __cb);
             else
@@ -192,7 +192,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// Ä³¸¯ÅÍ°¡ ¹«ºù ÁßÀÎ °æ¿ì´Â ¹«ºùÀÌ ¿Ï·áµÉ¶§±îÁö ±â´Ù¸°´Ù. 
+        /// ìºë¦­í„°ê°€ ë¬´ë¹™ ì¤‘ì¸ ê²½ìš°ëŠ” ë¬´ë¹™ì´ ì™„ë£Œë ë•Œê¹Œì§€ ê¸°ë‹¤ë¦°ë‹¤. 
         /// </summary>
         IEnumerator RoutineMoveWait(ScriptRow __row, Action __cb)
         {
@@ -201,7 +201,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// È­¸é»óÀÇ ¸ğµç ¸»Ç³¼±(ÀüÈ­ ¸»Ç³¼± Æ÷ÇÔ), ³ª·¹ÀÌ¼Ç Á¦°Å 
+        /// í™”ë©´ìƒì˜ ëª¨ë“  ë§í’ì„ (ì „í™” ë§í’ì„  í¬í•¨), ë‚˜ë ˆì´ì…˜ ì œê±° 
         /// </summary>
         public void HideBubbles()
         {
@@ -221,12 +221,12 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ÀüÈ­ Áß ¸»Ç³¼± À§Ä¡ ¼³Á¤
+        /// ì „í™” ì¤‘ ë§í’ì„  ìœ„ì¹˜ ì„¤ì •
         /// </summary>
-        /// <param name="isSelf">trueÀÏ °æ¿ì ÀüÈ­º»ÀÎ, falseÀÏ °æ¿ì ÀüÈ­»ó´ë</param>
+        /// <param name="isSelf">trueì¼ ê²½ìš° ì „í™”ë³¸ì¸, falseì¼ ê²½ìš° ì „í™”ìƒëŒ€</param>
         public void SetPhoneProcess(ScriptRow __row, Action __cb, bool isSelf)
         {
-            // ÀÔ·ÂµÈ µ¥ÀÌÅÍ ¸»Ç³¼± »çÀÌÁî Ã¼Å©¸¦ À§ÇÑ Ã¼Å©
+            // ì…ë ¥ëœ ë°ì´í„° ë§í’ì„  ì‚¬ì´ì¦ˆ ì²´í¬ë¥¼ ìœ„í•œ ì²´í¬
             if (__row.bubble_size < 1)
                 BubbleManager.main.SetFakeBubbles(__row);
 
@@ -237,9 +237,9 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ÀüÈ­ ÅÛÇÃ¸´¿ë ¸»Ç³¼± ¼û±â±â
+        /// ì „í™” í…œí”Œë¦¿ìš© ë§í’ì„  ìˆ¨ê¸°ê¸°
         /// </summary>
-        /// <param name="isSelf">true¸é ¼ö½ÅÀÚ, false¸é ¹ß½ÅÀÚ</param>
+        /// <param name="isSelf">trueë©´ ìˆ˜ì‹ ì, falseë©´ ë°œì‹ ì</param>
         public void HidePhoneBubble(bool isSelf)
         {
             if (isSelf)
@@ -250,7 +250,7 @@ namespace PIERStory
 
         #endregion
 
-        #region ³ª·¹ÀÌ¼Ç °ü·Ã
+        #region ë‚˜ë ˆì´ì…˜ ê´€ë ¨
 
         public void ShowNarration(string __narration, bool typeWhite, Action __cb)
         {
@@ -278,9 +278,9 @@ namespace PIERStory
 
             textNarration.color = textColor;
 
-            // color °ª Á¶Á¤
+            // color ê°’ ì¡°ì •
             boxImage.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
-            textNarration.color = new Color(textNarration.color.r, textNarration.color.b, textNarration.color.g, 0); // Åõ¸íÇÏ°Ô ¸¸µé¾îÁØ´Ù.
+            textNarration.color = new Color(textNarration.color.r, textNarration.color.b, textNarration.color.g, 0); // íˆ¬ëª…í•˜ê²Œ ë§Œë“¤ì–´ì¤€ë‹¤.
 
             narrationText = __narration.Replace(@"\", "\n");
 
@@ -327,31 +327,31 @@ namespace PIERStory
 
         #endregion
 
-        #region ¼±ÅÃÁö Ã³¸®
+        #region ì„ íƒì§€ ì²˜ë¦¬
 
 
         /// <summary>
-        /// ¼±ÅÃÁö ½×±â Ã³¸® 
+        /// ì„ íƒì§€ ìŒ“ê¸° ì²˜ë¦¬ 
         /// </summary>
         /// <param name="__row"></param>
         /// <param name="__openUI"></param>
         public void StackSelection(ScriptRow __row, bool __openUI)
         {
-            ListSelectionRows.Add(__row); // ½×±â!
+            ListSelectionRows.Add(__row); // ìŒ“ê¸°!
 
-            // ¸¶Áö¸· ¼±ÅÃÁö°¡ ½×¿´À¸¸é, UI È°¼ºÈ­ 
+            // ë§ˆì§€ë§‰ ì„ íƒì§€ê°€ ìŒ“ì˜€ìœ¼ë©´, UI í™œì„±í™” 
             if (__openUI)
                 OpenSelectionUI();
         }
 
         /// <summary>
-        /// ¼±ÅÃÁö È°¼ºÈ­ 
+        /// ì„ íƒì§€ í™œì„±í™” 
         /// </summary>
         void OpenSelectionUI()
         {
-            GameManager.main.isSelectionInputWait = true; // ¼±ÅÃÁö ÀÔ·ÂÀ» ±â´Ù·Á¾ß ÇÑ´Ù. 
+            GameManager.main.isSelectionInputWait = true; // ì„ íƒì§€ ì…ë ¥ì„ ê¸°ë‹¤ë ¤ì•¼ í•œë‹¤. 
 
-            // ¾Æ·¡ µÎ°³ÀÇ ¸®½ºÆ® Å¬¸®¾î ÇÏ°í ½ÃÀÛÇÑ´Ù.
+            // ì•„ë˜ ë‘ê°œì˜ ë¦¬ìŠ¤íŠ¸ í´ë¦¬ì–´ í•˜ê³  ì‹œì‘í•œë‹¤.
             ListAppearSelection.Clear();
             GameSelectionCtrl.ListStacks.Clear();
 
@@ -359,10 +359,10 @@ namespace PIERStory
             SelectionMain.color = CommonConst.COLOR_BLACK_TRANSPARENT;
             SelectionMain.gameObject.SetActive(true);
 
-            // ÆäÀÌµåÀÎ Ã³¸® 
+            // í˜ì´ë“œì¸ ì²˜ë¦¬ 
             SelectionMain.DOFade(0.5f, 1);
 
-            // Æ©Åä¸®¾óÀ» º¸Áö ¾Ê°í ½ºÅµÇØ¼­ ¼±ÅÃÁö ¾î¶»°Ô ´©¸£´ÂÁö ¸ğ¸£´Â ¹Ùº¸µéÀ» À§ÇØ ¼±ÅÃÁö ²Ù¿í ´­·¯¾ß ÇÑ´Ù°í ¹®±¸¸¦ ¶ç¿öÁØ´Ù.
+            // íŠœí† ë¦¬ì–¼ì„ ë³´ì§€ ì•Šê³  ìŠ¤í‚µí•´ì„œ ì„ íƒì§€ ì–´ë–»ê²Œ ëˆ„ë¥´ëŠ”ì§€ ëª¨ë¥´ëŠ” ë°”ë³´ë“¤ì„ ìœ„í•´ ì„ íƒì§€ ê¾¸ìš± ëˆŒëŸ¬ì•¼ í•œë‹¤ê³  ë¬¸êµ¬ë¥¼ ë„ì›Œì¤€ë‹¤.
             if (UserManager.main.tutorialStep.Equals(2))
                 selectionTutorialText.gameObject.SetActive(true);
             else
@@ -375,12 +375,12 @@ namespace PIERStory
                 ListAppearSelection.Add(ListGameSelection[i]);
             }
 
-            // µîÀå ¿¬ÃâÀÌ ³¡³¯‹š±îÁö ÀÔ·ÂÀ» ¸·°í½Í¾î¿ä.
+            // ë“±ì¥ ì—°ì¶œì´ ëë‚ ë–„ê¹Œì§€ ì…ë ¥ì„ ë§‰ê³ ì‹¶ì–´ìš”.
             SetBlockScreenActiveFlag(true);
         }
 
         /// <summary>
-        /// µîÀåÇÏ´Â ¼±ÅÃÁö, µîÀåÀÌ ¿Ï·áÇÏ¸é ¸®½ºÆ®¿¡¼­ Á¦°Å 
+        /// ë“±ì¥í•˜ëŠ” ì„ íƒì§€, ë“±ì¥ì´ ì™„ë£Œí•˜ë©´ ë¦¬ìŠ¤íŠ¸ì—ì„œ ì œê±° 
         /// </summary>
         /// <param name="__selection"></param>
         public void RemoveListAppearSelection(GameSelectionCtrl __selection)
@@ -403,14 +403,14 @@ namespace PIERStory
 
 
         /// <summary>
-        /// ¼±ÅÃÁö ¼±ÅÃ ¿Ï·á¿¡ ´ëÇÑ Ã³¸® 
+        /// ì„ íƒì§€ ì„ íƒ ì™„ë£Œì— ëŒ€í•œ ì²˜ë¦¬ 
         /// </summary>
-        /// <param name="__targetSceneID">ÀÌµ¿ÇÒ »ç°Ç ID</param>
-        /// <param name="__selectionIndex">¼±ÅÃÁö ¹öÆ° ÀÎµ¦½º</param>
+        /// <param name="__targetSceneID">ì´ë™í•  ì‚¬ê±´ ID</param>
+        /// <param name="__selectionIndex">ì„ íƒì§€ ë²„íŠ¼ ì¸ë±ìŠ¤</param>
         public void ChooseSelection(string __targetSceneID, int __selectionIndex)
         {
-            // ¿¬Ãâ·Î ÀÎÇØ ¸Ş¼Òµå°¡ ºĞ»êµÇ¾î¼­ µû·Î Àï¿©µĞ´Ù.
-            SetBlockScreenActiveFlag(true); // ÀÔ·Â ¸·±â.
+            // ì—°ì¶œë¡œ ì¸í•´ ë©”ì†Œë“œê°€ ë¶„ì‚°ë˜ì–´ì„œ ë”°ë¡œ ìŸì—¬ë‘”ë‹¤.
+            SetBlockScreenActiveFlag(true); // ì…ë ¥ ë§‰ê¸°.
             GameManager.main.targetSelectionSceneID = __targetSceneID;
 
             Debug.Log(string.Format("You Selected {0}", __targetSceneID));
@@ -418,7 +418,7 @@ namespace PIERStory
 
             StartCoroutine(RoutineHideSelection());
 
-            // Ã¹¹øÂ° ¼±ÅÃÁö¿¡¼­ ÀÌº¥Æ® Ãß°¡ 
+            // ì²«ë²ˆì§¸ ì„ íƒì§€ì—ì„œ ì´ë²¤íŠ¸ ì¶”ê°€ 
             /*
             if (UserManager.main.IsUserFirstSelection())
             {
@@ -430,23 +430,23 @@ namespace PIERStory
 
 
         /// <summary>
-        /// ¼±ÅÃÁö »ç¶óÁö´Â ¿¬Ãâ. 
+        /// ì„ íƒì§€ ì‚¬ë¼ì§€ëŠ” ì—°ì¶œ. 
         /// </summary>
         /// <returns></returns>
         IEnumerator RoutineHideSelection()
         {
             yield return new WaitForSeconds(2);
 
-            // Æ¾Æ® ¾ø¾ÖÁÖ°í. 
+            // í‹´íŠ¸ ì—†ì• ì£¼ê³ . 
             SelectionMain.DOFade(0, 0.5f).OnComplete(OnPostProcessCompleteSelection);
         }
 
         /// <summary>
-        /// ¼±ÅÃÁö Æ¾Æ® ¾ø¾îÁö¸é ¹Ù·Î È£Ãâ. 
+        /// ì„ íƒì§€ í‹´íŠ¸ ì—†ì–´ì§€ë©´ ë°”ë¡œ í˜¸ì¶œ. 
         /// </summary>
         void OnPostProcessCompleteSelection()
         {
-            // ÀÌµ¿!
+            // ì´ë™!
             GameManager.main.currentPage.SetCurrentRowBySceneID(GameManager.main.targetSelectionSceneID);
 
             if (messenger.activeSelf)
@@ -457,7 +457,7 @@ namespace PIERStory
 
 
         /// <summary>
-        /// Áï°¢ÀûÀÎ ¼±ÅÃÁö ºñÈ°¼ºÈ­ Ã³¸® 
+        /// ì¦‰ê°ì ì¸ ì„ íƒì§€ ë¹„í™œì„±í™” ì²˜ë¦¬ 
         /// </summary>
         public void HideSelection()
         {
@@ -484,15 +484,15 @@ namespace PIERStory
 
         #endregion
 
-        #region ½Ã°£Èå¸§ °ü·Ã
+        #region ì‹œê°„íë¦„ ê´€ë ¨
 
         /// <summary>
-        /// ½Ã°£ Èå¸§ °ü·Ã ÅØ½ºÆ® ¿¬Ãâ
+        /// ì‹œê°„ íë¦„ ê´€ë ¨ í…ìŠ¤íŠ¸ ì—°ì¶œ
         /// </summary>
-        /// <param name="labelText">¶óº§¿¡ µé¾î°¥ string</param>
-        /// <param name="voice">À½¼º ÄÃ·³°ª</param>
-        /// <param name="reversal">¹İÀüÀ» »ç¿ëÇÏ´Â°¡?</param>
-        /// <param name="isBackground">´ÙÀ½ ÇàÀÌ ¹è°æ, Àå¼ÒÁøÀÔ, ÀÏ·¯½ºÆ®ÀÎ°¡?</param>
+        /// <param name="labelText">ë¼ë²¨ì— ë“¤ì–´ê°ˆ string</param>
+        /// <param name="voice">ìŒì„± ì»¬ëŸ¼ê°’</param>
+        /// <param name="reversal">ë°˜ì „ì„ ì‚¬ìš©í•˜ëŠ”ê°€?</param>
+        /// <param name="isBackground">ë‹¤ìŒ í–‰ì´ ë°°ê²½, ì¥ì†Œì§„ì…, ì¼ëŸ¬ìŠ¤íŠ¸ì¸ê°€?</param>
         public void FlowTimeAnim(string labelText, string voice, bool reversal, bool isBackground)
         {
             flowTimeText.text = string.Empty;
@@ -519,7 +519,7 @@ namespace PIERStory
             yield return timeTween.WaitForCompletion();
             GameManager.main.HideCharacters();
 
-            // script_data°¡ null°ªÀÌ ¾Æ´Ï¶ó¸é
+            // script_dataê°€ nullê°’ì´ ì•„ë‹ˆë¼ë©´
             if (!string.IsNullOrEmpty(labelText))
             {
                 if (labelText.Contains("\\"))
@@ -533,7 +533,7 @@ namespace PIERStory
                 {
                     string tmpStr = string.Empty;
 
-                    // ´ÙÀ½ ¹®ÀÚ°¡ Æ¯¼ö¹®ÀÚÀÎ °æ¿ì ÇÑ ±ÛÀÚ·Î Ãë±ŞÇÑ´Ù
+                    // ë‹¤ìŒ ë¬¸ìê°€ íŠ¹ìˆ˜ë¬¸ìì¸ ê²½ìš° í•œ ê¸€ìë¡œ ì·¨ê¸‰í•œë‹¤
                     if (i + 1 < labelText.Length && System.Text.RegularExpressions.Regex.IsMatch(labelText[i + 1].ToString(), @"[~!@\#$%^&*\()\=+|\\/:;,?""<>']"))
                         tmpStr = labelText[i + 1].ToString();
 
@@ -546,7 +546,7 @@ namespace PIERStory
                 }
 
                 // 21.10.22
-                // À½¼ºÀÌ Àç»ıÁßÀÌ¶ó¸é ÀüºÎ Àç»ıµÉ ¶§±îÁö ±â´Ù·Á!
+                // ìŒì„±ì´ ì¬ìƒì¤‘ì´ë¼ë©´ ì „ë¶€ ì¬ìƒë  ë•Œê¹Œì§€ ê¸°ë‹¤ë ¤!
                 if (GameManager.main.SoundGroup[1].GetIsPlaying)
                     yield return new WaitUntil(() => !GameManager.main.SoundGroup[1].GetIsPlaying);
 
@@ -570,7 +570,7 @@ namespace PIERStory
 
 
         /// <summary>
-        /// ½Ã°£Èå¸§, Animation callback
+        /// ì‹œê°„íë¦„, Animation callback
         /// </summary>
         void OnCompleteTimeFlowAnim()
         {
@@ -591,7 +591,7 @@ namespace PIERStory
 
         #endregion
 
-        #region ÇÚµåÆù »ç¿ë °ü·Ã
+        #region í•¸ë“œí° ì‚¬ìš© ê´€ë ¨
 
         public void HIdePhoneImage()
         {
@@ -602,16 +602,16 @@ namespace PIERStory
             callBackground.gameObject.SetActive(false);
         }
 
-        #region ÀüÈ­
+        #region ì „í™”
 
         /// <summary>
-        /// ÇÚµåÆù È­¸é ½ÇÇà ÄÚ·çÆ¾. ¹öÆ°¿¡ ¿¬°áÇØ¼­ »ç¿ë
+        /// í•¸ë“œí° í™”ë©´ ì‹¤í–‰ ì½”ë£¨í‹´. ë²„íŠ¼ì— ì—°ê²°í•´ì„œ ì‚¬ìš©
         /// </summary>
         public void PhoneCallButton()
         {
             timeEnd = false;
 
-            // fade Àü Åõ¸íµµ 0
+            // fade ì „ íˆ¬ëª…ë„ 0
             callBackground.color = new Color(callBackground.color.r, callBackground.color.g, callBackground.color.b, 0f);
             callIcon.color = new Color(callIcon.color.r, callIcon.color.g, callIcon.color.b, 0f);
             calledName.color = new Color(calledName.color.r, calledName.color.g, calledName.color.b, 0f);
@@ -632,14 +632,14 @@ namespace PIERStory
                 GameManager.main.isThreadHold = false;
                 GameManager.main.isWaitingScreenTouch = false;
 
-                //ÅëÈ­½Ã°£ ÁøÇàÇÏ±â
+                //í†µí™”ì‹œê°„ ì§„í–‰í•˜ê¸°
                 StartCoroutine(PhoneTimer());
             });
         }
 
 
         /// <summary>
-        /// ÀüÈ­±â È°¼ºÈ­ È¤Àº ÀüÈ­ È­¸é È°¼ºÈ­
+        /// ì „í™”ê¸° í™œì„±í™” í˜¹ì€ ì „í™” í™”ë©´ í™œì„±í™”
         /// </summary>
         public void ActivePhoneImage(string template)
         {
@@ -650,7 +650,7 @@ namespace PIERStory
 
                 timeEnd = true;
 
-                // ÀüÈ­ °É·Á¿ÔÀ» ¶§ ¿¬Ãâ
+                // ì „í™” ê±¸ë ¤ì™”ì„ ë•Œ ì—°ì¶œ
                 if (!GameManager.main.useSkip)
                     StartCoroutine(RoutinePhoneEnter());
             }
@@ -687,8 +687,8 @@ namespace PIERStory
             {
                 timer += Time.deltaTime;
 
-                // È­¸é¿¡ È°¼ºÈ­ ÁßÀÏ ¶§¸¸ ¶ç¿î´Ù
-                // ´Ş¸® ÀüÈ­¸¦ ¾Æ¿¹ »ç¿ëÇÏÁö ¾ÊÀº ÀÌÈÄÀÇ timeEnd¸¦ ³¡¸ÎÀ» °÷À» ¾îµğ·Î ÇÒÁö Àß ¸ğ¸£°ÚÀ½
+                // í™”ë©´ì— í™œì„±í™” ì¤‘ì¼ ë•Œë§Œ ë„ìš´ë‹¤
+                // ë‹¬ë¦¬ ì „í™”ë¥¼ ì•„ì˜ˆ ì‚¬ìš©í•˜ì§€ ì•Šì€ ì´í›„ì˜ timeEndë¥¼ ëë§ºì„ ê³³ì„ ì–´ë””ë¡œ í• ì§€ ì˜ ëª¨ë¥´ê² ìŒ
                 if (callBackground.gameObject.activeSelf)
                 {
                     if ((int)(timer % 60) < 10f)
@@ -703,7 +703,7 @@ namespace PIERStory
 
         IEnumerator RoutinePhoneEnter()
         {
-            // À§Ä¡ ÃÊ±âÈ­
+            // ìœ„ì¹˜ ì´ˆê¸°í™”
             phoneImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1150);
             phoneImage.GetComponent<RectTransform>().DOAnchorPosY(0f, 0.7f).SetEase(Ease.OutBack);
 
@@ -714,7 +714,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ÅëÈ­ ¹öÆ°ÂÊ ¹°°á Ã³¸®
+        /// í†µí™” ë²„íŠ¼ìª½ ë¬¼ê²° ì²˜ë¦¬
         /// </summary>
         IEnumerator PhoneCallCircleMove()
         {
@@ -722,7 +722,7 @@ namespace PIERStory
             int circleCount = 0;
             bool isFirstTime = true;
 
-            // ÀüÈ­ ¹ŞÀ» ¶§±îÁö °è¼Ó µ·´Ù
+            // ì „í™” ë°›ì„ ë•Œê¹Œì§€ ê³„ì† ëˆë‹¤
             while (phoneCall.activeSelf)
             {
                 switch (circleCount)
@@ -771,7 +771,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ÀüÈ­ ¿Â »ç¶÷ ÀÌ¸§ Á¤º¸ ¼¼ÆÃ
+        /// ì „í™” ì˜¨ ì‚¬ëŒ ì´ë¦„ ì •ë³´ ì„¸íŒ…
         /// </summary>
         public void SetPhoneCallInfo(ScriptRow __row)
         {
@@ -781,13 +781,13 @@ namespace PIERStory
 
         #endregion
 
-        #region ¸Ş½ÅÀú
+        #region ë©”ì‹ ì €
 
         /// <summary>
-        /// ¸Ş½ÃÁö µµÂø ¿¬Ãâ
+        /// ë©”ì‹œì§€ ë„ì°© ì—°ì¶œ
         /// </summary>
         /// <param name="completeCallback">GameManager.main.isThreadHold = false;</param>
-        /// <param name="speaker">¹ß½ÅÀÚ</param>
+        /// <param name="speaker">ë°œì‹ ì</param>
         public void ReceiveMessage(Action completeCallback, string speaker)
         {
             float animTime = 0.7f;
@@ -795,16 +795,16 @@ namespace PIERStory
             phoneCall.SetActive(false);
             messengerOverlay.gameObject.SetActive(true);
 
-            // ÇÚµåÆù À§Ä¡ ÃÊ±âÈ­
+            // í•¸ë“œí° ìœ„ì¹˜ ì´ˆê¸°í™”
             phoneImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1350);
 
-            // Åõ¸íµµ 0
+            // íˆ¬ëª…ë„ 0
             messengerOverlay.color = new Color(messengerOverlay.color.r, messengerOverlay.color.g, messengerOverlay.color.b, 0f);
             messengerIcon.color = new Color(messengerIcon.color.r, messengerIcon.color.g, messengerIcon.color.b, 0f);
             messageSender.color = new Color(messageSender.color.r, messageSender.color.g, messageSender.color.b, 0f);
             messageAlert.color = new Color(messageAlert.color.r, messageAlert.color.g, messageAlert.color.b, 0f);
 
-            // ¹ß½ÅÀÚ string °ª ¼¼ÆÃ
+            // ë°œì‹ ì string ê°’ ì„¸íŒ…
             messageSender.text = speaker;
 
             Sequence alert = DOTween.Sequence();
@@ -818,9 +818,9 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ¸Ş½ÅÀú °ü·Ã ¸¸µë
+        /// ë©”ì‹ ì € ê´€ë ¨ ë§Œë“¬
         /// </summary>
-        /// <param name="template">ÅÛÇÃ¸´ ºĞ·ù</param>
+        /// <param name="template">í…œí”Œë¦¿ ë¶„ë¥˜</param>
         /// <param name="row"></param>
         public void CreateForMeesenger(string template, ScriptRow row)
         {
@@ -829,7 +829,7 @@ namespace PIERStory
             switch (template)
             {
                 case GameConst.TEMPLATE_MESSAGE_CALL:
-                    // ¸Ş½ÅÀú ¾Ë¶÷Àº ÅÍÄ¡ ¾øÀÌ Çà³Ñ±è. string °ª¸¸ ÀÔ·ÂÇØÁÜ
+                    // ë©”ì‹ ì € ì•ŒëŒì€ í„°ì¹˜ ì—†ì´ í–‰ë„˜ê¹€. string ê°’ë§Œ ì…ë ¥í•´ì¤Œ
                     messengerObject = Instantiate(messenger_call, messengerContent.transform);
                     messengerText = messengerObject.GetComponentInChildren<TextMeshProUGUI>();
                     messengerText.text = row.script_data;
@@ -875,10 +875,10 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ÅÛÇÃ¸´ÀÌ ¸Ş½ÃÁö»ó´ë, ¸Ş½ÃÁöº»ÀÎ ÀÏ¶§¸¸ ½ÇÇàµÇ´Â ÇÔ¼ö
+        /// í…œí”Œë¦¿ì´ ë©”ì‹œì§€ìƒëŒ€, ë©”ì‹œì§€ë³¸ì¸ ì¼ë•Œë§Œ ì‹¤í–‰ë˜ëŠ” í•¨ìˆ˜
         /// </summary>
-        /// <param name="messageType">¸Ş½ÃÁö º»ÀÎ, »ó´ë ÀÏ¶§ÀÇ prefab</param>
-        /// <param name="bubbleType">¸Ş½ÃÁö º»ÀÎ, »ó´ë ÀÏ ¶§ÀÇ ¸»Ç³¼± Å¸ÀÔ prefab</param>
+        /// <param name="messageType">ë©”ì‹œì§€ ë³¸ì¸, ìƒëŒ€ ì¼ë•Œì˜ prefab</param>
+        /// <param name="bubbleType">ë©”ì‹œì§€ ë³¸ì¸, ìƒëŒ€ ì¼ ë•Œì˜ ë§í’ì„  íƒ€ì… prefab</param>
         void SetMessageTalker(ScriptRow row, GameObject messageType, GameObject bubbleType)
         {
 
@@ -892,21 +892,21 @@ namespace PIERStory
                     msgCurrSpeaker = string.Format("{0}", "(Unknown)");
             }
 
-            // ÀÌÀü¿¡ ¸»ÇÑ »ç¶÷°ú Àü¿¡ ¸»ÇÑ È­ÀÚ°¡ °°Àº »ç¶÷ÀÌ³Ä?
+            // ì´ì „ì— ë§í•œ ì‚¬ëŒê³¼ ì „ì— ë§í•œ í™”ìê°€ ê°™ì€ ì‚¬ëŒì´ëƒ?
             bool sameSpeaker = msgCurrSpeaker.Equals(msgPrevSpeaker) ? true : false;
-            // È®ÀÎÇßÀ¸´Ï È­ÀÚ µ¤¾î¾º¿ì±â
+            // í™•ì¸í–ˆìœ¼ë‹ˆ í™”ì ë®ì–´ì”Œìš°ê¸°
             msgPrevSpeaker = msgCurrSpeaker;
             msgBubbleParent = null;
 
             if (!sameSpeaker)
             {
-                // È­ÀÚÀÇ Ã¹ µîÀåÀÌ°Å³ª ÀÌÀü È­ÀÚ¿Í ´Ù¸£¸é speakerPrefabÀ» ´ã¾ÆµÎ´Â º¯¼ö¿¡ »õ·Î ¼³Á¤ÇØÁØ´Ù.
+                // í™”ìì˜ ì²« ë“±ì¥ì´ê±°ë‚˜ ì´ì „ í™”ìì™€ ë‹¤ë¥´ë©´ speakerPrefabì„ ë‹´ì•„ë‘ëŠ” ë³€ìˆ˜ì— ìƒˆë¡œ ì„¤ì •í•´ì¤€ë‹¤.
                 speakerPrefab = null;
                 speakerPrefab = Instantiate(messageType, messengerContent.transform);
                 MessengerUserInfo userInfo = speakerPrefab.GetComponent<MessengerUserInfo>();
                 Sprite s = null;
 
-                // ÀÌ¸ğÆ¼ÄÜ Ç¥ÇöÀÌ ÀÖ°í, ÀÌ¸ğÆ¼ÄÜÀÌ Á¸ÀçÇÏ¸é ÇÁ·ÎÇÊ »çÁøÀ» ³Ö¾îÁØ´Ù
+                // ì´ëª¨í‹°ì½˜ í‘œí˜„ì´ ìˆê³ , ì´ëª¨í‹°ì½˜ì´ ì¡´ì¬í•˜ë©´ í”„ë¡œí•„ ì‚¬ì§„ì„ ë„£ì–´ì¤€ë‹¤
                 if (!string.IsNullOrEmpty(row.emoticon_expression) && GameManager.main.GetEmoticonSprite(row.emoticon_expression) != null)
                     s = GameManager.main.GetEmoticonSprite(row.emoticon_expression).sprite;
 
@@ -916,7 +916,7 @@ namespace PIERStory
             }
             else
             {
-                // ÀÌÀü È­ÀÚ°¡ ¸»ÇÏ°í ÀÖ´Â °ÍÀÌ±â ¶§¹®¿¡ ¸»Ç³¼±¸¸ Ãß°¡ÇØÁØ´Ù.
+                // ì´ì „ í™”ìê°€ ë§í•˜ê³  ìˆëŠ” ê²ƒì´ê¸° ë•Œë¬¸ì— ë§í’ì„ ë§Œ ì¶”ê°€í•´ì¤€ë‹¤.
                 MessengerUserInfo existUser = speakerPrefab.GetComponent<MessengerUserInfo>();
                 msgBubbleParent = existUser.bubblesParent;
             }
@@ -924,7 +924,7 @@ namespace PIERStory
             messengerObject = Instantiate(bubbleType, msgBubbleParent);
             messengerText = messengerObject.GetComponentInChildren<TextMeshProUGUI>();
 
-            // ¸Ş½ÅÀú ¸»Ç³¼±ÀÌ ÇÑ ÁÙ¿¡ 16ÀÚ ÀÌ»óÀÌ µé¾î°¡¸é ÀÚµ¿À¸·Î Àß¶ó¼­ ¿£ÅÍ¸¦ ÇØÁØ´Ù.
+            // ë©”ì‹ ì € ë§í’ì„ ì´ í•œ ì¤„ì— 16ì ì´ìƒì´ ë“¤ì–´ê°€ë©´ ìë™ìœ¼ë¡œ ì˜ë¼ì„œ ì—”í„°ë¥¼ í•´ì¤€ë‹¤.
             string[] lineStr = row.script_data.Split('\\');
             messengerText.text = string.Empty;
 
@@ -944,7 +944,7 @@ namespace PIERStory
                     messengerText.text = messengerText.text.Insert(messengerText.text.Length, tmp);
             }
 
-            // ÀÌ ¶ÇÇÑ ´ëÈ­ÀÌ¹Ç·Î °ÔÀÓ·Î±×¿¡ µ¥ÀÌÅÍ¸¦ ±âÀÔÇÑ´Ù.
+            // ì´ ë˜í•œ ëŒ€í™”ì´ë¯€ë¡œ ê²Œì„ë¡œê·¸ì— ë°ì´í„°ë¥¼ ê¸°ì…í•œë‹¤.
             CreateTalkLog(row.template, GameManager.main.GetNotationName(row), row.script_data);
         }
 
@@ -960,7 +960,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ¸Ş½ÅÀú ³»¿ëÀÌ ¿Ã¶§¸¶´Ù ½ºÅ©·Ñ Á¦ÀÏ ¾Æ·¡·Î ³»¸°´Ù
+        /// ë©”ì‹ ì € ë‚´ìš©ì´ ì˜¬ë•Œë§ˆë‹¤ ìŠ¤í¬ë¡¤ ì œì¼ ì•„ë˜ë¡œ ë‚´ë¦°ë‹¤
         /// </summary>
         IEnumerator RoutineScrollDown()
         {
@@ -969,7 +969,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ´Ù½ÃÇÏ±â µî¿¡¼­ ³»¿ëÀ» ÀüºÎ Áö¿î´Ù
+        /// ë‹¤ì‹œí•˜ê¸° ë“±ì—ì„œ ë‚´ìš©ì„ ì „ë¶€ ì§€ìš´ë‹¤
         /// </summary>
         public void DestoryAllContents()
         {
@@ -989,32 +989,38 @@ namespace PIERStory
 
         #endregion
 
-        #region Àå¼Ò ÁøÀÔ
+        #region ì¥ì†Œ ì§„ì…
 
         /// <summary>
-        /// Àå¼Ò ÁøÀÔ ÅÛÇÃ¸´¿ë Àå¼Ò ÅÂ±×
+        /// ì¥ì†Œ ì§„ì… í…œí”Œë¦¿ìš© ì¥ì†Œ íƒœê·¸
         /// </summary>
-        /// <param name="placeLabel">ÅÂ±× ¾È¿¡ µé¾î°¥ ÅØ½ºÆ® °ª</param>
+        /// <param name="placeLabel">íƒœê·¸ ì•ˆì— ë“¤ì–´ê°ˆ í…ìŠ¤íŠ¸ ê°’</param>
         public void PlaceNameAnim(Sequence placeTag, string placeLabel)
         {
+            string textEpisodeNum = string.Empty; 
+            
             episodeNum.text = string.Empty;
             placeNameText.text = string.Empty;
-
-            if (SystemManager.GetJsonNodeString(GameManager.main.currentEpisodeJson, CommonConst.COL_EPISODE_TYPE).Equals(CommonConst.COL_CHAPTER))
-            {
-                if (!string.IsNullOrEmpty(SystemManager.GetJsonNodeString(GameManager.main.currentEpisodeJson, CommonConst.COL_EPISODE_NO)))
-                    episodeNum.text = string.Format("EPISODE. {0}", SystemManager.GetJsonNodeString(GameManager.main.currentEpisodeJson, CommonConst.COL_EPISODE_NO));
+            
+            // * ì¥ì†Œì§„ì…  íƒœê·¸ëŠ” ì—í”¼ì†Œë“œ íƒ€ì…ë§ˆë‹¤ ë‹¤ë¥´ë‹¤. 
+            switch(GameManager.main.currentEpisodeData.episodeType) {
+                case EpisodeType.Chapter:
+                textEpisodeNum = string.Format("EPISODE. {0}", GameManager.main.currentEpisodeData.episodeNO);
+                break;
+                
+                case EpisodeType.Side:
+                textEpisodeNum = "SPECIAL EPISODE";
+                break;
+                
+                case EpisodeType.Ending:
+                textEpisodeNum = "ENDING";
+                break;
             }
-            else
-            {
-                // Á¤±Ô ¿¡ÇÇ¼Òµå°¡ ¾Æ´Ï¸é episode typeÀ» ¸í½ÃÇØÁØ´Ù
-                episodeNum.text = SystemManager.GetJsonNodeString(GameManager.main.currentEpisodeJson, CommonConst.COL_EPISODE_TYPE).ToUpper();
+            episodeNum.text = textEpisodeNum;
+            
 
-                if (SystemManager.GetJsonNodeString(GameManager.main.currentEpisodeJson, CommonConst.COL_EPISODE_TYPE).Equals(CommonConst.COL_SIDE))
-                    episodeNum.text = "SPECIAL EPISODE";
-            }
 
-            // Åõ¸íµµ 0À¸·Î ¸¸µé¾î¼­ ¾Èº¸ÀÌ°Ô ÇÏ±â
+            // íˆ¬ëª…ë„ 0ìœ¼ë¡œ ë§Œë“¤ì–´ì„œ ì•ˆë³´ì´ê²Œ í•˜ê¸°
             placeTextBG.color = new Color(placeTextBG.color.r, placeTextBG.color.g, placeTextBG.color.b, 0f);
             episodeNum.color = new Color(episodeNum.color.r, episodeNum.color.g, episodeNum.color.b, 1f);
             placeTagContour.color = new Color(placeTagContour.color.r, placeTagContour.color.g, placeTagContour.color.b, 1f);
@@ -1022,31 +1028,31 @@ namespace PIERStory
 
             placeTag.Join(placeTextBG.DOFade(1f, 1f).SetDelay(1f).OnStart(() =>
             {
-                // ½ºÅµÀÌ ¾Æ´Ñ °æ¿ì¿¡¸¸ È°¼ºÈ­ ÇÑ´Ù
+                // ìŠ¤í‚µì´ ì•„ë‹Œ ê²½ìš°ì—ë§Œ í™œì„±í™” í•œë‹¤
                 if (!GameManager.main.useSkip)
                     placeTextBG.gameObject.SetActive(true);
             }));
 
-            // µ¿ÀÏÇÑ ¼Óµµ·Î ±ÛÀÚ Å¸ÀÌÇÎ ¾Ö´Ï¸ŞÀÌ¼Ç
+            // ë™ì¼í•œ ì†ë„ë¡œ ê¸€ì íƒ€ì´í•‘ ì• ë‹ˆë©”ì´ì…˜
             placeTag.Append(placeNameText.DOText(placeLabel, placeLabel.Length * 0.1f).SetEase(Ease.Linear));
             placeTag.Append(placeTextBG.DOFade(0f, 2f).SetDelay(1f)).Join(episodeNum.DOFade(0f, 2f)).Join(placeTagContour.DOFade(0f, 2f)).Join(placeNameText.DOFade(0f, 2f));
         }
 
         #endregion
 
-        #region GameLog °ü·Ã
+        #region GameLog ê´€ë ¨
 
         /// <summary>
-        /// ·Î±× È°¼ºÈ­
+        /// ë¡œê·¸ í™œì„±í™”
         /// </summary>
         public void ShowLog()
         {
-            // ·Î±× Ã¢À» ¿ÀÇÂÇÕ´Ï´Ù.
+            // ë¡œê·¸ ì°½ì„ ì˜¤í”ˆí•©ë‹ˆë‹¤.
             logPanel.SetActive(true);
             inGameMenuBtn.SetActive(false);
             closeLogBtn.SetActive(true);
 
-            // ·Î±× ½ºÅ©·ÑÀ» ÃÖÇÏ´ÜÀ¸·Î ³»¸®±â
+            // ë¡œê·¸ ìŠ¤í¬ë¡¤ì„ ìµœí•˜ë‹¨ìœ¼ë¡œ ë‚´ë¦¬ê¸°
             logScrollRect.verticalNormalizedPosition = 0f;
         }
 
@@ -1063,7 +1069,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ¼±ÅÃÁö ·Î±× »ı¼ºÇÏ±â 
+        /// ì„ íƒì§€ ë¡œê·¸ ìƒì„±í•˜ê¸° 
         /// </summary>
         public void CreateSelectionLog(string __selected)
         {
@@ -1071,7 +1077,7 @@ namespace PIERStory
 
             logData.Append("\n");
 
-            // ¼±ÅÃÇÑ ¼±ÅÃÁö¿Í ¾Æ´Ñ°ÍÀ» ±¸ºĞÇÏ±â 
+            // ì„ íƒí•œ ì„ íƒì§€ì™€ ì•„ë‹Œê²ƒì„ êµ¬ë¶„í•˜ê¸° 
             foreach (string s in selections)
             {
                 if (s.Equals(selected))
@@ -1084,12 +1090,12 @@ namespace PIERStory
             logData.Append("\n");
             logText.text = logData.ToString();
 
-            // Àç»ç¿ëÀ» À§ÇØ ºñ¿öÁØ´Ù.
+            // ì¬ì‚¬ìš©ì„ ìœ„í•´ ë¹„ì›Œì¤€ë‹¤.
             selections.Clear();
         }
 
         /// <summary>
-        /// ¼±ÅÃÁö Á¤º¸¸¦ ¹Ì¸® ¼öÁıÇØ³õ½À´Ï´Ù. (DoAction ¿¡¼­)
+        /// ì„ íƒì§€ ì •ë³´ë¥¼ ë¯¸ë¦¬ ìˆ˜ì§‘í•´ë†“ìŠµë‹ˆë‹¤. (DoAction ì—ì„œ)
         /// </summary>
         public void CollectSelections(string __data)
         {
@@ -1152,7 +1158,7 @@ namespace PIERStory
 
 
         /// <summary>
-        /// °ÔÀÓ ·Î±× ºñÈ°¼ºÈ­
+        /// ê²Œì„ ë¡œê·¸ ë¹„í™œì„±í™”
         /// </summary>
         public void DisableGameLog()
         {

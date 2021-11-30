@@ -8,7 +8,7 @@ namespace PIERStory
 {
     public class ViewGameMenu : CommonView
     {
-        JsonData episodeJSON = null; // 현재 실행중인 에피소드 JSON 
+        
 
         [Header("Skip")]
         public Image skipButtonIcon;
@@ -26,37 +26,14 @@ namespace PIERStory
 
         [Space(10)]
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
-        string episodeTitle = string.Empty;
-        string episodeType = string.Empty;
+        
 
         public override void OnView()
         {
             base.OnView();
-
-            episodeJSON = GameManager.main.currentEpisodeJson;
-
-            episodeType = SystemManager.GetJsonNodeString(episodeJSON, CommonConst.COL_EPISODE_TYPE);
-
-            // 엔딩과 일반 에피소드 다르게 타이틀 처리 
-            try
-            {
-                switch (episodeType)
-                {
-                    case CommonConst.COL_CHAPTER:
-                        episodeTitle = string.Format("Episode {0}. {1}", SystemManager.GetJsonNodeString(episodeJSON, CommonConst.COL_EPISODE_NO), SystemManager.GetJsonNodeString(episodeJSON, CommonConst.COL_TITLE));
-                        break;
-
-                    default:
-                        episodeTitle = string.Format("{0}", SystemManager.GetJsonNodeString(episodeJSON, CommonConst.COL_TITLE));
-                        break;
-                }
-
-                textTitle.text = episodeTitle;
-            }
-            catch (UnityException e)
-            {
-                textTitle.text = SystemManager.GetLocalizedText("80080");
-            }
+            
+            // 타이틀 처리 타입, 순번, 타이틀 조합
+            textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
 
             SetAutoPlayButtonSprite();
         }
@@ -156,17 +133,17 @@ namespace PIERStory
             SetAutoPlayButtonSprite();
         }
 
+        /// <summary>
+        /// 처음부터 버튼 클릭 
+        /// </summary>
         public void OnClickReplay()
         {
             StopAutoPlay();
 
-            JsonData purchaseData = null;
-            UserManager.main.CheckPurchaseEpisode(SystemManager.GetJsonNodeString(episodeJSON, CommonConst.COL_EPISODE_ID), ref purchaseData);
-
-            if (SystemManager.GetJsonNodeString(purchaseData, CommonConst.COL_PURCHASE_TYPE).Equals("OneTime") && !UserManager.main.CheckAdminUser())
-            {
+            // 1회권 유저는 처음부터 불가하다.             
+            if(GameManager.main.currentEpisodeData.purchaseState == PurchaseState.OneTime) {
                 SystemManager.ShowAlertWithLocalize("6038");
-                return;
+                return; 
             }
 
             SystemManager.ShowConfirmPopUp(SystemManager.GetLocalizedText("6039"), GameManager.main.RetryPlay, null);

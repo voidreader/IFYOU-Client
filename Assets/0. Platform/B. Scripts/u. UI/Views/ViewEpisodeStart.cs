@@ -28,7 +28,7 @@ namespace PIERStory {
         [SerializeField] GameObject btnFreepass; // 프리패스
         [SerializeField] Image iconOneTimePlayCurrency; // 일반 플레이 재화 아이콘 
         
-        [SerializeField] bool isOneTimeUsePossible = false; // 1회권 사용 가능 상태 
+        [SerializeField] bool isOneTimeUsePossible = false; // 1회권 사용 가능 상태 (티켓이 있다)
         [SerializeField] TextMeshProUGUI textOneTimePrice;   // 1회권 구매 가격
         [SerializeField] TextMeshProUGUI textPremiumPrice;  // 프리미엄 구매 가격
         [SerializeField] TextMeshProUGUI textBtnFree; // btnFree 텍스트
@@ -179,9 +179,17 @@ namespace PIERStory {
                 return;
             }
             
+            // 작품의 1회 플레이 티켓이 있는 경우 재화 아이콘과 가격 레이블 변경 
+            ChangeOnetimePlayCurrencyIcon(); 
             
             
+            // * 여기서부터 일반 미구매 유정 
+            if(episodeData.episodeType == EpisodeType.Chapter)  // 정규 챕터만 1회 플레이 가능 
+                btnOneTime.SetActive(true);
+                
+            btnPremium.SetActive(true);
             
+            // 종료 
             
         } // ? end of SetButtonState
         
@@ -216,6 +224,16 @@ namespace PIERStory {
             {
                 iconOneTimePlayCurrency.sprite = LobbyManager.main.spriteGemIcon; // 1회권 없으면 보석 처리 
             }
-        }        
+        }
+        
+        
+        #region 플레이 버튼 클릭 이벤트
+        
+        public void OnClickPlayButton() {
+            
+        }
+        
+        #endregion
+                
     }
 }

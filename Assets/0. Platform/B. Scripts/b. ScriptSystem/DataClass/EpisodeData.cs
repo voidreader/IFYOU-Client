@@ -19,7 +19,10 @@ namespace PIERStory {
         
         public string episodeID = string.Empty; // 에피소드 ID 
         public string episodeNO = string.Empty; // 에피소드 순번
-        public string episodeType = string.Empty; // 에피소드 타입
+        public string episodeTypeString = string.Empty; // 에피소드 타입
+        
+        public EpisodeType episodeType = EpisodeType.Chapter; // 에피소드 타입 enum
+        
         public string episodeTitle = string.Empty; // 에피소드 타이틀
         public string episodeSummary = string.Empty; // 에피소드 스토리 요약 
         
@@ -70,7 +73,8 @@ namespace PIERStory {
         void InitData() {
             episodeID = SystemManager.GetJsonNodeString(episodeJSON, "episode_id");
             episodeNO = SystemManager.GetJsonNodeString(episodeJSON, "chapter_number");
-            episodeType = SystemManager.GetJsonNodeString(episodeJSON, "episode_type");
+            episodeTypeString = SystemManager.GetJsonNodeString(episodeJSON, "episode_type");
+           
             episodeTitle = SystemManager.GetJsonNodeString(episodeJSON, "title");
             episodeSummary = SystemManager.GetJsonNodeString(episodeJSON, "summary");
 
@@ -103,19 +107,24 @@ namespace PIERStory {
                 sceneProgressorValue = playedSceneCount / totalSceneCount;
                 
             
-            switch(episodeType) {
-                case "chapter": 
+                        
+            switch(episodeTypeString) {
+                case "chapter":
+                episodeType = EpisodeType.Chapter;
                 combinedEpisodeTitle = string.Format(SystemManager.GetLocalizedText("6090"),  episodeNO) + episodeTitle;
                 break;
                 
-                case "side":
-                combinedEpisodeTitle = "Special. " + episodeTitle;
-                break;
-                
                 case "ending":
+                episodeType = EpisodeType.Ending;
                 combinedEpisodeTitle = "Ending. " + episodeTitle;
                 break;
+                
+                case "side":
+                episodeType = EpisodeType.Side;
+                combinedEpisodeTitle = "Special. " + episodeTitle;
+                break;
             }
+            
                 
             SetEpisodePlayState();
             SetPurchaseState();
@@ -127,7 +136,7 @@ namespace PIERStory {
         void SetEpisodePlayState() {
             string currentRegularEpisodeID = string.Empty;
             
-            if(episodeType == "side") {
+            if(episodeType == EpisodeType.Side) {
                 episodeState = EpisodeState.Current;
                 return;
             }

@@ -20,7 +20,7 @@ namespace PIERStory
         public static long lastPlayScriptNo = 0;
         public static bool hasLastPlayScriptNo = false;     // 이어하기 타겟 script_no가 대본상에 존재하는지 체크
 
-        [HideInInspector] public JsonData currentEpisodeJson = null;    // 선택한 에피소드 정보
+        public EpisodeData currentEpisodeData = null;    // 선택한 에피소드 정보(JSON => Serializable Class)
 
         JsonData episodeElement = null;     // 에피소드 구성 및 리소스(script, background, image, illust, emoticon)
         JsonData scriptJson = null;         // 스크립트 JsonData
@@ -265,12 +265,12 @@ namespace PIERStory
         /// <summary>
         /// 에피소드 선택(리스트에서..)
         /// </summary>
-        public void SelectEpisode(JsonData __j)
+        public void SelectEpisode(EpisodeData __currentEpisodeData)
         {
-            currentEpisodeJson = __j;
+            currentEpisodeData = __currentEpisodeData;
 
             // 스토리 매니저에게 현재 실행하는 에피소드 ID를 전달한다. 
-            StoryManager.main.SetCurrentEpisodeJson(currentEpisodeJson);
+            StoryManager.main.SetCurrentEpisodeJson(currentEpisodeData);
 
             Debug.Log(string.Format("SelectEpisode [{0}]", StoryManager.main.CurrentEpisodeID));
 

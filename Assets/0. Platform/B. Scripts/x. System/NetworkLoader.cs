@@ -299,6 +299,29 @@ namespace PIERStory
         #region 동기 통신
         
         /// <summary>
+        /// 에피소드 구매 (2021.08.04 수정)
+        /// </summary>
+        /// <param name="__episodeID">대상 에피소드ID</param>
+        /// <param name="__purchaseType">구매 타입</param>
+        /// <param name="__currency">재화코드</param>
+        /// <param name="__currencyQuantity">재화개수</param>
+        public void PurchaseEpisode(string __episodeID, PurchaseState __purchaseType, string __currency, string __currencyQuantity)
+        {
+            // 에피소드 구매는 반드시 통신이 완료되고 다음이 진행되어야 합니다. 
+            JsonData sending = new JsonData();
+            sending[FUNC] = FUNC_EPISODE_PURCHASE;
+            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
+            sending["episodeID"] = __episodeID; // 타겟 에피소드 
+            sending["purchaseType"] = __purchaseType.ToString();
+            sending["currency"] = __currency;
+            sending["currencyQuantity"] = __currencyQuantity;
+            
+
+            SendPost(UserManager.main.CallbackPurchaseEpisode, sending);
+        }
+        
+        
+        /// <summary>
         /// 에피소드 리소스와 스크립트 조회
         /// </summary>
         /// <param name="__sending">전송 데이터</param>

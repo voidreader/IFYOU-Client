@@ -54,8 +54,8 @@ namespace PIERStory
 
         bool isLaunchingCalled = false; //  런칭정보 불러왔는지? 
         public JsonData launchingJSON = null; // 게임베이스 런칭 
-        public JsonData givenStoryData = null; // 선택된 스토리 JSON 데이터 
-        public JsonData givenEpisodeData = null; // 로비에서 전달받은 에피소드 JSON 데이터 
+        public JsonData givenStoryData = null; // 선택된 스토리 JSON 데이터 (프로젝트)
+        public EpisodeData givenEpisodeData = null; // 로비에서 전달받은 에피소드 데이터 (에피소드)
         public JsonData appComonResourceData = null; // 앱 공용 리소스 데이터 (2021.09.14)
        
 

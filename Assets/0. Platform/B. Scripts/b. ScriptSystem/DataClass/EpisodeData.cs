@@ -19,7 +19,10 @@ namespace PIERStory {
         
         public string episodeID = string.Empty; // 에피소드 ID 
         public string episodeNO = string.Empty; // 에피소드 순번
-        public string episodeType = string.Empty; // 에피소드 타입
+        public string episodeTypeString = string.Empty; // 에피소드 타입
+        
+        public EpisodeType episodeType = EpisodeType.Chapter; // 에피소드 타입 enum
+        
         public string episodeTitle = string.Empty; // 에피소드 타이틀
         public string episodeSummary = string.Empty; // 에피소드 스토리 요약 
         
@@ -49,6 +52,7 @@ namespace PIERStory {
         public int pricePremium = 0; // 프리미엄 가격
         
         public string currencyOneTime = string.Empty; // 1회 플레이 화폐
+        public string currencyPremuim =  string.Empty; // 프리미엄 화폐 
         public int priceOneTime = 0; // 1회 플레이 가격
         
         
@@ -70,7 +74,8 @@ namespace PIERStory {
         void InitData() {
             episodeID = SystemManager.GetJsonNodeString(episodeJSON, "episode_id");
             episodeNO = SystemManager.GetJsonNodeString(episodeJSON, "chapter_number");
-            episodeType = SystemManager.GetJsonNodeString(episodeJSON, "episode_type");
+            episodeTypeString = SystemManager.GetJsonNodeString(episodeJSON, "episode_type");
+           
             episodeTitle = SystemManager.GetJsonNodeString(episodeJSON, "title");
             episodeSummary = SystemManager.GetJsonNodeString(episodeJSON, "summary");
 
@@ -92,6 +97,7 @@ namespace PIERStory {
             // * 가격
             pricePremiumSale = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.EPISODE_SALE_PRICE));
             pricePremium = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.EPISODE_PRICE));
+            currencyPremuim = SystemManager.GetJsonNodeString(episodeJSON, "currency");
             currencyOneTime = SystemManager.GetJsonNodeString(episodeJSON, "one_currency");
             priceOneTime = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, "one_price"));
             
@@ -103,19 +109,24 @@ namespace PIERStory {
                 sceneProgressorValue = playedSceneCount / totalSceneCount;
                 
             
-            switch(episodeType) {
-                case "chapter": 
+                        
+            switch(episodeTypeString) {
+                case "chapter":
+                episodeType = EpisodeType.Chapter;
                 combinedEpisodeTitle = string.Format(SystemManager.GetLocalizedText("6090"),  episodeNO) + episodeTitle;
                 break;
                 
-                case "side":
-                combinedEpisodeTitle = "Special. " + episodeTitle;
-                break;
-                
                 case "ending":
+                episodeType = EpisodeType.Ending;
                 combinedEpisodeTitle = "Ending. " + episodeTitle;
                 break;
+                
+                case "side":
+                episodeType = EpisodeType.Side;
+                combinedEpisodeTitle = "Special. " + episodeTitle;
+                break;
             }
+            
                 
             SetEpisodePlayState();
             SetPurchaseState();
@@ -127,7 +138,7 @@ namespace PIERStory {
         void SetEpisodePlayState() {
             string currentRegularEpisodeID = string.Empty;
             
-            if(episodeType == "side") {
+            if(episodeType == EpisodeType.Side) {
                 episodeState = EpisodeState.Current;
                 return;
             }
@@ -161,7 +172,7 @@ namespace PIERStory {
         /// <summary>
         /// 에피소드의 구매 상태 설정 
         /// </summary>        
-        void SetPurchaseState() {
+        public void SetPurchaseState() {
             string episodePurchaseState = string.Empty;
             
             // 구매내역을 purchaseDate로 out 
@@ -194,6 +205,14 @@ namespace PIERStory {
                 
             }
         } // ? SetPurchaseState
+        
+        /// <summary>
+        /// 구매기록이 있는지 체크 
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckExistsPurchaseData() {
+            return purchaseData != null;
+        }
         
     }   
 

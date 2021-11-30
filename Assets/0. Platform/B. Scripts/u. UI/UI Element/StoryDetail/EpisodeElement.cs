@@ -79,11 +79,11 @@ namespace PIERStory {
             
             // 에피소드 타입에 따라. 
             switch(episodeData.episodeType) {
-                case "chapter":
+                case EpisodeType.Chapter:
                 textEpisodeNumbering.text = SystemManager.GetLocalizedText("5027");
                 break;
                 
-                case "side":
+                case EpisodeType.Side:
                 textEpisodeNumbering.text = SystemManager.GetLocalizedText("5028");
                 break;
             }

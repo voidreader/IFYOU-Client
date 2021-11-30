@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using LitJson;
 using TMPro;
 using Doozy.Runtime.Signals;
+using UnityEngine.SceneManagement;
 
 namespace PIERStory {
     public class ViewEpisodeStart : CommonView
@@ -28,7 +29,7 @@ namespace PIERStory {
         [SerializeField] GameObject btnFreepass; // 프리패스
         [SerializeField] Image iconOneTimePlayCurrency; // 일반 플레이 재화 아이콘 
         
-        [SerializeField] bool isOneTimeUsePossible = false; // 1회권 사용 가능 상태 
+        [SerializeField] bool isOneTimeUsePossible = false; // 1회권 사용 가능 상태 (티켓이 있다)
         [SerializeField] TextMeshProUGUI textOneTimePrice;   // 1회권 구매 가격
         [SerializeField] TextMeshProUGUI textPremiumPrice;  // 프리미엄 구매 가격
         [SerializeField] TextMeshProUGUI textBtnFree; // btnFree 텍스트
@@ -41,26 +42,26 @@ namespace PIERStory {
         
         JsonData projectCurrent = null; // 이어하기 체크용 Json
         
-        SignalReceiver signalReceiver;
-        SignalStream signalStream;
+        SignalReceiver signalReceiverEpisodeStart;
+        SignalStream signalStreamEpisodeStart;
         
         #region Meta Signal 수신 관련 처리 
         
         void Awake() {
-            signalStream = SignalStream.Get(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START);
-            signalReceiver = new SignalReceiver().SetOnSignalCallback(OnSignal);
+            signalStreamEpisodeStart = SignalStream.Get(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START);
+            signalReceiverEpisodeStart = new SignalReceiver().SetOnSignalCallback(OnSignal);
         }
         
         private void OnEnable()
         {
             //add the receiver to react to signals sent through the stream
-            signalStream.ConnectReceiver(signalReceiver);
+            signalStreamEpisodeStart.ConnectReceiver(signalReceiverEpisodeStart);
         }
 
         private void OnDisable()
         {
             //remove the receiver from reacting to signals sent through the stream
-            signalStream.DisconnectReceiver(signalReceiver);
+            signalStreamEpisodeStart.DisconnectReceiver(signalReceiverEpisodeStart);
         }        
         
         private void OnSignal(Signal signal)
@@ -179,9 +180,17 @@ namespace PIERStory {
                 return;
             }
             
+            // 작품의 1회 플레이 티켓이 있는 경우 재화 아이콘과 가격 레이블 변경 
+            ChangeOnetimePlayCurrencyIcon(); 
             
             
+            // * 여기서부터 일반 미구매 유정 
+            if(episodeData.episodeType == EpisodeType.Chapter)  // 정규 챕터만 1회 플레이 가능 
+                btnOneTime.SetActive(true);
+                
+            btnPremium.SetActive(true);
             
+            // 종료 
             
         } // ? end of SetButtonState
         
@@ -216,6 +225,242 @@ namespace PIERStory {
             {
                 iconOneTimePlayCurrency.sprite = LobbyManager.main.spriteGemIcon; // 1회권 없으면 보석 처리 
             }
+        }
+        
+        
+        #region 플레이 버튼 클릭 이벤트
+        
+        
+        
+        
+        /// <summary>
+        /// 플레이 버튼 클릭!
+        /// </summary>
+        public void OnClickPlayButton() {
+            SystemManager.main.givenEpisodeData = episodeData;
+            SystemManager.ShowNetworkLoading(); 
+            
+            // * 구매기록이 없으면, 구매처리를 한다. (0원)
+            if(!episodeData.CheckExistsPurchaseData()) {
+                UserManager.OnRequestEpisodePurchase = PurchasePostProcess;
+                NetworkLoader.main.PurchaseEpisode(episodeData.episodeID, PurchaseState.Permanent, episodeData.currencyPremuim, "0");
+            }
+            else {
+                PurchasePostProcess(true);
+            }
+            
+        }
+        
+        /// <summary>
+        /// 1회권 플레이 
+        /// </summary>
+        public void OnClickOneTimePlay() {
+            
+            // 1회권 사용이 강제되는 상태 
+            if(isOneTimeUsePossible) {
+                string oneTimeCurrency = StoryManager.main.GetProjectCurrencyCode(CurrencyType.OneTime);
+                
+                // 올바른 화폐코드가 없는 경우에 오류 처리 
+                if(string.IsNullOrEmpty(oneTimeCurrency)) {
+                    SystemManager.ShowAlertWithLocalize("80073");
+                    return;
+                }
+                
+                PurchaseEpisode(PurchaseState.OneTime, oneTimeCurrency, 1);
+                return;
+            }
+            
+            // 1회권 보유하지 않음, 일반 진행 
+            if(episodeData.currencyOneTime == "coin" && !UserManager.main.CheckCoinProperty(episodeData.priceOneTime))
+            {
+                SystemManager.ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("80013"));
+                return;
+            }
+                
+            if(episodeData.currencyOneTime == "gem" && !UserManager.main.CheckGemProperty(episodeData.priceOneTime))
+            {
+                SystemManager.ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("80014"));
+                return;
+            }
+            
+           
+            // 에피소드 구매 고고 
+            PurchaseEpisode(PurchaseState.OneTime, episodeData.currencyOneTime, episodeData.priceOneTime);            
+            
+        } // ? 1회 플레이 종료
+        
+        
+        /// <summary>
+        /// 프리미엄, 프리패스 플레이 
+        /// </summary>
+        public void OnClickPremiumPlay() {
+            
+            // 프리패스가 없으면 재화 체크하기
+            if(!UserManager.main.HasProjectFreepass())
+            {
+                // 돈없을때 처리 
+                if (episodeData.currencyPremuim == "coin" && !UserManager.main.CheckCoinProperty(episodeData.pricePremiumSale))
+                {
+                    SystemManager.ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("80013"));
+                    return;
+                }
+
+                if (episodeData.currencyPremuim == "gem" && !UserManager.main.CheckGemProperty(episodeData.pricePremiumSale))
+                {
+                    SystemManager.ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("80014"));
+                    return;
+                }
+            }
+
+            // 진행             
+            PurchaseEpisode(PurchaseState.Permanent, episodeData.currencyPremuim, episodeData.pricePremiumSale);
+        }
+        
+        
+        public void OnClickLock() {
+            if(!UserManager.main.CheckAdminUser())
+                return;
+
+            // 어드민 유저만                 
+            SystemManager.main.givenEpisodeData = episodeData;
+            SystemManager.ShowNetworkLoading();
+            StartGame();
+        }
+         
+        
+        #endregion
+        
+        
+        /// <summary>
+        /// 에피소드 구매처리 (통신 시작점)
+        /// </summary>
+        /// <param name="__state">구매 타입</param>
+        /// <param name="__currency">재화코드</param>
+        /// <param name="__price">소모 재화 개수</param>
+        void PurchaseEpisode(PurchaseState __state, string __currency, int __price) {
+            
+            Debug.Log(string.Format("PurchaseEpisode {0}/{1}/{2}", __state.ToString(), __currency, __price));
+            
+            SystemManager.main.givenEpisodeData = episodeData;
+            SystemManager.ShowNetworkLoading();
+            UserManager.OnRequestEpisodePurchase = PurchasePostProcess;
+            
+            // 서버에서 알아서 처리해주기!
+            NetworkLoader.main.PurchaseEpisode(episodeData.episodeID, __state, __currency, __price.ToString());
+            
+        }
+        
+        /// <summary>
+        /// 구매 후 처리. 
+        /// </summary>
+        /// <param name="__isPurchaseSuccess"></param>
+        void PurchasePostProcess(bool __isPurchaseSuccess)
+        {
+            Debug.Log(">> PurchasePostProcess : + " + __isPurchaseSuccess);
+            
+            if (!__isPurchaseSuccess)
+            {
+                Debug.LogError("Error in purchase");
+                // 추가 메세지 처리 
+                // ! NetworkLoader에서 메세지 띄우니까 안해도 된다. 
+                return;
+            }
+            
+            // * 구매 성공시,  현재 에피소드의 구매 정보를 갱신한다. 
+            // ! 구매 정보는 갱신하고, 플레이 버튼들은 변경하지 않는다. 
+            episodeData.SetPurchaseState();
+            
+            
+            
+            // 에디터 환경에서는 그냥 실행
+            if(Application.isEditor) {
+                StartGame();
+                return;
+            }
+            
+            // * 에디터 환경이 아닌 경우는 네트워크 상태를 체크한다. 
+            if(PlayerPrefs.GetInt(SystemConst.KEY_NETWORK_DOWNLOAD, 0) > 1) { // * 와이파이 접속이 아닌 환경에서도 게임을 플레이 하겠다고 했음. 
+                StartGame(); 
+            }
+            else { // 동의 받지 않은 상태 
+                
+                // 동의받지 않았어도 wifi 상태면, 게임 시작. 
+                if(Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork) {
+                    StartGame();
+                    return;
+                }
+                
+                // wifi 아닌경우. 
+                if(Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork) {
+                    SystemManager.ShowConfirmPopUp(SystemManager.GetLocalizedText("80075"), ChangeNetworkSetting, OnRejectPlayWihoutWifi);
+                }
+            }
+
+        } // ? End of purchasePostProcess
+        
+        /// <summary>
+        /// 데이터 환경 다운로드 허용하면서 시작
+        /// </summary>
+        void ChangeNetworkSetting()
+        {
+            PlayerPrefs.SetInt(SystemConst.KEY_NETWORK_DOWNLOAD, 1);
+            StartGame();
+        }
+        
+        /// <summary>
+        /// 3G, LTE 환경에서 게임 플레이 하지 않음 => 리프레시 처리만 해주도록 한다. 
+        /// </summary>
+        void OnRejectPlayWihoutWifi() {
+            
+            // * 무조건 리프레시를 하면 로비에서 진입할때 어색함. 
+            // !  3G, LTE 환경에서 플레이 하지 않는다고 선택하면, 이미 구매는 된 상태기 때문에 
+            // ! 플레이 버튼 재설정해준다. 
+            
+            SetButtonState();
         }        
+        
+        /// <summary>
+        /// 찐 게임 start
+        /// </summary>
+        void StartGame()
+        {
+            Debug.Log("Game Start!!!!!");
+            IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
+            
+            // 다음 에피소드 진행 
+            // * 2021.09.23 iOS 메모리 이슈를 해결하기 위해 중간 Scene을 거쳐서 실행하도록 처리 
+            // * GameScene에서 게임이 시작되는 경우만!
+            if(GameManager.main != null) {
+                
+                SceneManager.LoadSceneAsync("Intermission", LoadSceneMode.Single).allowSceneActivation = true;
+            }
+            else {
+                SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single).allowSceneActivation = true;
+            }
+            
+            // ! 이어하기 체크 
+            string lastPlaySceneID = null;
+            long lastPlayScriptNO = 0;
+
+            // 플레이 지점 저장 정보를 가져오자. 
+            if (CheckResumePossible())
+            { // 이어하기 가능한 상태.
+                lastPlaySceneID = projectCurrent["scene_id"].ToString();
+                lastPlayScriptNO = long.Parse(projectCurrent["script_no"].ToString());
+
+                // ! 어드민 유저는 이어하기를 사용할 수 없다.                 
+                // if(!UserManager.main.CheckAdminUser())
+                GameManager.SetResumeGame(lastPlaySceneID, lastPlayScriptNO);
+            }
+            else
+            {
+                GameManager.SetNewGame(); // 새로운 게임
+            }
+
+            // 통신 
+            NetworkLoader.main.UpdateUserProjectCurrent(episodeData.episodeID, lastPlaySceneID, lastPlayScriptNO);
+        }        
+        
+                
     }
 }

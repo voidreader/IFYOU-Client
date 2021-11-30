@@ -52,6 +52,7 @@ namespace PIERStory {
         public int pricePremium = 0; // 프리미엄 가격
         
         public string currencyOneTime = string.Empty; // 1회 플레이 화폐
+        public string currencyPremuim =  string.Empty; // 프리미엄 화폐 
         public int priceOneTime = 0; // 1회 플레이 가격
         
         
@@ -96,6 +97,7 @@ namespace PIERStory {
             // * 가격
             pricePremiumSale = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.EPISODE_SALE_PRICE));
             pricePremium = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.EPISODE_PRICE));
+            currencyPremuim = SystemManager.GetJsonNodeString(episodeJSON, "currency");
             currencyOneTime = SystemManager.GetJsonNodeString(episodeJSON, "one_currency");
             priceOneTime = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, "one_price"));
             
@@ -170,7 +172,7 @@ namespace PIERStory {
         /// <summary>
         /// 에피소드의 구매 상태 설정 
         /// </summary>        
-        void SetPurchaseState() {
+        public void SetPurchaseState() {
             string episodePurchaseState = string.Empty;
             
             // 구매내역을 purchaseDate로 out 
@@ -203,6 +205,14 @@ namespace PIERStory {
                 
             }
         } // ? SetPurchaseState
+        
+        /// <summary>
+        /// 구매기록이 있는지 체크 
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckExistsPurchaseData() {
+            return purchaseData != null;
+        }
         
     }   
 

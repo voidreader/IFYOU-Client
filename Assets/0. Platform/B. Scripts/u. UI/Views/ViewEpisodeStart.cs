@@ -11,6 +11,8 @@ namespace PIERStory {
     public class ViewEpisodeStart : CommonView
     {
         
+        public static System.Action OnRefreshEpisodeStart = null;
+        
         [SerializeField] ImageRequireDownload popupImage; // 이미지 
         [SerializeField] TextMeshProUGUI textEpisodeTitle;
         [SerializeField] TextMeshProUGUI textEpisodeSummary;
@@ -24,15 +26,20 @@ namespace PIERStory {
         [SerializeField] GameObject btnPremium; // 프리미엄
         [SerializeField] GameObject btnOneTime; // 1회 플레이
         [SerializeField] GameObject btnFreepass; // 프리패스
+        [SerializeField] Image iconOneTimePlayCurrency; // 일반 플레이 재화 아이콘 
         
         [SerializeField] bool isOneTimeUsePossible = false; // 1회권 사용 가능 상태 
-        [SerializeField] TextMeshProUGUI textNormalPrice;   // 1회권 구매 가격
+        [SerializeField] TextMeshProUGUI textOneTimePrice;   // 1회권 구매 가격
         [SerializeField] TextMeshProUGUI textPremiumPrice;  // 프리미엄 구매 가격
+        [SerializeField] TextMeshProUGUI textBtnFree; // btnFree 텍스트
+        [SerializeField] TextMeshProUGUI textBtnFreepass; // 프리패스 버튼 텍스트
         
         [SerializeField] EpisodeData episodeData = null; 
         
         [SerializeField] VerticalLayoutGroup buttonVerticalGroup; // 버튼들 버티컬 레이아웃 그룹 
         [SerializeField] GameObject textAdminWarn; // 어드민 유저 경고 문구
+        
+        JsonData projectCurrent = null; // 이어하기 체크용 Json
         
         SignalReceiver signalReceiver;
         SignalStream signalStream;
@@ -74,6 +81,8 @@ namespace PIERStory {
         public override void OnView()
         {
             base.OnView();
+            
+            buttonVerticalGroup.enabled = false;
         }
         
         public override void OnStartView() {
@@ -85,6 +94,14 @@ namespace PIERStory {
             
             textEpisodeTitle.text = episodeData.combinedEpisodeTitle;
             textEpisodeSummary.text = episodeData.episodeSummary;
+            
+            popupImage.InitImage();
+            popupImage.SetDownloadURL(episodeData.popupImageURL, episodeData.popupImageKey);
+            
+            buttonVerticalGroup.enabled = true;
+            
+            
+            SetButtonState(); // 플레이 버튼 설정 
   
         }
         
@@ -101,7 +118,11 @@ namespace PIERStory {
             btnFreepass.gameObject.SetActive(false);
 
             textPremiumPrice.text = episodeData.pricePremiumSale.ToString();
-            textNormalPrice.text = episodeData.priceOneTime.ToString();
+            textOneTimePrice.text = episodeData.priceOneTime.ToString();
+            
+            // 버튼 텍스트 초기화 
+            textBtnFree.text = SystemManager.GetLocalizedText("5006"); 
+            textBtnFreepass.text = SystemManager.GetLocalizedText("5004");
 
             isOneTimeUsePossible = false;
         }
@@ -118,6 +139,83 @@ namespace PIERStory {
             }
             
             
+            // 이어하기 가능한 경우는 버튼 텍스트를 교체 
+            if (LobbyManager.main != null && CheckResumePossible()) {
+                // 5005: 이어하기 
+                textBtnFree.text = SystemManager.GetLocalizedText("5005"); 
+                textBtnFreepass.text = SystemManager.GetLocalizedText("5005");
+            }
+            
+            // * 에피소드 플레이 상태가 future의 상태인 경우는 플레이 불가 (버튼 제거)
+            if (LobbyManager.main != null && episodeData.episodeState == EpisodeState.Future)
+            {
+                textEpisodeSummary.text = SystemManager.GetLocalizedText("80072");
+                btnLock.SetActive(true);
+                // thumbnailLock.gameObject.SetActive(true);
+                
+                return;
+            }
+            
+            // * current & next (플레이 가능한 상태)
+            
+            // * 프리패스 유저 체크, 프리패스 유저이면 프리패스 버튼 하나만 활성화 
+            if(UserManager.main.HasProjectFreepass()) {
+                btnFreepass.SetActive(true);
+                return;
+            }
+            
+            // * 프리패스 아님, 구매상태 체크해서 버튼 설정
+            // * 무료 작품인지 먼저 체크
+            if(episodeData.pricePremiumSale <= 0) {
+                btnPlay.SetActive(true);
+                return; 
+            } // 무료면 무료버튼만 나오고 끝!
+            
+            // 구매 기록 체크 
+            if((episodeData.purchaseState == PurchaseState.OneTime && episodeData.OneTimePlayable)
+                || episodeData.purchaseState == PurchaseState.Permanent) {
+                
+                btnPlay.SetActive(true);        
+                return;
+            }
+            
+            
+            
+            
+            
+        } // ? end of SetButtonState
+        
+        
+        /// <summary>
+        /// 이어하기 가능한지 체크 
+        /// </summary>
+        /// <returns></returns>
+        bool CheckResumePossible() {
+            projectCurrent = UserManager.main.GetUserProjectCurrent(episodeData.episodeID);
+            
+            if(projectCurrent == null || string.IsNullOrEmpty(projectCurrent["scene_id"].ToString()) || projectCurrent["is_final"].ToString().Equals("1"))
+                return false;
+                
+            return true;
         }
+        
+        /// <summary>
+        /// 1회 플레이 재화 아이콘 수정
+        /// </summary>
+        void ChangeOnetimePlayCurrencyIcon()
+        {
+            if (UserManager.main.GetOneTimeProjectTicket(StoryManager.main.CurrentProjectID) > 0)
+            {
+                textOneTimePrice.text = "1";
+                iconOneTimePlayCurrency.sprite = LobbyManager.main.spriteOneTimeIcon; // 티켓 이미지로 변경한다. 
+                iconOneTimePlayCurrency.SetNativeSize();
+
+                isOneTimeUsePossible = true;
+            }
+            else
+            {
+                iconOneTimePlayCurrency.sprite = LobbyManager.main.spriteGemIcon; // 1회권 없으면 보석 처리 
+            }
+        }        
     }
 }

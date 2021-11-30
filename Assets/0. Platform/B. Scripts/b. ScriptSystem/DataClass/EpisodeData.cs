@@ -41,7 +41,9 @@ namespace PIERStory {
         public string popupImageKey = string.Empty; 
         
         public EpisodeState episodeState = EpisodeState.Future; // 에피소드 플레이 상태 
-        public PurchaseState purchaseState = PurchaseState.None; // 구매 상태 
+        public PurchaseState purchaseState = PurchaseState.None; // 구매 상태
+        
+        public bool OneTimePlayable = false; // 1회 플레이 가능여부  
         
         public int pricePremiumSale = 0; // 프리미엄 세일 가격
         public int pricePremium = 0; // 프리미엄 가격
@@ -178,6 +180,7 @@ namespace PIERStory {
                 }
                 else if (purchaseData["purchase_type"].ToString() == "OneTime"){ // OneTime
                     purchaseState = PurchaseState.OneTime;
+                    OneTimePlayable = SystemManager.GetJsonNodeBool(purchaseData, "onetime_playable");
                 }
                 else if (purchaseData["purchase_type"].ToString() == "Rent"){ // 
                     purchaseState = PurchaseState.Rent;

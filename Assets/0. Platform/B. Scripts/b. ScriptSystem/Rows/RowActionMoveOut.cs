@@ -58,13 +58,14 @@ namespace PIERStory
 
             // 실제 로직 동작을 시작합니다.
             currentBG = GameManager.main.currentBG;
-            ViewGame.main.HideBubbles(); // 모든 말풍선 제거 
 
             // 거리에 따라 트윈 시간 설정 
             tweenTime = GameManager.main.CalcMoveBGAnimTime(ref moveDistance);
 
-            // 캐릭터 무빙 관련 처리는 아직 하지 않는다. 
-            GameManager.main.CleanScreenWithoutBackground();
+            // 화면 연출을 제외한 이미지 리소스, 캐릭터, 말풍선을 지워준다
+            GameManager.main.HideImageResources();
+            GameManager.main.HideCharacters();
+            ViewGame.main.HideBubbles();
 
             // 배경 이동처리 
             MoveBackground();
@@ -90,6 +91,8 @@ namespace PIERStory
                 // Position 돌려준다. 
                 currentBG.transform.position = Vector3.zero;
                 GameManager.main.currentBackgroundMount.EndImage();
+                // 페이드 아웃이 완료되면 화면 연출도 지워준다.
+                ScreenEffectManager.main.RemoveAllScreenEffect();
                 // 완료되면 callback 처리 
                 callback?.Invoke();
 

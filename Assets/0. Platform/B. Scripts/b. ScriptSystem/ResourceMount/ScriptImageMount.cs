@@ -58,9 +58,12 @@ namespace PIERStory
             }
 
             // 추가 정보
-            gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_GAME_SCALE));
-            offsetX = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_OFFSET_X));
-            offsetY = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_OFFSET_Y));
+            if(resourceData.ContainsKey(CommonConst.COL_GAME_SCALE))
+                gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_GAME_SCALE));
+            if (resourceData.ContainsKey(CommonConst.COL_OFFSET_X))
+                offsetX = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_OFFSET_X));
+            if (resourceData.ContainsKey(CommonConst.COL_OFFSET_Y))
+                offsetY = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_OFFSET_Y));
 
 
             switch (template)

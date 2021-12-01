@@ -41,6 +41,7 @@ namespace PIERStory
         public const string LAYER_MODEL_C = "Model-C";
         public const string LAYER_MODEL_R = "Model-R";
 
+        public const string MOTION3_JSON = ".motion3.json";
 
         public const string MODEL_TYPE_SPINE = "spine";
 

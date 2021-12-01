@@ -46,6 +46,7 @@ namespace PIERStory
             }
 
             voiceInfo.text = string.Format("{0} 모아듣기\n<color=#A0A0A0FF>{1}개 / {2}개</color>", SystemManager.GetJsonNodeString(__nameTag, GameConst.COL_SPEAKER), unlockCount, totalCount);
+            gameObject.SetActive(true);
         }
 
         public void ShowDetailSoundList()

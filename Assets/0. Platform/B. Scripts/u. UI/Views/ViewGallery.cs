@@ -56,6 +56,9 @@ namespace PIERStory
 
             soundListElements[0].SetBGMListElement();
 
+            for (int i = 1; i < soundListElements.Length; i++)
+                soundListElements[i].gameObject.SetActive(false);
+
             JsonData voiceData = UserManager.main.GetNodeUserVoiceHistory();
             JsonData voiceImageData = StoryManager.main.storyNametagJSON;
             int voiceIndex = 1;

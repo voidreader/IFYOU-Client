@@ -328,7 +328,7 @@ namespace PIERStory
                 motion_name = string.IsNullOrEmpty(SystemManager.GetJsonNodeString(resourceData[i], CommonConst.MOTION_NAME)) ? string.Empty : SystemManager.GetJsonNodeString(resourceData[i], CommonConst.MOTION_NAME);
 
                 // 파일이름과 세팅된 모션이름이 있는지 체크해서 진행 
-                if (!file_key.Contains(".motion3.json") || string.IsNullOrEmpty(motion_name))
+                if (!file_key.Contains(GameConst.MOTION3_JSON) || string.IsNullOrEmpty(motion_name))
                     continue;
 
                 // 모션을 만들자. 

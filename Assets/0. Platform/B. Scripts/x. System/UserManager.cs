@@ -648,7 +648,7 @@ namespace PIERStory
         /// </summary>
         public void ShowCompleteMission(JsonData __j)
         {
-            Debug.LogError("Check ShowCompleteMission");
+            Debug.LogWarning("Check ShowCompleteMission");
             /*
             if(__j == null && __j.Count == 0)  {
                 Debug.Log("No Clear Mission");

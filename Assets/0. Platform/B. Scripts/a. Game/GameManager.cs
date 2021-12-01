@@ -493,6 +493,8 @@ namespace PIERStory
             // 모든 리소스 로딩을 완료할때까지 기다리기!
             yield return new WaitUntil(() => currentPage.IsPageInitialized());
             Debug.Log("<color=yellow> Current Page is just initialized! </color>");
+            
+            //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_GAME, "gameLoadingComplete", string.Empty);
 
             // 페이지에게 실행할 Row를 요청한다.(얘는 첫번째 행)
             ScriptRow currentRow = currentPage.GetNextRow();

@@ -101,6 +101,8 @@ namespace PIERStory
             }
 
             #endregion
+
+            gameObject.SetActive(true);
         }
 
         public void OnClickIllustDetail()

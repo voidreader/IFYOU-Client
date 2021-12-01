@@ -27,20 +27,14 @@ namespace PIERStory
         [Space(10)]
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
         
-
-        public override void OnView()
+        public override void OnStartView()
         {
-            base.OnView();
-            
+            base.OnStartView();
+
             // 타이틀 처리 타입, 순번, 타이틀 조합
             textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
 
             SetAutoPlayButtonSprite();
-        }
-
-        public override void OnStartView()
-        {
-            base.OnStartView();
         }
 
         void SetAutoPlayButtonSprite()

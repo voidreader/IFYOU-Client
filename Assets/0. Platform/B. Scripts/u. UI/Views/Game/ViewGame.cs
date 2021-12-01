@@ -127,6 +127,9 @@ namespace PIERStory
         public override void OnView()
         {
             base.OnView();
+
+            Debug.Log("ViewGame");
+
             StoryManager.enterGameScene = true;
 
             // 화면 크기에 맞춰서 스탠딩캐릭터 renderer 사이즈 조절
@@ -161,6 +164,11 @@ namespace PIERStory
 
             // 입력 받았어요!
             GameManager.main.isWaitingScreenTouch = false;
+        }
+
+        public void OnClickMenuArea()
+        {
+            Debug.Log("OnClickMenuArea");
         }
 
         #region 말풍선 관련

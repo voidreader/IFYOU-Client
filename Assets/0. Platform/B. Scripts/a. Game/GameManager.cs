@@ -870,6 +870,9 @@ namespace PIERStory
         {
             for(int i=0;i< characterModels.Length;i++)
             {
+                if (characterModels[i] == null)
+                    continue;
+
                 if (!characterModels[i].moveComplete)
                     return false;
             }

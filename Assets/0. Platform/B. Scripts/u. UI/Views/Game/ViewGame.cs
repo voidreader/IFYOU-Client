@@ -11,7 +11,7 @@ using DG.Tweening;
 
 namespace PIERStory
 {
-    public class ViewGame : CommonView, IPointerClickHandler
+    public class ViewGame : CommonView//, IPointerClickHandler
     {
         public static ViewGame main = null;     // UI singleton
         
@@ -124,11 +124,9 @@ namespace PIERStory
             main = this;
         }
 
-        public override void OnView()
+        public override void OnStartView()
         {
-            base.OnView();
-
-            Debug.Log("ViewGame");
+            base.OnStartView();
 
             StoryManager.enterGameScene = true;
 
@@ -140,11 +138,7 @@ namespace PIERStory
                 modelRenders[i].GetComponent<RectTransform>().sizeDelta = new Vector2(rawImageSize, rawImageSize);
         }
 
-        public override void OnStartView()
-        {
-            base.OnStartView();
-        }
-
+        /*
         public void OnPointerClick(PointerEventData eventData)
         {
             // 로그 패널 활성화 중엔 입력 받지 않음.   
@@ -165,11 +159,36 @@ namespace PIERStory
             // 입력 받았어요!
             GameManager.main.isWaitingScreenTouch = false;
         }
+        */
 
-        public void OnClickMenuArea()
+        /// <summary>
+        /// 터치하여 다음 행으로 진행
+        /// </summary>
+        public void OnClickProgressNextRow()
         {
-            Debug.Log("OnClickMenuArea");
+            // 로그 패널 활성화 중엔 입력 받지 않음.
+            if (logPanel.activeSelf)
+            {
+                DisableGameLog();
+                return;
+            }
+
+            // threadHold 중에 입력 받지 않음
+            if (GameManager.main.isThreadHold)
+            {
+                Debug.Log(">> holding thread now <<");
+                return;
+            }
+
+            // touch waiting 아닌 경우 입력 받지 않음.
+            if (!GameManager.main.isWaitingScreenTouch)
+                return;
+
+            // 입력 받았어요!
+            GameManager.main.isWaitingScreenTouch = false;
         }
+
+
 
         #region 말풍선 관련
 
@@ -371,10 +390,12 @@ namespace PIERStory
             SelectionMain.DOFade(0.5f, 1);
 
             // 튜토리얼을 보지 않고 스킵해서 선택지 어떻게 누르는지 모르는 바보들을 위해 선택지 꾸욱 눌러야 한다고 문구를 띄워준다.
+            /*
             if (UserManager.main.tutorialStep.Equals(2))
                 selectionTutorialText.gameObject.SetActive(true);
             else
                 selectionTutorialText.gameObject.SetActive(false);
+            */
 
             for (int i = 0; i < ListSelectionRows.Count; i++)
             {

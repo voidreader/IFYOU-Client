@@ -2,14 +2,12 @@
 using UnityEngine.UI;
 
 using TMPro;
-using LitJson;
 
 namespace PIERStory
 {
     public class ViewGameMenu : CommonView
     {
         
-
         [Header("Skip")]
         public Image skipButtonIcon;
         public Sprite ableSkip;    // 스킵버튼 사용 가능 sprite
@@ -110,7 +108,9 @@ namespace PIERStory
             // EndGame이 호출되면 Game씬에서 빠져나가기 때문에 오류 발생
             GameManager.main.SaveCurrentPlay();
 
-            SystemManager.ShowConfirmPopUp(SystemManager.GetLocalizedText("6037"), GameManager.main.EndGame, null);
+            // 팝업에 대해 뭔가 정해질 때까지 묻지 않고 그냥 종료
+            //SystemManager.ShowConfirmPopUp(SystemManager.GetLocalizedText("6037"), GameManager.main.EndGame, null);
+            GameManager.main.EndGame();
         }
 
         void StopAutoPlay()
@@ -133,14 +133,16 @@ namespace PIERStory
         public void OnClickReplay()
         {
             StopAutoPlay();
+            GameManager.main.RetryPlay();
 
             // 1회권 유저는 처음부터 불가하다.             
-            if(GameManager.main.currentEpisodeData.purchaseState == PurchaseState.OneTime) {
+            if (GameManager.main.currentEpisodeData.purchaseState == PurchaseState.OneTime) {
                 SystemManager.ShowAlertWithLocalize("6038");
                 return; 
             }
 
-            SystemManager.ShowConfirmPopUp(SystemManager.GetLocalizedText("6039"), GameManager.main.RetryPlay, null);
+            // 팝업이 결정될 때까진 걍 재시작
+            //SystemManager.ShowConfirmPopUp(SystemManager.GetLocalizedText("6039"), GameManager.main.RetryPlay, null);
         }
 
         #endregion

@@ -1708,7 +1708,31 @@ namespace PIERStory
 
         public void ShowGameEnd(string __nextEpisodeId)
         {
+            useSkip = false;
+            isPlaying = false;
 
+            //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_GAME, "episodeEnd", string.Empty);
+            JsonData nextEpisodeJson = null;
+
+            // 이동 컬럼이 없는 경우
+            if(string.IsNullOrEmpty(__nextEpisodeId))
+            {
+                Debug.Log("No target episode ID");
+                __nextEpisodeId = string.Empty;
+
+                if(currentEpisodeData.episodeTypeString.Equals(CommonConst.COL_CHAPTER))
+                {
+                    //nextEpisodeJson = ge
+                }
+            }
+
+        }
+
+        JsonData GetNextRegularEpisodeJson()
+        {
+
+
+            return null;
         }
 
         #endregion

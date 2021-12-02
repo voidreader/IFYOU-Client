@@ -286,8 +286,6 @@ namespace PIERStory
 
         public void OnPointerUp(PointerEventData eventData)
         {
-
-
             if (!isOneOfSelectionPointerDown)
                 return;
 

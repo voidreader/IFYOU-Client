@@ -478,6 +478,7 @@ namespace PIERStory
             // 이동!
             GameManager.main.currentPage.SetCurrentRowBySceneID(GameManager.main.targetSelectionSceneID);
 
+            // 메신저 중이었다면 비활성화
             if (messenger.activeSelf)
                 messenger.SetActive(false);
 

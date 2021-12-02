@@ -16,7 +16,7 @@ namespace PIERStory {
         
         
         [SerializeField] ImageRequireDownload thumbnailImage; 
-        [SerializeField] EpisodeData episodeData = null; 
+        public EpisodeData episodeData = null; 
         
         
         // 플래이 상태(현재, 과거, 미래)
@@ -33,6 +33,8 @@ namespace PIERStory {
         [Space]
         [SerializeField] TextMeshProUGUI textEpisodeTitle; // 타이틀 
         [SerializeField] TextMeshProUGUI textEpisodeNumbering; // 에피소드 번호 
+        
+        [SerializeField] GameObject btnSpreadEnding; // 엔딩 펼침 버튼 
         
         
         /// <summary>
@@ -55,21 +57,15 @@ namespace PIERStory {
         /// <summary>
         /// 에피소드 초기화
         /// </summary>
-        /// <param name="__j"></param>
-        public void InitElement(JsonData __j) {
+        /// <param name="__data"></param>
+        public void InitElement(EpisodeData __data) {
             
             this.gameObject.SetActive(true);
             
             ResetData();
             
-            episodeJSON = __j;
-            
-            // 에피소드 정보 클래스 데이터 세팅 
-            if(episodeData == null) 
-                episodeData = new EpisodeData(episodeJSON);
-            else 
-                episodeData.SetEpisodeData(episodeJSON);
-            
+            episodeData = __data;
+          
             
             // 목록 썸네일 처리 
             thumbnailImage.SetDownloadURL(episodeData.squareImageURL, episodeData.squareImageKey);

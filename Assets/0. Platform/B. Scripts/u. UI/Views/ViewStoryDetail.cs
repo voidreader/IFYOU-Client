@@ -60,9 +60,9 @@ namespace PIERStory {
         {
             base.OnView();
             
-            UserManager.OnRequestEpisodeReset = this.OnView;
+            UserManager.OnRequestEpisodeReset = this.OnStartView;
             UserManager.OnFreepassPurchase = this.SetFreepassInfo;
-            RefreshStoryDetail = this.OnView;
+            RefreshStoryDetail = this.OnStartView;
             
             
             
@@ -83,6 +83,13 @@ namespace PIERStory {
             else {
                 ShowEpisodeList(true);
             }
+            
+        }
+        
+        /// <summary>
+        /// 현재 작품의 EpisodeData를 일괄 생성
+        /// </summary>
+        void SetProjectEpisodeData() {
             
         }
         
@@ -130,11 +137,11 @@ namespace PIERStory {
                 return;
                 
             if(__isRegular) { // * 정규 에피소드 
-                SetEpisodeList(StoryManager.main.RegularListJSON);
+                SetEpisodeList(StoryManager.main.RegularEpisodeList);
                 SetRegularEpisodeCountText(StoryManager.main.regularEpisodeCount,  StoryManager.main.unlockEndingCount);
             }
             else  { // * 스페셜(사이드) 에피소드
-                SetEpisodeList(StoryManager.main.SideEpisodeListJson);
+                SetEpisodeList(StoryManager.main.SideEpisodeList);
                 SetSideEpisodeCountText(StoryManager.main.sideEpisodeCount, StoryManager.main.unlockSideEpisodeCount);
             }
             
@@ -181,18 +188,18 @@ namespace PIERStory {
         /// </summary>
         /// <param name="__listJSON">에피소드 리스트</param>
         /// <param name="__isMain">정규 에피소드 여부</param>
-        void SetEpisodeList(JsonData __listJSON) {
+        void SetEpisodeList(List<EpisodeData> __listEpisode) {
             ResetEpisodeList();
             
-            if(__listJSON == null)
+            if(__listEpisode == null || __listEpisode.Count == 0)
                 return;
             
             // * 작품개수를 3으로 나눈다. 
-            int dividedThree = Mathf.FloorToInt((float)__listJSON.Count / 3f );
+            int dividedThree = Mathf.FloorToInt((float)__listEpisode.Count / 3f );
             
             // 
             for(int i=0; i<dividedThree; i++) {
-                ListThreeEpisodeRows[i].InitRow(__listJSON, i);
+                ListThreeEpisodeRows[i].InitRow(__listEpisode, i);
             }
                            
         }

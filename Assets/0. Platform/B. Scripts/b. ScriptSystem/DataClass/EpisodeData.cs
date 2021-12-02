@@ -56,7 +56,6 @@ namespace PIERStory {
         public int priceOneTime = 0; // 1회 플레이 가격
         
         
-        
         public EpisodeData(JsonData __j) {
             episodeJSON = __j;
             

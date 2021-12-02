@@ -43,14 +43,13 @@ namespace PIERStory
         JsonData ProjectDetailJson = null; // 조회로 가져온 작품에 대한 기준정보와 유저정보.
         [SerializeField] EpisodeData CurrentEpisodeData = null; // 선택한 에피소드 정보(JSON => Serializable Class)
 
-        [HideInInspector]
-        public JsonData EpisodeListJson = null; // 에피소드 리스트 JSON 
-        public JsonData reverseEpisodeListJson { private set; get; } // 에피소드 리스트 역순 배열을 위한 JSON
-        [HideInInspector]
-        public JsonData SideEpisodeListJson = null; // 사이드 에피소드 리스트 JSON 
+        [HideInInspector] public JsonData EpisodeListJson = null; // 에피소드 리스트 JSON 
+        [HideInInspector] public JsonData SideEpisodeListJson = null; // 사이드 에피소드 리스트 JSON 
         
-        [HideInInspector] public JsonData RegularListJSON = null; // chapter(정규)만 따로 빼놓는다.
-        [HideInInspector] public JsonData ReverseRegularListJSON = null; // 정규 에피소드의 역순 
+        public List<EpisodeData> RegularEpisodeList = new List<EpisodeData>(); // chapter(정규)만 따로 빼놓는다.
+        public List<EpisodeData> ReverseRegularEpisodeList = new List<EpisodeData>(); // 정규 에피소드의 역순 
+        public List<EpisodeData> SideEpisodeList = new List<EpisodeData>(); // 사이드 에피소드
+        public List<EpisodeData> ListCurrentProjectEpisodes = new List<EpisodeData>(); // 현재 선택된 혹은 플레이중인 작품의 EpisodeData의 List.
         
         [Space]
         [Header("== 에피소드 카운팅 ==")]
@@ -387,6 +386,9 @@ namespace PIERStory
             // 프로젝트 기준정보 설정 
             SetProjectStandard();
             
+            // 현재 작품의 EpisodeData 클리어 . 
+            ListCurrentProjectEpisodes.Clear();
+            
 
             // 에피소드 정보 할당
             EpisodeListJson = ProjectDetailJson[NODE_EPISODE]; // 프로젝트의 정규 에피소드
@@ -394,20 +396,34 @@ namespace PIERStory
             sideEpisodeCount = SideEpisodeListJson.Count; // 사이드 에피소드 전체 
             unlockSideEpisodeCount = 0; 
             
+            EpisodeData newEpisodeData = null;
+            
+            SideEpisodeList.Clear();
+            
             // * 해금된 사이드 에피소드 개수 구하기 
             for(int i=0; i<SideEpisodeListJson.Count;i++) {
+                
+                newEpisodeData = new EpisodeData(SideEpisodeListJson[i]);
+                
+                ListCurrentProjectEpisodes.Add(newEpisodeData);  // 모든 에피소드 
+                SideEpisodeList.Add(newEpisodeData); // 사이드만 모아주기 
+                
                 if(SystemManager.GetJsonNodeBool(SideEpisodeListJson[i], "is_open"))
                     unlockSideEpisodeCount++;
             }
             
             
             // 정규 에피소드 수집 
-            RegularListJSON = new JsonData();
+            RegularEpisodeList.Clear();
             regularEpisodeCount = 0;
             unlockEndingCount = 0;
+            
            
             for(int i=0; i<EpisodeListJson.Count;i++) {
                 
+                newEpisodeData = new EpisodeData(EpisodeListJson[i]);
+                
+                ListCurrentProjectEpisodes.Add(newEpisodeData); // 정규+엔딩 모아주기 
                 
                 if (SystemManager.GetJsonNodeBool(EpisodeListJson[i], "ending_open"))
                         unlockEndingCount++;
@@ -416,42 +432,21 @@ namespace PIERStory
                 if (EpisodeListJson[i]["episode_type"].ToString() != "chapter")
                     continue;
                 
-                RegularListJSON.Add(EpisodeListJson[i]);
+                RegularEpisodeList.Add(newEpisodeData);
             }
             
-            regularEpisodeCount = RegularListJSON.Count; // 카운팅 
+            regularEpisodeCount = RegularEpisodeList.Count; // 카운팅 
             
             
             
             #region 에피소드 역순 배열을 위한 작업 
-            reverseEpisodeListJson = new JsonData();
-            ReverseRegularListJSON = new JsonData();
             
-            // * 이전 로직 
-            for(int i= EpisodeListJson.Count-1; i >= 0; i--)
-            {
-                if (EpisodeListJson[i]["episode_type"].ToString().Equals("ending"))
-                    continue;
-
-                // chapter 만 먼저,역순으로 넣어주기
-                reverseEpisodeListJson.Add(EpisodeListJson[i]);
-
-                // 방금 넣은 정규 에피소드에 소속된 엔딩을 다음으로 넣어주기. 
-                for(int j=0; j<EpisodeListJson.Count; j++)
-                {
-                    if (!EpisodeListJson[j]["episode_type"].ToString().Equals("ending"))
-                        continue;
-
-                    if (EpisodeListJson[j]["depend_episode"].ToString().Equals(EpisodeListJson[i]["episode_id"].ToString()))
-                        reverseEpisodeListJson.Add(EpisodeListJson[j]); // depend_episode랑 방금 넣은 정규 에피소드의 아이디가 같으면 add.
-
-                } // end of j for.
-
-            } // end of i for.
+            ReverseRegularEpisodeList.Clear();
             
+              
             // * IF YOU 로직 
-            for(int i=RegularListJSON.Count-1; i>=0; i--) {
-                ReverseRegularListJSON.Add(RegularListJSON[i]);
+            for(int i=RegularEpisodeList.Count-1; i>=0; i--) {
+                ReverseRegularEpisodeList.Add(RegularEpisodeList[i]);
             }
             
             #endregion
@@ -1234,6 +1229,51 @@ namespace PIERStory
             
             return null;
         }
+        
+        
+        
+        
+        /// <summary>
+        /// 이동 컬럼(#)을 통해 다음 에피소드를 찾아가는 경우 사용 
+        /// </summary>
+        /// <param name="targetID"></param>
+        /// <returns></returns>
+        public static EpisodeData GetNextFollowingEpisodeData(string targetID) {
+            
+            for(int i=0; i<main.ListCurrentProjectEpisodes.Count; i++) {
+                if(main.ListCurrentProjectEpisodes[i].episodeID == targetID)
+                    return main.ListCurrentProjectEpisodes[i];
+            }
+            
+            return null;
+        }
+        
+        /// <summary>
+        /// 정규 에피소드의 다음 순서 에피소드 찾기 
+        /// </summary>
+        /// <param name="currentEpisodeData"></param>
+        /// <returns></returns>
+        public static EpisodeData GetNextRegularEpisodeData(EpisodeData currentEpisodeData) {
+            
+            bool isFound = false;
+            
+            if(currentEpisodeData.episodeType == EpisodeType.Ending || currentEpisodeData.episodeType == EpisodeType.Side)
+                return null;
+                
+            for(int i=0; i<main.ListCurrentProjectEpisodes.Count;i++) {
+                
+                // 찾았으면 다음행이 다음 순번이다.
+                if(isFound)
+                    return main.ListCurrentProjectEpisodes[i];
+                
+                if(main.ListCurrentProjectEpisodes[i] == currentEpisodeData) {
+                    isFound = true;
+                }
+            } // 없으면 null;
+            
+            return null;
+        }
+        
         
         #endregion
         

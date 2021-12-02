@@ -9,6 +9,8 @@ using LitJson;
 using BestHTTP;
 using Toast.Gamebase;
 
+using TMPro;
+
 namespace PIERStory
 {
 
@@ -81,6 +83,15 @@ namespace PIERStory
 
         string messageRequireUpdate = string.Empty;
         string messageTestVersion = string.Empty;
+        
+        #region 내장폰트
+        [SerializeField] TMP_FontAsset innerFontKO = null;
+        [SerializeField] TMP_FontAsset innerFontEN = null;
+        [SerializeField] TMP_FontAsset innerFontJA = null;
+        [SerializeField] TMP_FontAsset innerFontSC = null;
+        [SerializeField] TMP_FontAsset innerFontTC = null;
+        #endregion
+        
 
         private void Awake()
         {

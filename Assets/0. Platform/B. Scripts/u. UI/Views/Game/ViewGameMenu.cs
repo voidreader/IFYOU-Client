@@ -2,13 +2,15 @@
 using UnityEngine.UI;
 
 using TMPro;
+using Doozy.Runtime.UIManager.Components;
 
 namespace PIERStory
 {
     public class ViewGameMenu : CommonView
     {
-        
+
         [Header("Skip")]
+        public UIButton skipButton;
         public Image skipButtonIcon;
         public Sprite ableSkip;    // 스킵버튼 사용 가능 sprite
         public Sprite disableSkip;  // 스킵버튼 사용 불가능 sprite
@@ -58,11 +60,13 @@ namespace PIERStory
         {
             if (skipable)
             {
+                skipButton.interactable = true;
                 skipButtonIcon.sprite = ableSkip;
                 skipButtonIcon.SetNativeSize();
             }
             else
             {
+                skipButton.interactable = false;
                 skipButtonIcon.sprite = disableSkip;
                 skipButtonIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(25, 27);
             }

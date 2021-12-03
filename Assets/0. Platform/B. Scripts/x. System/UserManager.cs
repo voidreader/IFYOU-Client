@@ -79,7 +79,6 @@ namespace PIERStory
         public JsonData currentStoryJson = null; // 선택한 프로젝트와 관련된 정보 
 
         public bool completeReadUserData = false;
-        public bool episodeRecordComplete = false;
 
         public float prevIllustProgress = -1f;
 
@@ -1326,7 +1325,6 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("CallbackUpdateEpisodeRecord");
-                episodeRecordComplete = false;
                 return;
             }
             
@@ -1349,8 +1347,6 @@ namespace PIERStory
                 // ViewGameEnd.UpdateCurrentEpisodeSceneCount(resultEpisodeRecord["playedSceneCount"][0]);
                 Signal.Send(LobbyConst.STREAM_GAME, LobbyConst.SIGNAL_UPDATE_EPISODE_SCENE_COUNT, resultEpisodeRecord["playedSceneCount"][0]);
             }
-
-            episodeRecordComplete = true;
         }
 
         /// <summary>

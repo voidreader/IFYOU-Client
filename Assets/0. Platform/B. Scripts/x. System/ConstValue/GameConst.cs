@@ -30,6 +30,10 @@ namespace PIERStory
         public const float normalDelay = 5f;
         public const float slowDelay = 7f;
 
+        public const string SIGNAL_EPISODE_END = "episodeEnd";
+        public const string SIGNAL_NEXT_DATA = "nextData";
+        public const string SIGNAL_UPDATE_EPISODE = "updateCurrentData";
+        public const string SIGNAL_NEXT_EPISODE = "nextEpisode";
 
         #region 게임 스크립트 관련
 

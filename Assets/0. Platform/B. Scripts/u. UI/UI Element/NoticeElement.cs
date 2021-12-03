@@ -43,7 +43,7 @@ namespace PIERStory
 
         public void OnClickNoticeBanner()
         {
-            ViewNoticeDetail.SetNoticeDetail(detailNotice, startDate);
+            // ViewNoticeDetail.SetNoticeDetail(detailNotice, startDate);
             Signal.Send(LobbyConst.STREAM_IFYOU, SHOW_NOTICE_DETAIL, string.Empty);
         }
     }

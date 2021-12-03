@@ -20,6 +20,7 @@ namespace PIERStory {
         readonly Vector2 foldingEndingSize = new Vector2(720, 340); // 해금 엔딩이 있지만, 접혀있는 상태에 대한 사이즈
         
         const int eachEndingHeight = 180; // 엔딩 높이 
+        const int foldingEndingHeight = 240; // 접혀있는 상태에서의 높이 
         
         /// <summary>
         ///  초기화
@@ -44,8 +45,19 @@ namespace PIERStory {
                 currentRowIndex++;
             }
             
-            // * 귀속 엔딩 설정
-            
+            // * 귀속 엔딩 유무 체크 
+            for(int i=0; i<ListRows.Count;i++) {
+                if(!ListRows[i].gameObject.activeSelf)  
+                    continue;
+                    
+                // 귀속 엔딩이 있다..! 
+                // 한 라인에서 하나만 체크하면 된다. 
+                if(ListRows[i].hasDependentEnding) {
+                    currentTransform.sizeDelta = foldingEndingSize;
+                    currentLayoutElement.minHeight = foldingEndingHeight;
+                    break;
+                }
+            }            
         }
         
         /// <summary>

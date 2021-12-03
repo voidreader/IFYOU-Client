@@ -17,6 +17,8 @@ namespace PIERStory {
         
         [SerializeField] ImageRequireDownload thumbnailImage; 
         public EpisodeData episodeData = null; 
+        public bool hasDependentEnding = false; // 귀속된 엔딩이 있는지 체크 
+        [SerializeField] List<EpisodeData> ListDependentEnding = new List<EpisodeData>();
         
         
         // 플래이 상태(현재, 과거, 미래)
@@ -88,8 +90,42 @@ namespace PIERStory {
             SetPurchaseState(); // 구매 상태 처리 
             
             SetPlayStateCover(); // 플레이 상태에 대한 처리 
+            
+            SetDependentEnding(); // 귀속 엔딩 유무 체크 , 버튼 활성화
         }
         
+        /// <summary>
+        /// 귀속된 엔딩 설정 
+        /// </summary>
+        void SetDependentEnding() {
+            
+            ListDependentEnding.Clear();
+            hasDependentEnding = false;
+            
+            if(episodeData.episodeType != EpisodeType.Chapter)
+                return;
+            
+            
+            for(int i=0; i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++) {
+                
+                // 엔딩이 아니거나, 종속 에피소드가 지정되지 않은 경우는 처리하지 않음.
+                if(StoryManager.main.ListCurrentProjectEpisodes[i].episodeType != EpisodeType.Ending ||
+                    StoryManager.main.ListCurrentProjectEpisodes[i].dependEpisode == "-1" )
+                    continue;
+                
+                // ID가 동일하고, 해금된 경우에만 한다. 
+                // * 어드민 유저의 경우는 모두 해금된 것으로 간주한다. 
+                if(StoryManager.main.ListCurrentProjectEpisodes[i].dependEpisode == episodeData.episodeID 
+                    && (StoryManager.main.ListCurrentProjectEpisodes[i].endingOpen || UserManager.main.CheckAdminUser())) {
+                        
+                    ListDependentEnding.Add(StoryManager.main.ListCurrentProjectEpisodes[i]); // 다 모은다. 여러개도 가능하다.
+                    hasDependentEnding = true; // 귀속된 엔딩이 있다!
+                }
+            }
+            
+            btnSpreadEnding.SetActive(hasDependentEnding);
+            
+        } // ? SetDependentEnding END
         
         
         /// <summary>

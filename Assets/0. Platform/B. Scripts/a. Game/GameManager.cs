@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 using LitJson;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
@@ -1711,8 +1712,8 @@ namespace PIERStory
             useSkip = false;
             isPlaying = false;
 
-            //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_GAME, "episodeEnd", string.Empty);
-            JsonData nextEpisodeJson = null;
+            
+            EpisodeData nextEpisodeData = null;
 
             // 이동 컬럼이 없는 경우
             if(string.IsNullOrEmpty(__nextEpisodeId))
@@ -1722,18 +1723,58 @@ namespace PIERStory
 
                 if(currentEpisodeData.episodeTypeString.Equals(CommonConst.COL_CHAPTER))
                 {
-                    //nextEpisodeJson = ge
+                    nextEpisodeData = StoryManager.GetNextRegularEpisodeData(currentEpisodeData);
+
+                    if (nextEpisodeData != null)
+                        __nextEpisodeId = nextEpisodeData.episodeID;
+                }
+            }
+            else
+            {
+                if (__nextEpisodeId.Contains("#"))
+                    __nextEpisodeId = __nextEpisodeId.Replace("#", "");
+
+                nextEpisodeData = StoryManager.GetNextFollowingEpisodeData(__nextEpisodeId);
+            }
+
+            UserManager.main.UpdateSceneIDRecord(currentSceneId);
+
+            StartCoroutine(RoutineEpisodeEnd(nextEpisodeData));
+        }
+
+        IEnumerator RoutineEpisodeEnd(EpisodeData nextData)
+        {
+            // 통신 완료될 때까지 대기
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+
+            // 다음 에피소드가 엔딩인 경우
+            if(nextData != null && nextData.episodeType.Equals(EpisodeType.Ending))
+            {
+                string title = nextData.endingType.Equals(LobbyConst.COL_HIDDEN) ? string.Format("<color=#9E10C1>{0}", SystemManager.GetLocalizedText("5087")) : string.Format("<color=#6941DB>{0}", SystemManager.GetLocalizedText("5088"));
+
+                // ViewGame에 UIContainer를 넣어서 Show, Hide 해준다
+                // 추후 추가해서
+            }
+
+            // 이전 진행도와 에피소드 완료 후, 진행도 비교를 위한 작업
+            JsonData updateJson = null;
+            
+            for(int i=0;i<StoryManager.main.EpisodeListJson.Count;i++)
+            {
+                if (currentEpisodeData.episodeID.Equals(SystemManager.GetJsonNodeString(StoryManager.main.EpisodeListJson[i], CommonConst.COL_EPISODE_ID)))
+                {
+                    updateJson = StoryManager.main.EpisodeListJson[i];
+                    break;
                 }
             }
 
+            EpisodeData updateData = new EpisodeData(updateJson);
+            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_UPDATE_EPISODE, updateData, string.Empty);
+            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_DATA, nextData, string.Empty);
+
+            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, currentEpisodeData, string.Empty);
         }
 
-        JsonData GetNextRegularEpisodeJson()
-        {
-
-
-            return null;
-        }
 
         #endregion
     }

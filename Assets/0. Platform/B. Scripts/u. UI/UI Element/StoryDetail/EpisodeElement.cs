@@ -10,7 +10,7 @@ namespace PIERStory {
     public class EpisodeElement : MonoBehaviour
     {
         
-        JsonData episodeJSON;  // 단일 에피소드 정보
+        
         JsonData purchaseData; // 에피소드 구매 정보
         
         
@@ -37,7 +37,8 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textEpisodeNumbering; // 에피소드 번호 
         
         [SerializeField] GameObject btnSpreadEnding; // 엔딩 펼침 버튼 
-        
+        ThreeEpisodeRow parentThreeRow; // 부모 ThreeRow
+        public int columnIndex = 0;
         
         /// <summary>
         /// 에피소드 리셋 
@@ -60,13 +61,15 @@ namespace PIERStory {
         /// 에피소드 초기화
         /// </summary>
         /// <param name="__data"></param>
-        public void InitElement(EpisodeData __data) {
+        public void InitElement(ThreeEpisodeRow __threeRow, EpisodeData __data, int __columnIndex) {
             
             this.gameObject.SetActive(true);
             
             ResetData();
             
             episodeData = __data;
+            columnIndex = __columnIndex;
+            parentThreeRow = __threeRow;
           
             
             // 목록 썸네일 처리 
@@ -74,6 +77,7 @@ namespace PIERStory {
             
             // 타이틀 
             textEpisodeTitle.text = episodeData.combinedEpisodeTitle;
+            textEpisodeNumbering.text = SystemManager.GetLocalizedText("6090");
             
             // 에피소드 타입에 따라. 
             switch(episodeData.episodeType) {
@@ -221,15 +225,39 @@ namespace PIERStory {
             
         } // ? end of SetPlayStateCover
         
+        /// <summary>
+        /// 엔딩 펼침 버튼 감추기
+        /// </summary>
+        public void HideSpreadButton() {
+            btnSpreadEnding.SetActive(false);
+        }
         
         /// <summary>
-        /// 목록 클릭
+        /// 엔딩 버튼 보여주기 (EndingEpisodeElement에서 호출)
+        /// </summary>
+        public void ShowSpreadButton() {
+            
+            // 보여주기가 호출되었어도 갖고있는 엔딩이 없으면 활성화하지 않는다.
+            btnSpreadEnding.SetActive(hasDependentEnding);
+        }
+        
+        
+        /// <summary>
+        /// 목록 클릭, 에피소드 시작 화면 오픈 
         /// </summary>
         public void OnClickElement() {
             
             Debug.Log(">> OnClickElement");
             
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, episodeData, string.Empty);
+        }
+        
+        /// <summary>
+        /// 엔딩 펼침버튼 누르기 
+        /// </summary>
+        public void OnCickEndingSpread() {
+            // 소속되어있는 ThreeRow한테 전달을 해줘야해요. 
+            parentThreeRow.SpreadEnding(ListDependentEnding, columnIndex);
         }
         
         

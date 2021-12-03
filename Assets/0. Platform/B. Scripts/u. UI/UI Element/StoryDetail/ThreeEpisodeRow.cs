@@ -5,7 +5,12 @@ using UnityEngine.UI;
 using LitJson;
 
 namespace PIERStory {
-
+    
+    
+    /// <summary>
+    /// * ThreeEpisodeRow, EpisodeElement, EndingEpisodeElement 
+    /// * 위 3개의 클래스는 ThreeEpisodeRow를 매개체로 서로에게 관여합니다.
+    /// </summary>
     public class ThreeEpisodeRow : MonoBehaviour
     {
         [SerializeField] List<EpisodeElement> ListRows; // 정규, 사이드 친구들 
@@ -19,8 +24,9 @@ namespace PIERStory {
         readonly Vector2 noEndingSize = new Vector2(720, 300); // 해금 엔딩이 없는 경우에 대한 사이즈
         readonly Vector2 foldingEndingSize = new Vector2(720, 340); // 해금 엔딩이 있지만, 접혀있는 상태에 대한 사이즈
         
-        const int eachEndingHeight = 180; // 엔딩 높이 
-        const int foldingEndingHeight = 240; // 접혀있는 상태에서의 높이 
+        const int originHeight = 300; // 소속 엔딩이 하나도 없는 상태에서의 전체 높이 
+        const int eachEndingHeight = 180; // 엔딩 각자의 높이 
+        const int foldingEndingHeight = 340; // 접혀있는 상태에서의 전체 높이 
         
         /// <summary>
         ///  초기화
@@ -41,7 +47,7 @@ namespace PIERStory {
             
             for(int i=minEpisodeIndex; i<= maxEpisodeIndex; i++) {
                 
-                ListRows[currentRowIndex].InitElement(__listEpisode[i]);
+                ListRows[currentRowIndex].InitElement(this, __listEpisode[i], currentRowIndex);
                 currentRowIndex++;
             }
             
@@ -75,6 +81,56 @@ namespace PIERStory {
             // 사이즈 처리 
             currentTransform.sizeDelta = noEndingSize;
             currentLayoutElement.minHeight = noEndingSize.y;
+        }
+        
+        /// <summary>
+        /// 엔딩 펼치기 
+        /// </summary>
+        /// <param name="__dependentEndings">소속된 엔딩 리스트</param>
+        /// <param name="__owner">주인 에피소드의 column index</param>
+        public void SpreadEnding(List<EpisodeData> __dependentEndings, int __owner) {
+            
+            int addHeight = 0;
+            
+            if(__dependentEndings.Count > ListEndings.Count) {
+                Debug.LogError("Too many dependent ending!!!");
+                return;
+            }
+            
+            for(int i=0; i<__dependentEndings.Count;i++) {
+                ListEndings[i].InitEndingElement(this, __dependentEndings[i], i, __owner);
+                addHeight += eachEndingHeight;
+            }
+            
+            currentLayoutElement.minHeight = originHeight + addHeight;
+            currentTransform.sizeDelta = new Vector2(noEndingSize.x, currentLayoutElement.minHeight);
+            
+            // 펼치는 순간 모든 펼침 버튼을 보여주지 않는다.
+            for(int i=0; i<ListRows.Count;i++) {
+                if(ListRows[i].gameObject.activeSelf)
+                    ListRows[i].HideSpreadButton();
+            }
+            
+        }
+        
+        /// <summary>
+        /// 엔딩 접기.
+        /// </summary>
+        public void FoldEnding() {
+            for(int i=0; i < ListEndings.Count;i++) {
+                ListEndings[i].gameObject.SetActive(false);
+            }
+            
+            // 접고나서는 다시 접기 버튼만 남아있는 상태로 돌린다. 
+            currentTransform.sizeDelta = foldingEndingSize;
+            currentLayoutElement.minHeight = foldingEndingHeight;
+            
+            // 접었으니까 다시 펼치는 버튼은 보여줘야한다. (전체를 다 호출한다.)
+            // 다 감췄으니까...
+            for(int i=0; i<ListRows.Count;i++) {
+                if(ListRows[i].gameObject.activeSelf)
+                    ListRows[i].ShowSpreadButton();
+            }
         }
     }
 }

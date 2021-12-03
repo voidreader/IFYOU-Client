@@ -194,7 +194,39 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
   Behaviours:
-    Behaviours: []
+    Behaviours:
+    - Enabled: 1
+      EventName: PointerClick
+      Runners: []
+      Event:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 7011282625937131449}
+            m_TargetAssemblyTypeName: PIERStory.EpisodeElement, Assembly-CSharp
+            m_MethodName: OnCickEndingSpread
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      BehaviourName: 4
+      Receiver:
+        ConnectionMode: 1
+        SignalProviderId:
+          Type: 0
+          Category: Pointer
+          Name: Click
+        ProviderReference: {fileID: 0}
+        StreamId:
+          Category: None
+          Name: None
+          Custom: 0
+      Cooldown: 0
+      Selectable: {fileID: 7444505185371149038}
     SignalSource: {fileID: 304288344111786723}
     Selectable: {fileID: 7444505185371149038}
   Id:
@@ -1807,6 +1839,8 @@ MonoBehaviour:
     currencyOneTime: 
     currencyPremuim: 
     priceOneTime: 0
+  hasDependentEnding: 0
+  ListDependentEnding: []
   playStateCover: {fileID: 7489182490660728365}
   playStateIcon: {fileID: 3187678298041638689}
   currentPlayFlag: {fileID: 8673080218470342770}
@@ -1815,6 +1849,7 @@ MonoBehaviour:
   textEpisodeTitle: {fileID: 2515796630916570141}
   textEpisodeNumbering: {fileID: 2515796631029789032}
   btnSpreadEnding: {fileID: 304288344111786723}
+  columnIndex: 0
 --- !u!114 &4465508611252426196
 MonoBehaviour:
   m_ObjectHideFlags: 0

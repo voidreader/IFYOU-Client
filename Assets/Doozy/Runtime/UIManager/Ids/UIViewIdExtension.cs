@@ -61,6 +61,7 @@ namespace Doozy.Runtime.UIManager
             Gallery,
             IfyouPlay,
             IllustDetail,
+            Lobby,
             Main,
             Mission,
             Navigation,

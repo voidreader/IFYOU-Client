@@ -8,7 +8,7 @@ namespace PIERStory {
     {
         
         [SerializeField] List<PlayingStoryElement> ListPlayingStoryElements; // 진행중 이야기 
-        [SerializeField] List<MainStoryRow> ListNewStoryRow; // 새로운 이야기의 3개짜리 행들. 
+        [SerializeField] List<MainStoryRow> ListRecommendStoryRow; // 새로운 이야기의 2개짜리 행들. 
         
         public override void OnView()
         {
@@ -62,19 +62,19 @@ namespace PIERStory {
         void InitNewStoryRows() {
             ResetNewStoryRows();
             
-            // 작품개수를 3으로 나눈다. 
-            int dividedIntoThree = Mathf.FloorToInt((float)StoryManager.main.totalStoryListJson.Count / 3f );
+            // 작품개수를 2로 나눈다. 
+            int dividedIntoTwo = Mathf.FloorToInt((float)StoryManager.main.totalStoryListJson.Count / 2f );
             
-            // 3배수로 나눈 수만큼 초기화 시작.
-            for(int i=0; i<dividedIntoThree; i++) {
-                ListNewStoryRow[i].InitRow(i);
+            // 2배수로 나눈 수만큼 초기화 시작.
+            for(int i=0; i<dividedIntoTwo; i++) {
+                ListRecommendStoryRow[i].InitRow(i);
             }
             
         }
         
         void ResetNewStoryRows() {
-            for(int i=0; i<ListNewStoryRow.Count; i++) {
-                ListNewStoryRow[i].gameObject.SetActive(false);
+            for(int i=0; i<ListRecommendStoryRow.Count; i++) {
+                ListRecommendStoryRow[i].gameObject.SetActive(false);
             }
         }
         

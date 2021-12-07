@@ -408,7 +408,7 @@ namespace PIERStory
                 ListCurrentProjectEpisodes.Add(newEpisodeData);  // 모든 에피소드 
                 SideEpisodeList.Add(newEpisodeData); // 사이드만 모아주기 
                 
-                if(SystemManager.GetJsonNodeBool(SideEpisodeListJson[i], "is_open"))
+                if(SystemManager.GetJsonNodeBool(SideEpisodeListJson[i], CommonConst.IS_OPEN))
                     unlockSideEpisodeCount++;
             }
             

@@ -138,6 +138,11 @@ namespace PIERStory
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_CAMERA_FLASH);
 
+            ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_FOG);
+            ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_SCREEN_FOG);
+            ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_FOCUS);
+
+
             // 카메라 이펙트 명령어 
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_GRAYSCALE);
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_GRAYSCALE_BG);
@@ -147,10 +152,7 @@ namespace PIERStory
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_DIZZY);
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_BLUR);
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_SHAKE);
-            ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_FOG);
-            ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_SCREEN_FOG);
 
-            ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_FOCUS);
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_HEAVYSNOW);
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_SNOW);
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_HEAVYRAIN);
@@ -226,9 +228,6 @@ namespace PIERStory
 
             if (string.IsNullOrEmpty(script_data) || !isValidCommand)
             {
-                // 이펙트 올바르지 않은 명령어일때!
-                //Debug.Log("No Effect in Row");
-
                 GameManager.ShowMissingComponent(scriptRow.template, command);
 
                 callback();
@@ -249,66 +248,54 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BLING:
-
-                    if (paramArray == null)
-                    {
-                        paramArray = new string[2];
-                        paramArray[0] = "타입=C";
-                        paramArray[1] = "분포=3";
-                    }
-
-                 //   ScreenEffectManager.main.StartBlingEffect(paramArray);
+                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_FIRE:
-                 //   ScreenEffectManager.main.StartFireEffect(paramArray);
+                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_GRAYSCALE:
                 case GameConst.KR_SCREEN_EFFECT_GRAYSCALE_BG:
                 case GameConst.KR_SCREEN_EFFECT_GRAYSCALE_CH:
-                  //  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BROKEN:
-                 //   ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                 ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_SHAKE:
-                  //  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
-                    break;
-
-                case GameConst.KR_SCREEN_EFFECT_ANOMALY:
-                  //  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_DIZZY:
-                  //  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BLUR:
-                   // ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                   ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_FOG:
                 case GameConst.KR_SCREEN_EFFECT_SCREEN_FOG:
-                    //ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_HEAVYRAIN:
-                   // ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                   ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
                     break;
                 case GameConst.KR_SCREEN_EFFECT_RAIN:
-                    //ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                    ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
                     break;
                 case GameConst.KR_SCREEN_EFFECT_HEAVYSNOW:
-                    //ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                    ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
                     break;
                 case GameConst.KR_SCREEN_EFFECT_SNOW:
-                    //ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                    ScreenEffectManager.main.StartParticleEffect(command, null);
                     break;
                 case GameConst.KR_SCREEN_EFFECT_FOCUS:
-                    //ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_ZOOMIN:
@@ -324,22 +311,22 @@ namespace PIERStory
 
                 case GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT:
                 case GameConst.KR_SCREEN_EFFECT_HEX_LIGHT:
-                   // ScreenEffectManager.main.StartScreenEffectLightDust(command);
+                    ScreenEffectManager.main.StartParticleEffect(command, null);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BLOOD_HIT:
-                  //  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                  ScreenEffectManager.main.StartParticleEffect(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_GLITCH:
-                  //  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
                     break;
                 case GameConst.KR_SCREEN_EFFECT_GLITCH_SCREEN:
-                  //  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_REMINISCE:
-                  //  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                  ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_CAMERA_FLASH:
@@ -353,6 +340,5 @@ namespace PIERStory
         /// 동작을 마무리합니다.
         /// </summary>
         public void EndAction() { }
-       
     }
 }

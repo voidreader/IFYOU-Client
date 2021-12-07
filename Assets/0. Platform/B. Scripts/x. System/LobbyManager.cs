@@ -37,8 +37,8 @@ namespace PIERStory {
         public Sprite spriteInappOriginIcon; // 인앱 구매확정 메일 아이콘
         
         [Header("갤러리 - 사운드 BGMSprite")]
-        public Sprite spriteSoundPlay;
-        public Sprite spriteSoundPause;
+        public Sprite spriteOpenVoice;
+        public Sprite spriteLockVoice;
 
         [Header("미션View Sprite")]
         public Sprite spriteLockOverlay;          // 클리어하지 못한 미션 overlay

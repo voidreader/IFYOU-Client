@@ -191,7 +191,9 @@ namespace PIERStory
         public const string KR_PARAM_VALUE_FORCE = "강도";
         public const string KR_PARAM_VALUE_LEVEL = "단계";
         public const string KR_PARAM_VALUE_TYPE = "타입";
-        
+        public const string KR_PARAM_VALUE_DISTRIBUTION = "분포";
+        public const string KR_PARAM_VALUE_DIR = "방향";
+        public const string KR_PARAM_VALUE_SPEED = "속도";        // 사실 속력
 
 
         // 등장과 퇴장연출

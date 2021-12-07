@@ -833,6 +833,10 @@ namespace PIERStory
                     case GameConst.TEMPLATE_FEELING:
                     case GameConst.TEMPLATE_MONOLOGUE:
                     case GameConst.TEMPLATE_SPEECH:
+                    case GameConst.TEMPLATE_PHONE_PARTNER:
+                    case GameConst.TEMPLATE_PHONE_SELF:
+                    case GameConst.TEMPLATE_MESSAGE_PARTNER:
+                    case GameConst.TEMPLATE_MESSAGE_SELF:
                         if (ListRows[i].emoticon_expression.Equals(__expression))
                             count++;
                         break;

@@ -24,7 +24,7 @@ namespace PIERStory
             if (__isInstant)
                 FinDotween();
 
-            if (!string.IsNullOrEmpty(out_effect) && GameManager.main.currentLiveObj != null)
+            if (!string.IsNullOrEmpty(out_effect) && GameManager.main.currentLiveObj != null && GameManager.main.currentLiveObj.liveImageController != null)
             {
                 GameLiveImageCtrl liveObjCtrl = GameManager.main.currentLiveObj.liveImageController;
 

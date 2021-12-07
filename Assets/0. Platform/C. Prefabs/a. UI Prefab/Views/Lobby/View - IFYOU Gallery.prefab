@@ -3760,7 +3760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4e0d75a1eedbac46ad7cf13031eec46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IllustScroll: {fileID: 3658588131995281256}
+  IllustScroll: {fileID: 3658588132562751262}
   totalCollection: {fileID: 3658588131995281262}
   totalCollectionPercentage: {fileID: 3658588133345348475}
   illustProgress: {fileID: 3658588132192877436}
@@ -4012,12 +4012,24 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnToggleOnCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnToggleOnCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3658588131953736945}
+          m_TargetAssemblyTypeName: PIERStory.ViewGallery, Assembly-CSharp
+          m_MethodName: EnableIllustList
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnToggleOffCallback:
     Enabled: 0
     EventName: OnToggleOffCallback
@@ -4296,7 +4308,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 3658588132697263423}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
   m_MovementType: 1
   m_Elasticity: 0.1
@@ -4844,7 +4856,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 3658588133300887294}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
   m_MovementType: 1
   m_Elasticity: 0.1
@@ -5907,12 +5919,24 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnToggleOnCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnToggleOnCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3658588131953736945}
+          m_TargetAssemblyTypeName: PIERStory.ViewGallery, Assembly-CSharp
+          m_MethodName: EnableSoundList
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnToggleOffCallback:
     Enabled: 0
     EventName: OnToggleOffCallback

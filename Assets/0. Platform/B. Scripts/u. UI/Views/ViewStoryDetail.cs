@@ -13,6 +13,7 @@ namespace PIERStory {
     {
         
         public static Action RefreshStoryDetail = null; // Refresh 액션
+        float mainScrollRectY = 0;
         
         [Header("== ScrollRect ==")]        
         [SerializeField] ScrollRect mainScrollRect;
@@ -72,7 +73,7 @@ namespace PIERStory {
         public override void OnStartView() {
             base.OnStartView();
             
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_ON_BACK_BUTTON, string.Empty);
+            
             
             SetProjectBaseInfo(); // 기본 프로젝트 정보
             
@@ -84,13 +85,46 @@ namespace PIERStory {
                 ShowEpisodeList(true);
             }
             
+            
+            // 상단 처리
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_VIEW_NAME, false, string.Empty);
+            
         }
         
-        /// <summary>
-        /// 현재 작품의 EpisodeData를 일괄 생성
-        /// </summary>
-        void SetProjectEpisodeData() {
+        
+        public override void OnHideView() {
+            // 백버튼 비활성화
+            // * StoryDetail이 비활성화 되는 경우는 메인으로 돌아갈때만이다. 
+            // * 되돌아갈때가 어렵네...
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+        }        
+        
+        
+        
+        void Update() {
             
+            /*
+            if(ViewCommonTop.staticCurrentTopOwner != this.gameObject.name)
+                return;
+            
+            
+            if(mainScrollRect.content.transform.localPosition.y > 150f && !ViewCommonTop.isBackgroundShow) {
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
+                return;
+            }
+            
+            
+            if(mainScrollRect.content.transform.localPosition.y <= 150f && ViewCommonTop.isBackgroundShow) {
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+                return;
+            }
+            */
+            
+             
         }
         
         /// <summary>
@@ -216,5 +250,30 @@ namespace PIERStory {
         }
         
         #endregion
+        
+        
+                /// <summary>
+        /// 메인ScrollRect 상하 변경시.. 상단 제어 
+        /// </summary>
+        /// <param name="vec"></param>
+        public void OnValueChangedMainScroll(Vector2 vec) {
+            
+            if(mainScrollRectY == vec.y)
+                return;
+                
+            mainScrollRectY = vec.y;
+            
+            if(mainScrollRectY < 0.95f && !ViewCommonTop.isBackgroundShow) {
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
+                return;
+            }
+           
+            
+            if(mainScrollRectY >= 0.95f && ViewCommonTop.isBackgroundShow) {
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+                return;
+            }
+        }
+        
     }
 }

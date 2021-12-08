@@ -15,6 +15,9 @@ namespace PIERStory
         string image_url = string.Empty;
         string image_key = string.Empty;
 
+        JsonData voiceData = null;
+        string voiceMaster = string.Empty;
+
         const string BGM_BANNER = "bgmBanner";
         const string SHOW_SOUND_DETAIL = "showSoundDetail";
 
@@ -28,9 +31,12 @@ namespace PIERStory
 
         public void SetVoiceElement(JsonData __nameTag, JsonData __voiceData)
         {
+            voiceData = __voiceData;
             image_url = SystemManager.GetJsonNodeString(__nameTag, LobbyConst.BANNER_URL);
             image_key = SystemManager.GetJsonNodeString(__nameTag, LobbyConst.BANNER_KEY);
-            
+            voiceMaster = SystemManager.GetJsonNodeString(__nameTag, GameConst.COL_SPEAKER);
+
+
             soundThumbnail.SetDownloadURL(image_url, image_key);
 
             int unlockCount = 0, totalCount = 0;
@@ -45,12 +51,17 @@ namespace PIERStory
                 totalCount += __voiceData[i].Count;
             }
 
-            voiceInfo.text = string.Format("{0} 모아듣기\n<color=#A0A0A0FF>{1}개 / {2}개</color>", SystemManager.GetJsonNodeString(__nameTag, GameConst.COL_SPEAKER), unlockCount, totalCount);
+            voiceInfo.text = string.Format("{0} 모아듣기\n<color=#A0A0A0FF>{1}개 / {2}개</color>", voiceMaster, unlockCount, totalCount);
             gameObject.SetActive(true);
         }
 
         public void ShowDetailSoundList()
         {
+            if (voiceData == null)
+                ViewSoundDetail.SetSoundDetail(true, SystemManager.GetJsonNode(UserManager.main.currentStoryJson, "bgms"), soundThumbnail.downloadedSprite, "BGM 재생목록");
+            else
+                ViewSoundDetail.SetSoundDetail(false, voiceData, soundThumbnail.downloadedSprite, string.Format("{0} 모아듣기", voiceMaster));
+
             Signal.Send(LobbyConst.STREAM_IFYOU, SHOW_SOUND_DETAIL, string.Empty);
         }
     }

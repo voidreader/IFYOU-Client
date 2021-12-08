@@ -16,12 +16,8 @@ namespace PIERStory {
 
         JsonData platformImageJson = null; // 플랫폼 이미지 JSON
 
-
-        [SerializeField] Transform illustPillar;
-        
-        
-        // public ScriptLiveIllustMount currentLiveIllust = null; // Live Illust for Gallery 
-        // public ScriptLiveObjectMount currentLiveObject = null; // Live Object for Gallery
+        public ScriptLiveMount currentLiveIllust = null; // Live Illust for Gallery 
+        public ScriptLiveMount currentLiveObject = null; // Live Object for Gallery
         
         int scaleOffset = 0;
         string illustName = string.Empty;
@@ -113,7 +109,7 @@ namespace PIERStory {
 
         public void SetIllustParent(Transform __model)
         {
-            __model.SetParent(illustPillar);
+            __model.SetParent(transform);
         }
 
 
@@ -146,62 +142,58 @@ namespace PIERStory {
             return lobbyNetworkLoadingScreen;
         }
         
-        /*
+        
         
         /// <summary>
         /// 갤러리의 라이브 일러스트 처리!
         /// </summary>
         /// <param name="__name"></param>
         /// <param name="__scale"></param>
-        public void SetGalleryLiveIllust(string __name, int __scale, IllustType __type)
+        public void SetGalleryLiveIllust(string __name, int __scale, bool liveObj)
         {
             scaleOffset = __scale;
             illustName = __name;
             
             
-            // ! 재활용 안한다..!
-            Debug.Log(string.Format("SetGalleryLiveIllust {0} / {1}", __name, __type.ToString()));
-            
-            if(__type == IllustType.liveIllust) {
-                currentLiveIllust = new ScriptLiveIllustMount(illustName, OnGalleryLiveIllustMount, this);
+            if(!liveObj) {
+                currentLiveIllust = new ScriptLiveMount(illustName, OnGalleryLiveIllustMount, this, false);
                 currentLiveIllust.SetModelDataFromStoryManager();
 
             }
             else { // 라이브 오브제 추가 
-                currentLiveObject = new ScriptLiveObjectMount(illustName, OnGalleryLiveObjectMount, this);
+                currentLiveObject = new ScriptLiveMount(illustName, OnGalleryLiveObjectMount, this, true);
                 currentLiveObject.SetModelDataFromStoryManager();
             }
-        } // ? SetGalleryLiveIllust
+        }
         
         /// <summary>
         /// 갤러리 Live Object 마운트 완료 
         /// </summary>
         void OnGalleryLiveObjectMount() {
             
-            Debug.Log("OnGalleryLiveObjectMount");
-            if(currentLiveObject == null || currentLiveObject.liveObj == null) {
+            if(currentLiveObject == null || currentLiveObject.liveImage == null) {
                 Debug.LogError("Something wrong in OnGalleryLiveObjectMount");
                 return;
             }
             
-            Debug.Log("LiveObject Scale : " + currentLiveObject.gameScale);
+            currentLiveObject.liveImage.transform.localScale = new Vector3(currentLiveObject.gameScale , currentLiveObject.gameScale, 1);
 
-            currentLiveObject.liveObj.transform.localScale = new Vector3(currentLiveObject.gameScale , currentLiveObject.gameScale, 1);
-            
-            GameEventMessage.SendEvent("EventIllustDetail");
+            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SHOW_ILLUSTDETAIL, string.Empty);
+            //GameEventMessage.SendEvent("EventIllustDetail");
         }
 
         void OnGalleryLiveIllustMount()
         {
             Debug.Log(string.Format("OnGalleryLiveIllustMount gameScale({0})/scaleOffset({1})", currentLiveIllust.gameScale, scaleOffset));
-            float scale = currentLiveIllust.gameScale + scaleOffset; // gameScale에 scaleOffset을 더한다. 
-            // * 메모: scaleOffset은 UI에서 크기를 조절하기 위한 컬럼. 근데 LiveObject에는 없어... ;;; 
-            currentLiveIllust.illust.transform.localScale = new Vector3(scale, scale, 1);
- 
-            GameEventMessage.SendEvent("EventIllustDetail");
+            float scale = currentLiveIllust.gameScale + scaleOffset;
+
+            currentLiveIllust.liveImage.transform.localScale = new Vector3(scale, scale, 1);
+
+            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SHOW_ILLUSTDETAIL, string.Empty);
+            //GameEventMessage.SendEvent("EventIllustDetail");
         }
         
-        */
+        
         
         #region 플랫폼 로딩 화면 처리 
         

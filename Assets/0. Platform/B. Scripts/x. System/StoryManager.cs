@@ -22,13 +22,6 @@ namespace PIERStory
         Rent // 대여권
     }
     
-    public enum IllustType {
-        illust,
-        minicut,
-        liveIllust,
-        liveObject
-    }
-    
 
     /// <summary>
     /// 선택한 스토리의 기본 정보, 리스트, 말풍선 세트에 관여하는 클래스 

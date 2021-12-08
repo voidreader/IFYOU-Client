@@ -77,7 +77,10 @@ namespace PIERStory
         /// <param name="__modelName"></param>
         public void SetModelDataFromStoryManager()
         {
-            resourceData = StoryManager.main.GetLiveObjectJsonByName(liveName);
+            if(isMinicut)
+                resourceData = StoryManager.main.GetLiveObjectJsonByName(liveName);
+            else
+                resourceData = StoryManager.main.GetLiveIllustJsonByName(liveName);
 
             if (resourceData == null || resourceData.Count == 0) // 데이터가 없을 경우 
             {
@@ -217,7 +220,7 @@ namespace PIERStory
             // 얘는 미리 생성안시키고 필요할때 불러오기 떄문에 LiveIllustMount랑 쫌 다르구나
             if (isMinicut && GameManager.main != null)
                 SendSuccessMessage();
-            else
+            else if(LobbyManager.main != null)
                 InstantiateCubismModel();
 
         }
@@ -251,7 +254,7 @@ namespace PIERStory
             // 세팅된 모션 준비하기
             PrepareCubismMotions();
 
-            if (isMinicut && LobbyManager.main != null)
+            if (LobbyManager.main != null)
                 SendSuccessMessage();
         }
 

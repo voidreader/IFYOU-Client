@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
@@ -8,11 +9,14 @@ namespace PIERStory
 {
     public class ViewGallery : CommonView
     {
+        public static Action<bool> OnDelayIllustOpen = null;
+
         [Header("Illust part")]
         public GameObject IllustScroll;
         public TextMeshProUGUI totalCollection;
         public TextMeshProUGUI totalCollectionPercentage;
         public Image illustProgress;
+        JsonData illustData;
 
         public IllustElement[] illustElements;
         int totalIllust = -1;
@@ -28,7 +32,7 @@ namespace PIERStory
 
             #region 일러스트
 
-            JsonData illustData = UserManager.main.GetNodeUserIllust();
+            illustData = UserManager.main.GetNodeUserIllust();
 
             // 비활성화 해주면서 초기화
             foreach (IllustElement ie in illustElements)
@@ -49,6 +53,8 @@ namespace PIERStory
             float illustPrgressPercent = (float)openIllust / (float)totalIllust;
             totalCollectionPercentage.text = string.Format("{0}%", Mathf.Round(illustPrgressPercent * 100));
             illustProgress.fillAmount = illustPrgressPercent;
+
+            OnDelayIllustOpen = DelayIllustOpen;
 
             #endregion
 
@@ -93,6 +99,18 @@ namespace PIERStory
         {
             IllustScroll.SetActive(false);
             soundScroll.SetActive(true);
+        }
+
+        void DelayIllustOpen(bool __interactable)
+        {
+            for(int i=0;i<illustData.Count;i++)
+            {
+                if (!illustElements[i].illustOpen)
+                    continue;
+
+                illustElements[i].illustButton.interactable = __interactable;
+            }
+                
         }
     }
 }

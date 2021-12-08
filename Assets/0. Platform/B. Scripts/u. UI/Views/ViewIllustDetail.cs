@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 using TMPro;
 using LitJson;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
@@ -16,8 +17,7 @@ namespace PIERStory
         static bool isMinicut = false;
 
         public RectTransform viewRect;
-        public Transform livePillar;        // live2D가 생성될 곳
-
+        
         public ImageRequireDownload illustImage;
         public RawImage liveRenderTexture;
 
@@ -40,7 +40,15 @@ namespace PIERStory
         {
             base.OnStartView();
 
-            if(!isLive)
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_VIEW_NAME, false, string.Empty);
+
+            ViewGallery.OnDelayIllustOpen?.Invoke(true);
+
+            // live2D 아닌 경우
+            if (!isLive)
             {
                 illustImage.gameObject.SetActive(true);
                 illustImage.SetDownloadURL(SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_KEY));
@@ -57,12 +65,12 @@ namespace PIERStory
                 if (isMinicut)
                 {
                     liveRenderTexture.rectTransform.sizeDelta = new Vector2(viewRect.rect.width, viewRect.rect.width);
-                    //LobbyManager.main.currentLiveObject.PlayCubismAnimation();
+                    LobbyManager.main.currentLiveObject.PlayCubismAnimation();
                 }
                 else
                 {
                     liveRenderTexture.rectTransform.sizeDelta = new Vector2(viewRect.rect.height, viewRect.rect.height);
-                    //LobbyManager.main.currentLiveIllust.PlayCubismAnimation();
+                    LobbyManager.main.currentLiveIllust.PlayCubismAnimation();
                 }
             }
 
@@ -70,33 +78,34 @@ namespace PIERStory
             illustSummary.text = summary;
         }
 
-        void IllustSetNativeSize()
+        public override void OnHideView()
         {
-            illustImage.GetComponent<RectTransform>().sizeDelta = new Vector2(1000, 1755);
-        }
+            base.OnHideView();
 
-        public void HideView()
-        {
-            if (livePillar.childCount == 0)
+            if (LobbyManager.main.transform.childCount < 1)
                 return;
 
-            /*
-             * 21.11.24 임시적으로 주석
+
             if (LobbyManager.main.currentLiveIllust != null && LobbyManager.main.currentLiveIllust.liveImageController != null)
                 LobbyManager.main.currentLiveIllust.liveImageController.DestroySelf();
 
             if (LobbyManager.main.currentLiveObject != null && LobbyManager.main.currentLiveObject.liveImageController != null)
                 LobbyManager.main.currentLiveObject.liveImageController.DestroySelf();
-            */
+
 
             // 연타 클릭되어 생성된 것이 있다면 파괴(혹시 모를 안전장치)
-            if (livePillar.childCount > 0)
+            if (LobbyManager.main.transform.childCount > 0)
             {
-                GameLiveImageCtrl[] gameLive = livePillar.GetComponentsInChildren<GameLiveImageCtrl>();
+                GameLiveImageCtrl[] gameLive = LobbyManager.main.GetComponentsInChildren<GameLiveImageCtrl>();
 
                 foreach (GameLiveImageCtrl gl in gameLive)
                     gl.DestroySelf();
             }
+        }
+
+        void IllustSetNativeSize()
+        {
+            illustImage.GetComponent<RectTransform>().sizeDelta = new Vector2(1000, 1755);
         }
     }
 }

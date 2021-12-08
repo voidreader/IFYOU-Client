@@ -3,11 +3,14 @@
 using TMPro;
 using LitJson;
 using Doozy.Runtime.Signals;
+using Doozy.Runtime.UIManager.Components;
 
 namespace PIERStory
 {
     public class IllustElement : MonoBehaviour
     {
+        public UIButton illustButton;
+
         public ImageRequireDownload illustThumbnail;
         public GameObject liveTag;
         public GameObject lockOverlay;
@@ -16,7 +19,7 @@ namespace PIERStory
 
         JsonData elementData = null;
 
-        bool illustOpen = false;
+        public bool illustOpen = false;
         bool isLive = false;
         bool isMinicut = false;
         string illustName = string.Empty;
@@ -27,7 +30,7 @@ namespace PIERStory
         
         const string APPEAR_EPISODE_ID = "appear_episode";
         const string APPEAR_EPISODE_TYPE = "appear_episode_type";
-        const string SHOW_ILLUSTDETAIL = "showIllustDetail";
+        
 
         public void InitElementInfo(JsonData __j)
         {
@@ -37,6 +40,7 @@ namespace PIERStory
 
             illustThumbnail.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.THUMBNAIL_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.THUMBNAIL_KEY));
             isLive = SystemManager.GetJsonNodeString(__j, CommonConst.ILLUST_TYPE).Equals(CommonConst.MODEL_TYPE_LIVE2D);
+            isMinicut = SystemManager.GetJsonNodeBool(__j, CommonConst.COL_IS_MINICUT);
             liveTag.SetActive(isLive);
 
             #region 일러스트 획득 관련 세팅
@@ -45,6 +49,7 @@ namespace PIERStory
             appearEpisodeId = SystemManager.GetJsonNodeString(__j, APPEAR_EPISODE_ID);
             appearEpisodeType = SystemManager.GetJsonNodeString(__j, APPEAR_EPISODE_TYPE);
             lockOverlay.SetActive(!illustOpen);
+            illustButton.interactable = illustOpen;
 
             // 일러스트를 획득하지 못한 경우에만 실행한다
             if(!illustOpen)
@@ -108,17 +113,21 @@ namespace PIERStory
         public void OnClickIllustDetail()
         {
             ViewIllustDetail.SetData(elementData, isLive, isMinicut, illustPublicName.text, summary);
+            ViewGallery.OnDelayIllustOpen?.Invoke(false);
 
-            if(isLive)
+            if (isLive)
             {
+                int scaleOffset = 0;
 
+                if (elementData[0].ContainsKey("scale_offset"))
+                    int.TryParse(SystemManager.GetJsonNodeString(elementData[0], "scale_offset"), out scaleOffset);
+
+                LobbyManager.main.SetGalleryLiveIllust(illustName, scaleOffset, isMinicut);
             }
             else
             {
-
+                Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SHOW_ILLUSTDETAIL, string.Empty);
             }
-
-            Signal.Send(LobbyConst.STREAM_IFYOU, SHOW_ILLUSTDETAIL, string.Empty);
         }
     }
 }

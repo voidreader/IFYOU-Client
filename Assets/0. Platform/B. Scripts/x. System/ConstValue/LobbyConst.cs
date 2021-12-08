@@ -46,6 +46,7 @@ namespace PIERStory {
         public const string MISSION_NAME = "mission_name";
 
         public const string NODE_DETAIL = "detail";
+        
 
         #region 재화 
         public const string COIN = "coin";
@@ -82,6 +83,8 @@ namespace PIERStory {
         public const string TOP_SIGNAL_SHOW_BACK_BUTTON = "topSignalShowBackButton"; // 백버튼 처리
 
         public const string TOP_SIGNAL_CHANGE_OWNER = "topSignalChangeOwner"; // 오너 변경 
+
+        public const string SHOW_ILLUSTDETAIL = "showIllustDetail";
 
         #endregion
 

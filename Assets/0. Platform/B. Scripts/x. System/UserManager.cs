@@ -817,7 +817,7 @@ namespace PIERStory
                 // 일러스트 명칭과 동일한 jsonData값을 찾아 id와 type값을 넣어서 return 해준다
                 // 4개 종류가 통합되었기 때문에 is_minicut 값도 체크한다.
                 if(GetNodeUserIllust()[i][LobbyConst.ILLUST_NAME].ToString().Equals(__illustName) 
-                    && !SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], "is_minicut"))
+                    && !SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], CommonConst.COL_IS_MINICUT))
                 {
                     JsonData data = new JsonData();
                     data.Add(GetNodeUserIllust()[i]["illust_id"]);
@@ -862,7 +862,7 @@ namespace PIERStory
             {
                 
                 // 미니컷이면서, 이름 똑같은 친구
-                if(SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], "is_minicut")
+                if(SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], CommonConst.COL_IS_MINICUT)
                     && SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], LobbyConst.ILLUST_NAME) == __minicutName
                     && SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], "illust_type") == illustType) {
                         
@@ -885,7 +885,7 @@ namespace PIERStory
             for(int i=0;i<GetNodeUserIllust().Count;i++)
             {
                 if(SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], LobbyConst.ILLUST_NAME) == __name
-                    && SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], "is_minicut")) 
+                    && SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], CommonConst.COL_IS_MINICUT)) 
                 {
                     return GetNodeUserIllust()[i];
                 }
@@ -1896,7 +1896,7 @@ namespace PIERStory
                 if (GetNodeUserIllust()[i]["illust_id"].ToString() == __illustID
                     && GetNodeUserIllust()[i]["illust_type"].ToString() == __illustType
                     && GetNodeUserIllust()[i]["illust_open"].ToString() == "1" 
-                    && GetNodeUserIllust()[i]["is_minicut"].ToString() == "0")
+                    && GetNodeUserIllust()[i][CommonConst.COL_IS_MINICUT].ToString() == "0")
                     return true;
             }
 
@@ -2025,7 +2025,7 @@ namespace PIERStory
             {
                     if(SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], LobbyConst.ILLUST_NAME) == imageName
                         && SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], "illust_type") == illustType
-                        && SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], "is_minicut")
+                        && SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], CommonConst.COL_IS_MINICUT)
                         && !SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], "illust_open")) {
                         
                         return true; // 해금 가능함

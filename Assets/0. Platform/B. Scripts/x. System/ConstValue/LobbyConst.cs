@@ -60,16 +60,28 @@ namespace PIERStory {
         public const string STREAM_IFYOU = "IFYOU";
         public const string STREAM_GAME = "Game";
         public const string STREAM_COMMON = "Common";
+        public const string STREAM_TOP = "Top";
         
         public const string SIGNAL_MOVE_STORY_DETAIL = "moveStoryDetail";
         public const string SIGNAL_PURCHASE_FREEPASS = "PurchaseFreepass";
         public const string SIGNAL_CLOSE_RESET = "closeEpisodeReset";
         public const string SIGNAL_UPDATE_EPISODE_SCENE_COUNT = "updateEpisodeSceneCount";
         public const string SIGNAL_CONNECT_SERVER = "connectingDone";
-        public const string SIGNAL_ON_BACK_BUTTON = "OnBackButton";
-        public const string SIGNAL_OFF_BACK_BUTTON = "OffBackButton";
+        
         
         public const string SIGNAL_EPISODE_START = "EpisodeStart";
+        
+        public const string TOP_SIGNAL_SHOW_BACKGROUND = "topSignalShowBackground"; // 상단 배경 보여주기
+        // public const string TOP_SIGNAL_HIDE_BACKGROUND = "topSignalHideBackground"; // 상단 배경 감추기
+        public const string TOP_SIGNAL_SHOW_VIEW_NAME = "topSignalShowViewName"; // 상단 뷰 이름 보여주기 
+        // public const string TOP_SIGNAL_HIDE_VIEW_NAME = "topSignalHideViewName"; // 상단 뷰 이름 감추기
+        
+        public const string TOP_SIGNAL_SHOW_PROPERTY_GROUP = "topSignalShowPropertyGroup"; // 재화 그룹 보여주기
+        // public const string TOP_SIGNAL_HIDE_PROPERTY_GROUP = "topSignalHidePropertyGroup"; // 재화 그룹 감추기 
+        
+        public const string TOP_SIGNAL_SHOW_BACK_BUTTON = "topSignalShowBackButton"; // 백버튼 처리
+
+        public const string TOP_SIGNAL_CHANGE_OWNER = "topSignalChangeOwner"; // 오너 변경 
 
         #endregion
 

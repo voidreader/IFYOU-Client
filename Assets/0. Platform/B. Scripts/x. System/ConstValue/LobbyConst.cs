@@ -89,8 +89,13 @@ namespace PIERStory {
         #endregion
 
         public static Color colorBlueBlue = new Color(0.384f,0.5176f,1,1);
-       
 
+        #region PlayerPrefs Key Value
+
+        public const string KEY_SEARCH_RECORD = "searchRecord";
+
+
+        #endregion
 
     }
 }

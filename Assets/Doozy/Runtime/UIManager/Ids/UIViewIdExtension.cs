@@ -69,6 +69,7 @@ namespace Doozy.Runtime.UIManager
             NoticeDetail,
             OneTimeHistory,
             Profile,
+            Search,
             Shop,
             SoundDetail,
             StoryDetail,

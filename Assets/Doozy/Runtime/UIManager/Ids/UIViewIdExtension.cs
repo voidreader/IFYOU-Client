@@ -38,7 +38,6 @@ namespace Doozy.Runtime.UIManager
     {
         public enum Common
         {
-            CurrencyTop,
             EpisodeStart,
             Mail,
             Top

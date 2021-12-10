@@ -54,6 +54,7 @@ namespace Doozy.Runtime.UIManager
 
         public enum IFYOU
         {
+            AddMenu,
             Beginning,
             Category,
             DataManager,
@@ -71,6 +72,7 @@ namespace Doozy.Runtime.UIManager
             Search,
             Shop,
             SoundDetail,
+            StarHistory,
             StoryDetail,
             Title
         }

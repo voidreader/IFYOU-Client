@@ -103,7 +103,7 @@ namespace PIERStory
         
         JsonData storyDetailJson = null; // 작품 상세정보(타이틀,요약,작가, 썸네일, 완결 여부 등)
 
-        JsonData challengeJson = null; // 도전과제 
+        
         JsonData illustJson = null; // 일러스트 정보
         JsonData dressCodeJson = null; // 의상 정보
         JsonData emoticonJson = null; // 이모티콘 정보(백그라운드 다운로드)
@@ -234,7 +234,6 @@ namespace PIERStory
         public void InitStoryInfo()
         {
             illustJson = null;
-            challengeJson = null;
             EpisodeListJson = null;
             storyNametagJSON = null;
             storyCurrencyJSON = null;
@@ -552,7 +551,7 @@ namespace PIERStory
             freepassTitleKey = string.Empty;
             
             illustJson = UserManager.main.GetNodeProjectIllusts(); // 일러스트 기본 정보 
-            challengeJson = UserManager.main.GetNodeProjectChallenges(); // 미션 
+            
             dressCodeJson = ProjectDetailJson[NODE_DRESS_CODE]; // 의상 
             
             storyCurrencyJSON = ProjectDetailJson[NODE_CURRENCY]; // 화폐

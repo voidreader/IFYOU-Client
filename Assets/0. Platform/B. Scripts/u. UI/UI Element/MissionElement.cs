@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-
+using BestHTTP;
 using TMPro;
 using LitJson;
 
@@ -21,27 +21,26 @@ namespace PIERStory
         public TextMeshProUGUI missionState;
         public Image stateButtonImage;
 
-        enum MissionState { LOCK, OPEN, GOT }
-        MissionState state = MissionState.LOCK;
+        MissionState state;
 
-        const string MISSION_HINT = "misson_hint";
-        const string REWARD_EXP = "reward_exp";
-        const string REWARD_CURRENCY = "reward_currency";
-        const string REWARD_QUANTITY = "reward_quantity";
-        const string UNLOCK_STATE = "unlock_state";
 
         Color32 missionGreen = new Color32(69, 198, 80, 255);
+        
+        [SerializeField] MissionData missionData;
 
-        public void InitMission(JsonData __j)
+        public void InitMission(MissionData __missionData)
         {
-            missionThumbnail.SetDownloadURL(SystemManager.GetJsonNodeString(__j, CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(__j, CommonConst.COL_IMAGE_KEY));
-            missionTitle.text = SystemManager.GetJsonNodeString(__j, LobbyConst.MISSION_NAME);
-            missionHint.text = SystemManager.GetJsonNodeString(__j, MISSION_HINT);
+            missionData = __missionData;
+            
+            
+            missionThumbnail.SetDownloadURL(missionData.imageURL, missionData.imageKey);
+            missionTitle.text = missionData.missionName;
+            missionHint.text = missionData.missionHint;
 
-            expText.text = string.Format("EXP {0}", SystemManager.GetJsonNodeString(__j, REWARD_EXP));
+            expText.text = string.Format("EXP {0}", missionData.rewardExp);
 
-            SetCurrencyIcon(SystemManager.GetJsonNodeString(__j, REWARD_CURRENCY), SystemManager.GetJsonNodeString(__j, REWARD_QUANTITY));
-            SetMissionState(SystemManager.GetJsonNodeString(__j, UNLOCK_STATE));
+            SetCurrencyIcon(missionData.rewardCurrency, missionData.rewardQuantity.ToString());
+            SetMissionState(missionData.missionState);
         }
 
         void SetCurrencyIcon(string __type, string __amount)
@@ -65,26 +64,25 @@ namespace PIERStory
             currencyAmount.text = string.Format("<b>{0}</b><size=17>개</size>", __amount);
         }
 
-        void SetMissionState(string __state)
+        void SetMissionState(MissionState __state)
         {
             rewardInfo.SetActive(true);
             completeMark.SetActive(false);
+            
+            state = __state;
 
             switch (__state)
             {
-                case "0":
-                    state = MissionState.OPEN;
+                case MissionState.unlocked:
                     missionState.color = Color.white;
                     stateButtonImage.color = missionGreen;
                     break;
-                case "1":
-                    state = MissionState.GOT;
+                case MissionState.finish:
                     rewardInfo.SetActive(false);
                     completeMark.SetActive(true);
                     break;
 
                 default:
-                    state = MissionState.LOCK;
                     missionState.color = missionGreen;
                     stateButtonImage.color = Color.white;
                     break;
@@ -94,8 +92,39 @@ namespace PIERStory
         public void OnClickGetReward()
         {
             // 열려 있는 상태가 아니라면 동작하지 않는다
-            if (state != MissionState.OPEN)
+            if (state != MissionState.unlocked)
                 return;
+                
+            UserManager.main.GetMissionRewared(missionData.missionID, missionData.rewardCurrency, missionData.rewardQuantity.ToString(), CallbackGetMissionReward);
+        }
+        
+        void CallbackGetMissionReward(HTTPRequest req, HTTPResponse res)
+        {
+            /*
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                SystemManager.ShowAlert("통신 실패!");
+                return;
+            }
+            
+            JsonData resposeData = JsonMapper.ToObject(res.DataAsText);
+            
+            // node 갱신 
+            UserManager.main.currentStoryJson["missions"] = resposeData["userMissionList"];
+            // 재화 갱신
+            UserManager.main.SetBankInfo(resposeData);
+
+            storyMission.SetGetAllButton();
+            
+            // 미션 리스트 갱신 
+            // * 2021.09.15 연출을 위해 view에서 갱신을 하지 않음. 
+            // storyMission.SetMissionList(resposeData["userMissionList"]);
+            
+            // * 성공 했다. => 미션이 해금도 되었고, 보상도 받은 상태가 되는거다. 
+            SetMissionComplete();
+            */
         }
     }
+    
+    
 }

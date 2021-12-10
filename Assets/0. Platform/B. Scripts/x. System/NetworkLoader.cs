@@ -176,7 +176,20 @@ namespace PIERStory
         /// <param name="__originPrice">원 가격</param>
         /// <param name="__salePrice">할인 가격</param>
         public void PurchaseProjectFreepass(string __freepassNo, int __originPrice, int __salePrice) {
-
+            JsonData sending = new JsonData();
+            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            sending["currency"] = StoryManager.main.GetProjectCurrencyCode(CurrencyType.Freepass);
+            sending["originPrice"] = __originPrice;
+            sending["salePrice"] = __salePrice;
+            
+            if(!string.IsNullOrEmpty(__freepassNo)) {
+                sending["freepass_no"] = __freepassNo;
+            }
+            
+            
+            sending["func"] = "purchaseFreepass";
+            
+            SendPost(UserManager.main.CallbackPurchaseFreepass, sending);
         }
         
         /// <summary>
@@ -185,7 +198,14 @@ namespace PIERStory
         /// <param name="__targetSceneID">이동하게 되는 사건ID</param>
         /// <param name="__selectionData">버튼 텍스트</param>
         public void UpdateUserSelectionProgress(string __targetSceneID, string __selectionData) {
+            JsonData sending = new JsonData();
+            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 
+            sending["episodeID"] = StoryManager.main.CurrentEpisodeID; 
+            sending["target_scene_id"] = __targetSceneID;
+            sending["selection_data"] = __selectionData;
+            sending["func"] = "updateSelectionProgress"; // func 지정 
 
+            SendPost(UserManager.main.CallbackUpdateSelectionProgress, sending);
         }
 
         /// <summary>
@@ -195,7 +215,17 @@ namespace PIERStory
         /// <param name="__scriptNO"></param>
         public void UpdateUserProjectCurrent(string __episodeID, string __sceneID, long __scriptNO) 
         {
+            if (!UserManager.main.useRecord)
+                return;
 
+            JsonData sending = new JsonData();
+            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 
+            sending["episodeID"] = __episodeID;
+            sending["scene_id"] = __sceneID;
+            sending["script_no"] = __scriptNO;
+            sending["func"] = "updateUserProjectCurrent"; // func 지정 
+
+            SendPost(UserManager.main.CallbackUpdateProjectCurrent, sending);
         }
 
         /// <summary>

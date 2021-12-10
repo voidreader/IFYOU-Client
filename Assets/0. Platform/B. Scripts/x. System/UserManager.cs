@@ -5,6 +5,8 @@ using UnityEngine;
 using LitJson;
 using BestHTTP;
 using Doozy.Runtime.Signals;
+using Sirenix.OdinInspector;
+using System.Linq;
 
 namespace PIERStory
 {
@@ -13,21 +15,21 @@ namespace PIERStory
     /// <summary>
     /// 사용자 정보 
     /// </summary>
-    public class UserManager : MonoBehaviour
+    public class UserManager : SerializedMonoBehaviour
     {
         public static UserManager main = null;
         
 
-        public JsonData userJson = null; // 계정정보 (table_account) 
-        public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)
-        public JsonData notReceivedMailJson = null;     // 미수신 메일
+        [HideInInspector] public JsonData userJson = null; // 계정정보 (table_account) 
+        [HideInInspector] public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)
+        [HideInInspector] public JsonData notReceivedMailJson = null;     // 미수신 메일
 
 
         public List<CoinIndicator> ListCoinIndicators = new List<CoinIndicator>(); // 코인 표시기
         public List<GemIndicator> ListGemIndicators = new List<GemIndicator>(); // 사파이어 표시기
         public TicketIndicator ticketIndicators;        // 1회권 표시기
-        public Queue<JsonData> OpenSideStories = new Queue<JsonData>();     // 해금된 사이드 에피소드 목록
-        public Queue<JsonData> CompleteMissions = new Queue<JsonData>();      // 완료된 미션 목록
+        [HideInInspector] public Queue<JsonData> OpenSideStories = new Queue<JsonData>();     // 해금된 사이드 에피소드 목록
+        [HideInInspector] public Queue<JsonData> CompleteMissions = new Queue<JsonData>();      // 완료된 미션 목록
 
 
         #region Actions
@@ -76,9 +78,9 @@ namespace PIERStory
         /// 진행중인 상황 ID와 클리어 상황 기록은 다르다. 
         /// 
         /// </summary>
-        public JsonData currentStoryJson = null; // 선택한 프로젝트와 관련된 정보 
+        [HideInInspector] public JsonData currentStoryJson = null; // 선택한 프로젝트와 관련된 정보 
 
-        public bool completeReadUserData = false;
+        [HideInInspector] public bool completeReadUserData = false;
 
         public float prevIllustProgress = -1f;
 
@@ -100,6 +102,9 @@ namespace PIERStory
         JsonData resultSceneRecord = null; // 사건ID 기록 통신 결과 
         JsonData resultEpisodeRecord = null; // 에피소드 기록 통신 결과
         JsonData resultEpisodeReset = null; // 에피소드 리셋 통신 결과
+        
+        JsonData currentStoryMissionJSON = null; // 현재 선택한 스토리의 미션 JSON
+        public Dictionary<string, MissionData> DictStoryMission; // 미션 Dictionary
 
         #region static const 
 
@@ -115,11 +120,11 @@ namespace PIERStory
         const string NODE_PROJECT_MODELS = "models"; // 프로젝트의 모든 모델 파일리스트 
         const string NODE_PROJECT_ILLUSTS = "illusts"; // 프로젝트의 모든 일러스트 
         const string NODE_PROJECT_MISSIONS = "missions";                    // 프로젝트의 모든 미션
-        const string NODE_PROJECT_MISSION_PROGRESS = "missionProgress";     // 프로젝트 완료한 미션
+        
 
         // 사용자 정보 
         const string NODE_USER_FAVOR = "favorProgress"; // 유저 호감도 정보 
-        const string NODE_USER_MISSIONS = "missionProgress"; // 유저 도전과제 정보 
+        
 
         const string NODE_USER_VOICE = "voiceHistory";      // 유저 보이스(더빙) 히스토리 정보
         const string NODE_USER_RAW_VOICE = "rawVoiceHistory"; // 유저 보이스 히스토리 (Raw 타입)
@@ -315,6 +320,56 @@ namespace PIERStory
             // 알림 정보 update
             SetNotificationInfo(__j);
         }
+        
+        
+        /// <summary>
+        /// 선택한 스토리에서 유저 데이터 분리해서 저장 
+        /// </summary>
+        /// <param name="__j"></param>
+        public void SetStoryUserData(JsonData __j)
+        {
+            currentStoryJson = __j;
+            // Debug.Log("SetUserEpisodeSceneHistory " + JsonMapper.ToJson(currentStoryJson));
+            
+            #region 미션 
+            currentStoryMissionJSON = GetNodeProjectMissions();
+            DictStoryMission = new Dictionary<string, MissionData>();
+            
+            // 딕셔너리에 정리하기. JSON 쓰기 시러요..!
+            for(int i=0; i<currentStoryMissionJSON.Count;i++) {
+                MissionData missionData = new MissionData(currentStoryMissionJSON[i]);
+                DictStoryMission.Add(missionData.missionID, missionData);
+            }
+            
+            #endregion
+
+
+            /// 데이터 확인용도 
+            if (!Application.isEditor)
+                return;
+
+            DebugProjectIllusts.Clear();
+            DebugProjectChallenges.Clear();
+            DebugProjectFavors.Clear();
+            
+
+            for (int i=0; i<GetNodeProjectIllusts().Count; i++) {
+                DebugProjectIllusts.Add(JsonMapper.ToStringUnicode(GetNodeProjectIllusts()[i]));
+            }
+
+            for (int i = 0; i < GetNodeProjectMissions().Count; i++)
+            {
+                DebugProjectChallenges.Add(JsonMapper.ToStringUnicode(GetNodeProjectMissions()[i]));
+            }
+
+            
+           
+
+            RefreshUserIllustHistoryInspector();
+            
+            RefreshUserFavorHistoryInspector();
+        }
+        
 
         #region 튜토리얼 Update 통신
 
@@ -379,6 +434,14 @@ namespace PIERStory
             sending["reward_quantity"] = quantity;
 
             NetworkLoader.main.SendPost(callback, sending, true);
+        }
+        
+        /// <summary>
+        /// 해금되고 보상은 받지않은 미션 개수 가져오기 
+        /// </summary>
+        /// <returns></returns>        
+        public int GetUnlockStateMissionCount() {
+            return DictStoryMission.Values.Count( mission => mission.missionState == MissionState.unlocked);
         }
 
         #endregion
@@ -504,7 +567,7 @@ namespace PIERStory
 
         #region 유저 노드 제어 
 
-
+        
 
         /// <summary>
         /// 유저 계정 노드 
@@ -765,15 +828,12 @@ namespace PIERStory
             return currentStoryJson[NODE_PROJECT_ILLUSTS];
         }
 
-        public JsonData GetNodeMissionProgress()
-        {
-            return currentStoryJson[NODE_PROJECT_MISSION_PROGRESS];
-        }
+
 
         /// <summary>
         /// 프로젝트 도전과제 정보
         /// </summary>
-        public JsonData GetNodeProjectChallenges()
+        JsonData GetNodeProjectMissions()
         {
             return currentStoryJson[NODE_PROJECT_MISSIONS];
         }
@@ -892,23 +952,6 @@ namespace PIERStory
             }
 
             return null;
-        }
-
-
-        /// <summary>
-        /// 유저 도전과제 기록 
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetNodeUserChallenges()
-        {
-            return currentStoryJson[NODE_USER_MISSIONS];
-        }
-
-        public void SetNodeUserChallenge(JsonData __newData)
-        {
-            currentStoryJson[NODE_USER_MISSIONS] = __newData;
-
-            RefreshUserChallengeHistoryInspector();
         }
 
         /// <summary>
@@ -1497,66 +1540,18 @@ namespace PIERStory
 
 
 
-        /// <summary>
-        /// 선택한 스토리에서 유저 데이터 분리해서 저장 
-        /// </summary>
-        /// <param name="__j"></param>
-        public void SetStoryUserData(JsonData __j)
-        {
-            currentStoryJson = __j;
-            // Debug.Log("SetUserEpisodeSceneHistory " + JsonMapper.ToJson(currentStoryJson));
 
 
-            /// 데이터 확인용도 
-            if (!Application.isEditor)
-                return;
-
-            DebugProjectIllusts.Clear();
-            DebugProjectChallenges.Clear();
-            DebugProjectFavors.Clear();
-            
-
-            for (int i=0; i<GetNodeProjectIllusts().Count; i++) {
-                DebugProjectIllusts.Add(JsonMapper.ToStringUnicode(GetNodeProjectIllusts()[i]));
-            }
-
-            for (int i = 0; i < GetNodeProjectChallenges().Count; i++)
-            {
-                DebugProjectChallenges.Add(JsonMapper.ToStringUnicode(GetNodeProjectChallenges()[i]));
-            }
-
-            
-           
-
-            RefreshUserIllustHistoryInspector();
-            RefreshUserChallengeHistoryInspector();
-            RefreshUserFavorHistoryInspector();
-        }
-
-        /// <summary>
-        /// 완료된 미션이었는지 체크한다
-        /// </summary>
-        /// <returns>true를 리턴하면 완료한 미션, false를 return하면 아직 미완료한 미션</returns>
-        public bool CheckCompleteMission(string missionName)
-        {
-            for(int i=0;i<GetNodeMissionProgress().Count;i++)
-            {
-                if (GetNodeMissionProgress()[i]["mission_name"].ToString().Equals(missionName))
-                    return true;
-            }
-
-            return false;
-        }
 
         /// <summary>
         /// 미션 이름을 비교하여 mission Id를 반환한다
         /// </summary>
         public string GetMissionId(string missionName)
         {
-            for(int i=0;i<GetNodeProjectChallenges().Count;i++)
+            for(int i=0;i<GetNodeProjectMissions().Count;i++)
             {
-                if (GetNodeProjectChallenges()[i]["mission_name"].ToString().Equals(missionName))
-                    return GetNodeProjectChallenges()[i]["mission_id"].ToString();
+                if (GetNodeProjectMissions()[i]["mission_name"].ToString().Equals(missionName))
+                    return GetNodeProjectMissions()[i]["mission_id"].ToString();
             }
 
             return string.Empty;
@@ -1594,17 +1589,7 @@ namespace PIERStory
             }
         }
 
-        void RefreshUserChallengeHistoryInspector()
-        {
-            if (!Application.isEditor)
-                return;
 
-            DebugUserChallenges.Clear();
-            for (int i = 0; i < GetNodeUserChallenges().Count; i++)
-            {
-                DebugUserChallenges.Add(JsonMapper.ToStringUnicode(GetNodeUserChallenges()[i]));
-            }
-        }
 
         #endregion
 

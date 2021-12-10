@@ -93,7 +93,14 @@ namespace PIERStory {
         #region PlayerPrefs Key Value
 
         public const string KEY_SEARCH_RECORD = "searchRecord";
-
+        
+        
+        // * 스토리 컨텐츠 관련 키 
+        public const string KEY_GALLERY_DATA = "keyGalleryData";
+        public const string KEY_ENDING_DATA = "keyEndingData";
+        public const string KEY_SELECTION_DATA = "keySelectionData";
+        public const string KEY_MISSION_DATA = "keyMissionData";
+        
 
         #endregion
 

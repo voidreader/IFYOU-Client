@@ -532,14 +532,8 @@ namespace PIERStory
                     //yield return new WaitUntil(() => gamePopup == null);        // HIde
                 }
 
-                // * 이어하기 추가 처리
-                if (isResumePlay)
-                { // true일때만 호출해야한다.
-                    // 정지 포인트에서 useSkip을 false로 바꿔야 한다. 
-                    useSkip = CheckResumePlayStopPoint();
-                }
-                else
-                {
+                // * 이어하기 아닌 경우, 선택지나 조건을 만났을때는 통신이 완료되는 것을 기다린다. 
+                if(!isResumePlay) {
                     if (currentRow.template.Equals(GameConst.TEMPLATE_SELECTION) || !string.IsNullOrEmpty(currentRow.requisite))
                     {
                         SystemManager.ShowNetworkLoading();
@@ -550,6 +544,12 @@ namespace PIERStory
 
                 // 현재 '행'의 동작을 수행합니다. 
                 currentRow.ProcessRowAction(OnFinishedRowAction, useSkip);
+                
+                // * Row 동작을 한 상태에서 StopPoint를 체크해서 스킵과 resumePlay를 해제해본다.
+                if(isResumePlay) { // true일때만 호출해야한다.
+                    // 정지 포인트에서 useSkip을 false로 바꿔야 한다. 
+                    useSkip = CheckResumePlayStopPoint();
+                }                
 
                 // * 일반 플레이. 
                 if (!useSkip)

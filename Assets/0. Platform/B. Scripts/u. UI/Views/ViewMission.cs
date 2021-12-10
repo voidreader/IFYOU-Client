@@ -8,7 +8,7 @@ namespace PIERStory
 {
     public class ViewMission : CommonView
     {
-        JsonData missionJson = null;
+        
 
         public TextMeshProUGUI projectTitle;
         public TextMeshProUGUI missionProgressText;
@@ -41,51 +41,48 @@ namespace PIERStory
             SetGetAllButton();
 
             #region mission setting
-            int lockHIddenMissionCount = 0;     // 공개되지 않은 히든미션 count
+            int lockHiddenMissionCount = 0;     // 공개되지 않은 히든미션 count
             int sortIndex = 0;                  // unlock_state 등에 의하여 정렬을 도와줄 index
             int completeValue = 0;
-
-            // 달성 후 보상 미수령
-            for(int i=0;i<missionJson.Count;i++)
-            {
-                if (SystemManager.GetJsonNodeString(missionJson[i], UNLOCK_STATE).Equals("0"))
-                {
-                    missionElements[sortIndex].InitMission(missionJson[i]);
+            
+            // * 달성 후 보상 미수령 => 잠금 => 보상 받음 순서로 한다. 
+            // 달성 후 보상 미수령 상태             
+            foreach(MissionData missionData in UserManager.main.DictStoryMission.Values) {
+                if(missionData.missionState == MissionState.unlocked) {
+                    missionElements[sortIndex].InitMission(missionData);
                     sortIndex++;
                     completeValue++;
                 }
             }
-
-            // 미해금
-            for (int i = 0; i < missionJson.Count; i++)
-            {
-                if (string.IsNullOrEmpty(SystemManager.GetJsonNodeString(missionJson[i], UNLOCK_STATE)))
-                {
-                    // 진행중인 히든 미션 갯수 카운팅
-                    if (SystemManager.GetJsonNodeBool(missionJson, IS_HIDDEN))
-                        lockHIddenMissionCount++;
-                    else
-                    {
-                        // 진행 중이나, 히든 미션이 아닌경우
-                        missionElements[sortIndex].InitMission(missionJson[i]);
-                        sortIndex++;
+            
+            
+            // 잠금 상태
+            foreach(MissionData missionData in UserManager.main.DictStoryMission.Values) {
+                if(missionData.missionState == MissionState.locked) {
+                    
+                    if(missionData.isHidden)
+                        lockHiddenMissionCount++;
+                    else {
+                        missionElements[sortIndex].InitMission(missionData);
+                        sortIndex++;    
                     }
                 }
             }
 
+
+  
             // 히든엔딩 갯수 표기
-            if (lockHIddenMissionCount > 0)
+            if (lockHiddenMissionCount > 0)
             {
                 //rewardBoxes[sortIndex].HighlightHidden(lockHIddenMissionCount);
-                sortIndex++;
+                // sortIndex++;
             }
 
-            // 달성 후 보상 수령 완료
-            for (int i = 0; i < missionJson.Count; i++)
-            {
-                if (SystemManager.GetJsonNodeString(missionJson[i], UNLOCK_STATE).Equals("1"))
-                {
-                    missionElements[sortIndex].InitMission(missionJson[i]);
+            // 달성 후 보상 수령 완료 
+            foreach(MissionData missionData in UserManager.main.DictStoryMission.Values) {
+                if(missionData.missionState == MissionState.finish) {
+                    
+                    missionElements[sortIndex].InitMission(missionData);
                     sortIndex++;
                     completeValue++;
                 }
@@ -94,24 +91,27 @@ namespace PIERStory
             #endregion
 
             projectTitle.text = StoryManager.main.CurrentProjectTitle;
-            missionProgressText.text = string.Format("미션 달성 진행률 ({0}/{1})", completeValue, missionJson.Count);
+            missionProgressText.text = string.Format("미션 달성 진행률 ({0}/{1})", completeValue, UserManager.main.DictStoryMission.Count);
 
-            float percentage = (float)completeValue / missionJson.Count;
+            float percentage = (float)completeValue / (float)UserManager.main.DictStoryMission.Count;
             missionPercent.text = string.Format("{0}%", Mathf.Round(percentage * 100));
             missionProgressBar.fillAmount = percentage;
 
             missionScroll.verticalNormalizedPosition = 1f;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void SetGetAllButton()
         {
-            missionJson = UserManager.main.GetNodeProjectChallenges();
+            
             int countOpen = 0;
-
-            for(int i=0;i<missionJson.Count;i++)
-            {
-                if (SystemManager.GetJsonNodeString(missionJson[i], UNLOCK_STATE).Equals("0"))
+            
+            foreach(MissionData missionData in UserManager.main.DictStoryMission.Values) {
+                if(missionData.missionState == MissionState.unlocked) {
                     countOpen++;
+                }
             }
 
             if (countOpen > 0)

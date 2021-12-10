@@ -1201,6 +1201,30 @@ namespace PIERStory
             return __node[__col];
         }
         
+        /// <summary>
+        /// 특정 노드의 int 값을 알려주세요. 
+        /// </summary>
+        /// <param name="__node"></param>
+        /// <param name="__col"></param>
+        /// <returns></returns>
+        public static int GetJsonNodeInt(JsonData __node, string __col) {
+            if (__node == null || !__node.ContainsKey(__col))
+                return 0;
+
+
+            if (__node[__col] == null)
+                return 0;
+            
+            try {    
+                return int.Parse(GetJsonNodeString(__node, __col));
+            }
+            catch (System.Exception e) {
+                return 0;
+            }
+
+            
+        }
+        
 
         /// <summary>
         /// JSON 특정 노드의 string 값을 알려주세요

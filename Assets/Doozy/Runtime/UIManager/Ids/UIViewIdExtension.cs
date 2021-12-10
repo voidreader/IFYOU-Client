@@ -57,6 +57,7 @@ namespace Doozy.Runtime.UIManager
             AddMenu,
             Beginning,
             Category,
+            CoinStarHistory,
             DataManager,
             Gallery,
             IfyouPlay,
@@ -72,7 +73,6 @@ namespace Doozy.Runtime.UIManager
             Search,
             Shop,
             SoundDetail,
-            StarHistory,
             StoryDetail,
             Title
         }

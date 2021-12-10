@@ -17,7 +17,6 @@ namespace PIERStory
         public static Action<JsonData> OnEpisodeGameData = null;
 
         #region CONST
-        const string FUNC = "func";
         const string HEADER_RETRY = "X-retry";
 
         public const string FUNC_LOGIN_CLIENT = "loginClient";
@@ -67,7 +66,7 @@ namespace PIERStory
         
         // * 기본 파라매터 
         const string COL_BUILD = "build";
-        const string COL_USERKEY = "userkey";
+        
         const string COL_COUNTRY = "country";
 
 
@@ -260,13 +259,13 @@ namespace PIERStory
                 return;
 
             JsonData sending = new JsonData();
-            sending[COL_USERKEY] = UserManager.main.userKey;
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
             
             sending[CommonConst.SOUND_NAME] = soundName;
             sending["sound_id"] = soundID; // 사운드 ID 추가 
             
-            sending[FUNC] = FUNC_UPDATE_USER_VOICE_HISTORY;
+            sending[CommonConst.FUNC] = FUNC_UPDATE_USER_VOICE_HISTORY;
 
             SendPost(OnUpdateUserVoice, sending);
         }
@@ -309,8 +308,8 @@ namespace PIERStory
         {
             // 에피소드 구매는 반드시 통신이 완료되고 다음이 진행되어야 합니다. 
             JsonData sending = new JsonData();
-            sending[FUNC] = FUNC_EPISODE_PURCHASE;
-            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
+            sending[CommonConst.FUNC] = FUNC_EPISODE_PURCHASE;
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
             sending["episodeID"] = __episodeID; // 타겟 에피소드 
             sending["purchaseType"] = __purchaseType.ToString();
             sending["currency"] = __currency;
@@ -355,7 +354,7 @@ namespace PIERStory
         public void RequestSingleMail(OnRequestFinishedDelegate __cb, string mailNo)
         {
             JsonData sendingData = new JsonData();
-            sendingData[FUNC] = FUNC_MAIL_SINGLE_READ;
+            sendingData[CommonConst.FUNC] = FUNC_MAIL_SINGLE_READ;
             sendingData["mail_no"] = mailNo;
 
             SendPost(__cb, sendingData, true);
@@ -367,7 +366,7 @@ namespace PIERStory
         public void RequestAllMail(OnRequestFinishedDelegate __cb)
         {
             JsonData sendingData = new JsonData();
-            sendingData[FUNC] = FUNC_MAIL_ALL_READ;
+            sendingData[CommonConst.FUNC] = FUNC_MAIL_ALL_READ;
 
             SendPost(__cb, sendingData, true);
         }
@@ -380,7 +379,7 @@ namespace PIERStory
         /// </summary>
         /// <param name="__j"></param>
         void SetBaseParams(JsonData __j) {
-            __j[COL_USERKEY] = UserManager.main.userKey;
+            __j[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             __j[COL_BUILD] = Application.identifier;
             __j[COL_COUNTRY] = Gamebase.GetCountryCodeOfDevice();
             __j[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
@@ -402,8 +401,8 @@ namespace PIERStory
            
 
             // func 동작에 대한 List ADD
-            if (__sendingData.ContainsKey(FUNC))
-                ListNetwork.Add(__sendingData[FUNC].ToString());
+            if (__sendingData.ContainsKey(CommonConst.FUNC))
+                ListNetwork.Add(__sendingData[CommonConst.FUNC].ToString());
 
             // 동기 통신에 대한 처리
             if(__isSync)
@@ -462,9 +461,9 @@ namespace PIERStory
                     if((_requestRawData.StartsWith("{") && _requestRawData.EndsWith("}")) || (_requestRawData.StartsWith("[") && _requestRawData.EndsWith("]"))) {
                         _reqData = JsonMapper.ToObject(_requestRawData);
                         
-                        if (_reqData != null && _reqData.ContainsKey(FUNC))
+                        if (_reqData != null && _reqData.ContainsKey(CommonConst.FUNC))
                         {
-                            main.ListNetwork.Remove(_reqData[FUNC].ToString());
+                            main.ListNetwork.Remove(_reqData[CommonConst.FUNC].ToString());
                         }        
                     } //  end of deal with json
                 }

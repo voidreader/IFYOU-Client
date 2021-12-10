@@ -85,6 +85,7 @@ namespace PIERStory
             glitch = mainCam.GetComponent<CameraFilterPack_TV_Artefact>();
             screenGlitch = generalCam.GetComponent<CameraFilterPack_TV_Artefact>();
 
+            reminisce = generalCam.GetComponent<CameraFilterPack_TV_Old_Movie_2>();
             brokenScreen = generalCam.GetComponent<CameraFilterPack_Broken_Screen>();
 
             glitters = glitter.GetComponentsInChildren<ParticleSystem>();

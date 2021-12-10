@@ -221,8 +221,8 @@ namespace PIERStory
 
 
             // account 정보 
-            userJson = userJson["account"];
-            userKey = userJson["userkey"].ToString();
+            userJson = SystemManager.GetJsonNode(userJson, "account");
+            userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
             tutorialStep = int.Parse(SystemManager.GetJsonNodeString(userJson, "tutorial_step"));
             adCharge = int.Parse(SystemManager.GetJsonNodeString(userJson, "ad_charge"));
 
@@ -295,8 +295,8 @@ namespace PIERStory
             // 알림 정보 update
             SetNotificationInfo(__j);
 
-            userJson = userJson["account"];
-            userKey = userJson["userkey"].ToString();
+            userJson = SystemManager.GetJsonNode(userJson, "account");
+            userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
             tutorialStep = int.Parse(SystemManager.GetJsonNodeString(userJson, "tutorial_step"));
 
             // 사용자 UI 정보를 갱신하는 Event 필요함!
@@ -324,8 +324,8 @@ namespace PIERStory
         public void UpdateTutorialStep()
         {
             JsonData sending = new JsonData();
-            sending["func"] = "updateTutorialStep";
-            sending["userkey"] = userKey;
+            sending[CommonConst.FUNC] = "updateTutorialStep";
+            sending[CommonConst.COL_USERKEY] = userKey;
             sending["tutorial_step"] = ++tutorialStep;
 
             NetworkLoader.main.SendPost(CallbackUpdateTutorialStep, sending);
@@ -371,10 +371,10 @@ namespace PIERStory
         public void GetMissionRewared(string missionId, string currency, string quantity, OnRequestFinishedDelegate callback)
         {
             JsonData sending = new JsonData();
-            sending["func"] = NetworkLoader.FUNC_USER_MISSION_REWARD;
-            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            sending[CommonConst.FUNC] = NetworkLoader.FUNC_USER_MISSION_REWARD;
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
             sending["mission_id"] = missionId;
-            sending["userkey"] = userKey;
+            sending[CommonConst.COL_USERKEY] = userKey;
             sending["reward_currency"] = currency;
             sending["reward_quantity"] = quantity;
 
@@ -1661,11 +1661,13 @@ namespace PIERStory
             // j["func"] = NetworkLoader.func;
             // UserManager.main.UpdateCurrentSceneID(StoryManager.main.CurrentProjectID, StoryManager.main.CurrentEpisodeID, scene_id);
 
-            j["func"] = NetworkLoader.FUNC_UPDATE_EPISODE_SCENE_RECORD;
-            j["userkey"] = userKey;
-            j["project_id"] = __project_id;
-            j["episode_id"] = __episode_id;
-            j["scene_id"] = __scene_id;
+            j[CommonConst.FUNC] = NetworkLoader.FUNC_UPDATE_EPISODE_SCENE_RECORD;
+            j[CommonConst.COL_USERKEY] = userKey;
+            j[CommonConst.COL_PROJECT_ID] = __project_id;
+            j[CommonConst.COL_EPISODE_ID] = __episode_id;
+            j[GameConst.COL_SCENE_ID] = __scene_id;
+
+            
 
             NetworkLoader.main.SendPost(CallbackUpdateSceneRecord, j);
         }
@@ -1690,7 +1692,7 @@ namespace PIERStory
         {
             JsonData j = new JsonData();
 
-            j["func"] = NetworkLoader.FUNC_DELETE_EPISODE_SCENE_HISTORY;
+            j[CommonConst.FUNC] = NetworkLoader.FUNC_DELETE_EPISODE_SCENE_HISTORY;
             j["scene_id"] = __scene_id;
             j["project_id"] = __project_id;
 

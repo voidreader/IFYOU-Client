@@ -70,13 +70,14 @@ namespace PIERStory {
             
             int elementIndex = 0;
             
-            for(int i=0;i<StoryManager.main.totalStoryListJson.Count;i++) {
+            for(int i=0;i<StoryManager.main.listTotalStory.Count;i++) {
                 
-                if(!SystemManager.GetJsonNodeBool(StoryManager.main.totalStoryListJson[i], LobbyConst.STORY_IS_PLAYING))
+                if(!StoryManager.main.listTotalStory[i].isPlaying)
                     continue;
                 
+                
                 // 진행기록이 있는 작품만 가져온다.                 
-                ListPlayingStoryElements[elementIndex++].InitElement(StoryManager.main.totalStoryListJson[i]);
+                ListPlayingStoryElements[elementIndex++].InitElement(StoryManager.main.listTotalStory[i]);
             }
         }
         
@@ -96,7 +97,7 @@ namespace PIERStory {
             ResetRecommendStory();
             
             // 작품개수를 2로 나눈다. 
-            int dividedIntoTwo = Mathf.FloorToInt((float)StoryManager.main.totalStoryListJson.Count / 2f );
+            int dividedIntoTwo = Mathf.FloorToInt((float)StoryManager.main.listTotalStory.Count / 2f );
             
             // 2배수로 나눈 수만큼 초기화 시작.
             for(int i=0; i<dividedIntoTwo; i++) {
@@ -112,8 +113,8 @@ namespace PIERStory {
             ResetNewStory();
             
             
-            for(int i=0; i<StoryManager.main.totalStoryListJson.Count;i++) {
-                ListNewStoryElement[i].InitStoryElement(StoryManager.main.totalStoryListJson[i]);
+            for(int i=0; i<StoryManager.main.listTotalStory.Count;i++) {
+                ListNewStoryElement[i].InitStoryElement(StoryManager.main.listTotalStory[i]);
             }   
         }
         

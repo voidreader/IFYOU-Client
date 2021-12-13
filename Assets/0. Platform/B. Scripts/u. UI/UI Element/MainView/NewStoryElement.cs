@@ -13,40 +13,32 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textTitle; // 타이틀 
         
         [SerializeField] bool isLock = false;
-        [SerializeField] string projectID = string.Empty;
-        [SerializeField] string title = string.Empty;
-        [SerializeField] string imageURL = string.Empty;
-        [SerializeField] string imageKey = string.Empty;
+
         [SerializeField] string colorCode = string.Empty;
         [SerializeField] Color mainColor;
         
-        JsonData storyJSON = null; // 작품 정보
+        StoryData storyData = null; // 작품 정보
         
         /// <summary>
         /// 초기화 하기. 
         /// </summary>
         /// <param name="__j"></param>
-        public void InitStoryElement(JsonData __j) {
+        public void InitStoryElement(StoryData __j) {
             
             this.gameObject.SetActive(true);
             
-            storyJSON = __j;
+            storyData = __j;
             
-            projectID = storyJSON[LobbyConst.STORY_ID].ToString(); 
-            title = storyJSON[LobbyConst.STORY_TITLE].ToString(); 
-            imageURL = storyJSON[LobbyConst.IFYOU_PROJECT_BANNER_URL].ToString();
-            imageKey = storyJSON[LobbyConst.IFYOU_PROJECT_BANNER_KEY].ToString();
+            textTitle.text = storyData.title;
             
-            textTitle.text = title;
-            
-            colorCode = storyJSON[LobbyConst.IFYOU_PROJECT_MAIN_COLOR].ToString();
+            colorCode = storyData.colorCode;
             ColorUtility.TryParseHtmlString("#" + colorCode, out mainColor);
             
             // 메인 컬러 처리 
             colorShadow.color = mainColor;
             
             // 배너 이미지 처리 
-            bannerImage.SetDownloadURL(imageURL, imageKey);
+            bannerImage.SetDownloadURL(storyData.bannerURL, storyData.bannerKey);
         }
         
         public void OnClickElement() {
@@ -56,7 +48,7 @@ namespace PIERStory {
             }
             
             // 스토리매니저에게 작품 상세정보 요청 
-            StoryManager.main.RequestStoryInfo(projectID, storyJSON);
+            StoryManager.main.RequestStoryInfo(storyData);
             
         }
     }

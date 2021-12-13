@@ -19,6 +19,7 @@ namespace PIERStory
         CameraFilterPack_Color_GrayScale bgGrayScale, screenGrayScale;
         CameraFilterPack_Blur_Blurry blur;
         CameraFilterPack_TV_Artefact glitch, screenGlitch;
+        CameraFilterPack_Blur_Bloom bloom;
         CameraFilterPack_TV_Old_Movie_2 reminisce;
         CameraFilterPack_Broken_Screen brokenScreen;
         CameraFilterPack_Distortion_Dream2 dizzy;
@@ -45,7 +46,10 @@ namespace PIERStory
         [Tooltip("비")] public ParticleSystem rainParticle;
         [Tooltip("폭설")] public ParticleSystem heavySnowParticle;
         [Tooltip("눈")] public ParticleSystem snow;
-        [Tooltip("렌즈플레어")] public ParticleSystem lensFlare;         // 타입 1개만 있음 아직
+        [Tooltip("렌즈플레어1")] public ParticleSystem lensFlare1;
+        [Tooltip("렌즈플레어2")] public ParticleSystem lensFlare2;
+        [Tooltip("렌즈플레어3")] public ParticleSystem lensFlare3;
+        [Tooltip("렌즈플레어에서 사용되는 빛알갱이")] public ParticleSystem lightDust;
         [Tooltip("집중선")] public ParticleSystem radiLine;
         public ParticleSystem[] radiLines;                              // 집중선 색 변경을 위한 변수
         [Tooltip("출혈 타입1")] public ParticleSystem bleeding_1;
@@ -85,6 +89,7 @@ namespace PIERStory
             glitch = mainCam.GetComponent<CameraFilterPack_TV_Artefact>();
             screenGlitch = generalCam.GetComponent<CameraFilterPack_TV_Artefact>();
 
+            bloom = generalCam.GetComponent<CameraFilterPack_Blur_Bloom>();
             reminisce = generalCam.GetComponent<CameraFilterPack_TV_Old_Movie_2>();
             brokenScreen = generalCam.GetComponent<CameraFilterPack_Broken_Screen>();
 
@@ -798,6 +803,47 @@ namespace PIERStory
 
                     break;
 
+                case GameConst.KR_SCREEN_EFFECT_LENS_FLARE:
+
+                    string lensDir = "L";
+                    int lightIntensity = 2;
+                    int typeValue = 1;
+
+                    if(__params != null)
+                    {
+                        ScriptRow.GetParam<string>(__params, GameConst.KR_PARAM_VALUE_DIR, ref lensDir);
+                        ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_STRENGTH, ref lightIntensity);
+                        ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_TYPE, ref typeValue);
+                    }
+
+                    lensDir = lensDir.ToUpper();
+                    lightIntensity = Mathf.Clamp(lightIntensity, 1, 3);
+
+                    ParticleSystem currLensFlare = null;
+                    switch (typeValue)
+                    {
+                        case 1:
+                            currLensFlare = lensFlare1;
+                            break;
+                        case 2:
+                            currLensFlare = lensFlare2;
+                            break;
+                        case 3:
+                            currLensFlare = lensFlare3;
+                            break;
+                    }
+
+                    if (lensDir.Contains(GameConst.POS_LEFT))
+                        currLensFlare.transform.position = new Vector3(1, 1, 1);
+                    else
+                        currLensFlare.transform.position = new Vector3(-1, 1, 1);
+
+                    bloom.enabled = true;
+                    lightDust.gameObject.SetActive(true);
+                    currLensFlare.gameObject.SetActive(true);
+
+                    break;
+
                 case GameConst.KR_SCREEN_EFFECT_SNOW:
                     snow.gameObject.SetActive(true);
                     break;
@@ -895,7 +941,11 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_LENS_FLARE:
-                    
+                    lensFlare1.gameObject.SetActive(false);
+                    lensFlare2.gameObject.SetActive(false);
+                    lensFlare3.gameObject.SetActive(false);
+                    bloom.enabled = false;
+                    lightDust.gameObject.SetActive(false);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_FOG:
@@ -941,8 +991,6 @@ namespace PIERStory
                 case GameConst.KR_SCREEN_EFFECT_BROKEN:
                     brokenScreen.enabled = false;
                     break;
-
-                
 
                 case GameConst.KR_SCREEN_EFFECT_HEAVYRAIN:
                     heavyRain.enabled = false;

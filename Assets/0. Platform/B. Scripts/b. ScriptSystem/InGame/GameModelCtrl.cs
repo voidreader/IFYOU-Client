@@ -23,7 +23,7 @@ namespace PIERStory
         // About DefaultCharacter
         SpriteRenderer defaultSprite = null;
         GameObject dummyInfo;
-        //DefaultCharacterInfo info;
+        DefaultCharacterInfo info;
 
         [Header("ScriptModelMount Value")]
         public string direction;
@@ -159,11 +159,11 @@ namespace PIERStory
                     // 생성되어 있으면 또 생성할 필요가 없고 이미 연결되어 있기 때문에 또 연결할 필요가 없다.
                     dummyInfo = Instantiate(GameManager.main.infoPrefab, ViewGame.main.transform);
                     // Prefab에 들어 있는 스크립트에 정보 전달
-                    //info = dummyInfo.GetComponent<DefaultCharacterInfo>();
+                    info = dummyInfo.GetComponent<DefaultCharacterInfo>();
                 }
 
                 // 따라다녀야 하니 transform 값도 전달해줘야 함
-                //info.SetCharacterInfo(transform, row.speaker, row.character_expression);
+                info.SetCharacterInfo(transform, row.speaker, row.character_expression);
             }
 
             gameObject.SetActive(true);

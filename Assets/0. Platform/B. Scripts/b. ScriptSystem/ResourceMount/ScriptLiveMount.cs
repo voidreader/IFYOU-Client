@@ -216,13 +216,15 @@ namespace PIERStory
                     yield return new WaitForSeconds(0.2f);
             }
 
-            // ! 2021.08.18 라이브 오브제도 갤러리에서 쓰게 생겼다
-            // 얘는 미리 생성안시키고 필요할때 불러오기 떄문에 LiveIllustMount랑 쫌 다르구나
-            if (isMinicut && GameManager.main != null)
-                SendSuccessMessage();
-            else if(LobbyManager.main != null)
+            if(GameManager.main != null)
+            {
+                if(isMinicut)
+                    SendSuccessMessage();
+                else
+                    InstantiateCubismModel();
+            }
+            else
                 InstantiateCubismModel();
-
         }
 
         /// <summary>
@@ -255,6 +257,9 @@ namespace PIERStory
             PrepareCubismMotions();
 
             if (LobbyManager.main != null)
+                SendSuccessMessage();
+
+            if(GameManager.main !=null && !isMinicut)
                 SendSuccessMessage();
         }
 

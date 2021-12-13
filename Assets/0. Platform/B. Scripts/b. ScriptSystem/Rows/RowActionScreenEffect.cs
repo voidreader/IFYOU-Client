@@ -306,7 +306,7 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_LENS_FLARE:
-                   // ScreenEffectManager.main.StartScreenEffectLensFlare(paramArray);
+                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT:

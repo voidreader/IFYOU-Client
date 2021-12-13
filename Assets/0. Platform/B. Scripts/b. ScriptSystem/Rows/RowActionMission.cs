@@ -15,6 +15,8 @@ namespace PIERStory
         {
             GameManager.main.isWaitingScreenTouch = false;
 
+            // 잠시 미션 스킵 (21.12.13)
+            __actionCallback();
             //if (!string.IsNullOrEmpty(scriptRow.script_data))
             //    NetworkLoader.main.UpdateScriptMission(scriptRow.script_data);
         }

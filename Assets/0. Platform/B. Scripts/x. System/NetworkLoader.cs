@@ -402,6 +402,20 @@ namespace PIERStory
         }
 
         #endregion
+        
+        #region 카테고리
+        
+        /// <summary>
+        /// 카테고리에서 사용하는 장르 요청
+        /// </summary>
+        /// <param name="__cb"></param>
+        public void RequestGenre () {
+            JsonData sendingData = new JsonData();
+            sendingData[CommonConst.FUNC] = "getDistinctProjectGenre";
+            
+            SendPost(SystemManager.main.SetCategoryGenre, sendingData, false);
+        }
+        #endregion
 
 
         /// <summary>

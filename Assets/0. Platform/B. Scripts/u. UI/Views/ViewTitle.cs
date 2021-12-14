@@ -49,7 +49,7 @@ namespace PIERStory {
             Debug.Log(">> OnRequestStoryList : " + response.DataAsText);
             
             // 작품 리스트 받아와서 스토리 매니저에게 전달. 
-            StoryManager.main.totalStoryListJson = JsonMapper.ToObject(response.DataAsText);
+            StoryManager.main.SetStoryList(JsonMapper.ToObject(response.DataAsText));
             
             StartCoroutine(RoutinePrepareMainPage());
             
@@ -73,16 +73,16 @@ namespace PIERStory {
         /// </summary>
         void DownloadStoryMainImages() {
             totalDownloadingImageCount = 0;
-            JsonData currentNode;
+            StoryData currentData;
             string imageURL = string.Empty;
             string imageKey = string.Empty;
             
-            for(int i=0; i<StoryManager.main.totalStoryListJson.Count;i++) {
+            for(int i=0; i<StoryManager.main.listTotalStory.Count;i++) {
                 
-                currentNode = StoryManager.main.totalStoryListJson[i];
+                currentData = StoryManager.main.listTotalStory[i];
                    
-                imageURL = currentNode[LobbyConst.IFYOU_PROJECT_BANNER_URL].ToString();
-                imageKey = currentNode[LobbyConst.IFYOU_PROJECT_BANNER_KEY].ToString();
+                imageURL = currentData.bannerURL;
+                imageKey = currentData.bannerKey;
                 
                 if(string.IsNullOrEmpty(imageURL) || string.IsNullOrEmpty(imageKey))
                     continue;

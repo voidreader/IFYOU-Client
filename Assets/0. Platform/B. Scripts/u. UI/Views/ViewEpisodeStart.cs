@@ -133,6 +133,8 @@ namespace PIERStory {
         /// </summary>
         void SetButtonState() {
             
+            ResetButton();
+            
             // 엔딩 수집화면에서 진입하는 경우는 그냥 FREE
             if(LobbyManager.main != null && !UserManager.main.useRecord) {
                 btnPlay.gameObject.SetActive(true);

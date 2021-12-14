@@ -608,6 +608,7 @@ GameObject:
   - component: {fileID: 731451554106769815}
   - component: {fileID: 2280135931912084990}
   - component: {fileID: 1925946532111782227}
+  - component: {fileID: 3034967664844618673}
   m_Layer: 5
   m_Name: ButtonFreepass
   m_TagString: Untagged
@@ -633,7 +634,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 360, y: -161.5}
+  m_AnchoredPosition: {x: 360, y: -174.5}
   m_SizeDelta: {x: 602, y: 83}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4239511432019550337
@@ -811,11 +812,11 @@ MonoBehaviour:
           Type: 0
           Category: Pointer
           Name: Click
-        ProviderReference: {fileID: 0}
+        ProviderReference: {fileID: 3034967664844618673}
         StreamId:
           Category: None
           Name: None
-          Custom: 0
+          Custom: 1
       Cooldown: 0
       Selectable: {fileID: 3328920823236624969}
     SignalSource: {fileID: 356373427900889132}
@@ -2240,6 +2241,21 @@ MonoBehaviour:
       ToCustomValue: 0
       FromOffset: 0
       ToOffset: 0.4
+--- !u!114 &3034967664844618673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356373427900889132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9612023dc70c4fcc886b736aa5a8f046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ProviderCurrentState: 20
+  SignalCooldown: 0
+  SignalTimescale: 0
 --- !u!1 &582787367895234429
 GameObject:
   m_ObjectHideFlags: 0
@@ -4471,6 +4487,7 @@ GameObject:
   - component: {fileID: 5415717583934914846}
   - component: {fileID: 3927099005447775806}
   - component: {fileID: 2977468223702674519}
+  - component: {fileID: 8435120335162551454}
   m_Layer: 5
   m_Name: ButtonContinue
   m_TagString: Untagged
@@ -4674,11 +4691,11 @@ MonoBehaviour:
           Type: 0
           Category: Pointer
           Name: Click
-        ProviderReference: {fileID: 0}
+        ProviderReference: {fileID: 8435120335162551454}
         StreamId:
           Category: None
           Name: None
-          Custom: 0
+          Custom: 1
       Cooldown: 0
       Selectable: {fileID: 8971141762916233393}
     SignalSource: {fileID: 4653236705545303743}
@@ -6103,6 +6120,21 @@ MonoBehaviour:
       ToCustomValue: 0
       FromOffset: 0
       ToOffset: 0.4
+--- !u!114 &8435120335162551454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4653236705545303743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9612023dc70c4fcc886b736aa5a8f046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ProviderCurrentState: 20
+  SignalCooldown: 0
+  SignalTimescale: 0
 --- !u!1 &4845808829839126528
 GameObject:
   m_ObjectHideFlags: 0
@@ -10647,7 +10679,7 @@ MonoBehaviour:
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: -0, y: 0, z: 0}
-      Enabled: 1
+      Enabled: 0
       StartRotation: {x: -0, y: 0, z: 0}
       FromReferenceValue: 0
       ToReferenceValue: 0
@@ -10711,7 +10743,7 @@ MonoBehaviour:
       FromValue: {x: 1, y: 1, z: 1}
       ToValue: {x: 0.9, y: 0.9, z: 1}
       CurrentValue: {x: 1.0209981, y: 1.0209981, z: 1}
-      Enabled: 1
+      Enabled: 0
       StartScale: {x: 1, y: 1, z: 1}
       FromReferenceValue: 0
       ToReferenceValue: 0

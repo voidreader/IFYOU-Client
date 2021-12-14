@@ -17,6 +17,10 @@ namespace PIERStory {
         
         public const string IFYOU_PROJECT_BANNER_URL = "ifyou_image_url";
         public const string IFYOU_PROJECT_BANNER_KEY = "ifyou_image_key";
+        public const string IFYOU_PROJECT_THUMBNAIL_URL = "ifyou_thumbnail_url";
+        public const string IFYOU_PROJECT_THUMBNAIL_KEY = "ifyou_thumbnail_key";
+        public const string IFYOU_PROJECT_CIRCLE_URL = "circle_image_url";
+        public const string IFYOU_PROJECT_CIRCLE_KEY = "circle_image_key";
         public const string IFYOU_PROJECT_MAIN_COLOR = "color_rgb";
         public const string STORY_TITLE = "title";
         public const string STORY_ID = "project_id";
@@ -38,6 +42,12 @@ namespace PIERStory {
 
         public const string PUBLIC_NAME = "public_name";
         public const string SUMMARY = "summary";
+        public const string WRITER = "writer";
+        
+        public const string SORTKEY = "sortkey";
+        
+        public const string IS_LOCK = "is_lock";
+        public const string IS_CREDIT = "is_credit";
 
         public const string ENDING_TYPE = "ending_type";
         public const string COL_HIDDEN = "hidden";
@@ -97,7 +107,7 @@ namespace PIERStory {
         
         // * 스토리 컨텐츠 관련 키 
         public const string KEY_GALLERY_DATA = "keyGalleryData";
-        public const string KEY_ENDING_DATA = "keyEndingData";
+        public const string KEY_OPEN_ENDING_COUNT = "keyEndingData";
         public const string KEY_SELECTION_DATA = "keySelectionData";
         public const string KEY_MISSION_DATA = "keyMissionData";
         

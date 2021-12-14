@@ -126,7 +126,7 @@ namespace PIERStory
             }
             else
             {
-                Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SHOW_ILLUSTDETAIL, string.Empty);
+                Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SHOW_ILLUSTDETAIL, string.Empty);
             }
         }
     }

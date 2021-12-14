@@ -60,6 +60,7 @@ namespace Doozy.Runtime.UIManager
             CoinStarHistory,
             DataManager,
             Ending,
+            EndingSelection,
             Gallery,
             IfyouPlay,
             IllustDetail,

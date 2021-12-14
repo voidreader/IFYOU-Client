@@ -1757,6 +1757,7 @@ namespace PIERStory
             }
 
             // 이전 진행도와 에피소드 완료 후, 진행도 비교를 위한 작업
+            // 21.12.14 수정 확률(85%)
             JsonData updateJson = null;
             
             for(int i=0;i<StoryManager.main.EpisodeListJson.Count;i++)
@@ -1770,6 +1771,12 @@ namespace PIERStory
 
             EpisodeData updateData = new EpisodeData(updateJson);
             Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_UPDATE_EPISODE, updateData, string.Empty);
+
+
+            // 21.12.14 현 회차 선택지 리스트 가져와야 하는데, UserManager에서 호출하는게 맞는데...작업이 겹치네....
+
+
+
             Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_DATA, nextData, string.Empty);
 
             Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, currentEpisodeData, string.Empty);

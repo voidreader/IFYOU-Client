@@ -47,6 +47,7 @@ namespace PIERStory
         [Space]
         [Header("== 에피소드 카운팅 ==")]
         public int regularEpisodeCount = 0; // 엔딩을 제외한 정규 에피소드 개수
+        public int totalEndingCount = 0;    // 엔딩 총 개수
         public int unlockEndingCount = 0; // 해금된 엔딩 개수
         public int sideEpisodeCount = 0; // 사이드 에피소드 개수
         public int unlockSideEpisodeCount = 0; // 해금된 사이드 에피소드 개수 
@@ -307,7 +308,10 @@ namespace PIERStory
             // 달라진 부분이 있는 경우에만 말풍선 세트 정보를 새로 받는다 (텍스트가 많다.)
             sendingData["clientBubbleSetID"] = currentBubbleSetID; 
             sendingData["userBubbleVersion"] = currentBubbleSetVersion; // 유저가 저장하고 있던 말풍선 세트의 버전 정보를 전달 
-            
+
+            // 선택지 히스토리 통신도 함께 진행합시다(여기서 받으면 선택지 페이지 안들어갔다고 해도, 에피소드 종료 페이지에서 사용해야함)
+            UserManager.main.SetCurrentStorySelectionList(__storyData.projectID);
+
 
             // 콜백에서 이어지도록 처리 
             NetworkLoader.main.SendPost(CallbackStoryInfo, sendingData);
@@ -436,8 +440,11 @@ namespace PIERStory
                         unlockEndingCount++;
                 
                 
-                if (EpisodeListJson[i]["episode_type"].ToString() != "chapter")
+                if (EpisodeListJson[i][LobbyConst.STORY_EPISODE_TYPE].ToString() != CommonConst.COL_CHAPTER)
+                {
+                    totalEndingCount++;
                     continue;
+                }
                 
                 RegularEpisodeList.Add(newEpisodeData);
             }

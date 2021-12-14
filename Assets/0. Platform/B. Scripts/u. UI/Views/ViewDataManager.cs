@@ -17,7 +17,7 @@ namespace PIERStory
         public UIButton deleteAllButton;
         public GameObject projectDataSizePrefab;
         public Transform elementParent;             // 프리팹이 생성될 위치
-        JsonData projectData;
+        
         long totalDataSize = 0;
 
         ProjectDataElement projectElement = null;
@@ -29,13 +29,13 @@ namespace PIERStory
         {
             base.OnStartView();
 
-            projectData = StoryManager.main.totalStoryListJson;
+            
             OnRequestCalcAllProejctDataSize = CalcAllProjectDataSize;
             OnRequestCalcAllProejctDataSize?.Invoke();
 
-            for(int i=0;i<projectData.Count;i++)
+            for(int i=0;i<StoryManager.main.listTotalStory.Count;i++)
             {
-                string path = Application.persistentDataPath + "/" + SystemManager.GetJsonNodeString(projectData[i], LobbyConst.STORY_ID);
+                string path = Application.persistentDataPath + "/" + StoryManager.main.listTotalStory[i].projectID;
                 dirInfo = new DirectoryInfo(path);
 
                 if (dirInfo.Exists)
@@ -46,7 +46,7 @@ namespace PIERStory
                         size += fi.Length;
 
                     projectElement = Instantiate(projectDataSizePrefab, elementParent).GetComponent<ProjectDataElement>();
-                    projectElement.InitProjectData(projectData[i], size);
+                    projectElement.InitProjectData(StoryManager.main.listTotalStory[i], size);
                     projectPrefabs.Add(projectElement.gameObject);
                 }
             }
@@ -54,10 +54,10 @@ namespace PIERStory
 
         void CalcAllProjectDataSize()
         {
-            for(int i=0;i<projectData.Count;i++)
+            for(int i=0;i<StoryManager.main.listTotalStory.Count;i++)
             {
                 // 프로젝트 폴더 경로
-                string path = Application.persistentDataPath + "/" + SystemManager.GetJsonNodeString(projectData[i], LobbyConst.STORY_ID);
+                string path = Application.persistentDataPath + "/" + StoryManager.main.listTotalStory[i].projectID;
                 dirInfo = new DirectoryInfo(path);
 
                 if(dirInfo.Exists)
@@ -89,10 +89,10 @@ namespace PIERStory
 
         void DeleteAllProjectData()
         {
-            for (int i = 0; i < projectData.Count; i++)
+            for(int i=0;i<StoryManager.main.listTotalStory.Count;i++)
             {
                 // 프로젝트 폴더 경로
-                string path = Application.persistentDataPath + "/" + SystemManager.GetJsonNodeString(projectData[i], LobbyConst.STORY_ID);
+                string path = Application.persistentDataPath + "/" + StoryManager.main.listTotalStory[i].projectID;
                 dirInfo = new DirectoryInfo(path);
 
                 if (dirInfo.Exists)

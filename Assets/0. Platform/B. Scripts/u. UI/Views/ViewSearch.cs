@@ -24,7 +24,7 @@ namespace PIERStory
         List<string> searchKeyword = new List<string>();
         List<SearchRecordElement> recordElements = new List<SearchRecordElement>();         // 검색 기록 element들을 저장해둘 List
 
-        JsonData totalProjectList = null;
+        List<StoryData> totalProjectList = null;
         public GameObject storyElementPrefab;
         public RectTransform searchResultContent;
         public Transform searchResultElements;
@@ -52,7 +52,7 @@ namespace PIERStory
             if (!Application.isEditor)
                 keypad = TouchScreenKeyboard.Open(string.Empty, TouchScreenKeyboardType.Default);
 
-            totalProjectList = StoryManager.main.totalStoryListJson;
+            totalProjectList = StoryManager.main.listTotalStory;
             FindStoryForKeyword = FindKeywordProject;
             DeleteRecordElement = DeleteSearchRecord;
 
@@ -173,7 +173,7 @@ namespace PIERStory
             for (int i = 0; i < totalProjectList.Count; i++)
             {
                 // 검색어 키워드를 제목에 포함하고 있다면
-                if (SystemManager.GetJsonNodeString(totalProjectList[i], CommonConst.COL_TITLE).Contains(keyword))
+                if (totalProjectList[i].title.Contains(keyword))
                 {
                     NewStoryElement newStory = Instantiate(storyElementPrefab, searchResultElements).GetComponent<NewStoryElement>();
                     newStory.InitStoryElement(totalProjectList[i]);

@@ -1064,7 +1064,7 @@ namespace PIERStory
         /// 엔딩 진행율 
         /// </summary>
         /// <returns></returns>
-        public float GetCollectionEndingProgress() {
+        public float GetCollectioEndingnProgress() {
             if(GetNodeUserCollectionProgress().ContainsKey("ending"))  {
                 return float.Parse(GetNodeUserCollectionProgress()["ending"].ToString());
             }
@@ -1540,22 +1540,6 @@ namespace PIERStory
 
 
 
-
-
-
-        /// <summary>
-        /// 미션 이름을 비교하여 mission Id를 반환한다
-        /// </summary>
-        public string GetMissionId(string missionName)
-        {
-            for(int i=0;i<GetNodeProjectMissions().Count;i++)
-            {
-                if (GetNodeProjectMissions()[i]["mission_name"].ToString().Equals(missionName))
-                    return GetNodeProjectMissions()[i]["mission_id"].ToString();
-            }
-
-            return string.Empty;
-        }
 
         #region 인스펙터 체크용!
 
@@ -2070,5 +2054,7 @@ namespace PIERStory
         public void SetUserFreepassTimedeal(JsonData __data) {
             currentStoryJson[NODE_FREEPASS_TIMEDEAL] = __data;
         }
+        
+        
     }
 }

@@ -56,13 +56,15 @@ namespace PIERStory
 
         bool isLaunchingCalled = false; //  런칭정보 불러왔는지? 
         public JsonData launchingJSON = null; // 게임베이스 런칭 
-        public JsonData givenStoryData = null; // 선택된 스토리 JSON 데이터 (프로젝트)
+        public StoryData givenStoryData = null; // 선택된 스토리 JSON 데이터 (프로젝트)
         public EpisodeData givenEpisodeData = null; // 로비에서 전달받은 에피소드 데이터 (에피소드)
         public JsonData appComonResourceData = null; // 앱 공용 리소스 데이터 (2021.09.14)
        
 
         
         #region 기준정보 Variables
+        
+    
         [SerializeField] bool isServerInfoReceived = false; // 서버 기준 정보 전달받았는지 체크 한다. (2021.08.31)
         [SerializeField] bool isAppCommonResourcesReceived = false; // 앱 공용 리소스 통신 완료했는지 체크 (2021.09.14)
         
@@ -77,7 +79,11 @@ namespace PIERStory
         
         #endregion
 
-
+        
+        #region 장르
+        JsonData storyGenreData = null; // 공개된 작품 장르
+        #endregion
+        
         public JsonData noticeData = null; // 공지사항 데이터 
 
 
@@ -1225,6 +1231,30 @@ namespace PIERStory
             
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__node"></param>
+        /// <param name="__col"></param>
+        /// <returns></returns>
+        public static float GetJsonNodeFloat(JsonData __node, string __col) {
+            if (__node == null || !__node.ContainsKey(__col))
+                return 0;
+
+
+            if (__node[__col] == null)
+                return 0;
+            
+            try {    
+                return float.Parse(GetJsonNodeString(__node, __col));
+            }
+            catch (System.Exception e) {
+                return 0;
+            }
+
+            
+        }
+        
 
         /// <summary>
         /// JSON 특정 노드의 string 값을 알려주세요
@@ -1352,6 +1382,27 @@ namespace PIERStory
         {
 
         }
+        
+        #region 장르, 카테고리 관련
+        
+        /// <summary>
+        /// 장르 관련 정보 세팅 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        public void SetCategoryGenre(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                return;
+            }
+            
+            // genre_name
+            storyGenreData = JsonMapper.ToObject(response.DataAsText);
+            
+        }
+        
+        
+        
+        #endregion
 
         #region 파일 체크, 파일 다운로드 공용
         

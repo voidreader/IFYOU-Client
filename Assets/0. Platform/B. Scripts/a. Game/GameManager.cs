@@ -202,7 +202,7 @@ namespace PIERStory
                 Debug.Log("GameManager RequestStoryInfoIndependently");
 
                 // 프로젝트 정보를 가져오고, 설정한 에피소드 데이터를 사용한다.
-                StoryManager.main.RequestStoryInfo(StoryManager.main.CurrentProjectID, null);
+                StoryManager.main.RequestStoryInfo(StoryManager.main.CurrentProject);
             }
 
             SoundSetting(GameConst.BGM_MUTE, 0);

@@ -9,7 +9,7 @@ using Doozy.Runtime.Signals;
 namespace PIERStory {
     public class ViewCommonTop : CommonView
     {
-        public static bool isBackgroundShow = false; // 배경 보여지고 있는지 
+        public static bool isBackgroundShow = true; // 배경 보여지고 있는지 
         public static string staticCurrentTopOwner = string.Empty; // static owner.
         
         
@@ -22,7 +22,7 @@ namespace PIERStory {
         [SerializeField] string topOwner = string.Empty;
         
         
-        bool backgroundSignalValue = false;
+        bool backgroundSignalValue = true;
         
         
         // Stream, Signal
@@ -128,7 +128,7 @@ namespace PIERStory {
             isBackgroundShow = backgroundSignalValue; // static 변수도 같이 갱신
             
             
-            Debug.Log("OnTopBackgroundSignal : " + backgroundSignalValue);
+            // Debug.Log("OnTopBackgroundSignal : " + backgroundSignalValue);
             
             imageBackground.DOKill();
             

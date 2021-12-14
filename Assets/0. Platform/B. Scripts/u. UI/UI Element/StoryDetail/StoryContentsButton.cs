@@ -41,6 +41,7 @@ namespace PIERStory {
                 break;
                 
                 case StoryContentsType.Ending:
+                CheckEndingData();
                 break;
                 
                 case StoryContentsType.Selection:
@@ -60,11 +61,6 @@ namespace PIERStory {
         void CheckMissionData() {
             
             // * 미션은 보상받지 않은 미션이 있는 경우에 보여준다. 
-            // 미션 데이터 가져온다.
-            // int previousUnlockMissionCount = PlayerPrefs.GetInt(LobbyConst.KEY_MISSION_DATA, 0);
-            
-            // 미션 데이터 가져와서, unlock_state가 null 아닌 데이터의 개수를 저장한다. 
-            // 저장된 데이터와 개수를 비교해서 new 표시를 한다. 
             int unlockMissionCount = UserManager.main.GetUnlockStateMissionCount();
             
             if(unlockMissionCount > 0) {
@@ -76,6 +72,11 @@ namespace PIERStory {
         /// 엔딩 데이터 체크 
         /// </summary>
         void CheckEndingData() {
+            
+            // 프로젝트의 이전에 오픈 엔딩 카운트와 현재의 오픈 엔딩 카운트를 비교해서 설정 
+            int previousOpenEndingCount = PlayerPrefs.GetInt(LobbyConst.KEY_OPEN_ENDING_COUNT + StoryManager.main.CurrentProjectID, 0);
+            
+            SetNewContentsNotification(StoryManager.main.unlockEndingCount > previousOpenEndingCount);
             
         }
         

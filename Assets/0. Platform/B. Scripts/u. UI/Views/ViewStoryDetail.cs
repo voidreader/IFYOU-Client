@@ -30,6 +30,13 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textGenre; // 장르 
         [SerializeField] TextMeshProUGUI textSummary; // 요약
         
+        [SerializeField] StoryContentsButton buttonContentsMission;
+        [SerializeField] StoryContentsButton buttonContentsGallery;
+        [SerializeField] StoryContentsButton buttonContentsEnding;
+        [SerializeField] StoryContentsButton buttonContentsSelection;
+        
+        
+        
         [Space]
         [Header("== Lower Controls ==")]
         
@@ -146,6 +153,13 @@ namespace PIERStory {
             
             totalEpisodeCount = StoryManager.main.GetStoryDetailInfo("episode_count"); // 메인 에피소드의 개수 (엔딩제외)
             isCreditUse = StoryManager.main.GetStoryDetailInfo("is_credit").Equals("1") ? true : false; // 크레딧 사용 여부 
+            
+            // 컨텐츠 버튼 초기화
+            buttonContentsSelection.InitContentsButton();
+            buttonContentsGallery.InitContentsButton();
+            buttonContentsMission.InitContentsButton();
+            buttonContentsEnding.InitContentsButton();
+            
         }
         
         

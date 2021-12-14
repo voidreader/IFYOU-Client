@@ -7,16 +7,16 @@ namespace PIERStory
 {
     public class ProjectDataElement : MonoBehaviour
     {
+        StoryData storyData = null;
         public TextMeshProUGUI projectName;
         public TextMeshProUGUI projectDataSize;
 
-        string projectId = string.Empty;
 
-        public void InitProjectData(JsonData __j, long dataSize)
+        public void InitProjectData(StoryData __data, long dataSize)
         {
-            projectId = SystemManager.GetJsonNodeString(__j, LobbyConst.STORY_ID);
+            storyData = __data;
 
-            projectName.text = SystemManager.GetJsonNodeString(__j, LobbyConst.STORY_TITLE);
+            projectName.text = __data.title;
             projectDataSize.text = string.Format("{0:#,0} KB", dataSize / 1024);
 
             if (dataSize / (1024 * 1024) > 0)
@@ -30,7 +30,7 @@ namespace PIERStory
 
         void DeleteProjectData()
         {
-            ES3.DeleteDirectory(Application.persistentDataPath + "/" + projectId);
+            ES3.DeleteDirectory(Application.persistentDataPath + "/" + storyData.projectID);
 
             ViewDataManager.OnRequestCalcAllProejctDataSize?.Invoke();
             Destroy(gameObject);

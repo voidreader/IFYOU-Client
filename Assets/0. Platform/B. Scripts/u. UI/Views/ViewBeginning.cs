@@ -15,12 +15,14 @@ namespace PIERStory {
             
             // 첫 시작시, 타이틀로 이동을 요청하기 전 메인 로딩 이미지에 대한 url, key값에 대한 정보를 받습니다.
             // 게임 씬에서 넘어온 경우(givenStoryData) 바로 목록 화면으로 보낸다. 
-            if (SystemManager.main.givenStoryData == null)
+            if (SystemManager.main.givenStoryData == null || string.IsNullOrEmpty(SystemManager.main.givenStoryData.projectID))
             {
+                Debug.Log("Go Title From Begining");
                 Signal.Send("IFYOU", "moveTitle", "open!");
             }
             else {
-                StoryManager.main.RequestStoryInfo(StoryManager.main.CurrentProjectID, SystemManager.main.givenStoryData);
+                Debug.Log("Go Detail From Begining");
+                StoryManager.main.RequestStoryInfo(SystemManager.main.givenStoryData);
             }
         }
     }

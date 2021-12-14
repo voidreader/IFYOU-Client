@@ -32,7 +32,7 @@ namespace PIERStory
         public static StoryManager main = null;
 
         
-        JsonData CurrentProjectJson = null; // 현재 선택한 작품 Master 정보 
+        public StoryData CurrentProject = null; // 현재 선택한 작품 Master 정보 
         JsonData ProjectDetailJson = null; // 조회로 가져온 작품에 대한 기준정보와 유저정보.
         [SerializeField] EpisodeData CurrentEpisodeData = null; // 선택한 에피소드 정보(JSON => Serializable Class)
 
@@ -53,8 +53,8 @@ namespace PIERStory
         [Space]
         
 
-        [HideInInspector]
-        public JsonData totalStoryListJson = null; // 조회로 가져온 작품 리스트
+        JsonData totalStoryListJson = null; // 조회로 가져온 작품 리스트
+        public List<StoryData> listTotalStory = new List<StoryData>(); // 작품 리스트 
 
         #region 말풍선 세트와 관련된 JSON , 변수
 
@@ -259,6 +259,21 @@ namespace PIERStory
 
             NetworkLoader.main.SendPost(__cb, sendingData);
         }
+        
+        /// <summary>
+        /// 작품들 리스트화 하기.
+        /// </summary>
+        /// <param name="__listJSON"></param>
+        public void SetStoryList(JsonData __listJSON) {
+            totalStoryListJson = __listJSON;
+            
+            listTotalStory.Clear();
+            for(int i=0; i<totalStoryListJson.Count;i++) {
+                StoryData storyData = new StoryData(totalStoryListJson[i]);
+                listTotalStory.Add(storyData);
+            }
+               
+        }
 
        
         /// <summary>
@@ -266,9 +281,9 @@ namespace PIERStory
         /// </summary>
         /// <param name="__projectID">프로젝트 ID </param>
         /// <param name="__J">작품 기본 정보</param>
-        public void RequestStoryInfo(string __projectID, JsonData __J)
+        public void RequestStoryInfo(StoryData __storyData)
         {
-            Debug.Log(string.Format("<color=yellow>RequestStoryInfo [{0}]</color>", __projectID));
+            Debug.Log(string.Format("<color=yellow>RequestStoryInfo [{0}]</color>", __storyData.projectID));
 
 
             // 네트워크 로딩 표시 
@@ -279,14 +294,14 @@ namespace PIERStory
 
             // Game 씬에서 단독으로 실행 안된다. (아직 기능 추가 되지 않음)
             // 선택한 프로젝트에 대한 종합정보가 들어온다.(유저정보 포함)
-            SetCurrentProjectJson(__J); // 메인화면에서 받아온 Project JSON 설정 
-            SystemManager.main.givenStoryData = __J;
+            SetCurrentProject(__storyData);
+            SystemManager.main.givenStoryData = __storyData;
 
             
             // 통신 준비 
             JsonData sendingData = new JsonData();
             sendingData["func"] = NetworkLoader.FUNC_SELECTED_STORY_INFO;
-            sendingData["project_id"] = __projectID;
+            sendingData["project_id"] = __storyData.projectID;
             
             // 로컬에 저장되어 있었던, 프로젝트와 연결된 말풍선 세트 정보를 함께 전송한다. 
             // 달라진 부분이 있는 경우에만 말풍선 세트 정보를 새로 받는다 (텍스트가 많다.)
@@ -303,15 +318,15 @@ namespace PIERStory
         /// 선택한 작품의 기본 정보 설정 
         /// </summary>
         /// <param name="__j"></param>
-        public void SetCurrentProjectJson(JsonData __j)
+        public void SetCurrentProject(StoryData __storyData)
         {
-            CurrentProjectJson = __j;
-            CurrentProjectID = CurrentProjectJson[LobbyConst.STORY_ID].ToString();
-            CurrentProjectTitle = CurrentProjectJson[LobbyConst.STORY_TITLE].ToString();
+            CurrentProject = __storyData;
+            CurrentProjectID = CurrentProject.projectID;
+            CurrentProjectTitle = CurrentProject.title;
 
 
             // 말풍선 세트 ID 
-            currentBubbleSetID = CurrentProjectJson[LobbyConst.STORY_BUBBLE_ID].ToString();
+            currentBubbleSetID = CurrentProject.bubbleSetID;
 
             // 로컬에 저장된 정보 불러온다. 
             LoadProjectBubbleSetID(CurrentProjectID); // 프로젝트에 연결된 말풍선 세트 ID
@@ -978,15 +993,12 @@ namespace PIERStory
 
         public string GetStoryTitle()
         {
-            return CurrentProjectJson["title"].ToString();
+            return CurrentProject.title;
         }
 
         public string GetAuthor()
         {
-            if (CurrentProjectJson.ContainsKey("writer") && CurrentProjectJson["writer"] != null)
-                return CurrentProjectJson["writer"].ToString();
-            else
-                return string.Empty;
+            return CurrentProject.writer;
         }
 
         #region 의장 정보 컨트롤 
@@ -1173,13 +1185,15 @@ namespace PIERStory
         /// <returns>파라미터로 받은 작품ID의 작품 제목 반환</returns>
         public string GetStoryTitle(string projectId)
         {
-            if (totalStoryListJson == null)
+            
+            if(listTotalStory.Count == 0)
                 return null;
+            
 
-            for(int i=0;i<totalStoryListJson.Count;i++)
+            for(int i=0;i<listTotalStory.Count;i++)
             {
-                if (totalStoryListJson[i]["project_id"].ToString().Equals(projectId))
-                    return totalStoryListJson[i]["title"].ToString();
+                if (listTotalStory[i].projectID == projectId)
+                    return listTotalStory[i].title;
             }
 
             return null;

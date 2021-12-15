@@ -63,6 +63,7 @@ namespace Doozy.Runtime.UIManager
             EndingSelection,
             Gallery,
             IfyouPlay,
+            IfyouSelection,
             IllustDetail,
             Lobby,
             Main,

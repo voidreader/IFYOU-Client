@@ -22,6 +22,7 @@ namespace PIERStory
         public static bool hasLastPlayScriptNo = false;     // 이어하기 타겟 script_no가 대본상에 존재하는지 체크
 
         public EpisodeData currentEpisodeData = null;    // 선택한 에피소드 정보(JSON => Serializable Class)
+        public float updatedEpisodeSceneProgressValue = 0; // 플레이 후에 업데이트된 사건 달성률 2021.12.14
 
         JsonData episodeElement = null;     // 에피소드 구성 및 리소스(script, background, image, illust, emoticon)
         JsonData scriptJson = null;         // 스크립트 JsonData
@@ -40,6 +41,9 @@ namespace PIERStory
         public bool isWaitingScreenTouch = false;   // 게임 플레이 도중 스크린 터치 기다림
         public bool useSkip = false;                // 스킵을 사용했는가?
         public bool skipable = false;               // 스킵 기능 사용이 가능한가?
+        
+        public bool isJustSkipStop = false; // * 막 스킵이 끝났는지 체크 변수 
+        
         public ViewGameMenu inGameMenu;
         public string currentSceneId = string.Empty;    // 현재 sceneId(사건ID)
 
@@ -502,7 +506,7 @@ namespace PIERStory
             isPlaying = true; // 플레이 시작함!
 
             // 시작 기록 업데이트를 호출한다.
-            //NetworkLoader.main.UpdateEpisodeStartRecord();
+            NetworkLoader.main.UpdateEpisodeStartRecord();
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork()); // 통신 완료까지 대기.
 
             Debug.Log("<<< UpdateEpisodeStartRecord done >>>");
@@ -532,8 +536,25 @@ namespace PIERStory
                     //yield return new WaitUntil(() => gamePopup == null);        // HIde
                 }
 
-                // * 이어하기 아닌 경우, 선택지나 조건을 만났을때는 통신이 완료되는 것을 기다린다. 
-                if(!isResumePlay) {
+                // * 이어하기 추가 처리
+                // * 조심스럽게 바꿔본다. 2021.12.08
+                // * 망했다. 다시 바꾼다. 2021.12.15
+                if(isResumePlay) { // true일때만 호출해야한다.
+                    // 정지 포인트에서 useSkip을 false로 바꿔야 한다. 
+                    useSkip = CheckResumePlayStopPoint();
+                    
+                    // 방금 스킵이 종료되었다면, 아래 변수를 true로 처리한다.
+                    if(!useSkip) {
+
+                        // * skip으로 진행되다가, 마지막 중단지점에서 갑자기 이전 라인을 트윈시키기 때문에
+                        // * 캐릭터 2인 스탠딩 구도에 변화가 필요할때 아래 변수가 필요하다.
+                        // * 2인 스탠딩에서 1인 스탠딩으로 신규캐릭터가 등장하는 시점 등이 문제가 되었다. 
+                        // * 이 변수는 현재는 오직 GameModelCtrl과 관련된 곳에서만 사용된다. 
+                        isJustSkipStop = true;  
+                    }
+                }
+                else
+                {
                     if (currentRow.template.Equals(GameConst.TEMPLATE_SELECTION) || !string.IsNullOrEmpty(currentRow.requisite))
                     {
                         SystemManager.ShowNetworkLoading();
@@ -545,12 +566,7 @@ namespace PIERStory
                 // 현재 '행'의 동작을 수행합니다. 
                 currentRow.ProcessRowAction(OnFinishedRowAction, useSkip);
                 
-                // * Row 동작을 한 상태에서 StopPoint를 체크해서 스킵과 resumePlay를 해제해본다.
-                if(isResumePlay) { // true일때만 호출해야한다.
-                    // 정지 포인트에서 useSkip을 false로 바꿔야 한다. 
-                    useSkip = CheckResumePlayStopPoint();
-                }                
-
+     
                 // * 일반 플레이. 
                 if (!useSkip)
                 {
@@ -562,6 +578,8 @@ namespace PIERStory
                     while (isWaitingScreenTouch) // 화면을 터치해줘야 다음으로 넘어갑니다.
                         yield return null;
                 }
+                
+                isJustSkipStop = false; // 한번 액션이 일어났으면 false로 변경.
 
                 // 선택지 입력이 필요할때는 기다려야해..!
                 while (isSelectionInputWait)
@@ -887,7 +905,7 @@ namespace PIERStory
                 characterModels[index] = characterModels[1];
 
             characterModels[1] = null;
-            characterModels[index].PushListenerToSide(index, useSkip);
+            characterModels[index].PushListenerToSide(index, useSkip || isJustSkipStop);
         }
 
         /// <summary>
@@ -1707,72 +1725,84 @@ namespace PIERStory
         }
 
 
-        public void ShowGameEnd(string __nextEpisodeId)
+        public void ShowGameEnd(string __nextEpisodeID)
         {
-            useSkip = false;
-            isPlaying = false;
-
             
-            EpisodeData nextEpisodeData = null;
-
-            // 이동 컬럼이 없는 경우
-            if(string.IsNullOrEmpty(__nextEpisodeId))
-            {
-                Debug.Log("No target episode ID");
-                __nextEpisodeId = string.Empty;
-
-                if(currentEpisodeData.episodeTypeString.Equals(CommonConst.COL_CHAPTER))
-                {
-                    nextEpisodeData = StoryManager.GetNextRegularEpisodeData(currentEpisodeData);
-
-                    if (nextEpisodeData != null)
-                        __nextEpisodeId = nextEpisodeData.episodeID;
-                }
-            }
-            else
-            {
-                if (__nextEpisodeId.Contains("#"))
-                    __nextEpisodeId = __nextEpisodeId.Replace("#", "");
-
-                nextEpisodeData = StoryManager.GetNextFollowingEpisodeData(__nextEpisodeId);
-            }
-
-            UserManager.main.UpdateSceneIDRecord(currentSceneId);
-
-            StartCoroutine(RoutineEpisodeEnd(nextEpisodeData));
+            // * 통신이 겹치는 문제로 인해서 코루틴으로 변경
+            StartCoroutine(RoutineFinishGame(__nextEpisodeID));
         }
+        
+        IEnumerator RoutineFinishGame(string __nextEpisodeID) {
+            // 안전을 위해..
+            yield return new WaitForSeconds(0.1f);
+            
+            // 서버 통신 완료를 기다린다. 
+            SystemManager.ShowNetworkLoading();
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            SystemManager.HideNetworkLoading();
+            
+            useSkip = false;
+            isPlaying = false; // false로 변경한다.
+            
+            EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터
+            
+            // * 이동 컬럼에 아무 데이이터가 없는 경우와, 있는 경우 
+            if(string.IsNullOrEmpty(__nextEpisodeID)) {
+                __nextEpisodeID = string.Empty;
+                
+                // 챕터의 경우에만 처리. 사이드 엔딩은 진행하지 않음 
+                if(currentEpisodeData.episodeType == EpisodeType.Chapter) {
+                    nextEpisodeData = StoryManager.GetNextRegularEpisodeData(currentEpisodeData);
+                    
+                    if(nextEpisodeData != null && nextEpisodeData.isValidData)
+                        __nextEpisodeID = nextEpisodeData.episodeID;
+                }
+                   
+            }
+            else { // 이동 컬럼 데이터 있음
+            
+                // #이 붙은 경우에 대한 처리 
+                if (__nextEpisodeID.Contains("#"))
+                    __nextEpisodeID = __nextEpisodeID.Replace("#", "");
 
-        IEnumerator RoutineEpisodeEnd(EpisodeData nextData)
+                nextEpisodeData = StoryManager.GetNextFollowingEpisodeData(__nextEpisodeID);
+            }
+            
+            UserManager.main.episodeRecordComplete = false; // wait 용도. 
+            UserManager.main.UpdateSceneIDRecord(currentSceneId);
+            NetworkLoader.main.UpdateEpisodeCompleteRecord(nextEpisodeData);
+            SystemManager.ShowNetworkLoading();
+            
+            StartCoroutine(RoutineOpenNextUI(nextEpisodeData));
+        }
+        
+        
+        /// <summary>
+        /// 게임 종료 처리 후, 다음 화를 위한 UI 준비 
+        /// </summary>
+        /// <param name="nextData"></param>
+        /// <returns></returns>
+        IEnumerator RoutineOpenNextUI(EpisodeData nextData)
         {
             // 통신 완료될 때까지 대기
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            SystemManager.HideNetworkLoading();
 
             // 다음 에피소드가 엔딩인 경우
-            if(nextData != null && nextData.episodeType.Equals(EpisodeType.Ending))
+            if(nextData != null && nextData.episodeType == EpisodeType.Ending)
             {
                 string title = nextData.endingType.Equals(LobbyConst.COL_HIDDEN) ? string.Format("<color=#9E10C1>{0}", SystemManager.GetLocalizedText("5087")) : string.Format("<color=#6941DB>{0}", SystemManager.GetLocalizedText("5088"));
 
                 // ViewGame에 UIContainer를 넣어서 Show, Hide 해준다
                 // 추후 추가해서
+                // ! 엔딩 오픈 팝업 호출 
+                // ! 종료 대기 처리 필요 
             }
-
-            // 이전 진행도와 에피소드 완료 후, 진행도 비교를 위한 작업
-            JsonData updateJson = null;
             
-            for(int i=0;i<StoryManager.main.EpisodeListJson.Count;i++)
-            {
-                if (currentEpisodeData.episodeID.Equals(SystemManager.GetJsonNodeString(StoryManager.main.EpisodeListJson[i], CommonConst.COL_EPISODE_ID)))
-                {
-                    updateJson = StoryManager.main.EpisodeListJson[i];
-                    break;
-                }
-            }
-
-            EpisodeData updateData = new EpisodeData(updateJson);
-            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_UPDATE_EPISODE, updateData, string.Empty);
-            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_DATA, nextData, string.Empty);
-
-            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, currentEpisodeData, string.Empty);
+            // * 엔딩 연출 끝나면 아래 진행 (없으면 그냥 진행)
+            // Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_UPDATE_EPISODE, currentEpisodeData, string.Empty);
+            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_DATA, nextData, string.Empty); // 다음 에피소드 전달 
+            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, currentEpisodeData, string.Empty); // 현재 에피소드 전달 
         }
 
 

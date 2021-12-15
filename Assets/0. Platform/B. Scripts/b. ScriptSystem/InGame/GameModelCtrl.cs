@@ -84,7 +84,7 @@ namespace PIERStory
         /// 말하지 않는 스탠딩을 밀어주며, 스케일 값을 변경해준다
         /// </summary>
         /// <param name="targetIndex">캐릭터가 밀려나게 될 위치</param>
-        public void PushListenerToSide(int targetIndex, bool autoPlay = false)
+        public void PushListenerToSide(int targetIndex, bool __autoPlay = false)
         {
             // currentRenderTexture는 현재 C를 사용하고 있기 떄문에 Talker에 있던 것을 EnterReady로 옮겨준다
             // 밑에서 Layer를 변경해주고, SetNonTalker가 선언되면서 Object의 부모가 변경되고, currentRenderTexture도 L or R로 변경될 것임
@@ -93,7 +93,7 @@ namespace PIERStory
             switch (targetIndex)
             {
                 case 0:
-                    if (autoPlay)
+                    if (__autoPlay)
                         SetAutoPlayListener(-1);
                     else
                     {
@@ -106,7 +106,7 @@ namespace PIERStory
                     break;
                 
                 case 2:
-                    if (autoPlay)
+                    if (__autoPlay)
                         SetAutoPlayListener(1);
                     else
                     {
@@ -181,7 +181,7 @@ namespace PIERStory
             #region autoPlay value
             autoPlay = __row.autoplay_row < 1 ? false : true;
 
-            if (GameManager.main.useSkip)
+            if (GameManager.main.useSkip || GameManager.main.isJustSkipStop)
                 autoPlay = true;
             #endregion
 

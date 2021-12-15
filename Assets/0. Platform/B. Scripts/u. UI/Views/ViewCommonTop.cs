@@ -66,6 +66,14 @@ namespace PIERStory {
             signalSteamTopBackButton.ConnectReceiver(signalReceiverTopBackButton);
         }
         
+        void OnDisable() {
+            signalSteamTopBackground.DisconnectReceiver(signalReceiverTopBackground);
+            signalSteamTopViewName.DisconnectReceiver(signalReceiverTopViewName);
+            signalSteamTopPropertyGroup.DisconnectReceiver(signalReceiverTopPropertyGroup);
+            signalSteamTopChangeOwner.DisconnectReceiver(signalReceiverTopChangeOwner);
+            signalSteamTopBackButton.DisconnectReceiver(signalReceiverTopBackButton);
+        }
+        
         public override void OnView()
         {
             base.OnView();

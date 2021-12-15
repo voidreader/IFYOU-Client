@@ -34,11 +34,11 @@ namespace PIERStory
         EpisodeData nextData = null;
         EpisodeData episodeData = null;
 
-        SignalReceiver signalReceiverUpdateData;
+        
         SignalReceiver signalReceiverNextData;
         SignalReceiver signalReceiverEpisodeEnd;
 
-        SignalStream signalStreamUpdateData;
+        
         SignalStream signalStreamNextData;
         SignalStream signalStreamEpisodeEnd;
 
@@ -47,42 +47,29 @@ namespace PIERStory
 
         private void Awake()
         {
-            signalStreamUpdateData = SignalStream.Get(LobbyConst.STREAM_GAME, GameConst.SIGNAL_UPDATE_EPISODE);
-            signalReceiverUpdateData = new SignalReceiver().SetOnSignalCallback(OnUpdateSignal);
 
+            // * 다음 플레이 에피소드 데이터 수신 
             signalStreamNextData = SignalStream.Get(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_DATA);
             signalReceiverNextData = new SignalReceiver().SetOnSignalCallback(OnNextSignal);
-
+            
+            // * 방금 플레이했던 에피소드의 데이터 수신 
             signalStreamEpisodeEnd = SignalStream.Get(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END);
             signalReceiverEpisodeEnd = new SignalReceiver().SetOnSignalCallback(OnSignal);
         }
 
         private void OnEnable()
         {
-            signalStreamUpdateData.ConnectReceiver(signalReceiverUpdateData);
             signalStreamNextData.ConnectReceiver(signalReceiverNextData);
             signalStreamEpisodeEnd.ConnectReceiver(signalReceiverEpisodeEnd);
         }
 
         private void OnDisable()
         {
-            signalStreamUpdateData.DisconnectReceiver(signalReceiverUpdateData);
             signalStreamNextData.DisconnectReceiver(signalReceiverNextData);
             signalStreamEpisodeEnd.DisconnectReceiver(signalReceiverEpisodeEnd);
         }
 
-        void OnUpdateSignal(Signal s)
-        {
-            if (s.hasValue)
-            {
-                updateData = s.GetValueUnsafe<EpisodeData>();
-                currIllustGauge.fillAmount = updateData.episodeGalleryImageProgressValue;
-                currSceneGauge.fillAmount = updateData.sceneProgressorValue;
 
-                currIllustValue.text = string.Format("{0}%", Mathf.Round(currIllustGauge.fillAmount * 100f));
-                currSceneValue.text = string.Format("{0}%", Mathf.Round(currSceneGauge.fillAmount * 100f));
-            }
-        }
 
         void OnNextSignal(Signal s)
         {
@@ -148,9 +135,7 @@ namespace PIERStory
 
             episodeTitle.text += episodeData.episodeTitle;
 
-            // 에피소드에 획득 일러스트가 없는 경우 비활성
-            //
-            // 화 해준다
+            // 에피소드에 획득 일러스트가 없는 경우 비활성화 해준다
             if(episodeData.episodeGalleryImageProgressValue < 0)
             {
                 IllustProgress.SetActive(false);
@@ -159,6 +144,15 @@ namespace PIERStory
 
             prevIllustGauge.fillAmount = episodeData.episodeGalleryImageProgressValue;
             prevSceneGauge.fillAmount = episodeData.sceneProgressorValue;
+            
+            // 갤러리 이미지 값 리프레시 시키고, curr에 할당한다. 
+            episodeData.RefreshGalleryProgressValue();
+            currIllustGauge.fillAmount = episodeData.episodeGalleryImageProgressValue;
+            
+            // 게임매니저에서 updatedEpisodeSceneProgressValue 값 받아와서 재계산. 
+            currSceneGauge.fillAmount = GameManager.main.updatedEpisodeSceneProgressValue / episodeData.totalSceneCount; 
+            // played scene count 표기하고 갱신
+            episodeData.SetNewPlayedSceneCount(GameManager.main.updatedEpisodeSceneProgressValue);
 
         }
 

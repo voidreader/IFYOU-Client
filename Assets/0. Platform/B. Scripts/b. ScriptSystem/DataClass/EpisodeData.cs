@@ -55,6 +55,16 @@ namespace PIERStory {
         public string currencyPremuim =  string.Empty; // 프리미엄 화폐 
         public int priceOneTime = 0; // 1회 플레이 가격
         
+        /// <summary>
+        /// 유효한 데이터인지? 
+        /// </summary>
+        /// <value></value>
+        public bool isValidData {
+            get {
+                return !string.IsNullOrEmpty(episodeID);
+            }
+        }
+        
         
         public EpisodeData(JsonData __j) {
             episodeJSON = __j;
@@ -129,6 +139,23 @@ namespace PIERStory {
                 
             SetEpisodePlayState();
             SetPurchaseState();
+        }
+        
+        /// <summary>
+        /// 새로운 sceneProgressorValue 
+        /// </summary>
+        /// <param name="__newCount"></param>
+        public void SetNewPlayedSceneCount(float __newCount) {
+            playedSceneCount = __newCount;
+            if(totalSceneCount > 0)        
+                sceneProgressorValue = playedSceneCount / totalSceneCount;
+        }
+        
+        /// <summary>
+        /// 갤러리 이미지 프로그래서 밸류 리프레시 
+        /// </summary>
+        public void RefreshGalleryProgressValue() {
+            episodeGalleryImageProgressValue = UserManager.main.CalcGalleryImage(episodeGalleryImageJSON); // Progressor용 값 
         }
         
         /// <summary>

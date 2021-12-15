@@ -23,13 +23,10 @@ namespace PIERStory
             JsonData data = UserManager.main.GetIllustData(scriptRow.script_data);
 
             // 일러스트 해금이라면 팝업 출현
-            /* 21.11.22 아직 미구현이기 때문에 주석
-            if (data != null && NetworkLoader.main.UpdateUserIllust(data[0].ToString(), data[1].ToString()))
+            if (data !=null && NetworkLoader.main.UpdateUserIllust(data[0].ToString(), data[1].ToString()))
             {
                 GameManager.main.ShowAchieveIllust(data[2].ToString());
-                //AppsFlyerSDK.AppsFlyer.sendEvent("ILLUST_ACQUIRE_" + data[0].ToString(), null);
             }
-            */
 
             // 스킵했으면 렌더 안하고 넘어가
             if (__isInstant && GameManager.main.RenderingPass())

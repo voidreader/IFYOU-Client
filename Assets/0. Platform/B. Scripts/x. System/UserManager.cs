@@ -79,6 +79,7 @@ namespace PIERStory
         /// 
         /// </summary>
         [HideInInspector] public JsonData currentStoryJson = null; // 선택한 프로젝트와 관련된 정보 
+        [HideInInspector] public JsonData currentStorySelectionHistoryJson = null;      // 선택한 프로젝트의 선택지 내역(히스토리)
 
         [HideInInspector] public bool completeReadUserData = false;
 
@@ -109,6 +110,8 @@ namespace PIERStory
         #region static const 
 
         // getUserSelectedStory를 통해 받아온 작품 관련 정보 
+
+        const string FUNC_GET_TOP3_SELECTION_LIST = "getTop3SelectionList";
 
         public const string UN_UNREAD_MAIL_COUNT = "unreadMailCount"; // 미수신 메일 개수
         public const string UN_UNREAD_MAIL_LIST = "mailList"; // 미수신 메일 리스트
@@ -368,6 +371,32 @@ namespace PIERStory
             RefreshUserIllustHistoryInspector();
             
             RefreshUserFavorHistoryInspector();
+        }
+        
+        /// <summary>
+        /// 작품 선택하는 순간 해당 작품의 선택지 내역도 함께 불러온다
+        /// </summary>
+        /// <param name="__projectId">선택한 작품의 id</param>
+        public void SetCurrentStorySelectionList(string __projectId)
+        {
+            JsonData sendingData = new JsonData();
+            sendingData[CommonConst.FUNC] = FUNC_GET_TOP3_SELECTION_LIST;
+            sendingData[CommonConst.COL_USERKEY] = userKey;
+            sendingData[CommonConst.COL_PROJECT_ID] = __projectId;
+            sendingData[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
+
+            NetworkLoader.main.SendPost(CallbackSelectionList, sendingData);
+        }
+
+        void CallbackSelectionList(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackSelectionList");
+                return;
+            }
+
+            currentStorySelectionHistoryJson = JsonMapper.ToObject(res.DataAsText);
         }
         
 

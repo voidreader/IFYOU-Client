@@ -178,7 +178,7 @@ namespace PIERStory {
             
             currentLiveObject.liveImage.transform.localScale = new Vector3(currentLiveObject.gameScale , currentLiveObject.gameScale, 1);
 
-            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SHOW_ILLUSTDETAIL, string.Empty);
+            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SHOW_ILLUSTDETAIL, string.Empty);
             //GameEventMessage.SendEvent("EventIllustDetail");
         }
 
@@ -189,7 +189,7 @@ namespace PIERStory {
 
             currentLiveIllust.liveImage.transform.localScale = new Vector3(scale, scale, 1);
 
-            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SHOW_ILLUSTDETAIL, string.Empty);
+            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SHOW_ILLUSTDETAIL, string.Empty);
             //GameEventMessage.SendEvent("EventIllustDetail");
         }
         

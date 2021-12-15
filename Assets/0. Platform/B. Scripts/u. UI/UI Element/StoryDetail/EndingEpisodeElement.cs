@@ -42,7 +42,7 @@ namespace PIERStory {
             endingData = __data;
             endingThumbnail.SetDownloadURL(__data.squareImageURL, __data.squareImageKey);
            
-            if(__data.endingType == "hidden") {
+            if(__data.endingType == LobbyConst.COL_HIDDEN) {
                 textEndingType.text = SystemManager.GetLocalizedText("5087");
             }
             else {

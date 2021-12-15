@@ -137,15 +137,7 @@ namespace PIERStory
                         // 일치하는 에피소드 아이디를 찾았다!
                         if (StoryManager.main.ListCurrentProjectEpisodes[i].episodeID.Equals(SystemManager.GetJsonNodeString(soundData[key][0], LobbyConst.STORY_EPISODE_ID)))
                         {
-                            // 정규 에피소드이다!
-                            if (SystemManager.GetJsonNodeString(soundData[key][0], LobbyConst.STORY_EPISODE_TYPE).Equals(CommonConst.COL_CHAPTER))
-                            {
-                                episodeInfo[textIndex].text = string.Format("{0} {1}. {2}", SystemManager.GetLocalizedText("5027"), StoryManager.main.ListCurrentProjectEpisodes[i].episodeNO, StoryManager.main.ListCurrentProjectEpisodes[i].episodeTitle);
-                            }
-                            // 엔딩이나 사이드이다!
-                            else
-                                episodeInfo[textIndex].text = string.Format("{0}", StoryManager.main.ListCurrentProjectEpisodes[i].episodeTitle);
-
+                            episodeInfo[textIndex].text = StoryManager.main.ListCurrentProjectEpisodes[i].combinedEpisodeTitle;
                             episodeInfo[textIndex].transform.SetParent(voiceContents);
                             textIndex++;
                             break;

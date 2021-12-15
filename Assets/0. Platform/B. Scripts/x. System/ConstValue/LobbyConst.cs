@@ -94,7 +94,9 @@ namespace PIERStory {
 
         public const string TOP_SIGNAL_CHANGE_OWNER = "topSignalChangeOwner"; // 오너 변경 
 
-        public const string SHOW_ILLUSTDETAIL = "showIllustDetail";
+        public const string SIGNAL_SHOW_ILLUSTDETAIL = "showIllustDetail";
+        public const string SIGNAL_SHOW_ENDINGDETAIL = "showEndingDetail";
+        public const string SIGNAL_ENDINGDATA = "endingData";
 
         #endregion
 

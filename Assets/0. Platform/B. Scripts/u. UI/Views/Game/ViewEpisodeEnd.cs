@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 
 using TMPro;
-using LitJson;
 using Doozy.Runtime.Signals;
 
 namespace PIERStory
@@ -24,6 +23,13 @@ namespace PIERStory
         public Image prevSceneGauge;
         public Image currSceneGauge;
         public TextMeshProUGUI currSceneValue;
+
+        [Header("Selection scroll snap")]
+        public Transform scrollContent;
+        public GameObject[] episodeSelectionElements;
+        public Transform pagenation;
+        public GameObject pageTogglePrefab;           // scroll sanp의 pagenation에 쓰이는 toggle prefab
+
 
         [Space][Header("Buttons")]
         public GameObject nextEpisodeButton;
@@ -120,6 +126,8 @@ namespace PIERStory
         public override void OnStartView()
         {
             base.OnStartView();
+
+
         }
 
         void SetCurrentEpisodeInfo()

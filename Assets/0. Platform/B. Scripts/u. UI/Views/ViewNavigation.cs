@@ -13,6 +13,8 @@ namespace PIERStory {
         [SerializeField] List<Sprite> listInactiveIcons; // 비활성 아이콘 스프라이트 
         [SerializeField] List<Sprite> listActiveIcons; // 활성 아이콘 스프라이트 
         
+        public Dictionary<string, Sprite> DictSprite;
+        
         public override void OnView()
         {
             base.OnView();

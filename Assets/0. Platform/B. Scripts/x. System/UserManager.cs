@@ -399,6 +399,7 @@ namespace PIERStory
             }
 
             currentStorySelectionHistoryJson = JsonMapper.ToObject(res.DataAsText);
+        }
                 /// <summary>
         /// 완료된 미션이었는지 체크한다
         /// </summary>

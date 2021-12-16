@@ -43,7 +43,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47e3f3756fcd0a5448f8bf367a947429, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  illustPillar: {fileID: 0}
+  currentLiveIllust:
+    liveImage: {fileID: 0}
+    anim: {fileID: 0}
+    liveName: 
+    isMounted: 0
+    totalAssetCount: 0
+    unloadAssetCount: 0
+    liveImageController: {fileID: 0}
+    gameScale: 0
+    useCount: 0
+  currentLiveObject:
+    liveImage: {fileID: 0}
+    anim: {fileID: 0}
+    liveName: 
+    isMounted: 0
+    totalAssetCount: 0
+    unloadAssetCount: 0
+    liveImageController: {fileID: 0}
+    gameScale: 0
+    useCount: 0
   spriteGemIcon: {fileID: 21300000, guid: 2c89d90772445cc41a55906196a94077, type: 3}
   spriteCoinIcon: {fileID: 21300000, guid: 4362719dde577cb40838ea384d8975dc, type: 3}
   spriteOneTimeIcon: {fileID: 21300000, guid: 0912bd61aba780b40ad0bb0afc73cd68, type: 3}
@@ -64,8 +83,22 @@ MonoBehaviour:
   spriteEpisodeCurrentCover: {fileID: 21300000, guid: 72e7e0ef859d0ed48907cfcc817e6cd8, type: 3}
   spriteEpisodePrevIcon: {fileID: 21300000, guid: 535f4302d0d9e744e876a6d86dbb723c, type: 3}
   spriteEpisodeNextIcon: {fileID: 21300000, guid: 5c8031f64e82cad448397a7ad6fd486b, type: 3}
+  spriteNavLobbyOn: {fileID: 21300000, guid: 7623891312b4590479ede74a6b7081e4, type: 3}
+  spriteNavLobbyOff: {fileID: 21300000, guid: 403042a6e3234444d845e695be4d340b, type: 3}
+  spriteNavCategoryOn: {fileID: 21300000, guid: 76d55af9ae97808409d1a45048da6a23, type: 3}
+  spriteNavCategoryOff: {fileID: 21300000, guid: 7f3a058fdf7ac6d42a743fcf09ceda03, type: 3}
+  spriteNavShopOn: {fileID: 21300000, guid: 1dd5d2d698375d5469987a1ef05041ae, type: 3}
+  spriteNavShopOff: {fileID: 21300000, guid: e96d533cadd5cb648a5c20ae541c5b74, type: 3}
+  spriteNavIfYouOn: {fileID: 21300000, guid: ee3ac1168586e0b4ca6c04a69591753b, type: 3}
+  spriteNavIfYouOff: {fileID: 21300000, guid: c510a0a658570224dab60c23754654d5, type: 3}
+  spriteNavProfileOn: {fileID: 21300000, guid: 61ee93fc861e9884d8953a0f959d69f1, type: 3}
+  spriteNavProfileOff: {fileID: 21300000, guid: 23c4a5a504c2d8e489cb24eb07622791, type: 3}
+  spriteNavMoreOn: {fileID: 21300000, guid: 9af3c61a4f2433d4094e499d5079a07a, type: 3}
+  spriteNavMoreOff: {fileID: 21300000, guid: 8b3db6d6869b77f4481668c116540295, type: 3}
   colorPremiumBox: {r: 0.53333336, g: 0.54509807, b: 1, a: 1}
   colorFreeBox: {r: 0.9529412, g: 0.54901963, b: 0.6313726, a: 1}
   colorOneTimeBox: {r: 0.99607843, g: 0.627451, b: 0.28235295, a: 1}
+  colorNavOn: {r: 0.9529412, g: 0.54901963, b: 0.6313726, a: 1}
+  colorNavOff: {r: 0.6, g: 0.6, b: 0.6, a: 1}
   termView: 0
   lobbyNetworkLoadingScreen: {fileID: 0}

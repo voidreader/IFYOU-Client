@@ -22,7 +22,6 @@ namespace PIERStory
         public const string FUNC_LOGIN_CLIENT = "loginClient";
         public const string FUNC_SELECTED_STORY_INFO = "getUserSelectedStory";
         public const string FUNC_SELECT_LOBBY_PROJECT_LIST = "selectLobbyProjectList";
-        public const string FUNC_UPDATE_EPISODE_PURCHASE = "";
         
         public const string FUNC_UPDATE_EPISODE_SCENE_RECORD = "updateUserEpisodeSceneRecord"; // 씬 경험 기록
 
@@ -260,7 +259,79 @@ namespace PIERStory
         }
 
 
+        /// <summary>
+        /// Drop미션 완료 요청
+        /// </summary>
+    /// <param name="missionName">scriptData에 입력된 미션 이름</param>
+        public void UpdateScriptMission(string missionName)
+        {
+            
+            MissionData missionData = UserManager.main.GetMissionData(missionName);
+            
+            // 데이터 없음 
+            if(missionData == null || string.IsNullOrEmpty(missionData.missionID)) {
+                GameManager.main.isThreadHold = false;
+                return;
+            }
+            
+            // 이미 해금된 상태
+            if(missionData.missionState != MissionState.locked) {
+                GameManager.main.isThreadHold = false;
+                return;
+            }
 
+            
+
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = FUNC_UPDATE_USER_SCRIPT_MISSION;
+            sending["userkey"] = UserManager.main.userKey;
+            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            sending["mission_id"] =missionData.missionID;
+
+            SendPost(CallbackUpdateScriptMission, sending, false);
+        }
+
+        void CallbackUpdateScriptMission(HTTPRequest req, HTTPResponse res)
+        {
+            Debug.Log("Wait Off [CallbackUpdateScriptMission]");
+            GameManager.main.isThreadHold = false;      // 통신이 완료된 후에 행을 진행해준다
+
+            if (!CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackUpdateScriptMission");
+                return;
+            }
+
+            JsonData data = JsonMapper.ToObject(res.DataAsText);
+            UserManager.main.ShowCompleteMission(data);
+        }
+
+        
+        /// <summary>
+        /// 유저 일러스트 해금 요청 
+        /// </summary>
+        /// <param name="__illustID">일러스트 ID</param>
+        /// <param name="__illustType">일러스트 타입(illust,live2d)</param>
+        public bool UpdateUserIllust(string __illustID, string __illustType)
+        {
+
+            // 리턴 값에 따라서 메세지 처리 추가할것. (신규 일러스트가 해금..어쩌고저쩌고)
+
+            // 새로운 일러스트 아니면 통신할 필요 없음 
+            if (UserManager.main.CheckNewIllustUnlock(__illustID, __illustType))
+                return false; 
+
+            JsonData sending = new JsonData();
+            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
+            sending["illust_id"] = __illustID; // 일러스트 ID
+            sending["illust_type"] = __illustType; // 일러스트 타입(illust / live2d) 2 종류 
+            sending[CommonConst.FUNC] = FUNC_UPDATE_USER_ILLUST_HISTORY;
+
+            SendPost(UserManager.main.CallbackUpdateIllustHistory, sending);
+            return true; 
+            // 신규면 true 리턴, 이거 응답받고 메세지 띄우면 안되고, CallbackUpdateIllustHistory 에서 
+            // 정상 응답받으면 메세지 처리 해줘야함!
+        }
         
 
 
@@ -272,7 +343,24 @@ namespace PIERStory
         /// <returns></returns>
         public bool UpdateUserImage(string imageName, string minicutType)
         {
+            // 새로운 미니컷(이미지,라이브 오브제)가 아니면 통신 안함
+            if (!UserManager.main.CheckMinicutUnlockable(imageName, minicutType == "live2d" ? true : false))
+                return false;
 
+            string imageId = UserManager.main.GetGalleryMinicutID(imageName, minicutType == "live2d" ? true : false);
+
+            // 목록에 없는 거여도 통신 안하기
+            if (string.IsNullOrEmpty(imageId))
+                return false;
+
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = FUNC_UPDATE_USER_MINICUT_HISTORY;
+            sending["userkey"] = UserManager.main.userKey;
+            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            sending["minicut_id"] = imageId;            // 미니컷 Id. 이미지, 라이브오브제 상관없이 다 들어옴
+            sending["minicut_type"] = minicutType;      // (image, live2d) 2종류가 들어온다
+
+            SendPost(UserManager.main.CallbackUpdateMinicutHistory, sending);
             return true;
         }
 
@@ -311,16 +399,69 @@ namespace PIERStory
         }
 
 
+        /// <summary>
+        /// 에피소드 플레이 시작 기록 저장하기 
+        /// </summary>
+        public void UpdateEpisodeStartRecord()
+        {
+            // 수집 엔딩을 보는 경우 기록하지 않는다
+            if (!UserManager.main.useRecord)
+                return;
+
+            // Progress에만 저장이 된다. 
+            JsonData sending = new JsonData();
+            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
+            sending["episodeID"] = StoryManager.main.CurrentEpisodeID; // 현재 프로젝트 ID 
+            sending["func"] = FUNC_UPDATE_EPISODE_START_RECORD;
+
+            SendPost(UserManager.main.CallbackUpdateEpisodeStartRecord, sending);
+        }
+
+        /// <summary>
+        /// 에피소드 완료 기록 저장하기 
+        /// </summary>
+        /// <param name="nextEpisodeID">다음 에피소드 ID</param>
+        public void UpdateEpisodeCompleteRecord(EpisodeData nextEpisode)
+        {
+            // 튜토리얼 스텝이 2라면 한번 더 레벨업
+            if (UserManager.main.tutorialStep.Equals(2))
+                UserManager.main.UpdateTutorialStep();
+
+            if (!UserManager.main.useRecord)
+                return;
+
+            // Progress와 History 둘 다 저장이 된다. (progress는 is_clear가 업데이트)
+            JsonData sending = new JsonData();
+            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
+            sending["episodeID"] = StoryManager.main.CurrentEpisodeID; // 현재 프로젝트 ID 
+
+            if(!string.IsNullOrEmpty(nextEpisode.episodeID))
+                sending["nextEpisodeID"] = nextEpisode.episodeID; // 다음 에피소드 ID 있을때만
 
 
+            sending["func"] = FUNC_UPDATE_EPISODE_COMPLETE_RECORD;
+
+            SendPost(UserManager.main.CallbackUpdateEpisodeRecord, sending);
+        }
         
         /// <summary>
-        /// 에피소드 구매 (2021.08.04 수정)
+        /// 에피소드 진행도 리셋 
         /// </summary>
-        /// <param name="__episodeID">대상 에피소드ID</param>
-        /// <param name="__purchaseType">구매 타입</param>
-        /// <param name="__currency">재화코드</param>
-        /// <param name="__currencyQuantity">재화개수</param>
+        /// <param name="resetEpisodeID">타겟 에피소드</param>
+        public void ResetEpisodeProgress(string __resetEpisodeID, bool __isFree)
+        {
+            // 에피소드 리셋은 반드시 통신이 완료되고 다음이 진행되어야 합니다. 
+            JsonData sending = new JsonData();
+            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
+            sending["episodeID"] = __resetEpisodeID; // 타겟 에피소드 
+            sending["isFree"] = __isFree; // 무료 유료 처리 
+            sending[CommonConst.FUNC] = FUNC_RESET_EPISODE_PROGRESS;
+
+
+            // 통신 시작!
+            SendPost(UserManager.main.CallbackResetEpisodeProgress, sending, true);
+        }        
+        
 
 
         #endregion
@@ -375,7 +516,14 @@ namespace PIERStory
         /// </summary>
         public void RequestUnreadMailList(OnRequestFinishedDelegate __cb = null)
         {
+            OnRequestFinishedDelegate callback = UserManager.main.CallbackNotRecievedMail;
+            if(__cb != null)
+                callback += __cb;
+            
+            JsonData sendingData = new JsonData();
+            sendingData[CommonConst.FUNC] = FUNC_MAIL_LIST;
 
+            SendPost(callback, sendingData, true);
         }
 
         /// <summary>

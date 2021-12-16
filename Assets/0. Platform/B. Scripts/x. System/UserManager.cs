@@ -82,6 +82,8 @@ namespace PIERStory
         [HideInInspector] public JsonData currentStorySelectionHistoryJson = null;      // 선택한 프로젝트의 선택지 내역(히스토리)
 
         [HideInInspector] public bool completeReadUserData = false;
+        
+        public bool episodeRecordComplete = false;
 
         public float prevIllustProgress = -1f;
 
@@ -397,6 +399,34 @@ namespace PIERStory
             }
 
             currentStorySelectionHistoryJson = JsonMapper.ToObject(res.DataAsText);
+                /// <summary>
+        /// 완료된 미션이었는지 체크한다
+        /// </summary>
+        /// <returns>true를 리턴하면 완료한 미션, false를 return하면 아직 미완료한 미션</returns>
+        public bool CheckCompleteMission(string missionName)
+        {
+            foreach(MissionData missionData in DictStoryMission.Values) {
+                if(missionData.missionName == missionName && missionData.missionState != MissionState.locked)
+                    return true;
+                else if (missionData.missionName == missionName && missionData.missionState == MissionState.locked)
+                    return false;
+            }
+            
+            return false;
+            
+        }
+
+        /// <summary>
+        /// 미션 이름을 비교하여 mission Id를 반환한다
+        /// </summary>
+        public MissionData GetMissionData(string missionName)
+        {
+            foreach(MissionData missionData in DictStoryMission.Values) {
+                if(missionData.missionName == missionName)
+                    return missionData;
+            }
+            
+            return null;
         }
         
 
@@ -1397,6 +1427,7 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("CallbackUpdateEpisodeRecord");
+                episodeRecordComplete = false;
                 return;
             }
             
@@ -1417,8 +1448,14 @@ namespace PIERStory
                 Debug.Log(JsonMapper.ToStringUnicode(resultEpisodeRecord["playedSceneCount"]));
                 Debug.Log("Check this method : CallbackUpdateEpisodeRecord"); 
                 // ViewGameEnd.UpdateCurrentEpisodeSceneCount(resultEpisodeRecord["playedSceneCount"][0]);
-                Signal.Send(LobbyConst.STREAM_GAME, LobbyConst.SIGNAL_UPDATE_EPISODE_SCENE_COUNT, resultEpisodeRecord["playedSceneCount"][0]);
+                
+                
+                // * EpisodeData는 StoryManager로부터 시작해서 모두 참조가 같으므로 따로 변수를 만들어서 처리한다. 
+                GameManager.main.updatedEpisodeSceneProgressValue = float.Parse(resultEpisodeRecord["playedSceneCount"].ToString());
+                
             }
+            
+            episodeRecordComplete = true;
         }
 
         /// <summary>
@@ -1459,8 +1496,6 @@ namespace PIERStory
             resultEpisodeReset = JsonMapper.ToObject(res.DataAsText);
             Debug.Log(JsonMapper.ToStringUnicode(resultEpisodeReset));
 
-            // ! 삭제 대상 
-            // SetNodeUserNextEpisode(resultEpisodeReset[NODE_NEXT_EPISODE]); // 다음 에피소드 
 
             // ! 삭제 대상 아님 
             SetNodeUserEpisodeProgress(resultEpisodeReset[NODE_EPISODE_PROGRESS]); // 에피소드 progress 

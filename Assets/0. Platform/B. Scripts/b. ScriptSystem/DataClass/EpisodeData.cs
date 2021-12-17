@@ -161,7 +161,7 @@ namespace PIERStory {
         /// <summary>
         /// 에피소드의 플레이 상태 설정 
         /// </summary>
-        void SetEpisodePlayState() {
+        public void SetEpisodePlayState() {
             string currentRegularEpisodeID = string.Empty;
             
             if(episodeType == EpisodeType.Side) {

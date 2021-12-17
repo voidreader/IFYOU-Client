@@ -1727,6 +1727,8 @@ namespace PIERStory
 
         public void ShowGameEnd(string __nextEpisodeID)
         {
+            useSkip = false;
+            isPlaying = false; // 게임 플레이 정지.
             
             // * 통신이 겹치는 문제로 인해서 코루틴으로 변경
             StartCoroutine(RoutineFinishGame(__nextEpisodeID));
@@ -1740,9 +1742,6 @@ namespace PIERStory
             SystemManager.ShowNetworkLoading();
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             SystemManager.HideNetworkLoading();
-            
-            useSkip = false;
-            isPlaying = false; // false로 변경한다.
             
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터
             
@@ -1768,7 +1767,7 @@ namespace PIERStory
                 nextEpisodeData = StoryManager.GetNextFollowingEpisodeData(__nextEpisodeID);
             }
             
-            UserManager.main.episodeRecordComplete = false; // wait 용도. 
+            
             UserManager.main.UpdateSceneIDRecord(currentSceneId);
             NetworkLoader.main.UpdateEpisodeCompleteRecord(nextEpisodeData);
             SystemManager.ShowNetworkLoading();

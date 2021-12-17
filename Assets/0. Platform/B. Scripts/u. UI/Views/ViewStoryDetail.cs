@@ -48,12 +48,9 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textDetailEpisodeCount; // 상세 에피소드 카운팅 
         [SerializeField] TextMeshProUGUI textSpecialEpisodeExplain; // 스페셜 에피소드 부연설명!
         
+        [SerializeField] GameObject endingNotification; // 엔딩 알림
         
-        
-        JsonData episodeListJson; // 정규 에피소드 순서대로 
-        JsonData reverseEpisodeListJson ; // 정규 에피소드 역순
-        JsonData specialListJson; // 스페셜 에피소드 순서대로 
-        JsonData endingListJson; // 엔딩 에피소드 
+        JsonData continueData = null;
         
         int episodeCount = 0;           // 에피소드 갯수, 미해금된 사이드 갯수
         int openEndingCount = 0;        // 열린 엔딩 갯수
@@ -71,10 +68,6 @@ namespace PIERStory {
             UserManager.OnRequestEpisodeReset = this.OnStartView;
             UserManager.OnFreepassPurchase = this.SetFreepassInfo;
             RefreshStoryDetail = this.OnStartView;
-            
-            
-            
-            
         }
         
         public override void OnStartView() {
@@ -160,6 +153,9 @@ namespace PIERStory {
             buttonContentsMission.InitContentsButton();
             buttonContentsEnding.InitContentsButton();
             
+            // 빠른플레이, 엔딩 알람을 위한 project current 
+            continueData = UserManager.main.GetUserProjectRegularEpisodeCurrent();
+            SetBottomNotification(); // continueData 가져가서 처리 
         }
         
         
@@ -172,6 +168,18 @@ namespace PIERStory {
         
         
         #region 에피소드 리스트 처리
+        
+        /// <summary>
+        /// 정규 에피소드 리스트 리프레시 
+        /// </summary>
+        public void RefreshRegularEpisodeList() {
+            // 리셋하고 호출하도록 한다. (Signal listener에서 호출)
+            
+            StoryManager.main.UpdateRegularEpisodeData();
+            ShowEpisodeList(true);
+            
+            
+        }
         
         /// <summary>
         /// 에피소드 리스트를 보여주세요! 제발!
@@ -266,7 +274,33 @@ namespace PIERStory {
         #endregion
         
         
-                /// <summary>
+        #region 빠른플레이 & 엔딩 알림
+        
+        /// <summary>
+        /// 엔딩 알림, 빠른 플레이 표기 처리 
+        /// </summary>
+        void SetBottomNotification() {
+            
+            // * 엔딩이고 엔딩 플레이를 완료한 경우에는 엔딩 알람을 하단에 띄워준다. 
+            if( SystemManager.GetJsonNodeBool(continueData, "is_final") 
+            && SystemManager.GetJsonNodeBool(continueData, "is_ending")) {
+                endingNotification.SetActive(true); 
+                mainScrollVertical.padding.bottom = 100; // 간격 줘야함!
+                return;
+            }
+        }
+        
+        /// <summary>
+        /// 빠른 플레이 처리 
+        /// </summary>
+        void SetFastPlay() {
+            
+        }
+        
+        #endregion
+        
+        
+        /// <summary>
         /// 메인ScrollRect 상하 변경시.. 상단 제어 
         /// </summary>
         /// <param name="vec"></param>

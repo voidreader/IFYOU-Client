@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 using TMPro;
 using LitJson;
@@ -13,12 +14,13 @@ namespace PIERStory
         public TextMeshProUGUI endingTitle;
 
         public Transform scrollContent;
-        public Transform storage;
 
-        public GameObject[] episodeElements;
-        public GameObject[] scriptElements;
-        public GameObject[] emptyElements;
-        public GameObject episodeEndTitle;
+        public GameObject episodeTitlePrefab;
+        public GameObject selectionScriptPrefab;
+        public GameObject emptyPrefab;
+        public GameObject endingTitlePrefab;
+
+        List<GameObject> createObject = new List<GameObject>();
 
         EpisodeData endingData = null;
         JsonData selectionData = null;
@@ -83,52 +85,42 @@ namespace PIERStory
 
             endingTitle.text = endingData.episodeTitle;
 
-            int episodeIndex = 0, scriptIndex = 0;
+            int episodeIndex = 0;
 
-            // 해당 파트는 GetComponentsInChildren<TextMeshProUGUI>()가 
             // 선택지 세팅
             foreach (string key in selectionData.Keys)
             {
-                // 엔딩까지 도달하기 위한 0 = 몇화인지, 1 = 제목이 무언지
-                TextMeshProUGUI[] episodeTexts = episodeElements[episodeIndex].GetComponentsInChildren<TextMeshProUGUI>();
-                episodeTexts[0].text = string.Format("{0}", episodeIndex + 1);
-                episodeTexts[1].text = key;
-                episodeElements[episodeIndex].transform.SetParent(scrollContent);
+                EpisodeTitleElement titleElement = Instantiate(episodeTitlePrefab, scrollContent).GetComponent<EpisodeTitleElement>();
+                titleElement.SetEpisodeTitle(episodeIndex + 1, key);
+                createObject.Add(titleElement.gameObject);
+                episodeIndex++;
 
                 for (int i = 0; i < selectionData[key].Count; i++)
                 {
-                    // 0 = 도달하기 전 대사, 1 = 선택했던 선택지 대사
-                    TextMeshProUGUI[] scriptTexts = scriptElements[scriptIndex].GetComponentsInChildren<TextMeshProUGUI>();
-                    scriptTexts[0].text = SystemManager.GetJsonNodeString(selectionData[key][i], GameConst.COL_SCRIPT_DATA);
-                    scriptTexts[1].text = SystemManager.GetJsonNodeString(selectionData[key][i], KEY_SELECTION_CONTENT);
-                    episodeElements[scriptIndex].transform.SetParent(scrollContent);
-                    scriptIndex++;
+                    EndingSelectionScriptElement scriptElement = Instantiate(selectionScriptPrefab, scrollContent).GetComponent<EndingSelectionScriptElement>();
+                    scriptElement.SetSelectionScript(SystemManager.GetJsonNodeString(selectionData[key][i], GameConst.COL_SCRIPT_DATA), SystemManager.GetJsonNodeString(selectionData[key][i], KEY_SELECTION_CONTENT));
+                    createObject.Add(scriptElement.gameObject);
                 }
-                emptyElements[episodeIndex].transform.SetParent(scrollContent);
-                episodeIndex++;
+
+                GameObject emptyObject = Instantiate(emptyPrefab, scrollContent);
+                createObject.Add(emptyObject);
             }
 
             // for문이 전무 돌고, 제일 마지막에 엔딩 무엇에 도달했는지 표기
-            TextMeshProUGUI[] endingTexts = episodeEndTitle.GetComponentsInChildren<TextMeshProUGUI>();
-            endingTexts[1].text = string.Format("{0}. {1}", endingType.text, endingTitle.text);
-            episodeEndTitle.transform.SetParent(scrollContent);
+            EndingTitleElement endingTitleElement = Instantiate(endingTitlePrefab, scrollContent).GetComponent<EndingTitleElement>();
+            endingTitleElement.SetEndingTitle(string.Format("{0}. {1}", endingType.text, endingTitle.text));
+            createObject.Add(endingTitleElement.gameObject);
         }
 
         public override void OnHideView()
         {
             base.OnHideView();
 
-            // storage로 element들을 다 옮겨준다
-            episodeEndTitle.transform.SetParent(storage);
+            // element들을 모두 Instantiate 하여 생성해줬으므로 모두 파괴한다
+            foreach (GameObject g in createObject)
+                Destroy(g);
 
-            foreach (GameObject g in episodeElements)
-                g.transform.SetParent(storage);
-
-            foreach (GameObject g in scriptElements)
-                g.transform.SetParent(storage);
-
-            foreach (GameObject g in emptyElements)
-                g.transform.SetParent(storage);
+            createObject.Clear();
         }
     }
 }

@@ -57,12 +57,28 @@ namespace PIERStory {
         public Sprite spriteEpisodePrevIcon; // 과거 커버
         public Sprite spriteEpisodeNextIcon; // 미래 커버 
         
+        [Header("네비게이션 Sprite")]
+        public Sprite spriteNavLobbyOn;
+        public Sprite spriteNavLobbyOff;
+        public Sprite spriteNavCategoryOn;
+        public Sprite spriteNavCategoryOff;
+        public Sprite spriteNavShopOn;
+        public Sprite spriteNavShopOff;
+        public Sprite spriteNavIfYouOn;
+        public Sprite spriteNavIfYouOff;
+        public Sprite spriteNavProfileOn;
+        public Sprite spriteNavProfileOff;
+        public Sprite spriteNavMoreOn;
+        public Sprite spriteNavMoreOff;
+        
         
         
         [Header("== 컬러 ==")]
         public Color colorPremiumBox = Color.white;
         public Color colorFreeBox = Color.white;
         public Color colorOneTimeBox = Color.white;
+        public Color colorNavOn = Color.white;
+        public Color colorNavOff = Color.white;
         
 
         public bool termView = false;

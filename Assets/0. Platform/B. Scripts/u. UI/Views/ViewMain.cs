@@ -7,6 +7,9 @@ using Doozy.Runtime.Signals;
 namespace PIERStory {
     public class ViewMain : CommonView
     {
+        
+        
+        [Header("로비")]
         [SerializeField] ScrollRect mainScrollRect;
         
         [SerializeField] List<PlayingStoryElement> ListPlayingStoryElements; // 진행중 이야기 
@@ -25,6 +28,15 @@ namespace PIERStory {
             
             base.OnStartView();
             
+
+            InitLobby();
+            
+        }
+        
+        /// <summary>
+        /// 로비 컨테이너 초기화 
+        /// </summary>
+        void InitLobby() {
             Signal.Send(LobbyConst.STREAM_IFYOU, "initNavigation", string.Empty);
             
             InitPlayingStoryElements(); // 진행중인 이야기 Area 초기화 
@@ -37,30 +49,15 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_VIEW_NAME, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
-            
+        }
+
+        
+        public void OnClickTabNavigation(int index) {
             
         }
         
-        void Update() {
         
-            /*
-            if(ViewCommonTop.staticCurrentTopOwner != this.gameObject.name)
-                return;
-            
-            if(mainScrollRect.content.transform.localPosition.y > 150f && !ViewCommonTop.isBackgroundShow) {
-                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
-                return;
-            }
-            
-            
-            if(mainScrollRect.content.transform.localPosition.y <= 150f && ViewCommonTop.isBackgroundShow) {
-                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
-                return;
-            }
-            */
-            
-        }
-        
+        #region 메인 로비 
         
         /// <summary>
         /// 진행중인 이야기 초기화
@@ -153,6 +150,15 @@ namespace PIERStory {
                 return;
             }
         }
+        
+        #endregion
+        
+        #region 카테고리
+        #endregion
+        
+        #region 상점
+        #endregion
+        
         
     }
 }

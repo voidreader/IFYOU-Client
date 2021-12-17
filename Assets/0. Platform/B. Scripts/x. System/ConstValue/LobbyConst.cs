@@ -81,6 +81,7 @@ namespace PIERStory {
         
         
         public const string SIGNAL_EPISODE_START = "EpisodeStart";
+        public const string SIGNAL_EPISODE_RESET = "EpisodeReset";
         
         public const string TOP_SIGNAL_SHOW_BACKGROUND = "topSignalShowBackground"; // 상단 배경 보여주기
         // public const string TOP_SIGNAL_HIDE_BACKGROUND = "topSignalHideBackground"; // 상단 배경 감추기

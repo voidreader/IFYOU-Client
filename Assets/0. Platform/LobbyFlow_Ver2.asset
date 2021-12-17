@@ -575,6 +575,71 @@ MonoBehaviour:
     Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
+--- !u!114 &-5200175382701018417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 81ad76bf-b1f3-46b0-b01c-67965e93b5b6
+  NodeType: 0
+  NodeName: Reset
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 81ad76bf-b1f3-46b0-b01c-67965e93b5b6
+    PortId: 8ad14ef9-daa4-445f-a3a6-41470647e3f6
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 8f5775c0-263c-4f8c-b898-b27a1d683f48
+    Value: '{"CanGoBack":true}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 81ad76bf-b1f3-46b0-b01c-67965e93b5b6
+    PortId: e059e9da-6d89-43a5-af0b-176d919ff49f
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 96462830-de13-4560-8e9a-99a2ba17f35c
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"IFYOU","Name":"closeEpisodeReset","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 0
+  Position: {x: 1357.9595, y: -335.4011}
+  OnEnterShowViews:
+  - Id:
+      Category: Popup
+      Name: Reset
+      Custom: 0
+    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
+  OnExitHideViews:
+  - Id:
+      Category: Popup
+      Name: Reset
+      Custom: 0
+    Mode: 0
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
 --- !u!114 &-4748862683584036090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1066,6 +1131,7 @@ MonoBehaviour:
   - {fileID: 2336447358800265435}
   - {fileID: 6399534788089070960}
   - {fileID: -7255986138980570167}
+  - {fileID: -5200175382701018417}
   RootNode: {fileID: 3282273850073061226}
   ActiveNode: {fileID: 0}
 --- !u!114 &1841992565293203595
@@ -1276,6 +1342,7 @@ MonoBehaviour:
     - a9bc95ce-5628-41fc-abd3-3b99a06410e0
     - a97d01cc-2aa5-41cd-8be2-05c94f08714f
     - 73b2c122-7af0-4c45-a927-21d50d10af93
+    - e059e9da-6d89-43a5-af0b-176d919ff49f
     Value: '{"CanGoBack":false}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -1337,6 +1404,17 @@ MonoBehaviour:
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 1
     CanBeReordered: 1
+  - NodeId: 20033a71-c301-479a-9912-c3981f6c675b
+    PortId: 8f5775c0-263c-4f8c-b898-b27a1d683f48
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 8ad14ef9-daa4-445f-a3a6-41470647e3f6
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"IFYOU","Name":"episodeReset","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
   RunUpdate: 0
   RunFixedUpdate: 0
   RunLateUpdate: 0
@@ -1344,7 +1422,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 842.9452, y: -350.63324}
+  Position: {x: 968, y: -370}
   OnEnterShowViews:
   - Id:
       Category: IFYOU

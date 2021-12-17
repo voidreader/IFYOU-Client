@@ -88,7 +88,8 @@ namespace Doozy.Runtime.UIManager
             ConfirmType1,
             ConfirmType2,
             Coupon,
-            PrivacyPolicy
+            PrivacyPolicy,
+            Reset
         }    
     }
 }

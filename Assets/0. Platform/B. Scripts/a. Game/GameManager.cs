@@ -1735,13 +1735,11 @@ namespace PIERStory
         }
         
         IEnumerator RoutineFinishGame(string __nextEpisodeID) {
+            
             // 안전을 위해..
             yield return new WaitForSeconds(0.1f);
-            
-            // 서버 통신 완료를 기다린다. 
-            SystemManager.ShowNetworkLoading();
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
-            SystemManager.HideNetworkLoading();
+            
             
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터
             
@@ -1756,7 +1754,6 @@ namespace PIERStory
                     if(nextEpisodeData != null && nextEpisodeData.isValidData)
                         __nextEpisodeID = nextEpisodeData.episodeID;
                 }
-                   
             }
             else { // 이동 컬럼 데이터 있음
             
@@ -1767,44 +1764,34 @@ namespace PIERStory
                 nextEpisodeData = StoryManager.GetNextFollowingEpisodeData(__nextEpisodeID);
             }
             
-            
+            // scene Id값 갱신하고 통신 완료까지 잠시 대기
             UserManager.main.UpdateSceneIDRecord(currentSceneId);
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+
+            // 에피소드 완료까지 통신 대기
             NetworkLoader.main.UpdateEpisodeCompleteRecord(nextEpisodeData);
             SystemManager.ShowNetworkLoading();
-            
-            StartCoroutine(RoutineOpenNextUI(nextEpisodeData));
-        }
-        
-        
-        /// <summary>
-        /// 게임 종료 처리 후, 다음 화를 위한 UI 준비 
-        /// </summary>
-        /// <param name="nextData"></param>
-        /// <returns></returns>
-        IEnumerator RoutineOpenNextUI(EpisodeData nextData)
-        {
-            // 통신 완료될 때까지 대기
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             SystemManager.HideNetworkLoading();
 
             // 다음 에피소드가 엔딩인 경우
-            if(nextData != null && nextData.episodeType == EpisodeType.Ending)
+            if (nextEpisodeData != null && nextEpisodeData.episodeType == EpisodeType.Ending)
             {
-                string title = nextData.endingType.Equals(LobbyConst.COL_HIDDEN) ? string.Format("<color=#9E10C1>{0}", SystemManager.GetLocalizedText("5087")) : string.Format("<color=#6941DB>{0}", SystemManager.GetLocalizedText("5088"));
+                string title = nextEpisodeData.endingType.Equals(LobbyConst.COL_HIDDEN) ? string.Format("<color=#9E10C1>{0}", SystemManager.GetLocalizedText("5087")) : string.Format("<color=#6941DB>{0}", SystemManager.GetLocalizedText("5088"));
 
                 // ViewGame에 UIContainer를 넣어서 Show, Hide 해준다
                 // 추후 추가해서
                 // ! 엔딩 오픈 팝업 호출 
                 // ! 종료 대기 처리 필요 
+                
             }
-            
+
             // * 엔딩 연출 끝나면 아래 진행 (없으면 그냥 진행)
             // Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_UPDATE_EPISODE, currentEpisodeData, string.Empty);
-            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_DATA, nextData, string.Empty); // 다음 에피소드 전달 
-            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, currentEpisodeData, string.Empty); // 현재 에피소드 전달 
+            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_DATA, nextEpisodeData, string.Empty); // 다음 에피소드 전달 
+            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, currentEpisodeData, string.Empty); // 현재 에피소드 전달
         }
-
-
+        
         #endregion
     }
 

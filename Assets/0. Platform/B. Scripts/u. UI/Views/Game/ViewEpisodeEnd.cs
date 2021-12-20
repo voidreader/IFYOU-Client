@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 
 using TMPro;
+using LitJson;
 using Doozy.Runtime.Signals;
 
 namespace PIERStory
@@ -26,10 +27,8 @@ namespace PIERStory
 
         [Header("Selection scroll snap")]
         public Transform scrollContent;
-        public GameObject[] episodeSelectionElements;
-        public Transform pagenation;
-        public GameObject pageTogglePrefab;           // scroll sanp의 pagenation에 쓰이는 toggle prefab
-
+        public GameObject selectionEpisodePrefab;
+        
 
         [Space][Header("Buttons")]
         public GameObject nextEpisodeButton;
@@ -114,6 +113,55 @@ namespace PIERStory
         {
             base.OnStartView();
 
+            // 사용자가 현재 화에서 선택한 선택지 셋팅
+            JsonData selectionData = SystemManager.GetJsonNode(UserManager.main.currentStorySelectionHistoryJson, GameConst.TEMPLATE_SELECTION);
+
+            // 선택지는 최신순으로 들어오지 않는다
+            int reverse = 0;
+
+            // 플레이가 2회차 이하인 경우
+            if(selectionData.Count < 3)
+            {
+                reverse = 1;
+
+                // 첫 플레이인 경우
+                if (selectionData.Count < 2)
+                    reverse = 2;
+            }
+
+            foreach(string roundKey in selectionData.Keys)
+            {
+                // 현재 회차 도달할 때까지 건너뛰기
+                if (reverse != 2)
+                {
+                    reverse++;
+                    continue;
+                }
+
+                foreach(string titleKey in selectionData[roundKey].Keys)
+                {
+                    // 현재 플레이하고 있는 에피소드와 제목이 같은 행을 찾는다
+                    if(episodeData.episodeTitle.Equals(titleKey))
+                    {
+                        foreach(string prevScriptKey in selectionData[roundKey][titleKey].Keys)
+                        {
+                            // 선택지 직전 대사 대사
+                            JsonData selectionGroup = selectionData[roundKey][titleKey][prevScriptKey];
+
+                            for(int i=0;i<selectionGroup.Count;i++)
+                            {
+                                // 선택한 선택지만 보여준다
+                                if(SystemManager.GetJsonNodeBool(selectionGroup[i], "selected"))
+                                {
+                                    SelectionEpisodeElement selectionEpisode = Instantiate(selectionEpisodePrefab, scrollContent).GetComponent<SelectionEpisodeElement>();
+                                    selectionEpisode.SetCurrentEpisodeSelection(prevScriptKey, SystemManager.GetJsonNodeString(selectionGroup[i], "selection_content"));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
         }
 

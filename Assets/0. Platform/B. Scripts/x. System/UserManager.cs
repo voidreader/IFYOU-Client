@@ -372,7 +372,7 @@ namespace PIERStory
 
             RefreshUserIllustHistoryInspector();
             
-            //RefreshUserFavorHistoryInspector();
+            
         }
         
         /// <summary>
@@ -483,15 +483,15 @@ namespace PIERStory
         /// <summary>
         /// 개별 미션 보상 받기
         /// </summary>
-        public void GetMissionRewared(string missionId, string currency, string quantity, OnRequestFinishedDelegate callback)
+        public void GetMissionRewared(MissionData missionData, OnRequestFinishedDelegate callback)
         {
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = NetworkLoader.FUNC_USER_MISSION_REWARD;
             sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
-            sending["mission_id"] = missionId;
+            sending["mission_id"] = missionData.missionID;
             sending[CommonConst.COL_USERKEY] = userKey;
-            sending["reward_currency"] = currency;
-            sending["reward_quantity"] = quantity;
+            sending["reward_currency"] = missionData.rewardCurrency;
+            sending["reward_quantity"] = missionData.rewardQuantity;
 
             NetworkLoader.main.SendPost(callback, sending, true);
         }
@@ -771,7 +771,7 @@ namespace PIERStory
         public void ShowCompleteMission(JsonData __j)
         {
             Debug.LogWarning("Check ShowCompleteMission");
-            /*
+            
             if(__j == null && __j.Count == 0)  {
                 Debug.Log("No Clear Mission");
                 return;
@@ -785,7 +785,7 @@ namespace PIERStory
             while(CompleteMissions.Count > 0) {
                 
                 // popup 변수를 여러개가 공유할 수 없음. 매번 새로 만들어줘야된다. 
-                UIPopup popUp = UIPopupManager.GetPopup("AchieveCollection");
+                PopupBase popUp = PopupManager.main.GetPopup(SystemConst.POPUP_ILLUST_ACHIEVEMENT);
                 if (popUp == null)
                 {
                     Debug.LogError("No AchieveMission Popup");
@@ -807,10 +807,10 @@ namespace PIERStory
 
                 // AppsFlyerSDK.AppsFlyer.sendEvent("MISSION_CLEAR_"+ currentMissionData["mission_id"].ToString(), null);
                 popUp.Data.SetLabelsTexts(SystemManager.GetLocalizedText("5086"), currentMissionData["mission_name"].ToString(), SystemManager.GetLocalizedText("80078"));
-                UIPopupManager.ShowPopup(popUp, true, false);
+                PopupManager.main.ShowPopup(popUp, true, false);
                 Debug.Log("Show Mission Popup");   
             }
-            */
+            
         }
 
 
@@ -898,22 +898,6 @@ namespace PIERStory
             return currentStoryJson[NODE_PROJECT_MISSIONS];
         }
 
-
-        /// <summary>
-        /// 유저 호감도 기록 
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetNodeUserFavor()
-        {
-            return currentStoryJson[NODE_USER_FAVOR];
-        }
-
-        public void SetNodeUserFavor(JsonData __newData)
-        {
-            currentStoryJson[NODE_USER_FAVOR] = __newData;
-
-            RefreshUserFavorHistoryInspector();
-        }
 
         /// <summary>
         /// 유저 일러스트 오픈 기록
@@ -1604,21 +1588,6 @@ namespace PIERStory
 
 
         #region 인스펙터 체크용!
-
-        /// <summary>
-        /// 유저 호감도 인스펙터 확인용!
-        /// </summary>
-        void RefreshUserFavorHistoryInspector()
-        {
-            if (!Application.isEditor)
-                return;
-
-            DebugUserFavors.Clear();
-            for(int i=0; i<GetNodeUserFavor().Count;i++)
-            {
-                DebugUserFavors.Add(JsonMapper.ToStringUnicode(GetNodeUserFavor()[i]));
-            }
-        }
 
 
         // 인스펙터 확인용도!

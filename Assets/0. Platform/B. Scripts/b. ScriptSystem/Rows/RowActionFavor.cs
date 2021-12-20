@@ -67,7 +67,7 @@ namespace PIERStory
             JsonData result = JsonMapper.ToObject(res.DataAsText);
 
             // UserManager 갱신하기
-            UserManager.main.SetNodeUserFavor(result);
+            // UserManager.main.SetNodeUserFavor(result);
             callback();
         }
     }

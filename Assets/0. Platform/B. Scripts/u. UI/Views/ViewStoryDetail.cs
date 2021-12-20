@@ -156,6 +156,8 @@ namespace PIERStory {
             // 빠른플레이, 엔딩 알람을 위한 project current 
             continueData = UserManager.main.GetUserProjectRegularEpisodeCurrent();
             SetBottomNotification(); // continueData 가져가서 처리 
+            
+            textSpecialEpisodeExplain.gameObject.SetActive(false);    
         }
         
         
@@ -197,7 +199,19 @@ namespace PIERStory {
                 SetRegularEpisodeCountText(StoryManager.main.regularEpisodeCount,  StoryManager.main.unlockEndingCount);
             }
             else  { // * 스페셜(사이드) 에피소드
-                SetEpisodeList(StoryManager.main.SideEpisodeList);
+            
+                List<EpisodeData> ListOpenSide = StoryManager.main.SideEpisodeList;
+                
+                for(int i=ListOpenSide.Count-1; i>=0; i--) {
+                    // 해금되지 않은 사이드 에피소드 제거 
+                    if(!ListOpenSide[i].isUnlock)
+                        ListOpenSide.RemoveAt(i);
+                }
+                
+                Debug.Log("ListOpenSide Count : " + ListOpenSide.Count);
+                
+            
+                SetEpisodeList(ListOpenSide);
                 SetSideEpisodeCountText(StoryManager.main.sideEpisodeCount, StoryManager.main.unlockSideEpisodeCount);
             }
             
@@ -223,6 +237,15 @@ namespace PIERStory {
         void SetSideEpisodeCountText(int sideCount, int unlockSideCount) {
             textTotalEpisodeCount.text = string.Format(SystemManager.GetLocalizedText("10000"), unlockSideCount);
             textDetailEpisodeCount.text = string.Empty;
+            
+            if(sideCount - unlockSideCount > 0) {
+                textSpecialEpisodeExplain.text = string.Format(SystemManager.GetLocalizedText("6055"), (sideCount - unlockSideCount).ToString());
+                textSpecialEpisodeExplain.gameObject.SetActive(true);    
+            }
+            else 
+                textSpecialEpisodeExplain.gameObject.SetActive(false);    
+            
+            
         }
         
         
@@ -249,16 +272,23 @@ namespace PIERStory {
             
             if(__listEpisode == null || __listEpisode.Count == 0)
                 return;
+                
+            Debug.Log(">> SetEpisodeList listCount : " + __listEpisode.Count);
             
             // * 작품개수를 3으로 나눈다. 
             int dividedThree = Mathf.FloorToInt((float)__listEpisode.Count / 3f );
+            
+            // 나머지가 있으면 1 더해야한다;.
+            if(__listEpisode.Count % 3 > 0)
+                dividedThree++;
             
             // 
             for(int i=0; i<dividedThree; i++) {
                 ListThreeEpisodeRows[i].InitRow(__listEpisode, i);
             }
-                           
         }
+        
+        
         
         
         

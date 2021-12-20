@@ -187,6 +187,8 @@ namespace PIERStory
         IEnumerator Start()
         {
             Debug.Log(">>>>> GameManager Start <<<<<");
+            
+            PopupManager.main.InitPopupManager();
 
             GarbageCollect();
 

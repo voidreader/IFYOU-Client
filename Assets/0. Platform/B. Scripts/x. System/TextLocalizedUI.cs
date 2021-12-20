@@ -18,11 +18,19 @@ namespace PIERStory {
             if(_text) 
                 _text = this.GetComponent<TextMeshProUGUI>();
                 
+            SetText();
+        }
+        
+        void SetText() {
             if(_text == null)
                 return;
                 
             // 언어별 텍스트 불러와서 할당해주기
             _text.text = SystemManager.GetLocalizedText(_textID);
+        }
+        
+        void OnEnable() {
+            SetText();
         }
     }
 }

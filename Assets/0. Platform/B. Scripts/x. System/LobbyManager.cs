@@ -93,21 +93,19 @@ namespace PIERStory {
             main = this;
         }
 
-        /*
+        
         void Start() {
 
-            // 로비 매니저는 UserManager가 서버 접속을 완료할때까지 대기합니다. 
-            // yield return new WaitUntil(() => UserManager.main.userKey != null);
-            
-            while (UserManager.main == null || UserManager.main.GetUserAccountJSON() == null)
-                yield return null;
+            // * 팝업매니저 초기화(로비씬)
+            PopupManager.main.InitPopupManager(); 
         
         }
-        */
+        
         private void Update() {
             if(Input.GetKeyDown(KeyCode.O)) {
                 PopupBase popup = PopupManager.main.GetPopup("AchivementIllust");
-                popup.Show();
+                popup.Data.SetLabelsTexts("가짜이름");
+                PopupManager.main.ShowPopup(popup, true, false);
             }
         }
 

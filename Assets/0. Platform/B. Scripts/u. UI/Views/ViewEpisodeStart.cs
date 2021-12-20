@@ -42,6 +42,12 @@ namespace PIERStory {
         
         JsonData projectCurrent = null; // 이어하기 체크용 Json
         
+        [SerializeField] float illustProgress = 0;
+        [SerializeField] float sceneProgress = 0;
+        [SerializeField] EpisodeContentProgress illustProgressBar;
+        [SerializeField] EpisodeContentProgress sceneProgressBar;
+        [SerializeField] GameObject contentsMiddleVerticalLine; // 일러스트, 경험한 사건 사이에 선 
+        
         SignalReceiver signalReceiverEpisodeStart;
         SignalStream signalStreamEpisodeStart;
         
@@ -100,6 +106,24 @@ namespace PIERStory {
             popupImage.SetDownloadURL(episodeData.popupImageURL, episodeData.popupImageKey);
             
             buttonVerticalGroup.enabled = true;
+            
+            // 진행도 처리 
+            illustProgress = episodeData.episodeGalleryImageProgressValue;
+            sceneProgress = episodeData.sceneProgressorValue;
+            
+            // 갤러리 프로그레스. -1이면 없다. 
+            if(illustProgress > -1) {
+                contentsMiddleVerticalLine.SetActive(true);
+                illustProgressBar.gameObject.SetActive(true);
+                illustProgressBar.SetProgress(illustProgress);
+            }
+            else {
+                illustProgressBar.gameObject.SetActive(false);
+                contentsMiddleVerticalLine.SetActive(false);
+            }
+            
+            sceneProgressBar.SetProgress(sceneProgress);
+            
             
             
             SetButtonState(); // 플레이 버튼 설정 

@@ -90,24 +90,27 @@ namespace PIERStory
             // 선택지 세팅
             foreach (string key in selectionData.Keys)
             {
-                EpisodeTitleElement titleElement = Instantiate(episodeTitlePrefab, scrollContent).GetComponent<EpisodeTitleElement>();
+                // 정규 에피소드 넘버링, 제목
+                SelectionEpisodeTitleElement titleElement = Instantiate(episodeTitlePrefab, scrollContent).GetComponent<SelectionEpisodeTitleElement>();
                 titleElement.SetEpisodeTitle(episodeIndex + 1, key);
                 createObject.Add(titleElement.gameObject);
                 episodeIndex++;
 
                 for (int i = 0; i < selectionData[key].Count; i++)
                 {
-                    EndingSelectionScriptElement scriptElement = Instantiate(selectionScriptPrefab, scrollContent).GetComponent<EndingSelectionScriptElement>();
+                    // 어떤 선택지를 선택했는지
+                    SelectionEndingScriptElement scriptElement = Instantiate(selectionScriptPrefab, scrollContent).GetComponent<SelectionEndingScriptElement>();
                     scriptElement.SetSelectionScript(SystemManager.GetJsonNodeString(selectionData[key][i], GameConst.COL_SCRIPT_DATA), SystemManager.GetJsonNodeString(selectionData[key][i], KEY_SELECTION_CONTENT));
                     createObject.Add(scriptElement.gameObject);
                 }
 
+                // 큰 의미는 없고, 한 챕터가 끝났을 때에 여백을 주고 있음
                 GameObject emptyObject = Instantiate(emptyPrefab, scrollContent);
                 createObject.Add(emptyObject);
             }
 
-            // for문이 전무 돌고, 제일 마지막에 엔딩 무엇에 도달했는지 표기
-            EndingTitleElement endingTitleElement = Instantiate(endingTitlePrefab, scrollContent).GetComponent<EndingTitleElement>();
+            // for문이 전부 돌고, 제일 마지막에 엔딩 무엇에 도달했는지 표기
+            SelectionEndingTitleElement endingTitleElement = Instantiate(endingTitlePrefab, scrollContent).GetComponent<SelectionEndingTitleElement>();
             endingTitleElement.SetEndingTitle(string.Format("{0}. {1}", endingType.text, endingTitle.text));
             createObject.Add(endingTitleElement.gameObject);
         }

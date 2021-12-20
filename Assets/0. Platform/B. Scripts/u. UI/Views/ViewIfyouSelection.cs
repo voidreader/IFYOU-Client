@@ -71,6 +71,10 @@ namespace PIERStory
             }
         }
 
+
+        /// <summary>
+        /// 드래그를 좌우로 일정 이상 하는 경우 다음 페이지, 혹은 이전 페이지로 scrollSnap 되도록 한다
+        /// </summary>
         void CheckOutPosition()
         {
             if (touchInPos.x - touchOutPos.x > 4.5f)
@@ -89,6 +93,7 @@ namespace PIERStory
             JsonData endingData = SystemManager.GetJsonNode(UserManager.main.currentStorySelectionHistoryJson, CommonConst.COL_ENDING);
 
             // 순서대로 넣고, 오브젝트를 역순으로 넣어주자
+            // 서버에서 최신순으로 보내주는 것이 아니라 1회차부터 순서대로 정렬되어 오고 있으며, key값이 메인으로 오고 있기 때문에 오브젝트를 역순으로 넣어주게 되었다
             int reverse = 0;
 
             // 3회까지 안했을 수도 있으니까 스크롤들을 비활성화 해준다
@@ -110,7 +115,6 @@ namespace PIERStory
                 // 몇번째 회차인지 설정
                 string roundText = string.Format("{0}회차", roundKey);
 
-                // 몇 회차인지 설정
                 if (reverse == 0)
                     formerTimesRound.text = roundText;
                 else if (reverse == 1)
@@ -123,17 +127,17 @@ namespace PIERStory
                 foreach(string titleKey in selectionData[roundKey].Keys)
                 {
                     // 에피소드 제목 설정
-                    EpisodeTitleElement titleElement = Instantiate(episodeTitlePrefab).GetComponent<EpisodeTitleElement>();
+                    SelectionEpisodeTitleElement titleElement = Instantiate(episodeTitlePrefab).GetComponent<SelectionEpisodeTitleElement>();
                     titleElement.SetEpisodeTitle(episodeNum, titleKey);
+                    episodeNum++;
 
                     SetObjectParent(reverse, titleElement.gameObject);
-
                     createObject.Add(titleElement.gameObject);
 
                     foreach(string prevScriptKey in selectionData[roundKey][titleKey].Keys)
                     {
                         // 선택지 전 대사 설정
-                        PrevScriptElement prevScript = Instantiate(prevScriptPrefab).GetComponent<PrevScriptElement>();
+                        SelectionPrevScriptElement prevScript = Instantiate(prevScriptPrefab).GetComponent<SelectionPrevScriptElement>();
                         prevScript.SetPrevScript(prevScriptKey);
                         SetObjectParent(reverse, prevScript.gameObject);
                         createObject.Add(prevScript.gameObject);
@@ -147,6 +151,7 @@ namespace PIERStory
                             SelectionScriptElement selectionScript = Instantiate(selectionScriptPrefab).GetComponent<SelectionScriptElement>();
                             string scriptData = SystemManager.GetJsonNodeString(selectionGroup[i], "selection_content");
 
+                            // 선택한 선택지인지?
                             if (SystemManager.GetJsonNodeBool(selectionGroup[i], "selected"))
                                 selectionScript.SetSelectionScript(selectBoxSprite, scriptData, selectTextColor);
                             else
@@ -170,12 +175,13 @@ namespace PIERStory
                 else
                     endingType = SystemManager.GetLocalizedText("5088");
 
-                EndingTitleElement endingTitleElement = Instantiate(endingTitlePrefab).GetComponent<EndingTitleElement>();
+                SelectionEndingTitleElement endingTitleElement = Instantiate(endingTitlePrefab).GetComponent<SelectionEndingTitleElement>();
                 endingTitleElement.SetEndingTitle(string.Format("{0}. {1}", endingType, SystemManager.GetJsonNodeString(endingData[roundKey][0], "ending_title")));
 
                 SetObjectParent(reverse, endingTitleElement.gameObject);
                 createObject.Add(endingTitleElement.gameObject);
                 
+                // 한 회차 셋팅을 끝냈으니 그 다음 회차 셋팅을 해주기 위해 값을 증가한다
                 reverse++;
             }
         }

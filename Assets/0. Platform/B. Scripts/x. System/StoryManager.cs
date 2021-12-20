@@ -472,6 +472,16 @@ namespace PIERStory
             OpenViewStoryDetail(); 
 
         }
+        
+        
+        /// <summary>
+        /// 선택된 프로젝트의 정규 에피소드 데이터 리프레시 
+        /// </summary>
+        public void UpdateRegularEpisodeData() {
+            for(int i=0; i<ListCurrentProjectEpisodes.Count;i++) {
+                ListCurrentProjectEpisodes[i].SetEpisodePlayState();
+            }    
+        }
 
 
         /// <summary>

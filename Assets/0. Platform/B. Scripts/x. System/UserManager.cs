@@ -83,7 +83,7 @@ namespace PIERStory
 
         [HideInInspector] public bool completeReadUserData = false;
         
-        public bool episodeRecordComplete = false;
+        
 
         public float prevIllustProgress = -1f;
 
@@ -1428,7 +1428,6 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("CallbackUpdateEpisodeRecord");
-                episodeRecordComplete = false;
                 return;
             }
             
@@ -1456,7 +1455,7 @@ namespace PIERStory
                 
             }
             
-            episodeRecordComplete = true;
+            
         }
 
         /// <summary>
@@ -1505,15 +1504,13 @@ namespace PIERStory
             SetNodeUserProjectCurrent(resultEpisodeReset[NODE_PROJECT_CURRENT]);  // projectCurrent
             SetNodeUserProjectSelectionProgress(resultEpisodeReset[NODE_SELECTION_PROGRESS]); // 선택지 기록 
 
-            // 다했으면 후속  처리 시작!
-            OnRequestEpisodeReset?.Invoke();
-            
+           
             
             // 알림 팝업 후 목록화면 갱신처리 
             SystemManager.ShowSimpleMessagePopUp("선택한 시점으로 이야기가 초기화 되었습니다.");
 
-            // Doozy Nody StoryDetail로 돌아가기 위한 이벤트 생성 
-            // Doozy.Engine.GameEventMessage.SendEvent("EventCloseEpisodeReset");
+            // * Doozy Nody StoryDetail로 돌아가기 위한 이벤트 생성 
+            // * ViewStoryDetail 에서 이 시그널을 Listener를 통해서 받는다. (Inspector)
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CLOSE_RESET, string.Empty);
             
 

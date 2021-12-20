@@ -25,15 +25,11 @@ namespace PIERStory {
         }
         
         void Start() {
-            
+            streamReceive.ConnectReceiver(receiverTarget);
         }
         
         void OnDisable() {
             streamReceive.DisconnectReceiver(receiverTarget);
-        }
-        
-        void OnEnable() {
-            streamReceive.ConnectReceiver(receiverTarget);
         }
         
         

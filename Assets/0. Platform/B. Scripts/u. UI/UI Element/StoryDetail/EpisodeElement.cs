@@ -249,6 +249,17 @@ namespace PIERStory {
             
             Debug.Log(">> OnClickElement");
             
+            // * 이전이나 블록 상태. 
+            if(episodeData.episodeState == EpisodeState.Prev || episodeData.episodeState == EpisodeState.Block) {
+                
+                Debug.Log("Call Reset");
+                
+                // Reset 호출 
+                Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_EPISODE_RESET, episodeData, string.Empty);
+                return;
+            }
+            
+            
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, episodeData, string.Empty);
         }
         

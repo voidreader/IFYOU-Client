@@ -372,7 +372,7 @@ namespace PIERStory
 
             RefreshUserIllustHistoryInspector();
             
-            RefreshUserFavorHistoryInspector();
+            //RefreshUserFavorHistoryInspector();
         }
         
         /// <summary>

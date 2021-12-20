@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
@@ -8,7 +9,7 @@ namespace PIERStory
 {
     public class ViewMission : CommonView
     {
-        
+        public static Action OnCompleteReward = null;
 
         public TextMeshProUGUI projectTitle;
         public TextMeshProUGUI missionProgressText;
@@ -27,9 +28,13 @@ namespace PIERStory
         const string IS_HIDDEN = "is_hidden";
         const string UNLOCK_STATE = "unlock_state";
 
-        Color32 getAllOpenColor = new Color32(51, 51, 51, 255);
-        Color32 getAllLockColor = new Color32(153, 153, 153, 255);
-        Color32 missionGreen = new Color32(69, 198, 80, 255);
+        public Color32 getAllOpenColor = new Color32(51, 51, 51, 255);
+        public Color32 getAllLockColor = new Color32(153, 153, 153, 255);
+        public Color32 missionGreen = new Color32(69, 198, 80, 255);
+        
+        private void Start() {
+            OnCompleteReward = OnStartView;
+        }
 
         public override void OnStartView()
         {
@@ -38,7 +43,7 @@ namespace PIERStory
             foreach (MissionElement me in missionElements)
                 me.gameObject.SetActive(false);
 
-            SetGetAllButton();
+            SetGetAllButtonState();
 
             #region mission setting
             int lockHiddenMissionCount = 0;     // 공개되지 않은 히든미션 count
@@ -103,7 +108,7 @@ namespace PIERStory
         /// <summary>
         /// 
         /// </summary>
-        public void SetGetAllButton()
+        public void SetGetAllButtonState()
         {
             
             int countOpen = 0;

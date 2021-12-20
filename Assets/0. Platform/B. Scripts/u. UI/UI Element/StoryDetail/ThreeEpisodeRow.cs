@@ -45,6 +45,10 @@ namespace PIERStory {
             minEpisodeIndex = rowIndex * 3;
             maxEpisodeIndex = minEpisodeIndex + 2;
             
+            if(maxEpisodeIndex >= __listEpisode.Count) {
+                maxEpisodeIndex = __listEpisode.Count - 1;
+            }
+            
             for(int i=minEpisodeIndex; i<= maxEpisodeIndex; i++) {
                 
                 ListRows[currentRowIndex].InitElement(this, __listEpisode[i], currentRowIndex);

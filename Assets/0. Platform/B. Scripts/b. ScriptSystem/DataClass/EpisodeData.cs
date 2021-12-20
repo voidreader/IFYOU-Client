@@ -55,6 +55,8 @@ namespace PIERStory {
         public string currencyPremuim =  string.Empty; // 프리미엄 화폐 
         public int priceOneTime = 0; // 1회 플레이 가격
         
+        public bool isUnlock = true; // 언락 여부 
+        
         /// <summary>
         /// 유효한 데이터인지? 
         /// </summary>
@@ -91,6 +93,8 @@ namespace PIERStory {
             endingOpen = SystemManager.GetJsonNodeBool(episodeJSON, "ending_open");
             endingType = SystemManager.GetJsonNodeString(episodeJSON, "ending_type");
             dependEpisode = SystemManager.GetJsonNodeString(episodeJSON, "depend_episode");
+            
+
             
             // 에피소드에 등장한는 갤러리 이미지
             episodeGalleryImageJSON = episodeJSON["galleryImage"];
@@ -134,6 +138,10 @@ namespace PIERStory {
                 episodeType = EpisodeType.Side;
                 combinedEpisodeTitle = "Special. " + episodeTitle;
                 break;
+            }
+            
+            if(episodeType == EpisodeType.Side) {
+                isUnlock = SystemManager.GetJsonNodeBool(episodeJSON, "is_open");
             }
             
                 

@@ -1479,9 +1479,23 @@ namespace PIERStory
         /// <returns></returns>
         public static string GetLocalizedText(string __id) {
             
-            // 데이터가 없거나, id가 없을때. value 값이 null이 왔을 떄
-            if(localizedTextJSON == null || !localizedTextJSON.ContainsKey(__id) || string.IsNullOrEmpty(__id))
+            
+            if(localizedTextJSON == null) {
+                // Debug.LogError("localizedTextJSON is null");
                 return string.Empty;
+            }
+            
+            if(string.IsNullOrEmpty(__id)) {
+                Debug.LogError("ID is null or empty");
+                return string.Empty;
+            }
+                
+            if(!localizedTextJSON.ContainsKey(__id)) {
+                Debug.LogError(string.Format("TEXT ID : [{0}] is missing", __id));
+                return string.Empty;
+            }
+            
+            
             
             return localizedTextJSON[__id][main.currentAppLanguageCode].ToString();
         }

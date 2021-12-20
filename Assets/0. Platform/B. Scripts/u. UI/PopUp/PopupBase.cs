@@ -18,6 +18,7 @@ namespace PIERStory {
         // 자동파괴까지 걸리는 시간
         public float autoDestroyTime = 0;  // 0인 경우 자동파괴 사용하지 않음 
         public bool isOverlayUse = false; // 오버레이 사용 여부 
+        public bool addQueue = false; // 팝업 큐 사용여부 
          
         
         
@@ -48,7 +49,6 @@ namespace PIERStory {
         public virtual void Show() {
             
             StartCoroutine(ShowEnumerator());
-            
             SetAutoDestroy();
         }
         

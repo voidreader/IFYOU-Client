@@ -443,6 +443,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 695784143491603422}
+  - component: {fileID: 8220870237377648057}
   m_Layer: 5
   m_Name: EpisodeCircleProgressor
   m_TagString: Untagged
@@ -475,6 +476,21 @@ RectTransform:
   m_AnchoredPosition: {x: -189, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8220870237377648057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 695784143491603423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b12f7abd90080f409ee5e0d6ee7f02d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  progressor: {fileID: 695784142373451373}
+  textPercent: {fileID: 695784143537542430}
+  currentValue: 0
 --- !u!1 &695784143537542428
 GameObject:
   m_ObjectHideFlags: 0

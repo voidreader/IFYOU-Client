@@ -13,5 +13,7 @@ namespace PIERStory {
         public const string IMAGE_KEY = "image_key";
         public const string IMAGE_URL = "image_url";
         
+        public const string POPUP_ILLUST_ACHIEVEMENT = "AchivementIllust";
+        
     }
 }

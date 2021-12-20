@@ -104,6 +104,12 @@ namespace PIERStory {
         
         }
         */
+        private void Update() {
+            if(Input.GetKeyDown(KeyCode.O)) {
+                PopupBase popup = PopupManager.main.GetPopup("AchivementIllust");
+                popup.Show();
+            }
+        }
 
         public void InitLobbyScene()
         {

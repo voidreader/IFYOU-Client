@@ -11,7 +11,7 @@ namespace PIERStory
     public enum EpisodeType { Chapter, Ending, Side }; // 에피소드 타입 
     // 에피소드 상태 enum
     public enum EpisodeState { None, Prev, Current, Future, Block };    // 에피소드 진행중에는 prev, current, future, block 에피소드가 엔딩에 들어온 경우 해당 엔딩 제외 전부 block처리
-    public enum PurchaseState { None, Permanent, OneTime, Rent, Free } // 에피소드 구매 상태  (구매이력 없음/영구구매/1회권/대여)
+    public enum PurchaseState { None, Permanent, OneTime, Rent, Free, AD } // 에피소드 구매 상태  (구매이력 없음/영구구매/1회권/대여/광고)
     
     public enum CurrencyType {
         Gem,

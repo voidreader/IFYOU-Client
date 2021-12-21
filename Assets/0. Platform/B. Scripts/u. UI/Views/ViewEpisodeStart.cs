@@ -14,6 +14,8 @@ namespace PIERStory {
         
         public static System.Action OnRefreshEpisodeStart = null;
         
+        [SerializeField] bool isEpisodeContinuePlay = false; // 에피소드 이어하기 상태? 
+        
         [SerializeField] ImageRequireDownload popupImage; // 이미지 
         [SerializeField] TextMeshProUGUI textEpisodeTitle;
         [SerializeField] TextMeshProUGUI textEpisodeSummary;
@@ -21,18 +23,19 @@ namespace PIERStory {
         
         [Space]
         [Header("== 버튼 ==")]
-        [SerializeField] GameObject btnPlay; // 플레이 
+        [SerializeField] GameObject btnPlay; // 플레이 (엔딩에서 진입하거나, 구매만 한 상태의 경우)
         [SerializeField] GameObject btnLock; // 잠금
         [SerializeField] GameObject btnConinue; // 이어서 플레이
-        [SerializeField] GameObject btnPremium; // 프리미엄
-        [SerializeField] GameObject btnOneTime; // 1회 플레이
-        [SerializeField] GameObject btnFreepass; // 프리패스
-        [SerializeField] Image iconOneTimePlayCurrency; // 일반 플레이 재화 아이콘 
+        [SerializeField] GameObject btnStarPlay; // 스타플레이
+        [SerializeField] GameObject btnAdPlay; // 무료 플레이
+        [SerializeField] GameObject btnPremiumPass; // 프리미엄 패스
+
         
-        [SerializeField] bool isOneTimeUsePossible = false; // 1회권 사용 가능 상태 (티켓이 있다)
-        [SerializeField] TextMeshProUGUI textOneTimePrice;   // 1회권 구매 가격
-        [SerializeField] TextMeshProUGUI textPremiumPrice;  // 프리미엄 구매 가격
-        [SerializeField] TextMeshProUGUI textBtnFree; // btnFree 텍스트
+        
+        [SerializeField] GameObject continueButtonIcon; // 이어서 플레이 버튼에 붙는 아이콘
+        [SerializeField] GameObject continueButtonAD; // 이어서 플레이 버튼에 붙는 광고사인
+        [SerializeField] TextMeshProUGUI textStarPlayPrice;  // 스타플레이 구매 가격
+        
         [SerializeField] TextMeshProUGUI textBtnFreepass; // 프리패스 버튼 텍스트
         
         [SerializeField] EpisodeData episodeData = null; 
@@ -138,18 +141,23 @@ namespace PIERStory {
         {
             btnPlay.gameObject.SetActive(false);
             btnLock.gameObject.SetActive(false);
-            btnOneTime.gameObject.SetActive(false);
-            btnPremium.gameObject.SetActive(false);
-            btnFreepass.gameObject.SetActive(false);
+            btnAdPlay.gameObject.SetActive(false);
+            btnStarPlay.gameObject.SetActive(false);
+            btnPremiumPass.gameObject.SetActive(false);
+            
+            // 이어서 플레이 버튼 
+            btnConinue.SetActive(false);
+            continueButtonAD.SetActive(false);
+            continueButtonIcon.SetActive(true); 
+            isEpisodeContinuePlay = false;
 
-            textPremiumPrice.text = episodeData.pricePremiumSale.ToString();
-            textOneTimePrice.text = episodeData.priceOneTime.ToString();
+            textStarPlayPrice.text = episodeData.priceStarPlaySale.ToString();
             
             // 버튼 텍스트 초기화 
-            textBtnFree.text = SystemManager.GetLocalizedText("5006"); 
+            // textBtnFree.text = SystemManager.GetLocalizedText("5006"); 
             textBtnFreepass.text = SystemManager.GetLocalizedText("5004");
 
-            isOneTimeUsePossible = false;
+            // isOneTimeUsePossible = false;
         }
         
         /// <summary>
@@ -159,64 +167,80 @@ namespace PIERStory {
             
             ResetButton();
             
-            // 엔딩 수집화면에서 진입하는 경우는 그냥 FREE
+            // 엔딩 수집화면에서 진입하는 경우는 플레이 버튼만 노출한다.
             if(LobbyManager.main != null && !UserManager.main.useRecord) {
                 btnPlay.gameObject.SetActive(true);
                 return;
             }
-            
-            
-            // 이어하기 가능한 경우는 버튼 텍스트를 교체 
-            if (LobbyManager.main != null && CheckResumePossible()) {
-                // 5005: 이어하기 
-                textBtnFree.text = SystemManager.GetLocalizedText("5005"); 
-                textBtnFreepass.text = SystemManager.GetLocalizedText("5005");
-            }
-            
-            // * 에피소드 플레이 상태가 future의 상태인 경우는 플레이 불가 (버튼 제거)
+           
+            // * 에피소드 플레이 상태가 future의 상태인 경우는 플레이 불가 => Lock 버튼 노출
             if (LobbyManager.main != null && episodeData.episodeState == EpisodeState.Future)
             {
                 textEpisodeSummary.text = SystemManager.GetLocalizedText("80072");
                 btnLock.SetActive(true);
-                // thumbnailLock.gameObject.SetActive(true);
-                
                 return;
             }
             
             // * current & next (플레이 가능한 상태)
             
+            // 이어하기가 가능한 경우와 아닌 경우를 분류한다. 
+            // 이어하기 처리 (로비씬에서만 가능하다.)
+            if (LobbyManager.main != null && CheckResumePossible()) {
+                isEpisodeContinuePlay = true;
+                // 5005: 프리미엄 패스에 이어하기 텍스트 처리 해놓기. 
+                textBtnFreepass.text = SystemManager.GetLocalizedText("5005");
+            }
+            
             // * 프리패스 유저 체크, 프리패스 유저이면 프리패스 버튼 하나만 활성화 
             if(UserManager.main.HasProjectFreepass()) {
-                btnFreepass.SetActive(true);
+                btnPremiumPass.SetActive(true);
                 return;
             }
+            
+            // 구매기록 체크... 구매기록이 있는 경우와 아닌 경우 
+            
             
             // * 프리패스 아님, 구매상태 체크해서 버튼 설정
-            // * 무료 작품인지 먼저 체크
-            if(episodeData.pricePremiumSale <= 0) {
-                btnPlay.SetActive(true);
-                return; 
-            } // 무료면 무료버튼만 나오고 끝!
-            
-            // 구매 기록 체크 
-            if((episodeData.purchaseState == PurchaseState.OneTime && episodeData.OneTimePlayable)
-                || episodeData.purchaseState == PurchaseState.Permanent) {
+            // * 이어하기와 아닌 경우에 대한 분리 
+            if(isEpisodeContinuePlay) {
                 
-                btnPlay.SetActive(true);        
-                return;
+                // 스타플레이 구매기록 있음 
+                if(episodeData.purchaseState == PurchaseState.Permanent) {
+                    btnConinue.SetActive(true);
+                    return;
+                }
+                
+                // 스타플레이 구매기록 없으면.. 
+                btnConinue.SetActive(true);
+                continueButtonIcon.SetActive(false);
+                continueButtonAD.SetActive(true); // 광고 사인 붙여주기 
+                
+                // 하단에 스타플레이 버튼 보여준다.
+                btnStarPlay.SetActive(true);
+                
+                
             }
+            else { // 이어서 플레이 아님. 
             
-            // 작품의 1회 플레이 티켓이 있는 경우 재화 아이콘과 가격 레이블 변경 
-            ChangeOnetimePlayCurrencyIcon(); 
-            
-            
-            // * 여기서부터 일반 미구매 유정 
-            if(episodeData.episodeType == EpisodeType.Chapter)  // 정규 챕터만 1회 플레이 가능 
-                btnOneTime.SetActive(true);
+                // 무료인지 아닌지에 대한 체크. 
+                if(episodeData.priceStarPlaySale <= 0) {
+                    // 스타플레이 가격이 0이면, 스타플레이 버튼만 노출하고 끝. 
+                    btnStarPlay.SetActive(true);
+                    return; 
+                } 
                 
-            btnPremium.SetActive(true);
+                // 유료 구매이력이 있는 경우. 
+                if(episodeData.purchaseState == PurchaseState.Permanent) {
+                    btnPlay.SetActive(true);
+                    return;
+                }
+                else {
+                    // * 구매 이력이 없음. 광고보기와 스타 플레이 버튼 노출
+                    btnAdPlay.SetActive(true);    
+                    btnStarPlay.SetActive(true);
+                }
             
-            // 종료 
+            }
             
         } // ? end of SetButtonState
         
@@ -234,24 +258,7 @@ namespace PIERStory {
             return true;
         }
         
-        /// <summary>
-        /// 1회 플레이 재화 아이콘 수정
-        /// </summary>
-        void ChangeOnetimePlayCurrencyIcon()
-        {
-            if (UserManager.main.GetOneTimeProjectTicket(StoryManager.main.CurrentProjectID) > 0)
-            {
-                textOneTimePrice.text = "1";
-                iconOneTimePlayCurrency.sprite = LobbyManager.main.spriteOneTimeIcon; // 티켓 이미지로 변경한다. 
-                iconOneTimePlayCurrency.SetNativeSize();
 
-                isOneTimeUsePossible = true;
-            }
-            else
-            {
-                iconOneTimePlayCurrency.sprite = LobbyManager.main.spriteGemIcon; // 1회권 없으면 보석 처리 
-            }
-        }
         
         
         #region 플레이 버튼 클릭 이벤트
@@ -269,20 +276,20 @@ namespace PIERStory {
             // * 구매기록이 없으면, 구매처리를 한다. (0원)
             if(!episodeData.CheckExistsPurchaseData()) {
                 UserManager.OnRequestEpisodePurchase = PurchasePostProcess;
-                NetworkLoader.main.PurchaseEpisode(episodeData.episodeID, PurchaseState.Permanent, episodeData.currencyPremuim, "0");
+                NetworkLoader.main.PurchaseEpisode(episodeData.episodeID, PurchaseState.Permanent, episodeData.currencyStarPlay, "0");
             }
             else {
                 PurchasePostProcess(true);
             }
-            
         }
         
         /// <summary>
         /// 1회권 플레이 
         /// </summary>
-        public void OnClickOneTimePlay() {
+        void OnClickOneTimePlay() {
             
             // 1회권 사용이 강제되는 상태 
+            /*
             if(isOneTimeUsePossible) {
                 string oneTimeCurrency = StoryManager.main.GetProjectCurrencyCode(CurrencyType.OneTime);
                 
@@ -312,12 +319,12 @@ namespace PIERStory {
            
             // 에피소드 구매 고고 
             PurchaseEpisode(PurchaseState.OneTime, episodeData.currencyOneTime, episodeData.priceOneTime);            
-            
+            */
         } // ? 1회 플레이 종료
         
         
         /// <summary>
-        /// 프리미엄, 프리패스 플레이 
+        /// 스타플레이, 프리미엄 패스 플레이 
         /// </summary>
         public void OnClickPremiumPlay() {
             
@@ -325,13 +332,13 @@ namespace PIERStory {
             if(!UserManager.main.HasProjectFreepass())
             {
                 // 돈없을때 처리 
-                if (episodeData.currencyPremuim == "coin" && !UserManager.main.CheckCoinProperty(episodeData.pricePremiumSale))
+                if (episodeData.currencyStarPlay == "coin" && !UserManager.main.CheckCoinProperty(episodeData.priceStarPlaySale))
                 {
                     SystemManager.ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("80013"));
                     return;
                 }
 
-                if (episodeData.currencyPremuim == "gem" && !UserManager.main.CheckGemProperty(episodeData.pricePremiumSale))
+                if (episodeData.currencyStarPlay == "gem" && !UserManager.main.CheckGemProperty(episodeData.priceStarPlaySale))
                 {
                     SystemManager.ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("80014"));
                     return;
@@ -339,10 +346,13 @@ namespace PIERStory {
             }
 
             // 진행             
-            PurchaseEpisode(PurchaseState.Permanent, episodeData.currencyPremuim, episodeData.pricePremiumSale);
+            PurchaseEpisode(PurchaseState.Permanent, episodeData.currencyStarPlay, episodeData.priceStarPlaySale);
         }
         
         
+        /// <summary>
+        /// 잠금 버튼 
+        /// </summary>
         public void OnClickLock() {
             if(!UserManager.main.CheckAdminUser())
                 return;
@@ -351,6 +361,21 @@ namespace PIERStory {
             SystemManager.main.givenEpisodeData = episodeData;
             SystemManager.ShowNetworkLoading();
             StartGame();
+        }
+        
+        /// <summary>
+        /// 이어하기 버튼 클릭
+        /// </summary>
+        public void OnClickContinue() {
+            PurchasePostProcess(true);
+        }
+        
+        
+        /// <summary>
+        /// 광고보고 무료로 하기 플레이 버튼 클릭
+        /// </summary>
+        public void OnClickAdPlay() {
+            PurchaseEpisode(PurchaseState.AD, "none", 0);
         }
          
         
@@ -469,7 +494,7 @@ namespace PIERStory {
             long lastPlayScriptNO = 0;
 
             // 플레이 지점 저장 정보를 가져오자. 
-            if (CheckResumePossible())
+            if (isEpisodeContinuePlay)
             { // 이어하기 가능한 상태.
                 lastPlaySceneID = projectCurrent["scene_id"].ToString();
                 lastPlayScriptNO = long.Parse(projectCurrent["script_no"].ToString());

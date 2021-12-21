@@ -48,11 +48,11 @@ namespace PIERStory {
         
         public bool OneTimePlayable = false; // 1회 플레이 가능여부  
         
-        public int pricePremiumSale = 0; // 프리미엄 세일 가격
-        public int pricePremium = 0; // 프리미엄 가격
+        public int priceStarPlaySale = 0; // 스타플레이 세일 가격
+        public int priceStarPlay = 0; // 스타플레이 가격
         
         public string currencyOneTime = string.Empty; // 1회 플레이 화폐
-        public string currencyPremuim =  string.Empty; // 프리미엄 화폐 
+        public string currencyStarPlay =  string.Empty; // 스타플레이 화폐 
         public int priceOneTime = 0; // 1회 플레이 가격
         
         public bool isUnlock = true; // 언락 여부 
@@ -108,9 +108,9 @@ namespace PIERStory {
             
             
             // * 가격
-            pricePremiumSale = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.EPISODE_SALE_PRICE));
-            pricePremium = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.EPISODE_PRICE));
-            currencyPremuim = SystemManager.GetJsonNodeString(episodeJSON, "currency");
+            priceStarPlaySale = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.EPISODE_SALE_PRICE));
+            priceStarPlay = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.EPISODE_PRICE));
+            currencyStarPlay = SystemManager.GetJsonNodeString(episodeJSON, "currency");
             currencyOneTime = SystemManager.GetJsonNodeString(episodeJSON, "one_currency");
             priceOneTime = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, "one_price"));
             
@@ -220,7 +220,7 @@ namespace PIERStory {
                     purchaseState = PurchaseState.Permanent; // 영구적인 구매 상태 
 
                     // 구매 했어도 가격이 원래 무료면 FREE 처리
-                    if(pricePremiumSale < 1)
+                    if(priceStarPlaySale < 1)
                         purchaseState = PurchaseState.Free;
                 }
                 else if (purchaseData["purchase_type"].ToString() == "OneTime"){ // OneTime
@@ -230,11 +230,14 @@ namespace PIERStory {
                 else if (purchaseData["purchase_type"].ToString() == "Rent"){ // 
                     purchaseState = PurchaseState.Rent;
                 }
+                else if (purchaseData["purchase_type"].ToString() == "AD"){ // 
+                    purchaseState = PurchaseState.AD;
+                }
             }
             else
             {
                 // 구매 내역이 없는 경우에 대한 처리 
-                if(pricePremiumSale < 1)
+                if(priceStarPlaySale < 1)
                     purchaseState = PurchaseState.Free; // 무료!
                 
             }

@@ -49,6 +49,7 @@ namespace PIERStory
                 {
                     // 유저의 사용 언어 코드를 변경해주고
                     ES3.Save<string>(SystemConst.KEY_LANG, le.elementLang);
+                    SystemManager.main.currentAppLanguageCode = le.elementLang;
                     break;
                 }
             }

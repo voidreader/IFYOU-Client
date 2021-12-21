@@ -113,6 +113,14 @@ namespace PIERStory
         {
             base.OnStartView();
 
+            // 에피소드가 완료되었으니 모든 사운드를 멈춘다
+            foreach(GameSoundCtrl sc in GameManager.main.SoundGroup)
+            {
+                if (sc.GetIsPlaying)
+                    sc.PauseAudioClip();
+            }
+
+
             // 사용자가 현재 화에서 선택한 선택지 셋팅
             JsonData selectionData = SystemManager.GetJsonNode(UserManager.main.currentStorySelectionHistoryJson, GameConst.TEMPLATE_SELECTION);
 
@@ -165,6 +173,9 @@ namespace PIERStory
 
         }
 
+        /// <summary>
+        /// 현재 에피소드 정보 기입
+        /// </summary>
         void SetCurrentEpisodeInfo()
         {
             episodeImage.InitImage();

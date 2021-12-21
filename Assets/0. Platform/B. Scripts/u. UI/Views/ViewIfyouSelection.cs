@@ -3,6 +3,7 @@ using UnityEngine;
 
 using TMPro;
 using LitJson;
+using Doozy.Runtime.Signals;
 using DanielLochner.Assets.SimpleScrollSnap;
 
 namespace PIERStory
@@ -15,6 +16,7 @@ namespace PIERStory
         public TextMeshProUGUI prevRound;
         public TextMeshProUGUI formerTimesRound;
 
+        public TextMeshProUGUI nonePlayText;
         public GameObject prevRoundScroll;
         public GameObject formerTimesRoundScroll;
 
@@ -87,6 +89,11 @@ namespace PIERStory
         {
             base.OnStartView();
 
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_VIEW_NAME, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
+
             // 선택지 데이터
             JsonData selectionData = SystemManager.GetJsonNode(UserManager.main.currentStorySelectionHistoryJson, GameConst.TEMPLATE_SELECTION);
             // 선택에 의한 엔딩 데이터
@@ -97,23 +104,34 @@ namespace PIERStory
             int reverse = 0;
 
             // 3회까지 안했을 수도 있으니까 스크롤들을 비활성화 해준다
-            if(selectionData.Count <3)
+            if (selectionData.Count < 3)
             {
                 formerTimesRoundScroll.SetActive(false);
                 reverse = 1;
 
                 // 이번이 첫 플레이면 이전회차도 없다
-                if(selectionData.Count < 2)
+                if (selectionData.Count < 2)
                 {
                     prevRoundScroll.SetActive(false);
                     reverse = 2;
                 }
             }
 
+            scrollSnap.Setup();
+
+            if(selectionData.Count == 0)
+            {
+                currentRound.text = "1회차";
+                nonePlayText.gameObject.SetActive(true);
+                return;
+            }
+
+
             foreach(string roundKey in selectionData.Keys)
             {
                 // 몇번째 회차인지 설정
                 string roundText = string.Format("{0}회차", roundKey);
+                nonePlayText.gameObject.SetActive(false);
 
                 if (reverse == 0)
                     formerTimesRound.text = roundText;

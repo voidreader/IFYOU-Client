@@ -21,9 +21,7 @@ namespace PIERStory
         public UIToggle starToggle;
         public UIToggle coinToggle;
 
-
-        [Space(20)]
-        [Header("날짜")]
+        [Space(20)][Header("날짜")]
         public Image _7dayButton;
         public Image _30dayButton;
         public Image _90dayButton;
@@ -41,14 +39,14 @@ namespace PIERStory
         CoinStarHistoryElement historyElement;
         List<CoinStarHistoryElement> historyElements = new List<CoinStarHistoryElement>();
 
-        [Space(20)]
-        [Header("Sprite resource")]
+        [Space(20)][Header("Sprite resource")]
         public Sprite toggleOnSprite;
         public Sprite toggleOffSprite;
+        public Sprite dayToggleOnSprite;
+        public Sprite dayToggleOffSprite;
 
         Color toggleOnColor = new Color32(64, 64, 64, 255);
         Color toggleOffColor = new Color32(153, 153, 153, 255);
-        Color toggleOnDayColor = new Color32(243, 204, 204, 255);
 
         const string FUNC_GET_USER_PROPERTY_HISTORY = "getUserPropertyHistory";
         const string PROPERTY_GEM = "gem";
@@ -111,11 +109,11 @@ namespace PIERStory
         /// </summary>
         public void Enable7DayHistory()
         {
-            _7dayButton.color = toggleOnDayColor;
+            _7dayButton.sprite = dayToggleOnSprite;
             _7dayText.color = toggleOnColor;
-            _30dayButton.color = Color.white;
+            _30dayButton.sprite = dayToggleOffSprite;
             _30dayText.color = toggleOffColor;
-            _90dayButton.color = Color.white;
+            _90dayButton.sprite = dayToggleOffSprite;
             _90dayText.color = toggleOffColor;
 
             if (starToggle.isOn)
@@ -131,11 +129,11 @@ namespace PIERStory
         /// </summary>
         public void Enable30DayHistory()
         {
-            _7dayButton.color = Color.white;
+            _7dayButton.sprite = dayToggleOffSprite;
             _7dayText.color = toggleOffColor;
-            _30dayButton.color = toggleOnDayColor;
+            _30dayButton.sprite = dayToggleOnSprite;
             _30dayText.color = toggleOnColor;
-            _90dayButton.color = Color.white;
+            _90dayButton.sprite = dayToggleOffSprite;
             _90dayText.color = toggleOffColor;
 
             if (starToggle.isOn)
@@ -150,11 +148,11 @@ namespace PIERStory
         /// </summary>
         public void Enable90DayHistory()
         {
-            _7dayButton.color = Color.white;
+            _7dayButton.sprite = dayToggleOffSprite;
             _7dayText.color = toggleOffColor;
-            _30dayButton.color = Color.white;
+            _30dayButton.sprite = dayToggleOffSprite;
             _30dayText.color = toggleOffColor;
-            _90dayButton.color = toggleOnDayColor;
+            _90dayButton.sprite = dayToggleOnSprite;
             _90dayText.color = toggleOnColor;
 
             if (starToggle.isOn)

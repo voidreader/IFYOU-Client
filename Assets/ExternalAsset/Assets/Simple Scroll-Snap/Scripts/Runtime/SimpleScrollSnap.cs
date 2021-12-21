@@ -74,7 +74,18 @@ namespace DanielLochner.Assets.SimpleScrollSnap
 
         public int NumberOfPanels
         {
-            get { return Content.childCount; }
+            get {
+
+                int count = 0;
+
+                for(int i=0;i<Content.childCount;i++)
+                {
+                    if (Content.GetChild(i).gameObject.activeSelf)
+                        count++;
+                }
+                
+                return count; 
+            }
         }
         #endregion
 
@@ -225,7 +236,7 @@ namespace DanielLochner.Assets.SimpleScrollSnap
 
             return valid;
         }
-        private void Setup()
+        public void Setup()
         {
             if (NumberOfPanels == 0) return;
 

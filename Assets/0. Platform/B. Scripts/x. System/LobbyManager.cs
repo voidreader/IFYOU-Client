@@ -107,6 +107,10 @@ namespace PIERStory {
                 popup.Data.SetLabelsTexts("가짜이름");
                 PopupManager.main.ShowPopup(popup, true, false);
             }
+            
+            if(Input.GetKeyDown(KeyCode.P)) {
+                AdManager.main.ShowRewardAd();
+            }
         }
 
         public void InitLobbyScene()

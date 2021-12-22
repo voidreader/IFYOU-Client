@@ -59,6 +59,7 @@ namespace Doozy.Runtime.UIManager
             Category,
             CoinStarHistory,
             DataManager,
+            DecoMode,
             Ending,
             EndingSelection,
             Gallery,
@@ -78,7 +79,8 @@ namespace Doozy.Runtime.UIManager
             Shop,
             SoundDetail,
             StoryDetail,
-            Title
+            Title,
+            UserPlayHistory
         }
 
         public enum Popup

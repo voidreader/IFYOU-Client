@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Services.Mediation;
 using Unity.Services.Core;
+using LitJson;
 
 
 
@@ -18,8 +19,32 @@ namespace PIERStory {
         
         [SerializeField] int gamePlayRowCount = 0;
         
+        JsonData serverData = null;
+        
         IRewardedAd rewardedAd;
         IInterstitialAd interstitialAd;
+        
+        #region 서버 광고 기준정보
+        
+        public bool useLoadingAD = false; // 에피소드 로딩 광고 사용여부
+        int shareLoadingInterstitial = 0; // 에피소드 로딩 전면광고 점유율
+        int shareLoadingRewarded = 0; // 에피소드 로딩 동영상 광고 점유율
+        
+        public bool useBannerAD = false; // 띠배너 광고 사용여부
+        public bool usePlayAD = false; // 플레이 도중 광고 사용여부
+        int sharePlayInterstitial = 0; // 게임플레이 전면광고 점유율
+        int sharePlayRewarded = 0; // 게임플레이 동영상 광고 점유율
+        int ratePlayAD = 0; // 플레이 광고 재생 확률
+        int lineOfPlayAD = 0; // 플레이 광고 실행에 필요한 스크립트 라인 수
+        
+        public bool useSelectionAD = false; // 선택지 광고 사용여부
+        int shareSelectionInterstitial = 0; // 선택지 전면광고 점유율
+        int shareSelectionRewarded = 0; // 선택지 동영상 광고 점유율 
+        public bool useDoubleRewardAD = false; // 광고보고 2배 받기 사용여부 
+        int shareDoubleInterstitial = 0; // 2배 보상 전면광고 점유율
+        int shareDoubleRewarded = 0; // 2배 보상 동영상 광고 점유율 
+        
+        #endregion
         
         private void Awake() {
             if(main != null) {
@@ -39,6 +64,10 @@ namespace PIERStory {
             
         }
         
+        /// <summary>
+        /// 유니티 메디에이션 초기화 
+        /// </summary>
+        /// <returns></returns>
         async void InitUnityMediation() {
             // Initialize package to access API
             await UnityServices.InitializeAsync();
@@ -57,6 +86,36 @@ namespace PIERStory {
 
             CreateRewardAd();
             CreateInterstitial();
+        }
+        
+        /// <summary>
+        /// 서버 기준정보 세팅하기
+        /// </summary>
+        /// <param name="__j"></param>
+        public void SetServerAdInfo(JsonData __j) {
+            serverData = __j;   
+            
+            useLoadingAD = SystemManager.GetJsonNodeBool(serverData, "loading_is_active");
+            useBannerAD = SystemManager.GetJsonNodeBool(serverData, "banner_is_active");
+            usePlayAD = SystemManager.GetJsonNodeBool(serverData, "play_is_active");
+            useSelectionAD = SystemManager.GetJsonNodeBool(serverData, "selection_is_active");
+            useDoubleRewardAD = SystemManager.GetJsonNodeBool(serverData, "reward_is_active");
+            
+            shareLoadingInterstitial = SystemManager.GetJsonNodeInt(serverData, "loading_interstitial");
+            shareLoadingRewarded = SystemManager.GetJsonNodeInt(serverData, "loading_rewarded");
+            
+            sharePlayInterstitial = SystemManager.GetJsonNodeInt(serverData, "play_interstitial");
+            sharePlayRewarded = SystemManager.GetJsonNodeInt(serverData, "play_rewarded");
+            lineOfPlayAD = SystemManager.GetJsonNodeInt(serverData, "play_line");
+            ratePlayAD = SystemManager.GetJsonNodeInt(serverData, "play_percent");
+            
+            
+            shareSelectionInterstitial = SystemManager.GetJsonNodeInt(serverData, "selection_interstitial");
+            shareSelectionRewarded = SystemManager.GetJsonNodeInt(serverData, "selection_rewarded");
+            
+            shareDoubleInterstitial = SystemManager.GetJsonNodeInt(serverData, "reward_interstitial");
+            shareDoubleRewarded = SystemManager.GetJsonNodeInt(serverData, "reward_rewarded");
+            
         }
         
         

@@ -476,7 +476,7 @@ namespace PIERStory
             isServerInfoReceived = false; 
             
             JsonData reqData  = new JsonData();
-            reqData["func"] = "getServerInfo";
+            reqData["func"] = "getServerMasterInfo";
             
             NetworkLoader.main.SendPost(OnRequestGameServerInfo, reqData, false);
         }
@@ -492,18 +492,23 @@ namespace PIERStory
             
             // 버전 비교를 시작한다.
             JsonData result = JsonMapper.ToObject(response.DataAsText);
+            
+            JsonData masterInfo = result["master"]; // 마스터 정보 
+            JsonData adInfo = result["ad"]; // 광고 기준정보 
             int serverlocalVer = int.Parse(result["local_ver"].ToString()); // 서버 로컬라이징 텍스트 버전
+            
+            AdManager.main.SetServerAdInfo(adInfo); // 광고 기준정보 세팅 
             
             
             // 코인 응모권 시스템 관련 (서버에서 받아온다.)
-            isCoinPrizeUse = GetJsonNodeBool(result, "coin_url_use");
-            coinPrizeURL = GetJsonNodeString(result, "coin_url"); // URL
+            isCoinPrizeUse = GetJsonNodeBool(masterInfo, "coin_url_use");
+            coinPrizeURL = GetJsonNodeString(masterInfo, "coin_url"); // URL
             
             // 없는 리소스 허용 여부
-            allowMissingResource = GetJsonNodeBool(result, "allow_missing_resource");
+            allowMissingResource = GetJsonNodeBool(masterInfo, "allow_missing_resource");
 
             // 일일 최대 무료충전 횟수 
-            maxAdCharge = int.Parse(GetJsonNodeString(result, "max_ad_charge"));
+            maxAdCharge = int.Parse(GetJsonNodeString(masterInfo, "max_ad_charge"));
 
             // 디바이스 정보 불러다놓고, 
             localVer = GetDeviceLocalVer();

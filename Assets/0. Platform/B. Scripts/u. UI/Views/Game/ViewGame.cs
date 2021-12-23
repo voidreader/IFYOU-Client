@@ -489,6 +489,10 @@ namespace PIERStory
                 messenger.SetActive(false);
 
             HideSelection();
+            
+            // * 광고처리 추가 
+            AdManager.main.PlaySelectionAD();
+            
         }
 
 

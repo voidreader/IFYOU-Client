@@ -218,12 +218,6 @@ namespace PIERStory {
                 if(purchaseData["purchase_type"].ToString() == "Permanent")
                 {
                     purchaseState = PurchaseState.Permanent; // 영구적인 구매 상태 
-
-                    // 구매 했어도 가격이 원래 무료면 FREE 처리
-                    /*
-                    if(priceStarPlaySale < 1)
-                        purchaseState = PurchaseState.Free;
-                    */
                 }
                 else if (purchaseData["purchase_type"].ToString() == "OneTime"){ // OneTime
                     purchaseState = PurchaseState.OneTime;
@@ -241,7 +235,8 @@ namespace PIERStory {
                 // 구매 내역이 없는 경우에 대한 처리 
                 if(priceStarPlaySale < 1)
                     purchaseState = PurchaseState.Free; // 무료!
-                
+                else 
+                    purchaseState = PurchaseState.None;
             }
         } // ? SetPurchaseState
         

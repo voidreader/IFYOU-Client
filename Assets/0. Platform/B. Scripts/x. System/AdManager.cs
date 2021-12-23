@@ -32,10 +32,10 @@ namespace PIERStory {
         
         public bool useBannerAD = false; // 띠배너 광고 사용여부
         public bool usePlayAD = false; // 플레이 도중 광고 사용여부
-        int sharePlayInterstitial = 0; // 게임플레이 전면광고 점유율
-        int sharePlayRewarded = 0; // 게임플레이 동영상 광고 점유율
-        int ratePlayAD = 0; // 플레이 광고 재생 확률
-        int lineOfPlayAD = 0; // 플레이 광고 실행에 필요한 스크립트 라인 수
+        [SerializeField] int sharePlayInterstitial = 0; // 게임플레이 전면광고 점유율
+        [SerializeField] int sharePlayRewarded = 0; // 게임플레이 동영상 광고 점유율
+        [SerializeField] int ratePlayAD = 0; // 플레이 광고 재생 확률
+        [SerializeField] int lineOfPlayAD = 0; // 플레이 광고 실행에 필요한 스크립트 라인 수
         
         public bool useSelectionAD = false; // 선택지 광고 사용여부
         int shareSelectionInterstitial = 0; // 선택지 전면광고 점유율
@@ -118,8 +118,64 @@ namespace PIERStory {
             
         }
         
+        #region 선택지 선택 후 광고 처리
         
-        public void InitGameRowCount() {
+        /// <summary>
+        /// 선택지 선택 후 광고
+        /// </summary>
+        public void PlaySelectionAD() {
+            if(!useSelectionAD) 
+                return;
+                
+                
+            ShowSelectionAD();
+        }
+        
+        
+        /// <summary>
+        /// 선택지 선택 후 광고 보여주기 
+        /// </summary>
+        public void ShowSelectionAD() {
+            if(UnityEngine.Random.Range(0, 100) < shareSelectionInterstitial)
+                ShowInterstitial();
+            else 
+                ShowRewardAd();
+                
+            InitGamePlayRowCount(); // 선택지 선택하면 플레이 카운트 초기화
+        }
+        
+        #endregion
+        
+        #region 에피소드 로딩 광고 처리 
+        
+        /// <summary>
+        /// 로딩 광고 
+        /// </summary>
+        public void PlayLoadingAD() {
+            if(!useLoadingAD)
+                return;
+                
+            ShowLoadingAD();
+        }
+        
+        /// <summary>
+        /// 플레이 AD 재생. 
+        /// </summary>
+        public void ShowLoadingAD() {
+            
+            // 여기서도 점유율에 따라서, 처리 
+            if(UnityEngine.Random.Range(0, 100) < shareLoadingInterstitial)
+                ShowInterstitial();
+            else 
+                ShowRewardAd();
+        }        
+        #endregion
+        
+                
+        /// <summary>
+        /// 플레이 Row 카운트 초기화
+        /// </summary>
+        public void InitGamePlayRowCount() {
             gamePlayRowCount = 0;
         }
         
@@ -127,17 +183,30 @@ namespace PIERStory {
         /// 스크립트 Row 마다 추가
         /// </summary>
         public void AddGameRowCount() {
+            
+            // Play AD 사용하지 않으면 끝!
+            if(!usePlayAD)
+                return;
+            
             gamePlayRowCount++;
             
-            if(gamePlayRowCount >= 60) {
+            // 정해진 라인까지 그냥 증가.
+            if(gamePlayRowCount >= lineOfPlayAD) {
                 gamePlayRowCount = 0;
-                ShowMiddleAd();
+                
+                // 확률처리. 
+                if(UnityEngine.Random.Range(0,100) < ratePlayAD) 
+                    ShowPlayAD();
             }
         }
         
-        public void ShowMiddleAd() {
-            int dice = UnityEngine.Random.Range(0, 100);
-            if(dice < 20)
+        /// <summary>
+        /// 플레이 AD 재생. 
+        /// </summary>
+        public void ShowPlayAD() {
+            
+            // 여기서도 점유율에 따라서, 처리 
+            if(UnityEngine.Random.Range(0, 100) < sharePlayInterstitial)
                 ShowInterstitial();
             else 
                 ShowRewardAd();
@@ -153,7 +222,10 @@ namespace PIERStory {
         public void ShowInterstitial() {
             // Ensure the ad has loaded, then show it.
             if (interstitialAd.AdState == AdState.Loaded) {
-            interstitialAd.Show();
+                interstitialAd.Show();
+            }
+            else {
+                
             }
         }     
         

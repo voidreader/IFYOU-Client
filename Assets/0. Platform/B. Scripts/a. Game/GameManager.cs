@@ -492,7 +492,7 @@ namespace PIERStory
             }
 
             Debug.Log("<color=yellow> RoutineEpisodePlay </color>");
-            AdManager.main.InitGameRowCount(); // 광고 Row 초기화 
+            AdManager.main.InitGamePlayRowCount(); // 광고 Row 초기화 
 
             // 첫 실행히 page가 생성되어 있지 않다면 기다려준다.
             while (currentPage == null)
@@ -600,7 +600,9 @@ namespace PIERStory
 
                 currentRow = currentPage.GetNextRow(); // 새로운 행 받아오기
                 
-                AdManager.main.AddGameRowCount(); // 광고 처리 추가
+                // 광고 처리 추가 (SKIP 아닐때)
+                if(!useSkip)
+                    AdManager.main.AddGameRowCount(); 
 
             }
 

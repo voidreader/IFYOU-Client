@@ -186,6 +186,7 @@ namespace PIERStory {
             // 이어하기가 가능한 경우와 아닌 경우를 분류한다. 
             // 이어하기 처리 (로비씬에서만 가능하다.)
             if (LobbyManager.main != null && CheckResumePossible()) {
+                Debug.Log("continue play possible");
                 isEpisodeContinuePlay = true;
                 // 5005: 프리미엄 패스에 이어하기 텍스트 처리 해놓기. 
                 textBtnFreepass.text = SystemManager.GetLocalizedText("5005");
@@ -193,6 +194,7 @@ namespace PIERStory {
             
             // * 프리패스 유저 체크, 프리패스 유저이면 프리패스 버튼 하나만 활성화 
             if(UserManager.main.HasProjectFreepass()) {
+                Debug.Log("Premium Pass USER!!!");
                 btnPremiumPass.SetActive(true);
                 return;
             }

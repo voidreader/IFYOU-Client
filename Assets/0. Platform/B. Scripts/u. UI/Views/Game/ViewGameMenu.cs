@@ -79,6 +79,14 @@ namespace PIERStory
         /// </summary>
         public void SkipScene()
         {
+            // AD 무료플레이에서는 스킵 할 수 없도록 한다.
+            if(GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD) {
+                SystemManager.ShowAlert("무료 플레이에서는 스킵을 사용할 수 없습니다.");
+                return;
+            }
+            
+            
+            
             // 스킵이 가능하지 않으면 아무것도 실행하지 않는다.
             if (!GameManager.main.skipable)
                 return;

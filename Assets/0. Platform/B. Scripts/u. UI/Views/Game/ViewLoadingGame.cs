@@ -62,6 +62,9 @@ namespace PIERStory
                 textInfo.text = SystemManager.GetJsonNodeString(GameManager.main.loadingDetailJson[loadingTextIndex], KEY_LOADING_TEXT);
             }
             
+            // 로딩 광고 플레이 처리
+            AdManager.main.ShowLoadingAD();
+            
             while(loadingBar.fillAmount < 1) {
                 yield return new WaitForSeconds(0.05f);
                 loadingBar.fillAmount = GameManager.main.GetPagePrepValue();

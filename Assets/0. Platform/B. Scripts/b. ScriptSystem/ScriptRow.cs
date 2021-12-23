@@ -130,7 +130,7 @@ namespace PIERStory
             get
             {
                 // 배경, 일러스트, 이미지 only
-                if (template.Equals(GameConst.TEMPLATE_BACKGROUND) || template.Equals(GameConst.TEMPLATE_ILLUST) || template.Equals(GameConst.TEMPLATE_IMAGE) || template.Equals(GameConst.TEMPLATE_LIVE_OBJECT))
+                if (template.Equals(GameConst.TEMPLATE_BACKGROUND) || template.Equals(GameConst.TEMPLATE_ILLUST) || template.Equals(GameConst.TEMPLATE_IMAGE) || template.Equals(GameConst.TEMPLATE_LIVE_OBJECT) || template.Equals(GameConst.TEMPLATE_LIVE_ILLUST))
                     return true;
 
                 return false;
@@ -340,7 +340,8 @@ namespace PIERStory
                     break;
 
                 case GameConst.TEMPLATE_ILLUST:
-                    rowAction = new RowActionIllust(this);
+                case GameConst.TEMPLATE_LIVE_ILLUST:
+                    rowAction = new RowActionIllust(this, template);
                     break;
 
                 case GameConst.TEMPLATE_IMAGE:

@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+using DG.Tweening;
 using TMPro;
 
 namespace PIERStory
@@ -9,6 +10,11 @@ namespace PIERStory
     public class ViewLoadingGame :CommonView, IPointerClickHandler
     {
         public ImageRequireDownload loadingImage;
+        
+        
+        public Image loadingBar;
+        public Image fadeImage;
+        public TextMeshProUGUI textPercentage;
 
         public TextMeshProUGUI textTitle;
         public TextMeshProUGUI textInfo;
@@ -20,33 +26,50 @@ namespace PIERStory
         public override void OnStartView()
         {
             base.OnStartView();
+            
+            fadeImage.color = new Color(0, 0, 0, 1);
+            fadeImage.gameObject.SetActive(true);
+
+            loadingImage.OnDownloadImage = CallbackDownloadLoadingImage;
 
             textTitle.text = GameManager.main.currentEpisodeData.episodeTitle;
+            loadingBar.fillAmount = 0;
+            
             StartCoroutine(RoutineGameLoading());
         }
 
         void CallbackDownloadLoadingImage()
         {
-
+            fadeImage.DOFade(0f, 0.4f).OnComplete(() => fadeImage.gameObject.SetActive(false));
         }
 
         IEnumerator RoutineGameLoading()
         {
             // 게임 매니저에서 에피소드 스크립트 정보 가져올 때까지 대기
             yield return new WaitUntil(() => GameManager.main.isScriptFetch);
+            Debug.Log("<color=cyan>Script Fetched</color>");
 
-            if (GameManager.main.loadingJson.Count > 0)
+            if (GameManager.main.loadingJson.Count > 0) {
                 loadingImage.SetDownloadURL(SystemManager.GetJsonNodeString(GameManager.main.loadingJson[0], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(GameManager.main.loadingJson[0], CommonConst.COL_IMAGE_KEY));
-            else
+            }
+            else {
                 loadingImage.SetDownloadURL(string.Empty, string.Empty);
+            }
 
             if (GameManager.main.loadingDetailJson.Count > 0)
             {
                 loadingTextIndex = 0;
                 textInfo.text = SystemManager.GetJsonNodeString(GameManager.main.loadingDetailJson[loadingTextIndex], KEY_LOADING_TEXT);
             }
+            
+            while(loadingBar.fillAmount < 1) {
+                yield return new WaitForSeconds(0.05f);
+                loadingBar.fillAmount = GameManager.main.GetPagePrepValue();
+                textPercentage.text = Mathf.RoundToInt(loadingBar.fillAmount).ToString() + "%";
+            }
 
             yield return new WaitUntil(() => GameManager.main.GetCurrentPageInitialized());
+            
 
             Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_GAME, "gameLoadingComplete", string.Empty);
         }

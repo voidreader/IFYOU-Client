@@ -41,7 +41,7 @@ namespace PIERStory
         public const string MOTION_NAME = "motion_name";
 
         public const string COL_PUBLIC_NAME = "public_name";
-        public const string COL_IS_MINICUT = "is_minicut";
+        
 
         public const string COL_IMAGE_NAME = "image_name";
         public const string COL_IMAGE_URL = "image_url";

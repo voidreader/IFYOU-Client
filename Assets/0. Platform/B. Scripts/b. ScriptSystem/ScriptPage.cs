@@ -460,7 +460,7 @@ namespace PIERStory
                     CollectDemandedLiveObjectResource(ListRows[i]);
 
                 // 라이브 일러스트 
-                if (ListRows[i].template.Equals(GameConst.TEMPLATE_ILLUST))
+                if (ListRows[i].template.Equals(GameConst.TEMPLATE_ILLUST) || ListRows[i].template.Equals(GameConst.TEMPLATE_LIVE_ILLUST))
                     CollectDemandedLiveIllustResource(ListRows[i]);
             }
 

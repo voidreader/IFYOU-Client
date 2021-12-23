@@ -35,7 +35,7 @@ namespace PIERStory
 
         public const string FUNC_UPDATE_USER_VOICE_HISTORY = "updateUserVoiceHistory";      // 보이스 해금 갱신
         public const string FUNC_UPDATE_USER_ILLUST_HISTORY = "updateUserIllustHistory";    // 일러스트 해금 갱신
-        public const string FUNC_UPDATE_USER_MINICUT_HISTORY = "updateUserMinicutHistory";  // 미니컷 해금 갱신
+        public const string FUNC_UPDATE_USER_MINICUT_HISTORY = "updateUserMinicutHistoryVer2";  // 미니컷 해금 갱신
         public const string FUNC_UPDATE_USER_FAVOR_HISTORY = "updateUserFavorHistory";      // 호감도 갱신
         public const string FUNC_UPDATE_USER_SCRIPT_MISSION = "updateUserScriptMission";    // Drop미션 통신
         public const string FUNC_CHANGE_ACCOUNT_GAMEBASE = "changeAccountByGamebase";
@@ -318,13 +318,15 @@ namespace PIERStory
             // 리턴 값에 따라서 메세지 처리 추가할것. (신규 일러스트가 해금..어쩌고저쩌고)
 
             // 새로운 일러스트 아니면 통신할 필요 없음 
-            if (UserManager.main.CheckNewIllustUnlock(__illustID, __illustType))
+            if (UserManager.main.CheckIllustUnlocked(__illustID, __illustType))
                 return false; 
 
             JsonData sending = new JsonData();
             sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
             sending["illust_id"] = __illustID; // 일러스트 ID
-            sending["illust_type"] = __illustType; // 일러스트 타입(illust / live2d) 2 종류 
+            
+            // 일러스트 타입(illust / live2d) 2 종류로 변형해서 전송 
+            sending["illust_type"] = __illustType.Contains("live")?"live2d":__illustType; 
             sending[CommonConst.FUNC] = FUNC_UPDATE_USER_ILLUST_HISTORY;
 
             SendPost(UserManager.main.CallbackUpdateIllustHistory, sending);
@@ -339,15 +341,17 @@ namespace PIERStory
         /// 유저의 미니컷 해금기록 업데이트
         /// </summary>
         /// <param name="imageName"></param>
-        /// <param name="minicutType"></param>
+        /// <param name="minicutType">live_object or minicut</param>
         /// <returns></returns>
         public bool UpdateUserImage(string imageName, string minicutType)
         {
+            Debug.Log(string.Format("UpdateUserImage [{0}]/[{1}]", imageName, minicutType));
+            
             // 새로운 미니컷(이미지,라이브 오브제)가 아니면 통신 안함
-            if (!UserManager.main.CheckMinicutUnlockable(imageName, minicutType == "live2d" ? true : false))
+            if (!UserManager.main.CheckMinicutUnlockable(imageName, minicutType))
                 return false;
 
-            string imageId = UserManager.main.GetGalleryMinicutID(imageName, minicutType == "live2d" ? true : false);
+            string imageId = StoryManager.main.GetGalleryMinicutID(imageName, minicutType);
 
             // 목록에 없는 거여도 통신 안하기
             if (string.IsNullOrEmpty(imageId))
@@ -358,7 +362,7 @@ namespace PIERStory
             sending["userkey"] = UserManager.main.userKey;
             sending["project_id"] = StoryManager.main.CurrentProjectID;
             sending["minicut_id"] = imageId;            // 미니컷 Id. 이미지, 라이브오브제 상관없이 다 들어옴
-            sending["minicut_type"] = minicutType;      // (image, live2d) 2종류가 들어온다
+            sending["minicut_type"] = minicutType.Contains("live")?"live2d":minicutType;      // (minicut, live2d) 2종류가 들어온다
 
             SendPost(UserManager.main.CallbackUpdateMinicutHistory, sending);
             return true;

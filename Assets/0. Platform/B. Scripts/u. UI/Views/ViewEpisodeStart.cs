@@ -367,6 +367,7 @@ namespace PIERStory {
         /// 이어하기 버튼 클릭
         /// </summary>
         public void OnClickContinue() {
+            SystemManager.main.givenEpisodeData = episodeData;
             PurchasePostProcess(true);
         }
         

@@ -38,21 +38,29 @@ namespace PIERStory
 
             #region 일러스트
 
-            illustData = UserManager.main.GetNodeUserIllust();
+            illustData = UserManager.main.GetUserGalleryImage();
+            
+            Debug.Log("ViewGallery total image Count : " + illustData.Count);
 
             // 비활성화 해주면서 초기화
             foreach (IllustElement ie in illustElements)
                 ie.gameObject.SetActive(false);
 
             openIllust = 0;
-            totalIllust = illustData.Count;
+            totalIllust = 0;
+            int elementIndex = 0;
 
-            for(int i=0;i<totalIllust;i++)
+            for(int i=0;i<illustData.Count;i++)
             {
+                if(!SystemManager.GetJsonNodeBool(illustData[i], "valid"))
+                    continue;
+                
                 if (SystemManager.GetJsonNodeBool(illustData[i], CommonConst.ILLUST_OPEN))
                     openIllust++;
+                    
+                totalIllust++;
 
-                illustElements[i].InitElementInfo(illustData[i]);
+                illustElements[elementIndex++].InitElementInfo(illustData[i]);
             }
 
             totalCollection.text = string.Format("전체 수집률({0}/{1}", openIllust, totalIllust);
@@ -109,13 +117,31 @@ namespace PIERStory
 
         void DelayIllustOpen(bool __interactable)
         {
+            int elementIndex = 0;
+            
+            for(int i=0; i<illustElements.Length; i++) {
+                if(!illustElements[i].gameObject.activeSelf)
+                    continue;
+                    
+                if (!illustElements[elementIndex].illustOpen)
+                    continue;
+                    
+                illustElements[i].illustButton.interactable = __interactable;
+            }
+            
+            /*
             for(int i=0;i<illustData.Count;i++)
             {
-                if (!illustElements[i].illustOpen)
+                
+                if(!SystemManager.GetJsonNodeBool(illustData[i], "valid"))
+                    continue;
+                
+                if (!illustElements[elementIndex].illustOpen)
                     continue;
 
                 illustElements[i].illustButton.interactable = __interactable;
             }
+            */
                 
         }
     }

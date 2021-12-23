@@ -26,6 +26,7 @@ namespace PIERStory
         string summary = string.Empty;
         string appearEpisodeId = string.Empty;
         string appearEpisodeType = string.Empty;
+        string illustType = string.Empty;
 
         
         const string APPEAR_EPISODE_ID = "appear_episode";
@@ -34,13 +35,16 @@ namespace PIERStory
 
         public void InitElementInfo(JsonData __j)
         {
+            this.gameObject.SetActive(true);
+            
             elementData = null;
             illustName = SystemManager.GetJsonNodeString(__j, LobbyConst.ILLUST_NAME);
             summary = SystemManager.GetJsonNodeString(__j, LobbyConst.SUMMARY);
+            illustType = SystemManager.GetJsonNodeString(__j, "illust_type");
 
             illustThumbnail.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.THUMBNAIL_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.THUMBNAIL_KEY));
-            isLive = SystemManager.GetJsonNodeString(__j, CommonConst.ILLUST_TYPE).Equals(CommonConst.MODEL_TYPE_LIVE2D);
-            isMinicut = SystemManager.GetJsonNodeBool(__j, CommonConst.COL_IS_MINICUT);
+            isLive = SystemManager.GetJsonNodeString(__j, CommonConst.ILLUST_TYPE).Contains("live");
+            isMinicut = illustType == "live_object" || illustType == "minicut" ? true : false;
             liveTag.SetActive(isLive);
 
             #region 일러스트 획득 관련 세팅
@@ -59,27 +63,24 @@ namespace PIERStory
                     episodeHintText.text = "Side Episode";
                 else
                 {
-                    JsonData appearEpisodeData = UserManager.main.FindEpisodeData(appearEpisodeType, appearEpisodeId);
+                    EpisodeData appearEpisodeData = StoryManager.GetNextFollowingEpisodeData(appearEpisodeId);
+                    if(appearEpisodeData == null || !appearEpisodeData.isValidData) {
+                        Debug.LogError("Wrong appear episode ID : "+ appearEpisodeId);
+                    }
 
                     // 엔딩인 경우
                     if (appearEpisodeType.Equals(CommonConst.COL_ENDING))
                     {
                         // 히든 엔딩 표기
-                        if(SystemManager.GetJsonNodeString(appearEpisodeData, LobbyConst.ENDING_TYPE).Equals(LobbyConst.COL_HIDDEN))
+                        if(appearEpisodeData.endingType == LobbyConst.COL_HIDDEN) 
                             episodeHintText.text = "Hidden Ending";
-                        else
+                        else 
                             episodeHintText.text = "Final Ending";
                     }
                     else
                     {
                         // 정규 에피소드인 경우
-                        int episodeNum = int.Parse(SystemManager.GetJsonNodeString(appearEpisodeData, CommonConst.COL_EPISODE_NO));
-
-                        if (episodeNum < 10)
-                            episodeHintText.text = string.Format("Episode 0{0}", episodeNum);
-                        else
-                            episodeHintText.text = string.Format("Episode {0}", episodeNum);
-
+                        episodeHintText.text = string.Format("Episode {0}", appearEpisodeData.episodeNO);
                     }
                 }
             }
@@ -102,7 +103,7 @@ namespace PIERStory
                 if (!isMinicut)
                     elementData = StoryManager.main.GetIllustJsonByIllustName(illustName);
                 else
-                    elementData = UserManager.main.GetPublicMinicutJsonByName(illustName);
+                    elementData = StoryManager.main.GetPublicMinicutJsonByName(illustName);
             }
 
             #endregion

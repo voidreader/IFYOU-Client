@@ -12,20 +12,53 @@ namespace PIERStory
         Action callback = delegate { };
         GameSpriteCtrl gameSprite;
         ScriptLiveMount liveImage;
+        
+        string template = string.Empty;
 
-        public RowActionIllust(ScriptRow __row)
+        public RowActionIllust(ScriptRow __row, string __type)
         {
             scriptRow = __row;
+            template = __type; // 라이브 일러스트와 일러스트가 구분되어 들어온다.
         }
 
         public void DoAction(Action __actionCallback, bool __isInstant = false)
         {
-            JsonData data = UserManager.main.GetIllustData(scriptRow.script_data);
+            JsonData data = null;
+            string illustType = string.Empty;
+            string id = string.Empty;
+            
+            // 라이브 일러스트와 일러스트로 구분해야된다. (스크립트 불러올때 유료, 무료에 따라 템플릿을 변경시켜준다.)
+            // * 기존 로직 때문에 일러스트의 경우는 이미지를 검색 후 없으면 Live2D까지 체크한다.
+            if(template == "illust") {
+                data = StoryManager.main.GetImageIllustData(scriptRow.script_data);
+                illustType = template;
+                
+                if(data == null) {
+                    data = StoryManager.main.GetLiveIllustJsonByName(scriptRow.script_data);
+                    illustType = "live_illust"; // 라이브 일러스트로 변경한다. 
+                    id = data[0]["live_illust_id"].ToString();
+                }
+                else {
+                    id = data["illust_id"].ToString();
+                }
+                
+                
+                
+            }
+            else {
+                // 라이브 일러스트 
+                data = StoryManager.main.GetLiveIllustJsonByName(scriptRow.script_data);
+                illustType = template;
+                id = data[0]["live_illust_id"].ToString();
+            }
+            
 
             // 일러스트 해금이라면 팝업 출현
-            if (data !=null && NetworkLoader.main.UpdateUserIllust(data[0].ToString(), data[1].ToString()))
+            // id와 타입을 전달한다. 
+            if (data !=null && NetworkLoader.main.UpdateUserIllust(id, illustType))
             {
-                GameManager.main.ShowAchieveIllust(data[2].ToString());
+                // public_name을 전달해줘야한다. 
+                GameManager.main.ShowAchieveIllust(UserManager.main.GetGalleryImagePublicName(id, illustType));
             }
 
             // 스킵했으면 렌더 안하고 넘어가
@@ -55,6 +88,8 @@ namespace PIERStory
             }
             else
             {
+                Debug.Log("No Live2D Data in RowActionIllust");
+                
                 // 라이브 일러스트가 아니었다면 그냥 일반 일러스트 로직으로 돌아온다. 
                 // 게임매니저에게 이미지 요청 
                 gameSprite = GameManager.main.SetGameIllust(scriptRow.script_data);

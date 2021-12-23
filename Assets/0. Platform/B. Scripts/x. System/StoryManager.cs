@@ -105,7 +105,8 @@ namespace PIERStory
         JsonData storyDetailJson = null; // 작품 상세정보(타이틀,요약,작가, 썸네일, 완결 여부 등)
 
         
-        JsonData illustJson = null; // 일러스트 정보
+        JsonData illustJson = null; // 이미지 일러스트 정보
+        JsonData minicutJSON = null; // 이미지 미니컷 정보 
         JsonData dressCodeJson = null; // 의상 정보
         JsonData emoticonJson = null; // 이모티콘 정보(백그라운드 다운로드)
         JsonData loadingJson = null;    // 로딩 스크린 정보
@@ -117,10 +118,7 @@ namespace PIERStory
         int countDownloadingLoading = 0;        // 로딩화면 다운로드 카운팅용
         bool isDownloadLoadingsSaved = false;   // 로딩화면 다운로드 1회 실행했는지 체크용 변수
 
-        
-        // 갤러리 배너 URL & KEY         
-        public string galleryBannerURL = string.Empty;
-        public string galleryBannerKey = string.Empty;
+
         
         // BGM 배너 URL & KEY
         [SerializeField] string bgmBannerURL = string.Empty; 
@@ -188,6 +186,9 @@ namespace PIERStory
         const string NODE_FREEPASS_SALE_PRICE = "sale_freepass_price";
         const string NODE_FREEPASS_PRODUCT = "freepasProduct"; // 작품별 프리패스 타임딜 상품리스트
         
+        const string NODE_PROJECT_ILLUSTS = "illusts"; // 프로젝트의 모든 일러스트 
+        const string NODE_PROJECT_MINICUTS = "minicuts"; // 프로젝트의 모든 미니컷
+        const string NODE_PROJECT_MODELS = "models"; // 프로젝트의 모든 모델 파일리스트 
         
 
         public const string EVENT_STORY_INFO_LOADING = "EventStoryInfoLoding"; // 스토리 정보 로딩 화면 
@@ -235,6 +236,7 @@ namespace PIERStory
         public void InitStoryInfo()
         {
             illustJson = null;
+            minicutJSON = null;
             EpisodeListJson = null;
             storyNametagJSON = null;
             storyCurrencyJSON = null;
@@ -573,8 +575,6 @@ namespace PIERStory
         void SetProjectStandard()
         {
             // 프로젝트 귀속 이미지들 초기화 
-            galleryBannerURL = string.Empty;
-            galleryBannerKey = string.Empty;
             bgmBannerURL = string.Empty;
             bgmBannerURL = string.Empty;
             freepassBannerURL = string.Empty;
@@ -582,7 +582,8 @@ namespace PIERStory
             freepassTitleURL = string.Empty;
             freepassTitleKey = string.Empty;
             
-            illustJson = UserManager.main.GetNodeProjectIllusts(); // 일러스트 기본 정보 
+            illustJson = GetNodeProjectIllusts(); // 일러스트 기본 정보 
+            minicutJSON = GetNodeProjectMinicuts(); // 미니컷 기본정보 
             
             dressCodeJson = ProjectDetailJson[NODE_DRESS_CODE]; // 의상 
             
@@ -593,11 +594,7 @@ namespace PIERStory
 
             // * 바보! GetJsonNode와 RequestDownloadImage 메소드에 유효성 검사를 추가하고 여기서는 신경쓰지 않게 한다. 
             
-            // 갤러리 상단 배너 
-            galleryBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_GALLERY_BANNER), SystemConst.IMAGE_URL);
-            galleryBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_GALLERY_BANNER), SystemConst.IMAGE_KEY);
-            SystemManager.RequestDownloadImage(galleryBannerURL, galleryBannerKey, null);
-            
+           
             // 갤러리 
             bgmBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_URL);
             bgmBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_KEY);
@@ -674,7 +671,7 @@ namespace PIERStory
         void SetProjectModels()
         {
             // 프로젝트 모델 JSON 
-            modelJson = UserManager.main.GetNodeProjectModels();
+            modelJson = GetNodeProjectModels();
             SetProjectModelDictionary(); // 모델별로 Dictionary로 정리 
         }
 
@@ -718,7 +715,120 @@ namespace PIERStory
 
             CollectBubbleImages();
         }
+        
+        
+        #region 작품 리소스 관리 일러스트, 미니컷, 라이브 일러스트, 라이브 오브제, 캐릭터 모델
+        
+        
+        
+        /// <summary>
+        /// 갤러리 미니컷, 라이브 오브젝트의 ID 찾기 
+        /// </summary>
+        /// <param name="minicutName">ScriptRow의 scriptData로 들어간 값</param>
+        /// <returns>해당 미니컷 id</returns>
+        public string GetGalleryMinicutID(string __minicutName, string __minicutType)
+        {
+            Debug.Log(string.Format("GetGalleryMinicutID [{0}]/[{1}]", __minicutName, __minicutType));
+            
+            // 라이브 2D인지, 일반 이미지인지 분리해서 처리한다. 
+            if(__minicutType == "live_object") {
+                // dictionary 조회해서 처리 
+                return DictProjectLiveObject.ContainsKey(__minicutName) ? DictProjectLiveObject[__minicutName]["live_object_id"].ToString() : string.Empty;
+            }
+            else {
+                // 이미지 미니컷 데이터에서 검색.
+                for(int i=0; i<minicutJSON.Count;i++) {
+                    
+                    if(SystemManager.GetJsonNodeString(minicutJSON[i], "image_name") == __minicutName)
+                        return SystemManager.GetJsonNodeString(minicutJSON[i], "minicut_id");
+                }
+                
+                return string.Empty;
+            }
 
+        }
+        
+        
+        /// <summary>
+        /// 미니컷 이름으로 Json 찾기 
+        /// </summary>
+        /// <param name="__name"></param>
+        /// <returns></returns>
+        public JsonData GetPublicMinicutJsonByName(string __name) {
+            
+            for(int i=0;i<minicutJSON.Count;i++)
+            {
+                if(SystemManager.GetJsonNodeString(minicutJSON[i], "image_name") == __name)
+                {
+                    return minicutJSON[i];
+                }
+            }
+
+            return null;
+        }        
+        
+        /// <summary>
+        /// 일러스트 이름으로 일러스트 기준정보 찾기
+        /// </summary>
+        /// <param name="__illustName">일러스트 명칭</param>
+        /// <returns>일러스트 id와 type을 담은 JsonData</returns>
+        public JsonData GetImageIllustData(string __illustName)
+        {
+            // * 2021.12.23 이 메소드는 일반 일러스트만을 대상으로 합니다. 
+            // illust_id, image_name, image_url,key ,is_public, appear_episode, public_name, live_pair_id..
+            for(int i=0; i<illustJson.Count;i++) {
+                if(SystemManager.GetJsonNodeString(illustJson[i], "image_name") == __illustName) {
+                    return illustJson[i];
+                }
+            }
+            
+            return null;
+            
+            /*
+            for(int i=0;i<GetNodeUserIllust().Count;i++)
+            {
+                // 일러스트 명칭과 동일한 jsonData값을 찾아 id와 type값을 넣어서 return 해준다
+                // 4개 종류가 통합되었기 때문에 is_minicut 값도 체크한다.
+                if(GetNodeUserIllust()[i][LobbyConst.ILLUST_NAME].ToString().Equals(__illustName) 
+                    && !SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], CommonConst.COL_IS_MINICUT))
+                {
+                    JsonData data = new JsonData();
+                    data.Add(GetNodeUserIllust()[i]["illust_id"]);
+                    data.Add(GetNodeUserIllust()[i]["illust_type"]);
+                    data.Add(GetNodeUserIllust()[i]["public_name"]);
+                    Debug.Log(JsonMapper.ToStringUnicode(data));
+                    return data;
+                }
+            }
+            return null;
+            */
+        }        
+        
+        /// <summary>
+        /// 프로젝트 모델 정보 불러오기 
+        /// </summary>
+        /// <returns></returns>
+        public JsonData GetNodeProjectModels()
+        {
+            return ProjectDetailJson[NODE_PROJECT_MODELS];
+        }
+        
+        /// <summary>
+        /// 프로젝트 이미지 일러스트 정보 
+        /// </summary>
+        /// <returns></returns>
+        public JsonData GetNodeProjectIllusts()
+        {
+            return ProjectDetailJson[NODE_PROJECT_ILLUSTS];
+        }
+        
+        /// <summary>
+        /// 프로젝트 이미지 미니컷 정보 
+        /// </summary>
+        /// <returns></returns>
+        public JsonData GetNodeProjectMinicuts() {
+            return ProjectDetailJson[NODE_PROJECT_MINICUTS];
+        }
 
 
         /// <summary>
@@ -759,7 +869,13 @@ namespace PIERStory
                 return null;
 
             return DictProjectLiveObject[__name];
-        }
+        }        
+        
+        #endregion
+        
+        
+        
+
 
 
         /// <summary>
@@ -1530,27 +1646,7 @@ namespace PIERStory
         
         #region 갤러리 리소스 
         
-        /// <summary>
-        /// 갤러리 작품별 상단 배너 주세요 
-        /// </summary>
-        /// <returns></returns>
-        public Texture2D getGalleryTopBanner()  {
-            if(string.IsNullOrEmpty(galleryBannerKey))
-                return null;
-            
-            if(!ES3.FileExists(galleryBannerKey))
-                return null;
-                
-            try {
-                
-                return SystemManager.GetLocalTexture2D(galleryBannerKey);
-                
-            }
-            catch(System.Exception e) {
-                Debug.Log(e.StackTrace);
-                return null;
-            }
-        }
+
         
         /// <summary>
         /// 갤러리의 작품별 BGM 배너 주세요 

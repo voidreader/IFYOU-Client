@@ -122,8 +122,8 @@ namespace PIERStory
         
         public const string NODE_BUBBLE_SET = "bubbleSet"; // 말풍선 세트 정보 
         const string NODE_BUBBLE_SPRITE = "bubbleSprite"; // 말풍선 스프라이트 정보 
-        const string NODE_PROJECT_MODELS = "models"; // 프로젝트의 모든 모델 파일리스트 
-        const string NODE_PROJECT_ILLUSTS = "illusts"; // 프로젝트의 모든 일러스트 
+        
+
         const string NODE_PROJECT_MISSIONS = "missions";                    // 프로젝트의 모든 미션
         
 
@@ -133,7 +133,8 @@ namespace PIERStory
 
         const string NODE_USER_VOICE = "voiceHistory";      // 유저 보이스(더빙) 히스토리 정보
         const string NODE_USER_RAW_VOICE = "rawVoiceHistory"; // 유저 보이스 히스토리 (Raw 타입)
-        const string NODE_USER_ILLUSTS = "illustHistory";   // 유저 일러스트 히스토리 정보 
+        
+        const string NODE_USER_GALLERY_IMAGES = "galleryImages"; // * 유저 갤러리 이미지 (해금 여부 포함됨) - 일반 & 라이브 페어 시스템 
         
         const string NODE_DRESS_PROGRESS = "dressProgress"; // 유저 의상 진행정보 (의상 템플릿 관련)
 
@@ -358,20 +359,11 @@ namespace PIERStory
             DebugProjectFavors.Clear();
             
 
-            for (int i=0; i<GetNodeProjectIllusts().Count; i++) {
-                DebugProjectIllusts.Add(JsonMapper.ToStringUnicode(GetNodeProjectIllusts()[i]));
-            }
-
             for (int i = 0; i < GetNodeProjectMissions().Count; i++)
             {
                 DebugProjectChallenges.Add(JsonMapper.ToStringUnicode(GetNodeProjectMissions()[i]));
             }
 
-            
-           
-
-            RefreshUserIllustHistoryInspector();
-            
             
         }
         
@@ -870,23 +862,9 @@ namespace PIERStory
         }
 
 
-        /// <summary>
-        /// 프로젝트 모델 정보 불러오기 
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetNodeProjectModels()
-        {
-            return currentStoryJson[NODE_PROJECT_MODELS];
-        }
+   
 
-        /// <summary>
-        /// 프로젝트 일러스트 정보 
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetNodeProjectIllusts()
-        {
-            return currentStoryJson[NODE_PROJECT_ILLUSTS];
-        }
+
 
 
 
@@ -899,104 +877,35 @@ namespace PIERStory
         }
 
 
+        
+        
         /// <summary>
-        /// 유저 일러스트 오픈 기록
-        /// 공개처리된, 최초 등장 에피소드가 입력된 미니컷,라이브 오브제, 일러스트, 라이브 일러스트 포함
+        /// 유저 갤러리 이미지 리스트 및 오픈 기록  
+        /// 일반, 라이브 페어 시스템 적용
         /// </summary>
-        /// <returns>illustHistory JsonData</returns>
-        public JsonData GetNodeUserIllust()
-        {
-            return currentStoryJson[NODE_USER_ILLUSTS];
+        /// <returns></returns>
+        public JsonData GetUserGalleryImage() {
+            return currentStoryJson[NODE_USER_GALLERY_IMAGES];
         }
+        
+        
 
-        /// <summary>
-        /// 일러스트 이름으로 일러스트 기준정보 찾기
-        /// </summary>
-        /// <param name="__illustName">일러스트 명칭</param>
-        /// <returns>일러스트 id와 type을 담은 JsonData</returns>
-        public JsonData GetIllustData(string __illustName)
-        {
-            for(int i=0;i<GetNodeUserIllust().Count;i++)
-            {
-                // 일러스트 명칭과 동일한 jsonData값을 찾아 id와 type값을 넣어서 return 해준다
-                // 4개 종류가 통합되었기 때문에 is_minicut 값도 체크한다.
-                if(GetNodeUserIllust()[i][LobbyConst.ILLUST_NAME].ToString().Equals(__illustName) 
-                    && !SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], CommonConst.COL_IS_MINICUT))
-                {
-                    JsonData data = new JsonData();
-                    data.Add(GetNodeUserIllust()[i]["illust_id"]);
-                    data.Add(GetNodeUserIllust()[i]["illust_type"]);
-                    data.Add(GetNodeUserIllust()[i]["public_name"]);
-                    Debug.Log(JsonMapper.ToStringUnicode(data));
-                    return data;
-                }
-            }
-            return null;
-        }
 
+
+
+        
         /// <summary>
-        /// 유저 일러스트(갤러리 히스토리) json  업데이트
+        /// 유저 갤러리 이미지 목록 및 해금 정보 업데이트 
         /// </summary>
         /// <param name="__newData"></param>
-        public void SetNodeUserIllust(JsonData __newData)
-        {
-            currentStoryJson[NODE_USER_ILLUSTS] = __newData;
-
-            RefreshUserIllustHistoryInspector();
+        public void SetNodeUserGalleryImages(JsonData __newData) {
+            currentStoryJson[NODE_USER_GALLERY_IMAGES] = __newData;
         }
 
         
 
 
-        /// <summary>
-        /// 갤러리 미니컷, 라이브 오브젝트의 ID 찾기 
-        /// </summary>
-        /// <param name="minicutName">ScriptRow의 scriptData로 들어간 값</param>
-        /// <returns>해당 미니컷 id</returns>
-        public string GetGalleryMinicutID(string __minicutName, bool isLive2D)
-        {
-            
-            // illust_type
-            string illustType = "minicut";
-            
-            if(isLive2D)
-                illustType = "live2d";
-            
-            for(int i=0;i<GetNodeUserIllust().Count;i++)
-            {
-                
-                // 미니컷이면서, 이름 똑같은 친구
-                if(SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], CommonConst.COL_IS_MINICUT)
-                    && SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], LobbyConst.ILLUST_NAME) == __minicutName
-                    && SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], "illust_type") == illustType) {
-                        
-                    // id 리턴
-                    return SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], "illust_id");
-                }
 
-            }
-
-            return string.Empty;
-        }
-        
-        
-        /// <summary>
-        /// 미니컷 이름 (단순 이미지만!)
-        /// </summary>
-        /// <param name="__name"></param>
-        /// <returns></returns>
-        public JsonData GetPublicMinicutJsonByName(string __name) {
-            for(int i=0;i<GetNodeUserIllust().Count;i++)
-            {
-                if(SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], LobbyConst.ILLUST_NAME) == __name
-                    && SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], CommonConst.COL_IS_MINICUT)) 
-                {
-                    return GetNodeUserIllust()[i];
-                }
-            }
-
-            return null;
-        }
 
         /// <summary>
         /// 유저 에피소드 진행도 
@@ -1558,7 +1467,7 @@ namespace PIERStory
             // 노드 갱신하자.
             
             
-            SetNodeUserIllust(responseData[NODE_USER_ILLUSTS]);
+            SetNodeUserGalleryImages(responseData[NODE_USER_GALLERY_IMAGES]);
         }
 
         /// <summary>
@@ -1576,7 +1485,8 @@ namespace PIERStory
             JsonData responseData = JsonMapper.ToObject(res.DataAsText);
 
             // Node 갱신
-            SetNodeUserIllust(responseData[NODE_USER_ILLUSTS]);
+            SetNodeUserGalleryImages(responseData[NODE_USER_GALLERY_IMAGES]);
+            
         }
 
 
@@ -1588,21 +1498,6 @@ namespace PIERStory
 
 
         #region 인스펙터 체크용!
-
-
-        // 인스펙터 확인용도!
-        void RefreshUserIllustHistoryInspector()
-        {
-
-            if (!Application.isEditor)
-                return;
-            
-            DebugUserIllusts.Clear();
-            for (int i = 0; i < GetNodeUserIllust().Count; i++)
-            {
-                DebugUserIllusts.Add(JsonMapper.ToStringUnicode(GetNodeUserIllust()[i]));
-            }
-        }
 
 
 
@@ -1888,21 +1783,44 @@ namespace PIERStory
         /// 현재 일러스트가 신규 일러스트인지 체크한다
         /// </summary>
         /// <param name="__illustID">일러스트 ID</param>
-        /// <param name="__illustType">일러스트 타입(illust/live2d)</param>
+        /// <param name="__illustType">일러스트 타입(illust/live_illust)</param>
         /// <returns></returns>
-        public bool CheckNewIllustUnlock(string __illustID, string __illustType)
+        public bool CheckIllustUnlocked(string __illustID, string  __illustType)
         {
             // 노드 루프돌면서 오픈된 기록이 있는지 체크한다.
-            for(int i=0; i< GetNodeUserIllust().Count;i++)
+            for(int i=0; i< GetUserGalleryImage().Count;i++)
             {
-                if (GetNodeUserIllust()[i]["illust_id"].ToString() == __illustID
-                    && GetNodeUserIllust()[i]["illust_type"].ToString() == __illustType
-                    && GetNodeUserIllust()[i]["illust_open"].ToString() == "1" 
-                    && GetNodeUserIllust()[i][CommonConst.COL_IS_MINICUT].ToString() == "0")
+                if (GetUserGalleryImage()[i]["illust_id"].ToString() == __illustID
+                    && GetUserGalleryImage()[i]["illust_type"].ToString() == __illustType
+                    && GetUserGalleryImage()[i]["illust_open"].ToString() == "1")
+                    
+                    // 이미 오픈된 것이 있다. 
                     return true;
             }
-
+            
+            // 오픈되지 않았다.
             return false;
+        }
+        
+        /// <summary>
+        ///  갤러리에서 사용되는 이미지들의 퍼블릭 네임 가져오기 
+        /// </summary>
+        /// <param name="__id"></param>
+        /// <param name="__type"></param>
+        /// <returns></returns>
+        public string GetGalleryImagePublicName(string __id, string __type) {
+            for(int i=0;i<GetUserGalleryImage().Count;i++) {
+                
+                if(SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_id") == __id
+                    && SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_type") == __type) {
+                        
+                        return SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "public_name");
+                }
+                
+                
+            }
+            
+            return string.Empty;
         }
 
         
@@ -1921,7 +1839,7 @@ namespace PIERStory
 
                 for(int i=0;i < __j.Count;i++)
                 {
-                    if (CheckGalleryImage(SystemManager.GetJsonNodeString(__j[i], "illust_id")))
+                    if (CheckGalleryImage(SystemManager.GetJsonNodeString(__j[i], "illust_id"), SystemManager.GetJsonNodeString(__j[i], "gallery_type")))
                         getGallery += 1f;
                 }
 
@@ -1934,13 +1852,16 @@ namespace PIERStory
         /// <summary>
         /// 갤러리 이미지를 획득 했는지 체크
         /// </summary>
-        /// <param name="__illustId">illust, live illust, minicut, live object id값</param>
-        bool CheckGalleryImage(string __galleryId)
+        /// <param name="__illustId">illust, live_illust, minicut, live_object id값</param>
+        bool CheckGalleryImage(string __galleryId, string __galleryType)
         {
 
-            for (int i = 0; i < GetNodeUserIllust().Count; i++)
+            for (int i = 0; i < GetUserGalleryImage().Count; i++)
             {
-                if (GetNodeUserIllust()[i]["illust_id"].ToString().Equals(__galleryId) && GetNodeUserIllust()[i]["illust_open"].ToString().Equals("1"))
+                // 값 있을때.  타입이랑 미니컷 여부까지 맞아야 한다. 
+                if(SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_id") == __galleryId
+                    && SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_type") == __galleryType
+                    && SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "illust_open"))
                     return true;
             }
 
@@ -2014,56 +1935,24 @@ namespace PIERStory
         /// 해금된 이미지(라이브 오브제)인지 check
         /// </summary>
         /// <param name="imageName">이미지(라이브오브제) 이름</param>
-        public bool CheckMinicutUnlockable(string imageName, bool isLive2D)
+        public bool CheckMinicutUnlockable(string imageName, string minicutType)
         {
-            // illust_type
-            string illustType = "minicut";
-            
-            if(isLive2D)
-                illustType = CommonConst.MODEL_TYPE_LIVE2D;
+                
             
             // 노드 루프돌면서 오픈된 기록이 있는지 체크한다.
-            for(int i=0;i< GetNodeUserIllust().Count;i++)
+            for(int i=0;i< GetUserGalleryImage().Count;i++)
             {
-                    if(SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], LobbyConst.ILLUST_NAME) == imageName
-                        && SystemManager.GetJsonNodeString(GetNodeUserIllust()[i], "illust_type") == illustType
-                        && SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], CommonConst.COL_IS_MINICUT)
-                        && !SystemManager.GetJsonNodeBool(GetNodeUserIllust()[i], "illust_open")) {
+                    if(SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], LobbyConst.ILLUST_NAME) == imageName
+                        && SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_type") == minicutType
+                        && !SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "illust_open")) {
                         
-                        return true; // 해금 가능함
+                        return true; // 해금 가능
                     }
             }
 
-            return false; // 해금 못해! 
+            return false; // 데이터가 없다. 불가능
         }
 
-        /// <summary>
-        /// 에피소드 타입과 에피소드 id로 해당 에피소드 데이터를 전달해주는 함수
-        /// </summary>
-        public JsonData FindEpisodeData(string episodeType, string episodeId)
-        {
-            // 에피소드 타입이 스페셜 에피소드인 경우
-            if(episodeType.Equals("side"))
-            {
-                for(int i=0;i<currentStoryJson["sides"].Count;i++)
-                {
-                    if (currentStoryJson["sides"][i]["episode_id"].ToString().Equals(episodeId))
-                        return currentStoryJson["sides"][i];
-                }
-            }
-            else
-            {
-                // 정규, 엔딩인 경우
-                for (int i = 0; i < currentStoryJson["episodes"].Count; i++)
-                {
-                    if (currentStoryJson["episodes"][i]["episode_id"].ToString().Equals(episodeId))
-                        return currentStoryJson["episodes"][i];
-                }
-
-            }
-
-            return null;
-        }
         
         /// <summary>
         /// 유저 프리패스 타임딜 목록 가져오기

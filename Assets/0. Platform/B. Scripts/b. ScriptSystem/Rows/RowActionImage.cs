@@ -22,8 +22,8 @@ namespace PIERStory
 
         public void DoAction(Action __actionCallback, bool __isInstant = false)
         {
-            if (NetworkLoader.main.UpdateUserImage(scriptRow.script_data, "image"))
-                GameManager.main.ShowAchieveIllust(SystemManager.GetJsonNodeString(UserManager.main.GetPublicMinicutJsonByName(scriptRow.script_data), "public_name"));
+            if (NetworkLoader.main.UpdateUserImage(scriptRow.script_data, "minicut"))
+                GameManager.main.ShowAchieveIllust(SystemManager.GetJsonNodeString(StoryManager.main.GetPublicMinicutJsonByName(scriptRow.script_data), "public_name"));
 
             // 스킵을 사용하면 바로 return
             if (__isInstant && GameManager.main.RenderingPass())

@@ -123,6 +123,7 @@ namespace PIERStory
         public const string TEMPLATE_MESSAGE_END = "message_end";           //메신저 종료
         public const string TEMPLATE_BACKGROUND = "background";
         public const string TEMPLATE_ILLUST = "illust";
+        public const string TEMPLATE_LIVE_ILLUST = "live_illust"; // 라이브 일러스트
         public const string TEMPLATE_IMAGE = "image";
         public const string TEMPLATE_LIVE_OBJECT = "live_object";                   //라이브 오브제
         public const string TEMPLATE_LIVE_OBJECT_REMOVE = "live_object_remove";     //라이브 오브제 제거

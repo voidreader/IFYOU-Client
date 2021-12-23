@@ -1726,6 +1726,8 @@ namespace PIERStory
         /// </summary>
         public void ShowAchieveIllust(string illustName)
         {
+            Debug.Log("ShowAchieveIllust : " + illustName);
+            
             PopupBase popup = PopupManager.main.GetPopup(SystemConst.POPUP_ILLUST_ACHIEVEMENT);
             if(popup == null) {
                 Debug.LogError("No Popup");

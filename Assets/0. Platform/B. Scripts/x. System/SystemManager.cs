@@ -490,12 +490,18 @@ namespace PIERStory
                 return;
             }
             
+            Debug.Log(response.DataAsText);
+    
+            
             // 버전 비교를 시작한다.
             JsonData result = JsonMapper.ToObject(response.DataAsText);
-            
+                    
+            Debug.Log(JsonMapper.ToStringUnicode(result["master"]));
             JsonData masterInfo = result["master"]; // 마스터 정보 
+            
+            Debug.Log(JsonMapper.ToStringUnicode(result["ad"]));
             JsonData adInfo = result["ad"]; // 광고 기준정보 
-            int serverlocalVer = int.Parse(result["local_ver"].ToString()); // 서버 로컬라이징 텍스트 버전
+            int serverlocalVer = int.Parse(masterInfo["local_ver"].ToString()); // 서버 로컬라이징 텍스트 버전
             
             AdManager.main.SetServerAdInfo(adInfo); // 광고 기준정보 세팅 
             

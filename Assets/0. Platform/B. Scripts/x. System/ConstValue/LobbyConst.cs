@@ -85,8 +85,8 @@ namespace PIERStory {
         
         public const string TOP_SIGNAL_SHOW_BACKGROUND = "topSignalShowBackground"; // 상단 배경 보여주기
         // public const string TOP_SIGNAL_HIDE_BACKGROUND = "topSignalHideBackground"; // 상단 배경 감추기
-        public const string TOP_SIGNAL_SHOW_VIEW_NAME = "topSignalShowViewName"; // 상단 뷰 이름 보여주기 
-        // public const string TOP_SIGNAL_HIDE_VIEW_NAME = "topSignalHideViewName"; // 상단 뷰 이름 감추기
+        public const string TOP_SIGNAL_VIEW_NAME_EXIST = "topSignalShowViewName"; // 상단 뷰 이름 보여주기
+        public const string TOP_SIGNAL_VIEW_NAME = "topSignalViewName";             // 상단 뷰 이름
         
         public const string TOP_SIGNAL_SHOW_PROPERTY_GROUP = "topSignalShowPropertyGroup"; // 재화 그룹 보여주기
         // public const string TOP_SIGNAL_HIDE_PROPERTY_GROUP = "topSignalHidePropertyGroup"; // 재화 그룹 감추기 

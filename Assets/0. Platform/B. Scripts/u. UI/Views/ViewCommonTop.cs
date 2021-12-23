@@ -29,6 +29,7 @@ namespace PIERStory {
         
         SignalStream signalSteamTopBackground;
         SignalStream signalSteamTopViewName;
+        SignalStream signalSteamTopViewNameExist;
         SignalStream signalSteamTopPropertyGroup;
         SignalStream signalSteamTopChangeOwner;
         SignalStream signalSteamTopBackButton;
@@ -36,6 +37,7 @@ namespace PIERStory {
         
         SignalReceiver signalReceiverTopBackground;
         SignalReceiver signalReceiverTopViewName;
+        SignalReceiver signalReceiverTopViewNameExist;
         SignalReceiver signalReceiverTopPropertyGroup;
         SignalReceiver signalReceiverTopChangeOwner;
         SignalReceiver signalReceiverTopBackButton;
@@ -44,10 +46,13 @@ namespace PIERStory {
             // Background 
             signalSteamTopBackground = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND);
             signalReceiverTopBackground = new SignalReceiver().SetOnSignalCallback(OnTopBackgroundSignal);
-            
-            signalSteamTopViewName = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_VIEW_NAME);
+
+            signalSteamTopViewNameExist = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST);
+            signalReceiverTopViewNameExist = new SignalReceiver().SetOnSignalCallback(OnTopViewNameExistSignal);
+
+            signalSteamTopViewName = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME);
             signalReceiverTopViewName = new SignalReceiver().SetOnSignalCallback(OnTopViewNameSignal);
-            
+
             signalSteamTopPropertyGroup = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP);
             signalReceiverTopPropertyGroup = new SignalReceiver().SetOnSignalCallback(OnTopPropertySignal);
             
@@ -60,6 +65,7 @@ namespace PIERStory {
         
         private void Start() {
             signalSteamTopBackground.ConnectReceiver(signalReceiverTopBackground);
+            signalSteamTopViewNameExist.ConnectReceiver(signalReceiverTopViewNameExist);
             signalSteamTopViewName.ConnectReceiver(signalReceiverTopViewName);
             signalSteamTopPropertyGroup.ConnectReceiver(signalReceiverTopPropertyGroup);
             signalSteamTopChangeOwner.ConnectReceiver(signalReceiverTopChangeOwner);
@@ -68,6 +74,7 @@ namespace PIERStory {
         
         void OnDisable() {
             signalSteamTopBackground.DisconnectReceiver(signalReceiverTopBackground);
+            signalSteamTopViewNameExist.DisconnectReceiver(signalReceiverTopViewNameExist);
             signalSteamTopViewName.DisconnectReceiver(signalReceiverTopViewName);
             signalSteamTopPropertyGroup.DisconnectReceiver(signalReceiverTopPropertyGroup);
             signalSteamTopChangeOwner.DisconnectReceiver(signalReceiverTopChangeOwner);
@@ -151,10 +158,10 @@ namespace PIERStory {
         
         
         /// <summary>
-        /// 뷰 네임 시그널 처리 
+        /// 뷰 네임 표기 시그널 처리 
         /// </summary>
         /// <param name="signal"></param>
-        void OnTopViewNameSignal(Signal signal) {
+        void OnTopViewNameExistSignal(Signal signal) {
             if(!signal.hasValue) {
                 Debug.LogError("OnTopViewNameSignal has no value");
                 return;
@@ -164,6 +171,20 @@ namespace PIERStory {
             
             textViewName.gameObject.SetActive(isShow);
         }
+
+        /// <summary>
+        /// 뷰 네임명
+        /// </summary>
+        /// <param name="s"></param>
+        void OnTopViewNameSignal(Signal s)
+        {
+            if(s.hasValue)
+            {
+                string viewName = s.GetValueUnsafe<string>();
+                textViewName.text = viewName;
+            }
+        }
+
         
         void OnTopPropertySignal(Signal signal) {
             if(!signal.hasValue) {

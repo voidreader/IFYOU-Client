@@ -21,7 +21,7 @@ namespace PIERStory
             base.OnStartView();
 
             OnRequestMailList = SetMailList;
-            OnRequestMailList?.Invoke(SystemManager.GetJsonNode(UserManager.main.notReceivedMailJson, MAIL_LIST));
+            NetworkLoader.main.RequestUnreadMailList(CallbackRequestUnreadMail);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace PIERStory
             }
 
 
-            for (int i = 0; i < mailElements.Length; i++)
+            for (int i = 0; i < __j.Count; i++)
                 mailElements[i].InitMailInfo(__j[i]);
         }
 
@@ -70,6 +70,17 @@ namespace PIERStory
 
             // 우편을 모두 수령했습니다.
             SystemManager.ShowSimpleMessagePopUpWithLocalize("80063");
+        }
+
+        void CallbackRequestUnreadMail(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackRequestUnreadMail");
+                return;
+            }
+
+            OnRequestMailList?.Invoke(SystemManager.GetJsonNode(UserManager.main.notReceivedMailJson, MAIL_LIST));
         }
     }
 }

@@ -127,6 +127,10 @@ namespace PIERStory {
             if(!useSelectionAD) 
                 return;
                 
+            // 무료 유저가 아니면 광고 재생 되지 않음
+            if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD)
+                return;
+                
                 
             ShowSelectionAD();
         }
@@ -153,6 +157,10 @@ namespace PIERStory {
         /// </summary>
         public void PlayLoadingAD() {
             if(!useLoadingAD)
+                return;
+                
+            // 무료 유저가 아니면 광고 재생 되지 않음
+            if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD)
                 return;
                 
             ShowLoadingAD();
@@ -186,6 +194,10 @@ namespace PIERStory {
             
             // Play AD 사용하지 않으면 끝!
             if(!usePlayAD)
+                return;
+                
+            // 무료 유저가 아니면 광고 재생 되지 않음
+            if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD)
                 return;
             
             gamePlayRowCount++;

@@ -2594,7 +2594,19 @@ MonoBehaviour:
   ShowAnimation:
     OnPlayCallback:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 7109955898737969264}
+          m_TargetAssemblyTypeName: PIERStory.PopupReset, Assembly-CSharp
+          m_MethodName: OnStartView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     OnStopCallback:
       m_PersistentCalls:
         m_Calls: []
@@ -3627,40 +3639,7 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
   Behaviours:
-    Behaviours:
-    - Enabled: 1
-      EventName: PointerClick
-      Runners: []
-      Event:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 6896977224114600247}
-            m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
-              DoozyRuntime
-            m_MethodName: Hide
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-      BehaviourName: 4
-      Receiver:
-        ConnectionMode: 1
-        SignalProviderId:
-          Type: 0
-          Category: Pointer
-          Name: Click
-        ProviderReference: {fileID: 6896977224417806713}
-        StreamId:
-          Category: None
-          Name: None
-          Custom: 1
-      Cooldown: 0
-      Selectable: {fileID: 6896977224417806718}
+    Behaviours: []
     SignalSource: {fileID: 6896977224417806716}
     Selectable: {fileID: 6896977224417806718}
   Id:

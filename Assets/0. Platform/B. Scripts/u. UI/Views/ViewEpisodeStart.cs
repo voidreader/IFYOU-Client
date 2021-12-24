@@ -67,11 +67,6 @@ namespace PIERStory {
             signalStreamEpisodeStart.ConnectReceiver(signalReceiverEpisodeStart);
         }
 
-        private void OnDisable()
-        {
-            //remove the receiver from reacting to signals sent through the stream
-            signalStreamEpisodeStart.DisconnectReceiver(signalReceiverEpisodeStart);
-        }        
         
         private void OnSignal(Signal signal)
         {
@@ -102,11 +97,16 @@ namespace PIERStory {
         
         public override void OnStartView() {
             base.OnStartView();
-            signalStreamEpisodeStart.ConnectReceiver(signalReceiverEpisodeStart);
+            SetEpisodeInfo();
         }        
         
         
         void SetEpisodeInfo() {
+            
+            episodeData = SystemListener.main.startEpisode;
+            if(episodeData == null || !episodeData.isValidData) {
+                Debug.LogError("Wrong Episode data");
+            }
             
             textEpisodeTitle.text = episodeData.combinedEpisodeTitle;
             textEpisodeSummary.text = episodeData.episodeSummary;

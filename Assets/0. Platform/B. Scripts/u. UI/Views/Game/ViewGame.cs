@@ -12,10 +12,10 @@ using Doozy.Runtime.UIManager.Containers;
 
 namespace PIERStory
 {
-    public class ViewGame : CommonView//, IPointerClickHandler
+    public class ViewGame : CommonView, IPointerClickHandler
     {
         public static ViewGame main = null;     // UI singleton
-        
+
         [Header("말풍선")]
         public RectTransform bubbleParent;          // 말풍선 부모
         public List<GameBubbleCtrl> ListBubbles;    // 말풍선들!
@@ -58,7 +58,8 @@ namespace PIERStory
 
         [Space][Space][Header("휴대폰 사용")]
         [Tooltip("전화,메시지 오면 뜰 이미지")]
-        public Image phoneImage;
+        public GameObject phoneOverlay;
+        public GameObject phoneImage;
 
         [Header("***전화***")]
         public GameObject phoneCall;
@@ -144,7 +145,6 @@ namespace PIERStory
                 modelRenders[i].GetComponent<RectTransform>().sizeDelta = new Vector2(rawImageSize, rawImageSize);
         }
 
-        /*
         public void OnPointerClick(PointerEventData eventData)
         {
             // 로그 패널 활성화 중엔 입력 받지 않음.   
@@ -165,35 +165,6 @@ namespace PIERStory
             // 입력 받았어요!
             GameManager.main.isWaitingScreenTouch = false;
         }
-        */
-
-        /// <summary>
-        /// 터치하여 다음 행으로 진행
-        /// </summary>
-        public void OnClickProgressNextRow()
-        {
-            // 로그 패널 활성화 중엔 입력 받지 않음.
-            if (logPanel.activeSelf)
-            {
-                DisableGameLog();
-                return;
-            }
-
-            // threadHold 중에 입력 받지 않음
-            if (GameManager.main.isThreadHold)
-            {
-                Debug.Log(">> holding thread now <<");
-                return;
-            }
-
-            // touch waiting 아닌 경우 입력 받지 않음.
-            if (!GameManager.main.isWaitingScreenTouch)
-                return;
-
-            // 입력 받았어요!
-            GameManager.main.isWaitingScreenTouch = false;
-        }
-
 
 
         #region 말풍선 관련
@@ -635,7 +606,8 @@ namespace PIERStory
 
         public void HIdePhoneImage()
         {
-            phoneImage.gameObject.SetActive(false);
+            phoneOverlay.SetActive(false);
+            phoneImage.SetActive(false);
             phoneCall.SetActive(false);
             messengerOverlay.gameObject.SetActive(false);
 
@@ -685,8 +657,10 @@ namespace PIERStory
         {
             if (template.Equals(GameConst.TEMPLATE_PHONECALL))
             {
-                phoneImage.gameObject.SetActive(true);
+                phoneOverlay.SetActive(true);
+                phoneImage.SetActive(true);
                 phoneCall.SetActive(true);
+                messengerOverlay.gameObject.SetActive(false);
 
                 timeEnd = true;
 
@@ -698,7 +672,8 @@ namespace PIERStory
             {
                 if (phoneCall.activeSelf)
                 {
-                    phoneImage.gameObject.SetActive(false);
+                    phoneOverlay.SetActive(false);
+                    phoneImage.SetActive(false);
                     phoneCall.SetActive(false);
                 }
 
@@ -713,8 +688,8 @@ namespace PIERStory
                         callTime.text = string.Format("{0}:{1}", (timer / 60 % 60), (timer % 60));
 
                     StartCoroutine(PhoneTimer(timer));
-
                 }
+
                 callBackground.gameObject.SetActive(true);
             }
         }
@@ -831,7 +806,9 @@ namespace PIERStory
         public void ReceiveMessage(Action completeCallback, string speaker)
         {
             float animTime = 0.7f;
-            phoneImage.gameObject.SetActive(true);
+
+            phoneOverlay.SetActive(true);
+            phoneImage.SetActive(true);
             phoneCall.SetActive(false);
             messengerOverlay.gameObject.SetActive(true);
 

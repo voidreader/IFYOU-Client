@@ -899,17 +899,21 @@ namespace PIERStory
                     {
                         case 1:
                             bleedMain = bleeding_1.main;
+                            bleedMain.startLifetime = bloodTime;
+                            bleeding_1.gameObject.SetActive(true);
                             break;
                         case 2:
                             bleedMain = bleeding_2.main;
+                            bleedMain.startLifetime = bloodTime;
+                            bleeding_2.gameObject.SetActive(true);
                             break;
                         case 3:
                         default:
                             bleedMain = bleeding_3.main;
+                            bleedMain.startLifetime = bloodTime;
+                            bleeding_3.gameObject.SetActive(true);
                             break;
                     }
-
-                    bleedMain.startLifetime = bloodTime;
 
                     break;
             }

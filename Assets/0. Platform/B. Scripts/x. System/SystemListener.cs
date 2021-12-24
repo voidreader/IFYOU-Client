@@ -37,7 +37,7 @@ namespace PIERStory {
             signalStreamEpisodeStart = SignalStream.Get(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START);
             signalReceiverEpisodeStart = new SignalReceiver().SetOnSignalCallback(OnEpisodeStartSignal);
             
-            // DontDestroyOnLoad(this);
+            DontDestroyOnLoad(this);
         }
         
         // Start is called before the first frame update
@@ -76,10 +76,5 @@ namespace PIERStory {
             Debug.Log("ViewEpisodeStart OnSingal");
             startEpisode = signal.GetValueUnsafe<EpisodeData>();
         }
-                                
-            
-        
-
-
     }
 }

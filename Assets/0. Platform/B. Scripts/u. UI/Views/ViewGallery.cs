@@ -118,13 +118,12 @@ namespace PIERStory
 
         void DelayIllustOpen(bool __interactable)
         {
-            int elementIndex = 0;
             
             for(int i=0; i<illustElements.Length; i++) {
                 if(!illustElements[i].gameObject.activeSelf)
                     continue;
                     
-                if (!illustElements[elementIndex].illustOpen)
+                if (!illustElements[i].illustOpen)
                     continue;
                     
                 illustElements[i].illustButton.interactable = __interactable;

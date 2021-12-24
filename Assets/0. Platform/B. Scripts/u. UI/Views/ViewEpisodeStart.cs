@@ -61,6 +61,10 @@ namespace PIERStory {
             signalReceiverEpisodeStart = new SignalReceiver().SetOnSignalCallback(OnSignal);
         }
         
+        private void Start() {
+            signalStreamEpisodeStart.ConnectReceiver(signalReceiverEpisodeStart);
+        }
+        
         private void OnEnable()
         {
             //add the receiver to react to signals sent through the stream

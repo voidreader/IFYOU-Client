@@ -28,6 +28,10 @@ namespace PIERStory {
             streamReceive.ConnectReceiver(receiverTarget);
         }
         
+        private void OnEnable() {
+            streamReceive.ConnectReceiver(receiverTarget);
+        }
+        
         void OnDisable() {
             streamReceive.DisconnectReceiver(receiverTarget);
         }
@@ -36,8 +40,10 @@ namespace PIERStory {
         
         public void OnClickReset() {
             
-            if(targetEpisode == null || !targetEpisode.isValidData)
+            if(targetEpisode == null || !targetEpisode.isValidData) {
+                Debug.LogError("No target data OnClickReset");
                 return;
+            }
             
             // 리셋 
             NetworkLoader.main.ResetEpisodeProgress(targetEpisode.episodeID, true);

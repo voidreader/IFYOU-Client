@@ -54,8 +54,12 @@ namespace PIERStory
         [Space]
         
 
-        JsonData totalStoryListJson = null; // 조회로 가져온 작품 리스트
+        JsonData totalStoryListJson = null; // 조회로 가져온 모든 작품 리스트(all)
+        JsonData recommendStoryIdJSON = null; // 추천 작품 ID JSON
+        
+        
         public List<StoryData> listTotalStory = new List<StoryData>(); // 작품 리스트 
+        public List<StoryData> listRecommendStory = new List<StoryData>(); // 추천 작품 리스트 
 
         #region 말풍선 세트와 관련된 JSON , 변수
 
@@ -268,12 +272,25 @@ namespace PIERStory
         /// </summary>
         /// <param name="__listJSON"></param>
         public void SetStoryList(JsonData __listJSON) {
-            totalStoryListJson = __listJSON;
+            totalStoryListJson = __listJSON["all"];
+            recommendStoryIdJSON = __listJSON["recommend"];
             
             listTotalStory.Clear();
             for(int i=0; i<totalStoryListJson.Count;i++) {
                 StoryData storyData = new StoryData(totalStoryListJson[i]);
                 listTotalStory.Add(storyData);
+            }
+            
+            
+            // 추천 작품 처리 
+            listRecommendStory.Clear();
+            for(int i=0;i<listTotalStory.Count;i++) {
+                // if(listTotalStory[i].projectID)
+                for(int j=0;j<recommendStoryIdJSON.Count;j++) {
+                    if(listTotalStory[i].projectID == recommendStoryIdJSON[j].ToString()) {
+                        listRecommendStory.Add(listTotalStory[i]);
+                    }
+                }
             }
                
         }

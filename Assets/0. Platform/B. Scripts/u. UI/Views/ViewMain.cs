@@ -12,6 +12,11 @@ namespace PIERStory {
         [Header("로비")]
         [SerializeField] ScrollRect mainScrollRect;
         
+        
+        // 진행중인 이야기 타이틀과 ScrollRect
+        [SerializeField] GameObject playingAreaTitle;
+        [SerializeField] GameObject playingAreaScrollRect;
+        
         [SerializeField] List<PlayingStoryElement> ListPlayingStoryElements; // 진행중 이야기 
         [SerializeField] List<MainStoryRow> ListRecommendStoryRow; // 추천 스토리의 2열짜리 행 
         [SerializeField] List<NewStoryElement> ListNewStoryElement; // 새로운 이야기 개별 개체 
@@ -75,16 +80,26 @@ namespace PIERStory {
                 
                 // 진행기록이 있는 작품만 가져온다.                 
                 ListPlayingStoryElements[elementIndex++].InitElement(StoryManager.main.listTotalStory[i]);
+                
+                if(elementIndex == 1)  {
+                    playingAreaTitle.SetActive(true);
+                    playingAreaScrollRect.SetActive(true);
+                }
             }
+                
         }
         
         /// <summary>
         /// 진행중인 이야기 Reset
         /// </summary>
         void ResetPlayingStoryElements() {
+            
             for(int i=0; i<ListPlayingStoryElements.Count;i++) {
                 ListPlayingStoryElements[i].gameObject.SetActive(false);
             }
+            
+            playingAreaTitle.SetActive(false);
+            playingAreaScrollRect.SetActive(false);
         }
         
         /// <summary>
@@ -94,7 +109,7 @@ namespace PIERStory {
             ResetRecommendStory();
             
             // 작품개수를 2로 나눈다. 
-            int dividedIntoTwo = Mathf.FloorToInt((float)StoryManager.main.listTotalStory.Count / 2f );
+            int dividedIntoTwo = Mathf.FloorToInt((float)StoryManager.main.listRecommendStory.Count / 2f );
             
             // 2배수로 나눈 수만큼 초기화 시작.
             for(int i=0; i<dividedIntoTwo; i++) {

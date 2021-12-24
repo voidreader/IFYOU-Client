@@ -30,10 +30,10 @@ namespace PIERStory {
             for(int i=minStoryIndex; i<= maxStoryIndex; i++) {
                 
                 // 작품 개수 오버하면 끝..!
-                if(StoryManager.main.listTotalStory.Count <= i)
+                if(StoryManager.main.listRecommendStory.Count <= i)
                     break;
                 
-                ListRows[currentRowIndex].InitStoryElement(StoryManager.main.listTotalStory[i]);
+                ListRows[currentRowIndex].InitStoryElement(StoryManager.main.listRecommendStory[i]);
                 currentRowIndex++;
             }
            

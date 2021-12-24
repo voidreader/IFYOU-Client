@@ -21,7 +21,8 @@ namespace PIERStory
 
         public const string FUNC_LOGIN_CLIENT = "loginClient";
         public const string FUNC_SELECTED_STORY_INFO = "getUserSelectedStory";
-        public const string FUNC_SELECT_LOBBY_PROJECT_LIST = "selectLobbyProjectList";
+        // public const string FUNC_SELECT_LOBBY_PROJECT_LIST = "selectLobbyProjectList";
+        public const string FUNC_SELECT_LOBBY_PROJECT_LIST = "getIfYouProjectList";
         
         public const string FUNC_UPDATE_EPISODE_SCENE_RECORD = "updateUserEpisodeSceneRecord"; // 씬 경험 기록
 

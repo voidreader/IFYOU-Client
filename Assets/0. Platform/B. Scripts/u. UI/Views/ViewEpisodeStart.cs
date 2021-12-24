@@ -50,45 +50,21 @@ namespace PIERStory {
         [SerializeField] EpisodeContentProgress illustProgressBar;
         [SerializeField] EpisodeContentProgress sceneProgressBar;
         [SerializeField] GameObject contentsMiddleVerticalLine; // 일러스트, 경험한 사건 사이에 선 
-        
-        SignalReceiver signalReceiverEpisodeStart;
-        SignalStream signalStreamEpisodeStart;
+
         
         #region Meta Signal 수신 관련 처리 
         
         void Awake() {
-            signalStreamEpisodeStart = SignalStream.Get(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START);
-            signalReceiverEpisodeStart = new SignalReceiver().SetOnSignalCallback(OnSignal);
+            
         }
         
         private void Start() {
-            signalStreamEpisodeStart.ConnectReceiver(signalReceiverEpisodeStart);
+            
         }
         
-        private void OnEnable()
-        {
-            //add the receiver to react to signals sent through the stream
-            signalStreamEpisodeStart.ConnectReceiver(signalReceiverEpisodeStart);
-        }
 
-        private void OnDisable()
-        {
-            //remove the receiver from reacting to signals sent through the stream
-            signalStreamEpisodeStart.DisconnectReceiver(signalReceiverEpisodeStart);
-        }        
         
-        private void OnSignal(Signal signal)
-        {
-           //check if signal is MetaSignal
-           if (signal.hasValue)
-           {
-               
-               // Type valueType = signal.valueType; //get the payload value type
-               Debug.Log("ViewEpisodeStart OnSingal");
-               episodeData = signal.GetValueUnsafe<EpisodeData>();
-               SetEpisodeInfo();
-           }
-        }
+
         
         #endregion
         
@@ -101,10 +77,16 @@ namespace PIERStory {
         
         public override void OnStartView() {
             base.OnStartView();
+            SetEpisodeInfo();
         }        
         
         
         void SetEpisodeInfo() {
+            
+            episodeData = SystemListener.main.startEpisode;
+            if(episodeData == null || !episodeData.isValidData) {
+                Debug.LogError("Wrong Episode data");
+            }
             
             textEpisodeTitle.text = episodeData.combinedEpisodeTitle;
             textEpisodeSummary.text = episodeData.episodeSummary;

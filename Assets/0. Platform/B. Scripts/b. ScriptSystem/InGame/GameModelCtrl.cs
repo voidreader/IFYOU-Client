@@ -317,7 +317,15 @@ namespace PIERStory
             else
             {
                 if(string.IsNullOrEmpty(__dir))
+                {
                     MoveCharacterToTargetPosition(0f, false);
+
+                    if (transform.localScale.x < 0f)
+                        transform.position = new Vector3(-1, 1, 1);
+                    else
+                        transform.position = new Vector3(1, 1, 1);
+
+                }
                 else
                 {
                     // 시선 방향과 위치가 동향이면 뒤집기
@@ -325,13 +333,13 @@ namespace PIERStory
                         MoveCharacterToTargetPosition(posX, true);
                     else
                         MoveCharacterToTargetPosition(posX, false);
+
+                    if (transform.localScale.x < 0f)
+                        transform.DOScale(new Vector3(-1f, 1f, 1f) * talkerScale, animTime);
+                    else
+                        transform.DOScale(Vector3.one * talkerScale, animTime);
                 }
             }
-
-            if (transform.localScale.x < 0f)
-                transform.DOScale(new Vector3(-1f, 1f, 1f) * talkerScale, animTime);
-            else
-                transform.DOScale(Vector3.one * talkerScale, animTime);
         }
 
         /// <summary>

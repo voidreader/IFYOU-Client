@@ -371,7 +371,6 @@ GameObject:
   - component: {fileID: 6896977223086267437}
   - component: {fileID: 6776503660070846918}
   - component: {fileID: 2227016418712285164}
-  - component: {fileID: 4295492946790021335}
   m_Layer: 5
   m_Name: YesButton
   m_TagString: Untagged
@@ -501,7 +500,7 @@ MonoBehaviour:
   Behaviours:
     Behaviours:
     - Enabled: 1
-      EventName: PointerEnter
+      EventName: PointerClick
       Runners: []
       Event:
         m_PersistentCalls:
@@ -518,18 +517,18 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
-      BehaviourName: 0
+      BehaviourName: 4
       Receiver:
         ConnectionMode: 1
         SignalProviderId:
           Type: 0
           Category: Pointer
-          Name: Enter
-        ProviderReference: {fileID: 4295492946790021335}
+          Name: Click
+        ProviderReference: {fileID: 0}
         StreamId:
           Category: None
           Name: None
-          Custom: 1
+          Custom: 0
       Cooldown: 0
       Selectable: {fileID: 6896977223086267437}
     SignalSource: {fileID: 6896977223086267427}
@@ -576,21 +575,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 7356215
---- !u!114 &4295492946790021335
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6896977223086267427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3554c00bfa3b414fa18b0cbbbc2d8688, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ProviderCurrentState: 20
-  SignalCooldown: 0
-  SignalTimescale: 0
 --- !u!1 &6896977223155175270
 GameObject:
   m_ObjectHideFlags: 0

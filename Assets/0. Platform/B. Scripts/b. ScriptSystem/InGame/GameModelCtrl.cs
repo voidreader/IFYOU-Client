@@ -295,6 +295,7 @@ namespace PIERStory
         /// <param name="posX">옮겨질 위치</param>
         void SetCharacterTransform(string __dir, float posX)
         {
+            // 자동진행 or skip처리
             if (autoPlay)
             {
                 if(string.IsNullOrEmpty(__dir))
@@ -311,75 +312,34 @@ namespace PIERStory
                     else
                         transform.localScale = Vector3.one * talkerScale;
                 }
-
-                return;
             }
             else
             {
                 if(string.IsNullOrEmpty(__dir))
                 {
-                    MoveCharacterToTargetPosition(0f, false);
-
-                    if (transform.localScale.x < 0f)
-                        transform.position = new Vector3(-1, 1, 1);
+                    if(transform.localScale.x < 0f)
+                        transform.localScale = new Vector3(-1f, 1f, 1f);
                     else
-                        transform.position = new Vector3(1, 1, 1);
+                        transform.localScale = Vector3.one;
 
+                    // 중앙 등장은 무조건 Fade in
+                    in_effect = GameConst.INOUT_EFFECT_FADEIN;
+                    FadeIn(0f, GameConst.LAYER_MODEL_C);
                 }
                 else
                 {
                     // 시선 방향과 위치가 동향이면 뒤집기
                     if (direction.Equals(__dir))
-                        MoveCharacterToTargetPosition(posX, true);
+                        transform.localScale = new Vector3(-1f, 1f, 1f) * talkerScale;
                     else
-                        MoveCharacterToTargetPosition(posX, false);
+                        transform.localScale = Vector3.one * talkerScale;
 
-                    if (transform.localScale.x < 0f)
-                        transform.DOScale(new Vector3(-1f, 1f, 1f) * talkerScale, animTime);
+                    // 2인 스탠딩으로 등장 연출
+                    if (posX < 0f)
+                        EnterCharacterDirection(-width, posX, GameConst.LAYER_MODEL_L);
                     else
-                        transform.DOScale(Vector3.one * talkerScale, animTime);
+                        EnterCharacterDirection(width, posX, GameConst.LAYER_MODEL_R);
                 }
-            }
-        }
-
-        /// <summary>
-        /// 등장할 캐릭터를 목표한 위치로 이동. 
-        /// </summary>
-        /// <param name="moveX">이동할 위치</param>
-        /// <param name="flip">좌우 반전 - 방향</param>
-        void MoveCharacterToTargetPosition(float moveX, bool flip)
-        {
-            #region flip 처리 
-            // Center는 moveX가 0f이다.
-            if (moveX == 0)
-            {
-                if (flip)
-                    transform.localScale = new Vector3(-1f, 1f, 1f);
-                else
-                    transform.localScale = Vector3.one;
-            }
-            else
-            {
-                if (flip)
-                    transform.localScale = new Vector3(-1f, 1f, 1f) * talkerScale;
-                else
-                    transform.localScale = Vector3.one * talkerScale;
-            }
-            #endregion
-
-            if (moveX.Equals(0f)) // 가운데 등장 캐릭터는 무조건 페이드인이야.
-            {
-                in_effect = GameConst.INOUT_EFFECT_FADEIN;
-                FadeIn(moveX, GameConst.LAYER_MODEL_C);
-            }
-            else // 좌우 캐릭터 처리 
-            {
-                // 왼쪽에서 등장
-                if (moveX < 0f)
-                    EnterCharacterDirection(-width, moveX, GameConst.LAYER_MODEL_L);
-                else
-                    EnterCharacterDirection(width, moveX, GameConst.LAYER_MODEL_R);
-
             }
         }
 

@@ -54,6 +54,7 @@ namespace PIERStory
         const string KEY_PROPERTY = "property";
         const string KEY_RANGE = "range";
 
+        bool viewShow = false;
 
         public override void OnStartView()
         {
@@ -62,7 +63,10 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_VIEW_NAME, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5047"), string.Empty);
+
+            viewShow = true;
 
             _90dayToggle.isOn = false;
             _30dayToggle.isOn = false;
@@ -75,6 +79,8 @@ namespace PIERStory
         public override void OnHideView()
         {
             base.OnHideView();
+
+            viewShow = false;
         }
 
 
@@ -109,6 +115,9 @@ namespace PIERStory
         /// </summary>
         public void Enable7DayHistory()
         {
+            if (!viewShow)
+                return;
+
             _7dayButton.sprite = dayToggleOnSprite;
             _7dayText.color = toggleOnColor;
             _30dayButton.sprite = dayToggleOffSprite;

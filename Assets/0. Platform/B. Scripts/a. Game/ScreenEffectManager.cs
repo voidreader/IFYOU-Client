@@ -47,8 +47,11 @@ namespace PIERStory
         [Tooltip("폭설")] public ParticleSystem heavySnowParticle;
         [Tooltip("눈")] public ParticleSystem snow;
         [Tooltip("렌즈플레어1")] public ParticleSystem lensFlare1;
+        public ParticleSystem flareGlow1;
         [Tooltip("렌즈플레어2")] public ParticleSystem lensFlare2;
+        public ParticleSystem flareGlow2;
         [Tooltip("렌즈플레어3")] public ParticleSystem lensFlare3;
+        public ParticleSystem flareGlow3;
         [Tooltip("렌즈플레어에서 사용되는 빛알갱이")] public ParticleSystem lightDust;
         [Tooltip("집중선")] public ParticleSystem radiLine;
         public ParticleSystem[] radiLines;                              // 집중선 색 변경을 위한 변수
@@ -820,19 +823,50 @@ namespace PIERStory
                     lightIntensity = Mathf.Clamp(lightIntensity, 1, 3);
 
                     ParticleSystem currLensFlare = null;
+                    var flareGlow = flareGlow1.main.startColor.color;
+
+                    // 렌즈 플레어 타입 설정
                     switch (typeValue)
                     {
                         case 1:
                             currLensFlare = lensFlare1;
+                            flareGlow = flareGlow1.main.startColor.color;
+
+                            // 렌즈플레어 타입에 따른 세기 설정
+                            if (lightIntensity == 1)
+                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.01568628f);
+                            else if(lightIntensity ==2)
+                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.02745098f);
+                            else
+                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.05882353f);
                             break;
                         case 2:
                             currLensFlare = lensFlare2;
+                            flareGlow = flareGlow2.main.startColor.color;
+
+                            if (lightIntensity == 1)
+                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.1568628f);
+                            else if (lightIntensity == 2)
+                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.2352941f);
+                            else
+                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.3137255f);
+
                             break;
                         case 3:
                             currLensFlare = lensFlare3;
+                            flareGlow = flareGlow3.main.startColor.color;
+
+                            if (lightIntensity == 1)
+                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.01960784f);
+                            else if (lightIntensity == 2)
+                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.05882353f);
+                            else
+                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.09803922f);
+
                             break;
                     }
 
+                    // 방향 설정
                     if (lensDir.Contains(GameConst.POS_LEFT))
                         currLensFlare.transform.position = new Vector3(1, 1, 1);
                     else

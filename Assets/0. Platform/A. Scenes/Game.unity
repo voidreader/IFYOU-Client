@@ -9024,7 +9024,7 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
   MultiplayerInfo: {fileID: 0}
-  IsOn: 0
+  IsOn: 1
   CurrentUISelectionState: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
@@ -13248,7 +13248,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 399896060900882010, guid: e8c16d69bd31ef742ab2872609666811, type: 3}
       propertyPath: m_Name
-      value: fx_LensFlare_003
+      value: fx_LensFlare_002
       objectReference: {fileID: 0}
     - target: {fileID: 399896060900882010, guid: e8c16d69bd31ef742ab2872609666811, type: 3}
       propertyPath: m_Layer
@@ -13288,7 +13288,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4803615267538651028, guid: e8c16d69bd31ef742ab2872609666811, type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4803615267538651028, guid: e8c16d69bd31ef742ab2872609666811, type: 3}
       propertyPath: m_LocalPosition.x
@@ -13388,6 +13388,11 @@ Transform:
 --- !u!198 &912753590 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 6163458444262984925, guid: e8c16d69bd31ef742ab2872609666811, type: 3}
+  m_PrefabInstance: {fileID: 912753588}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &912753591 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8726429423543766641, guid: e8c16d69bd31ef742ab2872609666811, type: 3}
   m_PrefabInstance: {fileID: 912753588}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1011341254
@@ -14621,9 +14626,9 @@ Transform:
   - {fileID: 1510498401}
   - {fileID: 1380731388}
   - {fileID: 235376039}
-  - {fileID: 1675062761}
   - {fileID: 1717006248}
   - {fileID: 912753589}
+  - {fileID: 1675062761}
   - {fileID: 1570965479}
   - {fileID: 1921964081}
   - {fileID: 1497326737}
@@ -14662,8 +14667,11 @@ MonoBehaviour:
   heavySnowParticle: {fileID: 1380731389}
   snow: {fileID: 235376040}
   lensFlare1: {fileID: 1717006249}
+  flareGlow1: {fileID: 1717006250}
   lensFlare2: {fileID: 912753590}
+  flareGlow2: {fileID: 912753591}
   lensFlare3: {fileID: 1675062762}
+  flareGlow3: {fileID: 1675062763}
   lightDust: {fileID: 824665225}
   radiLine: {fileID: 1570965480}
   radiLines:
@@ -19621,7 +19629,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2256072102312098034, guid: 9f22cff9855fca8478e5b7cad7dd2fb9, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 2256072102312098034, guid: 9f22cff9855fca8478e5b7cad7dd2fb9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -19681,7 +19689,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8098351946849423368, guid: 9f22cff9855fca8478e5b7cad7dd2fb9, type: 3}
       propertyPath: m_Name
-      value: fx_LensFlare_001
+      value: fx_LensFlare_003
       objectReference: {fileID: 0}
     - target: {fileID: 8098351946849423368, guid: 9f22cff9855fca8478e5b7cad7dd2fb9, type: 3}
       propertyPath: m_Layer
@@ -19705,6 +19713,11 @@ Transform:
 --- !u!198 &1675062762 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 2575232457255126826, guid: 9f22cff9855fca8478e5b7cad7dd2fb9, type: 3}
+  m_PrefabInstance: {fileID: 1675062760}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &1675062763 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5300347088375726258, guid: 9f22cff9855fca8478e5b7cad7dd2fb9, type: 3}
   m_PrefabInstance: {fileID: 1675062760}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1715085553
@@ -19869,7 +19882,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2089149737118163118, guid: 8f1d1992f44926f498f8b4d0a311d42b, type: 3}
       propertyPath: m_Name
-      value: fx_LensFlare_002
+      value: fx_LensFlare_001
       objectReference: {fileID: 0}
     - target: {fileID: 2089149737118163118, guid: 8f1d1992f44926f498f8b4d0a311d42b, type: 3}
       propertyPath: m_Layer
@@ -19917,7 +19930,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6618971377424437600, guid: 8f1d1992f44926f498f8b4d0a311d42b, type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 6618971377424437600, guid: 8f1d1992f44926f498f8b4d0a311d42b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -20001,6 +20014,11 @@ Transform:
 --- !u!198 &1717006249 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 5547186829796121129, guid: 8f1d1992f44926f498f8b4d0a311d42b, type: 3}
+  m_PrefabInstance: {fileID: 1717006247}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &1717006250 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6946820669187528837, guid: 8f1d1992f44926f498f8b4d0a311d42b, type: 3}
   m_PrefabInstance: {fileID: 1717006247}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1745309060

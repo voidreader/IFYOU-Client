@@ -53,21 +53,17 @@ namespace PIERStory {
         
         SignalReceiver signalReceiverEpisodeStart;
         SignalStream signalStreamEpisodeStart;
-        
+
         #region Meta Signal 수신 관련 처리 
-        
-        void Awake() {
+
+        void Awake()
+        {
             signalStreamEpisodeStart = SignalStream.Get(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START);
             signalReceiverEpisodeStart = new SignalReceiver().SetOnSignalCallback(OnSignal);
         }
         
-        private void Start() {
-            signalStreamEpisodeStart.ConnectReceiver(signalReceiverEpisodeStart);
-        }
-        
         private void OnEnable()
         {
-            //add the receiver to react to signals sent through the stream
             signalStreamEpisodeStart.ConnectReceiver(signalReceiverEpisodeStart);
         }
 
@@ -79,15 +75,20 @@ namespace PIERStory {
         
         private void OnSignal(Signal signal)
         {
-           //check if signal is MetaSignal
-           if (signal.hasValue)
+            //check if signal is MetaSignal
+            if (signal.hasValue)
            {
                
                // Type valueType = signal.valueType; //get the payload value type
-               Debug.Log("ViewEpisodeStart OnSingal");
+               Debug.Log("ViewEpisodeStart OnSingal hasValue");
                episodeData = signal.GetValueUnsafe<EpisodeData>();
                SetEpisodeInfo();
            }
+           else
+            {
+                Debug.LogError("No episode data in ViewEpisodeStart");
+            }
+
         }
         
         #endregion
@@ -101,6 +102,7 @@ namespace PIERStory {
         
         public override void OnStartView() {
             base.OnStartView();
+            signalStreamEpisodeStart.ConnectReceiver(signalReceiverEpisodeStart);
         }        
         
         

@@ -72,6 +72,8 @@ namespace PIERStory {
             // Initialize package to access API
             await UnityServices.InitializeAsync();
             
+            
+            
             // 스테이트 체크 
             Debug.Log(UnityServices.State);
 
@@ -128,7 +130,7 @@ namespace PIERStory {
                 return;
                 
             // 무료 유저가 아니면 광고 재생 되지 않음
-            if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD)
+            if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState != PurchaseState.AD)
                 return;
                 
                 
@@ -139,7 +141,7 @@ namespace PIERStory {
         /// <summary>
         /// 선택지 선택 후 광고 보여주기 
         /// </summary>
-        public void ShowSelectionAD() {
+        void ShowSelectionAD() {
             if(UnityEngine.Random.Range(0, 100) < shareSelectionInterstitial)
                 ShowInterstitial();
             else 
@@ -159,8 +161,10 @@ namespace PIERStory {
             if(!useLoadingAD)
                 return;
                 
+            Debug.Log(">> PlayLoadingAD : " + SystemManager.main.givenEpisodeData.purchaseState.ToString());
+                
             // 무료 유저가 아니면 광고 재생 되지 않음
-            if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD)
+            if(GameManager.main != null && SystemManager.main.givenEpisodeData.purchaseState != PurchaseState.AD)
                 return;
                 
             ShowLoadingAD();
@@ -169,7 +173,7 @@ namespace PIERStory {
         /// <summary>
         /// 플레이 AD 재생. 
         /// </summary>
-        public void ShowLoadingAD() {
+        void ShowLoadingAD() {
             
             // 여기서도 점유율에 따라서, 처리 
             if(UnityEngine.Random.Range(0, 100) < shareLoadingInterstitial)
@@ -197,7 +201,7 @@ namespace PIERStory {
                 return;
                 
             // 무료 유저가 아니면 광고 재생 되지 않음
-            if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD)
+            if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState != PurchaseState.AD)
                 return;
             
             gamePlayRowCount++;
@@ -215,7 +219,7 @@ namespace PIERStory {
         /// <summary>
         /// 플레이 AD 재생. 
         /// </summary>
-        public void ShowPlayAD() {
+        void ShowPlayAD() {
             
             // 여기서도 점유율에 따라서, 처리 
             if(UnityEngine.Random.Range(0, 100) < sharePlayInterstitial)

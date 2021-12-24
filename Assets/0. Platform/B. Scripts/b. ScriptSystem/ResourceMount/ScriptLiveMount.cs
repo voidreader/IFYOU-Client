@@ -183,7 +183,7 @@ namespace PIERStory
 
             // byte로 받기 때문에 파일을 저장한다. 
             // 로컬 세이브 
-            ES3.SaveRaw(res.Data, GetCubismRelativePath(SystemManager.GetJsonNodeString(requestJSON, CommonConst.COL_FILE_KEY))); // requestJSON의 키를 저장경로로 사용 할 것!
+            ES3.SaveRaw(res.Data, GetCubismRelativePath(SystemManager.GetJsonNodeString(requestJSON, CommonConst.COL_FILE_KEY)), SystemManager.noEncryptionSetting); // requestJSON의 키를 저장경로로 사용 할 것!
 
             SetMinusAssetCount();
         }

@@ -87,7 +87,7 @@ namespace PIERStory
                 return;
             }
 
-            ES3.SaveRaw(res.Data, sound_key);
+            ES3.SaveRaw(res.Data, sound_key, SystemManager.noEncryptionSetting);
 
             if (sound_key.Contains("mp3"))
                 audioClip = ES3.LoadAudio(sound_key, AudioType.MPEG);

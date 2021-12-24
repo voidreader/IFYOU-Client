@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using LitJson;
 using BestHTTP;
 using Toast.Gamebase;
-
+using System.IO;
 using TMPro;
 
 namespace PIERStory
@@ -89,6 +89,7 @@ namespace PIERStory
 
         string messageRequireUpdate = string.Empty;
         string messageTestVersion = string.Empty;
+        const string KEY_ENCRYPTION = "imageEncrypt_2"; // 암호화 여부 
         
         #region 내장폰트
         [SerializeField] TMP_FontAsset innerFontKO = null;
@@ -96,7 +97,11 @@ namespace PIERStory
         [SerializeField] TMP_FontAsset innerFontJA = null;
         [SerializeField] TMP_FontAsset innerFontSC = null;
         [SerializeField] TMP_FontAsset innerFontTC = null;
+
         #endregion
+
+        // * 비암호화 저장 세팅 (디폴트는 암호화)        
+        public static ES3Settings noEncryptionSetting;
         
 
         private void Awake()
@@ -163,6 +168,21 @@ namespace PIERStory
                 gamebaseLogger_ID = "6WMxzJjo6i5Z5iXm";
                 // AppsFlyerSDK.AppsFlyer.useAppsFlyer = false;
             }
+            
+            
+            // * 2021.11.25 보안 처리 추가 
+            // * 보안처리되지 않았던 빌드가 첫 진입시에는 데이터 폴더를 삭제한다. 
+            if(!PlayerPrefs.HasKey(KEY_ENCRYPTION)) {
+                
+                Debug.Log("!!!!!!!! It's not secure. clean data path.");
+                
+                // 1.0.27 버전부터는 모든 이미지 파일에는 암호화가 적용된다.
+                ClearPersistentDataPath();
+                PlayerPrefs.SetInt(KEY_ENCRYPTION, 1);
+                PlayerPrefs.Save();
+            }            
+            
+            
             // 시스탬매니저는 앱의 실행부터 끝까지 씬에서 모두 사용됩니다. 
             DontDestroyOnLoad(this);
             
@@ -189,6 +209,7 @@ namespace PIERStory
             // 디바이스 스펙에 따른 그래픽 퀄리티 설정             
             ChangeQuality();
             
+            noEncryptionSetting = new ES3Settings(ES3.EncryptionType.None, "password");
             
         }
         
@@ -1553,6 +1574,23 @@ namespace PIERStory
                     SystemManager.ShowSimpleMessagePopUp(error.message);
                 }
             });
+        }
+        
+                /// <summary>
+        /// persistentDataPath 모두 삭제하기. (보안)
+        /// </summary>
+        void ClearPersistentDataPath() {
+            
+           
+            System.IO.DirectoryInfo di = new DirectoryInfo(Application.persistentDataPath);
+
+            foreach (FileInfo file in di.GetFiles())
+                file.Delete();
+
+            
+            foreach (DirectoryInfo dir in di.GetDirectories()) {
+                dir.Delete(true);
+            }
         }
          
     }

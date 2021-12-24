@@ -15,7 +15,6 @@ namespace PIERStory {
         JsonData episodeJSON; // 에피소드 정보 
         
         JsonData purchaseData; // 에피소드 구매 정보
-        JsonData episodeGalleryImageJSON; // 에피소드에 등장하는 갤러리 이미지 JSON
         
         public string episodeID = string.Empty; // 에피소드 ID 
         public string episodeNO = string.Empty; // 에피소드 순번
@@ -97,8 +96,8 @@ namespace PIERStory {
 
             
             // 에피소드에 등장한는 갤러리 이미지
-            episodeGalleryImageJSON = episodeJSON["galleryImage"];
-            episodeGalleryImageProgressValue = UserManager.main.CalcGalleryImage(episodeGalleryImageJSON); // Progressor용 값 
+            
+            episodeGalleryImageProgressValue = UserManager.main.CalcEpisodeGalleryProgress(episodeID);
             
             // * 이미지 
             squareImageURL = SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.TITLE_IMAGE_URL);
@@ -163,7 +162,7 @@ namespace PIERStory {
         /// 갤러리 이미지 프로그래서 밸류 리프레시 
         /// </summary>
         public void RefreshGalleryProgressValue() {
-            episodeGalleryImageProgressValue = UserManager.main.CalcGalleryImage(episodeGalleryImageJSON); // Progressor용 값 
+            episodeGalleryImageProgressValue = UserManager.main.CalcEpisodeGalleryProgress(episodeID); 
         }
         
         /// <summary>

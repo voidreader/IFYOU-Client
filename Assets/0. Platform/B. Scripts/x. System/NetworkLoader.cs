@@ -319,7 +319,7 @@ namespace PIERStory
             // 리턴 값에 따라서 메세지 처리 추가할것. (신규 일러스트가 해금..어쩌고저쩌고)
 
             // 새로운 일러스트 아니면 통신할 필요 없음 
-            if (UserManager.main.CheckIllustUnlocked(__illustID, __illustType))
+            if (!UserManager.main.CheckIllustUnlockable(__illustID, __illustType))
                 return false; 
 
             JsonData sending = new JsonData();

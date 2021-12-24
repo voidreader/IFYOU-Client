@@ -394,10 +394,13 @@ namespace PIERStory {
             episodeData.SetPurchaseState();
             
             
+            StartGame();
             
+            return;
+            // ! 추후 작성
             // 에디터 환경에서는 그냥 실행
             if(Application.isEditor) {
-                StartGame();
+                
                 return;
             }
             

@@ -63,12 +63,12 @@ namespace PIERStory
             }
             
             // 로딩 광고 플레이 처리
-            AdManager.main.ShowLoadingAD();
+            AdManager.main.PlayLoadingAD();
             
             while(loadingBar.fillAmount < 1) {
                 yield return new WaitForSeconds(0.05f);
                 loadingBar.fillAmount = GameManager.main.GetPagePrepValue();
-                textPercentage.text = Mathf.RoundToInt(loadingBar.fillAmount).ToString() + "%";
+                textPercentage.text = Mathf.RoundToInt(loadingBar.fillAmount * 100).ToString() + "%";
             }
 
             yield return new WaitUntil(() => GameManager.main.GetCurrentPageInitialized());

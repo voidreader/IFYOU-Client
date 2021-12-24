@@ -1780,25 +1780,25 @@ namespace PIERStory
         #endregion
 
         /// <summary>
-        /// 현재 일러스트가 신규 일러스트인지 체크한다
+        /// 현재 일러스트가 해금가능한지 체크한다.
         /// </summary>
         /// <param name="__illustID">일러스트 ID</param>
         /// <param name="__illustType">일러스트 타입(illust/live_illust)</param>
         /// <returns></returns>
-        public bool CheckIllustUnlocked(string __illustID, string  __illustType)
+        public bool CheckIllustUnlockable(string __illustID, string  __illustType)
         {
             // 노드 루프돌면서 오픈된 기록이 있는지 체크한다.
             for(int i=0; i< GetUserGalleryImage().Count;i++)
             {
                 if (GetUserGalleryImage()[i]["illust_id"].ToString() == __illustID
                     && GetUserGalleryImage()[i]["illust_type"].ToString() == __illustType
-                    && GetUserGalleryImage()[i]["illust_open"].ToString() == "1")
+                    && GetUserGalleryImage()[i]["illust_open"].ToString() == "0")
                     
-                    // 이미 오픈된 것이 있다. 
+                    // 갤러리 이미지에 목록이 있고, 해금되지 않았다. => 해금 가능하다.
                     return true;
             }
             
-            // 오픈되지 않았다.
+            // 목록에 겂거나, 이미 해금되었다. 
             return false;
         }
         
@@ -1847,6 +1847,29 @@ namespace PIERStory
             }
 
             return galleryValue;
+        }
+        
+        public float CalcEpisodeGalleryProgress(string __episodeID) {
+            
+            int totalEpisodeImage = 0;
+            int openEpisodeImage = 0;
+            
+            for(int i=0; i<GetUserGalleryImage().Count;i++) {
+                if( SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "appear_episode") == __episodeID
+                    && SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "valid")) {
+                    totalEpisodeImage++;
+                    
+                    // 오픈된 경우. 
+                    if(SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "illust_open")) {
+                        openEpisodeImage++;
+                    }
+                }
+            }
+            
+            if(totalEpisodeImage == 0 || openEpisodeImage == 0)
+                return 0;
+                
+            return (float)openEpisodeImage / (float)totalEpisodeImage;
         }
 
         /// <summary>

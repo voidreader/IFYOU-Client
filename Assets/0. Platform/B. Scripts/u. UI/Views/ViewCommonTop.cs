@@ -13,13 +13,21 @@ namespace PIERStory {
         public static string staticCurrentTopOwner = string.Empty; // static owner.
         
         
-        [SerializeField] GameObject backButton;
-        [SerializeField] TextMeshProUGUI textViewName;
-        [SerializeField] Image imageBackground;
+        [SerializeField] GameObject backButton; // 뒤로가기 버튼 
+        [SerializeField] TextMeshProUGUI textViewName; // 뷰 이름 
+        [SerializeField] Image imageBackground; // 뒤의 흰 배경
         [SerializeField] GameObject groupProperty; // 프로퍼티 그룹 (재화, 메일, 등등)
         
         // * 현재 탑을 제어하는 owner를 설정하려고 했는데, 잠시 보류... 2021.12.07
         [SerializeField] string topOwner = string.Empty;
+        
+        
+        // 바로 이전 상태 저장 변수
+        bool previousBackButtonShow = false; // 백버튼의 이전 상태
+        bool previousTextViewNameShow = false; // 이전 뷰 이름 상태
+        string previousViewName = string.Empty; // 이전 뷰 텍스트
+        bool previousGroupPropertyShow = false; // 이전 그룹 프로퍼티 상태 
+        bool previousBackgroundShow = false; // 이전 백그라운드 상태 
         
         
         bool backgroundSignalValue = true;
@@ -27,12 +35,14 @@ namespace PIERStory {
         
         // Stream, Signal
         
-        SignalStream signalSteamTopBackground;
-        SignalStream signalSteamTopViewName;
-        SignalStream signalSteamTopViewNameExist;
-        SignalStream signalSteamTopPropertyGroup;
-        SignalStream signalSteamTopChangeOwner;
-        SignalStream signalSteamTopBackButton;
+        SignalStream signalStreamTopBackground;
+        SignalStream signalStreamTopViewName;
+        SignalStream signalStreamTopViewNameExist;
+        SignalStream signalStreamTopPropertyGroup;
+        SignalStream signalStreamTopChangeOwner;
+        SignalStream signalStreamTopBackButton;
+        SignalStream signalStreamRecover;
+        SignalStream signalStreamSaveState;
         
         
         SignalReceiver signalReceiverTopBackground;
@@ -41,44 +51,57 @@ namespace PIERStory {
         SignalReceiver signalReceiverTopPropertyGroup;
         SignalReceiver signalReceiverTopChangeOwner;
         SignalReceiver signalReceiverTopBackButton;
+        SignalReceiver signalReceiverRecover;
+        SignalReceiver signalReceiverSaveState;
         
         private void Awake() {
             // Background 
-            signalSteamTopBackground = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND);
+            signalStreamTopBackground = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND);
             signalReceiverTopBackground = new SignalReceiver().SetOnSignalCallback(OnTopBackgroundSignal);
 
-            signalSteamTopViewNameExist = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST);
+            signalStreamTopViewNameExist = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST);
             signalReceiverTopViewNameExist = new SignalReceiver().SetOnSignalCallback(OnTopViewNameExistSignal);
 
-            signalSteamTopViewName = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME);
+            signalStreamTopViewName = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME);
             signalReceiverTopViewName = new SignalReceiver().SetOnSignalCallback(OnTopViewNameSignal);
 
-            signalSteamTopPropertyGroup = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP);
+            signalStreamTopPropertyGroup = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP);
             signalReceiverTopPropertyGroup = new SignalReceiver().SetOnSignalCallback(OnTopPropertySignal);
             
-            signalSteamTopChangeOwner = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_CHANGE_OWNER);
+            signalStreamTopChangeOwner = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_CHANGE_OWNER);
             signalReceiverTopChangeOwner = new SignalReceiver().SetOnSignalCallback(OnTopChangeOwner);
             
-            signalSteamTopBackButton = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON);
+            signalStreamTopBackButton = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON);
             signalReceiverTopBackButton = new SignalReceiver().SetOnSignalCallback(OnTopBackButtonSignal);
+            
+            // 복원 시그널 추가
+            signalStreamRecover = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER);
+            signalReceiverRecover = new SignalReceiver().SetOnSignalCallback(OnTopRecoverSignal);
+            // 상태 저장 시그널 추가
+            signalStreamSaveState = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE);
+            signalReceiverSaveState = new SignalReceiver().SetOnSignalCallback(OnTopSaveState);
         }
         
         private void Start() {
-            signalSteamTopBackground.ConnectReceiver(signalReceiverTopBackground);
-            signalSteamTopViewNameExist.ConnectReceiver(signalReceiverTopViewNameExist);
-            signalSteamTopViewName.ConnectReceiver(signalReceiverTopViewName);
-            signalSteamTopPropertyGroup.ConnectReceiver(signalReceiverTopPropertyGroup);
-            signalSteamTopChangeOwner.ConnectReceiver(signalReceiverTopChangeOwner);
-            signalSteamTopBackButton.ConnectReceiver(signalReceiverTopBackButton);
+            signalStreamTopBackground.ConnectReceiver(signalReceiverTopBackground);
+            signalStreamTopViewNameExist.ConnectReceiver(signalReceiverTopViewNameExist);
+            signalStreamTopViewName.ConnectReceiver(signalReceiverTopViewName);
+            signalStreamTopPropertyGroup.ConnectReceiver(signalReceiverTopPropertyGroup);
+            signalStreamTopChangeOwner.ConnectReceiver(signalReceiverTopChangeOwner);
+            signalStreamTopBackButton.ConnectReceiver(signalReceiverTopBackButton);
+            signalStreamRecover.ConnectReceiver(signalReceiverRecover);
+            signalStreamSaveState.ConnectReceiver(signalReceiverSaveState);
         }
         
         void OnDisable() {
-            signalSteamTopBackground.DisconnectReceiver(signalReceiverTopBackground);
-            signalSteamTopViewNameExist.DisconnectReceiver(signalReceiverTopViewNameExist);
-            signalSteamTopViewName.DisconnectReceiver(signalReceiverTopViewName);
-            signalSteamTopPropertyGroup.DisconnectReceiver(signalReceiverTopPropertyGroup);
-            signalSteamTopChangeOwner.DisconnectReceiver(signalReceiverTopChangeOwner);
-            signalSteamTopBackButton.DisconnectReceiver(signalReceiverTopBackButton);
+            signalStreamTopBackground.DisconnectReceiver(signalReceiverTopBackground);
+            signalStreamTopViewNameExist.DisconnectReceiver(signalReceiverTopViewNameExist);
+            signalStreamTopViewName.DisconnectReceiver(signalReceiverTopViewName);
+            signalStreamTopPropertyGroup.DisconnectReceiver(signalReceiverTopPropertyGroup);
+            signalStreamTopChangeOwner.DisconnectReceiver(signalReceiverTopChangeOwner);
+            signalStreamTopBackButton.DisconnectReceiver(signalReceiverTopBackButton);
+            signalStreamRecover.DisconnectReceiver(signalReceiverRecover);
+            signalStreamSaveState.DisconnectReceiver(signalReceiverSaveState);
         }
         
         public override void OnView()
@@ -90,6 +113,45 @@ namespace PIERStory {
             backButton.SetActive(__flag);
         }
         
+        /// <summary>
+        /// 상태 정보 저장. 
+        /// </summary>
+        void SavePreviousState() {
+            previousBackButtonShow = backButton.activeSelf;
+            previousBackgroundShow = backgroundSignalValue;
+            previousGroupPropertyShow = groupProperty.activeSelf;
+            previousTextViewNameShow = textViewName.gameObject.activeSelf;
+            previousViewName = textViewName.text;
+        }
+        
+        /// <summary>
+        /// 상태정보 복원
+        /// 팝업이나 일부 뷰가 닫힐때 다시 실행한다. 
+        /// </summary>
+        void RecoverState() {
+            backButton.SetActive(previousBackButtonShow);
+            groupProperty.SetActive(previousGroupPropertyShow);
+            textViewName.gameObject.SetActive(previousTextViewNameShow);
+            textViewName.text = previousViewName;
+            
+            if(backgroundSignalValue) {
+                imageBackground.DOFade(1, 0.4f);
+            }
+            else {
+                imageBackground.DOFade(0, 0.4f);
+            }
+        }
+
+        void OnTopSaveState(Signal signal) {
+            SavePreviousState();
+        }
+        
+        void OnTopRecoverSignal(Signal signal) {
+            
+            Debug.Log("Top Recover Signal Received");
+            
+            RecoverState();
+        }
         
         /// <summary>
         /// 백버튼 
@@ -100,6 +162,8 @@ namespace PIERStory {
                 Debug.LogError("OnTopBackButtonSignal has no value");
                 return;
             }
+            
+            
             
             bool isShow = signal.GetValueUnsafe<bool>();
             backButton.SetActive(isShow);
@@ -167,6 +231,8 @@ namespace PIERStory {
                 return;
             }
             
+            
+            
             bool isShow = signal.GetValueUnsafe<bool>();
             
             textViewName.gameObject.SetActive(isShow);
@@ -180,6 +246,8 @@ namespace PIERStory {
         {
             if(s.hasValue)
             {
+                
+                
                 string viewName = s.GetValueUnsafe<string>();
                 textViewName.text = viewName;
             }
@@ -191,6 +259,8 @@ namespace PIERStory {
                 Debug.LogError("OnTopPropertySignal has no value");
                 return;
             }
+            
+            
             
             bool isShow = signal.GetValueUnsafe<bool>();
             groupProperty.SetActive(isShow);

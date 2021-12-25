@@ -218,6 +218,16 @@ namespace PIERStory
             routineAutoPlay = RoutineAutoPlay();
         }
 
+
+        /// <summary>
+        /// 게임 씬에서 사용하는 네트워크 로딩 스크린 받기
+        /// </summary>
+        /// <returns></returns>
+        public NetworkLoadingScreen GetGameNetworkLoadingScreen()
+        {
+            return gameNetworkLoadingScreen;
+        }
+
         static void GarbageCollect()
         {
             Debug.Log("GarbageCollect Called");

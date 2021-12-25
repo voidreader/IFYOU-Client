@@ -2,6 +2,8 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System;
+using System.Collections.Generic;
 using Doozy.Runtime.Signals;
 using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
@@ -23,15 +25,24 @@ namespace Doozy.Runtime.UIManager.Input
         public const string k_NavigateDown = "Down";
         
         private static SignalStream s_navigateLeftStream;
-        private static SignalStream s_navigateRightStream;
-        private static SignalStream s_navigateUpStream;
-        private static SignalStream s_navigateDownStream;
         public static SignalStream navigateLeftStream => s_navigateLeftStream ??= SignalsService.GetStream(k_NavigateStreamCategory, k_NavigateLeft);
-        public static SignalStream navigateRightStream => s_navigateRightStream ??= SignalsService.GetStream(k_NavigateStreamCategory, k_NavigateRight);
-        public static SignalStream navigateUpStream => s_navigateUpStream ??= SignalsService.GetStream(k_NavigateStreamCategory, k_NavigateUp);
-        public static SignalStream navigateDownStream => s_navigateDownStream ??= SignalsService.GetStream(k_NavigateStreamCategory, k_NavigateDown);
         
+        private static SignalStream s_navigateRightStream;
+        public static SignalStream navigateRightStream => s_navigateRightStream ??= SignalsService.GetStream(k_NavigateStreamCategory, k_NavigateRight);
+        
+        private static SignalStream s_navigateUpStream;
+        public static SignalStream navigateUpStream => s_navigateUpStream ??= SignalsService.GetStream(k_NavigateStreamCategory, k_NavigateUp);
+        
+        private static SignalStream s_navigateDownStream;
+        public static SignalStream navigateDownStream => s_navigateDownStream ??= SignalsService.GetStream(k_NavigateStreamCategory, k_NavigateDown);
+
+        public const string k_CustomInputActionStreamCategory = "CustomInputAction";
+        private static Dictionary<string, SignalStream> s_customInputActionSignalStreams;
+        private static Dictionary<string, SignalStream> customInputActionSignalStreams => s_customInputActionSignalStreams ??= new Dictionary<string, SignalStream>();
+
         private static SignalReceiver inputStreamReceiver { get; set; }
+        
+        
         private static void ConnectToInputStream()
         {
             stream.ConnectReceiver(inputStreamReceiver);
@@ -53,13 +64,41 @@ namespace Doozy.Runtime.UIManager.Input
             inputStreamReceiver = new SignalReceiver().SetOnSignalCallback(signal =>
             {
                 if (!signal.hasValue) return;
-                if (!(signal.valueAsObject is InputSignalData { inputActionName: UIInputActionName.Navigate } data)) return;
-                Navigate(data);
+                if(!(signal.valueAsObject is InputSignalData data)) return;
+                switch (data.inputActionName)
+                {
+                    case UIInputActionName.Point:
+                        break;
+                    case UIInputActionName.Click:
+                        break;
+                    case UIInputActionName.MiddleClick:
+                        break;
+                    case UIInputActionName.RightClick:
+                        break;
+                    case UIInputActionName.ScrollWheel:
+                        break;
+                    case UIInputActionName.Navigate:
+                        Navigate(data);
+                        break;
+                    case UIInputActionName.Submit:
+                        break;
+                    case UIInputActionName.Cancel:
+                        break;
+                    case UIInputActionName.TrackedDevicePosition:
+                        break;
+                    case UIInputActionName.TrackedDeviceOrientation:
+                        break;
+                    case UIInputActionName.CustomActionName:
+                        CustomInputAction(data);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             });
             
             ConnectToInputStream();
         }
-
+      
         public static void Stop()
         {
             if (!connected)
@@ -97,6 +136,17 @@ namespace Doozy.Runtime.UIManager.Input
             }
         }
         
-        
+        private static void CustomInputAction(InputSignalData data)
+        {
+
+            string streamName = data.callbackContext.action.name;
+            if (!customInputActionSignalStreams.TryGetValue(streamName, out SignalStream signalStream))
+            {
+                signalStream = SignalsService.GetStream(k_CustomInputActionStreamCategory, streamName);
+                customInputActionSignalStreams.Add(streamName, signalStream);
+            }
+
+            signalStream.SendSignal(data);
+        }
     }
 }

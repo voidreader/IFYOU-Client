@@ -17,6 +17,7 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textViewName; // 뷰 이름 
         [SerializeField] Image imageBackground; // 뒤의 흰 배경
         [SerializeField] GameObject groupProperty; // 프로퍼티 그룹 (재화, 메일, 등등)
+        [SerializeField] HorizontalLayoutGroup propertyHorizontalLayout;
         
         // * 현재 탑을 제어하는 owner를 설정하려고 했는데, 잠시 보류... 2021.12.07
         [SerializeField] string topOwner = string.Empty;
@@ -107,6 +108,9 @@ namespace PIERStory {
         public override void OnView()
         {
             base.OnView();
+            
+            propertyHorizontalLayout.enabled = false;
+            
         }
         
         public void OnSignalControlBackButton(bool __flag) {

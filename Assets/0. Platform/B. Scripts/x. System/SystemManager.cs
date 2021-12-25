@@ -1335,7 +1335,14 @@ namespace PIERStory
         /// </summary>
         public static void ShowNetworkLoading()
         {
+            if (LobbyManager.main != null)
+                main.networkLoadingScreen = LobbyManager.main.GetLobbyNetworkLoadingScreen();
 
+            if (GameManager.main != null)
+                main.networkLoadingScreen = GameManager.main.GetGameNetworkLoadingScreen();
+
+            if (main.networkLoadingScreen)
+                main.networkLoadingScreen.ShowNetworkLoading();
         }
 
         /// <summary>

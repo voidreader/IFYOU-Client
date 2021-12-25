@@ -14,6 +14,7 @@ using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
 using UnityEngine.UIElements;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Editor.UIManager.Windows
 {
@@ -22,11 +23,8 @@ namespace Doozy.Editor.UIManager.Windows
         private const string WINDOW_TITLE = "UI Manager";
         public const string k_WindowMenuPath = "Tools/Doozy/UI Manager/";
 
-        [MenuItem(k_WindowMenuPath + "Window", priority = -100)]
+        [MenuItem(k_WindowMenuPath + "Window", priority = -750)]
         public static void Open() => InternalOpenWindow(WINDOW_TITLE);
-
-        // [MenuItem(k_WindowMenuPath + "Refresh UIBehaviours", priority = 1000)]
-        // public static void RefreshUIBehaviours() => UIBehaviourExtensionGenerator.Run();
 
         public static EditorSelectableColorInfo buttonAccentColor => EditorSelectableColors.EditorUI.Blue;
 

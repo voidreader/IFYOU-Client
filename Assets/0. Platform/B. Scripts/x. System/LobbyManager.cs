@@ -109,7 +109,11 @@ namespace PIERStory {
             }
             
             if(Input.GetKeyDown(KeyCode.P)) {
-                AdManager.main.ShowRewardAd();
+                // AdManager.main.ShowRewardAd();
+                SystemManager.ShowNetworkLoading();
+            }
+            else if(Input.GetKeyDown(KeyCode.L)) {
+                SystemManager.HideNetworkLoading();
             }
         }
 

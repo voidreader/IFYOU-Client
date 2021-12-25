@@ -15,7 +15,7 @@ namespace Doozy.Editor.Signals.Windows
     {
         private const string WINDOW_TITLE = "Streams Console";
 
-        [MenuItem(SignalsWindow.k_WindowMenuPath + "/" + WINDOW_TITLE, priority = 100)]
+        [MenuItem(SignalsWindow.k_WindowMenuPath + WINDOW_TITLE, priority = -700)]
         private static void ShowWindow() => InternalOpenWindow(WINDOW_TITLE);
 
         protected override void OnEnable()

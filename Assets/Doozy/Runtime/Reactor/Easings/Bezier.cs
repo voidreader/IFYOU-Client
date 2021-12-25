@@ -115,46 +115,52 @@ namespace Doozy.Runtime.Reactor.Easings
         {
             progress = Clamp01(progress);
 
-            return ease switch
-                   {
-                       Ease.Linear     => Evaluate(0f, 0f, 1f, 1f, progress),
-                       Ease.Easy       => Evaluate(0.25f, 0.1f, 0.25f, 1.0f, progress),
-                       Ease.InEasy     => Evaluate(0.42f, 0f, 1f, 1f, progress),
-                       Ease.OutEasy    => Evaluate(0f, 0f, 0.58f, 1f, progress),
-                       Ease.InOutEasy  => Evaluate(0.42f, 0, 0.58f, 1f, progress),
-                       Ease.InSine     => Evaluate(0.47f, 0, 0.745f, 0.715f, progress),
-                       Ease.OutSine    => Evaluate(0.39f, 0.575f, 0.565f, 1f, progress),
-                       Ease.InOutSine  => Evaluate(0.445f, 0.05f, 0.55f, 0.95f, progress),
-                       Ease.InQuad     => Evaluate(0.55f, 0.085f, 0.68f, 0.53f, progress),
-                       Ease.OutQuad    => Evaluate(0.25f, 0.46f, 0.45f, 0.94f, progress),
-                       Ease.InOutQuad  => Evaluate(0.455f, 0.03f, 0.515f, 0.955f, progress),
-                       Ease.InCubic    => Evaluate(0.55f, 0.055f, 0.675f, 0.19f, progress),
-                       Ease.OutCubic   => Evaluate(0.215f, 0.61f, 0.355f, 1f, progress),
-                       Ease.InOutCubic => Evaluate(0.645f, 0.045f, 0.355f, 1f, progress),
-                       Ease.InQuart    => Evaluate(0.895f, 0.03f, 0.685f, 0.22f, progress),
-                       Ease.OutQuart   => Evaluate(0.165f, 0.84f, 0.44f, 1f, progress),
-                       Ease.InOutQuart => Evaluate(0.77f, 0f, 0.175f, 1f, progress),
-                       Ease.InQuint    => Evaluate(0.755f, 0.05f, 0.855f, 0.06f, progress),
-                       Ease.OutQuint   => Evaluate(0.23f, 1f, 0.32f, 1f, progress),
-                       Ease.InOutQuint => Evaluate(0.86f, 0f, 0.07f, 1f, progress),
-                       Ease.InExpo     => Evaluate(0.95f, 0.05f, 0.795f, 0.035f, progress),
-                       Ease.OutExpo    => Evaluate(0.19f, 1f, 0.22f, 1f, progress),
-                       Ease.InOutExpo  => Evaluate(1f, 0f, 0f, 1f, progress),
-                       Ease.InCirc     => Evaluate(0.6f, 0.04f, 0.98f, 0.335f, progress),
-                       Ease.OutCirc    => Evaluate(0.075f, 0.82f, 0.165f, 1f, progress),
-                       Ease.InOutCirc  => Evaluate(0.785f, 0.135f, 0.15f, 0.86f, progress),
-                       Ease.InBack     => Evaluate(0.8f, -0.4f, 0f, 1f, progress),
-                       // _               => throw new ArgumentOutOfRangeException(nameof(ease), ease, null)
-                   };
-            // case Ease.OutBack:
-            // case Ease.InOutBack:
-            // case Ease.InElastic:
-            // case Ease.OutElastic:
-            // case Ease.InOutElastic:
-            // case Ease.InBounce:
-            // case Ease.OutBounce:
-            // case Ease.InOutBounce:
-            // case Ease.Spring:
+            //The switch expression does not handle all possible values of its input type (it is not exhaustive).
+            #pragma warning disable 8509
+            {
+                return ease switch
+                       {
+                           Ease.Linear     => Evaluate(0f, 0f, 1f, 1f, progress),
+                           Ease.Easy       => Evaluate(0.25f, 0.1f, 0.25f, 1.0f, progress),
+                           Ease.InEasy     => Evaluate(0.42f, 0f, 1f, 1f, progress),
+                           Ease.OutEasy    => Evaluate(0f, 0f, 0.58f, 1f, progress),
+                           Ease.InOutEasy  => Evaluate(0.42f, 0, 0.58f, 1f, progress),
+                           Ease.InSine     => Evaluate(0.47f, 0, 0.745f, 0.715f, progress),
+                           Ease.OutSine    => Evaluate(0.39f, 0.575f, 0.565f, 1f, progress),
+                           Ease.InOutSine  => Evaluate(0.445f, 0.05f, 0.55f, 0.95f, progress),
+                           Ease.InQuad     => Evaluate(0.55f, 0.085f, 0.68f, 0.53f, progress),
+                           Ease.OutQuad    => Evaluate(0.25f, 0.46f, 0.45f, 0.94f, progress),
+                           Ease.InOutQuad  => Evaluate(0.455f, 0.03f, 0.515f, 0.955f, progress),
+                           Ease.InCubic    => Evaluate(0.55f, 0.055f, 0.675f, 0.19f, progress),
+                           Ease.OutCubic   => Evaluate(0.215f, 0.61f, 0.355f, 1f, progress),
+                           Ease.InOutCubic => Evaluate(0.645f, 0.045f, 0.355f, 1f, progress),
+                           Ease.InQuart    => Evaluate(0.895f, 0.03f, 0.685f, 0.22f, progress),
+                           Ease.OutQuart   => Evaluate(0.165f, 0.84f, 0.44f, 1f, progress),
+                           Ease.InOutQuart => Evaluate(0.77f, 0f, 0.175f, 1f, progress),
+                           Ease.InQuint    => Evaluate(0.755f, 0.05f, 0.855f, 0.06f, progress),
+                           Ease.OutQuint   => Evaluate(0.23f, 1f, 0.32f, 1f, progress),
+                           Ease.InOutQuint => Evaluate(0.86f, 0f, 0.07f, 1f, progress),
+                           Ease.InExpo     => Evaluate(0.95f, 0.05f, 0.795f, 0.035f, progress),
+                           Ease.OutExpo    => Evaluate(0.19f, 1f, 0.22f, 1f, progress),
+                           Ease.InOutExpo  => Evaluate(1f, 0f, 0f, 1f, progress),
+                           Ease.InCirc     => Evaluate(0.6f, 0.04f, 0.98f, 0.335f, progress),
+                           Ease.OutCirc    => Evaluate(0.075f, 0.82f, 0.165f, 1f, progress),
+                           Ease.InOutCirc  => Evaluate(0.785f, 0.135f, 0.15f, 0.86f, progress),
+                           Ease.InBack     => Evaluate(0.8f, -0.4f, 0f, 1f, progress),
+                           // Ease.OutBack      => expr,
+                           // Ease.InOutBack    => expr,
+                           // Ease.InElastic    => expr,
+                           // Ease.OutElastic   => expr,
+                           // Ease.InOutElastic => expr,
+                           // Ease.InBounce     => expr,
+                           // Ease.OutBounce    => expr,
+                           // Ease.InOutBounce  => expr,
+                           // Ease.Spring       => expr,
+                           // _                 => throw new ArgumentOutOfRangeException(nameof(ease), ease, null)
+                       };
+            }
+            #pragma warning restore 8509
+
         }
     }
 }

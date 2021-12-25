@@ -9,6 +9,8 @@ namespace PIERStory
     public class ViewMail : CommonView
     {
         public static Action<JsonData> OnRequestMailList = null;
+        
+        [SerializeField] GameObject NoMail;
 
         public MailElement[] mailElements;
 
@@ -66,8 +68,11 @@ namespace PIERStory
             if(__j == null || __j.Count == 0)
             {
                 isEmptyMailBox = true;
+                NoMail.SetActive(true);
                 return;
             }
+            
+            NoMail.SetActive(false);
 
 
             for (int i = 0; i < __j.Count; i++)

@@ -1,7 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+using TMPro;
 using Doozy.Runtime.Signals;
 
 namespace PIERStory {
@@ -20,6 +21,9 @@ namespace PIERStory {
         [SerializeField] List<PlayingStoryElement> ListPlayingStoryElements; // 진행중 이야기 
         [SerializeField] List<MainStoryRow> ListRecommendStoryRow; // 추천 스토리의 2열짜리 행 
         [SerializeField] List<NewStoryElement> ListNewStoryElement; // 새로운 이야기 개별 개체 
+
+        [Header("더보기")]
+        public TextMeshProUGUI userPincode;
         
         float mainScrollRectY = 0;
         
@@ -36,6 +40,7 @@ namespace PIERStory {
 
             InitLobby();
             
+            InitAddMore();
         }
         
         /// <summary>
@@ -165,15 +170,36 @@ namespace PIERStory {
                 return;
             }
         }
-        
+
         #endregion
-        
+
         #region 카테고리
         #endregion
-        
+
         #region 상점
         #endregion
+
+        #region 더보기
+
+        /// <summary>
+        /// 더보기 페이지 설정
+        /// </summary>
+        void InitAddMore()
+        {
+            userPincode.text = string.Format("UID : {0}", UserManager.main.GetUserPinCode());
+        }
+
+
+        /// <summary>
+        /// pin code 복사
+        /// </summary>
+        public void OnClickCopyUID()
+        {
+            UniClipboard.SetText(userPincode.text);
+        }
         
-        
+        #endregion
+
+
     }
 }

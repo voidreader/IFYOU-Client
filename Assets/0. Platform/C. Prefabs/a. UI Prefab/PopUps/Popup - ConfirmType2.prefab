@@ -729,9 +729,9 @@ MonoBehaviour:
       CurrentValue: 1
       Enabled: 1
       StartAlpha: 1
-      FromReferenceValue: 1
+      FromReferenceValue: 2
       ToReferenceValue: 2
-      FromCustomValue: 1
+      FromCustomValue: 0.5
       ToCustomValue: 0
       FromOffset: 0
       ToOffset: 0
@@ -2259,7 +2259,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 600, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5997633522107407752
@@ -2351,7 +2351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 0
+  OnStartBehaviour: 4
   OnShowCallback:
     Enabled: 0
     EventName: OnShowCallback
@@ -2384,7 +2384,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
-  UseCustomStartPosition: 0
+  UseCustomStartPosition: 1
   AutoHideAfterShow: 0
   AutoHideAfterShowDelay: 0
   DisableGameObjectWhenHidden: 0
@@ -2482,7 +2482,7 @@ MonoBehaviour:
       FromValue: {x: -872.5, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 0
+      Enabled: 1
       AnimationType: 0
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -2712,7 +2712,7 @@ MonoBehaviour:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 9
         Curve:
           serializedVersion: 2
           m_Curve:
@@ -2764,17 +2764,17 @@ MonoBehaviour:
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 872.5, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 0
+      Enabled: 1
       AnimationType: 1
       StartPosition: {x: 0, y: 0, z: 0}
-      FromReferenceValue: 1
+      FromReferenceValue: 2
       ToReferenceValue: 0
-      FromCustomValue: {x: 0, y: 0, z: 0}
-      ToCustomValue: {x: 0, y: 0, z: 0}
+      FromCustomValue: {x: 0, y: 100, z: 0}
+      ToCustomValue: {x: 0, y: -50, z: 0}
       FromOffset: {x: 0, y: 0, z: 0}
-      ToOffset: {x: 0, y: 0, z: 0}
+      ToOffset: {x: 0, y: -100, z: 0}
       FromDirection: 13
-      ToDirection: 11
+      ToDirection: 13
     Rotate:
       Settings:
         PlayMode: 0

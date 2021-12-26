@@ -103,8 +103,9 @@ namespace Doozy.Editor.Nody
             flowGraph.UpdateNodes();       //update nodes
             RefreshNodeViews();            //create node views
             RefreshEdges();                //create edges
-            AssetDatabase.SaveAssets();
-            // nodyInspector?.UpdateSelection((FlowNodeView) selection.FirstOrDefault());
+            EditorUtility.SetDirty(flowGraph);
+            // AssetDatabase.SaveAssetIfDirty(flowGraph);
+            // AssetDatabase.SaveAssets();
             NodyInspectorWindow.instance.UpdateSelection((FlowNodeView)selection.FirstOrDefault());
         }
 
@@ -235,8 +236,8 @@ namespace Doozy.Editor.Nody
 
                 ConnectPorts(edgeView.outputPortView.flowPort, inputPortView.flowPort);
             });
-
-            AssetDatabase.SaveAssets();
+            
+            // AssetDatabase.SaveAssets();
             return graphViewChange;
         }
 
@@ -316,24 +317,27 @@ namespace Doozy.Editor.Nody
             EditorUtility.SetDirty(flowGraph);
             AssetDatabase.AddObjectToAsset(node, flowGraph);
             if (recordUndo) Undo.RegisterCreatedObjectUndo(node, $"{ObjectNames.NicifyVariableName(nameof(CreateNode))}");
-            AssetDatabase.SaveAssets();
+            // AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssetIfDirty(node);
+            AssetDatabase.SaveAssetIfDirty(flowGraph);
             if (createView) CreateNodeView(node);
             return node;
         }
 
         private void DeleteNode(FlowNodeView nodeView)
         {
-            if (flowGraph == null) return;                         //null graph -> stop
-            if (nodeView == null) return;                          //null node view -> stop
+            if (flowGraph == null) return;                             //null graph -> stop
+            if (nodeView == null) return;                              //null node view -> stop
             if (nodeView.flowNode == null) return;                     //null node reference -> stop
             if (nodeView.flowNode.canBeDeleted == false) return;       //node marked not to be deleted -> stop
             if (nodeView.flowNode.nodeType == NodeType.System) return; //node is system node -> stop
-            Undo.RecordObject(flowGraph, "Delete Node");           //save undo for graph
+            Undo.RecordObject(flowGraph, "Delete Node");               //save undo for graph
             NodyUtils.DisconnectNode(nodeView.flowNode, flowGraph);    //disconnect node
             flowGraph.nodes.Remove(nodeView.flowNode);                 //remove node from graph
-            EditorUtility.SetDirty(flowGraph);                     //mark graph as dirty
+            EditorUtility.SetDirty(flowGraph);                         //mark graph as dirty
             Undo.DestroyObjectImmediate(nodeView.flowNode);            //save undo for node and destroy the node (asset)
-            AssetDatabase.SaveAssets();                            //save assets
+            // AssetDatabase.SaveAssets();                                //save assets
+            AssetDatabase.SaveAssetIfDirty(flowGraph);
         }
 
         private void DeletePort(FlowPortView portView)
@@ -426,7 +430,8 @@ namespace Doozy.Editor.Nody
                     continue;
                 flowGraph.rootNode = rootNode;
                 EditorUtility.SetDirty(flowGraph);
-                AssetDatabase.SaveAssets();
+                AssetDatabase.SaveAssetIfDirty(flowGraph);
+                // AssetDatabase.SaveAssets();
                 break;
             }
             if (flowGraph.rootNode != null) return;
@@ -434,7 +439,8 @@ namespace Doozy.Editor.Nody
             flowGraph.nodes.Remove(flowGraph.rootNode);
             flowGraph.nodes.Insert(0, flowGraph.rootNode);
             EditorUtility.SetDirty(flowGraph);
-            AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssetIfDirty(flowGraph);
+            // AssetDatabase.SaveAssets();
             FrameAll();
         }
 

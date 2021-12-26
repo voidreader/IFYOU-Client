@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 namespace PIERStory {
 
@@ -11,8 +12,8 @@ namespace PIERStory {
 
 
         [SerializeField] Image _overlay;
-        [SerializeField] GameObject _animatedIcon;
-        // [SerializeField] Transform _icon;
+        [SerializeField] Image _icon;
+        [SerializeField] TextMeshProUGUI _textLoading;
 
        
         /// <summary>
@@ -23,15 +24,17 @@ namespace PIERStory {
             // 네트워크 로딩 화면은 바로 등장시키지 않고, 약간의 텀을 두고 나오도록 한다. 
             // 빠른 통신의 경우 굳이 이 화면을 노출할 필요는 없다. 
             Debug.Log("[[NetworkLoading]]");
-            _animatedIcon.gameObject.SetActive(false);
-            _overlay.DOKill();
-            /*
+            
+            _icon.transform.localScale = Vector3.one;
+            _icon.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
+            
             _icon.DOKill();
-            _icon.gameObject.SetActive(false);
-            _icon.localEulerAngles = new Vector3(0, 0, -10);
-            */
-
+            _icon.transform.DOKill();
+            _overlay.DOKill();
             _overlay.color = new Color(0, 0, 0, 0);
+
+            _textLoading.DOKill();
+            _textLoading.text = string.Empty;
             
             this.gameObject.SetActive(true);
             _overlay.DOFade(0.4f, 1f).SetDelay(0.5f).OnComplete(OnStartShow); // 딜레이 1초 
@@ -42,12 +45,17 @@ namespace PIERStory {
         /// </summary>
         void OnStartShow()
         {
-            /*
             _icon.gameObject.SetActive(true);
-            _icon.DOLocalRotate(new Vector3(0, 0, 10), 1, RotateMode.Fast).SetLoops(-1, LoopType.Yoyo);
-            */
             
-            _animatedIcon.gameObject.SetActive(true);
+            _textLoading.DOText("Loading...", 1.2f, true).OnComplete(()=> { Invoke("RestartTextTyping", 2f); });
+            _icon.transform.DOScale(1.1f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+            _icon.DOFade(1, 0.4f);
+            
+        }
+        
+        void RestartTextTyping() {
+            _textLoading.text = string.Empty;
+            _textLoading.DOText("Loading...", 1.2f, true).OnComplete(()=> { Invoke("RestartTextTyping", 2f); });
         }
 
         /// <summary>
@@ -55,8 +63,10 @@ namespace PIERStory {
         /// </summary>
         public void OffNetworkLoading()
         {
-            _animatedIcon.gameObject.SetActive(false);
+            _icon.transform.localScale = Vector3.one;
+            _icon.gameObject.SetActive(false);
             this.gameObject.SetActive(false);
+            _textLoading.text = string.Empty;
         }
     }
 }

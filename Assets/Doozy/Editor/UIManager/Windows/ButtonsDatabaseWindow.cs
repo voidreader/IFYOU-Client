@@ -16,7 +16,7 @@ namespace Doozy.Editor.UIManager.Windows
     {
         private const string WINDOW_TITLE = "Buttons Database";
 
-        [MenuItem(UIManagerWindow.k_WindowMenuPath  + "/Databases/" +  WINDOW_TITLE, priority = 100)]
+        [MenuItem(UIManagerWindow.k_WindowMenuPath  + "Databases/" +  WINDOW_TITLE, priority = -700)]
         public static void Open() => InternalOpenWindow(WINDOW_TITLE);
 
         protected override void CreateGUI()

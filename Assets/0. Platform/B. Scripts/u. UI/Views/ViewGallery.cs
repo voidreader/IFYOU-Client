@@ -26,16 +26,24 @@ namespace PIERStory
         [Header("Sound part")]
         public GameObject soundScroll;
         public SoundListElement[] soundListElements;
-
-        public override void OnStartView()
-        {
-            base.OnStartView();
-
+        
+        public override void OnView() {
+            base.OnView();
+            
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5024"), string.Empty);
+        }
+
+        public override void OnStartView()
+        {
+            base.OnStartView();
+            
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
+
+            
 
             #region 일러스트
 
@@ -101,6 +109,12 @@ namespace PIERStory
             }
             
             #endregion
+        }
+        
+        public override void OnHideView() {
+            base.OnHideView();
+            
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
         }
 
 

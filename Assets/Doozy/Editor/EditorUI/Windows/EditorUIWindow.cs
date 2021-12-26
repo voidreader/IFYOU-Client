@@ -27,11 +27,10 @@ namespace Doozy.Editor.EditorUI.Windows
         private const string WINDOW_TITLE = "EditorUI";
         public const string k_WindowMenuPath = "Tools/Doozy/EditorUI/";
 
-        [MenuItem(k_WindowMenuPath + "Window", priority = 1000)]
+        [MenuItem(k_WindowMenuPath + "Window", priority = -600)]
         public static void Open() => InternalOpenWindow(WINDOW_TITLE);
 
-        
-        [MenuItem(k_WindowMenuPath + "Refresh", priority = 200)]
+        [MenuItem(k_WindowMenuPath + "Refresh", priority = -450)]
         public static void Refresh()
         {
             EditorDataLayoutDatabase.instance.RefreshDatabase();

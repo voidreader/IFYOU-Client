@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Doozy.Runtime.UIManager.Components;
 using TMPro;
 
 namespace PIERStory {
@@ -15,9 +16,52 @@ namespace PIERStory {
         public bool HasLabels { get { return LabelsCount > 0; } }    
         public int ImagesCount { get { return Images.Count; } }   
         public int LabelsCount { get { return Labels.Count; } }
+        public bool HasButtons { get { return Buttons.Count > 0; } }
+        
+        public List<UIButton> Buttons = new List<UIButton>();
         
         public List<Image> Images = new List<Image>();
         public List<TextMeshProUGUI> Labels = new List<TextMeshProUGUI>();
+        
+        
+        public Action positiveButtonCallback = null; // 긍정 버튼 콜백 
+        public Action negativeButtonCallback = null; // 부정 버튼 콜백
+        
+        /*
+        public void SetButtonsCallbacks(params Action[] callbacks)
+        {
+            if (callbacks == null || callbacks.Length == 0 || !HasButtons) {
+                Debug.Log("SetButtonsCallbacks, WrUnityActionong!");
+                return;
+            }
+            
+            for (int i = 0; i < Buttons.Count; i++)
+            {
+                UIButton button = Buttons[i];
+                if (button == null) continue;
+                if (callbacks[i] == null) continue;
+                
+                // button.set
+                button.behaviours.HasBehaviour()
+            }
+        }
+        */
+
+        /// <summary>
+        /// 긍정 버튼 콜백 설정
+        /// </summary>
+        /// <param name="__action"></param>        
+        public void SetPositiveButtonCallback(Action __action) {
+            positiveButtonCallback = __action;
+        }
+        
+        /// <summary>
+        /// 부정 버튼 콜백 설정 
+        /// </summary>
+        /// <param name="__action"></param>
+        public void SetNegativeButtonCallback(Action __action) {
+            negativeButtonCallback = __action;
+        }
         
         
         /// <summary>

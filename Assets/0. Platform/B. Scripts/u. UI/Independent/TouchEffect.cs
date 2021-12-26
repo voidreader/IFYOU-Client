@@ -42,17 +42,17 @@ namespace PIERStory
         {
             if (touchInPos.x >= touchOutPos.x - 0.4f && touchInPos.x <= touchOutPos.x + 0.4f &&
                 touchInPos.y >= touchOutPos.y - 0.4f && touchInPos.y <= touchOutPos.y + 0.4f)
-                CreateTouchEffect(touchOutPos);
+                CreateTouchEffect(touchInPos);
         }
 
         void CreateTouchEffect(Vector3 touchPos)
         {
             Vector3 touchedPos = touchPos;
-            touchInPos = Vector3.forward;
-            touchOutPos = Vector3.back;
             touchedPos = new Vector3(touchedPos.x, touchedPos.y, 0);
             effect = Instantiate(touchEffect, touchedPos, Quaternion.identity);
-
+            
+            touchInPos = Vector3.forward;
+            touchOutPos = Vector3.back;
             Destroy(effect, 0.5f);
         }
     }

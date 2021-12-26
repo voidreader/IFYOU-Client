@@ -12,10 +12,10 @@ namespace Doozy.Editor.EditorUI.Windows
     {
         private const string WINDOW_TITLE = "Editor Selectable Colors";
 
-        [MenuItem(EditorUIWindow.k_WindowMenuPath + "/" + WINDOW_TITLE + "/Window", priority = 100)]
+        [MenuItem(EditorUIWindow.k_WindowMenuPath + WINDOW_TITLE + "/Window", priority = -550)]
         private static void ShowWindow() => InternalOpenWindow(WINDOW_TITLE);
         
-        [MenuItem(EditorUIWindow.k_WindowMenuPath + "/" + WINDOW_TITLE + "/Refresh")]
+        [MenuItem(EditorUIWindow.k_WindowMenuPath + WINDOW_TITLE + "/Refresh", priority = -500)]
         private static void RefreshDatabase() => EditorDataSelectableColorDatabase.instance.RefreshDatabase();
     }
 }

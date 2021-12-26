@@ -23,10 +23,10 @@ namespace Doozy.Editor.Signals.Windows
         private const string WINDOW_TITLE = "Signals";
         public const string k_WindowMenuPath = "Tools/Doozy/Signals/";
 
-        [MenuItem(k_WindowMenuPath + "Window", priority = -750)]
+        [MenuItem(k_WindowMenuPath + "Window", priority = -100)]
         public static void Open() => InternalOpenWindow(WINDOW_TITLE);
 
-        [MenuItem(k_WindowMenuPath + "Refresh Providers", priority = -650)]
+        [MenuItem(k_WindowMenuPath + "Refresh Providers", priority = 1000)]
         public static void RefreshProviders() => SignalsUtils.RefreshProviders();
 
         private TemplateContainer templateContainer { get; set; }

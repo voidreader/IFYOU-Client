@@ -23,11 +23,11 @@ namespace Doozy.Runtime.Nody
 
         /// <summary> True if Multiplayer Mode is enabled </summary>
         public static bool multiplayerMode => inputSettings.multiplayerMode;
-
+        
         [SerializeField] private bool DontDestroyOnSceneChange;
         [SerializeField] private FlowGraph Flow;
         [SerializeField] private FlowType FlowType = FlowType.Global;
-
+        
         /// <summary> Don't destroy on load (when the scene changes) the GameObject this component is attached to </summary>
         public bool dontDestroyOnSceneChange
         {
@@ -42,37 +42,52 @@ namespace Doozy.Runtime.Nody
         public FlowType flowType => FlowType;
 
         #region Player Index
-
         [SerializeField] private MultiplayerInfo MultiplayerInfo;
         public MultiplayerInfo multiplayerInfo => MultiplayerInfo;
         public bool hasMultiplayerInfo => multiplayerInfo != null;
         public int playerIndex => multiplayerMode & hasMultiplayerInfo ? multiplayerInfo.playerIndex : inputSettings.defaultPlayerIndex;
         public void SetMultiplayerInfo(MultiplayerInfo info) => MultiplayerInfo = info;
-
         #endregion
 
         private bool initialized { get; set; }
 
         private void Awake()
         {
-            if (DontDestroyOnSceneChange)
-                DontDestroyOnLoad(gameObject);
-
             BackButton.Initialize();
 
             initialized = false;
+
+            if (Flow == null)
+            {
+                enabled = false;
+                return;
+            }
+
+            if (DontDestroyOnSceneChange)
+                DontDestroyOnLoad(gameObject);
         }
 
         private IEnumerator Start()
         {
             yield return null;
-            SetFlowGraph(Flow);
+
+            if (flowType == FlowType.Local)
+                Flow = Flow.Clone();
+
+            StartCoroutine(StartGraph());
         }
 
         private void OnEnable()
         {
-            if (initialized)
-                SetFlowGraph(Flow);
+
+            if (Flow == null)
+            {
+                enabled = false;
+                return;
+            }
+
+            if (initialized && Flow != null)
+                StartCoroutine(StartGraph());
         }
 
         private void OnDisable()
@@ -110,26 +125,6 @@ namespace Doozy.Runtime.Nody
             initialized = true;
             Flow.controller = this;
             Flow.Start();
-        }
-
-        /// <summary> Set a new flow graph to this controller </summary>
-        /// <param name="graph"> Target flow graph </param>
-        public void SetFlowGraph(FlowGraph graph)
-        {
-            if (initialized & Flow != null)
-            {
-                Flow.Stop();
-                Flow.controller = null;
-                Flow = null;
-            }
-
-            enabled = graph != null;
-
-            if (graph == null)
-                return;
-
-            Flow = flowType == FlowType.Local ? graph.Clone() : graph;
-            StartCoroutine(StartGraph());
         }
 
         /// <summary> Activate the given node (if it exists in the flow graph) </summary>

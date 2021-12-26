@@ -19,7 +19,6 @@ using Doozy.Runtime.Reactor.Reactions;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
 using UnityEngine.UIElements;
-// ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Editor.UIManager.UIMenu
 {
@@ -44,7 +43,6 @@ namespace Doozy.Editor.UIManager.UIMenu
         public FluidToggleButtonTab linkInstantiateModeTab { get; private set; }
 
         public FluidButton refreshButton { get; set; }
-        public FluidButton regenerateButton { get; set; }
 
         private List<UIMenuPrefabType> prefabTypes { get; set; }
         private List<UIMenuItem> items { get; set; }
@@ -102,17 +100,6 @@ namespace Doozy.Editor.UIManager.UIMenu
 
             searchBox.AddSearchable(this);
 
-            regenerateButton =
-                FluidButton.Get()
-                    .SetTooltip("Regenerate the UI Menu")
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Reset)
-                    .SetElementSize(ElementSize.Tiny)
-                    .SetOnClick(() =>
-                    {
-                        UIMenuItemsDatabase.instance.RefreshDatabase();
-                        UpdateItems();
-                    });
-            
             refreshButton =
                 FluidButton.Get()
                     .SetTooltip("Refresh the UI Menu")
@@ -134,8 +121,7 @@ namespace Doozy.Editor.UIManager.UIMenu
                         Undo.RecordObject(UIMenuSettings.instance, "Update Auto Select");
                         UIMenuSettings.instance.SelectNewlyCreatedObjects = !UIMenuSettings.instance.SelectNewlyCreatedObjects;
                         EditorUtility.SetDirty(UIMenuSettings.instance);
-                        AssetDatabase.SaveAssetIfDirty(UIMenuSettings.instance);
-                        // AssetDatabase.SaveAssets();
+                        AssetDatabase.SaveAssets();
                         UpdateBottomTabs(true);
                     });
 
@@ -148,8 +134,7 @@ namespace Doozy.Editor.UIManager.UIMenu
                         Undo.RecordObject(UIMenuSettings.instance, "Update InstantiateMode");
                         UIMenuSettings.instance.InstantiateMode = PrefabInstantiateModeSetting.Clone;
                         EditorUtility.SetDirty(UIMenuSettings.instance);
-                        AssetDatabase.SaveAssetIfDirty(UIMenuSettings.instance);
-                        // AssetDatabase.SaveAssets();
+                        AssetDatabase.SaveAssets();
                         UpdateBottomTabs(true);
                     });
 
@@ -162,8 +147,7 @@ namespace Doozy.Editor.UIManager.UIMenu
                         Undo.RecordObject(UIMenuSettings.instance, "Update InstantiateMode");
                         UIMenuSettings.instance.InstantiateMode = PrefabInstantiateModeSetting.Default;
                         EditorUtility.SetDirty(UIMenuSettings.instance);
-                        AssetDatabase.SaveAssetIfDirty(UIMenuSettings.instance);
-                        // AssetDatabase.SaveAssets();
+                        AssetDatabase.SaveAssets();
                         UpdateBottomTabs(true);
                     });
 
@@ -177,8 +161,7 @@ namespace Doozy.Editor.UIManager.UIMenu
                         Undo.RecordObject(UIMenuSettings.instance, "Update InstantiateMode");
                         UIMenuSettings.instance.InstantiateMode = PrefabInstantiateModeSetting.Link;
                         EditorUtility.SetDirty(UIMenuSettings.instance);
-                        AssetDatabase.SaveAssetIfDirty(UIMenuSettings.instance);
-                        // AssetDatabase.SaveAssets();
+                        AssetDatabase.SaveAssets();
                         UpdateBottomTabs(true);
                     });
 
@@ -272,8 +255,6 @@ namespace Doozy.Editor.UIManager.UIMenu
                         .SetStyleAlignItems(Align.Center)
                         .SetStyleBackgroundColor(EditorColors.Default.BoxBackground)
                         .SetStylePadding(DesignUtils.k_Spacing2X)
-                        .AddChild(regenerateButton)
-                        .AddChild(DesignUtils.spaceBlock)
                         .AddChild(refreshButton)
                         .AddChild(DesignUtils.spaceBlock2X)
                         .AddChild(autoSelectTab)

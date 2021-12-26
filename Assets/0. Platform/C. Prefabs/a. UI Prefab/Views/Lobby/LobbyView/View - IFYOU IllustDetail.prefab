@@ -144,7 +144,7 @@ MonoBehaviour:
   m_text: 'Illust Title '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
-  m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: eec943c0673465149967187972b9421f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -916,37 +916,13 @@ MonoBehaviour:
   ShowAnimation:
     OnPlayCallback:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 7430190786067229246}
-          m_TargetAssemblyTypeName: PIERStory.ViewIllustDetail, Assembly-CSharp
-          m_MethodName: OnStartView
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     OnStopCallback:
       m_PersistentCalls:
         m_Calls: []
     OnFinishCallback:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 7430190786067229246}
-          m_TargetAssemblyTypeName: PIERStory.ViewIllustDetail, Assembly-CSharp
-          m_MethodName: OnView
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     AnimationType: 0
     Move:
       Settings:
@@ -1004,7 +980,7 @@ MonoBehaviour:
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 0
+      Enabled: 1
       AnimationType: 0
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -1173,7 +1149,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.4
+        Duration: 0.3
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -1199,10 +1175,10 @@ MonoBehaviour:
       FromValue: 1
       ToValue: 1
       CurrentValue: 0
-      Enabled: 1
+      Enabled: 0
       StartAlpha: 1
       FromReferenceValue: 0
-      ToReferenceValue: 2
+      ToReferenceValue: 0
       FromCustomValue: 1
       ToCustomValue: 1
       FromOffset: 0
@@ -1210,19 +1186,7 @@ MonoBehaviour:
   HideAnimation:
     OnPlayCallback:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 7430190786067229246}
-          m_TargetAssemblyTypeName: PIERStory.ViewIllustDetail, Assembly-CSharp
-          m_MethodName: OnHideView
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     OnStopCallback:
       m_PersistentCalls:
         m_Calls: []
@@ -1286,7 +1250,7 @@ MonoBehaviour:
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 0
+      Enabled: 1
       AnimationType: 1
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -1481,12 +1445,12 @@ MonoBehaviour:
       FromValue: 1
       ToValue: 1
       CurrentValue: 0
-      Enabled: 1
+      Enabled: 0
       StartAlpha: 1
-      FromReferenceValue: 1
-      ToReferenceValue: 2
+      FromReferenceValue: 0
+      ToReferenceValue: 0
       FromCustomValue: 1
-      ToCustomValue: 0
+      ToCustomValue: 1
       FromOffset: 0
       ToOffset: 0
 --- !u!114 &7430190786067229246
@@ -1643,7 +1607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.24, g: 0.24, b: 0.24, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1743,7 +1707,7 @@ MonoBehaviour:
     \uD758\uB9AC\uC624\uB9AC\uB2E4"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
-  m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: eec943c0673465149967187972b9421f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -16,7 +16,7 @@ namespace PIERStory {
         }
         
         public virtual void OnHideView() {
-            Debug.Log(string.Format("[{0}] HIDE <<", this.gameObject.name));
+            
         }
     }
 }

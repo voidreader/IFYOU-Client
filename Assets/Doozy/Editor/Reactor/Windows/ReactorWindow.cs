@@ -25,11 +25,11 @@ namespace Doozy.Editor.Reactor.Windows
         private const string WINDOW_TITLE = "Reactor";
         public const string k_WindowMenuPath = "Tools/Doozy/Reactor/";
 
-        [MenuItem(k_WindowMenuPath + "Window", priority = -750)]
-        public static void Open() => InternalOpenWindow(WINDOW_TITLE);
-    
-        [MenuItem(k_WindowMenuPath + "Refresh", priority = -650)]
+        [MenuItem(k_WindowMenuPath + "/Refresh")]
         private static void RefreshDatabase() => UIAnimationPresetDatabase.instance.RefreshDatabase();
+
+        [MenuItem(k_WindowMenuPath + "Window", priority = -100)]
+        public static void Open() => InternalOpenWindow(WINDOW_TITLE);
 
         private TemplateContainer templateContainer { get; set; }
         private VisualElement sideMenuContainer { get; set; }
@@ -133,8 +133,7 @@ namespace Doozy.Editor.Reactor.Windows
             editorTickerVisualizer?.Dispose();
             runtimeTickerVisualizer?.Dispose();
             
-            AssetDatabase.SaveAssetIfDirty(ReactorSettings.instance);
-            // AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssets();
         }
     }
 }

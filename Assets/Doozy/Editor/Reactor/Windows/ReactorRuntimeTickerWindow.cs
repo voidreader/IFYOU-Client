@@ -14,7 +14,7 @@ namespace Doozy.Editor.Reactor.Windows
     {
         private const string WINDOW_TITLE = "Runtime Heartbeat";
 
-        [MenuItem(ReactorWindow.k_WindowMenuPath + WINDOW_TITLE, priority = -700)]
+        [MenuItem(ReactorWindow.k_WindowMenuPath + "/" + WINDOW_TITLE, priority = 100)]
         internal static void ShowWindow() => InternalOpenWindow(WINDOW_TITLE);
         
         private TickerVisualizer m_TickerVisualizer;

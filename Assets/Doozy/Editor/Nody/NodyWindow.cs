@@ -24,16 +24,16 @@ namespace Doozy.Editor.Nody
     public class NodyWindow : FluidWindow<NodyWindow>
     {
         private const string WINDOW_TITLE = "Nody";
-        public const string k_WindowMenuPath = "Tools/Doozy/Nody/";
+        public const string k_WindowMenuPath = "Tools/Doozy/Nody";
 
-        [MenuItem(k_WindowMenuPath + "Window", priority = -900)]
+        [MenuItem(k_WindowMenuPath + "/Window", priority = -900)]
         public static void Open()
         {
             InternalOpenWindow(WINDOW_TITLE);
             _ = NodyInspectorWindow.instance;
         }
 
-        [MenuItem(k_WindowMenuPath + "Refresh", priority = -800)]
+        [MenuItem(k_WindowMenuPath + "/Refresh")]
         public static void Refresh()
         {
             FlowNodeViewExtensionGenerator.Run();
@@ -331,7 +331,7 @@ namespace Doozy.Editor.Nody
             base.OnDisable();
             EditorApplication.playModeStateChanged -= PlayModeStateChanged;
 
-            if (NodyInspectorWindow.isOpen)
+            if(NodyInspectorWindow.isOpen)
                 NodyInspectorWindow.instance.ClearInspector();
         }
 
@@ -403,9 +403,6 @@ namespace Doozy.Editor.Nody
 
             if (flowGraphView != null)
             {
-                if (flowGraphView.flowGraph != null)
-                    AssetDatabase.SaveAssetIfDirty(flowGraphView.flowGraph);
-                
                 flowGraphView.flowGraph = null;
                 flowGraphView.ClearGraphView();
             }

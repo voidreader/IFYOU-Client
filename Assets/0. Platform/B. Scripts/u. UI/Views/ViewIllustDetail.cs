@@ -35,21 +35,16 @@ namespace PIERStory
             summary = __summary;
         }
 
-        public override void OnView() {
-            base.OnView();
-            
-            
-        }
-        
+
         public override void OnStartView()
         {
             base.OnStartView();
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
+
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
-            
+
             ViewGallery.OnDelayIllustOpen?.Invoke(true);
 
             // live2D 아닌 경우
@@ -86,7 +81,6 @@ namespace PIERStory
         public override void OnHideView()
         {
             base.OnHideView();
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
 
             if (LobbyManager.main.transform.childCount < 1)
                 return;

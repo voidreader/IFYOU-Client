@@ -15,7 +15,7 @@ namespace Doozy.Editor.Signals.Windows
     {
         private const string WINDOW_TITLE = "Streams Database";
         
-        [MenuItem(SignalsWindow.k_WindowMenuPath + WINDOW_TITLE, priority = -700)]
+        [MenuItem(SignalsWindow.k_WindowMenuPath + "/" + WINDOW_TITLE, priority = 100)]
         public static void Open() => InternalOpenWindow(WINDOW_TITLE);
 
         protected override void OnEnable()

@@ -3,13 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Doozy.Runtime.UIManager.Containers;
-using Doozy.Runtime.UIManager.Input;
 
 namespace PIERStory {
 
-    /// <summary>
-    /// Doozy와 비슷한 팝업시스템
-    /// </summary>
     public abstract class PopupBase : MonoBehaviour
     {
         public PopupContent Data;
@@ -52,8 +48,6 @@ namespace PIERStory {
         
         public virtual void Show() {
             
-            BackButton.blockBackInput = true; // block 해제
-            
             StartCoroutine(ShowEnumerator());
             SetAutoDestroy();
         }
@@ -72,12 +66,7 @@ namespace PIERStory {
         }
         
         
-        /// <summary>
-        /// 팝업 Hide
-        /// </summary>
         public virtual void Hide() {
-            
-            BackButton.blockBackInput = false; // block 해제
             
             if(isOverlayUse)
                 overlay.Hide();
@@ -104,29 +93,8 @@ namespace PIERStory {
             SelfDestroy();
         }   
         
-        /// <summary>
-        /// Hide의 콜백으로 꼭 걸어줄것!
-        /// </summary>
         public void SelfDestroy() {
             Destroy(this.gameObject);
-        }
-        
-        
-        /// <summary>
-        /// 긍정 버튼 클릭 
-        /// </summary>
-        public void OnClickPositive() {
-            
-            Data.positiveButtonCallback?.Invoke();
-            
-            Hide();
-        }
-        
-        public void OnClickNegative() {
-            
-            Data.negativeButtonCallback?.Invoke();
-            
-            Hide();
         }
     }
 }

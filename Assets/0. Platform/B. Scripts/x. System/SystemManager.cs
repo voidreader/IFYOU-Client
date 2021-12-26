@@ -1335,14 +1335,7 @@ namespace PIERStory
         /// </summary>
         public static void ShowNetworkLoading()
         {
-            if (LobbyManager.main != null)
-                main.networkLoadingScreen = LobbyManager.main.GetLobbyNetworkLoadingScreen();
 
-            if (GameManager.main != null)
-                main.networkLoadingScreen = GameManager.main.GetGameNetworkLoadingScreen();
-
-            if (main.networkLoadingScreen)
-                main.networkLoadingScreen.ShowNetworkLoading();
         }
 
         /// <summary>
@@ -1385,22 +1378,10 @@ namespace PIERStory
         /// </summary>
         /// <param name="__message"></param>
         /// <param name="__positive"></param>
-        public static void ShowConfirmPopUp(string __message, System.Action __positive, System.Action __negative)
+        public static void ShowConfirmPopUp(string __message, UnityEngine.Events.UnityAction __positive, UnityEngine.Events.UnityAction __negative, bool hideOnClickOverlay = true)
         {
-            
-            PopupBase p = PopupManager.main.GetPopup("Confirm");
-            
-            if(p == null) {
-                Debug.LogError(">> No Confirm Popup");
-                return;
-            }
-            
-            p.Data.SetLabelsTexts(__message);
-            p.Data.SetPositiveButtonCallback(__positive);
-            p.Data.SetNegativeButtonCallback(__negative);
 
             // 중복 방지 
-            PopupManager.main.ShowPopup(p, false);
 
         }
 

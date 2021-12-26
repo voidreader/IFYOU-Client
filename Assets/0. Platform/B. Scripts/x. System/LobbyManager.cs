@@ -108,16 +108,8 @@ namespace PIERStory {
                 PopupManager.main.ShowPopup(popup, true, false);
             }
             
-            if(Input.GetKeyDown(KeyCode.C)) {
-                SystemManager.ShowConfirmPopUp("TEST", null, null);
-            }
-            
             if(Input.GetKeyDown(KeyCode.P)) {
-                // AdManager.main.ShowRewardAd();
-                SystemManager.ShowNetworkLoading();
-            }
-            else if(Input.GetKeyDown(KeyCode.L)) {
-                SystemManager.HideNetworkLoading();
+                AdManager.main.ShowRewardAd();
             }
         }
 

@@ -3,6 +3,7 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using Object = UnityEngine.Object;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -49,7 +50,7 @@ namespace Doozy.Runtime.Signals
         public Type valueType { get; protected internal set; }
 
         /// <summary> Signal value boxed as an object (used by MetaSignal) </summary>
-        public object valueAsObject { get; protected internal set; }
+        public object valueAsObject { get; protected set; }
         
         /// <summary> Was the signal used </summary>
         public bool used { get; protected internal set; }
@@ -184,7 +185,7 @@ namespace Doozy.Runtime.Signals
         /// <param name="streamCategory"> Target stream category </param>
         /// <param name="streamName"> Target stream name </param>
         /// <param name="message"> Text message used to pass info about this Signal </param>
-        public static bool Send(string streamCategory, string streamName, string message = "") =>
+        public static bool Send(string streamCategory, string streamName, string message) =>
             SignalsService.SendSignal(streamCategory, streamName, message);
 
         /// <summary> Send a Signal on the stream with the given stream category and name, with a reference to the GameObject from where it is sent </summary>
@@ -415,13 +416,6 @@ namespace Doozy.Runtime.Signals
             target.used = false;
 
             target.timestamp = Time.time;
-
-            target.hasValue = false;
-            target.valueType = null;
-            target.valueAsObject = null;
-
-            if (target is MetaSignal<T> metaSignal)
-                metaSignal.ResetValue();
 
             return target;
         }

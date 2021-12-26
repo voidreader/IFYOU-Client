@@ -86,23 +86,6 @@ namespace PIERStory {
         }
         
         /// <summary>
-        /// 팝업 보여주기
-        /// </summary>
-        /// <param name="popupName"></param>
-        /// <param name="addToPopupQueue"></param>
-        /// <param name="instantAction"></param>
-        public void ShowPopup(string popupName, bool addToPopupQueue, bool instantAction = false) {
-            PopupBase p = GetPopup(popupName);
-            
-            if(p == null) {
-                Debug.LogError(">> No Popup... " + popupName);
-                return; 
-            }
-            
-            ShowPopup(p, addToPopupQueue, instantAction);
-        }
-        
-        /// <summary>
         /// 팝업 보여주기 
         /// </summary>
         /// <param name="popup"></param>

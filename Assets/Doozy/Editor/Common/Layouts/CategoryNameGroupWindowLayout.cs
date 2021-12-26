@@ -525,8 +525,7 @@ namespace Doozy.Editor.Common.Layouts
             Undo.RecordObject(targetObject, "Remove Category");
             database.RemoveCategory(targetCategory);
             EditorUtility.SetDirty(targetObject);
-            AssetDatabase.SaveAssetIfDirty(targetObject);
-            // AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssets();
             UpdateDatabase();
             schedule.Execute(() => sideMenu.buttons.First()?.SetIsOn(true));
         }
@@ -555,8 +554,7 @@ namespace Doozy.Editor.Common.Layouts
             Undo.RecordObject(targetObject, "Remove Item");
             database.RemoveName(targetCategory, targetItem.name);
             EditorUtility.SetDirty(targetObject);
-            AssetDatabase.SaveAssetIfDirty(targetObject);
-            // AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssets();
             onUpdateCallback?.Invoke();
             if (sideMenu.searchBox.isSearching)
             {
@@ -591,8 +589,7 @@ namespace Doozy.Editor.Common.Layouts
             database.AddName(targetCategory, newName);
             database.RemoveName(targetCategory, targetItem.name);
             EditorUtility.SetDirty(targetObject);
-            AssetDatabase.SaveAssetIfDirty(targetObject);
-            // AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssets();
             if (sideMenu.searchBox.isSearching)
             {
                 UpdateSearchResults();
@@ -697,8 +694,7 @@ namespace Doozy.Editor.Common.Layouts
                         if (!result) return;
                         newIdNameTextField.value = string.Empty;
                         EditorUtility.SetDirty(targetObject);
-                        AssetDatabase.SaveAssetIfDirty(targetObject);
-                        // AssetDatabase.SaveAssets();
+                        AssetDatabase.SaveAssets();
                         string currentCategoryName = createdNewCategory ? categoryName : selectedCategoryName;
                         UpdateDatabase();
                         categoryButtons[currentCategoryName].SetIsOn(true);

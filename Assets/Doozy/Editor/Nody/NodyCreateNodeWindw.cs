@@ -28,9 +28,9 @@ namespace Doozy.Editor.Nody
     public class NodyCreateNodeWindow : FluidWindow<NodyCreateNodeWindow>
     {
         private const string WINDOW_TITLE = "Create Node";
-        public const string k_WindowMenuPath = "Tools/Doozy/Nody/";
+        public const string k_WindowMenuPath = "Tools/Doozy/Nody";
 
-        [MenuItem(k_WindowMenuPath + WINDOW_TITLE, priority = -800)]
+        [MenuItem(k_WindowMenuPath + "/" + WINDOW_TITLE)]
         public static void Open() => InternalOpenWindow(WINDOW_TITLE);
 
         public static Color accentColor => EditorColors.Nody.Color;

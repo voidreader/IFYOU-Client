@@ -28,7 +28,6 @@ namespace Doozy.Runtime.UIManager.Input
         public const string k_StreamName = nameof(BackButton);
         public const string k_ButtonName = "Back"; //ToDo: maybe allow for different button names to be THE 'Back' button
 
-        public static bool blockBackInput = false;  // 백키 입력 block 여부 추가
         private static SignalStream s_stream;
         private static SignalStream s_streamOnEnabled;
         private static SignalStream s_streamOnDisabled;
@@ -194,11 +193,6 @@ namespace Doozy.Runtime.UIManager.Input
         /// </summary>
         public static void Fire(InputSignalData data)
         {
-            Debug.Log("BackButton Fire #1");
-            
-            if(blockBackInput)
-                return; 
-            
             if (applicationIsQuitting) return;
             if (!instance.canFire) return;
             stream.SendSignal(data); //this sends a MetaSignal (with input data)
@@ -211,8 +205,6 @@ namespace Doozy.Runtime.UIManager.Input
         /// </summary>
         public static void Fire()
         {
-            Debug.Log("BackButton Fire #2");
-            
             if (applicationIsQuitting) return;
             if (!instance.canFire) return;
             stream.SendSignal(); //this sends a Signal (ping)

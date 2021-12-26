@@ -227,47 +227,39 @@ namespace Doozy.Editor.UIManager.UIMenu
         {
             if (prefab == null) return;
 
-            bool isUIPrefab = prefab.GetComponent<RectTransform>() != null;
-
             GameObject parent = Selection.activeGameObject;
-
             bool explicitParentChoice = true;
-
-            if (isUIPrefab)
+            if (parent == null)
             {
-                if (parent == null)
-                {
-                    parent = GetOrCreateCanvasGameObject();
-                    explicitParentChoice = false;
+                parent = GetOrCreateCanvasGameObject();
+                explicitParentChoice = false;
 
-                    // If in Prefab Mode, Canvas has to be part of Prefab contents,
-                    // otherwise use Prefab root instead.
-                    PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
-                    if (prefabStage != null && !prefabStage.IsPartOfPrefabContents(parent))
-                        parent = prefabStage.prefabContentsRoot;
-                }
-
-                if (parent.GetComponentsInParent<Canvas>(true).Length == 0)
-                {
-                    // Create canvas under context GameObject,
-                    // and make that be the parent which UI element is added under.
-                    GameObject canvas = CreateNewUI();
-                    Undo.SetTransformParent(canvas.transform, parent.transform, "");
-                    parent = canvas;
-                }
+                // If in Prefab Mode, Canvas has to be part of Prefab contents,
+                // otherwise use Prefab root instead.
+                PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+                if (prefabStage != null && !prefabStage.IsPartOfPrefabContents(parent))
+                    parent = prefabStage.prefabContentsRoot;
+            }
+            if (parent.GetComponentsInParent<Canvas>(true).Length == 0)
+            {
+                // Create canvas under context GameObject,
+                // and make that be the parent which UI element is added under.
+                GameObject canvas = CreateNewUI();
+                Undo.SetTransformParent(canvas.transform, parent.transform, "");
+                parent = canvas;
             }
 
             GameObject element;
             switch (instantiateMode)
             {
                 case PrefabInstantiateMode.Clone:
-                    element = parent != null ? Object.Instantiate(prefab, parent.transform) : Object.Instantiate(prefab);
+                    element = Object.Instantiate(prefab, parent.transform);
                     // clone.name = clone.name.Replace("(Clone)", "");
                     element.name = prefabName;
                     Undo.RegisterCreatedObjectUndo(element, $"Create {element.name}");
                     break;
                 case PrefabInstantiateMode.Link:
-                    element = parent != null ? (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent.transform) : (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+                    element = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent.transform);
                     element.name = prefabName;
                     Undo.RegisterCreatedObjectUndo(element, $"Create {element.name}");
                     break;
@@ -277,12 +269,10 @@ namespace Doozy.Editor.UIManager.UIMenu
 
             GameObjectUtility.EnsureUniqueNameForSibling(element);
 
-            if (parent != null)
-                SetParentAndAlign(element, parent);
+            SetParentAndAlign(element, parent);
 
-            if (isUIPrefab)
-                if (!explicitParentChoice) // not a context click, so center in scene view
-                    SetPositionVisibleInSceneView(parent.GetComponent<RectTransform>(), element.GetComponent<RectTransform>());
+            if (!explicitParentChoice) // not a context click, so center in scene view
+                SetPositionVisibleInSceneView(parent.GetComponent<RectTransform>(), element.GetComponent<RectTransform>());
 
             // This call ensure any change made to created Objects after they where registered will be part of the Undo.
             Undo.RegisterFullObjectHierarchyUndo(parent == null ? element : parent, "");

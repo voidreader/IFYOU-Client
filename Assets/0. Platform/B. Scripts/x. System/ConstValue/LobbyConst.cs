@@ -94,8 +94,6 @@ namespace PIERStory {
         public const string TOP_SIGNAL_SHOW_BACK_BUTTON = "topSignalShowBackButton"; // 백버튼 처리
 
         public const string TOP_SIGNAL_CHANGE_OWNER = "topSignalChangeOwner"; // 오너 변경 
-        public const string TOP_SIGNAL_RECOVER = "topSignalRecover"; // 상단 상태 복원 
-        public const string TOP_SIGNAL_SAVE_STATE = "topSignalSaveState"; // 상단 상태 저장 
 
         public const string SIGNAL_SHOW_ILLUSTDETAIL = "showIllustDetail";
         public const string SIGNAL_SHOW_ENDINGDETAIL = "showEndingDetail";

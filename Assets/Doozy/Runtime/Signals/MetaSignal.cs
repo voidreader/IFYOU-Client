@@ -15,6 +15,7 @@ namespace Doozy.Runtime.Signals
         /// <summary> Create a MetaSignal </summary>
         public MetaSignal() : base(null, true, typeof(T))
         {
+            this.SetValueType(true, typeof(T));
             SetSignalValue(default);
         }
 
@@ -23,6 +24,7 @@ namespace Doozy.Runtime.Signals
         /// <param name="signalSource"> Reference to the GameObject from where this Signal is sent </param>
         internal MetaSignal(SignalStream stream, GameObject signalSource) : base(stream, signalSource, true, typeof(T))
         {
+            this.SetValueType(true, typeof(T));
             SetSignalValue(default);
         }
 
@@ -31,6 +33,7 @@ namespace Doozy.Runtime.Signals
         /// <param name="signalProvider"> Reference to the SignalProvider that sends this Signal </param>
         internal MetaSignal(SignalStream stream, SignalProvider signalProvider) : base(stream, signalProvider, true, typeof(T))
         {
+            this.SetValueType(true, typeof(T));
             SetSignalValue(default);
         }
 
@@ -39,20 +42,18 @@ namespace Doozy.Runtime.Signals
         /// <param name="senderObject"> Reference to the Object that sends this Signal </param>
         internal MetaSignal(SignalStream stream, Object senderObject) : base(stream, senderObject, true, typeof(T))
         {
+            this.SetValueType(true, typeof(T));
             SetSignalValue(default);
         }
         
         internal void SetSignalValue(T signalValue)
         {
-            this.SetValueType(true, typeof(T));
             value = signalValue;
             valueAsObject = signalValue;
         }
 
         internal void ResetValue()
         {
-            hasValue = false;
-            valueType = null;
             value = default;
             valueAsObject = null;
         }

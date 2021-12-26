@@ -20,9 +20,9 @@ namespace Doozy.Editor.Nody
     public class NodyInspectorWindow : FluidWindow<NodyInspectorWindow>
     {
         private const string WINDOW_TITLE = "Nody Inspector";
-        public const string k_WindowMenuPath = "Tools/Doozy/Nody/";
+        public const string k_WindowMenuPath = "Tools/Doozy/Nody";
 
-        [MenuItem(k_WindowMenuPath + "Inspector", priority = -850)]
+        [MenuItem(k_WindowMenuPath + "/Inspector", priority = -800)]
         public static void Open() => InternalOpenWindow(WINDOW_TITLE);
 
         public static Color accentColor => EditorColors.Nody.Color;

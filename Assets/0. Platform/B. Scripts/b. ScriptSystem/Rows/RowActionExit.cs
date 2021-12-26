@@ -16,7 +16,7 @@ namespace PIERStory
             if (UserManager.main.useRecord)
                 GameManager.main.ShowGameEnd(null);
             else
-                SystemManager.ShowConfirmPopUp("다시 보시겠습니까?", GameManager.main.RetryPlay, GameManager.main.EndGame);
+                SystemManager.ShowConfirmPopUp("다시 보시겠습니까?", GameManager.main.RetryPlay, GameManager.main.EndGame, false);
         }
 
         public void EndAction() { }

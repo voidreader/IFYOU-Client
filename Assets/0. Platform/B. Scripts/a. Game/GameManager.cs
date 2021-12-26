@@ -623,7 +623,7 @@ namespace PIERStory
                 if (UserManager.main.useRecord)
                     ShowGameEnd(null);
                 else
-                    SystemManager.ShowConfirmPopUp("다시 보시겠습니까?", RetryPlay, EndGame, false);
+                    SystemManager.ShowConfirmPopUp("다시 보시겠습니까?", RetryPlay, EndGame);
             }
 
             isPlaying = false;

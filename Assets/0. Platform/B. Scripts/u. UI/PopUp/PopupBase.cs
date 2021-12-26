@@ -72,6 +72,9 @@ namespace PIERStory {
         }
         
         
+        /// <summary>
+        /// 팝업 Hide
+        /// </summary>
         public virtual void Hide() {
             
             BackButton.blockBackInput = false; // block 해제
@@ -106,6 +109,24 @@ namespace PIERStory {
         /// </summary>
         public void SelfDestroy() {
             Destroy(this.gameObject);
+        }
+        
+        
+        /// <summary>
+        /// 긍정 버튼 클릭 
+        /// </summary>
+        public void OnClickPositive() {
+            
+            Data.positiveButtonCallback?.Invoke();
+            
+            Hide();
+        }
+        
+        public void OnClickNegative() {
+            
+            Data.negativeButtonCallback?.Invoke();
+            
+            Hide();
         }
     }
 }

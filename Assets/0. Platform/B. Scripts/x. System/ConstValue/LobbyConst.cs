@@ -89,7 +89,7 @@ namespace PIERStory {
         public const string TOP_SIGNAL_VIEW_NAME = "topSignalViewName";             // 상단 뷰 이름
         
         public const string TOP_SIGNAL_SHOW_PROPERTY_GROUP = "topSignalShowPropertyGroup"; // 재화 그룹 보여주기
-        // public const string TOP_SIGNAL_HIDE_PROPERTY_GROUP = "topSignalHidePropertyGroup"; // 재화 그룹 감추기 
+        public const string TOP_SIGNAL_SHOW_MAIL_BUTTON = "topSignalShowMailButton";        // 재화 그룹의 메일버튼 활성화
         
         public const string TOP_SIGNAL_SHOW_BACK_BUTTON = "topSignalShowBackButton"; // 백버튼 처리
 

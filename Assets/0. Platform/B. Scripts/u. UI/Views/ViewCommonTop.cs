@@ -18,6 +18,7 @@ namespace PIERStory {
         [SerializeField] Image imageBackground; // 뒤의 흰 배경
         [SerializeField] GameObject groupProperty; // 프로퍼티 그룹 (재화, 메일, 등등)
         [SerializeField] HorizontalLayoutGroup propertyHorizontalLayout;
+        public GameObject mailButton;           // 프로퍼티 그룹의 메일 버튼
         
         // * 현재 탑을 제어하는 owner를 설정하려고 했는데, 잠시 보류... 2021.12.07
         [SerializeField] string topOwner = string.Empty;
@@ -40,6 +41,7 @@ namespace PIERStory {
         SignalStream signalStreamTopViewName;
         SignalStream signalStreamTopViewNameExist;
         SignalStream signalStreamTopPropertyGroup;
+        SignalStream signalStreamTopMail;
         SignalStream signalStreamTopChangeOwner;
         SignalStream signalStreamTopBackButton;
         SignalStream signalStreamRecover;
@@ -50,6 +52,7 @@ namespace PIERStory {
         SignalReceiver signalReceiverTopViewName;
         SignalReceiver signalReceiverTopViewNameExist;
         SignalReceiver signalReceiverTopPropertyGroup;
+        SignalReceiver signalReceiverTopMail;
         SignalReceiver signalReceiverTopChangeOwner;
         SignalReceiver signalReceiverTopBackButton;
         SignalReceiver signalReceiverRecover;
@@ -68,6 +71,9 @@ namespace PIERStory {
 
             signalStreamTopPropertyGroup = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP);
             signalReceiverTopPropertyGroup = new SignalReceiver().SetOnSignalCallback(OnTopPropertySignal);
+
+            signalStreamTopMail = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON);
+            signalReceiverTopMail = new SignalReceiver().SetOnSignalCallback(OnTopMailSignal);
             
             signalStreamTopChangeOwner = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_CHANGE_OWNER);
             signalReceiverTopChangeOwner = new SignalReceiver().SetOnSignalCallback(OnTopChangeOwner);
@@ -88,6 +94,7 @@ namespace PIERStory {
             signalStreamTopViewNameExist.ConnectReceiver(signalReceiverTopViewNameExist);
             signalStreamTopViewName.ConnectReceiver(signalReceiverTopViewName);
             signalStreamTopPropertyGroup.ConnectReceiver(signalReceiverTopPropertyGroup);
+            signalStreamTopMail.ConnectReceiver(signalReceiverTopMail);
             signalStreamTopChangeOwner.ConnectReceiver(signalReceiverTopChangeOwner);
             signalStreamTopBackButton.ConnectReceiver(signalReceiverTopBackButton);
             signalStreamRecover.ConnectReceiver(signalReceiverRecover);
@@ -99,6 +106,7 @@ namespace PIERStory {
             signalStreamTopViewNameExist.DisconnectReceiver(signalReceiverTopViewNameExist);
             signalStreamTopViewName.DisconnectReceiver(signalReceiverTopViewName);
             signalStreamTopPropertyGroup.DisconnectReceiver(signalReceiverTopPropertyGroup);
+            signalStreamTopMail.DisconnectReceiver(signalReceiverTopMail);
             signalStreamTopChangeOwner.DisconnectReceiver(signalReceiverTopChangeOwner);
             signalStreamTopBackButton.DisconnectReceiver(signalReceiverTopBackButton);
             signalStreamRecover.DisconnectReceiver(signalReceiverRecover);
@@ -269,6 +277,15 @@ namespace PIERStory {
             bool isShow = signal.GetValueUnsafe<bool>();
             groupProperty.SetActive(isShow);
             
+        }
+
+        void OnTopMailSignal(Signal s)
+        {
+            if(s.hasValue)
+            {
+                bool isShow = s.GetValueUnsafe<bool>();
+                mailButton.SetActive(isShow);
+            }
         }
         
     }

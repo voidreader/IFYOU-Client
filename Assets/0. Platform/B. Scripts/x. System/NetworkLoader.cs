@@ -440,7 +440,7 @@ namespace PIERStory
             sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
             sending["episodeID"] = StoryManager.main.CurrentEpisodeID; // 현재 프로젝트 ID 
 
-            if(!string.IsNullOrEmpty(nextEpisode.episodeID))
+            if(nextEpisode != null && !string.IsNullOrEmpty(nextEpisode.episodeID))
                 sending["nextEpisodeID"] = nextEpisode.episodeID; // 다음 에피소드 ID 있을때만
 
             sending["func"] = FUNC_UPDATE_EPISODE_COMPLETE_RECORD;

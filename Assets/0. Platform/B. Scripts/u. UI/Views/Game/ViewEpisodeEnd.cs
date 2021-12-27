@@ -113,8 +113,14 @@ namespace PIERStory
         {
             base.OnStartView();
 
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
+
+
             // 에피소드가 완료되었으니 모든 사운드를 멈춘다
-            foreach(GameSoundCtrl sc in GameManager.main.SoundGroup)
+            foreach (GameSoundCtrl sc in GameManager.main.SoundGroup)
             {
                 if (sc.GetIsPlaying)
                     sc.PauseAudioClip();

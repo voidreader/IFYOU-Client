@@ -1418,13 +1418,13 @@ namespace PIERStory
             if(currentEpisodeData.episodeType == EpisodeType.Ending || currentEpisodeData.episodeType == EpisodeType.Side)
                 return null;
                 
-            for(int i=0; i<main.ListCurrentProjectEpisodes.Count;i++) {
+            for(int i=0; i<main.RegularEpisodeList.Count;i++) {
                 
                 // 찾았으면 다음행이 다음 순번이다.
                 if(isFound)
-                    return main.ListCurrentProjectEpisodes[i];
+                    return main.RegularEpisodeList[i];
                 
-                if(main.ListCurrentProjectEpisodes[i] == currentEpisodeData) {
+                if(main.RegularEpisodeList[i] == currentEpisodeData) {
                     isFound = true;
                 }
             } // 없으면 null;

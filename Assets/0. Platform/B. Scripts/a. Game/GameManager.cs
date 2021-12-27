@@ -1793,24 +1793,24 @@ namespace PIERStory
             
             // scene Id값 갱신하고 통신 완료까지 잠시 대기
             UserManager.main.UpdateSceneIDRecord(currentSceneId);
+            SystemManager.ShowNetworkLoading();
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
 
             // 에피소드 완료까지 통신 대기
             NetworkLoader.main.UpdateEpisodeCompleteRecord(nextEpisodeData);
-            SystemManager.ShowNetworkLoading();
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             SystemManager.HideNetworkLoading();
 
             // 다음 에피소드가 엔딩인 경우
             if (nextEpisodeData != null && nextEpisodeData.episodeType == EpisodeType.Ending)
             {
-                string title = nextEpisodeData.endingType.Equals(LobbyConst.COL_HIDDEN) ? string.Format("<color=#9E10C1>{0}", SystemManager.GetLocalizedText("5087")) : string.Format("<color=#6941DB>{0}", SystemManager.GetLocalizedText("5088"));
-
                 // ViewGame에 UIContainer를 넣어서 Show, Hide 해준다
                 // 추후 추가해서
                 // ! 엔딩 오픈 팝업 호출 
                 // ! 종료 대기 처리 필요 
-                
+                ViewGame.main.ShowEndingContainer(nextEpisodeData);
+                yield return new WaitForSeconds(0.2f);
+                yield return new WaitUntil(() => ViewGame.main.totalContainer.isHidden);
             }
 
             // * 엔딩 연출 끝나면 아래 진행 (없으면 그냥 진행)

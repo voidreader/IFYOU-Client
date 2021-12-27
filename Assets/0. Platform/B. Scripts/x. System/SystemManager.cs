@@ -1372,11 +1372,19 @@ namespace PIERStory
         /// </summary>
         /// <param name="__message"></param>
         public static void ShowAlert(string __message) {
-
+            PopupBase p = PopupManager.main.GetPopup("Alert");
+            if(p == null) {
+                Debug.LogError(">> No Alert Popup");
+                return;
+            }
+            
+            p.Data.SetLabelsTexts(__message);
+            PopupManager.main.ShowPopup(p, false);
+            
         }
         
         public static void ShowAlertWithLocalize(string __textID) {
-
+            ShowAlert(GetLocalizedText(__textID));
         }
 
 

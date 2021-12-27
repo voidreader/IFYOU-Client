@@ -111,6 +111,9 @@ namespace PIERStory {
             if(Input.GetKeyDown(KeyCode.C)) {
                 SystemManager.ShowConfirmPopUp("TEST", null, null);
             }
+            if(Input.GetKeyDown(KeyCode.D)) {
+                SystemManager.ShowAlert("경고 메세지 테스트");
+            }
             
             if(Input.GetKeyDown(KeyCode.P)) {
                 // AdManager.main.ShowRewardAd();

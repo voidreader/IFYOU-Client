@@ -35,6 +35,10 @@ namespace PIERStory {
         [SerializeField] StoryContentsButton buttonContentsEnding;
         [SerializeField] StoryContentsButton buttonContentsSelection;
         
+        [SerializeField] GameObject premiumPassArea; // 프리미엄 패스 구역
+        [SerializeField] PassBanner passBanner; // 프리미엄 패스 배너 
+        
+        
         
         
         [Space]
@@ -50,7 +54,10 @@ namespace PIERStory {
         
         [SerializeField] GameObject endingNotification; // 엔딩 알림
         
-        JsonData continueData = null;
+        
+        [SerializeField] QuickPlayButton quickPlay; // 빠른 플레이 버튼 
+        JsonData quickRegularData = null; // 정규 + 엔딩 에피소드 이어하기 데이터
+        JsonData quickSideData = null; // 사이드 에피소드 이어하기 데이터 
         
         int episodeCount = 0;           // 에피소드 갯수, 미해금된 사이드 갯수
         int openEndingCount = 0;        // 열린 엔딩 갯수
@@ -153,11 +160,13 @@ namespace PIERStory {
             buttonContentsMission.InitContentsButton();
             buttonContentsEnding.InitContentsButton();
             
-            // 빠른플레이, 엔딩 알람을 위한 project current 
-            continueData = UserManager.main.GetUserProjectRegularEpisodeCurrent();
-            SetBottomNotification(); // continueData 가져가서 처리 
+            
             
             textSpecialEpisodeExplain.gameObject.SetActive(false);    
+            
+            
+            // 프리패스 정보 설정
+            SetFreepassInfo();
         }
         
         
@@ -197,6 +206,9 @@ namespace PIERStory {
             if(__isRegular) { // * 정규 에피소드 
                 SetEpisodeList(StoryManager.main.RegularEpisodeList);
                 SetRegularEpisodeCountText(StoryManager.main.regularEpisodeCount,  StoryManager.main.unlockEndingCount);
+                
+                // 빠른플레이 및 엔딩 알림 
+                SetRegularExtraNotification(); 
             }
             else  { // * 스페셜(사이드) 에피소드
             
@@ -213,6 +225,9 @@ namespace PIERStory {
             
                 SetEpisodeList(ListOpenSide);
                 SetSideEpisodeCountText(StoryManager.main.sideEpisodeCount, StoryManager.main.unlockSideEpisodeCount);
+                
+                // 빠른플레이 
+                SetSideExtraNotification();
             }
             
 
@@ -297,7 +312,24 @@ namespace PIERStory {
         
         #region 프리패스 관련 처리 
         
+        /// <summary>
+        /// 프리패스 설정 
+        /// </summary>
         void SetFreepassInfo() {
+            // 없을때에 대한 처리 
+            if(StoryManager.main.GetProjectFreepassNode() == null) {
+                Debug.Log("!!!!! Project freepass node is null");
+                return;
+            }
+            
+            // 유저가 프리패스 대상 프로젝트의 프리패스 보유중 
+            if(UserManager.main.HasProjectFreepass()) {
+                Debug.Log("!!! freepass user in this project");
+                premiumPassArea.SetActive(false);
+            }
+            
+            premiumPassArea.SetActive(true);
+            passBanner.SetPremiumPass(true);
             
         }
         
@@ -309,23 +341,53 @@ namespace PIERStory {
         /// <summary>
         /// 엔딩 알림, 빠른 플레이 표기 처리 
         /// </summary>
-        void SetBottomNotification() {
+        void SetRegularExtraNotification() {
+            quickRegularData = UserManager.main.GetUserProjectRegularEpisodeCurrent();
             
             // * 엔딩이고 엔딩 플레이를 완료한 경우에는 엔딩 알람을 하단에 띄워준다. 
-            if( SystemManager.GetJsonNodeBool(continueData, "is_final") 
-            && SystemManager.GetJsonNodeBool(continueData, "is_ending")) {
+            if( SystemManager.GetJsonNodeBool(quickRegularData, "is_final") 
+            && SystemManager.GetJsonNodeBool(quickRegularData, "is_ending")) {
+                
+                quickPlay.gameObject.SetActive(false); // 퀵 플레이 없음.
+                
                 endingNotification.SetActive(true); 
                 mainScrollVertical.padding.bottom = 100; // 간격 줘야함!
                 return;
             }
+            
+            endingNotification.SetActive(false); 
+            
+            // 퀵 버튼!
+            quickPlay.SetRegularQuickPlay(quickRegularData);
+            
+            
         }
         
         /// <summary>
-        /// 빠른 플레이 처리 
+        /// 사이드 플레이에서의 알림 
         /// </summary>
-        void SetFastPlay() {
+        void SetSideExtraNotification() {
+            endingNotification.SetActive(false) ; // 사이드에서는 엔딩 알림 사용하지 않음
+            quickPlay.gameObject.SetActive(false);
+            mainScrollVertical.padding.bottom = 0;
             
+            quickSideData = UserManager.main.GetUserProjectSpecialEpisodeCurrent();
+            
+            if(quickSideData == null) {
+                return;
+            }
+            
+            // 끝까지 다 봤으면 끝!
+            if(SystemManager.GetJsonNodeBool(quickSideData, "is_final"))  {
+                return;                
+            }
+            
+            // 빠른 플레이 버튼 설정
+            quickPlay.SetSideQuickPlay(quickSideData);
+            
+
         }
+        
         
         #endregion
         

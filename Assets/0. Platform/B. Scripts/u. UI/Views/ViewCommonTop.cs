@@ -30,6 +30,7 @@ namespace PIERStory {
         string previousViewName = string.Empty; // 이전 뷰 텍스트
         bool previousGroupPropertyShow = false; // 이전 그룹 프로퍼티 상태 
         [SerializeField] bool previousBackgroundShow = false; // 이전 백그라운드 상태 
+        bool previousMailShow = true; // 이전 메일함 버튼 
         
         
         [SerializeField] bool backgroundSignalValue = true;
@@ -117,7 +118,7 @@ namespace PIERStory {
         {
             base.OnView();
             
-            propertyHorizontalLayout.enabled = false;
+            // propertyHorizontalLayout.enabled = false;
             
         }
         
@@ -134,6 +135,7 @@ namespace PIERStory {
             previousGroupPropertyShow = groupProperty.activeSelf;
             previousTextViewNameShow = textViewName.gameObject.activeSelf;
             previousViewName = textViewName.text;
+            previousMailShow = mailButton.activeSelf;
         }
         
         /// <summary>
@@ -152,6 +154,10 @@ namespace PIERStory {
             else {
                 imageBackground.DOFade(0, 0.4f);
             }
+            
+            mailButton.SetActive(previousMailShow);
+            
+            
         }
 
         void OnTopSaveState(Signal signal) {

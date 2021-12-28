@@ -752,7 +752,7 @@ namespace PIERStory
             // 라이브 2D인지, 일반 이미지인지 분리해서 처리한다. 
             if(__minicutType == "live_object") {
                 // dictionary 조회해서 처리 
-                return DictProjectLiveObject.ContainsKey(__minicutName) ? DictProjectLiveObject[__minicutName]["live_object_id"].ToString() : string.Empty;
+                return DictProjectLiveObject.ContainsKey(__minicutName) ? DictProjectLiveObject[__minicutName][0]["live_object_id"].ToString() : string.Empty;
             }
             else {
                 // 이미지 미니컷 데이터에서 검색.

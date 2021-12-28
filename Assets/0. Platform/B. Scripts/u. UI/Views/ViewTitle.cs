@@ -23,6 +23,12 @@ namespace PIERStory {
             SetTitleTexture();
             
             
+            // UserManager에서 원래 connectingDone Signal을 기다린다. 
+            // 언어변경에서 넘어오는 경우는 바로 진행 
+            if(UserManager.main.completeReadUserData) {
+                RequestStoryList();
+            }
+            
             
         }
         
@@ -31,6 +37,9 @@ namespace PIERStory {
         /// 
         /// </summary>
         public void RequestStoryList() {
+            
+            Debug.Log("View Title RequestStoryList");
+            
             // * 메인화면 작품 리스트 요청 
             StoryManager.main.RequestStoryList(OnRequestStoryList);
         }

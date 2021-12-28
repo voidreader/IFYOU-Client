@@ -10,7 +10,7 @@ namespace PIERStory
     {
 
         [Header("Skip")]
-        public UIButton skipButton;
+        public Button skipButton;
         public Image skipButtonIcon;
         public Sprite ableSkip;    // 스킵버튼 사용 가능 sprite
         public Sprite disableSkip;  // 스킵버튼 사용 불가능 sprite
@@ -107,6 +107,8 @@ namespace PIERStory
         {
             ViewGame.main.ShowLog();
             StopAutoPlay();
+            
+            Doozy.Runtime.UIManager.Input.BackButton.Fire();
         }
 
         /// <summary>

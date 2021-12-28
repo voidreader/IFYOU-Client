@@ -72,9 +72,16 @@ namespace PIERStory {
         
         void SetEpisodeInfo() {
             
-            episodeData = SystemListener.main.startEpisode;
+            if(LobbyManager.main != null) {
+                episodeData = SystemListener.main.startEpisode;
+            }
+            else {
+                episodeData = SystemListener.main.episodeEndNextData;
+            }
+            
             if(episodeData == null || !episodeData.isValidData) {
                 Debug.LogError("Wrong Episode data");
+                return;
             }
             
             textEpisodeTitle.text = episodeData.combinedEpisodeTitle;
@@ -344,6 +351,9 @@ namespace PIERStory {
         /// 이어하기 버튼 클릭
         /// </summary>
         public void OnClickContinue() {
+            
+            Debug.Log(">> OnClickContinue");
+            
             SystemManager.main.givenEpisodeData = episodeData;
             PurchasePostProcess(true);
         }

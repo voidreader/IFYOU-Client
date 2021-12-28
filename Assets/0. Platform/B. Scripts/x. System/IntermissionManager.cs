@@ -32,14 +32,14 @@ namespace PIERStory
             Debug.Log(string.Format("[{0}] texture2Ds are destroyed", texture2Ds.Length));
 
             // Destory는 Immediate이 아니기 때문에 일정 frame 혹은 시간 대기. 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.2f);
 
             // 수동 호출. 
             System.GC.Collect();
             Resources.UnloadUnusedAssets();
 
             Debug.Log("Intermission Start #2");
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.2f);
 
 
             // * 인터미션 씬은 오직 게임씬에서만 진입 가능하고, 에피소드 데이터가 있다.             

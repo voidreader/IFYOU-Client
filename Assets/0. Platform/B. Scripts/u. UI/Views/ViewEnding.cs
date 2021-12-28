@@ -14,6 +14,11 @@ namespace PIERStory
 
         public EndingElement[] endingElements;
 
+        void OnEnable() {
+            // 상태 저장 
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
+        }
+
         public override void OnStartView()
         {
             base.OnStartView();
@@ -45,6 +50,13 @@ namespace PIERStory
 
             #endregion
         }
+        
+        
+        public override void OnHideView() {
+            base.OnHideView();
+            
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
+        }        
 
     }
 }

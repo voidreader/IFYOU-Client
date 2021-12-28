@@ -84,6 +84,12 @@ namespace PIERStory
             else if (touchInPos.x - touchOutPos.x < -4.5f)
                 scrollSnap.GoToPreviousPanel();
         }
+        
+        
+        void OnEnable() {
+            // 상태 저장 
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
+        }
 
         public override void OnStartView()
         {
@@ -204,6 +210,8 @@ namespace PIERStory
                 reverse++;
             }
         }
+        
+
 
         /// <summary>
         /// 생성한 Object의 부모를 설정한다
@@ -238,6 +246,8 @@ namespace PIERStory
             // 스크롤들이 다시 또 사용될 수 있으므로 활성화!
             prevRoundScroll.SetActive(true);
             formerTimesRoundScroll.SetActive(true);
+            
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
         }
     }
 }

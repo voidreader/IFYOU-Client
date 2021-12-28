@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components.Internal;
@@ -44,12 +45,19 @@ namespace Doozy.Runtime.UIManager.Components
                 .SetSignalSource(gameObject);
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            behaviours?.Connect();
+        }
+
         protected override void OnDisable()
         {
             base.OnDisable();
             behaviours?.Disconnect();
         }
 
+          
         public virtual void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)

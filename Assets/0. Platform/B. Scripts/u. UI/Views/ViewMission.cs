@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 using TMPro;
 using LitJson;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
@@ -31,6 +32,11 @@ namespace PIERStory
         public Color32 getAllOpenColor = new Color32(51, 51, 51, 255);
         public Color32 getAllLockColor = new Color32(153, 153, 153, 255);
         public Color32 missionGreen = new Color32(69, 198, 80, 255);
+
+        void OnEnable() {
+            // 상태 저장 
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
+        }
         
         private void Start() {
             OnCompleteReward = OnStartView;
@@ -39,6 +45,13 @@ namespace PIERStory
         public override void OnStartView()
         {
             base.OnStartView();
+            
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5026"), string.Empty);
+            
 
             foreach (MissionElement me in missionElements)
                 me.gameObject.SetActive(false);
@@ -104,6 +117,15 @@ namespace PIERStory
 
             missionScroll.verticalNormalizedPosition = 1f;
         }
+        
+        
+        public override void OnHideView() {
+            base.OnHideView();
+            
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
+        }        
+        
+        
 
         /// <summary>
         /// 

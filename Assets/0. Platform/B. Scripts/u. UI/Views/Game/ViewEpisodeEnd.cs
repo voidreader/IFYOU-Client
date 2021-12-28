@@ -40,12 +40,7 @@ namespace PIERStory
         EpisodeData episodeData = null;
 
         
-        SignalReceiver signalReceiverNextData;
-        SignalReceiver signalReceiverEpisodeEnd;
 
-        
-        SignalStream signalStreamNextData;
-        SignalStream signalStreamEpisodeEnd;
 
 
         #region Signal 수신 처리
@@ -53,58 +48,14 @@ namespace PIERStory
         private void Awake()
         {
 
-            // * 다음 플레이 에피소드 데이터 수신 
-            signalStreamNextData = SignalStream.Get(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_DATA);
-            signalReceiverNextData = new SignalReceiver().SetOnSignalCallback(OnNextSignal);
             
-            // * 방금 플레이했던 에피소드의 데이터 수신 
-            signalStreamEpisodeEnd = SignalStream.Get(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END);
-            signalReceiverEpisodeEnd = new SignalReceiver().SetOnSignalCallback(OnSignal);
         }
-
-        private void OnEnable()
-        {
-            signalStreamNextData.ConnectReceiver(signalReceiverNextData);
-            signalStreamEpisodeEnd.ConnectReceiver(signalReceiverEpisodeEnd);
-        }
-
-        private void OnDisable()
-        {
-            signalStreamNextData.DisconnectReceiver(signalReceiverNextData);
-            signalStreamEpisodeEnd.DisconnectReceiver(signalReceiverEpisodeEnd);
-        }
+        
 
 
 
-        void OnNextSignal(Signal s)
-        {
-            // 버튼 세팅(다시하기(엔딩, 사이드), 다음 에피소드 결정)
-            if (s.hasValue)
-            {
-                nextData = s.GetValueUnsafe<EpisodeData>();
 
-                // 다음화가 존재하는 경우
-                if(nextData != null)
-                {
-                    nextEpisodeButton.SetActive(true);
-                    retryButton.SetActive(false);
-                }
-                else
-                {
-                    nextEpisodeButton.SetActive(false);
-                    retryButton.SetActive(true);
-                }
-            }
-        }
 
-        void OnSignal(Signal signal)
-        {
-            if(signal.hasValue)
-            {
-                episodeData = signal.GetValueUnsafe<EpisodeData>();
-                SetCurrentEpisodeInfo();
-            }
-        }
 
         #endregion
 
@@ -117,6 +68,23 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
+            
+            episodeData = SystemListener.main.episodeEndCurrentData;
+            nextData = SystemListener.main.episodeEndNextData;
+            
+            // 방금 플레이한 에피소드 정보 설정 
+            SetCurrentEpisodeInfo();
+            
+            // 다음 에피소드 정보 설정  
+            if(nextData != null && nextData.isValidData) { // 다음 에피소드 있음
+                nextEpisodeButton.SetActive(true);
+                retryButton.SetActive(false);
+            }
+            else {
+                nextEpisodeButton.SetActive(false);
+                retryButton.SetActive(true);
+            }
+
 
 
             // 에피소드가 완료되었으니 모든 사운드를 멈춘다
@@ -233,6 +201,9 @@ namespace PIERStory
 
         public void OnClickNextEpisode()
         {
+            
+            Debug.Log(">> OnClickNextEpisode << ");
+            
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, nextData, string.Empty);
             Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_EPISODE, string.Empty);
         }

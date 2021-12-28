@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace PIERStory
 {
@@ -13,6 +14,8 @@ namespace PIERStory
 
         public void DoAction(Action __actionCallback, bool __isInstant = false)
         {
+            Debug.Log("RowActionExit Call");
+            
             if (UserManager.main.useRecord)
                 GameManager.main.ShowGameEnd(null);
             else

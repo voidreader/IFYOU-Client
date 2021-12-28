@@ -671,6 +671,7 @@ namespace PIERStory
 
             if (__sceneID.Contains(GameConst.TAG_TARGET_EPISODE))
             {
+                Debug.Log("Jump to other Episode :: " + __sceneID);
                 ShowGameEnd(__sceneID);
                 return;
             }
@@ -1752,8 +1753,14 @@ namespace PIERStory
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__nextEpisodeID"></param>
         public void ShowGameEnd(string __nextEpisodeID)
         {
+            Debug.Log("ShowGameEnd :: " + __nextEpisodeID);
+            
             useSkip = false;
             isPlaying = false; // 게임 플레이 정지.
             
@@ -1812,6 +1819,9 @@ namespace PIERStory
                 yield return new WaitForSeconds(0.2f);
                 yield return new WaitUntil(() => ViewGame.main.totalContainer.isHidden);
             }
+            
+            
+            Debug.Log("Signal Send for Episode END !!!!!!");
 
             // * 엔딩 연출 끝나면 아래 진행 (없으면 그냥 진행)
             // Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_UPDATE_EPISODE, currentEpisodeData, string.Empty);

@@ -71,8 +71,9 @@ namespace PIERStory {
         public void SetLabelsTexts(params string[] __text) {
             if (__text == null || __text.Length == 0 || !HasLabels) return;
             
-            for (int i = 0; i < Labels.Count; i++)
+            for (int i = 0; i < __text.Length; i++)
             {
+                
                 if(Labels.Count <= i) {
                     Debug.LogError("Too many text labels");
                     break;
@@ -90,8 +91,13 @@ namespace PIERStory {
         public void SetImagesSprites(params Sprite[] sprites)
         {
             if (sprites == null || sprites.Length == 0 || !HasImages) return;
-            for (int i = 0; i < Images.Count; i++)
+            for (int i = 0; i < sprites.Length; i++)
             {
+                if(Images.Count <= i) {
+                    Debug.LogError("Too many sprites");
+                    break;
+                }
+                
                 Image image = Images[i];
                 if (image == null) continue;
                 image.sprite = sprites[i];

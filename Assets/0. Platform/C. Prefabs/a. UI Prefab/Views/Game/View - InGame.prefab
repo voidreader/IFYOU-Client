@@ -767,7 +767,7 @@ MonoBehaviour:
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
   AutoHideAfterShowDelay: 0
-  DisableGameObjectWhenHidden: 0
+  DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
 --- !u!225 &226006623141294329
@@ -1301,7 +1301,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.2
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -1327,12 +1327,12 @@ MonoBehaviour:
       FromValue: 1
       ToValue: 1
       CurrentValue: 0
-      Enabled: 0
+      Enabled: 1
       StartAlpha: 1
-      FromReferenceValue: 0
-      ToReferenceValue: 0
+      FromReferenceValue: 2
+      ToReferenceValue: 2
       FromCustomValue: 1
-      ToCustomValue: 1
+      ToCustomValue: 0
       FromOffset: 0
       ToOffset: 0
 --- !u!1 &226006623159225082
@@ -2641,8 +2641,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: RobertoCarlos
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a363381a0c34c3a4d9498e8531d83f96, type: 2}
-  m_sharedMaterial: {fileID: 1495675259068731669, guid: a363381a0c34c3a4d9498e8531d83f96, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
+  m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5950,8 +5950,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: RobertoCarlos
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a363381a0c34c3a4d9498e8531d83f96, type: 2}
-  m_sharedMaterial: {fileID: 1495675259068731669, guid: a363381a0c34c3a4d9498e8531d83f96, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
+  m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7606,7 +7606,7 @@ MonoBehaviour:
   UseCustomStartPosition: 1
   AutoHideAfterShow: 1
   AutoHideAfterShowDelay: 2.5
-  DisableGameObjectWhenHidden: 0
+  DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
 --- !u!225 &226006623937243273
@@ -7913,7 +7913,20 @@ MonoBehaviour:
         m_Calls: []
     OnFinishCallback:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 226006623141294213}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: Hide
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     AnimationType: 1
     Move:
       Settings:
@@ -11163,8 +11176,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: RobertoCarlos
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a363381a0c34c3a4d9498e8531d83f96, type: 2}
-  m_sharedMaterial: {fileID: 1495675259068731669, guid: a363381a0c34c3a4d9498e8531d83f96, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
+  m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

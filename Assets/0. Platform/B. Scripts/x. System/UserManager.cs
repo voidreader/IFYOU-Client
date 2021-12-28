@@ -798,7 +798,7 @@ namespace PIERStory
                 }
 
                 // AppsFlyerSDK.AppsFlyer.sendEvent("MISSION_CLEAR_"+ currentMissionData["mission_id"].ToString(), null);
-                popUp.Data.SetLabelsTexts(SystemManager.GetLocalizedText("5086"), currentMissionData["mission_name"].ToString(), SystemManager.GetLocalizedText("80078"));
+                popUp.Data.SetLabelsTexts(SystemManager.GetLocalizedText("5086"), currentMissionData["mission_name"].ToString());
                 PopupManager.main.ShowPopup(popUp, true, false);
                 Debug.Log("Show Mission Popup");   
             }

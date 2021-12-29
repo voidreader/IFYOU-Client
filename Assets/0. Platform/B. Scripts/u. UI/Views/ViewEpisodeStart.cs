@@ -20,6 +20,8 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textEpisodeTitle;
         [SerializeField] TextMeshProUGUI textEpisodeSummary;
         
+        [SerializeField] PassBanner passBanner; // 프리패스 배너 
+        
         
         [Space]
         [Header("== 버튼 ==")]
@@ -67,6 +69,14 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
 
             SetEpisodeInfo();
+            
+            // * 프리패스 추가 
+            if(UserManager.main.HasProjectFreepass()) {
+                passBanner.gameObject.SetActive(false);    
+                return;
+            }
+            
+            passBanner.SetPremiumPass(true);
         }        
         
         

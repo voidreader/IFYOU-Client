@@ -11,6 +11,8 @@ namespace PIERStory {
 
     public class PassBanner : MonoBehaviour
     {
+        [SerializeField] TextMeshProUGUI textTitle; // 타이틀.. 
+        
         [Header("타임딜 그룹")]
         [SerializeField] GameObject groupTimedeal;
         [SerializeField] TextMeshProUGUI textTimedealPrice;
@@ -70,6 +72,10 @@ namespace PIERStory {
         /// 프리미엄 배너 설정하기 
         /// </summary>
         public void SetPremiumPass(bool __useTimer) {
+            
+            this.gameObject.SetActive(true);
+            
+            textTitle.text = StoryManager.main.CurrentProject.title; // 타이틀
             
             useTimer = __useTimer;
             

@@ -148,7 +148,7 @@ namespace PIERStory {
             textViewName.gameObject.SetActive(previousTextViewNameShow);
             textViewName.text = previousViewName;
             
-            if(backgroundSignalValue) {
+            if(previousBackgroundShow) {
                 imageBackground.DOFade(1, 0.4f);
             }
             else {
@@ -216,6 +216,7 @@ namespace PIERStory {
                 return;
             }
             
+            
             backgroundSignalValue = signal.GetValueUnsafe<bool>();
             
             // 같으면 return.
@@ -225,7 +226,7 @@ namespace PIERStory {
             isBackgroundShow = backgroundSignalValue; // static 변수도 같이 갱신
             
             
-            // Debug.Log("OnTopBackgroundSignal : " + backgroundSignalValue);
+            Debug.Log("OnTopBackgroundSignal : " + backgroundSignalValue);
             
             imageBackground.DOKill();
             

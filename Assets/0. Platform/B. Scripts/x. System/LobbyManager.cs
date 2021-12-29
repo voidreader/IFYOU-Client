@@ -109,7 +109,10 @@ namespace PIERStory {
             }
             
             if(Input.GetKeyDown(KeyCode.C)) {
-                SystemManager.ShowConfirmPopUp("TEST", null, null);
+                //SystemManager.ShowConfirmPopUp("TEST", null, null);
+                PopupBase p = PopupManager.main.GetPopup("PremiumPass");
+                
+                PopupManager.main.ShowPopup(p, false, false);
             }
             if(Input.GetKeyDown(KeyCode.D)) {
                 SystemManager.ShowAlert("경고 메세지 테스트");

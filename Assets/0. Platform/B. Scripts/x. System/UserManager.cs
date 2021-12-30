@@ -23,6 +23,8 @@ namespace PIERStory
         [HideInInspector] public JsonData userJson = null; // 계정정보 (table_account) 
         [HideInInspector] public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)
         [HideInInspector] public JsonData notReceivedMailJson = null;     // 미수신 메일
+        [HideInInspector] public JsonData userProfile = null;               // 유저 프로필 정보
+        [HideInInspector] public JsonData userProfileCurrency = null;       // 유저 프로필 재화 정보
 
 
         public List<CoinIndicator> ListCoinIndicators = new List<CoinIndicator>(); // 코인 표시기
@@ -221,7 +223,6 @@ namespace PIERStory
 
             Debug.Log(string.Format("CallbackConnectServer: {0}", res.DataAsText));
 
-
             userJson = JsonMapper.ToObject(res.DataAsText);
 
             // 소모성 재화 정보 update
@@ -335,7 +336,6 @@ namespace PIERStory
         public void SetStoryUserData(JsonData __j)
         {
             currentStoryJson = __j;
-            // Debug.Log("SetUserEpisodeSceneHistory " + JsonMapper.ToJson(currentStoryJson));
             
             #region 미션 
             currentStoryMissionJSON = GetNodeProjectMissions();
@@ -349,7 +349,6 @@ namespace PIERStory
             
             #endregion
 
-
             /// 데이터 확인용도 
             if (!Application.isEditor)
                 return;
@@ -360,11 +359,7 @@ namespace PIERStory
             
 
             for (int i = 0; i < GetNodeProjectMissions().Count; i++)
-            {
                 DebugProjectChallenges.Add(JsonMapper.ToStringUnicode(GetNodeProjectMissions()[i]));
-            }
-
-            
         }
         
         /// <summary>
@@ -392,21 +387,47 @@ namespace PIERStory
 
             currentStorySelectionHistoryJson = JsonMapper.ToObject(res.DataAsText);
         }
-                /// <summary>
+
+        /// <summary>
+        /// 프로필 페이지 저장해둔 데이터 소환
+        /// </summary>
+        public void GetProfileCurrent()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = LobbyConst.FUNC_GET_PROFILE_CURRENCY_CURRENT;
+            sending[CommonConst.COL_USERKEY] = userKey;
+
+            NetworkLoader.main.SendPost(CallbackGetProfileCurrent, sending);
+        }
+
+        void CallbackGetProfileCurrent(HTTPRequest req, HTTPResponse res)
+        {
+            if(!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackGetProfileCurrent");
+                return;
+            }
+
+            userProfile = JsonMapper.ToObject(res.DataAsText);
+        }
+
+
+
+        /// <summary>
         /// 완료된 미션이었는지 체크한다
         /// </summary>
         /// <returns>true를 리턴하면 완료한 미션, false를 return하면 아직 미완료한 미션</returns>
         public bool CheckCompleteMission(string missionName)
         {
-            foreach(MissionData missionData in DictStoryMission.Values) {
-                if(missionData.missionName == missionName && missionData.missionState != MissionState.locked)
+            foreach (MissionData missionData in DictStoryMission.Values)
+            {
+                if (missionData.missionName == missionName && missionData.missionState != MissionState.locked)
                     return true;
                 else if (missionData.missionName == missionName && missionData.missionState == MissionState.locked)
                     return false;
             }
-            
+
             return false;
-            
         }
 
         /// <summary>
@@ -421,7 +442,7 @@ namespace PIERStory
             
             return null;
         }
-        
+
 
         #region 튜토리얼 Update 통신
 
@@ -1261,6 +1282,19 @@ namespace PIERStory
 
             // 갱신
             currentStoryJson[NODE_SELECTION_PROGRESS] = result;
+        }
+
+        public void CallbackUpdateSelectionCurrent(HTTPRequest req, HTTPResponse res)
+        {
+            if(!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackUpdateSelectionCurrent");
+                return;
+            }
+
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+
+            // 21.12.27 currentStoryJson에는 아직 뭔가 겹치는게 없어서 일단...이렇게 끝
         }
         
         

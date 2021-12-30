@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
+
 using TMPro;
 using DG.Tweening;
 using Doozy.Runtime.Signals;
@@ -11,15 +11,19 @@ namespace PIERStory {
     {
         public static bool isBackgroundShow = true; // 배경 보여지고 있는지 
         public static string staticCurrentTopOwner = string.Empty; // static owner.
-        
-        
+        public static Action OnClickButtonAction = null;    // 다용도 버튼 Action 저장용도
+
+
         [SerializeField] GameObject backButton; // 뒤로가기 버튼 
         [SerializeField] TextMeshProUGUI textViewName; // 뷰 이름 
         [SerializeField] Image imageBackground; // 뒤의 흰 배경
         [SerializeField] GameObject groupProperty; // 프로퍼티 그룹 (재화, 메일, 등등)
         [SerializeField] HorizontalLayoutGroup propertyHorizontalLayout;
         public GameObject mailButton;           // 프로퍼티 그룹의 메일 버튼
-        
+        public GameObject multipleButton;       // 여러 용도(저장, 변경 등)로 사용될 버튼
+        public TextMeshProUGUI multipleButtonText;      // 다용도 버튼에 들어가는 텍스트
+
+
         // * 현재 탑을 제어하는 owner를 설정하려고 했는데, 잠시 보류... 2021.12.07
         [SerializeField] string topOwner = string.Empty;
         
@@ -31,8 +35,8 @@ namespace PIERStory {
         bool previousGroupPropertyShow = false; // 이전 그룹 프로퍼티 상태 
         [SerializeField] bool previousBackgroundShow = false; // 이전 백그라운드 상태 
         bool previousMailShow = true; // 이전 메일함 버튼 
-        
-        
+
+
         [SerializeField] bool backgroundSignalValue = true;
         
         
@@ -45,6 +49,8 @@ namespace PIERStory {
         SignalStream signalStreamTopMail;
         SignalStream signalStreamTopChangeOwner;
         SignalStream signalStreamTopBackButton;
+        SignalStream signalStreamTopMultipleButton;
+        SignalStream signalStreamTopMultipleButtonText;
         SignalStream signalStreamRecover;
         SignalStream signalStreamSaveState;
         
@@ -56,6 +62,8 @@ namespace PIERStory {
         SignalReceiver signalReceiverTopMail;
         SignalReceiver signalReceiverTopChangeOwner;
         SignalReceiver signalReceiverTopBackButton;
+        SignalReceiver siganlReceiverTopMultipleButton;
+        SignalReceiver signalReceiverTopMultipleButtonText;
         SignalReceiver signalReceiverRecover;
         SignalReceiver signalReceiverSaveState;
         
@@ -81,7 +89,14 @@ namespace PIERStory {
             
             signalStreamTopBackButton = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON);
             signalReceiverTopBackButton = new SignalReceiver().SetOnSignalCallback(OnTopBackButtonSignal);
+
+            // 몇가지 예외적으로 다용도로 사용될 버튼 활성화 및 Action 추가
+            signalStreamTopMultipleButton = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON);
+            siganlReceiverTopMultipleButton = new SignalReceiver().SetOnSignalCallback(OnTopMultipleSignal);
+            signalStreamTopMultipleButtonText = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_MULTIPLE_BUTTON_LABEL);
+            signalReceiverTopMultipleButtonText = new SignalReceiver().SetOnSignalCallback(OnTopMultipleLabelSignal);
             
+
             // 복원 시그널 추가
             signalStreamRecover = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER);
             signalReceiverRecover = new SignalReceiver().SetOnSignalCallback(OnTopRecoverSignal);
@@ -98,6 +113,8 @@ namespace PIERStory {
             signalStreamTopMail.ConnectReceiver(signalReceiverTopMail);
             signalStreamTopChangeOwner.ConnectReceiver(signalReceiverTopChangeOwner);
             signalStreamTopBackButton.ConnectReceiver(signalReceiverTopBackButton);
+            signalStreamTopMultipleButton.ConnectReceiver(siganlReceiverTopMultipleButton);
+            signalStreamTopMultipleButtonText.ConnectReceiver(signalReceiverTopMultipleButtonText);
             signalStreamRecover.ConnectReceiver(signalReceiverRecover);
             signalStreamSaveState.ConnectReceiver(signalReceiverSaveState);
         }
@@ -110,6 +127,8 @@ namespace PIERStory {
             signalStreamTopMail.DisconnectReceiver(signalReceiverTopMail);
             signalStreamTopChangeOwner.DisconnectReceiver(signalReceiverTopChangeOwner);
             signalStreamTopBackButton.DisconnectReceiver(signalReceiverTopBackButton);
+            signalStreamTopMultipleButton.DisconnectReceiver(siganlReceiverTopMultipleButton);
+            signalStreamTopMultipleButtonText.DisconnectReceiver(signalReceiverTopMultipleButtonText);
             signalStreamRecover.DisconnectReceiver(signalReceiverRecover);
             signalStreamSaveState.DisconnectReceiver(signalReceiverSaveState);
         }
@@ -156,8 +175,6 @@ namespace PIERStory {
             }
             
             mailButton.SetActive(previousMailShow);
-            
-            
         }
 
         void OnTopSaveState(Signal signal) {
@@ -167,7 +184,6 @@ namespace PIERStory {
         void OnTopRecoverSignal(Signal signal) {
             
             Debug.Log("Top Recover Signal Received");
-            
             RecoverState();
         }
         
@@ -180,8 +196,6 @@ namespace PIERStory {
                 Debug.LogError("OnTopBackButtonSignal has no value");
                 return;
             }
-            
-            
             
             bool isShow = signal.GetValueUnsafe<bool>();
             backButton.SetActive(isShow);
@@ -224,11 +238,7 @@ namespace PIERStory {
                 
             isBackgroundShow = backgroundSignalValue; // static 변수도 같이 갱신
             
-            
-            // Debug.Log("OnTopBackgroundSignal : " + backgroundSignalValue);
-            
             imageBackground.DOKill();
-            
             
             if(backgroundSignalValue) {
                 imageBackground.DOFade(1, 0.4f);
@@ -249,10 +259,7 @@ namespace PIERStory {
                 return;
             }
             
-            
-            
             bool isShow = signal.GetValueUnsafe<bool>();
-            
             textViewName.gameObject.SetActive(isShow);
         }
 
@@ -264,8 +271,6 @@ namespace PIERStory {
         {
             if(s.hasValue)
             {
-                
-                
                 string viewName = s.GetValueUnsafe<string>();
                 textViewName.text = viewName;
             }
@@ -277,8 +282,6 @@ namespace PIERStory {
                 Debug.LogError("OnTopPropertySignal has no value");
                 return;
             }
-            
-            
             
             bool isShow = signal.GetValueUnsafe<bool>();
             groupProperty.SetActive(isShow);
@@ -293,6 +296,30 @@ namespace PIERStory {
                 mailButton.SetActive(isShow);
             }
         }
-        
+
+        void OnTopMultipleSignal(Signal s)
+        {
+            if(s.hasValue)
+            {
+                bool isShow = s.GetValueUnsafe<bool>();
+                multipleButton.SetActive(isShow);
+            }
+            else
+                multipleButton.SetActive(false);
+        }
+
+        void OnTopMultipleLabelSignal(Signal s)
+        {
+            if(s.hasValue)
+            {
+                string label = s.GetValueUnsafe<string>();
+                multipleButtonText.text = label;
+            }
+        }
+
+        public void OnClickMultipleButton()
+        {
+            OnClickButtonAction?.Invoke();
+        }
     }
 }

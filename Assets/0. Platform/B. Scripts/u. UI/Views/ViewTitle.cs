@@ -1,19 +1,16 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 using LitJson;
 using BestHTTP;
-using Doozy.Runtime.UIManager.Components;
 using Doozy.Runtime.Signals;
 
 namespace PIERStory {
     public class ViewTitle : CommonView
     {
-        
         public RawImage mainImage;
         
-        float loadingGauge = 0f;
         [SerializeField] int totalDownloadingImageCount = 0;
         
         public override void OnView() {
@@ -21,8 +18,6 @@ namespace PIERStory {
             
             // 타이틀 이미지 설정             
             SetTitleTexture();
-            
-            
             
         }
         
@@ -52,11 +47,13 @@ namespace PIERStory {
             StoryManager.main.SetStoryList(JsonMapper.ToObject(response.DataAsText));
             
             StartCoroutine(RoutinePrepareMainPage());
-            
         }
         
         IEnumerator RoutinePrepareMainPage() {
             
+            UserManager.main.GetProfileCurrent();       // 사용자 프로필 정보 요청
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+
             DownloadStoryMainImages(); // 다운로드 요청 
             
             // 다운로드 완료될때까지 기다린다.
@@ -64,7 +61,6 @@ namespace PIERStory {
          
             // 준비 끝났으면 signal 전송 
             Signal.Send(LobbyConst.STREAM_IFYOU, "moveMain", "open!");
-            
         }
         
         
@@ -109,8 +105,6 @@ namespace PIERStory {
                 totalDownloadingImageCount--;
             }
         }
-        
-        
         
         
         /// <summary>
@@ -161,8 +155,6 @@ namespace PIERStory {
             
            
             return selectedTexture;
-            
-               
         }
     }
 }

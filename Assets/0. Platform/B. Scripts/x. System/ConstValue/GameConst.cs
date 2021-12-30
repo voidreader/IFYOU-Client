@@ -88,6 +88,8 @@ namespace PIERStory
         public const string COL_SOUND_EFFECT = "sound_effect";
         public const string COL_AUTOPLAY_ROW = "autoplay_row";
         public const string COL_CONTROL = "control";
+        public const string COL_SELECTION_GROUP = "selection_group";
+        public const string COL_SELECTION_NO = "selection_no";
 
         public const string COL_DRESS_ID = "dress_id";
         public const string COL_DRESS_NAME = "dress_name";

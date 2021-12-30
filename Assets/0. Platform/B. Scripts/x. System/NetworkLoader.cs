@@ -207,6 +207,27 @@ namespace PIERStory
             SendPost(UserManager.main.CallbackUpdateSelectionProgress, sending);
         }
 
+        
+        /// <summary>
+        /// 선택지 기록 쌓기
+        /// </summary>
+        /// <param name="__targetSceneID">이동하게 되는 사건ID</param>
+        /// <param name="__selectionGroup">선택지 그룹 번호</param>
+        /// <param name="__selectionNo">선택지 내 번호</param>
+        public void UpdateUserSelectionCurrent(string __targetSceneID, string __selectionGroup, string __selectionNo)
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+            sending[CommonConst.FUNC] = StoryManager.main.CurrentProjectID;
+            sending["episodeID"] = StoryManager.main.CurrentEpisodeID;
+            sending["target_scene_id"] = __targetSceneID;
+            sending[GameConst.COL_SELECTION_GROUP] = __selectionGroup;
+            sending[GameConst.COL_SELECTION_NO] = __selectionNo;
+
+            SendPost(UserManager.main.CallbackUpdateSelectionCurrent, sending);
+        }
+
+
         /// <summary>
         /// 작품의 플레이 지점을 업데이트한다. (이어하기에 사용)
         /// </summary>

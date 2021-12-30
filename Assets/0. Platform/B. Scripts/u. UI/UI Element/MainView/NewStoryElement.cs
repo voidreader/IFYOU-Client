@@ -19,6 +19,15 @@ namespace PIERStory {
         
         StoryData storyData = null; // 작품 정보
         
+        
+        /// <summary>
+        /// 생성자
+        /// </summary>
+        /// <param name="__j"></param>
+        public NewStoryElement(StoryData __j) {
+            InitStoryElement(__j);
+        }
+        
         /// <summary>
         /// 초기화 하기. 
         /// </summary>

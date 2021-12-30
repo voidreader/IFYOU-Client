@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,10 +6,12 @@ using BestHTTP;
 using LitJson;
 using TMPro;
 using Doozy.Runtime.Signals;
+using System.Linq;
 
 namespace PIERStory {
     public class ViewMain : CommonView
     {
+        public static Action<string> OnCategoryList;
         
         
         [Header("로비")]
@@ -25,6 +28,11 @@ namespace PIERStory {
         
         [Header("카테고리")] 
         JsonData genreData = null;
+        [SerializeField] List<GenreToggle> ListCategoryToggle;
+        [SerializeField] GameObject prefabStoryElement; // 프리팹
+        [SerializeField] GameObject NoInterestStory; // 관심작품 없음
+        [SerializeField] Transform categoryParent;
+                
         
 
         [Header("더보기")]
@@ -42,10 +50,14 @@ namespace PIERStory {
             
             base.OnStartView();
             
-
+            // 로비 
             InitLobby();
             
+            // 더보기 
             InitAddMore();
+            
+            // 카테고리 
+            InitCategory();
         }
         
         /// <summary>
@@ -181,7 +193,16 @@ namespace PIERStory {
 
         #region 카테고리
         
+        /// <summary>
+        /// 
+        /// </summary>
         void InitCategory() {
+            
+            //
+            for(int i=0; i<ListCategoryToggle.Count;i++) {
+                ListCategoryToggle[i].gameObject.SetActive(false);
+            }
+            
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "getDistinctProjectGenre";
             NetworkLoader.main.SendPost(OnCallbackGenre, sending, false);
@@ -192,9 +213,53 @@ namespace PIERStory {
                 return;
             }
             
+            Debug.Log("OnCallbackGenre");
+            
             genreData = JsonMapper.ToObject(response.DataAsText);
             
+            // 
+            for(int i=0; i<genreData.Count;i++) {
+                
+                if(ListCategoryToggle.Count <= i)  {
+                    Debug.LogError("Too many genre data");
+                    break;
+                }
+                
+                ListCategoryToggle[i].SetGenre(genreData[i]);
+            }
             
+            NoInterestStory.SetActive(true);
+            
+        }
+        
+        void CallCategoryList(string __genre)  {
+            NoInterestStory.SetActive(false);
+            
+            List<StoryData> filteredList = null;
+            
+            if(__genre == "전체") {
+                filteredList = StoryManager.main.listTotalStory;
+            }
+            else if(__genre.Contains("관심작품")) {
+                NoInterestStory.SetActive(true);    
+            }
+            else {
+                filteredList = GetGenreFilteredStoryList(__genre);
+            }
+            
+            for(int i=0; i<filteredList.Count; i++) {
+                // NewStoryElement ns = Instantiate(prefabStoryElement, Vector3.zero, Quaternion.)
+            }
+            
+        }
+        
+        /// <summary>
+        /// 장르로 필터 걸어서 리스트 가져오기 
+        /// </summary>
+        /// <param name="__genre"></param>
+        /// <returns></returns>
+        List<StoryData> GetGenreFilteredStoryList(string __genre) {
+            return StoryManager.main.listTotalStory.Where( item => item.genre.Contains("__genre")).ToList<StoryData>();
         }
         
         #endregion

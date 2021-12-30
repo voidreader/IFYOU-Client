@@ -22,8 +22,10 @@ namespace PIERStory {
         /// <param name="__j"></param>
         public void SetGenre(JsonData __j) {
             
-            originName = __j["genre_name"].ToString();
-            localizedName = SystemManager.GetLocalizedText(__j["genre_text_id"].ToString());
+            this.gameObject.SetActive(true);
+            
+            originName = __j["origin_name"].ToString();
+            localizedName = __j["genre_name"].ToString();
             textGenre.text = localizedName;
             
             SetOff();

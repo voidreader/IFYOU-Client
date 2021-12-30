@@ -77,8 +77,23 @@ namespace Doozy.Runtime.Nody
 
         private void OnDisable()
         {
+            Debug.Log("<color=yellow>OnDisable FlowController :: " + this.gameObject.name +"</color>");
+            
             if (Flow != null)
                 Flow.Stop();
+         
+        }
+        
+        void OnDestroy() {
+            Debug.Log("<color=yellow>Destroy FlowController :: " + this.gameObject.name +"</color>");
+            
+            Destroy(Flow);
+            
+            /*
+            Flow.Stop();
+            Flow.controller = null;
+            Flow = null;
+            */
         }
 
         private void Update()
@@ -127,6 +142,8 @@ namespace Doozy.Runtime.Nody
 
             if (graph == null)
                 return;
+                
+            Debug.Log("<color=yellow>"+this.gameObject.name + " starts.. : " + flowType.ToString()+"</color>");
 
             Flow = flowType == FlowType.Local ? graph.Clone() : graph;
             StartCoroutine(StartGraph());

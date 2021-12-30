@@ -126,7 +126,7 @@ namespace PIERStory
 
         // 자동 재생
         public bool isAutoPlay = false;
-        public IEnumerator routineAutoPlay = null;
+        
 
         #region Properties
 
@@ -215,7 +215,7 @@ namespace PIERStory
             SoundSetting(GameConst.VOICE_MUTE, 1);
             SoundSetting(GameConst.SOUNDEFFECT_MUTE, 2);
 
-            routineAutoPlay = RoutineAutoPlay();
+            
         }
 
 
@@ -696,26 +696,47 @@ namespace PIERStory
                 StartCoroutine(RoutineEpisodePlay());
         }
 
+
+        #region AutoPlay 
+        
+        public void StartAutoPlay() {
+            StartCoroutine(RoutineAutoPlay());
+        }
+        
+        public void StopAutoPlay() {
+            StopCoroutine(RoutineAutoPlay());
+        }
+
         IEnumerator RoutineAutoPlay()
         {
-            while(true)
+            Debug.Log("RoutineAutoPlay Start!");
+            
+            while(isPlaying)
             {
                 if(!isThreadHold && isWaitingScreenTouch)
                 {
+                    
+                    Debug.Log(">> SoundGroup[1].GetIsPlaying");
+                    
+                    yield return new WaitForSeconds(PlayerPrefs.GetFloat(GameConst.AUTO_PLAY));
                     // 보이스가 재생이 끝날때까지 대기
-
+                    /*
                     if (SoundGroup[1].GetIsPlaying)
                     {
                         yield return new WaitUntil(() => !SoundGroup[1].GetIsPlaying);
-                        yield return new WaitForSeconds(2f);
                     }
                     else
                         yield return new WaitForSeconds(PlayerPrefs.GetFloat(GameConst.AUTO_PLAY));
+                    */
 
+                    Debug.Log(">> Auto Click <<");
                     isWaitingScreenTouch = false;
                 }
+                
+                yield return null;
             }
         }
+        #endregion
 
         /// <summary>
         /// 말풍선(대화 관련 처리 시작)

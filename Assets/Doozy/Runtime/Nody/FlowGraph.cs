@@ -368,6 +368,8 @@ namespace Doozy.Runtime.Nody
             flowClone.RootNode = RootNode.Clone().SetFlowGraph(flowClone);
             flowClone.nodes = nodes.ConvertAll(n => n.Clone());
             flowClone.UpdateNodes();
+            flowClone.name = flowClone.name + UnityEngine.Random.Range(0,1000).ToString();
+            flowClone.GraphName = flowClone.name;
             return flowClone;
         }
 

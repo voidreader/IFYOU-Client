@@ -20,6 +20,8 @@ namespace PIERStory {
         [SerializeField] HorizontalLayoutGroup propertyHorizontalLayout;
         public GameObject mailButton;           // 프로퍼티 그룹의 메일 버튼
         
+        [SerializeField] GameObject logo; // 로고
+        
         // * 현재 탑을 제어하는 owner를 설정하려고 했는데, 잠시 보류... 2021.12.07
         [SerializeField] string topOwner = string.Empty;
         
@@ -31,6 +33,8 @@ namespace PIERStory {
         bool previousGroupPropertyShow = false; // 이전 그룹 프로퍼티 상태 
         [SerializeField] bool previousBackgroundShow = false; // 이전 백그라운드 상태 
         bool previousMailShow = true; // 이전 메일함 버튼 
+        
+        bool previousLogoShow = false; // 로고 보여주기 
         
         
         [SerializeField] bool backgroundSignalValue = true;
@@ -136,6 +140,7 @@ namespace PIERStory {
             previousTextViewNameShow = textViewName.gameObject.activeSelf;
             previousViewName = textViewName.text;
             previousMailShow = mailButton.activeSelf;
+            previousLogoShow = !previousBackButtonShow;
         }
         
         /// <summary>
@@ -156,6 +161,7 @@ namespace PIERStory {
             }
             
             mailButton.SetActive(previousMailShow);
+            logo.SetActive(!previousBackButtonShow);
             
             
         }
@@ -185,6 +191,7 @@ namespace PIERStory {
             
             bool isShow = signal.GetValueUnsafe<bool>();
             backButton.SetActive(isShow);
+            logo.SetActive(!isShow);
             
         }
         

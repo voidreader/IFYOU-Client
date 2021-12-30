@@ -70,18 +70,28 @@ namespace PIERStory {
             InitRecommendStory(); // 추천스토리 Area 초기화
             InitNewStoryElements(); // 새로운 이야기 Area 초기화
             
+        }
+        
+        public void OnLobbyTab() {
             
-            // 탑 처리 추가 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);            
         }
 
         
         public void OnClickTabNavigation(int index) {
-            
+            switch(index) {
+                case 0: 
+                OnLobbyTab();
+                break;
+                
+                case 1:
+                OnCategoryTab();
+                break;
+            }
         }
         
         
@@ -192,6 +202,17 @@ namespace PIERStory {
         #endregion
 
         #region 카테고리
+        
+        /// <summary>
+        /// 카테고리 탭 활성화 
+        /// </summary>
+        public void OnCategoryTab() {
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
+        }
         
         /// <summary>
         /// 

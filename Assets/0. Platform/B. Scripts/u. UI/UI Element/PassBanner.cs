@@ -22,7 +22,7 @@ namespace PIERStory {
         [SerializeField] GameObject groupTimer; // 타이머 그룹 
         [SerializeField] TextMeshProUGUI textTimer; // 타이머 
          public const long addTick = 621355968000000000; // C#과 javascript 타임 Tick 차이 
-        [SerializeField] string freepass_no = string.Empty;
+        public string freepass_no = string.Empty;
         [SerializeField] long end_date_tick = 0; // 서버에서 받아오는 타임딜 종료시간 tick
         
         [SerializeField] DateTime endDate;

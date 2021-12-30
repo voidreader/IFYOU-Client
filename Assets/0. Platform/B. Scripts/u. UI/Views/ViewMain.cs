@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using BestHTTP;
+using LitJson;
 using TMPro;
 using Doozy.Runtime.Signals;
 
@@ -21,6 +22,10 @@ namespace PIERStory {
         [SerializeField] List<PlayingStoryElement> ListPlayingStoryElements; // 진행중 이야기 
         [SerializeField] List<MainStoryRow> ListRecommendStoryRow; // 추천 스토리의 2열짜리 행 
         [SerializeField] List<NewStoryElement> ListNewStoryElement; // 새로운 이야기 개별 개체 
+        
+        [Header("카테고리")] 
+        JsonData genreData = null;
+        
 
         [Header("더보기")]
         public TextMeshProUGUI userPincode;
@@ -175,6 +180,23 @@ namespace PIERStory {
         #endregion
 
         #region 카테고리
+        
+        void InitCategory() {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "getDistinctProjectGenre";
+            NetworkLoader.main.SendPost(OnCallbackGenre, sending, false);
+        }
+        
+        void OnCallbackGenre(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                return;
+            }
+            
+            genreData = JsonMapper.ToObject(response.DataAsText);
+            
+            
+        }
+        
         #endregion
 
         #region 상점

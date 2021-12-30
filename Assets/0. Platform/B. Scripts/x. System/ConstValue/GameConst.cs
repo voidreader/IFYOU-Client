@@ -26,9 +26,9 @@ namespace PIERStory
 
         public const string AUTO_PLAY = "autoplay";
 
-        public const float fastDelay = 3f;
-        public const float normalDelay = 5f;
-        public const float slowDelay = 7f;
+        public const float fastDelay = 2f;
+        public const float normalDelay = 3f;
+        public const float slowDelay = 5f;
 
         public const string SIGNAL_EPISODE_END = "episodeEnd";
         public const string SIGNAL_NEXT_DATA = "nextData";

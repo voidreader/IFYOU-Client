@@ -71,6 +71,11 @@ namespace PIERStory {
         public Sprite spriteNavMoreOn;
         public Sprite spriteNavMoreOff;
         
+        [Space]
+        [Header("카테고리")] 
+        public Sprite spriteGenreOn;
+        public Sprite spriteGenreOff;
+        
         
         
         [Header("== 컬러 ==")]
@@ -79,6 +84,9 @@ namespace PIERStory {
         public Color colorOneTimeBox = Color.white;
         public Color colorNavOn = Color.white;
         public Color colorNavOff = Color.white;
+        
+        public Color colorGenreOn = Color.white;
+        public Color colorGenreOff = Color.white;
         
 
         public bool termView = false;

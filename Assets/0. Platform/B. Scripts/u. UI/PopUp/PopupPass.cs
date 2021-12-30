@@ -25,5 +25,19 @@ namespace PIERStory {
             textOriginPrice.text = passBanner.originFreepassPrice.ToString();
             textSalePrice.text = passBanner.saleFreepassPrice.ToString();
         }
+        
+        
+        /// <summary>
+        /// 구매 처리 
+        /// </summary>
+        public void OnClickPurchase() {
+            if(UserManager.main.CheckGemProperty(passBanner.saleFreepassPrice)) {
+                NetworkLoader.main.PurchaseProjectFreepass(passBanner.freepass_no, passBanner.originFreepassPrice, passBanner.saleFreepassPrice);    
+                return;
+            }
+            
+            // 젬 부족시. 
+            SystemManager.ShowAlertWithLocalize("80014");
+        }
     }
 }

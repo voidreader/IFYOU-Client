@@ -11,6 +11,8 @@ namespace PIERStory {
 
     public class PassBanner : MonoBehaviour
     {
+        [SerializeField] bool isTargetBanner = false; // ID로 지정된 프리미엄 배너인 경우 true.
+        [SerializeField] StoryData passStory = null; // 대상 스토리
         [SerializeField] TextMeshProUGUI textTitle; // 타이틀.. 
         
         [Header("타임딜 그룹")]
@@ -20,7 +22,7 @@ namespace PIERStory {
         [SerializeField] GameObject groupTimer; // 타이머 그룹 
         [SerializeField] TextMeshProUGUI textTimer; // 타이머 
          public const long addTick = 621355968000000000; // C#과 javascript 타임 Tick 차이 
-        [SerializeField] string freepass_no = string.Empty;
+        public string freepass_no = string.Empty;
         [SerializeField] long end_date_tick = 0; // 서버에서 받아오는 타임딜 종료시간 tick
         
         [SerializeField] DateTime endDate;
@@ -48,8 +50,8 @@ namespace PIERStory {
         [SerializeField] Sprite spriteNormalFrame; // 노멀 프레임 스프라이트 
         
         
-        [SerializeField] int originFreepassPrice = 0;
-        [SerializeField] int saleFreepassPrice = 0;
+        public int originFreepassPrice = 0;
+        public int saleFreepassPrice = 0;
         
         JsonData userFreepassTimedealJSON; // 대상 작품의 유저 프리패스 타임딜 
          
@@ -73,7 +75,11 @@ namespace PIERStory {
         /// </summary>
         public void SetPremiumPass(bool __useTimer) {
             
+            
             this.gameObject.SetActive(true);
+            
+            isTargetBanner = false; // 타겟팅 되지 않음.
+            passStory = StoryManager.main.CurrentProject;
             
             textTitle.text = StoryManager.main.CurrentProject.title; // 타이틀
             
@@ -117,6 +123,37 @@ namespace PIERStory {
             }
             
         }
+        
+        /// <summary>
+        /// 프로젝트ID로 세팅하기 (미구현)
+        /// </summary>
+        /// <param name="__projectID"></param>
+        /// <param name="__useTimer"></param>
+        public void SetPremiumPassByID(string __projectID, bool __useTimer) {
+            isTargetBanner = true; 
+            // passStory = 아이디로 스토리를 찾아서 블라블라. 
+        }
+        
+        /// <summary>
+        /// 배너 클릭
+        /// </summary>
+        public void OnClickBanner() {
+            PopupBase p = PopupManager.main.GetPopup("PremiumPass");
+            
+            if(p == null) {
+                Debug.LogError("No Premium Pass popup");
+                return;
+            }
+            
+            // 지정 배너와 현재 프로젝트를 연결한 배너 분류 
+            if(isTargetBanner)
+                p.Data.targetData = passStory.projectID;
+            else 
+                p.Data.targetData = string.Empty;
+            
+            PopupManager.main.ShowPopup(p, false, false);
+        }
+        
         
         
                 /// <summary>

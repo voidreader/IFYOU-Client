@@ -36,6 +36,11 @@ namespace PIERStory {
         }
         
         public void SetAutoDestroy() {
+            
+            BackButton.blockBackInput = true; // block 
+            PopupManager.main.AddActivePopup(this); // 팝업매니저에 등록하기
+            
+            
             if(autoDestroyTime <= 0 )
                 return;
                 
@@ -52,7 +57,7 @@ namespace PIERStory {
         
         public virtual void Show() {
             
-            BackButton.blockBackInput = true; // block 해제
+            
             
             StartCoroutine(ShowEnumerator());
             SetAutoDestroy();
@@ -77,7 +82,11 @@ namespace PIERStory {
         /// </summary>
         public virtual void Hide() {
             
+            if(content.inTransition)
+                return;
+            
             BackButton.blockBackInput = false; // block 해제
+            
             
             if(isOverlayUse)
                 overlay.Hide();
@@ -108,6 +117,10 @@ namespace PIERStory {
         /// Hide의 콜백으로 꼭 걸어줄것!
         /// </summary>
         public void SelfDestroy() {
+            
+            BackButton.blockBackInput = false; // block 해제
+            PopupManager.main.RemoveActivePopup(this); // remove
+            
             Destroy(this.gameObject);
         }
         

@@ -11,7 +11,7 @@ namespace PIERStory {
     [Serializable]
     public class PopupContent 
     {
-        
+        public string targetData = string.Empty; // 공용으로 사용되는 스트링 데이터 
         public bool HasImages { get { return ImagesCount > 0; } }
         public bool HasLabels { get { return LabelsCount > 0; } }    
         public int ImagesCount { get { return Images.Count; } }   
@@ -46,6 +46,14 @@ namespace PIERStory {
             }
         }
         */
+        
+        /// <summary>
+        /// 타겟 데이터 지정
+        /// </summary>
+        /// <param name="__t"></param>
+        public void SetTargetData(string __t) {
+            targetData = __t;
+        }
 
         /// <summary>
         /// 긍정 버튼 콜백 설정

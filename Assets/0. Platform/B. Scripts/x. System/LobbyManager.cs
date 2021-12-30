@@ -71,11 +71,6 @@ namespace PIERStory {
         public Sprite spriteNavMoreOn;
         public Sprite spriteNavMoreOff;
         
-        [Space]
-        [Header("카테고리")] 
-        public Sprite spriteGenreOn;
-        public Sprite spriteGenreOff;
-        
         
         
         [Header("== 컬러 ==")]
@@ -84,9 +79,6 @@ namespace PIERStory {
         public Color colorOneTimeBox = Color.white;
         public Color colorNavOn = Color.white;
         public Color colorNavOff = Color.white;
-        
-        public Color colorGenreOn = Color.white;
-        public Color colorGenreOff = Color.white;
         
 
         public bool termView = false;
@@ -117,10 +109,7 @@ namespace PIERStory {
             }
             
             if(Input.GetKeyDown(KeyCode.C)) {
-                //SystemManager.ShowConfirmPopUp("TEST", null, null);
-                PopupBase p = PopupManager.main.GetPopup("PremiumPass");
-                
-                PopupManager.main.ShowPopup(p, false, false);
+                SystemManager.ShowConfirmPopUp("TEST", null, null);
             }
             if(Input.GetKeyDown(KeyCode.D)) {
                 SystemManager.ShowAlert("경고 메세지 테스트");

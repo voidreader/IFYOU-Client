@@ -13,12 +13,17 @@ namespace PIERStory
         public TextMeshProUGUI episodeTitle;
 
         [Space][Header("Circle progress bar")]
-        [SerializeField] float illustProgress = 0;
-        [SerializeField] float sceneProgress = 0;
-        [SerializeField] EpisodeContentProgress illustProgressBar;
-        [SerializeField] EpisodeContentProgress sceneProgressBar;
-        [SerializeField] GameObject contentsMiddleVerticalLine; // 일러스트, 경험한 사건 사이에 선 
+        public GameObject IllustProgress;       // 일러스트 획득률
+        public GameObject verticalLine;         // 일러스트, 사건 사이에 들어간 세로선
 
+        [Header("Illust progress bar")]
+        public Image prevIllustGauge;
+        public Image currIllustGauge;
+        public TextMeshProUGUI currIllustValue;
+        [Header("Scene progress bar")]
+        public Image prevSceneGauge;
+        public Image currSceneGauge;
+        public TextMeshProUGUI currSceneValue;
 
         [Header("Selection scroll snap")]
         public Transform scrollContent;
@@ -171,30 +176,24 @@ namespace PIERStory
 
             episodeTitle.text += episodeData.episodeTitle;
 
-            // 진행도 처리 
-            illustProgress = episodeData.episodeGalleryImageProgressValue;
-            sceneProgress = episodeData.sceneProgressorValue;
+            // 에피소드에 획득 일러스트가 없는 경우 비활성화 해준다
+            if(episodeData.episodeGalleryImageProgressValue < 0)
+            {
+                IllustProgress.SetActive(false);
+                verticalLine.SetActive(false);
+            }
 
-            // 갤러리 프로그레스. -1이면 없다. 
-            if(illustProgress > -1) {
-                contentsMiddleVerticalLine.SetActive(true);
-                illustProgressBar.gameObject.SetActive(true);
-                illustProgressBar.SetProgress(illustProgress);
-                
-                // 갤러리 Progress 리프레시 
-                episodeData.RefreshGalleryProgressValue();
-                illustProgressBar.SetAdditionalProgress(episodeData.episodeGalleryImageProgressValue);
-                
-            }
-            else {
-                illustProgressBar.gameObject.SetActive(false);
-                contentsMiddleVerticalLine.SetActive(false);
-            }
+            prevIllustGauge.fillAmount = episodeData.episodeGalleryImageProgressValue;
+            prevSceneGauge.fillAmount = episodeData.sceneProgressorValue;
             
-            sceneProgressBar.SetProgress(sceneProgress);
-            // * refresh된 값을 추가로 할당한다. 
+            // 갤러리 이미지 값 리프레시 시키고, curr에 할당한다. 
+            episodeData.RefreshGalleryProgressValue();
+            currIllustGauge.fillAmount = episodeData.episodeGalleryImageProgressValue;
+            
+            // 게임매니저에서 updatedEpisodeSceneProgressValue 값 받아와서 재계산. 
+            currSceneGauge.fillAmount = GameManager.main.updatedEpisodeSceneProgressValue / episodeData.totalSceneCount; 
+            // played scene count 표기하고 갱신
             episodeData.SetNewPlayedSceneCount(GameManager.main.updatedEpisodeSceneProgressValue);
-            sceneProgressBar.SetAdditionalProgress(episodeData.sceneProgressorValue);
 
         }
 

@@ -42,7 +42,7 @@ namespace PIERStory
         {
             if (touchInPos.x >= touchOutPos.x - 0.4f && touchInPos.x <= touchOutPos.x + 0.4f &&
                 touchInPos.y >= touchOutPos.y - 0.4f && touchInPos.y <= touchOutPos.y + 0.4f)
-                CreateTouchEffect(touchInPos);
+                CreateTouchEffect(touchOutPos);
         }
 
         void CreateTouchEffect(Vector3 touchPos)

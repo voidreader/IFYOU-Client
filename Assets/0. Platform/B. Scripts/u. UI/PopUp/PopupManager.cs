@@ -8,8 +8,6 @@ namespace PIERStory {
     {
         public static PopupManager main = null;
         
-        public List<PopupBase> ListShowingPopup = new List<PopupBase>();
-        
         public Canvas popupCanvas = null;
         
         public Dictionary<string, GameObject> DictPopup;
@@ -118,28 +116,6 @@ namespace PIERStory {
             else {
                 popup.Show(); // 독립적인 실행 
             }
-        }
-        
-        
-        /// <summary>
-        /// 모든 활성화 팝업 감추기
-        /// </summary>
-        public void HideActivePopup() {
-            for(int i=0; i<ListShowingPopup.Count;i++) {
-                ListShowingPopup[i].Hide();
-            }
-        }
-        
-        /// <summary>
-        /// 팝업이 활성화될때 호출 
-        /// </summary>
-        /// <param name="__p"></param>
-        public void AddActivePopup(PopupBase __p) {
-            ListShowingPopup.Add(__p);
-        }
-        
-        public void RemoveActivePopup(PopupBase __p) {
-            ListShowingPopup.Remove(__p);
         }
         
         

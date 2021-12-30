@@ -706,6 +706,7 @@ namespace PIERStory
         /// <returns></returns>
         public bool HasProjectFreepass()
         {
+
             if (SystemManager.GetJsonNodeBool(bankJson, "free_" + StoryManager.main.CurrentProjectID))
                 return true;
             else
@@ -1239,18 +1240,28 @@ namespace PIERStory
             SetBankInfo(result);
             
             
-            // 모든 팝업 비활성화 
-            PopupManager.main.HideActivePopup();
             
             // StoryDetail 갱신처리 
             OnFreepassPurchase?.Invoke();
-            // 에피소드 시작화면 갱신
-            ViewEpisodeStart.OnRefreshPremiumPass?.Invoke();
             
             // View 종료를 위해 Event 처리 
             // Doozy.Engine.GameEventMessage.SendEvent("PurchaseFreepass"); 
-            // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_PURCHASE_FREEPASS, string.Empty);
-            SystemManager.ShowAlert(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle));
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_PURCHASE_FREEPASS, string.Empty);
+            SystemManager.ShowSimpleMessagePopUp(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle));
+            
+            
+            // AppsFlyer
+            if(purchaseResult == null) {
+                return;
+            }
+            
+            string eventName = "USER_PURCHASE_FREEPASS_" + StoryManager.main.CurrentProjectID;
+            Dictionary<string, string> appsFlayerParam = new Dictionary<string, string>();
+            appsFlayerParam.Add("freepass_no", SystemManager.GetJsonNodeString(purchaseResult, "freepass_no"));
+            appsFlayerParam.Add("origin_price", SystemManager.GetJsonNodeString(purchaseResult, "originPrice"));
+            appsFlayerParam.Add("sale_price", SystemManager.GetJsonNodeString(purchaseResult, "salePrice"));
+            
+            // AppsFlyerSDK.AppsFlyer.sendEvent(eventName,appsFlayerParam);
         }
         
         /// <summary>

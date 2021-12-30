@@ -130,30 +130,15 @@ namespace PIERStory
         void StopAutoPlay()
         {
             GameManager.main.isAutoPlay = false;
-            GameManager.main.StopAutoPlay();
+            StopCoroutine(GameManager.main.routineAutoPlay);
             SetAutoPlayButtonSprite();
         }
 
-
-        /// <summary>
-        /// 오토플레이 버튼 클릭 
-        /// </summary>
         public void AutoPlay()
         {
-            
-            
-            GameManager.main.isAutoPlay = !GameManager.main.isAutoPlay;
-            
-            if(GameManager.main.isAutoPlay) {
-                GameManager.main.StartAutoPlay();    
-                SetAutoPlayButtonSprite();
-            }
-            else {
-                StopAutoPlay();
-            }
-            
-            
-            
+            GameManager.main.isAutoPlay = true;
+            StartCoroutine(GameManager.main.routineAutoPlay);
+            SetAutoPlayButtonSprite();
         }
 
         /// <summary>

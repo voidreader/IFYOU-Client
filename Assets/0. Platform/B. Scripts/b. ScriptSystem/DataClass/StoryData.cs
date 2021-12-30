@@ -40,8 +40,6 @@ namespace PIERStory {
         public float projectProgress = 0;
         public bool isPlaying = false; // 플레이중? 
         
-        public string genre = string.Empty; // 장르
-        
         public StoryData() {
             
         }
@@ -88,9 +86,6 @@ namespace PIERStory {
             
             // 
             isPlaying = isLock = SystemManager.GetJsonNodeBool(originData, LobbyConst.STORY_IS_PLAYING); 
-            
-            //
-            genre = SystemManager.GetJsonNodeString(originData, "genre");
         }
     }
 }

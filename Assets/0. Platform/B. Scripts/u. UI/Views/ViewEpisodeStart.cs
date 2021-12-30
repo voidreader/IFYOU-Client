@@ -12,7 +12,7 @@ namespace PIERStory {
     public class ViewEpisodeStart : CommonView
     {
         
-        public static System.Action OnRefreshPremiumPass = null;
+        public static System.Action OnRefreshEpisodeStart = null;
         
         [SerializeField] bool isEpisodeContinuePlay = false; // 에피소드 이어하기 상태? 
         
@@ -62,9 +62,6 @@ namespace PIERStory {
         
         public override void OnStartView() {
             base.OnStartView();
-            
-            OnRefreshPremiumPass = SetPremiumPass;
-            
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
@@ -73,11 +70,6 @@ namespace PIERStory {
 
             SetEpisodeInfo();
             
-            SetPremiumPass();
-
-        }        
-        
-        void SetPremiumPass() {
             // * 프리패스 추가 
             if(UserManager.main.HasProjectFreepass()) {
                 passBanner.gameObject.SetActive(false);    
@@ -85,7 +77,7 @@ namespace PIERStory {
             }
             
             passBanner.SetPremiumPass(true);
-        }
+        }        
         
         
         void SetEpisodeInfo() {
@@ -485,9 +477,6 @@ namespace PIERStory {
         void StartGame()
         {
             Debug.Log("Game Start!!!!!");
-            // 게임씬 FlowControl 오류 해결을 위한 임시방편 
-            Signal.Send(LobbyConst.STREAM_GAME, "deadEnd", string.Empty);
-            
             IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
             
             // 다음 에피소드 진행 

@@ -322,13 +322,10 @@ namespace PIERStory {
                 return;
             }
             
-            Debug.Log(">> Check Project freepass : " +  UserManager.main.HasProjectFreepass());
-            
             // 유저가 프리패스 대상 프로젝트의 프리패스 보유중 
             if(UserManager.main.HasProjectFreepass()) {
                 Debug.Log("!!! freepass user in this project");
                 premiumPassArea.SetActive(false);
-                return;
             }
             
             premiumPassArea.SetActive(true);

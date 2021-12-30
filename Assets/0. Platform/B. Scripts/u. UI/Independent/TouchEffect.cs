@@ -6,8 +6,8 @@ namespace PIERStory
     {
         public GameObject touchEffect;
         GameObject effect;
-        Vector3 touchInPos = Vector3.forward;
-        Vector3 touchOutPos = Vector3.back;
+        Vector3 touchInPos = Vector3.one;
+        Vector3 touchOutPos = Vector3.one;
 
         private void Update()
         {
@@ -51,9 +51,8 @@ namespace PIERStory
             touchedPos = new Vector3(touchedPos.x, touchedPos.y, 0);
             effect = Instantiate(touchEffect, touchedPos, Quaternion.identity);
             
-            
-            touchInPos = Vector3.forward;
-            touchOutPos = Vector3.back;
+            touchInPos = Vector3.one;
+            touchOutPos = Vector3.one;
             Destroy(effect, 0.5f);
         }
     }

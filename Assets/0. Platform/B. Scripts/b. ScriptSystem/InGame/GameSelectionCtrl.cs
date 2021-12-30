@@ -211,6 +211,8 @@ namespace PIERStory
             // 선택지 선택 후 서버 통신 진행 (선택지 경로 저장 )
             NetworkLoader.main.UpdateUserSelectionProgress(targetSceneID, selectionScript);
 
+            // 선택지 기록 쌓기
+            NetworkLoader.main.UpdateUserSelectionCurrent(targetSceneID, scriptRow.selection_group, scriptRow.selection_no);
 
             // 다른 친구들은 Out 으로 처리 
             SetOtherStackState("Out");

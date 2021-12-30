@@ -49,6 +49,9 @@ namespace PIERStory
         public string[] controlParams = null;                   // 제어파라매터 배열 
         public string controlAlternativeName = string.Empty;    // 대체 이름
 
+        public string selection_group = string.Empty;
+        public string selection_no = string.Empty;
+
 
         // 액션 인터페이스 
         public IRowAction rowAction = null;
@@ -237,6 +240,9 @@ namespace PIERStory
             autoplay_row = ParseCol<int>(GameConst.COL_AUTOPLAY_ROW);
 
             control = ParseCol<string>(GameConst.COL_CONTROL);
+            selection_group = ParseCol<string>(GameConst.COL_SELECTION_GROUP);
+            selection_no = ParseCol<string>(GameConst.COL_SELECTION_NO);
+
             SetControlParams();
 
             // 리소스 키 만들기

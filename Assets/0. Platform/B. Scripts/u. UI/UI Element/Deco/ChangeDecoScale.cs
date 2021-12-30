@@ -23,12 +23,13 @@ namespace PIERStory
 
         public void OnDrag(PointerEventData eventData)
         {
-            
             dragX = eventData.position.x;
 
-            // 가로나 세로의 길이가 80 밑으로 내려가지 못하도록 조절
-            if (decoObject.sizeDelta.x >= 80 || decoObject.sizeDelta.y >= 80)
-                decoObject.sizeDelta = new Vector2(originSize.x + (startX - dragX) * sizeFactor, originSize.y + (startX - dragX) * sizeFactor);
+            float calcSize = (startX - dragX) * sizeFactor;
+
+            // 가로나 세로의 길이가 80 밑으로 내려가지 못하게 막음
+            if (decoObject.sizeDelta.x + calcSize >= 80 && decoObject.sizeDelta.y + calcSize >= 80)
+                decoObject.sizeDelta = new Vector2(originSize.x + calcSize, originSize.y + calcSize);
         }
 
         public void OnEndDrag(PointerEventData eventData)

@@ -915,8 +915,22 @@ namespace PIERStory
                             break;
                     }
 
+                    StartCoroutine(DisableBloodEffect(bloodTime));
+
                     break;
             }
+        }
+
+        /// <summary>
+        /// lifeTime동안 활성화 되어있다가 비활성화 함
+        /// </summary>
+        IEnumerator DisableBloodEffect(float lifeTIme)
+        {
+            yield return new WaitForSeconds(lifeTIme);
+            bleeding_1.gameObject.SetActive(false);
+            bleeding_2.gameObject.SetActive(false);
+            bleeding_3.gameObject.SetActive(false);
+
         }
 
         #region 카메라 플래시
@@ -1004,6 +1018,8 @@ namespace PIERStory
                 case GameConst.KR_SCREEN_EFFECT_SNOW:
                     snow.gameObject.SetActive(false);
                     break;
+
+
             }
         }
 

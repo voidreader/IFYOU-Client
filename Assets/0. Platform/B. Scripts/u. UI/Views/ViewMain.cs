@@ -1,14 +1,17 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
+using LitJson;
+using BestHTTP;
 using Doozy.Runtime.Signals;
 
 namespace PIERStory {
     public class ViewMain : CommonView
     {
-        
+        public static Action OnProfileSetting = null;
         
         [Header("로비")]
         [SerializeField] ScrollRect mainScrollRect;
@@ -21,6 +24,14 @@ namespace PIERStory {
         [SerializeField] List<PlayingStoryElement> ListPlayingStoryElements; // 진행중 이야기 
         [SerializeField] List<MainStoryRow> ListRecommendStoryRow; // 추천 스토리의 2열짜리 행 
         [SerializeField] List<NewStoryElement> ListNewStoryElement; // 새로운 이야기 개별 개체 
+
+        [Header("프로필")]
+        public ImageRequireDownload background;
+        public Transform decoObjectParent;
+        public GameObject decoObjectPrefab;
+        public Transform textObjectParent;
+        public GameObject textObjectPrefab;
+        List<GameObject> createObject = new List<GameObject>();
 
         [Header("더보기")]
         public TextMeshProUGUI userPincode;
@@ -37,9 +48,11 @@ namespace PIERStory {
             
             base.OnStartView();
             
-
             InitLobby();
-            
+
+            OnProfileSetting = InitProfile;
+
+            InitProfile();
             InitAddMore();
         }
         
@@ -60,6 +73,7 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, false, string.Empty);
         }
 
         
@@ -179,6 +193,81 @@ namespace PIERStory {
 
         #region 상점
         #endregion
+
+        #region 프로필
+
+        void InitProfile()
+        {
+            // 남아있는게 있으면 일단 다 뿌셔뿌셔
+            foreach (GameObject g in createObject)
+                Destroy(g);
+
+            createObject.Clear();
+
+            JsonData profileCurrency = SystemManager.GetJsonNode(UserManager.main.userProfile, LobbyConst.NODE_CURRENCY);
+            JsonData profileText = SystemManager.GetJsonNode(UserManager.main.userProfile, LobbyConst.NODE_TEXT);
+
+            if (profileCurrency.Count > 0)
+            {
+                int sortingOrder = 0;
+
+                // 배경을 먼저 넣어준다. 배경이 존재한다면 sortingOrder 0값이 존재한다.
+                if (SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_SORTING_ORDER) == "0")
+                {
+                    background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_CURRENCY_KEY));
+                    background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_POS_X)), 0f);
+                    background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_HEIGHT)));
+                    sortingOrder++;
+                }
+
+                // 데코 아이템 화면에 뿌리기
+                for (int i = sortingOrder; i < profileCurrency.Count; i++)
+                {
+                    ItemElement deco = Instantiate(decoObjectPrefab, decoObjectParent).GetComponent<ItemElement>();
+                    deco.SetProfileItem(profileCurrency[i]);
+                    deco.GetComponent<Image>().raycastTarget = false;       // 프로필 페이지에서 선택되면 안돼!
+                    createObject.Add(deco.gameObject);
+                }
+            }
+
+            if (profileText.Count > 0)
+            {
+                // 텍스트
+                for (int i = 0; i < profileText.Count; i++)
+                {
+                    DecoTextElement textElement = Instantiate(textObjectPrefab, textObjectParent).GetComponent<DecoTextElement>();
+                    textElement.SetProfileText(profileText[i]);
+                    textElement.inputField.enabled = false;     // 프로필 페이지에서 텍스트가 편집되면 안돼!
+                    textElement.GetComponent<Image>().raycastTarget = false;
+                    createObject.Add(textElement.gameObject);
+                }
+            }
+        }
+
+        public void OnClickDecoMode()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = LobbyConst.FUNC_GET_PROFILE_CURRENCY_OWN_LIST;
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+
+            NetworkLoader.main.SendPost(CallbackGetProfileCurrencyList, sending, true);
+        }
+
+        void CallbackGetProfileCurrencyList(HTTPRequest req, HTTPResponse res)
+        {
+            if(!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackGetProfileCurrencyList");
+                return;
+            }
+
+            // 통신이 완료된 후, 사용자가 소지하고 있는 프로필 재화 정보를 받은 뒤, 페이지를 넘긴다.
+            UserManager.main.userProfileCurrency = JsonMapper.ToObject(res.DataAsText);
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_DECO_MODE, string.Empty);
+        }
+
+        #endregion
+
 
         #region 더보기
 

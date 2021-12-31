@@ -1098,7 +1098,7 @@ namespace PIERStory
             foreach (string s in selections)
             {
                 if (s.Equals(selected))
-                    logData.Append("<b><color=#6284FF>[" + s + "]</color></b>");
+                    logData.Append("<b><color=#FF73A5>[" + s + "]</color></b>");
                 else
                     logData.Append("[" + s + "]");
             }
@@ -1128,7 +1128,7 @@ namespace PIERStory
             if (string.IsNullOrEmpty(prevSpeaker) || !prevSpeaker.Equals(speaker))
             {
                 prevSpeaker = speaker;
-                logData.Append("\n<size=26><color=#000000>" + speaker + "</color></size>\n");
+                logData.Append("\n<size=26><color=#404040>" + speaker + "</color></size>\n");
             }
 
             __data = __data.Replace("\\", " ");
@@ -1138,19 +1138,19 @@ namespace PIERStory
                 case GameConst.TEMPLATE_TALK:
                     logData.Append(__data + "\n");
                     break;
-                case GameConst.TEMPLATE_YELL:
+                case GameConst.TEMPLATE_YELL:       // 외침
                     logData.Append("<b>" + __data + "</b>\n");
                     break;
-                case GameConst.TEMPLATE_WHISPER:
-                    logData.Append("<color=#3D3D3DB3>" + __data + "</color>\n");
+                case GameConst.TEMPLATE_WHISPER:    // 속삭임
+                    logData.Append("<color=#404040B3>" + __data + "</color>\n");
                     break;
-                case GameConst.TEMPLATE_FEELING:
-                    logData.Append("<color=#767676>'" + __data + "'</color>\n");
+                case GameConst.TEMPLATE_FEELING:    // 속마음
+                    logData.Append("<color=#999999>'" + __data + "'</color>\n");
                     break;
-                case GameConst.TEMPLATE_MONOLOGUE:
-                    logData.Append("<color=#767676B3>" + __data + "</color>\n");
+                case GameConst.TEMPLATE_MONOLOGUE:  // 독백
+                    logData.Append("<color=#999999B3>" + __data + "</color>\n");
                     break;
-                case GameConst.TEMPLATE_SPEECH:
+                case GameConst.TEMPLATE_SPEECH:     // 중요대사
                     logData.Append("<u>" + __data + "</u>\n");
                     break;
 

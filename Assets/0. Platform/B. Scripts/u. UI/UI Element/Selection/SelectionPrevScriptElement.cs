@@ -15,6 +15,7 @@ namespace PIERStory
         public void SetPrevScript(string script)
         {
             prevScript.text = script;
+            prevScript.text = prevScript.text.Replace("\\", " ");
         }
     }
 }

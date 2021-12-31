@@ -50,7 +50,7 @@ namespace PIERStory
             j[CommonConst.FUNC] = "getEndingSelectionList";
             j[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             j[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
-            j[CommonConst.COL_EPISODE_ID] = endingData.episodeID;
+            j["ending_id"] = endingData.episodeID;
             j[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
 
             NetworkLoader.main.SendPost(CallbackEndingSelection, j, true);
@@ -65,8 +65,11 @@ namespace PIERStory
                 return;
             }
 
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            Debug.Log(JsonMapper.ToStringUnicode(result));
+
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_ENDINGDATA, endingData, string.Empty);
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SHOW_ENDINGDETAIL, JsonMapper.ToObject(res.DataAsText), string.Empty);
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SHOW_ENDINGDETAIL, result, string.Empty);
         }
 
         #endregion

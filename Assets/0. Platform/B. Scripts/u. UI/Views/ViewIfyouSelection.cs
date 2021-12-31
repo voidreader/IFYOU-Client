@@ -157,6 +157,7 @@ namespace PIERStory
                     episodeNum++;
 
                     SetObjectParent(reverse, titleElement.gameObject);
+                    titleElement.transform.localScale = Vector3.one;
                     createObject.Add(titleElement.gameObject);
 
                     foreach(string prevScriptKey in selectionData[roundKey][titleKey].Keys)
@@ -165,8 +166,8 @@ namespace PIERStory
                         SelectionPrevScriptElement prevScript = Instantiate(prevScriptPrefab).GetComponent<SelectionPrevScriptElement>();
                         prevScript.SetPrevScript(prevScriptKey);
                         SetObjectParent(reverse, prevScript.gameObject);
+                        prevScript.transform.localScale = Vector3.one;
                         createObject.Add(prevScript.gameObject);
-
 
                         // 선택지 셋팅
                         JsonData selectionGroup = selectionData[roundKey][titleKey][prevScriptKey];
@@ -183,9 +184,15 @@ namespace PIERStory
                                 selectionScript.SetSelectionScript(unselectBoxSprite, scriptData, unSelectTextColor);
 
                             SetObjectParent(reverse, selectionScript.gameObject);
+                            selectionScript.transform.localScale = Vector3.one;
                             createObject.Add(selectionScript.gameObject);
                         }
                     }
+
+                    GameObject emp = Instantiate(emptyPrefab);
+                    SetObjectParent(reverse, emp);
+                    emp.transform.localScale = Vector3.one;
+                    createObject.Add(emp);
                 }
 
                 //이전 회차에 대해 엔딩 셋팅
@@ -204,6 +211,7 @@ namespace PIERStory
                 endingTitleElement.SetEndingTitle(string.Format("{0}. {1}", endingType, SystemManager.GetJsonNodeString(endingData[roundKey][0], "ending_title")));
 
                 SetObjectParent(reverse, endingTitleElement.gameObject);
+                endingTitleElement.transform.localScale = Vector3.one;
                 createObject.Add(endingTitleElement.gameObject);
                 
                 // 한 회차 셋팅을 끝냈으니 그 다음 회차 셋팅을 해주기 위해 값을 증가한다

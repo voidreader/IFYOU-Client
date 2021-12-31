@@ -10,7 +10,6 @@ namespace PIERStory
     {
 
         [Header("Skip")]
-        public Button skipButton;
         public Image skipButtonIcon;
         public Sprite ableSkip;    // 스킵버튼 사용 가능 sprite
         public Sprite disableSkip;  // 스킵버튼 사용 불가능 sprite
@@ -18,11 +17,7 @@ namespace PIERStory
         [Header("AutoPlay")]
         public Image playButton;
         public Image playToggle;
-        public Sprite playOnImage;
-        public Sprite playOffImage;
-        public Sprite playToggleOnImage;
-        public Sprite playToggleOffImage;
-
+        public UIToggle autoPlayToggle;
 
         [Space(10)]
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
@@ -33,23 +28,6 @@ namespace PIERStory
 
             // 타이틀 처리 타입, 순번, 타이틀 조합
             textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
-
-            SetAutoPlayButtonSprite();
-        }
-
-        void SetAutoPlayButtonSprite()
-        {
-            // 자동재생 값에 대한 sprite 변화
-            if (GameManager.main.isAutoPlay)
-            {
-                playButton.sprite = playOnImage;
-                playToggle.sprite = playToggleOnImage;
-            }
-            else
-            {
-                playButton.sprite = playOffImage;
-                playToggle.sprite = playToggleOffImage;
-            }
         }
 
         /// <summary>
@@ -60,13 +38,11 @@ namespace PIERStory
         {
             if (skipable)
             {
-                skipButton.interactable = true;
                 skipButtonIcon.sprite = ableSkip;
                 skipButtonIcon.SetNativeSize();
             }
             else
             {
-                skipButton.interactable = false;
                 skipButtonIcon.sprite = disableSkip;
                 skipButtonIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(25, 27);
             }
@@ -84,8 +60,6 @@ namespace PIERStory
                 SystemManager.ShowAlert("무료 플레이에서는 스킵을 사용할 수 없습니다.");
                 return;
             }
-            
-            
             
             // 스킵이 가능하지 않으면 아무것도 실행하지 않는다.
             if (!GameManager.main.skipable)
@@ -106,7 +80,6 @@ namespace PIERStory
         public void OpenLog()
         {
             ViewGame.main.ShowLog();
-            StopAutoPlay();
             
             Doozy.Runtime.UIManager.Input.BackButton.Fire();
         }
@@ -116,8 +89,6 @@ namespace PIERStory
         /// </summary>
         public void ExitGameByMenu()
         {
-            StopAutoPlay();
-
             // 이 창을 띄우는 시점에 저장을 해둔다. 
             // EndGame이 호출되면 Game씬에서 빠져나가기 때문에 오류 발생
             GameManager.main.SaveCurrentPlay();
@@ -127,33 +98,20 @@ namespace PIERStory
             GameManager.main.EndGame();
         }
 
-        void StopAutoPlay()
+        public void OnAutoPlay()
+        {
+            GameManager.main.isAutoPlay = !GameManager.main.isAutoPlay;
+            GameManager.main.StartAutoPlay();
+            playButton.color = Color.white;
+            playToggle.color = Color.white;
+        }
+
+        public void OffAutoPlay()
         {
             GameManager.main.isAutoPlay = false;
             GameManager.main.StopAutoPlay();
-            SetAutoPlayButtonSprite();
-        }
-
-
-        /// <summary>
-        /// 오토플레이 버튼 클릭 
-        /// </summary>
-        public void AutoPlay()
-        {
-            
-            
-            GameManager.main.isAutoPlay = !GameManager.main.isAutoPlay;
-            
-            if(GameManager.main.isAutoPlay) {
-                GameManager.main.StartAutoPlay();    
-                SetAutoPlayButtonSprite();
-            }
-            else {
-                StopAutoPlay();
-            }
-            
-            
-            
+            playButton.color = Color.grey;
+            playToggle.color = Color.grey;
         }
 
         /// <summary>
@@ -161,14 +119,20 @@ namespace PIERStory
         /// </summary>
         public void OnClickReplay()
         {
-            StopAutoPlay();
+            if (GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD)
+            {
+                SystemManager.ShowAlert("무료 플레이에서는 다시 할 수 없습니다.");
+                return;
+            }
+
             GameManager.main.RetryPlay();
 
-            // 1회권 유저는 처음부터 불가하다.             
+            // 1회권 유저는 처음부터 불가하다.
+            /*
             if (GameManager.main.currentEpisodeData.purchaseState == PurchaseState.OneTime) {
                 SystemManager.ShowAlertWithLocalize("6038");
                 return; 
-            }
+            }*/
 
             // 팝업이 결정될 때까진 걍 재시작
             //SystemManager.ShowConfirmPopUp(SystemManager.GetLocalizedText("6039"), GameManager.main.RetryPlay, null);

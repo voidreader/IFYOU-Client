@@ -17,6 +17,7 @@ namespace PIERStory
         public void SetSelectionScript(string prevData, string selectionScriptData)
         {
             prevScript.text = prevData;
+            prevScript.text = prevScript.text.Replace("\\", " ");
             selectionScript.text = selectionScriptData;
         }
     }

@@ -217,8 +217,9 @@ namespace PIERStory
         public void UpdateUserSelectionCurrent(string __targetSceneID, string __selectionGroup, string __selectionNo)
         {
             JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "updateUserSelectionCurrent";
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
-            sending[CommonConst.FUNC] = StoryManager.main.CurrentProjectID;
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
             sending["episodeID"] = StoryManager.main.CurrentEpisodeID;
             sending["target_scene_id"] = __targetSceneID;
             sending[GameConst.COL_SELECTION_GROUP] = __selectionGroup;

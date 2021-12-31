@@ -53,7 +53,6 @@ namespace PIERStory
         [Header("**장소 진입용 Label**")]
         public Image placeTextBG;
         public TextMeshProUGUI episodeNum;
-        public Image placeTagContour;
         public TextMeshProUGUI placeNameText;
 
         [Space][Space][Header("휴대폰 사용")]
@@ -1040,7 +1039,6 @@ namespace PIERStory
             // 투명도 0으로 만들어서 안보이게 하기
             placeTextBG.color = new Color(placeTextBG.color.r, placeTextBG.color.g, placeTextBG.color.b, 0f);
             episodeNum.color = new Color(episodeNum.color.r, episodeNum.color.g, episodeNum.color.b, 1f);
-            placeTagContour.color = new Color(placeTagContour.color.r, placeTagContour.color.g, placeTagContour.color.b, 1f);
             placeNameText.color = new Color(placeNameText.color.r, placeNameText.color.g, placeNameText.color.b, 1f);
 
             placeTag.Join(placeTextBG.DOFade(1f, 1f).SetDelay(1f).OnStart(() =>
@@ -1052,7 +1050,7 @@ namespace PIERStory
 
             // 동일한 속도로 글자 타이핑 애니메이션
             placeTag.Append(placeNameText.DOText(placeLabel, placeLabel.Length * 0.1f).SetEase(Ease.Linear));
-            placeTag.Append(placeTextBG.DOFade(0f, 2f).SetDelay(1f)).Join(episodeNum.DOFade(0f, 2f)).Join(placeTagContour.DOFade(0f, 2f)).Join(placeNameText.DOFade(0f, 2f));
+            placeTag.Append(placeTextBG.DOFade(0f, 2f).SetDelay(1f)).Join(episodeNum.DOFade(0f, 2f)).Join(placeNameText.DOFade(0f, 2f));
         }
 
         #endregion

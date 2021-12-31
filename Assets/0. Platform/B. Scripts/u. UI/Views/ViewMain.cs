@@ -31,7 +31,8 @@ namespace PIERStory {
         
         [Header("카테고리")] 
         JsonData genreData = null;
-        [SerializeField] List<GenreToggle> ListCategoryToggle;
+        [SerializeField] List<GenreToggle> ListCategoryToggle; // 토글들
+        [SerializeField] List<NewStoryElement> ListCategoryStory = new List<NewStoryElement>(); // 카테고리에 생성된 스토리 개체들 
         [SerializeField] GameObject prefabStoryElement; // 프리팹
         [SerializeField] GameObject NoInterestStory; // 관심작품 없음
         [SerializeField] Transform categoryParent;
@@ -50,6 +51,10 @@ namespace PIERStory {
         public TextMeshProUGUI userPincode;
         
         float mainScrollRectY = 0;
+        
+        void Start() {
+            OnCategoryList = CallCategoryList;
+        }
         
         public override void OnView()
         {
@@ -267,8 +272,19 @@ namespace PIERStory {
         }
         
         void CallCategoryList(string __genre)  {
+            
+            Debug.Log("CallCategoryList : " + __genre);
+            
             NoInterestStory.SetActive(false);
             
+            
+            // 기존에 생성된 게임오브젝트 제거 후 클리어             
+            for(int i=0; i<ListCategoryStory.Count;i++) {
+                Destroy(ListCategoryStory[i].gameObject);
+            }
+            ListCategoryStory.Clear();
+            
+            // 조건에 맞는 작품 검색 
             List<StoryData> filteredList = null;
             
             if(__genre == "전체") {
@@ -276,13 +292,24 @@ namespace PIERStory {
             }
             else if(__genre.Contains("관심작품")) {
                 NoInterestStory.SetActive(true);    
+                return;
             }
             else {
                 filteredList = GetGenreFilteredStoryList(__genre);
             }
             
+            if(filteredList != null)
+                Debug.Log("CallCategory Filter Count: " + filteredList.Count);
+            
+            
             for(int i=0; i<filteredList.Count; i++) {
-                // NewStoryElement ns = Instantiate(prefabStoryElement, Vector3.zero, Quaternion.)
+                NewStoryElement ns = Instantiate(prefabStoryElement, Vector3.zero, Quaternion.identity).GetComponent<NewStoryElement>();
+                ns.transform.SetParent(categoryParent);
+                ns.transform.localScale = Vector3.one;
+                
+                ns.InitStoryElement(filteredList[i]);
+                ListCategoryStory.Add(ns); // 리스트에 추가 
+               
             }
             
         }
@@ -293,7 +320,7 @@ namespace PIERStory {
         /// <param name="__genre"></param>
         /// <returns></returns>
         List<StoryData> GetGenreFilteredStoryList(string __genre) {
-            return StoryManager.main.listTotalStory.Where( item => item.genre.Contains("__genre")).ToList<StoryData>();
+            return StoryManager.main.listTotalStory.Where( item => item.genre.Contains(__genre)).ToList<StoryData>();
         }
         
         #endregion

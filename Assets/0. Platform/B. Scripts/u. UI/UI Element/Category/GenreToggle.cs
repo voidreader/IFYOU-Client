@@ -39,10 +39,12 @@ namespace PIERStory {
         public void SetOn() {
             buttonImage.sprite = LobbyManager.main.spriteGenreOn;
             textGenre.color = LobbyManager.main.colorGenreOn;   
+            
+            OnClickGenre();
         }
         
         public void OnClickGenre() {
-            
+            ViewMain.OnCategoryList?.Invoke(localizedName);
         }
            
     }

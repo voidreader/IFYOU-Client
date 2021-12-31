@@ -91,6 +91,13 @@ namespace PIERStory {
             
             //
             genre = SystemManager.GetJsonNodeString(originData, "genre");
+            genre = string.Empty;
+            
+            for(int i=0; i<originData["genre"].Count;i++) {
+                genre += originData["genre"][i].ToString();
+                genre += ",";
+            }
+            
         }
     }
 }

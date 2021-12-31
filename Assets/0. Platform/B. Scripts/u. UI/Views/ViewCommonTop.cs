@@ -154,6 +154,9 @@ namespace PIERStory {
         /// 상태 정보 저장. 
         /// </summary>
         void SavePreviousState() {
+            
+            Debug.Log("SavePreviousState");
+            
             previousBackButtonShow = backButton.activeSelf;
             previousBackgroundShow = backgroundSignalValue;
             previousGroupPropertyShow = groupProperty.activeSelf;

@@ -27,6 +27,9 @@ namespace PIERStory {
         /// </summary>
         void InitOff() {
             
+            if(LobbyManager.main == null)
+                return;
+            
             textName.color = LobbyManager.main.colorNavOff;
             
             switch(mainNavigationType) {

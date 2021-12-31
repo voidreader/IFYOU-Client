@@ -64,7 +64,7 @@ namespace PIERStory
             // 사용자가 소지하고 있는 재화 리스트 불러와서 뿌려주기
             ProfileItemElement listElement = null;
 
-            if(profileCurrencyList[LobbyConst.NODE_WALLPAPER] == null)
+            if(!profileCurrencyList.ContainsKey(LobbyConst.NODE_WALLPAPER) || profileCurrencyList[LobbyConst.NODE_WALLPAPER] == null)
             {
                 profileBgScroll.SetActive(false);
                 noneBGItem.SetActive(true);
@@ -100,7 +100,7 @@ namespace PIERStory
 
 
             // 스티커
-            if (profileCurrencyList[LobbyConst.NODE_BADGE] == null)
+            if (!profileCurrencyList.ContainsKey(LobbyConst.NODE_BADGE) || profileCurrencyList[LobbyConst.NODE_BADGE] == null)
             {
                 stickerScroll.SetActive(false);
                 noneStickerItem.SetActive(true);

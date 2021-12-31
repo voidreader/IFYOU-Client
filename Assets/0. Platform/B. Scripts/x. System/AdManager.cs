@@ -14,6 +14,8 @@ namespace PIERStory {
     {
         public static AdManager main = null;
         
+        public static Action OnShowAdvertisement;
+        
         public string rewardedAdUnitId = "Rewarded_Android";
         public string interstitialAdUnitId = "Interstitial_Android";
         
@@ -120,6 +122,28 @@ namespace PIERStory {
             
         }
         
+        
+        /// <summary>
+        /// 광고 보여주기 전, 3초 마음의 준비하기 
+        /// </summary>
+        /// <param name="__isRewarded">동영상 광고</param>
+        void ShowAdvertisementReady(bool __isRewarded) {
+            if(__isRewarded)
+                OnShowAdvertisement = ShowRewardAd;
+            else 
+                OnShowAdvertisement = ShowInterstitial;
+                
+            
+            PopupBase p = PopupManager.main.GetPopup("AdvertisementShow");
+            if(p == null) {
+                Debug.LogError("AdvertisementShow ");
+            }
+            
+            PopupManager.main.ShowPopup(p, false, false);
+            
+        }
+        
+        
         #region 선택지 선택 후 광고 처리
         
         /// <summary>
@@ -143,9 +167,9 @@ namespace PIERStory {
         /// </summary>
         void ShowSelectionAD() {
             if(UnityEngine.Random.Range(0, 100) < shareSelectionInterstitial)
-                ShowInterstitial();
+                ShowAdvertisementReady(false);
             else 
-                ShowRewardAd();
+                ShowAdvertisementReady(true);
                 
             InitGamePlayRowCount(); // 선택지 선택하면 플레이 카운트 초기화
         }
@@ -223,9 +247,9 @@ namespace PIERStory {
             
             // 여기서도 점유율에 따라서, 처리 
             if(UnityEngine.Random.Range(0, 100) < sharePlayInterstitial)
-                ShowInterstitial();
+                ShowAdvertisementReady(false);
             else 
-                ShowRewardAd();
+                ShowAdvertisementReady(true);
         }
         
 

@@ -100,7 +100,7 @@ namespace PIERStory
 
         public void OnAutoPlay()
         {
-            GameManager.main.isAutoPlay = !GameManager.main.isAutoPlay;
+            GameManager.main.isAutoPlay = true;
             GameManager.main.StartAutoPlay();
             playButton.color = Color.white;
             playToggle.color = Color.white;

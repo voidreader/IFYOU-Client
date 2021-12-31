@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using LitJson;
 using Doozy.Runtime.Signals;
+using DG.Tweening;
 
 
 namespace PIERStory {
@@ -19,9 +20,13 @@ namespace PIERStory {
         [SerializeField] string targetEpisodeID; // 대상 에피소드의 ID 
         [SerializeField] bool isRegular = true; // 정규야 사이드야?
         
+        [SerializeField] Transform iconParent; // 아이콘 트랜스폼 
+        
         void InitControls() {
             bubble.SetActive(true);
             
+            iconParent.DOKill();
+            iconParent.localPosition = Vector3.zero;
         }
         
         
@@ -95,6 +100,9 @@ namespace PIERStory {
         /// </summary>        
         public void OnClickQuickButton() {
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, quickEpisode, string.Empty);
+            
+            iconParent.DOLocalMoveY(-10, 0.2f).SetLoops(1, LoopType.Yoyo);
+            
         }
         
         /// <summary>

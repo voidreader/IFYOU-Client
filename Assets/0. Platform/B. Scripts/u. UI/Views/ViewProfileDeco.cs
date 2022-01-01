@@ -79,8 +79,13 @@ namespace PIERStory
                 {
                     listElement = Instantiate(bgPrefab, bgElementListContent).GetComponent<ProfileItemElement>();
                     listElement.InitCurrencyListElement(profileCurrencyList[LobbyConst.NODE_WALLPAPER][i]);
-
-                    if (SystemManager.GetJsonNodeString(profileCurrencyList[LobbyConst.NODE_WALLPAPER][i], LobbyConst.NODE_CURRENCY) == SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY))
+                    
+                    // ! 여기 프로필 저장정보가 없는 경우 오류가 납니다. 빈 JSON이 날아옵니다. '{}'  
+                    // ! (임시로 조건 수정함)
+                    // ! 그리고 0번째 데이터가 월페이퍼라고 장담할 수 없습니다. 
+                    // ! 아래 스티커 처럼 for문을 돌리세요. 
+                    if ( profileCurrency != null && profileCurrency.Count > 0
+                        && SystemManager.GetJsonNodeString(profileCurrencyList[LobbyConst.NODE_WALLPAPER][i], LobbyConst.NODE_CURRENCY) == SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY))
                     {
                         background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY_KEY));
                         background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_POS_X)), 0f);

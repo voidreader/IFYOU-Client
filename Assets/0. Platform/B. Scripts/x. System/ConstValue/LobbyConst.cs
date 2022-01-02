@@ -117,6 +117,13 @@ namespace PIERStory {
         public const string SIGNAL_EPISODE_START = "EpisodeStart";
         public const string SIGNAL_EPISODE_RESET = "EpisodeReset";
         
+        public const string SIGNAL_LANGUAGE = "language";
+        public const string SIGNAL_STAR_HISTORY = "starHistory";
+        public const string SIGNAL_DATA_MANAGE = "dataManage";
+        public const string SIGNAL_COUPON = "coupon";
+        public const string SIGNAL_NOTICE = "notice";
+        
+        
         public const string TOP_SIGNAL_SHOW_BACKGROUND = "topSignalShowBackground"; // 상단 배경 보여주기
         // public const string TOP_SIGNAL_HIDE_BACKGROUND = "topSignalHideBackground"; // 상단 배경 감추기
         public const string TOP_SIGNAL_VIEW_NAME_EXIST = "topSignalShowViewName"; // 상단 뷰 이름 보여주기

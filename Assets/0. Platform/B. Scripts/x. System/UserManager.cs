@@ -97,6 +97,10 @@ namespace PIERStory
         public string gamebaseID = string.Empty;
         public int tutorialStep = 0;
         public int adCharge = 0;
+        
+        public int level = 0; // 레벨 
+        public int exp = 0; // 경험치 
+        
 
         public int gem = 0;
         public int coin = 0;
@@ -310,6 +314,8 @@ namespace PIERStory
             userJson = SystemManager.GetJsonNode(userJson, "account");
             userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
             tutorialStep = int.Parse(SystemManager.GetJsonNodeString(userJson, "tutorial_step"));
+            
+            SetLevelInfo();
 
             // 사용자 UI 정보를 갱신하는 Event 필요함!
 
@@ -551,6 +557,25 @@ namespace PIERStory
         {
 
         }
+        
+        
+        /// <summary>
+        /// 레벨 정보 세팅 
+        /// </summary>
+        /// <param name="__j"></param>
+        public void SetLevelInfo() {
+            if(userJson.ContainsKey("current_level")) {
+                Debug.LogError("No level Node");
+                return;
+            }
+            
+            
+            // 레벨과 경험치             
+            level = SystemManager.GetJsonNodeInt(userJson, CommonConst.NODE_LEVEL);
+            exp = SystemManager.GetJsonNodeInt(userJson, CommonConst.NODE_EXP);
+            
+        }
+        
 
         /// <summary>
         /// 소모성 재화 세팅 
@@ -1214,6 +1239,26 @@ namespace PIERStory
         #endregion
 
         #region 통신 콜백 
+        
+        /// <summary>
+        /// 경험치 통신 콜백 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        public void CallbackEXP(HTTPRequest request, HTTPResponse response) {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
+            {
+                Debug.LogError("CallbackEXP");
+                return;
+            }
+            
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            
+            // 팝업 화면 호출 
+            SystemManager.main.ShowExpGain(result);
+            
+        }
+        
         
         /// <summary>
         /// 프리패스 구매 콜백

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-
+using LitJson;
 
 namespace PIERStory {
     public class TestRunner : MonoBehaviour
@@ -27,6 +27,24 @@ namespace PIERStory {
         {
             if(Input.GetKeyDown(KeyCode.Q)) {
                 ShowSelectionTEST();
+            }
+            
+            if(Input.GetKeyDown(KeyCode.P)) {
+                JsonData data = new JsonData();
+                data["current"] = JsonMapper.ToObject("{}");
+                data["before"] = JsonMapper.ToObject("{}");
+                
+                data["current"]["level"] = 3;
+                data["current"]["experience"] = 7;
+                
+                data["before"]["level"] = 2;
+                data["before"]["experience"] = 7;
+                data["before"]["get_experience"] = 10;
+                
+                PopupBase p =  PopupManager.main.GetPopup("EXP");
+                p.Data.SetContentJson(data);
+                
+                PopupManager.main.ShowPopup(p, false, false);
             }
         }
         

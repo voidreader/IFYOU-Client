@@ -59,7 +59,7 @@ namespace PIERStory
         public StoryData givenStoryData = null; // 선택된 스토리 JSON 데이터 (프로젝트)
         public EpisodeData givenEpisodeData = null; // 로비에서 전달받은 에피소드 데이터 (에피소드)
         public JsonData appComonResourceData = null; // 앱 공용 리소스 데이터 (2021.09.14)
-       
+        JsonData levelData = null; // 레벨 데이터 
 
         
         #region 기준정보 Variables
@@ -481,7 +481,10 @@ namespace PIERStory
             
             appComonResourceData = JsonMapper.ToObject(response.DataAsText);
             
-            // * appComonResourceData.models 앱의 공용 모델들. 2021.09.14
+            // 레벨 기준정보 데이터 추가 
+            levelData = appComonResourceData["levelList"]; 
+            
+            
             
             isAppCommonResourcesReceived = true;
         }
@@ -1603,7 +1606,38 @@ namespace PIERStory
             });
         }
         
-                /// <summary>
+        
+        /// <summary>
+        /// 경험치 획득 정보 및 레벨업 효과 보여주기
+        /// </summary>
+        public void ShowExpGain(JsonData __j) {
+            PopupBase p = PopupManager.main.GetPopup("EXP");
+            p.Data.SetContentJson(__j);
+            
+            PopupManager.main.ShowPopup(p, false, false);
+        }
+        
+        
+        /// <summary>
+        /// 레벨의 최대 경험치 구하기 
+        /// </summary>
+        /// <param name="__level"></param>
+        /// <returns></returns>
+        public int GetLevelMaxExp(string __level) {
+            for(int i=0; i<levelData.Count;i++) {
+                
+                if(GetJsonNodeString(levelData[i], "next_level") == __level) {
+                    return GetJsonNodeInt(levelData[i], "experience");
+                }
+                
+            }
+            
+            return -1;
+        }
+        
+        
+        
+        /// <summary>
         /// persistentDataPath 모두 삭제하기. (보안)
         /// </summary>
         void ClearPersistentDataPath() {

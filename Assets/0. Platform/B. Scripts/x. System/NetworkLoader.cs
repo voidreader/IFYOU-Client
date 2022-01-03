@@ -138,6 +138,26 @@ namespace PIERStory
 
         #region 기타 통신 RequestGamebaseLaunching, UpdateEpisodeStartRecord, UpdateEpisodeCompleteRecord
         
+        
+        /// <summary>
+        /// 경험치 획득 처리
+        /// </summary>
+        public void UpdateUserExp(int __exp, string __route, string __clearID) {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "updateUserLevelProcess";
+            
+            sending["current_level"] = UserManager.main.level; // 현재 레벨 
+            sending["current_experience"] = UserManager.main.exp; // 현재 경험치
+            
+            sending["experience"] = __exp;
+            sending["route"] = __route;
+            sending["clear_id"] = __clearID;
+            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            
+            
+            SendPost(null, sending);
+        }
+        
         /// <summary>
         /// 기본 재화 정보 요청 
         /// </summary>

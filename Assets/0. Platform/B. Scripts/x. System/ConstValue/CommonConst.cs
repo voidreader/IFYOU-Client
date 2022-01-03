@@ -73,6 +73,10 @@ namespace PIERStory
         // JSON COLUMN
         public const string JSON_EPISODE_SCENE_HISTORY = "sceneProgress";
         public const string JSON_EPISODE_PURCHASE_HISTORY = "episodePurchase";
+        
+        
+        public const string NODE_LEVEL = "current_level";
+        public const string NODE_EXP = "current_experience";
 
         public static Color COLOR_IMAGE_TRANSPARENT = new Color(1, 1, 1, 0);
         public static Color COLOR_BLACK_TRANSPARENT = new Color(0, 0, 0, 0);

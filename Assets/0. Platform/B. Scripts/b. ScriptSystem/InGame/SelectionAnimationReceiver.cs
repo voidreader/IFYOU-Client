@@ -15,7 +15,7 @@ namespace PIERStory
         void OnCompleteAppear()
         {
             Debug.Log("OnCompleteAppear");
-            ViewGame.main.RemoveListAppearSelection(_base);
+            // ViewGame.main.RemoveListAppearSelection(_base);
         }
 
         void OnCompleteFill()

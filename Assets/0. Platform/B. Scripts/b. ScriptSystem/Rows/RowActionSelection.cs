@@ -41,6 +41,7 @@ namespace PIERStory
             GameManager.main.useSkip = false;
 
             ViewGame.main.CollectSelections(scriptRow.script_data);
+            
             // 다음 행도 선택지 인지 체크한다.
             // 다음 행이 뭐죠!?
             ScriptRow nextRow = GameManager.main.currentPage.GetNextRowWithoutIncrement();

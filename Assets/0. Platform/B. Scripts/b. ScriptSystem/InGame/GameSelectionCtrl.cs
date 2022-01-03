@@ -28,7 +28,7 @@ namespace PIERStory
         [SerializeField] TextMeshProUGUI textSelection; // 
         [SerializeField] Image auraImage; // 뒤 후광 이미지 
 
-        [SerializeField] SelectionAnimationReceiver animEventReceiver; // 애니메이션 이벤트 Receiver. 
+        // [SerializeField] SelectionAnimationReceiver animEventReceiver; // 애니메이션 이벤트 Receiver. 
 
         [SerializeField] Image lockIconImage; // 자물쇠 이미지 
 
@@ -60,7 +60,7 @@ namespace PIERStory
 
         void Start()
         {
-            animEventReceiver.SetSelectionBase(this);
+            // animEventReceiver.SetSelectionBase(this);
         }
 
         /// <summary>

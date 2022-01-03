@@ -11,6 +11,9 @@ namespace PIERStory {
         static readonly  Vector2 selectedSizeDelta = new Vector2(600, 80);
         
         public List<IFYouGameSelectionCtrl> ListSelection;
+        
+        
+        
         RectTransform baseTransform; // 
         
         // Start is called before the first frame update
@@ -22,13 +25,19 @@ namespace PIERStory {
         // Update is called once per frame
         void Update()
         {
-            if(Input.GetKeyDown(KeyCode.F)) {
-                
+            if(Input.GetKeyDown(KeyCode.Q)) {
+                ShowSelectionTEST();
             }
         }
         
         public void FillSelection() {
             baseTransform.DOSizeDelta(selectedSizeDelta, 0.4f);
+        }
+        
+        void ShowSelectionTEST() {
+            for(int i=0; i<ListSelection.Count; i++) {
+                ListSelection[i].SetSelection(i);
+            }
         }
     }
 }

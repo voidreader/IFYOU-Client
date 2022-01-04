@@ -110,6 +110,7 @@ namespace PIERStory {
         }
         
         private void Update() {
+            /*
             if(Input.GetKeyDown(KeyCode.O)) {
                 PopupBase popup = PopupManager.main.GetPopup("AchivementIllust");
                 popup.Data.SetLabelsTexts("가짜이름");
@@ -132,6 +133,25 @@ namespace PIERStory {
             }
             else if(Input.GetKeyDown(KeyCode.L)) {
                 SystemManager.HideNetworkLoading();
+            }
+            */
+            
+            if(Input.GetKeyDown(KeyCode.R)) {
+                JsonData data = new JsonData();
+                data["current"] = JsonMapper.ToObject("{}");
+                data["before"] = JsonMapper.ToObject("{}");
+                
+                data["current"]["level"] = 3;
+                data["current"]["experience"] = 17;
+                
+                data["before"]["level"] = 3;
+                data["before"]["experience"] = 7;
+                data["before"]["get_experience"] = 10;
+                
+                PopupBase p =  PopupManager.main.GetPopup("EXP");
+                p.Data.SetContentJson(data);
+                
+                PopupManager.main.ShowPopup(p, false, false);
             }
         }
 

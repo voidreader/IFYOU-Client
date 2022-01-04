@@ -13,7 +13,7 @@ namespace PIERStory
     public class GameManager : MonoBehaviour
     {
         public static GameManager main = null;      // singleton
-        public static List<GameSelectionCtrl> ListAppearSelection = new List<GameSelectionCtrl>();
+        
 
         // 이어하기 변수
         public static bool isResumePlay = false;        // 이어하기를 통한 진입인가?

@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using Doozy.Runtime.UIManager.Components;
 using TMPro;
+using LitJson;
 
 namespace PIERStory {
     [Serializable]
@@ -22,6 +23,8 @@ namespace PIERStory {
         
         public List<Image> Images = new List<Image>();
         public List<TextMeshProUGUI> Labels = new List<TextMeshProUGUI>();
+        
+        public JsonData contentJson = null;
         
         
         public Action positiveButtonCallback = null; // 긍정 버튼 콜백 
@@ -53,6 +56,15 @@ namespace PIERStory {
         /// <param name="__t"></param>
         public void SetTargetData(string __t) {
             targetData = __t;
+        }
+        
+        
+        /// <summary>
+        ///  JSON 데이터 지정 
+        /// </summary>
+        /// <param name="__j"></param>
+        public void SetContentJson(JsonData __j) {
+            contentJson = __j;
         }
 
         /// <summary>

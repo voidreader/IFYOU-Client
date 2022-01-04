@@ -39,10 +39,11 @@ namespace PIERStory
         
         [Space][Space][Header("**선택지**")]
         public Image selectionTutorialText;     // 선택지 튜토리얼 안내문구
-        public List<ScriptRow> ListSelectionRows = new List<ScriptRow>();                 // 수집된 행들 
-        public List<GameSelectionCtrl> ListGameSelection = new List<GameSelectionCtrl>(); // 선택지 UI
-        public static List<GameSelectionCtrl> ListAppearSelection = new List<GameSelectionCtrl>();
-        public Image SelectionMain = null;                      // 선택지 메인 오브젝트
+        public List<ScriptRow> ListSelectionRows = new List<ScriptRow>(); // 현재보여지는 선택지 정보의 스크립트 데이터 
+        public List<IFYouGameSelectionCtrl> ListGameSelection = new List<IFYouGameSelectionCtrl>(); // UI에 저장된 선택지들 
+        public List<IFYouGameSelectionCtrl> ListAppearSelection = new List<IFYouGameSelectionCtrl>(); // 활성화된 선택지 
+        
+        
         
         public GameObject screenInputBlocker = null;            // 연출중 입력막고싶다..!
 
@@ -133,8 +134,12 @@ namespace PIERStory
         public override void OnStartView()
         {
             base.OnStartView();
+            
+            // ViewGame 초기화 
 
+            
             StoryManager.enterGameScene = true;
+            SetBlockScreenActiveFlag(false); 
 
             // 화면 크기에 맞춰서 스탠딩캐릭터 renderer 사이즈 조절
             float rawImageSize = (float)Screen.height / (float)Screen.width * 900f;
@@ -144,6 +149,11 @@ namespace PIERStory
                 modelRenders[i].GetComponent<RectTransform>().sizeDelta = new Vector2(rawImageSize, rawImageSize);
         }
 
+
+        /// <summary>
+        /// 화면 터치 처리 
+        /// </summary>
+        /// <param name="eventData"></param>
         public void OnPointerClick(PointerEventData eventData)
         {
             // 로그 패널 활성화 중엔 입력 받지 않음.   
@@ -348,22 +358,15 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 선택지 활성화 
+        /// 선택지 UI 활성화 
         /// </summary>
         void OpenSelectionUI()
         {
             GameManager.main.isSelectionInputWait = true; // 선택지 입력을 기다려야 한다. 
-
-            // 아래 두개의 리스트 클리어 하고 시작한다.
+            
+            // Appear 리스트 클리어 
             ListAppearSelection.Clear();
-            GameSelectionCtrl.ListStacks.Clear();
-
-
-            SelectionMain.color = CommonConst.COLOR_BLACK_TRANSPARENT;
-            SelectionMain.gameObject.SetActive(true);
-
-            // 페이드인 처리 
-            SelectionMain.DOFade(0.5f, 1);
+            IFYouGameSelectionCtrl.ListStacks.Clear();
 
             // 튜토리얼을 보지 않고 스킵해서 선택지 어떻게 누르는지 모르는 바보들을 위해 선택지 꾸욱 눌러야 한다고 문구를 띄워준다.
             /*
@@ -375,26 +378,18 @@ namespace PIERStory
 
             for (int i = 0; i < ListSelectionRows.Count; i++)
             {
-                ListGameSelection[i].enabled = true;
+                if(i >= ListGameSelection.Count) {
+                    SystemManager.ShowAlert("너무 많은 선택지!(최대 6개)");
+                    break;
+                }
+                
                 ListGameSelection[i].SetSelection(ListSelectionRows[i], i);
-                ListAppearSelection.Add(ListGameSelection[i]);
+                ListAppearSelection.Add(ListGameSelection[i]); // appear에 추가. 
             }
 
-            // 등장 연출이 끝날떄까지 입력을 막고싶어요.
-            SetBlockScreenActiveFlag(true);
         }
 
-        /// <summary>
-        /// 등장하는 선택지, 등장이 완료하면 리스트에서 제거 
-        /// </summary>
-        /// <param name="__selection"></param>
-        public void RemoveListAppearSelection(GameSelectionCtrl __selection)
-        {
-            ListAppearSelection.Remove(__selection);
 
-            if (ListAppearSelection.Count == 0)
-                SetBlockScreenActiveFlag(false);
-        }
 
 
         /// <summary>
@@ -414,43 +409,46 @@ namespace PIERStory
         /// <param name="__selectionIndex">선택지 버튼 인덱스</param>
         public void ChooseSelection(string __targetSceneID, int __selectionIndex)
         {
-            // 연출로 인해 메소드가 분산되어서 따로 쟁여둔다.
-            SetBlockScreenActiveFlag(true); // 입력 막기.
+            
+            SetBlockScreenActiveFlag(true); // 입력 막기.(안전빵 )
+            
+            // 사건 ID 미리할당. 
             GameManager.main.targetSelectionSceneID = __targetSceneID;
+           
+        }
+        
+        /// <summary>
+        /// 선택지 모두 퇴장완료
+        /// </summary>
+        /// <param name="__selection"></param>
+        public void RemoveListAppearSelection(IFYouGameSelectionCtrl __selection)
+        {
+            
+            // IFYouGameSelectionCtrl에서 상태가 None으로 변경되면서 호출된다. 
+            ListAppearSelection.Remove(__selection);
+            
+            Debug.Log(">> RemoveListAppearSelection, count : " + ListAppearSelection.Count);
 
-            Debug.Log(string.Format("You Selected {0}", __targetSceneID));
-
-
-            StartCoroutine(RoutineHideSelection());
-
-            // 첫번째 선택지에서 이벤트 추가 
-            /*
-            if (UserManager.main.IsUserFirstSelection())
-            {
-                Debug.Log("!!! FIRST SELECTION !!!");
-                //AppsFlyerSDK.AppsFlyer.sendEvent("FIRST_SELECTION", null);
+            // * 모든 선택지가 퇴장했다. 
+            if (ListAppearSelection.Count == 0) {
+                SetBlockScreenActiveFlag(false); // 입력막기 풀기. 
+                HideSelection(); // Selection 처리 완료
             }
-            */
-        }
-
-
-        /// <summary>
-        /// 선택지 사라지는 연출. 
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator RoutineHideSelection()
-        {
-            yield return new WaitForSeconds(2);
-
-            // 틴트 없애주고. 
-            SelectionMain.DOFade(0, 0.5f).OnComplete(OnPostProcessCompleteSelection);
+            
         }
 
         /// <summary>
-        /// 선택지 틴트 없어지면 바로 호출. 
+        /// 즉각적인 선택지 비활성화 처리 
         /// </summary>
-        void OnPostProcessCompleteSelection()
+        public void HideSelection()
         {
+            
+            Debug.Log(">> HideSelection");
+        
+            GameManager.main.isSelectionInputWait = false;
+        
+            ListSelectionRows.Clear(); // 선택지 스크립트 stack 클리어 
+            
             // 이동!
             GameManager.main.currentPage.SetCurrentRowBySceneID(GameManager.main.targetSelectionSceneID);
 
@@ -458,37 +456,10 @@ namespace PIERStory
             if (messenger.activeSelf)
                 messenger.SetActive(false);
 
-            HideSelection();
             
             // * 광고처리 추가 
             AdManager.main.PlaySelectionAD();
-            
-        }
 
-
-        /// <summary>
-        /// 즉각적인 선택지 비활성화 처리 
-        /// </summary>
-        public void HideSelection()
-        {
-            SelectionMain.gameObject.SetActive(false);
-
-            for (int i = 0; i < ListGameSelection.Count; i++)
-                ListGameSelection[i].HideSelection();
-
-            ListSelectionRows.Clear();
-            StartCoroutine(ReleasingSelectionInputWait());
-        }
-
-
-        IEnumerator ReleasingSelectionInputWait()
-        {
-            yield return null;
-            yield return null;
-            yield return null;
-            GameManager.main.isSelectionInputWait = false;
-
-            SetBlockScreenActiveFlag(false);
         }
 
 

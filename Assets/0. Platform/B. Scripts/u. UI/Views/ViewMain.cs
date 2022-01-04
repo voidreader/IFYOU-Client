@@ -43,6 +43,7 @@ namespace PIERStory {
         public ImageRequireDownload background;
         public Transform decoObjectParent;
         public GameObject decoObjectPrefab;
+        public GameObject standingObjectPrefab;
         public Transform textObjectParent;
         public GameObject textObjectPrefab;
         List<GameObject> createObject = new List<GameObject>();
@@ -354,13 +355,25 @@ namespace PIERStory {
                     sortingOrder++;
                 }
 
-                // 데코 아이템 화면에 뿌리기
+                // 데코 아이템, 스탠딩 화면에 뿌리기
                 for (int i = sortingOrder; i < profileCurrency.Count; i++)
                 {
-                    ItemElement deco = Instantiate(decoObjectPrefab, decoObjectParent).GetComponent<ItemElement>();
-                    deco.SetProfileItem(profileCurrency[i]);
-                    deco.GetComponent<Image>().raycastTarget = false;       // 프로필 페이지에서 선택되면 안돼!
-                    createObject.Add(deco.gameObject);
+                    switch (SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_TYPE))
+                    {
+                        case LobbyConst.NODE_BADGE:
+                            ItemElement deco = Instantiate(decoObjectPrefab, decoObjectParent).GetComponent<ItemElement>();
+                            deco.SetProfileItem(profileCurrency[i]);
+                            deco.GetComponent<Image>().raycastTarget = false;       // 프로필 페이지에서 선택되면 안돼!
+                            createObject.Add(deco.gameObject);
+                            break;
+                        case LobbyConst.NODE_STANDING:
+                            StandingElement standingElement = Instantiate(standingObjectPrefab, decoObjectParent).GetComponent<StandingElement>();
+                            standingElement.SetProfileStanding(profileCurrency[i]);
+                            standingElement.GetComponent<Image>().raycastTarget = false;
+                            createObject.Add(standingElement.gameObject);
+                            break;
+                    }
+                    
                 }
             }
 
@@ -371,7 +384,7 @@ namespace PIERStory {
                 {
                     DecoTextElement textElement = Instantiate(textObjectPrefab, textObjectParent).GetComponent<DecoTextElement>();
                     textElement.SetProfileText(profileText[i]);
-                    textElement.inputField.enabled = false;     // 프로필 페이지에서 텍스트가 편집되면 안돼!
+                    textElement.inputField.interactable = false;     // 프로필 페이지에서 텍스트가 편집되면 안돼!
                     textElement.GetComponent<Image>().raycastTarget = false;
                     createObject.Add(textElement.gameObject);
                 }

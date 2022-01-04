@@ -11,6 +11,7 @@ namespace PIERStory
         public TextMeshProUGUI countText;
 
         JsonData currencyData;
+        public string currencyName = string.Empty;
         int totalCount = 1;
         public int currentCount = 0;
         
@@ -20,6 +21,7 @@ namespace PIERStory
             currencyData = __j;
 
             icon.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_KEY));
+            currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
             totalCount = int.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_TOTAL_COUNT));
             currentCount = int.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENT_COUNT));
 
@@ -51,6 +53,15 @@ namespace PIERStory
 
             currentCount++;
             SetCountText();
+        }
+
+        public void OnClickSelectStanding()
+        {
+            if (totalCount <= currentCount)
+                return;
+
+            currentCount++;
+            ViewProfileDeco.OnStandingSetting?.Invoke(currencyData, this);
         }
 
         public void SetCountText()

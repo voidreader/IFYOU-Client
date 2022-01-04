@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using LitJson;
 using Doozy.Runtime.Signals;
+using DanielLochner.Assets.SimpleScrollSnap;
 
 namespace PIERStory
 {
@@ -21,8 +22,11 @@ namespace PIERStory
 
 
         [Header("Selection scroll snap")]
+        public SimpleScrollSnap selectionSnap;
         public Transform scrollContent;
         public GameObject selectionEpisodePrefab;
+        public Transform pagenation;
+        public GameObject pageTogglePrefab;
         
 
         [Space][Header("Buttons")]
@@ -30,12 +34,8 @@ namespace PIERStory
         public GameObject retryButton;
         public GameObject returnLobbyButton;
 
-        EpisodeData updateData = null;
         EpisodeData nextData = null;
         EpisodeData episodeData = null;
-
-        
-
 
 
         #region Signal 수신 처리
@@ -132,12 +132,16 @@ namespace PIERStory
                                 {
                                     SelectionEpisodeElement selectionEpisode = Instantiate(selectionEpisodePrefab, scrollContent).GetComponent<SelectionEpisodeElement>();
                                     selectionEpisode.SetCurrentEpisodeSelection(prevScriptKey, SystemManager.GetJsonNodeString(selectionGroup[i], "selection_content"));
+                                    Instantiate(pageTogglePrefab, pagenation);
                                     break;
                                 }
                             }
                         }
                     }
                 }
+
+                // Instantiate로 만드므로 Panel 설정이 필요함
+                selectionSnap.Setup();
             }
 
         }

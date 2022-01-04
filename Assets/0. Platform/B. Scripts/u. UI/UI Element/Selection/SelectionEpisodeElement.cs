@@ -18,6 +18,7 @@ namespace PIERStory
         {
             prevScript.text = prevData;
             selectionScript.text = selectionData;
+            selectionScript.text = selectionScript.text.Replace("\\", " ");
         }
     }
 }

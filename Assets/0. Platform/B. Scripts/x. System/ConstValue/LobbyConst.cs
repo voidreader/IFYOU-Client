@@ -72,6 +72,7 @@ namespace PIERStory {
         public const string NODE_CURRENCY = "currency";
         public const string NODE_CURRENCY_LIST = "currencyList";
         public const string NODE_SORTING_ORDER = "sorting_order";
+        public const string NODE_CURRENCY_TYPE = "currency_type";
         public const string NODE_ICON_URL = "icon_url";
         public const string NODE_ICON_KEY = "icon_key";
         public const string NODE_CURRENCY_URL = "currency_url";

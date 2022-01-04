@@ -16,10 +16,13 @@ namespace PIERStory {
         
         public static Action OnShowAdvertisement;
         
+        public static Action<bool> OnCompleteRewardAD = null; // 동영상 광고 보고 콜백
+        
         public string rewardedAdUnitId = "Rewarded_Android";
         public string interstitialAdUnitId = "Interstitial_Android";
         
         [SerializeField] int gamePlayRowCount = 0;
+        [SerializeField] bool isRewarded = false; // 영상광고 끝까지 재생되었는지. 
         
         JsonData serverData = null;
         
@@ -329,9 +332,34 @@ namespace PIERStory {
             rewardedAd.Load();
         }
         
+        /// <summary>
+        /// 콜백이 없는 동영상 광고 재생 
+        /// </summary>
         public void ShowRewardAd() {
+            
+            OnCompleteRewardAD = null;
+            isRewarded = false;
+            
             if(rewardedAd.AdState == AdState.Loaded)
                 rewardedAd.Show();
+            else {
+                SystemManager.ShowAlert(SystemManager.GetLocalizedText("6093"));
+            }
+        }
+        
+        /// <summary>
+        /// 콜백이 있는 동영상 광고 재생 
+        /// </summary>
+        /// <param name="callback"></param>
+        public void ShowRewardAdWithCallback(Action<bool> callback) {
+            OnCompleteRewardAD = callback;
+            isRewarded = false;
+            
+            if(rewardedAd.AdState == AdState.Loaded)
+                rewardedAd.Show();
+            else {
+                SystemManager.ShowAlert(SystemManager.GetLocalizedText("6093"));
+            }
         }
         
         void OnRewardedLoaded(object sender, System.EventArgs args) {
@@ -341,15 +369,24 @@ namespace PIERStory {
         void OnRewardedFailedLoad(object sender, LoadErrorEventArgs args) {
             Debug.Log("OnRewardedFailedLoad : " + args.Message);
         }
+        
+        // 영상광고 닫힘 (보상여부와 상관없음 )
         void OnRewardedClosed(object sender, EventArgs e) {
             Debug.Log("Rewarded is closed.");
             // Execute logic for the user closing the ad.
-            
             CreateRewardAd();
+            
+            OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
         }
+        
+        // 영상 광고를 끝까지 보았음
         void OnUserRewarded(object sender, RewardEventArgs args) {
             Debug.Log("Ad has rewarded user.");
             // Execute logic for rewarding the user.
+            
+            isRewarded = true; // true로 변경! 다 봤다!
+            
+            // * 여기서부터 유니티 로직이 다시 돌기 시작하기때문에 closed에 후로직을 넣는다.
         }
         
         void OnRewardedFailedToShow(object sender, ShowErrorEventArgs args) {

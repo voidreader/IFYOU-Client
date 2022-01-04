@@ -241,6 +241,9 @@ namespace PIERStory
             userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
             tutorialStep = int.Parse(SystemManager.GetJsonNodeString(userJson, "tutorial_step"));
             adCharge = int.Parse(SystemManager.GetJsonNodeString(userJson, "ad_charge"));
+            
+            
+            SetLevelInfo();
 
 
             // 유저 정보 불러왔으면, Lobby로 진입을 요청합니다. 
@@ -564,7 +567,7 @@ namespace PIERStory
         /// </summary>
         /// <param name="__j"></param>
         public void SetLevelInfo() {
-            if(userJson.ContainsKey("current_level")) {
+            if(!userJson.ContainsKey(CommonConst.NODE_LEVEL)) {
                 Debug.LogError("No level Node");
                 return;
             }
@@ -581,7 +584,7 @@ namespace PIERStory
         /// 소모성 재화 세팅 
         /// </summary>
         /// <param name="__j"></param>
-        public void SetBankInfo(JsonData __j)
+        public void SetBankInfo(JsonData __j, bool __refresh = true)
         {
             if (!__j.ContainsKey("bank"))
             {
@@ -597,6 +600,10 @@ namespace PIERStory
             gem = int.Parse(bankJson["gem"].ToString());
             coin = int.Parse(bankJson["coin"].ToString());
 
+            // 상단 리프레시
+            if(!__refresh)
+                return;
+
             // 붙어있는 표시기들 refresh 처리 
             RefreshCoinIndicators();
             RefreshGemIndicators();
@@ -604,6 +611,21 @@ namespace PIERStory
             if(ticketIndicators != null)
                 ticketIndicators.RefreshTicket();
         }
+        
+        
+        /// <summary>
+        /// 상단 리프레시만. 
+        /// </summary>
+        public void RefreshIndicators() {
+            RefreshCoinIndicators();
+            RefreshGemIndicators();
+
+            if(ticketIndicators != null)
+                ticketIndicators.RefreshTicket();
+        }
+        
+        
+        
 
         /// <summary>
         /// 확인이 필요한 유저 정보 세팅
@@ -1252,6 +1274,9 @@ namespace PIERStory
                 return;
             }
             
+            
+            Debug.Log("CallbackEXP");
+            
             JsonData result = JsonMapper.ToObject(response.DataAsText);
             
             // 팝업 화면 호출 
@@ -1393,16 +1418,17 @@ namespace PIERStory
             }
             
             Debug.Log(">> CallbackUpdateEpisodeRecord : " + res.DataAsText);
+            
+            // ! 여기에 JSON 따로 저장합니다. 
             resultEpisodeRecord = JsonMapper.ToObject(res.DataAsText);
 
             // 노드 저장!
             SetNodeUserEpisodeHistory(resultEpisodeRecord[NODE_EPISODE_HISTORY]); // 히스토리 
             SetNodeUserEpisodeProgress(resultEpisodeRecord[NODE_EPISODE_PROGRESS]); // 진행도 
-
+            
+            // 미션 
             ShowCompleteMission(resultEpisodeRecord[NODE_UNLOCK_MISSION]);
 
-            // 다음 에피소드 정보 
-            // SetNodeUserNextEpisode(resultEpisodeRecord[NODE_NEXT_EPISODE]);
             
             // played scene count 업데이트 
             if(resultEpisodeRecord.ContainsKey("playedSceneCount")) {
@@ -1416,6 +1442,28 @@ namespace PIERStory
                 
             }
             
+            // * 최초 보상 정보 처리
+            JsonData firstReward = GetNodeFirstClearResult();
+            
+            if(firstReward == null || firstReward.Count == 0)
+                return;
+                
+           
+            // 최초 보상 있으면 팝업 호출
+            PopupBase p = PopupManager.main.GetPopup("EpisodeFirstReward");
+            if(p == null) {
+                Debug.LogError("First reward popup is null");
+                return;
+            }
+            
+            Debug.Log(">> First Reward exists : " + JsonMapper.ToStringUnicode(firstReward[0]));
+            
+            
+            p.Data.SetContentJson(firstReward[0]); // 첫번째 로우 (항상 1개만 온다)
+            PopupManager.main.ShowPopup(p, false, false); // 보여주기. 
+            
+            // 뱅크 설정 (리프레시 없이)
+            SetBankInfo(resultEpisodeRecord, false);
             
         }
 

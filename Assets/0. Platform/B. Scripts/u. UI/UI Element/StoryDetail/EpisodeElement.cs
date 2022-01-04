@@ -167,17 +167,18 @@ namespace PIERStory {
 
                 case PurchaseState.Free: // * 무료
                     episodePurchaseStateText = "FREE";
-                    purchaseStateBox.color = LobbyManager.main.colorFreeBox;
+                    
+                    // purchaesStateBox.color = LobbyManager.main.colorFreeBox;
                     break;
 
                 case PurchaseState.Permanent: // * 프리미엄 
                     episodePurchaseStateText = SystemManager.GetLocalizedText("6006");
-                    purchaseStateBox.color = LobbyManager.main.colorPremiumBox;
+                    // purchaseStateBox.color = LobbyManager.main.colorPremiumBox;
                     break;
 
                 case PurchaseState.OneTime: // * 1회 플레이
                     episodePurchaseStateText = SystemManager.GetLocalizedText("6005");
-                    purchaseStateBox.color = LobbyManager.main.colorOneTimeBox;
+                    // purchaseStateBox.color = LobbyManager.main.colorOneTimeBox;
                     break;
                 
             } // ? end of switch

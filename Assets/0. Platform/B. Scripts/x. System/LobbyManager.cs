@@ -57,6 +57,10 @@ namespace PIERStory {
         public Sprite spriteEpisodePrevIcon; // 과거 커버
         public Sprite spriteEpisodeNextIcon; // 미래 커버 
         
+        public Sprite spritePlateStarPlay; // 스타플레이 플레이트
+        public Sprite spritePlateFree; // 프리 플레이트
+        
+        
         [Header("네비게이션 Sprite")]
         public Sprite spriteNavLobbyOn;
         public Sprite spriteNavLobbyOff;
@@ -79,9 +83,9 @@ namespace PIERStory {
         
         
         [Header("== 컬러 ==")]
-        public Color colorPremiumBox = Color.white;
+        
         public Color colorFreeBox = Color.white;
-        public Color colorOneTimeBox = Color.white;
+        
         public Color colorNavOn = Color.white;
         public Color colorNavOff = Color.white;
         

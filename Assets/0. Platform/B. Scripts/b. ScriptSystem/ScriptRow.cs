@@ -468,7 +468,7 @@ namespace PIERStory
             // 자동 진행 처리 해제해준다. 
             if (autoplay_row > 0 && template != GameConst.TEMPLATE_EXIT)
             {
-                Debug.Log("Wait Off [ProcessRowAction]");
+                // Debug.Log("Wait Off [ProcessRowAction]");
                 GameManager.main.isThreadHold = false;
                 GameManager.main.isWaitingScreenTouch = false;
             }

@@ -138,11 +138,28 @@ namespace PIERStory
 
         #region 기타 통신 RequestGamebaseLaunching, UpdateEpisodeStartRecord, UpdateEpisodeCompleteRecord
         
+        /// <summary>
+        /// 유저에게 재화지급
+        /// </summary>
+        /// <param name="__currency"></param>
+        /// <param name="__quantity"></param>
+        /// <param name="__path"></param>
+        /// <param name="__cb"></param>        
+        public void AddUserProperty(string __currency, int __quantity, string __path, OnRequestFinishedDelegate __cb) {
+            
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "insertUserProperty";
+            sending["currency"] = __currency;
+            sending["quantity"] = __quantity;
+            sending["pathCode"] = __path;
+            
+            SendPost(__cb, sending);
+        }
         
         /// <summary>
         /// 경험치 획득 처리
         /// </summary>
-        public void UpdateUserExp(int __exp, string __route, string __clearID) {
+        public void UpdateUserExp(int __exp, string __route, int __clearID) {
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "updateUserLevelProcess";
             
@@ -155,7 +172,7 @@ namespace PIERStory
             sending["project_id"] = StoryManager.main.CurrentProjectID;
             
             
-            SendPost(null, sending);
+            SendPost(UserManager.main.CallbackEXP, sending);
         }
         
         /// <summary>

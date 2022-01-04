@@ -59,22 +59,34 @@ namespace PIERStory {
         
         public virtual void Show() {
             
-            
+            // Debug.Log(this.gameObject.name + " Show!");
             
             StartCoroutine(ShowEnumerator());
             SetAutoDestroy();
         }
         
         IEnumerator ShowEnumerator() {
+            
+            if(content.inTransition)
+                yield break;
+            
             yield return null;
             
             if(isOverlayUse) {
                 overlay.enabled = true;
-                overlay.Show();
+                
+                if(overlay.OnStartBehaviour != Doozy.Runtime.UIManager.ContainerBehaviour.Show)
+                    overlay.Show();
             }
             
             content.enabled = true;
-            content.Show();
+            
+            Debug.Log(this.gameObject.name + " " + content.OnStartBehaviour.ToString());
+            
+            if( content.OnStartBehaviour != Doozy.Runtime.UIManager.ContainerBehaviour.Show) {
+                Debug.Log("content show");
+                content.Show();
+            }
             
         }
         

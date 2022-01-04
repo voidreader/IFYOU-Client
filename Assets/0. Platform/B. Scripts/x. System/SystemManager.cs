@@ -352,6 +352,8 @@ namespace PIERStory
             
             // * 여기서 부터 초기화 이후 로직.
             Debug.Log("Gamebase Initialization succeeded.");
+            ViewTitle.OnUpdateLoadingText?.Invoke(2);
+            
             IsGamebaseInit = true; // 초기화 완료 
             Gamebase.AddEventHandler(GamebaseObserverHandler);
             
@@ -687,6 +689,7 @@ namespace PIERStory
         }
         
         
+        
         #endregion
 
 
@@ -695,6 +698,9 @@ namespace PIERStory
         /// </summary>
         public void LoginPlatform(bool isForceGuest = false)
         {
+            
+            ViewTitle.OnUpdateLoadingText?.Invoke(3);
+            
             // 마지막에 진행한 로그인 방법을 가져와서 실행합니다.(GUEST, Google, Apple)
             string lastLoggedInProvider = Gamebase.GetLastLoggedInProvider();
             Debug.Log(string.Format("Gamebase Last Logged Provider [{0}]", lastLoggedInProvider));

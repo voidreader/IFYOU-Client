@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,27 +6,83 @@ using UnityEngine.UI;
 using LitJson;
 using BestHTTP;
 using Doozy.Runtime.Signals;
+using TMPro;
+using DG.Tweening;
 
 namespace PIERStory {
     public class ViewTitle : CommonView
     {
-        public RawImage mainImage;
         
+        public static Action<int> OnUpdateLoadingText = null;
+        
+        public RawImage mainImage; // 다운로드받아서 보여주는 플랫폼 로딩 화면 
+        
+        [SerializeField] TextMeshProUGUI textLoading;
         [SerializeField] int totalDownloadingImageCount = 0;
+        [SerializeField] Image progressBar; 
+        
+        [SerializeField] GameObject baseScreen; // 기본 스크린 
+        
+        private void Awake() {
+            OnUpdateLoadingText = UpdateLoadingText;
+            textLoading.text = string.Empty;
+            
+            progressBar.fillAmount = 0;
+            
+            mainImage.gameObject.SetActive(false);
+            baseScreen.SetActive(true);
+            
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void OnStartView() {
+            base.OnStartView();
+            
+            // 타이틀 이미지 설정             
+            SetTitleTexture();
+        }
         
         public override void OnView() {
             base.OnView();
             
-            // 타이틀 이미지 설정             
-            SetTitleTexture();
-            
-            
+
             // UserManager에서 원래 connectingDone Signal을 기다린다. 
             // 언어변경에서 넘어오는 경우는 바로 진행 
             if(UserManager.main.completeReadUserData) {
                 RequestStoryList();
             }
             
+            
+            ViewTitle.OnUpdateLoadingText?.Invoke(1);
+            
+        }
+        
+        /// <summary>
+        /// 로딩 텍스트 변환 
+        /// </summary>
+        /// <param name="step"></param>
+        void UpdateLoadingText(int step) {
+            textLoading.text = GetPlatformLoadingText(step);
+            
+            Debug.Log(" >> UpdateLoadingText :: " + step);
+            
+            progressBar.DOKill();
+            
+            // 이미지 fillAmount 추가
+            switch(step) {
+                case 1:
+                progressBar.DOFillAmount(0.3f, 0.1f);
+                break;
+                case 2:
+                progressBar.DOFillAmount(0.7f, 0.1f);
+                break;
+                case 3:
+                progressBar.DOFillAmount(1f, 0.1f);
+                break;
+            
+            }
         }
         
         
@@ -68,6 +125,9 @@ namespace PIERStory {
             
             // 다운로드 완료될때까지 기다린다.
             yield return new WaitUntil(()=> totalDownloadingImageCount <= 0);
+            
+            // 게이지 다 찰때까지 기다린다.
+            yield return new WaitUntil(()=> progressBar.fillAmount >= 1);
          
             // 준비 끝났으면 signal 전송 
             Signal.Send(LobbyConst.STREAM_IFYOU, "moveMain", "open!");
@@ -125,7 +185,13 @@ namespace PIERStory {
             
             // 다운로드 텍스쳐가 올바르면 교체한다. 
             if(downloadedLoadingTexture != null) {
+                mainImage.gameObject.SetActive(true);
+                baseScreen.SetActive(false);
                 mainImage.texture = downloadedLoadingTexture;
+            }
+            else { // 다운로드 텍스쳐가 없는경우 
+                baseScreen.SetActive(true);
+                mainImage.gameObject.SetActive(false);
             }
         }
         
@@ -154,7 +220,7 @@ namespace PIERStory {
             if(data == null || data.Count == 0)
                 return null;
             
-            imageIndex = Random.Range(0, data.Count);
+            imageIndex = UnityEngine.Random.Range(0, data.Count);
             imageKey = data[imageIndex][SystemConst.IMAGE_KEY].ToString();
             imageURL = data[imageIndex][SystemConst.IMAGE_URL].ToString();
             
@@ -165,6 +231,51 @@ namespace PIERStory {
             
            
             return selectedTexture;
+        }
+        
+        
+        /// <summary>
+        /// 플랫폼 로딩의 텍스트 
+        /// </summary>
+        /// <returns></returns>
+        public static string GetPlatformLoadingText(int step) {
+            
+            string currentAppLang = string.Empty;
+            
+            // 로컬라이징 정보가 최초 실행시에는 없다.
+            if(!ES3.KeyExists(SystemConst.KEY_LANG)) { // 없는 경우 
+                
+                switch(Application.systemLanguage) {
+                    case SystemLanguage.Korean:
+                    currentAppLang = "KO";
+                    break;
+                    
+                    default:
+                    currentAppLang = "EN";
+                    break;
+                }
+                
+                
+            }
+            else { // 있는 경우 
+                currentAppLang = ES3.Load<string>(SystemConst.KEY_LANG);
+            }
+            
+            switch(step) {
+                case 1: 
+                return currentAppLang == "KO"?"서버에 접속합니다.":"Connecting to server";
+                
+                case 2:
+                return currentAppLang == "KO"?"플랫폼 정보를 불러오고 있습니다.":"Requesting platform information.";
+                
+                case 3:
+                return currentAppLang == "KO"?"계정 정보를 불러오고 있습니다.":"Loading account Information.";
+                
+            }
+            
+            return string.Empty;
+            
+            
         }
     }
 }

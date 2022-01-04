@@ -60,6 +60,7 @@ namespace PIERStory {
         {
             base.OnView();
             
+            LobbyManager.main.RequestPlatformLoadingImages(); // 플랫폼 로딩 이미지 다운로드 처리 
         }
         
         public override void OnStartView() {

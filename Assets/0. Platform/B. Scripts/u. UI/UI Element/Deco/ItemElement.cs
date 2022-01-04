@@ -12,8 +12,8 @@ namespace PIERStory
         public GameObject optionals;
 
         RectTransform decoRect;
-        ProfileItemElement profileDecoElement;
-        string currencyName = string.Empty;
+        public ProfileItemElement profileDecoElement;
+        public string currencyName = string.Empty;
         float posX = 0f, posY = 0f;
         float width = 300f, height = 300f;
         float angle = 0f;

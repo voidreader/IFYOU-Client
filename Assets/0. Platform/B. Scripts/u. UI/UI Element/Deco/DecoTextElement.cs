@@ -8,13 +8,18 @@ namespace PIERStory
 {
     public class DecoTextElement : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
+        enum INPUT_STATE
+        {
+            None, Move, Write
+        }
+
         public TMP_InputField inputField;
         public TMP_Text textComponent;
 
         public GameObject selectedBox;
         public GameObject deleteButton;
 
-        bool isSelected = false;
+        INPUT_STATE state = INPUT_STATE.None;
 
         public void NewTextProfile(Color c, int fontSize)
         {
@@ -22,6 +27,7 @@ namespace PIERStory
             textComponent.color = c;
 
             inputField.pointSize = fontSize;
+            state = INPUT_STATE.None;
         }
 
         /// <summary>
@@ -36,11 +42,12 @@ namespace PIERStory
             inputField.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_POS_X)), float.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_POS_Y)));
             textComponent.GetComponent<RectTransform>().sizeDelta = textComponent.GetPreferredValues(textComponent.text) * Vector2.one;
             inputField.GetComponent<RectTransform>().sizeDelta = new Vector2(textComponent.GetComponent<RectTransform>().sizeDelta.x + 30, textComponent.GetComponent<RectTransform>().sizeDelta.y + 30);
+            state = INPUT_STATE.None;
         }
 
         private void Update()
         {
-            if (!isSelected)
+            if (state == INPUT_STATE.None)
                 return;
 
             textComponent.GetComponent<RectTransform>().sizeDelta = textComponent.GetPreferredValues(textComponent.text) * Vector2.one;
@@ -55,18 +62,32 @@ namespace PIERStory
         public void OnPointerClick(PointerEventData eventData)
         {
             // 프로필(메인) 화면에서 클릭 되지 않도록(Caret 때문에 선택이 됨)
-            if (!inputField.enabled)
+            if (!inputField.interactable)
                 return;
 
-            ViewProfileDeco.OnDisableAllOptionals?.Invoke();
-            selectedBox.SetActive(true);
-            isSelected = true;
+            if(!selectedBox.activeSelf)
+                ViewProfileDeco.OnDisableAllOptionals?.Invoke();
+
+            switch (state)
+            {
+                case INPUT_STATE.None:
+                    selectedBox.SetActive(true);
+                    state = INPUT_STATE.Move;
+                    break;
+                case INPUT_STATE.Move:
+                    inputField.enabled = true;
+                    state = INPUT_STATE.Write;
+                    break;
+                case INPUT_STATE.Write:
+                    break;
+            }
         }
 
         public void DisableOptional()
         {
+            inputField.enabled = false;
             selectedBox.SetActive(false);
-            isSelected = false;
+            state = INPUT_STATE.None;
         }
 
         #region Drag Action
@@ -78,6 +99,9 @@ namespace PIERStory
 
         public void OnDrag(PointerEventData eventData)
         {
+            if (!inputField.interactable)
+                return;
+
             transform.position = Camera.main.ScreenToWorldPoint(eventData.position);
             transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0f);
         }

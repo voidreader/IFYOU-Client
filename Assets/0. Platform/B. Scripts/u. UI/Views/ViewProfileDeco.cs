@@ -91,40 +91,44 @@ namespace PIERStory
             // 사용자가 보유한 재화로 프로필 페이지 꾸며둔 정보("currency")
             JsonData profileCurrency = SystemManager.GetJsonNode(UserManager.main.userProfile, LobbyConst.NODE_CURRENCY);
 
-            // 배경
-            background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY_KEY));
-            background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_POS_X)), 0f);
-            background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_HEIGHT)));
-            moveBg.currencyName = SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY);
-
-
-            // 스탠딩, 스티커 
-            for (int j = 1; j < profileCurrency.Count; j++)
+            if (profileCurrency.Count > 0)
             {
-                switch (SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_TYPE))
+                // 배경
+                background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY_KEY));
+                background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_POS_X)), 0f);
+                background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_HEIGHT)));
+                moveBg.currencyName = SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY);
+
+
+                // 스탠딩, 스티커 
+                for (int j = 1; j < profileCurrency.Count; j++)
                 {
-                    case LobbyConst.NODE_BADGE:
-                    case LobbyConst.NODE_STICKER:
-                        ItemElement itemElement = Instantiate(stickerObjectPrefab, decoObjects).GetComponent<ItemElement>();
-                        itemElement.SetProfileItem(profileCurrency[j]);
-                        createObject.Add(itemElement.gameObject);
-                        break;
-                    case LobbyConst.NODE_STANDING:
-                        StandingElement standingElement = Instantiate(standingPrefab, decoObjects).GetComponent<StandingElement>();
-                        standingElement.SetProfileStanding(profileCurrency[j]);
+                    switch (SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_TYPE))
+                    {
+                        case LobbyConst.NODE_BADGE:
+                        case LobbyConst.NODE_STICKER:
+                            ItemElement itemElement = Instantiate(stickerObjectPrefab, decoObjects).GetComponent<ItemElement>();
+                            itemElement.SetProfileItem(profileCurrency[j]);
+                            createObject.Add(itemElement.gameObject);
+                            break;
+                        case LobbyConst.NODE_STANDING:
+                            StandingElement standingElement = Instantiate(standingPrefab, decoObjects).GetComponent<StandingElement>();
+                            standingElement.SetProfileStanding(profileCurrency[j]);
 
-                        // 위치에 따라서 배열에 넣는 위치도 다름
-                        if (standingElement.standingRect.anchoredPosition.x < 0)
-                            screenStand[0] = standingElement;
-                        else if(standingElement.standingRect.anchoredPosition.x == 0)
-                            screenStand[1] = standingElement;
-                        else
-                            screenStand[2] = standingElement;
+                            // 위치에 따라서 배열에 넣는 위치도 다름
+                            if (standingElement.standingRect.anchoredPosition.x < 0)
+                                screenStand[0] = standingElement;
+                            else if (standingElement.standingRect.anchoredPosition.x == 0)
+                                screenStand[1] = standingElement;
+                            else
+                                screenStand[2] = standingElement;
 
-                        createObject.Add(standingElement.gameObject);
-                        break;
+                            createObject.Add(standingElement.gameObject);
+                            break;
+                    }
                 }
             }
+            
 
             // 텍스트
             JsonData profileText = SystemManager.GetJsonNode(UserManager.main.userProfile, LobbyConst.NODE_TEXT);
@@ -198,8 +202,8 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_MULTIPLE_BUTTON_LABEL, "저장", string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, "꾸미기모드", string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_MULTIPLE_BUTTON_LABEL, SystemManager.GetLocalizedText("6097"), string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5124"), string.Empty);
 
         }
 

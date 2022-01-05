@@ -137,7 +137,7 @@ namespace PIERStory
             foreach(string roundKey in selectionData.Keys)
             {
                 // 몇번째 회차인지 설정
-                string roundText = string.Format("{0}회차", roundKey);
+                string roundText = string.Format(SystemManager.GetLocalizedText("5130"), roundKey);
                 nonePlayText.gameObject.SetActive(false);
 
                 if (reverse == 0)

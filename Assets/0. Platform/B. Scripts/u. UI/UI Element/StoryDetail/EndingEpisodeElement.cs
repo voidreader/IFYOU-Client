@@ -17,6 +17,8 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textEndingType; // 엔딩 타입 
         [SerializeField] TextMeshProUGUI textEndingTitle; // 엔딩 타이틀 
         
+        [SerializeField] Image endingBox;
+        
         ThreeEpisodeRow parentThreeRow; // 부모 ThreeRow
         
         [SerializeField] EpisodeData endingData;
@@ -26,15 +28,23 @@ namespace PIERStory {
         [SerializeField] GameObject centerArrow;
         [SerializeField] GameObject rightArrow;
         
+        [SerializeField] GameObject btnFold; // 접기 버튼 
+        
+        [SerializeField] Image stateCover; // 커버 
+        [SerializeField] GameObject bookmark; // 북마크 
+        
+        
         /// <summary>
         /// 
         /// </summary>
         /// <param name="__data"></param>
         /// <param name="__rowIndex"></param>
         /// <param name="__colIndex"></param>
-        public void InitEndingElement(ThreeEpisodeRow __parentThreeRow, EpisodeData __data, int __rowIndex, int __colIndex) {
+        public void InitEndingElement(ThreeEpisodeRow __parentThreeRow, EpisodeData __data, int __rowIndex, int __colIndex, bool isLast = false) {
            
            this.gameObject.SetActive(true);
+           bookmark.SetActive(false);
+           
            parentThreeRow = __parentThreeRow;
            
             
@@ -56,6 +66,13 @@ namespace PIERStory {
             leftArrow.SetActive(false);
             centerArrow.SetActive(false);
             rightArrow.SetActive(false);
+            
+                
+            btnFold.SetActive(isLast); // 마지막 개체만 true
+            
+            // 커버 ㅠㅠ
+            SetPlayStateCover();
+            
             if(__rowIndex > 0) {
                 return;
             }
@@ -73,6 +90,32 @@ namespace PIERStory {
                 break;
             }
         }
+        
+        /// <summary>
+        /// 플레이 상태에 대한 처리 
+        /// </summary>
+        void SetPlayStateCover() {
+            stateCover.gameObject.SetActive(false);
+            
+            switch(endingData.episodeState) {
+                case EpisodeState.Prev:
+                stateCover.gameObject.SetActive(true);
+                stateCover.color = LobbyManager.main.colorEndingPastCover;
+                break;
+                
+                case EpisodeState.Current:
+                bookmark.SetActive(true); 
+                break;
+                
+                case EpisodeState.Future:
+                stateCover.gameObject.SetActive(true);
+                stateCover.color = LobbyManager.main.colorEndingFutureCover;
+                break;
+                
+            }
+            
+        }
+        
         
         /// <summary>
         /// 엔딩 클릭시, 에피소드 시작팝업 호출

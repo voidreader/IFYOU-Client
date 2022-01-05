@@ -59,7 +59,9 @@ namespace PIERStory {
         
         public Sprite spritePlateStarPlay; // 스타플레이 플레이트
         public Sprite spritePlateFree; // 프리 플레이트
+        public Sprite spritePlatePremium; // 패스 플레이트
         
+                
         
         [Header("네비게이션 Sprite")]
         public Sprite spriteNavLobbyOn;
@@ -91,6 +93,9 @@ namespace PIERStory {
         
         public Color colorGenreOn = Color.white;
         public Color colorGenreOff = Color.white;
+        
+        public Color colorEndingFutureCover; // 엔딩 미래 커버
+        public Color colorEndingPastCover;  // 엔딩 과거 커버 
         
 
         public bool termView = false;

@@ -13,6 +13,14 @@ namespace PIERStory
         public Camera mainCam;
         public Camera modelRenderCamC;
         public Camera generalCam;
+        
+        [SerializeField] GameObject lensFlare1_obj;
+        [SerializeField] GameObject flareGlow1_obj;
+        [SerializeField] GameObject lensFlare2_obj;
+        [SerializeField] GameObject flareGlow2_obj;
+        [SerializeField] GameObject lensFlare3_obj;
+        [SerializeField] GameObject flareGlow3_obj;
+        
 
         #region 카메라 오브젝트 component에 스크립트로 제어하는 연출
 
@@ -106,6 +114,16 @@ namespace PIERStory
             heavySnow = generalCam.GetComponent<CameraFilterPack_3D_Snow>();
             heavyRain = generalCam.GetComponent<CameraFilterPack_Atmosphere_Rain>();
             rain = generalCam.GetComponent<D2RainsPE>();
+            
+            
+            lensFlare1 = lensFlare1_obj.GetComponent<ParticleSystem>();
+            lensFlare2 = lensFlare2_obj.GetComponent<ParticleSystem>();
+            lensFlare3 = lensFlare3_obj.GetComponent<ParticleSystem>();
+            
+            flareGlow1 = flareGlow1_obj.GetComponent<ParticleSystem>();
+            flareGlow2 = flareGlow2_obj.GetComponent<ParticleSystem>();
+            flareGlow3 = flareGlow3_obj.GetComponent<ParticleSystem>();
+            // flareGlow1 = lensFlare1.get
         }
 
         #region 화면 연출 screen effect

@@ -549,6 +549,8 @@ namespace AlmostEngine.Screenshot
         public bool m_ShowInstall = true;
         public bool m_ShowDelay = true;
 
+        public bool m_ShowShare = true;
+
         #endregion
 
 

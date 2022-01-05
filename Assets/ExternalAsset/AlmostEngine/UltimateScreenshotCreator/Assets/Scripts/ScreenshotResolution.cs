@@ -62,6 +62,7 @@ namespace AlmostEngine.Screenshot
         [HideInInspector]
         public bool m_IgnoreOrientation = false;
 
+        public bool m_DisableSafeArea = false;
         public Rect m_SafeAreaPortrait;
         public Rect m_SafeAreaLandscapeLeft;
 

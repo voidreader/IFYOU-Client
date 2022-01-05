@@ -768,7 +768,7 @@ namespace AlmostEngine.Preview
 
         protected void RestoreDevicePreview()
         {
-            if (m_ConfigAsset.m_BackupPreviewToDisk == false)
+            if (m_ConfigAsset == null || m_ConfigAsset.m_BackupPreviewToDisk == false)
                 return;
 
             // Debug.Log("Restore");

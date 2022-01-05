@@ -13,14 +13,7 @@ namespace AlmostEngine.Screenshot
         [Header("Data")]
         public ScreenshotConfig m_Config;
 
-
-
-        public static List<ScreenshotResolutionAsset> m_Presets = new List<ScreenshotResolutionAsset>();
-        public static List<PopularityPresetAsset> m_Popularities = new List<PopularityPresetAsset>();
-        public static List<PresetCollectionAsset> m_Collections = new List<PresetCollectionAsset>();
-
-        List<string> categories = new List<string>();
-        List<string> ratios = new List<string>();
+        public ScreenshotPresetDatabase m_Database = new ScreenshotPresetDatabase();
 
         public bool m_ShowDetailedDevice = false;
 
@@ -58,28 +51,6 @@ namespace AlmostEngine.Screenshot
             UpdateDeviceSelectorList();
         }
 
-        public void InitPresets()
-        {
-            EditorUtility.DisplayProgressBar("Loading presets", "", 0);
-
-            // Load all presets
-            m_Presets = AssetUtils.LoadAll<ScreenshotResolutionAsset>();
-
-
-            EditorUtility.DisplayProgressBar("Loading collections", "", 0.9f);
-
-            // Load all collections
-            m_Popularities = AssetUtils.LoadAll<PopularityPresetAsset>();
-            m_Collections = AssetUtils.LoadAll<PresetCollectionAsset>();
-
-            // Update categories and ratios
-            InitNamesList();
-            InitCategoryList();
-            InitRatioList();
-
-            EditorUtility.ClearProgressBar();
-        }
-
         void UpdateDeviceSelectorList()
         {
             // Filter preset based on user filter
@@ -107,73 +78,6 @@ namespace AlmostEngine.Screenshot
             }
         }
 
-        void InitNamesList()
-        {
-            // Parse names
-            foreach (var preset in m_Presets)
-            {
-                preset.m_Resolution.m_ResolutionName = preset.name;
-            }
-        }
-        void InitCategoryList()
-        {
-            categories.Clear();
-            Dictionary<string, bool> catTable = new Dictionary<string, bool>();
-
-
-            // Parse and register category to table
-            foreach (var preset in m_Presets)
-            {
-                preset.m_Resolution.m_Category = ScreenshotResolutionPresets.ParseCategory(preset);
-                var c = preset.m_Resolution.m_Category;
-                if (!c.Contains("Popularity") && !c.Contains("Collections"))
-                {
-                    for (int i = 0; i < c.Length; ++i)
-                    {
-                        if (c[i] == '/')
-                        {
-                            catTable[c.Substring(0, i) + "/All"] = true;
-                        }
-                    }
-                }
-                catTable[preset.m_Resolution.m_Category] = true;
-            }
-
-            // Popularity presets
-            foreach (PopularityPresetAsset popularity in m_Popularities)
-            {
-                catTable["Popularity/" + popularity.name] = true;
-            }
-
-            // Collections presets
-            foreach (PresetCollectionAsset collection in m_Collections)
-            {
-                catTable["Collections/" + collection.name] = true;
-            }
-
-            // Update list
-            categories = catTable.Keys.ToList();
-            categories.Insert(0, "All");
-        }
-
-        void InitRatioList()
-        {
-            ratios.Clear();
-            Dictionary<string, bool> ratioTable = new Dictionary<string, bool>();
-
-            // Parse and register ratio to table
-            foreach (var preset in m_Presets)
-            {
-
-                preset.m_Resolution.UpdateRatio();
-                ratioTable[preset.m_Resolution.m_Ratio] = true;
-            }
-
-            // Update list
-            ratios = ratioTable.Keys.ToList().OrderBy(x => int.Parse(x.Split(':')[0])).ToList();
-            ratios.Insert(0, "All");
-        }
-
 
         #endregion
 
@@ -186,7 +90,7 @@ namespace AlmostEngine.Screenshot
 
             // Init with all presets
             m_FilteredPresets.Clear();
-            m_FilteredPresets.AddRange(m_Presets);
+            m_FilteredPresets.AddRange(m_Database.m_Presets);
 
             // Filter with the text filter
             if (m_TextFilter != "")
@@ -345,11 +249,14 @@ namespace AlmostEngine.Screenshot
             // Update
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Update presets", GUILayout.MaxWidth(150)) || m_Presets.Count == 0)
+            // var colorBK = GUI.color;
+            // GUI.color = new Color(1.0f, 0.9f, 0.7f);
+            if (GUILayout.Button("Update preset database", GUILayout.MaxWidth(300), GUILayout.Height(30)) || m_Database.m_Presets.Count == 0)
             {
-                InitPresets();
+                m_Database.InitPresets();
                 UpdateDeviceSelectorList();
             }
+            // GUI.color = colorBK;
             EditorGUILayout.EndHorizontal();
         }
 
@@ -480,7 +387,7 @@ namespace AlmostEngine.Screenshot
         int categoryId = 0;
         void DrawCategoryPopup()
         {
-            int selectedId = EditorGUILayout.Popup("Category", categoryId, categories.ToArray());
+            int selectedId = EditorGUILayout.Popup("Category", categoryId, m_Database.categories.ToArray());
             if (categoryId != selectedId)
             {
                 categoryId = selectedId;
@@ -493,19 +400,19 @@ namespace AlmostEngine.Screenshot
                 // Update filter
                 if (categoryId != 0)
                 {
-                    m_CategoryFilter = categories[categoryId];
+                    m_CategoryFilter = m_Database.categories[categoryId];
 
                     if (m_CategoryFilter.Contains("Collections/"))
                     {
                         m_CategoryFilter = m_CategoryFilter.Replace("/All", "");
                         m_CategoryFilter = m_CategoryFilter.Replace("Collections/", "");
-                        m_SelectedCollection = m_Collections.Find(x => x.name == m_CategoryFilter);
+                        m_SelectedCollection = m_Database.m_Collections.Find(x => x.name == m_CategoryFilter);
                     }
                     else if (m_CategoryFilter.Contains("Popularity"))
                     {
                         m_CategoryFilter = m_CategoryFilter.Replace("/All", "");
                         m_CategoryFilter = m_CategoryFilter.Replace("Popularity/", "");
-                        m_SelectedPopularityCollection = m_Popularities.Find(x => x.name == m_CategoryFilter);
+                        m_SelectedPopularityCollection = m_Database.m_Popularities.Find(x => x.name == m_CategoryFilter);
                     }
                     else
                     {
@@ -522,13 +429,13 @@ namespace AlmostEngine.Screenshot
         int ratiosId = 0;
         void DrawRatiosPopup()
         {
-            int selectedRatio = EditorGUILayout.Popup("Ratio", ratiosId, ratios.ToArray());//, GUILayout.MaxWidth(100));
+            int selectedRatio = EditorGUILayout.Popup("Ratio", ratiosId, m_Database.ratios.ToArray());//, GUILayout.MaxWidth(100));
             if (ratiosId != selectedRatio)
             {
                 ratiosId = selectedRatio;
                 if (ratiosId != 0)
                 {
-                    m_RatioFilter = ratios[ratiosId];
+                    m_RatioFilter = m_Database.ratios[ratiosId];
                 }
                 else
                 {

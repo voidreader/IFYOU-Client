@@ -7,7 +7,7 @@ namespace AlmostEngine.Preview
 {
 	public class UniversalDevicePreview
 	{
-		public static string VERSION = "Universal Device Preview v1.9.9";
+		public static string VERSION = "Universal Device Preview v1.9.12";
 		public static string AUTHOR = "(c)Arnaud Emilien - support@wildmagegames.com";
 
 		#if UNITY_EDITOR

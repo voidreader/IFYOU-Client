@@ -39,11 +39,19 @@ namespace AlmostEngine.Screenshot
             m_NamePresets.Add(new NamePreset("{name}", "Resolution name"));
             m_NamePresets.Add(new NamePreset("{width}x{height}-{scale} {name} {orientation}", "Resolution infos"));
             m_NamePresets.Add(new NamePreset("{year}-{month}-{day}_{hour}h{minute}_{second}", "Current time"));
-            m_NamePresets.Add(new NamePreset("{batch}/{composer}", "Composition grouped by batches"));
-            m_NamePresets.Add(new NamePreset("{batch}", "Batch name"));
-            m_NamePresets.Add(new NamePreset("{scene}", "Scene name"));
-            m_NamePresets.Add(new NamePreset("{activeObject}", "Selected game object (editor only)"));
-            m_NamePresets.Add(new NamePreset("{gameObjects}", "Selected game objects (editor only)"));
+            m_NamePresets.Add(new NamePreset("{batch}/{composer}-{width}x{height}", "Composition"));
+            m_NamePresets.Add(new NamePreset("{batch}/{width}x{height}", "Batch"));
         }
+        public static string m_Presets = "{width}" + ", "
+                        + "{height}" + ", "
+                        + "{ratio}" + ", "
+                        + "{category}" + ", "
+                        + "{scale}" + ", "
+                        + "{name}" + ", "
+                        + "{orientation}" + ", "
+                        + "{year}, {month}, {day}, {hour}, {minute}, {second}" + ", "
+                        + "{batch}, {composer}" + ", "
+                        + "{scene}, {activeObject}, {gameObjects}" + ", "
+                        + "{companyName}, {productName}, {version}";
     }
 }

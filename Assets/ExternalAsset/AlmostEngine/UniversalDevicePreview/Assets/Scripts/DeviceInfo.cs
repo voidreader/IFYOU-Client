@@ -128,7 +128,7 @@ namespace AlmostEngine.Preview
         public static Rect GetSimulatedSafeArea()
         {
             Rect safeArea = new Rect();
-            if (m_CurrentDevice != null)
+            if (m_CurrentDevice != null && ! m_CurrentDevice.m_DisableSafeArea)
             {
                 // Get current device safe area
                 if (m_CurrentDevice.m_Orientation == ScreenshotResolution.Orientation.LANDSCAPE)

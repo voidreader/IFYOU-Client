@@ -20,6 +20,8 @@ namespace AlmostEngine.Screenshot
         public ReorderableList m_OverlayReorderableList;
         public ReorderableList m_CameraReorderableList;
 
+        SerializedProperty m_ShareSubject;
+        SerializedProperty m_ShareText;
         SerializedProperty m_DestinationFolder;
         SerializedProperty m_ExportToPhoneGallery;
         SerializedProperty m_FileFormat;
@@ -68,6 +70,8 @@ namespace AlmostEngine.Screenshot
             m_Obj = obj;
             m_Config = config;
 
+            m_ShareText = configProperty.FindPropertyRelative("m_ShareText");
+            m_ShareSubject = configProperty.FindPropertyRelative("m_ShareSubject");
             m_DestinationFolder = configProperty.FindPropertyRelative("m_DestinationFolder");
             m_ExportToPhoneGallery = configProperty.FindPropertyRelative("m_ExportToPhoneGallery");
             m_FileFormat = configProperty.FindPropertyRelative("m_FileFormat");
@@ -308,7 +312,32 @@ namespace AlmostEngine.Screenshot
 
             // Display full name
             EditorGUILayout.LabelField("Full name: " + fullName, EditorStyles.miniLabel);
+            EditorGUILayout.HelpBox("You can use the following symbols to customize the screenshot names: " + ScreenshotNamePresets.m_Presets, MessageType.Info);
 
+        }
+
+
+
+
+        public void DrawShareGUI()
+        {
+
+            //Title
+            var title = IconsUtils.TryGetIcon("Particle Effect");
+
+            title.text = "Share".ToUpper();
+            m_Config.m_ShowShare = EditorGUILayout.Foldout(m_Config.m_ShowShare, title);
+            if (m_Config.m_ShowShare == false)
+                return;
+            EditorGUILayout.Separator();
+
+            var activeResolution = m_Config.m_Resolutions.Count > 0 ? m_Config.m_Resolutions[0] : m_Config.m_GameViewResolution;
+            EditorGUILayout.PropertyField(m_ShareSubject);
+            EditorGUILayout.LabelField("Full share subject: " + ScreenshotNameParser.ParseSymbols(m_Config.m_ShareSubject, activeResolution, System.DateTime.Now), EditorStyles.miniLabel);
+            EditorGUILayout.PropertyField(m_ShareText);
+            EditorGUILayout.LabelField("Full share text: " + ScreenshotNameParser.ParseSymbols(m_Config.m_ShareText, activeResolution, System.DateTime.Now), EditorStyles.miniLabel);
+
+            EditorGUILayout.HelpBox("You can use the following symbols to customize the share subject and text: " + ScreenshotNamePresets.m_Presets, MessageType.Info);
         }
 
         #endregion
@@ -588,12 +617,29 @@ namespace AlmostEngine.Screenshot
             EditorGUI.PropertyField(activeRect, property.FindPropertyRelative("m_DeviceCanvas"), GUIContent.none);
 
         }
+        
+
+        
+        void DrawDeviceSafeAreaToggle(Rect position, SerializedProperty property)
+        {
+
+            Rect activeRect = new Rect(position.x + 20, position.y + 2 + (EditorGUIUtility.singleLineHeight + 2) * 7, 20, EditorGUIUtility.singleLineHeight);
+
+            activeRect.width = 182;
+            EditorGUI.LabelField(activeRect, "Disable Safe Area");
+
+            activeRect.x += activeRect.width + 2;
+            activeRect.width = 212;
+            EditorGUI.PropertyField(activeRect, property.FindPropertyRelative("m_DisableSafeArea"), GUIContent.none);
+
+            position.y += (EditorGUIUtility.singleLineHeight + 2) * 2;
+        }
 
 
         void DrawDeviceSafeArea(Rect position, SerializedProperty property)
         {
 
-            Rect activeRect = new Rect(position.x + 20, position.y + 2 + (EditorGUIUtility.singleLineHeight + 2) * 9, 20, EditorGUIUtility.singleLineHeight);
+            Rect activeRect = new Rect(position.x + 20, position.y + 2 + (EditorGUIUtility.singleLineHeight + 2) * 10, 20, EditorGUIUtility.singleLineHeight);
 
             activeRect.width = 170;
             EditorGUI.LabelField(activeRect, "Safe Area Landscape");
@@ -624,7 +670,7 @@ namespace AlmostEngine.Screenshot
         void DrawDeviceSafeAreaPortrait(Rect position, SerializedProperty property)
         {
 
-            Rect activeRect = new Rect(position.x + 20, position.y + 2 + (EditorGUIUtility.singleLineHeight + 2) * 7, 20, EditorGUIUtility.singleLineHeight);
+            Rect activeRect = new Rect(position.x + 20, position.y + 2 + (EditorGUIUtility.singleLineHeight + 2) * 8, 20, EditorGUIUtility.singleLineHeight);
 
             activeRect.width = 170;
             EditorGUI.LabelField(activeRect, "Safe Area Portrait");
@@ -636,13 +682,13 @@ namespace AlmostEngine.Screenshot
             position.y += (EditorGUIUtility.singleLineHeight + 2) * 2;
         }
 
-        void CreateResolutionReorderableList()
+        public void CreateResolutionReorderableList()
         {
             m_ResolutionReorderableList = new ReorderableList(serializedObject, m_Resolutions, true, true, true, true);
 
             if (m_ShowDetailedDevice && m_Expanded)
             {
-                m_ResolutionReorderableList.elementHeight = EditorGUIUtility.singleLineHeight * 13f;
+                m_ResolutionReorderableList.elementHeight = EditorGUIUtility.singleLineHeight * 15f;
             }
             else
             {
@@ -667,6 +713,7 @@ namespace AlmostEngine.Screenshot
                         DrawDeviceResolutionPPI(position, m_ResolutionReorderableList.serializedProperty.GetArrayElementAtIndex(index));
                         DrawResolutionOrientation(position, m_ResolutionReorderableList.serializedProperty.GetArrayElementAtIndex(index));
                         DrawDeviceCanvasResolution(position, m_ResolutionReorderableList.serializedProperty.GetArrayElementAtIndex(index));
+                        DrawDeviceSafeAreaToggle(position, m_ResolutionReorderableList.serializedProperty.GetArrayElementAtIndex(index));
                         DrawDeviceSafeAreaPortrait(position, m_ResolutionReorderableList.serializedProperty.GetArrayElementAtIndex(index));
                         DrawDeviceSafeArea(position, m_ResolutionReorderableList.serializedProperty.GetArrayElementAtIndex(index));
                         // DrawDeviceSafeAreaRight(position, m_ResolutionReorderableList.serializedProperty.GetArrayElementAtIndex(index));
@@ -819,54 +866,81 @@ namespace AlmostEngine.Screenshot
 
 
             // Buttons
+            int width = (int)(EditorGUIUtility.currentViewWidth / 3f);
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Enable all"))
             {
-                m_Config.SelectAllResolutions();
-                EditorUtility.SetDirty(m_Obj);
+                var title = IconsUtils.TryGetIcon("toggle on");
+                title.text = "Enable all".ToUpper();
+                if (GUILayout.Button(title, GUILayout.MaxWidth(width)))
+                {
+                    m_Config.SelectAllResolutions();
+                    EditorUtility.SetDirty(m_Obj);
+                }
             }
-            if (GUILayout.Button("Disable all"))
             {
-                m_Config.ClearAllResolutions();
-                EditorUtility.SetDirty(m_Obj);
+                var title = IconsUtils.TryGetIcon("toggle");
+                title.text = "Disable all".ToUpper();
+                if (GUILayout.Button(title, GUILayout.MaxWidth(width)))
+                {
+                    m_Config.ClearAllResolutions();
+                    EditorUtility.SetDirty(m_Obj);
+                }
             }
-            if (GUILayout.Button("Remove all"))
             {
-                m_Config.RemoveAllResolutions();
-                EditorUtility.SetDirty(m_Obj);
+                var title = IconsUtils.TryGetIcon("vcs_delete");
+                title.text = "Remove all".ToUpper();
+                if (GUILayout.Button(title, GUILayout.MaxWidth(width)))
+                {
+                    m_Config.RemoveAllResolutions();
+                    EditorUtility.SetDirty(m_Obj);
+                }
             }
             EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            {
+                var title = IconsUtils.TryGetIcon("");
+                title.text = "Set all Portait".ToUpper();
+                if (GUILayout.Button(title, GUILayout.MaxWidth(width)))
+                {
+                    m_Config.SetAllPortait();
+                    EditorUtility.SetDirty(m_Obj);
+                }
+            }
+            {
+                var title = IconsUtils.TryGetIcon("");
+                title.text = "Set all Landscape".ToUpper();
+                if (GUILayout.Button(title, GUILayout.MaxWidth(width)))
+                {
+                    m_Config.SetAllLandscape();
+                    EditorUtility.SetDirty(m_Obj);
+                }
+            }
+            {
+                var title = IconsUtils.TryGetIcon("");
+                title.text = "Set all Landscape right".ToUpper();
+                if (GUILayout.Button(title, GUILayout.MaxWidth(width)))
+                {
+                    m_Config.SetAllLandscapeRight();
+                    EditorUtility.SetDirty(m_Obj);
+                }
+            }
+
+            EditorGUILayout.EndHorizontal();
+
+
 
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Export active resolution(s) as cutom preset(s)"))
             {
                 ScreenshotResolutionPresets.ExportPresets(m_Config.GetActiveResolutions());
-                m_Selector.InitPresets();
+                m_Selector.m_Database.InitPresets();
             }
 
             if (GUILayout.Button("Save as collection"))
             {
                 ScreenshotResolutionPresets.ExportAsCollection(m_Config.GetActiveResolutions());
-                m_Selector.InitPresets();
-            }
-
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Set all Portait"))
-            {
-                m_Config.SetAllPortait();
-                EditorUtility.SetDirty(m_Obj);
-            }
-            if (GUILayout.Button("Set all Landscape"))
-            {
-                m_Config.SetAllLandscape();
-                EditorUtility.SetDirty(m_Obj);
-            }
-            if (GUILayout.Button("Set all Landscape right"))
-            {
-                m_Config.SetAllLandscapeRight();
-                EditorUtility.SetDirty(m_Obj);
+                m_Selector.m_Database.InitPresets();
             }
 
             EditorGUILayout.EndHorizontal();
@@ -881,7 +955,7 @@ namespace AlmostEngine.Screenshot
             //			if (m_IsDevice) {
             if (m_Expanded)
             {
-                m_ResolutionReorderableList.elementHeight = EditorGUIUtility.singleLineHeight * 13f;
+                m_ResolutionReorderableList.elementHeight = EditorGUIUtility.singleLineHeight * 15f;
             }
             else
             {
@@ -1532,12 +1606,12 @@ namespace AlmostEngine.Screenshot
             else
             {
 #endif
-                KeyCode k = (KeyCode)EditorGUILayout.EnumPopup(key.m_Key);
-                if (k != key.m_Key)
-                {
-                    EditorUtility.SetDirty(m_Obj);
-                    key.m_Key = k;
-                }
+            KeyCode k = (KeyCode)EditorGUILayout.EnumPopup(key.m_Key);
+            if (k != key.m_Key)
+            {
+                EditorUtility.SetDirty(m_Obj);
+                key.m_Key = k;
+            }
 
 #if ENABLE_INPUT_SYSTEM && USC_INPUT_SYSTEM
             }

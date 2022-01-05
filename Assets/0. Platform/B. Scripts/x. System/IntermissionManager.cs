@@ -16,6 +16,9 @@ namespace PIERStory
         
         IEnumerator Start()
         {
+            
+            AdManager.main.HideBanner();
+            
             // * 메모리 누수를 알아보기 위해 FindObject 검사 실행. 
             audioClips = FindObjectsOfType<AudioClip>(true); // 정리되지 않음
             texture2Ds = FindObjectsOfType<Texture2D>(true); // 정리되지 않음

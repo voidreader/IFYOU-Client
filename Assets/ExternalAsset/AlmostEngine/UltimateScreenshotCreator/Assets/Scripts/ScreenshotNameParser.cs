@@ -75,6 +75,12 @@ namespace AlmostEngine.Screenshot
             name = name.Replace("{gameObjects}", (Selection.gameObjects.Length > 0) ? Selection.gameObjects.Select(x => x.name).Aggregate("", (x, y) => x + " " + y) : "");
 #endif
 
+            // Application
+            name = name.Replace("{companyName}", Application.companyName);
+            name = name.Replace("{productName}", Application.productName);
+            name = name.Replace("{version}", Application.version);
+
+
             return name;
         }
 

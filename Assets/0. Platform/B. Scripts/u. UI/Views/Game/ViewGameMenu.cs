@@ -19,6 +19,12 @@ namespace PIERStory
         public Image playToggle;
         public UIToggle autoPlayToggle;
 
+        [Header("Division Free")]
+        public GameObject retryButton;
+        public GameObject blockRetryButton;
+        public GameObject skipButton;
+        public GameObject blockSkipButton;
+
         [Space(10)]
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
         
@@ -28,6 +34,23 @@ namespace PIERStory
 
             // 타이틀 처리 타입, 순번, 타이틀 조합
             textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
+
+            // 무료(광고) 플레이인 경우 보여주는 버튼을 아예 변경해준다
+            if(GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD)
+            {
+                retryButton.SetActive(false);
+                blockRetryButton.SetActive(true);
+                skipButton.SetActive(false);
+                blockSkipButton.SetActive(true);
+
+            }
+            else
+            {
+                retryButton.SetActive(true);
+                blockRetryButton.SetActive(false);
+                skipButton.SetActive(true);
+                blockSkipButton.SetActive(false);
+            }
         }
 
         /// <summary>
@@ -37,15 +60,11 @@ namespace PIERStory
         public void ChangeSkipIcon(bool skipable)
         {
             if (skipable)
-            {
                 skipButtonIcon.sprite = ableSkip;
-                skipButtonIcon.SetNativeSize();
-            }
             else
-            {
                 skipButtonIcon.sprite = disableSkip;
-                skipButtonIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(25, 27);
-            }
+
+            skipButtonIcon.SetNativeSize();
         }
 
         #region OnClick Event
@@ -55,12 +74,6 @@ namespace PIERStory
         /// </summary>
         public void SkipScene()
         {
-            // AD 무료플레이에서는 스킵 할 수 없도록 한다.
-            if(GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD) {
-                SystemManager.ShowAlert("무료 플레이에서는 스킵을 사용할 수 없습니다.");
-                return;
-            }
-            
             // 스킵이 가능하지 않으면 아무것도 실행하지 않는다.
             if (!GameManager.main.skipable)
                 return;
@@ -72,6 +85,11 @@ namespace PIERStory
             GameManager.main.useSkip = true;
             GameManager.main.isThreadHold = false;
             GameManager.main.isWaitingScreenTouch = false;
+        }
+
+        public void OnClickBlockSkip()
+        {
+            SystemManager.ShowAlert("무료 플레이에서는 스킵을 사용할 수 없습니다.");
         }
 
         /// <summary>
@@ -119,12 +137,6 @@ namespace PIERStory
         /// </summary>
         public void OnClickReplay()
         {
-            if (GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD)
-            {
-                SystemManager.ShowAlert("무료 플레이에서는 다시 할 수 없습니다.");
-                return;
-            }
-
             GameManager.main.RetryPlay();
 
             // 1회권 유저는 처음부터 불가하다.
@@ -136,6 +148,11 @@ namespace PIERStory
 
             // 팝업이 결정될 때까진 걍 재시작
             //SystemManager.ShowConfirmPopUp(SystemManager.GetLocalizedText("6039"), GameManager.main.RetryPlay, null);
+        }
+
+        public void OnClickBlockReplay()
+        {
+            SystemManager.ShowAlert("무료 플레이에서는 다시 할 수 없습니다.");
         }
 
         #endregion

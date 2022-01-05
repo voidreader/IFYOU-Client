@@ -376,7 +376,7 @@ namespace PIERStory {
             // Execute logic for the user closing the ad.
             CreateRewardAd();
             
-            OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
+            
         }
         
         // 영상 광고를 끝까지 보았음
@@ -385,8 +385,7 @@ namespace PIERStory {
             // Execute logic for rewarding the user.
             
             isRewarded = true; // true로 변경! 다 봤다!
-            
-            // * 여기서부터 유니티 로직이 다시 돌기 시작하기때문에 closed에 후로직을 넣는다.
+            OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
         }
         
         void OnRewardedFailedToShow(object sender, ShowErrorEventArgs args) {

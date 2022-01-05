@@ -537,6 +537,9 @@ namespace PIERStory
 
             // ! 이어하기 유효성 검사 
             CheckResumePlayValidation();
+            
+            // ! 띠배너 광고 
+            AdManager.main.LoadBanner();
 
 
             // 모든 라인을, 혹은 종료 명령어를 만날때까지 계속해! 
@@ -615,8 +618,12 @@ namespace PIERStory
                     AdManager.main.AddGameRowCount(); 
 
             }
+            
 
             GarbageCollect();
+            
+            // 띠배너 보여주고 있었다면 감추기.
+            AdManager.main.HideBanner();
 
             if (isPlaying)
             {
@@ -1781,6 +1788,8 @@ namespace PIERStory
         public void ShowGameEnd(string __nextEpisodeID)
         {
             Debug.Log("ShowGameEnd :: " + __nextEpisodeID);
+            
+            AdManager.main.HideBanner();
             
             useSkip = false;
             isPlaying = false; // 게임 플레이 정지.

@@ -8,6 +8,8 @@ namespace PIERStory
 {
     public class ViewGameMenu : CommonView
     {
+        [SerializeField] RectTransform rect;
+        
 
         [Header("Skip")]
         public Image skipButtonIcon;
@@ -31,6 +33,15 @@ namespace PIERStory
         public override void OnStartView()
         {
             base.OnStartView();
+            
+            if(AdManager.main.isIronSourceBannerLoad) {
+                // rect.
+                rect.offsetMin = new Vector2(0, 120);
+            }
+            else {
+                rect.offsetMin = Vector2.zero;
+            }
+            
 
             // 타이틀 처리 타입, 순번, 타이틀 조합
             textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;

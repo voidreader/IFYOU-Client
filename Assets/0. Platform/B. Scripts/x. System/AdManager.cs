@@ -24,6 +24,13 @@ namespace PIERStory {
         [SerializeField] int gamePlayRowCount = 0;
         [SerializeField] bool isRewarded = false; // 영상광고 끝까지 재생되었는지. 
         
+        [Space]
+        [Header("IronSource")] 
+        [SerializeField] string ironSource_android = string.Empty;
+        [SerializeField] string ironSource_ios = string.Empty;
+        [SerializeField] string ironSourceKey = string.Empty;
+        public bool isIronSourceBannerLoad = false;
+        
         JsonData serverData = null;
         
         IRewardedAd rewardedAd;
@@ -67,7 +74,91 @@ namespace PIERStory {
 
             InitUnityMediation();
             
+            InitIronSource();
         }
+        
+        
+        #region ironSource
+        /// <summary>
+        /// 아이언 소스 
+        /// </summary>
+        void InitIronSource() {
+            
+            
+            
+            #if UNITY_ANDROID
+            ironSourceKey = ironSource_android;
+            #else
+            ironSourceKey = ironSource_ios;
+            #endif
+            
+            IronSource.Agent.init(ironSourceKey);
+            IronSource.Agent.validateIntegration();
+            
+            InitBanner();
+        }
+        
+        /// <summary>
+        /// 배너 초기화
+        /// </summary>
+        void InitBanner() {
+            IronSourceEvents.onBannerAdLoadedEvent += BannerAdLoadedEvent;
+            IronSourceEvents.onBannerAdLoadFailedEvent += BannerAdLoadFailedEvent;        
+            IronSourceEvents.onBannerAdClickedEvent += BannerAdClickedEvent; 
+        }
+        
+        /// <summary>
+        /// 띠배너 불러오기
+        /// </summary>
+        public void LoadBanner() {
+            
+            if(!useBannerAD) {
+                Debug.Log("Off Banner AD");
+                return;
+            }
+
+
+            // 무료 유저가 아니면 광고 재생 되지 않음
+            if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState != PurchaseState.AD)
+                return;            
+            
+            
+            
+            if(!isIronSourceBannerLoad)
+                IronSource.Agent.loadBanner(IronSourceBannerSize.BANNER, IronSourceBannerPosition.BOTTOM);
+            else 
+                IronSource.Agent.displayBanner();
+        }
+        
+        /// <summary>
+        /// 띠배너 감추기
+        /// </summary>
+        public void HideBanner() {
+            
+            if(!isIronSourceBannerLoad)
+                return;
+                
+            if(!useBannerAD)
+                return;
+                
+            IronSource.Agent.hideBanner();
+        }
+        
+        void BannerAdLoadedEvent() {
+            Debug.Log("ironSourceBanner Loaded");
+            isIronSourceBannerLoad = true;
+        }
+        
+        void BannerAdLoadFailedEvent(IronSourceError error) {
+            Debug.Log("ironSource bannder fail : " + error.getDescription());
+        }
+        
+        void BannerAdClickedEvent() {
+            
+        }
+        
+        #endregion
+        
         
         /// <summary>
         /// 유니티 메디에이션 초기화 

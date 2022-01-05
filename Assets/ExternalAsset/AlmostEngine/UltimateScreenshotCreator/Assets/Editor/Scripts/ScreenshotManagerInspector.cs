@@ -108,6 +108,10 @@ namespace AlmostEngine.Screenshot
 			EditorGUILayout.EndVertical ();
 			EditorGUILayout.Separator ();
 
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+            m_ConfigDrawer.DrawShareGUI();
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.Separator();
 			EditorGUILayout.BeginVertical (GUI.skin.box);
 			m_ConfigDrawer.DrawUtilsGUI ();
 			EditorGUILayout.Separator ();

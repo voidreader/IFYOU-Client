@@ -281,6 +281,7 @@ namespace AlmostEngine.Preview
                 {
                     m_ConfigAsset.m_ExpandDevices = false;
                     m_ConfigDrawer.m_Expanded = false;
+                    m_ConfigDrawer.CreateResolutionReorderableList();
                 }
             }
             else
@@ -290,6 +291,7 @@ namespace AlmostEngine.Preview
                 {
                     m_ConfigAsset.m_ExpandDevices = true;
                     m_ConfigDrawer.m_Expanded = true;
+                    m_ConfigDrawer.CreateResolutionReorderableList();
                 }
             }
 

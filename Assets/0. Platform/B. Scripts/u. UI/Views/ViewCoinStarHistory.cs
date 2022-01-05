@@ -62,8 +62,9 @@ namespace PIERStory
             base.OnStartView();
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5047"), string.Empty);
 
@@ -94,6 +95,8 @@ namespace PIERStory
         {
             starButton.sprite = toggleOnSprite;
             coinButton.sprite = toggleOffSprite;
+            starText.color = toggleOnColor;
+            coinText.color = toggleOffColor;
             _7dayToggle.isOn = true;
             _30dayToggle.isOn = false;
             _90dayToggle.isOn = false;
@@ -108,6 +111,8 @@ namespace PIERStory
         {
             starButton.sprite = toggleOffSprite;
             coinButton.sprite = toggleOnSprite;
+            starText.color = toggleOffColor;
+            coinText.color = toggleOnColor;
             _7dayToggle.isOn = true;
             _30dayToggle.isOn = false;
             _90dayToggle.isOn = false;

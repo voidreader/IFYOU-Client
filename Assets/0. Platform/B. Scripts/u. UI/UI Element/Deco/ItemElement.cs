@@ -29,7 +29,7 @@ namespace PIERStory
             string key = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_KEY);
             string currency = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
 
-            itemImage.SetDownloadURL(url, key);
+            itemImage.SetDownloadURL(url, key, true);
             decoRect = GetComponent<RectTransform>();
             currencyName = currency;
             profileDecoElement = connectedElement;

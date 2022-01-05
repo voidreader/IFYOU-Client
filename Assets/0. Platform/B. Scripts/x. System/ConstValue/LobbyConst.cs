@@ -66,6 +66,7 @@ namespace PIERStory {
         public const string NODE_WALLPAPER = "wallpaper";
         public const string NODE_STANDING = "standing";
         public const string NODE_BADGE = "badge";
+        public const string NODE_STICKER = "sticker";
         public const string NODE_BUBBLE = "bubble";
         public const string NODE_TEXT = "text";
         public const string NODE_TEXT_LIST = "textList";

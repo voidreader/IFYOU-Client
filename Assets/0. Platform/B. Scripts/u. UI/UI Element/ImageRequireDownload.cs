@@ -17,6 +17,7 @@ namespace PIERStory {
         [Header("RawImage Check")]
         [SerializeField] bool isRawImage = false; // RawImage인 경우에 체크
         [SerializeField] bool useFade = true; // 이미지를 불러온 경우 FadeIn 사용 
+        bool useNativeSize = false;
         
         [Space]
         [SerializeField] string imageURL = string.Empty;
@@ -52,10 +53,12 @@ namespace PIERStory {
         /// </summary>
         /// <param name="__url"></param>
         /// <param name="__key"></param>
-        public void SetDownloadURL(string __url, string __key) {
+        public void SetDownloadURL(string __url, string __key, bool useNative = false) {
             imageURL = __url;
             imageKey = __key;
-            
+            useNativeSize = useNative;
+
+
             InitImage();
             
             #region 유효성 체크 
@@ -144,7 +147,10 @@ namespace PIERStory {
         void SetTextureToTargetImage() {
             if(isRawImage) {
                 targetRawImage.texture = downloadedTexture;
-                
+
+                if (useNativeSize)
+                    targetRawImage.SetNativeSize();
+
                 // 페이드인 쓸래 말래 처리 
                 if(useFade)
                     targetRawImage.DOFade(1, 0.4f);
@@ -155,6 +161,9 @@ namespace PIERStory {
             else {
                 downloadedSprite = Sprite.Create(downloadedTexture, new Rect(0, 0, downloadedTexture.width, downloadedTexture.height), new Vector2(0.5f, 0.5f));
                 targetImage.sprite = downloadedSprite;
+
+                if (useNativeSize)
+                    targetImage.SetNativeSize();
                 
                 if(useFade)
                     targetImage.DOFade(1, 0.4f);

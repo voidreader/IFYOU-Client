@@ -23,6 +23,7 @@ namespace PIERStory
         public Image voiceButtonImage;
         public TextMeshProUGUI voiceScriptData;
         public GameObject lockIcon;
+        public GameObject playingIcon;
         public bool isOpen = false;
 
 
@@ -69,14 +70,17 @@ namespace PIERStory
                 return;
             }
 
-            ES3.SaveRaw(res.Data, soundKey);
+            ES3.SaveRaw(res.Data, soundKey, SystemManager.noEncryptionSetting);
             SuccessLoad();
         }
 
         void SuccessLoad()
         {
             if (soundKey.Contains("mp3"))
+            {
                 audioClip = ES3.LoadAudio(soundKey, AudioType.MPEG);
+                Debug.Log(soundKey);
+            }
             else if (soundKey.Contains("wav"))
                 audioClip = ES3.LoadAudio(soundKey, AudioType.WAV);
 
@@ -97,14 +101,12 @@ namespace PIERStory
                 if(isOpen)
                 {
                     voiceButtonImage.sprite = LobbyManager.main.spriteOpenVoice;
-                    voiceButtonImage.color = LobbyManager.main.colorFreeBox;
                     voiceScriptData.gameObject.SetActive(true);
                     lockIcon.SetActive(false);
                 }
                 else
                 {
                     voiceButtonImage.sprite = LobbyManager.main.spriteLockVoice;
-                    voiceButtonImage.color = Color.white;
                     voiceScriptData.gameObject.SetActive(false);
                     lockIcon.SetActive(true);
                 }
@@ -128,6 +130,8 @@ namespace PIERStory
                 playIcon.SetActive(true);
                 soundNumText.gameObject.SetActive(false);
             }
+            else
+                playingIcon.SetActive(true);
         }
     }
 }

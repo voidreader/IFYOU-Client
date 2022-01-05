@@ -46,6 +46,13 @@ namespace PIERStory
         public UIToggle[] bottomToggles;
         public UIContainer bottomContainer;
 
+        [Header("뱃지 Tab")]
+        public GameObject badgeObjectPrefab;
+        public GameObject badgeListPrefab;
+        public Transform badgeElementListContent;
+        public GameObject badgeScroll;
+        public GameObject noneBadgeItem;
+
         [Header("스티커 Tab")]
         public GameObject stickerObjectPrefab;      // 화면에 세워질 sticker object prefab
         public GameObject itemListPrefab;           // 뱃지, 스티커 icon prefab
@@ -97,6 +104,7 @@ namespace PIERStory
                 switch (SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_TYPE))
                 {
                     case LobbyConst.NODE_BADGE:
+                    case LobbyConst.NODE_STICKER:
                         ItemElement itemElement = Instantiate(stickerObjectPrefab, decoObjects).GetComponent<ItemElement>();
                         itemElement.SetProfileItem(profileCurrency[j]);
                         createObject.Add(itemElement.gameObject);
@@ -206,6 +214,15 @@ namespace PIERStory
                 Destroy(g);
 
             createObject.Clear();
+            
+            // 배경 제어 끄고
+            profileBgScroll.SetActive(true);
+            bgScrolling.SetActive(false);
+
+            // 스탠딩 제어 끄고
+            profileStandingScroll.SetActive(true);
+            standingController.SetActive(false);
+            
         }
 
         /// <summary>
@@ -538,7 +555,7 @@ namespace PIERStory
 
         void LoadStickerData()
         {
-            if (!profileCurrencyList.ContainsKey(LobbyConst.NODE_BADGE) || profileCurrencyList[LobbyConst.NODE_BADGE] == null)
+            if (!profileCurrencyList.ContainsKey(LobbyConst.NODE_STICKER) || profileCurrencyList[LobbyConst.NODE_STICKER] == null)
             {
                 stickerScroll.SetActive(false);
                 noneStickerItem.SetActive(true);
@@ -550,21 +567,11 @@ namespace PIERStory
 
             ProfileItemElement listElement = null;
 
-            for (int i = 0; i < profileCurrencyList[LobbyConst.NODE_BADGE].Count; i++)
+            for (int i = 0; i < profileCurrencyList[LobbyConst.NODE_STICKER].Count; i++)
             {
                 listElement = Instantiate(itemListPrefab, stickerElementListContent).GetComponent<ProfileItemElement>();
-                listElement.InitCurrencyListElement(profileCurrencyList[LobbyConst.NODE_BADGE][i]);
+                listElement.InitCurrencyListElement(profileCurrencyList[LobbyConst.NODE_STICKER][i]);
                 createObject.Add(listElement.gameObject);
-
-                /*
-                // current_cnt 1개 이상인걸 체크해서(if문) Instantiate 해줄 for문 추가.
-                // curreny 이름으로 체크(이름이 PK임)해서 찾아서 생성해주고 ProfileDecoElement 연결 해준다
-                if (int.Parse(SystemManager.GetJsonNodeString(profileCurrencyList[LobbyConst.NODE_BADGE][i], LobbyConst.NODE_CURRENT_COUNT)) > 0)
-                {
-                    
-                }
-                */
-
             }
         }
 

@@ -234,7 +234,7 @@ namespace PIERStory
 
         private void Update()
         {
-            if (playSound == null || !playSound.isPlaying)
+            if (playSound == null || !playSound.isPlaying || playSound.clip == null)
                 return;
 
             // 재생 중~
@@ -351,6 +351,9 @@ namespace PIERStory
             }
         }
 
+        /// <summary>
+        /// 무작위 플레이
+        /// </summary>
         void RandomPlay()
         {
             int index = UnityEngine.Random.Range(0, activeTotalCount);

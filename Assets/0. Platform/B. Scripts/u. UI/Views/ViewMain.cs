@@ -104,12 +104,16 @@ namespace PIERStory {
         
         public void OnClickTabNavigation(int index) {
             switch(index) {
-                case 0: 
+                case 0:  // 로비
                 OnLobbyTab();
                 break;
                 
-                case 1:
+                case 1:  // 카테고리
                 OnCategoryTab();
+                break;
+                
+                case 2: // 상점
+                OnShopTab();
                 break;
             }
         }
@@ -220,6 +224,7 @@ namespace PIERStory {
         }
 
         #endregion
+        
 
         #region 카테고리
         
@@ -328,6 +333,18 @@ namespace PIERStory {
         #endregion
 
         #region 상점
+        
+        /// <summary>
+        /// 상점 탭 활성화
+        /// </summary>
+        public void OnShopTab() {
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
+        }
+        
         #endregion
 
         #region 프로필

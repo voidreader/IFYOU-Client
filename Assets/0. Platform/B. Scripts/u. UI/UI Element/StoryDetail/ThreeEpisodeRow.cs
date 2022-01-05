@@ -67,6 +67,13 @@ namespace PIERStory {
                     currentLayoutElement.minHeight = foldingEndingHeight;
                     break;
                 }
+            }
+            
+            // * 귀속 엔딩중에 현재 플레이 차례가 있는지
+            for(int i=0; i<ListRows.Count;i++) {
+                if(ListRows[i].hasCurrentDependentEnding) {
+                    ListRows[i].DelayOnClickEndingSpread(); // 약간 시간차 걸어준다.   
+                }
             }            
         }
         
@@ -102,7 +109,8 @@ namespace PIERStory {
             }
             
             for(int i=0; i<__dependentEndings.Count;i++) {
-                ListEndings[i].InitEndingElement(this, __dependentEndings[i], i, __owner);
+                // 마지막 행에 대한 판단 값 추가
+                ListEndings[i].InitEndingElement(this, __dependentEndings[i], i, __owner, i == __dependentEndings.Count -1?true:false);
                 addHeight += eachEndingHeight;
             }
             

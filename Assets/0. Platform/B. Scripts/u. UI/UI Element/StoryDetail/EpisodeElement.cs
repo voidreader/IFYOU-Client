@@ -18,7 +18,8 @@ namespace PIERStory {
         [SerializeField] ImageRequireDownload thumbnailImage; 
         public EpisodeData episodeData = null; 
         public bool hasDependentEnding = false; // 귀속된 엔딩이 있는지 체크 
-        [SerializeField] List<EpisodeData> ListDependentEnding = new List<EpisodeData>();
+        public bool hasCurrentDependentEnding = false; // 귀속된 엔딩중 현재 상태의 엔딩이 있는지.
+        public List<EpisodeData> ListDependentEnding = new List<EpisodeData>();
         
         
         // 플래이 상태(현재, 과거, 미래)
@@ -96,6 +97,8 @@ namespace PIERStory {
             SetPlayStateCover(); // 플레이 상태에 대한 처리 
             
             SetDependentEnding(); // 귀속 엔딩 유무 체크 , 버튼 활성화
+            
+            CheckDependEndingCurrent(); // 귀속 엔딩 중 현재 상태의 엔딩 체크 
         }
         
         /// <summary>
@@ -105,6 +108,7 @@ namespace PIERStory {
             
             ListDependentEnding.Clear();
             hasDependentEnding = false;
+            hasCurrentDependentEnding = false;
             
             if(episodeData.episodeType != EpisodeType.Chapter)
                 return;
@@ -166,14 +170,23 @@ namespace PIERStory {
                     break;
 
                 case PurchaseState.Free: // * 무료
-                    episodePurchaseStateText = "FREE";
+                    episodePurchaseStateText = SystemManager.GetLocalizedText("6098");
                     
-                    // purchaesStateBox.color = LobbyManager.main.colorFreeBox;
+                    purchaseStateBox.sprite = LobbyManager.main.spritePlateFree;
                     break;
 
-                case PurchaseState.Permanent: // * 프리미엄 
-                    episodePurchaseStateText = SystemManager.GetLocalizedText("6006");
-                    // purchaseStateBox.color = LobbyManager.main.colorPremiumBox;
+                case PurchaseState.Permanent: // * 스타 플레이 
+                    
+                    // 프리미엄 패스 보유여부에 따라 달라짐 . 
+                    if(UserManager.main.HasProjectFreepass()) {
+                        episodePurchaseStateText = SystemManager.GetLocalizedText("6006");
+                        purchaseStateBox.sprite = LobbyManager.main.spritePlatePremium;    
+                    }
+                    else {
+                        episodePurchaseStateText = SystemManager.GetLocalizedText("5002");
+                        purchaseStateBox.sprite = LobbyManager.main.spritePlateStarPlay;    
+                    }
+                    
                     break;
 
                 case PurchaseState.OneTime: // * 1회 플레이
@@ -265,6 +278,13 @@ namespace PIERStory {
         }
         
         /// <summary>
+        /// 
+        /// </summary>
+        public void DelayOnClickEndingSpread() {
+            Invoke("OnCickEndingSpread",  0.1f);
+        }
+        
+        /// <summary>
         /// 엔딩 펼침버튼 누르기 
         /// </summary>
         public void OnCickEndingSpread() {
@@ -272,6 +292,23 @@ namespace PIERStory {
             parentThreeRow.SpreadEnding(ListDependentEnding, columnIndex);
         }
         
+        
+        /// <summary>
+        /// 귀속 엔딩 중에서 상태가 current인 엔딩이 있는지 체크 
+        /// </summary>
+        void CheckDependEndingCurrent() {
+            
+            if(!hasDependentEnding)
+                return;
+            
+            
+            for(int i=0;i<ListDependentEnding.Count;i++) {
+                if(ListDependentEnding[i].episodeState == EpisodeState.Current) {
+                    hasCurrentDependentEnding = true;
+                    return;
+                }
+            }
+        }
         
     } // ? end of class
 

@@ -36,6 +36,7 @@ namespace PIERStory
         public GameObject historyElementPrefab;
         public Transform historyContent;
 
+        public GameObject noneAlertText;            // 내역이 존재하지 않을 때 띄워줄 object
         CoinStarHistoryElement historyElement;
         List<CoinStarHistoryElement> historyElements = new List<CoinStarHistoryElement>();
 
@@ -91,6 +92,8 @@ namespace PIERStory
         /// </summary>
         public void EnableStarHistory()
         {
+            starButton.sprite = toggleOnSprite;
+            coinButton.sprite = toggleOffSprite;
             _7dayToggle.isOn = true;
             _30dayToggle.isOn = false;
             _90dayToggle.isOn = false;
@@ -103,6 +106,8 @@ namespace PIERStory
         /// </summary>
         public void EnableCoinHistory()
         {
+            starButton.sprite = toggleOffSprite;
+            coinButton.sprite = toggleOnSprite;
             _7dayToggle.isOn = true;
             _30dayToggle.isOn = false;
             _90dayToggle.isOn = false;
@@ -219,8 +224,16 @@ namespace PIERStory
                 Destroy(csElement.gameObject);
 
             historyElements.Clear();
-            
-            for(int i=0;i<__j.Count;i++)
+
+            if (__j.Count < 1)
+            {
+                noneAlertText.SetActive(true);
+                return;
+            }
+
+            noneAlertText.SetActive(false);
+
+            for (int i=0;i<__j.Count;i++)
             {
                 historyElement = Instantiate(historyElementPrefab, historyContent).GetComponent<CoinStarHistoryElement>();
                 historyElement.InitHistoryInfo(__j[i]);

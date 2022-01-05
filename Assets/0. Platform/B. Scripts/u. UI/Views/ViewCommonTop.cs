@@ -41,6 +41,9 @@ namespace PIERStory {
         
         bool previousLogoShow = false; // 로고 보여주기 
         
+        bool previousMultipleButtonShow = false; // 멀티 버튼 보여주기
+        string previousMultipleLabelText = string.Empty; // 멀티 버튼 텍스트
+        
         
         [SerializeField] bool backgroundSignalValue = true;
         
@@ -164,6 +167,12 @@ namespace PIERStory {
             previousViewName = textViewName.text;
             previousMailShow = mailButton.activeSelf;
             previousLogoShow = !previousBackButtonShow;
+            
+            // 멀티플 버튼
+            previousMultipleButtonShow = multipleButton.activeSelf;
+            
+            // 멀티플 버튼 레이블
+            previousMultipleLabelText = multipleButtonText.text;
         }
         
         /// <summary>
@@ -185,6 +194,12 @@ namespace PIERStory {
             
             mailButton.SetActive(previousMailShow);
             logo.SetActive(!previousBackButtonShow);
+            
+            // 멀티플 버튼
+            multipleButton.SetActive(previousMultipleButtonShow);
+            
+            // 멀티플 버튼 레이블
+            multipleButtonText.text = previousMultipleLabelText;
             
             
         }

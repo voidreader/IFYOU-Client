@@ -93,15 +93,18 @@ namespace PIERStory
 
             if (profileCurrency.Count > 0)
             {
-                // 배경
-                background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY_KEY));
-                background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_POS_X)), 0f);
-                background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_HEIGHT)));
-                moveBg.currencyName = SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY);
-
+                if (SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_SORTING_ORDER) == "0")
+                {
+                    // 배경
+                    background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY_KEY));
+                    background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_POS_X)), 0f);
+                    background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_HEIGHT)));
+                    moveBg.currencyName = SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY);
+                }
+                
 
                 // 스탠딩, 스티커 
-                for (int j = 1; j < profileCurrency.Count; j++)
+                for (int j = 0; j < profileCurrency.Count; j++)
                 {
                     switch (SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_TYPE))
                     {

@@ -72,6 +72,9 @@ namespace PIERStory {
         /// <param name="__selected"></param>
         /// <param name="__state"></param>
         public static void SetOtherSelectionState(IFYouGameSelectionCtrl __selected, SelectionState __state) {
+            
+            Debug.Log(string.Format("<color=yellow>SetOtherSelectionState [{0}]/[{1}]</color>", __selected.selectionText, __state.ToString()));
+            
             for(int i=0; i<ListStacks.Count;i++) {
                 
                 if(ListStacks[i] == __selected)
@@ -341,6 +344,11 @@ namespace PIERStory {
                 
                 case SelectionState.None:
                 this.gameObject.SetActive(false);
+                
+                // 최대한 원상복구 해보자 
+                canvasGroup.alpha = 1;
+                imageAura.color = new Color(1,1,1,1);
+                imageAura.gameObject.SetActive(false);
                 
                 // ViewGame 메소드 호출 
                 ViewGame.main.RemoveListAppearSelection(this);

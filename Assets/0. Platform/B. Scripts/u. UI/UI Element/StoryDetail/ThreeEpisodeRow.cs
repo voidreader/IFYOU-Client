@@ -71,6 +71,10 @@ namespace PIERStory {
             
             // * 귀속 엔딩중에 현재 플레이 차례가 있는지
             for(int i=0; i<ListRows.Count;i++) {
+                
+                if(!ListRows[i].gameObject.activeSelf)  
+                    continue;
+                
                 if(ListRows[i].hasCurrentDependentEnding) {
                     ListRows[i].DelayOnClickEndingSpread(); // 약간 시간차 걸어준다.   
                 }

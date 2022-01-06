@@ -29,6 +29,10 @@ namespace PIERStory {
         
         public Action positiveButtonCallback = null; // 긍정 버튼 콜백 
         public Action negativeButtonCallback = null; // 부정 버튼 콜백
+
+        public string imageURL = string.Empty;
+        public string imageKey = string.Empty;
+
         
         /*
         public void SetButtonsCallbacks(params Action[] callbacks)
@@ -50,6 +54,7 @@ namespace PIERStory {
         }
         */
         
+
         /// <summary>
         /// 타겟 데이터 지정
         /// </summary>

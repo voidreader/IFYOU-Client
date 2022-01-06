@@ -120,11 +120,6 @@ namespace PIERStory
         public GameObject microphoneIcon;
         Animator microphoneAnimator;
 
-        [Space][Header("Alert Container")]
-        public UIContainer totalContainer;      // Fade가 깔리는 까만 배경의 Container
-        public UIContainer alertContainer;      // 실제 내용이 담기는 Container
-        public TextMeshProUGUI alertTitle;
-        public TextMeshProUGUI containerMessage;
 
         private void Awake()
         {
@@ -523,7 +518,11 @@ namespace PIERStory
                     if (!string.IsNullOrEmpty(tmpStr))
                         i++;
 
-                    yield return new WaitForSeconds(0.1f);
+                    // 영어 텍스트는 길어서 너무 속도가 느리다
+                    if (SystemManager.main.currentAppLanguageCode == "EN")
+                        yield return new WaitForSeconds(0.03f);
+                    else
+                        yield return new WaitForSeconds(0.1f);
                 }
 
                 // 21.10.22
@@ -1152,72 +1151,6 @@ namespace PIERStory
 
             inGameMenuBtn.SetActive(true);
             closeLogBtn.SetActive(false);
-        }
-
-        #endregion
-
-        #region Conatiner 관련
-
-        /// <summary>
-        /// 엔딩 알림
-        /// </summary>
-        public void ShowEndingContainer(EpisodeData data)
-        {
-            if (data.endingType == LobbyConst.COL_HIDDEN)
-                alertTitle.text = SystemManager.GetLocalizedText("5087");
-            else
-                alertTitle.text = SystemManager.GetLocalizedText("5088");
-
-            containerMessage.text = string.Format("'{0}'로 이어집니다.", data.episodeTitle);
-
-            totalContainer.Show();
-        }
-
-        /// <summary>
-        /// 사이드 해금 알림
-        /// </summary>
-        public void ShowSideContainer()
-        {
-            // 해금된 스페셜 에피소드 jsonData
-            LitJson.JsonData sideData = UserManager.main.GetNodeUnlockSide();
-
-            if (sideData == null || sideData.Count < 1)
-            {
-                Debug.Log("No Next Episode JSON");
-                return;
-            }
-
-            // 해금된 사이드 목록을 가져와서
-            for(int i=0;i<sideData.Count;i++)
-            {
-                string sideId = SystemManager.GetJsonNodeString(sideData[i], CommonConst.COL_EPISODE_ID);
-
-                for(int j=0;j<StoryManager.main.SideEpisodeList.Count;j++)
-                {
-                    // Side List에서 동일한 Id값을 찾아준다
-                    if(StoryManager.main.SideEpisodeList[i].episodeID.Equals(sideId))
-                    {
-                        StartCoroutine(ShowDelaySideContainer(StoryManager.main.SideEpisodeList[i].episodeTitle));
-                        break;
-                    }
-                }
-            }
-
-        }
-
-        IEnumerator ShowDelaySideContainer(string sideTitle)
-        {
-            if (totalContainer.isVisible || totalContainer.isShowing)
-            {
-                // 여러 개의 사이드가 해금될 수 있으므로 alertContainer가 autoHide될 때까지 기다리게 한다
-                yield return new WaitUntil(() => alertContainer.isHidden);
-                alertContainer.Show();
-            }
-            else
-                totalContainer.Show();
-
-            alertTitle.text = "사이드 에피소드";
-            containerMessage.text = string.Format("'{0}'가 해금되었습니다.", sideTitle);
         }
 
         #endregion

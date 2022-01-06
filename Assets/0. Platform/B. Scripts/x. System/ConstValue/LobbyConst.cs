@@ -114,6 +114,7 @@ namespace PIERStory {
         public const string SIGNAL_UPDATE_EPISODE_SCENE_COUNT = "updateEpisodeSceneCount";
         public const string SIGNAL_CONNECT_SERVER = "connectingDone";
         public const string SIGNAL_MOVE_DECO_MODE = "moveDecoMode";
+        public const string SIGNAL_MOVE_PROFILE_DECO = "moveProfileDeco";
         public const string SIGNAL_SAVE_PROFILE_DECO = "saveProfileDeco";
         
         public const string SIGNAL_EPISODE_START = "EpisodeStart";

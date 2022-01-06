@@ -30,10 +30,7 @@ namespace PIERStory
         [Space(10)]
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
         
-        public override void OnStartView()
-        {
-            base.OnStartView();
-            
+        void Start() {
             if(AdManager.main.isIronSourceBannerLoad) {
                 // rect.
                 rect.offsetMin = new Vector2(0, 120);
@@ -41,6 +38,13 @@ namespace PIERStory
             else {
                 rect.offsetMin = Vector2.zero;
             }
+        }
+        
+        public override void OnStartView()
+        {
+            base.OnStartView();
+            
+
             
 
             // 타이틀 처리 타입, 순번, 타이틀 조합

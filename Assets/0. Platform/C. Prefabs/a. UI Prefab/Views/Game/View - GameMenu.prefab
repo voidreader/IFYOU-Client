@@ -541,7 +541,6 @@ GameObject:
   - component: {fileID: 508574641374012872}
   - component: {fileID: 508574641374012873}
   - component: {fileID: 508574641374012874}
-  - component: {fileID: 508574641374012877}
   - component: {fileID: 508574641374012876}
   m_Layer: 5
   m_Name: View - GameMenu
@@ -1311,25 +1310,6 @@ MonoBehaviour:
       ToCustomValue: 1
       FromOffset: 0
       ToOffset: 0
---- !u!114 &508574641374012877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508574641374012884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c97afc556caea1c44969477eb7ddec74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Panel: {fileID: 508574641374012875}
-  m_HorizontalConstraintType: 0
-  m_HorizontalConstraint: 2
-  m_VerticalConstraintType: 1
-  m_VerticalConstraint: 0
-  m_DefaultAnchorMin: {x: 0, y: 0}
-  m_DefaultAnchorMax: {x: 1, y: 1}
 --- !u!114 &508574641374012876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7228,6 +7208,7 @@ GameObject:
   - component: {fileID: 508574642937988387}
   - component: {fileID: 508574642937988396}
   - component: {fileID: 508574642937988397}
+  - component: {fileID: 5513209717495671765}
   m_Layer: 5
   m_Name: Header
   m_TagString: Untagged
@@ -7910,6 +7891,25 @@ MonoBehaviour:
       ToCustomValue: 1
       FromOffset: 0
       ToOffset: 0
+--- !u!114 &5513209717495671765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508574642937988399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c97afc556caea1c44969477eb7ddec74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Panel: {fileID: 508574642937988398}
+  m_HorizontalConstraintType: 0
+  m_HorizontalConstraint: 2
+  m_VerticalConstraintType: 2
+  m_VerticalConstraint: 0
+  m_DefaultAnchorMin: {x: 0, y: 1}
+  m_DefaultAnchorMax: {x: 1, y: 1}
 --- !u!1 &508574643019696175
 GameObject:
   m_ObjectHideFlags: 0

@@ -33,12 +33,21 @@ namespace PIERStory
                 data = StoryManager.main.GetImageIllustData(scriptRow.script_data);
                 illustType = template;
                 
-                if(data == null) {
+                if(data == null) { // 일러스트 없으면 라이브 일러스트 데이터 찾아본다.
+                
                     data = StoryManager.main.GetLiveIllustJsonByName(scriptRow.script_data);
+                    
+                    if(data == null) {
+                        SystemManager.ShowAlert(string.Format("일러스트 {0}가 없습니다", scriptRow.script_data));
+                        __actionCallback();
+                        return;
+                    }
+                    
                     illustType = "live_illust"; // 라이브 일러스트로 변경한다. 
                     id = data[0]["live_illust_id"].ToString();
                 }
                 else {
+                    // 일러스트 있음
                     id = data["illust_id"].ToString();
                 }
                 

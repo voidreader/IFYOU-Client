@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -16,7 +16,7 @@ namespace PIERStory
         static Vector2 centerPivot = new Vector2(0.5f, 0.5f);
         static Vector3 reverseScaleX = new Vector3(-1, 1, 1);
 
-        // ¼­¹ö json ÄÃ·³µé.. 
+        // ì„œë²„ json ì»¬ëŸ¼ë“¤.. 
         const string COL_TEXTAREA_LEFT = "textarea_left";
         const string COL_TEXTAREA_RIGHT = "textarea_right";
         const string COL_TEXTAREA_TOP = "textarea_top";
@@ -59,21 +59,21 @@ namespace PIERStory
 
         #endregion
 
-        // Á¦¾î¿ë transform
+        // ì œì–´ìš© transform
         public RectTransform rtransform;
 
 
-        public Image imageBubble;           // ¸öÃ¼ 
-        public Image imageOutline;          // ¿Ü°û
-        public Image nametag;               // ÀÌ¸§Ç¥ ÀÌ¹ÌÁö
-        public TextMeshProUGUI textName;    // ÀÌ¸§Ç¥ ÅØ½ºÆ® 
+        public Image imageBubble;           // ëª¸ì²´ 
+        public Image imageOutline;          // ì™¸ê³½
+        public Image nametag;               // ì´ë¦„í‘œ ì´ë¯¸ì§€
+        public TextMeshProUGUI textName;    // ì´ë¦„í‘œ í…ìŠ¤íŠ¸ 
 
 
-        public TextMeshProUGUI textContents;    // ±Û
-        public Image imageTail;                 // ²¿¸®
-        public Image imageTailOutline;          // ²¿¸® ¿Ü°û¼± 
-        public Image emoticon;                  // ÀÌ¸ğÆ¼ÄÜ
-        ScriptImageMount emoticonMount;         // ÀÌ¸ğÆ¼ÄÜ °¡Á®¿À´Â ImageMount
+        public TextMeshProUGUI textContents;    // ê¸€
+        public Image imageTail;                 // ê¼¬ë¦¬
+        public Image imageTailOutline;          // ê¼¬ë¦¬ ì™¸ê³½ì„  
+        public Image emoticon;                  // ì´ëª¨í‹°ì½˜
+        ScriptImageMount emoticonMount;         // ì´ëª¨í‹°ì½˜ ê°€ì ¸ì˜¤ëŠ” ImageMount
         public GameObject fakeReverseTail;
         public bool isFakeBubble = false;
 
@@ -81,28 +81,30 @@ namespace PIERStory
         string message = string.Empty;
         int bubbleSize = 0;
         int bubblePos = 0;
-        int bubbleReverse = 0;                  // ¸»²¿¸® ¹İÀü »ç¿ë
+        int bubbleReverse = 0;                  // ë§ê¼¬ë¦¬ ë°˜ì „ ì‚¬ìš©
         int holdingCount = 0;
         ScriptRow row;
         string emoticon_expression = string.Empty;
         string in_effect = string.Empty;
         string out_effect = string.Empty;
         string speaker = string.Empty;
-        string alternativeName = string.Empty; // ´ëÃ¼ ÀÌ¸§ 
+        string alternativeName = string.Empty; // ëŒ€ì²´ ì´ë¦„ 
 
-        Vector3 tweenLocalScale = Vector3.zero; // scaleX,Y¿¡ º¯È­°¡ ÀÏ¾î³µÀ»¶§ ´ë½Å »ç¿ëÇÒ Vector3
+        Vector3 tweenLocalScale = Vector3.zero; // scaleX,Yì— ë³€í™”ê°€ ì¼ì–´ë‚¬ì„ë•Œ ëŒ€ì‹  ì‚¬ìš©í•  Vector3
 
-        int speakerTall = 0;                    // È­ÀÚ-Ä³¸¯ÅÍ ¸ğµ¨ÀÇ Å°
-        bool isStandingSpeak = false;           // ¼­ÀÖ´Â Ä³¸¯ÅÍ°¡ ¸»ÇÏ´Â°Å´Ï?
-        bool isEmoticonAvailable = false;       // ÀÌ¸ğÆ¼ÄÜ expressionÀÌ ÀÖ¾îµµ, ÀÌ º¯¼ö¿¡ ÀÇÇØ¼­ »ç¿ë¿©ºÎ°¡ °áÁ¤µÇµµ·Ï ÇÑ´Ù.
+        int speakerTall = 0;                    // í™”ì-ìºë¦­í„° ëª¨ë¸ì˜ í‚¤
+        bool isStandingSpeak = false;           // ì„œìˆëŠ” ìºë¦­í„°ê°€ ë§í•˜ëŠ”ê±°ë‹ˆ?
+        bool isEmoticonAvailable = false;       // ì´ëª¨í‹°ì½˜ expressionì´ ìˆì–´ë„, ì´ ë³€ìˆ˜ì— ì˜í•´ì„œ ì‚¬ìš©ì—¬ë¶€ê°€ ê²°ì •ë˜ë„ë¡ í•œë‹¤.
+        
+        int adjustmentPosY = 0;
 
 
-        [Space][Header("ºÎ°¡ ±â´É")]
-        string options = string.Empty; // ºÎ°¡ ±â´É!
+        [Space][Header("ë¶€ê°€ ê¸°ëŠ¥")]
+        string options = string.Empty; // ë¶€ê°€ ê¸°ëŠ¥!
 
         string variation = string.Empty;        // variation 
-        JsonData currentBubbleGroup = null;     // ¹è¸®¿¡ÀÌ¼Ç¿¡ µû¸¥ ¸»Ç³¼± ±âÁØÁ¤º¸ 
-        JsonData targetBubbleJson = null;       // size, pos¿¡ ¸Â´Â Å¸°Ù JSON Object Çà 
+        JsonData currentBubbleGroup = null;     // ë°°ë¦¬ì—ì´ì…˜ì— ë”°ë¥¸ ë§í’ì„  ê¸°ì¤€ì •ë³´ 
+        JsonData targetBubbleJson = null;       // size, posì— ë§ëŠ” íƒ€ê²Ÿ JSON Object í–‰ 
         string targetBubbleDataString = string.Empty;
 
 
@@ -131,7 +133,7 @@ namespace PIERStory
         float textAreaRight = 0;
 
 
-        [Header("Ä¿½ºÅÒ Å©±â")]
+        [Header("ì»¤ìŠ¤í…€ í¬ê¸°")]
         float customSizeX = 0;
         float customSizeY = 0;
 
@@ -148,31 +150,31 @@ namespace PIERStory
         float emoticonPosY = 0;
         float emoticonScaleX = 0;
         float emoticonScaleY = 0;
-        int emoticonWidth = 0;      // ÀÌ¸ğÆ¼ÄÜ ³Êºñ 
-        int emoticonHeight = 0;     // ÀÌ¸ğÆ¼ÄÜ ³ôÀÌ
+        int emoticonWidth = 0;      // ì´ëª¨í‹°ì½˜ ë„ˆë¹„ 
+        int emoticonHeight = 0;     // ì´ëª¨í‹°ì½˜ ë†’ì´
 
 
         [Header("Nametag")]
         int tagSpriteID = -1;
-        float tagPosX = 0; // ³×ÀÓÅÂ±× À§Ä¡ x
-        float tagPosY = 0; // ³×ÀÓÅÂ±× À§Ä¡ y
+        float tagPosX = 0; // ë„¤ì„íƒœê·¸ ìœ„ì¹˜ x
+        float tagPosY = 0; // ë„¤ì„íƒœê·¸ ìœ„ì¹˜ y
         string tagMainColor = "000000FF";
         string tagSubColor = "FFFFFFFF";
         string tagText = string.Empty;
 
 
-        #region ÃÊ±âÈ­ Ã³¸®
+        #region ì´ˆê¸°í™” ì²˜ë¦¬
 
         /// <summary>
-        /// ÃÊ±âÈ­ (PoolingÀ¸·Î ¾²´Ï±î ÃÊ±âÈ­ ÁÖÀÇ)
+        /// ì´ˆê¸°í™” (Poolingìœ¼ë¡œ ì“°ë‹ˆê¹Œ ì´ˆê¸°í™” ì£¼ì˜)
         /// </summary>
         void InitTransform()
         {
-            // transform ÃÊ±âÈ­ 
+            // transform ì´ˆê¸°í™” 
             isEmoticonAvailable = false;
             rtransform.localScale = Vector3.one;
             rtransform.localEulerAngles = Vector3.zero;
-            textContents.transform.localScale = Vector3.one; // textContent localScaleÀº Áß¿äÇØÁ³´Ù. 
+            textContents.transform.localScale = Vector3.one; // textContent localScaleì€ ì¤‘ìš”í•´ì¡Œë‹¤. 
             nametag.transform.localScale = Vector3.one;
 
             imageBubble.transform.localScale = Vector3.one;
@@ -193,7 +195,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// »ö»ó ÃÊ±âÈ­ 
+        /// ìƒ‰ìƒ ì´ˆê¸°í™” 
         /// </summary>
         void InitColor()
         {
@@ -210,7 +212,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ÅØ½ºÆ®´Â ÁöÁ¤ÇÑ »ö¿¡¼­ ¹ş¾î³ªÁö ¾Ê°Ô À§ÇØ¼­ µû·Î ÇÑ´Ù. 
+        /// í…ìŠ¤íŠ¸ëŠ” ì§€ì •í•œ ìƒ‰ì—ì„œ ë²—ì–´ë‚˜ì§€ ì•Šê²Œ ìœ„í•´ì„œ ë”°ë¡œ í•œë‹¤. 
         /// </summary>
         void SetTransparentTextColor()
         {
@@ -221,9 +223,9 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ÆÄ¶ó¸ÅÅÍ ¼¼ÆÃ
+        /// íŒŒë¼ë§¤í„° ì„¸íŒ…
         /// </summary>
-        /// <param name="pos">ÀüÈ­ ÅÛÇÃ¸´ ¸»Ç³¼± À§Ä¡ °íÁ¤¿ë</param>
+        /// <param name="pos">ì „í™” í…œí”Œë¦¿ ë§í’ì„  ìœ„ì¹˜ ê³ ì •ìš©</param>
         void SetParams(ScriptRow __row, Action __cb, int pos = -1)
         {
             row = __row;
@@ -240,35 +242,35 @@ namespace PIERStory
 
             message = message.Replace(@"\", "\n");
             
-            template = __row.template;          // ÅÛÇÃ¸´ 
-            holdingCount = __row.bubble_hold;   // À¯Áö È½¼ö
-            bubbleSize = row.bubble_size;       // ¸»Ç³¼± »çÀÌÁî
+            template = __row.template;          // í…œí”Œë¦¿ 
+            holdingCount = __row.bubble_hold;   // ìœ ì§€ íšŸìˆ˜
+            bubbleSize = row.bubble_size;       // ë§í’ì„  ì‚¬ì´ì¦ˆ
 
             if (pos < 0)
-                bubblePos = row.bubble_pos;         // ¸»Ç³¼± À§Ä¡
+                bubblePos = row.bubble_pos;         // ë§í’ì„  ìœ„ì¹˜
             else
                 bubblePos = pos;
 
-            bubbleReverse = row.bubble_reverse; // ¸»Ç³¼± ¹İÀü
+            bubbleReverse = row.bubble_reverse; // ë§í’ì„  ë°˜ì „
 
-            emoticon_expression = row.emoticon_expression; // ÀÌ¸ğÆ¼ÄÜ Ç¥Çö
-            in_effect = row.in_effect; // µîÀå ¿¬Ãâ
-            out_effect = row.out_effect; // ÅğÀå ¿¬Ãâ
+            emoticon_expression = row.emoticon_expression; // ì´ëª¨í‹°ì½˜ í‘œí˜„
+            in_effect = row.in_effect; // ë“±ì¥ ì—°ì¶œ
+            out_effect = row.out_effect; // í‡´ì¥ ì—°ì¶œ
 
-            speaker = row.speaker; // È­ÀÚ Ãß°¡ 
-            alternativeName = row.controlAlternativeName; // ´ëÃ¼ÀÌ¸§ 
+            speaker = row.speaker; // í™”ì ì¶”ê°€ 
+            alternativeName = row.controlAlternativeName; // ëŒ€ì²´ì´ë¦„ 
 
-            // ÅØ½ºÆ® ¼³Á¤ 
+            // í…ìŠ¤íŠ¸ ì„¤ì • 
             textContents.SetText(message);
         }
 
         #endregion
 
-        #region ¸»Ç³¼± Å©±â Ã¼Å© ¿ëµµ °¡Â¥ ¸»Ç³¼± ¼³Á¤ 
+        #region ë§í’ì„  í¬ê¸° ì²´í¬ ìš©ë„ ê°€ì§œ ë§í’ì„  ì„¤ì • 
 
 
         /// <summary>
-        /// ¸»Ç³¼± Å©±â Ã¼Å©¿ë °¡Â¥ ¸»Ç³¼± ¼¼ÆÃÇÏ±â 
+        /// ë§í’ì„  í¬ê¸° ì²´í¬ìš© ê°€ì§œ ë§í’ì„  ì„¸íŒ…í•˜ê¸° 
         /// </summary>
         public void SetFakeBubble(ScriptRow __row, int __size)
         {
@@ -276,19 +278,19 @@ namespace PIERStory
 
             SetParams(__row, null);
 
-            bubbleSize = __size; // fake ´Â ÁöÁ¤ÇÑ size·Î ¼öµ¿ º¯°æ 
+            bubbleSize = __size; // fake ëŠ” ì§€ì •í•œ sizeë¡œ ìˆ˜ë™ ë³€ê²½ 
             if (bubblePos == 0)
                 bubblePos = BubbleManager.GetDefaultBubbleTalkPosIndex();
 
-            // ¹ŞÀº µ¥ÀÌÅÍ¸¦ ±â¹İÀ¸·Î ¸»Ç³¼± ±âÁØÁ¤º¸¸¦ ¹Ş¾Æ¿Â´Ù. 
+            // ë°›ì€ ë°ì´í„°ë¥¼ ê¸°ë°˜ìœ¼ë¡œ ë§í’ì„  ê¸°ì¤€ì •ë³´ë¥¼ ë°›ì•„ì˜¨ë‹¤. 
             SetBubbleGroup();
 
-            // ¼­¹öµ¥ÀÌÅÍ¿Í ¸ÂÃß±â 
+            // ì„œë²„ë°ì´í„°ì™€ ë§ì¶”ê¸° 
             SetBubbleSync();
 
             SetTextFontStyle();
 
-            // ¸»²¿¸® Ãß°¡ ¼³Á¤
+            // ë§ê¼¬ë¦¬ ì¶”ê°€ ì„¤ì •
             SetTail();
 
             SetBubbleEmoticon();
@@ -299,11 +301,11 @@ namespace PIERStory
 
         #endregion
 
-        #region ¸»Ç³¼± ½Å±Ô ÀÛ¾÷ 
+        #region ë§í’ì„  ì‹ ê·œ ì‘ì—… 
 
 
         /// <summary>
-        /// ¸»²¿¸® Ãß°¡ ¼³Á¤
+        /// ë§ê¼¬ë¦¬ ì¶”ê°€ ì„¤ì •
         /// </summary>
         void SetTail()
         {
@@ -313,7 +315,7 @@ namespace PIERStory
             if (GameManager.main.CompareWithCurrentSpeaker(row.speaker))
                 return;
 
-            // È­¸é¿¡ Ä³¸¯ÅÍ ¸ğµ¨ÀÌ ¾ø°í, ÀÌ¸ğÆ¼ÄÜ Ç¥ÇöÀÌ ¾øÀ¸¸é ¸»²¿¸® Á¦°Å 
+            // í™”ë©´ì— ìºë¦­í„° ëª¨ë¸ì´ ì—†ê³ , ì´ëª¨í‹°ì½˜ í‘œí˜„ì´ ì—†ìœ¼ë©´ ë§ê¼¬ë¦¬ ì œê±° 
             if (!GameManager.main.CompareWithCurrentSpeaker(row.speaker) && string.IsNullOrEmpty(emoticon_expression))
             {
                 imageTail.rectTransform.localScale = Vector3.zero;
@@ -322,7 +324,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ±âº» ÆùÆ® ½ºÅ¸ÀÏ ¼³Á¤ 
+        /// ê¸°ë³¸ í°íŠ¸ ìŠ¤íƒ€ì¼ ì„¤ì • 
         /// </summary>
         void SetTextFontStyle()
         {
@@ -363,14 +365,14 @@ namespace PIERStory
 
 
         /// <summary>
-        /// µğÆúÆ® °ªµé¿¡ ´ëÇÑ Ã³¸® 
+        /// ë””í´íŠ¸ ê°’ë“¤ì— ëŒ€í•œ ì²˜ë¦¬ 
         /// </summary>
         void SetBubbleDefaults()
         {
             if (GameManager.main == null)
                 return;
 
-            #region pos°ªÀÌ Á¤ÇØÁöÁö ¾ÊÀº °æ¿ì¿¡ ´ëÇÑ Ã³¸®
+            #region posê°’ì´ ì •í•´ì§€ì§€ ì•Šì€ ê²½ìš°ì— ëŒ€í•œ ì²˜ë¦¬
 
             if (bubblePos < 1)
             {
@@ -387,7 +389,7 @@ namespace PIERStory
             }
             #endregion
 
-            #region size °ªÀÌ Á¤ÇØÁöÁö ¾ÊÀº °æ¿ì Ã³¸® 
+            #region size ê°’ì´ ì •í•´ì§€ì§€ ì•Šì€ ê²½ìš° ì²˜ë¦¬ 
 
             if (bubbleSize < 1)
                 bubbleSize = BubbleManager.main.GetCurrentAdjustmentSize();
@@ -398,17 +400,17 @@ namespace PIERStory
 
 
         /// <summary>
-        /// ¼­¹ö ±âÁØÁ¤º¸ µû¶ó¼­ ¸»Ç³¼± ¼³Á¤ 
+        /// ì„œë²„ ê¸°ì¤€ì •ë³´ ë”°ë¼ì„œ ë§í’ì„  ì„¤ì • 
         /// </summary>
         void SetBubbleSync()
         {
 
-            #region TEXTAREA Ã³¸® 
+            #region TEXTAREA ì²˜ë¦¬ 
             float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TEXTAREA_TOP), out textAreaTop);
             float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TEXTAREA_BOTTOM), out textAreaBottom);
             float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TEXTAREA_LEFT), out textAreaLeft);
             float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TEXTAREA_RIGHT), out textAreaRight);
-            // right, topÀº - Ã³¸®ÇÑ´Ù.
+            // right, topì€ - ì²˜ë¦¬í•œë‹¤.
             textAreaTop *= -1;
             textAreaRight *= -1;
 
@@ -417,7 +419,7 @@ namespace PIERStory
             textContents.rectTransform.offsetMax = new Vector2(textAreaRight, textAreaTop);
             #endregion
 
-            #region SPRITE Ã³¸® 
+            #region SPRITE ì²˜ë¦¬ 
 
             float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_CUSTOM_SIZE_X), out customSizeX);
             float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_CUSTOM_SIZE_Y), out customSizeY);
@@ -428,20 +430,20 @@ namespace PIERStory
             imageBubble.sprite = BubbleManager.main.GetBubbleSprite(SystemManager.GetJsonNodeString(targetBubbleJson, COL_BUBBLE_SPRITE_ID)); 
             imageOutline.sprite = BubbleManager.main.GetBubbleSprite(SystemManager.GetJsonNodeString(targetBubbleJson, COL_OUTLINE_SPRITE_ID));
 
-            if (bubbleReverse > 0) // ¹İÀü 
+            if (bubbleReverse > 0) // ë°˜ì „ 
             {
                 imageTail.sprite = BubbleManager.main.GetBubbleSprite(SystemManager.GetJsonNodeString(targetBubbleJson, COL_REVERSE_TAIL_SPRITE_ID));
                 imageTailOutline.sprite = BubbleManager.main.GetBubbleSprite(SystemManager.GetJsonNodeString(targetBubbleJson, COL_REVERSE_TAIL_OUTLINE_SPRITE_ID));
 
             }
-            else // ¾È ¹İÀü 
+            else // ì•ˆ ë°˜ì „ 
             {
                 imageTail.sprite = BubbleManager.main.GetBubbleSprite(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TAIL_SPRITE_ID));
                 imageTailOutline.sprite = BubbleManager.main.GetBubbleSprite(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TAIL_OUTLINE_SPRITE_ID));
             }
 
 
-            // ÀÌ¹ÌÁö ¾øÀ¸¸é ¾Èº¸ÀÌ°Ô Ã³¸® 
+            // ì´ë¯¸ì§€ ì—†ìœ¼ë©´ ì•ˆë³´ì´ê²Œ ì²˜ë¦¬ 
             if (imageTail.sprite != null)
                 imageTail.SetNativeSize();
 
@@ -470,12 +472,12 @@ namespace PIERStory
             {
                 rtransform.sizeDelta = new Vector2(customSizeX, customSizeY);
 
-                // 2021.04.21 custom Å¸ÀÔ¿¡¼­ size°¡ 1ÀÎ °æ¿ì ±ÛÀÚ¼ö 9ÀÌÇÏÀÏ¶§ °¡·Î »çÀÌÁî °¨¼ÒÃ³¸®
-                // ¹İÀü¿¡¼­´Â Ã³¸®ÇÏÁö ¾ÊÀ½. 
-                // ´ëÈ­¿¡¼­¸¸ Ã³¸®. 
+                // 2021.04.21 custom íƒ€ì…ì—ì„œ sizeê°€ 1ì¸ ê²½ìš° ê¸€ììˆ˜ 9ì´í•˜ì¼ë•Œ ê°€ë¡œ ì‚¬ì´ì¦ˆ ê°ì†Œì²˜ë¦¬
+                // ë°˜ì „ì—ì„œëŠ” ì²˜ë¦¬í•˜ì§€ ì•ŠìŒ. 
+                // ëŒ€í™”ì—ì„œë§Œ ì²˜ë¦¬. 
                 if (bubbleSize == 1 && textContents.text.Length <= 9 && bubbleReverse < 1 && template == GameConst.TEMPLATE_TALK)
                     rtransform.sizeDelta = new Vector2(customSizeX - 66, customSizeY);
-                else // ³ª¸ÓÁö´Â ±âÀÔµÈ ¼öÄ¡´ë·Î ÇÑ´Ù
+                else // ë‚˜ë¨¸ì§€ëŠ” ê¸°ì…ëœ ìˆ˜ì¹˜ëŒ€ë¡œ í•œë‹¤
                     rtransform.sizeDelta = new Vector2(customSizeX, customSizeY);
             }
 
@@ -483,7 +485,7 @@ namespace PIERStory
             #endregion
 
 
-            #region Color Ã³¸® 
+            #region Color ì²˜ë¦¬ 
 
             fontColor = SystemManager.GetJsonNodeString(targetBubbleJson, COL_FONT_COLOR);
             fillColor = SystemManager.GetJsonNodeString(targetBubbleJson, COL_FILL_COLOR);
@@ -502,7 +504,7 @@ namespace PIERStory
 
             #endregion
 
-            #region position, scale Ã³¸® 
+            #region position, scale ì²˜ë¦¬ 
             float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_POS_X), out posX);
             float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_POS_Y), out posY);
             float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_SCALE_X), out scaleX);
@@ -524,7 +526,7 @@ namespace PIERStory
             float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_REVERSE_TAIL_SCALE_X), out reverseTailScaleX);
             float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_REVERSE_TAIL_SCALE_Y), out reverseTailScaleY);
 
-            if (bubbleReverse > 0) // ¹İÀü Ã³¸® 
+            if (bubbleReverse > 0) // ë°˜ì „ ì²˜ë¦¬ 
             {
                 imageTail.rectTransform.anchoredPosition = new Vector3(reverseTailPosX, reverseTailPosY, 0);
                 imageTail.rectTransform.localScale = new Vector3(reverseTailScaleX, reverseTailScaleY, 1);
@@ -538,18 +540,18 @@ namespace PIERStory
 
             #endregion
 
-            #region ³×ÀÓÅÂ±× È°¼ºÈ­, ½ºÇÁ¶óÀÌÆ® Ã³¸® 
+            #region ë„¤ì„íƒœê·¸ í™œì„±í™”, ìŠ¤í”„ë¼ì´íŠ¸ ì²˜ë¦¬ 
 
-            // ÀÌÀü¿¡ ·ÎÄÃ ÀúÀåµÈ µ¥ÀÌÅÍ¿¡´Â ÄÃ·³ÀÌ ¾øÀ» ¼öµµ ÀÖ´Ù.
+            // ì´ì „ì— ë¡œì»¬ ì €ì¥ëœ ë°ì´í„°ì—ëŠ” ì»¬ëŸ¼ì´ ì—†ì„ ìˆ˜ë„ ìˆë‹¤.
             if (targetBubbleJson.ContainsKey(COL_TAG_SPRITE_ID))
             {
-                // ³×ÀÓÅÂ±× ½ºÇÁ¶óÀÌÆ® ¹× À§Ä¡ Á¤º¸ ºÒ·¯¿À±â 
+                // ë„¤ì„íƒœê·¸ ìŠ¤í”„ë¼ì´íŠ¸ ë° ìœ„ì¹˜ ì •ë³´ ë¶ˆëŸ¬ì˜¤ê¸° 
                 int.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TAG_SPRITE_ID), out tagSpriteID);
                 float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TAG_POS_X), out tagPosX);
                 float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TAG_POS_Y), out tagPosY);
 
 
-                if (tagSpriteID < 0) // ³×ÀÓÅÂ±× ¾øÀ¸¸é »ç¿ëÇÏÁö ¾Ê´Â °ÍÀ¸·Î Ã³¸® 
+                if (tagSpriteID < 0) // ë„¤ì„íƒœê·¸ ì—†ìœ¼ë©´ ì‚¬ìš©í•˜ì§€ ì•ŠëŠ” ê²ƒìœ¼ë¡œ ì²˜ë¦¬ 
                     nametag.gameObject.SetActive(false);
                 else
                 {
@@ -558,9 +560,9 @@ namespace PIERStory
                     if (nametag.sprite != null)
                         nametag.SetNativeSize();
 
-                    // À§Ä¡ ¼³Á¤ÇØÁÖ±â. 
+                    // ìœ„ì¹˜ ì„¤ì •í•´ì£¼ê¸°. 
                     nametag.transform.localPosition = new Vector3(tagPosX, tagPosY, 0);
-                    nametag.color = Color.cyan; // ÀÓ½Ã ÄÃ·¯
+                    nametag.color = Color.cyan; // ì„ì‹œ ì»¬ëŸ¬
                 }
             }
             else
@@ -569,7 +571,7 @@ namespace PIERStory
 
             #endregion
 
-            #region ÀÌ¸ğÆ¼ÄÜ Ã³¸® 
+            #region ì´ëª¨í‹°ì½˜ ì²˜ë¦¬ 
 
             if (!string.IsNullOrEmpty(emoticon_expression))
             {
@@ -577,17 +579,17 @@ namespace PIERStory
                 float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_EMOTICON_POS_Y), out emoticonPosY);
                 float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_EMOTICON_SCALE_X), out emoticonScaleX);
                 float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_EMOTICON_SCALE_Y), out emoticonScaleY);
-                // ÀÌ¸ğÆ¼ÄÜ ³Êºñ, ³ôÀÌ Ãß°¡ 
+                // ì´ëª¨í‹°ì½˜ ë„ˆë¹„, ë†’ì´ ì¶”ê°€ 
                 int.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_EMOTICON_WIDTH), out emoticonWidth);
                 int.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_EMOTICON_HEIGHT), out emoticonHeight);
 
                 emoticon.rectTransform.anchoredPosition = new Vector3(emoticonPosX, emoticonPosY, 0);
                 emoticon.rectTransform.localScale = new Vector3(emoticonScaleX, emoticonScaleY, 1);
 
-                // ÀÌ¸ğÆ¼ÄÜ ³Êºñ, ³ôÀÌ Àû¿ë
+                // ì´ëª¨í‹°ì½˜ ë„ˆë¹„, ë†’ì´ ì ìš©
                 emoticon.rectTransform.sizeDelta = new Vector2(emoticonWidth, emoticonHeight);
 
-                // ¸»Ç³¼± ¼¼Æ®¿¡¼­ ÀÌ¸ğÆ¼ÄÜ Å©±â°¡ µÑ´Ù 0À¸·Î µÇ¾îÀÖÀ¸¸é »ç¿ëÇÏÁö ¾Ê´Â °ÍÀ¸·Î °£ÁÖÇÑ´Ù.
+                // ë§í’ì„  ì„¸íŠ¸ì—ì„œ ì´ëª¨í‹°ì½˜ í¬ê¸°ê°€ ë‘˜ë‹¤ 0ìœ¼ë¡œ ë˜ì–´ìˆìœ¼ë©´ ì‚¬ìš©í•˜ì§€ ì•ŠëŠ” ê²ƒìœ¼ë¡œ ê°„ì£¼í•œë‹¤.
                 if (emoticonWidth <= 0 && emoticonHeight <= 0)
                     isEmoticonAvailable = false;
                 else
@@ -596,26 +598,26 @@ namespace PIERStory
 
             #endregion
 
-            #region ¸»Ç³¼± ScaleX, ScaleY¿¡ ´ëÇÑ Ãß°¡ Ã³¸® 
+            #region ë§í’ì„  ScaleX, ScaleYì— ëŒ€í•œ ì¶”ê°€ ì²˜ë¦¬ 
 
-            // ¸»Ç³¼±°ú ²¿¸®°¡ ºĞ¸®µÈ ¼¼Æ®¿¡¼­´Â scaleX¿Í scaleY¸¦ ¸¶ÀÌ³Ê½º·Î ¼³Á¤ÇÒ ÀÏÀÌ ¾ø´Ù. 
-            // ºÙ¾îÀÖ´Â Ä£±¸µéÀÌ ¹®Á¦ÀÎµ¥...
+            // ë§í’ì„ ê³¼ ê¼¬ë¦¬ê°€ ë¶„ë¦¬ëœ ì„¸íŠ¸ì—ì„œëŠ” scaleXì™€ scaleYë¥¼ ë§ˆì´ë„ˆìŠ¤ë¡œ ì„¤ì •í•  ì¼ì´ ì—†ë‹¤. 
+            // ë¶™ì–´ìˆëŠ” ì¹œêµ¬ë“¤ì´ ë¬¸ì œì¸ë°...
 
-            // scaleX¸¦ ¹İÀü½ÃÅ°´Â °æ¿ì
-            // 1. Textµµ ¹İÀü½ÃÅ²´Ù.
-            // 2. ³×ÀÓÅÂ±×µµ ¹İÀü½ÃÅ²´Ù. 
-            // 3. ÀÌ¸ğÆ¼ÄÜÀº..? 
+            // scaleXë¥¼ ë°˜ì „ì‹œí‚¤ëŠ” ê²½ìš°
+            // 1. Textë„ ë°˜ì „ì‹œí‚¨ë‹¤.
+            // 2. ë„¤ì„íƒœê·¸ë„ ë°˜ì „ì‹œí‚¨ë‹¤. 
+            // 3. ì´ëª¨í‹°ì½˜ì€..? 
 
             if (scaleX < 0)
             {
-                // ÅØ½ºÆ® ¹İÀü½ÃÅ²´Ù.
+                // í…ìŠ¤íŠ¸ ë°˜ì „ì‹œí‚¨ë‹¤.
                 textContents.rectTransform.localScale = reverseScaleX;
 
-                // ³×ÀÓÅÂ±×µµ ¹İÀü½ÃÅ²´Ù. (³×ÀÓÅÂ±× »ç¿ëÁß¿¡¸¸)
+                // ë„¤ì„íƒœê·¸ë„ ë°˜ì „ì‹œí‚¨ë‹¤. (ë„¤ì„íƒœê·¸ ì‚¬ìš©ì¤‘ì—ë§Œ)
                 if (nametag.gameObject.activeSelf)
                 {
                     nametag.rectTransform.localScale = reverseScaleX;
-                    // position X¸¦ -1 °öÇØÁØ´Ù. 
+                    // position Xë¥¼ -1 ê³±í•´ì¤€ë‹¤. 
                     nametag.rectTransform.localPosition = new Vector3(nametag.rectTransform.localPosition.x * -1, nametag.rectTransform.localPosition.y, 0);
                 }
 
@@ -629,12 +631,12 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ¸»Ç³¼± ¹è¸®¿¡ÀÌ¼Ç ¹Ş¾Æ¿À±â 
+        /// ë§í’ì„  ë°°ë¦¬ì—ì´ì…˜ ë°›ì•„ì˜¤ê¸° 
         /// </summary>
         string GetBubbleVariation()
         {
 
-            // speaker ÀÔ·Â¾ÈµÆÀ»±îºÁ..
+            // speaker ì…ë ¥ì•ˆëì„ê¹Œë´..
             if (string.IsNullOrEmpty(row.speaker))
             {
                 Debug.LogWarning("speaker is empty");
@@ -642,28 +644,28 @@ namespace PIERStory
             }
 
 
-            // 21.05.19 ±âÁØ variation
-            // normal (1ÀÎ ½ºÅÄµù, È­ÀÚ¿Í ½ºÅÄµù Ä³¸¯ÅÍ°¡ °°À½)
-            // emoticon (È­ÀÚ¿Í ½ºÅÄµù Ä³¸¯ÅÍ°¡ ´Ù¸£°í, emoticon_expression »ç¿ë)
-            // reverse_emoticon (È­ÀÚ¿Í ½ºÅÄµù Ä³¸¯ÅÍ°¡ ´Ù¸£°í, emoticon_expression »ç¿ë, ¸»Ç³¼± ¹İÀü »ç¿ë)
-            // double (2ÀÎ ½ºÅÄµù, È­ÀÚ¿Í ½ºÅÄµù Ä³¸¯ÅÍ°¡ °°À½)
+            // 21.05.19 ê¸°ì¤€ variation
+            // normal (1ì¸ ìŠ¤íƒ ë”©, í™”ìì™€ ìŠ¤íƒ ë”© ìºë¦­í„°ê°€ ê°™ìŒ)
+            // emoticon (í™”ìì™€ ìŠ¤íƒ ë”© ìºë¦­í„°ê°€ ë‹¤ë¥´ê³ , emoticon_expression ì‚¬ìš©)
+            // reverse_emoticon (í™”ìì™€ ìŠ¤íƒ ë”© ìºë¦­í„°ê°€ ë‹¤ë¥´ê³ , emoticon_expression ì‚¬ìš©, ë§í’ì„  ë°˜ì „ ì‚¬ìš©)
+            // double (2ì¸ ìŠ¤íƒ ë”©, í™”ìì™€ ìŠ¤íƒ ë”© ìºë¦­í„°ê°€ ê°™ìŒ)
 
-            // ¼­ÀÖ´Â Ä£±¸°¡ ¸»ÇÏ´Â°ÇÁö ¸ÕÀú Ã¼Å©ÇÑ´Ù. 
+            // ì„œìˆëŠ” ì¹œêµ¬ê°€ ë§í•˜ëŠ”ê±´ì§€ ë¨¼ì € ì²´í¬í•œë‹¤. 
             isStandingSpeak = GameManager.main.CompareWithCurrentSpeaker(row.speaker);
 
-            if (isStandingSpeak) // ¼­ÀÖ´Â Ä³¸¯ÅÍ°¡ ¸»ÇÏ´Â ÁßÀÏ¶§ => double or normal 
+            if (isStandingSpeak) // ì„œìˆëŠ” ìºë¦­í„°ê°€ ë§í•˜ëŠ” ì¤‘ì¼ë•Œ => double or normal 
             {
 
-                // ½ºÅÄµùÀÌ ¸î¸íÀÎÁö¿¡ µû¸¥ ºĞ¸® 
+                // ìŠ¤íƒ ë”©ì´ ëª‡ëª…ì¸ì§€ì— ë”°ë¥¸ ë¶„ë¦¬ 
                 if (GameManager.main.CheckModelStanding() > 1)
                     return StoryManager.BUBBLE_VARIATION_DOUBLE;
                 else
                     return StoryManager.BUBBLE_VARIATION_NORMAL;
 
             }
-            else // ¼­ÀÖ´Â Ä³¸¯ÅÍ°¡ ¸»ÇÏ´Â°Ô ¾Æ´Ï´Ù => emoticon or reverse_emoticon
+            else // ì„œìˆëŠ” ìºë¦­í„°ê°€ ë§í•˜ëŠ”ê²Œ ì•„ë‹ˆë‹¤ => emoticon or reverse_emoticon
             {
-                // ÀÌ¸ğÆ¼ÄÜ Ç¥Çö °ªÀÌ ¾øÀ» °æ¿ì Ã¼Å© 
+                // ì´ëª¨í‹°ì½˜ í‘œí˜„ ê°’ì´ ì—†ì„ ê²½ìš° ì²´í¬ 
                 if (string.IsNullOrEmpty(emoticon_expression))
                 {
                     // Debug.LogWarning("emoticon_expression is empty");
@@ -679,11 +681,11 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ¸»Ç³¼± Variation Ã¼Å© ¹× ±âÁØÁ¤º¸ °¡Á®¿À±â 
+        /// ë§í’ì„  Variation ì²´í¬ ë° ê¸°ì¤€ì •ë³´ ê°€ì ¸ì˜¤ê¸° 
         /// </summary>
         void SetBubbleGroup()
         {
-            // ¹è¸®¿¡ÀÌ¼Ç ¼³Á¤ÇÏ±â 
+            // ë°°ë¦¬ì—ì´ì…˜ ì„¤ì •í•˜ê¸° 
             variation = GetBubbleVariation();
 
 
@@ -691,7 +693,7 @@ namespace PIERStory
             if (currentBubbleGroup == null)
                 Debug.LogError("Can't take bubble group json");
 
-            // ¸»Ç³¼± ±âÁØÁ¤º¸¿¡¼­ size,pos°¡ ÀÏÄ¡ÇÏ´Â Ä£±¸ °¡Á®¿À±â 
+            // ë§í’ì„  ê¸°ì¤€ì •ë³´ì—ì„œ size,posê°€ ì¼ì¹˜í•˜ëŠ” ì¹œêµ¬ ê°€ì ¸ì˜¤ê¸° 
             int groupSize = 0;
             int groupPos = 0;
             targetBubbleDataString = string.Empty;
@@ -711,21 +713,21 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ÀÌ¸ğÆ¼ÄÜ ¼³Á¤
+        /// ì´ëª¨í‹°ì½˜ ì„¤ì •
         /// </summary>
         void SetBubbleEmoticon()
         {
             emoticon.gameObject.SetActive(false);
 
-            // ÀÌ¸ğÆ¼ÄÜ ¾øÀ¸¸é ¸®ÅÏ 
+            // ì´ëª¨í‹°ì½˜ ì—†ìœ¼ë©´ ë¦¬í„´ 
             if (string.IsNullOrEmpty(emoticon_expression))
                 return;
 
-            // Ã¼Å© Ãß°¡ 
+            // ì²´í¬ ì¶”ê°€ 
             if (!isEmoticonAvailable)
                 return;
 
-            // Á¤»ó È¯°æ 
+            // ì •ìƒ í™˜ê²½ 
             emoticonMount = GameManager.main.GetEmoticonSprite(emoticon_expression);
             if (emoticonMount != null)
                 emoticon.sprite = emoticonMount.sprite;
@@ -737,16 +739,16 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// ³×ÀÓÅÂ±× ¼³Á¤ 
+        /// ë„¤ì„íƒœê·¸ ì„¤ì • 
         /// </summary>
         void SetNametag()
         {
-            // ³×ÀÓÅÂ±× ¾È¾²¸é ÇÒÇÊ¿ä ¾ø´Ù.
+            // ë„¤ì„íƒœê·¸ ì•ˆì“°ë©´ í• í•„ìš” ì—†ë‹¤.
             if (!nametag.gameObject.activeSelf)
                 return;
 
 
-            // alternativeNameÀÌ ÀÖ´Â °æ¿ì´Â alternative°¡ ¿ì¼±½ÃµÈ´Ù. 
+            // alternativeNameì´ ìˆëŠ” ê²½ìš°ëŠ” alternativeê°€ ìš°ì„ ì‹œëœë‹¤. 
             if (!string.IsNullOrEmpty(alternativeName))
             {
                 tagMainColor = StoryManager.main.GetNametagColor(alternativeName);
@@ -761,13 +763,13 @@ namespace PIERStory
             }
 
 
-            // ¿©±â±îÁö ¿Ô´Âµ¥, tagText°¡ °ªÀÌ ¾ø´Â °æ¿ì.
-            // default·Î Ã³¸®ÇØÁØ´Ù. 
+            // ì—¬ê¸°ê¹Œì§€ ì™”ëŠ”ë°, tagTextê°€ ê°’ì´ ì—†ëŠ” ê²½ìš°.
+            // defaultë¡œ ì²˜ë¦¬í•´ì¤€ë‹¤. 
             if (string.IsNullOrEmpty(tagText))
             {
                 tagMainColor = StoryManager.main.GetNametagColor(GameConst.COL_DEFAULT);
                 tagSubColor = StoryManager.main.GetNametagColor(GameConst.COL_DEFAULT, false);
-                tagText = "³×ÀÓÅÂ±×¾øÀ½";
+                tagText = "ë„¤ì„íƒœê·¸ì—†ìŒ";
             }
 
             nametag.color = HexCodeChanger.HexToColor(tagMainColor);
@@ -779,7 +781,7 @@ namespace PIERStory
         #endregion
 
         /// <summary>
-        /// ¸»Ç³¼± º¸¿©ÁÖ±â 
+        /// ë§í’ì„  ë³´ì—¬ì£¼ê¸° 
         /// </summary>
         public void ShowBubble(ScriptRow __row, Action __cb)
         {
@@ -787,55 +789,55 @@ namespace PIERStory
             InitTransform();
             SetParams(__row, __cb);
 
-            // °ªÀÌ ÁöÁ¤µÇÁö ¾ÊÀº column µé¿¡ ´ëÇÑ Ã³¸® 
+            // ê°’ì´ ì§€ì •ë˜ì§€ ì•Šì€ column ë“¤ì— ëŒ€í•œ ì²˜ë¦¬ 
             SetBubbleDefaults();
 
-            // ¹ŞÀº µ¥ÀÌÅÍ¸¦ ±â¹İÀ¸·Î ¸»Ç³¼± ±âÁØÁ¤º¸¸¦ ¹Ş¾Æ¿Â´Ù. 
+            // ë°›ì€ ë°ì´í„°ë¥¼ ê¸°ë°˜ìœ¼ë¡œ ë§í’ì„  ê¸°ì¤€ì •ë³´ë¥¼ ë°›ì•„ì˜¨ë‹¤. 
             SetBubbleGroup();
 
-            // ¼­¹öµ¥ÀÌÅÍ¿Í ¸ÂÃß±â 
+            // ì„œë²„ë°ì´í„°ì™€ ë§ì¶”ê¸° 
             SetBubbleSync();
 
-            // ÆùÆ® ½ºÅ¸ÀÏ Ã³¸® 
+            // í°íŠ¸ ìŠ¤íƒ€ì¼ ì²˜ë¦¬ 
             SetTextFontStyle();
 
-            // ¸»²¿¸® Ãß°¡ ¼³Á¤
+            // ë§ê¼¬ë¦¬ ì¶”ê°€ ì„¤ì •
             SetTail();
 
-            // ÀÌ¸ğÆ¼ÄÜ Ã³¸® 
+            // ì´ëª¨í‹°ì½˜ ì²˜ë¦¬ 
             SetBubbleEmoticon();
             if (emoticonMount != null)
                 emoticonMount.DecreaseUseCount();
 
-            // Ä³¸¯ÅÍ Å° µû¶ó¼­ À§Ä¡ Á¶Á¤ Ãß°¡ 
+            // ìºë¦­í„° í‚¤ ë”°ë¼ì„œ ìœ„ì¹˜ ì¡°ì • ì¶”ê°€ 
             SetCharacterTallAdjustment();
 
-            // ¾Æ·¡ÂÊ ¶óÀÎ ¸»Ç³¼± ÇØ»óµµ ´ëÀÀ 
+            // ì•„ë˜ìª½ ë¼ì¸ ë§í’ì„  í•´ìƒë„ ëŒ€ì‘ 
             SetBottomLinePositionAdjustment();
 
-            // ³×ÀÓÅÂ±× ¼³Á¤
+            // ë„¤ì„íƒœê·¸ ì„¤ì •
             SetNametag();
 
             OnBubble();
 
             if (!string.IsNullOrEmpty(__row.voice))
-                GameManager.main.SoundGroup[1].PlayVoice(__row.voice);          // 21.09.27 ´ëÈ­ °ü·Ã ÅÛÇÃ¸´ ¶§¿¡´Â ÀÌ°÷¿¡¼­ À½¼ºÀ» Àç»ıÇÏµµ·Ï ÇÑ´Ù
+                GameManager.main.SoundGroup[1].PlayVoice(__row.voice);          // 21.09.27 ëŒ€í™” ê´€ë ¨ í…œí”Œë¦¿ ë•Œì—ëŠ” ì´ê³³ì—ì„œ ìŒì„±ì„ ì¬ìƒí•˜ë„ë¡ í•œë‹¤
 
             __cb?.Invoke();
         }
 
 
         /// <summary>
-        /// ÀüÈ­ ÅëÈ­ ¸»Ç³¼±
+        /// ì „í™” í†µí™” ë§í’ì„ 
         /// </summary>
-        /// <param name="pos">¸»Ç³¼± À§Ä¡</param>
-        /// <param name="isSelf">true = ÀüÈ­º»ÀÎ, false = ÀüÈ­»ó´ë</param>
+        /// <param name="pos">ë§í’ì„  ìœ„ì¹˜</param>
+        /// <param name="isSelf">true = ì „í™”ë³¸ì¸, false = ì „í™”ìƒëŒ€</param>
         public void ForPhoneBubble(ScriptRow __row, Action __cb, int pos, bool isSelf)
         {
             InitTransform();
             SetParams(__row, __cb, pos);
 
-            // bubble size, pos ¼³Á¤ ¾ÈÇØµĞ °Íµé ¹Ş¾Æ¿È
+            // bubble size, pos ì„¤ì • ì•ˆí•´ë‘” ê²ƒë“¤ ë°›ì•„ì˜´
             SetBubbleDefaults();
 
             SetBubbleGroup();
@@ -850,21 +852,21 @@ namespace PIERStory
             }
             else
             {
-                #region Sync Ã³¸®
+                #region Sync ì²˜ë¦¬
 
-                #region TEXTAREA Ã³¸® 
+                #region TEXTAREA ì²˜ë¦¬ 
                 float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TEXTAREA_TOP), out textAreaTop);
                 float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TEXTAREA_BOTTOM), out textAreaBottom);
                 float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TEXTAREA_LEFT), out textAreaLeft);
                 float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_TEXTAREA_RIGHT), out textAreaRight);
 
-                // 21.08.03 ÀÓÀÇ·Î textArea °ª Ãß°¡ Á¶Á¤(ÀüÈ­»ó´ë ÅÛÇÃ¸´¸¸)
+                // 21.08.03 ì„ì˜ë¡œ textArea ê°’ ì¶”ê°€ ì¡°ì •(ì „í™”ìƒëŒ€ í…œí”Œë¦¿ë§Œ)
                 textAreaTop += 25f;
                 textAreaBottom -= 15f;
                 textAreaLeft += 40f;
                 textAreaRight += 30f;
 
-                // right, topÀº - Ã³¸®ÇÑ´Ù.
+                // right, topì€ - ì²˜ë¦¬í•œë‹¤.
                 textAreaTop *= -1;
                 textAreaRight *= -1;
 
@@ -872,14 +874,14 @@ namespace PIERStory
                 textContents.rectTransform.offsetMax = new Vector2(textAreaRight, textAreaTop);
                 #endregion
 
-                #region SPRITE Ã³¸® 
+                #region SPRITE ì²˜ë¦¬ 
 
                 imageBubble.sprite = BubbleManager.main.GetForPhoneSprite(bubbleSize);
                 imageBubble.SetNativeSize();
                 
                 #endregion
 
-                #region position, scale Ã³¸® 
+                #region position, scale ì²˜ë¦¬ 
                 float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_POS_X), out posX);
                 float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_POS_Y), out posY);
                 float.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_SCALE_X), out scaleX);
@@ -888,7 +890,7 @@ namespace PIERStory
 
                 if (!isFakeBubble)
                 {
-                    // 21.08.03 ¸»Ç³¼± XÃà À§Ä¡ º¯°æ(ÀüÈ­»ó´ë ¸»Ç³¼± ÇÑÁ¤)
+                    // 21.08.03 ë§í’ì„  Xì¶• ìœ„ì¹˜ ë³€ê²½(ì „í™”ìƒëŒ€ ë§í’ì„  í•œì •)
                     posX += 70f;
 
                     rtransform.anchoredPosition = new Vector2(posX, posY);
@@ -897,7 +899,7 @@ namespace PIERStory
 
                 #endregion
 
-                #region ÀÌ¸ğÆ¼ÄÜ Ã³¸® 
+                #region ì´ëª¨í‹°ì½˜ ì²˜ë¦¬ 
 
                 if (string.IsNullOrEmpty(emoticon_expression))
                     return;
@@ -910,11 +912,11 @@ namespace PIERStory
                 int.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_EMOTICON_WIDTH), out emoticonWidth);
                 int.TryParse(SystemManager.GetJsonNodeString(targetBubbleJson, COL_EMOTICON_HEIGHT), out emoticonHeight);
 
-                // 21.08.03 ¸»Ç³¼± ÀÌ¸ğÆ¼ÄÜ À§Ä¡ º¯°æ(ÀüÈ­»ó´ë ¸»Ç³¼± ÇÑÁ¤)
+                // 21.08.03 ë§í’ì„  ì´ëª¨í‹°ì½˜ ìœ„ì¹˜ ë³€ê²½(ì „í™”ìƒëŒ€ ë§í’ì„  í•œì •)
                 emoticonPosX -= 150f;
                 emoticonPosY = -220f;
 
-                // ¸»Ç³¼± µÚÁı¾î¼­ ¶È°°ÀÌ ¶Ç µÚÁıÀ½
+                // ë§í’ì„  ë’¤ì§‘ì–´ì„œ ë˜‘ê°™ì´ ë˜ ë’¤ì§‘ìŒ
                 emoticon.rectTransform.anchoredPosition = new Vector3(emoticonPosX, emoticonPosY, 0);
                 emoticon.rectTransform.localScale = new Vector3(emoticonScaleX, emoticonScaleY, 1);
                 emoticon.rectTransform.sizeDelta = new Vector2(emoticonWidth, emoticonHeight);
@@ -926,7 +928,7 @@ namespace PIERStory
 
                 #endregion
 
-                // ¸»Ç³¼± µÚÁı¾î Áà¼­ ±ÛÀÚµµ µÚÁıÀ½
+                // ë§í’ì„  ë’¤ì§‘ì–´ ì¤˜ì„œ ê¸€ìë„ ë’¤ì§‘ìŒ
                 textContents.rectTransform.localScale = new Vector3(textContents.rectTransform.localScale.x, textContents.rectTransform.localScale.y, textContents.rectTransform.localScale.z);
 
                 #endregion
@@ -945,10 +947,10 @@ namespace PIERStory
         }
 
 
-        #region ¸»Ç³¼± On/Off
+        #region ë§í’ì„  On/Off
 
         /// <summary>
-        /// ¸»Ç³¼± µîÀå Ã³¸® 
+        /// ë§í’ì„  ë“±ì¥ ì²˜ë¦¬ 
         /// </summary>
         public void OnBubble()
         {
@@ -959,7 +961,7 @@ namespace PIERStory
         {
             rtransform.DOKill();
 
-            // default Ã³¸®
+            // default ì²˜ë¦¬
             if (string.IsNullOrEmpty(in_effect) || in_effect == CommonConst.NONE)
             {
                 rtransform.localScale = Vector3.zero;
@@ -971,18 +973,18 @@ namespace PIERStory
                 else
                     rtransform.DOScale(1, 0.2f).SetEase(Ease.OutBack);
             }
-            if (in_effect == GameConst.INOUT_EFFECT_FADEIN) // ÆäÀÌµåÀÎ 
+            if (in_effect == GameConst.INOUT_EFFECT_FADEIN) // í˜ì´ë“œì¸ 
             {
                 InitColor();
                 SetTransparentTextColor();
                 SetFadeInImages(0.4f);
             }
-            else if (in_effect == GameConst.INOUT_EFFECT_SHAKE) // ÈçµéÈçµé
+            else if (in_effect == GameConst.INOUT_EFFECT_SHAKE) // í”ë“¤í”ë“¤
             {
                 this.gameObject.SetActive(true);
                 rtransform.DOPunchRotation(new Vector3(0, 0, 20), 0.2f, 40);
             }
-            else   // ½ºÄÉÀÏ ¾÷
+            else   // ìŠ¤ì¼€ì¼ ì—…
             {
                 rtransform.localScale = Vector3.zero;
                 this.gameObject.SetActive(true);
@@ -996,11 +998,11 @@ namespace PIERStory
 
 
         /// <summary>
-        /// ¸»Ç³¼± Á¾·á Ã³¸®
+        /// ë§í’ì„  ì¢…ë£Œ ì²˜ë¦¬
         /// </summary>
         public void OffBubble(bool immediate = false)
         {
-            // Áï½Ã Ã³¸® 
+            // ì¦‰ì‹œ ì²˜ë¦¬ 
             if (immediate)
             {
                 OnCompletedOffTween();
@@ -1026,7 +1028,7 @@ namespace PIERStory
 
 
         /// <summary>
-        /// ÆäÀÌµå¾Æ¿ô Ã³¸®
+        /// í˜ì´ë“œì•„ì›ƒ ì²˜ë¦¬
         /// </summary>
         /// <param name="__time"></param>
         void SetFadeOutImages(float __time)
@@ -1073,7 +1075,7 @@ namespace PIERStory
         #endregion
 
 
-        #region ÀüÈ­ °ü·Ã ¸»Ç³¼± On/Off
+        #region ì „í™” ê´€ë ¨ ë§í’ì„  On/Off
 
         void PhoneBubbleOn(bool isSelf)
         {
@@ -1111,46 +1113,56 @@ namespace PIERStory
         
 
         /// <summary>
-        /// µğ¹ÙÀÌ½º ½ºÅ©¸° ºñÀ²¿¡ µû¸¥ ÇÏ´Ü ¶óÀÎ ¸»Ç³¼± À§Ä¡ Á¶Á¤
+        /// ë””ë°”ì´ìŠ¤ ìŠ¤í¬ë¦° ë¹„ìœ¨ì— ë”°ë¥¸ í•˜ë‹¨ ë¼ì¸ ë§í’ì„  ìœ„ì¹˜ ì¡°ì •
         /// </summary>
         void SetBottomLinePositionAdjustment()
         {
             if (bubblePos < 7)
                 return;
+                
+            adjustmentPosY = 0;
 
 
-            // ! 7,8,9 À§Ä¡¸¸ Á¶Á¤ÇÑ´Ù. 
-            // ! ¼¼·Î°¡ ±æ¾îÁö´Â µğ¹ÙÀÌ½º´Â 7,8,9 À§Ä¡¸¦ Á¶±İ ´õ ¾Æ·¡ÂÊÀ¸·Î Ã³¸® 
-            if (SystemManager.screenRatio > 0.56f)
-                return;
+            // ! 7,8,9 ìœ„ì¹˜ë§Œ ì¡°ì •í•œë‹¤. 
+            // ! ì„¸ë¡œê°€ ê¸¸ì–´ì§€ëŠ” ë””ë°”ì´ìŠ¤ëŠ” 7,8,9 ìœ„ì¹˜ë¥¼ ì¡°ê¸ˆ ë” ì•„ë˜ìª½ìœ¼ë¡œ ì²˜ë¦¬ 
+            if (SystemManager.screenRatio < 0.56f)
+                adjustmentPosY = -100; // ê¸¸ì–´ì§€ë©´ -100
+                    
+            
+            
+            // banner ê´€ë ¨ëœ ë‚´ìš© ì¶”ê°€. 
+            // ë°°ë„ˆ ì‚¬ìš©í•˜ë©´ ì‚´ì§ ì˜¬ë ¤ì•¼í•œë‹¤.
+            if(AdManager.main.isIronSourceBannerLoad)
+                adjustmentPosY += 100; // ë‹¤ì‹œ 100 í”ŒëŸ¬ìŠ¤.
+            
 
-            // 100¸¸Å­ ¾Æ·¡·Î ÀÌµ¿ 
-            rtransform.anchoredPosition = new Vector2(posX, posY - 100);
+            // 100ë§Œí¼ ì•„ë˜ë¡œ ì´ë™ 
+            rtransform.anchoredPosition = new Vector2(posX, posY + adjustmentPosY);
 
         }
 
         /// <summary>
-        /// È­ÀÚÀÇ 'Å°'¿¡ µû¸¥ ¸»Ç³¼± À§Ä¡ Á¶Á¤ 
+        /// í™”ìì˜ 'í‚¤'ì— ë”°ë¥¸ ë§í’ì„  ìœ„ì¹˜ ì¡°ì • 
         /// </summary>
         void SetCharacterTallAdjustment()
         {
-            // Ä³¸¯ÅÍ Å°·Î ¸»Ç³¼± À§Ä¡ Á¶Á¤ÇÏ±â .
+            // ìºë¦­í„° í‚¤ë¡œ ë§í’ì„  ìœ„ì¹˜ ì¡°ì •í•˜ê¸° .
             if (string.IsNullOrEmpty(row.speaker))
                 return;
 
-            // µÎ¹øÂ° ¿­±îÁö¸¸ Á¶Á¤ 
+            // ë‘ë²ˆì§¸ ì—´ê¹Œì§€ë§Œ ì¡°ì • 
             if (bubblePos > 6)
                 return;
 
 
-            // ½ºÅÄµùÀÌ ÀÖÀ»¶§¸¸ Å° Ã¼Å©¸¦ ÇÑ´Ù.
+            // ìŠ¤íƒ ë”©ì´ ìˆì„ë•Œë§Œ í‚¤ ì²´í¬ë¥¼ í•œë‹¤.
             if (GameManager.main.CheckModelStanding() < 1)
                 return;
 
-            // Å° °¡Á®¿À±â 
+            // í‚¤ ê°€ì ¸ì˜¤ê¸° 
             speakerTall = GameManager.main.GetCurrentModelTall(row.speaker);
 
-            // Å° ³ôÀÌ¿¡ ÀÇÇÑ ¸»Ç³¼± À§Ä¡ Á¶Àı
+            // í‚¤ ë†’ì´ì— ì˜í•œ ë§í’ì„  ìœ„ì¹˜ ì¡°ì ˆ
             switch (speakerTall)
             {
                 case 0:
@@ -1168,7 +1180,7 @@ namespace PIERStory
                 case 4:
                     rtransform.anchoredPosition = new Vector2(posX, posY - 30);
                     break;
-                // Ä³¸¯ÅÍ Å° µî±ŞÀÌ 5ÀÌ»óÀÌ¸é Á¶Á¤ÇÏÁö ¾ÊÀ½ 
+                // ìºë¦­í„° í‚¤ ë“±ê¸‰ì´ 5ì´ìƒì´ë©´ ì¡°ì •í•˜ì§€ ì•ŠìŒ 
                 case 5:
                 default:
                     break;

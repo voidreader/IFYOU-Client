@@ -844,8 +844,10 @@ namespace PIERStory
                     else {
                         
                         // 없는 리소스 허용하면, true 리턴 
+                        /*
                         if(SystemManager.main.allowMissingResource)
                             return true;
+                        */  
                         
                         // * AWS S3의 경우, 리소스가 없는 경우에 대해서는 request는 완료,
                         // * response에서 fail을 준다. 

@@ -48,6 +48,8 @@ namespace PIERStory
             // 게임 매니저에서 에피소드 스크립트 정보 가져올 때까지 대기
             yield return new WaitUntil(() => GameManager.main.isScriptFetch);
             Debug.Log("<color=cyan>Script Fetched</color>");
+            
+            StartCoroutine(RoutineDebugLoading());
 
             if (GameManager.main.loadingJson.Count > 0) {
                 loadingImage.SetDownloadURL(SystemManager.GetJsonNodeString(GameManager.main.loadingJson[0], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(GameManager.main.loadingJson[0], CommonConst.COL_IMAGE_KEY));
@@ -75,6 +77,13 @@ namespace PIERStory
             
 
             Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_GAME, "gameLoadingComplete", string.Empty);
+        }
+        
+        IEnumerator RoutineDebugLoading() {
+            while(!GameManager.main.GetCurrentPageInitialized()) {
+                yield return new WaitForSeconds(1);
+                Debug.Log(GameManager.main.GetDebugDouwnloadFactor());
+            }
         }
 
         public void OnPointerClick(PointerEventData eventData)

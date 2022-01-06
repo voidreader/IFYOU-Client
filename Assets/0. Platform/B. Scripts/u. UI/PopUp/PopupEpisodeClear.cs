@@ -93,7 +93,7 @@ namespace PIERStory {
         /// <param name="request"></param>
         /// <param name="response"></param>
         void OnDoubleReward(HTTPRequest request, HTTPResponse response) {
-            if(NetworkLoader.CheckResponseValidation(request, response)) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
                 return;
             }
             

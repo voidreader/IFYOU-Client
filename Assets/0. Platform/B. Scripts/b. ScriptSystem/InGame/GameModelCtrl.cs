@@ -42,7 +42,7 @@ namespace PIERStory
 
 
         [Header("Character tall")]
-        public int tallGrade = 0; // 0~4
+        public int tallGrade = -1; // 0~4
 
         float height, width;
 
@@ -565,6 +565,7 @@ namespace PIERStory
         /// </summary>
         public void SetTall(int __grade)
         {
+            // 제일 높은 키를 체크한다. 
             if (tallGrade >= __grade)
                 return;
 
@@ -578,6 +579,7 @@ namespace PIERStory
         {
             if (model == null)
                 return;
+                
 
             BoxCollider box = null;
 
@@ -588,6 +590,33 @@ namespace PIERStory
                     box.enabled = false;
             }
         }
+        
+        
+        /// <summary>
+        /// 충돌체 설정하기 
+        /// </summary>
+        public void SetBoxColliders()
+        {
+            if (model == null) {
+                Debug.Log(this.originModelName + " is not created");
+                return;
+            }
+
+            // 모든 drawables에 boxCollider 추가 
+            for (int i = 0; i < model.Drawables.Length; i++)
+                model.Drawables[i].gameObject.AddComponent<BoxCollider>();
+                
+            // ! 컬라이더 붙이고 없애는데 프레임 딜레이 필요하다.
+        }
+        
+        IEnumerator DelayRemoveColliders() {
+            yield return new WaitForFixedUpdate();
+            
+            RemoveColliders();
+        }
+        
+        
+        
     }
 
 }

@@ -77,8 +77,10 @@ namespace PIERStory {
             
             for(int i=0; i<ListStacks.Count;i++) {
                 
-                if(ListStacks[i] == __selected)
+                if(ListStacks[i] == __selected) {
+                    Debug.Log("SetOtherSelectionState pass itself");
                     continue;
+                }
                     
                 ListStacks[i].SetState(__state);
             }
@@ -272,8 +274,8 @@ namespace PIERStory {
                     
                     SetOtherSelectionState(this, SelectionState.Out); 
                     // 파티클
-                    particleSelect.gameObject.SetActive(true);
-                    particleSelect.Play();
+                    //particleSelect.gameObject.SetActive(true);
+                    //particleSelect.Play();
                 });
                 
                 imageBar.DOKill();

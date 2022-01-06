@@ -1326,12 +1326,12 @@ namespace PIERStory
         public static bool GetJsonNodeBool(JsonData __node, string __col) {
             
             if (__node == null || !__node.ContainsKey(__col)) {
-                Debug.Log(string.Format("Error : {0} is not a node", __col));
+                Debug.Log(string.Format("Error : [{0}] is not a node", __col));
                 return false;
             }
                 
             if (__node[__col] == null) {
-                Debug.Log(string.Format("Error : {0} is null", __col));
+                Debug.Log(string.Format("Error : [{0}] is null", __col));
                 return false;
             }
             

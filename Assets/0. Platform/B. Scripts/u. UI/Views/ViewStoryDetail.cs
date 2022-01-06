@@ -75,6 +75,8 @@ namespace PIERStory {
             UserManager.OnRequestEpisodeReset = this.OnStartView;
             UserManager.OnFreepassPurchase = this.SetFreepassInfo;
             RefreshStoryDetail = this.OnStartView;
+            
+            // SetScrollTop();
         }
         
         public override void OnStartView() {

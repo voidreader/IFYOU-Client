@@ -1,4 +1,4 @@
-#region Header
+ï»¿#region Header
 /**
  * JsonMapper.cs
  *   JSON to .Net object and object to JSON conversions.
@@ -948,7 +948,7 @@ namespace LitJson
         }
 
         /// <summary>
-        /// À¯´ÏÄÚµå ÇÑ±Û·Î º¸ÀÌµµ·Ï ÇÏ±â!
+        /// ìœ ë‹ˆì½”ë“œ í•œê¸€ë¡œ ë³´ì´ë„ë¡ í•˜ê¸°!
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>

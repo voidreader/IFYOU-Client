@@ -293,6 +293,9 @@ namespace PIERStory {
             
             Debug.Log("CallCategoryList : " + __genre);
             
+            if(NoInterestStory == null)
+                return;
+            
             NoInterestStory.SetActive(false);
             
             

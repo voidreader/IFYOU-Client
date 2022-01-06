@@ -73,13 +73,16 @@ namespace PIERStory {
             // 이미지 fillAmount 추가
             switch(step) {
                 case 1:
-                progressBar.DOFillAmount(0.3f, 0.1f);
+                //progressBar.DOFillAmount(0.3f, 0.1f);
+                progressBar.fillAmount = 0.3f;
                 break;
                 case 2:
-                progressBar.DOFillAmount(0.7f, 0.1f);
+                // progressBar.DOFillAmount(0.7f, 0.1f);
+                progressBar.fillAmount = 0.7f;
                 break;
                 case 3:
-                progressBar.DOFillAmount(1f, 0.1f);
+                // progressBar.DOFillAmount(1f, 0.1f);
+                progressBar.fillAmount = 1;
                 break;
             
             }
@@ -127,7 +130,7 @@ namespace PIERStory {
             yield return new WaitUntil(()=> totalDownloadingImageCount <= 0);
             
             // 게이지 다 찰때까지 기다린다.
-            yield return new WaitUntil(()=> progressBar.fillAmount >= 1);
+            // yield return new WaitUntil(()=> progressBar.fillAmount >= 1);
          
             // 준비 끝났으면 signal 전송 
             Signal.Send(LobbyConst.STREAM_IFYOU, "moveMain", "open!");

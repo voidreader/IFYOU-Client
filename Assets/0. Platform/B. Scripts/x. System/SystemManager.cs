@@ -1676,10 +1676,22 @@ namespace PIERStory
         }
         
         public void ShowDefaultWebview(string __url) {
+            
+            
+            // defaultWebview.OnShouldClose = OnWebviewClosed;
+            
+            
             defaultWebview.Load(__url);
+            
+            
+            
             defaultWebview.Show();
         }
         
+        
+        void OnWebviewClosed(UniWebView __view) {
+            
+        }
         
         
          

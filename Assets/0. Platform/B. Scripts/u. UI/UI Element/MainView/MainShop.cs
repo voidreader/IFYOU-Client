@@ -22,12 +22,15 @@ namespace PIERStory {
             string finalURL = SystemManager.main.coinShopURL + uidParam + langParam;
             Debug.Log("Coinshop : " + finalURL);
             
-            var color = new Color(1, 0.83f, 0.83f);
+            SystemManager.main.ShowDefaultWebview(finalURL);
+            
+            // var color = new Color(1, 0.83f, 0.83f);
+            /*
             if(UniWebViewSafeBrowsing.IsSafeBrowsingSupported) {
                 Debug.Log("Safe Browsing Support");
             
                 var safeBrowsing = UniWebViewSafeBrowsing.Create(finalURL);
-                UniWebView v;
+                
                 // v.SetShowToolbar()
                 safeBrowsing.SetToolbarColor(color);
                 safeBrowsing.SetToolbarItemColor(Color.white);
@@ -41,6 +44,7 @@ namespace PIERStory {
                 SystemManager.main.ShowDefaultWebview(finalURL);
                 
             }
+            */
             
         }
     }

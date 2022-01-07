@@ -90,8 +90,17 @@ namespace PIERStory
         public void SkipScene()
         {
             // 스킵이 가능하지 않으면 아무것도 실행하지 않는다.
-            if (!GameManager.main.skipable)
+            if (!GameManager.main.skipable) {
+                OnClickBlockSkip();
                 return;
+            }
+            
+            
+            // 선택지 도중에서는 스킵할 수 없음.
+            if(GameManager.main.isSelectionInputWait) {
+                SystemManager.ShowAlert(SystemManager.GetLocalizedText("6102"));
+                return;    
+            }
 
             // 시간 흐름중 스킵하면 시간흐름용 fadeImage를 비활성화 해버린다
             if (GameManager.main.currentRow.template.Equals(GameConst.TEMPLATE_FLOWTIME))
@@ -100,6 +109,8 @@ namespace PIERStory
             GameManager.main.useSkip = true;
             GameManager.main.isThreadHold = false;
             GameManager.main.isWaitingScreenTouch = false;
+            
+            Doozy.Runtime.UIManager.Input.BackButton.Fire(); // 백버튼 발동처리
         }
 
         public void OnClickBlockSkip()

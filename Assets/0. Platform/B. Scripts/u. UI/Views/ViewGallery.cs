@@ -83,7 +83,14 @@ namespace PIERStory
             }
 
             totalCollection.text = string.Format("전체 수집률({0}/{1}", openIllust, totalIllust);
-            float illustPrgressPercent = (float)openIllust / (float)totalIllust;
+            float illustPrgressPercent = 0;
+            
+            if(openIllust == 0 || totalIllust == 0) 
+                illustPrgressPercent = 0;
+            else 
+                illustPrgressPercent = (float)openIllust / (float)totalIllust;
+            
+            
             totalCollectionPercentage.text = string.Format("{0}%", Mathf.Round(illustPrgressPercent * 100));
             illustProgress.fillAmount = illustPrgressPercent;
 

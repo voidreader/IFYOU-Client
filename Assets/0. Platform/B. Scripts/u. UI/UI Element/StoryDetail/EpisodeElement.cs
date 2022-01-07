@@ -77,13 +77,13 @@ namespace PIERStory {
             thumbnailImage.SetDownloadURL(episodeData.squareImageURL, episodeData.squareImageKey);
             
             // 타이틀 
-            textEpisodeTitle.text = episodeData.combinedEpisodeTitle;
-            textEpisodeNumbering.text = SystemManager.GetLocalizedText("6090");
+            textEpisodeTitle.text = episodeData.episodeTitle;
+            textEpisodeNumbering.text = string.Empty;
             
             // 에피소드 타입에 따라. 
             switch(episodeData.episodeType) {
                 case EpisodeType.Chapter:
-                textEpisodeNumbering.text = SystemManager.GetLocalizedText("5027");
+                textEpisodeNumbering.text = string.Format(SystemManager.GetLocalizedText("6090"), episodeData.episodeNO);
                 break;
                 
                 case EpisodeType.Side:

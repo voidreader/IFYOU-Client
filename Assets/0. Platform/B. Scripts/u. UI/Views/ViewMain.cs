@@ -46,6 +46,7 @@ namespace PIERStory {
         public GameObject standingObjectPrefab;
         public Transform textObjectParent;
         public GameObject textObjectPrefab;
+        bool decoMode = true;       // true = 꾸미기 모드, false = 프로필 꾸미기
         List<GameObject> createObject = new List<GameObject>();
 
         [Header("더보기")]
@@ -428,15 +429,16 @@ namespace PIERStory {
                 {
                     DecoTextElement textElement = Instantiate(textObjectPrefab, textObjectParent).GetComponent<DecoTextElement>();
                     textElement.SetProfileText(profileText[i]);
-                    textElement.inputField.interactable = false;     // 프로필 페이지에서 텍스트가 편집되면 안돼!
                     textElement.GetComponent<Image>().raycastTarget = false;
                     createObject.Add(textElement.gameObject);
                 }
             }
         }
 
-        public void OnClickDecoMode()
+        public void OnClickDecoMode(bool __decoMode)
         {
+            decoMode = __decoMode;
+
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = LobbyConst.FUNC_GET_PROFILE_CURRENCY_OWN_LIST;
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
@@ -454,7 +456,11 @@ namespace PIERStory {
 
             // 통신이 완료된 후, 사용자가 소지하고 있는 프로필 재화 정보를 받은 뒤, 페이지를 넘긴다.
             UserManager.main.userProfileCurrency = JsonMapper.ToObject(res.DataAsText);
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_DECO_MODE, string.Empty);
+
+            if(decoMode)
+                Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_DECO_MODE, string.Empty);
+            else
+                Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_PROFILE_DECO, string.Empty);
         }
 
         #endregion

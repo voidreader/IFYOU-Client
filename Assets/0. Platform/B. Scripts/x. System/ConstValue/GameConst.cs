@@ -30,6 +30,9 @@ namespace PIERStory
         public const float normalDelay = 3f;
         public const float slowDelay = 5f;
 
+        public const string POPUP_ENDING_ALERT = "EndingAlert";
+        public const string POPUP_SIDE_ALERT = "SideAlert";
+
         public const string SIGNAL_EPISODE_END = "episodeEnd";
         public const string SIGNAL_NEXT_DATA = "nextData";
         public const string SIGNAL_UPDATE_EPISODE = "updateCurrentData";

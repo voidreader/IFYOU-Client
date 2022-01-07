@@ -11,6 +11,11 @@ namespace PIERStory
     public class ViewGallery : CommonView
     {
         public static Action<bool> OnDelayIllustOpen = null;
+        [Header("Top tab")]
+        public Image illustToggleBG;
+        public Image soundToggleBG;
+        public TextMeshProUGUI illustToggleText;
+        public TextMeshProUGUI soundToggleText;
 
         [Header("Illust part")]
         public GameObject IllustScroll;
@@ -125,12 +130,25 @@ namespace PIERStory
 
         public void EnableIllustList()
         {
+            if (LobbyManager.main == null)
+                return;
+
+            illustToggleBG.sprite = LobbyManager.main.spriteGenreOn;
+            soundToggleBG.sprite = LobbyManager.main.spriteGenreOff;
+            illustToggleText.color = LobbyManager.main.colorGenreOn;
+            soundToggleText.color = LobbyManager.main.colorGenreOff;
+
             IllustScroll.SetActive(true);
             soundScroll.SetActive(false);
         }
 
         public void EnableSoundList()
         {
+            illustToggleBG.sprite = LobbyManager.main.spriteGenreOff;
+            soundToggleBG.sprite = LobbyManager.main.spriteGenreOn;
+            illustToggleText.color = LobbyManager.main.colorGenreOff;
+            soundToggleText.color = LobbyManager.main.colorGenreOn;
+
             IllustScroll.SetActive(false);
             soundScroll.SetActive(true);
         }

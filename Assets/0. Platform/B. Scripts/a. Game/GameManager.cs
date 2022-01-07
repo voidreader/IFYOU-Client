@@ -124,6 +124,7 @@ namespace PIERStory
         public Sprite spriteSelectionUnlockIcon = null;
         public Sprite spriteIllustPopup = null;             // 일러스트 획득 팝업 아이콘
 
+
         // 자동 재생
         public bool isAutoPlay = false;
         
@@ -1789,8 +1790,9 @@ namespace PIERStory
                 Debug.LogError("No Popup");
                 return;
             }
-            
-            popup.Data.SetLabelsTexts(illustName);
+
+            popup.Data.SetImagesSprites(spriteIllustPopup);
+            popup.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("5085"), illustName));
             popup.Show();
             
         }
@@ -1856,20 +1858,50 @@ namespace PIERStory
             // 다음 에피소드가 엔딩인 경우
             if (nextEpisodeData != null && nextEpisodeData.episodeType == EpisodeType.Ending)
             {
-                // ViewGame에 UIContainer를 넣어서 Show, Hide 해준다
-                // 추후 추가해서
-                // ! 엔딩 오픈 팝업 호출 
-                // ! 종료 대기 처리 필요 
-                ViewGame.main.ShowEndingContainer(nextEpisodeData);
-                yield return new WaitForSeconds(0.2f);
-                yield return new WaitUntil(() => ViewGame.main.totalContainer.isHidden);
+                PopupBase endingPopup = PopupManager.main.GetPopup(GameConst.POPUP_ENDING_ALERT);
+
+                string endingType = string.Empty;
+
+                if (nextEpisodeData.endingType == LobbyConst.COL_HIDDEN)
+                    endingType = SystemManager.GetLocalizedText("5087");
+                else
+                    endingType = SystemManager.GetLocalizedText("5088");
+
+                endingPopup.Data.SetLabelsTexts(endingType, string.Format("\"{0}\"로 이어집니다.", nextEpisodeData.episodeTitle));
+                PopupManager.main.ShowPopup(endingPopup, true, false);
+                yield return new WaitUntil(() => PopupManager.main.PopupQueue.Count < 1);
             }
-            
-            
+
+            // 완료 통신을 하고 나면 사이드 해금을 체크할 수 있다
+            JsonData sideData = UserManager.main.GetNodeUnlockSide();
+
+            // 사이드 해금이 있는 경우
+            if (sideData != null && sideData.Count > 0)
+            {
+                PopupBase sidePopup = PopupManager.main.GetPopup(GameConst.POPUP_SIDE_ALERT);
+
+                for (int i = 0; i < sideData.Count; i++)
+                {
+                    string sideId = SystemManager.GetJsonNodeString(sideData[i], CommonConst.COL_EPISODE_ID);
+
+                    for (int j = 0; j < StoryManager.main.SideEpisodeList.Count; j++)
+                    {
+                        if (StoryManager.main.SideEpisodeList[j].episodeID.Equals(sideId))
+                        {
+                            sidePopup.Data.SetLabelsTexts(string.Format("\"{0}\" 열렸습니다", StoryManager.main.SideEpisodeList[j].episodeTitle));
+                            PopupManager.main.ShowPopup(sidePopup, true, false);
+                            break;
+                        }
+                    }
+                }
+
+                yield return new WaitUntil(() => PopupManager.main.PopupQueue.Count < 1);
+            }
+
+
             Debug.Log("Signal Send for Episode END !!!!!!");
 
             // * 엔딩 연출 끝나면 아래 진행 (없으면 그냥 진행)
-            // Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_UPDATE_EPISODE, currentEpisodeData, string.Empty);
             Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_DATA, nextEpisodeData, string.Empty); // 다음 에피소드 전달 
             Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, currentEpisodeData, string.Empty); // 현재 에피소드 전달
         }

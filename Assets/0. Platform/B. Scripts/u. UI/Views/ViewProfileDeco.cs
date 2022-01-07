@@ -142,7 +142,6 @@ namespace PIERStory
                 {
                     DecoTextElement textElement = Instantiate(textObjectPrefab, textObjects).GetComponent<DecoTextElement>();
                     textElement.SetProfileText(profileText[i]);
-                    textElement.inputField.enabled = false;
                     createObject.Add(textElement.gameObject);
                 }
             }

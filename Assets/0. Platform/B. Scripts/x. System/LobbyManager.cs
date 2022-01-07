@@ -119,13 +119,13 @@ namespace PIERStory {
         }
         
         private void Update() {
+
             /*
             if(Input.GetKeyDown(KeyCode.O)) {
                 PopupBase popup = PopupManager.main.GetPopup("AchivementIllust");
                 popup.Data.SetLabelsTexts("가짜이름");
                 PopupManager.main.ShowPopup(popup, true, false);
             }
-            
             if(Input.GetKeyDown(KeyCode.C)) {
                 //SystemManager.ShowConfirmPopUp("TEST", null, null);
                 PopupBase p = PopupManager.main.GetPopup("PremiumPass");

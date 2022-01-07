@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 
 using TMPro;
-using LitJson;
+using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
 
 namespace PIERStory
@@ -29,11 +29,12 @@ namespace PIERStory
         {
             base.OnStartView();
 
-            
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
+
             OnRequestCalcAllProejctDataSize = CalcAllProjectDataSize;
             OnRequestCalcAllProejctDataSize?.Invoke();
 
-            for(int i=0;i<StoryManager.main.listTotalStory.Count;i++)
+            for (int i = 0; i < StoryManager.main.listTotalStory.Count; i++)
             {
                 string path = Application.persistentDataPath + "/" + StoryManager.main.listTotalStory[i].projectID;
                 dirInfo = new DirectoryInfo(path);
@@ -50,6 +51,29 @@ namespace PIERStory
                     projectPrefabs.Add(projectElement.gameObject);
                 }
             }
+        }
+
+        public override void OnView()
+        {
+            base.OnView();
+
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5046"), string.Empty);
+        }
+
+        public override void OnHideView()
+        {
+            base.OnHideView();
+
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
+
+            foreach (GameObject g in projectPrefabs)
+                Destroy(g);
+
+            projectPrefabs.Clear();
         }
 
         void CalcAllProjectDataSize()
@@ -85,11 +109,13 @@ namespace PIERStory
             // 전체 데이터가 0이하면 아무것도 실행하지 않는다
             if (totalDataSize < 1)
                 return;
+
+            DeleteAllProjectData();
         }
 
         void DeleteAllProjectData()
         {
-            for(int i=0;i<StoryManager.main.listTotalStory.Count;i++)
+            for (int i = 0; i < StoryManager.main.listTotalStory.Count; i++)
             {
                 // 프로젝트 폴더 경로
                 string path = Application.persistentDataPath + "/" + StoryManager.main.listTotalStory[i].projectID;

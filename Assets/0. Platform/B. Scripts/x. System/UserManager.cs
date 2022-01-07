@@ -114,6 +114,7 @@ namespace PIERStory
         
         JsonData currentStoryMissionJSON = null; // 현재 선택한 스토리의 미션 JSON
         public Dictionary<string, MissionData> DictStoryMission; // 미션 Dictionary
+        public Sprite spriteMissionPopup;       // 미션 팝업에서 사용되는 아이콘
 
         #region static const 
 
@@ -861,17 +862,9 @@ namespace PIERStory
                 Debug.Log("Mission : " + JsonMapper.ToStringUnicode(currentMissionData)); // 체크용도 
              
              
-                // 미션 썸네일과 이름 설정 
-                Texture2D t = SystemManager.GetLocalTexture2D(SystemManager.GetJsonNodeString(currentMissionData, "image_key"));
-
-                if (t != null)
-                {
-                    Sprite s = Sprite.Create(t, new Rect(0, 0, t.width, t.height), new Vector2(0.5f, 0.5f));
-                    popUp.Data.SetImagesSprites(s);
-                }
-
                 // AppsFlyerSDK.AppsFlyer.sendEvent("MISSION_CLEAR_"+ currentMissionData["mission_id"].ToString(), null);
-                popUp.Data.SetLabelsTexts(SystemManager.GetLocalizedText("5086"), currentMissionData["mission_name"].ToString());
+                popUp.Data.SetImagesSprites(spriteMissionPopup);
+                popUp.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("5086"), currentMissionData["mission_name"].ToString()));
                 PopupManager.main.ShowPopup(popUp, true, false);
                 Debug.Log("Show Mission Popup");   
             }

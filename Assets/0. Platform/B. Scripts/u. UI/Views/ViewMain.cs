@@ -390,6 +390,7 @@ namespace PIERStory {
 
             if (profileCurrency.Count > 0)
             {
+                bool hasBG = false, hasPortrait = false;
                 // currency List 화면에 배포
                 for (int i = 0; i < profileCurrency.Count; i++)
                 {
@@ -399,6 +400,7 @@ namespace PIERStory {
                             background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY), true);
                             background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_POS_X)), 0f);
                             background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_HEIGHT)));
+                            hasBG = true;
                             break;
 
                         case LobbyConst.NODE_BADGE:
@@ -417,6 +419,7 @@ namespace PIERStory {
 
                         case LobbyConst.NODE_PORTRAIT:
                             profilePortrait.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY));
+                            hasPortrait = true;
                             break;
                         case LobbyConst.NODE_FRAME:
                             profileFrame.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY), true);
@@ -424,8 +427,12 @@ namespace PIERStory {
                     }
                 }
 
-                // 프로필 사진 지정 안해서 해당 key값이 없는 경우
-                if (!profileCurrency.ContainsKey(LobbyConst.NODE_PORTRAIT))
+                // 배경을 지정하지 않은 경우
+                if (!hasBG)
+                    background.SetTexture2D(null);
+
+                // 프로필 사진 지정 안한 경우
+                if (!hasPortrait)
                     profilePortrait.SetTexture2D(null);
             }
 

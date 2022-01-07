@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3996476879530058954}
   - component: {fileID: 5135437818085352079}
   - component: {fileID: 3587945834296183236}
+  - component: {fileID: 5186937748211254799}
   m_Layer: 5
   m_Name: textName
   m_TagString: Untagged
@@ -134,6 +135,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5186937748211254799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 210741821859436239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _textID: 5131
+  _text: {fileID: 3587945834296183236}
 --- !u!1 &1580408364157812554
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,8 +162,8 @@ GameObject:
   - component: {fileID: 1270866547668670733}
   - component: {fileID: 1005049142357573343}
   - component: {fileID: 2628753676383716057}
-  - component: {fileID: 5252015583516641812}
   - component: {fileID: 2092655888609489500}
+  - component: {fileID: 6040031583270512340}
   m_Layer: 5
   m_Name: Toggle - Navigation
   m_TagString: Untagged
@@ -359,6 +374,31 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: Show
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: PIERStory.ViewMain, Assembly-CSharp
+          m_MethodName: OnClickTabNavigation
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnToggleOffCallback:
     Enabled: 1
     EventName: OnToggleOffCallback
@@ -369,6 +409,19 @@ MonoBehaviour:
         - m_Target: {fileID: 2628753676383716057}
           m_TargetAssemblyTypeName: PIERStory.MainToggleNavigation, Assembly-CSharp
           m_MethodName: OffToggle
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: Hide
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -396,14 +449,6 @@ MonoBehaviour:
   textName: {fileID: 3587945834296183236}
   icon: {fileID: 1730125010450277589}
   mainNavigationType: 0
---- !u!222 &5252015583516641812
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1580408364157812554}
-  m_CullTransparentMesh: 1
 --- !u!114 &2092655888609489500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,6 +479,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!222 &6040031583270512340
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1580408364157812554}
+  m_CullTransparentMesh: 1
 --- !u!1 &4272697301581080944
 GameObject:
   m_ObjectHideFlags: 0

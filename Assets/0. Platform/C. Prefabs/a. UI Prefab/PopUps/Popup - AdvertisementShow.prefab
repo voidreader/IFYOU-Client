@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 4
+  OnStartBehaviour: 0
   OnShowCallback:
     Enabled: 1
     EventName: OnShowCallback
@@ -140,7 +140,7 @@ MonoBehaviour:
   UseCustomStartPosition: 0
   AutoHideAfterShow: 0
   AutoHideAfterShowDelay: 0
-  DisableGameObjectWhenHidden: 0
+  DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
 --- !u!225 &778640314223155235
@@ -1576,6 +1576,8 @@ MonoBehaviour:
     Buttons: []
     Images: []
     Labels: []
+    imageURL: 
+    imageKey: 
   overlay: {fileID: 778640314241410305}
   content: {fileID: 778640314223155234}
   autoDestroyTime: 0

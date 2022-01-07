@@ -11,6 +11,8 @@ namespace PIERStory {
         [SerializeField] Image progressBar;
         [SerializeField] float timer = 0;
         
+        bool isInvoked = false;
+        
         public override void Show() {
             base.Show();
             
@@ -40,7 +42,11 @@ namespace PIERStory {
         public override void Hide() {
             base.Hide();
             
+            if(isInvoked)
+                return;
+            
             AdManager.OnShowAdvertisement?.Invoke();
+            isInvoked = true;
         }
     }
 }

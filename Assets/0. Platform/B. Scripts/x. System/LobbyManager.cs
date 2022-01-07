@@ -145,22 +145,9 @@ namespace PIERStory {
             }
             */
             
-            if(Input.GetKeyDown(KeyCode.R)) {
-                JsonData data = new JsonData();
-                data["current"] = JsonMapper.ToObject("{}");
-                data["before"] = JsonMapper.ToObject("{}");
-                
-                data["current"]["level"] = 3;
-                data["current"]["experience"] = 17;
-                
-                data["before"]["level"] = 3;
-                data["before"]["experience"] = 7;
-                data["before"]["get_experience"] = 10;
-                
-                PopupBase p =  PopupManager.main.GetPopup("EXP");
-                p.Data.SetContentJson(data);
-                
-                PopupManager.main.ShowPopup(p, false, false);
+            
+            if(Input.GetKeyDown(KeyCode.R)) { // 경험치 획득 
+                NetworkLoader.main.UpdateUserExp(50, "event", -1);
             }
         }
 

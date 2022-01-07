@@ -21,6 +21,7 @@ namespace PIERStory {
         
         JsonData beforeData = null; // 경험치 획득 전 
         JsonData currentData = null; // 경험치 획득 후 
+        JsonData rewardData = null;
          
         [SerializeField] int maxExp = 0; // 이전 레벨의 최대 경험치 
         
@@ -31,6 +32,8 @@ namespace PIERStory {
         [Space]
         [SerializeField] int currentLevel = 0; // 현재 레벨 
         [SerializeField] int beforeLevel = 0; // 이전 레벨
+        
+        [SerializeField] bool isLevelUpExpected = false;
         
         void Update() {
             if(content.inTransition)
@@ -51,8 +54,14 @@ namespace PIERStory {
             }
             
             // 
-            beforeData = Data.contentJson["before"];
-            currentData = Data.contentJson["current"];
+            beforeData = Data.contentJson["before"]; // 경험치 얻기 전 
+            currentData = Data.contentJson["current"]; // 경험치 얻은 후 
+            rewardData = null;
+            
+            // 보상 데이터 
+            if(Data.contentJson.ContainsKey("reward")) {
+                rewardData = Data.contentJson["reward"]; 
+            }
             
             // 획득 경험치 
             getExp = SystemManager.GetJsonNodeInt(beforeData, "get_experience"); 
@@ -68,12 +77,12 @@ namespace PIERStory {
             currentLevel = SystemManager.GetJsonNodeInt(currentData, "level");
             
             // 레벨 최대 경험치 
-            maxExp = SystemManager.main.GetLevelMaxExp((beforeLevel+1).ToString()); // before의 경험치를 구한다.
+            maxExp = SystemManager.main.GetLevelMaxExp((beforeLevel+1).ToString()); // beforeLevel+1 의 경험치를 구한다.
             
             imageBar.fillAmount = 0; // 게이지 초기화 
             
-            // 레벨 텍스트 
-            textlevel.text = "LV. " + currentLevel.ToString();
+            // 레벨 텍스트 (이전 레벨을 표시한다.)
+            textlevel.text = "LV. " + beforeLevel.ToString();
             
             // 획득 경험치
             textExp.text = "+" + getExp.ToString();
@@ -97,14 +106,42 @@ namespace PIERStory {
             if(beforeLevel != currentLevel) {
                 Debug.Log(">>> Level Up expected <<<");
                 nextProgress= 1; // 레벨이 달라진 경우 1.
+                isLevelUpExpected = true;
             }
             else {
                 nextProgress = (float)currentExp / (float)maxExp;
             }
             
             // 경험치 게이지가 올라가는 효과 
-            imageBar.DOFillAmount(nextProgress, 1.5f); // fillAmount 처리한다. 
+            imageBar.DOFillAmount(nextProgress, 1.5f).OnComplete(OnCompleteExpFill); // fillAmount 처리한다. 
             textExpCounter.DOCounter(beforeExp, currentLevel==beforeLevel?currentExp:maxExp, 1.5f, false);
+        }
+        
+        /// <summary>
+        /// 경험치 채워지고 난 후에 추가 작업
+        /// </summary>
+        void OnCompleteExpFill() {
+            
+            if(beforeLevel == currentLevel) {
+                return;
+            }
+            
+            if(rewardData == null) {
+                Debug.LogError("No reward data... T_T");
+                return;
+            }
+            
+            // 레벨이 달라진 경우, 
+            // 레벨업 팝업 호출
+            PopupBase p = PopupManager.main.GetPopup("LevelUp");
+            if(p == null) {
+                Debug.LogError("No Level UP Popup... T_T");
+                return;
+            }
+            
+            p.Data.SetContentJson(Data.contentJson);
+            PopupManager.main.ShowPopup(p, false, false);
+            
         }
     
     }

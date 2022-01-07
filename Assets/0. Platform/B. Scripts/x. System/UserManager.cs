@@ -1274,12 +1274,25 @@ namespace PIERStory
             }
             
             
-            Debug.Log("CallbackEXP");
+            Debug.Log("CallbackEXP : " + response.DataAsText);
             
             JsonData result = JsonMapper.ToObject(response.DataAsText);
             
+            if(result.ContainsKey("current")) {
+                userJson[CommonConst.NODE_LEVEL] = result["current"]["level"];
+                userJson[CommonConst.NODE_EXP] = result["current"]["experience"];
+                SetLevelInfo(); // 유저 레벨 갱신
+                
+                // 뱅킹 리프레시 없이. 
+                SetBankInfo(result, false);
+            }
+            
+            
+            
+            
             // 팝업 화면 호출 
             SystemManager.main.ShowExpGain(result);
+            
             
         }
         

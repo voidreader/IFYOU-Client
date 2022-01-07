@@ -1,15 +1,13 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using BestHTTP;
-using LitJson;
+
 using TMPro;
 using LitJson;
 using BestHTTP;
 using Doozy.Runtime.Signals;
-using Doozy.Runtime.UIManager.Components;
-using System.Linq;
 
 
 namespace PIERStory {
@@ -51,11 +49,19 @@ namespace PIERStory {
         public GameObject textObjectPrefab;
         public ImageRequireDownload profilePortrait;
         public ImageRequireDownload profileFrame;
+        public TextMeshProUGUI nickname;
+        public TextMeshProUGUI levelText;
+        public TextMeshProUGUI expText;
+        public Image expGauge;
         bool decoMode = true;       // true = 꾸미기 모드, false = 프로필 꾸미기
         List<GameObject> createObject = new List<GameObject>();
 
         [Header("더보기")]
         public TextMeshProUGUI userPincode;
+        public TextMeshProUGUI mNickname;       // 더보기 페이지 닉네임
+        public TextMeshProUGUI mLevelText;      // 더보기 페이지 레벨
+        public TextMeshProUGUI mExpText;        // 더보기 페이지 경험치
+        public Image mExpGauge;                 // 더보기 페이지 경험치바
         
         float mainScrollRectY = 0;
         
@@ -78,13 +84,26 @@ namespace PIERStory {
 
             OnProfileSetting = InitProfile;
 
-            InitProfile();
-            InitAddMore();
-            
             // 카테고리 
             InitCategory();
+
+            InitProfile();
+            InitAddMore();
+
+            // (프로필) 닉네임, 레벨, 경험치
+            levelText.text = string.Format("Lv. {0}", UserManager.main.level);
+
+            int totalExp = SystemManager.main.GetLevelMaxExp((UserManager.main.level + 1).ToString());
+            expGauge.fillAmount = (float)UserManager.main.exp / (float)totalExp;
+            expText.text = string.Format("{0}/{1}", UserManager.main.exp, totalExp);
+
+            // (더보기) 닉네임, 레벨, 경험치
+
+            mLevelText.text = levelText.text;
+            mExpGauge.fillAmount = expGauge.fillAmount;
+            mExpText.text = expText.text;
         }
-        
+
         /// <summary>
         /// 로비 컨테이너 초기화 
         /// </summary>
@@ -453,6 +472,7 @@ namespace PIERStory {
                     createObject.Add(textElement.gameObject);
                 }
             }
+
         }
 
         public void OnClickDecoMode(bool __decoMode)

@@ -395,7 +395,7 @@ namespace PIERStory {
                 // 배경을 먼저 넣어준다. 배경이 존재한다면 sortingOrder 0값이 존재한다.
                 if (SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_SORTING_ORDER) == "0")
                 {
-                    background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_CURRENCY_KEY));
+                    background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_CURRENCY_KEY), true);
                     background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_POS_X)), 0f);
                     background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_HEIGHT)));
                     sortingOrder++;

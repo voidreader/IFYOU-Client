@@ -122,12 +122,12 @@ namespace PIERStory {
             if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState != PurchaseState.AD)
                 return;            
             
+            isIronSourceBannerLoad = false;
+            
+            IronSource.Agent.loadBanner(IronSourceBannerSize.BANNER, IronSourceBannerPosition.BOTTOM);
             
             
-            if(!isIronSourceBannerLoad)
-                IronSource.Agent.loadBanner(IronSourceBannerSize.BANNER, IronSourceBannerPosition.BOTTOM);
-            else 
-                IronSource.Agent.displayBanner();
+            
         }
         
         /// <summary>

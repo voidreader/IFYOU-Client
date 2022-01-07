@@ -262,8 +262,10 @@ namespace PIERStory {
             backgroundSignalValue = signal.GetValueUnsafe<bool>();
             
             // 같으면 return.
-            if(backgroundSignalValue == isBackgroundShow)
+            if(backgroundSignalValue == isBackgroundShow) {
+                Debug.Log("OnTopBackgroundSignal same signal received");
                 return; 
+            }
                 
             isBackgroundShow = backgroundSignalValue; // static 변수도 같이 갱신
             
@@ -276,6 +278,7 @@ namespace PIERStory {
                 imageBackground.DOFade(1, 0.4f);
             }
             else {
+                Debug.Log("top background out");
                 imageBackground.DOFade(0, 0.4f);
             }
         }

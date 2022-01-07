@@ -74,6 +74,13 @@ namespace PIERStory
         public bool allowMissingResource = true; // 에피소드 진입시 없는 리소스 허용 여부 2021.11.08
         public int maxAdCharge = 0;             // 일일 최대 무료 충전 횟수
         
+        public string coinShopURL = string.Empty; // 코인샵 URL
+        int firsetResetPrice = 0; // 최초 리셋 가격
+        int resetIncrementRate = 0; //리셋 증가비율 
+        
+        
+        
+        
         
         static JsonData localizedTextJSON = null; // 로컬라이징 텍스트 JSON
         
@@ -99,6 +106,8 @@ namespace PIERStory
         [SerializeField] TMP_FontAsset innerFontTC = null;
 
         #endregion
+        
+        [SerializeField] UniWebView defaultWebview = null;
 
         // * 비암호화 저장 세팅 (디폴트는 암호화)        
         public static ES3Settings noEncryptionSetting;
@@ -541,6 +550,12 @@ namespace PIERStory
 
             // 일일 최대 무료충전 횟수 
             maxAdCharge = int.Parse(GetJsonNodeString(masterInfo, "max_ad_charge"));
+            
+            coinShopURL = GetJsonNodeString(masterInfo, "coinshop_url"); // 코인샵 URL
+            firsetResetPrice = GetJsonNodeInt(masterInfo, "first_reset_price"); // 최초 리셋 비용 
+            resetIncrementRate = GetJsonNodeInt(masterInfo, "reset_increment_rate"); // 리셋 비용 증가비율 
+            
+            
 
             // 디바이스 정보 불러다놓고, 
             localVer = GetDeviceLocalVer();
@@ -1659,6 +1674,14 @@ namespace PIERStory
                 dir.Delete(true);
             }
         }
+        
+        public void ShowDefaultWebview(string __url) {
+            defaultWebview.Load(__url);
+            defaultWebview.Show();
+        }
+        
+        
+        
          
     }
 }

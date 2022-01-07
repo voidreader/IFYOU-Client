@@ -390,22 +390,17 @@ namespace PIERStory {
 
             if (profileCurrency.Count > 0)
             {
-                int sortingOrder = 0;
-
-                // 배경을 먼저 넣어준다. 배경이 존재한다면 sortingOrder 0값이 존재한다.
-                if (SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_SORTING_ORDER) == "0")
-                {
-                    background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_CURRENCY_KEY), true);
-                    background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_POS_X)), 0f);
-                    background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[sortingOrder], LobbyConst.NODE_HEIGHT)));
-                    sortingOrder++;
-                }
-
-                // 데코 아이템, 스탠딩 화면에 뿌리기
-                for (int i = sortingOrder; i < profileCurrency.Count; i++)
+                // currency List 화면에 배포
+                for (int i = 0; i < profileCurrency.Count; i++)
                 {
                     switch (SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_TYPE))
                     {
+                        case LobbyConst.NODE_WALLPAPER:
+                            background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY), true);
+                            background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_POS_X)), 0f);
+                            background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_HEIGHT)));
+                            break;
+
                         case LobbyConst.NODE_BADGE:
                         case LobbyConst.NODE_STICKER:
                             ItemElement deco = Instantiate(decoObjectPrefab, decoObjectParent).GetComponent<ItemElement>();

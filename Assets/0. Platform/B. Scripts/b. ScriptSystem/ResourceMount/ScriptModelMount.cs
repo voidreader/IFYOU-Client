@@ -33,6 +33,9 @@ namespace PIERStory
         #endregion
 
         JsonData resourceData = null;
+        
+        [SerializeField] bool isResourceDownloadComplete = false; // 리소스 다운로드 완료 
+        public bool isModelCreated = false; // 모델 생성되었는지 체크 .
 
         public string originModelName = string.Empty;   // 원래 모델명(의상시스템 관련)
         public string speaker = string.Empty;           // 화자
@@ -256,13 +259,13 @@ namespace PIERStory
         IEnumerator CheckFileSavedAndStartInitModel()
         {
             string file_key = string.Empty;
-            bool isFilesExist = false;
+            isResourceDownloadComplete = false;
 
             yield return new WaitForSeconds(0.1f);
 
-            while (!isFilesExist)
+            while (!isResourceDownloadComplete)
             {
-                isFilesExist = true;
+                isResourceDownloadComplete = true;
 
                 for (int i = 0; i < resourceData.Count; i++)
                 {
@@ -270,14 +273,21 @@ namespace PIERStory
 
                     // 파일의 저장이 아직 이루어지지 않았다.
                     if (!ES3.FileExists(GetCubismRelativePath(file_key)))
-                        isFilesExist = false;
+                        isResourceDownloadComplete = false;
                 }
 
-                if (!isFilesExist)
+                if (!isResourceDownloadComplete)
                     yield return null;
             }
+            
+            isResourceDownloadComplete = true; // 리소스 다운로드 완료 
+            
 
-            InstantiateCubismModel();
+            // ! 테스트를 위해 감춘다.!
+            // InstantiateCubismModel();
+            
+            // ! 여기서 성공 메세지 
+            SendSuccessMessage();
         }
 
         /// <summary>
@@ -304,21 +314,35 @@ namespace PIERStory
 
             // 세팅된 모션 준비하기
             PrepareCubismMotions();
-            SendSuccessMessage();
+            // SendSuccessMessage();
+            
+            isModelCreated = true;
+            
+            // ! 키 체크를 위해 박스 컬라이더 추가
+            // SetBoxColliders();
+            
+            if(modelController != null) {
+                modelController.SetBoxColliders();
+            }
+            
         }
 
         /// <summary>
         /// 키 체크를 위해 충돌체 설정 
         /// </summary>
+        /*
         public void SetBoxColliders()
         {
-            if (model == null)
+            if (model == null) {
+                Debug.Log(this.originModelName + " is not created");
                 return;
+            }
 
             // 모든 drawables에 boxCollider 추가 
             for (int i = 0; i < model.Drawables.Length; i++)
                 model.Drawables[i].gameObject.AddComponent<BoxCollider>();
         }
+        */
 
         /// <summary>
         /// 메인 파일의 모델화 처리 (Live2D)
@@ -403,6 +427,9 @@ namespace PIERStory
         /// </summary>
         public void HideModel()
         {
+            if(!isModelCreated)
+                return;
+            
             modelCharacter.SetActive(false);
         }
 

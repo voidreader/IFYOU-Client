@@ -25,7 +25,7 @@ namespace PIERStory
         [HideInInspector] public JsonData notReceivedMailJson = null;     // 미수신 메일
         [HideInInspector] public JsonData userProfile = null;               // 유저 프로필 정보
         [HideInInspector] public JsonData userProfileCurrency = null;       // 유저 프로필 재화 정보
-
+        [SerializeField] string debugBankString = string.Empty;
 
         public List<CoinIndicator> ListCoinIndicators = new List<CoinIndicator>(); // 코인 표시기
         public List<GemIndicator> ListGemIndicators = new List<GemIndicator>(); // 사파이어 표시기
@@ -595,6 +595,12 @@ namespace PIERStory
             Debug.Log("Refresh BankInfo");
 
             bankJson = __j["bank"];
+            if(bankJson == null) {
+                Debug.LogError("bank is null...!!");
+                return;
+            }
+            
+            debugBankString = JsonMapper.ToStringUnicode(bankJson);
 
             // 재화 값 갱신
             gem = int.Parse(bankJson["gem"].ToString());
@@ -1854,8 +1860,10 @@ namespace PIERStory
         public bool CheckSceneHistory(string __sceneID)
         {
             // 어드민 유저 무조건 true 
+            /*
             if(CheckAdminUser())
                 return true; 
+            */
             
             
             if (currentStoryJson == null || GetNodeProjectSceneHistory() == null)
@@ -2014,8 +2022,10 @@ namespace PIERStory
         /// <returns></returns>
         public bool CheckGemProperty(int __requirePrice)
         {
+            /*
             if(CheckAdminUser())
                 return true;
+            */
             
             return __requirePrice <= gem;
         }
@@ -2027,9 +2037,10 @@ namespace PIERStory
         /// <returns></returns>
         public bool CheckCoinProperty(int __requirePrice)
         {
-            
+            /*
             if(CheckAdminUser())
                 return true;
+            */
             
             return __requirePrice <= coin;
         }

@@ -344,6 +344,7 @@ namespace PIERStory
             yield return null;
 
             // 모델들 한테 충돌체 주고 키 체크 
+            /*
             for (int i = 0; i < ListModelMount.Count; i++)
             {
                 if (ListModelMount[i].modelController != null)
@@ -363,6 +364,7 @@ namespace PIERStory
                 if (ListModelMount[i].modelController != null)
                     ListModelMount[i].modelController.RemoveColliders();
             }
+            */
 
             Debug.Log("Character Model Loading Done");
         }
@@ -643,6 +645,15 @@ namespace PIERStory
         public int GetCurrentLoadingCount()
         {
             return pageImageResourceCount + pageModelCount + pageLiveIllustCount + pageLiveObjectCount + pageBubbleResourceCount + pageSoundResourceCount;
+        }
+        
+        /// <summary>
+        /// 디버그 체크용도.
+        /// </summary>
+        /// <returns></returns>
+        public string GetDebugLoadingCount() {
+            return string.Format("pageImageResourceCount[{0}] / pageModelCount[{1}] / pageLiveIllustCount[{2}] / pageLiveObjectCount[{3}] / pageBubbleResourceCount[{4}] / pageSoundResourceCount[{5}]"
+            , pageImageResourceCount, pageModelCount, pageLiveIllustCount , pageLiveObjectCount , pageBubbleResourceCount , pageSoundResourceCount);
         }
 
 

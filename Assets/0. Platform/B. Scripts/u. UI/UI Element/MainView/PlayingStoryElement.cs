@@ -17,6 +17,7 @@ namespace PIERStory {
         [SerializeField] string imageURL = string.Empty;
         [SerializeField] string imageKey = string.Empty;
         [SerializeField] float progressValue = 0;
+        [SerializeField] Image progressor;
         
         StoryData storyData = null; // 작품 정보
         
@@ -30,6 +31,8 @@ namespace PIERStory {
             storyData = data;
             
             progressValue = storyData.projectProgress;
+            
+            progressor.fillAmount = progressValue;
             
             bannerImage.SetDownloadURL(storyData.circleImageURL, storyData.circleImageKey);
         }

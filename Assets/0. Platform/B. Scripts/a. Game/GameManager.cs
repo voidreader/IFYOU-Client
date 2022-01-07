@@ -418,6 +418,14 @@ namespace PIERStory
         {
             return currentPage.IsPageInitialized();
         }
+        
+        /// <summary>
+        /// 로딩 막히는부분 좀 찾을려고..
+        /// </summary>
+        /// <returns></returns>
+        public string GetDebugDouwnloadFactor() {
+            return currentPage.GetDebugLoadingCount();
+        }
 
         #endregion
 
@@ -922,6 +930,13 @@ namespace PIERStory
         void SetCharacterReady(string speaker, int index)
         {
             standingSpeaker = GetConnectedModelMount(speaker);
+            
+            // * 모델 생성전이면 생성하고 처리 
+            if(!standingSpeaker.isModelCreated) {
+                standingSpeaker.InstantiateCubismModel();
+            }
+            
+            // 모델 컨트롤러 할당
             characterModels[index] = standingSpeaker.modelController;
         }
 

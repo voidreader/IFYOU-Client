@@ -77,6 +77,7 @@ namespace PIERStory {
         }
         
         public void OnClickCoin() {
+            
             if(!SystemManager.main.isCoinPrizeUse)
                 return;
                 
@@ -87,8 +88,9 @@ namespace PIERStory {
             string finalURL = SystemManager.main.coinPrizeURL + param;
             
             Debug.Log(finalURL);
+            
                 
-            //
+            /*
             GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
             configuration.title = "";
             configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
@@ -106,6 +108,7 @@ namespace PIERStory {
                 NetworkLoader.main.RequestUserBaseProperty();
                 // AppsFlyerSDK.AppsFlyer.sendEvent("USER_TICKETEVENT_SITE", null);
             }, null, null);
+            */
         }
     }
 }

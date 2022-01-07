@@ -180,6 +180,7 @@ namespace PIERStory
 
         public void MakeTalkBubble(ScriptRow __row, Action __cb, int index = -1)
         {
+            // StartCoroutine(MakingTalkBubble(__row, __cb, index));
             if (bubbleIndex >= ListBubbles.Count)
                 bubbleIndex = 0;
 
@@ -187,6 +188,7 @@ namespace PIERStory
             if (string.IsNullOrEmpty(__row.script_data))
             {
                 __cb?.Invoke();
+                // yield break;
                 return;
             }
 
@@ -203,6 +205,35 @@ namespace PIERStory
             else
                 StartCoroutine(RoutineMoveWait(__row, __cb));
         }
+        
+        IEnumerator MakingTalkBubble(ScriptRow __row, Action __cb, int index = -1) {
+            
+            yield return new WaitForFixedUpdate(); // physics 대기 
+            
+            if (bubbleIndex >= ListBubbles.Count)
+                bubbleIndex = 0;
+
+            // 아무말도 안넣으면 그냥 종료 
+            if (string.IsNullOrEmpty(__row.script_data))
+            {
+                __cb?.Invoke();
+                yield break;
+            }
+
+            // 말풍선 크기를 판단하기 위해 호출한다.
+            // 크기 지정을 수동으로 해놓은 경우만!
+            // * 추가 설명 : TextMesh 는 실제 화면에서 render 되어야지, TextArea를 오버했는지 안했는지를 알 수 있다.
+            if (__row.bubble_size == 0)
+                BubbleManager.main.SetFakeBubbles(__row);
+
+            // 말풍선 풀에서 하나를 골라 세팅합니다.
+            // skip을 사용했거나, 캐릭터 스탠딩이 아닐때
+            if (GameManager.main.useSkip || index < 0)
+                ListBubbles[bubbleIndex++].ShowBubble(__row, __cb);
+            else
+                StartCoroutine(RoutineMoveWait(__row, __cb));
+        }
+        
 
         /// <summary>
         /// 캐릭터가 무빙 중인 경우는 무빙이 완료될때까지 기다린다. 
@@ -222,7 +253,7 @@ namespace PIERStory
 
             for (int i = 0; i < ListBubbles.Count; i++)
             {
-                if (ListBubbles[i].gameObject.activeSelf)
+                if (ListBubbles[i].gameObject.activeSelf || ListBubbles[i].needDelayShow)
                     ListBubbles[i].OffBubble(GameManager.main.useSkip);
             }
 

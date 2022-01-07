@@ -76,6 +76,8 @@ namespace PIERStory
         ScriptImageMount emoticonMount;         // 이모티콘 가져오는 ImageMount
         public GameObject fakeReverseTail;
         public bool isFakeBubble = false;
+        
+        public bool needDelayShow = false;
 
         string template = string.Empty;
         string message = string.Empty;
@@ -230,6 +232,8 @@ namespace PIERStory
         {
             row = __row;
             message = __row.script_data;
+            
+            needDelayShow = false; 
 
             if (string.IsNullOrEmpty(message))
             {
@@ -954,11 +958,36 @@ namespace PIERStory
         /// </summary>
         public void OnBubble()
         {
+            if(needDelayShow && speakerTall < 0) {
+                Debug.Log("<color=white>Bubble Delay Show</color>");
+                // needDelayShow = false;
+                
+                Invoke("DelayOnBubble", 0.1f);
+            }
+            
             ActiveInEffect();
         }
-
+        
+        void DelayOnBubble() {
+            
+            // delay 호출되었을때 needDelayShow가 false이면 실행하지 않는다. 
+            if(!needDelayShow)
+                return;
+            
+            SetCharacterTallAdjustment(); // 키 측정 다시한다. 
+            OnBubble();
+        }
+        
+        
+        
+        /// <summary>
+        /// 실 등장!
+        /// </summary>
         void ActiveInEffect()
         {
+            
+            needDelayShow = false;
+            
             rtransform.DOKill();
 
             // default 처리
@@ -1002,6 +1031,12 @@ namespace PIERStory
         /// </summary>
         public void OffBubble(bool immediate = false)
         {
+            // delayShow가 걸려있는 상태에서 OffBubble이 호출받은 경우.
+            if(needDelayShow) {
+                needDelayShow = false;
+                return;
+            }
+            
             // 즉시 처리 
             if (immediate)
             {
@@ -1161,6 +1196,12 @@ namespace PIERStory
 
             // 키 가져오기 
             speakerTall = GameManager.main.GetCurrentModelTall(row.speaker);
+            
+            // * 화자 키가 0보다 작으면 아직 키 체크가 완료되지 않은상태다. 
+            if(speakerTall < 0) {
+                needDelayShow = true; // 약간 딜레이가 필요하다. (키체크가 필요해...)
+                return; 
+            }
 
             // 키 높이에 의한 말풍선 위치 조절
             switch (speakerTall)

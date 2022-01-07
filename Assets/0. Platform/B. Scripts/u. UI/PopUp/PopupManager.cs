@@ -16,6 +16,8 @@ namespace PIERStory {
         public Queue<PopupBase> PopupQueue = new Queue<PopupBase>(); 
         public PopupBase CurrentQueuePopup = null; // 큐 팝업. 
         
+        [SerializeField] List<ParticleSystem> confittiParticles;
+        
         private void Awake() {
             if(main != null) {
                 Destroy(this.gameObject);
@@ -23,6 +25,9 @@ namespace PIERStory {
             }
             
             main = this;
+            
+            HideConfetti();
+            
             DontDestroyOnLoad(this);
                 
         }
@@ -142,6 +147,31 @@ namespace PIERStory {
             ListShowingPopup.Remove(__p);
         }
         
+        
+        /// <summary>
+        /// 폭죽놀이다!
+        /// </summary>
+        public void PlayConfetti() {
+            StartCoroutine(RoutineConfetti());
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void HideConfetti() {
+            for(int i=0; i<confittiParticles.Count;i++) {
+                confittiParticles[i].gameObject.SetActive(false);
+            }
+        }
+        
+        IEnumerator RoutineConfetti() {
+            for(int i=0; i<confittiParticles.Count;i++) {
+                confittiParticles[i].gameObject.SetActive(true);
+                confittiParticles[i].Play();
+                
+                yield return new WaitForSeconds(UnityEngine.Random.Range(0.2f,0.5f));
+            }
+        }
         
     }
 }

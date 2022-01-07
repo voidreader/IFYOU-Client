@@ -132,9 +132,10 @@ namespace PIERStory
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = LobbyConst.FUNC_USER_PROFILE_SAVE;
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
-            
+            sending["kind"] = "profile";
 
-            for(int i=0;i<portraitList.Count;i++)
+
+            for (int i=0;i<portraitList.Count;i++)
             {
                 if (portraitList[i].currentCount == 1)
                 {
@@ -148,7 +149,7 @@ namespace PIERStory
             {
                 if (frameList[i].currentCount == 1)
                 {
-                    if(sending[LobbyConst.NODE_CURRENCY_LIST].Count < 1)
+                    if(!sending.ContainsKey(LobbyConst.NODE_CURRENCY_LIST))
                         sending[LobbyConst.NODE_CURRENCY_LIST] = JsonMapper.ToObject("[]");
 
                     sending[LobbyConst.NODE_CURRENCY_LIST].Add(frameList[i].SaveJsonData());

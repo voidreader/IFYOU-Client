@@ -213,14 +213,18 @@ namespace PIERStory
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
 
+            foreach (GameObject g in createObject)
+                Destroy(g);
+
+            createObject.Clear();
+
+            // 혹시 데코, 텍스트 남아있는 오브젝트 삭제
             for (int i = 0; i < decoObjects.childCount; i++)
                 Destroy(decoObjects.GetChild(i).gameObject);
 
             for (int i = 0; i < textObjects.childCount; i++)
                 Destroy(textObjects.GetChild(i).gameObject);
 
-            createObject.Clear();
-            
             // 배경 제어 끄고
             profileBgScroll.SetActive(true);
             bgScrolling.SetActive(false);
@@ -660,6 +664,7 @@ namespace PIERStory
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = LobbyConst.FUNC_USER_PROFILE_SAVE;
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+            sending["kind"] = "deco";
             sending[LobbyConst.NODE_CURRENCY_LIST] = JsonMapper.ToObject("[]");
 
             int sortingOrder = 0;

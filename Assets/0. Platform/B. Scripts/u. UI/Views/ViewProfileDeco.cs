@@ -93,21 +93,18 @@ namespace PIERStory
 
             if (profileCurrency.Count > 0)
             {
-                if (SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_SORTING_ORDER) == "0")
-                {
-                    // 배경
-                    background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY_KEY));
-                    background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_POS_X)), 0f);
-                    background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_HEIGHT)));
-                    moveBg.currencyName = SystemManager.GetJsonNodeString(profileCurrency[0], LobbyConst.NODE_CURRENCY);
-                }
-                
-
-                // 스탠딩, 스티커 
+                // 배경, 스탠딩, 스티커 
                 for (int j = 0; j < profileCurrency.Count; j++)
                 {
                     switch (SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_TYPE))
                     {
+                        case LobbyConst.NODE_WALLPAPER:
+                            background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_KEY));
+                            background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_POS_X)), 0f);
+                            background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_HEIGHT)));
+                            moveBg.currencyName = SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY);
+                            break;
+
                         case LobbyConst.NODE_BADGE:
                         case LobbyConst.NODE_STICKER:
                             ItemElement itemElement = Instantiate(stickerObjectPrefab, decoObjects).GetComponent<ItemElement>();

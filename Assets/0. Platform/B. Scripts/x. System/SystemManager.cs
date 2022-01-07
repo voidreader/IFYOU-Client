@@ -220,6 +220,8 @@ namespace PIERStory
             
             noEncryptionSetting = new ES3Settings(ES3.EncryptionType.None, "password");
             
+            defaultWebview.OnShouldClose += OnWebviewClosed;
+            
         }
         
         /// <summary>
@@ -1678,19 +1680,20 @@ namespace PIERStory
         public void ShowDefaultWebview(string __url) {
             
             
-            // defaultWebview.OnShouldClose = OnWebviewClosed;
             
+            defaultWebview.SetShowToolbar(true,true,true);
+            
+            // var color = new Color(1, 0.83f, 0.83f);
             
             defaultWebview.Load(__url);
-            
-            
+           
             
             defaultWebview.Show();
         }
         
         
-        void OnWebviewClosed(UniWebView __view) {
-            
+        bool OnWebviewClosed(UniWebView __view) {
+            return true;
         }
         
         

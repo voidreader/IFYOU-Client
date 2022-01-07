@@ -422,8 +422,11 @@ namespace PIERStory {
                             profileFrame.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY), true);
                             break;
                     }
-                    
                 }
+
+                // 프로필 사진 지정 안해서 해당 key값이 없는 경우
+                if (!profileCurrency.ContainsKey(LobbyConst.NODE_PORTRAIT))
+                    profilePortrait.SetTexture2D(null);
             }
 
             if (profileText.Count > 0)

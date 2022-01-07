@@ -279,7 +279,7 @@ namespace PIERStory
 
         public void OnClickDeleteBackground()
         {
-            background.SetDownloadURL("", "");
+            background.SetTexture2D(null);
             moveBg.currencyName = string.Empty;
         }
 

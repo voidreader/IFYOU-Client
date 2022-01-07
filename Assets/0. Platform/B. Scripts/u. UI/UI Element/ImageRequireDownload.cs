@@ -197,12 +197,12 @@ namespace PIERStory {
         void SetNoImage() {
             if(targetRawImage != null) {
                 targetRawImage.texture = null;
-                targetRawImage.color = Color.gray;
+                targetRawImage.color = Color.black;
             }
             
             if(targetImage != null) {
                 targetImage.sprite = null;
-                targetImage.color = Color.gray;
+                targetImage.color = Color.black;
                 downloadedSprite = null;
             }
 

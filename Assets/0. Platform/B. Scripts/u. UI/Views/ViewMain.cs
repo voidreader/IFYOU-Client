@@ -9,6 +9,7 @@ using LitJson;
 using BestHTTP;
 using Doozy.Runtime.Signals;
 
+
 namespace PIERStory {
     public class ViewMain : CommonView
     {
@@ -18,6 +19,7 @@ namespace PIERStory {
         
         [Header("로비")]
         [SerializeField] ScrollRect mainScrollRect;
+        [SerializeField] UIToggle mainToggle;
         
         
         // 진행중인 이야기 타이틀과 ScrollRect
@@ -238,6 +240,9 @@ namespace PIERStory {
         /// </summary>
         /// <param name="vec"></param>
         public void OnValueChangedMainScroll(Vector2 vec) {
+            
+            if(!mainToggle.isOn)
+                return;
             
             if(mainScrollRectY == vec.y)
                 return;

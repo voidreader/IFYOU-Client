@@ -1679,15 +1679,10 @@ namespace PIERStory
         
         public void ShowDefaultWebview(string __url) {
             
-            
-            
-            defaultWebview.SetShowToolbar(true,true,true);
-            
             // var color = new Color(1, 0.83f, 0.83f);
             
             defaultWebview.Load(__url);
-           
-            
+            defaultWebview.SetShowToolbar(true,true,true,true);
             defaultWebview.Show();
         }
         

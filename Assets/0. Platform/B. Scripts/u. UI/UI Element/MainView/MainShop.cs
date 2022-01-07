@@ -24,16 +24,16 @@ namespace PIERStory {
             
             SystemManager.main.ShowDefaultWebview(finalURL);
             
-            // var color = new Color(1, 0.83f, 0.83f);
-            /*
+            //  var color = new Color(1, 0.83f, 0.83f);
+            
             if(UniWebViewSafeBrowsing.IsSafeBrowsingSupported) {
                 Debug.Log("Safe Browsing Support");
             
                 var safeBrowsing = UniWebViewSafeBrowsing.Create(finalURL);
                 
                 // v.SetShowToolbar()
-                safeBrowsing.SetToolbarColor(color);
-                safeBrowsing.SetToolbarItemColor(Color.white);
+                // safeBrowsing.SetToolbarColor(color);
+                // safeBrowsing.SetToolbarItemColor(Color.white);
                 safeBrowsing.OnSafeBrowsingFinished += (browsing) => {
                     Debug.Log("UniWebViewSafeBrowsing is closed.");
                 };
@@ -41,10 +41,10 @@ namespace PIERStory {
             }
             else {
                 Debug.Log("Safe Browsing not Support");
-                SystemManager.main.ShowDefaultWebview(finalURL);
+                // SystemManager.main.ShowDefaultWebview(finalURL);
                 
             }
-            */
+            
             
         }
     }

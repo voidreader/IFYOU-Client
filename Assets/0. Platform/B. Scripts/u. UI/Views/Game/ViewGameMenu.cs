@@ -91,7 +91,7 @@ namespace PIERStory
         {
             // 스킵이 가능하지 않으면 아무것도 실행하지 않는다.
             if (!GameManager.main.skipable) {
-                OnClickBlockSkip();
+                // OnClickBlockSkip();
                 return;
             }
             

@@ -46,6 +46,8 @@ namespace PIERStory {
         public GameObject standingObjectPrefab;
         public Transform textObjectParent;
         public GameObject textObjectPrefab;
+        public ImageRequireDownload profilePortrait;
+        public ImageRequireDownload profileFrame;
         bool decoMode = true;       // true = 꾸미기 모드, false = 프로필 꾸미기
         List<GameObject> createObject = new List<GameObject>();
 
@@ -416,6 +418,13 @@ namespace PIERStory {
                             standingElement.SetProfileStanding(profileCurrency[i]);
                             standingElement.GetComponent<Image>().raycastTarget = false;
                             createObject.Add(standingElement.gameObject);
+                            break;
+
+                        case LobbyConst.NODE_PORTRAIT:
+                            profilePortrait.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY));
+                            break;
+                        case LobbyConst.NODE_FRAME:
+                            profileFrame.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY), true);
                             break;
                     }
                     

@@ -10,37 +10,35 @@ namespace PIERStory
     public class MissionElement : MonoBehaviour
     {
         public ImageRequireDownload missionThumbnail;
+        public GameObject hiddenHighlight;
+        public Image RewardMask;
         public TextMeshProUGUI missionText;
         
-
         public GameObject rewardInfo;
-        public GameObject completeMark;
+        public GameObject missionProceeding;        // 미션 진행중
+        public GameObject getRewardButton;          // 미션 보상받기
+        public GameObject completeMark;             // 미션 완료 도장
 
-        public Image currencyIcon;
+        public ImageRequireDownload currencyIcon;
         public TextMeshProUGUI expText;
         public TextMeshProUGUI currencyAmount;
         // public TextMeshProUGUI missionState;
-        public Image btnClaim; // 보상받기 버튼
-        public TextMeshProUGUI textClaimText;
-        
-        public Image RewardMask;
         
         
-
         MissionState state;
 
-
-        Color32 missionGreen = new Color32(69, 198, 80, 255);
         
         [SerializeField] MissionData missionData;
 
         public void InitMission(MissionData __missionData)
         {
-            this.gameObject.SetActive(true);
+            gameObject.SetActive(true);
             
             missionData = __missionData;
+            missionThumbnail.gameObject.SetActive(true);
+            hiddenHighlight.SetActive(false);
             
-            
+
             missionThumbnail.SetDownloadURL(missionData.imageURL, missionData.imageKey);
             
             missionText.text = string.Format("<size=24><b>{0}</b></size>\n{1}", missionData.missionName, missionData.missionHint);
@@ -52,52 +50,41 @@ namespace PIERStory
             RewardMask.color = new Color(1,1,1,0);
             RewardMask.raycastTarget = false;
 
-            SetCurrencyIcon(missionData.rewardCurrency, missionData.rewardQuantity.ToString());
+            SetCurrencyIcon(missionData.rewardQuantity);
             SetMissionState(missionData.missionState);
         }
 
-        void SetCurrencyIcon(string __type, string __amount)
+        public void HighlightHidden(int lockCount)
         {
-            switch (__type)
-            {
-                case CommonConst.NONE:
-                    currencyIcon.gameObject.SetActive(false);
-                    return;
-                        
-                case LobbyConst.COIN:
-                    currencyIcon.sprite = LobbyManager.main.spriteCoinIcon;
-                    break;
+            gameObject.SetActive(true);
 
-                case LobbyConst.GEM:
-                    currencyIcon.sprite = LobbyManager.main.spriteCoinIcon;
-                    break;
+            missionThumbnail.gameObject.SetActive(false);
+            hiddenHighlight.SetActive(true);
+            rewardInfo.SetActive(false);
 
-                default:
-                    // 그 외에는 다운로드 
-                    break;
-            }
-            
-            currencyIcon.SetNativeSize();
+            missionText.text = string.Format("<size=24><b>"+SystemManager.GetLocalizedText("6056")+"</b></size>\n"+SystemManager.GetLocalizedText("6057"), lockCount);
+        }
 
-            //currencyAmount.text = string.Format("<b>{0}</b><size=17>개</size>", __amount);
+        void SetCurrencyIcon(int __amount)
+        {
+            currencyIcon.SetDownloadURL(missionData.currency_icon_url, missionData.currency_icon_key, true);
             currencyAmount.text = string.Format("{0}", __amount);
         }
 
         void SetMissionState(MissionState __state)
         {
             rewardInfo.SetActive(true);
+            getRewardButton.SetActive(false);
+            missionProceeding.SetActive(false);
             completeMark.SetActive(false);
-            btnClaim.gameObject.SetActive(false);
             
             state = __state;
 
             switch (__state)
             {
                 case MissionState.unlocked:
-                    btnClaim.gameObject.SetActive(true);
-                
-                    //textClaimText.color = Color.white;
-                    //btnClaim.image.sprite = null;
+                    getRewardButton.SetActive(true);
+                    missionProceeding.SetActive(false);
                     break;
                 case MissionState.finish:
                     rewardInfo.SetActive(false);
@@ -106,9 +93,9 @@ namespace PIERStory
                     RewardMask.raycastTarget = true;
                     break;
 
-                default: 
-                    //textClaimText.color = missionGreen;
-                    //btnClaim.image.sprite = null;
+                default:
+                    getRewardButton.SetActive(false);
+                    missionProceeding.SetActive(true);
                     break;
             }
         }

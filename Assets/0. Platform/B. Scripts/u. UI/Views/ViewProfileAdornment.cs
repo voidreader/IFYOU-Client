@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 using TMPro;
 using LitJson;
+using BestHTTP;
 using Doozy.Runtime.Signals;
 
 namespace PIERStory
@@ -111,7 +112,7 @@ namespace PIERStory
 
         #endregion
 
-        void SelectCancel()
+        public void SelectCancel()
         {
             if(pictureScroll.activeSelf)
             {
@@ -123,12 +124,53 @@ namespace PIERStory
                 foreach (ProfileBriefElement be in frameList)
                     be.SelectCancel();
             }
-
         }
 
 
         void OnClickSaveProfile()
         {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = LobbyConst.FUNC_USER_PROFILE_SAVE;
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+            
+
+            for(int i=0;i<portraitList.Count;i++)
+            {
+                if (portraitList[i].currentCount == 1)
+                {
+                    sending[LobbyConst.NODE_CURRENCY_LIST] = JsonMapper.ToObject("[]");
+                    sending[LobbyConst.NODE_CURRENCY_LIST].Add(portraitList[i].SaveJsonData());
+                    break;
+                }
+            }
+
+            for (int i = 0; i < frameList.Count; i++)
+            {
+                if (frameList[i].currentCount == 1)
+                {
+                    if(sending[LobbyConst.NODE_CURRENCY_LIST].Count < 1)
+                        sending[LobbyConst.NODE_CURRENCY_LIST] = JsonMapper.ToObject("[]");
+
+                    sending[LobbyConst.NODE_CURRENCY_LIST].Add(frameList[i].SaveJsonData());
+                    break;
+                }
+            }
+
+            NetworkLoader.main.SendPost(CallbackSaveProfile, sending, true);
+        }
+
+        void CallbackSaveProfile(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackSaveProfile");
+                return;
+            }
+
+            UserManager.main.userProfile = JsonMapper.ToObject(res.DataAsText);
+            Debug.Log(JsonMapper.ToStringUnicode(UserManager.main.userProfile));
+            ViewMain.OnProfileSetting?.Invoke();
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SAVE_PROFILE_DECO);
 
         }
 

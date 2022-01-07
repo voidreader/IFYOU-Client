@@ -11,7 +11,7 @@ namespace PIERStory
         public GameObject selectBox;
 
         string currencyName = string.Empty;
-        int currentCount = 0;
+        public int currentCount = 0;
 
         public void InitProfileBrief(JsonData __j)
         {
@@ -48,6 +48,21 @@ namespace PIERStory
             selectBox.SetActive(false);
 
             currentCount = 0;
+        }
+
+        public JsonData SaveJsonData()
+        {
+            JsonData data = new JsonData();
+
+            data[LobbyConst.NODE_CURRENCY] = currencyName;
+            data[LobbyConst.NODE_SORTING_ORDER] = 0;
+            data[LobbyConst.NODE_POS_X] = 0f;
+            data[LobbyConst.NODE_POS_Y] = 0f;
+            data[LobbyConst.NODE_WIDTH] = thumbnail.downloadedSprite.rect.width;
+            data[LobbyConst.NODE_HEIGHT] = thumbnail.downloadedSprite.rect.height;
+            data[LobbyConst.NODE_ANGLE] = 0f;
+
+            return data;
         }
     }
 }

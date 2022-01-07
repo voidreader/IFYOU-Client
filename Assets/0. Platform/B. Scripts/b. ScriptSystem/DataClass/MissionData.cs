@@ -39,6 +39,8 @@ namespace PIERStory {
         public bool isHidden = false; // 히든 
         
         public string rewardCurrency = string.Empty; // 보상재화
+        public string currency_icon_url = string.Empty;
+        public string currency_icon_key = string.Empty;
         public int rewardQuantity = 0; // 수량 
         public int rewardExp = 0; // 경험지
         
@@ -72,6 +74,9 @@ namespace PIERStory {
             
             imageURL = SystemManager.GetJsonNodeString(missionJSON, "image_url");
             imageKey = SystemManager.GetJsonNodeString(missionJSON, "image_key");
+
+            currency_icon_url = SystemManager.GetJsonNodeString(missionJSON, "icon_image_url");
+            currency_icon_key = SystemManager.GetJsonNodeString(missionJSON, "icon_image_key");
             
             string originMissionType = SystemManager.GetJsonNodeString(missionJSON, "mission_type");
             string originUnlockState = SystemManager.GetJsonNodeString(missionJSON, "unlock_state");

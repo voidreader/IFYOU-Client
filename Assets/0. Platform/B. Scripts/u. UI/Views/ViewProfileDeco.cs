@@ -216,8 +216,11 @@ namespace PIERStory
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
 
-            foreach (GameObject g in createObject)
-                Destroy(g);
+            for (int i = 0; i < decoObjects.childCount; i++)
+                Destroy(decoObjects.GetChild(i).gameObject);
+
+            for (int i = 0; i < textObjects.childCount; i++)
+                Destroy(textObjects.GetChild(i).gameObject);
 
             createObject.Clear();
             
@@ -442,6 +445,8 @@ namespace PIERStory
 
             controlStanding.RemoveFromScreen();
             Destroy(controlStanding.gameObject);
+            profileStandingScroll.SetActive(true);
+            standingController.SetActive(false);
         }
 
         public void OnClickCancleControl()
@@ -459,7 +464,12 @@ namespace PIERStory
                 }
             }
             else
-                Destroy(controlStanding.gameObject);
+            {
+                if (controlStanding != null)
+                    Destroy(controlStanding.gameObject);
+                else
+                    controlStandingItemElement.currentCount--;
+            }
 
             controlStanding = null;
 
@@ -648,7 +658,7 @@ namespace PIERStory
         /// <summary>
         /// 꾸미기 한거 저장
         /// </summary>
-        public void OnCllickSaveDeco()
+        void OnCllickSaveDeco()
         {
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = LobbyConst.FUNC_USER_PROFILE_SAVE;

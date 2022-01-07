@@ -1866,10 +1866,8 @@ namespace PIERStory
         public bool CheckSceneHistory(string __sceneID)
         {
             // 어드민 유저 무조건 true 
-            /*
             if(CheckAdminUser())
                 return true; 
-            */
             
             
             if (currentStoryJson == null || GetNodeProjectSceneHistory() == null)

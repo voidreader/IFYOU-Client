@@ -63,6 +63,13 @@ namespace PIERStory {
         public TextMeshProUGUI mLevelText;      // 더보기 페이지 레벨
         public TextMeshProUGUI mExpText;        // 더보기 페이지 경험치
         public Image mExpGauge;                 // 더보기 페이지 경험치바
+        public Image pushAlert;                 // 푸쉬 알림
+        public Image nightPushAlert;            // 야간 푸쉬 알림
+        public Image dataUseAgree;              // 데이터 사용 허용
+
+        public Sprite spriteToggleOn;
+        public Sprite spriteToggleOff;
+
         
         float mainScrollRectY = 0;
         
@@ -535,6 +542,55 @@ namespace PIERStory {
         public void OnClickCopyUID()
         {
             UniClipboard.SetText(userPincode.text);
+        }
+
+
+        /// <summary>
+        /// 푸쉬 알림 On
+        /// </summary>
+        public void ToggleOnPushAlert()
+        {
+            pushAlert.sprite = spriteToggleOn;
+        }
+
+        /// <summary>
+        /// 푸쉬 알림 OFf
+        /// </summary>
+        public void ToggleOffPushAlert()
+        {
+            pushAlert.sprite = spriteToggleOff;
+        }
+
+        /// <summary>
+        /// 야간 푸쉬 알림 On
+        /// </summary>
+        public void ToggleOnNightPushAlert()
+        {
+            nightPushAlert.sprite = spriteToggleOn;
+        }
+
+        /// <summary>
+        /// 야간 푸쉬 알림 Off
+        /// </summary>
+        public void ToggleOffNightPushAlert()
+        {
+            nightPushAlert.sprite = spriteToggleOff;
+        }
+
+        /// <summary>
+        /// 데이터 사용 허용 On
+        /// </summary>
+        public void ToggleOnDataUse()
+        {
+            dataUseAgree.sprite = spriteToggleOn;
+        }
+
+        /// <summary>
+        /// 데이터 사용 허용 Off
+        /// </summary>
+        public void ToggleOffDataUse()
+        {
+            dataUseAgree.sprite = spriteToggleOff;
         }
         
         #endregion

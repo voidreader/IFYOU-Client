@@ -1677,17 +1677,23 @@ namespace PIERStory
             }
         }
         
+        /// <summary>
+        /// Uniwebview 연동하기 
+        /// </summary>
+        /// <param name="__url"></param>
         public void ShowDefaultWebview(string __url) {
             
             // var color = new Color(1, 0.83f, 0.83f);
             
             defaultWebview.Load(__url);
-            defaultWebview.SetShowToolbar(true,true,true,true);
+            defaultWebview.SetShowToolbar(false);
             defaultWebview.Show();
         }
         
         
         bool OnWebviewClosed(UniWebView __view) {
+            Debug.Log("Webview Closed");
+            NetworkLoader.main.RequestUserBaseProperty();
             return true;
         }
         

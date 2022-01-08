@@ -26,6 +26,7 @@ namespace PIERStory {
             
             //  var color = new Color(1, 0.83f, 0.83f);
             
+            /*
             if(UniWebViewSafeBrowsing.IsSafeBrowsingSupported) {
                 Debug.Log("Safe Browsing Support");
             
@@ -44,6 +45,7 @@ namespace PIERStory {
                 // SystemManager.main.ShowDefaultWebview(finalURL);
                 
             }
+            */
             
             
         }

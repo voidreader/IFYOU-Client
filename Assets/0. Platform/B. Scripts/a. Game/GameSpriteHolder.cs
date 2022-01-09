@@ -11,6 +11,8 @@ namespace PIERStory {
         public Sprite spriteSelectionLock; // 인게임 선택지 버튼 락
         public Sprite spriteSelectionUnlock; // 인게임 선택지 버튼 언락 
         
+        public Sprite spriteInappOriginIcon; // 메일함에서 사용하는 아이콘
+        
         void Awake() {
             main = this;
         }

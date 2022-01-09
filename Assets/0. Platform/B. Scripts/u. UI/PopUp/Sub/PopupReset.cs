@@ -14,8 +14,11 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textResetExplain; // 설명
         [SerializeField] EpisodeData targetEpisode; // 리셋을 해서 돌아갈 에피소드 데이터 
         
-        
+        [SerializeField] int currentResetPrice = 0;
+        [SerializeField] int currentResetCount = 0;
 
+        [SerializeField] TextMeshProUGUI textResetCoinPrice; // 리셋 코인 가격
+        [SerializeField] TextMeshProUGUI textStoryResetCount; // 작품 리셋 횟수
         
         
         void Awake() {
@@ -30,6 +33,14 @@ namespace PIERStory {
         public override void OnStartView() {
             base.OnStartView();
             targetEpisode = SystemListener.main.resetTargetEpisode;
+            
+            // 현재 작품의 리셋 가격과 리셋 횟수 가져오기. 
+            currentResetCount = UserManager.main.GetProjectResetCount();
+            currentResetPrice = UserManager.main.GetProjectResetPrice();
+            
+            // 소모가격 세팅 
+            textResetCoinPrice.text = currentResetPrice.ToString();
+            
             SetExplain();
         }
         
@@ -39,6 +50,14 @@ namespace PIERStory {
                 Debug.LogError("No target data OnClickReset");
                 return;
             }
+            
+            // 잔고 체크
+            if(!UserManager.main.CheckCoinProperty(currentResetPrice)) {
+                SystemManager.ShowAlertWithLocalize("80013");
+                return;
+            }
+            
+            
             
             // 리셋 
             NetworkLoader.main.ResetEpisodeProgress(targetEpisode.episodeID, true);
@@ -58,8 +77,12 @@ namespace PIERStory {
             
         }
         
+        /// <summary>
+        /// 값이 필요한 설명글 처리 
+        /// </summary>
         void SetExplain() {
             textResetExplain.text = string.Format(SystemManager.GetLocalizedText("6000"), targetEpisode.episodeNO);
+            textStoryResetCount.text = string.Format(SystemManager.GetLocalizedText("6103"), currentResetCount);
         }
     }
 }

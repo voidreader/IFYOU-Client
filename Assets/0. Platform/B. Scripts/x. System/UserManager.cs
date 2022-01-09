@@ -164,7 +164,7 @@ namespace PIERStory
         const string NODE_SELECTION_PROGRESS = "selectionProgress"; // 선택지 프로그레스 
         
         const string NODE_FREEPASS_TIMEDEAL = "userFreepassTimedeal"; // 유저 프리패스 타임딜
-        
+        const string NODE_RESET_DATA = "resetData"; // 유저 작품 리셋데이터        
 
         #endregion
 
@@ -1623,13 +1623,45 @@ namespace PIERStory
         #region 사용자 에피소드 관련 메소드
 
 
-
-
-        #region 인스펙터 체크용!
-
-
-
+        #region 유저 리셋 정보 2022.01
+        
+        /// <summary>
+        /// 현재 프로젝트의 리셋 가격
+        /// </summary>
+        /// <returns></returns>
+        public int GetProjectResetPrice() {
+            
+            // 프리미엄 패스 유저는 0원이다. 
+            if(HasProjectFreepass()) {
+                return 0;
+            }
+            
+            return SystemManager.GetJsonNodeInt(currentStoryJson[NODE_RESET_DATA], "resetPrice");
+        }
+        
+        
+        /// <summary>
+        /// 프로젝트 리셋 카운트
+        /// </summary>
+        /// <returns></returns>
+        public int GetProjectResetCount() {
+            return SystemManager.GetJsonNodeInt(currentStoryJson[NODE_RESET_DATA], "reset_count");
+        }
+        
+        
+        /// <summary>
+        /// 작품 리셋정보 갱신하기 
+        /// </summary>
+        /// <param name="__newData"></param>
+        public void SetProjectResetData(JsonData __newData) {
+            currentStoryJson[NODE_RESET_DATA] = __newData;
+        }
+        
+        
+        
         #endregion
+
+        
 
         #region 유저 의상 변경점 업데이트 
         public void UpdateDressProgress(string __speaker, string __dress_id)
@@ -1909,6 +1941,8 @@ namespace PIERStory
 
         #endregion
 
+        
+        
         /// <summary>
         /// 현재 일러스트가 해금가능한지 체크한다.
         /// </summary>

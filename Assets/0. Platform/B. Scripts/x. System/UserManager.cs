@@ -760,7 +760,7 @@ namespace PIERStory
         /// <returns></returns>
         public bool HasProjectFreepass()
         {
-            if (SystemManager.GetJsonNodeBool(bankJson, "free_" + StoryManager.main.CurrentProjectID))
+            if (SystemManager.GetJsonNodeBool(bankJson, "Free" + StoryManager.main.CurrentProjectID))
                 return true;
             else
                 return false;
@@ -1524,8 +1524,10 @@ namespace PIERStory
             
             SetNodeUserProjectCurrent(resultEpisodeReset[NODE_PROJECT_CURRENT]);  // projectCurrent
             SetNodeUserProjectSelectionProgress(resultEpisodeReset[NODE_SELECTION_PROGRESS]); // 선택지 기록 
-
-           
+            SetProjectResetData(resultEpisodeReset[NODE_RESET_DATA]); // 리셋 기록 
+            
+            SetBankInfo(resultEpisodeReset); // 뱅크 정보 업데이트 
+            
             
             // 알림 팝업 후 목록화면 갱신처리 
             SystemManager.ShowSimpleMessagePopUp("선택한 시점으로 이야기가 초기화 되었습니다.");

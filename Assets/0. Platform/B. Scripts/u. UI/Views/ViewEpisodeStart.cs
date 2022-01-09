@@ -40,6 +40,7 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textBtnFreepass; // 프리패스 버튼 텍스트
         [SerializeField] TextMeshProUGUI textBtnAdPlay; // 광고 플레이 텍스트 
         [SerializeField] TextMeshProUGUI textBtnStarPlay; // 스타플레이 텍스트 
+        [SerializeField] GameObject starPlayCurrencyGroup; // 스타플레이 가격정보
         
         [SerializeField] EpisodeData episodeData = null; 
         
@@ -163,6 +164,9 @@ namespace PIERStory {
             textBtnStarPlay.text = SystemManager.GetLocalizedText("5002");
 
             // isOneTimeUsePossible = false;
+            
+            starPlayCurrencyGroup.SetActive(true); // 스타플레이 가격정보 
+            
         }
         
         /// <summary>
@@ -214,6 +218,7 @@ namespace PIERStory {
             if(episodeData.priceStarPlaySale <= 0) {
                 // 스타플레이 가격이 0이면, 스타플레이 버튼만 노출하고 끝. 
                 btnStarPlay.SetActive(true);
+                starPlayCurrencyGroup.SetActive(false);  // 가격정보 감추기. 
                 return; 
             } 
             
@@ -221,6 +226,7 @@ namespace PIERStory {
             if(episodeData.purchaseState == PurchaseState.Permanent) {
                 // btnPlay.SetActive(true);
                 btnStarPlay.SetActive(true);
+                starPlayCurrencyGroup.SetActive(false);  // 가격정보 감추기. 
                 return;
             }
             else {

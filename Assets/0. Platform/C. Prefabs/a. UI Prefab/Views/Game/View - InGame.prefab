@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 123, y: -135.5}
-  m_SizeDelta: {x: 202, y: 107}
+  m_AnchoredPosition: {x: 120.28, y: -139.13}
+  m_SizeDelta: {x: 207.44, y: 133.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &226006623011993286
 CanvasRenderer:
@@ -65,7 +65,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Place name
+  m_text: 'Place name
+
+    Place name'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3b94b8a95fd106940ac05fb65bdd2d01, type: 2}
   m_sharedMaterial: {fileID: -4354653047143194263, guid: 3b94b8a95fd106940ac05fb65bdd2d01, type: 2}
@@ -92,19 +94,19 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34
+  m_fontSize: 30
   m_fontSizeBase: 34
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 20
-  m_fontSizeMax: 34
+  m_fontSizeMax: 30
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: -6
   m_wordSpacing: 0
-  m_lineSpacing: -20
+  m_lineSpacing: -30
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -904,7 +906,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 226006623190912181}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
   m_Name: 
@@ -1655,6 +1657,7 @@ MonoBehaviour:
   emoticon: {fileID: 226006625110971604}
   fakeReverseTail: {fileID: 226006624107130547}
   isFakeBubble: 0
+  needDelayShow: 0
 --- !u!1 &226006623235660950
 GameObject:
   m_ObjectHideFlags: 0
@@ -2313,6 +2316,7 @@ MonoBehaviour:
   emoticon: {fileID: 226006623291315106}
   fakeReverseTail: {fileID: 226006623335540982}
   isFakeBubble: 0
+  needDelayShow: 0
 --- !u!1 &226006623392214192
 GameObject:
   m_ObjectHideFlags: 0
@@ -3252,8 +3256,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 102, y: -59}
-  m_SizeDelta: {x: 160, y: 36}
+  m_AnchoredPosition: {x: 109.86, y: -49.324997}
+  m_SizeDelta: {x: 175.72, y: 36}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &226006623643072583
 CanvasRenderer:
@@ -5454,8 +5458,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -5}
+  m_SizeDelta: {x: 0, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &226006624562747965
 MonoBehaviour:
@@ -5464,7 +5468,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 226006624019536231}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c97afc556caea1c44969477eb7ddec74, type: 3}
   m_Name: 
@@ -9269,10 +9273,6 @@ MonoBehaviour:
   inGameMenuBtn: {fileID: 226006625014140405}
   closeLogBtn: {fileID: 226006623836446310}
   microphoneIcon: {fileID: 0}
-  totalContainer: {fileID: 0}
-  alertContainer: {fileID: 0}
-  alertTitle: {fileID: 0}
-  containerMessage: {fileID: 0}
 --- !u!222 &7153852993802478744
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9492,6 +9492,7 @@ MonoBehaviour:
   emoticon: {fileID: 226006623593366810}
   fakeReverseTail: {fileID: 226006623878200070}
   isFakeBubble: 0
+  needDelayShow: 0
 --- !u!1 &226006624275290430
 GameObject:
   m_ObjectHideFlags: 0
@@ -9882,6 +9883,7 @@ MonoBehaviour:
   emoticon: {fileID: 226006624188216730}
   fakeReverseTail: {fileID: 226006623540908569}
   isFakeBubble: 0
+  needDelayShow: 0
 --- !u!1 &226006624316354040
 GameObject:
   m_ObjectHideFlags: 0
@@ -13711,6 +13713,7 @@ MonoBehaviour:
   emoticon: {fileID: 226006624731548669}
   fakeReverseTail: {fileID: 226006623041563930}
   isFakeBubble: 0
+  needDelayShow: 0
 --- !u!1 &226006624947592282
 GameObject:
   m_ObjectHideFlags: 0
@@ -14256,6 +14259,7 @@ MonoBehaviour:
   emoticon: {fileID: 226006624184035220}
   fakeReverseTail: {fileID: 226006623997900284}
   isFakeBubble: 0
+  needDelayShow: 0
 --- !u!1 &226006625110971606
 GameObject:
   m_ObjectHideFlags: 0

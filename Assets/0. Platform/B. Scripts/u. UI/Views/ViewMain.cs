@@ -522,7 +522,7 @@ namespace PIERStory {
 
         void OnAddMore()
         {
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
@@ -582,6 +582,7 @@ namespace PIERStory {
         public void ToggleOnPushAlert()
         {
             pushAlert.sprite = spriteToggleOn;
+            nightPushAlert.color = Color.white;
             SystemManager.main.PushRegister(true, false);
         }
 
@@ -591,6 +592,9 @@ namespace PIERStory {
         public void ToggleOffPushAlert()
         {
             pushAlert.sprite = spriteToggleOff;
+            nightPushAlert.sprite = spriteToggleOff;
+            nightPushAlert.color = Color.gray;
+
             SystemManager.main.PushRegister(false, false);
         }
 
@@ -599,6 +603,13 @@ namespace PIERStory {
         /// </summary>
         public void ToggleOnNightPushAlert()
         {
+            // 푸쉬 알림이 켜져있지 않으면 잠군다
+            if(!pushToggle.isOn)
+            {
+                SystemManager.ShowAlert(SystemManager.GetLocalizedText("6033"));
+                return;
+            }
+
             nightPushAlert.sprite = spriteToggleOn;
             SystemManager.main.PushRegister(true, true);
         }

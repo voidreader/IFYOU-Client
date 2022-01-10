@@ -1797,7 +1797,7 @@ namespace PIERStory
 
             popup.Data.SetImagesSprites(spriteIllustPopup);
             popup.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("5085"), illustName));
-            popup.Show();
+            PopupManager.main.ShowPopup(popup, true, false);
             
         }
 

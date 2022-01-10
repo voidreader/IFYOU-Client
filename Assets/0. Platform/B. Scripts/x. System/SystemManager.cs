@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
 using System.Text;
+using System.IO;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using TMPro;
 using LitJson;
 using BestHTTP;
 using Toast.Gamebase;
-using System.IO;
-using TMPro;
 
 namespace PIERStory
 {
@@ -833,12 +833,10 @@ namespace PIERStory
         
             
             // 이용약관, 개인정보처리방침을 수락했다면 key값이 존재하고, getInt 값도 1이다.
-            /*
             if (PlayerPrefs.HasKey("useTerms") && PlayerPrefs.HasKey("privacy") && PlayerPrefs.GetInt("useTerms") > 0 || PlayerPrefs.GetInt("privacy") > 0)
                 return;
 
             LobbyManager.main.termView = true;
-            */
             
             // 사실 뷰.  
             // Doozy.Engine.GameEventMessage.SendEvent("EventAgreementTerms");

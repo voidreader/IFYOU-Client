@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using TMPro;
 using LitJson;
 using BestHTTP;
+using Toast.Gamebase;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
 
@@ -66,6 +67,9 @@ namespace PIERStory {
         public Image pushAlert;                 // 푸쉬 알림
         public Image nightPushAlert;            // 야간 푸쉬 알림
         public Image dataUseAgree;              // 데이터 사용 허용
+        public UIToggle pushToggle;
+        public UIToggle nightPushToggle;
+        public UIToggle dataUseToggle;
 
         public Sprite spriteToggleOn;
         public Sprite spriteToggleOff;
@@ -524,6 +528,33 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, "더보기", string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, false, string.Empty);
+
+            #region 게임베이스 push
+
+            if (Application.isEditor)
+                return;
+
+
+            Gamebase.Push.QueryTokenInfo((data, error) =>
+            {
+                if(Gamebase.IsSuccess(error))
+                {
+                    pushToggle.isOn = data.agreement.adAgreement;
+                    nightPushToggle.isOn = data.agreement.adAgreementNight;
+
+                    Debug.Log(string.Format("TokenInfo = pushAlert : {0}, nightPush : {1}", data.agreement.adAgreement, data.agreement.adAgreementNight));
+                }
+                else
+                    Debug.LogError(string.Format("QueryToken response failed. Error : {0}", error));
+            });
+
+            // 데이터 사용 허용
+            if (PlayerPrefs.GetInt(SystemConst.KEY_NETWORK_DOWNLOAD) > 0)
+                dataUseToggle.isOn = true;
+            else
+                dataUseToggle.isOn = false;
+
+            #endregion
         }
 
 
@@ -551,6 +582,7 @@ namespace PIERStory {
         public void ToggleOnPushAlert()
         {
             pushAlert.sprite = spriteToggleOn;
+            SystemManager.main.PushRegister(true, false);
         }
 
         /// <summary>
@@ -559,6 +591,7 @@ namespace PIERStory {
         public void ToggleOffPushAlert()
         {
             pushAlert.sprite = spriteToggleOff;
+            SystemManager.main.PushRegister(false, false);
         }
 
         /// <summary>
@@ -567,6 +600,7 @@ namespace PIERStory {
         public void ToggleOnNightPushAlert()
         {
             nightPushAlert.sprite = spriteToggleOn;
+            SystemManager.main.PushRegister(true, true);
         }
 
         /// <summary>
@@ -575,6 +609,7 @@ namespace PIERStory {
         public void ToggleOffNightPushAlert()
         {
             nightPushAlert.sprite = spriteToggleOff;
+            SystemManager.main.PushRegister(true, false);
         }
 
         /// <summary>
@@ -583,6 +618,7 @@ namespace PIERStory {
         public void ToggleOnDataUse()
         {
             dataUseAgree.sprite = spriteToggleOn;
+            PlayerPrefs.SetInt(SystemConst.KEY_NETWORK_DOWNLOAD, 1);
         }
 
         /// <summary>
@@ -591,7 +627,9 @@ namespace PIERStory {
         public void ToggleOffDataUse()
         {
             dataUseAgree.sprite = spriteToggleOff;
+            PlayerPrefs.SetInt(SystemConst.KEY_NETWORK_DOWNLOAD, 0);
         }
+
         
         #endregion
 

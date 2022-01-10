@@ -759,69 +759,6 @@ MonoBehaviour:
     Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
---- !u!114 &-4748862683584036090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
-  m_Name: UI
-  m_EditorClassIdentifier: 
-  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
-  NodeId: be976cb1-cd68-41da-af9d-0e2a2b88f9a6
-  NodeType: 0
-  NodeName: Coupon
-  NodeDescription: 
-  InputPorts:
-  - NodeId: be976cb1-cd68-41da-af9d-0e2a2b88f9a6
-    PortId: 29f2188d-0794-44d3-84f1-cc610fe7dcee
-    Direction: 0
-    Capacity: 1
-    Connections: []
-    Value: '{"CanGoBack":true}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  OutputPorts:
-  - NodeId: be976cb1-cd68-41da-af9d-0e2a2b88f9a6
-    PortId: c5d2f631-c920-4275-88f3-c9d34a4c2794
-    Direction: 1
-    Capacity: 0
-    Connections: []
-    Value: '{"Trigger":0,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  RunUpdate: 0
-  RunFixedUpdate: 0
-  RunLateUpdate: 0
-  NodeState: 0
-  CanBeDeleted: 1
-  Passthrough: 0
-  ClearGraphHistory: 0
-  Position: {x: 1228, y: -1004.24}
-  OnEnterShowViews:
-  - Id:
-      Category: Popup
-      Name: Coupon
-      Custom: 0
-    Mode: 0
-  OnEnterHideViews: []
-  OnExitShowViews: []
-  OnExitHideViews:
-  - Id:
-      Category: Popup
-      Name: Coupon
-      Custom: 0
-    Mode: 0
-  OnEnterHideAllViews: 0
-  OnExitHideAllViews: 0
 --- !u!114 &-4316637466623339110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1027,16 +964,6 @@ MonoBehaviour:
     CanBeDeleted: 1
     CanBeReordered: 1
   - NodeId: 3468d9d5-bb74-4327-a921-df38bba24d33
-    PortId: 130120bb-8fb1-4e50-8d39-9fcb8d3fb018
-    Direction: 1
-    Capacity: 0
-    Connections: []
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"IFYOU","Name":"coupon","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"Lobby","Name":"Coupon","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 1
-    CanBeReordered: 1
-  - NodeId: 3468d9d5-bb74-4327-a921-df38bba24d33
     PortId: 61d38317-df19-44e1-a906-9fadcca91a1f
     Direction: 1
     Capacity: 0
@@ -1087,7 +1014,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 1
-  Position: {x: 740.3225, y: -751.0002}
+  Position: {x: 740, y: -751.75616}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -1283,7 +1210,6 @@ MonoBehaviour:
   - {fileID: -7894595917190794327}
   - {fileID: -6859130076055646578}
   - {fileID: -2480378993206472224}
-  - {fileID: -4748862683584036090}
   - {fileID: 1841992565293203595}
   - {fileID: 2336447358800265435}
   - {fileID: 6399534788089070960}

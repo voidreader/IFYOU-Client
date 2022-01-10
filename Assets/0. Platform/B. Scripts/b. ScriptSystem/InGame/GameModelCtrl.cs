@@ -18,7 +18,8 @@ namespace PIERStory
         [HideInInspector] public Animation modelAnim;
         [HideInInspector] public Dictionary<string, AnimationClip> DictMotion;
         [HideInInspector] public RawImage currRenderTexture;        // 현재 그려지고 있는 곳
-
+        
+        [SerializeField] bool isModelActivated = false; // 모델이 한번이라도 Activate 되었었지에 대한 변수
 
         // About DefaultCharacter
         SpriteRenderer defaultSprite = null;
@@ -166,6 +167,8 @@ namespace PIERStory
                 info.SetCharacterInfo(transform, row.speaker, row.character_expression);
             }
 
+
+            isModelActivated = true; // true로 처리한다. 한번만 true되면 된다.
             gameObject.SetActive(true);
         }
 
@@ -177,6 +180,7 @@ namespace PIERStory
         public void PlayCubismAnimation(ScriptRow __row, int characterPos)
         {
             // 더미 캐릭터고 스탠딩 캐릭터고 여기에서 다 관리하기 떄문에 이 스크립트에서 자체적으로 SetActive true/false 해주면 된다. 이동 및 크기 변경도 마찬가지
+            Debug.Log(string.Format("PlayCubismAnimation [{0}], [{1}]", __row.speaker, characterPos));
 
             #region autoPlay value
             autoPlay = __row.autoplay_row < 1 ? false : true;
@@ -186,8 +190,12 @@ namespace PIERStory
             #endregion
 
             // 모델이 비활성 상태일때 활성화가 되면 페이드인 처리를 한다. 
-            if (!gameObject.activeSelf)
+            // * 22.01.10 조건 추가합니다. 최초 로딩시점에 모델을 생성하지 않기 때문에 
+            // * isModelActivated bool 변수를 통해서 한번이라도 활성화 되었었는지를 체크합니다. 
+            if (!gameObject.activeSelf || !isModelActivated)
             {
+                Debug.Log(string.Format("PlayCubismAnimation !gameObject.activeSelf [{0}], [{1}]", __row.speaker, characterPos));
+                
                 ActivateModel(__row);
 
                 // 등장 연출과 퇴장 연출을 미리 받아둔다.
@@ -268,6 +276,8 @@ namespace PIERStory
             // 스킵이나 자동진행이 아니면 무조건 연출을 시작한다고 생각한다
             if (!autoPlay)
                 OnMoveStart();
+                
+            Debug.Log("EnterTalkingCharacter : " + characterPosIndex);
 
             // 캐릭터 위치(L,C,R)에 따른 위치 및 크기 조정
             switch (characterPosIndex)

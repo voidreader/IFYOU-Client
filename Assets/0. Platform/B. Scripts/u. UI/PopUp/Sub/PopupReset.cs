@@ -28,6 +28,8 @@ namespace PIERStory {
         
         public override void OnView() {
             base.OnView();
+            
+            
         }
         
         public override void OnStartView() {
@@ -41,7 +43,7 @@ namespace PIERStory {
             // 소모가격 세팅 
             textResetCoinPrice.text = currentResetPrice.ToString();
             
-            SetExplain();
+            
         }
         
         public void OnClickReset() {
@@ -80,7 +82,7 @@ namespace PIERStory {
         /// <summary>
         /// 값이 필요한 설명글 처리 
         /// </summary>
-        void SetExplain() {
+        public void SetExplain() {
             textResetExplain.text = string.Format(SystemManager.GetLocalizedText("6000"), targetEpisode.episodeNO);
             textStoryResetCount.text = string.Format(SystemManager.GetLocalizedText("6103"), currentResetCount);
         }

@@ -792,6 +792,8 @@ namespace PIERStory
                         characterIndex = 0;
                     else
                         characterIndex = 2;
+                        
+                    Debug.Log(string.Format("SetTalkProcess start [{0}] / [{1}]", __row.direction , __row.speaker));
 
                     // 동일한 사이드 캐릭터가 계속 말하는중
                     if (isSameTalker)
@@ -939,6 +941,8 @@ namespace PIERStory
             
             // 모델 컨트롤러 할당
             characterModels[index] = standingSpeaker.modelController;
+            
+            Debug.Log(string.Format("SetCharacterReady done [{0}], [{1}]", speaker, index));
         }
 
         #region 2인 스탠딩 연출 관련

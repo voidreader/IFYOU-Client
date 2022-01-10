@@ -81,15 +81,15 @@ namespace PIERStory
 
         string template = string.Empty;
         string message = string.Empty;
-        int bubbleSize = 0;
-        int bubblePos = 0;
+        [SerializeField] int bubbleSize = 0;
+        [SerializeField] int bubblePos = 0;
         int bubbleReverse = 0;                  // 말꼬리 반전 사용
         int holdingCount = 0;
         ScriptRow row;
         string emoticon_expression = string.Empty;
         string in_effect = string.Empty;
         string out_effect = string.Empty;
-        string speaker = string.Empty;
+        [SerializeField] string speaker = string.Empty;
         string alternativeName = string.Empty; // 대체 이름 
 
         Vector3 tweenLocalScale = Vector3.zero; // scaleX,Y에 변화가 일어났을때 대신 사용할 Vector3
@@ -104,7 +104,7 @@ namespace PIERStory
         [Space][Header("부가 기능")]
         string options = string.Empty; // 부가 기능!
 
-        string variation = string.Empty;        // variation 
+        [SerializeField] string variation = string.Empty;        // variation 
         JsonData currentBubbleGroup = null;     // 배리에이션에 따른 말풍선 기준정보 
         JsonData targetBubbleJson = null;       // size, pos에 맞는 타겟 JSON Object 행 
         string targetBubbleDataString = string.Empty;

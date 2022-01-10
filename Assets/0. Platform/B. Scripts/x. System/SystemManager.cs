@@ -107,7 +107,8 @@ namespace PIERStory
 
         #endregion
         
-        [SerializeField] UniWebView defaultWebview = null;
+        //[SerializeField] UniWebView defaultWebview = null;
+        [SerializeField] GameObject prefabWebview;
 
         // * 비암호화 저장 세팅 (디폴트는 암호화)        
         public static ES3Settings noEncryptionSetting;
@@ -220,7 +221,7 @@ namespace PIERStory
             
             noEncryptionSetting = new ES3Settings(ES3.EncryptionType.None, "password");
             
-            defaultWebview.OnShouldClose += OnWebviewClosed;
+            
             
         }
         
@@ -1684,16 +1685,29 @@ namespace PIERStory
         public void ShowDefaultWebview(string __url) {
             
             // var color = new Color(1, 0.83f, 0.83f);
+            UniWebView uniWebView = Instantiate(prefabWebview, Vector3.zero, Quaternion.identity, SystemManager.main.transform).GetComponent<UniWebView>();
             
-            defaultWebview.Load(__url);
-            defaultWebview.SetShowToolbar(false);
-            defaultWebview.Show();
+            
+            // uniWebView.Frame = new Rect(0,0, Screen.width, Screen.height);
+            uniWebView.CleanCache();
+            uniWebView.Load(__url);
+            // uniWebView.SetShowToolbar(false);
+            uniWebView.Show();
+            uniWebView.OnShouldClose += OnWebviewClosed;
         }
         
         
         bool OnWebviewClosed(UniWebView __view) {
             Debug.Log("Webview Closed");
             NetworkLoader.main.RequestUserBaseProperty();
+            
+            try {
+                Destroy(__view);
+            }
+            catch(Exception e){
+                Debug.Log("OnWebviewClosed" + e.StackTrace);
+            }
+            
             return true;
         }
         

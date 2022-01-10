@@ -1698,6 +1698,8 @@ namespace PIERStory
                 if(message.Path.Contains("close")) {
                     uniWebView.Hide();
                     Debug.Log("close called");
+                    
+                    OnWebviewClosed(uniWebView);
                 }
             };
         }

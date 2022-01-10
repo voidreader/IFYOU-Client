@@ -1692,6 +1692,14 @@ namespace PIERStory
             // uniWebView.SetShowToolbar(false);
             uniWebView.Show();
             uniWebView.OnShouldClose += OnWebviewClosed;
+            
+            
+            uniWebView.OnMessageReceived += (view, message) => {
+                if(message.Path.Contains("close")) {
+                    uniWebView.Hide();
+                    Debug.Log("close called");
+                }
+            };
         }
         
         

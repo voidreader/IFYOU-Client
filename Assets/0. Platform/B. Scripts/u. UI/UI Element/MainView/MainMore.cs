@@ -45,7 +45,9 @@ namespace PIERStory {
         /// </summary>
         public void OnClickCoupon() {
             Debug.Log(">> OnClickCoupon");
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_COUPON, string.Empty);
+
+            PopupBase coupon = PopupManager.main.GetPopup("Coupon");
+            PopupManager.main.ShowPopup(coupon, true, false);
         }
         
         /// <summary>

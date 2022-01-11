@@ -17,6 +17,7 @@ namespace PIERStory
         public static Action OnDisableAllOptionals = null;
         public static Action<JsonData, ProfileItemElement> OnBackgroundSetting = null;
         public static Action<JsonData, ProfileItemElement> OnBadgeSetting = null;
+        public static Action<JsonData, ProfileItemElement> OnStickerSetting = null;
         public static Action<JsonData, ProfileItemElement> OnStandingSetting = null;
         public static Action<StandingElement> OnControlStanding = null;
 
@@ -83,6 +84,7 @@ namespace PIERStory
             OnDisableAllOptionals = OnClickAllDisable;
             OnBackgroundSetting = ProfileBackgrounSetting;
             OnBadgeSetting = ProfileBadgeSetting;
+            OnStickerSetting = ProfileStickerSetting;
             OnStandingSetting = ProfileStandingSetting;
             OnControlStanding = SelectControlStanding;
 
@@ -153,7 +155,7 @@ namespace PIERStory
             LoadStandingData();
 
             // 뱃지
-
+            LoadBadgeData();
 
             // 스티커
             LoadStickerData();
@@ -565,6 +567,34 @@ namespace PIERStory
 
         #region 뱃지
 
+        void LoadBadgeData()
+        {
+            if(!profileCurrencyList.ContainsKey(LobbyConst.NODE_BADGE) || profileCurrencyList[LobbyConst.NODE_BADGE] == null)
+            {
+                badgeScroll.SetActive(false);
+                noneBadgeItem.SetActive(true);
+                return;
+            }
+
+            badgeScroll.SetActive(true);
+            noneBadgeItem.SetActive(false);
+
+            ProfileItemElement listElement = null;
+
+            for(int i=0;i<profileCurrencyList[LobbyConst.NODE_BADGE].Count;i++)
+            {
+                listElement = Instantiate(badgeListPrefab, badgeElementListContent).GetComponent<ProfileItemElement>();
+                listElement.InitCurrencyListElement(profileCurrencyList[LobbyConst.NODE_BADGE][i]);
+                createObject.Add(listElement.gameObject);
+            }
+        }
+
+        void ProfileBadgeSetting(JsonData __j, ProfileItemElement profileDeco)
+        {
+            ItemElement badgeElement = Instantiate(stickerObjectPrefab, decoObjects).GetComponent<ItemElement>();
+            badgeElement.NewProfileItem(__j, profileDeco);
+            createObject.Add(badgeElement.gameObject);
+        }
 
         #endregion
 
@@ -592,11 +622,11 @@ namespace PIERStory
             }
         }
 
-        void ProfileBadgeSetting(JsonData __j, ProfileItemElement profileDeco)
+        void ProfileStickerSetting(JsonData __j, ProfileItemElement profileDeco)
         {
-            ItemElement badgeElement = Instantiate(stickerObjectPrefab, decoObjects).GetComponent<ItemElement>();
-            badgeElement.NewProfileItem(__j, profileDeco);
-            createObject.Add(badgeElement.gameObject);
+            ItemElement stickerElement = Instantiate(stickerObjectPrefab, decoObjects).GetComponent<ItemElement>();
+            stickerElement.NewProfileItem(__j, profileDeco);
+            createObject.Add(stickerElement.gameObject);
         }
 
         #endregion

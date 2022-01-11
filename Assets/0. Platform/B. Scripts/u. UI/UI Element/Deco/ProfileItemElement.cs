@@ -53,7 +53,7 @@ namespace PIERStory
 
             currentCount++;
             SetCountText();
-            ViewProfileDeco.OnBadgeSetting?.Invoke(currencyData, this);
+            ViewProfileDeco.OnStickerSetting?.Invoke(currencyData, this);
         }
 
         public void OnClickSelectStanding()

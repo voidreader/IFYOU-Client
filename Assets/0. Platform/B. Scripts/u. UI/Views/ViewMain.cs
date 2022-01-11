@@ -599,6 +599,22 @@ namespace PIERStory {
                 dataUseToggle.isOn = false;
 
             #endregion
+
+            if (pushToggle.isOn)
+                pushToggle.OnToggleOnCallback.Execute();
+            else
+                pushToggle.OnToggleOffCallback.Execute();
+
+
+            if(nightPushToggle.isOn)
+                nightPushToggle.OnToggleOnCallback.Execute();
+            else
+                nightPushToggle.OnToggleOffCallback.Execute();
+
+            if(dataUseToggle.isOn)
+                dataUseToggle.OnToggleOnCallback.Execute();
+            else
+                dataUseToggle.OnToggleOffCallback.Execute();
         }
 
 

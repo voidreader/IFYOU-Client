@@ -7,6 +7,28 @@ namespace PIERStory {
 
     public class MainMore : MonoBehaviour
     {
+        public static System.Action OnRefreshMore = null;
+        
+        [SerializeField] GameObject accountBonus;
+        
+        void Start() {
+            OnRefreshMore = RefreshScreen;
+        }
+        
+        void OnEnable() {
+            RefreshScreen();
+        }
+        
+        void RefreshScreen() {
+            
+            accountBonus.SetActive(false);
+            
+            if(UserManager.main == null || string.IsNullOrEmpty(UserManager.main.userKey))
+                return;
+            
+            if(UserManager.main.accountLink == "-")
+                accountBonus.SetActive(true);
+        }
         
         /// <summary>
         /// 언어
@@ -72,6 +94,27 @@ namespace PIERStory {
         public void OnClickLeave() {
             
         }
+        
+        /// <summary>
+        /// 닉네임 체인지 
+        /// </summary>
+        public void OnClickNicknameChange() {
+            
+        }
+        
+        /// <summary>
+        /// 계정 연결 
+        /// </summary>
+        public void OnClickAccount() {
+            PopupBase p = PopupManager.main.GetPopup("Account");
+            if( p == null) {
+                Debug.LogError("No account popup");
+                return;
+            }
+            
+            PopupManager.main.ShowPopup(p, true);
+        }
+        
         
     }
 }

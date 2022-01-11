@@ -101,6 +101,7 @@ namespace PIERStory
         public int level = 0; // 레벨 
         public int exp = 0; // 경험치 
         public string nickname = string.Empty;      // 유저 닉네임
+        public string accountLink = string.Empty; // 유저 계정 연동 정보 (table_account)
         
 
         public int gem = 0;
@@ -236,16 +237,10 @@ namespace PIERStory
 
             // 알림 정보 update
             SetNotificationInfo(userJson);
-
-
-            // account 정보 
-            userJson = SystemManager.GetJsonNode(userJson, "account");
-            userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
-            tutorialStep = int.Parse(SystemManager.GetJsonNodeString(userJson, "tutorial_step"));
-            adCharge = int.Parse(SystemManager.GetJsonNodeString(userJson, "ad_charge"));
-            nickname = SystemManager.GetJsonNodeString(userJson, "nickname");
             
-            SetLevelInfo();
+            // 유저 정보
+            SetUserInfo(userJson);
+           
 
 
             // 유저 정보 불러왔으면, Lobby로 진입을 요청합니다. 
@@ -301,6 +296,23 @@ namespace PIERStory
             SetRefreshUserInfo(result);            
             
         }
+        
+        
+        /// <summary>
+        /// userkey및 기타 닉네임, 레벨 정도 설정 
+        /// </summary>
+        /// <param name="__j"></param>
+        void SetUserInfo(JsonData __j) {
+            userJson = SystemManager.GetJsonNode(__j, "account"); // 유저 json 
+            
+            userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
+            tutorialStep = int.Parse(SystemManager.GetJsonNodeString(userJson, "tutorial_step"));
+            nickname = SystemManager.GetJsonNodeString(userJson, "nickname");
+            accountLink = SystemManager.GetJsonNodeString(userJson, "account_link");
+            
+            // 레벨 정보
+            SetLevelInfo();
+        }
 
 
         /// <summary>
@@ -315,13 +327,8 @@ namespace PIERStory
 
             // 알림 정보 update
             SetNotificationInfo(__j);
-
-            userJson = SystemManager.GetJsonNode(userJson, "account");
-            userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
-            tutorialStep = int.Parse(SystemManager.GetJsonNodeString(userJson, "tutorial_step"));
-            nickname = SystemManager.GetJsonNodeString(userJson, "nickname");
-
-            SetLevelInfo();
+            
+            SetUserInfo(__j);
 
             // 사용자 UI 정보를 갱신하는 Event 필요함!
 

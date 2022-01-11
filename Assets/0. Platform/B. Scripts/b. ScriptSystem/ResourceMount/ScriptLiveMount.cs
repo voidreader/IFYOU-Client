@@ -407,6 +407,9 @@ namespace PIERStory
 
         public void EndIllust()
         {
+            // * 잠시 사용하지 않도록 처리 
+            
+            /*
             if (useCount < 1)
             {
                 if(isMinicut)
@@ -416,6 +419,7 @@ namespace PIERStory
 
                 liveImageController.DestroySelf();
             }
+            */
         }
     }
 }

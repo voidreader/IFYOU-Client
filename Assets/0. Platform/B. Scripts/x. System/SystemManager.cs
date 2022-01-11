@@ -907,6 +907,8 @@ namespace PIERStory
         }
 
 
+        #region 약관 및 푸쉬
+
         /// <summary>
         /// 약관 및 푸시 내용 update
         /// </summary>
@@ -1046,8 +1048,10 @@ namespace PIERStory
                 }
             });
         }
-        
-        
+
+        #endregion
+
+
         /// <summary>
         /// 슬라이드 메뉴에서 게임베이스 로그인 
         /// </summary>
@@ -1193,8 +1197,6 @@ namespace PIERStory
         #endregion
         
 
-
-
         /// <summary>
         /// TOAST 로그 시스템
         /// </summary>
@@ -1206,9 +1208,7 @@ namespace PIERStory
         }
 
 
-
-
-#region 시스테 로컬 설정(BGM,효과음 등) 
+        #region 시스테 로컬 설정(BGM,효과음 등) 
 
         const string BGM_SETTING = "bgm_setting";
         const string SE_SETTING = "se_setting";
@@ -1247,7 +1247,7 @@ namespace PIERStory
             PlayerPrefs.Save();
         }
 
-#endregion
+        #endregion
         
         /// <summary>
         /// JSON 특정 노드의 노드 값을 알려주쇼
@@ -1468,7 +1468,19 @@ namespace PIERStory
 
         }
 
+        /// <summary>
+        /// 공지사항 리스트 요청 콜백
+        /// </summary>
+        public void CallbackNoticeList(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackNoticeList");
+                return;
+            }
 
+            noticeData = JsonMapper.ToObject(res.DataAsText);
+        }
 
 
         #region 프로모션, 장르, 카테고리 관련

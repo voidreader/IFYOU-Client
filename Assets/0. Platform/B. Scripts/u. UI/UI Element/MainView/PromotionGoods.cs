@@ -34,7 +34,7 @@ namespace PIERStory
                 // 상점의 경우에는 상점페이지로 이동
                 Debug.Log("Move to starShop");
 
-
+                ViewMain.OnMoveStarShop?.Invoke();
             }
             else if(promotionType == LobbyConst.COL_COIN)
             {

@@ -15,6 +15,7 @@ using DanielLochner.Assets.SimpleScrollSnap;
 namespace PIERStory {
     public class ViewMain : CommonView
     {
+        public static Action OnMoveStarShop = null;
         public static Action OnProfileSetting = null;
         public static Action<string> OnCategoryList;
         
@@ -30,6 +31,7 @@ namespace PIERStory {
         public GameObject promotionGoodsPrefab;
         public Transform promotionPagenation;
         public GameObject pageTogglePrefab;
+        public UIToggle shopToggle;
         
         // 진행중인 이야기 타이틀과 ScrollRect
         [SerializeField] GameObject playingAreaTitle;
@@ -201,9 +203,14 @@ namespace PIERStory {
             }
 
             promotionScroll.Setup();
+            OnMoveStarShop = MoveToStarShop;
         }
 
-
+        void MoveToStarShop()
+        {
+            mainToggle.OnToggleOffCallback.Execute();
+            shopToggle.OnToggleOnCallback.Execute();
+        }
 
         /// <summary>
         /// 진행중인 이야기 초기화

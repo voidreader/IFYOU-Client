@@ -616,9 +616,21 @@ namespace PIERStory
         }
 
         #endregion
-        
+
+        #region 메인 프로모션
+
+        public void RequestPromotionList()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestPromotionList";
+
+            SendPost(SystemManager.main.CallbackPromotionList, sending);
+        }
+
+        #endregion
+
         #region 카테고리
-        
+
         /// <summary>
         /// 카테고리에서 사용하는 장르 요청
         /// </summary>

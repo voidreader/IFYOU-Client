@@ -91,6 +91,15 @@ namespace PIERStory {
         public const string NODE_COLOR_RGB = "color_rgb";
 
 
+        // 프로모션 관련
+        public const string NODE_PROMOTION_TYPE = "promotion_type";
+        public const string COL_PROJECT = "project";
+        public const string COL_PAGE = "page";
+        public const string NODE_PROMOTION_BANNER_URL = "promotion_banner_url";
+        public const string NODE_PROMOTION_BANNER_KEY = "promotion_banner_key";
+        public const string COL_STAR = "star";
+        public const string COL_COIN = "coin";
+        public const string COL_IFYOU = "ifyou";
 
 
         #region 재화 

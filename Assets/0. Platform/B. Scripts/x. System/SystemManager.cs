@@ -90,8 +90,9 @@ namespace PIERStory
         #region 장르
         JsonData storyGenreData = null; // 공개된 작품 장르
         #endregion
-        
-        public JsonData noticeData = null; // 공지사항 데이터 
+
+        public JsonData promotionData = null;       // 프로모션 데이터
+        public JsonData noticeData = null;          // 공지사항 데이터 
 
 
         string messageRequireUpdate = string.Empty;
@@ -1466,24 +1467,41 @@ namespace PIERStory
         {
 
         }
-        
-        #region 장르, 카테고리 관련
-        
+
+
+
+
+        #region 프로모션, 장르, 카테고리 관련
+
+        /// <summary>
+        /// 프로모션 리스트 요청 콜백
+        /// </summary>
+        public void CallbackPromotionList(HTTPRequest req, HTTPResponse res)
+        {
+            if(!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackPromotionList");
+                return;
+            }
+
+            promotionData = JsonMapper.ToObject(res.DataAsText);
+        }
+
+
+
         /// <summary>
         /// 장르 관련 정보 세팅 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
-        public void SetCategoryGenre(HTTPRequest request, HTTPResponse response) {
-            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+        public void SetCategoryGenre(HTTPRequest request, HTTPResponse response)
+        {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
                 return;
-            }
-            
+
             // genre_name
             storyGenreData = JsonMapper.ToObject(response.DataAsText);
-            
         }
-        
         
         
         #endregion
@@ -1638,22 +1656,21 @@ namespace PIERStory
             
             PopupManager.main.ShowPopup(p, false, false);
         }
-        
-        
+
+
         /// <summary>
         /// 레벨의 최대 경험치 구하기 
         /// </summary>
         /// <param name="__level"></param>
         /// <returns></returns>
-        public int GetLevelMaxExp(string __level) {
-            for(int i=0; i<levelData.Count;i++) {
-                
-                if(GetJsonNodeString(levelData[i], "next_level") == __level) {
+        public int GetLevelMaxExp(string __level)
+        {
+            for (int i = 0; i < levelData.Count; i++)
+            {
+                if (GetJsonNodeString(levelData[i], "next_level") == __level)
                     return GetJsonNodeInt(levelData[i], "experience");
-                }
-                
             }
-            
+
             return -1;
         }
         
@@ -1703,23 +1720,24 @@ namespace PIERStory
                 }
             };
         }
-        
-        
-        bool OnWebviewClosed(UniWebView __view) {
+
+
+        bool OnWebviewClosed(UniWebView __view)
+        {
             Debug.Log("Webview Closed");
             NetworkLoader.main.RequestUserBaseProperty();
-            
-            try {
+
+            try
+            {
                 Destroy(__view);
             }
-            catch(Exception e){
+            catch (Exception e)
+            {
                 Debug.Log("OnWebviewClosed" + e.StackTrace);
             }
-            
+
             return true;
         }
-        
-        
          
     }
 }

@@ -10,7 +10,7 @@ using BestHTTP;
 using Toast.Gamebase;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
-
+using DanielLochner.Assets.SimpleScrollSnap;
 
 namespace PIERStory {
     public class ViewMain : CommonView
@@ -22,7 +22,14 @@ namespace PIERStory {
         [Header("로비")]
         [SerializeField] ScrollRect mainScrollRect;
         [SerializeField] UIToggle mainToggle;
-        
+
+        // 프로모션 배너
+        public SimpleScrollSnap promotionScroll;
+        public Transform promotionContent;
+        public GameObject promotionProjectPrefab;
+        public GameObject promotionGoodsPrefab;
+        public Transform promotionPagenation;
+        public GameObject pageTogglePrefab;
         
         // 진행중인 이야기 타이틀과 ScrollRect
         [SerializeField] GameObject playingAreaTitle;
@@ -119,13 +126,14 @@ namespace PIERStory {
         /// <summary>
         /// 로비 컨테이너 초기화 
         /// </summary>
-        void InitLobby() {
+        void InitLobby()
+        {
             Signal.Send(LobbyConst.STREAM_IFYOU, "initNavigation", string.Empty);
-            
+
+            InitPromotionList();
             InitPlayingStoryElements(); // 진행중인 이야기 Area 초기화 
             InitRecommendStory(); // 추천스토리 Area 초기화
             InitNewStoryElements(); // 새로운 이야기 Area 초기화
-            
         }
         
         public void OnLobbyTab() {
@@ -168,6 +176,35 @@ namespace PIERStory {
         
         #region 메인 로비 
         
+        /// <summary>
+        /// 프로모션 리스트 세팅
+        /// </summary>
+        void InitPromotionList()
+        {
+            JsonData promotionList = SystemManager.main.promotionData;
+
+            for (int i = 0; i < promotionList.Count; i++)
+            {
+                // 프로모션 타입을 체크
+                if(SystemManager.GetJsonNodeString(promotionList[i], LobbyConst.NODE_PROMOTION_TYPE) == LobbyConst.COL_PROJECT)
+                {
+                    PromotionProject promotionProject = Instantiate(promotionProjectPrefab, promotionContent).GetComponent<PromotionProject>();
+                    promotionProject.SetPromotionProject(SystemManager.GetJsonNodeString(promotionList[i], "location"), promotionList[i]["detail"]);
+                    Instantiate(pageTogglePrefab, promotionPagenation);
+                }
+                else
+                {
+                    PromotionGoods promotionGoods = Instantiate(promotionGoodsPrefab, promotionContent).GetComponent<PromotionGoods>();
+                    promotionGoods.SetPromotionGoods(SystemManager.GetJsonNodeString(promotionList[i], "location"), promotionList[i]["detail"]);
+                    Instantiate(pageTogglePrefab, promotionPagenation);
+                }
+            }
+
+            promotionScroll.Setup();
+        }
+
+
+
         /// <summary>
         /// 진행중인 이야기 초기화
         /// </summary>

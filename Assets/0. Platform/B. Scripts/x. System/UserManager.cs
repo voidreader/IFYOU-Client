@@ -100,6 +100,7 @@ namespace PIERStory
         
         public int level = 0; // 레벨 
         public int exp = 0; // 경험치 
+        public string nickname = string.Empty;      // 유저 닉네임
         
 
         public int gem = 0;
@@ -242,7 +243,7 @@ namespace PIERStory
             userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
             tutorialStep = int.Parse(SystemManager.GetJsonNodeString(userJson, "tutorial_step"));
             adCharge = int.Parse(SystemManager.GetJsonNodeString(userJson, "ad_charge"));
-            
+            nickname = SystemManager.GetJsonNodeString(userJson, "nickname");
             
             SetLevelInfo();
 
@@ -318,7 +319,8 @@ namespace PIERStory
             userJson = SystemManager.GetJsonNode(userJson, "account");
             userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
             tutorialStep = int.Parse(SystemManager.GetJsonNodeString(userJson, "tutorial_step"));
-            
+            nickname = SystemManager.GetJsonNodeString(userJson, "nickname");
+
             SetLevelInfo();
 
             // 사용자 UI 정보를 갱신하는 Event 필요함!

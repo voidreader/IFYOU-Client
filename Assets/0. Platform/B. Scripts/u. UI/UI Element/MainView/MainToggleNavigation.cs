@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 using TMPro;
 
 namespace PIERStory {
@@ -65,6 +64,10 @@ namespace PIERStory {
         /// 활성 상태
         /// </summary>
         void InitOn() {
+
+            if (LobbyManager.main == null)
+                return;
+
             textName.color = LobbyManager.main.colorNavOn;
             
             switch(mainNavigationType) {

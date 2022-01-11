@@ -617,6 +617,19 @@ namespace PIERStory
 
         #endregion
 
+
+        /// <summary>
+        /// 공지사항 리스트 요청
+        /// </summary>
+        public void RequestNoticeList()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "getClientNoticeList";
+
+            SendPost(SystemManager.main.CallbackNoticeList, sending);
+        }
+
+
         #region 메인 프로모션
 
         public void RequestPromotionList()

@@ -16,10 +16,36 @@ namespace PIERStory {
     
     public class MainToggleNavigation : MonoBehaviour
     {
+        public static System.Action OnToggleAccountBonus = null;
+        
         [SerializeField] TextMeshProUGUI textName;
         [SerializeField] Image icon;
         
         [SerializeField] MainNavigationType mainNavigationType;
+        [SerializeField] GameObject accountBonus;
+        
+        void Start() {
+            if(mainNavigationType != MainNavigationType.More)
+                return;
+                
+            OnToggleAccountBonus = RefreshAccountBonus;
+        }
+        
+        void OnEnable() {
+            RefreshAccountBonus();
+        }
+        
+        void RefreshAccountBonus() {
+            if(UserManager.main == null || string.IsNullOrEmpty(UserManager.main.userKey))
+                return;
+            
+            // 더보기에서만 작동
+            // 계정연동 되지 않은 경우에는 보상 표시
+            if(mainNavigationType == MainNavigationType.More && UserManager.main.accountLink == "-")
+                accountBonus.SetActive(true);
+        }
+        
+        
         
         /// <summary>
         /// 비활성 상태 

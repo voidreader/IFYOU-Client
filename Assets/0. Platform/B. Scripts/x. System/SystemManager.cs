@@ -1105,8 +1105,74 @@ namespace PIERStory
         /// <param name="request"></param>
         /// <param name="response"></param>
         void OnRequest__checkAccountExistsByGamebase(HTTPRequest request, HTTPResponse response) {
-
+            Debug.Log("OnRequest__checkAccountExistsByGamebase");
+            
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                Debug.Log(string.Format("#### OnRequest__checkAccountExistsByGamebase failed. error is {0}", request.State));
+                return;
+            }
+            
+            
+            // 여기서는 연동한 구글, 애플과 연결된 계정정보를 불러오고 처리를 진행한다. 
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            
+            if(result == null || result.Count == 0) { 
+                // ! 계정이 없다. => call updateAccountWithGamebaseID => OnRequest__updateAccountWithGamebaseID
+                 Debug.Log("### No connected Gamebase account");
+                 // TODO 현재 유저의 table_account에 현재의 gamebaseID를 덮어씌운다. 
+                 JsonData reqData = new JsonData();
+                 reqData["func"] = "updateAccountWithGamebaseID";
+                 reqData["gamebaseID"] = Gamebase.GetUserID();
+                 NetworkLoader.main.SendPost(OnRequest__updateAccountWithGamebaseID, reqData, true);
+                 
+            }
+            else {
+                // ! 이전에 연결된 계정이 있다. 
+                string connectedUserkey = result[0]["userkey"].ToString();
+                Debug.Log(string.Format("### connected account exists [{0}]", connectedUserkey));
+                
+                // * 여기서부터 복잡해지는건데... 이미 연동한 계정이 있는 경우는..? 
+                // * 유저에게 연동된 계정이 있는데, 연동하겠느냐고 묻는다. 
+                // TODO 예, 아니오 팝업을 띄운다.
+                if(connectedUserkey != UserManager.main.userKey) {
+                    ShowConfirmPopUp(SystemManager.GetLocalizedText("6111"), ConfirmPreviousAccountLoad, CancleAccountConnect);
+                }
+ 
+            }
         }
+        
+        
+        /// <summary>
+        /// 게임베이스 ID => table_account에 업데이트 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        void OnRequest__updateAccountWithGamebaseID(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request,response)) {
+                Debug.Log(string.Format("#### OnRequest__updateAccountWithGamebaseID failed. error is {0}", request.State));
+                ShowSimpleMessagePopUp("게임베이스 연동 과정에서 오류가 발생했습니다.");
+                return;
+            }
+            
+            
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            
+            // 2022.01 미수신 메일 카운트 날아온다.
+            UserManager.main.SetNotificationInfo(result);
+            
+            // 연동이 완료되었습니다. 메세지 처리 
+            ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("6110"));
+
+            UserManager.main.accountLink = "link";
+            
+            // Refresh 처리 
+            PopupAccount.OnRefresh?.Invoke();
+            MainToggleNavigation.OnToggleAccountBonus?.Invoke();
+            MainMore.OnRefreshMore?.Invoke();
+            
+        }
+                
+        
         
         /// <summary>
         /// 계정 연동 취소. 
@@ -1147,8 +1213,26 @@ namespace PIERStory
             Debug.Log("##### ConfirmPreviousAccountLoad");
             
             // 코루틴에서 처리 
-            // StartCoroutine(RoutineLoadingConnectedAccount());
+            StartCoroutine(RoutineLoadingConnectedAccount());
        }
+       
+       
+        IEnumerator RoutineLoadingConnectedAccount() {
+             // ! 연결된 계정 다시 로드 
+            UserManager.main.InitUser(Gamebase.GetUserID());
+            
+            // 통신이 완료될때까지 기다려야한다.
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+        
+            // 연동이 완료되었습니다.
+            ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("6112"));
+        
+            
+            // Refresh 처리 
+            MainToggleNavigation.OnToggleAccountBonus?.Invoke();
+            PopupAccount.OnRefresh?.Invoke();
+            MainMore.OnRefreshMore?.Invoke();
+        }       
         
 
 
@@ -1448,7 +1532,7 @@ namespace PIERStory
         /// 로컬라이즈 메세지를 이용한 단순 메세지 팝업 호출
         /// </summary>
         /// <param name="__textID"></param>
-        public static void ShowSimpleMessagePopUpWithLocalize(string __textID, UnityEngine.Events.UnityAction __callback = null) {
+        public static void ShowSimpleMessagePopUpWithLocalize(string __textID, Action __callback = null) {
             ShowSimpleMessagePopUp(GetLocalizedText(__textID), __callback);
         }
 
@@ -1456,9 +1540,24 @@ namespace PIERStory
         /// 원버튼의 단순 메세지 팝업 호출 
         /// </summary>
         /// <param name="__message"></param>
-        public static void ShowSimpleMessagePopUp(string __message, UnityEngine.Events.UnityAction __callback)
+        public static void ShowSimpleMessagePopUp(string __message, Action __callback)
         {
-
+            
+            // 로비에서 사용하는것과 게임에서 사용하는게 다르다. 
+            if(LobbyManager.main != null) {
+                PopupBase  p = PopupManager.main.GetPopup("LobbyMessage");
+                if(p == null) {
+                    Debug.LogError("No lobby simple message popup ");
+                    return;
+                }
+                
+                p.Data.SetLabelsTexts(__message);
+                if(__callback != null) {
+                    p.Data.SetPositiveButtonCallback(__callback);
+                }
+                
+                PopupManager.main.ShowPopup(p, false);
+            }
 
         }
 

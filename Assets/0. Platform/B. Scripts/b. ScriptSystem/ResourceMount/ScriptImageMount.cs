@@ -243,9 +243,9 @@ namespace PIERStory
                 // 게임매니저 Dictionary에서 제거 요청
                 switch (template)
                 {
+                    // IMAGE 사용하지 않도록 변경 2022.01.11
                     case GameConst.TEMPLATE_IMAGE:
-                        //GameManager.main.RemoveImageFromDictionary(imageName);
-                        break;
+                        return;
                     case GameConst.TEMPLATE_BACKGROUND:
                     case GameConst.TEMPLATE_MOVEIN:
                         //GameManager.main.RemoveBackgroundFromDicionary(imageName);

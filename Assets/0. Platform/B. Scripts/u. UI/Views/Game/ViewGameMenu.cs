@@ -139,7 +139,15 @@ namespace PIERStory
 
             // 팝업에 대해 뭔가 정해질 때까지 묻지 않고 그냥 종료
             //SystemManager.ShowConfirmPopUp(SystemManager.GetLocalizedText("6037"), GameManager.main.EndGame, null);
-            GameManager.main.EndGame();
+            
+            
+            // * 이 조건일때, 나가면 튜토리얼이 중단된다고 경고해줘야 한다.  
+            if(UserManager.main.tutorialStep == 1 && UserManager.main.tutorialFirstProjectID > 0) {
+                
+            }
+            
+            // ! 여기서 나가면 강제 종료야. 튜토리얼이 끊긴다고..! 
+            GameManager.main.QuitGame(); // QuitGame은 강제종료고 EndGame은 정상종료다.
         }
 
         public void OnAutoPlay()

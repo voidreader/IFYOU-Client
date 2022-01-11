@@ -96,6 +96,8 @@ namespace PIERStory
         public string userKey = string.Empty;
         public string gamebaseID = string.Empty;
         public int tutorialStep = 0;
+        public int tutorialFirstProjectID = 0; // 튜토리얼 첫번째 프로젝트  
+        
         public int adCharge = 0;
         
         public int level = 0; // 레벨 
@@ -464,16 +466,63 @@ namespace PIERStory
 
 
         #region 튜토리얼 Update 통신
+        
+        
+        /// <summary>
+        /// 튜토리얼 스텝 1단계
+        /// </summary>
+        /// <param name="__projectID"></param>
+        public void UpdateFirstTutorial(int __projectID) {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "updateTutorialStep";
+            sending[CommonConst.COL_USERKEY] = userKey;
+            
+            
+            // 유저가 선택한 프로젝트 ID도 같이 넘겨줄것..!
+            sending["tutorial_step"] = 1;
+            sending["first_project_id"] = __projectID;
+
+            NetworkLoader.main.SendPost(CallbackUpdateFirstTutorialStep, sending);
+        }
+        
+        /// <summary>
+        /// 튜토리얼 스텝 1단계... 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>        
+        void CallbackUpdateFirstTutorialStep(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackUpdateTutorialStep");
+                return;
+            }
+            
+            Debug.Log("CallbackUpdateFirstTutorialStep : " + res.DataAsText);
+            
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            
+            // 튜토리얼 스텝 단계는 1이 되어야 하고
+            // 튜토리얼 처음에 고른 프로젝트 아이디를 보유하고 있는다.
+            tutorialStep = SystemManager.GetJsonNodeInt(result, "new_tutorial_step");
+            tutorialFirstProjectID = SystemManager.GetJsonNodeInt(result, "first_project_id");
+            
+            // * tutorialFirstProjectID는 튜토리얼이 계속 연속됨을 나타낸다.
+            
+        }   
+        
 
         /// <summary>
         /// 튜토리얼을 거치면 단계를 업데이트 해준다
         /// </summary>
-        public void UpdateTutorialStep()
+        public void UpdateTutorialStep(int __nextStep)
         {
+            
+            // * 스텝 꼭 입력받도록 한다. 
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "updateTutorialStep";
             sending[CommonConst.COL_USERKEY] = userKey;
-            sending["tutorial_step"] = ++tutorialStep;
+            sending["tutorial_step"] = __nextStep;
 
             NetworkLoader.main.SendPost(CallbackUpdateTutorialStep, sending);
         }
@@ -485,6 +534,13 @@ namespace PIERStory
                 Debug.LogError("CallbackUpdateTutorialStep");
                 return;
             }
+            
+            Debug.Log("CallbackUpdateTutorialStep : " + res.DataAsText);
+            
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            // 튜토리얼 스텝 갱신 
+            tutorialStep = SystemManager.GetJsonNodeInt(result, "new_tutorial_step");
+            
         }
 
         #endregion

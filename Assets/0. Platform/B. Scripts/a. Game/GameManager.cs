@@ -1285,10 +1285,11 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 나가기 
+        /// 게임 나가기 - 정상 종료 
         /// </summary>
         public void EndGame()
         {
+           
             Debug.Log("EndGame");
             isPlaying = false;
 
@@ -1297,6 +1298,22 @@ namespace PIERStory
             IntermissionManager.isMovingLobby = true;
             SceneManager.LoadSceneAsync("Intermission", LoadSceneMode.Single).allowSceneActivation = true;
         }
+        
+        /// <summary>
+        /// 게임 중간에 나가기. 
+        /// </summary>
+        public void QuitGame() {
+            // * 중간 종료되는 경우에는 tutorial 관련 처리 초기화 시킨다. 
+            UserManager.main.tutorialFirstProjectID = 0; // 0으로 초기화 시켜버린다.                 
+            
+            EndGame();
+            
+        }
+        
+        
+        
+        
+        
 
         /// <summary>
         /// 재시작 하기 

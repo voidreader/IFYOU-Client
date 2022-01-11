@@ -487,9 +487,9 @@ namespace PIERStory
         /// <param name="nextEpisodeID">다음 에피소드 ID</param>
         public void UpdateEpisodeCompleteRecord(EpisodeData nextEpisode)
         {
-            // 튜토리얼 스텝이 2라면 한번 더 레벨업
-            if (UserManager.main.tutorialStep.Equals(2))
-                UserManager.main.UpdateTutorialStep();
+            // * 튜토리얼 프로젝트 값이 있고, 튜토리얼 스텝이 1이면 2로 업데이트 해준다. 
+            if(UserManager.main.tutorialFirstProjectID > 0 && UserManager.main.tutorialStep == 1)
+                UserManager.main.UpdateTutorialStep(2);
 
             if (!UserManager.main.useRecord)
                 return;

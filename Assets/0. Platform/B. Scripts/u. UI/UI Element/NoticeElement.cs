@@ -25,7 +25,8 @@ namespace PIERStory
 
             for (int i=0;i< detailData.Count;i++)
             {
-                if (SystemManager.GetJsonNodeString(detailData[i], LobbyConst.COL_LANG).Equals("KO"))
+                // 앱 언어설정과 동일한 notice Detail 데이터를 넣어준다
+                if (SystemManager.GetJsonNodeString(detailData[i], LobbyConst.COL_LANG) == SystemManager.main.currentAppLanguageCode)
                 {
                     detailNotice = detailData[i];
                     break;
@@ -34,7 +35,7 @@ namespace PIERStory
 
             if(detailNotice == null)
             {
-                Debug.Log("No Korean Detail");
+                Debug.LogWarning("No Detail");
                 return;
             }
 

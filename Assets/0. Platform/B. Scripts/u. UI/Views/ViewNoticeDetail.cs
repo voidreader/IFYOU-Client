@@ -49,7 +49,7 @@ namespace PIERStory
                 noticeDetailScroll.content = imageContent;
                 textContent.gameObject.SetActive(false);
                 imageContent.gameObject.SetActive(true);
-                noticeContentImage.SetDownloadURL(SystemManager.GetJsonNodeString(detailData, DETAIL_BANNER_URL), SystemManager.GetJsonNodeString(detailData, DETAIL_BANNER_KEY));
+                noticeContentImage.SetDownloadURL(SystemManager.GetJsonNodeString(detailData, DETAIL_BANNER_URL), SystemManager.GetJsonNodeString(detailData, DETAIL_BANNER_KEY), true);
             }
         }
     }

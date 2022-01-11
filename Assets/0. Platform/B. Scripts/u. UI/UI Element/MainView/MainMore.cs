@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 using Doozy.Runtime.Signals;
 
 namespace PIERStory {
@@ -71,11 +71,23 @@ namespace PIERStory {
             PopupBase coupon = PopupManager.main.GetPopup("Coupon");
             PopupManager.main.ShowPopup(coupon, true, false);
         }
-        
+
         /// <summary>
         /// 공지사항
         /// </summary>
-        public void OnClickNotice() {
+        public void OnClickNotice()
+        {
+            StartCoroutine(RoutineOpenNotice());
+        }
+
+        IEnumerator RoutineOpenNotice()
+        {
+            SystemManager.ShowNetworkLoading();
+            NetworkLoader.main.RequestNoticeList();
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            yield return null;
+            SystemManager.HideNetworkLoading();
+
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_NOTICE, string.Empty);
         }
         

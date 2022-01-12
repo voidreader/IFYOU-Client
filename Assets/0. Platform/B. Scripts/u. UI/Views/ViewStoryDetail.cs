@@ -75,7 +75,8 @@ namespace PIERStory {
             UserManager.OnRequestEpisodeReset = this.OnStartView;
             UserManager.OnFreepassPurchase = this.SetFreepassInfo;
             RefreshStoryDetail = this.OnStartView;
-            
+
+
             // SetScrollTop();
         }
         
@@ -111,7 +112,7 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
-            
+
         }
         
         

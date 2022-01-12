@@ -82,6 +82,8 @@ namespace PIERStory {
                 PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_EPISODE_START);
                 PopupManager.main.ShowPopup(p, false);
             }
+            else if(UserManager.main.tutorialStep >= 2 && UserManager.main.tutorialFirstProjectID != 0 )
+                UserManager.main.RequestTutorialReward();
 
         }        
         

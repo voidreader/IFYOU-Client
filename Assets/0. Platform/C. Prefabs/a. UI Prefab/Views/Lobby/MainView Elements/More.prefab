@@ -745,6 +745,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 6311191701588364545}
+          m_TargetAssemblyTypeName: PIERStory.MainMore, Assembly-CSharp
+          m_MethodName: ToggleOnPushAlert
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnToggleOffCallback:
     Enabled: 1
     EventName: OnToggleOffCallback
@@ -756,6 +768,18 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.Reactor.Animators.UIAnimator, DoozyRuntime
           m_MethodName: Play
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 6311191701588364545}
+          m_TargetAssemblyTypeName: PIERStory.MainMore, Assembly-CSharp
+          m_MethodName: ToggleOffPushAlert
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3510,6 +3534,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 6311191701588364545}
+          m_TargetAssemblyTypeName: PIERStory.MainMore, Assembly-CSharp
+          m_MethodName: ToggleOnDataUse
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnToggleOffCallback:
     Enabled: 1
     EventName: OnToggleOffCallback
@@ -3521,6 +3557,18 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.Reactor.Animators.UIAnimator, DoozyRuntime
           m_MethodName: Play
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 6311191701588364545}
+          m_TargetAssemblyTypeName: PIERStory.MainMore, Assembly-CSharp
+          m_MethodName: ToggleOffDataUse
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -7026,10 +7074,10 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 367752961673829991}
-          m_TargetAssemblyTypeName: Doozy.Runtime.Reactor.Animators.UIAnimator, DoozyRuntime
-          m_MethodName: Play
-          m_Mode: 6
+        - m_Target: {fileID: 6311191701588364545}
+          m_TargetAssemblyTypeName: PIERStory.MainMore, Assembly-CSharp
+          m_MethodName: ToggleOnNightPushAlert
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -7045,10 +7093,10 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 367752961673829991}
-          m_TargetAssemblyTypeName: Doozy.Runtime.Reactor.Animators.UIAnimator, DoozyRuntime
-          m_MethodName: Play
-          m_Mode: 6
+        - m_Target: {fileID: 6311191701588364545}
+          m_TargetAssemblyTypeName: PIERStory.MainMore, Assembly-CSharp
+          m_MethodName: ToggleOffNightPushAlert
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -10370,12 +10418,24 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   OnStartBehaviour: 1
   OnShowCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnShowCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 6311191701588364545}
+          m_TargetAssemblyTypeName: PIERStory.MainMore, Assembly-CSharp
+          m_MethodName: ShowMainMore
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnVisibleCallback:
     Enabled: 0
     EventName: OnVisibleCallback
@@ -10384,12 +10444,24 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnHideCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnHideCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 6311191701588364545}
+          m_TargetAssemblyTypeName: PIERStory.MainMore, Assembly-CSharp
+          m_MethodName: HideMainMore
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnHiddenCallback:
     Enabled: 0
     EventName: OnHiddenCallback
@@ -10985,6 +11057,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   accountBonus: {fileID: 3115357915614260072}
+  pushAlert: {fileID: 367752961162913263}
+  nightPushAlert: {fileID: 367752962471430222}
+  dataUseAgree: {fileID: 367752962586728230}
+  pushToggle: {fileID: 367752960686740555}
+  nightPushToggle: {fileID: 367752961898531766}
+  dataUseToggle: {fileID: 367752961134799444}
+  nightPushAnimator: {fileID: 367752961673829991}
+  spriteToggleOn: {fileID: 21300000, guid: 7a4c5b7f983b54a418188be248b7baba, type: 3}
+  spriteToggleOff: {fileID: 21300000, guid: 05ad7d469a68b9147a76980c2cd664c8, type: 3}
 --- !u!1001 &2054568450172970354
 PrefabInstance:
   m_ObjectHideFlags: 0

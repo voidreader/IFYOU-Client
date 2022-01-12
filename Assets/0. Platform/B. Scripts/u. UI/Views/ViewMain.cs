@@ -7,7 +7,6 @@ using UnityEngine.UI;
 using TMPro;
 using LitJson;
 using BestHTTP;
-using Toast.Gamebase;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
 using DanielLochner.Assets.SimpleScrollSnap;
@@ -73,15 +72,7 @@ namespace PIERStory {
         public TextMeshProUGUI mLevelText;      // 더보기 페이지 레벨
         public TextMeshProUGUI mExpText;        // 더보기 페이지 경험치
         public Image mExpGauge;                 // 더보기 페이지 경험치바
-        public Image pushAlert;                 // 푸쉬 알림
-        public Image nightPushAlert;            // 야간 푸쉬 알림
-        public Image dataUseAgree;              // 데이터 사용 허용
-        public UIToggle pushToggle;
-        public UIToggle nightPushToggle;
-        public UIToggle dataUseToggle;
-
-        public Sprite spriteToggleOn;
-        public Sprite spriteToggleOff;
+        
 
         
         float mainScrollRectY = 0;
@@ -577,49 +568,6 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, "더보기", string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, false, string.Empty);
-
-            #region 게임베이스 push
-
-            if (Application.isEditor)
-                return;
-
-
-            Gamebase.Push.QueryTokenInfo((data, error) =>
-            {
-                if(Gamebase.IsSuccess(error))
-                {
-                    pushToggle.isOn = data.agreement.adAgreement;
-                    nightPushToggle.isOn = data.agreement.adAgreementNight;
-
-                    Debug.Log(string.Format("TokenInfo = pushAlert : {0}, nightPush : {1}", data.agreement.adAgreement, data.agreement.adAgreementNight));
-                }
-                else
-                    Debug.LogError(string.Format("QueryToken response failed. Error : {0}", error));
-            });
-
-            // 데이터 사용 허용
-            if (PlayerPrefs.GetInt(SystemConst.KEY_NETWORK_DOWNLOAD) > 0)
-                dataUseToggle.isOn = true;
-            else
-                dataUseToggle.isOn = false;
-
-            #endregion
-
-            if (pushToggle.isOn)
-                pushToggle.OnToggleOnCallback.Execute();
-            else
-                pushToggle.OnToggleOffCallback.Execute();
-
-
-            if(nightPushToggle.isOn)
-                nightPushToggle.OnToggleOnCallback.Execute();
-            else
-                nightPushToggle.OnToggleOffCallback.Execute();
-
-            if(dataUseToggle.isOn)
-                dataUseToggle.OnToggleOnCallback.Execute();
-            else
-                dataUseToggle.OnToggleOffCallback.Execute();
         }
 
 
@@ -638,72 +586,6 @@ namespace PIERStory {
         public void OnClickCopyUID()
         {
             UniClipboard.SetText(userPincode.text);
-        }
-
-
-        /// <summary>
-        /// 푸쉬 알림 On
-        /// </summary>
-        public void ToggleOnPushAlert()
-        {
-            pushAlert.sprite = spriteToggleOn;
-            nightPushAlert.color = Color.white;
-            SystemManager.main.PushRegister(true, false);
-        }
-
-        /// <summary>
-        /// 푸쉬 알림 OFf
-        /// </summary>
-        public void ToggleOffPushAlert()
-        {
-            pushAlert.sprite = spriteToggleOff;
-            nightPushAlert.sprite = spriteToggleOff;
-            nightPushAlert.color = Color.gray;
-
-            SystemManager.main.PushRegister(false, false);
-        }
-
-        /// <summary>
-        /// 야간 푸쉬 알림 On
-        /// </summary>
-        public void ToggleOnNightPushAlert()
-        {
-            // 푸쉬 알림이 켜져있지 않으면 잠군다
-            if(!pushToggle.isOn)
-            {
-                SystemManager.ShowSimpleAlertLocalize("6033");
-                return;
-            }
-
-            nightPushAlert.sprite = spriteToggleOn;
-            SystemManager.main.PushRegister(true, true);
-        }
-
-        /// <summary>
-        /// 야간 푸쉬 알림 Off
-        /// </summary>
-        public void ToggleOffNightPushAlert()
-        {
-            nightPushAlert.sprite = spriteToggleOff;
-            SystemManager.main.PushRegister(true, false);
-        }
-
-        /// <summary>
-        /// 데이터 사용 허용 On
-        /// </summary>
-        public void ToggleOnDataUse()
-        {
-            dataUseAgree.sprite = spriteToggleOn;
-            PlayerPrefs.SetInt(SystemConst.KEY_NETWORK_DOWNLOAD, 1);
-        }
-
-        /// <summary>
-        /// 데이터 사용 허용 Off
-        /// </summary>
-        public void ToggleOffDataUse()
-        {
-            dataUseAgree.sprite = spriteToggleOff;
-            PlayerPrefs.SetInt(SystemConst.KEY_NETWORK_DOWNLOAD, 0);
         }
 
         

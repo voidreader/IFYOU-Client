@@ -32,6 +32,10 @@ namespace PIERStory {
         }
         
         public void SetOff(){
+
+            if (LobbyManager.main == null)
+                return;
+
             buttonImage.sprite = LobbyManager.main.spriteGenreOff;
             textGenre.color = LobbyManager.main.colorGenreOff;   
         }

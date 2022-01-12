@@ -1913,6 +1913,8 @@ namespace PIERStory
                         if (StoryManager.main.SideEpisodeList[j].episodeID.Equals(sideId))
                         {
                             sidePopup.Data.SetLabelsTexts(string.Format("\"{0}\" 열렸습니다", StoryManager.main.SideEpisodeList[j].episodeTitle));
+                            sidePopup.Data.imageURL = StoryManager.main.SideEpisodeList[j].squareImageURL;
+                            sidePopup.Data.imageKey = StoryManager.main.SideEpisodeList[j].squareImageKey;
                             PopupManager.main.ShowPopup(sidePopup, true, false);
                             break;
                         }

@@ -10,7 +10,7 @@ namespace PIERStory
         public void OnClickOpenEpisodeStart()
         {
             Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, StoryManager.main.RegularEpisodeList[0], string.Empty);
-            PopupManager.main.CurrentQueuePopup.Hide();
+            Hide();
         }
 
 
@@ -22,7 +22,7 @@ namespace PIERStory
         void CancelTutorial()
         {
             UserManager.main.UpdateTutorialStep(3);
-            PopupManager.main.CurrentQueuePopup.Hide();
+            Hide();
         }
     }
 }

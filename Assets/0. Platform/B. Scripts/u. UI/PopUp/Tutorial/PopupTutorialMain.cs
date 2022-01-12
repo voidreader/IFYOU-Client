@@ -6,7 +6,7 @@ namespace PIERStory
 
         public void OnClickTutorialProject(string __projectId)
         {
-            PopupManager.main.CurrentQueuePopup.Hide();
+            Hide();
             StoryData storyData = StoryManager.main.FindProject(__projectId);
             StoryManager.main.RequestStoryInfo(storyData);
         }
@@ -23,7 +23,7 @@ namespace PIERStory
         void CancelTutorial()
         {
             UserManager.main.UpdateTutorialStep(3);
-            PopupManager.main.CurrentQueuePopup.Hide();
+            Hide();
         }
     }
 }

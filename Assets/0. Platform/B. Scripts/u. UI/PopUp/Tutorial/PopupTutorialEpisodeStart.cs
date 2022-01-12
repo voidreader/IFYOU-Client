@@ -54,7 +54,7 @@ namespace PIERStory
             NetworkLoader.main.UpdateUserProjectCurrent(episodeData.episodeID, null, 0);
             UserManager.main.UpdateFirstTutorial(int.Parse(StoryManager.main.CurrentProjectID));
 
-            PopupManager.main.CurrentQueuePopup.Hide();
+            Hide();
         }
 
         void ChangeNetworkSetting()
@@ -72,7 +72,7 @@ namespace PIERStory
         void CancelTutorial()
         {
             UserManager.main.UpdateTutorialStep(3);
-            PopupManager.main.CurrentQueuePopup.Hide();
+            Hide();
         }
     }
 }

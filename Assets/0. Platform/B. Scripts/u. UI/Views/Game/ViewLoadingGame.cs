@@ -75,7 +75,7 @@ namespace PIERStory
 
             yield return new WaitUntil(() => GameManager.main.GetCurrentPageInitialized());
             
-
+            Debug.Log("Page Init Done!!! gameLoadingComplete");
             Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_GAME, "gameLoadingComplete", string.Empty);
         }
         

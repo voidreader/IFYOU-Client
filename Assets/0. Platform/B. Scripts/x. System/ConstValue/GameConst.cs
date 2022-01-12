@@ -57,6 +57,7 @@ namespace PIERStory
 
         public const string SPLIT_OPTIONAL_PARAM = "`"; // 옵셔널 파라매터 구분자.
         public const string TAG_TARGET_EPISODE = "#"; // 에피소드 이동 태그 구분자.
+        public const string TAG_TARGET_EPISODE2 = "@"; // 과도기.. 2개 사용.
 
         
         // 시선 방향

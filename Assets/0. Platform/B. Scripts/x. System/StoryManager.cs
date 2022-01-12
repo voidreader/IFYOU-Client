@@ -27,7 +27,7 @@ namespace PIERStory
     /// 선택한 스토리의 기본 정보, 리스트, 말풍선 세트에 관여하는 클래스 
     /// </summary>
     
-    public class StoryManager : SerializedMonoBehaviour
+    public class StoryManager : MonoBehaviour
     {
         public static StoryManager main = null;
 

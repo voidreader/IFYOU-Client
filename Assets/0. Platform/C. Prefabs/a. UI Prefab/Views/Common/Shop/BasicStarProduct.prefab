@@ -696,7 +696,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8624297186388185463}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7365605049552127981}
+        m_TargetAssemblyTypeName: PIERStory.BaseStarProduct, Assembly-CSharp
+        m_MethodName: OnClickProduct
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5998723405044381254
 GameObject:
   m_ObjectHideFlags: 0
@@ -762,7 +774,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uCCAB\uAD6C\uB9E4 \uBE14\uB77C\uBE14\uB77C"
+  m_text: First Purchase Bonus <color=#FF59C2>+ 500</color>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
@@ -789,7 +801,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22
+  m_fontSize: 18
   m_fontSizeBase: 22
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -801,7 +813,7 @@ MonoBehaviour:
   m_textAlignment: 65535
   m_characterSpacing: -4
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -30
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -841,6 +853,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1254503528398501536}
   - component: {fileID: 5444279418834015380}
+  - component: {fileID: 7365605049552127981}
   m_Layer: 5
   m_Name: BasicStarProduct
   m_TagString: Untagged
@@ -876,6 +889,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6601539650651535107}
   m_CullTransparentMesh: 1
+--- !u!114 &7365605049552127981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6601539650651535107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 838a9cb1213d11d468e1ce135555d7ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  productID: 
+  productMasterID: 
+  hasPurchaseHistory: 0
+  mainGemQuantity: 0
+  bonusGemQuantity: 0
+  coinQuantity: 0
+  firstPurchaseBonusGem: 0
+  textMainStar: {fileID: 3205109299431010630}
+  textCoinQuantity: {fileID: 5937389752342219486}
+  textPrice: {fileID: 1601141744413643939}
+  textFirstPurchaseBonus: {fileID: 4508129113421469243}
+  groupFirstPurchaseBonus: {fileID: 4495184793778854351}
 --- !u!1 &7136153403258178185
 GameObject:
   m_ObjectHideFlags: 0
@@ -888,7 +925,7 @@ GameObject:
   - component: {fileID: 9157959252629939266}
   - component: {fileID: 1601141744413643939}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: textPrice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -935,7 +972,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

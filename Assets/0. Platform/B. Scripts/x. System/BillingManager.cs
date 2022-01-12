@@ -7,7 +7,7 @@ using LitJson;
 using BestHTTP;
 
 namespace PIERStory {
-    public class BillingManager : SerializedMonoBehaviour
+    public class BillingManager : MonoBehaviour
     {
         public static BillingManager main = null;
         public static bool isInit = false;
@@ -226,9 +226,12 @@ namespace PIERStory {
                 userPurchaseHistoryJSON = result["userPurchaseHistory"];
 
             // Shop 리프레시
-            // ViewShop.RefreshShopView?.Invoke();
-
-            SystemManager.ShowLobbySubmitPopup("결제가 완료되었습니다. 우편함을 확인해주세요");
+            
+            MainShop.OnRefreshNormalShop?.Invoke();
+            MainShop.OnRefreshPackageShop?.Invoke();
+            
+            // 결제가 완료되었습니다. 어쩌고. 
+            SystemManager.ShowAlertWithLocalize("6113");
         }
         
         

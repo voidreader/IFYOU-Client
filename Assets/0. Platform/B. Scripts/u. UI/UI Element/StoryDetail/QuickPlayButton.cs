@@ -69,10 +69,13 @@ namespace PIERStory {
                 return;
             }
             
+            // * 1화부터도 퀵플레이 나오게 변경.
+            /*
             if(quickEpisode.episodeNO  == "1" && string.IsNullOrEmpty(quickData[GameConst.COL_SCENE_ID].ToString())) {
                 this.gameObject.SetActive(false);
                 return;
             }
+            */
             
             this.gameObject.SetActive(true);
             

@@ -226,7 +226,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 899, y: 36}
+  Position: {x: 892.2181, y: 37.29698}
   OnEnterShowViews:
   - Id:
       Category: Game
@@ -241,6 +241,11 @@ MonoBehaviour:
       Name: InGameOption
       Custom: 0
     Mode: 0
+  - Id:
+      Category: Common
+      Name: Top
+      Custom: 0
+    Mode: 1
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
 --- !u!114 &11400000
@@ -329,14 +334,19 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 1
-  Position: {x: 519.3484, y: 61.225647}
+  Position: {x: 516, y: 61}
   OnEnterShowViews:
   - Id:
       Category: Game
       Name: InGame
       Custom: 0
     Mode: 0
-  OnEnterHideViews: []
+  OnEnterHideViews:
+  - Id:
+      Category: Common
+      Name: Top
+      Custom: 0
+    Mode: 1
   OnExitShowViews: []
   OnExitHideViews: []
   OnEnterHideAllViews: 0

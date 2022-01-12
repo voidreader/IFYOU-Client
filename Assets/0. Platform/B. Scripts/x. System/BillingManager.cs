@@ -231,7 +231,7 @@ namespace PIERStory {
             MainShop.OnRefreshPackageShop?.Invoke();
             
             // 결제가 완료되었습니다. 어쩌고. 
-            SystemManager.ShowAlertWithLocalize("6113");
+            SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("6113"));
         }
         
         

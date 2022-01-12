@@ -99,15 +99,19 @@ namespace PIERStory {
         void InitAuthMappingList() {
             listAuthMapping = Gamebase.GetAuthMappingList();
             
-                        // * 2021.09 둘 중 하나만 가능하도록 처리
-            if(listAuthMapping.Contains(AUTH_APPLE)) {
-                isAppleOn = true;
-                isGoogleOn = false;
-            }
+            if(listAuthMapping != null && listAuthMapping.Count > 0) {
             
-            if(listAuthMapping.Contains(AUTH_GOOGLE)) {
-                isGoogleOn = true;
-                isAppleOn = false;
+            
+                // * 2021.09 둘 중 하나만 가능하도록 처리
+                if(listAuthMapping.Contains(AUTH_APPLE)) {
+                    isAppleOn = true;
+                    isGoogleOn = false;
+                }
+                
+                if(listAuthMapping.Contains(AUTH_GOOGLE)) {
+                    isGoogleOn = true;
+                    isAppleOn = false;
+                }
             }
             
             if(!isGoogleOn && !isAppleOn) {

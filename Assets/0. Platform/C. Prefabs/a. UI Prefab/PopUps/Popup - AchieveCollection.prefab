@@ -56,6 +56,10 @@ MonoBehaviour:
     - {fileID: 1017000941213670713}
     Labels:
     - {fileID: 1017000940605295391}
+    imageURL: 
+    imageKey: 
+    isConfirm: 1
+    isPositive: 1
   overlay: {fileID: 0}
   content: {fileID: 1017000941827558449}
   autoDestroyTime: 3
@@ -401,12 +405,24 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnHiddenCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnHiddenCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1017000940313171266}
+          m_TargetAssemblyTypeName: PIERStory.PopupBase, Assembly-CSharp
+          m_MethodName: SetAutoDestroy
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []

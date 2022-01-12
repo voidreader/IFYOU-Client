@@ -15,7 +15,7 @@ namespace PIERStory
     /// <summary>
     /// 사용자 정보 
     /// </summary>
-    public class UserManager : SerializedMonoBehaviour
+    public class UserManager : MonoBehaviour
     {
         public static UserManager main = null;
         

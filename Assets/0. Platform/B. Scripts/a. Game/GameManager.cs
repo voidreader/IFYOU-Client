@@ -685,7 +685,7 @@ namespace PIERStory
         {
             targetRow = -1;
 
-            if (__sceneID.Contains(GameConst.TAG_TARGET_EPISODE))
+            if (__sceneID.Contains(GameConst.TAG_TARGET_EPISODE) || __sceneID.Contains(GameConst.TAG_TARGET_EPISODE2))
             {
                 Debug.Log("Jump to other Episode :: " + __sceneID);
                 ShowGameEnd(__sceneID);
@@ -1859,9 +1859,12 @@ namespace PIERStory
             }
             else { // 이동 컬럼 데이터 있음
             
-                // #이 붙은 경우에 대한 처리 
-                if (__nextEpisodeID.Contains("#"))
-                    __nextEpisodeID = __nextEpisodeID.Replace("#", "");
+                // #, @이 붙은 경우에 대한 처리 
+                if (__nextEpisodeID.Contains(GameConst.TAG_TARGET_EPISODE))
+                    __nextEpisodeID = __nextEpisodeID.Replace(GameConst.TAG_TARGET_EPISODE, "");
+                
+                if (__nextEpisodeID.Contains(GameConst.TAG_TARGET_EPISODE2))
+                    __nextEpisodeID = __nextEpisodeID.Replace(GameConst.TAG_TARGET_EPISODE2, "");
 
                 nextEpisodeData = StoryManager.GetNextFollowingEpisodeData(__nextEpisodeID);
             }

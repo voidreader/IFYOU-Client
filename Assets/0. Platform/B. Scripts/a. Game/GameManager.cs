@@ -1882,6 +1882,9 @@ namespace PIERStory
             // 다음 에피소드가 엔딩인 경우
             if (nextEpisodeData != null && nextEpisodeData.episodeType == EpisodeType.Ending)
             {
+                
+                Debug.Log("<color=yellow>Ending Alert open </color>");
+                
                 PopupBase endingPopup = PopupManager.main.GetPopup(GameConst.POPUP_ENDING_ALERT);
 
                 string endingType = string.Empty;
@@ -1892,8 +1895,18 @@ namespace PIERStory
                     endingType = SystemManager.GetLocalizedText("5088");
 
                 endingPopup.Data.SetLabelsTexts(endingType, string.Format("\"{0}\"로 이어집니다.", nextEpisodeData.episodeTitle));
+                endingPopup.Data.imageURL = nextEpisodeData.squareImageURL;
+                endingPopup.Data.imageKey = nextEpisodeData.squareImageKey;
+                
+                
                 PopupManager.main.ShowPopup(endingPopup, true, false);
+                
+                
+                yield return new WaitForSeconds(0.1f);
+                
                 yield return new WaitUntil(() => PopupManager.main.PopupQueue.Count < 1);
+                
+                Debug.Log("<color=yellow>Ending Alert close </color>");
             }
 
             // 완료 통신을 하고 나면 사이드 해금을 체크할 수 있다

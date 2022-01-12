@@ -108,6 +108,9 @@ namespace PIERStory {
         }
         
         public void InstanteHide() {
+            
+            BackButton.blockBackInput = false; // block 해제
+            
             if(isOverlayUse)
                 overlay.InstantHide();
                 

@@ -44,9 +44,6 @@ namespace PIERStory
         {
             base.OnStartView();
             
-
-            
-
             // 타이틀 처리 타입, 순번, 타이틀 조합
             textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
 
@@ -98,7 +95,7 @@ namespace PIERStory
             
             // 선택지 도중에서는 스킵할 수 없음.
             if(GameManager.main.isSelectionInputWait) {
-                SystemManager.ShowAlert(SystemManager.GetLocalizedText("6102"));
+                SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6102"), true);
                 return;    
             }
 
@@ -115,7 +112,7 @@ namespace PIERStory
 
         public void OnClickBlockSkip()
         {
-            SystemManager.ShowAlert("무료 플레이에서는 스킵을 사용할 수 없습니다.");
+            SystemManager.ShowSimpleAlert("무료 플레이에서는 스킵을 사용할 수 없습니다.");
         }
 
         /// <summary>
@@ -143,11 +140,18 @@ namespace PIERStory
             
             // * 이 조건일때, 나가면 튜토리얼이 중단된다고 경고해줘야 한다.  
             if(UserManager.main.tutorialStep == 1 && UserManager.main.tutorialFirstProjectID > 0) {
-                
+                SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("80108"), GiveUpTutorial, null, true, false);
+                return;
             }
             
             // ! 여기서 나가면 강제 종료야. 튜토리얼이 끊긴다고..! 
             GameManager.main.QuitGame(); // QuitGame은 강제종료고 EndGame은 정상종료다.
+        }
+
+        void GiveUpTutorial()
+        {
+            UserManager.main.UpdateTutorialStep(3);
+            GameManager.main.QuitGame();
         }
 
         public void OnAutoPlay()
@@ -186,7 +190,7 @@ namespace PIERStory
 
         public void OnClickBlockReplay()
         {
-            SystemManager.ShowAlert("무료 플레이에서는 다시 할 수 없습니다.");
+            SystemManager.ShowSimpleAlert("무료 플레이에서는 다시 할 수 없습니다.");
         }
 
         #endregion

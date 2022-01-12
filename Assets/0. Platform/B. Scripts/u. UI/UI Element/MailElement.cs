@@ -111,8 +111,7 @@ namespace PIERStory
             ViewMail.OnRequestMailList?.Invoke(SystemManager.GetJsonNode(data, MAIL_LIST));
             UserManager.OnFreepassPurchase?.Invoke();
 
-            //SystemManager.ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("80082"));
-            SystemManager.ShowAlertWithLocalize("80082");
+            SystemManager.ShowSimpleAlertLocalize("80082");
         }
     }
 }

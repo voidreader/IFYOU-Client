@@ -1,9 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using Doozy.Runtime.UIManager.Containers;
+
 using Doozy.Runtime.UIManager.Input;
+using Doozy.Runtime.UIManager.Containers;
 
 namespace PIERStory {
 
@@ -22,18 +21,10 @@ namespace PIERStory {
         // 자동파괴까지 걸리는 시간
         public float autoDestroyTime = 0;  // 0인 경우 자동파괴 사용하지 않음 
         public bool isOverlayUse = false; // 오버레이 사용 여부 
-        public bool addQueue = false; // 팝업 큐 사용여부 
+        public bool addQueue = false; // 팝업 큐 사용여부
+        
          
         
-        
-        void Awake() {
-            // overlay.gameObject.SetActive(false);   
-            // content.gameObject.SetActive(false);
-        }
-        
-        void OnDisable() {
-            
-        }
         
         public void SetAutoDestroy() {
             
@@ -55,12 +46,10 @@ namespace PIERStory {
             Hide();
             
         }
-        
-        
-        public virtual void Show() {
-            
-            // Debug.Log(this.gameObject.name + " Show!");
-            
+
+        public virtual void Show()
+        {
+
             StartCoroutine(ShowEnumerator());
             SetAutoDestroy();
         }
@@ -81,7 +70,7 @@ namespace PIERStory {
             
             content.enabled = true;
             
-            Debug.Log(this.gameObject.name + " " + content.OnStartBehaviour.ToString());
+            Debug.Log(gameObject.name + " " + content.OnStartBehaviour.ToString());
             
             if( content.OnStartBehaviour != Doozy.Runtime.UIManager.ContainerBehaviour.Show) {
                 Debug.Log("content show");
@@ -137,7 +126,7 @@ namespace PIERStory {
             if(PopupManager.main != null)
                 PopupManager.main.RemoveActivePopup(this); // remove
             
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
         
         

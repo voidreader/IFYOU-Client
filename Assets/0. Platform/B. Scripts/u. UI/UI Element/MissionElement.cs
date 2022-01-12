@@ -114,7 +114,7 @@ namespace PIERStory
             
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
-                SystemManager.ShowAlert("통신 실패!");
+                SystemManager.ShowMessageAlert("통신 실패!", false);
                 return;
             }
             

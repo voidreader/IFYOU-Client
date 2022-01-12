@@ -76,9 +76,8 @@ namespace PIERStory {
         /// <param name="__flag"></param>
         void DoubleReward(bool __flag) {
             
-           
             if(!__flag) {
-                SystemManager.ShowAlert(SystemManager.GetLocalizedText("6094")); // 광고가 끝까지 재생되지 않았습니다.
+                SystemManager.ShowSimpleAlertLocalize("6094"); // 광고가 끝까지 재생되지 않았습니다.
                 return;
             }
             

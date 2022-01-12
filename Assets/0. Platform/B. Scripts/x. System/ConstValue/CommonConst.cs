@@ -67,9 +67,19 @@ namespace PIERStory
         public const string COL_TICKET = "ticket";
         public const string COL_FREEPASS = "freepass";
 
-        public const string POPUP_CONFIRM = "Confirm";
-        public const string POPUP_SIMPLE_MESSAGE = "SimpleMessage";
 
+        // Popup name
+        public const string POPUP_TYPE_1 = "Popup1";
+        public const string POPUP_TYPE_2 = "Popup2";
+        public const string POPUP_MESSAGE_ALERT = "MessageAlert";
+        public const string POPUP_SIMPLE_ALERT = "SimpleAlert";
+
+        public const string POPUP_TUTORIAL_MAIN = "TutorialMain";
+        public const string POPUP_TUTORIAL_STORYDETAIL = "TutorialStoryDetail";
+        public const string POPUP_TUTORIAL_EPISODE_START = "TutorialEpisodeStart";
+        public const string POPUP_TUTORIAL_TUTORIAL_COMPLETE = "TutorialComplete";
+        
+        
         // JSON COLUMN
         public const string JSON_EPISODE_SCENE_HISTORY = "sceneProgress";
         public const string JSON_EPISODE_PURCHASE_HISTORY = "episodePurchase";

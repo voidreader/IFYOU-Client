@@ -295,6 +295,23 @@ namespace PIERStory
                
         }
 
+        /// <summary>
+        /// 작품 Id로 해당 작품 찾기
+        /// </summary>
+        public StoryData FindProject(string __projectId)
+        {
+            if (listTotalStory.Count < 1)
+                return null;
+
+            foreach(StoryData sd in listTotalStory)
+            {
+                if (sd.projectID == __projectId)
+                    return sd;
+            }
+
+            return null;
+        }
+
        
         /// <summary>
         /// 스토리 정보 요청 

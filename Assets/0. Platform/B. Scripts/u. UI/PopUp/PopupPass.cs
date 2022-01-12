@@ -37,7 +37,7 @@ namespace PIERStory {
             }
             
             // 젬 부족시. 
-            SystemManager.ShowAlertWithLocalize("80014");
+            SystemManager.ShowMessageWithLocalize("80014", false);
         }
     }
 }

@@ -224,11 +224,11 @@ namespace PIERStory {
             // 히스토리 갱신 
             if(result.ContainsKey("userPurchaseHistory"))
                 userPurchaseHistoryJSON = result["userPurchaseHistory"];
-                
+
             // Shop 리프레시
             // ViewShop.RefreshShopView?.Invoke();
-            
-            SystemManager.ShowSimpleMessagePopUp("결제가 완료되었습니다. 우편함을 확인해주세요");
+
+            SystemManager.ShowLobbySubmitPopup("결제가 완료되었습니다. 우편함을 확인해주세요");
         }
         
         

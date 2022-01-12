@@ -111,6 +111,12 @@ namespace PIERStory {
             InitProfile();
             InitAddMore();
 
+            if(UserManager.main.tutorialStep < 2)
+            {
+                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MAIN);
+                PopupManager.main.ShowPopup(p, false);
+            }
+
             // (프로필) 닉네임, 레벨, 경험치
             levelText.text = string.Format("Lv. {0}", UserManager.main.level);
 
@@ -480,7 +486,6 @@ namespace PIERStory {
                         case LobbyConst.NODE_WALLPAPER:
                             background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY), true);
                             background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_POS_X)), 0f);
-                            background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_HEIGHT)));
                             hasBG = true;
                             break;
 
@@ -666,7 +671,7 @@ namespace PIERStory {
             // 푸쉬 알림이 켜져있지 않으면 잠군다
             if(!pushToggle.isOn)
             {
-                SystemManager.ShowAlert(SystemManager.GetLocalizedText("6033"));
+                SystemManager.ShowSimpleAlertLocalize("6033");
                 return;
             }
 

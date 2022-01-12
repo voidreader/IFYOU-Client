@@ -25,10 +25,6 @@ namespace Doozy.Runtime.UIManager.Containers
         public static IEnumerable<UIView> GetViews(UIViewId.IFYOU id) => GetViews(nameof(UIViewId.IFYOU), id.ToString());
         public static void Show(UIViewId.IFYOU id, bool instant = false) => Show(nameof(UIViewId.IFYOU), id.ToString(), instant);
         public static void Hide(UIViewId.IFYOU id, bool instant = false) => Hide(nameof(UIViewId.IFYOU), id.ToString(), instant);
-
-        public static IEnumerable<UIView> GetViews(UIViewId.Popup id) => GetViews(nameof(UIViewId.Popup), id.ToString());
-        public static void Show(UIViewId.Popup id, bool instant = false) => Show(nameof(UIViewId.Popup), id.ToString(), instant);
-        public static void Hide(UIViewId.Popup id, bool instant = false) => Hide(nameof(UIViewId.Popup), id.ToString(), instant);
     }
 }
 
@@ -82,17 +78,6 @@ namespace Doozy.Runtime.UIManager
             StoryDetail,
             Title,
             UserPlayHistory
-        }
-
-        public enum Popup
-        {
-            AlertMessage,
-            AlertSimple,
-            ConfirmType1,
-            ConfirmType2,
-            Coupon,
-            PrivacyPolicy,
-            Reset
         }    
     }
 }

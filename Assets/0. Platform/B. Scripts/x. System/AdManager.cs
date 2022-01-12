@@ -434,7 +434,7 @@ namespace PIERStory {
             if(rewardedAd.AdState == AdState.Loaded)
                 rewardedAd.Show();
             else {
-                SystemManager.ShowAlert(SystemManager.GetLocalizedText("6093"));
+                SystemManager.ShowSimpleAlertLocalize("6093");
             }
         }
         
@@ -449,7 +449,7 @@ namespace PIERStory {
             if(rewardedAd.AdState == AdState.Loaded)
                 rewardedAd.Show();
             else {
-                SystemManager.ShowAlert(SystemManager.GetLocalizedText("6093"));
+                SystemManager.ShowSimpleAlertLocalize("6093");
             }
         }
         

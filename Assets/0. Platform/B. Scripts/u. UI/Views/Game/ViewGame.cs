@@ -405,7 +405,7 @@ namespace PIERStory
             for (int i = 0; i < ListSelectionRows.Count; i++)
             {
                 if(i >= ListGameSelection.Count) {
-                    SystemManager.ShowAlert("너무 많은 선택지!(최대 6개)");
+                    SystemManager.ShowMessageAlert("너무 많은 선택지!(최대 6개)", false);
                     break;
                 }
                 

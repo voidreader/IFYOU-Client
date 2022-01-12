@@ -33,7 +33,13 @@ namespace PIERStory {
         public string imageURL = string.Empty;
         public string imageKey = string.Empty;
 
-        
+        /*
+         * true = 예/아니오, false = 확인
+         * 버튼 존재
+         */
+        public bool isConfirm = true;
+        public bool isPositive = true;      // 팝업의 타입이 긍정타입인지 부정타입인지
+
         /*
         public void SetButtonsCallbacks(params Action[] callbacks)
         {
@@ -53,7 +59,7 @@ namespace PIERStory {
             }
         }
         */
-        
+
 
         /// <summary>
         /// 타겟 데이터 지정
@@ -128,8 +134,6 @@ namespace PIERStory {
                 image.sprite = sprites[i];
                 image.SetNativeSize();
             }
-            
         }
-        
     }
 }

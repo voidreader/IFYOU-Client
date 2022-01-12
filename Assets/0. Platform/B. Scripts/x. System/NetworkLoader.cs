@@ -772,11 +772,10 @@ namespace PIERStory
                         // 실패로 날아오는 경우는 message와 code가 날아온다. (서버에서)
                         message = GetServerErrorMessage(response);
                         SystemManager.HideNetworkLoading(); // 실패했을때 네트워크 로딩은 제거해주자.
-                        
+
                         // status가 error로 날아오는 경우에 대한 메세지 처리 (2021.11.02)
-                        if(!string.IsNullOrEmpty(message)) {
-                            SystemManager.ShowSimpleMessagePopUp(message); // 메세지 띄워주고.
-                        }
+                        if (!string.IsNullOrEmpty(message))
+                            SystemManager.ShowLobbySubmitPopup(message);    // 메세지 띄워주고.
                         
                         return false;
                     }
@@ -834,14 +833,14 @@ namespace PIERStory
                     }
                     else { // 3번하는 동안 모두 실패했다. 
                         SystemManager.HideNetworkLoading(); // 실패했을때 네트워크 로딩은 제거해주자.
-                        SystemManager.ShowSimpleMessagePopUp(message, SystemManager.LoadLobbyScene);
+                        SystemManager.ShowLobbyPopup(message, SystemManager.LoadLobbyScene, null, false);
                     }
                     
-                } catch (System.Exception e) {
+                } catch (Exception e) {
                     message = "서버 통신 과정에서 알 수 없는 오류가 발생했습니다.";
                     Debug.Log(e.StackTrace);
                     SystemManager.HideNetworkLoading(); // 실패했을때 네트워크 로딩은 제거해주자.
-                    SystemManager.ShowSimpleMessagePopUp(message, SystemManager.LoadLobbyScene);
+                    SystemManager.ShowLobbyPopup(message, SystemManager.LoadLobbyScene, null, false);
                 }                
             } // ? end of retry
             
@@ -897,12 +896,10 @@ namespace PIERStory
             else {
                 // 3번 모두 실패하면 로비로 돌려보낸다.
                 SystemManager.HideNetworkLoading();
-                SystemManager.ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("80084"), SystemManager.LoadLobbyScene);
+                SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("80084"), SystemManager.LoadLobbyScene, null, false);
             }
             
             return false;
-            
-            
         }
         
         /// <summary>

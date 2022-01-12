@@ -193,11 +193,8 @@ namespace PIERStory
                 PlayerPrefs.Save();
             }            
             
-            
             // 시스탬매니저는 앱의 실행부터 끝까지 씬에서 모두 사용됩니다. 
             DontDestroyOnLoad(this);
-            
-
         }
         
 
@@ -206,8 +203,6 @@ namespace PIERStory
         /// </summary>
         void Start()
         {
-            
-
             /* TOAST 게임베이스 초기화. 아래의 순서로 진행됩니다. 
              * 1. Gamebase 초기화 (TOAST 서버와 통신합니다.)
              * 2. Gamebase 로그인 (Gamebase에서 유저별 고유 ID를 받습니다.)
@@ -221,9 +216,6 @@ namespace PIERStory
             ChangeQuality();
             
             noEncryptionSetting = new ES3Settings(ES3.EncryptionType.None, "password");
-            
-            
-            
         }
         
         /// <summary>
@@ -354,7 +346,7 @@ namespace PIERStory
             {
                 // 이 부분에 초기화가 실패해서 접속을 할 수 없다는 안내 멘트 필요
                 Debug.Log(string.Format("Gamebase Initialization failed. error is {0}", error));
-                ShowSimpleMessagePopUp("Game initialization failed : " + error.message, Application.Quit);
+                ShowLobbyPopup("Game initialization failed : " + error.message, Application.Quit, null, false);
 
                 if (error.code == GamebaseErrorCode.LAUNCHING_UNREGISTERED_CLIENT)
                 {
@@ -434,20 +426,20 @@ namespace PIERStory
 
                 case GamebaseLaunchingStatus.REQUIRE_UPDATE: // 업그레이드 필수
                     // 각 스토어 페이지를 열어주고 앱은 종료 처리 
-                    ShowSimpleMessagePopUp(messageRequireUpdate, Application.Quit);
+                    ShowLobbyPopup(messageRequireUpdate, Application.Quit, null, false);
                     isServerValid = false;
                     break;
 
                 case GamebaseLaunchingStatus.INSPECTING_ALL_SERVICES: // 점검에 대한 처리 
                 case GamebaseLaunchingStatus.INSPECTING_SERVICE:
                     // 점검에 대한 처리 
-                    ShowSimpleMessagePopUp(string.Format("{0}\n~\n{1}\n{2}", launchingInfo.launching.maintenance.beginDate, launchingInfo.launching.maintenance.endDate, Uri.UnescapeDataString(launchingInfo.launching.maintenance.message)), Application.Quit);
+                    ShowLobbyPopup(string.Format("{0}\n~\n{1}\n{2}", launchingInfo.launching.maintenance.beginDate, launchingInfo.launching.maintenance.endDate, Uri.UnescapeDataString(launchingInfo.launching.maintenance.message)), Application.Quit, null, false);
                     isServerValid = false; 
                     break;
 
 
                 case GamebaseLaunchingStatus.INTERNAL_SERVER_ERROR: // Error in internal server.
-                    ShowSimpleMessagePopUp("Internal Server Error", Application.Quit);
+                    ShowLobbyPopup("Internal Server Error", Application.Quit, null, false);
                     isServerValid = false;
                     break;
             } // ? end of switch
@@ -755,7 +747,7 @@ namespace PIERStory
                 if (error.code == (int)GamebaseErrorCode.SOCKET_ERROR || error.code == (int)GamebaseErrorCode.SOCKET_RESPONSE_TIMEOUT)
                 {
                     Debug.Log(string.Format("Retry Login or notify an error message to the user. : {0}", error.message));
-                    ShowSimpleMessagePopUp("로그인 서버가 응답하지 않습니다. 다시 로그인을 시도합니다.");
+                    ShowLobbySubmitPopup("로그인 서버가 응답하지 않습니다. 다시 로그인을 시도합니다.");
                     LoginPlatform();
                 }
                 else if (error.code == GamebaseErrorCode.BANNED_MEMBER)
@@ -1066,7 +1058,7 @@ namespace PIERStory
                 // 설마 로그아웃을 실패하진 않겠지!
                 if(!Gamebase.IsSuccess(error)) {
                     Debug.Log(string.Format("# Logout failed. error is {0}", error));
-                    ShowSimpleMessagePopUp(string.Format("[{0}] {1}", error.code, error.message));
+                    ShowLobbySubmitPopup(string.Format("[{0}] {1}", error.code, error.message));
                     return;
                 }
                 
@@ -1076,12 +1068,10 @@ namespace PIERStory
                     
                     if(!Gamebase.IsSuccess(error)) {
                         Debug.Log(string.Format("#### Login failed. error is {0}", error));
-                        ShowSimpleMessagePopUp(string.Format("[{0}] {1}", error.code, error.message));
-                        
+                        ShowLobbySubmitPopup(string.Format("[{0}] {1}", error.code, error.message));
                         
                         // 로그인 복원
                         Gamebase.Login(GamebaseAuthProvider.GUEST, OnCallbackLogin);
-                        
                         return;
                     }
                
@@ -1091,7 +1081,7 @@ namespace PIERStory
                     
                     // 로그인에 성공했으면 현재 GamebaseID로 userkey를 조회한다. 
                     JsonData reqData = new JsonData();
-                    reqData["func"] = "checkAccountExistsByGamebase";
+                    reqData[CommonConst.FUNC] = "checkAccountExistsByGamebase";
                     reqData["gamebaseID"] = newGamebaseID;
                     
                     NetworkLoader.main.SendPost(OnRequest__checkAccountExistsByGamebase, reqData, true);
@@ -1125,7 +1115,7 @@ namespace PIERStory
                  Debug.Log("### No connected Gamebase account");
                  // TODO 현재 유저의 table_account에 현재의 gamebaseID를 덮어씌운다. 
                  JsonData reqData = new JsonData();
-                 reqData["func"] = "updateAccountWithGamebaseID";
+                 reqData[CommonConst.FUNC] = "updateAccountWithGamebaseID";
                  reqData["gamebaseID"] = Gamebase.GetUserID();
                  NetworkLoader.main.SendPost(OnRequest__updateAccountWithGamebaseID, reqData, true);
                  
@@ -1139,7 +1129,7 @@ namespace PIERStory
                 // * 유저에게 연동된 계정이 있는데, 연동하겠느냐고 묻는다. 
                 // TODO 예, 아니오 팝업을 띄운다.
                 if(connectedUserkey != UserManager.main.userKey) {
-                    ShowConfirmPopUp(SystemManager.GetLocalizedText("6111"), ConfirmPreviousAccountLoad, CancleAccountConnect);
+                    ShowLobbyPopup(GetLocalizedText("6111"), ConfirmPreviousAccountLoad, CancleAccountConnect);
                 }
  
             }
@@ -1152,9 +1142,10 @@ namespace PIERStory
         /// <param name="request"></param>
         /// <param name="response"></param>
         void OnRequest__updateAccountWithGamebaseID(HTTPRequest request, HTTPResponse response) {
-            if(!NetworkLoader.CheckResponseValidation(request,response)) {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
+            {
                 Debug.Log(string.Format("#### OnRequest__updateAccountWithGamebaseID failed. error is {0}", request.State));
-                ShowSimpleMessagePopUp("게임베이스 연동 과정에서 오류가 발생했습니다.");
+                ShowLobbySubmitPopup("게임베이스 연동 과정에서 오류가 발생했습니다.");
                 return;
             }
             
@@ -1163,9 +1154,9 @@ namespace PIERStory
             
             // 2022.01 미수신 메일 카운트 날아온다.
             UserManager.main.SetNotificationInfo(result);
-            
+
             // 연동이 완료되었습니다. 메세지 처리 
-            ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("6110"));
+            ShowLobbySubmitPopup(GetLocalizedText("6110"));
 
             UserManager.main.accountLink = "link";
             
@@ -1173,7 +1164,6 @@ namespace PIERStory
             PopupAccount.OnRefresh?.Invoke();
             MainToggleNavigation.OnToggleAccountBonus?.Invoke();
             MainMore.OnRefreshMore?.Invoke();
-            
         }
                 
         
@@ -1227,9 +1217,9 @@ namespace PIERStory
             
             // 통신이 완료될때까지 기다려야한다.
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
-        
+
             // 연동이 완료되었습니다.
-            ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("6112"));
+            ShowLobbySubmitPopup(GetLocalizedText("6112"));
         
             
             // Refresh 처리 
@@ -1238,21 +1228,15 @@ namespace PIERStory
             MainMore.OnRefreshMore?.Invoke();
         }       
         
-
-
         
         public void Logout()
         {
             Gamebase.Logout((error) =>
             {
                 if (Gamebase.IsSuccess(error))
-                {
                     Debug.Log("Logout succeeded.");
-                }
                 else
-                {
                     Debug.Log(string.Format("Logout failed. error is {0}", error));
-                }
             });
         }
         
@@ -1268,12 +1252,12 @@ namespace PIERStory
                 if (Gamebase.IsSuccess(error))
                 {
                     Debug.Log("AddMapping succeeded.");
-                    ShowSimpleMessagePopUp("연동 계정 변경이 완료되었습니다.");
+                    ShowLobbySubmitPopup("연동 계정 변경이 완료되었습니다.");
                 }
                 else
                 {
                     Debug.Log(string.Format("AddMapping failed. error is {0}", error));
-                    ShowSimpleMessagePopUp(error.message);
+                    ShowLobbySubmitPopup(error.message);
                 }
             });
         }        
@@ -1332,7 +1316,9 @@ namespace PIERStory
         }
 
         #endregion
-        
+
+        #region JsonData 추출
+
         /// <summary>
         /// JSON 특정 노드의 노드 값을 알려주쇼
         /// </summary>
@@ -1390,11 +1376,9 @@ namespace PIERStory
             try {    
                 return float.Parse(GetJsonNodeString(__node, __col));
             }
-            catch (System.Exception e) {
+            catch (Exception e) {
                 return 0;
             }
-
-            
         }
         
 
@@ -1438,8 +1422,11 @@ namespace PIERStory
             
             return __node[__col].ToString() == "1" ? true : false;
         }
-        
-        
+
+        #endregion
+
+        #region 로딩 팝업
+
         /// <summary>
         /// 네트워크 로딩 팝업 오픈 
         /// </summary>
@@ -1475,97 +1462,133 @@ namespace PIERStory
 
             return main.networkLoadingScreen.gameObject.activeSelf;
         }
-        
-        
+
+        #endregion
+
+
+        #region 시스템(앱) 팝업
+
+
         /// <summary>
-        /// 중앙 경고창( 자동 사라짐)
+        /// 주로 Lobby scene에서 사용하는 팝업
         /// </summary>
-        /// <param name="__message"></param>
-        public static void ShowAlert(string __message) {
-            PopupBase p = PopupManager.main.GetPopup("Alert");
-            if(p == null) {
-                Debug.LogError(">> No Alert Popup");
+        public static void ShowLobbyPopup(string __message, Action __positive, Action __negative, bool isConfirm = true)
+        {
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TYPE_1);
+
+            if (p == null)
+            {
+                Debug.LogError(">> No Lobby Popup");
                 return;
             }
-            
-            p.Data.SetLabelsTexts(__message);
-            PopupManager.main.ShowPopup(p, false);
-            
-        }
-        
-        public static void ShowAlertWithLocalize(string __textID) {
-            ShowAlert(GetLocalizedText(__textID));
-        }
 
+            p.Data.isConfirm = isConfirm;
+            p.Data.SetLabelsTexts(__message);
+
+            if(__positive != null)
+                p.Data.SetPositiveButtonCallback(__positive);
+
+            if(__negative != null)
+                p.Data.SetNegativeButtonCallback(__negative);
+
+            PopupManager.main.ShowPopup(p, false);
+        }
 
         /// <summary>
-        /// 유저의 응답(YES/NO)를 받는 메세지 창을 생성합니다. 
+        /// Lobby scene에서 알려주기?만 하면서 확인버튼 눌러야 닫히는 그런 팝업
         /// </summary>
-        /// <param name="__message"></param>
-        /// <param name="__positive"></param>
-        public static void ShowConfirmPopUp(string __message, System.Action __positive, System.Action __negative)
+        /// <param name="__message">팝업 내용</param>
+        public static void ShowLobbySubmitPopup(string __message)
         {
-            
-            PopupBase p = PopupManager.main.GetPopup("Confirm");
-            
-            if(p == null) {
-                Debug.LogError(">> No Confirm Popup");
+            ShowLobbyPopup(__message, null, null, false);
+        }
+
+        /// <summary>
+        /// 주로 Game scene에서 사용되는 팝업
+        /// </summary>
+        /// <param name="__message">팝업 내용</param>
+        /// <param name="isConfirm">confirm 타입 사용할지, submit타입 사용할지</param>
+        /// <param name="isPositive">긍정적 팝업인지, 부정적 팝업인지</param>
+        public static void ShowGamePopup(string __message, Action __positive, Action __negative, bool isConfirm = true, bool isPositive = true)
+        {
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TYPE_2);
+
+            if (p == null)
+            {
+                Debug.LogError(">> No Game Popup");
                 return;
             }
-            
+
+            p.Data.isConfirm = isConfirm;
+            p.Data.isPositive = isPositive;
             p.Data.SetLabelsTexts(__message);
-            p.Data.SetPositiveButtonCallback(__positive);
-            p.Data.SetNegativeButtonCallback(__negative);
 
-            // 중복 방지 
+            if (__positive != null)
+                p.Data.SetPositiveButtonCallback(__positive);
+            if (__negative != null)
+                p.Data.SetNegativeButtonCallback(__negative);
+
             PopupManager.main.ShowPopup(p, false);
-
-        }
-
-
-        public static void ShowSimpleMessagePopUp(string __message)
-        {
-            ShowSimpleMessagePopUp(__message, null);
-        }
-        
-        /// <summary>
-        /// 로컬라이즈 메세지를 이용한 단순 메세지 팝업 호출
-        /// </summary>
-        /// <param name="__textID"></param>
-        public static void ShowSimpleMessagePopUpWithLocalize(string __textID, Action __callback = null) {
-            ShowSimpleMessagePopUp(GetLocalizedText(__textID), __callback);
         }
 
         /// <summary>
-        /// 원버튼의 단순 메세지 팝업 호출 
+        /// 하단에 생기는 까만 정말 간단한 팝업
         /// </summary>
-        /// <param name="__message"></param>
-        public static void ShowSimpleMessagePopUp(string __message, Action __callback)
+        public static void ShowSimpleAlert(string __message)
         {
-            
-            // 로비에서 사용하는것과 게임에서 사용하는게 다르다. 
-            if(LobbyManager.main != null) {
-                PopupBase  p = PopupManager.main.GetPopup("LobbyMessage");
-                if(p == null) {
-                    Debug.LogError("No lobby simple message popup ");
-                    return;
-                }
-                
-                p.Data.SetLabelsTexts(__message);
-                if(__callback != null) {
-                    p.Data.SetPositiveButtonCallback(__callback);
-                }
-                
-                PopupManager.main.ShowPopup(p, false);
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_SIMPLE_ALERT);
+
+            if(p == null)
+            {
+                Debug.LogError(">> No Simple alert popup");
+                return;
             }
 
+            p.Data.SetLabelsTexts(__message);
+
+            PopupManager.main.ShowPopup(p, true);
         }
+
+        
+        public static void ShowSimpleAlertLocalize(string __texId)
+        {
+            ShowSimpleAlert(GetLocalizedText(__texId));
+        }
+
+
+        /// <summary>
+        /// 화면 중앙에 뜨는 긍정적/부정적에 따라 다르게 박스가 입혀지는 팝업
+        /// </summary>
+        public static void ShowMessageAlert(string __message, bool isPositive)
+        {
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_MESSAGE_ALERT);
+
+            if (p == null)
+            {
+                Debug.LogError(">> No Message alert popup");
+                return;
+            }
+
+            p.Data.isPositive = isPositive;
+            p.Data.SetLabelsTexts(__message);
+
+            PopupManager.main.ShowPopup(p, true);
+        }
+
+
+        public static void ShowMessageWithLocalize(string __textId, bool isPositive)
+        {
+            ShowMessageAlert(GetLocalizedText(__textId), isPositive);
+        }
+
 
 
         public void ShowMissingFunction(string __message)
         {
 
         }
+
+        #endregion
 
         /// <summary>
         /// 공지사항 리스트 요청 콜백
@@ -1746,13 +1769,12 @@ namespace PIERStory
 
                     NetworkLoader.main.UpdateWithdrawDate(); // 게임서버 통신 호출 
                     // 바이바이 팝업창 
-                    SystemManager.ShowSimpleMessagePopUpWithLocalize("6008", Application.Quit); // 탈퇴, 감사합니다. 앱 종료 
+                    ShowLobbyPopup(GetLocalizedText("6008"), Application.Quit, null, false);    // 탈퇴, 감사합니다. 앱 종료 
                 }
                 else
                 {
                     Debug.Log(string.Format("Withdraw failed. error is {0}", error));
-
-                    SystemManager.ShowSimpleMessagePopUp(error.message);
+                    ShowLobbySubmitPopup(error.message);
                 }
             });
         }
@@ -1784,24 +1806,22 @@ namespace PIERStory
 
             return -1;
         }
-        
-        
-        
+
+
+
         /// <summary>
         /// persistentDataPath 모두 삭제하기. (보안)
         /// </summary>
-        void ClearPersistentDataPath() {
-            
-           
-            System.IO.DirectoryInfo di = new DirectoryInfo(Application.persistentDataPath);
+        void ClearPersistentDataPath()
+        {
+            DirectoryInfo di = new DirectoryInfo(Application.persistentDataPath);
 
             foreach (FileInfo file in di.GetFiles())
                 file.Delete();
 
-            
-            foreach (DirectoryInfo dir in di.GetDirectories()) {
+
+            foreach (DirectoryInfo dir in di.GetDirectories())
                 dir.Delete(true);
-            }
         }
         
         /// <summary>

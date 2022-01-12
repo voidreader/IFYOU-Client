@@ -475,7 +475,7 @@ namespace PIERStory
             // 불완전한 선택지가 있으면 안된다.
             if (currentPage.CheckIncompleteSelection())
             {
-                SystemManager.ShowAlert("불완전한 선택지가 존재하여 이어하기를 진행할 수 없습니다.");
+                SystemManager.ShowMessageAlert("불완전한 선택지가 존재하여 이어하기를 진행할 수 없습니다.", false);
                 isResumePlay = false;
                 return;
             }
@@ -639,7 +639,7 @@ namespace PIERStory
                 if (UserManager.main.useRecord)
                     ShowGameEnd(null);
                 else
-                    SystemManager.ShowConfirmPopUp("다시 보시겠습니까?", RetryPlay, EndGame);
+                    SystemManager.ShowGamePopup("다시 보시겠습니까?", RetryPlay, EndGame);
             }
 
             isPlaying = false;

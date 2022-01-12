@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 using TMPro;
 using LitJson;
 using Doozy.Runtime.Signals;
@@ -83,16 +83,27 @@ namespace PIERStory {
             base.OnStartView();
             
             
-            
             SetProjectBaseInfo(); // 기본 프로젝트 정보
-            
+
             // * 게임씬에 있다가 돌아온 경우에 대한 처리 
-            if(StoryManager.enterGameScene) {
+            if (StoryManager.enterGameScene)
+            {
                 StoryManager.enterGameScene = false;
+
+                if (UserManager.main.tutorialFirstProjectID != 0)
+                    UserManager.main.RequestTutorialReward();
             }
-            else {
+            else
+            {
                 ShowEpisodeList(true);
+
+                if (UserManager.main.tutorialStep < 2)
+                {
+                    PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_STORYDETAIL);
+                    PopupManager.main.ShowPopup(p, false);
+                }
             }
+
             
             
             // 상단 처리
@@ -186,12 +197,10 @@ namespace PIERStory {
         /// 정규 에피소드 리스트 리프레시 
         /// </summary>
         public void RefreshRegularEpisodeList() {
+
             // 리셋하고 호출하도록 한다. (Signal listener에서 호출)
-            
             StoryManager.main.UpdateRegularEpisodeData();
             ShowEpisodeList(true);
-            
-            
         }
         
         /// <summary>
@@ -231,8 +240,6 @@ namespace PIERStory {
                 // 빠른플레이 
                 SetSideExtraNotification();
             }
-            
-
         }
         
         /// <summary>
@@ -264,48 +271,46 @@ namespace PIERStory {
             
             
         }
-        
-        
+
+
         /// <summary>
         /// 에피소드 리스트 리셋 
         /// </summary>
-        void ResetEpisodeList() {
-            for(int i=0; i<ListThreeEpisodeRows.Count;i++) {
+        void ResetEpisodeList()
+        {
+            for (int i = 0; i < ListThreeEpisodeRows.Count; i++)
                 ListThreeEpisodeRows[i].gameObject.SetActive(false);
-            }
-            
+
             episodeCount = 0;
             openEndingCount = 0;
         }
-        
+
         /// <summary>
         /// JSON 받아서 에피소드 element 설정
         /// 정규 에피소드 LIST 정보를 가지고 호출한다.
         /// </summary>
         /// <param name="__listJSON">에피소드 리스트</param>
         /// <param name="__isMain">정규 에피소드 여부</param>
-        void SetEpisodeList(List<EpisodeData> __listEpisode) {
+        void SetEpisodeList(List<EpisodeData> __listEpisode)
+        {
             ResetEpisodeList();
-            
-            if(__listEpisode == null || __listEpisode.Count == 0)
+
+            if (__listEpisode == null || __listEpisode.Count == 0)
                 return;
-                
+
             Debug.Log(">> SetEpisodeList listCount : " + __listEpisode.Count);
-            
+
             // * 작품개수를 3으로 나눈다. 
-            int dividedThree = Mathf.FloorToInt((float)__listEpisode.Count / 3f );
-            
+            int dividedThree = Mathf.FloorToInt((float)__listEpisode.Count / 3f);
+
             // 나머지가 있으면 1 더해야한다;.
-            if(__listEpisode.Count % 3 > 0)
+            if (__listEpisode.Count % 3 > 0)
                 dividedThree++;
-            
+
             // 
-            for(int i=0; i<dividedThree; i++) {
+            for (int i = 0; i < dividedThree; i++)
                 ListThreeEpisodeRows[i].InitRow(__listEpisode, i);
-            }
         }
-        
-        
         
         
         
@@ -364,8 +369,6 @@ namespace PIERStory {
             
             // 퀵 버튼!
             quickPlay.SetRegularQuickPlay(quickRegularData);
-            
-            
         }
         
         /// <summary>
@@ -377,20 +380,16 @@ namespace PIERStory {
             mainScrollVertical.padding.bottom = 0;
             
             quickSideData = UserManager.main.GetUserProjectSpecialEpisodeCurrent();
-            
-            if(quickSideData == null) {
+
+            if (quickSideData == null)
                 return;
-            }
-            
+
             // 끝까지 다 봤으면 끝!
-            if(SystemManager.GetJsonNodeBool(quickSideData, "is_final"))  {
-                return;                
-            }
+            if (SystemManager.GetJsonNodeBool(quickSideData, "is_final"))
+                return;
             
             // 빠른 플레이 버튼 설정
             quickPlay.SetSideQuickPlay(quickSideData);
-            
-
         }
         
         

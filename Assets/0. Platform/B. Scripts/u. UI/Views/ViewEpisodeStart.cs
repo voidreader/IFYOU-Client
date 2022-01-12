@@ -77,6 +77,12 @@ namespace PIERStory {
             
             SetPremiumPass();
 
+            if (UserManager.main.tutorialStep < 2)
+            {
+                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_EPISODE_START);
+                PopupManager.main.ShowPopup(p, false);
+            }
+
         }        
         
         void SetPremiumPass() {
@@ -290,13 +296,13 @@ namespace PIERStory {
                 // 돈없을때 처리 
                 if (episodeData.currencyStarPlay == "coin" && !UserManager.main.CheckCoinProperty(episodeData.priceStarPlaySale))
                 {
-                    SystemManager.ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("80013"));
+                    SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80013"));
                     return;
                 }
 
                 if (episodeData.currencyStarPlay == "gem" && !UserManager.main.CheckGemProperty(episodeData.priceStarPlaySale))
                 {
-                    SystemManager.ShowSimpleMessagePopUp(SystemManager.GetLocalizedText("80014"));
+                    SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80014"));
                     return;
                 }
                 
@@ -389,32 +395,34 @@ namespace PIERStory {
             episodeData.SetPurchaseState();
             
             
-            StartGame();
-            
-            return;
-            // ! 추후 작성
             // 에디터 환경에서는 그냥 실행
-            if(Application.isEditor) {
-                
+            if(Application.isEditor)
+            {
+                StartGame();
                 return;
             }
-            
-            // * 에디터 환경이 아닌 경우는 네트워크 상태를 체크한다. 
-            if(PlayerPrefs.GetInt(SystemConst.KEY_NETWORK_DOWNLOAD, 0) > 1) { // * 와이파이 접속이 아닌 환경에서도 게임을 플레이 하겠다고 했음. 
-                StartGame(); 
+
+            // 인터넷 연결이 끊겨있음
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
+                SystemManager.ShowMessageWithLocalize("80074", false);
+                return;
             }
-            else { // 동의 받지 않은 상태 
-                
+
+
+            // * 에디터 환경이 아닌 경우는 네트워크 상태를 체크한다. 
+            // * 와이파이 접속이 아닌 환경에서도 게임을 플레이 하겠다고 했음. 
+            if (PlayerPrefs.GetInt(SystemConst.KEY_NETWORK_DOWNLOAD) == 1)
+                StartGame();
+            else
+            {
+                // 동의 받지 않은 상태
                 // 동의받지 않았어도 wifi 상태면, 게임 시작. 
-                if(Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork) {
+                if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
                     StartGame();
-                    return;
-                }
-                
                 // wifi 아닌경우. 
-                if(Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork) {
-                    SystemManager.ShowConfirmPopUp(SystemManager.GetLocalizedText("80075"), ChangeNetworkSetting, OnRejectPlayWihoutWifi);
-                }
+                else if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork)
+                    SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("80075"), ChangeNetworkSetting, OnRejectPlayWihoutWifi);
             }
 
         } // ? End of purchasePostProcess

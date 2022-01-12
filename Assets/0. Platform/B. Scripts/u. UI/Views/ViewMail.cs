@@ -108,10 +108,10 @@ namespace PIERStory
             JsonData data = JsonMapper.ToObject(res.DataAsText);
             OnRequestMailList?.Invoke(SystemManager.GetJsonNode(data, MAIL_LIST));
             UserManager.main.SetRefreshInfo(data);
-            
+
 
             // 우편을 모두 수령했습니다.
-            SystemManager.ShowSimpleMessagePopUpWithLocalize("80063");
+            SystemManager.ShowSimpleAlertLocalize("80063");
         }
 
         void CallbackRequestUnreadMail(HTTPRequest req, HTTPResponse res)

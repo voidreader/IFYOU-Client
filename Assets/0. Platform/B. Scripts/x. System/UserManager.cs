@@ -291,7 +291,7 @@ namespace PIERStory
                 // 여기 오면... 안되는데 ㅠㅠ
                 // Force 하기전에 미리 체크해야 되나?
                 Debug.LogError("LogError in CallbackChangeAccount");
-                SystemManager.ShowSimpleMessagePopUp("새로 로그인한 IDP 로그인 정보가 서버에 없습니다.");
+                SystemManager.ShowLobbySubmitPopup("새로 로그인한 IDP 로그인 정보가 서버에 없습니다.");
                 return;
             }
 
@@ -335,7 +335,7 @@ namespace PIERStory
             // 사용자 UI 정보를 갱신하는 Event 필요함!
 
             // 다했다고 안내
-            SystemManager.ShowSimpleMessagePopUp("계정 정보를 불러왔습니다.");
+            SystemManager.ShowLobbySubmitPopup("계정 정보를 불러왔습니다.");
         }
 
         public void SetRefreshInfo(JsonData __j)
@@ -540,8 +540,39 @@ namespace PIERStory
             JsonData result = JsonMapper.ToObject(res.DataAsText);
             // 튜토리얼 스텝 갱신 
             tutorialStep = SystemManager.GetJsonNodeInt(result, "new_tutorial_step");
-            
         }
+
+        /// <summary>
+        /// 튜토리얼 보상 요청
+        /// </summary>
+        public void RequestTutorialReward()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestTutorialReward";
+            sending[CommonConst.COL_USERKEY] = userKey;
+
+            NetworkLoader.main.SendPost(CallbackTutorialReward, sending);
+        }
+
+
+        void CallbackTutorialReward(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackTutorialReward");
+                return;
+            }
+
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+
+            // 튜토리얼 스텝 갱신, bank 갱신
+            tutorialStep = SystemManager.GetJsonNodeInt(result, "new_tutorial_step");
+            SetBankInfo(result);
+
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_TUTORIAL_COMPLETE);
+            PopupManager.main.ShowPopup(p, false);
+        }
+
 
         #endregion
 
@@ -1397,7 +1428,7 @@ namespace PIERStory
             // View 종료를 위해 Event 처리 
             // Doozy.Engine.GameEventMessage.SendEvent("PurchaseFreepass"); 
             // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_PURCHASE_FREEPASS, string.Empty);
-            SystemManager.ShowAlert(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle));
+            SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle), true);
         }
         
         /// <summary>
@@ -1595,7 +1626,7 @@ namespace PIERStory
             
             
             // 알림 팝업 후 목록화면 갱신처리 
-            SystemManager.ShowSimpleMessagePopUp("선택한 시점으로 이야기가 초기화 되었습니다.");
+            SystemManager.ShowLobbySubmitPopup("선택한 시점으로 이야기가 초기화 되었습니다.");
 
             // * Doozy Nody StoryDetail로 돌아가기 위한 이벤트 생성 
             // * ViewStoryDetail 에서 이 시그널을 Listener를 통해서 받는다. (Inspector)

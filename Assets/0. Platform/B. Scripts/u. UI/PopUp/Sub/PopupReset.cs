@@ -55,7 +55,7 @@ namespace PIERStory {
             
             // 잔고 체크
             if(!UserManager.main.CheckCoinProperty(currentResetPrice)) {
-                SystemManager.ShowAlertWithLocalize("80013");
+                SystemManager.ShowMessageWithLocalize("80013", false);
                 return;
             }
             

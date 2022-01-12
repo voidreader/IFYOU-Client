@@ -463,7 +463,6 @@ namespace PIERStory {
             // * 2021.09.23 iOS 메모리 이슈를 해결하기 위해 중간 Scene을 거쳐서 실행하도록 처리 
             // * GameScene에서 게임이 시작되는 경우만!
             if(GameManager.main != null) {
-                
                 SceneManager.LoadSceneAsync("Intermission", LoadSceneMode.Single).allowSceneActivation = true;
             }
             else {
@@ -482,8 +481,6 @@ namespace PIERStory {
                 lastPlaySceneID = projectCurrent["scene_id"].ToString();
                 lastPlayScriptNO = long.Parse(projectCurrent["script_no"].ToString());
 
-                // ! 어드민 유저는 이어하기를 사용할 수 없다.                 
-                // if(!UserManager.main.CheckAdminUser())
                 GameManager.SetResumeGame(lastPlaySceneID, lastPlayScriptNO);
             }
             else

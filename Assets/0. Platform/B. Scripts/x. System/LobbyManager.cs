@@ -114,8 +114,7 @@ namespace PIERStory {
         void Start() {
 
             // * 팝업매니저 초기화(로비씬)
-            PopupManager.main.InitPopupManager(); 
-        
+            PopupManager.main.InitPopupManager();
         }
         
         private void Update() {

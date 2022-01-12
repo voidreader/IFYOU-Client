@@ -1,8 +1,24 @@
 ﻿
+using TMPro;
+
+
 namespace PIERStory
 {
     public class PopupTutorialStoryDetail : PopupBase
     {
+        public TextMeshProUGUI episodeNo;
+        public TextMeshProUGUI episodeTitle;
+
+        public override void Show()
+        {
+            base.Show();
+
+            EpisodeData episodeData = StoryManager.main.RegularEpisodeList[0];
+
+            episodeNo.text = string.Format("{0} {1}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNO);
+            episodeTitle.text = episodeData.episodeTitle;
+        }
+
 
         /// <summary>
         /// 빠른 플레이버튼 눌러서 에피소드 시작 페이지 열기

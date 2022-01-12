@@ -53,8 +53,6 @@ namespace PIERStory
 
             NetworkLoader.main.UpdateUserProjectCurrent(episodeData.episodeID, null, 0);
             UserManager.main.UpdateFirstTutorial(int.Parse(StoryManager.main.CurrentProjectID));
-
-            Hide();
         }
 
         void ChangeNetworkSetting()

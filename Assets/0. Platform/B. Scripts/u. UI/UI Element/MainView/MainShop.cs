@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Doozy.Runtime.UIManager.Components;
 
 namespace PIERStory {
 
@@ -11,11 +12,19 @@ namespace PIERStory {
         public static System.Action OnRefreshPackageShop = null;
         public List<BaseStarProduct> listBaseStarProducts; // 일반 스타 상품 
         
+        [SerializeField] UIToggle packageToggle;
+        [SerializeField] UIToggle normalToggle;
+        
+        
         
         void Start() {
             OnRefreshNormalShop = InitNormalContainer;
             OnRefreshPackageShop = InitPackContainer;
                  
+        }
+        
+        public void OnCompleteShowAnimation() {
+            packageToggle.SetIsOn(true);
         }
         
         

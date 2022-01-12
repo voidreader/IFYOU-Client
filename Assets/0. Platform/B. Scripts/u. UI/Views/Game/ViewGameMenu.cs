@@ -3,13 +3,14 @@ using UnityEngine.UI;
 
 using TMPro;
 using Doozy.Runtime.UIManager.Components;
+using Doozy.Runtime.UIManager.Containers;
 
 namespace PIERStory
 {
     public class ViewGameMenu : CommonView
     {
         [SerializeField] RectTransform rect;
-        
+        [SerializeField] UIView viewGameMenu; // 게임메뉴. 
 
         [Header("Skip")]
         public Image skipButtonIcon;
@@ -98,6 +99,11 @@ namespace PIERStory
                 SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6102"), true);
                 return;    
             }
+            
+            // Doozy.Runtime.UIManager.Input.BackButton.Fire(); // 백버튼 발동처리
+            
+            viewGameMenu.Hide();
+            
 
             // 시간 흐름중 스킵하면 시간흐름용 fadeImage를 비활성화 해버린다
             if (GameManager.main.currentRow.template.Equals(GameConst.TEMPLATE_FLOWTIME))
@@ -107,7 +113,7 @@ namespace PIERStory
             GameManager.main.isThreadHold = false;
             GameManager.main.isWaitingScreenTouch = false;
             
-            Doozy.Runtime.UIManager.Input.BackButton.Fire(); // 백버튼 발동처리
+            
         }
 
         public void OnClickBlockSkip()
@@ -120,9 +126,10 @@ namespace PIERStory
         /// </summary>
         public void OpenLog()
         {
+            viewGameMenu.Hide();
             ViewGame.main.ShowLog();
             
-            Doozy.Runtime.UIManager.Input.BackButton.Fire();
+            // Doozy.Runtime.UIManager.Input.BackButton.Fire();
         }
 
         /// <summary>
@@ -191,6 +198,11 @@ namespace PIERStory
         public void OnClickBlockReplay()
         {
             SystemManager.ShowSimpleAlert("무료 플레이에서는 다시 할 수 없습니다.");
+        }
+        
+        public void OnClickBack() {
+            
+            viewGameMenu.Hide();
         }
 
         #endregion

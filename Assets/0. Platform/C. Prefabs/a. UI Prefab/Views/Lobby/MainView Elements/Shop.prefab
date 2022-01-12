@@ -327,7 +327,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnVisibleCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnVisibleCallback
     Runners: []
     Event:
@@ -349,7 +349,19 @@ MonoBehaviour:
         m_Calls: []
   OnVisibilityChangedCallback:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3819851223816581921}
+        m_TargetAssemblyTypeName: PIERStory.MainShop, Assembly-CSharp
+        m_MethodName: OnCompleteShowAnimation
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 0
   AutoHideAfterShow: 0
@@ -941,6 +953,8 @@ MonoBehaviour:
   - {fileID: 8276915519816105485}
   - {fileID: 7129462475524361781}
   - {fileID: 2477447365645442234}
+  packageToggle: {fileID: 5035268295856394546}
+  normalToggle: {fileID: 3660044304111106875}
 --- !u!1 &1714073758161162260
 GameObject:
   m_ObjectHideFlags: 0
@@ -1111,7 +1125,7 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
   MultiplayerInfo: {fileID: 0}
-  IsOn: 1
+  IsOn: 0
   CurrentUISelectionState: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
@@ -1200,9 +1214,9 @@ MonoBehaviour:
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
-  ToggleGroupValue: 2
-  Mode: 2
-  HasMixedValues: 1
+  ToggleGroupValue: 0
+  Mode: 1
+  HasMixedValues: 0
   AutoSort: 1
   OnToggleGroupMixedValuesCallback:
     Enabled: 0
@@ -1810,7 +1824,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8660011422300793729}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3819851223816581921}
+        m_TargetAssemblyTypeName: PIERStory.MainShop, Assembly-CSharp
+        m_MethodName: OnClickCoinShop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3907826806756301539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2092,7 +2118,7 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
   MultiplayerInfo: {fileID: 0}
-  IsOn: 1
+  IsOn: 0
   CurrentUISelectionState: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
@@ -3135,7 +3161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 0
+  OnStartBehaviour: 1
   OnShowCallback:
     Enabled: 1
     EventName: OnShowCallback
@@ -4533,7 +4559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 0
+  OnStartBehaviour: 1
   OnShowCallback:
     Enabled: 1
     EventName: OnShowCallback
@@ -5815,7 +5841,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1254503528398501536, guid: e4cff0394c6b46345917de8eeef50cbd, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1254503528398501536, guid: e4cff0394c6b46345917de8eeef50cbd, type: 3}
       propertyPath: m_AnchorMin.x
@@ -5823,15 +5849,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1254503528398501536, guid: e4cff0394c6b46345917de8eeef50cbd, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1254503528398501536, guid: e4cff0394c6b46345917de8eeef50cbd, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 210
       objectReference: {fileID: 0}
     - target: {fileID: 1254503528398501536, guid: e4cff0394c6b46345917de8eeef50cbd, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 320
       objectReference: {fileID: 0}
     - target: {fileID: 1254503528398501536, guid: e4cff0394c6b46345917de8eeef50cbd, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5863,11 +5889,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1254503528398501536, guid: e4cff0394c6b46345917de8eeef50cbd, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 594
       objectReference: {fileID: 0}
     - target: {fileID: 1254503528398501536, guid: e4cff0394c6b46345917de8eeef50cbd, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -560
       objectReference: {fileID: 0}
     - target: {fileID: 1254503528398501536, guid: e4cff0394c6b46345917de8eeef50cbd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5888,6 +5914,10 @@ PrefabInstance:
     - target: {fileID: 6601539650651535107, guid: e4cff0394c6b46345917de8eeef50cbd, type: 3}
       propertyPath: m_Name
       value: BasicStarProduct (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6601539650651535107, guid: e4cff0394c6b46345917de8eeef50cbd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7365605049552127981, guid: e4cff0394c6b46345917de8eeef50cbd, type: 3}
       propertyPath: productID

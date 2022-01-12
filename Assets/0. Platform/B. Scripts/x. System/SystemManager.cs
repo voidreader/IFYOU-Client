@@ -346,7 +346,7 @@ namespace PIERStory
             {
                 // 이 부분에 초기화가 실패해서 접속을 할 수 없다는 안내 멘트 필요
                 Debug.Log(string.Format("Gamebase Initialization failed. error is {0}", error));
-                ShowLobbyPopup("Game initialization failed : " + error.message, Application.Quit, null, false);
+                ShowLobbyPopup("Game initialization failed : " + error.message, Application.Quit, Application.Quit, false);
 
                 if (error.code == GamebaseErrorCode.LAUNCHING_UNREGISTERED_CLIENT)
                 {
@@ -433,13 +433,13 @@ namespace PIERStory
                 case GamebaseLaunchingStatus.INSPECTING_ALL_SERVICES: // 점검에 대한 처리 
                 case GamebaseLaunchingStatus.INSPECTING_SERVICE:
                     // 점검에 대한 처리 
-                    ShowLobbyPopup(string.Format("{0}\n~\n{1}\n{2}", launchingInfo.launching.maintenance.beginDate, launchingInfo.launching.maintenance.endDate, Uri.UnescapeDataString(launchingInfo.launching.maintenance.message)), Application.Quit, null, false);
+                    ShowLobbyPopup(string.Format("{0}\n~\n{1}\n{2}", launchingInfo.launching.maintenance.beginDate, launchingInfo.launching.maintenance.endDate, Uri.UnescapeDataString(launchingInfo.launching.maintenance.message)), Application.Quit, Application.Quit, false);
                     isServerValid = false; 
                     break;
 
 
                 case GamebaseLaunchingStatus.INTERNAL_SERVER_ERROR: // Error in internal server.
-                    ShowLobbyPopup("Internal Server Error", Application.Quit, null, false);
+                    ShowLobbyPopup("Internal Server Error", Application.Quit, Application.Quit, false);
                     isServerValid = false;
                     break;
             } // ? end of switch
@@ -1769,7 +1769,7 @@ namespace PIERStory
 
                     NetworkLoader.main.UpdateWithdrawDate(); // 게임서버 통신 호출 
                     // 바이바이 팝업창 
-                    ShowLobbyPopup(GetLocalizedText("6008"), Application.Quit, null, false);    // 탈퇴, 감사합니다. 앱 종료 
+                    ShowLobbyPopup(GetLocalizedText("6008"), Application.Quit, Application.Quit, false);    // 탈퇴, 감사합니다. 앱 종료 
                 }
                 else
                 {

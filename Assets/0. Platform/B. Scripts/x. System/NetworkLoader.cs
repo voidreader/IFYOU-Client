@@ -833,14 +833,14 @@ namespace PIERStory
                     }
                     else { // 3번하는 동안 모두 실패했다. 
                         SystemManager.HideNetworkLoading(); // 실패했을때 네트워크 로딩은 제거해주자.
-                        SystemManager.ShowLobbyPopup(message, SystemManager.LoadLobbyScene, null, false);
+                        SystemManager.ShowLobbyPopup(message, SystemManager.LoadLobbyScene, SystemManager.LoadLobbyScene, false);
                     }
                     
                 } catch (Exception e) {
                     message = "서버 통신 과정에서 알 수 없는 오류가 발생했습니다.";
                     Debug.Log(e.StackTrace);
                     SystemManager.HideNetworkLoading(); // 실패했을때 네트워크 로딩은 제거해주자.
-                    SystemManager.ShowLobbyPopup(message, SystemManager.LoadLobbyScene, null, false);
+                    SystemManager.ShowLobbyPopup(message, SystemManager.LoadLobbyScene, SystemManager.LoadLobbyScene, false);
                 }                
             } // ? end of retry
             

@@ -16,6 +16,8 @@ namespace PIERStory {
     
         public JsonData productMasterJSON;
         JsonData productDetailJSON;
+        JsonData coinExchangeJSON; // 코인 환전 
+        
         JsonData userPurchaseHistoryJSON = null;
     
         const string NODE_PRODUCT_MASTER = "productMaster";
@@ -46,6 +48,9 @@ namespace PIERStory {
             
             // 유저의 구매 내역 받아오기
             NetworkLoader.main.RequestUserPurchaseHistory();
+            
+            // 코인 환전 상품 정보 가져오기
+            NetworkLoader.main.RequestCoinExchangeProductList();
             
             
             // 게임베이스 상품 정보 받아오기 
@@ -269,6 +274,15 @@ namespace PIERStory {
             
         }
         
+        public void OnRequestCoinExchangeProductList(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                return;
+            }
+            
+            
+            coinExchangeJSON = JsonMapper.ToObject(response.DataAsText); 
+        }
+        
         
         /// <summary>
         /// 게임베이스에 등록된 상품 정보 ID로 가져오기 
@@ -340,6 +354,50 @@ namespace PIERStory {
             return false;
         }
         
+       
+         
+        public JsonData GetCoinExchangeProductInfo(string __productID) {
+            if(coinExchangeJSON == null)
+                return null;
+                
+            for(int i=0; i<coinExchangeJSON.Count;i++) {
+                if(SystemManager.GetJsonNodeString(coinExchangeJSON[i], "exchange_product_id") == __productID)
+                    return coinExchangeJSON[i];
+            }
+            
+            
+            return null;
+        }
+        
+        
+        /// <summary>
+        /// 환전 고고 
+        /// </summary>
+        /// <param name="exchangeProductID"></param>
+        public void ExchangeStarToCoin(string exchangeProductID) {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "coinExchangePurchase";
+            sending["exchange_product_id"] = exchangeProductID;
+            
+            NetworkLoader.main.SendPost(OnRequestCoinExchange, sending, true);
+        }
+        
+        void OnRequestCoinExchange(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                return;
+            }
+            
+            JsonData result = JsonMapper.ToObject(response.DataAsText); 
+            
+            coinExchangeJSON = result["coinExchangeProduct"]; // 상품 리스트 갱신 
+            
+            UserManager.main.SetBankInfo(result); // 뱅크 갱신 
+            
+            MainShop.OnRefreshNormalShop?.Invoke();
+            
+            // 코인을 몇개 받았습니다.
+            SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("6121"), result["gotCoin"].ToString()), true);
+        }
         
     } // ? end of class
 }

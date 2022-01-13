@@ -1722,7 +1722,7 @@ namespace PIERStory
             }
             
             if(string.IsNullOrEmpty(__id)) {
-                Debug.LogError("ID is null or empty");
+                Debug.LogError("id is null or empty");
                 return string.Empty;
             }
                 

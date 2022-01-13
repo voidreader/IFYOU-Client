@@ -134,6 +134,18 @@ namespace PIERStory
             
         }
         
+        
+        /// <summary>
+        /// 환전 상품 받아오기 
+        /// </summary>
+        public void RequestCoinExchangeProductList() {
+            JsonData sending = new JsonData();
+            sending["func"] = "getCoinExchangeProductList";
+            
+            SendPost(BillingManager.main.OnRequestCoinExchangeProductList, sending);
+        }
+        
+        
         #endregion
 
         #region 기타 통신 RequestGamebaseLaunching, UpdateEpisodeStartRecord, UpdateEpisodeCompleteRecord

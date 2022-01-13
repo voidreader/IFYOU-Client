@@ -14,7 +14,7 @@ namespace PIERStory {
         
         [SerializeField] List<GamebaseResponse.Purchase.PurchasableItem> ListGamebaseProducts; // 게임베이스에 등록된 인앱 상품 정보 
     
-        JsonData productMasterJSON;
+        public JsonData productMasterJSON;
         JsonData productDetailJSON;
         JsonData userPurchaseHistoryJSON = null;
     

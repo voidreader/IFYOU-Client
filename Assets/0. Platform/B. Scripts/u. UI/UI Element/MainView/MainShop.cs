@@ -11,6 +11,7 @@ namespace PIERStory {
         public static System.Action OnRefreshNormalShop = null;
         public static System.Action OnRefreshPackageShop = null;
         public List<BaseStarProduct> listBaseStarProducts; // 일반 스타 상품 
+        public List<GeneralPackProduct> listGeneralPackProducts; // 일반 패키지 상품 
         
         [SerializeField] UIToggle packageToggle;
         [SerializeField] UIToggle normalToggle;
@@ -45,6 +46,26 @@ namespace PIERStory {
         /// </summary>
          public void InitPackContainer() {
              
+             for (int i=0; i<listGeneralPackProducts.Count;i++) {
+                 listGeneralPackProducts[i].gameObject.SetActive(false);
+             }
+             
+             int packIndex = 0;
+             
+             
+            for(int i=0; i<BillingManager.main.productMasterJSON.Count;i++) {
+                
+                // general_pack 만 해당한다. 
+                if(SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_id").Contains("general_pack")) {
+                    
+                    // index 체크
+                    if(packIndex >= listGeneralPackProducts.Count)    
+                        return;
+                    
+                    listGeneralPackProducts[packIndex++].InitPackage(SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_id"));
+                    
+                }
+            }
          }
         
         

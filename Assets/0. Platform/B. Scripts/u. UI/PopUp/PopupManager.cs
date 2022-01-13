@@ -43,6 +43,7 @@ namespace PIERStory {
         [SerializeField] GameObject popupTutorialStoryDetail;
         
         [SerializeField] GameObject popupNickname;       
+        [SerializeField] GameObject popupPackDetail;
         
          
         private void Awake() {
@@ -307,6 +308,11 @@ namespace PIERStory {
                 DictPopup["Nickname"] = popupNickname;
             else 
                 DictPopup.Add("Nickname", popupNickname);
+                
+            if(DictPopup.ContainsKey("PackDetail")) 
+                DictPopup["PackDetail"] = popupPackDetail;
+            else 
+                DictPopup.Add("PackDetail", popupPackDetail);
         }
         
         #endregion

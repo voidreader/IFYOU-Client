@@ -66,7 +66,44 @@ namespace PIERStory
             }
             
             
+            bannerURL = SystemManager.GetJsonNodeString(productMasterJSON, "product_url");
+            bannerKey = SystemManager.GetJsonNodeString(productMasterJSON, "product_key");
             
+            detailURL = SystemManager.GetJsonNodeString(productMasterJSON, "product_detail_url");
+            detailKey = SystemManager.GetJsonNodeString(productMasterJSON, "product_detail_key");
+            
+            
+            // 배너 이미지 세팅 
+            bannerImage.SetDownloadURL(bannerURL, bannerKey);
+            
+            // 디테일 다운로드 요청 
+            SystemManager.RequestDownloadImage(detailURL, detailKey, null);
+            
+            
+        }
+        
+        public void OnClickBanner() {
+            
+            if(productMasterJSON == null || productDetailJSON == null)
+                return;
+            
+            PopupBase p = PopupManager.main.GetPopup("PackDetail");
+            if (p == null)
+            {
+                Debug.LogError("No PackDetail popup");
+                return;
+            }
+            
+            // 데이터 세팅 
+            p.Data.SetLabelsTexts(textPrice.text);
+            p.Data.targetData = productID;
+            p.Data.imageURL = detailURL;
+            p.Data.imageKey = detailKey;
+            
+            // 열기
+            PopupManager.main.ShowPopup(p, false);
+            
+            // BillingManager.main.RequestPurchaseGamebase(productID);
         }
     }
     

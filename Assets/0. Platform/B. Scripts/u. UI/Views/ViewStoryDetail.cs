@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BestHTTP;
 
 using TMPro;
 using LitJson;
@@ -67,6 +68,10 @@ namespace PIERStory {
         string  totalEpisodeCount = string.Empty; // 정규 에피소드 카운트
         bool isReverse = false; // 역순 리스트 
         bool isCreditUse = false; // 크레딧 버튼 사용 
+        
+        [SerializeField] Button btnLike; // 좋아요 버튼
+        [SerializeField] Sprite spriteLikeOff; // 좋아요 버튼 OFF 스프라이트
+        [SerializeField] Sprite spriteLikeOn; // 좋아요 버튼 ON 스프라이트
         
         public override void OnView()
         {
@@ -181,6 +186,8 @@ namespace PIERStory {
             
             // 프리패스 정보 설정
             SetFreepassInfo();
+            
+            SetLikeButtonState();
         }
         
         
@@ -417,6 +424,44 @@ namespace PIERStory {
             if(mainScrollRectY >= 0.95f && ViewCommonTop.isBackgroundShow) {
                 Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
                 return;
+            }
+        }
+        
+        /// <summary>
+        ///  좋아요 버튼 클릭
+        /// </summary>
+        public void OnClickLikeButton() {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "updateProjectLike";
+            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            
+            NetworkLoader.main.SendPost(OnProjectLike, sending, true);
+        }
+        
+        void OnProjectLike(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)){
+                return;
+            }
+            
+            Debug.Log("OnProjectLike : " + response.DataAsText);
+            
+            // 서버에서 likeID 통으로 응답받는다.
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            StoryManager.main.SetLikeStoryData(result["like"]); // 리스트 갱신. 
+            
+            // 갱신된 정보를 버튼에 반영 
+            SetLikeButtonState();
+        }
+        
+        /// <summary>
+        /// 좋아요 버튼 세팅
+        /// </summary>
+        void SetLikeButtonState() {
+            if(StoryManager.main.CheckProjectLike(StoryManager.main.CurrentProjectID)) {
+                btnLike.image.sprite = spriteLikeOn;                
+            }
+            else {
+                btnLike.image.sprite = spriteLikeOff;
             }
         }
         

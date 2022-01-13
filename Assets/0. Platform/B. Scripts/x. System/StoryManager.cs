@@ -56,7 +56,7 @@ namespace PIERStory
 
         JsonData totalStoryListJson = null; // 조회로 가져온 모든 작품 리스트(all)
         JsonData recommendStoryIdJSON = null; // 추천 작품 ID JSON
-        
+        JsonData likeStoryIdJSON = null; // 좋아요 작품 ID JSON
         
         public List<StoryData> listTotalStory = new List<StoryData>(); // 작품 리스트 
         public List<StoryData> listRecommendStory = new List<StoryData>(); // 추천 작품 리스트 
@@ -274,6 +274,7 @@ namespace PIERStory
         public void SetStoryList(JsonData __listJSON) {
             totalStoryListJson = __listJSON["all"];
             recommendStoryIdJSON = __listJSON["recommend"];
+            likeStoryIdJSON = __listJSON["like"];
             
             listTotalStory.Clear();
             for(int i=0; i<totalStoryListJson.Count;i++) {
@@ -294,6 +295,34 @@ namespace PIERStory
             }
                
         }
+        
+        /// <summary>
+        /// 작품 좋아요 여부 
+        /// </summary>
+        /// <param name="__project_id"></param>
+        /// <returns></returns>
+        public bool CheckProjectLike(string __project_id){
+            
+            for(int i=0; i < likeStoryIdJSON.Count;i++) {
+                if(likeStoryIdJSON[i].ToString() == __project_id) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        
+        /// <summary>
+        /// 좋아요 작품 데이터 갱신 
+        /// </summary>
+        /// <param name="__newData"></param>
+        public void SetLikeStoryData(JsonData __newData) {
+            likeStoryIdJSON = __newData;
+        }
+        
+        
+        
 
         /// <summary>
         /// 작품 Id로 해당 작품 찾기

@@ -21,7 +21,6 @@ namespace PIERStory
         {
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "useCoupon";
-            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             sending["coupon_code"] = couponCode.text.ToUpper();
 
             NetworkLoader.main.SendPost(CallbackUseCoupon, sending, true);

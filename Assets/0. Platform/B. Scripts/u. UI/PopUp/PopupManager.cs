@@ -18,6 +18,22 @@ namespace PIERStory {
         
         [SerializeField] List<ParticleSystem> confittiParticles;
         
+        
+        [Space]
+        [Space]
+        [Header("Prefab")]
+        [SerializeField] GameObject popupAccount;
+        [SerializeField] GameObject popupAchivement;
+        [SerializeField] GameObject popupAdvertisementShow;
+        [SerializeField] GameObject popupCoupon;
+        [SerializeField] GameObject popupEndingAlert;
+        [SerializeField] GameObject popupEpisodeClearReward;
+        [SerializeField] GameObject popupExp;
+        [SerializeField] GameObject popupLevelUp;
+        
+        [SerializeField] GameObject popupNickname;       
+        
+         
         private void Awake() {
             if(main != null) {
                 Destroy(this.gameObject);
@@ -26,10 +42,19 @@ namespace PIERStory {
             
             main = this;
             
+            
             HideConfetti();
             
             DontDestroyOnLoad(this);
                 
+        }
+        
+        void Start() {
+            if(DictPopup.ContainsKey("Nickname")) 
+                DictPopup["Nickname"] = popupNickname;
+            else 
+                DictPopup.Add("Nickname", popupNickname);
+            
         }
         
         /// <summary>

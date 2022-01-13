@@ -393,8 +393,10 @@ namespace PIERStory {
                 filteredList = StoryManager.main.listTotalStory;
             }
             else if(__genre.Contains("관심작품")) {
-                NoInterestStory.SetActive(true);    
-                return;
+                filteredList = GetLikeStoryList();
+                if(filteredList.Count == 0) {
+                    NoInterestStory.SetActive(true);
+                }
             }
             else {
                 filteredList = GetGenreFilteredStoryList(__genre);
@@ -423,6 +425,11 @@ namespace PIERStory {
         /// <returns></returns>
         List<StoryData> GetGenreFilteredStoryList(string __genre) {
             return StoryManager.main.listTotalStory.Where( item => item.genre.Contains(__genre)).ToList<StoryData>();
+        }
+        
+        List<StoryData> GetLikeStoryList() {
+            
+            return StoryManager.main.listTotalStory.Where( item => StoryManager.main.CheckProjectLike(item.projectID)).ToList<StoryData>();
         }
         
         #endregion

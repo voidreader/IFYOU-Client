@@ -28,8 +28,11 @@ namespace PIERStory
         [SerializeField] string debugBankString = string.Empty;
 
         public List<CoinIndicator> ListCoinIndicators = new List<CoinIndicator>(); // 코인 표시기
-        public List<GemIndicator> ListGemIndicators = new List<GemIndicator>(); // 사파이어 표시기
-        public TicketIndicator ticketIndicators;        // 1회권 표시기
+        public List<GemIndicator> ListGemIndicators = new List<GemIndicator>(); // 젬 표시기
+        public List<NicknameIndicator> ListNicknameIndicators = new List<NicknameIndicator>(); // 닉네임 표시기
+        
+        
+        
         [HideInInspector] public Queue<JsonData> OpenSideStories = new Queue<JsonData>();     // 해금된 사이드 에피소드 목록
         [HideInInspector] public Queue<JsonData> CompleteMissions = new Queue<JsonData>();      // 완료된 미션 목록
 
@@ -187,6 +190,7 @@ namespace PIERStory
 
             ListCoinIndicators.Clear();
             ListGemIndicators.Clear();
+            ListNicknameIndicators.Clear();
         }
 
         /// <summary>
@@ -309,11 +313,19 @@ namespace PIERStory
             
             userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
             tutorialStep = int.Parse(SystemManager.GetJsonNodeString(userJson, "tutorial_step"));
-            nickname = SystemManager.GetJsonNodeString(userJson, "nickname");
             accountLink = SystemManager.GetJsonNodeString(userJson, "account_link");
+            
+            SetNewNickname(SystemManager.GetJsonNodeString(userJson, "nickname"));
             
             // 레벨 정보
             SetLevelInfo();
+        }
+        
+        public void SetNewNickname(string __newNickname) {
+            nickname = __newNickname;
+            
+            // nickname 컨트롤 리프레시 필요 
+            RefreshNicknameIndicators(nickname);
         }
 
 
@@ -654,9 +666,30 @@ namespace PIERStory
             RefreshGemIndicators(); 
         }
 
-        public void AddTicketIndicator(TicketIndicator __receiver)
+        public void AddNicknameIndicator(NicknameIndicator __receiver)
         {
+            if (ListNicknameIndicators.Contains(__receiver))
+                return;
 
+            ListNicknameIndicators.Add(__receiver);
+            RefreshGemIndicators(); 
+        }
+        
+        /// <summary>
+        /// 닉네임 표시 업데이트 
+        /// </summary>
+        void RefreshNicknameIndicators(string __nick) {
+            for(int i = ListNicknameIndicators.Count-1; i>= 0; i--)
+            {
+                if (!ListNicknameIndicators[i])
+                    ListNicknameIndicators.RemoveAt(i);
+            }
+            
+            for(int i=0; i<ListNicknameIndicators.Count;i++) {
+                ListNicknameIndicators[i].RefreshNickname(__nick);
+            }
+            
+        
         }
         
         
@@ -712,8 +745,7 @@ namespace PIERStory
             RefreshCoinIndicators();
             RefreshGemIndicators();
 
-            if(ticketIndicators != null)
-                ticketIndicators.RefreshTicket();
+            
         }
         
         
@@ -724,8 +756,6 @@ namespace PIERStory
             RefreshCoinIndicators();
             RefreshGemIndicators();
 
-            if(ticketIndicators != null)
-                ticketIndicators.RefreshTicket();
         }
         
         

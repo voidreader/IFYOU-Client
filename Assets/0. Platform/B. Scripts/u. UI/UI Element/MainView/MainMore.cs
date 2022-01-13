@@ -277,7 +277,14 @@ namespace PIERStory {
         /// </summary>
         public void OnClickNicknameChange()
         {
+            PopupBase p = PopupManager.main.GetPopup("Nickname");
+            if (p == null)
+            {
+                Debug.LogError("No Nickname popup");
+                return;
+            }
 
+            PopupManager.main.ShowPopup(p, true);
         }
 
         /// <summary>

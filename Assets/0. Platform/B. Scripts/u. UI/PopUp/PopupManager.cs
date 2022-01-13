@@ -30,6 +30,17 @@ namespace PIERStory {
         [SerializeField] GameObject popupEpisodeClearReward;
         [SerializeField] GameObject popupExp;
         [SerializeField] GameObject popupLevelUp;
+        [SerializeField] GameObject popupMessageAlert;
+        [SerializeField] GameObject popupType1;
+        [SerializeField] GameObject popupType2;
+        [SerializeField] GameObject popupPremiumPass;
+        [SerializeField] GameObject popupSideAlert;
+        [SerializeField] GameObject popupSimpleAlert;
+        
+        [SerializeField] GameObject popupTutorialComplete;
+        [SerializeField] GameObject popupTutorialEpisodeStart;
+        [SerializeField] GameObject popupTutorialMain;
+        [SerializeField] GameObject popupTutorialStoryDetail;
         
         [SerializeField] GameObject popupNickname;       
         
@@ -50,12 +61,11 @@ namespace PIERStory {
         }
         
         void Start() {
-            if(DictPopup.ContainsKey("Nickname")) 
-                DictPopup["Nickname"] = popupNickname;
-            else 
-                DictPopup.Add("Nickname", popupNickname);
-            
+
+            CreatePopupDict();
         }
+        
+
         
         /// <summary>
         /// 팝업 매니저 초기화
@@ -197,6 +207,105 @@ namespace PIERStory {
                 yield return new WaitForSeconds(UnityEngine.Random.Range(0.2f,0.5f));
             }
         }
+        
+        
+        
+        #region CreatePopupDict
+        
+        void CreatePopupDict() {
+            if(DictPopup.ContainsKey("Account")) 
+                DictPopup["Account"] = popupAccount;
+            else 
+                DictPopup.Add("Account", popupAccount);
+                
+            if(DictPopup.ContainsKey("AchivementIllust")) 
+                DictPopup["AchivementIllust"] = popupAchivement;
+            else 
+                DictPopup.Add("AchivementIllust", popupAchivement);
+                
+            if(DictPopup.ContainsKey("AdvertisementShow")) 
+                DictPopup["AdvertisementShow"] = popupAdvertisementShow;
+            else 
+                DictPopup.Add("AdvertisementShow", popupAdvertisementShow);
+                
+            if(DictPopup.ContainsKey("Coupon")) 
+                DictPopup["Coupon"] = popupCoupon;
+            else 
+                DictPopup.Add("Coupon", popupCoupon);
+                
+            if(DictPopup.ContainsKey("EndingAlert")) 
+                DictPopup["EndingAlert"] = popupEndingAlert;
+            else 
+                DictPopup.Add("EndingAlert", popupEndingAlert);
+                
+            if(DictPopup.ContainsKey("EpisodeFirstReward")) 
+                DictPopup["EpisodeFirstReward"] = popupEpisodeClearReward;
+            else 
+                DictPopup.Add("EpisodeFirstReward", popupEpisodeClearReward);
+                
+            if(DictPopup.ContainsKey("EXP")) 
+                DictPopup["EXP"] = popupExp;
+            else 
+                DictPopup.Add("EXP", popupExp);
+                
+            if(DictPopup.ContainsKey("LevelUp")) 
+                DictPopup["LevelUp"] = popupLevelUp;
+            else 
+                DictPopup.Add("LevelUp", popupLevelUp);
+                
+            if(DictPopup.ContainsKey("MessageAlert")) 
+                DictPopup["MessageAlert"] = popupMessageAlert;
+            else 
+                DictPopup.Add("MessageAlert", popupMessageAlert);
+                
+            if(DictPopup.ContainsKey("Popup1")) 
+                DictPopup["Popup1"] = popupType1;
+            else 
+                DictPopup.Add("Popup1", popupType1);
+                
+            if(DictPopup.ContainsKey("Popup2")) 
+                DictPopup["Popup2"] = popupType2;
+            else 
+                DictPopup.Add("Popup2", popupType2);
+                
+            if(DictPopup.ContainsKey("PremiumPass")) 
+                DictPopup["PremiumPass"] = popupPremiumPass;
+            else 
+                DictPopup.Add("PremiumPass", popupPremiumPass);
+                
+            if(DictPopup.ContainsKey("SideAlert")) 
+                DictPopup["SideAlert"] = popupSideAlert;
+            else 
+                DictPopup.Add("SideAlert", popupSideAlert);
+                
+            if(DictPopup.ContainsKey("SimpleAlert")) 
+                DictPopup["SimpleAlert"] = popupSimpleAlert;
+            else 
+                DictPopup.Add("SimpleAlert", popupSimpleAlert);
+                
+            if(DictPopup.ContainsKey("TutorialComplete")) 
+                DictPopup["TutorialComplete"] = popupTutorialComplete;
+            else 
+                DictPopup.Add("TutorialComplete", popupTutorialComplete);
+                
+            if(DictPopup.ContainsKey("TutorialEpisodeStart")) 
+                DictPopup["TutorialEpisodeStart"] = popupTutorialEpisodeStart;
+            else 
+                DictPopup.Add("TutorialEpisodeStart", popupTutorialEpisodeStart);
+                
+            if(DictPopup.ContainsKey("TutorialMain")) 
+                DictPopup["TutorialMain"] = popupTutorialMain;
+            else 
+                DictPopup.Add("TutorialMain", popupTutorialMain);
+                
+            if(DictPopup.ContainsKey("TutorialStoryDetail")) 
+                DictPopup["TutorialStoryDetail"] = popupTutorialStoryDetail;
+            else 
+                DictPopup.Add("TutorialStoryDetail", popupTutorialStoryDetail);
+                
+        }
+        
+        #endregion
         
     }
 }

@@ -146,7 +146,7 @@ namespace PIERStory {
             
             
             if(Input.GetKeyDown(KeyCode.R)) { // 경험치 획득 
-                NetworkLoader.main.UpdateUserExp(50, "event", -1);
+                // NetworkLoader.main.UpdateUserExp(50, "event", -1);
             }
         }
 

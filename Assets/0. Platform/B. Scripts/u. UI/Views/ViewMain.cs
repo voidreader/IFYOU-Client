@@ -86,6 +86,8 @@ namespace PIERStory {
             base.OnView();
             
             LobbyManager.main.RequestPlatformLoadingImages(); // 플랫폼 로딩 이미지 다운로드 처리 
+            
+            UserManager.main.SetNewNickname(UserManager.main.nickname);
         }
         
         public override void OnStartView() {
@@ -269,7 +271,7 @@ namespace PIERStory {
         void InitNewStoryElements() {
             ResetNewStory();
             
-            
+            // ! 오류 체크 
             for(int i=0; i<StoryManager.main.listTotalStory.Count;i++) {
                 ListNewStoryElement[i].InitStoryElement(StoryManager.main.listTotalStory[i]);
             }   

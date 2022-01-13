@@ -22,7 +22,6 @@ namespace HeurekaGames
         {
             PackageVersion newPackageVersion = new PackageVersion(major, minor, patch);
             VersionData.Add(newPackageVersion);
-            //newPackageVersion.OnChanged += Item_OnChanged;
         }
 
         public void CollapseAll()
@@ -37,14 +36,10 @@ namespace HeurekaGames
     [System.Serializable]
     public class PackageVersion
     {
-        //public event Action OnChanged;
         [SerializeField] public PackageVersionNum VersionNum = new PackageVersionNum();
         [SerializeField] public List<string> VersionChanges = new List<string>();
 
         [SerializeField] public bool FoldOut = false;
-
-        // [SerializeField] private string versionDescription;
-
         PackageVersionNum newVersionNum = new PackageVersionNum();
 
         private const float btnWidth = 150;

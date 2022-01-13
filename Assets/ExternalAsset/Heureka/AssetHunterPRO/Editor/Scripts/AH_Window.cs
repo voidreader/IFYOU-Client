@@ -15,27 +15,17 @@ namespace HeurekaGames.AssetHunterPRO
     public class AH_Window : EditorWindow
     {
         public const int WINDOWMENUITEMPRIO = 11;
-
-        public const string VERSION = "2.1.3";
+        public const string VERSION = "2.2.1";
         private static AH_Window m_window;
 
         [NonSerialized] bool m_Initialized;
         [SerializeField] TreeViewState m_TreeViewState; // Serialized in the window layout file so it survives assembly reloading
         [SerializeField] MultiColumnHeaderState m_MultiColumnHeaderState;
-
-        internal static AH_BuildInfoManager GetBuildInfoManager()
-        {
-            if (!m_window)
-                initializeWindow();
-
-            return m_window.buildInfoManager;
-        }
-
+        
         SearchField m_SearchField;
         private AH_TreeViewWithTreeModel m_TreeView;
 
-        [SerializeField]
-        public AH_BuildInfoManager buildInfoManager;
+        [SerializeField] public AH_BuildInfoManager buildInfoManager;
         public bool m_BuildLogLoaded { get; set; }
 
         //Button guiContent
@@ -44,7 +34,6 @@ namespace HeurekaGames.AssetHunterPRO
         [SerializeField] GUIContent guiContentGenerateReferenceGraph;
         [SerializeField] GUIContent guiContentDuplicates;
         
-
         //Only avaliable in 2018
 #if UNITY_2018_1_OR_NEWER
         [SerializeField] GUIContent guiContentBuildReport;
@@ -58,6 +47,7 @@ namespace HeurekaGames.AssetHunterPRO
         public static float ButtonMaxHeight = 18;
 
         //Add menu named "Asset Hunter" to the window menu  
+        [UnityEditor.MenuItem("Tools/Asset Hunter PRO/Asset Hunter PRO", priority = WINDOWMENUITEMPRIO)]
         [UnityEditor.MenuItem("Window/Heureka/Asset Hunter PRO/Asset Hunter PRO _%h", priority = WINDOWMENUITEMPRIO)]
         public static void OpenAssetHunter()
         {
@@ -88,6 +78,14 @@ namespace HeurekaGames.AssetHunterPRO
             AH_SettingsManager.Instance.IgnoreListUpdatedEvent += m_window.OnIgnoreListUpdatedEvent;
 
             return m_window;
+        }
+        
+        internal static AH_BuildInfoManager GetBuildInfoManager()
+        {
+            if (!m_window)
+                initializeWindow();
+
+            return m_window.buildInfoManager;
         }
 
         private void OnEnable()
@@ -140,6 +138,7 @@ namespace HeurekaGames.AssetHunterPRO
         //Callback
         private void OnAssetDeleted()
         {
+            //TODO need to improve the deletion of empty folder. Currently leaves meta file behind, causing warnings
             if (EditorUtility.DisplayDialog("Delete empty folders", "Do you want to delete any empty folders?", "Yes", "No"))
             {
                 deleteEmptyFolders();
@@ -204,6 +203,7 @@ namespace HeurekaGames.AssetHunterPRO
             AssetDatabase.Refresh();
         }
 
+        //This needs some work, it leaves the meta file. TAken out of codebase until a fix has been found
         private bool checkEmptyFolder(string dataPath)
         {
             if (dataPath.EndsWith(".git", StringComparison.InvariantCultureIgnoreCase))
@@ -238,8 +238,11 @@ namespace HeurekaGames.AssetHunterPRO
                 }
                 else
                 {
-                    Debug.Log("AH: Deleting empty folder " + folders[i]);
-                    FileUtil.DeleteFileOrDirectory(folders[i]);
+                    //if (EditorUtility.DisplayDialog("Delete folder", folders[i] + " seems to be empty, do you want to delete it?", "Yes", "No"))
+                    { 
+                        Debug.Log("AH: Deleting empty folder " + folders[i]);
+                        AssetDatabase.DeleteAsset(FileUtil.GetProjectRelativePath(folders[i]));
+                    }
                 }
             }
             return (!hasValidAsset && !hasFolderWithContents);
@@ -294,10 +297,11 @@ namespace HeurekaGames.AssetHunterPRO
             if (doSelectionButton(guiContentLoadBuildInfo))
                 openBuildInfoSelector();
 
+            if (doSelectionButton(guiContentDuplicates))
+                AH_DuplicatesWindow.Init(Docker.DockPosition.Left);
+
             if (doSelectionButton(guiContentGenerateReferenceGraph))
                 AH_DependencyGraphWindow.Init(Docker.DockPosition.Right);
-            if (doSelectionButton(guiContentDuplicates))
-                AH_DuplicatesWindow.Init(Docker.DockPosition.Left);       
 
             //Only avaliable in 2018
 #if UNITY_2018_1_OR_NEWER

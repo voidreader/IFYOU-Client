@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -11,22 +12,20 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
         #region Fields
         [SerializeField]
         private string absPath;
-        [SerializeField]
+        //[SerializeField]
         private string relativePath;
         [SerializeField]
         private string guid;
-        [SerializeField]
+        //[SerializeField]
         private Type assetType;
         [SerializeField]
         private string assetTypeSerialized;
-        [SerializeField]
         private long assetSize;
-        [SerializeField]
-        private string assestSizeStringRepresentation;
-        [SerializeField]
+        //private string assestSizeStringRepresentation;
+        //[SerializeField]
         private long fileSize;
-        [SerializeField]
-        private string fileSizeStringRepresentation;
+        //[SerializeField]
+        //private string fileSizeStringRepresentation;
         [SerializeField]
         private List<string> scenesReferencingAsset;
         [SerializeField]
@@ -42,19 +41,15 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
         #endregion
 
         #region Properties
-        public string AbsPath
-        {
-            get
-            {
-                return absPath;
-            }
-        }
 
         public string RelativePath
         {
             get
             {
-                return relativePath;
+                if(!string.IsNullOrEmpty(relativePath))
+                    return relativePath;
+                else
+                   return relativePath = UnityEditor.AssetDatabase.GUIDToAssetPath(GUID);
             }
         }
 
@@ -88,114 +83,91 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
         {
             get
             {
-                return assetSize;
+                if(UsedInBuild && assetSize == 0)
+                {
+                    UnityEngine.Object asset = UnityEditor.AssetDatabase.LoadMainAssetAtPath(RelativePath);
+                    //#if UNITY_2017_1_OR_NEWER
+                    if (asset != null)
+                        return this.assetSize = Profiler.GetRuntimeMemorySizeLong(asset) / 2;
+                    else
+                        return -1;
+                }
+                else
+                    return assetSize;
             }
-
-            /*set
-            {
-                assetSize = value;
-            }*/
         }
 
         public string AssetSizeStringRepresentation
         {
             get
             {
-                return assestSizeStringRepresentation;
+                return AH_Utils.GetSizeAsString(AssetSize);
             }
-
-            /*set
-            {
-                assestSizeStringRepresentation = value;
-            }*/
         }
 
         public long FileSize
         {
             get
             {
-                return fileSize;
+                if (fileSize != 0)
+                    return fileSize;
+                else
+                {
+                    var fileInfo = new System.IO.FileInfo(absPath);
+                    if (fileInfo.Exists)
+                        return fileSize = fileInfo != null ? fileInfo.Length : 0;
+                    else
+                        return -1;
+                }
             }
-
-            /* set
-             {
-                 fileSize = value;
-             }*/
         }
 
         public string FileSizeStringRepresentation
         {
             get
-            {
-                return fileSizeStringRepresentation;
-            }
-
-            /*set
-            {
-                fileSizeStringRepresentation = value;
-            }*/
+            { 
+                return AH_Utils.GetSizeAsString(fileSize);
+            }       
         }
 
         public List<string> ScenesReferencingAsset
         {
             get { return scenesReferencingAsset; }
-            //set { scenesReferencingAsset = value; }
         }
 
         public int SceneRefCount
         {
             get { return (scenesReferencingAsset != null) ? scenesReferencingAsset.Count : 0; }
-            //set { scenesReferencingAsset = value; }
         }
 
         public bool UsedInBuild
         {
             get { return usedInBuild; }
-            //set { usedInBuild = value; }
         }
 
         public bool IsFolder
         {
             get { return isFolder; }
-            //set { isFolder = value; }
         }
         #endregion
 
         public AH_TreeviewElement(string absPath, int depth, int id, string relativepath, string assetID, List<string> scenesReferencing, bool isUsedInBuild) : base(System.IO.Path.GetFileName(absPath), depth, id)
         {
             this.absPath = absPath;
-            this.relativePath = relativepath;
-            this.guid = UnityEditor.AssetDatabase.AssetPathToGUID(relativepath);
+            var assetPath = relativepath;
+            this.guid = UnityEditor.AssetDatabase.AssetPathToGUID(assetPath);
             this.scenesReferencingAsset = scenesReferencing;
             this.usedInBuild = isUsedInBuild;
 
             //Return if its a folder
-            if (isFolder = UnityEditor.AssetDatabase.IsValidFolder(relativepath))
+            if (isFolder = UnityEditor.AssetDatabase.IsValidFolder(assetPath))
                 return;
 
             //Return if its not an asset
             if (!string.IsNullOrEmpty(this.guid))
             {
-                this.assetType = UnityEditor.AssetDatabase.GetMainAssetTypeAtPath(relativepath);
-
+                this.assetType = UnityEditor.AssetDatabase.GetMainAssetTypeAtPath(assetPath);
                 updateIconDictEntry();
-
-                if (isUsedInBuild)
-                {
-                    UnityEngine.Object asset = UnityEditor.AssetDatabase.LoadMainAssetAtPath(relativepath); //TODO Maybe set this elsewhere to minimize memory issues
-
-                    //#if UNITY_2017_1_OR_NEWER
-                    if (asset != null)
-                        this.assetSize = Profiler.GetRuntimeMemorySizeLong(asset) / 2;
-                }
-
-                fileSize = new System.IO.FileInfo(absPath).Length;
-
-                var fileInfo = new System.IO.FileInfo(absPath);
-                fileSize = fileInfo != null ? fileInfo.Length : 0;
-
-                fileSizeStringRepresentation = AH_Utils.GetSizeAsString(fileSize);
-                assestSizeStringRepresentation = AH_Utils.GetSizeAsString(assetSize);
             }
         }
 
@@ -222,7 +194,7 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
                         combinedChildrenSize += item.GetFileSizeRecursively(showMode);
                 }
 
-            combinedChildrenSize += this.fileSize;
+            combinedChildrenSize += this.FileSize;
 
             //Cache the value
             combinedAssetSizeInFolder.Add(showMode, combinedChildrenSize);
@@ -287,14 +259,9 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
                         unusedAssetsInFolder.AddRange(item.GetUnusedPathsRecursively());
                     //Loop thropugh folders and assets thats used not in build
                     else if (!item.usedInBuild)
-                        unusedAssetsInFolder.Add(item.relativePath);
+                        unusedAssetsInFolder.Add(item.RelativePath);
                 }
             return unusedAssetsInFolder;
-        }
-
-        internal string GetInfoString()
-        {
-            return String.Format("{0} : {1}", relativePath, fileSizeStringRepresentation);
         }
 
         internal static List<string> GetStoredIconTypes()
@@ -320,7 +287,7 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
         private void updateIconDictEntry()
         {
             if (assetType != null && !iconDictionary.ContainsKey(assetType))
-                iconDictionary.Add(assetType, UnityEditor.EditorGUIUtility.ObjectContent(null, assetType).image); //UnityEditor.AssetDatabase.GetCachedIcon(relativePath));
+                iconDictionary.Add(assetType, UnityEditor.EditorGUIUtility.ObjectContent(null, assetType).image);
         }
 
         internal static void UpdateIconDictAfterSerialization(List<string> serializationHelperListIconTypes, List<Texture> serializationHelperListIconTextures)

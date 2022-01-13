@@ -100,6 +100,9 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
             extraSpaceBeforeIconAndLabel = kToggleWidth;
             multicolumnHeader.sortingChanged += OnSortingChanged;
 
+            //Make sure we show the correct columns
+            updateColumns();
+
             //IF we want to start expanded one level
             if (model.root.hasChildren)
                 SetExpanded(model.root.children[0].id, true);
@@ -169,6 +172,18 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
             return rows;
         }
 
+        void GetAllChildren(TreeViewItem root, ref List<TreeViewItem<AH_TreeviewElement>> children)
+        {
+            if (root != null && root.hasChildren && root.children != null)
+            { 
+                foreach (var child in root.children)
+                {
+                    children.AddRange(root.children.Cast<TreeViewItem<AH_TreeviewElement>>());
+                    GetAllChildren(child, ref children);
+                }
+            }
+        }
+
         void OnSortingChanged(MultiColumnHeader multiColumnHeader)
         {
             ModelChanged();
@@ -206,6 +221,25 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
                 return;
 
             var myTypes = rootItem.children.Cast<TreeViewItem<AH_TreeviewElement>>();
+
+            //Try to visualize to user that we are getting asset sizes
+            if (AH_SettingsManager.Instance.EstimateAssetSize)
+            {
+                int counter = 0;
+                int typeCount = myTypes.Count();
+
+                foreach (var item in myTypes)
+                {
+                    counter++;
+
+                    if (item == null)
+                        continue;
+
+                    EditorUtility.DisplayProgressBar($"Getting asset sizes", $"{ counter} / {typeCount} : {item.data.Name} : {item.data.AssetSizeStringRepresentation}", (float)counter / (float)typeCount);
+                }
+                EditorUtility.ClearProgressBar();
+            }
+
             var orderedQuery = InitialOrder(myTypes, sortedColumns);
             for (int i = 1; i < sortedColumns.Length; i++)
             {
@@ -287,8 +321,38 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
 
         private void showModeChanged()
         {
+
+            updateColumns();
+
             deselectItems();
             ModelChanged();
+        }
+
+        private void updateColumns()
+        {
+            #region Add or remove the "asset size" column as required
+            bool currentlyShowsAssetSize = (multiColumnHeader.state.visibleColumns.ToList().Contains((int)MyColumns.AssetSize));
+            bool couldHaveAssetSize = ((AH_MultiColumnHeader)multiColumnHeader).ShowMode != AH_MultiColumnHeader.AssetShowMode.Unused;
+            if (AH_SettingsManager.Instance.EstimateAssetSize)
+            {
+                if (!currentlyShowsAssetSize && couldHaveAssetSize)
+                {
+                    var tmpList = multiColumnHeader.state.visibleColumns.ToList();
+                    tmpList.Add((int)MyColumns.AssetSize);
+                    multiColumnHeader.state.visibleColumns = tmpList.ToArray();
+                    Array.Sort(multiColumnHeader.state.visibleColumns);
+                }
+            }
+            else
+            {
+                if (currentlyShowsAssetSize)
+                {
+                    var tmpList = multiColumnHeader.state.visibleColumns.ToList();
+                    tmpList.Remove((int)MyColumns.AssetSize);
+                    multiColumnHeader.state.visibleColumns = tmpList.ToArray();
+                }
+            }
+            #endregion
         }
 
         IOrderedEnumerable<TreeViewItem<AH_TreeviewElement>> InitialOrder(IEnumerable<TreeViewItem<AH_TreeviewElement>> myTypes, int[] history)
@@ -390,21 +454,20 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
                                     {
                                         UnityEngine.Object[] sceneAssets = new UnityEngine.Object[item.data.ScenesReferencingAsset.Count];
                                         string message = "";
-
+                                        string path = "";
                                         for (int i = 0; i < item.data.ScenesReferencingAsset.Count; i++)
                                         {
-                                            message += (item.data.ScenesReferencingAsset[i] + Environment.NewLine);
-                                            sceneAssets[i] = AssetDatabase.LoadMainAssetAtPath(item.data.ScenesReferencingAsset[i]);
+                                            path = AssetDatabase.GUIDToAssetPath(item.data.ScenesReferencingAsset[i]);
+                                            message += (path + Environment.NewLine);
+                                            sceneAssets[i] = AssetDatabase.LoadMainAssetAtPath(path);
                                         }
                                         Selection.objects = sceneAssets;
-                                        EditorUtility.DisplayDialog("Scenes referencing " + item.data.m_Name, message, "OK");
+                                        EditorUtility.DisplayDialog("Scenes referencing " + path, message, "OK");
                                     }
                                 }
                                 else
                                     DefaultGUI.LabelRightAligned(cellRect, cellString, args.selected, args.focused);
                             }
-                            /*else
-                                DefaultGUI.LabelRightAligned(cellRect, "Global", args.selected, args.focused);*/
                         }
                     }
                     break;
@@ -448,7 +511,7 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
                     headerTextAlignment = TextAlignment.Left,
                     sortedAscending = true,
                     sortingArrowAlignment = TextAlignment.Center,
-                    width = 320,
+                    width = 280,
                     minWidth = 175,
                     autoResize = true,
                     allowToggleVisibility = false
@@ -460,7 +523,7 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
                     sortedAscending = true,
                     sortingArrowAlignment = TextAlignment.Center,
                     width = 80,
-                    minWidth = 30,
+                    minWidth = 80,
                     maxWidth = 130,
                     autoResize = true
                 },
@@ -471,7 +534,7 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
                     sortedAscending = true,
                     sortingArrowAlignment = TextAlignment.Center,
                     width = 80,
-                    minWidth = 30,
+                    minWidth = 80,
                     maxWidth = 130,
                     autoResize = true,
                     allowToggleVisibility = true
@@ -494,7 +557,7 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
                     sortedAscending = true,
                     sortingArrowAlignment = TextAlignment.Center,
                     width = 70,
-                    minWidth = 30,
+                    minWidth = 70,
                     maxWidth = 100,
                     autoResize = true
                 }

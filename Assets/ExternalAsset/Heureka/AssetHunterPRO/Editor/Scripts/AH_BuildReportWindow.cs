@@ -30,6 +30,7 @@ namespace HeurekaGames.AssetHunterPRO
             "sv_icon_dot3_pix16_gizmo",
             "sv_icon_dot3_pix16_gizmo"};
 
+        [MenuItem("Tools/Asset Hunter PRO/Build report")]
         [MenuItem("Window/Heureka/Asset Hunter PRO/Build report")]
         public static void Init()
         {
@@ -108,7 +109,6 @@ namespace HeurekaGames.AssetHunterPRO
                     //If not, add new roleentry
                     else
                         roleInfoList.Add(new AH_BuildReportWindowRoleInfo(item));
-
                 }
 
                 //Sort roles

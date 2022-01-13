@@ -57,9 +57,17 @@ namespace HeurekaGames
 
         private void OnEnable()
         {
-            readmeManager = (Heureka_PackageDataManager)target;
+            readmeManager = SelectReadme();// (Heureka_PackageDataManager)target;
             //populate sections
-            readmeManager.sections = Resources.FindObjectsOfTypeAll<Heureka_PackageData>();
+            var guids = AssetDatabase.FindAssets($"t:{nameof(Heureka_PackageData).ToString()}");
+            List<Heureka_PackageData> tmpList = new List<Heureka_PackageData>();
+            foreach (var item in guids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(item);
+                tmpList.Add(AssetDatabase.LoadAssetAtPath<Heureka_PackageData>(path));
+            }
+            readmeManager.sections = tmpList.ToArray();
+            //readmeManager.sections = Resources.FindObjectsOfTypeAll<Heureka_PackageData>();
 
             //Sorted lidt by show Priority
             readmeManager.sections = readmeManager.sections.OrderByDescending(val => val.PackageShowPrio).ToArray();

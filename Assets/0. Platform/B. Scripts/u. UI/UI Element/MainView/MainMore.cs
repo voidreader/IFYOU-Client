@@ -115,6 +115,9 @@ namespace PIERStory {
         /// </summary>
         public void ToggleOnPushAlert()
         {
+            if(SystemManager.main == null)
+                return;
+            
             pushAlert.sprite = spriteToggleOn;
             nightPushAlert.color = Color.white;
             blockNightPushToggle.SetActive(false);
@@ -127,6 +130,9 @@ namespace PIERStory {
         /// </summary>
         public void ToggleOffPushAlert()
         {
+            if(SystemManager.main == null)
+                return;
+            
             pushAlert.sprite = spriteToggleOff;
 
             if(nightPushToggle.isOn)

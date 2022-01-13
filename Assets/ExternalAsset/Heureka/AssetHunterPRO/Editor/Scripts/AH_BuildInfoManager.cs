@@ -71,6 +71,19 @@ namespace HeurekaGames.AssetHunterPRO
             chosenFilePath = filePath;
             chosenBuildInfo = AH_SerializationHelper.LoadBuildReport(filePath);
 
+            Version reportVersion;
+            if (Version.TryParse(chosenBuildInfo.versionNumber, out reportVersion))
+            {
+                if (reportVersion.CompareTo(new Version("2.2.0")) < 0) //If report is older than 2.2.0 (tweaked datamodel in 2.2.0 from saving 'Paths' to saving 'guids')
+                {
+                    //Change paths to guids
+                    foreach (var item in chosenBuildInfo.AssetListUnSorted)
+                    {
+                        item.ChangePathToGUID();
+                    }
+                }
+            }
+
             if (chosenBuildInfo == null)
                 return;
 

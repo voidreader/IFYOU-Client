@@ -108,7 +108,7 @@ namespace HeurekaGames.AssetHunterPRO
                         {
                             List<string> newSceneRefs = newItem.Refs.FindAll(val => !OrigItem.Refs.Contains(val));
                             //Add them to list
-                            OrigItem.Refs.AddRange(newSceneRefs);
+                            OrigItem.Refs.AddRange(newSceneRefs); //Does this serialize as expected? Since we are adding through a setter?
                         }
                     }
                     else
@@ -177,7 +177,8 @@ namespace HeurekaGames.AssetHunterPRO
             //Add all the used assets to list
             foreach (var item in assetDict)
             {
-                AH_SerializableAssetInfo newAssetInfo = new AH_SerializableAssetInfo(item.Key, item.Value);
+                var sceneIDs = item.Value.Select(x => AssetDatabase.AssetPathToGUID(x)).ToList(); //Id scene IDs from paths
+                AH_SerializableAssetInfo newAssetInfo = new AH_SerializableAssetInfo(item.Key, sceneIDs);
                 AssetListUnSorted.Add(newAssetInfo);
             }
 

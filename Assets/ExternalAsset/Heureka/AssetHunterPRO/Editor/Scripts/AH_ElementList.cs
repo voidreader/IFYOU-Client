@@ -47,7 +47,7 @@ namespace HeurekaGames.AssetHunterPRO
             else if(element.AssetMatchesState(showmode))
             {
                UnityEngine.Debug.Log("Adding " + element.Name);
-                elements.Add(new AssetDumpData(element.GUID,element.AbsPath,element.RelativePath, element.AssetSize, element.FileSize, element.UsedInBuild,element.ScenesReferencingAsset));
+                elements.Add(new AssetDumpData(element.GUID,/*element.AbsPath,*/element.RelativePath, /*element.AssetSize,*/ element.FileSize, element.UsedInBuild,element.ScenesReferencingAsset));
             }
         }
         [System.Serializable]
@@ -55,20 +55,20 @@ namespace HeurekaGames.AssetHunterPRO
         {
             #pragma warning disable
             [SerializeField] private string GUID;
-            [SerializeField] private string absPath;
+            //[SerializeField] private string absPath;
             [SerializeField] private string relativePath;
-            [SerializeField] private long assetSize;
+            //[SerializeField] private long assetSize;
             [SerializeField] private long fileSize;
             [SerializeField] private bool usedInBuild;
             [SerializeField] private List<string> scenesReferencingAsset;
             #pragma warning restore
 
-            public AssetDumpData(string guid, string absPath, string relativePath, long assetSize, long fileSize, bool usedInBuild, List<string> scenesReferencingAsset)
+            public AssetDumpData(string guid, /*string absPath,*/ string relativePath, /*long assetSize,*/ long fileSize, bool usedInBuild, List<string> scenesReferencingAsset)
             {
                 this.GUID = guid;
-                this.absPath = absPath;
+                //this.absPath = absPath;
                 this.relativePath = relativePath;
-                this.assetSize = assetSize;
+                //this.assetSize = assetSize;
                 this.fileSize = fileSize;
                 this.usedInBuild = usedInBuild;
                 this.scenesReferencingAsset = scenesReferencingAsset;

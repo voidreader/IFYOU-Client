@@ -970,6 +970,8 @@ namespace PIERStory
         
         void DelayOnBubble() {
             
+            Debug.Log("DelayOnBubble : " + this.gameObject.name);
+            
             // delay 호출되었을때 needDelayShow가 false이면 실행하지 않는다. 
             if(!needDelayShow)
                 return;

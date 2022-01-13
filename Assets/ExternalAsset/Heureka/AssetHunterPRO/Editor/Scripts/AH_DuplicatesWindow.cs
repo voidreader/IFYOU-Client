@@ -25,6 +25,7 @@ namespace HeurekaGames.AssetHunterPRO
         private int scrollEndIndex;
 
         //Add menu named "Dependency Graph" to the window menu  
+        [UnityEditor.MenuItem("Tools/Asset Hunter PRO/Find Duplicates")]
         [UnityEditor.MenuItem("Window/Heureka/Asset Hunter PRO/Find Duplicates")]
         public static void OpenDuplicatesView()
         {

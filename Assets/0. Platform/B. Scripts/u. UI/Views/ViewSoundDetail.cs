@@ -133,9 +133,11 @@ namespace PIERStory
                 voiceList.SetActive(true);
             }
 
-            
             OnPlayBGM = PlayBGM;
             OnPlayVoice = PlayVoice;
+
+            playSound.Stop();
+            playSound.clip = null;
 
             // 반복 설정
             repeatState = RepeatState.NONE;
@@ -165,10 +167,8 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
 
             if (playSound != null)
-            {
                 playSound.Stop();
-                playSound.clip = null;
-            }
+
 
             if(playBGM)
             {
@@ -232,7 +232,7 @@ namespace PIERStory
 
         IEnumerator RoutinePlaySound()
         {
-            while(playSound.isPlaying)
+            while(playSound.isPlaying || playSound.time < playSound.clip.length)
             {
                 playtimeBar.fillAmount = playSound.time / playSound.clip.length;
                 agree = 270f - playtimeBar.fillAmount * circleAgree;
@@ -240,7 +240,7 @@ namespace PIERStory
                 yield return null;
             }
 
-            Debug.Log(string.Format("playSound.time == playSound.clip.length? {0}\nplaySound.time = {1}\nplaySound.clip.length = {2}", (playSound.time == playSound.clip.length), playSound.time, playSound.clip.length));
+            //Debug.Log(string.Format("playSound.time == playSound.clip.length? {0}\nplaySound.time = {1}\nplaySound.clip.length = {2}", (playSound.time == playSound.clip.length), playSound.time, playSound.clip.length));
 
             playtimeBar.fillAmount = 0f;
             playtimeBarHandle.rectTransform.anchoredPosition = new Vector2(0, -radius);

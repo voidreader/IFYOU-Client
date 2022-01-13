@@ -303,6 +303,10 @@ namespace PIERStory {
             else 
                 DictPopup.Add("TutorialStoryDetail", popupTutorialStoryDetail);
                 
+            if(DictPopup.ContainsKey("Nickname")) 
+                DictPopup["Nickname"] = popupNickname;
+            else 
+                DictPopup.Add("Nickname", popupNickname);
         }
         
         #endregion

@@ -568,6 +568,7 @@ namespace PIERStory
             // 튜토리얼 스텝 갱신, bank 갱신
             tutorialStep = SystemManager.GetJsonNodeInt(result, "new_tutorial_step");
             SetBankInfo(result);
+            tutorialFirstProjectID = 0;
 
             PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_TUTORIAL_COMPLETE);
             PopupManager.main.ShowPopup(p, false);

@@ -23,6 +23,7 @@ namespace PIERStory {
         public UIToggle dataUseToggle;
 
         public UIAnimator nightPushAnimator;
+        public GameObject blockNightPushToggle;
 
         public Sprite spriteToggleOn;
         public Sprite spriteToggleOff;
@@ -116,6 +117,8 @@ namespace PIERStory {
         {
             pushAlert.sprite = spriteToggleOn;
             nightPushAlert.color = Color.white;
+            blockNightPushToggle.SetActive(false);
+
             SystemManager.main.PushRegister(pushToggle.isOn, nightPushToggle.isOn);
         }
 
@@ -130,6 +133,7 @@ namespace PIERStory {
                 nightPushToggle.isOn = false;
 
             nightPushAlert.color = new Color32(64, 64, 64, 255);
+            blockNightPushToggle.SetActive(true);
 
             SystemManager.main.PushRegister(pushToggle.isOn, false);
         }
@@ -140,13 +144,6 @@ namespace PIERStory {
         /// </summary>
         public void ToggleOnNightPushAlert()
         {
-            // 푸쉬 알림이 켜져있지 않으면 잠군다
-            if (!pushToggle.isOn)
-            {
-                SystemManager.ShowSimpleAlertLocalize("6033");
-                return;
-            }
-
             nightPushAnimator.Play();
             nightPushAlert.sprite = spriteToggleOn;
 
@@ -162,6 +159,14 @@ namespace PIERStory {
             nightPushAnimator.Play(true);
             nightPushAlert.sprite = spriteToggleOff;
             SystemManager.main.PushRegister(pushToggle.isOn, false);
+        }
+
+        /// <summary>
+        /// 푸쉬 알림이 꺼져있을 때, 야간 푸쉬 터치를 막는다
+        /// </summary>
+        public void BlockNightPushToggle()
+        {
+            SystemManager.ShowSimpleAlertLocalize("6033");
         }
 
         /// <summary>

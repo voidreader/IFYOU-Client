@@ -67,7 +67,7 @@ namespace PIERStory
 
         void SetCurrencyIcon(int __amount)
         {
-            currencyIcon.SetDownloadURL(missionData.currency_icon_url, missionData.currency_icon_key, true);
+            currencyIcon.SetDownloadURL(missionData.currency_icon_url, missionData.currency_icon_key);
             currencyAmount.text = string.Format("{0}", __amount);
         }
 

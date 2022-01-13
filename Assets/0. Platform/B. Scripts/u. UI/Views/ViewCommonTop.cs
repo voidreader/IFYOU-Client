@@ -20,6 +20,8 @@ namespace PIERStory {
         [SerializeField] GameObject groupProperty; // 프로퍼티 그룹 (재화, 메일, 등등)
         [SerializeField] HorizontalLayoutGroup propertyHorizontalLayout;
         public GameObject mailButton;           // 프로퍼티 그룹의 메일 버튼
+        [SerializeField] GameObject mailNotify; // 메일 알림 표시 
+        
         public GameObject multipleButton;       // 여러 용도(저장, 변경 등)로 사용될 버튼
         public TextMeshProUGUI multipleButtonText;      // 다용도 버튼에 들어가는 텍스트
 
@@ -114,6 +116,10 @@ namespace PIERStory {
         }
         
         private void Start() {
+            
+            // 메일 알림 표시 추가
+            UserManager.OnRefreshUnreadMailCount = RefreshMailNotification;
+            
             signalStreamTopBackground.ConnectReceiver(signalReceiverTopBackground);
             signalStreamTopViewNameExist.ConnectReceiver(signalReceiverTopViewNameExist);
             signalStreamTopViewName.ConnectReceiver(signalReceiverTopViewName);
@@ -355,6 +361,14 @@ namespace PIERStory {
         public void OnClickMultipleButton()
         {
             OnClickButtonAction?.Invoke();
+        }
+        
+        /// <summary>
+        /// 메일 알림 표시 
+        /// </summary>
+        /// <param name="__cnt"></param>
+        void RefreshMailNotification(int __cnt) {
+            mailNotify.SetActive(__cnt > 0);
         }
     }
 }

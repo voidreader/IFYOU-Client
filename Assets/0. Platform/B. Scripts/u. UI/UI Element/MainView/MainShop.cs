@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Doozy.Runtime.UIManager.Components;
+using Toast.Gamebase;
 
 namespace PIERStory {
 
@@ -12,6 +13,8 @@ namespace PIERStory {
         public static System.Action OnRefreshPackageShop = null;
         public List<BaseStarProduct> listBaseStarProducts; // 일반 스타 상품 
         public List<GeneralPackProduct> listGeneralPackProducts; // 일반 패키지 상품 
+        
+        public List<BaseCoinExchangeProduct> listCoinExchangeProducts; // 코인 환전 상품
         
         [SerializeField] UIToggle packageToggle;
         [SerializeField] UIToggle normalToggle;
@@ -36,9 +39,17 @@ namespace PIERStory {
             
             // * container 콜백에서 실행된다. 
             
+            // 기본 스타 상품
             for(int i=0; i<listBaseStarProducts.Count;i++) {
                 listBaseStarProducts[i].InitProduct();
             }
+            
+            
+            // 코인 환전
+            for(int i=0; i<listCoinExchangeProducts.Count;i++) {
+                listCoinExchangeProducts[i].InitExchangeProduct();   
+            }
+            
         }
         
         /// <summary>
@@ -85,17 +96,44 @@ namespace PIERStory {
             string finalURL = SystemManager.main.coinShopURL + uidParam + langParam;
             Debug.Log("Coinshop : " + finalURL);
             
-            /*
-            if(UniWebViewSafeBrowsing.IsSafeBrowsingSupported) {
-            }
-            */
             
-            var safeBrowsing = UniWebViewSafeBrowsing.Create(finalURL);
-            safeBrowsing.OnSafeBrowsingFinished += (browsing) => {
+            if(UniWebViewSafeBrowsing.IsSafeBrowsingSupported) {
+                
+                var safeBrowsing = UniWebViewSafeBrowsing.Create(finalURL);
+                safeBrowsing.OnSafeBrowsingFinished += (browsing) => {
                 Debug.Log("UniWebViewSafeBrowsing is closed.");
                 NetworkLoader.main.RequestUserBaseProperty();
-            };
-            safeBrowsing.Show();
+                
+                Destroy(safeBrowsing);
+                
+                };
+            
+                safeBrowsing.Show();
+            }
+            else {
+                Debug.Log(">>>>>> Now support SafeBrowsingSupported");
+                
+                GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
+                configuration.title = "";
+                configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
+                // configuration.colorR = 98;
+                // configuration.colorG = 132;
+                // configuration.colorB = 207;
+                // configuration.colorA = 255;
+                configuration.barHeight = 30;
+                configuration.isBackButtonVisible = false;
+                // configuration.contentMode = GamebaseWebViewContentMode.MOBILE;
+
+                
+                Gamebase.Webview.ShowWebView(finalURL, configuration, (error) =>{ 
+                    Debug.Log("Webview Closed");
+                    NetworkLoader.main.RequestUserBaseProperty();
+                }, null, null);
+                
+            }
+            
+            
+            
             
             // SystemManager.main.ShowDefaultWebview(finalURL);
             

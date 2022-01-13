@@ -495,9 +495,10 @@ namespace PIERStory
             RegularEpisodeList.Clear();
             regularEpisodeCount = 0;
             unlockEndingCount = 0;
-            
-           
-            for(int i=0; i<EpisodeListJson.Count;i++) {
+            totalEndingCount = 0;
+
+
+            for (int i=0; i<EpisodeListJson.Count;i++) {
                 
                 newEpisodeData = new EpisodeData(EpisodeListJson[i]);
                 

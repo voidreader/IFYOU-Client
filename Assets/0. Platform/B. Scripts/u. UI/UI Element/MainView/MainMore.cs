@@ -132,7 +132,7 @@ namespace PIERStory {
             if(nightPushToggle.isOn)
                 nightPushToggle.isOn = false;
 
-            nightPushAlert.color = new Color32(64, 64, 64, 255);
+            nightPushAlert.color = new Color32(153, 153, 153, 255);
             blockNightPushToggle.SetActive(true);
 
             SystemManager.main.PushRegister(pushToggle.isOn, false);

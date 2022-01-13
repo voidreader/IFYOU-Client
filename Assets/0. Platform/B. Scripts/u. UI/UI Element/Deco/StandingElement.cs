@@ -22,14 +22,14 @@ namespace PIERStory
             string key = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_KEY);
             currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
 
-            standingImage.SetDownloadURL(url, key);
+            standingImage.SetDownloadURL(url, key, true);
             profileItemElement = connectElement;
         }
 
         public void SetProfileStanding(JsonData __j, ProfileItemElement connectElement = null)
         {
             currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
-            standingImage.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_KEY));
+            standingImage.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_KEY), true);
 
             posX = float.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_POS_X));
             posY = float.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_POS_Y));

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Collections;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 using TMPro;
 using LitJson;
@@ -13,13 +13,13 @@ namespace PIERStory
 {
     public class ViewSoundDetail : CommonView
     {
-        static Action OnPlaySound = null;
-        public static Action OnFindPlayIndex = null;
+        public static Action<AudioClip, int> OnPlayBGM = null;
+        public static Action<AudioClip, int> OnPlayVoice = null;
 
         static AudioSource playSound;
-        static AudioClip audioClip;
 
         static bool playBGM = true;
+        
         static JsonData soundData = null;
         static Sprite titleSprite = null;
         static string soundTitle = string.Empty;
@@ -31,7 +31,9 @@ namespace PIERStory
         public Image playtimeBarHandle;
 
         public UIToggle shuffleToggle;
-        public UIToggle playToggle;
+        public Image playButton;
+        public Sprite spritePlay;
+        public Sprite spritePause;
 
         [Header("BGM 재생목록 관련")]
         public GameObject bgmList;
@@ -43,7 +45,7 @@ namespace PIERStory
         public Transform storage;
         public TextMeshProUGUI[] episodeInfo;
         public SoundElement[] voiceElements;
-
+        List<SoundElement> currentVoiceList = new List<SoundElement>();
 
         [Space(30)]
         public Image repeatIcon;
@@ -52,6 +54,8 @@ namespace PIERStory
         public GameObject onceText;
         enum RepeatState { NONE, ALL, ONCE};
         RepeatState repeatState = RepeatState.NONE;
+
+        int currentSoundIndex = 0;
 
         [Space(20)]
         public Transform circleCenter;
@@ -63,8 +67,6 @@ namespace PIERStory
 
         float agree = 0f;                   // 각도
         int currentValue = 0;
-        int activeTotalCount = 0;           // 활성화 총량
-        int playIndex = 0;                  // 현재 재생중인 element의 index값
 
         public static void SetSoundDetail(bool isBGM, JsonData __j, Sprite s, string __title)
         {
@@ -74,24 +76,12 @@ namespace PIERStory
             soundTitle = __title;
         }
 
-        public static void PlaySound(AudioClip clip)
-        {
-            OnPlaySound?.Invoke();
-            playSound.clip = clip;
-            audioClip = clip;
-            playSound.time = 0f;
-            playSound.Play();
-        }
-
 
         public override void OnStartView()
         {
             base.OnStartView();
 
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
 
             if (playSound == null)
                 playSound = GetComponent<AudioSource>();
@@ -99,33 +89,19 @@ namespace PIERStory
             bgmList.SetActive(false);
             voiceList.SetActive(false);
             
-            activeTotalCount = 0;
             title.text = soundTitle;
             titleImage.sprite = titleSprite;
 
             // 배경음을 재생하는지, 보이스를 재생하는지에 따라 이후 세팅이 다름
             if(playBGM)
             {
-                for (int i = 0; i < BGMElements.Length; i++)
-                    BGMElements[i].gameObject.SetActive(false);
-
                 for (int i = 0; i < soundData.Count; i++)
-                {
-                    BGMElements[i].SetBGMElement(i + 1, soundData[i]);
-                    activeTotalCount++;
-                }
+                    BGMElements[i].SetBGMElement(i, soundData[i]);
 
                 bgmList.SetActive(true);
             }
             else
             {
-                // 초기화
-                foreach (TextMeshProUGUI info in episodeInfo)
-                    info.transform.SetParent(storage);
-
-                foreach (SoundElement voice in voiceElements)
-                    voice.transform.SetParent(storage);
-
                 int textIndex = 0, voiceIndex = 0;
 
                 // 보이스 세팅
@@ -147,13 +123,9 @@ namespace PIERStory
                     // 보이스 세팅
                     for (int i = 0; i < soundData[key].Count; i++)
                     {
-                        voiceElements[voiceIndex].SetVoiceElement(soundData[key][i]);
+                        voiceElements[voiceIndex].SetVoiceElement(voiceIndex, soundData[key][i]);
                         voiceElements[voiceIndex].transform.SetParent(voiceContents);
-
-                        // 해금했는지 확인되어야 활성화 총량 카운트를 증가시킨다
-                        if(SystemManager.GetJsonNodeBool(soundData[key][i], CommonConst.IS_OPEN))
-                            activeTotalCount++;
-
+                        currentVoiceList.Add(voiceElements[voiceIndex]);
                         voiceIndex++;
                     }
                 }
@@ -161,8 +133,9 @@ namespace PIERStory
                 voiceList.SetActive(true);
             }
 
-            OnPlaySound = SetBGMPlayIcon;
-            OnFindPlayIndex = FindPlayIndex;
+            
+            OnPlayBGM = PlayBGM;
+            OnPlayVoice = PlayVoice;
 
             // 반복 설정
             repeatState = RepeatState.NONE;
@@ -171,141 +144,206 @@ namespace PIERStory
 
             shuffleToggle.isOn = false;
             playtimeBar.fillAmount = 0f;
+            playButton.sprite = spritePlay;
         }
+
+        public override void OnView()
+        {
+            base.OnView();
+
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
+        }
+
 
         public override void OnHideView()
         {
             base.OnHideView();
 
-            if (playSound !=null && playSound.isPlaying)
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
+
+            if (playSound != null)
             {
                 playSound.Stop();
                 playSound.clip = null;
             }
 
+            if(playBGM)
+            {
+                for (int i = 0; i < BGMElements.Length; i++)
+                    BGMElements[i].gameObject.SetActive(false);
+            }
+            else
+            {
+                foreach (TextMeshProUGUI info in episodeInfo)
+                    info.transform.SetParent(storage);
+
+                foreach (SoundElement voice in voiceElements)
+                    voice.transform.SetParent(storage);
+
+                currentVoiceList.Clear();
+            }
         }
 
         #region Action Function
 
-        void SetBGMPlayIcon()
+
+        void PlayBGM(AudioClip clip, int playIndex)
         {
-            if(playBGM)
+            // 선택한 BGM만 선택된 표시를 해준다
+            for (int i = 0; i < BGMElements.Length; i++)
             {
-                foreach (SoundElement se in BGMElements)
-                {
-                    se.playIcon.SetActive(false);
-                    se.soundNumText.gameObject.SetActive(true);
-                    se.isPlaying = false;
-                }
+                if (i == playIndex)
+                    BGMElements[i].BGMPlayMode();
+                else
+                    BGMElements[i].BGMStopMode();
             }
-            
-            playToggle.isOn = true;
+
+            PlaySound(clip, playIndex);
         }
 
-        void FindPlayIndex()
+
+        void PlayVoice(AudioClip clip, int playIndex)
         {
-            // BGM 리스트 보는중
-            if (playBGM)
+            // 선택된 Voice만 선택된 표시를 해준다
+            for (int i = 0; i < currentVoiceList.Count; i++)
             {
-                for (int i = 0; i < activeTotalCount; i++)
-                {
-                    // 플레이 중인 index 찾기
-                    if (BGMElements[i].isPlaying)
-                    {
-                        playIndex = i;
-                        break;
-                    }
-                }
+                if (i == playIndex)
+                    currentVoiceList[i].VoicePlayMode();
+                else
+                    currentVoiceList[i].VoiceStopMode();
             }
-            else
-            {
-                for (int i = 0; i < activeTotalCount; i++)
-                {
-                    if (voiceElements[i].isPlaying)
-                    {
-                        playIndex = i;
-                        break;
-                    }
-                }
-            }
+
+            PlaySound(clip, playIndex);
         }
 
-        #endregion
 
-        private void Update()
+        void PlaySound(AudioClip clip, int playIndex)
         {
-            if (playSound == null || !playSound.isPlaying || playSound.clip == null)
-                return;
+            currentSoundIndex = playIndex;
+            playSound.clip = clip;
+            playSound.time = 0f;
 
-            // 재생 중~
-            if (playSound.isPlaying)
+            OnClickPlay();
+        }
+
+
+        IEnumerator RoutinePlaySound()
+        {
+            while(playSound.isPlaying)
             {
-                playtimeBar.fillAmount = playSound.time / audioClip.length;
+                playtimeBar.fillAmount = playSound.time / playSound.clip.length;
                 agree = 270f - playtimeBar.fillAmount * circleAgree;
                 playtimeBarHandle.rectTransform.anchoredPosition = new Vector2(Mathf.Cos(agree * Mathf.Deg2Rad) * radius, Mathf.Sin(agree * Mathf.Deg2Rad) * radius);
             }
 
-            // 재생을 끝까지 다 한 경우
-            if (playSound.time == audioClip.length)
+            Debug.Log(string.Format("playSound.time == playSound.clip.length? {0}\nplaySound.time = {1}\nplaySound.clip.length = {2}", (playSound.time == playSound.clip.length), playSound.time, playSound.clip.length));
+
+            playtimeBar.fillAmount = 0f;
+            playtimeBarHandle.rectTransform.anchoredPosition = new Vector2(0, -radius);
+            playButton.sprite = spritePlay;
+
+            // 랜덤 재생인지 먼저 체크하고
+            if (shuffleToggle.isOn)
             {
-                playSound.time = 0;
+                RandomPlay();
 
-                // 한곡 반복인 경우
-                if (repeatState == RepeatState.ONCE)
-                {
-                    playSound.time = 0f;
-                    playSound.Play();
-                    return;
-                }
+                // 랜덤 재생이면 코루틴을 빠져나온다
+                yield break;
+            }
+            
 
-                // 랜덤 재생을 사용하는 경우
-                if (shuffleToggle.isOn)
-                {
-                    RandomPlay();
-                }
-                else
-                {
-                    switch (repeatState)
+            // 스트레이트 한번인지, 전체 뺑뺑이인지, 한곡만 주구장창인지 체크
+            switch (repeatState)
+            {
+                case RepeatState.NONE:
+                    
+                    if(playBGM)
                     {
-                        case RepeatState.NONE:
-                            if (playIndex + 1 < activeTotalCount)
-                            {
-                                playIndex++;
-
-                                if (playBGM)
-                                    BGMElements[playIndex].PlaySound();
-                                else
-                                    voiceElements[playIndex].PlaySound();
-                            }
-                            else
-                            {
-                                if (playBGM)
-                                {
-                                    BGMElements[playIndex].playIcon.SetActive(false);
-                                    BGMElements[playIndex].soundNumText.gameObject.SetActive(true);
-                                    BGMElements[playIndex].isPlaying = false;
-                                }
-
-                                playToggle.isOn = false;
-                                return;
-                            }
-
-                            break;
-                        case RepeatState.ALL:
-
-                            if (playIndex + 1 < activeTotalCount)
-                                playIndex++;
-                            else
-                                playIndex = 0;
-
-                            if (playBGM)
-                                BGMElements[playIndex].PlaySound();
-                            else
-                                voiceElements[playIndex].PlaySound();
-                            break;
+                        if(currentSoundIndex + 1 < BGMElements.Length)
+                            BGMElements[currentSoundIndex + 1].PlaySound();
                     }
+                    else
+                    {
+                        while (true)
+                        {
+                            // 일단 냅다 증가하고
+                            currentSoundIndex++;
+
+                            // currentSoundIndex가 총량 이상인 경우 break
+                            if (currentSoundIndex >= currentVoiceList.Count)
+                                yield break;
+
+                            // 다음 index가 해금되어 있는 것이라면 재생!
+                            if (currentVoiceList[currentSoundIndex].isOpen)
+                            {
+                                currentVoiceList[currentSoundIndex].PlaySound();
+                                yield break;
+                            }
+                        }
+                    }
+
+                    break;
+
+                case RepeatState.ALL:
+                    OnClickPlayNext();
+
+                    break;
+
+                case RepeatState.ONCE:
+
+                    if(playBGM)
+                        BGMElements[currentSoundIndex].PlaySound();
+                    else
+                        currentVoiceList[currentSoundIndex].PlaySound();
+
+                    break;
+            }
+        }
+
+        int RandomSoundIndex()
+        {
+            int index = -1;
+
+            // BGM 리스트인지?
+            if(playBGM)
+            {
+                while(true)
+                {
+                    index = UnityEngine.Random.Range(0, BGMElements.Length);
+
+                    // 랜덤 값이 현재 재생값과 달라야 빠져나올 수 있다
+                    if (index != currentSoundIndex)
+                        return index;
                 }
             }
+            else
+            {
+                while(true)
+                {
+                    index = UnityEngine.Random.Range(0, currentVoiceList.Count);
+
+                    // 랜덤 값이 현재 재생값과 다르고, 해금한 voice여야 빠져나온다
+                    if (index != currentSoundIndex && currentVoiceList[index].isOpen)
+                        return index;
+                }
+            }
+        }
+
+
+        #endregion
+
+        /// <summary>
+        /// 무작위 재생
+        /// </summary>
+        void RandomPlay()
+        {
+            if (playBGM)
+                BGMElements[RandomSoundIndex()].PlaySound();
+            else
+                currentVoiceList[RandomSoundIndex()].PlaySound();
         }
 
         /// <summary>
@@ -318,15 +356,32 @@ namespace PIERStory
                 RandomPlay();
             else
             {
-                if (playIndex - 1 < 0)
-                    playIndex = activeTotalCount - 1;
-                else
-                    playIndex -= 1;
 
-                if (playBGM)
-                    BGMElements[playIndex].PlaySound();
+                if(playBGM)
+                {
+                    if (currentSoundIndex - 1 < 0)
+                        currentSoundIndex = BGMElements.Length - 1;
+                    else
+                        currentSoundIndex--;
+
+                    BGMElements[currentSoundIndex].PlaySound();
+                }
                 else
-                    voiceElements[playIndex].PlaySound();
+                {
+                    while(true)
+                    {
+                        currentSoundIndex--;
+
+                        if (currentSoundIndex - 1 < 0)
+                            currentSoundIndex = currentVoiceList.Count - 1;
+
+                        if(currentVoiceList[currentSoundIndex].isOpen)
+                        {
+                            currentVoiceList[currentSoundIndex].PlaySound();
+                            break;
+                        }
+                    }
+                }
             }
         }
 
@@ -339,55 +394,51 @@ namespace PIERStory
                 RandomPlay();
             else
             {
-                if (playIndex + 1 == activeTotalCount)
-                    playIndex = 0;
-                else
-                    playIndex += 1;
-
                 if (playBGM)
-                    BGMElements[playIndex].PlaySound();
+                {
+                    if (currentSoundIndex + 1 < BGMElements.Length)
+                        BGMElements[currentSoundIndex + 1].PlaySound();
+                    else
+                        BGMElements[0].PlaySound();
+                }
                 else
-                    voiceElements[playIndex].PlaySound();
+                {
+                    while (true)
+                    {
+                        currentSoundIndex++;
+
+                        // currentSoundIndex가 총량 이상인 경우 0으로 만든다
+                        if (currentSoundIndex >= currentVoiceList.Count)
+                            currentSoundIndex = 0;
+
+                        if (currentVoiceList[currentSoundIndex].isOpen)
+                        {
+                            currentVoiceList[currentSoundIndex].PlaySound();
+                            break;
+                        }
+                    }
+                }
             }
-        }
-
-        /// <summary>
-        /// 무작위 플레이
-        /// </summary>
-        void RandomPlay()
-        {
-            int index = UnityEngine.Random.Range(0, activeTotalCount);
-
-            // 랜덤값 중복 체크
-            while (true)
-            {
-                // 같은 값이 아니어야 이곳을 빠져나감
-                if (index != playIndex)
-                    break;
-                else
-                    index = UnityEngine.Random.Range(0, activeTotalCount);
-            }
-
-            playIndex = index;
-
-            if (playBGM)
-                BGMElements[index].PlaySound();
-            else
-                voiceElements[index].PlaySound();
         }
 
 
         public void OnClickPlay()
         {
+            // audioSource에 clip이 넣어진게 없으면 아무것도 하지 않는다
+            if (playSound.clip == null)
+                return;
+
+
             if (playSound.isPlaying)
             {
                 playSound.Pause();
-                playToggle.isOn = false;
+                playButton.sprite = spritePlay;
             }
             else
             {
                 playSound.Play();
-                playToggle.isOn = true;
+                playButton.sprite = spritePause;
+                StartCoroutine(RoutinePlaySound());
             }
         }
 

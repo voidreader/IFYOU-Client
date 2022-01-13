@@ -35,6 +35,7 @@ namespace PIERStory
 
         public GameObject historyElementPrefab;
         public Transform historyContent;
+        public ScrollRect scroll;
 
         public GameObject noneAlertText;            // 내역이 존재하지 않을 때 띄워줄 object
         CoinStarHistoryElement historyElement;
@@ -252,6 +253,8 @@ namespace PIERStory
                 historyElement.InitHistoryInfo(__j[i]);
                 historyElements.Add(historyElement);
             }
+
+            scroll.verticalNormalizedPosition = 0f;
         }
 
     }

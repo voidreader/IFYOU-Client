@@ -17,7 +17,7 @@ namespace PIERStory
         public GameObject playIcon;
         public TextMeshProUGUI soundNumText;
         public TextMeshProUGUI bgmTitle;
-        public TextMeshProUGUI sonudPlaytime;
+        public TextMeshProUGUI soundPlaytime;
 
         [Header("Voice require")]
         public Image voiceButtonImage;
@@ -26,28 +26,35 @@ namespace PIERStory
         public GameObject playingIcon;
         public bool isOpen = false;
 
+        int soundNumber = -1;
 
-        public bool isPlaying = false;          // 재생 중인가?
+        Color titleColor = new Color32(51, 51, 51, 255);
+        Color timeColor = new Color32(153, 153, 153, 255);
+        Color playColor = new Color32(243, 140, 161, 255);
 
         public void SetBGMElement(int index, JsonData __j)
         {
-            soundNumText.text = index.ToString();
+            soundNumber = index;
+            soundNumText.text = (index + 1).ToString();
             bgmTitle.text = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_NAME);
             soundUrl = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_URL);
             soundKey = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_KEY);
 
+            BGMStopMode();
             ClipSetting();
         }
 
 
-        public void SetVoiceElement(JsonData __j)
+        public void SetVoiceElement(int index, JsonData __j)
         {
+            soundNumber = index;
             voiceScriptData.text = SystemManager.GetJsonNodeString(__j, GameConst.COL_SCRIPT_DATA);
             voiceScriptData.text = voiceScriptData.text.Replace('\\', ' ');
             soundUrl = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_URL);
             soundKey = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_KEY);
             isOpen = SystemManager.GetJsonNodeBool(__j, CommonConst.IS_OPEN);
 
+            VoiceStopMode();
             ClipSetting();
         }
 
@@ -94,7 +101,7 @@ namespace PIERStory
                 else
                     second = string.Format("{0}", clipLength % 60);
 
-                sonudPlaytime.text = string.Format("{0}:{1}", clipLength / 60, second);
+                soundPlaytime.text = string.Format("{0}:{1}", clipLength / 60, second);
             }
             else
             {
@@ -121,17 +128,37 @@ namespace PIERStory
             if (voiceScriptData != null && !isOpen)
                 return;
 
-            ViewSoundDetail.PlaySound(audioClip);
-            isPlaying = true;
-            ViewSoundDetail.OnFindPlayIndex?.Invoke();
 
             if (voiceScriptData == null)
-            {
-                playIcon.SetActive(true);
-                soundNumText.gameObject.SetActive(false);
-            }
+                ViewSoundDetail.OnPlayBGM?.Invoke(audioClip, soundNumber);
             else
-                playingIcon.SetActive(true);
+                ViewSoundDetail.OnPlayVoice?.Invoke(audioClip, soundNumber);
+        }
+
+        public void BGMPlayMode()
+        {
+            playIcon.SetActive(true);
+            soundNumText.gameObject.SetActive(false);
+            bgmTitle.color = playColor;
+            soundPlaytime.color = playColor;
+        }
+
+        public void BGMStopMode()
+        {
+            playIcon.SetActive(false);
+            soundNumText.gameObject.SetActive(true);
+            bgmTitle.color = titleColor;
+            soundPlaytime.color = timeColor;
+        }
+
+        public void VoicePlayMode()
+        {
+            playingIcon.SetActive(true);
+        }
+
+        public void VoiceStopMode()
+        {
+            playingIcon.SetActive(false);
         }
     }
 }

@@ -237,6 +237,7 @@ namespace PIERStory
                 playtimeBar.fillAmount = playSound.time / playSound.clip.length;
                 agree = 270f - playtimeBar.fillAmount * circleAgree;
                 playtimeBarHandle.rectTransform.anchoredPosition = new Vector2(Mathf.Cos(agree * Mathf.Deg2Rad) * radius, Mathf.Sin(agree * Mathf.Deg2Rad) * radius);
+                yield return null;
             }
 
             Debug.Log(string.Format("playSound.time == playSound.clip.length? {0}\nplaySound.time = {1}\nplaySound.clip.length = {2}", (playSound.time == playSound.clip.length), playSound.time, playSound.clip.length));

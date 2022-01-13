@@ -113,8 +113,9 @@ namespace PIERStory
 
         public void OnClickIllustDetail()
         {
-            ViewIllustDetail.SetData(elementData, isLive, isMinicut, illustPublicName.text, summary);
             ViewGallery.OnDelayIllustOpen?.Invoke(false);
+            SystemManager.ShowNetworkLoading();
+            ViewIllustDetail.SetData(elementData, isLive, isMinicut, illustPublicName.text, summary);
 
             if (isLive)
             {

@@ -126,7 +126,7 @@ namespace PIERStory
 
 
         // 자동 재생
-        public bool isAutoPlay = false;
+        IEnumerator autoPlayCorountine;
         
 
         #region Properties
@@ -550,6 +550,8 @@ namespace PIERStory
             // ! 띠배너 광고 
             AdManager.main.LoadBanner();
 
+            autoPlayCorountine = RoutineAutoPlay();
+
 
             // 모든 라인을, 혹은 종료 명령어를 만날때까지 계속해! 
             while (currentRow != null && isPlaying)
@@ -716,11 +718,19 @@ namespace PIERStory
         #region AutoPlay 
         
         public void StartAutoPlay() {
-            StartCoroutine(RoutineAutoPlay());
+
+            if (autoPlayCorountine == null)
+                return;
+
+            StartCoroutine(autoPlayCorountine);
         }
         
         public void StopAutoPlay() {
-            StopCoroutine(RoutineAutoPlay());
+
+            if (autoPlayCorountine == null)
+                return;
+
+            StopCoroutine(autoPlayCorountine);
         }
 
         IEnumerator RoutineAutoPlay()
@@ -731,19 +741,17 @@ namespace PIERStory
             {
                 if(!isThreadHold && isWaitingScreenTouch)
                 {
-                    
-                    Debug.Log(">> SoundGroup[1].GetIsPlaying");
-                    
-                    yield return new WaitForSeconds(PlayerPrefs.GetFloat(GameConst.AUTO_PLAY));
+
+                    //yield return new WaitForSeconds(PlayerPrefs.GetFloat(GameConst.AUTO_PLAY));
                     // 보이스가 재생이 끝날때까지 대기
-                    /*
                     if (SoundGroup[1].GetIsPlaying)
                     {
+                        Debug.Log(">> SoundGroup[1].GetIsPlaying");
                         yield return new WaitUntil(() => !SoundGroup[1].GetIsPlaying);
+                        yield return new WaitForSeconds(2f);
                     }
                     else
                         yield return new WaitForSeconds(PlayerPrefs.GetFloat(GameConst.AUTO_PLAY));
-                    */
 
                     Debug.Log(">> Auto Click <<");
                     isWaitingScreenTouch = false;

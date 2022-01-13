@@ -112,8 +112,6 @@ namespace PIERStory
             GameManager.main.useSkip = true;
             GameManager.main.isThreadHold = false;
             GameManager.main.isWaitingScreenTouch = false;
-            
-            
         }
 
         public void OnClickBlockSkip()
@@ -141,18 +139,16 @@ namespace PIERStory
             // EndGame이 호출되면 Game씬에서 빠져나가기 때문에 오류 발생
             GameManager.main.SaveCurrentPlay();
 
-            // 팝업에 대해 뭔가 정해질 때까지 묻지 않고 그냥 종료
-            //SystemManager.ShowConfirmPopUp(SystemManager.GetLocalizedText("6037"), GameManager.main.EndGame, null);
-            
-            
             // * 이 조건일때, 나가면 튜토리얼이 중단된다고 경고해줘야 한다.  
-            if(UserManager.main.tutorialStep == 1 && UserManager.main.tutorialFirstProjectID > 0) {
+            if (UserManager.main.tutorialStep == 1 && UserManager.main.tutorialFirstProjectID > 0)
+            {
+                // ! 여기서 나가면 강제 종료야. 튜토리얼이 끊긴다고..!
                 SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("80108"), GiveUpTutorial, null, true, false);
                 return;
             }
-            
-            // ! 여기서 나가면 강제 종료야. 튜토리얼이 끊긴다고..! 
-            GameManager.main.QuitGame(); // QuitGame은 강제종료고 EndGame은 정상종료다.
+
+            // QuitGame은 강제종료고 EndGame은 정상종료다.
+            SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("6037"), GameManager.main.QuitGame, null);
         }
 
         void GiveUpTutorial()
@@ -163,7 +159,6 @@ namespace PIERStory
 
         public void OnAutoPlay()
         {
-            GameManager.main.isAutoPlay = true;
             GameManager.main.StartAutoPlay();
             playButton.color = Color.white;
             playToggle.color = Color.white;
@@ -171,7 +166,6 @@ namespace PIERStory
 
         public void OffAutoPlay()
         {
-            GameManager.main.isAutoPlay = false;
             GameManager.main.StopAutoPlay();
             playButton.color = Color.grey;
             playToggle.color = Color.grey;
@@ -182,17 +176,7 @@ namespace PIERStory
         /// </summary>
         public void OnClickReplay()
         {
-            GameManager.main.RetryPlay();
-
-            // 1회권 유저는 처음부터 불가하다.
-            /*
-            if (GameManager.main.currentEpisodeData.purchaseState == PurchaseState.OneTime) {
-                SystemManager.ShowAlertWithLocalize("6038");
-                return; 
-            }*/
-
-            // 팝업이 결정될 때까진 걍 재시작
-            //SystemManager.ShowConfirmPopUp(SystemManager.GetLocalizedText("6039"), GameManager.main.RetryPlay, null);
+            SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("6039"), GameManager.main.RetryPlay, null);
         }
 
         public void OnClickBlockReplay()

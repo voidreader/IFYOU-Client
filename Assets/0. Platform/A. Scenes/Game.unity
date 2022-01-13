@@ -552,8 +552,6 @@ GameObject:
   - component: {fileID: 3852369}
   - component: {fileID: 3852368}
   - component: {fileID: 3852367}
-  - component: {fileID: 3852366}
-  - component: {fileID: 3852365}
   m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
@@ -580,435 +578,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 26, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3852365
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3852363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3af1f82fc2e48368b588587f1e87ccf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Target: {fileID: 3852371}
---- !u!114 &3852366
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3852363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58ada66bc16d42029748b4f1816dd657, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Controller: {fileID: 330099712}
-  IsOn: 0
-  ToggleCommand: 0
-  ColorTarget: {fileID: 3852365}
-  NormalAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.1
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  HighlightedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.24705884, g: 0.24705884, b: 0.24705884, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.24705884, g: 0.24705884, b: 0.24705884, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0.05
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  PressedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.05
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.14509805, g: 0.14509805, b: 0.14509805, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.14509805, g: 0.14509805, b: 0.14509805, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: -0.05
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  SelectedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.29803923, g: 0.29803923, b: 0.29803923, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.29803923, g: 0.29803923, b: 0.29803923, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: -0.027777778
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0.1
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  DisabledAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 0.5019608}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 0.5019608}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: -0.5
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0
-      FromAlphaOffset: 0
-      ToAlphaOffset: -0.5
 --- !u!114 &3852367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2666,6 +2235,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 1909972470}
+          m_TargetAssemblyTypeName: PIERStory.ViewGameOption, Assembly-CSharp
+          m_MethodName: SetAutoPlaySlow
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnToggleOffCallback:
     Enabled: 1
     EventName: OnToggleOffCallback
@@ -3156,9 +2737,7 @@ GameObject:
   - component: {fileID: 386735381}
   - component: {fileID: 386735380}
   - component: {fileID: 386735379}
-  - component: {fileID: 386735378}
   - component: {fileID: 386735377}
-  - component: {fileID: 386735376}
   - component: {fileID: 386735375}
   m_Layer: 5
   m_Name: IconContainer
@@ -4552,422 +4131,6 @@ MonoBehaviour:
       ToCustomValue: 0
       FromOffset: 0
       ToOffset: 0.4
---- !u!114 &386735376
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 386735373}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58ada66bc16d42029748b4f1816dd657, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Controller: {fileID: 1378653089}
-  IsOn: 0
-  ToggleCommand: 2
-  ColorTarget: {fileID: 386735378}
-  NormalAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.1
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 1, g: 1, b: 1, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  HighlightedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 1, g: 1, b: 1, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0.05
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  PressedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.05
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.95, g: 0.95, b: 0.95, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: -0.05
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  SelectedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 1, g: 1, b: 1, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: -0.027777778
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0.1
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  DisabledAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 1, g: 1, b: 1, a: 0.5}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: -0.5
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0
-      FromAlphaOffset: 0
-      ToAlphaOffset: -0.5
 --- !u!114 &386735377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4982,19 +4145,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding: {x: 0, y: 0, z: 0, w: 0}
   m_Softness: {x: 0, y: 0}
---- !u!114 &386735378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 386735373}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3af1f82fc2e48368b588587f1e87ccf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Target: {fileID: 386735379}
 --- !u!114 &386735379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6406,6 +5556,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 1909972470}
+          m_TargetAssemblyTypeName: PIERStory.ViewGameOption, Assembly-CSharp
+          m_MethodName: SoundEffectToggleOn
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnToggleOffCallback:
     Enabled: 1
     EventName: OnToggleOffCallback
@@ -6417,6 +5579,18 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.Reactor.Animators.UIAnimator, DoozyRuntime
           m_MethodName: Play
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 1909972470}
+          m_TargetAssemblyTypeName: PIERStory.ViewGameOption, Assembly-CSharp
+          m_MethodName: SoundEffectToggleOff
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -6564,9 +5738,7 @@ GameObject:
   - component: {fileID: 723880667}
   - component: {fileID: 723880666}
   - component: {fileID: 723880665}
-  - component: {fileID: 723880664}
   - component: {fileID: 723880663}
-  - component: {fileID: 723880662}
   - component: {fileID: 723880661}
   m_Layer: 5
   m_Name: IconContainer
@@ -7960,422 +7132,6 @@ MonoBehaviour:
       ToCustomValue: 0
       FromOffset: 0
       ToOffset: 0.4
---- !u!114 &723880662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 723880659}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58ada66bc16d42029748b4f1816dd657, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Controller: {fileID: 330099712}
-  IsOn: 0
-  ToggleCommand: 2
-  ColorTarget: {fileID: 723880664}
-  NormalAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.1
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 1, g: 1, b: 1, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  HighlightedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 1, g: 1, b: 1, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 0
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0.05
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  PressedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.05
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.95, g: 0.95, b: 0.95, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 0
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: -0.05
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  SelectedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 1, g: 1, b: 1, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 0
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: -0.027777778
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0.1
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  DisabledAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 1, g: 1, b: 1, a: 0.5}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 0
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: -0.5
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0
-      FromAlphaOffset: 0
-      ToAlphaOffset: -0.5
 --- !u!114 &723880663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8390,19 +7146,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding: {x: 0, y: 0, z: 0, w: 0}
   m_Softness: {x: 0, y: 0}
---- !u!114 &723880664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 723880659}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3af1f82fc2e48368b588587f1e87ccf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Target: {fileID: 723880665}
 --- !u!114 &723880665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8769,8 +7512,6 @@ GameObject:
   - component: {fileID: 833274233}
   - component: {fileID: 833274232}
   - component: {fileID: 833274231}
-  - component: {fileID: 833274230}
-  - component: {fileID: 833274229}
   m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
@@ -8797,435 +7538,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 26, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &833274229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 833274227}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3af1f82fc2e48368b588587f1e87ccf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Target: {fileID: 833274235}
---- !u!114 &833274230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 833274227}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58ada66bc16d42029748b4f1816dd657, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Controller: {fileID: 1047054905}
-  IsOn: 0
-  ToggleCommand: 0
-  ColorTarget: {fileID: 833274229}
-  NormalAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.1
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  HighlightedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.24705884, g: 0.24705884, b: 0.24705884, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.24705884, g: 0.24705884, b: 0.24705884, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0.05
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  PressedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.05
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.14509805, g: 0.14509805, b: 0.14509805, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.14509805, g: 0.14509805, b: 0.14509805, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: -0.05
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  SelectedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.29803923, g: 0.29803923, b: 0.29803923, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.29803923, g: 0.29803923, b: 0.29803923, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: -0.027777778
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0.1
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  DisabledAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 0.5019608}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 0.5019608}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: -0.5
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0
-      FromAlphaOffset: 0
-      ToAlphaOffset: -0.5
 --- !u!114 &833274231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9772,6 +8084,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 1909972470}
+          m_TargetAssemblyTypeName: PIERStory.ViewGameOption, Assembly-CSharp
+          m_MethodName: BGMToggleOn
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnToggleOffCallback:
     Enabled: 1
     EventName: OnToggleOffCallback
@@ -9783,6 +8107,18 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.Reactor.Animators.UIAnimator, DoozyRuntime
           m_MethodName: Play
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 1909972470}
+          m_TargetAssemblyTypeName: PIERStory.ViewGameOption, Assembly-CSharp
+          m_MethodName: BGMToggleOff
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -10337,6 +8673,18 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.Reactor.Animators.UIAnimator, DoozyRuntime
           m_MethodName: Play
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1909972470}
+          m_TargetAssemblyTypeName: PIERStory.ViewGameOption, Assembly-CSharp
+          m_MethodName: SetAutoPlayFast
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -11362,7 +9710,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -11552,6 +9900,18 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.Reactor.Animators.UIAnimator, DoozyRuntime
           m_MethodName: Play
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1909972470}
+          m_TargetAssemblyTypeName: PIERStory.ViewGameOption, Assembly-CSharp
+          m_MethodName: SetAutoPlayNormal
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -11935,9 +10295,7 @@ GameObject:
   - component: {fileID: 1615722908}
   - component: {fileID: 1615722907}
   - component: {fileID: 1615722906}
-  - component: {fileID: 1615722905}
   - component: {fileID: 1615722904}
-  - component: {fileID: 1615722903}
   - component: {fileID: 1615722902}
   m_Layer: 5
   m_Name: IconContainer
@@ -13331,422 +11689,6 @@ MonoBehaviour:
       ToCustomValue: 0
       FromOffset: 0
       ToOffset: 0.4
---- !u!114 &1615722903
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1615722900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58ada66bc16d42029748b4f1816dd657, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Controller: {fileID: 1047054905}
-  IsOn: 0
-  ToggleCommand: 2
-  ColorTarget: {fileID: 1615722905}
-  NormalAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.1
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 1, g: 1, b: 1, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  HighlightedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 1, g: 1, b: 1, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0.05
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  PressedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.05
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.95, g: 0.95, b: 0.95, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: -0.05
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  SelectedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 1, g: 1, b: 1, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: -0.027777778
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0.1
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  DisabledAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 1, g: 1, b: 1, a: 0.5}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 0
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: -0.5
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0
-      FromAlphaOffset: 0
-      ToAlphaOffset: -0.5
 --- !u!114 &1615722904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13761,19 +11703,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding: {x: 0, y: 0, z: 0, w: 0}
   m_Softness: {x: 0, y: 0}
---- !u!114 &1615722905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1615722900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3af1f82fc2e48368b588587f1e87ccf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Target: {fileID: 1615722906}
 --- !u!114 &1615722906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14960,8 +12889,6 @@ GameObject:
   - component: {fileID: 1846358536}
   - component: {fileID: 1846358535}
   - component: {fileID: 1846358534}
-  - component: {fileID: 1846358533}
-  - component: {fileID: 1846358532}
   m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
@@ -14988,435 +12915,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 26, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1846358532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1846358530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3af1f82fc2e48368b588587f1e87ccf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Target: {fileID: 1846358538}
---- !u!114 &1846358533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1846358530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58ada66bc16d42029748b4f1816dd657, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Controller: {fileID: 1378653089}
-  IsOn: 0
-  ToggleCommand: 0
-  ColorTarget: {fileID: 1846358532}
-  NormalAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.1
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  HighlightedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.24705884, g: 0.24705884, b: 0.24705884, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.24705884, g: 0.24705884, b: 0.24705884, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0.05
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  PressedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.05
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.14509805, g: 0.14509805, b: 0.14509805, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.14509805, g: 0.14509805, b: 0.14509805, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: -0.05
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  SelectedAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.29803923, g: 0.29803923, b: 0.29803923, a: 1}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.29803923, g: 0.29803923, b: 0.29803923, a: 1}
-      FromHueOffset: 0
-      ToHueOffset: -0.027777778
-      FromSaturationOffset: 0
-      ToSaturationOffset: 0
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0.1
-      FromAlphaOffset: 0
-      ToAlphaOffset: 0
-  DisabledAnimation:
-    OnPlayCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStopCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishCallback:
-      m_PersistentCalls:
-        m_Calls: []
-    Animation:
-      Settings:
-        PlayMode: 0
-        EaseMode: 0
-        Ease: 1
-        Curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 1
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.2
-        Loops: 0
-        LoopDelay: 0
-        UseRandomStartDelay: 0
-        UseRandomDuration: 0
-        UseRandomLoops: 0
-        UseRandomLoopDelay: 0
-        RandomStartDelay:
-          MIN: 0
-          MAX: 1
-        RandomDuration:
-          MIN: 0
-          MAX: 1
-        RandomLoops:
-          MIN: 0
-          MAX: 1
-        RandomLoopDelay:
-          MIN: 0
-          MAX: 1
-        Strength: 1
-        Vibration: 8
-        Elasticity: 1
-        FadeOutShake: 0
-      FromValue: {r: 1, g: 1, b: 1, a: 1}
-      ToValue: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 0.5019608}
-      CurrentValue: {r: 0, g: 0, b: 0, a: 0}
-      Enabled: 1
-      StartColor: {r: 1, g: 1, b: 1, a: 1}
-      FromReferenceValue: 1
-      ToReferenceValue: 2
-      FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
-      ToCustomValue: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 0.5019608}
-      FromHueOffset: 0
-      ToHueOffset: 0
-      FromSaturationOffset: 0
-      ToSaturationOffset: -0.5
-      FromLightnessOffset: 0
-      ToLightnessOffset: 0
-      FromAlphaOffset: 0
-      ToAlphaOffset: -0.5
 --- !u!114 &1846358534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16286,33 +13784,42 @@ MonoBehaviour:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 9
         Curve:
           serializedVersion: 2
           m_Curve:
           - serializedVersion: 3
             time: 0
             value: 0
-            inSlope: 0
-            outSlope: 1
+            inSlope: -0.5398274
+            outSlope: -0.5398274
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
-            outWeight: 0
+            outWeight: 0.024151811
+          - serializedVersion: 3
+            time: 0.5360872
+            value: 0.4861448
+            inSlope: -2.2521195
+            outSlope: -2.2521195
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.020654876
+            outWeight: 0.33333334
           - serializedVersion: 3
             time: 1
             value: 1
-            inSlope: 1
-            outSlope: 0
+            inSlope: 0.04207796
+            outSlope: 0.04207796
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0
+            inWeight: 0.5248393
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.4
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -16338,7 +13845,7 @@ MonoBehaviour:
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 1
+      Enabled: 0
       AnimationType: 0
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -16347,39 +13854,39 @@ MonoBehaviour:
       ToCustomValue: {x: 0, y: 0, z: 0}
       FromOffset: {x: 0, y: 0, z: 0}
       ToOffset: {x: 0, y: 0, z: 0}
-      FromDirection: 0
+      FromDirection: 1
       ToDirection: 13
     Rotate:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 15
         Curve:
           serializedVersion: 2
           m_Curve:
           - serializedVersion: 3
             time: 0
             value: 0
-            inSlope: 0
-            outSlope: 1
+            inSlope: -1.5918956
+            outSlope: -1.5918956
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
-            outWeight: 0
+            outWeight: 0.027026983
           - serializedVersion: 3
             time: 1
             value: 1
-            inSlope: 1
-            outSlope: 0
+            inSlope: -2.2672713
+            outSlope: -2.2672713
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0
+            inWeight: 0.04600376
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.5
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -16411,13 +13918,13 @@ MonoBehaviour:
       ToReferenceValue: 0
       FromCustomValue: {x: 0, y: 0, z: 0}
       ToCustomValue: {x: 0, y: 0, z: 0}
-      FromOffset: {x: 0, y: 0, z: 0}
+      FromOffset: {x: 0, y: 0, z: 240}
       ToOffset: {x: 0, y: 0, z: 0}
     Scale:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 27
         Curve:
           serializedVersion: 2
           m_Curve:
@@ -16425,7 +13932,7 @@ MonoBehaviour:
             time: 0
             value: 0
             inSlope: 0
-            outSlope: 1
+            outSlope: 0
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
@@ -16433,17 +13940,17 @@ MonoBehaviour:
           - serializedVersion: 3
             time: 1
             value: 1
-            inSlope: 1
-            outSlope: 0
+            inSlope: 5.9879365
+            outSlope: 5.9879365
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0
+            inWeight: 0.022426665
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.4
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -16471,11 +13978,11 @@ MonoBehaviour:
       CurrentValue: {x: 0, y: 0, z: 0}
       Enabled: 0
       StartScale: {x: 1, y: 1, z: 1}
-      FromReferenceValue: 0
+      FromReferenceValue: 2
       ToReferenceValue: 0
-      FromCustomValue: {x: 1, y: 1, z: 1}
-      ToCustomValue: {x: 1, y: 1, z: 1}
-      FromOffset: {x: 0, y: 0, z: 0}
+      FromCustomValue: {x: 0, y: 0, z: 0}
+      ToCustomValue: {x: 1, y: 1, z: 0}
+      FromOffset: {x: 0.1, y: 0.1, z: 0}
       ToOffset: {x: 0, y: 0, z: 0}
     Fade:
       Settings:
@@ -16507,7 +14014,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.5
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -16533,14 +14040,14 @@ MonoBehaviour:
       FromValue: 1
       ToValue: 1
       CurrentValue: 0
-      Enabled: 0
+      Enabled: 1
       StartAlpha: 1
-      FromReferenceValue: 0
+      FromReferenceValue: 2
       ToReferenceValue: 0
-      FromCustomValue: 1
+      FromCustomValue: 0
       ToCustomValue: 1
       FromOffset: 0
-      ToOffset: 0
+      ToOffset: 1
   HideAnimation:
     OnPlayCallback:
       m_PersistentCalls:
@@ -16556,7 +14063,7 @@ MonoBehaviour:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 8
         Curve:
           serializedVersion: 2
           m_Curve:
@@ -16581,8 +14088,8 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-        StartDelay: 0
-        Duration: 0.3
+        StartDelay: 0.1
+        Duration: 0.4
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -16608,7 +14115,7 @@ MonoBehaviour:
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 1
+      Enabled: 0
       AnimationType: 1
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -16618,12 +14125,12 @@ MonoBehaviour:
       FromOffset: {x: 0, y: 0, z: 0}
       ToOffset: {x: 0, y: 0, z: 0}
       FromDirection: 13
-      ToDirection: 2
+      ToDirection: 1
     Rotate:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 8
         Curve:
           serializedVersion: 2
           m_Curve:
@@ -16682,12 +14189,12 @@ MonoBehaviour:
       FromCustomValue: {x: 0, y: 0, z: 0}
       ToCustomValue: {x: 0, y: 0, z: 0}
       FromOffset: {x: 0, y: 0, z: 0}
-      ToOffset: {x: 0, y: 0, z: 0}
+      ToOffset: {x: 0, y: 0, z: 240}
     Scale:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 26
         Curve:
           serializedVersion: 2
           m_Curve:
@@ -16713,7 +14220,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.5
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -16742,11 +14249,11 @@ MonoBehaviour:
       Enabled: 0
       StartScale: {x: 1, y: 1, z: 1}
       FromReferenceValue: 0
-      ToReferenceValue: 0
-      FromCustomValue: {x: 1, y: 1, z: 1}
-      ToCustomValue: {x: 1, y: 1, z: 1}
+      ToReferenceValue: 2
+      FromCustomValue: {x: 0, y: 0, z: 0}
+      ToCustomValue: {x: 0, y: 0, z: 0}
       FromOffset: {x: 0, y: 0, z: 0}
-      ToOffset: {x: 0, y: 0, z: 0}
+      ToOffset: {x: 0.4, y: 0.4, z: 0}
     Fade:
       Settings:
         PlayMode: 0
@@ -16777,7 +14284,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.5
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -16803,12 +14310,12 @@ MonoBehaviour:
       FromValue: 1
       ToValue: 1
       CurrentValue: 0
-      Enabled: 0
+      Enabled: 1
       StartAlpha: 1
-      FromReferenceValue: 0
-      ToReferenceValue: 0
+      FromReferenceValue: 2
+      ToReferenceValue: 2
       FromCustomValue: 1
-      ToCustomValue: 1
+      ToCustomValue: 0
       FromOffset: 0
       ToOffset: 0
 --- !u!114 &1909972466
@@ -16845,12 +14352,24 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   OnVisibleCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnVisibleCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1909972470}
+          m_TargetAssemblyTypeName: PIERStory.ViewGameOption, Assembly-CSharp
+          m_MethodName: OnView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnHideCallback:
     Enabled: 0
     EventName: OnHideCallback
@@ -16950,6 +14469,9 @@ MonoBehaviour:
   voiceButton: {fileID: 1843687080}
   bgmButton: {fileID: 74019411}
   seButton: {fileID: 924256778}
+  voiceToggle: {fileID: 1939400874}
+  bgmToggle: {fileID: 870234757}
+  seToggle: {fileID: 678032096}
   slowToggle: {fileID: 330099712}
   normalToggle: {fileID: 1378653089}
   fastToggle: {fileID: 1047054905}
@@ -17161,6 +14683,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 1909972470}
+          m_TargetAssemblyTypeName: PIERStory.ViewGameOption, Assembly-CSharp
+          m_MethodName: VoiceToggleOn
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnToggleOffCallback:
     Enabled: 1
     EventName: OnToggleOffCallback
@@ -17172,6 +14706,18 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.Reactor.Animators.UIAnimator, DoozyRuntime
           m_MethodName: Play
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 1909972470}
+          m_TargetAssemblyTypeName: PIERStory.ViewGameOption, Assembly-CSharp
+          m_MethodName: VoiceToggleOff
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -17865,6 +15411,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 226006624506918695, guid: 377977e2221a59840a370fb9f3784206, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -299.9999
+      objectReference: {fileID: 0}
     - target: {fileID: 226006624556660960, guid: 377977e2221a59840a370fb9f3784206, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -17965,6 +15515,10 @@ PrefabInstance:
     - target: {fileID: 508574641374012884, guid: d02befca5002768439f5e41ce6f28428, type: 3}
       propertyPath: m_Name
       value: View - GameMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 508574642937988398, guid: d02befca5002768439f5e41ce6f28428, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 120.00003
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d02befca5002768439f5e41ce6f28428, type: 3}

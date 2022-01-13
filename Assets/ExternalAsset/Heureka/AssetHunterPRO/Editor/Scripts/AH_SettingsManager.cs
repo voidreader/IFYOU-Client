@@ -41,7 +41,9 @@ namespace HeurekaGames.AssetHunterPRO
 
         private readonly static string PrefsAutoCreateLog = "AH.AutoCreateLog" + ProjectPostFix;
         private readonly static string PrefsAutoOpenLog = "AH.AutoOpenLog" + ProjectPostFix;
-        private readonly static string PrefsAutoRefreshLog = "AH.AutoRefreshLog" + ProjectPostFix;      
+        private readonly static string PrefsAutoRefreshLog = "AH.AutoRefreshLog" + ProjectPostFix;
+        private readonly static string PrefsEstimateAssetSize = "AH.PrefsEstimateAssetSize" + ProjectPostFix;
+        
         private readonly static string PrefsHideButtonText = "AH.HideButtonText" + ProjectPostFix;
         private readonly static string PrefsIgnoreScriptFiles = "AH.IgnoreScriptfiles" + ProjectPostFix;
         private readonly static string PrefsIgnoredTypes = "AH.DefaultIgnoredTypes" + ProjectPostFix;
@@ -54,7 +56,8 @@ namespace HeurekaGames.AssetHunterPRO
 
         internal readonly static bool InitialValueAutoCreateLog = true;
         internal readonly static bool InitialValueAutoOpenLog = false;
-        internal readonly static bool InitialValueAutoRefreshLog = false;       
+        internal readonly static bool InitialValueAutoRefreshLog = false;
+        internal readonly static bool InitialValueEstimateAssetSize = false;
         internal readonly static bool InitialValueHideButtonText = true;
         internal readonly static bool InitialIgnoreScriptFiles = true;
         internal readonly static string InitialUserPrefPath = Application.dataPath + System.IO.Path.DirectorySeparatorChar + "AH_Prefs";
@@ -125,6 +128,13 @@ namespace HeurekaGames.AssetHunterPRO
             internal set { EditorPrefs.SetInt(PrefsAutoRefreshLog, AH_Utils.BoolToInt(value)); }
         }
 
+        [SerializeField]
+        public bool EstimateAssetSize
+        {
+            get { return ((!EditorPrefs.HasKey(PrefsEstimateAssetSize) && InitialValueEstimateAssetSize) || AH_Utils.IntToBool(EditorPrefs.GetInt(PrefsEstimateAssetSize))); }
+            internal set { EditorPrefs.SetInt(PrefsEstimateAssetSize, AH_Utils.BoolToInt(value)); }
+        }
+        
         [SerializeField]
         public bool HideButtonText
         {
@@ -208,6 +218,7 @@ namespace HeurekaGames.AssetHunterPRO
             AutoCreateLog = AH_SettingsManager.InitialValueAutoCreateLog;
             AutoOpenLog = AH_SettingsManager.InitialValueAutoOpenLog;
             AutoRefreshLog = AH_SettingsManager.InitialValueAutoRefreshLog;
+            EstimateAssetSize = AH_SettingsManager.InitialValueEstimateAssetSize;
             HideButtonText = AH_SettingsManager.InitialValueHideButtonText;
             IgnoreScriptFiles = AH_SettingsManager.InitialIgnoreScriptFiles;
             UserPreferencePath = AH_SettingsManager.InitialUserPrefPath;
@@ -288,6 +299,7 @@ namespace HeurekaGames.AssetHunterPRO
             AutoCreateLog = drawSetting("Auto create log when building", AutoCreateLog, AH_SettingsManager.InitialValueAutoCreateLog);
             AutoOpenLog = drawSetting("Auto open log location after building", AutoOpenLog, AH_SettingsManager.InitialValueAutoOpenLog);
             AutoRefreshLog = drawSetting("Auto refresh when project changes", AutoRefreshLog, AH_SettingsManager.InitialValueAutoRefreshLog);
+            EstimateAssetSize = drawSetting("Estimate runtime filesize for each asset", EstimateAssetSize, AH_SettingsManager.InitialValueEstimateAssetSize);
             HideButtonText = drawSetting("Hide buttontexts", HideButtonText, AH_SettingsManager.InitialValueHideButtonText);
 
             EditorGUILayout.BeginHorizontal();

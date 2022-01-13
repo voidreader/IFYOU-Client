@@ -228,7 +228,6 @@ namespace HeurekaGames.AssetHunterPRO
             }
         }
 
-
         private void deleteUnusedFromFolder(AH_TreeviewElement folder)
         {
             deleteUnusedFromFolder("Delete unused assets from folder", "Do you want to delete all unused assets from:" + Environment.NewLine + folder.RelativePath, folder);
@@ -281,8 +280,17 @@ namespace HeurekaGames.AssetHunterPRO
             for (int i = 0; i < affectedAssets.Count(); i++)
             {
                 EditorUtility.DisplayProgressBar("Deleting unused assets", "Deleting " + i + "/" + affectedAssets.Count() + Environment.NewLine + affectedAssets[i], ((float)i) / ((float)affectedAssets.Count()));
-                FileUtil.DeleteFileOrDirectory(affectedAssets[i]);
             }
+#if UNITY_2020_1_OR_NEWER
+            List<string> failedPaths = new List<string>();
+            AssetDatabase.DeleteAssets(affectedAssets.ToArray(), failedPaths);
+#else
+            foreach (var asset in affectedAssets)
+            {
+                AssetDatabase.DeleteAsset(asset);
+            }
+#endif
+
             EditorUtility.ClearProgressBar();
 
             AssetDatabase.Refresh();

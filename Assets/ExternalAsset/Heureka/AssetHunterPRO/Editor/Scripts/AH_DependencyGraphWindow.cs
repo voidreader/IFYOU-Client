@@ -34,6 +34,7 @@ namespace HeurekaGames.AssetHunterPRO
         private static readonly string WINDOWNAME = "AH Dependency Graph";
 
         //Add menu named "Dependency Graph" to the window menu  
+        [UnityEditor.MenuItem("Tools/Asset Hunter PRO/Dependency Graph", priority = AH_Window.WINDOWMENUITEMPRIO + 1)]
         [UnityEditor.MenuItem("Window/Heureka/Asset Hunter PRO/Dependency Graph _%#h", priority = AH_Window.WINDOWMENUITEMPRIO + 1)]
         public static void OpenDependencyGraph()
         {

@@ -23,6 +23,7 @@ namespace HeurekaGames.AssetHunterPRO
 
         private static readonly string WINDOWNAME = "AH Scenes";
 
+        [MenuItem("Tools/Asset Hunter PRO/Scene overview")]
         [MenuItem("Window/Heureka/Asset Hunter PRO/Scene overview")]
         public static void Init()
         {

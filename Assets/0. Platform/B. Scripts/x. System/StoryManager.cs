@@ -576,16 +576,17 @@ namespace PIERStory
         /// </summary>
         void SetProjectNametag()
         {
+            // 편한접근을 위해서 Dictionary 구성 
+            DictNametag.Clear();
+            
             if (!ProjectDetailJson.ContainsKey(NODE_NAMETAG))
             {
                 Debug.Log("Nametag Info is null");
                 storyNametagJSON = null;
+                return;
             }
 
             storyNametagJSON = ProjectDetailJson[NODE_NAMETAG];
-
-            // 편한접근을 위해서 Dictionary 구성 
-            DictNametag.Clear();
 
             // speaker 컬럼별로 분류!
             string speaker = string.Empty;
@@ -607,11 +608,12 @@ namespace PIERStory
         /// <returns></returns>
         public string GetNametagName(string __speaker)
         {
+            // 네임태그에 이름이 없으면 그냥 받은 파라매터 그대로 준다. 
             if (!DictNametag.ContainsKey(__speaker))
-                return string.Empty;
+                return __speaker;
 
-            // 임시로 한글명만. 
-            return DictNametag[__speaker][CommonConst.COL_KO].ToString();
+            // 언어별로 이름을 준다.
+            return DictNametag[__speaker][SystemManager.main.currentAppLanguageCode].ToString();
         }
 
         /// <summary>

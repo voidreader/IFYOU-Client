@@ -34,8 +34,12 @@ namespace PIERStory
 
         public void EndAction()
         {
+            ViewGame.main.HideBubbles();
+            
+            /*
             if (scriptRow.autoplay_row < 1)
                 ViewGame.main.HideBubbles();
+            */
         }
     }
 }

@@ -15,6 +15,7 @@ namespace HeurekaGames.AssetHunterPRO
         private Vector2 scrollPos;
         private List<BuildInfoSelection> buildInfoFiles;
 
+        [MenuItem("Tools/Asset Hunter PRO/Merge tool")]
         [MenuItem("Window/Heureka/Asset Hunter PRO/Merge tool")]
         public static void Init()
         {

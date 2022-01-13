@@ -247,12 +247,16 @@ namespace PIERStory
         /// </summary>
         public void HideBubbles()
         {
+            
+            // Debug.Log("HideBubble Called");
+                        
             HideNarration();
 
             for (int i = 0; i < ListBubbles.Count; i++)
             {
                 if (ListBubbles[i].gameObject.activeSelf || ListBubbles[i].needDelayShow)
                     ListBubbles[i].OffBubble(GameManager.main.useSkip);
+                
             }
 
             if (selfBubble.gameObject.activeSelf)
@@ -1130,7 +1134,9 @@ namespace PIERStory
             if (string.IsNullOrEmpty(prevSpeaker) || !prevSpeaker.Equals(speaker))
             {
                 prevSpeaker = speaker;
-                logData.Append("\n<size=26><color=#404040>" + speaker + "</color></size>\n");
+                
+                // 이름 로컬라이징.
+                logData.Append("\n<size=26><color=#404040>" + StoryManager.main.GetNametagName(speaker) + "</color></size>\n");
             }
 
             __data = __data.Replace("\\", " ");

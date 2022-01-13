@@ -277,7 +277,7 @@ namespace PIERStory
             if (!autoPlay)
                 OnMoveStart();
                 
-            Debug.Log("EnterTalkingCharacter : " + characterPosIndex);
+            // Debug.Log("EnterTalkingCharacter : " + characterPosIndex);
 
             // 캐릭터 위치(L,C,R)에 따른 위치 및 크기 조정
             switch (characterPosIndex)

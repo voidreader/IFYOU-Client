@@ -9,6 +9,7 @@ namespace HeurekaGames.AssetHunterPRO
         private Vector2 scrollPos;
         private static AH_SettingsWindow m_window;
 
+        [UnityEditor.MenuItem("Tools/Asset Hunter PRO/Settings")]
         [UnityEditor.MenuItem("Window/Heureka/Asset Hunter PRO/Settings")]
         public static void OpenAssetHunter()
         {

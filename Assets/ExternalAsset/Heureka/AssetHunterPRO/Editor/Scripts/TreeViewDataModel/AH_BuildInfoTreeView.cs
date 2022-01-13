@@ -44,10 +44,10 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
             id++;
 
             //This is done because I cant find all assets in toplevel folders through the Unity API (Remove whem the API allows it)
-            int folderCount = System.IO.Directory.GetDirectories(Application.dataPath).Count();
+            int folderCount = System.IO.Directory.GetDirectories(Application.dataPath,"*",SearchOption.AllDirectories).Count();
             int foldersProcessed = 0;
 
-            bool populatedSuccesfully = AddFilesRecursively(Application.dataPath, chosenBuildInfo, depth, ref id, ref folderCount, ref foldersProcessed);
+            bool populatedSuccesfully = AddFilesRecursively(Application.dataPath, chosenBuildInfo, depth, ref id, folderCount, ref foldersProcessed);
 
             //Cleanup garbage
             AssetDatabase.Refresh();
@@ -62,7 +62,7 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
             return populatedSuccesfully;
         }
 
-        private bool AddFilesRecursively(string absPath, AH_SerializedBuildInfo chosenBuildInfo, int treeViewDepth, ref int treeViewID, ref int folderCount, ref int foldersProcessed)
+        private bool AddFilesRecursively(string absPath, AH_SerializedBuildInfo chosenBuildInfo, int treeViewDepth, ref int treeViewID, int folderCount, ref int foldersProcessed)
         {
             string relativePath;
             string folderID;
@@ -74,6 +74,11 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
                 return false;
             }
 
+            //Increment folder process count
+            foldersProcessed++;
+            var progress = (float)((float)foldersProcessed / (float)folderCount);
+            EditorUtility.DisplayProgressBar($"Analyzing project ({foldersProcessed}/{folderCount}", relativePath, progress); //Todo make cancellable
+
             //Check if this folder has been Ignored
             if (AH_SettingsManager.Instance.HasIgnoredFolder(relativePath, folderID))
                 return false;
@@ -82,13 +87,10 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
             System.IO.DirectoryInfo dirInfo = new System.IO.DirectoryInfo(absPath);
             string dirInfoName = dirInfo.Name;
 
-            //Increment folder process count
-            foldersProcessed++;
-            EditorUtility.DisplayProgressBar("Analyzing project", relativePath, ((float)foldersProcessed / (float)folderCount)); //Todo make cancellable
-
             //Increment ID
             treeViewID++;
 
+            //TODO creating new treeviewelements loads asset from memory...DONT DO THAT!! Get filesize info somewhere else
             AH_TreeviewElement threeViewFolder = new AH_TreeviewElement(dirInfoName, treeViewDepth, treeViewID, ((treeViewDepth != -1) ? relativePath : ""), "", null, false);
             treeElements.Add(threeViewFolder);
 
@@ -125,7 +127,7 @@ namespace HeurekaGames.AssetHunterPRO.BaseTreeviewImpl.AssetTreeView
 
             foreach (var dir in System.IO.Directory.GetDirectories(absPath))
             {
-                if (AddFilesRecursively(dir, chosenBuildInfo, treeViewDepth, ref treeViewID, ref folderCount, ref foldersProcessed))
+                if (AddFilesRecursively(dir, chosenBuildInfo, treeViewDepth, ref treeViewID, folderCount, ref foldersProcessed))
                     hasValidChildren = true;
             }
 

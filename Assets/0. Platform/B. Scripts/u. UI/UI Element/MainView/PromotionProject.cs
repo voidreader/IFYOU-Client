@@ -7,6 +7,10 @@ namespace PIERStory
     public class PromotionProject : MonoBehaviour
     {
         public ImageRequireDownload promotionBanner;
+        
+        [SerializeField] string bannerURL = string.Empty;
+        [SerializeField] string bannerKey = string.Empty;
+        
         StoryData storyData = null;
 
         /// <summary>
@@ -23,6 +27,9 @@ namespace PIERStory
                 // 해당 국가 코드에 맞는 promotion banner 이미지를 세팅한다
                 if (SystemManager.GetJsonNodeString(detail[i], LobbyConst.COL_LANG) == SystemManager.main.currentAppLanguageCode)
                 {
+                    bannerURL = SystemManager.GetJsonNodeString(detail[i], LobbyConst.NODE_PROMOTION_BANNER_URL);
+                    bannerKey = SystemManager.GetJsonNodeString(detail[i], LobbyConst.NODE_PROMOTION_BANNER_KEY);
+                    
                     promotionBanner.SetDownloadURL(SystemManager.GetJsonNodeString(detail[i], LobbyConst.NODE_PROMOTION_BANNER_URL), SystemManager.GetJsonNodeString(detail[i], LobbyConst.NODE_PROMOTION_BANNER_KEY), true);
                     break;
                 }

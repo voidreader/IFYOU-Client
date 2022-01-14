@@ -595,6 +595,7 @@ namespace PIERStory {
         public void OnClickCopyUID()
         {
             UniClipboard.SetText(userPincode.text);
+            SystemManager.ShowSimpleAlertLocalize("6017");
         }
 
         

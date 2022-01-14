@@ -25,7 +25,7 @@ namespace PIERStory
         // public TextMeshProUGUI missionState;
         
         
-        MissionState state;
+        public MissionState state;
 
         
         [SerializeField] MissionData missionData;
@@ -61,6 +61,7 @@ namespace PIERStory
             missionThumbnail.gameObject.SetActive(false);
             hiddenHighlight.SetActive(true);
             rewardInfo.SetActive(false);
+            completeMark.SetActive(false);
 
             missionText.text = string.Format("<size=24><b>"+SystemManager.GetLocalizedText("6056")+"</b></size>\n"+SystemManager.GetLocalizedText("6057"), lockCount);
         }
@@ -135,7 +136,9 @@ namespace PIERStory
             
             // * 성공 했다. => 미션이 해금도 되었고, 보상도 받은 상태가 되는거다. 
             SetMissionComplete();
-            
+
+            if(!ViewMission.clickGetAll)
+                SystemManager.ShowSimpleAlertLocalize("6123");
         }
         
         /// <summary>

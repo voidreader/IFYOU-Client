@@ -140,7 +140,7 @@ namespace PIERStory
             GameManager.main.SaveCurrentPlay();
 
             // * 이 조건일때, 나가면 튜토리얼이 중단된다고 경고해줘야 한다.  
-            if (UserManager.main.tutorialStep == 1 && UserManager.main.tutorialFirstProjectID > 0)
+            if (UserManager.main.tutorialStep == 2 && UserManager.main.tutorialFirstProjectID > 0)
             {
                 // ! 여기서 나가면 강제 종료야. 튜토리얼이 끊긴다고..!
                 SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("80108"), GiveUpTutorial, null, true, false);

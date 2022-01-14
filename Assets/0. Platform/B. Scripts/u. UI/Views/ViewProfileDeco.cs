@@ -746,6 +746,7 @@ namespace PIERStory
             UserManager.main.userProfile = JsonMapper.ToObject(res.DataAsText);
             ViewMain.OnProfileSetting?.Invoke();
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SAVE_PROFILE_DECO);
+            SystemManager.ShowSimpleAlertLocalize("6122");
         }
     }
 }

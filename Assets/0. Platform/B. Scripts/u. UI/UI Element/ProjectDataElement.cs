@@ -25,7 +25,7 @@ namespace PIERStory
 
         public void OnClickDeleteProjectData()
         {
-            DeleteProjectData();
+            SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("6021"), DeleteProjectData, null);
         }
 
         void DeleteProjectData()
@@ -33,6 +33,7 @@ namespace PIERStory
             ES3.DeleteDirectory(Application.persistentDataPath + "/" + storyData.projectID);
 
             ViewDataManager.OnRequestCalcAllProejctDataSize?.Invoke();
+
             Destroy(gameObject);
         }
     }

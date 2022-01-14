@@ -15,6 +15,7 @@ namespace PIERStory
     {
         public static Action<AudioClip, int> OnPlayBGM = null;
         public static Action<AudioClip, int> OnPlayVoice = null;
+        public static Action<float> OnMovePlayTime = null;
 
         static AudioSource playSound;
 
@@ -92,8 +93,10 @@ namespace PIERStory
             title.text = soundTitle;
             titleImage.sprite = titleSprite;
 
+            #region Sound Setting
+
             // 배경음을 재생하는지, 보이스를 재생하는지에 따라 이후 세팅이 다름
-            if(playBGM)
+            if (playBGM)
             {
                 for (int i = 0; i < soundData.Count; i++)
                     BGMElements[i].SetBGMElement(i, soundData[i]);
@@ -133,8 +136,11 @@ namespace PIERStory
                 voiceList.SetActive(true);
             }
 
+            #endregion
+
             OnPlayBGM = PlayBGM;
             OnPlayVoice = PlayVoice;
+            OnMovePlayTime = MovePlayTime;
 
             playSound.Stop();
             playSound.clip = null;
@@ -264,7 +270,15 @@ namespace PIERStory
                     if(playBGM)
                     {
                         if(currentSoundIndex + 1 < BGMElements.Length)
+                        {
                             BGMElements[currentSoundIndex + 1].PlaySound();
+                            yield break;
+                        }
+                        else
+                        {
+                            for (int i = 0; i < BGMElements.Length; i++)
+                                BGMElements[i].BGMStopMode();
+                        }
                     }
                     else
                     {
@@ -275,7 +289,12 @@ namespace PIERStory
 
                             // currentSoundIndex가 총량 이상인 경우 break
                             if (currentSoundIndex >= currentVoiceList.Count)
-                                yield break;
+                            {
+                                for (int i = 0; i < currentVoiceList.Count; i++)
+                                    currentVoiceList[i].VoiceStopMode();
+
+                                break;
+                            }
 
                             // 다음 index가 해금되어 있는 것이라면 재생!
                             if (currentVoiceList[currentSoundIndex].isOpen)
@@ -285,6 +304,9 @@ namespace PIERStory
                             }
                         }
                     }
+
+                    playSound.clip = null;
+
 
                     break;
 
@@ -333,6 +355,15 @@ namespace PIERStory
             }
         }
 
+        void MovePlayTime(float angle)
+        {
+            if (playSound.clip == null)
+                return;
+
+            playtimeBar.fillAmount = angle / circleAgree;
+            playtimeBarHandle.rectTransform.anchoredPosition = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad) * radius, Mathf.Sin(angle * Mathf.Deg2Rad) * radius);
+            playSound.time = playtimeBar.fillAmount * playSound.clip.length;
+        }
 
         #endregion
 
@@ -462,49 +493,6 @@ namespace PIERStory
                     repeatIcon.sprite = repeatOff;
                     break;
             }
-        }
-
-        public void DragCircleArea(bool isClick)
-        {
-            if(isClick && drag == DragState.DRAGGING)
-            {
-                drag = DragState.NOT_DRAGGING;
-                return;
-            }
-
-            if(isClick)
-                drag = DragState.NOT_DRAGGING;
-            else
-                drag = DragState.DRAGGING;
-
-            // 기준 벡터
-            Vector3 standard = new Vector3(circleCenter.position.x, circleCenter.position.y -180, circleCenter.position.z) - circleCenter.position;
-            Vector3 changed = Input.mousePosition - circleCenter.position;      // 기준점으로부터 위치 벡터
-
-            float f = Application.isEditor? Vector3.Angle(
-                changed, standard) : Vector3.Angle(Vector3.down, new Vector3(Input.GetTouch(0).position.x, Input.GetTouch(0).position.y, 0) - circleCenter.position);
-            bool onTheRight = Application.isEditor ? Input.mousePosition.x > circleCenter.position.x : Input.GetTouch(0).position.x > circleCenter.position.x;
-
-            Debug.Log(string.Format("Angle = {0}, standard_Vector = {1}, changed_Vector = {2}", f, standard, changed));
-
-            int detectedValue = onTheRight ? (int)f : 180 + (180 - (int)f);
-
-            if (detectedValue > 350)
-                detectedValue = 360;
-            else if (currentValue == 360 && detectedValue < 10)
-                detectedValue = 360;
-            else if (currentValue == 0 && detectedValue > 350)
-                detectedValue = 0;
-            else if (detectedValue < 10)
-                detectedValue = 0;
-
-            currentValue = detectedValue;
-            playtimeBar.fillAmount = currentValue / circleAgree;
-            agree = 270f - playtimeBar.fillAmount * circleAgree;
-            playtimeBarHandle.rectTransform.anchoredPosition = new Vector2(Mathf.Cos(agree * Mathf.Deg2Rad) * radius, Mathf.Sin(agree * Mathf.Deg2Rad) * radius);
-
-            if(playSound.clip != null)
-                playSound.time = playtimeBar.fillAmount * playSound.clip.length;
         }
     }
 }

@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
-using LitJson;
 using Doozy.Runtime.Signals;
 
 namespace PIERStory
@@ -11,6 +10,7 @@ namespace PIERStory
     public class ViewMission : CommonView
     {
         public static Action OnCompleteReward = null;
+        public static bool clickGetAll = false;
 
         public TextMeshProUGUI projectTitle;
         public TextMeshProUGUI missionProgressText;
@@ -117,6 +117,7 @@ namespace PIERStory
             missionProgressBar.fillAmount = percentage;
 
             missionScroll.verticalNormalizedPosition = 1f;
+            clickGetAll = false;
         }
 
 
@@ -125,28 +126,32 @@ namespace PIERStory
             base.OnHideView();
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
-        } 
-        
-        
+        }
+
+
         /// <summary>
         /// 
         /// </summary>
         public void SetGetAllButtonState()
         {
+            // 1개 이상인 경우 활성화해줌
+            if (UnlockRewardCount() > 0)
+                ChangeGetAllButton(getAllOpenColor, Color.white);
+            else
+                ChangeGetAllButton(getAllLockColor, Color.grey);
+        }
+
+        int UnlockRewardCount()
+        {
             int countOpen = 0;
-            
-            foreach(MissionData missionData in UserManager.main.DictStoryMission.Values) 
+
+            foreach (MissionData missionData in UserManager.main.DictStoryMission.Values)
             {
-                if(missionData.missionState == MissionState.unlocked) 
+                if (missionData.missionState == MissionState.unlocked)
                     countOpen++;
             }
 
-            if (countOpen > 0)
-                // 1개 이상인 경우 활성화해줌
-                if (countOpen > 0)
-                    ChangeGetAllButton(getAllOpenColor, Color.white);
-                else
-                    ChangeGetAllButton(getAllLockColor, Color.grey);
+            return countOpen;
         }
 
         /// <summary>
@@ -158,6 +163,24 @@ namespace PIERStory
         {
             getAllText.color = textColor;
             getAllButton.color = buttonColor;
+        }
+
+        public void OnClickGetAllReward()
+        {
+            if (UnlockRewardCount() == 0)
+                return;
+
+            clickGetAll = true;
+
+            foreach (MissionElement missionElement in missionElements)
+            {
+                if (missionElement.state == MissionState.unlocked)
+                    missionElement.OnClickGetReward();
+            }
+
+            SystemManager.ShowSimpleAlertLocalize("6123");
+            SetGetAllButtonState();
+            OnCompleteReward?.Invoke();
         }
     }
 }

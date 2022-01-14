@@ -58,9 +58,9 @@ namespace PIERStory
         public void ShowDetailSoundList()
         {
             if (voiceData == null)
-                ViewSoundDetail.SetSoundDetail(true, SystemManager.GetJsonNode(UserManager.main.currentStoryJson, "bgms"), soundThumbnail.downloadedSprite, "BGM 재생목록");
+                ViewSoundDetail.SetSoundDetail(true, SystemManager.GetJsonNode(UserManager.main.currentStoryJson, "bgms"), soundThumbnail.downloadedSprite, SystemManager.GetLocalizedText("6139"));
             else
-                ViewSoundDetail.SetSoundDetail(false, voiceData, soundThumbnail.downloadedSprite, string.Format("{0} 모아듣기", voiceMaster));
+                ViewSoundDetail.SetSoundDetail(false, voiceData, soundThumbnail.downloadedSprite, string.Format(SystemManager.GetLocalizedText("6058"), voiceMaster));
 
             Signal.Send(LobbyConst.STREAM_IFYOU, SHOW_SOUND_DETAIL, string.Empty);
         }

@@ -6,6 +6,7 @@ using Toast.Gamebase;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.Reactor.Animators;
 using Doozy.Runtime.UIManager.Components;
+using TMPro;
 
 namespace PIERStory {
 
@@ -29,6 +30,8 @@ namespace PIERStory {
         public Sprite spriteToggleOff;
 
         bool currentShow = false;
+        
+        [SerializeField] TextMeshProUGUI textVersion;
 
         void Start()
         {
@@ -65,6 +68,8 @@ namespace PIERStory {
 
             if (UserManager.main.accountLink == "-")
                 accountBonus.SetActive(true);
+                
+            textVersion.text = SystemManager.GetLocalizedText("5053") + " " + Application.version;
 
 
             #region 게임베이스 push

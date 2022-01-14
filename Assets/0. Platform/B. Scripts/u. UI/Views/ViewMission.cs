@@ -110,7 +110,7 @@ namespace PIERStory
             #endregion
 
             projectTitle.text = StoryManager.main.CurrentProjectTitle;
-            missionProgressText.text = string.Format("미션 달성 진행률 ({0}/{1})", completeValue, UserManager.main.DictStoryMission.Count);
+            missionProgressText.text = string.Format(SystemManager.GetLocalizedText("5032"), completeValue, UserManager.main.DictStoryMission.Count);
 
             float percentage = (float)completeValue / (float)UserManager.main.DictStoryMission.Count;
             missionPercent.text = string.Format("{0}%", Mathf.Round(percentage * 100));

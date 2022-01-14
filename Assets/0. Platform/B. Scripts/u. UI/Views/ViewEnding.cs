@@ -21,7 +21,7 @@ namespace PIERStory
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
 
-            collectionText.text = string.Format("수집률 ({0}/{1})", StoryManager.main.unlockEndingCount, StoryManager.main.totalEndingCount);
+            collectionText.text = string.Format(SystemManager.GetLocalizedText("6138"), StoryManager.main.unlockEndingCount, StoryManager.main.totalEndingCount);
 
             float percentage = (float)StoryManager.main.unlockEndingCount / (float)StoryManager.main.totalEndingCount;
             collectionGauge.fillAmount = percentage;

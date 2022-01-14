@@ -66,7 +66,7 @@ namespace PIERStory
                 illustElements[elementIndex++].InitElementInfo(illustData[i]);
             }
 
-            totalCollection.text = string.Format("전체 수집률({0}/{1})", openIllust, totalIllust);
+            totalCollection.text = string.Format(SystemManager.GetLocalizedText("6138"), openIllust, totalIllust);
             float illustPrgressPercent = 0;
             
             if(openIllust == 0 || totalIllust == 0) 

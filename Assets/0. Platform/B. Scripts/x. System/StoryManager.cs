@@ -612,6 +612,10 @@ namespace PIERStory
             // 네임태그에 이름이 없으면 그냥 받은 파라매터 그대로 준다. 
             if (!DictNametag.ContainsKey(__speaker))
                 return __speaker;
+                
+            if(!DictNametag[__speaker].ContainsKey(SystemManager.main.currentAppLanguageCode)
+                || string.IsNullOrEmpty(SystemManager.GetJsonNodeString(DictNametag[__speaker], SystemManager.main.currentAppLanguageCode)))
+                return __speaker;
 
             // 언어별로 이름을 준다.
             return DictNametag[__speaker][SystemManager.main.currentAppLanguageCode].ToString();

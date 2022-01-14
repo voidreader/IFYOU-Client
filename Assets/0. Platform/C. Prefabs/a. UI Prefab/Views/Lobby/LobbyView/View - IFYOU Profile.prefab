@@ -1423,6 +1423,7 @@ GameObject:
   - component: {fileID: 1672752555532941554}
   - component: {fileID: 1452781954163066812}
   - component: {fileID: 6347820834228331506}
+  - component: {fileID: 3988104156323073215}
   m_Layer: 5
   m_Name: ShowProfilebrief
   m_TagString: Untagged
@@ -2231,11 +2232,11 @@ MonoBehaviour:
           Type: 0
           Category: Pointer
           Name: Click
-        ProviderReference: {fileID: 0}
+        ProviderReference: {fileID: 3988104156323073215}
         StreamId:
           Category: None
           Name: None
-          Custom: 0
+          Custom: 1
       Cooldown: 0
       Selectable: {fileID: 6347820834228331506}
     SignalSource: {fileID: 6462341965672638526}
@@ -2244,6 +2245,21 @@ MonoBehaviour:
     Category: None
     Name: None
     Custom: 0
+--- !u!114 &3988104156323073215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6462341965672638526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9612023dc70c4fcc886b736aa5a8f046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ProviderCurrentState: 20
+  SignalCooldown: 0
+  SignalTimescale: 0
 --- !u!1 &6802820607757603426
 GameObject:
   m_ObjectHideFlags: 0
@@ -2622,7 +2638,7 @@ MonoBehaviour:
       ToCustomValue: {x: 0, y: 0, z: 0}
       FromOffset: {x: 0, y: 0, z: 0}
       ToOffset: {x: 0, y: 0, z: 0}
-      FromDirection: 0
+      FromDirection: 2
       ToDirection: 13
     Rotate:
       Settings:
@@ -2893,7 +2909,7 @@ MonoBehaviour:
       FromOffset: {x: 0, y: 0, z: 0}
       ToOffset: {x: 0, y: 0, z: 0}
       FromDirection: 13
-      ToDirection: 2
+      ToDirection: 0
     Rotate:
       Settings:
         PlayMode: 0

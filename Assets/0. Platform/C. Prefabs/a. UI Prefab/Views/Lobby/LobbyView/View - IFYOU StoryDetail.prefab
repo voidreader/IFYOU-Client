@@ -3608,6 +3608,7 @@ MonoBehaviour:
   buttonContentsSelection: {fileID: 2224798623374481690}
   premiumPassArea: {fileID: 1422695458521176446}
   passBanner: {fileID: 4954030930810486243}
+  sortText: {fileID: 6785083065278849521}
   toggleRegular: {fileID: 8010463203629629209}
   toggleSpecial: {fileID: 5793156254135913644}
   textSorting: {fileID: 6785083065278849521}
@@ -4948,7 +4949,39 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
   Behaviours:
-    Behaviours: []
+    Behaviours:
+    - Enabled: 1
+      EventName: PointerClick
+      Runners: []
+      Event:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 2004776774984580729}
+            m_TargetAssemblyTypeName: PIERStory.ViewStoryDetail, Assembly-CSharp
+            m_MethodName: SortEpisodeList
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      BehaviourName: 4
+      Receiver:
+        ConnectionMode: 1
+        SignalProviderId:
+          Type: 0
+          Category: Pointer
+          Name: Click
+        ProviderReference: {fileID: 0}
+        StreamId:
+          Category: None
+          Name: None
+          Custom: 0
+      Cooldown: 0
+      Selectable: {fileID: 7623007952391675657}
     SignalSource: {fileID: 4561155379333847530}
     Selectable: {fileID: 7623007952391675657}
   Id:

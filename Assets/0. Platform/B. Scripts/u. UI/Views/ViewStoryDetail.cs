@@ -38,8 +38,8 @@ namespace PIERStory {
         
         [SerializeField] GameObject premiumPassArea; // 프리미엄 패스 구역
         [SerializeField] PassBanner passBanner; // 프리미엄 패스 배너 
-        
-        
+
+        public TextMeshProUGUI sortText;
         
         
         [Space]
@@ -123,6 +123,7 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
 
+            sortText.text = SystemManager.GetLocalizedText("5029");
         }
         
         
@@ -252,6 +253,23 @@ namespace PIERStory {
                 
                 // 빠른플레이 
                 SetSideExtraNotification();
+            }
+        }
+
+        public void SortEpisodeList()
+        {
+            // 첫편부터라면
+            if(sortText.text == SystemManager.GetLocalizedText("5029"))
+            {
+                // DESC
+                SetEpisodeList(StoryManager.main.ReverseRegularEpisodeList);
+                sortText.text = SystemManager.GetLocalizedText("5030");
+            }
+            else if(sortText.text == SystemManager.GetLocalizedText("5030"))
+            {
+                // ASC
+                SetEpisodeList(StoryManager.main.RegularEpisodeList);
+                sortText.text = SystemManager.GetLocalizedText("5029");
             }
         }
         

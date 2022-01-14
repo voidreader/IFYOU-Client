@@ -1058,12 +1058,13 @@ namespace PIERStory
         /// <returns>표기명 string값</returns>
         public string GetNotationName(ScriptRow __row)
         {
+
             // 대체 이름이 존재하지 않으면 화자 return
             if (string.IsNullOrEmpty(__row.controlAlternativeName))
-                return __row.speaker;
+                return StoryManager.main.GetNametagName(__row.speaker);
             // 대체 이름이 존재하면 대체 이름 return
             else
-                return __row.controlAlternativeName;
+                return StoryManager.main.GetNametagName(__row.controlAlternativeName);
         }
 
         /// <summary>

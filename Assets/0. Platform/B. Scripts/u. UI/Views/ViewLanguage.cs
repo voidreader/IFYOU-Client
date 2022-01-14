@@ -42,8 +42,9 @@ namespace PIERStory
         
         public override void OnHideView() {
             base.OnHideView();
-
-            // SystemManager.main.currentAppLanguageCode = ES3.Load<string>(SystemConst.KEY_LANG);
+            
+            if(ES3.KeyExists(SystemConst.KEY_LANG))
+                SystemManager.main.currentAppLanguageCode = ES3.Load<string>(SystemConst.KEY_LANG);
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
         }

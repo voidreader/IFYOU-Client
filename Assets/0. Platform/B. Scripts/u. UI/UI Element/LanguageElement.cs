@@ -22,7 +22,7 @@ namespace PIERStory
             if(toggle == null)
                 toggle = GetComponent<UIToggle>();
 
-            if (elementLang.Equals(SystemManager.main.currentAppLanguageCode))
+            if (elementLang.Equals(ES3.Load<string>(SystemConst.KEY_LANG)))
                 toggle.isOn = true;
             else
                 toggle.isOn = false;

@@ -48,7 +48,6 @@ namespace PIERStory
         public UIContainer bottomContainer;
 
         [Header("뱃지 Tab")]
-        public GameObject badgeObjectPrefab;
         public GameObject badgeListPrefab;
         public Transform badgeElementListContent;
         public GameObject badgeScroll;
@@ -292,6 +291,15 @@ namespace PIERStory
             background.transform.localPosition = Vector3.zero;
             moveBg.enabled = true;
             moveBg.currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
+
+            // 배경 위에 뭔가 있으면 화면 드래그가 안되니까 rayCast를 화면 제외하고 다 꺼주자
+            for (int i = 0; i < decoObjects.childCount; i++)
+                decoObjects.GetChild(i).GetComponent<Image>().raycastTarget = false;
+
+            for (int i = 0; i < textObjects.childCount; i++)
+                textObjects.GetChild(i).GetComponent<Image>().raycastTarget = false;
+
+
             profileBgScroll.SetActive(false);
             bgScrolling.SetActive(true);
         }
@@ -301,6 +309,13 @@ namespace PIERStory
             profileBgScroll.SetActive(true);
             bgScrolling.SetActive(false);
             moveBg.enabled = false;
+
+            // 배경 설정 끝냈으니까 다시 raycastTargtet을 켜주자
+            for (int i = 0; i < decoObjects.childCount; i++)
+                decoObjects.GetChild(i).GetComponent<Image>().raycastTarget = true;
+
+            for (int i = 0; i < textObjects.childCount; i++)
+                textObjects.GetChild(i).GetComponent<Image>().raycastTarget = true;
         }
 
         #endregion
@@ -744,6 +759,7 @@ namespace PIERStory
 
             // 저장이 완료되면 다시 ViewMain으로 간다
             UserManager.main.userProfile = JsonMapper.ToObject(res.DataAsText);
+            Debug.Log(JsonMapper.ToStringUnicode(UserManager.main.userProfile));
             ViewMain.OnProfileSetting?.Invoke();
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SAVE_PROFILE_DECO);
             SystemManager.ShowSimpleAlertLocalize("6122");

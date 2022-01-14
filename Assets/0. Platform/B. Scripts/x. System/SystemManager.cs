@@ -697,6 +697,9 @@ namespace PIERStory
                 currentAppLanguageCode = "TC";
             else 
                 currentAppLanguageCode = currentGamebaseLanguageCode.ToUpper(); // 나머지는 대문자로 바꿔주면 끝!
+                
+            if(string.IsNullOrEmpty(currentGamebaseLanguageCode))
+                currentAppLanguageCode = "EN";
         }
         
         
@@ -1733,7 +1736,7 @@ namespace PIERStory
             
             
             
-            return localizedTextJSON[__id][main.currentAppLanguageCode].ToString();
+            return localizedTextJSON[__id][main.currentAppLanguageCode.ToUpper()].ToString();
         }
         
         

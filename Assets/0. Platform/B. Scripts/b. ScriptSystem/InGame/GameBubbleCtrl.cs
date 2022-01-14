@@ -352,7 +352,7 @@ namespace PIERStory
 
                 case GameConst.TEMPLATE_YELL:
                     textContents.fontSize = BubbleManager.main.BigFontSize;
-                    textContents.fontStyle = FontStyles.Bold;
+                    // textContents.fontStyle = FontStyles.Bold;
                     textContents.characterSpacing = -10;
                     break;
 
@@ -823,6 +823,9 @@ namespace PIERStory
             SetNametag();
 
             OnBubble();
+            
+            //textContents.SetText(message);
+            //textContents.text = message;
 
             if (!string.IsNullOrEmpty(__row.voice))
                 GameManager.main.SoundGroup[1].PlayVoice(__row.voice);          // 21.09.27 대화 관련 템플릿 때에는 이곳에서 음성을 재생하도록 한다

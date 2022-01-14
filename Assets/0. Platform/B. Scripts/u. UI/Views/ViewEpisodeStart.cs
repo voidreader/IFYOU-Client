@@ -60,6 +60,16 @@ namespace PIERStory {
             base.OnView();
             
             buttonVerticalGroup.enabled = false;
+            
+            // * 튜토리얼 관련 처리 OnView로 옮김 
+            if (UserManager.main.tutorialStep < 2)
+            {
+                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_EPISODE_START);
+                PopupManager.main.ShowPopup(p, false);
+            }
+            else if(UserManager.main.tutorialStep == 2 && UserManager.main.tutorialFirstProjectID != 0 )
+                UserManager.main.RequestTutorialReward();            
+            
         }
         
         public override void OnStartView() {
@@ -77,13 +87,7 @@ namespace PIERStory {
             
             SetPremiumPass();
 
-            if (UserManager.main.tutorialStep < 2)
-            {
-                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_EPISODE_START);
-                PopupManager.main.ShowPopup(p, false);
-            }
-            else if(UserManager.main.tutorialStep == 2 && UserManager.main.tutorialFirstProjectID != 0 )
-                UserManager.main.RequestTutorialReward();
+
 
         }        
         

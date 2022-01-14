@@ -2946,26 +2946,62 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   OnStartBehaviour: 1
   OnShowCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnShowCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 2004776774984580729}
+          m_TargetAssemblyTypeName: PIERStory.ViewStoryDetail, Assembly-CSharp
+          m_MethodName: OnStartView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnVisibleCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnVisibleCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 2004776774984580729}
+          m_TargetAssemblyTypeName: PIERStory.ViewStoryDetail, Assembly-CSharp
+          m_MethodName: OnView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnHideCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnHideCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 2004776774984580729}
+          m_TargetAssemblyTypeName: PIERStory.ViewStoryDetail, Assembly-CSharp
+          m_MethodName: OnHideView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnHiddenCallback:
     Enabled: 0
     EventName: OnHiddenCallback
@@ -3007,37 +3043,13 @@ MonoBehaviour:
   ShowAnimation:
     OnPlayCallback:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 2004776774984580729}
-          m_TargetAssemblyTypeName: PIERStory.ViewStoryDetail, Assembly-CSharp
-          m_MethodName: OnStartView
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     OnStopCallback:
       m_PersistentCalls:
         m_Calls: []
     OnFinishCallback:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 2004776774984580729}
-          m_TargetAssemblyTypeName: PIERStory.ViewStoryDetail, Assembly-CSharp
-          m_MethodName: OnView
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     AnimationType: 0
     Move:
       Settings:
@@ -3301,19 +3313,7 @@ MonoBehaviour:
   HideAnimation:
     OnPlayCallback:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 2004776774984580729}
-          m_TargetAssemblyTypeName: PIERStory.ViewStoryDetail, Assembly-CSharp
-          m_MethodName: OnHideView
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     OnStopCallback:
       m_PersistentCalls:
         m_Calls: []

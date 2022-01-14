@@ -81,8 +81,22 @@ namespace PIERStory {
             UserManager.OnFreepassPurchase = this.SetFreepassInfo;
             RefreshStoryDetail = this.OnStartView;
 
-
-            // SetScrollTop();
+            // * 튜토리얼 관련 팝업 오픈을 OnView로 옮겼습니다. 
+            if (StoryManager.enterGameScene)
+            {
+                StoryManager.enterGameScene = false;
+                
+                if (UserManager.main.tutorialFirstProjectID != 0)
+                    UserManager.main.RequestTutorialReward();
+            }
+            else
+            {
+                if (UserManager.main.tutorialStep < 2)
+                {
+                    PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_STORYDETAIL);
+                    PopupManager.main.ShowPopup(p, false);
+                }
+            }
         }
         
         public override void OnStartView() {
@@ -94,20 +108,11 @@ namespace PIERStory {
             // * 게임씬에 있다가 돌아온 경우에 대한 처리 
             if (StoryManager.enterGameScene)
             {
-                StoryManager.enterGameScene = false;
-
-                if (UserManager.main.tutorialFirstProjectID != 0)
-                    UserManager.main.RequestTutorialReward();
+                 //StoryManager.enterGameScene = false;
             }
             else
             {
                 ShowEpisodeList(true);
-
-                if (UserManager.main.tutorialStep < 2)
-                {
-                    PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_STORYDETAIL);
-                    PopupManager.main.ShowPopup(p, false);
-                }
             }
 
             

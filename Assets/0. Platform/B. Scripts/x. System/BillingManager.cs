@@ -231,9 +231,9 @@ namespace PIERStory {
                 userPurchaseHistoryJSON = result["userPurchaseHistory"];
 
             // Shop 리프레시
-            
             MainShop.OnRefreshNormalShop?.Invoke();
             MainShop.OnRefreshPackageShop?.Invoke();
+            MainShop.OnRefreshTopShop?.Invoke();
             
             // 결제가 완료되었습니다. 어쩌고. 
             SystemManager.ShowSimpleAlertLocalize(SystemManager.GetLocalizedText("6113"));

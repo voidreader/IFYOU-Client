@@ -29,7 +29,8 @@ namespace PIERStory
                     SystemManager.ShowMessageWithLocalize("80074", false);
                     return;
                 }
-
+                    
+                
                 if (PlayerPrefs.GetInt(SystemConst.KEY_NETWORK_DOWNLOAD) == 1)
                     RealStart();
                 else
@@ -53,7 +54,7 @@ namespace PIERStory
 
             NetworkLoader.main.UpdateUserProjectCurrent(episodeData.episodeID, null, 0);
             UserManager.main.UpdateFirstTutorial(int.Parse(StoryManager.main.CurrentProjectID));
-            UserManager.main.UpdateTutorialStep(2);
+            
         }
 
         void ChangeNetworkSetting()

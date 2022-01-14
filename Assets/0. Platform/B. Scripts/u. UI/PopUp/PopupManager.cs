@@ -73,7 +73,7 @@ namespace PIERStory {
         /// 각 씬의 담당 매니저에서 따로 호출해줘야한다. (LobbyManager, GameManager)
         /// </summary>
         public void InitPopupManager() {
-            
+            StopCoroutine(PopupQueueRoutine());
             
             // 팝업 큐 루틴 시작 
             StartCoroutine(PopupQueueRoutine());
@@ -103,7 +103,8 @@ namespace PIERStory {
                 CurrentQueuePopup = PopupQueue.Dequeue();
                 yield return null;
                 
-                CurrentQueuePopup.Show(); // 보여주기 
+                if(CurrentQueuePopup) 
+                    CurrentQueuePopup.Show(); // 보여주기 
             }
         }
         

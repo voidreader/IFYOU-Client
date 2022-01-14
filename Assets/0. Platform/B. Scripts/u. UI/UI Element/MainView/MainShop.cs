@@ -9,12 +9,16 @@ namespace PIERStory {
     public class MainShop : MonoBehaviour
     {
         // refresh 용도의 action
-        public static System.Action OnRefreshNormalShop = null;
-        public static System.Action OnRefreshPackageShop = null;
+        public static System.Action OnRefreshNormalShop = null; // 노멀 탭 리프레시
+        public static System.Action OnRefreshPackageShop = null; // 패키지 탭 리프레시
+        public static System.Action OnRefreshTopShop = null; // 상점 탑 리프레이 
+        
         public List<BaseStarProduct> listBaseStarProducts; // 일반 스타 상품 
         public List<GeneralPackProduct> listGeneralPackProducts; // 일반 패키지 상품 
         
         public List<BaseCoinExchangeProduct> listCoinExchangeProducts; // 코인 환전 상품
+        
+        public GeneralPackProduct topSpecialProduct; // 상단 패키지 상품 나중에 롤링으로 변경하자..
         
         [SerializeField] UIToggle packageToggle;
         [SerializeField] UIToggle normalToggle;
@@ -24,6 +28,7 @@ namespace PIERStory {
         void Start() {
             OnRefreshNormalShop = InitNormalContainer;
             OnRefreshPackageShop = InitPackContainer;
+            OnRefreshTopShop = InitShopTop;
                  
         }
         
@@ -31,6 +36,12 @@ namespace PIERStory {
             packageToggle.SetIsOn(true);
         }
         
+        /// <summary>
+        /// 상점 상단 초기화 
+        /// </summary>
+        public void InitShopTop() {
+            topSpecialProduct.InitPackage("starter_pack");
+        }
         
         /// <summary>
         /// 일반 컨테이너 초기화

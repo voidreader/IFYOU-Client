@@ -491,7 +491,7 @@ namespace PIERStory
             
             
             // 유저가 선택한 프로젝트 ID도 같이 넘겨줄것..!
-            sending["tutorial_step"] = 1;
+            sending["tutorial_step"] = 2;
             sending["first_project_id"] = __projectID;
 
             NetworkLoader.main.SendPost(CallbackUpdateFirstTutorialStep, sending);

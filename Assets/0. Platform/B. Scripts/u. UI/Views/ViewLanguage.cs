@@ -25,6 +25,8 @@ namespace PIERStory
         public override void OnStartView()
         {
             base.OnStartView();
+            
+            changeButton.SetActive(false);
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
@@ -41,7 +43,7 @@ namespace PIERStory
         public override void OnHideView() {
             base.OnHideView();
 
-            SystemManager.main.currentAppLanguageCode = ES3.Load<string>(SystemConst.KEY_LANG);
+            // SystemManager.main.currentAppLanguageCode = ES3.Load<string>(SystemConst.KEY_LANG);
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
         }

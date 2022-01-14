@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 310151797012266916}
   - component: {fileID: 310151797012266918}
   - component: {fileID: 310151797012266919}
+  - component: {fileID: 5200125454213240991}
   m_Layer: 5
   m_Name: PopupTitle
   m_TagString: Untagged
@@ -214,6 +215,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5200125454213240991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310151797012266917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _textID: 5011
+  _text: {fileID: 310151797012266919}
 --- !u!1 &310151797158690236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1243,6 +1258,8 @@ MonoBehaviour:
     Labels: []
     imageURL: 
     imageKey: 
+    isConfirm: 1
+    isPositive: 1
   overlay: {fileID: 2324080636015657349}
   content: {fileID: 310151797922152626}
   autoDestroyTime: 0

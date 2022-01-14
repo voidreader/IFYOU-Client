@@ -249,6 +249,8 @@ namespace PIERStory {
             
             // 로컬라이징 정보가 최초 실행시에는 없다.
             if(!ES3.KeyExists(SystemConst.KEY_LANG)) { // 없는 경우 
+            
+                Debug.Log("GetPlatformLoadingText : " + Application.systemLanguage);
                 
                 switch(Application.systemLanguage) {
                     case SystemLanguage.Korean:
@@ -264,6 +266,7 @@ namespace PIERStory {
             }
             else { // 있는 경우 
                 currentAppLang = ES3.Load<string>(SystemConst.KEY_LANG);
+                currentAppLang = currentAppLang.ToUpper();
             }
             
             switch(step) {

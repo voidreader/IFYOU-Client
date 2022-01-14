@@ -565,7 +565,7 @@ namespace PIERStory
             sending["currencyQuantity"] = __currencyQuantity;
             
 
-            SendPost(UserManager.main.CallbackPurchaseEpisode, sending);
+            SendPost(UserManager.main.CallbackPurchaseEpisode, sending, true);
         }
         
         

@@ -55,6 +55,8 @@ namespace PIERStory {
         [SerializeField] EpisodeContentProgress sceneProgressBar;
         [SerializeField] GameObject contentsMiddleVerticalLine; // 일러스트, 경험한 사건 사이에 선 
         
+        bool isGameStarting = false; // 게임 시작했는지 체크, 중복 입력 막기 위해서.
+        
         public override void OnView()
         {
             base.OnView();
@@ -396,6 +398,9 @@ namespace PIERStory {
                 return;
             }
             
+            if(isGameStarting)
+                return;
+            
             // * 구매 성공시,  현재 에피소드의 구매 정보를 갱신한다. 
             // ! 구매 정보는 갱신하고, 플레이 버튼들은 변경하지 않는다. 
             episodeData.SetPurchaseState();
@@ -454,6 +459,8 @@ namespace PIERStory {
             SetButtonState();
         }        
         
+        
+        
         /// <summary>
         /// 찐 게임 start
         /// </summary>
@@ -474,6 +481,9 @@ namespace PIERStory {
             else {
                 SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single).allowSceneActivation = true;
             }
+            
+            // true로 변경해놓는다.
+            isGameStarting = true;
             
             // ! 이어하기 체크 
             string lastPlaySceneID = null;

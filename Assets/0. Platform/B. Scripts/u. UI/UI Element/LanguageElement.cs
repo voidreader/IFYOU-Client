@@ -39,7 +39,7 @@ namespace PIERStory
             nowLang = elementLang.Equals(ES3.Load<string>(SystemConst.KEY_LANG));
 
             // 선택되면 잠시 언어코드를 변경한다
-            SystemManager.main.currentAppLanguageCode = elementLang;
+            SystemManager.main.currentAppLanguageCode = elementLang.ToUpper();
 
             string alertText = SystemManager.GetLocalizedText("6124");
             string buttonText = SystemManager.GetLocalizedText("6125");

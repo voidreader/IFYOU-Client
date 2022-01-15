@@ -341,7 +341,7 @@ namespace PIERStory
             MissionData missionData = UserManager.main.GetMissionData(missionName);
             
             // 데이터 없음 
-            if(missionData == null || string.IsNullOrEmpty(missionData.missionID)) {
+            if(missionData == null || missionData.missionID <= 0) {
                 GameManager.main.isThreadHold = false;
                 return;
             }
@@ -365,7 +365,7 @@ namespace PIERStory
 
         void CallbackUpdateScriptMission(HTTPRequest req, HTTPResponse res)
         {
-            Debug.Log("Wait Off [CallbackUpdateScriptMission]");
+            
             GameManager.main.isThreadHold = false;      // 통신이 완료된 후에 행을 진행해준다
 
             if (!CheckResponseValidation(req, res))
@@ -373,6 +373,8 @@ namespace PIERStory
                 Debug.LogError("CallbackUpdateScriptMission");
                 return;
             }
+            
+            Debug.Log("Wait Off [CallbackUpdateScriptMission] : " + res.DataAsText);
 
             JsonData data = JsonMapper.ToObject(res.DataAsText);
             UserManager.main.ShowCompleteMission(data);
@@ -795,19 +797,19 @@ namespace PIERStory
                 case HTTPRequestStates.Error: // 예상하지 못한 에러가 발생했다.
                 // 서버로 리포트.(ERROR만)
                 // main.ReportRequestError(Encoding.UTF8.GetString(request.RawData), request.Exception != null ? request.Exception.Message : "No Exception");
-                message = "서버 통신 과정에서 오류가 발생했습니다.";
+                message = SystemManager.GetLocalizedText("6173"); // 서버 오류가 발생함
                 break;
                 
                 case HTTPRequestStates.Aborted: // 네트워크 연결이 끊어졌다. 
-                message = "서버와의 연결이 끊겼습니다.\n통신 환경이 좋은 곳에서 다시 연결을 시도해보십시오.";
+                message = SystemManager.GetLocalizedText("6174"); 
                 break;
                 
                 case HTTPRequestStates.ConnectionTimedOut: // 서버에 연결되지 못함 
-                message = "서버에 접속하지 못했습니다.";
+                message = SystemManager.GetLocalizedText("6175");
                 break;
                 
                 case HTTPRequestStates.TimedOut: // 서버에서 주어진 시간내에 응답을 하지 못함
-                message = "서버로부터의 응답이 지연되고 있습니다.";
+                message = SystemManager.GetLocalizedText("6176");
                 break;
             }
             
@@ -849,7 +851,7 @@ namespace PIERStory
                     }
                     
                 } catch (Exception e) {
-                    message = "서버 통신 과정에서 알 수 없는 오류가 발생했습니다.";
+                    message = SystemManager.GetLocalizedText("6173");
                     Debug.Log(e.StackTrace);
                     SystemManager.HideNetworkLoading(); // 실패했을때 네트워크 로딩은 제거해주자.
                     SystemManager.ShowLobbyPopup(message, SystemManager.LoadLobbyScene, SystemManager.LoadLobbyScene, false);

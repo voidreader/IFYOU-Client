@@ -30,7 +30,7 @@ namespace PIERStory {
     {
         JsonData missionJSON; // 미션 원본 
         
-        public string missionID = string.Empty; // 미션 힌트
+        public int missionID = 0; // 미션 ID
         public string missionName = string.Empty; // 미션 이름
         public string originName = string.Empty; // 미션 스크립트용 이름 
         
@@ -64,7 +64,7 @@ namespace PIERStory {
             if(missionJSON == null)
                 return;
             
-            missionID = SystemManager.GetJsonNodeString(missionJSON, "mission_id");
+            missionID = SystemManager.GetJsonNodeInt(missionJSON, "mission_id");
             missionName = SystemManager.GetJsonNodeString(missionJSON, "mission_name");
             originName = SystemManager.GetJsonNodeString(missionJSON, "origin_name");
             missionHint = SystemManager.GetJsonNodeString(missionJSON, "mission_hint");

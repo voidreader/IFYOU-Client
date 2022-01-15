@@ -11,4 +11,8 @@ public class LoopScaleEffect : MonoBehaviour
         
         this.transform.DOScale(1.1f, 0.4f).SetLoops(-1, LoopType.Yoyo);
     }
+    
+    void OnDisable() {
+        this.transform.DOKill();
+    }
 }

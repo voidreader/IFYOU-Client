@@ -120,7 +120,7 @@ namespace PIERStory
         JsonData resultEpisodeReset = null; // 에피소드 리셋 통신 결과
         
         JsonData currentStoryMissionJSON = null; // 현재 선택한 스토리의 미션 JSON
-        public Dictionary<string, MissionData> DictStoryMission; // 미션 Dictionary
+        public Dictionary<int, MissionData> DictStoryMission; // 미션 Dictionary
         public Sprite spriteMissionPopup;       // 미션 팝업에서 사용되는 아이콘
 
         #region static const 
@@ -372,7 +372,7 @@ namespace PIERStory
             
             #region 미션 
             currentStoryMissionJSON = GetNodeProjectMissions();
-            DictStoryMission = new Dictionary<string, MissionData>();
+            DictStoryMission = new Dictionary<int, MissionData>();
             
             // 딕셔너리에 정리하기. JSON 쓰기 시러요..!
             for(int i=0; i<currentStoryMissionJSON.Count;i++) {
@@ -475,6 +475,13 @@ namespace PIERStory
             }
             
             return null;
+        }
+        
+        public void SetMissionData(int __missionID, MissionData __data) {
+            if(DictStoryMission.ContainsKey(__missionID)) {
+                DictStoryMission[__missionID] = __data;
+                
+            }
         }
 
 
@@ -964,9 +971,9 @@ namespace PIERStory
         /// </summary>
         public void ShowCompleteMission(JsonData __j)
         {
-            Debug.LogWarning("Check ShowCompleteMission");
+            Debug.Log("Check ShowCompleteMission");
             
-            if(__j == null && __j.Count == 0)  {
+            if(__j == null || __j.Count == 0)  {
                 Debug.Log("No Clear Mission");
                 return;
             }

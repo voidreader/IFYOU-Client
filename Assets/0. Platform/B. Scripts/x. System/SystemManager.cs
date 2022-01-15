@@ -694,7 +694,7 @@ namespace PIERStory
                     break;
                 } // ? end of switch
                 
-                ES3.Save<string>(SystemConst.KEY_LANG, currentGamebaseLanguageCode); // 저장한다. 
+                ES3.Save<string>(SystemConst.KEY_LANG, currentGamebaseLanguageCode.ToUpper()); // 저장한다. 
             }
             
             currentGamebaseLanguageCode = ES3.Load<string>(SystemConst.KEY_LANG);
@@ -711,6 +711,8 @@ namespace PIERStory
                 
             if(string.IsNullOrEmpty(currentGamebaseLanguageCode))
                 currentAppLanguageCode = "EN";
+        
+            currentAppLanguageCode = currentAppLanguageCode.ToUpper();
         }
         
         
@@ -1131,6 +1133,8 @@ namespace PIERStory
                  JsonData reqData = new JsonData();
                  reqData[CommonConst.FUNC] = "updateAccountWithGamebaseID";
                  reqData["gamebaseID"] = Gamebase.GetUserID();
+                 
+                 //  ! 이 통신에서 유저에게 연동보상을 지급한다. 
                  NetworkLoader.main.SendPost(OnRequest__updateAccountWithGamebaseID, reqData, true);
                  
             }
@@ -1144,6 +1148,14 @@ namespace PIERStory
                 // TODO 예, 아니오 팝업을 띄운다.
                 if(connectedUserkey != UserManager.main.userKey) {
                     ShowLobbyPopup(GetLocalizedText("6111"), ConfirmPreviousAccountLoad, CancleAccountConnect);
+                }
+                else { // 같은 계정으로 연결되었다. => 토큰 만료? 
+                
+                    
+                    // 연동이 완료되었음을 안내. 
+                    ShowLobbySubmitPopup(GetLocalizedText("6112"));
+                    UserManager.main.accountLink = "link"; // 링크 처리 
+                    RefreshAccountLinkRelated();
                 }
  
             }
@@ -1237,10 +1249,18 @@ namespace PIERStory
         
             
             // Refresh 처리 
+            RefreshAccountLinkRelated();
+        }
+        
+        /// <summary>
+        /// 계정 연동 관련 컨트롤 리프레시 
+        /// </summary>
+        void RefreshAccountLinkRelated() {
+            
             MainToggleNavigation.OnToggleAccountBonus?.Invoke();
             PopupAccount.OnRefresh?.Invoke();
             MainMore.OnRefreshMore?.Invoke();
-        }       
+        }      
         
         
         public void Logout()
@@ -1631,6 +1651,8 @@ namespace PIERStory
                 Debug.LogError("Failed CallbackPromotionList");
                 return;
             }
+            
+            Debug.Log("CallbackPromotionList :: " + res.DataAsText);
 
             promotionData = JsonMapper.ToObject(res.DataAsText);
         }

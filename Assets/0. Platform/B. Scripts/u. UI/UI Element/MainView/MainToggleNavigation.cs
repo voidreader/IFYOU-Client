@@ -43,6 +43,9 @@ namespace PIERStory {
             // 계정연동 되지 않은 경우에는 보상 표시
             if(mainNavigationType == MainNavigationType.More && UserManager.main.accountLink == "-")
                 accountBonus.SetActive(true);
+            else 
+                accountBonus.SetActive(false);
+            
         }
         
         

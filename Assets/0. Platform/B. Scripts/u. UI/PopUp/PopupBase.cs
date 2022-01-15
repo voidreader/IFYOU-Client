@@ -28,7 +28,9 @@ namespace PIERStory {
         
         public void SetAutoDestroy() {
             
-            BackButton.blockBackInput = true; // block 
+            // overlay 사용시에만 백버튼 막기
+            if(isOverlayUse)
+                BackButton.blockBackInput = true; // block 
             
             if(PopupManager.main != null)
                 PopupManager.main.AddActivePopup(this); // 팝업매니저에 등록하기

@@ -52,7 +52,8 @@ namespace PIERStory
             foreach (MissionElement me in missionElements)
                 me.gameObject.SetActive(false);
 
-            SetGetAllButtonState();
+            // ! 경험치 관련 문제로 잠시 모든 보상 받기 비활성화.
+            // SetGetAllButtonState();
 
             #region mission setting
 
@@ -179,7 +180,7 @@ namespace PIERStory
             }
 
             SystemManager.ShowSimpleAlertLocalize("6123");
-            SetGetAllButtonState();
+            //SetGetAllButtonState();
             OnCompleteReward?.Invoke();
         }
     }

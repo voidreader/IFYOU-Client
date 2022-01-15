@@ -20,6 +20,8 @@ namespace PIERStory {
     /// </summary>
     public class StoryContentsButton : MonoBehaviour
     {
+        public static System.Action onStoryContentsButtonMission = null;
+        
         public StoryContentsType contentsType;
         
         public bool hasNewContents = false; // 확인하지 않은 신규 컨텐츠 존재
@@ -48,6 +50,7 @@ namespace PIERStory {
                 break;
                 
                 case StoryContentsType.Mission:
+                onStoryContentsButtonMission = CheckMissionData;
                 CheckMissionData();
                 break;
                 
@@ -66,6 +69,9 @@ namespace PIERStory {
             if(unlockMissionCount > 0) {
                 SetNewContentsNotification(true);
             }
+            else {
+                SetNewContentsNotification(false);
+            }
         }
         
         /// <summary>
@@ -73,10 +79,12 @@ namespace PIERStory {
         /// </summary>
         void CheckEndingData() {
             
+            /*
             // 프로젝트의 이전에 오픈 엔딩 카운트와 현재의 오픈 엔딩 카운트를 비교해서 설정 
             int previousOpenEndingCount = PlayerPrefs.GetInt(LobbyConst.KEY_OPEN_ENDING_COUNT + StoryManager.main.CurrentProjectID, 0);
             
             SetNewContentsNotification(StoryManager.main.unlockEndingCount > previousOpenEndingCount);
+            */
             
         }
         

@@ -364,6 +364,22 @@ namespace PIERStory {
             return false;
         }
         
+        /// <summary>
+        /// 구매 횟수
+        /// </summary>
+        /// <param name="__product_id"></param>
+        /// <returns></returns>
+        public int GetProductPurchaseCount(string __product_id) {
+            int count = 0;
+            for(int i=0; i<userPurchaseHistoryJSON.Count;i++) {
+                if(SystemManager.GetJsonNodeString(userPurchaseHistoryJSON[i], "product_id") == __product_id)
+                    count++;
+            }
+            
+            return count;
+            
+        }
+        
        
          
         public JsonData GetCoinExchangeProductInfo(string __productID) {

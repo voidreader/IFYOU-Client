@@ -15,6 +15,7 @@ namespace PIERStory
         GamebaseResponse.Purchase.PurchasableItem gamebaseItem = null; // 게임베이스 기준정보 
         
         [SerializeField] ImageRequireDownload bannerImage; // 배너 이미지 
+        [SerializeField] GameObject soldOut; // 판매완료 (한정품목)
         JsonData productMasterJSON; // 마스터 
         JsonData productDetailJSON; // 디테일
         
@@ -28,6 +29,9 @@ namespace PIERStory
         [SerializeField] string detailURL = string.Empty; // 디테일 이미지 
         [SerializeField] string detailKey = string.Empty; // 
         
+        [SerializeField] int maxCount = 0; // 구매 가능 횟수
+        [SerializeField] int currentPurchaseCount = 0; // 현재 패키지 구매 횟수
+        
         
         /// <summary>
         /// 패키지 초기화
@@ -35,6 +39,8 @@ namespace PIERStory
         /// <param name="__productID"></param>        
         public void InitPackage(string __productID) {
             this.gameObject.SetActive(true);
+            
+            soldOut.SetActive(false);
             
             productID = __productID;
             gamebaseItem = BillingManager.main.GetGamebasePurchaseItem(productID);
@@ -64,6 +70,19 @@ namespace PIERStory
                 Debug.Log(string.Format("[{0}] has no info in game server ", productID ));
                 return; 
             }
+            
+            maxCount = SystemManager.GetJsonNodeInt(productMasterJSON, "max_count");
+            
+            if(maxCount > 0) {
+                currentPurchaseCount = BillingManager.main.GetProductPurchaseCount(productID); // 구매 횟수 구한다.
+                
+                // 구매횟수가 maxCount 이상이면 솔드아웃 처리 
+                if(maxCount <= currentPurchaseCount) {
+                    soldOut.SetActive(true);
+            }
+            }
+            
+            
             
             
             bannerURL = SystemManager.GetJsonNodeString(productMasterJSON, "product_url");

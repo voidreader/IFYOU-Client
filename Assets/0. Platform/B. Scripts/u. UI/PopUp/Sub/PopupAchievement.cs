@@ -15,7 +15,7 @@ namespace PIERStory {
             //base 호출하지 않음 
             base.Show();
 
-            icon.rectTransform.DOPunchScale(new Vector3(1.2f, 1.2f, 1.2f), 0.3f);
+            icon.rectTransform.DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), 0.4f);
             halo.rectTransform.DORotate(new Vector3(0, 0, 360f), 3f, RotateMode.FastBeyond360).SetLoops(-1, LoopType.Incremental).SetEase(Ease.Linear);
             
         }

@@ -13,7 +13,7 @@ namespace PIERStory
         
         
         public Image loadingBar;
-        public Image fadeImage;
+        // public Image fadeImage;
         public TextMeshProUGUI textPercentage;
 
         public TextMeshProUGUI textTitle;
@@ -27,10 +27,13 @@ namespace PIERStory
         {
             base.OnStartView();
             
+            // * 페이드 이미지보다 로딩이 빨리 끝나는 경우가 있더라....
+            /*
             fadeImage.color = new Color(0, 0, 0, 1);
             fadeImage.gameObject.SetActive(true);
+            */
 
-            loadingImage.OnDownloadImage = CallbackDownloadLoadingImage;
+            // loadingImage.OnDownloadImage = CallbackDownloadLoadingImage;
 
             textTitle.text = GameManager.main.currentEpisodeData.episodeTitle;
             loadingBar.fillAmount = 0;
@@ -40,7 +43,7 @@ namespace PIERStory
 
         void CallbackDownloadLoadingImage()
         {
-            fadeImage.DOFade(0f, 0.4f).OnComplete(() => fadeImage.gameObject.SetActive(false));
+            // fadeImage.DOFade(0f, 0.4f).OnComplete(() => fadeImage.gameObject.SetActive(false));
         }
 
         IEnumerator RoutineGameLoading()

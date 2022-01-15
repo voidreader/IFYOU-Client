@@ -118,7 +118,8 @@ namespace PIERStory
                 SystemManager.ShowMessageAlert("통신 실패!", false);
                 return;
             }
-            
+
+            Debug.Log("> CallbackGetMissionReward : " + res.DataAsText);
             JsonData resposeData = JsonMapper.ToObject(res.DataAsText);
             
             
@@ -127,6 +128,9 @@ namespace PIERStory
             
             // 미션 상태 변경 (보상 받고, 완료로 변경)
             missionData.missionState = MissionState.finish; 
+            // UserManager.main.SetMissionData(missionData.missionID, missionData);
+            
+            StoryContentsButton.onStoryContentsButtonMission?.Invoke();
             
 
             
@@ -145,6 +149,11 @@ namespace PIERStory
         /// 미션 보상 받는 연출 시작
         /// </summary>
         void SetMissionComplete() {
+            
+            // 경험치 처리 
+            NetworkLoader.main.UpdateUserExp(missionData.rewardExp, "mission", missionData.missionID);
+            
+            
             RewardMask.DOFade(1, 0.2f).OnComplete(CompleteStep2);
             RewardMask.raycastTarget = true;
             completeMark.transform.localScale = Vector3.one * 1.5f;

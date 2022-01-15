@@ -16,6 +16,7 @@ namespace PIERStory {
 
         [SerializeField] GameObject accountBonus;
         [SerializeField] GameObject couponButton; // 쿠폰 버튼 (iOS에서 비활성)
+        [SerializeField] TextMeshProUGUI textUID;
 
         public Image pushAlert;                 // 푸쉬 알림
         public Image nightPushAlert;            // 야간 푸쉬 알림
@@ -74,6 +75,7 @@ namespace PIERStory {
 
             if (UserManager.main.accountLink == "-")
                 accountBonus.SetActive(true);
+            
                 
             textVersion.text = SystemManager.GetLocalizedText("5053") + " " + Application.version;
 
@@ -300,6 +302,12 @@ namespace PIERStory {
         {
 
         }
+        
+        public void OnClickCopyUID() {
+            UniClipboard.SetText(textUID.text);
+            SystemManager.ShowSimpleAlertLocalize("6017");
+        }
+        
 
         /// <summary>
         /// 닉네임 체인지 

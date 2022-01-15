@@ -37,7 +37,7 @@ namespace PIERStory {
             _textLoading.text = string.Empty;
             
             this.gameObject.SetActive(true);
-            _overlay.DOFade(0.4f, 1f).SetDelay(0.5f).OnComplete(OnStartShow); // 딜레이 1초 
+            _overlay.DOFade(0.7f, 1f).SetDelay(0.5f).OnComplete(OnStartShow); // 딜레이 1초 
         }
 
         /// <summary>

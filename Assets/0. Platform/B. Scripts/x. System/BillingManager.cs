@@ -220,6 +220,7 @@ namespace PIERStory {
             }
             
             Debug.Log(response.DataAsText);
+            SystemManager.HideNetworkLoading();
             
             // 받은 데이터 처리
             // bank, unreadMailCount, userPurchaseHistory

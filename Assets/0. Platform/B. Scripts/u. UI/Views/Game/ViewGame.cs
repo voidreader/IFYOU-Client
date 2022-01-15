@@ -558,7 +558,7 @@ namespace PIERStory
 
                     // 영어 텍스트는 길어서 너무 속도가 느리다
                     if (SystemManager.main.currentAppLanguageCode == "EN")
-                        yield return new WaitForSeconds(0.03f);
+                        yield return new WaitForSeconds(0.05f);
                     else
                         yield return new WaitForSeconds(0.1f);
                 }

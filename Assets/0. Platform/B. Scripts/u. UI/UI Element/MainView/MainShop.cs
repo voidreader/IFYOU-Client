@@ -107,13 +107,31 @@ namespace PIERStory {
             string finalURL = SystemManager.main.coinShopURL + uidParam + langParam;
             Debug.Log("Coinshop : " + finalURL);
             
+            GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
+            configuration.title = "Coin Shop";
+            configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
+            configuration.colorR = 0;
+            configuration.colorG = 0;
+            configuration.colorB = 0;
+            configuration.colorA = 255;
+            configuration.barHeight = 30;
+            configuration.isBackButtonVisible = false;
+            // configuration.contentMode = GamebaseWebViewContentMode.MOBILE;
+
             
+            Gamebase.Webview.ShowWebView(finalURL, configuration, (error) =>{ 
+                Debug.Log("Webview Closed");
+                NetworkLoader.main.RequestUserBaseProperty();
+            }, null, null);            
+            
+            /*
             if(UniWebViewSafeBrowsing.IsSafeBrowsingSupported) {
                 
                 var safeBrowsing = UniWebViewSafeBrowsing.Create(finalURL);
                 safeBrowsing.OnSafeBrowsingFinished += (browsing) => {
                 Debug.Log("UniWebViewSafeBrowsing is closed.");
                 NetworkLoader.main.RequestUserBaseProperty();
+                
                 
                 Destroy(safeBrowsing);
                 
@@ -125,12 +143,12 @@ namespace PIERStory {
                 Debug.Log(">>>>>> Now support SafeBrowsingSupported");
                 
                 GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
-                configuration.title = "";
+                configuration.title = "Coin Shop";
                 configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
-                // configuration.colorR = 98;
-                // configuration.colorG = 132;
-                // configuration.colorB = 207;
-                // configuration.colorA = 255;
+                configuration.colorR = 255;
+                configuration.colorG = 212;
+                configuration.colorB = 212;
+                configuration.colorA = 255;
                 configuration.barHeight = 30;
                 configuration.isBackButtonVisible = false;
                 // configuration.contentMode = GamebaseWebViewContentMode.MOBILE;
@@ -142,6 +160,7 @@ namespace PIERStory {
                 }, null, null);
                 
             }
+            */
             
             
             

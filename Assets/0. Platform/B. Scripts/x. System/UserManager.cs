@@ -454,9 +454,9 @@ namespace PIERStory
         {
             foreach (MissionData missionData in DictStoryMission.Values)
             {
-                if (missionData.missionName == missionName && missionData.missionState != MissionState.locked)
+                if (missionData.originName == missionName && missionData.missionState != MissionState.locked)
                     return true;
-                else if (missionData.missionName == missionName && missionData.missionState == MissionState.locked)
+                else if (missionData.originName == missionName && missionData.missionState == MissionState.locked)
                     return false;
             }
 

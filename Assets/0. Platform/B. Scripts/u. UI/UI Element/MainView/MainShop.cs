@@ -116,7 +116,7 @@ namespace PIERStory {
             configuration.colorA = 255;
             configuration.barHeight = 30;
             configuration.isBackButtonVisible = false;
-            // configuration.contentMode = GamebaseWebViewContentMode.MOBILE;
+            configuration.contentMode = GamebaseWebViewContentMode.MOBILE;
 
             
             Gamebase.Webview.ShowWebView(finalURL, configuration, (error) =>{ 

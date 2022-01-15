@@ -116,7 +116,7 @@ namespace PIERStory
 
         public void OnClickBlockSkip()
         {
-            SystemManager.ShowSimpleAlert("무료 플레이에서는 스킵을 사용할 수 없습니다.");
+            SystemManager.ShowSimpleAlertLocalize("6171");
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace PIERStory
 
         public void OnClickBlockReplay()
         {
-            SystemManager.ShowSimpleAlert("무료 플레이에서는 다시 할 수 없습니다.");
+            SystemManager.ShowSimpleAlertLocalize("6172");
         }
         
         public void OnClickBack() {

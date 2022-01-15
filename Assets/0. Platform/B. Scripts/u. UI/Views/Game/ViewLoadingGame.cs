@@ -27,6 +27,8 @@ namespace PIERStory
         {
             base.OnStartView();
             
+            Debug.Log("GameLoading OnStartView");
+            
             // * 페이드 이미지보다 로딩이 빨리 끝나는 경우가 있더라....
             /*
             fadeImage.color = new Color(0, 0, 0, 1);

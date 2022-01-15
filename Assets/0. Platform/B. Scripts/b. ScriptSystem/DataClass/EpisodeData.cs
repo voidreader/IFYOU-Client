@@ -163,6 +163,8 @@ namespace PIERStory {
         /// </summary>
         public void RefreshGalleryProgressValue() {
             episodeGalleryImageProgressValue = UserManager.main.CalcEpisodeGalleryProgress(episodeID); 
+            
+            Debug.Log(">> RefreshGalleryProgressValue : " + episodeGalleryImageProgressValue);
         }
         
         /// <summary>

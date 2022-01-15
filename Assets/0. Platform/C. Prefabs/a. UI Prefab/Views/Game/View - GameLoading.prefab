@@ -203,12 +203,24 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   OnVisibleCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnVisibleCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 5516109181039746389}
+          m_TargetAssemblyTypeName: PIERStory.CommonView, Assembly-CSharp
+          m_MethodName: OnView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnHideCallback:
     Enabled: 0
     EventName: OnHideCallback
@@ -808,7 +820,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadingImage: {fileID: 5516109181383513568}
   loadingBar: {fileID: 5516109180866437059}
-  fadeImage: {fileID: 5516109181496222610}
   textPercentage: {fileID: 5516109182404654725}
   textTitle: {fileID: 5516109181646032894}
   textInfo: {fileID: 5516109182138661169}
@@ -1021,7 +1032,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.24, g: 0.24, b: 0.24, a: 0.9019608}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.9019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

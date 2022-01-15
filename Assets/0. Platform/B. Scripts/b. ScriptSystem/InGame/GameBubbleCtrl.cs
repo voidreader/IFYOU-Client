@@ -1158,8 +1158,19 @@ namespace PIERStory
             
             // 가로 세로 비율 0.45 미만은 -150 처리
             if(SystemManager.screenRatio < 0.45f) {
-                adjustmentPosY -= 150; // 긴 화면이라... 
+                
+                // 긴화면.. 유독 긴화면 
+                if(bubblePos < 4)
+                    adjustmentPosY -= 100;
+                else 
+                    adjustmentPosY -= 150; 
             }
+            
+            // 1,2,3 포지션에 대한 처리 추가 (꽤 긴 화면.. 추가 )
+            if(bubblePos < 4 && SystemManager.screenRatio < 0.47f) {
+                adjustmentPosY -= 50;
+            }
+            
             
             // 789 위치에 대한 추가 처리 
             if(bubblePos >= 7) {

@@ -739,10 +739,11 @@ namespace PIERStory
             
             while(isPlaying)
             {
+                yield return new WaitUntil(() => !isThreadHold);
+
                 if(!isThreadHold && isWaitingScreenTouch)
                 {
 
-                    //yield return new WaitForSeconds(PlayerPrefs.GetFloat(GameConst.AUTO_PLAY));
                     // 보이스가 재생이 끝날때까지 대기
                     if (SoundGroup[1].GetIsPlaying)
                     {
@@ -754,7 +755,9 @@ namespace PIERStory
                         yield return new WaitForSeconds(PlayerPrefs.GetFloat(GameConst.AUTO_PLAY));
 
                     Debug.Log(">> Auto Click <<");
-                    isWaitingScreenTouch = false;
+
+                    if(!isThreadHold)
+                        isWaitingScreenTouch = false;
                 }
                 
                 yield return null;
@@ -1318,11 +1321,6 @@ namespace PIERStory
             EndGame();
             
         }
-        
-        
-        
-        
-        
 
         /// <summary>
         /// 재시작 하기 

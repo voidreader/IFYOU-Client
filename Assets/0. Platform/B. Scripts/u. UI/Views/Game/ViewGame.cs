@@ -636,6 +636,7 @@ namespace PIERStory
             calledName.color = new Color(calledName.color.r, calledName.color.g, calledName.color.b, 0f);
             callTime.color = new Color(callTime.color.r, callTime.color.g, callTime.color.b, 0f);
             callBackground.gameObject.SetActive(true);
+            callTime.text = "0:00";
 
             const float animTime = 0.7f;
 
@@ -949,13 +950,27 @@ namespace PIERStory
             messengerText = messengerObject.GetComponentInChildren<TextMeshProUGUI>();
 
             // 메신저 말풍선이 한 줄에 16자 이상이 들어가면 자동으로 잘라서 엔터를 해준다.
-            string[] lineStr = row.script_data.Split('\\');
+            // 22.01.15
+            // 영어는 단어가 길어서 단어별로 판별해서 잘라서 엔터를 해줘야 한다
+            string enterAcess = row.script_data.Replace("\\", " ");
+            string[] lineStr = enterAcess.Split(' ');
+            string tmp = string.Empty;
+            int lineStringLength = 0;
+
             messengerText.text = string.Empty;
 
             foreach (string s in lineStr)
             {
-                string tmp = string.Empty;
+                if (lineStringLength + s.Length > 24)
+                {
+                    messengerText.text += "\n";
+                    lineStringLength = 0;
+                }
 
+                lineStringLength += s.Length + 1;
+                messengerText.text += s + " ";
+
+                /*
                 if (s.Length > 16)
                 {
                     for (int i = 0; i < s.Length / 16; i++)
@@ -966,6 +981,7 @@ namespace PIERStory
                     messengerText.text = messengerText.text.Insert(messengerText.text.Length, s + "\n");
                 else
                     messengerText.text = messengerText.text.Insert(messengerText.text.Length, tmp);
+                */
             }
 
             // 이 또한 대화이므로 게임로그에 데이터를 기입한다.
@@ -1057,7 +1073,13 @@ namespace PIERStory
             }));
 
             // 동일한 속도로 글자 타이핑 애니메이션
-            placeTag.Append(placeNameText.DOText(placeLabel, placeLabel.Length * 0.1f).SetEase(Ease.Linear));
+            float animTime = 0.1f;
+
+            // 영어권에서는 2배 더 빠르게!
+            if (SystemManager.main.currentAppLanguageCode == "EN")
+                animTime = 0.05f;
+
+            placeTag.Append(placeNameText.DOText(placeLabel, placeLabel.Length * animTime).SetEase(Ease.Linear));
             placeTag.Append(placeTextBG.DOFade(0f, 2f).SetDelay(1f)).Join(episodeNum.DOFade(0f, 2f)).Join(placeNameText.DOFade(0f, 2f));
         }
 

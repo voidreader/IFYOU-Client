@@ -9,6 +9,7 @@ using LitJson;
 using BestHTTP;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
+using Doozy.Runtime.UIManager.Containers;
 using DanielLochner.Assets.SimpleScrollSnap;
 
 namespace PIERStory {
@@ -16,6 +17,7 @@ namespace PIERStory {
     {
         public static Action OnMoveStarShop = null;
         public static Action OnProfileSetting = null;
+        public static Action OnProfileChange = null;        // 프사, 테두리 변경시 호출
         public static Action<string> OnCategoryList;
         
         
@@ -57,6 +59,7 @@ namespace PIERStory {
         public GameObject standingObjectPrefab;
         public Transform textObjectParent;
         public GameObject textObjectPrefab;
+        public UIContainer profileBriefContainer;
         public ImageRequireDownload profilePortrait;
         public ImageRequireDownload profileFrame;
         public TextMeshProUGUI nickname;
@@ -97,6 +100,7 @@ namespace PIERStory {
             InitLobby();
 
             OnProfileSetting = InitProfile;
+            OnProfileChange = ProfileChange;
 
             // 카테고리 
             InitCategory();
@@ -562,6 +566,11 @@ namespace PIERStory {
                 Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_DECO_MODE, string.Empty);
             else
                 Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_PROFILE_DECO, string.Empty);
+        }
+
+        void ProfileChange()
+        {
+            profileBriefContainer.Show();
         }
 
         #endregion

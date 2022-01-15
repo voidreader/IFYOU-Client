@@ -172,6 +172,7 @@ namespace PIERStory
             Debug.Log(JsonMapper.ToStringUnicode(UserManager.main.userProfile));
             ViewMain.OnProfileSetting?.Invoke();
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SAVE_PROFILE_DECO);
+            ViewMain.OnProfileChange?.Invoke();
 
         }
 

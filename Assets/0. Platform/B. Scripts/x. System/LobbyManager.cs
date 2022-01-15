@@ -323,9 +323,17 @@ namespace PIERStory {
 
 
             Debug.Log("OnRequestPlatformLoadingImages : " + res.DataAsText);
+            if(string.IsNullOrEmpty(res.DataAsText))
+                return;
+            
             JsonData data = JsonMapper.ToObject(res.DataAsText);
             string imageKey = string.Empty;
             string imageURL = string.Empty;
+            
+            if(data == null) {
+                return;
+            }
+            
 
             for(int i=0;i<data.Count;i++)
             {

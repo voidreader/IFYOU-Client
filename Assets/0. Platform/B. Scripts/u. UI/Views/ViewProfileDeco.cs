@@ -86,6 +86,7 @@ namespace PIERStory
             OnStickerSetting = ProfileStickerSetting;
             OnStandingSetting = ProfileStandingSetting;
             OnControlStanding = SelectControlStanding;
+            background.OnDownloadImage = SetBackgroundLoading;
 
             #region 프로필 꾸미기모드 사용자 세팅
 
@@ -287,9 +288,10 @@ namespace PIERStory
 
         void ProfileBackgrounSetting(JsonData __j, ProfileItemElement profileDeco)
         {
-            background.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_KEY));
+            SystemManager.ShowNetworkLoading();
+            background.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_KEY), true);
             background.transform.localPosition = Vector3.zero;
-            moveBg.enabled = true;
+            
             moveBg.currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
 
             // 배경 위에 뭔가 있으면 화면 드래그가 안되니까 rayCast를 화면 제외하고 다 꺼주자
@@ -763,6 +765,17 @@ namespace PIERStory
             ViewMain.OnProfileSetting?.Invoke();
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SAVE_PROFILE_DECO);
             SystemManager.ShowSimpleAlertLocalize("6122");
+        }
+
+        void SetBackgroundLoading()
+        {
+            SystemManager.HideNetworkLoading();
+
+            // 높이가 1200 미만이면 비율 2배수하기
+            if (background.GetComponent<RectTransform>().sizeDelta.y < 1200)
+                background.GetComponent<RectTransform>().sizeDelta *= 2f;
+
+            moveBg.enabled = true;
         }
     }
 }

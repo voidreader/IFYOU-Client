@@ -22,7 +22,9 @@ namespace PIERStory
             string key = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_KEY);
             currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
 
+            SystemManager.ShowNetworkLoading();
             standingImage.SetDownloadURL(url, key, true);
+            standingImage.OnDownloadImage = SystemManager.HideNetworkLoading;
             profileItemElement = connectElement;
         }
 

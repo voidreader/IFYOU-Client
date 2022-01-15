@@ -488,7 +488,8 @@ namespace PIERStory {
                     switch (SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_TYPE))
                     {
                         case LobbyConst.NODE_WALLPAPER:
-                            background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY), true);
+                            background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY));
+                            background.GetComponent<RectTransform>().sizeDelta = new Vector2(SystemManager.GetJsonNodeFloat(profileCurrency[i], LobbyConst.NODE_WIDTH), SystemManager.GetJsonNodeFloat(profileCurrency[i], LobbyConst.NODE_HEIGHT));
                             background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_POS_X)), 0f);
                             hasBG = true;
                             break;

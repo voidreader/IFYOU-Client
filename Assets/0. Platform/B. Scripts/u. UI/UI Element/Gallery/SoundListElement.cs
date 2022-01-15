@@ -36,7 +36,6 @@ namespace PIERStory
             image_key = SystemManager.GetJsonNodeString(__nameTag, LobbyConst.BANNER_KEY);
             voiceMaster = SystemManager.GetJsonNodeString(__nameTag, GameConst.COL_SPEAKER);
 
-
             soundThumbnail.SetDownloadURL(image_url, image_key);
 
             int unlockCount = 0, totalCount = 0;
@@ -51,7 +50,7 @@ namespace PIERStory
                 totalCount += __voiceData[i].Count;
             }
 
-            voiceInfo.text = string.Format("{0} 모아듣기\n<color=#A0A0A0FF>{1}개 / {2}개</color>", voiceMaster, unlockCount, totalCount);
+            voiceInfo.text = string.Format(SystemManager.GetLocalizedText("6058") + "\n<color=#A0A0A0FF>{1} / {2}</color>", StoryManager.main.GetNametagName(voiceMaster), unlockCount, totalCount);
             gameObject.SetActive(true);
         }
 
@@ -60,7 +59,7 @@ namespace PIERStory
             if (voiceData == null)
                 ViewSoundDetail.SetSoundDetail(true, SystemManager.GetJsonNode(UserManager.main.currentStoryJson, "bgms"), soundThumbnail.downloadedSprite, SystemManager.GetLocalizedText("6139"));
             else
-                ViewSoundDetail.SetSoundDetail(false, voiceData, soundThumbnail.downloadedSprite, string.Format(SystemManager.GetLocalizedText("6058"), voiceMaster));
+                ViewSoundDetail.SetSoundDetail(false, voiceData, soundThumbnail.downloadedSprite, string.Format(SystemManager.GetLocalizedText("6058"), StoryManager.main.GetNametagName(voiceMaster)));
 
             Signal.Send(LobbyConst.STREAM_IFYOU, SHOW_SOUND_DETAIL, string.Empty);
         }

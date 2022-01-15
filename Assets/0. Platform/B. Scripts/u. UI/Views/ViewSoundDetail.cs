@@ -461,7 +461,10 @@ namespace PIERStory
         {
             // audioSource에 clip이 넣어진게 없으면 아무것도 하지 않는다
             if (playSound.clip == null)
+            {
+                SystemManager.ShowSimpleAlertLocalize("6169");
                 return;
+            }
 
 
             if (playSound.isPlaying)

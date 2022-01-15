@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 using TMPro;
 using LitJson;
@@ -36,23 +35,6 @@ namespace PIERStory
 
         EpisodeData nextData = null;
         EpisodeData episodeData = null;
-
-
-        #region Signal 수신 처리
-
-        private void Awake()
-        {
-
-            
-        }
-        
-
-
-
-
-
-
-        #endregion
 
 
         public override void OnStartView()
@@ -143,7 +125,17 @@ namespace PIERStory
                 // Instantiate로 만드므로 Panel 설정이 필요함
                 selectionSnap.Setup();
             }
+        }
 
+        public override void OnHideView()
+        {
+            base.OnHideView();
+
+            for(int i=0;i<scrollContent.childCount;i++)
+            {
+                Destroy(scrollContent.GetChild(i).gameObject);
+                Destroy(pagenation.GetChild(i).gameObject);
+            }
         }
 
         /// <summary>

@@ -125,5 +125,10 @@ namespace PIERStory
 
             createObject.Clear();
         }
+
+        public void OnClickStartEnding()
+        {
+            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, endingData, string.Empty);
+        }
     }
 }

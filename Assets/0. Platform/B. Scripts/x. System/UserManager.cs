@@ -2146,22 +2146,27 @@ namespace PIERStory
             
             int totalEpisodeImage = 0;
             int openEpisodeImage = 0;
-            
-            for(int i=0; i<GetUserGalleryImage().Count;i++) {
-                if( SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "appear_episode") == __episodeID
-                    && SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "valid")) {
+
+            for (int i = 0; i < GetUserGalleryImage().Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "appear_episode") == __episodeID
+                    && SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "valid"))
+                {
                     totalEpisodeImage++;
-                    
+
                     // 오픈된 경우. 
-                    if(SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "illust_open")) {
+                    if (SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "illust_open"))
                         openEpisodeImage++;
-                    }
                 }
             }
-            
-            if(totalEpisodeImage == 0 || openEpisodeImage == 0)
+
+            if (totalEpisodeImage == 0)
+                return -1;
+
+            if (openEpisodeImage == 0)
                 return 0;
-                
+            
+            
             return (float)openEpisodeImage / (float)totalEpisodeImage;
         }
 

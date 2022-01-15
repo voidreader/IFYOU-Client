@@ -1,12 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using LitJson;
-using TMPro;
-using Doozy.Runtime.Signals;
 using UnityEngine.SceneManagement;
+
+using TMPro;
+using LitJson;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory {
     public class ViewEpisodeStart : CommonView
@@ -57,42 +55,51 @@ namespace PIERStory {
         
         bool isGameStarting = false; // 게임 시작했는지 체크, 중복 입력 막기 위해서.
         
-        public override void OnView()
-        {
-            base.OnView();
-            
-            buttonVerticalGroup.enabled = false;
-            
-            // * 튜토리얼 관련 처리 OnView로 옮김 
-            if (UserManager.main.tutorialStep < 2)
-            {
-                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_EPISODE_START);
-                PopupManager.main.ShowPopup(p, false);
-            }
-            else if(UserManager.main.tutorialStep == 2 && UserManager.main.tutorialFirstProjectID != 0 )
-                UserManager.main.RequestTutorialReward();            
-            
-        }
         
         public override void OnStartView() {
             base.OnStartView();
             
             OnRefreshPremiumPass = SetPremiumPass;
+
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
+
+
+            SetEpisodeInfo();
             
+            SetPremiumPass();
+
+        }
+
+        public override void OnView()
+        {
+            base.OnView();
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
 
-            SetEpisodeInfo();
-            
-            SetPremiumPass();
+            buttonVerticalGroup.enabled = false;
+
+            // * 튜토리얼 관련 처리 OnView로 옮김 
+            if (UserManager.main.tutorialStep < 2)
+            {
+                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_EPISODE_START);
+                PopupManager.main.ShowPopup(p, false);
+            }
+            else if (UserManager.main.tutorialStep == 2 && UserManager.main.tutorialFirstProjectID != 0)
+                UserManager.main.RequestTutorialReward();
+        }
 
 
+        public override void OnHideView()
+        {
+            base.OnHideView();
 
-        }        
-        
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
+        }
+
+
         void SetPremiumPass() {
             // * 프리패스 추가 
             if(UserManager.main.HasProjectFreepass()) {

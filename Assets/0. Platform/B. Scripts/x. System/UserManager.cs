@@ -468,8 +468,9 @@ namespace PIERStory
         /// </summary>
         public MissionData GetMissionData(string missionName)
         {
+            // origin name을 체크하도록 변경
             foreach(MissionData missionData in DictStoryMission.Values) {
-                if(missionData.missionName == missionName)
+                if(missionData.originName == missionName)
                     return missionData;
             }
             

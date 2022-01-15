@@ -32,6 +32,8 @@ namespace PIERStory {
         
         public string missionID = string.Empty; // 미션 힌트
         public string missionName = string.Empty; // 미션 이름
+        public string originName = string.Empty; // 미션 스크립트용 이름 
+        
         public string missionHint = string.Empty; // 미션 힌트
         
         public MissionType missionType; // 미션 타입 
@@ -64,6 +66,7 @@ namespace PIERStory {
             
             missionID = SystemManager.GetJsonNodeString(missionJSON, "mission_id");
             missionName = SystemManager.GetJsonNodeString(missionJSON, "mission_name");
+            originName = SystemManager.GetJsonNodeString(missionJSON, "origin_name");
             missionHint = SystemManager.GetJsonNodeString(missionJSON, "mission_hint");
             
             isHidden = SystemManager.GetJsonNodeBool(missionJSON, "is_hidden");

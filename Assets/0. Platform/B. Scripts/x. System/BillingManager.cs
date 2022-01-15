@@ -236,8 +236,17 @@ namespace PIERStory {
             MainShop.OnRefreshPackageShop?.Invoke();
             MainShop.OnRefreshTopShop?.Invoke();
             
+            // 모든 활성 팝업 제거
+            PopupManager.main.HideActivePopup();
+            
             // 결제가 완료되었습니다. 어쩌고. 
-            SystemManager.ShowSimpleAlertLocalize(SystemManager.GetLocalizedText("6113"));
+            // SystemManager.ShowSimpleAlertLocalize("6113");
+            #if UNITY_ANDROID
+            // 안드로이드에서만. 
+            SystemManager.ShowMessageWithLocalize("6113", true);
+            #endif
+            
+            
         }
         
         

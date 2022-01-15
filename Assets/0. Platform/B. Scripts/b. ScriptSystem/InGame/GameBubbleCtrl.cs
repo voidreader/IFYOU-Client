@@ -817,7 +817,7 @@ namespace PIERStory
             SetCharacterTallAdjustment();
 
             // 아래쪽 라인 말풍선 해상도 대응 
-            SetBottomLinePositionAdjustment();
+            SetPositionAdjustment();
 
             // 네임태그 설정
             SetNametag();
@@ -1149,37 +1149,40 @@ namespace PIERStory
         }
 
         #endregion
-
         
-
         /// <summary>
-        /// 디바이스 스크린 비율에 따른 하단 라인 말풍선 위치 조정
+        /// 디바이스와 광고에 따른 포지션 조정.
         /// </summary>
-        void SetBottomLinePositionAdjustment()
-        {
-            if (bubblePos < 7)
-                return;
+        void SetPositionAdjustment() {
+            adjustmentPosY = 0; // 조정 값
+            
+            // 가로 세로 비율 0.45 미만은 -150 처리
+            if(SystemManager.screenRatio < 0.45f) {
+                adjustmentPosY -= 150; // 긴 화면이라... 
+            }
+            
+            // 789 위치에 대한 추가 처리 
+            if(bubblePos >= 7) {
                 
-            adjustmentPosY = 0;
-
-
-            // ! 7,8,9 위치만 조정한다. 
-            // ! 세로가 길어지는 디바이스는 7,8,9 위치를 조금 더 아래쪽으로 처리 
-            if (SystemManager.screenRatio < 0.56f)
-                adjustmentPosY = -100; // 길어지면 -100
+                // 추가 -100
+                if (SystemManager.screenRatio < 0.56f)
+                    adjustmentPosY -= 100; // 길어지면 -100
                     
+                if(SystemManager.screenRatio > 0.7f) 
+                    adjustmentPosY += 100; // 4:3 비율은 100 더한다. 
+                        
+                
+                // banner 관련된 내용 추가. 
+                // 배너 사용하면 살짝 올려야한다.
+                if(AdManager.main.isIronSourceBannerLoad)
+                    adjustmentPosY += 100; // 다시 100 플러스.                
+                
+            }
             
-            
-            // banner 관련된 내용 추가. 
-            // 배너 사용하면 살짝 올려야한다.
-            if(AdManager.main.isIronSourceBannerLoad)
-                adjustmentPosY += 100; // 다시 100 플러스.
-            
-
-            // 100만큼 아래로 이동 
+            // 최종 조정 처리 
             rtransform.anchoredPosition = new Vector2(posX, posY + adjustmentPosY);
-
         }
+                    
 
         /// <summary>
         /// 화자의 '키'에 따른 말풍선 위치 조정 

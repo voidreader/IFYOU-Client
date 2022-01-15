@@ -15,6 +15,7 @@ namespace PIERStory {
         public static System.Action OnRefreshMore = null;
 
         [SerializeField] GameObject accountBonus;
+        [SerializeField] GameObject couponButton; // 쿠폰 버튼 (iOS에서 비활성)
 
         public Image pushAlert;                 // 푸쉬 알림
         public Image nightPushAlert;            // 야간 푸쉬 알림
@@ -36,6 +37,11 @@ namespace PIERStory {
         void Start()
         {
             OnRefreshMore = RefreshScreen;
+            
+            
+            #if UNITY_IOS
+            couponButton.SetActive(false);
+            #endif
         }
 
         private void OnEnable()
@@ -265,17 +271,29 @@ namespace PIERStory {
 
         public void OnClickInquiry()
         {
+            Debug.Log("Open Contact");
 
+            Gamebase.Contact.OpenContact((error) =>
+            {
+                if (Gamebase.IsSuccess(error))
+                {
+
+                }
+                else
+                {
+                    Debug.Log("GameBase Contact Error : " + error.code);
+                }
+            });
         }
 
         public void OnClickPrivacy()
         {
-
+            SystemManager.main.OpenPrivacyURL();
         }
 
         public void OnClickTermsOfUse()
         {
-
+            SystemManager.main.OpenTermsURL();
         }
 
         public void OnClickLeave()

@@ -79,6 +79,12 @@ namespace PIERStory
         int resetIncrementRate = 0; //리셋 증가비율 
         
         
+        // 개인정보 보호 정책 및 이용약관 URL
+        string privacyURL = string.Empty;
+        string termsOfUseURL = string.Empty;
+        
+        
+        
         
         
         
@@ -550,6 +556,11 @@ namespace PIERStory
             coinShopURL = GetJsonNodeString(masterInfo, "coinshop_url"); // 코인샵 URL
             firsetResetPrice = GetJsonNodeInt(masterInfo, "first_reset_price"); // 최초 리셋 비용 
             resetIncrementRate = GetJsonNodeInt(masterInfo, "reset_increment_rate"); // 리셋 비용 증가비율 
+            
+            privacyURL = GetJsonNodeString(masterInfo, "privacy_url");
+            termsOfUseURL = GetJsonNodeString(masterInfo, "terms_url"); 
+            
+            
             
             
 
@@ -1833,45 +1844,32 @@ namespace PIERStory
         /// <param name="__url"></param>
         public void ShowDefaultWebview(string __url) {
             
-            // var color = new Color(1, 0.83f, 0.83f);
-            UniWebView uniWebView = Instantiate(prefabWebview, Vector3.zero, Quaternion.identity, SystemManager.main.transform).GetComponent<UniWebView>();
+            GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
+            configuration.title = "Coin Shop";
+            configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
+            configuration.colorR = 0;
+            configuration.colorG = 0;
+            configuration.colorB = 0;
+            configuration.colorA = 255;
+            configuration.barHeight = 30;
+            configuration.isBackButtonVisible = false;
+            // configuration.contentMode = GamebaseWebViewContentMode.MOBILE;
+
             
-            
-            // uniWebView.Frame = new Rect(0,0, Screen.width, Screen.height);
-            uniWebView.CleanCache();
-            uniWebView.Load(__url);
-            // uniWebView.SetShowToolbar(false);
-            uniWebView.Show();
-            uniWebView.OnShouldClose += OnWebviewClosed;
-            
-            
-            uniWebView.OnMessageReceived += (view, message) => {
-                if(message.Path.Contains("close")) {
-                    uniWebView.Hide();
-                    Debug.Log("close called");
-                    
-                    OnWebviewClosed(uniWebView);
-                }
-            };
+            Gamebase.Webview.ShowWebView(__url, configuration, (error) =>{ 
+                Debug.Log("Webview Closed");
+                NetworkLoader.main.RequestUserBaseProperty();
+            }, null, null);            
+        }
+        
+        public void OpenPrivacyURL() {
+            ShowDefaultWebview(privacyURL);
+        }
+        
+        public void OpenTermsURL() {
+            ShowDefaultWebview(termsOfUseURL);
         }
 
-
-        bool OnWebviewClosed(UniWebView __view)
-        {
-            Debug.Log("Webview Closed");
-            NetworkLoader.main.RequestUserBaseProperty();
-
-            try
-            {
-                Destroy(__view);
-            }
-            catch (Exception e)
-            {
-                Debug.Log("OnWebviewClosed" + e.StackTrace);
-            }
-
-            return true;
-        }
          
     }
 }

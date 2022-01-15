@@ -14,12 +14,11 @@ namespace PIERStory
         public void OnPointerClick(PointerEventData eventData)
         {
             changed = new Vector2(eventData.position.x - centerPos.x, eventData.position.y - centerPos.y);
-            angle = Vector2.Angle(changed, standard);
+            angle = changed.x < 0 ? Vector2.Angle(changed, standard) : 360f - Vector2.Angle(changed, standard);
 
             ViewSoundDetail.OnMovePlayTime?.Invoke(angle);
         }
 
-        // Use this for initialization
         void Start()
         {
             centerPos = RectTransformUtility.WorldToScreenPoint(Camera.main, center.position);

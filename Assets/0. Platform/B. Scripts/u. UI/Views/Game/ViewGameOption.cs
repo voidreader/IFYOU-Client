@@ -127,7 +127,7 @@ namespace PIERStory
             if (!currentShow)
                 return;
 
-            if (slowToggle.isOn && GameManager.main != null)
+            if (normalToggle.isOn && GameManager.main != null)
                 PlayerPrefs.SetFloat(GameConst.AUTO_PLAY, GameConst.normalDelay);
         }
 
@@ -136,7 +136,7 @@ namespace PIERStory
             if (!currentShow)
                 return;
 
-            if (slowToggle.isOn && GameManager.main != null)
+            if (fastToggle.isOn && GameManager.main != null)
                 PlayerPrefs.SetFloat(GameConst.AUTO_PLAY, GameConst.fastDelay);
         }
 
@@ -170,5 +170,3 @@ namespace PIERStory
         }
     }
 }
-
-

@@ -23,7 +23,7 @@ namespace PIERStory
         public void OnDrag(PointerEventData eventData)
         {
             changed = new Vector2(eventData.position.x - centerPos.x, eventData.position.y - centerPos.y);
-            angle = Vector2.Angle(changed, standard);
+            angle = changed.x < 0 ? Vector2.Angle(changed, standard) : 360f - Vector2.Angle(changed, standard);
 
             ViewSoundDetail.OnMovePlayTime?.Invoke(angle);
         }
@@ -31,7 +31,7 @@ namespace PIERStory
         public void OnEndDrag(PointerEventData eventData)
         {
             changed = new Vector2(eventData.position.x - centerPos.x, eventData.position.y - centerPos.y);
-            angle = Vector2.Angle(changed, standard);
+            angle = changed.x < 0 ? Vector2.Angle(changed, standard) : 360f - Vector2.Angle(changed, standard);
 
             ViewSoundDetail.OnMovePlayTime?.Invoke(angle);
         }

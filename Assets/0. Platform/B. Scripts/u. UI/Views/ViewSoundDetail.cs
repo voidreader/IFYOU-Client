@@ -186,8 +186,11 @@ namespace PIERStory
                 foreach (TextMeshProUGUI info in episodeInfo)
                     info.transform.SetParent(storage);
 
-                foreach (SoundElement voice in voiceElements)
+                foreach (SoundElement voice in currentVoiceList)
+                {
+                    voice.gameObject.SetActive(false);
                     voice.transform.SetParent(storage);
+                }
 
                 currentVoiceList.Clear();
             }
@@ -199,7 +202,7 @@ namespace PIERStory
         void PlayBGM(AudioClip clip, int playIndex)
         {
             // 선택한 BGM만 선택된 표시를 해준다
-            for (int i = 0; i < BGMElements.Length; i++)
+            for (int i = 0; i < soundData.Count; i++)
             {
                 if (i == playIndex)
                     BGMElements[i].BGMPlayMode();
@@ -252,8 +255,8 @@ namespace PIERStory
             playtimeBarHandle.rectTransform.anchoredPosition = new Vector2(0, -radius);
             playButton.sprite = spritePlay;
 
-            // 랜덤 재생인지 먼저 체크하고
-            if (shuffleToggle.isOn)
+            // 랜덤 재생이지만 한곡 반복은 아닌지 먼저 체크하고
+            if (shuffleToggle.isOn && repeatState != RepeatState.ONCE)
             {
                 RandomPlay();
 
@@ -335,7 +338,7 @@ namespace PIERStory
             {
                 while(true)
                 {
-                    index = UnityEngine.Random.Range(0, BGMElements.Length);
+                    index = UnityEngine.Random.Range(0, soundData.Count);
 
                     // 랜덤 값이 현재 재생값과 달라야 빠져나올 수 있다
                     if (index != currentSoundIndex)
@@ -392,7 +395,7 @@ namespace PIERStory
                 if(playBGM)
                 {
                     if (currentSoundIndex - 1 < 0)
-                        currentSoundIndex = BGMElements.Length - 1;
+                        currentSoundIndex = soundData.Count - 1;
                     else
                         currentSoundIndex--;
 
@@ -428,7 +431,7 @@ namespace PIERStory
             {
                 if (playBGM)
                 {
-                    if (currentSoundIndex + 1 < BGMElements.Length)
+                    if (currentSoundIndex + 1 < soundData.Count)
                         BGMElements[currentSoundIndex + 1].PlaySound();
                     else
                         BGMElements[0].PlaySound();

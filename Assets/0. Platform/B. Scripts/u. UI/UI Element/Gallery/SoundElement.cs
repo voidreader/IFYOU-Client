@@ -84,10 +84,7 @@ namespace PIERStory
         void SuccessLoad()
         {
             if (soundKey.Contains("mp3"))
-            {
                 audioClip = ES3.LoadAudio(soundKey, AudioType.MPEG);
-                Debug.Log(soundKey);
-            }
             else if (soundKey.Contains("wav"))
                 audioClip = ES3.LoadAudio(soundKey, AudioType.WAV);
 

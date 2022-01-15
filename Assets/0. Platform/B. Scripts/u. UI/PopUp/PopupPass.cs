@@ -14,12 +14,15 @@ namespace PIERStory {
         public override void Show()
         {
             base.Show();
+            InitPassBanner();
         }
         
         /// <summary>
         /// 패스배너 초기화 
         /// </summary>
         public void InitPassBanner() {
+            Debug.Log("InitPassBanner");
+            
             passBanner.SetPremiumPass(true);
             
             textOriginPrice.text = passBanner.originFreepassPrice.ToString();

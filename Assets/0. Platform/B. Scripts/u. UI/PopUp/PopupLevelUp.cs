@@ -15,6 +15,8 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textSpecialGiftName;
         [SerializeField] TextMeshProUGUI textNormalGiftQuantity;
         
+        [SerializeField] TextMeshProUGUI textEventBonus; // 이벤트 보너스 
+        
         [SerializeField] ImageRequireDownload specialGiftIcon;
         [SerializeField] ImageRequireDownload normalGiftIcon;
         
@@ -77,6 +79,13 @@ namespace PIERStory {
             
             // 레벨 설정
             textLevel.text = beforeData["level"].ToString(); // 일단 before 레벨로 세팅 
+            
+            // 이벤트 설정 처리 
+            textEventBonus.gameObject.SetActive(false);
+            if(SystemManager.GetJsonNodeBool(Data.contentJson, "event")) {
+                textEventBonus.gameObject.SetActive(true);
+            }
+            
             
         }
         

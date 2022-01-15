@@ -11,7 +11,6 @@ namespace PIERStory {
 
     public class PassBanner : MonoBehaviour
     {
-        [SerializeField] bool isTargetBanner = false; // ID로 지정된 프리미엄 배너인 경우 true.
         [SerializeField] StoryData passStory = null; // 대상 스토리
         [SerializeField] TextMeshProUGUI textTitle; // 타이틀.. 
         
@@ -74,11 +73,10 @@ namespace PIERStory {
         /// 프리미엄 배너 설정하기 
         /// </summary>
         public void SetPremiumPass(bool __useTimer) {
-            
+            Debug.Log("SetPremiumPass");
             
             this.gameObject.SetActive(true);
             
-            isTargetBanner = false; // 타겟팅 되지 않음.
             passStory = StoryManager.main.CurrentProject;
             
             textTitle.text = StoryManager.main.CurrentProject.title; // 타이틀
@@ -130,7 +128,7 @@ namespace PIERStory {
         /// <param name="__projectID"></param>
         /// <param name="__useTimer"></param>
         public void SetPremiumPassByID(string __projectID, bool __useTimer) {
-            isTargetBanner = true; 
+            // isTargetBanner = true; 
             // passStory = 아이디로 스토리를 찾아서 블라블라. 
         }
         
@@ -145,11 +143,7 @@ namespace PIERStory {
                 return;
             }
             
-            // 지정 배너와 현재 프로젝트를 연결한 배너 분류 
-            if(isTargetBanner)
-                p.Data.targetData = passStory.projectID;
-            else 
-                p.Data.targetData = string.Empty;
+            p.Data.targetData = passStory.projectID;
             
             PopupManager.main.ShowPopup(p, false, false);
         }

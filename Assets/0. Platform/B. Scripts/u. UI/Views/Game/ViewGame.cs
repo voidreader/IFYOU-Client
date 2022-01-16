@@ -128,6 +128,12 @@ namespace PIERStory
         {
             main = this;
         }
+        
+        void Update() {
+            if (!GameManager.main.SoundGroup[1].GetIsPlaying)
+                InactiveMicrophoneIcon();
+           
+        }
 
         public override void OnStartView()
         {
@@ -1228,6 +1234,25 @@ namespace PIERStory
             
             viewGameMenu.Show();
         }
+        
+        #region 음성 재생 중 아이콘 연출
+
+        public void ActiveMicrophoneIcon()
+        {
+            microphoneIcon.SetActive(true);
+
+            if(microphoneAnimator == null)
+                microphoneAnimator = microphoneIcon.GetComponent<Animator>();
+            
+            microphoneAnimator.SetTrigger("Loop");
+        }
+
+        public void InactiveMicrophoneIcon()
+        {
+            microphoneIcon.SetActive(false);
+        }
+
+        #endregion
         
     }
 }

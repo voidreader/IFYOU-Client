@@ -13,6 +13,7 @@ namespace PIERStory {
     public class ImageRequireDownload : MonoBehaviour
     {
         public System.Action OnDownloadImage = null;
+        
 
         [Header("RawImage Check")]
         [SerializeField] bool isRawImage = false; // RawImage인 경우에 체크
@@ -20,6 +21,7 @@ namespace PIERStory {
         bool useNativeSize = false;
         
         [Space]
+        public bool isLoadComplete = false; // 이미지 정상 로드 완료되었는지 여부 
         [SerializeField] string imageURL = string.Empty;
         [SerializeField] string imageKey = string.Empty;
         
@@ -54,11 +56,19 @@ namespace PIERStory {
         /// <param name="__url"></param>
         /// <param name="__key"></param>
         public void SetDownloadURL(string __url, string __key, bool useNative = false) {
+            
+            
+            // * 조건 추가 (같은 이미지 여러번 불러오지 않기 위해)
+            // 이미 로드 완료한 상태이고, url key 같으면 진행하지 않음.
+            if(isLoadComplete && __url == imageURL && __key == imageKey)
+                return;
+            
+            
             imageURL = __url;
             imageKey = __key;
             useNativeSize = useNative;
 
-
+            // 초기화 
             InitImage();
             
             #region 유효성 체크 
@@ -171,13 +181,28 @@ namespace PIERStory {
                     targetImage.color = Color.white;
             }
 
+            
+            // 본인 콜백
+            OnCompleteLoadImage(); 
+            
+            // 연결된 다른 콜백
             OnDownloadImage?.Invoke();
+        }
+        
+        
+        /// <summary>
+        /// 이미지 정상적으로 불러왔을때. 
+        /// </summary>
+        void OnCompleteLoadImage() {
+            isLoadComplete = true; 
         }
         
         /// <summary>
         /// 시작할때 초기화하기
         /// </summary>
         public void InitImage() {
+            isLoadComplete = false;
+            
             if(targetRawImage) {
                 targetRawImage.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
                 targetRawImage.texture = null;

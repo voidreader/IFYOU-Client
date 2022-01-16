@@ -9,7 +9,7 @@ namespace PIERStory
 {
     public class ViewGameMenu : CommonView
     {
-        [SerializeField] RectTransform rect;
+        [SerializeField] RectTransform footer;
         [SerializeField] UIView viewGameMenu; // 게임메뉴. 
 
         [Header("Skip")]
@@ -32,6 +32,10 @@ namespace PIERStory
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
         
         void Start() {
+            
+            //rect.offsetMin = new Vector2(0, 120);
+            
+            /*
             if(AdManager.main.isIronSourceBannerLoad) {
                 // rect.
                 rect.offsetMin = new Vector2(0, 120);
@@ -39,6 +43,9 @@ namespace PIERStory
             else {
                 rect.offsetMin = Vector2.zero;
             }
+            */
+            
+            footer.anchoredPosition = new Vector2(0, footer.anchoredPosition.y + 120);
         }
         
         public override void OnStartView()

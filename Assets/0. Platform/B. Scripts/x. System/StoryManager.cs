@@ -379,7 +379,7 @@ namespace PIERStory
 
 
             // 콜백에서 이어지도록 처리 
-            NetworkLoader.main.SendPost(CallbackStoryInfo, sendingData);
+            NetworkLoader.main.SendPost(CallbackStoryInfo, sendingData, true);
 
         }
 

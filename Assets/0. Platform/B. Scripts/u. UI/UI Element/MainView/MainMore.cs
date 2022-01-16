@@ -16,6 +16,7 @@ namespace PIERStory {
 
         [SerializeField] GameObject accountBonus;
         [SerializeField] GameObject couponButton; // 쿠폰 버튼 (iOS에서 비활성)
+        [SerializeField] RectTransform usermenuRect; // 유저 메뉴 Rect
         [SerializeField] TextMeshProUGUI textUID;
 
         public Image pushAlert;                 // 푸쉬 알림
@@ -39,9 +40,10 @@ namespace PIERStory {
         {
             OnRefreshMore = RefreshScreen;
             
-            
+            // iOS에서는 쿠폰 제거 
             #if UNITY_IOS
             couponButton.SetActive(false);
+            usermenuRect.sizeDelta = new Vector2(720, 300);
             #endif
         }
 

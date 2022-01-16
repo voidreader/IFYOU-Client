@@ -70,6 +70,9 @@ namespace PIERStory
         const string COL_COUNTRY = "country";
 
 
+        [SerializeField] int failCount = 0; // 통신 실패 카운트 
+        [SerializeField] bool isFailMessageShow = false; // 통신 실패 메세지 오픈 여부 
+
         [SerializeField] string _url = string.Empty; // 서버 URL 
         [SerializeField] string _requestURL = string.Empty; // REQUEST URL
 
@@ -744,11 +747,13 @@ namespace PIERStory
             
             string message = string.Empty;
             _requestRawData = string.Empty;
+            string currentFunc = string.Empty;
 
             #region ListNetwork에 대한 추가 처리 
 
             try
             {
+                // 통신 완료 후, func 값 추출 
                 if(request.RawData != null) {
                 
                     _requestRawData = Encoding.UTF8.GetString(request.RawData);
@@ -760,7 +765,7 @@ namespace PIERStory
                         
                         if (_reqData != null && _reqData.ContainsKey(CommonConst.FUNC))
                         {
-                            main.ListNetwork.Remove(_reqData[CommonConst.FUNC].ToString());
+                            currentFunc = _reqData[CommonConst.FUNC].ToString();
                         }        
                     } //  end of deal with json
                 }
@@ -768,7 +773,7 @@ namespace PIERStory
             catch(System.Exception e)
             {
                 Debug.Log(e.StackTrace);
-            }
+            } // ? func 추출 완료
 
             // 일부 화면에서는 수동으로 네트워크 로딩 화면을 제거하고 싶다.
             if (CheckServerWork() && !dontHideNetworkLoading)
@@ -779,21 +784,33 @@ namespace PIERStory
             // 통신 Error 핸들링 
             switch(request.State) {
                 case HTTPRequestStates.Finished:
+                
+                    SystemManager.HideNetworkLoading(); // 실패했을때 네트워크 로딩은 제거해주자.
+                
+                    //통신이 실질적으로 완료됨.
+                    main.ListNetwork.Remove(_reqData[CommonConst.FUNC].ToString());
+                
+                    // 실패 메세지가 보여지는 중이 아니라면 count 0으로 초기화
+                    if(!main.isFailMessageShow)
+                        main.failCount = 0;                            
+                
                     if(response.IsSuccess) { // 굿! (status 200~299 , 304)
                         return true;
                     }
                     else { // 통신에는 성공했지만 status가 false 
                         // 실패로 날아오는 경우는 message와 code가 날아온다. (서버에서)
+                        // 서버에서 status 400 으로 전달받는다. 
                         message = GetServerErrorMessage(response);
-                        SystemManager.HideNetworkLoading(); // 실패했을때 네트워크 로딩은 제거해주자.
+                        
 
                         // status가 error로 날아오는 경우에 대한 메세지 처리 (2021.11.02)
                         if (!string.IsNullOrEmpty(message))
                             SystemManager.ShowLobbySubmitPopup(message);    // 메세지 띄워주고.
                         
-                        return false;
+                        return false; 
                     }
                     
+                // ! 여기서부터는 일반적인 응답 오류가 아닌 request 에러에 대한 처리 
                 case HTTPRequestStates.Error: // 예상하지 못한 에러가 발생했다.
                 // 서버로 리포트.(ERROR만)
                 // main.ReportRequestError(Encoding.UTF8.GetString(request.RawData), request.Exception != null ? request.Exception.Message : "No Exception");
@@ -818,51 +835,32 @@ namespace PIERStory
             if(!string.IsNullOrEmpty(message)) {
                 
                 Debug.LogError("Request Fail : " + message);
-                int retryCount = 0;  // 재시도 카운트.
                 
-                try {
-                    
-                    // 헤더를 받아와서 HEADER_RETRY값으로 리트라이 횟수를 파악한다. 
-                    List<string> headers = request.GetHeaderValues(HEADER_RETRY);
-                    
-                    // 재시도를 한번도 하지 않았음.
-                    if(headers == null || headers.Count == 0) { 
-                        Debug.LogWarning("First Try");
-                        retryCount = 2;
-                        request.SetHeader(HEADER_RETRY, retryCount.ToString());  // retry 카운트를 2로 저장한다.    
-                    }
-                    else {
-                        // 재시도한 이력이 있어서 헤더에 값을 가지고 있다. 
-                        // retry 카운트 차감
-                        retryCount = int.Parse(headers[0]);
-                        Debug.LogWarning("Retry : " + retryCount);
-                        
-                        retryCount--; // 1회 차감.
-                        request.SetHeader(HEADER_RETRY, retryCount.ToString());
-                    }
-                    
-                    if(retryCount > 0) {
-                        request.Send(); // 다시 전송. 
-                        return false; // false 리턴한다. 다시 통신완료를 기다린다.
-                    }
-                    else { // 3번하는 동안 모두 실패했다. 
-                        
-                        Debug.Log("### Failed third try ###");
-                    
-                        SystemManager.HideNetworkLoading(); // 실패했을때 네트워크 로딩은 제거해주자.
-                        SystemManager.ShowLobbyPopup(message, SystemManager.LoadLobbyScene, SystemManager.LoadLobbyScene, false);
-                    }
-                    
-                } catch (Exception e) {
-                    message = SystemManager.GetLocalizedText("6173");
-                    Debug.Log(e.StackTrace);
-                    SystemManager.HideNetworkLoading(); // 실패했을때 네트워크 로딩은 제거해주자.
-                    SystemManager.ShowLobbyPopup(message, SystemManager.LoadLobbyScene, SystemManager.LoadLobbyScene, false);
-                }                
+                // 실패 카운트 추가 
+                main.failCount++;
+                
+                if(!main.isFailMessageShow && main.failCount >= 5) {
+                    SystemManager.HideNetworkLoading();
+                    // ! 오류 메세지. 
+                    // 게임 밖으로 내보낸다. 
+                    SystemManager.ShowLobbyPopup(message, OnFailedServer, OnFailedServer, false);
+                    return false; // 이제 그만 보내. 
+                }
+                
+                // 다시 보낸다.
+                request.Send();
+          
             } // ? end of retry
             
             // 여기까지 내려왔으면 다 실패
             return false;
+        }
+        
+        /// <summary>
+        /// 서버 연결 오류 
+        /// </summary>
+        static void OnFailedServer() {
+            Application.Quit();
         }
         
         /// <summary>

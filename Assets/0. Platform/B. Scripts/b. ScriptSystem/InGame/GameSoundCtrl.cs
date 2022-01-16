@@ -66,7 +66,7 @@ namespace PIERStory
             if (!DictSound.ContainsKey(keyName))
                 return;
 
-            //ViewGame.main.ActiveMicrophoneIcon();
+            ViewGame.main.ActiveMicrophoneIcon();
 
             // * 2021.09.28 sound_id 추가
             NetworkLoader.main.UpdateUserVoice(keyName, DictSound[keyName].sound_id);

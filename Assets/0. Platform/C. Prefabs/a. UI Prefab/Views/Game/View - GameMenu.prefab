@@ -1322,7 +1322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 153ebbf3cc3fac84f9da9789356550d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rect: {fileID: 508574641374012875}
+  footer: {fileID: 508574642407708485}
   viewGameMenu: {fileID: 508574641374012873}
   skipButtonIcon: {fileID: 508574642611595174}
   ableSkip: {fileID: 21300000, guid: 324bf6e24874a0d4da603329f56a5953, type: 3}
@@ -5478,6 +5478,7 @@ GameObject:
   - component: {fileID: 508574642407708602}
   - component: {fileID: 508574642407708603}
   - component: {fileID: 508574642407708484}
+  - component: {fileID: 7676534656767472273}
   m_Layer: 5
   m_Name: Footer
   m_TagString: Untagged
@@ -6160,6 +6161,25 @@ MonoBehaviour:
       ToCustomValue: 1
       FromOffset: 0
       ToOffset: 0
+--- !u!114 &7676534656767472273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508574642407708486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c97afc556caea1c44969477eb7ddec74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Panel: {fileID: 508574642407708485}
+  m_HorizontalConstraintType: 0
+  m_HorizontalConstraint: 2
+  m_VerticalConstraintType: 2
+  m_VerticalConstraint: 1
+  m_DefaultAnchorMin: {x: 0, y: 0}
+  m_DefaultAnchorMax: {x: 1, y: 0}
 --- !u!1 &508574642558678822
 GameObject:
   m_ObjectHideFlags: 0

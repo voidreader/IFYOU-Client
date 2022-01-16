@@ -13,9 +13,12 @@ namespace PIERStory
 {
     public class ViewSoundDetail : CommonView
     {
+        public static Action OnSoundSetting = null;
         public static Action<AudioClip, int> OnPlayBGM = null;
         public static Action<AudioClip, int> OnPlayVoice = null;
         public static Action<float> OnMovePlayTime = null;
+
+        public static bool setComplete = false;
 
         static AudioSource playSound;
 
@@ -58,16 +61,16 @@ namespace PIERStory
 
         int currentSoundIndex = 0;
 
-        [Space(20)]
-        public Transform circleCenter;
-        enum DragState { DRAGGING, NOT_DRAGGING};
-        DragState drag = DragState.NOT_DRAGGING;
-
         const float radius = 180f;          // 반지름
         const float circleAgree = 360f;     // 360도
 
         float agree = 0f;                   // 각도
-        int currentValue = 0;
+
+        private void Awake()
+        {
+            OnSoundSetting = SoundDetailPageSetting;
+        }
+
 
         public static void SetSoundDetail(bool isBGM, JsonData __j, Sprite s, string __title)
         {
@@ -87,55 +90,10 @@ namespace PIERStory
             if (playSound == null)
                 playSound = GetComponent<AudioSource>();
 
-            bgmList.SetActive(false);
-            voiceList.SetActive(false);
-            
             title.text = soundTitle;
             titleImage.sprite = titleSprite;
 
-            #region Sound Setting
-
-            // 배경음을 재생하는지, 보이스를 재생하는지에 따라 이후 세팅이 다름
-            if (playBGM)
-            {
-                for (int i = 0; i < soundData.Count; i++)
-                    BGMElements[i].SetBGMElement(i, soundData[i]);
-
-                bgmList.SetActive(true);
-            }
-            else
-            {
-                int textIndex = 0, voiceIndex = 0;
-
-                // 보이스 세팅
-                foreach(string key in soundData.Keys)
-                {
-                    // 에피소드 넘버링, 제목 세팅
-                    for (int i = 0; i < StoryManager.main.ListCurrentProjectEpisodes.Count; i++)
-                    {
-                        // 일치하는 에피소드 아이디를 찾았다!
-                        if (StoryManager.main.ListCurrentProjectEpisodes[i].episodeID.Equals(SystemManager.GetJsonNodeString(soundData[key][0], LobbyConst.STORY_EPISODE_ID)))
-                        {
-                            episodeInfo[textIndex].text = StoryManager.main.ListCurrentProjectEpisodes[i].combinedEpisodeTitle;
-                            episodeInfo[textIndex].transform.SetParent(voiceContents);
-                            textIndex++;
-                            break;
-                        }
-                    }
-
-                    // 보이스 세팅
-                    for (int i = 0; i < soundData[key].Count; i++)
-                    {
-                        voiceElements[voiceIndex].SetVoiceElement(voiceIndex, soundData[key][i], VoiceLoadComplete);
-                        voiceIndex++;
-                    }
-                }
-
-                voiceList.SetActive(true);
-            }
-
-            #endregion
-
+            
             OnPlayBGM = PlayBGM;
             OnPlayVoice = PlayVoice;
             OnMovePlayTime = MovePlayTime;
@@ -189,14 +147,60 @@ namespace PIERStory
 
                 currentVoiceList.Clear();
             }
+
+            setComplete = false;
         }
 
         #region Action Function
 
-        void VoiceLoadComplete(int index)
+
+        void SoundDetailPageSetting()
         {
-            voiceElements[index].transform.SetParent(voiceContents);
-            currentVoiceList.Add(voiceElements[index]);
+            bgmList.SetActive(false);
+            voiceList.SetActive(false);
+
+            // 배경음을 재생하는지, 보이스를 재생하는지에 따라 이후 세팅이 다름
+            if (playBGM)
+            {
+                for (int i = 0; i < soundData.Count; i++)
+                    BGMElements[i].SetBGMElement(i, soundData[i]);
+
+                bgmList.SetActive(true);
+            }
+            else
+            {
+                int textIndex = 0, voiceIndex = 0;
+
+                // 보이스 세팅
+                foreach (string key in soundData.Keys)
+                {
+                    // 에피소드 넘버링, 제목 세팅
+                    for (int i = 0; i < StoryManager.main.ListCurrentProjectEpisodes.Count; i++)
+                    {
+                        // 일치하는 에피소드 아이디를 찾았다!
+                        if (StoryManager.main.ListCurrentProjectEpisodes[i].episodeID.Equals(SystemManager.GetJsonNodeString(soundData[key][0], LobbyConst.STORY_EPISODE_ID)))
+                        {
+                            episodeInfo[textIndex].text = StoryManager.main.ListCurrentProjectEpisodes[i].combinedEpisodeTitle;
+                            episodeInfo[textIndex].transform.SetParent(voiceContents);
+                            textIndex++;
+                            break;
+                        }
+                    }
+
+                    // 보이스 세팅
+                    for (int i = 0; i < soundData[key].Count; i++)
+                    {
+                        voiceElements[voiceIndex].SetVoiceElement(voiceIndex, soundData[key][i]);
+                        voiceElements[voiceIndex].transform.SetParent(voiceContents);
+                        currentVoiceList.Add(voiceElements[voiceIndex]);
+                        voiceIndex++;
+                    }
+                }
+
+                voiceList.SetActive(true);
+            }
+
+            setComplete = true;
         }
 
 

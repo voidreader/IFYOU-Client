@@ -128,7 +128,7 @@ namespace PIERStory
 
             if(selectionData.Count == 0)
             {
-                currentRound.text = "1회차";
+                currentRound.text = string.Format(SystemManager.GetLocalizedText("5130"), 0);
                 nonePlayText.gameObject.SetActive(true);
                 return;
             }

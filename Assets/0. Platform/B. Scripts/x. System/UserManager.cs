@@ -1665,7 +1665,7 @@ namespace PIERStory
             
             
             // 알림 팝업 후 목록화면 갱신처리 
-            SystemManager.ShowLobbySubmitPopup("선택한 시점으로 이야기가 초기화 되었습니다.");
+            SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("6167"));
 
             // * Doozy Nody StoryDetail로 돌아가기 위한 이벤트 생성 
             // * ViewStoryDetail 에서 이 시그널을 Listener를 통해서 받는다. (Inspector)

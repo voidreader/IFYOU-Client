@@ -36,8 +36,8 @@ namespace PIERStory
             posX = float.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_POS_X));
             posY = float.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_POS_Y));
 
-            width = float.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_WIDTH));
-            height = float.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_HEIGHT));
+            width = standingRect.sizeDelta.x;
+            height = standingRect.sizeDelta.y;
 
             angle = float.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ANGLE));
 

@@ -26,7 +26,6 @@ namespace PIERStory
         public GameObject lockIcon;
         public GameObject playingIcon;
         public bool isOpen = false;
-        Action<int> completeCallback = delegate { };
 
         int soundNumber = -1;
 
@@ -47,7 +46,7 @@ namespace PIERStory
         }
 
 
-        public void SetVoiceElement(int index, JsonData __j, Action<int> __completeCallback)
+        public void SetVoiceElement(int index, JsonData __j)
         {
             soundNumber = index;
             voiceScriptData.text = SystemManager.GetJsonNodeString(__j, GameConst.COL_SCRIPT_DATA);
@@ -56,7 +55,7 @@ namespace PIERStory
             soundKey = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_KEY);
             isOpen = SystemManager.GetJsonNodeBool(__j, CommonConst.IS_OPEN);
 
-            completeCallback = __completeCallback;
+            
             VoiceStopMode();
             ClipSetting();
         }
@@ -117,8 +116,6 @@ namespace PIERStory
                     voiceScriptData.gameObject.SetActive(false);
                     lockIcon.SetActive(true);
                 }
-
-                completeCallback?.Invoke(soundNumber);
             }
             
             gameObject.SetActive(true);

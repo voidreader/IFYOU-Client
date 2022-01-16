@@ -3,6 +3,7 @@
 using TMPro;
 using LitJson;
 using Doozy.Runtime.Signals;
+using System.Collections;
 
 namespace PIERStory
 {
@@ -61,7 +62,17 @@ namespace PIERStory
             else
                 ViewSoundDetail.SetSoundDetail(false, voiceData, soundThumbnail.downloadedSprite, string.Format(SystemManager.GetLocalizedText("6058"), StoryManager.main.GetNametagName(voiceMaster)));
 
+            SystemManager.ShowNetworkLoading();
+            StartCoroutine(MoveToSoundDetail());
+        }
+
+        IEnumerator MoveToSoundDetail()
+        {
+            ViewSoundDetail.OnSoundSetting?.Invoke();
+            yield return new WaitUntil(() => ViewSoundDetail.setComplete);
+
             Signal.Send(LobbyConst.STREAM_IFYOU, SHOW_SOUND_DETAIL, string.Empty);
+            SystemManager.HideNetworkLoading();
         }
     }
 }

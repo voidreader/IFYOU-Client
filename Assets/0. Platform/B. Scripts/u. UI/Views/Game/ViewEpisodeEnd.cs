@@ -131,7 +131,7 @@ namespace PIERStory
         {
             base.OnHideView();
 
-            for(int i=0;i<scrollContent.childCount;i++)
+            for (int i = 0; i < scrollContent.childCount; i++)
             {
                 Destroy(scrollContent.GetChild(i).gameObject);
                 Destroy(pagenation.GetChild(i).gameObject);

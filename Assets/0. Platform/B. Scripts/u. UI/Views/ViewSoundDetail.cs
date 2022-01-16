@@ -126,9 +126,7 @@ namespace PIERStory
                     // 보이스 세팅
                     for (int i = 0; i < soundData[key].Count; i++)
                     {
-                        voiceElements[voiceIndex].SetVoiceElement(voiceIndex, soundData[key][i]);
-                        voiceElements[voiceIndex].transform.SetParent(voiceContents);
-                        currentVoiceList.Add(voiceElements[voiceIndex]);
+                        voiceElements[voiceIndex].SetVoiceElement(voiceIndex, soundData[key][i], VoiceLoadComplete);
                         voiceIndex++;
                     }
                 }
@@ -187,16 +185,19 @@ namespace PIERStory
                     info.transform.SetParent(storage);
 
                 foreach (SoundElement voice in currentVoiceList)
-                {
-                    voice.gameObject.SetActive(false);
                     voice.transform.SetParent(storage);
-                }
 
                 currentVoiceList.Clear();
             }
         }
 
         #region Action Function
+
+        void VoiceLoadComplete(int index)
+        {
+            voiceElements[index].transform.SetParent(voiceContents);
+            currentVoiceList.Add(voiceElements[index]);
+        }
 
 
         void PlayBGM(AudioClip clip, int playIndex)

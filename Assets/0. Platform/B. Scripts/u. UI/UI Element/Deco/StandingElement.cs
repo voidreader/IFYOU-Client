@@ -23,8 +23,8 @@ namespace PIERStory
             currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
 
             SystemManager.ShowNetworkLoading();
-            standingImage.SetDownloadURL(url, key, true);
             standingImage.OnDownloadImage = SystemManager.HideNetworkLoading;
+            standingImage.SetDownloadURL(url, key, true);
             profileItemElement = connectElement;
         }
 

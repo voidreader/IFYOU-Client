@@ -80,10 +80,9 @@ namespace PIERStory {
             else 
                 accountBonus.SetActive(false);
             
-            // 버전
-            // UID
-            textVersion.text = SystemManager.GetLocalizedText("5053") + " " + Application.version;
-            textUID.text = string.Format("UID : {0}", UserManager.main.GetUserPinCode());
+
+            textVersion.text = SystemManager.GetLocalizedText("5053") + " " + Application.version;      // 버전
+            textUID.text = string.Format("UID : {0}", UserManager.main.GetUserPinCode());               // UID
 
 
             #region 게임베이스 push

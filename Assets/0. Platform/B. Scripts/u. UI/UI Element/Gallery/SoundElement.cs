@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
@@ -25,6 +26,7 @@ namespace PIERStory
         public GameObject lockIcon;
         public GameObject playingIcon;
         public bool isOpen = false;
+        Action<int> completeCallback = delegate { };
 
         int soundNumber = -1;
 
@@ -45,7 +47,7 @@ namespace PIERStory
         }
 
 
-        public void SetVoiceElement(int index, JsonData __j)
+        public void SetVoiceElement(int index, JsonData __j, Action<int> __completeCallback)
         {
             soundNumber = index;
             voiceScriptData.text = SystemManager.GetJsonNodeString(__j, GameConst.COL_SCRIPT_DATA);
@@ -54,6 +56,7 @@ namespace PIERStory
             soundKey = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_KEY);
             isOpen = SystemManager.GetJsonNodeBool(__j, CommonConst.IS_OPEN);
 
+            completeCallback = __completeCallback;
             VoiceStopMode();
             ClipSetting();
         }
@@ -64,7 +67,7 @@ namespace PIERStory
                 SuccessLoad();
             else
             {
-                var req = new HTTPRequest(new System.Uri(soundUrl), OnSoundDownloaded);
+                var req = new HTTPRequest(new Uri(soundUrl), OnSoundDownloaded);
                 req.Send();
             }
         }
@@ -114,6 +117,8 @@ namespace PIERStory
                     voiceScriptData.gameObject.SetActive(false);
                     lockIcon.SetActive(true);
                 }
+
+                completeCallback?.Invoke(soundNumber);
             }
             
             gameObject.SetActive(true);

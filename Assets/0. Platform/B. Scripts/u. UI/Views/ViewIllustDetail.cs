@@ -61,7 +61,7 @@ namespace PIERStory
                 illustImage.SetDownloadURL(SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_KEY));
 
                 if (isMinicut)
-                    illustImage.OnDownloadImage = illustImage.GetComponent<Image>().SetNativeSize;
+                    illustImage.OnDownloadImage = MinicutResize;
                 else
                     illustImage.OnDownloadImage = IllustSetNativeSize;
             }
@@ -114,6 +114,22 @@ namespace PIERStory
         void IllustSetNativeSize()
         {
             illustImage.GetComponent<RectTransform>().sizeDelta = new Vector2(1000, 1755);
+        }
+
+        void MinicutResize()
+        {
+            illustImage.GetComponent<Image>().SetNativeSize();
+
+            float ratioScale = 1f;
+
+            // 화면 비율에 따라서 비율 조절
+            if (SystemManager.screenRatio >= 0.4f)
+                ratioScale = 0.65f;
+
+            if (SystemManager.screenRatio >= 0.75f)
+                ratioScale = 0.9f;
+
+            illustImage.GetComponent<Image>().rectTransform.localScale = Vector3.one * ratioScale;
         }
     }
 }

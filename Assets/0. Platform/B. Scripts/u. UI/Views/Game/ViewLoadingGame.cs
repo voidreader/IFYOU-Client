@@ -22,6 +22,12 @@ namespace PIERStory
         int loadingTextIndex = 0;
 
         const string KEY_LOADING_TEXT = "loading_text";
+        
+        void Start() {
+            textTitle.text = string.Empty;
+            textInfo.text = string.Empty;
+            textPercentage.text = string.Empty;
+        }
 
         public override void OnStartView()
         {

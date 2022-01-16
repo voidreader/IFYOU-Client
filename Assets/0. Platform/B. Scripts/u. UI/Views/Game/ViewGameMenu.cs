@@ -33,19 +33,14 @@ namespace PIERStory
         
         void Start() {
             
-            //rect.offsetMin = new Vector2(0, 120);
             
-            /*
+            // 배너 등장시에만 처리. 
             if(AdManager.main.isIronSourceBannerLoad) {
                 // rect.
-                rect.offsetMin = new Vector2(0, 120);
+                footer.anchoredPosition = new Vector2(0, footer.anchoredPosition.y + 120);
             }
-            else {
-                rect.offsetMin = Vector2.zero;
-            }
-            */
             
-            footer.anchoredPosition = new Vector2(0, footer.anchoredPosition.y + 120);
+            
         }
         
         public override void OnStartView()

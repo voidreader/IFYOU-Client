@@ -846,6 +846,9 @@ namespace PIERStory
                         return false; // false 리턴한다. 다시 통신완료를 기다린다.
                     }
                     else { // 3번하는 동안 모두 실패했다. 
+                        
+                        Debug.Log("### Failed third try ###");
+                    
                         SystemManager.HideNetworkLoading(); // 실패했을때 네트워크 로딩은 제거해주자.
                         SystemManager.ShowLobbyPopup(message, SystemManager.LoadLobbyScene, SystemManager.LoadLobbyScene, false);
                     }

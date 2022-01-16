@@ -1791,6 +1791,19 @@ namespace PIERStory
 
         }
         
+        /// <summary>
+        /// OnApplicationPause
+        /// </summary>
+        /// <param name="pauseStatus"></param>
+        private void OnApplicationPause(bool pauseStatus) {
+            if(pauseStatus) {
+                Debug.Log("#### OnApplicationPause pause ####");
+            }
+            else {
+                Debug.Log("#### OnApplicationPause resume ####");
+            }
+        }
+        
         
         /// <summary>
         /// 스페셜 에피소드 해금 메세지 팝업 처리 

@@ -45,6 +45,7 @@ namespace PIERStory {
         [Space]
         [Header("== Lower Controls ==")]
         
+        [SerializeField] UIToggleGroup toggleEpisodeGroup; // 토글 에피소드 그룹 
         [SerializeField] UIToggle toggleRegular; // 토글 정규 에피소드
         [SerializeField] UIToggle toggleSpecial; // 토글 스페셜 에피소드 
         
@@ -101,7 +102,9 @@ namespace PIERStory {
         
         public override void OnStartView() {
             base.OnStartView();
-            
+            if(!toggleEpisodeGroup.FirstToggle.isOn) {
+                toggleRegular.SetIsOn(true, false);
+            }
             
             SetProjectBaseInfo(); // 기본 프로젝트 정보
 
@@ -112,7 +115,7 @@ namespace PIERStory {
             }
             else
             {
-                ShowEpisodeList(true);
+                // ShowEpisodeList(true);
             }
 
             
@@ -170,10 +173,10 @@ namespace PIERStory {
             mainThumbnail.SetDownloadURL(thumbnailURL, thumbnailKey); // 썸네일 
             
             textTitle.text = StoryManager.main.GetStoryDetailInfo("title"); // 타이틀 
-            textAuthor.text = StoryManager.main.GetStoryDetailInfo("original"); // 원작사
-            textProducer.text = StoryManager.main.GetStoryDetailInfo("writer"); // 제작사 
+            textAuthor.text =  SystemManager.GetLocalizedText("6179") + " / " + StoryManager.main.GetStoryDetailInfo("original"); // 원작사
+            textProducer.text = SystemManager.GetLocalizedText("6180") + " / " + StoryManager.main.GetStoryDetailInfo("writer"); // 제작사 
             textSummary.text = StoryManager.main.GetStoryDetailInfo("summary"); // 요약 
-            textGenre.text = "#장르"; // 해시태그 장르 
+            textGenre.text = SystemManager.GetLocalizedText("6180") + " / " + StoryManager.main.CurrentProject.genre; // 해시태그 장르 
             
             
             totalEpisodeCount = StoryManager.main.GetStoryDetailInfo("episode_count"); // 메인 에피소드의 개수 (엔딩제외)

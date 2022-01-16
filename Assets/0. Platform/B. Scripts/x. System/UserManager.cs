@@ -2174,7 +2174,7 @@ namespace PIERStory
             if (openEpisodeImage == 0)
                 return 0;
             
-            
+            Debug.Log(string.Format("### CalcEpisodeGalleryProgress {0}/{1}", openEpisodeImage, totalEpisodeImage));
             return (float)openEpisodeImage / (float)totalEpisodeImage;
         }
 

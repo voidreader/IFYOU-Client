@@ -218,6 +218,16 @@ namespace PIERStory
 
             
         }
+        
+        void Update() {
+            if(Input.GetKeyDown(KeyCode.X)){
+                ScriptRow lastRow =  currentPage.FindLastSceneRow();
+                if(lastRow != null) {
+                    HandleScriptJump(lastRow);
+                }
+            }
+            
+        }
 
 
         /// <summary>
@@ -1900,7 +1910,7 @@ namespace PIERStory
                 else
                     endingType = SystemManager.GetLocalizedText("5088");
 
-                endingPopup.Data.SetLabelsTexts(endingType, string.Format("\"{0}\"로 이어집니다.", nextEpisodeData.episodeTitle));
+                endingPopup.Data.SetLabelsTexts(endingType, string.Format(SystemManager.GetLocalizedText("6063"), nextEpisodeData.episodeTitle));
                 endingPopup.Data.imageURL = nextEpisodeData.squareImageURL;
                 endingPopup.Data.imageKey = nextEpisodeData.squareImageKey;
                 

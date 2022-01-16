@@ -954,6 +954,21 @@ namespace PIERStory
 
             return false;
         }
+        
+        
+        /// <summary>
+        /// 마지막 사건 ID가 있는 행 찾기 
+        /// </summary>
+        /// <returns></returns>
+        public ScriptRow FindLastSceneRow() {
+            
+            for(int i=ListRows.Count-1; i>=0; i--) {
+                if(!string.IsNullOrEmpty(ListRows[i].scene_id))
+                    return ListRows[i];
+            }
+            
+            return null;
+        }
     }
 }
 

@@ -27,8 +27,8 @@ namespace PIERStory
 
             float calcSize = (startX - dragX) * sizeFactor;
 
-            // 가로나 세로의 길이가 80 밑으로 내려가지 못하게 막음
-            if (decoObject.sizeDelta.x + calcSize >= 80 && decoObject.sizeDelta.y + calcSize >= 80)
+            // 가로나 세로의 길이가 80 밑으로, 540 위로 가지 못하게 막음
+            if (decoObject.sizeDelta.x + calcSize >= 80 && decoObject.sizeDelta.y + calcSize >= 80 && decoObject.sizeDelta.x + calcSize <=540 && decoObject.sizeDelta.y + calcSize <= 540)
                 decoObject.sizeDelta = new Vector2(originSize.x + calcSize, originSize.y + calcSize);
         }
 

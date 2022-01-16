@@ -218,7 +218,7 @@ namespace PIERStory
             if (NetworkLoader.main == null)
                 return;
 
-            NetworkLoader.main.SendPost(CallbackConnectServer, sendingData);
+            NetworkLoader.main.SendPost(CallbackConnectServer, sendingData, true);
         }
 
         /// <summary>

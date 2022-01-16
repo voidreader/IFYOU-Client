@@ -72,12 +72,18 @@ namespace PIERStory {
 
             if (UserManager.main == null || string.IsNullOrEmpty(UserManager.main.userKey))
                 return;
+                
+            Debug.Log("#### RefreshScreen");
 
             if (UserManager.main.accountLink == "-")
                 accountBonus.SetActive(true);
+            else 
+                accountBonus.SetActive(false);
             
-                
+            // 버전
+            // UID
             textVersion.text = SystemManager.GetLocalizedText("5053") + " " + Application.version;
+            textUID.text = string.Format("UID : {0}", UserManager.main.GetUserPinCode());
 
 
             #region 게임베이스 push

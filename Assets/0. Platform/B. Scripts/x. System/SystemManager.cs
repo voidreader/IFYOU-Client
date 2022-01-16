@@ -1238,11 +1238,18 @@ namespace PIERStory
        
        
         IEnumerator RoutineLoadingConnectedAccount() {
+            
+            Debug.Log("#### RoutineLoadingConnectedAccount :: " + Gamebase.GetUserID());
+            
              // ! 연결된 계정 다시 로드 
             UserManager.main.InitUser(Gamebase.GetUserID());
             
             // 통신이 완료될때까지 기다려야한다.
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            
+            yield return  null; 
+            
+            Debug.Log("#### RoutineLoadingConnectedAccount Load user done");
 
             // 연동이 완료되었습니다.
             ShowLobbySubmitPopup(GetLocalizedText("6112"));
@@ -1256,6 +1263,8 @@ namespace PIERStory
         /// 계정 연동 관련 컨트롤 리프레시 
         /// </summary>
         void RefreshAccountLinkRelated() {
+            
+            Debug.Log("#### RefreshAccountLinkRelated");
             
             MainToggleNavigation.OnToggleAccountBonus?.Invoke();
             PopupAccount.OnRefresh?.Invoke();

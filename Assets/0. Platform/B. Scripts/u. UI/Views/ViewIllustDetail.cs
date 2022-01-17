@@ -58,12 +58,13 @@ namespace PIERStory
             if (!isLive)
             {
                 illustImage.gameObject.SetActive(true);
-                illustImage.SetDownloadURL(SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_KEY));
 
                 if (isMinicut)
                     illustImage.OnDownloadImage = MinicutResize;
                 else
                     illustImage.OnDownloadImage = IllustSetNativeSize;
+
+                illustImage.SetDownloadURL(SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_KEY));
             }
             else
             {

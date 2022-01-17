@@ -50,7 +50,7 @@ namespace PIERStory
 
                 string finalURL = SystemManager.main.coinShopURL + uidParam + langParam;
 
-                SystemManager.main.ShowDefaultWebview(finalURL);
+                SystemManager.main.ShowDefaultWebview(finalURL, SystemManager.GetLocalizedText("6186"));
             }
         }
     }

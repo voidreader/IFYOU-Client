@@ -1916,10 +1916,10 @@ namespace PIERStory
         /// Uniwebview 연동하기 
         /// </summary>
         /// <param name="__url"></param>
-        public void ShowDefaultWebview(string __url) {
+        public void ShowDefaultWebview(string __url, string __title) {
             
             GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
-            configuration.title = "Coin Shop";
+            configuration.title = __title;
             configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
             configuration.colorR = 0;
             configuration.colorG = 0;
@@ -1937,11 +1937,11 @@ namespace PIERStory
         }
         
         public void OpenPrivacyURL() {
-            ShowDefaultWebview(privacyURL);
+            ShowDefaultWebview(privacyURL, SystemManager.GetLocalizedText("5050"));
         }
         
         public void OpenTermsURL() {
-            ShowDefaultWebview(termsOfUseURL);
+            ShowDefaultWebview(termsOfUseURL, SystemManager.GetLocalizedText("5049"));
         }
 
          

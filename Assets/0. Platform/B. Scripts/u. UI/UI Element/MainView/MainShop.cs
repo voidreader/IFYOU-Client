@@ -108,7 +108,7 @@ namespace PIERStory {
             Debug.Log("Coinshop : " + finalURL);
             
             GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
-            configuration.title = "Coin Shop";
+            configuration.title = SystemManager.GetLocalizedText("6186");
             configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
             configuration.colorR = 0;
             configuration.colorG = 0;

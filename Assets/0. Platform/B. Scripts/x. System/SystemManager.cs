@@ -1296,6 +1296,7 @@ namespace PIERStory
             MainToggleNavigation.OnToggleAccountBonus?.Invoke();
             PopupAccount.OnRefresh?.Invoke();
             MainMore.OnRefreshMore?.Invoke();
+            ViewMain.OnProfileSetting?.Invoke();
         }      
         
         

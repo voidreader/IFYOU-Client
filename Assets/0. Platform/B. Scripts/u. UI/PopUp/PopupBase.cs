@@ -23,8 +23,13 @@ namespace PIERStory {
         public bool isOverlayUse = false; // 오버레이 사용 여부 
         public bool addQueue = false; // 팝업 큐 사용여부
         
+        public CanvasGroup mainCanvasGroup = null; // 메인 캔버스 그룹 
          
         
+        void Awake() {
+            if(mainCanvasGroup != null)
+                mainCanvasGroup.alpha = 0;
+        }
         
         public void SetAutoDestroy() {
             
@@ -51,6 +56,8 @@ namespace PIERStory {
 
         public virtual void Show()
         {
+            if(mainCanvasGroup != null)
+                mainCanvasGroup.alpha = 1;   
 
             StartCoroutine(ShowEnumerator());
             SetAutoDestroy();
@@ -72,7 +79,7 @@ namespace PIERStory {
             
             content.enabled = true;
             
-            Debug.Log(gameObject.name + " " + content.OnStartBehaviour.ToString());
+            // Debug.Log(gameObject.name + " " + content.OnStartBehaviour.ToString());
             
             if( content.OnStartBehaviour != Doozy.Runtime.UIManager.ContainerBehaviour.Show) {
                 Debug.Log("content show");

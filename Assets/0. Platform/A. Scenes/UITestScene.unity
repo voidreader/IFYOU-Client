@@ -3017,7 +3017,6 @@ GameObject:
   - component: {fileID: 230358620}
   - component: {fileID: 230358619}
   - component: {fileID: 230358621}
-  - component: {fileID: 230358622}
   m_Layer: 0
   m_Name: Runner
   m_TagString: Untagged
@@ -3070,97 +3069,6 @@ MonoBehaviour:
   - {fileID: 242912336}
   - {fileID: 1986623903}
   - {fileID: 174239858}
---- !u!114 &230358622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 230358618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 477ece7615ac9584d812a7fff7562319, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 7365328696199000708, guid: 04e85ebe6ac3fc340bf87e921f4d74e1, type: 3}
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: DictPopup
-      Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.GameObject,
-        UnityEngine.CoreModule]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EXP
-    - Name: $v
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: PopupQueue
-      Entry: 7
-      Data: 2|System.Collections.Generic.Queue`1[[PIERStory.PopupBase, Assembly-CSharp]],
-        System
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-  ListShowingPopup: []
-  popupCanvas: {fileID: 1263081323}
-  CurrentQueuePopup: {fileID: 0}
-  confittiParticles: []
-  popupAccount: {fileID: 0}
-  popupAchivement: {fileID: 0}
-  popupAdvertisementShow: {fileID: 0}
-  popupCoupon: {fileID: 0}
-  popupEndingAlert: {fileID: 0}
-  popupEpisodeClearReward: {fileID: 0}
-  popupExp: {fileID: 0}
-  popupLevelUp: {fileID: 0}
-  popupMessageAlert: {fileID: 0}
-  popupType1: {fileID: 0}
-  popupType2: {fileID: 0}
-  popupPremiumPass: {fileID: 0}
-  popupSideAlert: {fileID: 0}
-  popupSimpleAlert: {fileID: 0}
-  popupTutorialComplete: {fileID: 0}
-  popupTutorialEpisodeStart: {fileID: 0}
-  popupTutorialMain: {fileID: 0}
-  popupTutorialStoryDetail: {fileID: 0}
-  popupNickname: {fileID: 0}
-  popupPackDetail: {fileID: 0}
 --- !u!1 &235178314
 GameObject:
   m_ObjectHideFlags: 0
@@ -6623,6 +6531,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Popup - AchieveCollection
       objectReference: {fileID: 0}
+    - target: {fileID: 1017000940313171276, guid: 0d3afacf85bcf55439f012ca002c53aa, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1017000940313171277, guid: 0d3afacf85bcf55439f012ca002c53aa, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -9252,7 +9164,7 @@ GameObject:
   - component: {fileID: 1263081321}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: PopupCanvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

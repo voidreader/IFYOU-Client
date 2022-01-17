@@ -19,7 +19,7 @@ namespace PIERStory {
         // Start is called before the first frame update
         void Start()
         {
-            
+            PopupManager.main.InitPopupManager();
         }
 
         // Update is called once per frame
@@ -29,7 +29,8 @@ namespace PIERStory {
                 ShowSelectionTEST();
             }
             
-            if(Input.GetKeyDown(KeyCode.P)) {
+            if(Input.GetKeyDown(KeyCode.P)) { 
+                /*
                 JsonData data = new JsonData();
                 data["current"] = JsonMapper.ToObject("{}");
                 data["before"] = JsonMapper.ToObject("{}");
@@ -45,6 +46,10 @@ namespace PIERStory {
                 p.Data.SetContentJson(data);
                 
                 PopupManager.main.ShowPopup(p, false, false);
+                */
+                PopupBase popup = PopupManager.main.GetPopup(SystemConst.POPUP_ILLUST_ACHIEVEMENT);
+                PopupManager.main.ShowPopup(popup, true, false);                
+                
             }
         }
         

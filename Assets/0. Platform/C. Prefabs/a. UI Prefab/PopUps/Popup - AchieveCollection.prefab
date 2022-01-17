@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1017000940313171277}
   - component: {fileID: 1017000940313171266}
+  - component: {fileID: 7994882894748013370}
   m_Layer: 5
   m_Name: Popup - AchieveCollection
   m_TagString: Untagged
@@ -64,9 +65,22 @@ MonoBehaviour:
   content: {fileID: 1017000941827558449}
   autoDestroyTime: 2
   isOverlayUse: 0
-  addQueue: 0
+  addQueue: 1
+  mainCanvasGroup: {fileID: 7994882894748013370}
   icon: {fileID: 1017000941213670713}
   halo: {fileID: 8965352764570164635}
+--- !u!225 &7994882894748013370
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017000940313171276}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1017000940605295385
 GameObject:
   m_ObjectHideFlags: 0

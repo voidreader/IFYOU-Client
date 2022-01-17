@@ -87,13 +87,15 @@ namespace PIERStory {
             PopupQueue.Clear();
             CurrentQueuePopup = null;
             
+            Debug.Log(">> PopupQueueRoutine START");
+            
             while(true) {
                 
                 yield return null;
                 
                 // * 현재 보여지고 있는 큐 팝업이 있으면, 대기 
                 while(CurrentQueuePopup) {
-                    yield return null;
+                    yield return new WaitForSeconds(0.1f);
                 }
                 
                 // * 팝업 큐에 팝업이 없으면 대기
@@ -105,9 +107,14 @@ namespace PIERStory {
                 CurrentQueuePopup = PopupQueue.Dequeue();
                 yield return null;
                 
-                if(CurrentQueuePopup) 
+                if(CurrentQueuePopup != null) {
+                    Debug.Log(">> PopupQueueRoutine New popup show!");
+                    
                     CurrentQueuePopup.Show(); // 보여주기 
+                }
             }
+            
+            // Debug.Log(">> PopupQueueRoutine END");
         }
         
         
@@ -157,8 +164,10 @@ namespace PIERStory {
         public void ShowPopup(PopupBase popup, bool addToPopupQueue, bool instantAction = false) {
             if (popup == null) return;
             
-            if(addToPopupQueue)
+            if(addToPopupQueue) {
+                Debug.Log("### Added Popup Queue. " + popup.name);
                 PopupQueue.Enqueue(popup);  // 큐를 통해 실행.
+            }
             else {
                 popup.Show(); // 독립적인 실행 
             }

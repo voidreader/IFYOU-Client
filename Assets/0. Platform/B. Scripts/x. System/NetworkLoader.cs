@@ -174,7 +174,7 @@ namespace PIERStory
                 
             sending["ad_type"] = __adType;
             
-            SendPost(NetworkLoader.main.OnResponseEmptyPostProcess, false);
+            SendPost(NetworkLoader.main.OnResponseEmptyPostProcess, sending, false);
             
         }
         

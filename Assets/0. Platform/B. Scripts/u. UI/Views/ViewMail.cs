@@ -80,8 +80,12 @@ namespace PIERStory
                 NoMail.SetActive(true);
                 return;
             }
+            else {
+                isEmptyMailBox = false;
+                NoMail.SetActive(false);
+            }
             
-            NoMail.SetActive(false);
+            
 
 
             for (int i = 0; i < __j.Count; i++)

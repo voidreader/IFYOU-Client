@@ -112,6 +112,7 @@ namespace PIERStory {
             {
                 PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MAIN);
                 PopupManager.main.ShowPopup(p, false);
+                SystemManager.appFirstExecute = false;
             }
             else if(UserManager.main.tutorialStep > 2 && SystemManager.appFirstExecute && !PlayerPrefs.HasKey("noticeOneday") && !StoryManager.enterGameScene)
             {
@@ -195,11 +196,13 @@ namespace PIERStory {
         {
             JsonData promotionList = SystemManager.main.promotionData;
 
+            /*
             for (int i = 0; i < promotionContent.childCount; i++)
             {
                 Destroy(promotionContent.GetChild(i).gameObject);
                 Destroy(promotionPagenation.GetChild(i).gameObject);
             }
+            */
 
             for (int i = 0; i < promotionList.Count; i++)
             {

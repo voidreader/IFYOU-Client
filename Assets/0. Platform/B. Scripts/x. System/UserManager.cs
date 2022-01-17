@@ -597,6 +597,9 @@ namespace PIERStory
 
             PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_TUTORIAL_COMPLETE);
             PopupManager.main.ShowPopup(p, false);
+
+            if (!SystemManager.appFirstExecute)
+                SystemManager.appFirstExecute = true;
         }
 
 

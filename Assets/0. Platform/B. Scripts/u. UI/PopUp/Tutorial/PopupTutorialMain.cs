@@ -24,6 +24,9 @@ namespace PIERStory
         {
             UserManager.main.UpdateTutorialStep(3);
             Hide();
+
+            PopupBase p = PopupManager.main.GetPopup("Notice");
+            PopupManager.main.ShowPopup(p, false);
         }
     }
 }

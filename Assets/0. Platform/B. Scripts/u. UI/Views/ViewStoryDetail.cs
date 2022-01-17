@@ -83,6 +83,7 @@ namespace PIERStory {
             RefreshStoryDetail = this.OnStartView;
 
             // * 튜토리얼 관련 팝업 오픈을 OnView로 옮겼습니다. 
+            // * 게임씬에 있다가 돌아온 경우에 대한 처리 
             if (StoryManager.enterGameScene)
             {
                 StoryManager.enterGameScene = false;
@@ -108,7 +109,7 @@ namespace PIERStory {
             
             SetProjectBaseInfo(); // 기본 프로젝트 정보
 
-            // * 게임씬에 있다가 돌아온 경우에 대한 처리 
+            
             if (StoryManager.enterGameScene)
             {
                  //StoryManager.enterGameScene = false;

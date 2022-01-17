@@ -166,8 +166,10 @@ namespace PIERStory
             JsonData sending = new JsonData();
             sending["func"] = "insertUserAdHistory";
             
-            if(string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
+            if(!string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
                 sending["project_id"] = StoryManager.main.CurrentProjectID;
+            else 
+                sending["project_id"] = -1;
             
                 
             sending["ad_type"] = __adType;

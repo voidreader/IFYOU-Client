@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 using TMPro;
 using LitJson;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
@@ -34,7 +35,18 @@ namespace PIERStory
         public override void OnStartView()
         {
             base.OnStartView();
-            
+
+            if (SystemManager.appFirstExecute)
+            {
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
+
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5001"), string.Empty);
+            }
+
             noticeTitle.text = SystemManager.GetJsonNodeString(detailData, LobbyConst.STORY_TITLE);
             noticeDate.text = startDate;
             noticeContentText.text = SystemManager.GetJsonNodeString(detailData, COL_CONTENTS);
@@ -50,6 +62,19 @@ namespace PIERStory
                 textContent.gameObject.SetActive(false);
                 imageContent.gameObject.SetActive(true);
                 noticeContentImage.SetDownloadURL(SystemManager.GetJsonNodeString(detailData, DETAIL_BANNER_URL), SystemManager.GetJsonNodeString(detailData, DETAIL_BANNER_KEY), true);
+            }
+        }
+
+        public override void OnHideView()
+        {
+            base.OnHideView();
+
+            if(SystemManager.appFirstExecute)
+            {
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
+
+                PopupBase p = PopupManager.main.GetPopup("Notice");
+                PopupManager.main.ShowPopup(p, false);
             }
         }
     }

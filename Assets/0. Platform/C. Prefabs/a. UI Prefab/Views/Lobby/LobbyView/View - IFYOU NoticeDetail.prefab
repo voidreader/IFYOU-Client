@@ -970,12 +970,24 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnHideCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnHideCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 8768156299833007503}
+          m_TargetAssemblyTypeName: PIERStory.ViewNoticeDetail, Assembly-CSharp
+          m_MethodName: OnHideView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnHiddenCallback:
     Enabled: 0
     EventName: OnHiddenCallback
@@ -1663,6 +1675,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isRawImage: 0
   useFade: 1
+  isLoadComplete: 0
   imageURL: 
   imageKey: 
   targetImage: {fileID: 8768156299880539802}

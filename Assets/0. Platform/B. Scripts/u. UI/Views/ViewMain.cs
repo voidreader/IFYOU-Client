@@ -87,7 +87,13 @@ namespace PIERStory {
         public override void OnView()
         {
             base.OnView();
-            
+
+            if (UserManager.main.tutorialStep > 2 && SystemManager.appFirstExecute && !PlayerPrefs.HasKey("noticeOneday") && !StoryManager.enterGameScene)
+            {
+                PopupBase p = PopupManager.main.GetPopup("Notice");
+                PopupManager.main.ShowPopup(p, false);
+            }
+
             LobbyManager.main.RequestPlatformLoadingImages(); // 플랫폼 로딩 이미지 다운로드 처리 
             
             UserManager.main.SetNewNickname(UserManager.main.nickname);
@@ -114,13 +120,7 @@ namespace PIERStory {
                 PopupManager.main.ShowPopup(p, false);
                 SystemManager.appFirstExecute = false;
             }
-            else if(UserManager.main.tutorialStep > 2 && SystemManager.appFirstExecute && !PlayerPrefs.HasKey("noticeOneday") && !StoryManager.enterGameScene)
-            {
-                PopupBase p = PopupManager.main.GetPopup("Notice");
-                PopupManager.main.ShowPopup(p, false);
-            }
 
-            
 
             // (프로필) 닉네임, 레벨, 경험치
             levelText.text = string.Format("Lv. {0}", UserManager.main.level);

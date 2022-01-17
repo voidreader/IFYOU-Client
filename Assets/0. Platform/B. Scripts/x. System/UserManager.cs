@@ -600,6 +600,9 @@ namespace PIERStory
 
             if (!SystemManager.appFirstExecute)
                 SystemManager.appFirstExecute = true;
+                
+            if(StoryManager.enterGameScene)
+                StoryManager.enterGameScene = false;
         }
 
 

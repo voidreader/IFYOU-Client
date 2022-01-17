@@ -86,7 +86,7 @@ namespace PIERStory {
             // * 게임씬에 있다가 돌아온 경우에 대한 처리 
             if (StoryManager.enterGameScene)
             {
-                StoryManager.enterGameScene = false;
+                // StoryManager.enterGameScene = false;
                 
                 if (UserManager.main.tutorialFirstProjectID != 0)
                     UserManager.main.RequestTutorialReward();

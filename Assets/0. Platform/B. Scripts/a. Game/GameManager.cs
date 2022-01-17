@@ -1742,6 +1742,7 @@ namespace PIERStory
 
             currentMinicut.color = new Color(currentMinicut.color.r, currentMinicut.color.g, currentMinicut.color.b, 1f);
             currentMinicut.transform.localScale = Vector3.one;
+            currentMinicut.transform.localEulerAngles = Vector3.zero;
 
             // 기본이미지가 아닌 경우 사용횟수 차감 기록에 따른 Destory 처리
             if (currentMinicut.sprite != defaultImage && currentMinicutMount != null)

@@ -408,20 +408,20 @@ namespace PIERStory {
             Debug.Log("InterstitialAd shown successfully.");
             // Execute logic for the ad showing successfully.
             
-            isAdShowing = true;
+            SetFrontAdStatus(true);
         }
 
         void OnInterstitialFailedToShow(object sender, ShowErrorEventArgs args) {
             Debug.Log("InterstitialAd failed to show.");
             // Execute logic for the ad failing to show.
             
-            isAdShowing = false;
+            SetFrontAdStatus(false);
         }
 
         private void OnInterstitialClosed(object sender, EventArgs e) {
             Debug.Log("InterstitialAd has closed");
             
-            isAdShowing = false;
+            SetFrontAdStatus(false);
             // Execute logic after an ad has been closed.
             CreateInterstitial();
             
@@ -481,7 +481,7 @@ namespace PIERStory {
         
         void OnRewardedShow(object sender, System.EventArgs args) {
             Debug.Log("OnRewardedShow");
-            isAdShowing = true;
+            SetFrontAdStatus(true);
         }
         
         
@@ -499,7 +499,8 @@ namespace PIERStory {
             // Execute logic for the user closing the ad.
             CreateRewardAd();
             
-            isAdShowing = false; // 광고가 종료되었음.
+            
+            SetFrontAdStatus(false);
             
         }
         
@@ -520,7 +521,7 @@ namespace PIERStory {
             Debug.Log("Ad failed to show.");
             // Execute logic for the ad failing to show.
             
-            isAdShowing = false; // 광고가 종료되었음.
+            SetFrontAdStatus(false);
         }
         
         #endregion

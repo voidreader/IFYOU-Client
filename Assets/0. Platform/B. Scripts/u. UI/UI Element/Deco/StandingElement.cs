@@ -54,7 +54,29 @@ namespace PIERStory
         {
             standingRect.anchoredPosition = new Vector2(posX, posY);
             standingRect.sizeDelta = new Vector2(width, height);
-            standingRect.eulerAngles = new Vector3(0f, angle, 0f);
+
+            if (angle == 180)
+                standingRect.localScale = new Vector3(-1f, 1f, 1f);
+            else
+                standingRect.localScale = Vector3.one;
+        }
+
+        /// <summary>
+        /// 캐릭터 픽스 후, 위치 고정
+        /// </summary>
+        public void SetRectTransInfo()
+        {
+            posX = standingRect.anchoredPosition.x;
+            posY = standingRect.anchoredPosition.y;
+
+            width = standingRect.sizeDelta.x;
+            height = standingRect.sizeDelta.y;
+
+
+            if (standingRect.localScale.x == -1)
+                angle = 180f;
+            else
+                angle = 0f;
         }
 
         /// <summary>
@@ -77,13 +99,18 @@ namespace PIERStory
         {
             JsonData data = new JsonData();
 
+            if (standingRect.localScale.x == -1)
+                angle = 180f;
+            else
+                angle = 0f;
+
             data[LobbyConst.NODE_CURRENCY] = currencyName;
             data[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
             data[LobbyConst.NODE_POS_X] = standingRect.anchoredPosition.x;
             data[LobbyConst.NODE_POS_Y] = standingRect.anchoredPosition.y;
             data[LobbyConst.NODE_WIDTH] = standingRect.sizeDelta.x;
             data[LobbyConst.NODE_HEIGHT] = standingRect.sizeDelta.y;
-            data[LobbyConst.NODE_ANGLE] = standingRect.eulerAngles.y;
+            data[LobbyConst.NODE_ANGLE] = angle;
 
             return data;
         }

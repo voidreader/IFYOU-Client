@@ -433,10 +433,10 @@ namespace PIERStory
         {
             if (controlStanding != null)
             {
-                if (controlStanding.standingRect.eulerAngles.y == 0)
-                    controlStanding.standingRect.eulerAngles = new Vector3(0f, 180f, 0f);
+                if (controlStanding.standingRect.localScale.x == 1)
+                    controlStanding.standingRect.localScale = new Vector3(-1f, 1f, 1f);
                 else
-                    controlStanding.standingRect.eulerAngles = new Vector3(0f, 0f, 0f);
+                    controlStanding.standingRect.localScale = Vector3.one;
             }
         }
 
@@ -532,6 +532,8 @@ namespace PIERStory
                 screenStand[1] = controlStanding;
             else
                 screenStand[2] = controlStanding;
+
+            controlStanding.SetRectTransInfo();
 
             controlStanding = null;
 

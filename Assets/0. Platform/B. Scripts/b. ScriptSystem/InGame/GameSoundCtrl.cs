@@ -93,9 +93,29 @@ namespace PIERStory
 
         }
 
-        public void PauseAudioClip()
+
+        /// <summary>
+        /// 클립 일시 정지
+        /// </summary>
+        public void PlayAudioClip(bool __play)
+        {
+            if (__play)
+            {
+                if (audioSource.clip != null)
+                    audioSource.Play();
+            }
+            else
+                audioSource.Pause();
+        }
+
+
+        /// <summary>
+        /// 클립 정지
+        /// </summary>
+        public void StopAudioClip()
         {
             audioSource.Stop();
+            audioSource.clip = null;
         }
 
         public void PauseBGM()

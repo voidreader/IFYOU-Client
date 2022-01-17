@@ -41,6 +41,7 @@ namespace PIERStory
         public bool isWaitingScreenTouch = false;   // 게임 플레이 도중 스크린 터치 기다림
         public bool useSkip = false;                // 스킵을 사용했는가?
         public bool skipable = false;               // 스킵 기능 사용이 가능한가?
+        public bool isAutoPlay = false;
         
         public bool isJustSkipStop = false; // * 막 스킵이 끝났는지 체크 변수 
         
@@ -740,14 +741,24 @@ namespace PIERStory
                 return;
 
             StopCoroutine(autoPlayCorountine);
+            isAutoPlay = false;
         }
 
         IEnumerator RoutineAutoPlay()
         {
             Debug.Log("RoutineAutoPlay Start!");
-            
-            while(isPlaying)
+
+            isAutoPlay = true;
+
+            while (isPlaying)
             {
+                if(AdManager.main.isAdShowing)
+                {
+                    isAutoPlay = false;
+                    yield break;
+                }
+
+
                 yield return new WaitUntil(() => !isThreadHold);
 
                 if(!isThreadHold && isWaitingScreenTouch)
@@ -1941,7 +1952,7 @@ namespace PIERStory
                     {
                         if (StoryManager.main.SideEpisodeList[j].episodeID.Equals(sideId))
                         {
-                            sidePopup.Data.SetLabelsTexts(string.Format("\"{0}\" 열렸습니다", StoryManager.main.SideEpisodeList[j].episodeTitle));
+                            sidePopup.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("6185"), StoryManager.main.SideEpisodeList[j].episodeTitle));
                             sidePopup.Data.imageURL = StoryManager.main.SideEpisodeList[j].squareImageURL;
                             sidePopup.Data.imageKey = StoryManager.main.SideEpisodeList[j].squareImageKey;
                             PopupManager.main.ShowPopup(sidePopup, true, false);

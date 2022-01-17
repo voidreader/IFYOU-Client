@@ -97,7 +97,7 @@ namespace PIERStory
 
             // 2021.10.12 효과음들이 길어서 배경이 전환 될 때, 효과음을 멈춘다
             if (GameManager.main.SoundGroup[2].GetIsPlaying)
-                GameManager.main.SoundGroup[2].PauseAudioClip();
+                GameManager.main.SoundGroup[2].StopAudioClip();
 
 
             // 이탈과는 다르게 script_data가 올바르지 않다면 진행하지 못함. 

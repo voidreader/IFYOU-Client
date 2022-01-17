@@ -476,7 +476,7 @@ namespace PIERStory
 
             // 다음 행으로 넘어갔으면 재생중이던 보이스는 정지
             if (GameManager.main.SoundGroup[1].GetIsPlaying)
-                GameManager.main.SoundGroup[1].PauseAudioClip();
+                GameManager.main.SoundGroup[1].StopAudioClip();
 
             // 자동 진행이 아닐때만 재생
             if (autoplay_row < 1)

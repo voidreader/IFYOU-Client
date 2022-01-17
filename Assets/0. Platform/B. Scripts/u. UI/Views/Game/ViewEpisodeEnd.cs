@@ -68,7 +68,7 @@ namespace PIERStory
             foreach (GameSoundCtrl sc in GameManager.main.SoundGroup)
             {
                 if (sc.GetIsPlaying)
-                    sc.PauseAudioClip();
+                    sc.StopAudioClip();
             }
 
 

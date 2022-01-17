@@ -91,6 +91,39 @@ namespace PIERStory {
             
             // 추가 로직
             // 광고의 실행, 종료에 따라 영향 받는 부분 로직
+            if(GameManager.main != null)
+            {
+                
+                if(__flag)
+                {
+                    // 자동 재생 중이라면
+                    if (GameManager.main.isAutoPlay)
+                        GameManager.main.StopAutoPlay();
+
+                    foreach (GameSoundCtrl sc in GameManager.main.SoundGroup)
+                        sc.PlayAudioClip(false);
+                }
+                else
+                {
+                    if (GameManager.main.isAutoPlay)
+                        GameManager.main.StartAutoPlay();
+
+                    foreach (GameSoundCtrl sc in GameManager.main.SoundGroup)
+                        sc.PlayAudioClip(true);
+                }
+
+
+                if (GameManager.main.isAutoPlay)
+                {
+                    if(__flag)
+                        GameManager.main.StopAutoPlay();
+                    else
+                        GameManager.main.StartAutoPlay();
+                }
+
+
+
+            }
         }
         
         

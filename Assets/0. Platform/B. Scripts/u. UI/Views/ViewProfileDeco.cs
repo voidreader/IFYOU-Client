@@ -533,8 +533,6 @@ namespace PIERStory
             else
                 screenStand[2] = controlStanding;
 
-            controlStanding.SetRectTransInfo();
-
             controlStanding = null;
 
             profileStandingScroll.SetActive(true);
@@ -738,7 +736,7 @@ namespace PIERStory
 
                 if (decoObjects.GetChild(i).GetComponent<ItemElement>() != null)
                     sending[LobbyConst.NODE_CURRENCY_LIST].Add(decoObjects.GetChild(i).GetComponent<ItemElement>().SaveJsonData(sortingOrder));
-                else if (decoObjects.GetChild(i).GetComponent<StandingElement>() != null)
+                else if (decoObjects.GetChild(i).GetComponent<StandingElement>() != null && decoObjects.GetChild(i).gameObject.activeSelf)
                     sending[LobbyConst.NODE_CURRENCY_LIST].Add(decoObjects.GetChild(i).GetComponent<StandingElement>().SaveStandingData(sortingOrder));
             }
 

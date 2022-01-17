@@ -113,7 +113,7 @@ namespace PIERStory {
                 PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MAIN);
                 PopupManager.main.ShowPopup(p, false);
             }
-            else if(UserManager.main.tutorialStep > 2 && SystemManager.appFirstExecute)
+            else if(UserManager.main.tutorialStep > 2 && SystemManager.appFirstExecute && !PlayerPrefs.HasKey("noticeOneday"))
             {
                 PopupBase p = PopupManager.main.GetPopup("Notice");
                 PopupManager.main.ShowPopup(p, false);

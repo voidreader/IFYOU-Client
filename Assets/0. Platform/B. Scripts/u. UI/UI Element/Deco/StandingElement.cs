@@ -33,30 +33,18 @@ namespace PIERStory
             currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
             standingImage.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_KEY), true);
 
-            posX = float.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_POS_X));
-            posY = float.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_POS_Y));
+            posX = SystemManager.GetJsonNodeFloat(__j, LobbyConst.NODE_POS_X);
+            posY = SystemManager.GetJsonNodeFloat(__j, LobbyConst.NODE_POS_Y);
 
             width = standingRect.sizeDelta.x;
             height = standingRect.sizeDelta.y;
 
-            angle = float.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ANGLE));
+            angle = SystemManager.GetJsonNodeFloat(__j, LobbyConst.NODE_ANGLE);
 
             RollbackTransform();
 
             if (connectElement != null)
                 profileItemElement = connectElement;
-        }
-
-        
-        public void SetRectTransInfo()
-        {
-            posX = standingRect.anchoredPosition.x;
-            posY = standingRect.anchoredPosition.y;
-
-            width = standingRect.sizeDelta.x;
-            height = standingRect.sizeDelta.y;
-
-            angle = standingRect.eulerAngles.y;
         }
 
         /// <summary>
@@ -91,11 +79,11 @@ namespace PIERStory
 
             data[LobbyConst.NODE_CURRENCY] = currencyName;
             data[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
-            data[LobbyConst.NODE_POS_X] = posX;
-            data[LobbyConst.NODE_POS_Y] = posY;
-            data[LobbyConst.NODE_WIDTH] = width;
-            data[LobbyConst.NODE_HEIGHT] = height;
-            data[LobbyConst.NODE_ANGLE] = angle;
+            data[LobbyConst.NODE_POS_X] = standingRect.anchoredPosition.x;
+            data[LobbyConst.NODE_POS_Y] = standingRect.anchoredPosition.y;
+            data[LobbyConst.NODE_WIDTH] = standingRect.sizeDelta.x;
+            data[LobbyConst.NODE_HEIGHT] = standingRect.sizeDelta.y;
+            data[LobbyConst.NODE_ANGLE] = standingRect.eulerAngles.y;
 
             return data;
         }

@@ -108,6 +108,9 @@ namespace PIERStory {
                     if (GameManager.main.isAutoPlay)
                         GameManager.main.StartAutoPlay();
 
+                    if (!GameManager.main.isPlaying)
+                        return;
+
                     foreach (GameSoundCtrl sc in GameManager.main.SoundGroup)
                         sc.PlayAudioClip(true);
                 }

@@ -37,6 +37,9 @@ namespace PIERStory {
         public override void Show()
         {
             base.Show();
+            
+            StartCoroutine(CheckTime());
+            
             isCompleteLoad = false;
             textLevel.text = string.Empty;
             textSpecialGiftName.text = string.Empty;
@@ -116,6 +119,12 @@ namespace PIERStory {
         }
         
         void OnLoadSpecialGift() {
+            isCompleteLoad = true;
+        }
+        
+        IEnumerator CheckTime() {
+            yield return new WaitForSeconds(3);
+            
             isCompleteLoad = true;
         }
         

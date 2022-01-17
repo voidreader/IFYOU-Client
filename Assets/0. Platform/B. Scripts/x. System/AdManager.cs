@@ -81,6 +81,19 @@ namespace PIERStory {
         }
         
         
+        /// <summary>
+        /// 전면에 등장하는 영상 광고, 전면광고 On/Off 에 대한 상태 처리 
+        /// </summary>
+        /// <param name="__flag"></param>
+        public void SetFrontAdStatus(bool __flag) {
+            isAdShowing = __flag;
+            
+            
+            // 추가 로직
+            // 광고의 실행, 종료에 따라 영향 받는 부분 로직
+        }
+        
+        
         #region ironSource
         /// <summary>
         /// 아이언 소스 

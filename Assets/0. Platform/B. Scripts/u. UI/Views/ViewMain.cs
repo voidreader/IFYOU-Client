@@ -20,6 +20,9 @@ namespace PIERStory {
         public static Action OnProfileChange = null;        // 프사, 테두리 변경시 호출
         public static Action<string> OnCategoryList;
         
+        public bool isView = false;
+        public bool isStartView = false;
+        
         
         [Header("로비")]
         [SerializeField] ScrollRect mainScrollRect;
@@ -86,6 +89,11 @@ namespace PIERStory {
         
         public override void OnView()
         {
+            if(isView)
+                return;
+                
+            isView = true; 
+            
             base.OnView();
 
             if (UserManager.main.tutorialStep > 2 && SystemManager.appFirstExecute && !PlayerPrefs.HasKey("noticeOneday") && !StoryManager.enterGameScene)
@@ -100,6 +108,11 @@ namespace PIERStory {
         }
         
         public override void OnStartView() {
+            
+            if(isStartView)
+                return;
+                
+            isStartView = true; 
             
             base.OnStartView();
             

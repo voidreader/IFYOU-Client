@@ -23,6 +23,7 @@ namespace PIERStory {
         [SerializeField] bool hasPurchaseHistory = false; // 구매 기록 
         
         [SerializeField] int mainGemQuantity = 0; // 메인 젬 수량 
+        [SerializeField] int subGemQuantity = 0; // 서브 젬 수량 
         [SerializeField] int bonusGemQuantity = 0; // 보너스 젬 수량
         [SerializeField] int coinQuantity = 0; // 코인 수량
         [SerializeField] int firstPurchaseBonusGem = 0; // 첫 구매 보너스 젬 
@@ -97,7 +98,15 @@ namespace PIERStory {
         /// </summary>
         void SetMainStarQuantity() {
             mainGemQuantity = getMainStarQuantity();
+            subGemQuantity = getSubStarQuantity();
+            
+            
             textMainStar.text = mainGemQuantity.ToString(); 
+            
+            if(subGemQuantity > 0) {
+                textMainStar.text += "+" + subGemQuantity.ToString(); // 더하기 붙인다. 
+            }
+            
         }
         
         /// <summary>
@@ -122,7 +131,8 @@ namespace PIERStory {
                 
             for(int i=0; i< productDetailJSON.Count; i++) {
                 // 메인이면서 화폐가 보석인것만. 
-                if(!SystemManager.GetJsonNodeBool(productDetailJSON[i], "first_purchase") 
+                if(!SystemManager.GetJsonNodeBool(productDetailJSON[i], "first_purchase")
+                    && SystemManager.GetJsonNodeBool(productDetailJSON[i], "is_main")
                     && SystemManager.GetJsonNodeString(productDetailJSON[i], "currency") == "gem") { 
                     
                     quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], "quantity"));
@@ -131,6 +141,26 @@ namespace PIERStory {
             
             return quantity;
         }
+        
+        int getSubStarQuantity() {
+            int quantity = 0;
+            
+            if(productDetailJSON == null) 
+                return quantity;
+                
+            for(int i=0; i< productDetailJSON.Count; i++) {
+                // 메인이 아니면서 화폐가 보석인것만. 
+                if(!SystemManager.GetJsonNodeBool(productDetailJSON[i], "first_purchase")
+                    && !SystemManager.GetJsonNodeBool(productDetailJSON[i], "is_main")
+                    && SystemManager.GetJsonNodeString(productDetailJSON[i], "currency") == "gem") { 
+                    
+                    quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], "quantity"));
+                }
+            }
+            
+            return quantity;
+        }
+        
         
         /// <summary>
         /// 코인 재화 수량 

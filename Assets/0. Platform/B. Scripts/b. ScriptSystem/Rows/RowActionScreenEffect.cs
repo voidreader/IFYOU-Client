@@ -46,7 +46,7 @@ namespace PIERStory
             // 구분자가 없는 경우 있음 
             if (!script_data.Contains(GameConst.SPLIT_SCREEN_EFFECT))
             {
-                Debug.Log(string.Format("<color=white>No screen effect split : {0}</color>", script_data));
+                // Debug.Log(string.Format("<color=white>No screen effect split : {0}</color>", script_data));
 
                 command = script_data;
                 paramOriginal = string.Empty;

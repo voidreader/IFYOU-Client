@@ -186,7 +186,7 @@ namespace PIERStory
             totalAssetCount = resourceData.Count; // 파일이 몇개인지 체크한다. 
             unloadAssetCount = totalAssetCount;
 
-            Debug.Log(JsonMapper.ToStringUnicode(resourceData));
+            // Debug.Log(JsonMapper.ToStringUnicode(resourceData));
 
             // scale과 offset 위치 정보
             gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_GAME_SCALE));

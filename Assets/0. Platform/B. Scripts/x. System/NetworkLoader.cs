@@ -758,7 +758,7 @@ namespace PIERStory
         /// <param name="response"></param>
         void OnResponseEmptyPostProcess(HTTPRequest request, HTTPResponse response)
         {
-            // CheckResponseValidation(request, response);
+            CheckResponseValidation(request, response);
         }
 
 
@@ -929,7 +929,7 @@ namespace PIERStory
                         // * response에서 fail을 준다. 
                         // * 이 경우는 서버 설정에 따라 진입을 막을지 허용할지 처리한다. allow_missing_resource
                         exceptionMessage = string.Format("{0}-{1} Message: {2}", response.StatusCode, response.Message, response.DataAsText);
-                        main.ReportRequestError(request.Uri.ToString(), exceptionMessage); // 오류 전송 
+                        // main.ReportRequestError(request.Uri.ToString(), exceptionMessage); // 오류 전송 
                         Debug.Log(string.Format("!!! Download response fail [{0}]", exceptionMessage));
                         return false; // 종료
                         

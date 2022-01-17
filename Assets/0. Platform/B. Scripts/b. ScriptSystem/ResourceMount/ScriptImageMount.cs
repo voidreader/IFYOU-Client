@@ -98,6 +98,7 @@ namespace PIERStory
 
             // ! 다운로드 처리. 다운로드 완료 후에도 texture와 sprite를 생성해두지 않는다. 
             var req = new HTTPRequest(new Uri(imageUrl), OnDownloadOnly);
+            req.Timeout = System.TimeSpan.FromSeconds(40);
             req.Send();
         }
 

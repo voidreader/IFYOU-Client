@@ -160,6 +160,13 @@ namespace PIERStory
         /// <param name="eventData"></param>
         public void OnPointerClick(PointerEventData eventData)
         {
+            
+            // 광고 볼때 터치 안되도록 처리 
+            if(AdManager.main.isAdShowing) {
+                Debug.Log(">> advertisement is showing now <<");
+                return;
+            }
+            
             // 로그 패널 활성화 중엔 입력 받지 않음.   
             if (logPanel.activeSelf)
                 return;

@@ -110,9 +110,9 @@ namespace PIERStory {
             GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
             configuration.title = "Coin Shop";
             configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
-            configuration.colorR = 0;
-            configuration.colorG = 0;
-            configuration.colorB = 0;
+            configuration.colorR = 255;
+            configuration.colorG = 255;
+            configuration.colorB = 255;
             configuration.colorA = 255;
             configuration.barHeight = 30;
             configuration.isBackButtonVisible = false;

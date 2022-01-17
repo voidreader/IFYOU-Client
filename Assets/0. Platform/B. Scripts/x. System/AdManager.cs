@@ -18,6 +18,9 @@ namespace PIERStory {
         
         public static Action<bool> OnCompleteRewardAD = null; // 동영상 광고 보고 콜백
         
+        // * 광고 도중 터치 막기 위한 변수.
+        public bool isAdShowing = false; // 현재 광고가 보여지고 있다.
+        
         public string rewardedAdUnitId = "Rewarded_Android";
         public string interstitialAdUnitId = "Interstitial_Android";
         
@@ -145,12 +148,12 @@ namespace PIERStory {
         }
         
         void BannerAdLoadedEvent() {
-            Debug.Log("ironSourceBanner Loaded");
+            Debug.Log("#### ironSourceBanner Loaded");
             isIronSourceBannerLoad = true;
         }
         
         void BannerAdLoadFailedEvent(IronSourceError error) {
-            Debug.Log("ironSource bannder fail : " + error.getDescription());
+            Debug.Log("#### ironSource bannder fail : " + error.getDescription());
         }
         
         void BannerAdClickedEvent() {
@@ -391,17 +394,27 @@ namespace PIERStory {
         void OnInterstitialShown(object sender, EventArgs args) {
             Debug.Log("InterstitialAd shown successfully.");
             // Execute logic for the ad showing successfully.
+            
+            isAdShowing = true;
         }
 
         void OnInterstitialFailedToShow(object sender, ShowErrorEventArgs args) {
             Debug.Log("InterstitialAd failed to show.");
             // Execute logic for the ad failing to show.
+            
+            isAdShowing = false;
         }
 
         private void OnInterstitialClosed(object sender, EventArgs e) {
             Debug.Log("InterstitialAd has closed");
+            
+            isAdShowing = false;
             // Execute logic after an ad has been closed.
             CreateInterstitial();
+            
+            // 광고 기록 
+            NetworkLoader.main.LogAdvertisement("interstitial");
+            
         }
    
                 
@@ -419,7 +432,7 @@ namespace PIERStory {
             rewardedAd.OnClosed += OnRewardedClosed;
             rewardedAd.OnUserRewarded += OnUserRewarded;
             rewardedAd.OnFailedShow += OnRewardedFailedToShow;
-            
+            rewardedAd.OnShowed += OnRewardedShow;
             rewardedAd.Load();
         }
         
@@ -453,6 +466,12 @@ namespace PIERStory {
             }
         }
         
+        void OnRewardedShow(object sender, System.EventArgs args) {
+            Debug.Log("OnRewardedShow");
+            isAdShowing = true;
+        }
+        
+        
         void OnRewardedLoaded(object sender, System.EventArgs args) {
             Debug.Log("OnRewardedLoaded");
         }
@@ -467,6 +486,7 @@ namespace PIERStory {
             // Execute logic for the user closing the ad.
             CreateRewardAd();
             
+            isAdShowing = false; // 광고가 종료되었음.
             
         }
         
@@ -475,6 +495,10 @@ namespace PIERStory {
             Debug.Log("Ad has rewarded user.");
             // Execute logic for rewarding the user.
             
+            
+            // 광고 기록
+            NetworkLoader.main.LogAdvertisement("rewarded");
+            
             isRewarded = true; // true로 변경! 다 봤다!
             OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
         }
@@ -482,6 +506,8 @@ namespace PIERStory {
         void OnRewardedFailedToShow(object sender, ShowErrorEventArgs args) {
             Debug.Log("Ad failed to show.");
             // Execute logic for the ad failing to show.
+            
+            isAdShowing = false; // 광고가 종료되었음.
         }
         
         #endregion

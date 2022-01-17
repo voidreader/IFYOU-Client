@@ -123,7 +123,8 @@ namespace PIERStory {
 
             NetworkLoader.main.RequestNoticeList();     // 공지사항 리스트 요청
             NetworkLoader.main.RequestPromotionList();  // 프로모션 리스트 요청
-            UserManager.main.GetProfileCurrent();       // 사용자 프로필 정보 요청
+            // UserManager.main.GetProfileCurrent();       // 사용자 프로필 정보 요청 
+            // * => 로그인에서 같이 처리 
             
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
 

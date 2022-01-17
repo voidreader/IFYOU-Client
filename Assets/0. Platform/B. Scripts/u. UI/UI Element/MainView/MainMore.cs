@@ -57,10 +57,15 @@ namespace PIERStory {
             currentShow = true;
 
             // 데이터 사용 허용
-            if (PlayerPrefs.GetInt(SystemConst.KEY_NETWORK_DOWNLOAD) > 0)
-                dataUseToggle.isOn = true;
-            else
-                dataUseToggle.isOn = false;
+            if (PlayerPrefs.GetInt(SystemConst.KEY_NETWORK_DOWNLOAD) > 0) {
+                // dataUseToggle.isOn = true;
+                dataUseToggle.SetIsOn(true, false);
+                
+            }
+            else {
+                // dataUseToggle.isOn = false;
+                dataUseToggle.SetIsOn(false, false);
+            }
         }
 
         public void HideMainMore()
@@ -87,29 +92,25 @@ namespace PIERStory {
             textUID.text = string.Format("UID : {0}", UserManager.main.GetUserPinCode());               // UID
 
 
+
             #region 게임베이스 push
 
-            if (Application.isEditor)
+            if (Application.isEditor) {
+                pushToggle.SetIsOn(false, false); 
+                nightPushToggle.SetIsOn(false, false);                
                 return;
+            }
 
 
-            Gamebase.Push.QueryTokenInfo((data, error) =>
-            {
-                if (Gamebase.IsSuccess(error))
-                {
-                    pushToggle.isOn = data.agreement.adAgreement;
-                    nightPushToggle.isOn = data.agreement.adAgreementNight;
-
-                    Debug.Log(string.Format("TokenInfo = pushAlert : {0}, nightPush : {1}", data.agreement.adAgreement, data.agreement.adAgreementNight));
-                }
-                else
-                    Debug.LogError(string.Format("QueryToken response failed. Error : {0}", error));
-            });
-
+            // 푸시 토글 세팅 
+            if(SystemManager.main.pushTokenInfo == null) {
+                
+            }
+            else {
+                pushToggle.SetIsOn(SystemManager.main.pushTokenInfo.agreement.adAgreement, false); 
+                nightPushToggle.SetIsOn(SystemManager.main.pushTokenInfo.agreement.adAgreementNight, false);                
+            }
             
-
-            #endregion
-
             if (pushToggle.isOn)
                 pushToggle.OnToggleOnCallback.Execute();
             else
@@ -120,14 +121,15 @@ namespace PIERStory {
                 nightPushToggle.OnToggleOnCallback.Execute();
             else
                 nightPushToggle.OnToggleOffCallback.Execute();
+            #endregion
 
-            /*
-            if (dataUseToggle.isOn)
-                dataUseToggle.OnToggleOnCallback.Execute();
-            else
-                dataUseToggle.OnToggleOffCallback.Execute();
-            */
+
         }
+        
+        void RefreshPushSettings() {
+
+        }
+        
 
 
         /// <summary>

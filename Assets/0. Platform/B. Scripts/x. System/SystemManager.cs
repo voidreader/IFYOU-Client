@@ -49,6 +49,8 @@ namespace PIERStory
         [SerializeField] string clientStatusString = string.Empty;
         [SerializeField] string serverAccessAddress = string.Empty; // 게임베이스에서 전송받은 서버 접속 주소 
         [SerializeField] string gamebaseID = string.Empty;
+        
+        public GamebaseResponse.Push.TokenInfo pushTokenInfo = null; // 게임베이스 푸시 토큰 정보 
 
 
         // 스크린 관련 정보
@@ -832,6 +834,28 @@ namespace PIERStory
 
 
         /// <summary>
+        /// 푸시 토큰 정보 불러오기 
+        /// </summary>
+        public void QueryPushTokenInfo() {
+                
+                    
+            Gamebase.Push.QueryTokenInfo((data, error) =>
+            {
+                if (Gamebase.IsSuccess(error))
+                {
+                    pushTokenInfo = data; // 데이터 설정 
+                    Debug.Log(string.Format("### Push TokenInfo = pushAlert : {0}, nightPush : {1}", data.agreement.adAgreement, data.agreement.adAgreementNight));
+                }
+                else
+                    Debug.LogError(string.Format("### QueryToken response failed. Error : {0}", error));
+                    
+                    
+                // MainMore.OnRefreshMore?.Invoke();
+            });
+            
+        }
+
+        /// <summary>
         /// 로그인 후 약관 동의 팝업 등장
         /// </summary>
         public void ShowAgreementTermsPopUp()
@@ -1245,7 +1269,9 @@ namespace PIERStory
              // ! 연결된 계정 다시 로드 
             UserManager.main.InitUser(Gamebase.GetUserID());
             
+            
             // 통신이 완료될때까지 기다려야한다.
+            yield return  null; 
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
             yield return  null; 

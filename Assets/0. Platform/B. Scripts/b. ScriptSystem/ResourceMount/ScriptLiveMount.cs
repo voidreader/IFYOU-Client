@@ -157,6 +157,7 @@ namespace PIERStory
                     // 파일이 없으면 network로 불러온다.
                     var req = new HTTPRequest(new Uri(file_url), OnModelDownloaded);
                     req.Tag = JsonMapper.ToJson(resourceData[i]); // 태그의 데이터로 얘를 넘겨버리자. 
+                    req.Timeout = System.TimeSpan.FromSeconds(40);
                     req.Send();
                 }
                 else

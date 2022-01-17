@@ -198,7 +198,7 @@ namespace PIERStory
         /// </summary>
         public void InitUser(string __gamebaseID)
         {
-            Debug.Log("<color=cyan>Init user info </color>");
+            Debug.Log(string.Format("<color=cyan>Init user info [{0}]</color>", __gamebaseID));
             gamebaseID = __gamebaseID;
 
             // 로그인 프로세스를 시작합니다. 
@@ -247,7 +247,7 @@ namespace PIERStory
             // 유저 정보
             SetUserInfo(userJson);
            
-
+            
 
             // 유저 정보 불러왔으면, Lobby로 진입을 요청합니다. 
             completeReadUserData = true;
@@ -307,9 +307,9 @@ namespace PIERStory
         /// <summary>
         /// userkey및 기타 닉네임, 레벨 정도 설정 
         /// </summary>
-        /// <param name="__j"></param>
-        void SetUserInfo(JsonData __j) {
-            userJson = SystemManager.GetJsonNode(__j, "account"); // 유저 json 
+        /// <param name="__accountInfo"></param>
+        void SetUserInfo(JsonData __accountInfo) {
+            userJson = SystemManager.GetJsonNode(__accountInfo, "account"); // 유저 json 
             
             userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
             tutorialStep = int.Parse(SystemManager.GetJsonNodeString(userJson, "tutorial_step"));
@@ -319,6 +319,11 @@ namespace PIERStory
             
             // 레벨 정보
             SetLevelInfo();
+            
+            // 프로필 정보 
+            if(__accountInfo.ContainsKey("profile")) { // 프로필 정보가 있을때만. 
+                userProfile = __accountInfo["profile"];
+            }
         }
         
         public void SetNewNickname(string __newNickname) {

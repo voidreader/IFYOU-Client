@@ -72,6 +72,9 @@ namespace PIERStory
 
         [SerializeField] int failCount = 0; // 통신 실패 카운트 
         [SerializeField] bool isFailMessageShow = false; // 통신 실패 메세지 오픈 여부 
+        
+        [SerializeField] int downloadFailCount = 0; // 다운로드 실패 카운트
+        [SerializeField] bool isDownloadFailMessageShow = false; // 다운로드 실패 메세지 오픈 여부 
 
         [SerializeField] string _url = string.Empty; // 서버 URL 
         [SerializeField] string _requestURL = string.Empty; // REQUEST URL
@@ -152,6 +155,27 @@ namespace PIERStory
         #endregion
 
         #region 기타 통신 RequestGamebaseLaunching, UpdateEpisodeStartRecord, UpdateEpisodeCompleteRecord
+        
+        
+        /// <summary>
+        /// 광고 기록 
+        /// </summary>
+        /// <param name="__projectID"></param>
+        /// <param name="__adType"></param>
+        public void LogAdvertisement(string __adType) {
+            JsonData sending = new JsonData();
+            sending["func"] = "insertUserAdHistory";
+            
+            if(string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
+                sending["project_id"] = StoryManager.main.CurrentProjectID;
+            
+                
+            sending["ad_type"] = __adType;
+            
+            SendPost(NetworkLoader.main.OnResponseEmptyPostProcess, false);
+            
+        }
+        
         
         /// <summary>
         /// 유저에게 재화지급
@@ -863,6 +887,10 @@ namespace PIERStory
             Application.Quit();
         }
         
+        static void OnResourceDownloadFail() {
+            SystemManager.LoadLobbyScene();
+        }
+        
         /// <summary>
         /// 리소스 다운로드에 대한 유효성 체크 
         /// </summary>
@@ -878,8 +906,15 @@ namespace PIERStory
                 
                 
                 case HTTPRequestStates.Finished:
-                    if(response.IsSuccess)
-                        return true;
+                    if(response.IsSuccess) {
+                        
+                        // 실패 메세지 보여지는 중이 아니라면 카운트 0으로 초기화
+                        if(!main.isDownloadFailMessageShow)
+                            main.downloadFailCount = 0;
+                        
+                        
+                        return true; // 종료
+                    }
                     else {
                         
                         // 없는 리소스 허용하면, true 리턴 
@@ -892,10 +927,13 @@ namespace PIERStory
                         // * response에서 fail을 준다. 
                         // * 이 경우는 서버 설정에 따라 진입을 막을지 허용할지 처리한다. allow_missing_resource
                         exceptionMessage = string.Format("{0}-{1} Message: {2}", response.StatusCode, response.Message, response.DataAsText);
+                        main.ReportRequestError(request.Uri.ToString(), exceptionMessage); // 오류 전송 
                         Debug.Log(string.Format("!!! Download response fail [{0}]", exceptionMessage));
+                        return false; // 종료
+                        
+                        
                     }
                 
-                break;
                 
                 default:
                 exceptionMessage = request.State.ToString();
@@ -903,18 +941,29 @@ namespace PIERStory
                 break;
             }
 
-            main.ReportRequestError(request.Uri.ToString(), exceptionMessage);
             
-            if(GetRequestRetryCount(request) > 0) {
-                request.Send();
-            }
-            else {
-                // 3번 모두 실패하면 로비로 돌려보낸다.
-                SystemManager.HideNetworkLoading();
-                SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("80084"), SystemManager.LoadLobbyScene, null, false);
+            
+            if(!string.IsNullOrEmpty(exceptionMessage)) {
+                // 시간초과이거나, 다운받지 못한 경우... 
+                Debug.LogError("Download Fail : " + exceptionMessage);
+                main.downloadFailCount++;
+                
+                if(!main.isDownloadFailMessageShow && main.downloadFailCount >= 5) {
+                    SystemManager.HideNetworkLoading();
+                    
+                    // ! 오류 메세지. 
+                    // 게임 밖으로 내보낸다. 
+                    SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("80084"), OnResourceDownloadFail, OnResourceDownloadFail, false);
+                    return false; // 이제 그만 보내. 
+                }
+                
+                request.Send(); // 다시 보낸다.  
             }
             
+            
+            // SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("80084"), SystemManager.LoadLobbyScene, null, false);
             return false;
+
         }
         
         /// <summary>

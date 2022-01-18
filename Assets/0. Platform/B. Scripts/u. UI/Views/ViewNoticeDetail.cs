@@ -69,7 +69,7 @@ namespace PIERStory
         {
             base.OnHideView();
 
-            if(SystemManager.appFirstExecute && !PlayerPrefs.HasKey("noticeOneday"))
+            if(SystemManager.appFirstExecute && !PlayerPrefs.HasKey("noticeOneday") && SystemManager.main.noticeData != null)
             {
                 Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
 

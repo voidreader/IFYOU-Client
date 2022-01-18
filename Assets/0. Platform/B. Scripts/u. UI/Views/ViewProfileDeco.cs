@@ -486,7 +486,10 @@ namespace PIERStory
             else
             {
                 if (controlStanding != null)
+                {
+                    controlStanding.RemoveFromScreen();
                     Destroy(controlStanding.gameObject);
+                }
                 else
                     controlStandingItemElement.currentCount--;
             }

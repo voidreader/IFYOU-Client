@@ -100,7 +100,7 @@ namespace PIERStory {
             BackButton.blockBackInput = false; // block 해제
             
             
-            if(isOverlayUse)
+            if(isOverlayUse && overlay != null)
                 overlay.Hide();
                 
                 

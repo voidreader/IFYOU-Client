@@ -179,7 +179,9 @@ namespace PIERStory {
         /// </summary>
         public void HideActivePopup() {
             for(int i=0; i<ListShowingPopup.Count;i++) {
-                ListShowingPopup[i].Hide();
+                
+                if(ListShowingPopup[i] != null)
+                    ListShowingPopup[i].Hide();
             }
         }
         

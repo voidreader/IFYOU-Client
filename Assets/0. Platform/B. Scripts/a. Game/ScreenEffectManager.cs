@@ -774,6 +774,8 @@ namespace PIERStory
                             break;
                     }
 
+                    bgFog.gameObject.SetActive(true);
+
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_SCREEN_FOG:
@@ -808,6 +810,8 @@ namespace PIERStory
                             backFogEmission.rateOverTime = 5f;
                             break;
                     }
+
+                    screenFog.gameObject.SetActive(true);
 
                     break;
 

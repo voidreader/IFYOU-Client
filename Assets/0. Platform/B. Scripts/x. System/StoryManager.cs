@@ -409,7 +409,7 @@ namespace PIERStory
         /// <param name="res"></param>
         void CallbackStoryInfo(HTTPRequest req, HTTPResponse res)
         {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
+            if (!NetworkLoader.CheckResponseValidation(req, res, true))
             {
                 Debug.LogError("Network Error in CallbackStoryInfo"); 
                 
@@ -417,7 +417,7 @@ namespace PIERStory
                 return;
             }
             
-            
+            Debug.Log("#### Callback Story Info");
 
             // 작품의 기준정보, 작품과 관련된 유저 정보.. 엄청나게 많이 온다. 
             // 모든 정보는 받아와서 UserManager에게 넘겨주고 (사용자 정보가 포함되어있다.) 

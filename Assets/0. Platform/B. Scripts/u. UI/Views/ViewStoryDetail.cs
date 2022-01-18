@@ -78,6 +78,8 @@ namespace PIERStory {
         {
             base.OnView();
             
+            SystemManager.HideNetworkLoading();
+            
             UserManager.OnRequestEpisodeReset = this.OnStartView;
             UserManager.OnFreepassPurchase = this.SetFreepassInfo;
             RefreshStoryDetail = this.OnStartView;

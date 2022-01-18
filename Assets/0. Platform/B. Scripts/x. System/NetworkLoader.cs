@@ -801,20 +801,20 @@ namespace PIERStory
                 Debug.Log(e.StackTrace);
             } // ? func 추출 완료
 
-            // 일부 화면에서는 수동으로 네트워크 로딩 화면을 제거하고 싶다.
-            if (CheckServerWork() && !dontHideNetworkLoading)
-                SystemManager.HideNetworkLoading();
+
 
             #endregion
             
             // 통신 Error 핸들링 
             switch(request.State) {
                 case HTTPRequestStates.Finished:
-                
-                    SystemManager.HideNetworkLoading(); // 실패했을때 네트워크 로딩은 제거해주자.
-                
+
                     //통신이 실질적으로 완료됨.
                     main.ListNetwork.Remove(_reqData[CommonConst.FUNC].ToString());
+                    
+                    // 일반적으로 네트워크 로딩 제거 
+                    if(CheckServerWork() && !dontHideNetworkLoading)
+                        SystemManager.HideNetworkLoading();                     
                 
                     // 실패 메세지가 보여지는 중이 아니라면 count 0으로 초기화
                     if(!main.isFailMessageShow)
@@ -832,6 +832,8 @@ namespace PIERStory
                         // status가 error로 날아오는 경우에 대한 메세지 처리 (2021.11.02)
                         if (!string.IsNullOrEmpty(message))
                             SystemManager.ShowLobbySubmitPopup(message);    // 메세지 띄워주고.
+                        
+                        SystemManager.HideNetworkLoading(); // 여기서는 무조건 제거 
                         
                         return false; 
                     }
@@ -853,6 +855,10 @@ namespace PIERStory
                 
                 case HTTPRequestStates.TimedOut: // 서버에서 주어진 시간내에 응답을 하지 못함
                 message = SystemManager.GetLocalizedText("6176");
+                break;
+                
+                default: 
+                message = "Unknown error occurred.";
                 break;
             }
             

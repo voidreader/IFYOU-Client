@@ -643,6 +643,8 @@ namespace PIERStory
                             break;
                     }
 
+                    fire.gameObject.SetActive(true);
+
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BLING:

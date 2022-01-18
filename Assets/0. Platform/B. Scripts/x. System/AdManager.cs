@@ -5,6 +5,8 @@ using UnityEngine;
 using Unity.Services.Mediation;
 using Unity.Services.Core;
 using LitJson;
+using Unity.Advertisement.IosSupport.Components;
+
 
 
 
@@ -74,11 +76,40 @@ namespace PIERStory {
         // Start is called before the first frame update
         void Start()
         {
+            // iOS 추적 권한 요청 
+            RequestAuthorizationTracking(); 
+            
 
             InitUnityMediation();
             
             InitIronSource();
         }
+        
+        /// <summary>
+        /// 추적 권한 요청 
+        /// </summary>
+        void RequestAuthorizationTracking() {
+            
+#if UNITY_IOS
+            // check with iOS to see if the user has accepted or declined tracking
+            var status = ATTrackingStatusBinding.GetAuthorizationTrackingStatus();
+            Version currentVersion = new Version(Device.systemVersion); 
+            Version ios14 = new Version("14.5"); 
+           
+            if (status == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED && currentVersion >= ios14)
+            {
+                // 호출 
+                ATTrackingStatusBinding.RequestAuthorizationTracking(AuthorizationTrackingReceived);
+            }
+#endif        
+    
+        }
+        
+        private void AuthorizationTrackingReceived(int status) {
+             Debug.LogFormat("Tracking status received: {0}", status);
+
+        }
+        
         
         
         /// <summary>

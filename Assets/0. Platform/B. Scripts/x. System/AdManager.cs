@@ -5,7 +5,11 @@ using UnityEngine;
 using Unity.Services.Mediation;
 using Unity.Services.Core;
 using LitJson;
-using Unity.Advertisement.IosSupport.Components;
+
+#if UNITY_IOS
+using UnityEngine.iOS;
+using Unity.Advertisement.IosSupport;
+#endif
 
 
 
@@ -89,12 +93,18 @@ namespace PIERStory {
         /// 추적 권한 요청 
         /// </summary>
         void RequestAuthorizationTracking() {
+            if(Application.isEditor)
+                return;
             
 #if UNITY_IOS
+
             // check with iOS to see if the user has accepted or declined tracking
             var status = ATTrackingStatusBinding.GetAuthorizationTrackingStatus();
             Version currentVersion = new Version(Device.systemVersion); 
             Version ios14 = new Version("14.5"); 
+            
+            Debug.Log(string.Format("### ATTrackingStatusBinding {0}/{1}", status.ToString(), ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED.ToString()));
+            Debug.Log(currentVersion.ToString());
            
             if (status == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED && currentVersion >= ios14)
             {

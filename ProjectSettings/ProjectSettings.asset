@@ -148,6 +148,9 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -169,7 +172,7 @@ PlayerSettings:
     iPhone: pier.make.story
   buildNumber:
     Standalone: 0
-    iPhone: 117
+    iPhone: 122
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
   AndroidBundleVersionCode: 121
@@ -531,9 +534,11 @@ PlayerSettings:
   enableInternalProfiler: 0
   logObjCUncaughtExceptions: 1
   enableCrashReportAPI: 0
-  cameraUsageDescription: 
+  cameraUsageDescription: Granting access will allow you to take photos and add them
+    to attachment fields
   locationUsageDescription: 
-  microphoneUsageDescription: 
+  microphoneUsageDescription: Granting access will allow you to take photos and add
+    them to attachment fields
   bluetoothUsageDescription: 
   switchNMETAOverride: 
   switchNetLibKey: 
@@ -771,7 +776,7 @@ PlayerSettings:
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
     1: ODIN_INSPECTOR;ODIN_INSPECTOR_3
-    4: ODIN_INSPECTOR;ODIN_INSPECTOR_3
+    4: ODIN_INSPECTOR;ODIN_INSPECTOR_3;ENABLE_LOG
     7: ODIN_INSPECTOR;ODIN_INSPECTOR_3;ENABLE_LOG
   additionalCompilerArguments: {}
   platformArchitecture: {}

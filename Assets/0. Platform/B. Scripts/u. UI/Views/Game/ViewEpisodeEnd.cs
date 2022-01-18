@@ -63,13 +63,9 @@ namespace PIERStory
             }
 
 
-
             // 에피소드가 완료되었으니 모든 사운드를 멈춘다
             foreach (GameSoundCtrl sc in GameManager.main.SoundGroup)
-            {
-                if (sc.GetIsPlaying)
-                    sc.StopAudioClip();
-            }
+                sc.StopAudioClip();
 
 
             // 사용자가 현재 화에서 선택한 선택지 셋팅

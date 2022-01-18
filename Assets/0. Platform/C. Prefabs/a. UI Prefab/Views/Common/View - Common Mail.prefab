@@ -234,6 +234,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4346469982237190099}
+  - component: {fileID: 8801959645547217294}
   m_Layer: 5
   m_Name: MailContents
   m_TagString: Untagged
@@ -264,6 +265,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -55}
   m_SizeDelta: {x: 0, y: -110}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8801959645547217294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4346469982237190096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c97afc556caea1c44969477eb7ddec74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Panel: {fileID: 4346469982237190099}
+  m_HorizontalConstraintType: 0
+  m_HorizontalConstraint: 2
+  m_VerticalConstraintType: 2
+  m_VerticalConstraint: 0
+  m_DefaultAnchorMin: {x: 0, y: 0}
+  m_DefaultAnchorMax: {x: 1, y: 1}
 --- !u!1 &4346469982247019517
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,7 +539,6 @@ GameObject:
   - component: {fileID: 4346469982337526871}
   - component: {fileID: 4346469982337526868}
   - component: {fileID: 4346469982337526867}
-  - component: {fileID: 8153270814932954646}
   m_Layer: 5
   m_Name: View - Common Mail
   m_TagString: Untagged
@@ -1297,25 +1316,6 @@ MonoBehaviour:
   - {fileID: 4967678388585028753}
   - {fileID: 4967678389150367548}
   - {fileID: 4967678389885786255}
---- !u!114 &8153270814932954646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4346469982337526858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c97afc556caea1c44969477eb7ddec74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Panel: {fileID: 4346469982337526869}
-  m_HorizontalConstraintType: 0
-  m_HorizontalConstraint: 2
-  m_VerticalConstraintType: 1
-  m_VerticalConstraint: 0
-  m_DefaultAnchorMin: {x: 0, y: 0}
-  m_DefaultAnchorMax: {x: 1, y: 1}
 --- !u!1 &4346469982376760379
 GameObject:
   m_ObjectHideFlags: 0

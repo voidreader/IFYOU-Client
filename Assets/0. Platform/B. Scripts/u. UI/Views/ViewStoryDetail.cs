@@ -481,6 +481,12 @@ namespace PIERStory
 
             // 갱신된 정보를 버튼에 반영 
             SetLikeButtonState();
+
+            // 눌렀을 때만 Alert popup이 뜨도록 수정
+            if (StoryManager.main.CheckProjectLike(StoryManager.main.CurrentProjectID))
+                SystemManager.ShowSimpleAlertLocalize("6188");
+            else
+                SystemManager.ShowSimpleAlertLocalize("6189");
         }
 
         /// <summary>
@@ -489,15 +495,9 @@ namespace PIERStory
         void SetLikeButtonState()
         {
             if (StoryManager.main.CheckProjectLike(StoryManager.main.CurrentProjectID))
-            {
                 btnLike.image.sprite = spriteLikeOn;
-                SystemManager.ShowSimpleAlertLocalize("6188");
-            }
             else
-            {
                 btnLike.image.sprite = spriteLikeOff;
-                SystemManager.ShowSimpleAlertLocalize("6189");
-            }
         }
 
     }

@@ -13,7 +13,7 @@ namespace PIERStory
     public class GameManager : MonoBehaviour
     {
         public static GameManager main = null;      // singleton
-        
+
 
         // 이어하기 변수
         public static bool isResumePlay = false;        // 이어하기를 통한 진입인가?
@@ -42,16 +42,17 @@ namespace PIERStory
         public bool useSkip = false;                // 스킵을 사용했는가?
         public bool skipable = false;               // 스킵 기능 사용이 가능한가?
         public bool isAutoPlay = false;
-        
+
         public bool isJustSkipStop = false; // * 막 스킵이 끝났는지 체크 변수 
-        
+
         public ViewGameMenu inGameMenu;
         public string currentSceneId = string.Empty;    // 현재 sceneId(사건ID)
 
         public int episodeDownloadableResourceCount = 0;
 
 
-        [Space][Header("인게임 배경")]
+        [Space]
+        [Header("인게임 배경")]
         public GameSpriteCtrl currentBG; // 현재 보여주고 있는 배경 
         public ScriptImageMount currentBackgroundMount = null;
         public int indexPoolBG = 0;
@@ -70,7 +71,8 @@ namespace PIERStory
         public RawImage liveObjectTexture;
 
 
-        [Space][Header("스탠딩 모델")]
+        [Space]
+        [Header("스탠딩 모델")]
         public ScriptModelMount standingSpeaker = null;
         public GameModelCtrl[] characterModels = new GameModelCtrl[3];  // 0 : 좌, 1:중앙, 2:우
         public Sprite defaultCharacterSprite;
@@ -78,13 +80,16 @@ namespace PIERStory
         public Transform modelPillar;           // 캐릭터 모델의 부모 transform.
 
 
-        [Space][Space]
+        [Space]
+        [Space]
         public string targetSelectionSceneID = string.Empty;    // 선택지 선택 후 이동할 사건ID
         public bool isSelectionInputWait = false;               // 선택지 입력 기다리기!
 
 
 
-        [Space][Space][Header("리소스 접근을 위한 Dictionary")]
+        [Space]
+        [Space]
+        [Header("리소스 접근을 위한 Dictionary")]
         public Dictionary<string, GameSpriteCtrl> DictIllusts = new Dictionary<string, GameSpriteCtrl>();                     // 일러스트 Dictionary
         public Dictionary<string, ScriptLiveMount> DictLiveIllusts = new Dictionary<string, ScriptLiveMount>();               // Live illust Dictionary
         public Dictionary<string, ScriptLiveMount> DictLiveObjs = new Dictionary<string, ScriptLiveMount>();                  // Live Object Dictionary
@@ -117,7 +122,8 @@ namespace PIERStory
         [Space]
         public NetworkLoadingScreen gameNetworkLoadingScreen;
 
-        [Space][Header("Sprite resources")]
+        [Space]
+        [Header("Sprite resources")]
         public Sprite spriteSelectionNormalBase = null;     // 일반 선택지 
         public Sprite spriteSelectionLockedBase = null;     // 선택지 잠금 상태
         public Sprite spriteSelectionUnlockedBase = null;   // 선택지 활성 상태 스프라이트 
@@ -128,7 +134,7 @@ namespace PIERStory
 
         // 자동 재생
         IEnumerator autoPlayCorountine;
-        
+
 
         #region Properties
 
@@ -189,7 +195,7 @@ namespace PIERStory
         IEnumerator Start()
         {
             Debug.Log(">>>>> GameManager Start <<<<<");
-            
+
             PopupManager.main.InitPopupManager();
 
             GarbageCollect();
@@ -202,7 +208,7 @@ namespace PIERStory
             Debug.Log("GameManager account check done");
 
             // 로비에서 에피소드 선택해서 게임씬에 진입한 경우
-            if(SystemManager.main.givenEpisodeData != null)
+            if (SystemManager.main.givenEpisodeData != null)
                 SelectEpisode(SystemManager.main.givenEpisodeData); // 바로 선택한 에피소드 할당 처리
             else
             {
@@ -217,17 +223,20 @@ namespace PIERStory
             SoundSetting(GameConst.VOICE_MUTE, 1);
             SoundSetting(GameConst.SOUNDEFFECT_MUTE, 2);
 
-            
+
         }
-        
-        void Update() {
-            if(Input.GetKeyDown(KeyCode.X)){
-                ScriptRow lastRow =  currentPage.FindLastSceneRow();
-                if(lastRow != null) {
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                ScriptRow lastRow = currentPage.FindLastSceneRow();
+                if (lastRow != null)
+                {
                     HandleScriptJump(lastRow);
                 }
             }
-            
+
         }
 
 
@@ -373,7 +382,7 @@ namespace PIERStory
 
             for (int i = 0; i < PoolIllust.Count; i++)
                 PoolIllust[i].gameObject.SetActive(false);
-            
+
             indexPoolIllust = 0;
             indexPoolBG = 0;
 
@@ -430,12 +439,13 @@ namespace PIERStory
         {
             return currentPage.IsPageInitialized();
         }
-        
+
         /// <summary>
         /// 로딩 막히는부분 좀 찾을려고..
         /// </summary>
         /// <returns></returns>
-        public string GetDebugDouwnloadFactor() {
+        public string GetDebugDouwnloadFactor()
+        {
             return currentPage.GetDebugLoadingCount();
         }
 
@@ -556,7 +566,7 @@ namespace PIERStory
 
             // ! 이어하기 유효성 검사 
             CheckResumePlayValidation();
-            
+
             // ! 띠배너 광고 
             AdManager.main.LoadBanner();
 
@@ -576,18 +586,20 @@ namespace PIERStory
                 // * 이어하기 추가 처리
                 // * 조심스럽게 바꿔본다. 2021.12.08
                 // * 망했다. 다시 바꾼다. 2021.12.15
-                if(isResumePlay) { // true일때만 호출해야한다.
+                if (isResumePlay)
+                { // true일때만 호출해야한다.
                     // 정지 포인트에서 useSkip을 false로 바꿔야 한다. 
                     useSkip = CheckResumePlayStopPoint();
-                    
+
                     // 방금 스킵이 종료되었다면, 아래 변수를 true로 처리한다.
-                    if(!useSkip) {
+                    if (!useSkip)
+                    {
 
                         // * skip으로 진행되다가, 마지막 중단지점에서 갑자기 이전 라인을 트윈시키기 때문에
                         // * 캐릭터 2인 스탠딩 구도에 변화가 필요할때 아래 변수가 필요하다.
                         // * 2인 스탠딩에서 1인 스탠딩으로 신규캐릭터가 등장하는 시점 등이 문제가 되었다. 
                         // * 이 변수는 현재는 오직 GameModelCtrl과 관련된 곳에서만 사용된다. 
-                        isJustSkipStop = true;  
+                        isJustSkipStop = true;
                     }
                 }
                 else
@@ -602,8 +614,8 @@ namespace PIERStory
 
                 // 현재 '행'의 동작을 수행합니다. 
                 currentRow.ProcessRowAction(OnFinishedRowAction, useSkip);
-                
-     
+
+
                 // * 일반 플레이. 
                 if (!useSkip)
                 {
@@ -615,7 +627,7 @@ namespace PIERStory
                     while (isWaitingScreenTouch) // 화면을 터치해줘야 다음으로 넘어갑니다.
                         yield return null;
                 }
-                
+
                 isJustSkipStop = false; // 한번 액션이 일어났으면 false로 변경.
 
                 // 선택지 입력이 필요할때는 기다려야해..!
@@ -633,16 +645,16 @@ namespace PIERStory
                 HandleScriptJump(currentRow);
 
                 currentRow = currentPage.GetNextRow(); // 새로운 행 받아오기
-                
+
                 // 광고 처리 추가 (SKIP 아닐때)
-                if(!useSkip)
-                    AdManager.main.AddGameRowCount(); 
+                if (!useSkip)
+                    AdManager.main.AddGameRowCount();
 
             }
-            
+
 
             GarbageCollect();
-            
+
             // 띠배너 보여주고 있었다면 감추기.
             AdManager.main.HideBanner();
 
@@ -726,16 +738,18 @@ namespace PIERStory
 
 
         #region AutoPlay 
-        
-        public void StartAutoPlay() {
+
+        public void StartAutoPlay()
+        {
 
             if (autoPlayCorountine == null)
                 return;
 
             StartCoroutine(autoPlayCorountine);
         }
-        
-        public void StopAutoPlay() {
+
+        public void StopAutoPlay()
+        {
 
             if (autoPlayCorountine == null)
                 return;
@@ -752,7 +766,7 @@ namespace PIERStory
 
             while (isPlaying)
             {
-                if(AdManager.main.isAdShowing)
+                if (AdManager.main.isAdShowing)
                 {
                     isAutoPlay = false;
                     yield break;
@@ -761,7 +775,7 @@ namespace PIERStory
 
                 yield return new WaitUntil(() => !isThreadHold);
 
-                if(!isThreadHold && isWaitingScreenTouch)
+                if (!isThreadHold && isWaitingScreenTouch)
                 {
 
                     // 보이스가 재생이 끝날때까지 대기
@@ -776,10 +790,10 @@ namespace PIERStory
 
                     Debug.Log(">> Auto Click <<");
 
-                    if(!isThreadHold)
+                    if (!isThreadHold)
                         isWaitingScreenTouch = false;
                 }
-                
+
                 yield return null;
             }
         }
@@ -823,8 +837,8 @@ namespace PIERStory
                         characterIndex = 0;
                     else
                         characterIndex = 2;
-                        
-                    Debug.Log(string.Format("SetTalkProcess start [{0}] / [{1}]", __row.direction , __row.speaker));
+
+                    Debug.Log(string.Format("SetTalkProcess start [{0}] / [{1}]", __row.direction, __row.speaker));
 
                     // 동일한 사이드 캐릭터가 계속 말하는중
                     if (isSameTalker)
@@ -964,15 +978,16 @@ namespace PIERStory
         void SetCharacterReady(string speaker, int index)
         {
             standingSpeaker = GetConnectedModelMount(speaker);
-            
+
             // * 모델 생성전이면 생성하고 처리 
-            if(!standingSpeaker.isModelCreated) {
+            if (!standingSpeaker.isModelCreated)
+            {
                 standingSpeaker.InstantiateCubismModel();
             }
-            
+
             // 모델 컨트롤러 할당
             characterModels[index] = standingSpeaker.modelController;
-            
+
             Debug.Log(string.Format("SetCharacterReady done [{0}], [{1}]", speaker, index));
         }
 
@@ -984,7 +999,7 @@ namespace PIERStory
         /// <returns></returns>
         public bool CheckModelMoveComlete()
         {
-            for(int i=0;i< characterModels.Length;i++)
+            for (int i = 0; i < characterModels.Length; i++)
             {
                 if (characterModels[i] == null)
                     continue;
@@ -1321,7 +1336,7 @@ namespace PIERStory
         /// </summary>
         public void EndGame()
         {
-           
+
             Debug.Log("EndGame");
             isPlaying = false;
 
@@ -1330,16 +1345,17 @@ namespace PIERStory
             IntermissionManager.isMovingLobby = true;
             SceneManager.LoadSceneAsync("Intermission", LoadSceneMode.Single).allowSceneActivation = true;
         }
-        
+
         /// <summary>
         /// 게임 중간에 나가기. 
         /// </summary>
-        public void QuitGame() {
+        public void QuitGame()
+        {
             // * 중간 종료되는 경우에는 tutorial 관련 처리 초기화 시킨다. 
             UserManager.main.tutorialFirstProjectID = 0; // 0으로 초기화 시켜버린다.                 
-            
+
             EndGame();
-            
+
         }
 
         /// <summary>
@@ -1833,9 +1849,10 @@ namespace PIERStory
         public void ShowAchieveIllust(string illustName)
         {
             Debug.Log("ShowAchieveIllust : " + illustName);
-            
+
             PopupBase popup = PopupManager.main.GetPopup(SystemConst.POPUP_ILLUST_ACHIEVEMENT);
-            if(popup == null) {
+            if (popup == null)
+            {
                 Debug.LogError("No Popup");
                 return;
             }
@@ -1843,7 +1860,7 @@ namespace PIERStory
             popup.Data.SetImagesSprites(spriteIllustPopup);
             popup.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("5085"), illustName));
             PopupManager.main.ShowPopup(popup, true, false);
-            
+
         }
 
 
@@ -1854,49 +1871,53 @@ namespace PIERStory
         public void ShowGameEnd(string __nextEpisodeID)
         {
             Debug.Log("ShowGameEnd :: " + __nextEpisodeID);
-            
+
             AdManager.main.HideBanner();
-            
+
             useSkip = false;
             isPlaying = false; // 게임 플레이 정지.
-            
+
             // * 통신이 겹치는 문제로 인해서 코루틴으로 변경
             StartCoroutine(RoutineFinishGame(__nextEpisodeID));
         }
-        
-        IEnumerator RoutineFinishGame(string __nextEpisodeID) {
-            
+
+        IEnumerator RoutineFinishGame(string __nextEpisodeID)
+        {
+
             // 안전을 위해..
             yield return new WaitForSeconds(0.1f);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
-            
-            
+
+
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터
-            
+
             // * 이동 컬럼에 아무 데이이터가 없는 경우와, 있는 경우 
-            if(string.IsNullOrEmpty(__nextEpisodeID)) {
+            if (string.IsNullOrEmpty(__nextEpisodeID))
+            {
                 __nextEpisodeID = string.Empty;
-                
+
                 // 챕터의 경우에만 처리. 사이드 엔딩은 진행하지 않음 
-                if(currentEpisodeData.episodeType == EpisodeType.Chapter) {
+                if (currentEpisodeData.episodeType == EpisodeType.Chapter)
+                {
                     nextEpisodeData = StoryManager.GetNextRegularEpisodeData(currentEpisodeData);
-                    
-                    if(nextEpisodeData != null && nextEpisodeData.isValidData)
+
+                    if (nextEpisodeData != null && nextEpisodeData.isValidData)
                         __nextEpisodeID = nextEpisodeData.episodeID;
                 }
             }
-            else { // 이동 컬럼 데이터 있음
-            
+            else
+            { // 이동 컬럼 데이터 있음
+
                 // #, @이 붙은 경우에 대한 처리 
                 if (__nextEpisodeID.Contains(GameConst.TAG_TARGET_EPISODE))
                     __nextEpisodeID = __nextEpisodeID.Replace(GameConst.TAG_TARGET_EPISODE, "");
-                
+
                 if (__nextEpisodeID.Contains(GameConst.TAG_TARGET_EPISODE2))
                     __nextEpisodeID = __nextEpisodeID.Replace(GameConst.TAG_TARGET_EPISODE2, "");
 
                 nextEpisodeData = StoryManager.GetNextFollowingEpisodeData(__nextEpisodeID);
             }
-            
+
             // scene Id값 갱신하고 통신 완료까지 잠시 대기
             UserManager.main.UpdateSceneIDRecord(currentSceneId);
             SystemManager.ShowNetworkLoading();
@@ -1910,9 +1931,9 @@ namespace PIERStory
             // 다음 에피소드가 엔딩인 경우
             if (nextEpisodeData != null && nextEpisodeData.episodeType == EpisodeType.Ending)
             {
-                
+
                 Debug.Log("<color=yellow>Ending Alert open </color>");
-                
+
                 PopupBase endingPopup = PopupManager.main.GetPopup(GameConst.POPUP_ENDING_ALERT);
 
                 string endingType = string.Empty;
@@ -1925,15 +1946,15 @@ namespace PIERStory
                 endingPopup.Data.SetLabelsTexts(endingType, string.Format(SystemManager.GetLocalizedText("6063"), nextEpisodeData.episodeTitle));
                 endingPopup.Data.imageURL = nextEpisodeData.squareImageURL;
                 endingPopup.Data.imageKey = nextEpisodeData.squareImageKey;
-                
-                
+
+
                 PopupManager.main.ShowPopup(endingPopup, true, false);
-                
-                
+
+
                 yield return new WaitForSeconds(0.1f);
-                
+
                 yield return new WaitUntil(() => PopupManager.main.PopupQueue.Count < 1);
-                
+
                 Debug.Log("<color=yellow>Ending Alert close </color>");
             }
 
@@ -1965,6 +1986,12 @@ namespace PIERStory
                 yield return new WaitUntil(() => PopupManager.main.PopupQueue.Count < 1);
             }
 
+            // 게임 종료되었으면 사운드도 다 종료해주고, 가끔 스킵해도 배경음이 남아있는 경우도 있으니 Mute까지 해준다
+            foreach (GameSoundCtrl sc in SoundGroup)
+            {
+                sc.StopAudioClip();
+                sc.MuteAudioClip();
+            }
 
             Debug.Log("Signal Send for Episode END !!!!!!");
 
@@ -1972,7 +1999,7 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_DATA, nextEpisodeData, string.Empty); // 다음 에피소드 전달 
             Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, currentEpisodeData, string.Empty); // 현재 에피소드 전달
         }
-        
+
         #endregion
     }
 

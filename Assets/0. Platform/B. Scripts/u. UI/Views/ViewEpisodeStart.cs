@@ -474,8 +474,8 @@ namespace PIERStory {
         void StartGame()
         {
             Debug.Log("Game Start!!!!!");
-            // 게임씬 FlowControl 오류 해결을 위한 임시방편 
-            Signal.Send(LobbyConst.STREAM_GAME, "deadEnd", string.Empty);
+            
+            Signal.Send(LobbyConst.STREAM_COMMON, "GameBegin", string.Empty);
             
             IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
             

@@ -3,6 +3,7 @@ using UnityEngine;
 using BestHTTP;
 using LitJson;
 using Toast.Gamebase;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory {
 
@@ -111,11 +112,21 @@ namespace PIERStory {
         }
 
         
-        void Start() {
+        System.Collections.IEnumerator Start() {
+
 
             // * 팝업매니저 초기화(로비씬)
             PopupManager.main.InitPopupManager();
+            
+            yield return null;
+            yield return new WaitForSeconds(0.1f);
+            
+            
+            // * 로비씬 시작을 알린다. 
+            Signal.Send(LobbyConst.STREAM_COMMON, "LobbyPlay"); 
         }
+        
+        
         
         private void Update() {
 

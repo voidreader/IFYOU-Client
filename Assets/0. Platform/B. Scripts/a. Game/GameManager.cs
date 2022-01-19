@@ -197,11 +197,17 @@ namespace PIERStory
             Debug.Log(">>>>> GameManager Start <<<<<");
 
             PopupManager.main.InitPopupManager();
+            
+            yield return null;
+            
+            Signal.Send(LobbyConst.STREAM_COMMON, "GamePlay"); // 게임씬 시작을 알린다. 
 
             GarbageCollect();
 
             isPlaying = false;
             isScriptFetch = false;
+            
+            
 
             // 유저 정보 로그인이 되었는지 체크
             yield return new WaitUntil(() => UserManager.main != null && UserManager.main.GetUserAccountJSON() != null);
@@ -1339,6 +1345,9 @@ namespace PIERStory
 
             Debug.Log("EndGame");
             isPlaying = false;
+            
+            Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin"); // 노드 제어
+            
 
             // 네트워크 창을 띄우고. 로비 씬으로 돌아가야한다.
             SystemManager.ShowNetworkLoading();
@@ -1365,6 +1374,8 @@ namespace PIERStory
         {
             Debug.Log("RetryPlay");
             isPlaying = false;
+            
+            Signal.Send(LobbyConst.STREAM_COMMON, "GameBegin"); // 노드 제어
 
             // 씬 로드 
             IntermissionManager.isMovingLobby = false;

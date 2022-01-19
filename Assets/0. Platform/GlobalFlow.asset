@@ -1,5 +1,224 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9222098385711240973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 907cd174-03c3-4c55-829d-4821fa3dfaba
+  NodeType: 0
+  NodeName: Game Loading
+  NodeDescription: "\uC778\uAC8C\uC784 \uB85C\uB529"
+  InputPorts:
+  - NodeId: 907cd174-03c3-4c55-829d-4821fa3dfaba
+    PortId: e513d31a-64e2-442d-9363-7b7ac00987d9
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - a2649f93-e57c-4834-a9ea-0d8076e21312
+    Value: '{"CanGoBack":false}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 907cd174-03c3-4c55-829d-4821fa3dfaba
+    PortId: 66707c50-f635-4ec0-a369-0d7ae0d0b472
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - ffc88287-1dd8-4cd3-9861-90380abf249d
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Game","Name":"gameLoadingComplete","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 0
+  Position: {x: 1750.5, y: 1032}
+  OnEnterShowViews:
+  - Id:
+      Category: Game
+      Name: InGameLoading
+      Custom: 0
+    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
+  OnExitHideViews: []
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
+--- !u!114 &-9044430366358447278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 4543eb81-a57b-4396-aa67-21f2b07db4eb
+  NodeType: 0
+  NodeName: Game
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 4543eb81-a57b-4396-aa67-21f2b07db4eb
+    PortId: ffc88287-1dd8-4cd3-9861-90380abf249d
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 66707c50-f635-4ec0-a369-0d7ae0d0b472
+    Value: '{"CanGoBack":false}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 4543eb81-a57b-4396-aa67-21f2b07db4eb
+    PortId: 972e3998-61fc-4a90-b4d1-4f99b88e7412
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 3964856b-fd91-4688-8ef2-46f2e0207251
+    Value: '{"Trigger":2,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"InGame","Name":"Option","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  - NodeId: 4543eb81-a57b-4396-aa67-21f2b07db4eb
+    PortId: 42457f19-3ee8-4dd4-abc2-b4d26a10a653
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 41005b57-225c-468b-bec1-4954e212aa64
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Game","Name":"showEpisodeEnd","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
+  - NodeId: 4543eb81-a57b-4396-aa67-21f2b07db4eb
+    PortId: 9a38fd9a-ea85-462f-89ec-2167dc1cfb71
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - dcde20e8-6781-44fa-93ad-55254807a7e2
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"GameBegin","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
+  - NodeId: 4543eb81-a57b-4396-aa67-21f2b07db4eb
+    PortId: f506aa1c-a25d-441c-8592-2e18ccdb9727
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - a22e3156-7d56-4eda-b1e2-b87fe4997911
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"LobbyBegin","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 1
+  Position: {x: 2149.5764, y: 1165}
+  OnEnterShowViews:
+  - Id:
+      Category: Game
+      Name: InGame
+      Custom: 0
+    Mode: 0
+  OnEnterHideViews:
+  - Id:
+      Category: Game
+      Name: InGameLoading
+      Custom: 0
+    Mode: 0
+  - Id:
+      Category: Common
+      Name: Top
+      Custom: 0
+    Mode: 1
+  OnExitShowViews: []
+  OnExitHideViews: []
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
+--- !u!114 &-8078226749904855442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 835d4e0c-407f-40ce-b340-603d31e99e0d
+  NodeType: 0
+  NodeName: Lobby-Game Mid
+  NodeDescription: "\uAC8C\uC784\uC52C \uB85C\uB529\uC744 \uAE30\uB2E4\uB9BD\uB2C8\uB2E4. "
+  InputPorts:
+  - NodeId: 835d4e0c-407f-40ce-b340-603d31e99e0d
+    PortId: 70b40448-c889-40fd-9eeb-b4358447ddd4
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 4f3c3113-d050-43c5-9c6a-2594a171ff12
+    - d0854f23-2417-4d1e-a736-c56e854fbd56
+    Value: '{"CanGoBack":false}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 835d4e0c-407f-40ce-b340-603d31e99e0d
+    PortId: a2649f93-e57c-4834-a9ea-0d8076e21312
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - e513d31a-64e2-442d-9363-7b7ac00987d9
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"GamePlay","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 1
+  Position: {x: 1543.5721, y: 821.0002}
+  OnEnterShowViews: []
+  OnEnterHideViews: []
+  OnExitShowViews: []
+  OnExitHideViews: []
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
 --- !u!114 &-7909885475099335332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15,7 +234,7 @@ MonoBehaviour:
   FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
   NodeId: 6235cdf4-bf16-4f27-b742-cbdabcec38e4
   NodeType: 0
-  NodeName: Beginning
+  NodeName: Lobby Scene Begin
   NodeDescription: 
   InputPorts:
   - NodeId: 6235cdf4-bf16-4f27-b742-cbdabcec38e4
@@ -23,8 +242,8 @@ MonoBehaviour:
     Direction: 0
     Capacity: 1
     Connections:
+    - 81c0154b-511c-4cb0-8fff-600d45479573
     - f4d50560-0aa1-45f4-9b20-0baf20a3f7dd
-    - 3521357a-38b6-4b16-a133-f5e11ec52fcb
     Value: '{"CanGoBack":false}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -56,11 +275,11 @@ MonoBehaviour:
   RunUpdate: 0
   RunFixedUpdate: 0
   RunLateUpdate: 0
-  NodeState: 0
+  NodeState: 2
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 1
-  Position: {x: 118.99998, y: -283.67752}
+  Position: {x: 477, y: -2}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -123,25 +342,15 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 1228, y: -892.24}
+  Position: {x: 1675.005, y: -885}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
       Name: OneTimeHistory
       Custom: 0
     Mode: 0
-  OnEnterHideViews:
-  - Id:
-      Category: IFYOU
-      Name: Navigation
-      Custom: 0
-    Mode: 0
-  OnExitShowViews:
-  - Id:
-      Category: IFYOU
-      Name: Navigation
-      Custom: 0
-    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
   OnExitHideViews:
   - Id:
       Category: IFYOU
@@ -150,7 +359,7 @@ MonoBehaviour:
     Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
---- !u!114 &-7592024454048064048
+--- !u!114 &-7663649391766692022
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -163,18 +372,18 @@ MonoBehaviour:
   m_Name: Portal
   m_EditorClassIdentifier: 
   FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
-  NodeId: 4b6fb6c4-8ec8-4cd4-a30c-0f8d1fa116b3
+  NodeId: 75eeaddf-6378-4f6e-a60f-a1d5941ee1d1
   NodeType: 1
-  NodeName: Search Portal
+  NodeName: NoticeDetail Portal
   NodeDescription: 
   InputPorts: []
   OutputPorts:
-  - NodeId: 4b6fb6c4-8ec8-4cd4-a30c-0f8d1fa116b3
-    PortId: defc224d-b0e6-4923-b9e0-28950d164152
+  - NodeId: 75eeaddf-6378-4f6e-a60f-a1d5941ee1d1
+    PortId: 1f1d8099-0cbe-4756-9900-84c03e015b5e
     Direction: 1
     Capacity: 0
     Connections:
-    - 453e28d8-d67c-48f2-b0df-d31ca5c5a335
+    - c98d5f07-a8b9-4676-ba37-66966b727c76
     Value: 
     ValueTypeQualifiedName: 
     CanBeDeleted: 0
@@ -182,16 +391,16 @@ MonoBehaviour:
   RunUpdate: 0
   RunFixedUpdate: 0
   RunLateUpdate: 0
-  NodeState: 0
+  NodeState: 1
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: -587.9225, y: 76.500015}
-  Trigger: 1
+  Position: {x: 1831.005, y: -530}
+  Trigger: 0
   SignalPayload:
     StreamId:
-      Category: None
-      Name: None
+      Category: IFYOU
+      Name: showNoticeDetail
       Custom: 0
     SignalValueType: 0
     IntegerValue: 0
@@ -203,8 +412,8 @@ MonoBehaviour:
     Vector3Value: {x: 0, y: 0, z: 0}
     Vector4Value: {x: 0, y: 0, z: 0, w: 0}
   ButtonId:
-    Category: Lobby
-    Name: Search
+    Category: None
+    Name: None
     Custom: 0
   ToggleId:
     Category: None
@@ -250,8 +459,9 @@ MonoBehaviour:
     PortId: f197e600-f634-4081-8f17-b74e6e083f42
     Direction: 1
     Capacity: 0
-    Connections: []
-    Value: '{"Trigger":0,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    Connections:
+    - 6c1cb4db-f5fe-4863-9d26-b2de84d1c331
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"EpisodeStart","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
@@ -263,7 +473,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 1171.174, y: 234.00002}
+  Position: {x: 2289, y: 640}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -328,7 +538,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 707, y: -922}
+  Position: {x: 1613.0001, y: -1053.8268}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -380,7 +590,7 @@ MonoBehaviour:
     Direction: 1
     Capacity: 0
     Connections: []
-    Value: '{"Trigger":0,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"Common","Name":"Back","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    Value: '{"Trigger":0,"TimeDelay":0.10000000149011612,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"Common","Name":"Back","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
@@ -390,7 +600,7 @@ MonoBehaviour:
     Direction: 1
     Capacity: 0
     Connections:
-    - 06a56f8b-4aa4-40be-923f-77210fd89f7d
+    - fe4107ee-6aeb-432c-a559-42d03c5092c2
     Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"IFYOU","Name":"showIllustDetail","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -414,7 +624,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 880.00006, y: -123.499954}
+  Position: {x: 2069, y: 78.99997}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -473,25 +683,15 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 1228, y: -781.5718}
+  Position: {x: 1675.005, y: -775}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
       Name: CoinStarHistory
       Custom: 0
     Mode: 0
-  OnEnterHideViews:
-  - Id:
-      Category: IFYOU
-      Name: Navigation
-      Custom: 0
-    Mode: 0
-  OnExitShowViews:
-  - Id:
-      Category: IFYOU
-      Name: Navigation
-      Custom: 0
-    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
   OnExitHideViews:
   - Id:
       Category: IFYOU
@@ -532,11 +732,11 @@ MonoBehaviour:
   RunUpdate: 0
   RunFixedUpdate: 0
   RunLateUpdate: 0
-  NodeState: 0
+  NodeState: 1
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: 154.00003, y: 232}
+  Position: {x: -239, y: 417}
   Trigger: 1
   SignalPayload:
     StreamId:
@@ -566,62 +766,6 @@ MonoBehaviour:
     Name: None
     Custom: 0
   CommandShowHide: 0
---- !u!114 &-6009340302406826022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
-  m_Name: UI
-  m_EditorClassIdentifier: 
-  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
-  NodeId: 11d8823e-e169-4986-bdcc-d30d2c18991b
-  NodeType: 0
-  NodeName: LobbyWaiting
-  NodeDescription: 
-  InputPorts:
-  - NodeId: 11d8823e-e169-4986-bdcc-d30d2c18991b
-    PortId: e102500f-dbc0-4c79-8f56-6f6fd51d324a
-    Direction: 0
-    Capacity: 1
-    Connections:
-    - 212763a6-25da-41bd-9e6c-cdd0e76c8ba7
-    - 2ae59444-c21c-4d9b-bc43-7c4b4e64df61
-    Value: '{"CanGoBack":false}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  OutputPorts:
-  - NodeId: 11d8823e-e169-4986-bdcc-d30d2c18991b
-    PortId: 3521357a-38b6-4b16-a133-f5e11ec52fcb
-    Direction: 1
-    Capacity: 0
-    Connections:
-    - 9beb7a6f-0099-4b92-a7f4-1d174a55bd9a
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"LobbyBegin","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  RunUpdate: 0
-  RunFixedUpdate: 0
-  RunLateUpdate: 0
-  NodeState: 0
-  CanBeDeleted: 1
-  Passthrough: 0
-  ClearGraphHistory: 0
-  Position: {x: -173, y: -455}
-  OnEnterShowViews: []
-  OnEnterHideViews: []
-  OnExitShowViews: []
-  OnExitHideViews: []
-  OnEnterHideAllViews: 0
-  OnExitHideAllViews: 0
 --- !u!114 &-5889367230208239001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -645,7 +789,7 @@ MonoBehaviour:
     Direction: 0
     Capacity: 1
     Connections:
-    - 47d4ba95-0627-4c79-9c2a-f4a6253ac416
+    - b8d394b5-99f6-450b-b133-7602bc3b21a6
     Value: '{"CanGoBack":true}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -657,7 +801,7 @@ MonoBehaviour:
     Direction: 1
     Capacity: 0
     Connections: []
-    Value: '{"Trigger":0,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"Common","Name":"Back","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    Value: '{"Trigger":0,"TimeDelay":0.10000000149011612,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"Common","Name":"Back","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
@@ -669,7 +813,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 1261, y: -174.49995}
+  Position: {x: 2801, y: 97.99991}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -682,71 +826,6 @@ MonoBehaviour:
   - Id:
       Category: IFYOU
       Name: IllustDetail
-      Custom: 0
-    Mode: 0
-  OnEnterHideAllViews: 0
-  OnExitHideAllViews: 0
---- !u!114 &-5847824807662746846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
-  m_Name: UI
-  m_EditorClassIdentifier: 
-  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
-  NodeId: 35f090d3-11ae-40e8-9d06-0b7c3a4200c2
-  NodeType: 0
-  NodeName: Episode Start In Game
-  NodeDescription: 
-  InputPorts:
-  - NodeId: 35f090d3-11ae-40e8-9d06-0b7c3a4200c2
-    PortId: afb64a4f-5338-40bf-8d35-406582e87af6
-    Direction: 0
-    Capacity: 1
-    Connections:
-    - 0687d4d8-49fd-4b47-975a-6a3136e9b606
-    Value: '{"CanGoBack":true}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  OutputPorts:
-  - NodeId: 35f090d3-11ae-40e8-9d06-0b7c3a4200c2
-    PortId: 8a9829a7-64e0-46c3-846e-498df4c1f8e6
-    Direction: 1
-    Capacity: 0
-    Connections:
-    - 12dc66c5-a51d-4ff7-826d-487c9786e485
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"GamePlay","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  RunUpdate: 0
-  RunFixedUpdate: 0
-  RunLateUpdate: 0
-  NodeState: 0
-  CanBeDeleted: 1
-  Passthrough: 0
-  ClearGraphHistory: 0
-  Position: {x: 938, y: 738}
-  OnEnterShowViews:
-  - Id:
-      Category: Common
-      Name: EpisodeStart
-      Custom: 0
-    Mode: 0
-  OnEnterHideViews: []
-  OnExitShowViews: []
-  OnExitHideViews:
-  - Id:
-      Category: Common
-      Name: EpisodeStart
       Custom: 0
     Mode: 0
   OnEnterHideAllViews: 0
@@ -799,7 +878,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 657.7896, y: -1140.7634}
+  Position: {x: 1094, y: -1443.3766}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -864,12 +943,12 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 1382.7002, y: -356.70007}
+  Position: {x: 2433, y: -77.00006}
   OnEnterShowViews:
   - Id:
       Category: Popup
       Name: Reset
-      Custom: 0
+      Custom: 1
     Mode: 0
   OnEnterHideViews: []
   OnExitShowViews: []
@@ -877,158 +956,7 @@ MonoBehaviour:
   - Id:
       Category: Popup
       Name: Reset
-      Custom: 0
-    Mode: 0
-  OnEnterHideAllViews: 0
-  OnExitHideAllViews: 0
---- !u!114 &-4952292235581586936
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
-  m_Name: UI
-  m_EditorClassIdentifier: 
-  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
-  NodeId: 50cd1c2b-f5ce-47a0-9885-fcf8e4d8865b
-  NodeType: 0
-  NodeName: GameLoading
-  NodeDescription: 
-  InputPorts:
-  - NodeId: 50cd1c2b-f5ce-47a0-9885-fcf8e4d8865b
-    PortId: a1e7e7c5-9e6b-4332-a264-5a5671203275
-    Direction: 0
-    Capacity: 1
-    Connections:
-    - c695e3c5-ac2b-43fb-9520-b37ffc45a456
-    Value: '{"CanGoBack":false}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  OutputPorts:
-  - NodeId: 50cd1c2b-f5ce-47a0-9885-fcf8e4d8865b
-    PortId: 3e1768d1-05a3-4137-9d3f-7765c5574ddc
-    Direction: 1
-    Capacity: 0
-    Connections:
-    - b8e9d525-74f9-4286-a8a7-8a72a7bd56b7
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Game","Name":"gameLoadingComplete","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  RunUpdate: 0
-  RunFixedUpdate: 0
-  RunLateUpdate: 0
-  NodeState: 0
-  CanBeDeleted: 1
-  Passthrough: 0
-  ClearGraphHistory: 0
-  Position: {x: 264, y: 448}
-  OnEnterShowViews:
-  - Id:
-      Category: Game
-      Name: InGameLoading
-      Custom: 0
-    Mode: 0
-  OnEnterHideViews: []
-  OnExitShowViews: []
-  OnExitHideViews:
-  - Id:
-      Category: Game
-      Name: InGameLoading
-      Custom: 0
-    Mode: 0
-  OnEnterHideAllViews: 0
-  OnExitHideAllViews: 0
---- !u!114 &-4873311818262708751
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
-  m_Name: UI
-  m_EditorClassIdentifier: 
-  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
-  NodeId: 2912ca82-5989-4d35-a69e-003c4a86ee14
-  NodeType: 0
-  NodeName: Episode Play End
-  NodeDescription: 
-  InputPorts:
-  - NodeId: 2912ca82-5989-4d35-a69e-003c4a86ee14
-    PortId: ce8a08b6-ee95-43bf-8894-abf6066dfd89
-    Direction: 0
-    Capacity: 1
-    Connections:
-    - 1d62046e-0af1-432c-8277-c61c031899ed
-    Value: '{"CanGoBack":false}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  OutputPorts:
-  - NodeId: 2912ca82-5989-4d35-a69e-003c4a86ee14
-    PortId: 0687d4d8-49fd-4b47-975a-6a3136e9b606
-    Direction: 1
-    Capacity: 0
-    Connections:
-    - afb64a4f-5338-40bf-8d35-406582e87af6
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Game","Name":"nextEpisode","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  - NodeId: 2912ca82-5989-4d35-a69e-003c4a86ee14
-    PortId: 2ae59444-c21c-4d9b-bc43-7c4b4e64df61
-    Direction: 1
-    Capacity: 0
-    Connections:
-    - e102500f-dbc0-4c79-8f56-6f6fd51d324a
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"BackToLobby","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 1
-    CanBeReordered: 1
-  RunUpdate: 0
-  RunFixedUpdate: 0
-  RunLateUpdate: 0
-  NodeState: 0
-  CanBeDeleted: 1
-  Passthrough: 0
-  ClearGraphHistory: 0
-  Position: {x: 595, y: 738}
-  OnEnterShowViews:
-  - Id:
-      Category: Game
-      Name: EpisodeEnd
-      Custom: 0
-    Mode: 0
-  - Id:
-      Category: Common
-      Name: Top
-      Custom: 0
-    Mode: 0
-  OnEnterHideViews:
-  - Id:
-      Category: Game
-      Name: InGame
-      Custom: 0
-    Mode: 0
-  OnExitShowViews: []
-  OnExitHideViews:
-  - Id:
-      Category: Game
-      Name: EpisodeEnd
-      Custom: 0
+      Custom: 1
     Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
@@ -1079,7 +1007,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 324.00003, y: 232.00003}
+  Position: {x: 0, y: 417}
   OnEnterShowViews:
   - Id:
       Category: Common
@@ -1096,6 +1024,34 @@ MonoBehaviour:
     Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
+--- !u!114 &-4210930317415113677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 181d4738046d4b98b267cac159652e21, type: 3}
+  m_Name: Sticky Note
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 0b41659a-ce89-4a71-80eb-3c3ea88de9e9
+  NodeType: 0
+  NodeName: "\uAC8C\uC784\uC52C\uC5D0\uC11C\uB294 \uB85C\uBE44\uB85C \uAC08\uC9C0
+    \uB2E4\uC2DC \uAC8C\uC784\uC744 \uD560\uC9C0 \uBD84\uAE30 \uAC00\uB2A5"
+  NodeDescription: 
+  InputPorts: []
+  OutputPorts: []
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 2416.166, y: 1060.8654}
 --- !u!114 &-4121138070047781917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1131,7 +1087,7 @@ MonoBehaviour:
     Direction: 1
     Capacity: 0
     Connections: []
-    Value: '{"Trigger":0,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"Common","Name":"Back","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    Value: '{"Trigger":0,"TimeDelay":0.10000000149011612,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"Common","Name":"Back","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
@@ -1143,7 +1099,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 1162, y: 5.4999237}
+  Position: {x: 2457, y: 319.99997}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -1280,14 +1236,24 @@ MonoBehaviour:
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 1
     CanBeReordered: 1
+  - NodeId: 3468d9d5-bb74-4327-a921-df38bba24d33
+    PortId: b78c6731-f89f-4d2f-830f-9cefc190a55b
+    Direction: 1
+    Capacity: 0
+    Connections: []
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"IFYOU","Name":"showNoticeDetail","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
   RunUpdate: 0
   RunFixedUpdate: 0
   RunLateUpdate: 0
-  NodeState: 2
+  NodeState: 0
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 1
-  Position: {x: 740, y: -752.5718}
+  Position: {x: 1087, y: -451}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -1356,29 +1322,84 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 1228, y: -668.24}
+  Position: {x: 1675.005, y: -661}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
       Name: DataManager
       Custom: 0
     Mode: 0
-  OnEnterHideViews:
-  - Id:
-      Category: IFYOU
-      Name: Navigation
-      Custom: 0
-    Mode: 0
-  OnExitShowViews:
-  - Id:
-      Category: IFYOU
-      Name: Navigation
-      Custom: 0
-    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
   OnExitHideViews:
   - Id:
       Category: IFYOU
       Name: DataManager
+      Custom: 0
+    Mode: 0
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
+--- !u!114 &-1233289665853294540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 93ca911a-26fb-4c40-9d2d-8b8d9b5ae138
+  NodeType: 0
+  NodeName: Game Episode START
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 93ca911a-26fb-4c40-9d2d-8b8d9b5ae138
+    PortId: 62ffefba-d198-4a66-bee3-463711313e03
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - e8f6286e-dd31-40d4-982c-a6496e4aedd7
+    Value: '{"CanGoBack":true}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 93ca911a-26fb-4c40-9d2d-8b8d9b5ae138
+    PortId: 5a4a1bd3-d89d-4d2c-9b56-ead1e96d6319
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - dcde20e8-6781-44fa-93ad-55254807a7e2
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"GameBegin","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 0
+  Position: {x: 2775, y: 1189}
+  OnEnterShowViews:
+  - Id:
+      Category: Common
+      Name: EpisodeStart
+      Custom: 0
+    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
+  OnExitHideViews:
+  - Id:
+      Category: Common
+      Name: EpisodeStart
       Custom: 0
     Mode: 0
   OnEnterHideAllViews: 0
@@ -1432,7 +1453,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 218.14996, y: -547.00006}
+  Position: {x: 710, y: -305}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -1467,7 +1488,7 @@ MonoBehaviour:
   m_Name: GlobalFlow
   m_EditorClassIdentifier: 
   Id: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
-  GraphName: Global Flow
+  GraphName: GlobalFlow
   GraphDescription: 
   IsSubGraph: 0
   Nodes:
@@ -1481,8 +1502,6 @@ MonoBehaviour:
   - {fileID: 4161346277671426255}
   - {fileID: -5889367230208239001}
   - {fileID: -4121138070047781917}
-  - {fileID: -7592024454048064048}
-  - {fileID: 6983009531301251038}
   - {fileID: -6079475458267631868}
   - {fileID: -4316637466623339110}
   - {fileID: -7894595917190794327}
@@ -1497,16 +1516,99 @@ MonoBehaviour:
   - {fileID: -5718154656162413006}
   - {fileID: -7137026327781398085}
   - {fileID: 2987182228132123219}
-  - {fileID: 7910483023005906335}
-  - {fileID: -4952292235581586936}
-  - {fileID: 4780102499736147196}
-  - {fileID: -6009340302406826022}
-  - {fileID: 4101766580594689906}
-  - {fileID: 6241959156449610206}
-  - {fileID: -4873311818262708751}
-  - {fileID: -5847824807662746846}
+  - {fileID: 5217759834007872996}
+  - {fileID: -7663649391766692022}
+  - {fileID: 5679311374605880363}
+  - {fileID: -8078226749904855442}
+  - {fileID: -9222098385711240973}
+  - {fileID: 314016154523122154}
+  - {fileID: -9044430366358447278}
+  - {fileID: 4399284879436649363}
+  - {fileID: 8889330968292307213}
+  - {fileID: -1233289665853294540}
+  - {fileID: -4210930317415113677}
+  - {fileID: 1592420594128064452}
+  - {fileID: 8865371530717531299}
+  - {fileID: 5046532316096942247}
   RootNode: {fileID: 3282273850073061226}
-  ActiveNode: {fileID: -2876243644258332160}
+  ActiveNode: {fileID: -7909885475099335332}
+--- !u!114 &314016154523122154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 181d4738046d4b98b267cac159652e21, type: 3}
+  m_Name: Sticky Note
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 1e9d2c02-9395-432c-9ddb-76cfb824980d
+  NodeType: 0
+  NodeName: "\uAC8C\uC784\uC52C \uAD6C\uC5ED"
+  NodeDescription: "\uAC8C\uC784\uC52C \uAD6C\uC5ED.."
+  InputPorts: []
+  OutputPorts: []
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 1863.0002, y: 955.00024}
+--- !u!114 &1592420594128064452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26771609544c5348b153b61330ee08f, type: 3}
+  m_Name: Pivot
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 00a21577-f4f1-4f44-bbb6-54629b8b15e8
+  NodeType: 0
+  NodeName: Pivot
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 00a21577-f4f1-4f44-bbb6-54629b8b15e8
+    PortId: dcde20e8-6781-44fa-93ad-55254807a7e2
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 5a4a1bd3-d89d-4d2c-9b56-ead1e96d6319
+    - 903547e5-fb0d-4907-a4a7-d1f72c385c13
+    - 9a38fd9a-ea85-462f-89ec-2167dc1cfb71
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 00a21577-f4f1-4f44-bbb6-54629b8b15e8
+    PortId: d0854f23-2417-4d1e-a736-c56e854fbd56
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 70b40448-c889-40fd-9eeb-b4358447ddd4
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 2932, y: 1527.4087}
+  PivotOrientation: 2
 --- !u!114 &1841992565293203595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1541,9 +1643,8 @@ MonoBehaviour:
     PortId: b92f2158-3f9e-45b1-af94-a4bd478bf015
     Direction: 1
     Capacity: 0
-    Connections:
-    - c98d5f07-a8b9-4676-ba37-66966b727c76
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"IFYOU","Name":"showNoticeDetail","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    Connections: []
+    Value: '{"Trigger":0,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"IFYOU","Name":"showNoticeDetail","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
@@ -1555,7 +1656,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 1228.0002, y: -547.0001}
+  Position: {x: 1675.005, y: -540}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -1614,7 +1715,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 1123, y: 115.5}
+  Position: {x: 2189.0002, y: 408.99994}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -1654,7 +1755,7 @@ MonoBehaviour:
     Direction: 0
     Capacity: 1
     Connections:
-    - b92f2158-3f9e-45b1-af94-a4bd478bf015
+    - 1f1d8099-0cbe-4756-9900-84c03e015b5e
     Value: '{"CanGoBack":true}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -1678,7 +1779,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 1525.0001, y: -547.0001}
+  Position: {x: 2048.0051, y: -540}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -1743,7 +1844,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 474.23404, y: -922}
+  Position: {x: 1613.0002, y: -1230.2483}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -1821,7 +1922,6 @@ MonoBehaviour:
     Direction: 0
     Capacity: 1
     Connections:
-    - a9bc95ce-5628-41fc-abd3-3b99a06410e0
     - a97d01cc-2aa5-41cd-8be2-05c94f08714f
     - 73b2c122-7af0-4c45-a927-21d50d10af93
     - e059e9da-6d89-43a5-af0b-176d919ff49f
@@ -1879,8 +1979,7 @@ MonoBehaviour:
     PortId: c4c0869b-3203-4d6e-bc26-74327cae5fa2
     Direction: 1
     Capacity: 0
-    Connections:
-    - 4a82bb76-a662-4953-9277-4752eacfe6a0
+    Connections: []
     Value: '{"Trigger":2,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"Lobby","Name":"Ending","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -1915,7 +2014,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 927.85004, y: -420.0001}
+  Position: {x: 1087.498, y: 28.17776}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -1940,70 +2039,6 @@ MonoBehaviour:
     Mode: 0
   OnExitShowViews: []
   OnExitHideViews: []
-  OnEnterHideAllViews: 0
-  OnExitHideAllViews: 0
---- !u!114 &4101766580594689906
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
-  m_Name: UI
-  m_EditorClassIdentifier: 
-  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
-  NodeId: 6792281b-bc78-4cd5-9432-f9fcf26fd4bb
-  NodeType: 0
-  NodeName: Game Option
-  NodeDescription: 
-  InputPorts:
-  - NodeId: 6792281b-bc78-4cd5-9432-f9fcf26fd4bb
-    PortId: 83482939-3dce-4356-a122-173c8137aced
-    Direction: 0
-    Capacity: 1
-    Connections:
-    - 9f600d2d-161b-49cf-ad87-81500ea0f256
-    Value: '{"CanGoBack":true}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  OutputPorts:
-  - NodeId: 6792281b-bc78-4cd5-9432-f9fcf26fd4bb
-    PortId: 4c7a2f5d-d73b-4e42-b834-1d487f4b0654
-    Direction: 1
-    Capacity: 0
-    Connections: []
-    Value: '{"Trigger":0,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  RunUpdate: 0
-  RunFixedUpdate: 0
-  RunLateUpdate: 0
-  NodeState: 0
-  CanBeDeleted: 1
-  Passthrough: 0
-  ClearGraphHistory: 0
-  Position: {x: 999.99994, y: 472}
-  OnEnterShowViews:
-  - Id:
-      Category: Game
-      Name: InGameOption
-      Custom: 0
-    Mode: 0
-  OnEnterHideViews: []
-  OnExitShowViews: []
-  OnExitHideViews:
-  - Id:
-      Category: Game
-      Name: InGameOption
-      Custom: 0
-    Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
 --- !u!114 &4161346277671426255
@@ -2053,7 +2088,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 880, y: 63.956512}
+  Position: {x: 1977.0001, y: 448}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -2070,7 +2105,7 @@ MonoBehaviour:
     Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
---- !u!114 &4780102499736147196
+--- !u!114 &4399284879436649363
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2083,56 +2118,33 @@ MonoBehaviour:
   m_Name: UI
   m_EditorClassIdentifier: 
   FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
-  NodeId: 52d24834-b0df-46b5-9425-625067e67e74
+  NodeId: 3fff30dc-7f5a-4b59-9a8e-c68e339fce15
   NodeType: 0
-  NodeName: Game
+  NodeName: GameOption
   NodeDescription: 
   InputPorts:
-  - NodeId: 52d24834-b0df-46b5-9425-625067e67e74
-    PortId: b8e9d525-74f9-4286-a8a7-8a72a7bd56b7
+  - NodeId: 3fff30dc-7f5a-4b59-9a8e-c68e339fce15
+    PortId: 3964856b-fd91-4688-8ef2-46f2e0207251
     Direction: 0
     Capacity: 1
     Connections:
-    - 3e1768d1-05a3-4137-9d3f-7765c5574ddc
-    Value: '{"CanGoBack":false}'
+    - 972e3998-61fc-4a90-b4d1-4f99b88e7412
+    Value: '{"CanGoBack":true}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
     CanBeReordered: 0
   OutputPorts:
-  - NodeId: 52d24834-b0df-46b5-9425-625067e67e74
-    PortId: 212763a6-25da-41bd-9e6c-cdd0e76c8ba7
+  - NodeId: 3fff30dc-7f5a-4b59-9a8e-c68e339fce15
+    PortId: 0049d0dd-c16a-4fd2-9f94-c44d5d9e1c10
     Direction: 1
     Capacity: 0
-    Connections:
-    - e102500f-dbc0-4c79-8f56-6f6fd51d324a
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"BackToLobby","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    Connections: []
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
     CanBeReordered: 0
-  - NodeId: 52d24834-b0df-46b5-9425-625067e67e74
-    PortId: 9f600d2d-161b-49cf-ad87-81500ea0f256
-    Direction: 1
-    Capacity: 0
-    Connections:
-    - 83482939-3dce-4356-a122-173c8137aced
-    Value: '{"Trigger":2,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"InGame","Name":"Option","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 1
-    CanBeReordered: 1
-  - NodeId: 52d24834-b0df-46b5-9425-625067e67e74
-    PortId: c52f2367-43cd-4c0c-93c8-16f58377059e
-    Direction: 1
-    Capacity: 0
-    Connections:
-    - 12dc66c5-a51d-4ff7-826d-487c9786e485
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"GamePlay","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 1
-    CanBeReordered: 1
   RunUpdate: 0
   RunFixedUpdate: 0
   RunLateUpdate: 0
@@ -2140,19 +2152,24 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 657.99976, y: 448.00006}
+  Position: {x: 2465, y: 946}
   OnEnterShowViews:
   - Id:
       Category: Game
-      Name: InGame
+      Name: InGameOption
       Custom: 0
     Mode: 0
   OnEnterHideViews: []
   OnExitShowViews: []
-  OnExitHideViews: []
+  OnExitHideViews:
+  - Id:
+      Category: Game
+      Name: InGameOption
+      Custom: 0
+    Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
---- !u!114 &6241959156449610206
+--- !u!114 &5046532316096942247
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2161,22 +2178,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b2479a69f56cf54c96de81c44e8ad1a, type: 3}
-  m_Name: Portal
+  m_Script: {fileID: 11500000, guid: d26771609544c5348b153b61330ee08f, type: 3}
+  m_Name: Pivot
   m_EditorClassIdentifier: 
   FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
-  NodeId: e5f1f43b-3ade-4ff4-9124-bdaaee092936
-  NodeType: 1
-  NodeName: Game End Portal
+  NodeId: 80b3c94b-c21d-485f-b373-2243c37eab7e
+  NodeType: 0
+  NodeName: Pivot
   NodeDescription: 
-  InputPorts: []
+  InputPorts:
+  - NodeId: 80b3c94b-c21d-485f-b373-2243c37eab7e
+    PortId: a22e3156-7d56-4eda-b1e2-b87fe4997911
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - a3a0beff-8c0b-4032-9f9b-5f47b5921699
+    - f506aa1c-a25d-441c-8592-2e18ccdb9727
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
   OutputPorts:
-  - NodeId: e5f1f43b-3ade-4ff4-9124-bdaaee092936
-    PortId: 1d62046e-0af1-432c-8277-c61c031899ed
+  - NodeId: 80b3c94b-c21d-485f-b373-2243c37eab7e
+    PortId: 93c33664-648d-4343-8b93-c946bf95d93d
     Direction: 1
     Capacity: 0
     Connections:
-    - ce8a08b6-ee95-43bf-8894-abf6066dfd89
+    - 8ef8d64b-70cb-4178-ae17-93fb8424b09c
     Value: 
     ValueTypeQualifiedName: 
     CanBeDeleted: 0
@@ -2188,36 +2216,84 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: 311.00006, y: 738}
-  Trigger: 0
-  SignalPayload:
-    StreamId:
-      Category: Game
-      Name: showEpisodeEnd
-      Custom: 0
-    SignalValueType: 0
-    IntegerValue: 0
-    BooleanValue: 0
-    FloatValue: 0
-    StringValue: 
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    Vector2Value: {x: 0, y: 0}
-    Vector3Value: {x: 0, y: 0, z: 0}
-    Vector4Value: {x: 0, y: 0, z: 0, w: 0}
-  ButtonId:
-    Category: None
-    Name: None
-    Custom: 0
-  ToggleId:
-    Category: None
-    Name: None
-    Custom: 0
-  CommandToggle: 2
-  ViewId:
-    Category: None
-    Name: None
-    Custom: 0
-  CommandShowHide: 0
+  Position: {x: 2341.3916, y: 1527.0001}
+  PivotOrientation: 2
+--- !u!114 &5217759834007872996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54190db4e4af45b7b8b7fcee721f1f20, type: 3}
+  m_Name: Debug
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 269a814c-cf46-4ca6-be8d-3b5319ff1172
+  NodeType: 0
+  NodeName: Debug
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 269a814c-cf46-4ca6-be8d-3b5319ff1172
+    PortId: fe4107ee-6aeb-432c-a559-42d03c5092c2
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 47d4ba95-0627-4c79-9c2a-f4a6253ac416
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 269a814c-cf46-4ca6-be8d-3b5319ff1172
+    PortId: b8d394b5-99f6-450b-b133-7602bc3b21a6
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 06a56f8b-4aa4-40be-923f-77210fd89f7d
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 2487, y: 97.99991}
+  Message: Middle Gallery-ILLUST
+--- !u!114 &5679311374605880363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 181d4738046d4b98b267cac159652e21, type: 3}
+  m_Name: Sticky Note
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: e211f3fe-4e98-414b-be66-9beef9482a94
+  NodeType: 0
+  NodeName: Sticky Note
+  NodeDescription: "\uB85C\uBE44 \uC5D0\uD53C\uC18C\uB4DC \uC2A4\uD0C0\uD2B8\uC5D0\uC11C
+    GameScene\uC73C\uB85C \uC804\uD658\uB420 \uC218 \uC788\uC74C."
+  InputPorts: []
+  OutputPorts: []
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 1312, y: 590}
 --- !u!114 &6399534788089070960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2240,8 +2316,7 @@ MonoBehaviour:
     PortId: 4a82bb76-a662-4953-9277-4752eacfe6a0
     Direction: 0
     Capacity: 1
-    Connections:
-    - c4c0869b-3203-4d6e-bc26-74327cae5fa2
+    Connections: []
     Value: '{"CanGoBack":true}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -2287,7 +2362,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 878.0001, y: 235.50002}
+  Position: {x: 1928.9999, y: 614}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -2298,86 +2373,6 @@ MonoBehaviour:
   OnExitShowViews: []
   OnExitHideViews: []
   OnEnterHideAllViews: 0
-  OnExitHideAllViews: 0
---- !u!114 &6983009531301251038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
-  m_Name: UI
-  m_EditorClassIdentifier: 
-  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
-  NodeId: 1803b5d9-1651-488b-afa4-1296fb52e730
-  NodeType: 0
-  NodeName: Search
-  NodeDescription: 
-  InputPorts:
-  - NodeId: 1803b5d9-1651-488b-afa4-1296fb52e730
-    PortId: 453e28d8-d67c-48f2-b0df-d31ca5c5a335
-    Direction: 0
-    Capacity: 1
-    Connections:
-    - defc224d-b0e6-4923-b9e0-28950d164152
-    Value: '{"CanGoBack":true}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  OutputPorts:
-  - NodeId: 1803b5d9-1651-488b-afa4-1296fb52e730
-    PortId: 8c8d7653-50aa-48fa-ab31-2c666f0e6f8c
-    Direction: 1
-    Capacity: 0
-    Connections: []
-    Value: '{"Trigger":0,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"Common","Name":"Back","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  - NodeId: 1803b5d9-1651-488b-afa4-1296fb52e730
-    PortId: a9bc95ce-5628-41fc-abd3-3b99a06410e0
-    Direction: 1
-    Capacity: 0
-    Connections:
-    - 96462830-de13-4560-8e9a-99a2ba17f35c
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"IFYOU","Name":"moveStoryDetail","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
-    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
-      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    CanBeDeleted: 1
-    CanBeReordered: 1
-  RunUpdate: 0
-  RunFixedUpdate: 0
-  RunLateUpdate: 0
-  NodeState: 0
-  CanBeDeleted: 1
-  Passthrough: 0
-  ClearGraphHistory: 0
-  Position: {x: -351.4674, y: 76.999985}
-  OnEnterShowViews:
-  - Id:
-      Category: IFYOU
-      Name: Search
-      Custom: 0
-    Mode: 0
-  OnEnterHideViews: []
-  OnExitShowViews:
-  - Id:
-      Category: Common
-      Name: Top
-      Custom: 0
-    Mode: 0
-  OnExitHideViews:
-  - Id:
-      Category: IFYOU
-      Name: Search
-      Custom: 0
-    Mode: 0
-  OnEnterHideAllViews: 1
   OnExitHideAllViews: 0
 --- !u!114 &7066925349952838486
 MonoBehaviour:
@@ -2404,6 +2399,7 @@ MonoBehaviour:
     Connections:
     - 58b4fa3a-9196-4a40-be54-b5683156f87c
     - f0dfd10a-1782-432c-9767-bd97cb90f858
+    - f197e600-f634-4081-8f17-b74e6e083f42
     Value: '{"CanGoBack":true}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -2415,8 +2411,8 @@ MonoBehaviour:
     Direction: 1
     Capacity: 0
     Connections:
-    - 12dc66c5-a51d-4ff7-826d-487c9786e485
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"GamePlay","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"Common","Name":"Back","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    - 70b40448-c889-40fd-9eeb-b4358447ddd4
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"GameBegin","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"Common","Name":"Back","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
@@ -2428,7 +2424,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: -387.71005, y: 448.00003}
+  Position: {x: 1312, y: 640}
   OnEnterShowViews:
   - Id:
       Category: Common
@@ -2445,7 +2441,7 @@ MonoBehaviour:
     Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
---- !u!114 &7910483023005906335
+--- !u!114 &8865371530717531299
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2458,32 +2454,30 @@ MonoBehaviour:
   m_Name: UI
   m_EditorClassIdentifier: 
   FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
-  NodeId: 30aeec34-55d3-4c72-a652-f0ad1ada4477
+  NodeId: 0beee4dc-4583-4245-9c91-a57d64b320c6
   NodeType: 0
-  NodeName: StartGameScene
+  NodeName: LobbyReady
   NodeDescription: 
   InputPorts:
-  - NodeId: 30aeec34-55d3-4c72-a652-f0ad1ada4477
-    PortId: 12dc66c5-a51d-4ff7-826d-487c9786e485
+  - NodeId: 0beee4dc-4583-4245-9c91-a57d64b320c6
+    PortId: 8ef8d64b-70cb-4178-ae17-93fb8424b09c
     Direction: 0
     Capacity: 1
     Connections:
-    - 4f3c3113-d050-43c5-9c6a-2594a171ff12
-    - 8a9829a7-64e0-46c3-846e-498df4c1f8e6
-    - c52f2367-43cd-4c0c-93c8-16f58377059e
+    - 93c33664-648d-4343-8b93-c946bf95d93d
     Value: '{"CanGoBack":false}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
     CanBeReordered: 0
   OutputPorts:
-  - NodeId: 30aeec34-55d3-4c72-a652-f0ad1ada4477
-    PortId: c695e3c5-ac2b-43fb-9520-b37ffc45a456
+  - NodeId: 0beee4dc-4583-4245-9c91-a57d64b320c6
+    PortId: 81c0154b-511c-4cb0-8fff-600d45479573
     Direction: 1
     Capacity: 0
     Connections:
-    - a1e7e7c5-9e6b-4332-a264-5a5671203275
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Game","Name":"Loading","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    - 9beb7a6f-0099-4b92-a7f4-1d174a55bd9a
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"LobbyPlay","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
@@ -2494,11 +2488,103 @@ MonoBehaviour:
   NodeState: 0
   CanBeDeleted: 1
   Passthrough: 0
-  ClearGraphHistory: 0
-  Position: {x: -123, y: 686.5}
+  ClearGraphHistory: 1
+  Position: {x: 212.91724, y: 149.5}
   OnEnterShowViews: []
   OnEnterHideViews: []
   OnExitShowViews: []
   OnExitHideViews: []
-  OnEnterHideAllViews: 1
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
+--- !u!114 &8889330968292307213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 63609cc5-8174-4aff-875d-90b00ff8fe63
+  NodeType: 0
+  NodeName: Game END
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 63609cc5-8174-4aff-875d-90b00ff8fe63
+    PortId: 41005b57-225c-468b-bec1-4954e212aa64
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 42457f19-3ee8-4dd4-abc2-b4d26a10a653
+    Value: '{"CanGoBack":false}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 63609cc5-8174-4aff-875d-90b00ff8fe63
+    PortId: e8f6286e-dd31-40d4-982c-a6496e4aedd7
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 62ffefba-d198-4a66-bee3-463711313e03
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Game","Name":"nextEpisode","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  - NodeId: 63609cc5-8174-4aff-875d-90b00ff8fe63
+    PortId: a3a0beff-8c0b-4032-9f9b-5f47b5921699
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - a22e3156-7d56-4eda-b1e2-b87fe4997911
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"LobbyBegin","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
+  - NodeId: 63609cc5-8174-4aff-875d-90b00ff8fe63
+    PortId: 903547e5-fb0d-4907-a4a7-d1f72c385c13
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - dcde20e8-6781-44fa-93ad-55254807a7e2
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"GameBegin","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 1
+  Position: {x: 2476.0007, y: 1189}
+  OnEnterShowViews:
+  - Id:
+      Category: Game
+      Name: EpisodeEnd
+      Custom: 0
+    Mode: 0
+  - Id:
+      Category: Common
+      Name: Top
+      Custom: 0
+    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
+  OnExitHideViews:
+  - Id:
+      Category: Game
+      Name: EpisodeEnd
+      Custom: 0
+    Mode: 0
+  OnEnterHideAllViews: 0
   OnExitHideAllViews: 0

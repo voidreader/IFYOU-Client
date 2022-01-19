@@ -165,7 +165,7 @@ namespace PIERStory
             textAuthor.text = SystemManager.GetLocalizedText("6179") + " / " + StoryManager.main.GetStoryDetailInfo("original"); // 원작사
             textProducer.text = SystemManager.GetLocalizedText("6180") + " / " + StoryManager.main.GetStoryDetailInfo("writer"); // 제작사 
             textSummary.text = StoryManager.main.GetStoryDetailInfo("summary"); // 요약 
-            textGenre.text = SystemManager.GetLocalizedText("6180") + " / " + StoryManager.main.CurrentProject.genre; // 해시태그 장르 
+            textGenre.text = SystemManager.GetLocalizedText("6181") + " / " + StoryManager.main.CurrentProject.genre; // 해시태그 장르 
 
 
             totalEpisodeCount = StoryManager.main.GetStoryDetailInfo("episode_count"); // 메인 에피소드의 개수 (엔딩제외)

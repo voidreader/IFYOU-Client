@@ -95,7 +95,10 @@ namespace PIERStory {
             
             for(int i=0; i<originData["genre"].Count;i++) {
                 genre += originData["genre"][i].ToString();
-                genre += ",";
+                
+                // 마지막에 콤마 붙이지 않는다.
+                if(i < originData["genre"].Count-1)
+                    genre += ",";
             }
             
         }

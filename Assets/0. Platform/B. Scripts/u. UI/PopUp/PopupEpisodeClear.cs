@@ -102,7 +102,9 @@ namespace PIERStory {
             UserManager.main.SetBankInfo(result);
             
             // 팝업 끝.
-            Hide(); 
+            base.InstanteHide();
+            
+            SystemManager.ShowMessageWithLocalize("6190", true);
         }
         
     }

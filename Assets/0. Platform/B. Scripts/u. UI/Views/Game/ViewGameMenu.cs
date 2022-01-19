@@ -137,10 +137,6 @@ namespace PIERStory
         /// </summary>
         public void ExitGameByMenu()
         {
-            // 이 창을 띄우는 시점에 저장을 해둔다. 
-            // EndGame이 호출되면 Game씬에서 빠져나가기 때문에 오류 발생
-            GameManager.main.SaveCurrentPlay();
-
             // * 이 조건일때, 나가면 튜토리얼이 중단된다고 경고해줘야 한다.  
             if (UserManager.main.tutorialStep == 2 && UserManager.main.tutorialFirstProjectID > 0)
             {

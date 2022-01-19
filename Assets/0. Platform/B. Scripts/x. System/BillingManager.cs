@@ -220,7 +220,7 @@ namespace PIERStory {
             }
             
             Debug.Log(response.DataAsText);
-            SystemManager.HideNetworkLoading();
+            // SystemManager.HideNetworkLoading();
             
             // 받은 데이터 처리
             // bank, unreadMailCount, userPurchaseHistory
@@ -237,14 +237,10 @@ namespace PIERStory {
             MainShop.OnRefreshTopShop?.Invoke();
             
             // 모든 활성 팝업 제거
-            PopupManager.main.HideActivePopup();
+            // PopupManager.main.HideActivePopup();
             
-            // 결제가 완료되었습니다. 어쩌고. 
-            // SystemManager.ShowSimpleAlertLocalize("6113");
-            #if UNITY_ANDROID
-            // 안드로이드에서만. 
-            SystemManager.ShowMessageWithLocalize("6113", true);
-            #endif
+            SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("6113"));
+            //SystemManager.ShowMessageWithLocalize("6113", true);
             
             
         }

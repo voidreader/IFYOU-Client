@@ -25,7 +25,7 @@ namespace PIERStory {
             
             while(timer < 1) {
                 
-                yield return new WaitForSeconds(0.05f);
+                yield return new WaitForSeconds(0.03f);
                                 
                 timer += 0.015f;
                 

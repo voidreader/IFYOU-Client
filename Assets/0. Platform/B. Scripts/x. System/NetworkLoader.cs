@@ -166,12 +166,20 @@ namespace PIERStory
             JsonData sending = new JsonData();
             sending["func"] = "insertUserAdHistory";
             
+            // 현재 프로젝트ID
             if(!string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
                 sending["project_id"] = StoryManager.main.CurrentProjectID;
             else 
                 sending["project_id"] = -1;
             
+            // 현재 에피소드ID
+            if(!string.IsNullOrEmpty(StoryManager.main.CurrentEpisodeID)) 
+                sending["episode_id"] = StoryManager.main.CurrentEpisodeID;
+            else 
+                sending["episode_id"] = -1;            
                 
+                
+            // 광고타입     
             sending["ad_type"] = __adType;
             
             SendPost(NetworkLoader.main.OnResponseEmptyPostProcess, sending, false);

@@ -365,7 +365,7 @@ namespace PIERStory
             if(countNewLine < 2)
                 boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 160);
             else
-                boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 100 + (countNewLine * 60));
+                boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 80 + (countNewLine * 60));
 
             boxImage.gameObject.SetActive(true);
             textNarration.text = narrationText;

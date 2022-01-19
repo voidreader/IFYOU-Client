@@ -46,6 +46,12 @@ namespace PIERStory
             if (!gameSprite.gameObject.activeSelf)
                 return;
 
+            // 22. 01.19 페어 시스템으로 인한 오류 제거
+            // 라이브 오브제에서는 이미지가 화면 위에 있으면 제거를 하고 있지만 이미지는 라이브오브제를 제거하고 있지 않음
+            // 따라서 라이브 오브제가 존재하면 제거하도록 한다
+            if (GameManager.main.currentLiveObj != null && GameManager.main.currentLiveObj.liveImageController != null)
+                GameManager.main.currentLiveObj.liveImageController.HideModel();
+
 
             // 효과는 GameBubbleCtrl.cs 참조
             if (!string.IsNullOrEmpty(in_effect))

@@ -46,7 +46,7 @@ namespace PIERStory
 
         void RealStart()
         {
-            Signal.Send(LobbyConst.STREAM_GAME, "deadEnd", string.Empty);
+            Signal.Send(LobbyConst.STREAM_COMMON, "GameBegin", string.Empty);
             IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
             SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single).allowSceneActivation = true;
 

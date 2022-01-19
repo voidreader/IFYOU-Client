@@ -41,6 +41,17 @@ MonoBehaviour:
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
     CanBeReordered: 0
+  - NodeId: 907cd174-03c3-4c55-829d-4821fa3dfaba
+    PortId: a712da9f-c365-4a3d-b8c3-275279c29e12
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - a22e3156-7d56-4eda-b1e2-b87fe4997911
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Common","Name":"LobbyBegin","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
   RunUpdate: 0
   RunFixedUpdate: 0
   RunLateUpdate: 0
@@ -1051,7 +1062,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: 2416.166, y: 1060.8654}
+  Position: {x: 2154.0005, y: 1129.0002}
 --- !u!114 &-4121138070047781917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1547,7 +1558,7 @@ MonoBehaviour:
   NodeId: 1e9d2c02-9395-432c-9ddb-76cfb824980d
   NodeType: 0
   NodeName: "\uAC8C\uC784\uC52C \uAD6C\uC5ED"
-  NodeDescription: "\uAC8C\uC784\uC52C \uAD6C\uC5ED.."
+  NodeDescription: "\uB85C\uB529 \uC2E4\uD328\uC2DC \uB85C\uBE44\uB85C \uD295\uACA8\uB098\uAC10"
   InputPorts: []
   OutputPorts: []
   RunUpdate: 0
@@ -1557,7 +1568,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: 1863.0002, y: 955.00024}
+  Position: {x: 1803.2003, y: 972.00006}
 --- !u!114 &1592420594128064452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2194,6 +2205,7 @@ MonoBehaviour:
     Connections:
     - a3a0beff-8c0b-4032-9f9b-5f47b5921699
     - f506aa1c-a25d-441c-8592-2e18ccdb9727
+    - a712da9f-c365-4a3d-b8c3-275279c29e12
     Value: 
     ValueTypeQualifiedName: 
     CanBeDeleted: 0

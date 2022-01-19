@@ -5,7 +5,7 @@ using System.IO;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using Doozy.Runtime.Signals;
 using TMPro;
 using LitJson;
 using BestHTTP;
@@ -1811,6 +1811,7 @@ namespace PIERStory
         
         
         public static void LoadLobbyScene() {
+            Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin");
             SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Single).allowSceneActivation = true;
         }
 

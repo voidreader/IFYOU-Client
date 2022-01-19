@@ -353,7 +353,7 @@ namespace PIERStory
                 case GameConst.TEMPLATE_YELL:
                     textContents.fontSize = BubbleManager.main.BigFontSize;
                     // textContents.fontStyle = FontStyles.Bold;
-                    textContents.characterSpacing = -10;
+                    textContents.characterSpacing = -6;
                     break;
 
                 case GameConst.TEMPLATE_WHISPER:
@@ -815,7 +815,7 @@ namespace PIERStory
 
             // 캐릭터 키 따라서 위치 조정 추가 
             SetCharacterTallAdjustment();
-
+            
             // 아래쪽 라인 말풍선 해상도 대응 
             SetPositionAdjustment();
 
@@ -990,7 +990,6 @@ namespace PIERStory
         /// </summary>
         void ActiveInEffect()
         {
-            
             needDelayShow = false;
             
             rtransform.DOKill();
@@ -1007,7 +1006,7 @@ namespace PIERStory
                 else
                     rtransform.DOScale(1, 0.2f).SetEase(Ease.OutBack);
             }
-            if (in_effect == GameConst.INOUT_EFFECT_FADEIN) // 페이드인 
+            else if (in_effect == GameConst.INOUT_EFFECT_FADEIN) // 페이드인 
             {
                 InitColor();
                 SetTransparentTextColor();
@@ -1191,7 +1190,7 @@ namespace PIERStory
             }
             
             // 최종 조정 처리 
-            rtransform.anchoredPosition = new Vector2(posX, posY + adjustmentPosY);
+            rtransform.anchoredPosition = new Vector2(posX, rtransform.anchoredPosition.y + adjustmentPosY);
         }
                     
 

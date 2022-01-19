@@ -600,6 +600,9 @@ namespace PIERStory
                         // * 2인 스탠딩에서 1인 스탠딩으로 신규캐릭터가 등장하는 시점 등이 문제가 되었다. 
                         // * 이 변수는 현재는 오직 GameModelCtrl과 관련된 곳에서만 사용된다. 
                         isJustSkipStop = true;
+
+                        // 22.01.19 isResumePlay인동안 skipable 체크가 무조건 true를 반환하고 있어서 이어하기가 딱 끝난 시점에서 한번 더 skipable을 체크할 필요가 있다
+                        CheckSkipable(currentSceneId);
                     }
                 }
                 else
@@ -1352,7 +1355,10 @@ namespace PIERStory
         public void QuitGame()
         {
             // * 중간 종료되는 경우에는 tutorial 관련 처리 초기화 시킨다. 
-            UserManager.main.tutorialFirstProjectID = 0; // 0으로 초기화 시켜버린다.                 
+            UserManager.main.tutorialFirstProjectID = 0; // 0으로 초기화 시켜버린다.
+                     
+            // 게임씬을 빠져나가기 전에 현재 상황을 저장하자!
+            SaveCurrentPlay();
 
             EndGame();
 

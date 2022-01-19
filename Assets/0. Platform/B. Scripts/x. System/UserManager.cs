@@ -1877,6 +1877,12 @@ namespace PIERStory
 
         public void UpdateSceneIDRecord(string __scene_id)
         {
+            
+            // 이미 프로그레스에 있으면 통신할 필요없다. 
+            // 스킵에서 또 호출하기 싫으니까!
+            if(UserManager.main.CheckSceneProgress(__scene_id))
+                return;
+            
             UpdateSceneIDRecord(StoryManager.main.CurrentProjectID, StoryManager.main.CurrentEpisodeID, __scene_id);
         }
 
@@ -2035,7 +2041,7 @@ namespace PIERStory
                     return true;
             }
 
-            Debug.Log(string.Format("{0} 히스토리 없음", __scene_id));
+            Debug.Log(string.Format("{0} No progress scene", __scene_id));
             return false;
         }
 

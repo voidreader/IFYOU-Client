@@ -77,6 +77,8 @@ namespace PIERStory
                     break;
                 }
             }
+            
+            Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin");
 
             // 타이틀로 보내버리기
             // 이후 타이틀에서 언어 정보에 따른 폰트 다운 뭐 그런거도 해줄 거임

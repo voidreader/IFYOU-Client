@@ -159,6 +159,10 @@ namespace PIERStory {
             backButton.SetActive(__flag);
         }
         
+        public void OnClickMail() {
+            Signal.Send(LobbyConst.STREAM_COMMON, "Mail");
+        }
+        
         /// <summary>
         /// 상태 정보 저장. 
         /// </summary>

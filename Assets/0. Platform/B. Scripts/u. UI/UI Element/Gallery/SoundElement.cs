@@ -76,6 +76,7 @@ namespace PIERStory
             if (req.State != HTTPRequestStates.Finished)
             {
                 Debug.LogError("Download failed : " + soundUrl);
+                ViewSoundDetail.OnSoundLoadCheck?.Invoke();
                 return;
             }
 
@@ -117,7 +118,8 @@ namespace PIERStory
                     lockIcon.SetActive(true);
                 }
             }
-            
+
+            ViewSoundDetail.OnSoundLoadCheck?.Invoke();
             gameObject.SetActive(true);
         }
 

@@ -18,6 +18,7 @@ namespace PIERStory
 
         JsonData voiceData = null;
         string voiceMaster = string.Empty;
+        int voiceTotalCount = 0;
 
         const string BGM_BANNER = "bgmBanner";
         const string SHOW_SOUND_DETAIL = "showSoundDetail";
@@ -39,19 +40,20 @@ namespace PIERStory
 
             soundThumbnail.SetDownloadURL(image_url, image_key);
 
-            int unlockCount = 0, totalCount = 0;
+            int unlockCount = 0;
+            voiceTotalCount = 0;
 
-            for(int i=0;i<__voiceData.Count;i++)
+            for (int i=0;i<__voiceData.Count;i++)
             {
                 for(int j=0;j<__voiceData[i].Count;j++)
                 {
                     if (SystemManager.GetJsonNodeBool(__voiceData[i][j], CommonConst.IS_OPEN))
                         unlockCount++;
                 }
-                totalCount += __voiceData[i].Count;
+                voiceTotalCount += __voiceData[i].Count;
             }
 
-            voiceInfo.text = string.Format(SystemManager.GetLocalizedText("6058") + "\n<color=#A0A0A0FF>{1} / {2}</color>", StoryManager.main.GetNametagName(voiceMaster), unlockCount, totalCount);
+            voiceInfo.text = string.Format(SystemManager.GetLocalizedText("6058") + "\n<color=#A0A0A0FF>{1} / {2}</color>", StoryManager.main.GetNametagName(voiceMaster), unlockCount, voiceTotalCount);
             gameObject.SetActive(true);
         }
 
@@ -68,7 +70,7 @@ namespace PIERStory
 
         IEnumerator MoveToSoundDetail()
         {
-            ViewSoundDetail.OnSoundSetting?.Invoke();
+            ViewSoundDetail.OnSoundSetting?.Invoke(voiceTotalCount);
             yield return new WaitUntil(() => ViewSoundDetail.setComplete);
 
             Signal.Send(LobbyConst.STREAM_IFYOU, SHOW_SOUND_DETAIL, string.Empty);

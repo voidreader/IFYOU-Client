@@ -46,8 +46,6 @@ namespace PIERStory
             #region 일러스트
 
             illustData = UserManager.main.GetUserGalleryImage();
-            
-            Debug.Log("ViewGallery total image Count : " + illustData.Count);
 
             // 비활성화 해주면서 초기화
             foreach (IllustElement ie in illustElements)

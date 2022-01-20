@@ -13,7 +13,8 @@ namespace PIERStory
 {
     public class ViewSoundDetail : CommonView
     {
-        public static Action OnSoundSetting = null;
+        public static Action<int> OnSoundSetting = null;
+        public static Action OnSoundLoadCheck = null;
         public static Action<AudioClip, int> OnPlayBGM = null;
         public static Action<AudioClip, int> OnPlayVoice = null;
         public static Action<float> OnMovePlayTime = null;
@@ -27,6 +28,9 @@ namespace PIERStory
         static JsonData soundData = null;
         static Sprite titleSprite = null;
         static string soundTitle = string.Empty;
+
+        public ScrollRect bgmScroll;
+        public ScrollRect voiceScroll;
 
         public TextMeshProUGUI title;
         public Image titleImage;
@@ -59,6 +63,8 @@ namespace PIERStory
         enum RepeatState { NONE, ALL, ONCE};
         RepeatState repeatState = RepeatState.NONE;
 
+        static int voiceTotalCount = 0;
+        int checkSoundSetting = 0;
         int currentSoundIndex = 0;
 
         const float radius = 180f;          // 반지름
@@ -69,6 +75,7 @@ namespace PIERStory
         private void Awake()
         {
             OnSoundSetting = SoundDetailPageSetting;
+            OnSoundLoadCheck = SoundSetCompleteCheck;
         }
 
 
@@ -93,7 +100,6 @@ namespace PIERStory
             title.text = soundTitle;
             titleImage.sprite = titleSprite;
 
-            
             OnPlayBGM = PlayBGM;
             OnPlayVoice = PlayVoice;
             OnMovePlayTime = MovePlayTime;
@@ -154,10 +160,13 @@ namespace PIERStory
         #region Action Function
 
 
-        void SoundDetailPageSetting()
+        void SoundDetailPageSetting(int __voiceTotal = -1)
         {
             bgmList.SetActive(false);
             voiceList.SetActive(false);
+
+            checkSoundSetting = 0;
+            voiceTotalCount = __voiceTotal;
 
             // 배경음을 재생하는지, 보이스를 재생하는지에 따라 이후 세팅이 다름
             if (playBGM)
@@ -166,6 +175,7 @@ namespace PIERStory
                     BGMElements[i].SetBGMElement(i, soundData[i]);
 
                 bgmList.SetActive(true);
+                bgmScroll.verticalNormalizedPosition = 1f;
             }
             else
             {
@@ -198,9 +208,24 @@ namespace PIERStory
                 }
 
                 voiceList.SetActive(true);
+                voiceScroll.verticalNormalizedPosition = 1f;
             }
+        }
 
-            setComplete = true;
+        void SoundSetCompleteCheck()
+        {
+            checkSoundSetting++;
+
+            if(playBGM)
+            {
+                if (soundData.Count == checkSoundSetting)
+                    setComplete = true;
+            }
+            else
+            {
+                if(voiceTotalCount > 0 && voiceTotalCount == checkSoundSetting)
+                    setComplete = true;
+            }
         }
 
 
@@ -391,6 +416,12 @@ namespace PIERStory
         /// </summary>
         public void OnClickPlayPrev()
         {
+            if (playSound.clip == null)
+            {
+                SystemManager.ShowSimpleAlertLocalize("6169");
+                return;
+            }
+
             // 랜덤 재생을 사용중이라면?
             if (shuffleToggle.isOn)
                 RandomPlay();
@@ -430,6 +461,12 @@ namespace PIERStory
         /// </summary>
         public void OnClickPlayNext()
         {
+            if (playSound.clip == null)
+            {
+                SystemManager.ShowSimpleAlertLocalize("6169");
+                return;
+            }
+
             if (shuffleToggle.isOn)
                 RandomPlay();
             else

@@ -8,7 +8,7 @@ namespace PIERStory
 {
     public class PopupMail : PopupBase
     {
-        public static Action<JsonData> OnRequestMailList = null;
+        public static Action OnRequestMailList = null;
         public MailElement[] mailElements;
 
         public GameObject mailScroll;
@@ -19,24 +19,27 @@ namespace PIERStory
             base.Show();
 
             OnRequestMailList = SetMailList;
-            OnRequestMailList?.Invoke(UserManager.main.notReceivedMailJson["mailList"]);
+            OnRequestMailList?.Invoke();
         }
 
 
         /// <summary>
         /// 메일 리스트 세팅
         /// </summary>
-        void SetMailList(JsonData __j)
+        void SetMailList()
         {
-            if (__j == null || __j.Count == 0)
+            if (UserManager.main.notReceivedMailJson["mailList"] == null || UserManager.main.notReceivedMailJson["mailList"].Count == 0)
             {
                 mailScroll.SetActive(false);
                 noMail.SetActive(true);
                 return;
             }
 
-            for (int i = 0; i < __j.Count; i++)
-                mailElements[i].InitMailInfo(__j[i]);
+            foreach (MailElement me in mailElements)
+                me.gameObject.SetActive(false);
+
+            for (int i = 0; i < UserManager.main.notReceivedMailJson["mailList"].Count; i++)
+                mailElements[i].InitMailInfo(UserManager.main.notReceivedMailJson["mailList"][i]);
         }
 
 
@@ -59,8 +62,8 @@ namespace PIERStory
             }
 
             JsonData data = JsonMapper.ToObject(res.DataAsText);
-            OnRequestMailList?.Invoke(SystemManager.GetJsonNode(data, "mailList"));
             UserManager.main.SetRefreshInfo(data);
+            OnRequestMailList?.Invoke();
 
             // 우편을 모두 수령했습니다.
             SystemManager.ShowSimpleAlertLocalize("80063");

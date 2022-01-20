@@ -15,6 +15,7 @@ namespace PIERStory {
         [SerializeField] bool isEpisodeContinuePlay = false; // 에피소드 이어하기 상태? 
         
         [SerializeField] ImageRequireDownload popupImage; // 이미지 
+        [SerializeField] ImageRequireDownload premiumpassBadge; // 프리미엄 패스 뱃지 
         [SerializeField] TextMeshProUGUI textEpisodeTitle;
         [SerializeField] TextMeshProUGUI textEpisodeSummary;
         
@@ -104,10 +105,16 @@ namespace PIERStory {
             // * 프리패스 추가 
             if(UserManager.main.HasProjectFreepass()) {
                 passBanner.gameObject.SetActive(false);    
+                
+                // 뱃지 정보 추가 
+                premiumpassBadge.gameObject.SetActive(true);
+                premiumpassBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey);
+                
                 return;
             }
             
             passBanner.SetPremiumPass(true);
+            premiumpassBadge.gameObject.SetActive(false);
         }
         
         

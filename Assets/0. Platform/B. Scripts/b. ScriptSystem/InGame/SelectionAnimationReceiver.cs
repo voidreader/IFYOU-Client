@@ -3,7 +3,8 @@
 namespace PIERStory
 {
     public class SelectionAnimationReceiver : MonoBehaviour
-    {
+    {   
+        /*
 
         GameSelectionCtrl _base;
 
@@ -23,5 +24,6 @@ namespace PIERStory
             Debug.Log("OnCompleteAppear");
             _base.ChooseSelection();
         }
+        */
     }
 }

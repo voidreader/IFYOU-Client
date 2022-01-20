@@ -607,7 +607,7 @@ namespace PIERStory
                         // * 이 변수는 현재는 오직 GameModelCtrl과 관련된 곳에서만 사용된다. 
                         isJustSkipStop = true;
 
-                        // 22.01.19 isResumePlay인동안 skipable 체크가 무조건 true를 반환하고 있어서 이어하기가 딱 끝난 시점에서 한번 더 skipable을 체크할 필요가 있다
+                        // 22.01.19 isResumePlay인동안 skipable 체크가 true를 반환하고 있어서 이어하기가 딱 끝난 시점에서 한번 더 skipable을 체크할 필요가 있다
                         CheckSkipable(currentSceneId);
                     }
                 }

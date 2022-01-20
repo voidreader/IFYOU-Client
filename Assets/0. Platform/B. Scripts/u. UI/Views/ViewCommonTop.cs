@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
+using BestHTTP;
 using DG.Tweening;
 using Doozy.Runtime.Signals;
 
@@ -158,9 +159,32 @@ namespace PIERStory {
         public void OnSignalControlBackButton(bool __flag) {
             backButton.SetActive(__flag);
         }
-        
-        public void OnClickMail() {
-            Signal.Send(LobbyConst.STREAM_COMMON, "Mail");
+
+        public void OnClickMail()
+        {
+            //Signal.Send(LobbyConst.STREAM_COMMON, "Mail");
+
+            // 22.01.20 Doozy Nody global로 변경하면서 Popup으로 변경
+            NetworkLoader.main.RequestUnreadMailList(CallbackOpenMail);
+        }
+
+        void CallbackOpenMail(HTTPRequest req, HTTPResponse res)
+        {
+            if(!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackOpenMail");
+                return;
+            }
+
+            PopupBase p = PopupManager.main.GetPopup("Mail");
+
+            if(p == null)
+            {
+                Debug.LogError("No Popup");
+                return;
+            }
+
+            PopupManager.main.ShowPopup(p, false);
         }
         
         /// <summary>

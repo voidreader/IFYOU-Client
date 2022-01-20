@@ -108,7 +108,8 @@ namespace PIERStory
             UserManager.main.SetRefreshInfo(data);
 
             // 메일 리스트 갱신
-            ViewMail.OnRequestMailList?.Invoke(SystemManager.GetJsonNode(data, MAIL_LIST));
+            //ViewMail.OnRequestMailList?.Invoke(SystemManager.GetJsonNode(data, MAIL_LIST));
+            PopupMail.OnRequestMailList?.Invoke(data[MAIL_LIST]);
             UserManager.OnFreepassPurchase?.Invoke();
 
             SystemManager.ShowSimpleAlertLocalize("80082");

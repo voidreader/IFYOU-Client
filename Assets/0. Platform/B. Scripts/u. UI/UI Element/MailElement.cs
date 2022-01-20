@@ -88,6 +88,7 @@ namespace PIERStory
         /// </summary>
         public void GetMail()
         {
+            SystemManager.ShowNetworkLoading();
             NetworkLoader.main.RequestSingleMail(CallbackRecievedSingleMail, mailNo);
         }
 
@@ -96,6 +97,7 @@ namespace PIERStory
         /// </summary>
         void CallbackRecievedSingleMail(HTTPRequest req, HTTPResponse res)
         {
+            SystemManager.HideNetworkLoading();
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackRecievedSingleMail");

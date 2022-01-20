@@ -45,11 +45,13 @@ namespace PIERStory
             if (noMail.activeSelf)
                 return;
 
+            SystemManager.ShowNetworkLoading();
             NetworkLoader.main.RequestAllMail(CallbackRecievedAllMail);
         }
 
         void CallbackRecievedAllMail(HTTPRequest req, HTTPResponse res)
         {
+            SystemManager.HideNetworkLoading();
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackRecieveAllMail");

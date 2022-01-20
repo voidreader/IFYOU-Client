@@ -99,6 +99,7 @@ namespace PIERStory
         public string userKey = string.Empty;
         public string gamebaseID = string.Empty;
         public int tutorialStep = 0;
+        public bool isSelectionTutorialClear = false; // 선택지 튜토리얼 초기화 여부 
         public int tutorialFirstProjectID = 0; // 튜토리얼 첫번째 프로젝트  
         
         public int adCharge = 0;
@@ -313,6 +314,8 @@ namespace PIERStory
             
             userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
             tutorialStep = int.Parse(SystemManager.GetJsonNodeString(userJson, "tutorial_step"));
+            isSelectionTutorialClear = SystemManager.GetJsonNodeBool(userJson, "tutorial_selection");
+            
             accountLink = SystemManager.GetJsonNodeString(userJson, "account_link");
             
             SetNewNickname(SystemManager.GetJsonNodeString(userJson, "nickname"));

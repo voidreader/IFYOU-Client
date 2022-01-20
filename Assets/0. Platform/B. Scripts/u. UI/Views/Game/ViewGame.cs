@@ -41,7 +41,8 @@ namespace PIERStory
 
         
         [Space][Space][Header("**선택지**")]
-        public Image selectionTutorialText;     // 선택지 튜토리얼 안내문구
+        public TextMeshProUGUI selectionTutorialText;     // 선택지 튜토리얼 안내문구
+        public Image selectionBackground; // 선택지 나올때 음영처리를 위한 백그라운드 이미지
         public List<ScriptRow> ListSelectionRows = new List<ScriptRow>(); // 현재보여지는 선택지 정보의 스크립트 데이터 
         public List<IFYouGameSelectionCtrl> ListGameSelection = new List<IFYouGameSelectionCtrl>(); // UI에 저장된 선택지들 
         public List<IFYouGameSelectionCtrl> ListAppearSelection = new List<IFYouGameSelectionCtrl>(); // 활성화된 선택지 
@@ -151,6 +152,11 @@ namespace PIERStory
 
             for (int i = 0; i < modelRenders.Length; i++)
                 modelRenders[i].GetComponent<RectTransform>().sizeDelta = new Vector2(rawImageSize, rawImageSize);
+                
+                
+            selectionTutorialText.gameObject.SetActive(false);
+            selectionBackground.gameObject.SetActive(false);
+            
         }
 
 
@@ -409,18 +415,26 @@ namespace PIERStory
         void OpenSelectionUI()
         {
             GameManager.main.isSelectionInputWait = true; // 선택지 입력을 기다려야 한다. 
+            IFYouGameSelectionCtrl.isChooseCompleted = false; // 선택지 입력 초기화 
             
             // Appear 리스트 클리어 
             ListAppearSelection.Clear();
             IFYouGameSelectionCtrl.ListStacks.Clear();
 
-            // 튜토리얼을 보지 않고 스킵해서 선택지 어떻게 누르는지 모르는 바보들을 위해 선택지 꾸욱 눌러야 한다고 문구를 띄워준다.
+            // 선택지 뒷배경에 대한 처리 
+            selectionBackground.color = CommonConst.COLOR_BLACK_TRANSPARENT;
+            selectionBackground.gameObject.SetActive(true);
+            selectionBackground.DOFade(0.7f, 1);
+            
+            // 선택지 텍스트 처리 
             /*
-            if (UserManager.main.tutorialStep.Equals(2))
-                selectionTutorialText.gameObject.SetActive(true);
-            else
-                selectionTutorialText.gameObject.SetActive(false);
+            selectionTutorialText.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
+            selectionTutorialText.gameObject.SetActive(true);
+            selectionTutorialText.DOFade(1, 1);
             */
+            
+            
+            
 
             for (int i = 0; i < ListSelectionRows.Count; i++)
             {
@@ -457,6 +471,9 @@ namespace PIERStory
         {
             
             SetBlockScreenActiveFlag(true); // 입력 막기.(안전빵 )
+            
+            // 백그라운드 제거 
+            selectionBackground.DOFade(0, 0.5f).OnComplete(()=>{ selectionBackground.gameObject.SetActive(false);});
             
             // 사건 ID 미리할당. 
             GameManager.main.targetSelectionSceneID = __targetSceneID;

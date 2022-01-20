@@ -129,8 +129,12 @@ namespace PIERStory
         [SerializeField] string bgmBannerKey = string.Empty;
         public string freepassBannerURL = string.Empty;
         public string freepassBannerKey = string.Empty;
-        public string freepassTitleURL = string.Empty;
-        public string freepassTitleKey = string.Empty;
+        
+        // 프리패스 뱃지 정보 
+        public string freepassBadgeURL = string.Empty;
+        public string freepassBadgeKey = string.Empty;
+        
+        
 
         #endregion
 
@@ -185,7 +189,7 @@ namespace PIERStory
         const string NODE_GALLERY_BANNER = "galleryBanner";
         const string NODE_BGM_BANNER = "bgmBanner";
         const string NODE_FREEPASS_BANNER = "freepassBanner";
-        const string NODE_FREEPASS_TITLE = "freepassTitle";
+        
         const string NODE_FREEPASS_ORIGIN_PRICE = "origin_freepass_price";
         const string NODE_FREEPASS_SALE_PRICE = "sale_freepass_price";
         const string NODE_FREEPASS_PRODUCT = "freepasProduct"; // 작품별 프리패스 타임딜 상품리스트
@@ -651,8 +655,7 @@ namespace PIERStory
             bgmBannerURL = string.Empty;
             freepassBannerURL = string.Empty;
             freepassBannerKey = string.Empty;
-            freepassTitleURL = string.Empty;
-            freepassTitleKey = string.Empty;
+            
             
             illustJson = GetNodeProjectIllusts(); // 일러스트 기본 정보 
             minicutJSON = GetNodeProjectMinicuts(); // 미니컷 기본정보 
@@ -671,14 +674,21 @@ namespace PIERStory
             bgmBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_URL);
             bgmBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_KEY);
             SystemManager.RequestDownloadImage(bgmBannerURL, bgmBannerKey, null);
-
+            
+            
+            // 프리미엄 패스 배너 
             freepassBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_FREEPASS_BANNER), SystemConst.IMAGE_URL);
             freepassBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_FREEPASS_BANNER), SystemConst.IMAGE_KEY);
-            SystemManager.RequestDownloadImage(freepassBannerURL, freepassBannerKey, null);
             
-            freepassTitleURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_FREEPASS_TITLE), SystemConst.IMAGE_URL);
-            freepassTitleKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_FREEPASS_TITLE), SystemConst.IMAGE_KEY);
+            // 프리미엄 패스 뱃지
+            freepassBadgeURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, "freepassBadge"), SystemConst.IMAGE_URL);
+            freepassBadgeKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, "freepassBadge"), SystemConst.IMAGE_KEY);
+            
+
+            /*
+
             SystemManager.RequestDownloadImage(freepassBannerURL, freepassBannerKey, null);
+            */
             
         }
 

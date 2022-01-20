@@ -28,6 +28,7 @@ namespace PIERStory {
         
         public static List<IFYouGameSelectionCtrl> ListStacks = new List<IFYouGameSelectionCtrl>(); // 현재 선택지에 사용되는 친구들 
         static bool isOneOfSelectionPointerDown = false; // 선택지 중 하나라도 누르고 있는 경우 true로 변환 
+        public static bool isChooseCompleted = false; // 선택 완료 (다른거 누를 수 없도록 막는다)
         
         
         #region const & readonly
@@ -200,6 +201,9 @@ namespace PIERStory {
         #region 포인터 다운, 업 
         
         public void OnPointerDown(PointerEventData eventData) {
+            if(isChooseCompleted)
+                return;
+           
             if(this.currentState == SelectionState.None || this.currentState == SelectionState.Appear) 
                 return;
                 
@@ -209,6 +213,10 @@ namespace PIERStory {
                 
             // 멀티터치 방지
             if(isOneOfSelectionPointerDown)
+                return;
+                
+            // 두개 이상 터치 막는다. 
+            if(Input.touchCount > 1)
                 return;
                 
             
@@ -228,9 +236,16 @@ namespace PIERStory {
                 || this.currentState == SelectionState.Out)  
                 return;
                 
+            if(isChooseCompleted)
+                return;
+                
                 
             // 멀티 터치 방지
             if (!isOneOfSelectionPointerDown)
+                return;
+                
+            // 두개 이상 터치 막는다. 
+            if(Input.touchCount > 1)
                 return;
             
             Debug.Log("OnPointerUp : " + this.gameObject);
@@ -388,6 +403,8 @@ namespace PIERStory {
         /// </summary>
         void ChooseSelection() {
             Debug.Log(string.Format(">>> {0} <<<", selectionText));
+            
+            isChooseCompleted = true; // 완료처리 
             
             // 
             

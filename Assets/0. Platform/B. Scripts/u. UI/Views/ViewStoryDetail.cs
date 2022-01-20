@@ -25,6 +25,7 @@ namespace PIERStory
         [Space]
         [Header("== Upper Controls ==")]
         [SerializeField] ImageRequireDownload mainThumbnail; // 썸네일 
+        [SerializeField] ImageRequireDownload premiumpassBadge; // 프리미엄패스 뱃지
         [SerializeField] GameObject btnCredit;
         [SerializeField] TextMeshProUGUI textTitle; // 타이틀
         [SerializeField] TextMeshProUGUI textAuthor; // 원작자
@@ -366,11 +367,19 @@ namespace PIERStory
             {
                 Debug.Log("!!! freepass user in this project");
                 premiumPassArea.SetActive(false);
+                
+                // 뱃지 정보 추가 
+                premiumpassBadge.gameObject.SetActive(true);
+                premiumpassBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey);
+                // premiumpassBadge.setdown
+                
                 return;
             }
 
             premiumPassArea.SetActive(true);
             passBanner.SetPremiumPass(true);
+            
+            premiumpassBadge.gameObject.SetActive(false);
 
         }
 

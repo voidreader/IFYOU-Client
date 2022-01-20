@@ -84,7 +84,7 @@ namespace PIERStory {
             // * 튜토리얼 관련 처리 OnView로 옮김 
             if (UserManager.main.tutorialStep < 2)
             {
-                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_EPISODE_START);
+                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_FREE_PLAY);
                 PopupManager.main.ShowPopup(p, false);
             }
             else if (UserManager.main.tutorialStep == 2 && UserManager.main.tutorialFirstProjectID != 0)

@@ -43,7 +43,7 @@ namespace PIERStory
 
             // loadingImage.OnDownloadImage = CallbackDownloadLoadingImage;
 
-            textTitle.text = GameManager.main.currentEpisodeData.episodeTitle;
+            textTitle.text = string.Empty;
             loadingBar.fillAmount = 0;
             
             StartCoroutine(RoutineGameLoading());
@@ -58,7 +58,10 @@ namespace PIERStory
         {
             // 게임 매니저에서 에피소드 스크립트 정보 가져올 때까지 대기
             yield return new WaitUntil(() => GameManager.main.isScriptFetch);
+            
+            
             Debug.Log("<color=cyan>Script Fetched</color>");
+            textTitle.text = GameManager.main.currentEpisodeData.episodeTitle;
             
             StartCoroutine(RoutineDebugLoading());
 

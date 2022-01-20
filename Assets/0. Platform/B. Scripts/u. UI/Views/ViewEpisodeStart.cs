@@ -476,8 +476,9 @@ namespace PIERStory {
             Debug.Log("Game Start!!!!!");
             
             Signal.Send(LobbyConst.STREAM_COMMON, "GameBegin", string.Empty);
-            
             IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
+            
+            SystemManager.ShowNetworkLoading(); // 게임시작할때 어색하지 않게, 네트워크 로딩 추가 
             
             // 다음 에피소드 진행 
             // * 2021.09.23 iOS 메모리 이슈를 해결하기 위해 중간 Scene을 거쳐서 실행하도록 처리 

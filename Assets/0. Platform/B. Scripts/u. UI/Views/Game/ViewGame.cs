@@ -360,9 +360,11 @@ namespace PIERStory
                 }
             }
 
+            int charCount = SystemManager.main.currentAppLanguageCode != "EN" ? 22 : 30;
+
             if(countNewLine == 0)
             {
-                while (countNewLine * 22 < narrationText.Length)
+                while (countNewLine * charCount < narrationText.Length)
                     countNewLine++;
 
                 countNewLine--;

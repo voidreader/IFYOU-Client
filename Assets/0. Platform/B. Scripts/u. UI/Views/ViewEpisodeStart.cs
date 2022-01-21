@@ -407,8 +407,7 @@ namespace PIERStory {
             if (!__isPurchaseSuccess)
             {
                 Debug.LogError("Error in purchase");
-                // 추가 메세지 처리 
-                // ! NetworkLoader에서 메세지 띄우니까 안해도 된다. 
+                SystemManager.HideNetworkLoading();
                 return;
             }
             
@@ -430,6 +429,7 @@ namespace PIERStory {
             // 인터넷 연결이 끊겨있음
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
+                SystemManager.HideNetworkLoading();
                 SystemManager.ShowMessageWithLocalize("80074", false);
                 return;
             }
@@ -446,8 +446,10 @@ namespace PIERStory {
                 if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
                     StartGame();
                 // wifi 아닌경우. 
-                else if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork)
+                else if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork) {
+                    SystemManager.HideNetworkLoading();
                     SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("80075"), ChangeNetworkSetting, OnRejectPlayWihoutWifi);
+                }
             }
 
         } // ? End of purchasePostProcess

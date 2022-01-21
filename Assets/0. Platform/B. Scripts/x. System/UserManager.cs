@@ -1696,7 +1696,7 @@ namespace PIERStory
         /// <param name="res"></param>
         public void CallbackPurchaseEpisode(HTTPRequest req, HTTPResponse res)
         {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
+            if (!NetworkLoader.CheckResponseValidation(req, res, true))
             {
                 Debug.LogError("CallbackPurchaseEpisode");
                 OnRequestEpisodePurchase?.Invoke(false);

@@ -46,6 +46,8 @@ namespace PIERStory
 
         void RealStart()
         {
+            SystemManager.ShowNetworkLoading(); // 게임시작할때 어색하지 않게, 네트워크 로딩 추가 
+            
             Signal.Send(LobbyConst.STREAM_COMMON, "GameBegin", string.Empty);
             IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
             SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single).allowSceneActivation = true;

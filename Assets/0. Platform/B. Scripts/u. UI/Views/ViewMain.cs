@@ -11,6 +11,7 @@ using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
 using Doozy.Runtime.UIManager.Containers;
 using DanielLochner.Assets.SimpleScrollSnap;
+using System.Collections;
 
 namespace PIERStory {
     public class ViewMain : CommonView
@@ -27,6 +28,7 @@ namespace PIERStory {
         [Header("로비")]
         [SerializeField] ScrollRect mainScrollRect;
         [SerializeField] UIToggle mainToggle;
+        public UIContainer lobbyContainer;
 
         // 프로모션 배너
         public SimpleScrollSnap promotionScroll;
@@ -197,6 +199,9 @@ namespace PIERStory {
                     OnAddMore();
                     break;
             }
+
+            if (index != 0)
+                StartCoroutine(RemoveTopBackground());
         }
         
         
@@ -322,31 +327,43 @@ namespace PIERStory {
                 ListNewStoryElement[i].gameObject.SetActive(false);
             }
         }
-        
+
         /// <summary>
         /// 메인ScrollRect 상하 변경시.. 상단 제어 
         /// </summary>
         /// <param name="vec"></param>
-        public void OnValueChangedMainScroll(Vector2 vec) {
-            
-            if(!mainToggle.isOn)
+        public void OnValueChangedMainScroll(Vector2 vec)
+        {
+            if (mainScrollRectY == vec.y)
                 return;
-            
-            if(mainScrollRectY == vec.y)
-                return;
-                
+
             mainScrollRectY = vec.y;
-            
-            if(mainScrollRectY < 0.95f && !ViewCommonTop.isBackgroundShow) {
+
+            if (mainScrollRectY < 0.95f && !ViewCommonTop.isBackgroundShow)
+            {
                 Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
                 return;
             }
-           
-            
-            if(mainScrollRectY >= 0.95f && ViewCommonTop.isBackgroundShow) {
+
+
+            if (mainScrollRectY >= 0.95f && ViewCommonTop.isBackgroundShow)
+            {
                 Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
                 return;
             }
+        }
+
+        IEnumerator RemoveTopBackground()
+        {
+            if (lobbyContainer.gameObject.activeSelf)
+            {
+                yield return new WaitUntil(() => !lobbyContainer.gameObject.activeSelf);
+
+                if (!lobbyContainer.gameObject.activeSelf)
+                    Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            }
+
+            yield break;
         }
 
         #endregion

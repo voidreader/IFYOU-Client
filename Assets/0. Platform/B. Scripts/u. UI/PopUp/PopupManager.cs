@@ -39,7 +39,10 @@ namespace PIERStory {
         
         [SerializeField] GameObject popupTutorialComplete;
         [SerializeField] GameObject popupTutorialEpisodeStart;
+        public GameObject popupTutorialFreeplay;
         [SerializeField] GameObject popupTutorialMain;
+        public GameObject popupTutorialPremiumpass;
+        public GameObject popupTutorialStarplay;
         [SerializeField] GameObject popupTutorialStoryDetail;
         
         [SerializeField] GameObject popupNickname;       
@@ -269,20 +272,20 @@ namespace PIERStory {
             else 
                 DictPopup.Add("LevelUp", popupLevelUp);
                 
-            if(DictPopup.ContainsKey("MessageAlert")) 
-                DictPopup["MessageAlert"] = popupMessageAlert;
+            if(DictPopup.ContainsKey(CommonConst.POPUP_MESSAGE_ALERT)) 
+                DictPopup[CommonConst.POPUP_MESSAGE_ALERT] = popupMessageAlert;
             else 
-                DictPopup.Add("MessageAlert", popupMessageAlert);
+                DictPopup.Add(CommonConst.POPUP_MESSAGE_ALERT, popupMessageAlert);
                 
-            if(DictPopup.ContainsKey("Popup1")) 
-                DictPopup["Popup1"] = popupType1;
+            if(DictPopup.ContainsKey(CommonConst.POPUP_TYPE_1)) 
+                DictPopup[CommonConst.POPUP_TYPE_1] = popupType1;
             else 
-                DictPopup.Add("Popup1", popupType1);
+                DictPopup.Add(CommonConst.POPUP_TYPE_1, popupType1);
                 
-            if(DictPopup.ContainsKey("Popup2")) 
-                DictPopup["Popup2"] = popupType2;
+            if(DictPopup.ContainsKey(CommonConst.POPUP_TYPE_2)) 
+                DictPopup[CommonConst.POPUP_TYPE_2] = popupType2;
             else 
-                DictPopup.Add("Popup2", popupType2);
+                DictPopup.Add(CommonConst.POPUP_TYPE_2, popupType2);
                 
             if(DictPopup.ContainsKey("PremiumPass")) 
                 DictPopup["PremiumPass"] = popupPremiumPass;
@@ -294,30 +297,45 @@ namespace PIERStory {
             else 
                 DictPopup.Add("SideAlert", popupSideAlert);
                 
-            if(DictPopup.ContainsKey("SimpleAlert")) 
-                DictPopup["SimpleAlert"] = popupSimpleAlert;
+            if(DictPopup.ContainsKey(CommonConst.POPUP_SIMPLE_ALERT)) 
+                DictPopup[CommonConst.POPUP_SIMPLE_ALERT] = popupSimpleAlert;
             else 
-                DictPopup.Add("SimpleAlert", popupSimpleAlert);
+                DictPopup.Add(CommonConst.POPUP_SIMPLE_ALERT, popupSimpleAlert);
                 
-            if(DictPopup.ContainsKey("TutorialComplete")) 
-                DictPopup["TutorialComplete"] = popupTutorialComplete;
+            if(DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_TUTORIAL_COMPLETE)) 
+                DictPopup[CommonConst.POPUP_TUTORIAL_TUTORIAL_COMPLETE] = popupTutorialComplete;
             else 
-                DictPopup.Add("TutorialComplete", popupTutorialComplete);
+                DictPopup.Add(CommonConst.POPUP_TUTORIAL_TUTORIAL_COMPLETE, popupTutorialComplete);
                 
-            if(DictPopup.ContainsKey("TutorialEpisodeStart")) 
-                DictPopup["TutorialEpisodeStart"] = popupTutorialEpisodeStart;
+            if(DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_EPISODE_START)) 
+                DictPopup[CommonConst.POPUP_TUTORIAL_EPISODE_START] = popupTutorialEpisodeStart;
             else 
-                DictPopup.Add("TutorialEpisodeStart", popupTutorialEpisodeStart);
+                DictPopup.Add(CommonConst.POPUP_TUTORIAL_EPISODE_START, popupTutorialEpisodeStart);
+
+            if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_FREE_PLAY))
+                DictPopup[CommonConst.POPUP_TUTORIAL_FREE_PLAY] = popupTutorialFreeplay;
+            else
+                DictPopup.Add(CommonConst.POPUP_TUTORIAL_FREE_PLAY, popupTutorialFreeplay);
                 
-            if(DictPopup.ContainsKey("TutorialMain")) 
-                DictPopup["TutorialMain"] = popupTutorialMain;
+            if(DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_MAIN)) 
+                DictPopup[CommonConst.POPUP_TUTORIAL_MAIN] = popupTutorialMain;
             else 
-                DictPopup.Add("TutorialMain", popupTutorialMain);
-                
-            if(DictPopup.ContainsKey("TutorialStoryDetail")) 
-                DictPopup["TutorialStoryDetail"] = popupTutorialStoryDetail;
+                DictPopup.Add(CommonConst.POPUP_TUTORIAL_MAIN, popupTutorialMain);
+
+            if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_PREMIUM_PASS))
+                DictPopup[CommonConst.POPUP_TUTORIAL_PREMIUM_PASS] = popupTutorialPremiumpass;
+            else
+                DictPopup.Add(CommonConst.POPUP_TUTORIAL_PREMIUM_PASS, popupTutorialPremiumpass);
+
+            if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_STAR_PLAY))
+                DictPopup[CommonConst.POPUP_TUTORIAL_STAR_PLAY] = popupTutorialStarplay;
+            else
+                DictPopup.Add(CommonConst.POPUP_TUTORIAL_STAR_PLAY, popupTutorialStarplay);
+
+            if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_STORYDETAIL)) 
+                DictPopup[CommonConst.POPUP_TUTORIAL_STORYDETAIL] = popupTutorialStoryDetail;
             else 
-                DictPopup.Add("TutorialStoryDetail", popupTutorialStoryDetail);
+                DictPopup.Add(CommonConst.POPUP_TUTORIAL_STORYDETAIL, popupTutorialStoryDetail);
                 
             if(DictPopup.ContainsKey("Nickname")) 
                 DictPopup["Nickname"] = popupNickname;

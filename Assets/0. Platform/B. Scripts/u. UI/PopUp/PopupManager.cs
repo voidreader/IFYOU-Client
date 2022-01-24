@@ -50,6 +50,7 @@ namespace PIERStory {
         [SerializeField] GameObject popupPackDetail;
         [SerializeField] GameObject popupNotice;
         [SerializeField] GameObject popupMail;
+        [SerializeField] GameObject popupResource; // 리소스 표현  팝업 
         
          
         private void Awake() {
@@ -355,7 +356,12 @@ namespace PIERStory {
             if(DictPopup.ContainsKey("Mail")) 
                 DictPopup["Mail"] = popupMail;
             else 
-                DictPopup.Add("Mail", popupMail);                
+                DictPopup.Add("Mail", popupMail);
+                
+            if(DictPopup.ContainsKey("Resource")) 
+                DictPopup["Resource"] = popupResource;
+            else 
+                DictPopup.Add("Resource", popupResource);
         }
         
         #endregion

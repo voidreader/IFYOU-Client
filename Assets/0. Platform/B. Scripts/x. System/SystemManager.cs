@@ -63,6 +63,7 @@ namespace PIERStory
         public EpisodeData givenEpisodeData = null; // 로비에서 전달받은 에피소드 데이터 (에피소드)
         public JsonData appComonResourceData = null; // 앱 공용 리소스 데이터 (2021.09.14)
         JsonData levelData = null; // 레벨 데이터 
+        JsonData baseCurrencyData = null; // 기본 재화 데이터 
 
         
         #region 기준정보 Variables
@@ -499,7 +500,7 @@ namespace PIERStory
             
             // 레벨 기준정보 데이터 추가 
             levelData = appComonResourceData["levelList"]; 
-            
+            baseCurrencyData = appComonResourceData["currency"];
             
             
             isAppCommonResourcesReceived = true;
@@ -1538,6 +1539,57 @@ namespace PIERStory
 
 
         #region 시스템(앱) 팝업
+        
+        
+        /// <summary>
+        /// 리소스 획득 팝업 (OK)
+        /// </summary>
+        /// <param name="__message"></param>
+        /// <param name="__url"></param>
+        /// <param name="__key"></param>
+        public static void ShowResourcePopup(string __message, string __url, string __key) {
+            PopupBase p = PopupManager.main.GetPopup("Resource");
+            
+            if (p == null)
+            {
+                Debug.LogError(">> No Resource Popup");
+                return;
+            }
+            
+            p.Data.isConfirm = false;
+            p.Data.imageURL = __url;
+            p.Data.imageKey = __key;
+            p.Data.SetLabelsTexts(__message);
+            
+            PopupManager.main.ShowPopup(p, false);
+        }
+        
+        /// <summary>
+        /// 리소스 사용 컨펌 팝업 
+        /// </summary>
+        /// <param name="__message"></param>
+        /// <param name="__url"></param>
+        /// <param name="__key"></param>
+        /// <param name="__positive"></param>
+        public static void ShowResourceConfirm (string __message, string __url, string __key, Action __positive) {
+            PopupBase p = PopupManager.main.GetPopup("Resource");
+            
+            if (p == null)
+            {
+                Debug.LogError(">> No Resource Popup");
+                return;
+            }
+            
+            p.Data.isConfirm = true;
+            p.Data.imageURL = __url;
+            p.Data.imageKey = __key;
+            p.Data.SetLabelsTexts(__message);
+            p.Data.positiveButtonCallback = __positive;
+            
+            PopupManager.main.ShowPopup(p, false);
+        }
+        
+        
 
 
         /// <summary>
@@ -1942,6 +1994,70 @@ namespace PIERStory
         public void OpenTermsURL() {
             ShowDefaultWebview(termsOfUseURL, SystemManager.GetLocalizedText("5049"));
         }
+        
+        /// <summary>
+        /// 코인샵 웹뷰 오픈 
+        /// </summary>
+        public void OpenCoinShopWebview() {
+            
+            if(string.IsNullOrEmpty(SystemManager.main.coinShopURL)) {
+                Debug.LogError("No Coinshop url");
+                return;
+            }
+            
+            
+            
+            
+            string uidParam = string.Format("?uid={0}", UserManager.main.GetUserPinCode());
+            string langParam = string.Format("&lang={0}", SystemManager.main.currentAppLanguageCode);
+            
+            string finalURL = SystemManager.main.coinShopURL + uidParam + langParam;
+            Debug.Log("Coinshop : " + finalURL);
+            
+            GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
+            configuration.title = SystemManager.GetLocalizedText("6186");
+            configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
+            configuration.colorR = 0;
+            configuration.colorG = 0;
+            configuration.colorB = 0;
+            configuration.colorA = 255;
+            configuration.barHeight = 30;
+            configuration.isBackButtonVisible = false;
+            configuration.contentMode = GamebaseWebViewContentMode.MOBILE;
+
+            
+            Gamebase.Webview.ShowWebView(finalURL, configuration, (error) =>{ 
+                Debug.Log("Webview Closed");
+                NetworkLoader.main.RequestUserBaseProperty();
+            }, null, null);            
+
+        }
+        
+        /// <summary>
+        /// 기본 재화의 아이콘 URL 
+        /// </summary>
+        /// <param name="__currency"></param>
+        /// <returns></returns>        
+        public string GetCurrencyImageURL (string __currency) {
+            if(baseCurrencyData == null || baseCurrencyData.ContainsKey(__currency))
+                return string.Empty;
+                
+            return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], "image_url");
+        }
+        
+        
+        /// <summary>
+        /// 기본 재화의 아이콘 Key
+        /// </summary>
+        /// <param name="__currency"></param>
+        /// <returns></returns>
+        public string GetCurrencyImageKey (string __currency) {
+            if(baseCurrencyData == null || baseCurrencyData.ContainsKey(__currency))
+                return string.Empty;
+                
+            return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], "image_key");
+        }
+        
 
          
     }

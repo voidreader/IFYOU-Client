@@ -11,6 +11,7 @@ namespace PIERStory
     {
         public ImageRequireDownload loadingImage;
         
+        public Image Cover; // 커버 
         
         public Image loadingBar;
         // public Image fadeImage;
@@ -35,6 +36,12 @@ namespace PIERStory
             
             Debug.Log("GameLoading OnStartView");
             
+            
+            
+            // 커버 이미지 처리 
+            Cover.color = new Color(0,0,0,1);
+            Cover.gameObject.SetActive(true);
+            
             // * 페이드 이미지보다 로딩이 빨리 끝나는 경우가 있더라....
             /*
             fadeImage.color = new Color(0, 0, 0, 1);
@@ -51,7 +58,7 @@ namespace PIERStory
 
         void CallbackDownloadLoadingImage()
         {
-            // fadeImage.DOFade(0f, 0.4f).OnComplete(() => fadeImage.gameObject.SetActive(false));
+            Cover.DOFade(0, 0.4f);    
         }
 
         IEnumerator RoutineGameLoading()
@@ -64,6 +71,8 @@ namespace PIERStory
             textTitle.text = GameManager.main.currentEpisodeData.episodeTitle;
             
             StartCoroutine(RoutineDebugLoading());
+            
+            loadingImage.OnDownloadImage = CallbackDownloadLoadingImage; // 로딩 이미지 다운로드 콜백. 
 
             if (GameManager.main.loadingJson.Count > 0) {
                 loadingImage.SetDownloadURL(SystemManager.GetJsonNodeString(GameManager.main.loadingJson[0], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(GameManager.main.loadingJson[0], CommonConst.COL_IMAGE_KEY));

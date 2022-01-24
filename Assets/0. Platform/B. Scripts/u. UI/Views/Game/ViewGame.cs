@@ -41,7 +41,7 @@ namespace PIERStory
 
         
         [Space][Space][Header("**선택지**")]
-        public TextMeshProUGUI selectionTutorialText;     // 선택지 튜토리얼 안내문구
+        public Image selectionTutorialText;     // 선택지 튜토리얼 안내문구
         public Image selectionBackground; // 선택지 나올때 음영처리를 위한 백그라운드 이미지
         public List<ScriptRow> ListSelectionRows = new List<ScriptRow>(); // 현재보여지는 선택지 정보의 스크립트 데이터 
         public List<IFYouGameSelectionCtrl> ListGameSelection = new List<IFYouGameSelectionCtrl>(); // UI에 저장된 선택지들 
@@ -421,13 +421,11 @@ namespace PIERStory
             selectionBackground.gameObject.SetActive(true);
             selectionBackground.DOFade(0.7f, 1);
             
-            // 선택지 텍스트 처리 
-            /*
-            selectionTutorialText.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
-            selectionTutorialText.gameObject.SetActive(true);
-            selectionTutorialText.DOFade(1, 1);
-            */
-            
+            if(!UserManager.main.isSelectionTutorialClear) {
+                selectionTutorialText.color = CommonConst.COLOR_BLACK_TRANSPARENT;
+                selectionTutorialText.gameObject.SetActive(true);
+                selectionTutorialText.DOFade(1, 1);    
+            }
             
             
 
@@ -469,6 +467,12 @@ namespace PIERStory
             
             // 백그라운드 제거 
             selectionBackground.DOFade(0, 0.5f).OnComplete(()=>{ selectionBackground.gameObject.SetActive(false);});
+            
+            // 튜토리얼 선택지 문구 제거 
+            if(selectionTutorialText.gameObject.activeSelf) {
+                selectionTutorialText.DOFade(0, 0.5f).OnComplete(()=>{ selectionTutorialText.gameObject.SetActive(false);});
+            }
+            
             
             // 사건 ID 미리할당. 
             GameManager.main.targetSelectionSceneID = __targetSceneID;

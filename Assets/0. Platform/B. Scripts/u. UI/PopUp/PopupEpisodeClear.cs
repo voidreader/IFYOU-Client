@@ -58,7 +58,11 @@ namespace PIERStory {
         /// </summary>
         public void OnClickGet() {
             Hide();
-            UserManager.main.RefreshIndicators(); // 상단 갱신만 하면 된다. (이미 재화는 들어온 상태)
+            // UserManager.main.RefreshIndicators(); // 상단 갱신만 하면 된다. (이미 재화는 들어온 상태)
+            
+            // 재화 요청
+            
+            
         }
 
         /// <summary>

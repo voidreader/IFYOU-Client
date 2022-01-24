@@ -60,8 +60,10 @@ namespace PIERStory {
             
             // * 조건 추가 (같은 이미지 여러번 불러오지 않기 위해)
             // 이미 로드 완료한 상태이고, url key 같으면 진행하지 않음.
-            if(isLoadComplete && __url == imageURL && __key == imageKey)
+            if(isLoadComplete && __url == imageURL && __key == imageKey) {
+                OnDownloadImage?.Invoke();
                 return;
+            }
             
             
             imageURL = __url;

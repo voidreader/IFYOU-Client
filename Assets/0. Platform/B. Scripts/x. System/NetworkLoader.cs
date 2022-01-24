@@ -690,7 +690,7 @@ namespace PIERStory
             sending[CommonConst.FUNC] = "getCommingList";
             sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
 
-            SendPost(null, sending);
+            SendPost(StoryManager.main.CallbackComingSoonList, sending);
         }
 
 

@@ -909,6 +909,9 @@ namespace PIERStory
         /// <returns></returns>
         public bool HasProjectFreepass()
         {
+            if (StoryManager.main.GetProjectFreepassNode() == null)
+                return false;
+
             if (SystemManager.GetJsonNodeBool(bankJson, "Free" + StoryManager.main.CurrentProjectID))
                 return true;
             else
@@ -922,6 +925,26 @@ namespace PIERStory
         public void SetNodeProjectUserProperty(JsonData __j)
         {
             currentStoryJson[NODE_PROJECT_USER_PROPERTY] = __j;
+        }
+
+        /// <summary>
+        /// 갤러리를 사용할 수 있는 상태인가요?
+        /// </summary>
+        /// <returns></returns>
+        public bool GalleryUsable()
+        {
+            int countPermanet = 0;
+
+            foreach(EpisodeData data in StoryManager.main.RegularEpisodeList)
+            {
+                if (data.purchaseState == PurchaseState.Permanent)
+                    countPermanet++;
+
+                if (countPermanet >= 3)
+                    return true;
+            }
+
+            return false;
         }
 
 

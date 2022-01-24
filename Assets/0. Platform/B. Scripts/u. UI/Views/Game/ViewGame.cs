@@ -36,7 +36,7 @@ namespace PIERStory
         string narrationText = string.Empty;
 
         [Space] [Header("**스탠딩 캐릭터용 변수**")]
-        public Transform[] modelRenderParents;  // 0 : 미사용 or 중앙 사용중, 1 : 2인스탠딩중 말 안하는 사람, 2 : 2인스탠딩중 말하는 사람
+        public Transform[] modelRenderParents;  // 0 : 미사용, 1 : 2인스탠딩중 말 안하는 사람, 2 : 2인스탠딩중 말하는 사람 or 중앙 사용중
         public RawImage[] modelRenders;         // 0 : L, 1 : C, 2: R
 
         
@@ -129,11 +129,11 @@ namespace PIERStory
         {
             main = this;
         }
-        
-        void Update() {
+
+        void Update()
+        {
             if (!GameManager.main.SoundGroup[1].GetIsPlaying)
                 InactiveMicrophoneIcon();
-           
         }
 
         public override void OnStartView()
@@ -141,8 +141,6 @@ namespace PIERStory
             base.OnStartView();
             
             // ViewGame 초기화 
-
-            
             StoryManager.enterGameScene = true;
             SetBlockScreenActiveFlag(false); 
 
@@ -153,10 +151,8 @@ namespace PIERStory
             for (int i = 0; i < modelRenders.Length; i++)
                 modelRenders[i].GetComponent<RectTransform>().sizeDelta = new Vector2(rawImageSize, rawImageSize);
                 
-                
             selectionTutorialText.gameObject.SetActive(false);
             selectionBackground.gameObject.SetActive(false);
-            
         }
 
 
@@ -166,9 +162,10 @@ namespace PIERStory
         /// <param name="eventData"></param>
         public void OnPointerClick(PointerEventData eventData)
         {
-            
+
             // 광고 볼때 터치 안되도록 처리 
-            if(AdManager.main.isAdShowing) {
+            if (AdManager.main.isAdShowing)
+            {
                 Debug.Log(">> advertisement is showing now <<");
                 return;
             }
@@ -266,16 +263,12 @@ namespace PIERStory
         /// </summary>
         public void HideBubbles()
         {
-            
-            // Debug.Log("HideBubble Called");
-                        
             HideNarration();
 
             for (int i = 0; i < ListBubbles.Count; i++)
             {
                 if (ListBubbles[i].gameObject.activeSelf || ListBubbles[i].needDelayShow)
                     ListBubbles[i].OffBubble(GameManager.main.useSkip);
-                
             }
 
             if (selfBubble.gameObject.activeSelf)

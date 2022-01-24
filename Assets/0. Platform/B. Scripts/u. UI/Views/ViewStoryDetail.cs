@@ -24,22 +24,23 @@ namespace PIERStory
 
         [Space]
         [Header("== Upper Controls ==")]
-        [SerializeField] ImageRequireDownload mainThumbnail; // 썸네일 
+        [SerializeField] ImageRequireDownload mainThumbnail;    // 썸네일 
         [SerializeField] ImageRequireDownload premiumpassBadge; // 프리미엄패스 뱃지
         [SerializeField] GameObject btnCredit;
-        [SerializeField] TextMeshProUGUI textTitle; // 타이틀
-        [SerializeField] TextMeshProUGUI textAuthor; // 원작자
-        [SerializeField] TextMeshProUGUI textProducer; // 제작사
-        [SerializeField] TextMeshProUGUI textGenre; // 장르 
-        [SerializeField] TextMeshProUGUI textSummary; // 요약
+        [SerializeField] TextMeshProUGUI textTitle;             // 타이틀
+        [SerializeField] TextMeshProUGUI textAuthor;            // 원작자
+        [SerializeField] TextMeshProUGUI textProducer;          // 제작사
+        [SerializeField] TextMeshProUGUI textGenre;             // 장르 
+        [SerializeField] TextMeshProUGUI textSummary;           // 요약
 
+        public GameObject lockGallery;                  // 잠긴 갤러리
         [SerializeField] StoryContentsButton buttonContentsMission;
         [SerializeField] StoryContentsButton buttonContentsGallery;
         [SerializeField] StoryContentsButton buttonContentsEnding;
         [SerializeField] StoryContentsButton buttonContentsSelection;
 
-        [SerializeField] GameObject premiumPassArea; // 프리미엄 패스 구역
-        [SerializeField] PassBanner passBanner; // 프리미엄 패스 배너 
+        [SerializeField] GameObject premiumPassArea;            // 프리미엄 패스 구역
+        [SerializeField] PassBanner passBanner;                 // 프리미엄 패스 배너 
 
         public TextMeshProUGUI sortText;
 
@@ -178,8 +179,6 @@ namespace PIERStory
             buttonContentsMission.InitContentsButton();
             buttonContentsEnding.InitContentsButton();
 
-
-
             textSpecialEpisodeExplain.gameObject.SetActive(false);
 
 
@@ -187,6 +186,34 @@ namespace PIERStory
             SetFreepassInfo();
 
             SetLikeButtonState();
+
+            // 어드민 유저는 상관 없음
+            if(UserManager.main.CheckAdminUser())
+            {
+                buttonContentsGallery.gameObject.SetActive(true);
+                lockGallery.SetActive(false);
+                return;
+            }
+
+            // 프리패스 구매자 인지 먼저 체크
+            if(UserManager.main.HasProjectFreepass())
+            {
+                buttonContentsGallery.gameObject.SetActive(true);
+                lockGallery.SetActive(false);
+            }
+            else
+            {
+                if(UserManager.main.GalleryUsable())
+                {
+                    buttonContentsGallery.gameObject.SetActive(true);
+                    lockGallery.SetActive(false);
+                }
+                else
+                {
+                    buttonContentsGallery.gameObject.SetActive(false);
+                    lockGallery.SetActive(true);
+                }
+            }
         }
 
 
@@ -508,6 +535,5 @@ namespace PIERStory
             else
                 btnLike.image.sprite = spriteLikeOff;
         }
-
     }
 }

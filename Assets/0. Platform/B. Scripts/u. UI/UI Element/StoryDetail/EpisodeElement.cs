@@ -266,6 +266,14 @@ namespace PIERStory {
             // * 이전이나 블록 상태. 
             if(episodeData.episodeState == EpisodeState.Prev || episodeData.episodeState == EpisodeState.Block) {
                 
+
+                // 프리패스가 아니면 엔딩에 도달할 때까지 리셋하지 못해!
+                if((!UserManager.main.HasProjectFreepass() && string.IsNullOrEmpty(episodeData.endingType)) || !UserManager.main.CheckAdminUser())
+                {
+                    SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("6199"));
+                    return;
+                }
+
                 Debug.Log("Call Reset");
                 
                 // Reset 호출 

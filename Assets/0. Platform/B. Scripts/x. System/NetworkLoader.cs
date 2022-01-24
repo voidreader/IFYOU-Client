@@ -681,6 +681,19 @@ namespace PIERStory
         }
 
 
+        /// <summary>
+        /// 커밍순 리스트 요청
+        /// </summary>
+        public void RequestComingSoonList()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "getCommingList";
+            sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
+
+            SendPost(null, sending);
+        }
+
+
         #region 메인 프로모션
 
         public void RequestPromotionList()

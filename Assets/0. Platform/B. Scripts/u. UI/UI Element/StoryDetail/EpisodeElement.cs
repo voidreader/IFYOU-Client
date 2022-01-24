@@ -267,8 +267,8 @@ namespace PIERStory {
             if(episodeData.episodeState == EpisodeState.Prev || episodeData.episodeState == EpisodeState.Block) {
                 
 
-                // 프리패스가 아니면 엔딩에 도달할 때까지 리셋하지 못해!
-                if((!UserManager.main.HasProjectFreepass() && string.IsNullOrEmpty(episodeData.endingType)) || !UserManager.main.CheckAdminUser())
+                // 프리패스가 아니면 엔딩에 도달할 때까지 리셋하지 못해! 엔딩은 종속(?)된 정규 챕터가 존재함
+                if((!UserManager.main.HasProjectFreepass() && episodeData.dependEpisode == "-1") || !UserManager.main.CheckAdminUser())
                 {
                     SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("6199"));
                     return;

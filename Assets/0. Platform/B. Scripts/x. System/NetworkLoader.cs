@@ -156,6 +156,20 @@ namespace PIERStory
 
         #region 기타 통신 RequestGamebaseLaunching, UpdateEpisodeStartRecord, UpdateEpisodeCompleteRecord
         
+        /// <summary>
+        /// 에피소드 클리어 보상 요청 
+        /// </summary>
+        /// <param name="isDouble"></param>
+        public void RequestEpisodeFirstClearReward(bool isDouble) {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestEpisodeFirstClearReward";
+            sending["is_double"] = isDouble;
+            sending["episode_id"] = StoryManager.main.CurrentEpisodeID;
+            
+            // 통신 
+            SendPost(UserManager.main.CallbackEpisodeFirstClearReward, sending, true);
+        }
+        
         
         /// <summary>
         /// 광고 기록 
@@ -554,6 +568,7 @@ namespace PIERStory
                 sending["nextEpisodeID"] = nextEpisode.episodeID; // 다음 에피소드 ID 있을때만
 
             sending["func"] = FUNC_UPDATE_EPISODE_COMPLETE_RECORD;
+            sending["ver"] = 10; // 버전 2022.01.24
 
             // 에피소드 완료 기록을 하면서 현재 선택지 기록을 갱신한다
             UserManager.main.SetCurrentStorySelectionList(StoryManager.main.CurrentProjectID);

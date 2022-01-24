@@ -293,7 +293,7 @@ namespace PIERStory {
                 });
                 
                 imageBar.DOKill();
-                imageBar.DOFillAmount(0, 0.3f).SetDelay(1).OnComplete(()=>{ 
+                imageBar.DOFillAmount(1, 0.3f).SetDelay(1).OnComplete(()=>{ 
                     SetState(SelectionState.Out); 
                     
                     ChooseSelection(); // 선택완료처리
@@ -406,7 +406,6 @@ namespace PIERStory {
             
             isChooseCompleted = true; // 완료처리 
             
-            // 
             
             // 로그 만들어주기. 
             ViewGame.main.CreateSelectionLog(selectionText);
@@ -419,6 +418,11 @@ namespace PIERStory {
 
             // 선택지 기록 쌓기
             NetworkLoader.main.UpdateUserSelectionCurrent(targetSceneID, scriptRow.selection_group, scriptRow.selection_no);
+            
+            // 선택지 튜토리얼 완료 처리 
+            if(!UserManager.main.isSelectionTutorialClear) {
+                UserManager.main.RequestSelectionTutorialClear(); 
+            }
         }
         
         /// <summary>

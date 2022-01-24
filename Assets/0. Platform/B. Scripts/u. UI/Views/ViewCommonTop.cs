@@ -398,5 +398,13 @@ namespace PIERStory {
         void RefreshMailNotification(int __cnt) {
             mailNotify.SetActive(__cnt > 0);
         }
+        
+        
+        /// <summary>
+        /// 코인 클릭 이벤트 
+        /// </summary>
+        public void OnClickCoin() {
+            SystemManager.main.OpenCoinShopWebview();
+        }
     }
 }

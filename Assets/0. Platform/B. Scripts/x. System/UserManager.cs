@@ -595,7 +595,10 @@ namespace PIERStory
 
             // 튜토리얼 스텝 갱신, bank 갱신
             tutorialStep = SystemManager.GetJsonNodeInt(result, "new_tutorial_step");
-            SetBankInfo(result);
+            
+            // SetBankInfo(result); 뱅크 제거 
+            SetNotificationInfo(result);
+            
             tutorialFirstProjectID = 0;
 
             PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_TUTORIAL_COMPLETE);
@@ -606,6 +609,28 @@ namespace PIERStory
                 
             if(StoryManager.enterGameScene)
                 StoryManager.enterGameScene = false;
+        }
+        
+        /// <summary>
+        /// 첫번째 선택지 선택시 호출한다. 선택지 튜토리얼 관련 처리 
+        /// </summary>
+        public void RequestSelectionTutorialClear()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "updateTutorialSelection";
+            sending[CommonConst.COL_USERKEY] = userKey;
+
+            NetworkLoader.main.SendPost(CallbackTutorialSelection, sending);
+        }
+        
+        void CallbackTutorialSelection(HTTPRequest req, HTTPResponse res) {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackTutorialSelection");
+                return;
+            }
+            
+            isSelectionTutorialClear = true; // 따로 데이터 받는거 없이 true 처리 
         }
 
 
@@ -1432,6 +1457,34 @@ namespace PIERStory
         #endregion
 
         #region 통신 콜백 
+        
+        /// <summary>
+        /// 에피소드 첫 보상 콜백 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        public void CallbackEpisodeFirstClearReward(HTTPRequest request, HTTPResponse response) {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
+            {
+                Debug.LogError("CallbackEpisodeFirstClearReward");
+                return;
+            }
+            
+            // bank, reward
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            Debug.Log(">> CallbackEpisodeFirstClearReward :: " + response.DataAsText);
+            
+            // bank 
+            SetBankInfo(result);
+            
+            // resource 팝업창 
+            string currency = SystemManager.GetJsonNodeString(result["reward"], "currency");
+            int quantity = SystemManager.GetJsonNodeInt(result["reward"], "quantity");
+            
+            // 재화 획득 팝업 6201
+            SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6201"), quantity, SystemManager.main.GetCurrencyImageURL(currency), SystemManager.main.GetCurrencyImageURL(currency));
+            
+        }
         
         /// <summary>
         /// 경험치 통신 콜백 

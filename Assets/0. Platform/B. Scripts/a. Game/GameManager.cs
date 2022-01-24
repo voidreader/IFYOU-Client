@@ -750,20 +750,18 @@ namespace PIERStory
 
         public void StartAutoPlay()
         {
-
             if (autoPlayCorountine == null)
                 return;
 
-            StartCoroutine(autoPlayCorountine);
+            StartCoroutine(main.autoPlayCorountine);
         }
 
         public void StopAutoPlay()
         {
-
             if (autoPlayCorountine == null)
                 return;
 
-            StopCoroutine(autoPlayCorountine);
+            StopCoroutine(main.autoPlayCorountine);
             isAutoPlay = false;
         }
 
@@ -781,12 +779,13 @@ namespace PIERStory
                     yield break;
                 }
 
-
                 yield return new WaitUntil(() => !isThreadHold);
+
+                if (!isWaitingScreenTouch)
+                    continue;
 
                 if (!isThreadHold && isWaitingScreenTouch)
                 {
-
                     // 보이스가 재생이 끝날때까지 대기
                     if (SoundGroup[1].GetIsPlaying)
                     {
@@ -796,6 +795,9 @@ namespace PIERStory
                     }
                     else
                         yield return new WaitForSeconds(PlayerPrefs.GetFloat(GameConst.AUTO_PLAY));
+
+                    if (!isWaitingScreenTouch)
+                        continue;
 
                     Debug.Log(">> Auto Click <<");
 

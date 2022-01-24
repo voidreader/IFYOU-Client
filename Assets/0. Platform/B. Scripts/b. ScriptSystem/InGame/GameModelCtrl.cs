@@ -39,7 +39,7 @@ namespace PIERStory
         const float slideTime = 0.7f;
 
         bool autoPlay = false;                 // 자동진행 값. skip을 사용해도 true로 동일하게 간주한다
-        public bool moveComplete = true;       // 등장, 퇴장 연출 완료 = true, 미완 = false
+        public bool moveComplete = true;      // 등장, 퇴장 연출 완료 = true, 미완 = false
 
 
         [Header("Character tall")]
@@ -253,7 +253,7 @@ namespace PIERStory
             if (model == null)
             {
                 // character_expression이 변경되었을 수도 있으니까 변경해줘야 해
-                //info.SetCharacterInfo(transform, __row.speaker, __row.character_expression);
+                info.SetCharacterInfo(transform, __row.speaker, __row.character_expression);
                 return;
             }
 
@@ -276,8 +276,8 @@ namespace PIERStory
             // 스킵이나 자동진행이 아니면 무조건 연출을 시작한다고 생각한다
             if (!autoPlay)
                 OnMoveStart();
-                
-            // Debug.Log("EnterTalkingCharacter : " + characterPosIndex);
+
+            SetTalker();
 
             // 캐릭터 위치(L,C,R)에 따른 위치 및 크기 조정
             switch (characterPosIndex)
@@ -294,8 +294,6 @@ namespace PIERStory
                     SetCharacterTransform(GameConst.VIEWDIRECTION_RIGHT, fixPosX);
                     break;
             }
-
-            SetTalker();
         }
 
         /// <summary>
@@ -398,7 +396,6 @@ namespace PIERStory
         /// <param name="layerName"></param>
         void FadeIn(float posX, string layerName)
         {
-
             // 여기에 OnMoveStart 넣으면 오류는 해결되지만, 답답해져서.. 다시 뺌. 
             // OnMoveStart();                      
 
@@ -456,14 +453,19 @@ namespace PIERStory
         /// </summary>
         public void SetListener()
         {
-            // 리스터는 살짝 작은 스케일로 조정해준다. 
+            currRenderTexture.transform.SetParent(ViewGame.main.modelRenderParents[1]);
 
+            // 리스터는 살짝 작은 스케일로 조정해준다. 
             if (transform.localScale.x < 0f)
                 transform.DOScale(new Vector3(-1f, 1f, 1f) * listenerScale, animTime);
             else
                 transform.DOScale(listenerScale, animTime);
 
-            currRenderTexture.transform.SetParent(ViewGame.main.modelRenderParents[1]);
+            // * 22.01.21
+            // 빠르게 진행하는 경우 투명도 값이 0~1 사이에 있는채로 방치되어 다시 사용할 경우를 위해 강제로 1로 만들어준다
+            if(ViewGame.main.modelRenders[1].color.a < 1f)
+                ViewGame.main.modelRenders[1].color = new Color(1, 1, 1, 1);
+
             OnMoveCompleted();
         }
 

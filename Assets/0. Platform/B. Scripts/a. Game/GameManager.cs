@@ -1036,7 +1036,6 @@ namespace PIERStory
         /// <param name="remainSpeakerIndex">남아있는 캐릭터 포지션</param>
         void ChanageDuetSpeaker(int newSpeakerIndex, ScriptRow __row)
         {
-
             // 남아있는 캐릭터 index
             int remainSpeakerIndex = 0;
             // * 왼쪽 혹은 오른쪽에 신규 캐릭터가 들어오면, 어차피 남아있는 index는 그 반대편 index 아닌가? 

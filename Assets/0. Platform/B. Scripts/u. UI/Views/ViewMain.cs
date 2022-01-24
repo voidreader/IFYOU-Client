@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +12,6 @@ using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
 using Doozy.Runtime.UIManager.Containers;
 using DanielLochner.Assets.SimpleScrollSnap;
-using System.Collections;
 
 namespace PIERStory {
     public class ViewMain : CommonView
@@ -46,6 +46,7 @@ namespace PIERStory {
         [SerializeField] List<PlayingStoryElement> ListPlayingStoryElements; // 진행중 이야기 
         [SerializeField] List<MainStoryRow> ListRecommendStoryRow; // 추천 스토리의 2열짜리 행 
         [SerializeField] List<NewStoryElement> ListNewStoryElement; // 새로운 이야기 개별 개체 
+        public List<ComingSoonElement> comingSoonStories;           // 커밍순 이야기
         
         [Header("카테고리")] 
         JsonData genreData = null;
@@ -162,6 +163,7 @@ namespace PIERStory {
             InitPlayingStoryElements(); // 진행중인 이야기 Area 초기화 
             InitRecommendStory(); // 추천스토리 Area 초기화
             InitNewStoryElements(); // 새로운 이야기 Area 초기화
+            InitComingSoonStory();  // 커밍순 스토리 초기화
         }
         
         public void OnLobbyTab() {
@@ -325,6 +327,33 @@ namespace PIERStory {
         void ResetNewStory() {
             for(int i=0; i<ListNewStoryElement.Count; i++) {
                 ListNewStoryElement[i].gameObject.SetActive(false);
+            }
+        }
+
+        /// <summary>
+        /// 커밍순 작품 초기화
+        /// </summary>
+        void InitComingSoonStory()
+        {
+            // 전부 비활성화
+            foreach (ComingSoonElement cse in comingSoonStories)
+                cse.gameObject.SetActive(false);
+
+
+            JsonData comingData = StoryManager.main.comingSoonJson;
+
+            if (comingData == null || comingData.Count < 1)
+                return;
+
+            string url = string.Empty, key = string.Empty, title = string.Empty;
+
+            for (int i = 0; i < comingData.Count; i++)
+            {
+                url = SystemManager.GetJsonNodeString(comingData[i], CommonConst.COL_IMAGE_URL);
+                key = SystemManager.GetJsonNodeString(comingData[i], CommonConst.COL_IMAGE_KEY);
+                title = SystemManager.GetJsonNodeString(comingData[i], CommonConst.COL_TITLE);
+
+                comingSoonStories[i].InitComingStoryData(url, key, title);
             }
         }
 

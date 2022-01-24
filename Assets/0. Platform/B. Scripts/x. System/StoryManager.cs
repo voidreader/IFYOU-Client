@@ -57,6 +57,7 @@ namespace PIERStory
         JsonData totalStoryListJson = null; // 조회로 가져온 모든 작품 리스트(all)
         JsonData recommendStoryIdJSON = null; // 추천 작품 ID JSON
         JsonData likeStoryIdJSON = null; // 좋아요 작품 ID JSON
+        [HideInInspector] public JsonData comingSoonJson = null;        // 커밍순 작품
         
         public List<StoryData> listTotalStory = new List<StoryData>(); // 작품 리스트 
         public List<StoryData> listRecommendStory = new List<StoryData>(); // 추천 작품 리스트 
@@ -325,8 +326,18 @@ namespace PIERStory
             likeStoryIdJSON = __newData;
         }
         
-        
-        
+        public void CallbackComingSoonList(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Network Error in CallbackComingSoonList");
+                return;
+            }
+
+            comingSoonJson = JsonMapper.ToObject(res.DataAsText);
+            Debug.Log(">> 커밍순 리스트 : \n" + JsonMapper.ToStringUnicode(comingSoonJson));
+        }
+
 
         /// <summary>
         /// 작품 Id로 해당 작품 찾기

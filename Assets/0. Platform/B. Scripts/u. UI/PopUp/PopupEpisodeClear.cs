@@ -61,7 +61,7 @@ namespace PIERStory {
             // UserManager.main.RefreshIndicators(); // 상단 갱신만 하면 된다. (이미 재화는 들어온 상태)
             
             // 재화 요청
-            
+            NetworkLoader.main.RequestEpisodeFirstClearReward(false);
             
         }
 
@@ -86,8 +86,14 @@ namespace PIERStory {
             }
             
             // 서버에 2배 보상 요청 
-            NetworkLoader.main.AddUserProperty(currency, quantity, "first_clear_double", OnDoubleReward);
+            //NetworkLoader.main.AddUserProperty(currency, quantity, "first_clear_double", OnDoubleReward);
             
+            Debug.Log("### DoubleReward ###");
+            
+            Hide();
+            
+            // 재화 요청
+            NetworkLoader.main.RequestEpisodeFirstClearReward(true);
         }
         
         /// <summary>

@@ -502,6 +502,7 @@ namespace PIERStory
             levelData = appComonResourceData["levelList"]; 
             baseCurrencyData = appComonResourceData["currency"];
             
+            Debug.Log("### " + JsonMapper.ToStringUnicode(baseCurrencyData));
             
             isAppCommonResourcesReceived = true;
         }
@@ -1547,7 +1548,7 @@ namespace PIERStory
         /// <param name="__message"></param>
         /// <param name="__url"></param>
         /// <param name="__key"></param>
-        public static void ShowResourcePopup(string __message, string __url, string __key) {
+        public static void ShowResourcePopup(string __message, int __quantity, string __url, string __key) {
             PopupBase p = PopupManager.main.GetPopup("Resource");
             
             if (p == null)
@@ -1559,7 +1560,7 @@ namespace PIERStory
             p.Data.isConfirm = false;
             p.Data.imageURL = __url;
             p.Data.imageKey = __key;
-            p.Data.SetLabelsTexts(__message);
+            p.Data.SetLabelsTexts(__message, __quantity.ToString()); // 메세지, 개수 
             
             PopupManager.main.ShowPopup(p, false);
         }
@@ -2039,7 +2040,7 @@ namespace PIERStory
         /// <param name="__currency"></param>
         /// <returns></returns>        
         public string GetCurrencyImageURL (string __currency) {
-            if(baseCurrencyData == null || baseCurrencyData.ContainsKey(__currency))
+            if(baseCurrencyData == null || !baseCurrencyData.ContainsKey(__currency))
                 return string.Empty;
                 
             return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], "image_url");
@@ -2052,7 +2053,7 @@ namespace PIERStory
         /// <param name="__currency"></param>
         /// <returns></returns>
         public string GetCurrencyImageKey (string __currency) {
-            if(baseCurrencyData == null || baseCurrencyData.ContainsKey(__currency))
+            if(baseCurrencyData == null || !baseCurrencyData.ContainsKey(__currency))
                 return string.Empty;
                 
             return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], "image_key");

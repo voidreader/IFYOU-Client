@@ -107,5 +107,10 @@ namespace PIERStory {
             hasNewContents = __flag;
             newContentsFrame.SetActive(hasNewContents);
         }
+
+        public void OnClickLockGallery()
+        {
+            SystemManager.ShowMessageAlert("6198", true);
+        }
     }
 }

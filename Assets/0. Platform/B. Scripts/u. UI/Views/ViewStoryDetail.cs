@@ -196,33 +196,19 @@ namespace PIERStory
             }
 
             // 프리패스 구매자 인지 먼저 체크
-            if(StoryManager.main.GetProjectFreepassNode() != null && UserManager.main.HasProjectFreepass())
+            if(UserManager.main.HasProjectFreepass())
             {
                 buttonContentsGallery.gameObject.SetActive(true);
                 lockGallery.SetActive(false);
             }
             else
             {
-                // 스타 구매 3개 이상인지 체크
-                int countPermanent = 0;
-
-                foreach (EpisodeData data in StoryManager.main.RegularEpisodeList)
+                if(UserManager.main.GalleryUsable())
                 {
-                    if (data.purchaseState == PurchaseState.Permanent)
-                    {
-                        countPermanent++;
-
-                        if (countPermanent >= 3)
-                        {
-                            buttonContentsGallery.gameObject.SetActive(true);
-                            lockGallery.SetActive(false);
-                            break;
-                        }
-                    }
+                    buttonContentsGallery.gameObject.SetActive(true);
+                    lockGallery.SetActive(false);
                 }
-                
-                // 3개 미만인 경우
-                if(countPermanent < 3)
+                else
                 {
                     buttonContentsGallery.gameObject.SetActive(false);
                     lockGallery.SetActive(true);
@@ -549,11 +535,5 @@ namespace PIERStory
             else
                 btnLike.image.sprite = spriteLikeOff;
         }
-
-        public void OnClickLockGallery()
-        {
-            SystemManager.ShowMessageAlert("6198", true);
-        }
-
     }
 }

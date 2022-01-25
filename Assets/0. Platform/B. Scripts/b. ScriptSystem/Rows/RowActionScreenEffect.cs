@@ -127,6 +127,10 @@ namespace PIERStory
 
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_CAMERA_FLASH);
 
+            ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_BUBBLES);
+            ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_DAMAGE);
+            ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_WAVE_LINE);
+
             // 일반 이펙트 명령어 
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_TINT);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_TINT_BG);
@@ -138,10 +142,14 @@ namespace PIERStory
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_CAMERA_FLASH);
 
+            ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_SNOW);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_FOG);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_SCREEN_FOG);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_FOCUS);
 
+            ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_BUBBLES);
+            ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_DAMAGE);
+            ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_WAVE_LINE);
 
             // 카메라 이펙트 명령어 
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_GRAYSCALE);
@@ -154,7 +162,6 @@ namespace PIERStory
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_SHAKE);
 
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_HEAVYSNOW);
-            ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_SNOW);
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_HEAVYRAIN);
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_RAIN);
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_ZOOMIN);
@@ -333,6 +340,17 @@ namespace PIERStory
                     ScreenEffectManager.main.DirectiveFlash(paramArray);
                     break;
 
+                case GameConst.KR_SCREEN_EFFECT_BUBBLES:
+                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_DAMAGE:
+                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
+                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
+                    break;
             }
         }
 

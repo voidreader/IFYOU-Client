@@ -18,7 +18,10 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textEventBonus; // 이벤트 보너스 
         
         [SerializeField] ImageRequireDownload specialGiftIcon;
-        [SerializeField] ImageRequireDownload normalGiftIcon;
+        
+        [SerializeField] GameObject normalGiftGroup; // 일반 기프트 그룹 
+        
+        [SerializeField] List<ResourceIconQuantity> listNormalGift;
         
         [SerializeField] Image aura; // 
         [SerializeField] bool isCompleteLoad = false;
@@ -29,6 +32,8 @@ namespace PIERStory {
         JsonData beforeData = null; // 경험치 획득 전 
         JsonData currentData = null; // 경험치 획득 후 
         JsonData rewardData = null;
+        
+        JsonData rewardList = null; // 재화 여러개. 
         
         [SerializeField] int beforeLevel = 0;
         [SerializeField] int currentLevel = 0;
@@ -45,7 +50,7 @@ namespace PIERStory {
             textSpecialGiftName.text = string.Empty;
             textNormalGiftQuantity.text = string.Empty;
             
-            normalGiftIcon.OnDownloadImage = OnLoadNormalGift;
+            // normalGiftIcon.OnDownloadImage = OnLoadNormalGift;
             specialGiftIcon.OnDownloadImage = OnLoadSpecialGift;
             
             
@@ -53,12 +58,17 @@ namespace PIERStory {
             aura.color = new Color(1,1,1,0);
             
             specialGiftIcon.gameObject.SetActive(false);
-            normalGiftIcon.gameObject.SetActive(false);
+            normalGiftGroup.SetActive(false);
+            for(int i=0; i<listNormalGift.Count;i++){ 
+                listNormalGift[i].gameObject.SetActive(false);
+            }
             
             
             beforeData = Data.contentJson["before"]; // 경험치 얻기 전 
             currentData = Data.contentJson["current"]; // 경험치 얻은 후 
             rewardData = Data.contentJson["reward"];  // 보상 데이터 
+            
+            rewardList = Data.contentJson["rewardList"];  // 보상 여러개인 경우의 데이터 
             
             beforeLevel = SystemManager.GetJsonNodeInt(beforeData, "level"); // 이전 레벨 
             currentLevel = SystemManager.GetJsonNodeInt(currentData, "level"); // 현재 레벨 
@@ -68,25 +78,49 @@ namespace PIERStory {
             currency_name = rewardData["currency_name"].ToString();
             
             // 특별선물과 일반선물의 구분
-            if(currency_type == "consumable") {
-                normalGiftIcon.gameObject.SetActive(true);
-                normalGiftIcon.SetDownloadURL(rewardData["icon_image_url"].ToString(), rewardData["icon_image_key"].ToString());
-                textNormalGiftQuantity.text = rewardData["quantity"].ToString();
+            if(rewardList.Count > 0) {
+                normalGiftGroup.SetActive(true);
+                
+                // 여러개라서 
+                for(int i=0; i<rewardList.Count;i++) {
+                    
+                    if(i >= listNormalGift.Count)
+                        break;
+                    
+                    listNormalGift[i].SetResourceInfo(SystemManager.GetJsonNodeString(rewardList[i], "icon_image_url"), SystemManager.GetJsonNodeString(rewardList[i], "icon_image_key"), SystemManager.GetJsonNodeInt(rewardList[i], "quantity"));
+                }
+                
+                Invoke("OnLoadNormalGift", 1);
+                
             }
-            else {
+            else if (rewardList.Count == 1 && currency_type == "consumable") { // 하나만, 소모성인경우 
+                normalGiftGroup.SetActive(true);
+                listNormalGift[0].SetResourceInfo(SystemManager.GetJsonNodeString(rewardData, "icon_image_url"), SystemManager.GetJsonNodeString(rewardData, "icon_image_key"), SystemManager.GetJsonNodeInt(rewardData, "quantity"));
+                Invoke("OnLoadNormalGift", 1);
+            }
+            else { // 스페셜 
                 specialGiftIcon.gameObject.SetActive(true);
                 specialGiftIcon.SetDownloadURL(rewardData["icon_image_url"].ToString(), rewardData["icon_image_key"].ToString());
                 textSpecialGiftName.text = rewardData["currency_name"].ToString();
             }
             
             
+            
+            
             // 레벨 설정
             textLevel.text = beforeData["level"].ToString(); // 일단 before 레벨로 세팅 
             
             // 이벤트 설정 처리 
-            textEventBonus.gameObject.SetActive(false);
+            textEventBonus.gameObject.SetActive(true);
+            
             if(SystemManager.GetJsonNodeBool(Data.contentJson, "event")) {
-                textEventBonus.gameObject.SetActive(true);
+                Debug.Log("### Level up Event");
+                textEventBonus.text = SystemManager.GetLocalizedText("6149");
+            }
+            else {
+                Debug.Log("### level up Not Event");
+                
+                textEventBonus.text = SystemManager.GetLocalizedText("6177");
             }
             
             
@@ -137,7 +171,8 @@ namespace PIERStory {
             base.Hide();
             
             // UserManager.main.SetBankInfo();
-            UserManager.main.SetBankInfo(Data.contentJson); // 뱅크 리프레시 
+            // UserManager.main.SetBankInfo(Data.contentJson); // 뱅크 리프레시 
+            UserManager.main.SetNotificationInfo(Data.contentJson);
             
         }
 

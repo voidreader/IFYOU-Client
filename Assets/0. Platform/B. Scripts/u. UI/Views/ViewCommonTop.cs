@@ -405,6 +405,8 @@ namespace PIERStory {
         /// </summary>
         public void OnClickCoin() {
             SystemManager.main.OpenCoinShopWebview();
+            
+            AdManager.main.AnalyticsCoinShopOpen("top");
         }
     }
 }

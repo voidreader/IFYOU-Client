@@ -233,6 +233,7 @@ namespace PIERStory
             sending["route"] = __route;
             sending["clear_id"] = __clearID;
             sending["project_id"] = StoryManager.main.CurrentProjectID;
+            sending["ver"] = 10;
             
             
             SendPost(UserManager.main.CallbackEXP, sending);

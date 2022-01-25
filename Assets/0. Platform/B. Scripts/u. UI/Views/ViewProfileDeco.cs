@@ -206,6 +206,8 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_MULTIPLE_BUTTON_LABEL, SystemManager.GetLocalizedText("6097"), string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5124"), string.Empty);
 
+
+            AdManager.main.AnalyticsEnter("decoEnter");
         }
 
 

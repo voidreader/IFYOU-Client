@@ -20,6 +20,7 @@ namespace PIERStory
         [HideInInspector] public RawImage currRenderTexture;        // 현재 그려지고 있는 곳
         
         [SerializeField] bool isModelActivated = false; // 모델이 한번이라도 Activate 되었었지에 대한 변수
+        [SerializeField] string motionName = string.Empty; // 플레이할 모션 이름 
 
         // About DefaultCharacter
         SpriteRenderer defaultSprite = null;
@@ -241,6 +242,7 @@ namespace PIERStory
             } // 화면 '등장'에 대한 처리 종료 
 
             // * 모션 처리 시작 
+            
             // 모션 없으면 진행하지 않음 
             if (DictMotion != null && !DictMotion.ContainsKey(__row.character_expression))
             {
@@ -262,10 +264,34 @@ namespace PIERStory
             if (!string.IsNullOrEmpty(__row.out_effect))
                 out_effect = __row.out_effect;
 
+            // * 실제 클립 재생
+            motionName = __row.character_expression;
+            
+            // * 립싱크 기능 추가 2022.01.25 
+            // 립싱크 모션 유무 체크 
+            if(DictMotion.ContainsKey(motionName + "_M") && CheckLipSyncTemplate(__row.template)) {
+                motionName = motionName + "_M"; // 립싱크 모션으로 변경 
+            }
+            
 
             // 클립 재생 
-            modelAnim.CrossFade(__row.character_expression, 0.3f);
+            modelAnim.CrossFade(motionName, 0.3f);
         }
+        
+        /// <summary>
+        /// 립싱크 가능 템플릿 체크 
+        /// </summary>
+        /// <param name="__template"></param>
+        /// <returns></returns>
+        bool CheckLipSyncTemplate(string __template) {
+            
+            // 대화, 외침, 속삭임, 중요대사
+            if(!string.IsNullOrEmpty(__template) || (__template == GameConst.TEMPLATE_TALK ||  __template == GameConst.TEMPLATE_YELL ||  __template == GameConst.TEMPLATE_WHISPER ||  __template == GameConst.TEMPLATE_SPEECH))
+                return true;
+                
+            return false;
+        }
+        
 
         /// <summary>
         /// 화면에 없었던 캐릭터의 진입 처리 

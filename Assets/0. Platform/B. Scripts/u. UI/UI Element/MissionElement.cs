@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Doozy.Runtime.UIManager.Components;
 using BestHTTP;
 using TMPro;
 using LitJson;
@@ -11,13 +12,16 @@ namespace PIERStory
     {
         public ImageRequireDownload missionThumbnail;
         public GameObject hiddenHighlight;
-        public Image RewardMask;
+
         public TextMeshProUGUI missionText;
+        
         
         public GameObject rewardInfo;
         public GameObject missionProceeding;        // 미션 진행중
         public GameObject getRewardButton;          // 미션 보상받기
         public GameObject completeMark;             // 미션 완료 도장
+        
+        public CanvasGroup rewardCanvasGroup; // 리워드 미션 캔버스 그룹 
 
         public ImageRequireDownload currencyIcon;
         public TextMeshProUGUI expText;
@@ -34,6 +38,9 @@ namespace PIERStory
         {
             gameObject.SetActive(true);
             
+            rewardCanvasGroup.alpha = 1;
+            
+            
             missionData = __missionData;
             missionThumbnail.gameObject.SetActive(true);
             hiddenHighlight.SetActive(false);
@@ -47,8 +54,6 @@ namespace PIERStory
             // missionHint.text = missionData.missionHint;
 
             expText.text = string.Format("EXP {0}", missionData.rewardExp);
-            RewardMask.color = new Color(1,1,1,0);
-            RewardMask.raycastTarget = false;
 
             SetCurrencyIcon(missionData.rewardQuantity);
             SetMissionState(missionData.missionState);
@@ -85,13 +90,13 @@ namespace PIERStory
             {
                 case MissionState.unlocked:
                     getRewardButton.SetActive(true);
+                    getRewardButton.GetComponent<UIButton>().interactable = true;
+                    
                     missionProceeding.SetActive(false);
                     break;
                 case MissionState.finish:
                     rewardInfo.SetActive(false);
                     completeMark.SetActive(true);
-                    RewardMask.color = new Color(1,1,1,1);
-                    RewardMask.raycastTarget = true;
                     break;
 
                 default:
@@ -120,23 +125,19 @@ namespace PIERStory
             }
 
             Debug.Log("> CallbackGetMissionReward : " + res.DataAsText);
+            getRewardButton.GetComponent<UIButton>().interactable = false;
+            
             JsonData resposeData = JsonMapper.ToObject(res.DataAsText);
             
-            
-            // 재화 갱신
-            UserManager.main.SetBankInfo(resposeData);
+            // 재화 획득 팝업 
+            SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6123"), missionData.rewardQuantity, missionData.currency_icon_url, missionData.currency_icon_key);
             
             // 미션 상태 변경 (보상 받고, 완료로 변경)
             missionData.missionState = MissionState.finish; 
-            // UserManager.main.SetMissionData(missionData.missionID, missionData);
+            UserManager.main.SetMissionData(missionData.missionID, missionData);
             
             StoryContentsButton.onStoryContentsButtonMission?.Invoke();
             
-
-            
-            // 미션 리스트 갱신 
-            // * 2021.09.15 연출을 위해 view에서 갱신을 하지 않음. 
-            // storyMission.SetMissionList(resposeData["userMissionList"]);
             
             // * 성공 했다. => 미션이 해금도 되었고, 보상도 받은 상태가 되는거다. 
             SetMissionComplete();
@@ -153,9 +154,9 @@ namespace PIERStory
             // 경험치 처리 
             NetworkLoader.main.UpdateUserExp(missionData.rewardExp, "mission", missionData.missionID);
             
+            rewardCanvasGroup.DOFade(0, 0.2f).OnComplete(CompleteStep2);
+            // RewardMask.DOFade(1, 0.2f).OnComplete(CompleteStep2);
             
-            RewardMask.DOFade(1, 0.2f).OnComplete(CompleteStep2);
-            RewardMask.raycastTarget = true;
             completeMark.transform.localScale = Vector3.one * 1.5f;
 
         }
@@ -168,7 +169,8 @@ namespace PIERStory
         }
         
         void RefreshViewMission() {
-            ViewMission.OnCompleteReward?.Invoke();
+            // ViewMission.OnCompleteReward?.Invoke();
+            ViewMission.OnRefreshProgressor?.Invoke();
         }
     }
     

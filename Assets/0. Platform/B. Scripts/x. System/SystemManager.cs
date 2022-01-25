@@ -504,6 +504,16 @@ namespace PIERStory
             
             Debug.Log("### " + JsonMapper.ToStringUnicode(baseCurrencyData));
             
+            // 코인, 젬 미리 다운로드 시켜놓기. 
+            if(baseCurrencyData != null && baseCurrencyData.ContainsKey("coin")) {
+                RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData["coin"], "image_url"), SystemManager.GetJsonNodeString(baseCurrencyData["coin"], "image_key"), null);
+            }
+            if(baseCurrencyData != null && baseCurrencyData.ContainsKey("gem")) {
+                RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData["gem"], "image_url"), SystemManager.GetJsonNodeString(baseCurrencyData["coin"], "image_key"), null);
+            }
+            
+            
+            
             isAppCommonResourcesReceived = true;
         }
         
@@ -2031,6 +2041,9 @@ namespace PIERStory
                 Debug.Log("Webview Closed");
                 NetworkLoader.main.RequestUserBaseProperty();
             }, null, null);            
+            
+            
+
 
         }
         

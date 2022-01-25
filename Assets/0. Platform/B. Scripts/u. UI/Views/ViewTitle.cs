@@ -57,6 +57,8 @@ namespace PIERStory {
             
             ViewTitle.OnUpdateLoadingText?.Invoke(1);
             
+            AdManager.main.AnalyticsEnter("titleEnter");
+            
         }
         
         /// <summary>

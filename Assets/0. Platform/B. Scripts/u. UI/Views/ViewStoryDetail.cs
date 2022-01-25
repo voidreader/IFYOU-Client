@@ -99,6 +99,8 @@ namespace PIERStory
                     PopupManager.main.ShowPopup(p, false);
                 }
             }
+            
+            AdManager.main.AnalyticsEnter("storyEnter");
         }
 
         public override void OnStartView()

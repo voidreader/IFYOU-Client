@@ -6,6 +6,8 @@ namespace PIERStory
         public override void Show()
         {
             base.Show();
+            
+            AdManager.main.AnalyticsEnter("tutorialClear");
         }
     }
 }

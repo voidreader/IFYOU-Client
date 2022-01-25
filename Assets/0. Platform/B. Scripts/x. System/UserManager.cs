@@ -553,6 +553,11 @@ namespace PIERStory
             sending["tutorial_step"] = __nextStep;
 
             NetworkLoader.main.SendPost(CallbackUpdateTutorialStep, sending);
+            
+            // 3으로 업데이트 받는 경우는 스킵 
+            if(__nextStep == 3) {
+                AdManager.main.AnalyticsEnter("tutorialSkip");
+            }
         }
 
         void CallbackUpdateTutorialStep(HTTPRequest req, HTTPResponse res)

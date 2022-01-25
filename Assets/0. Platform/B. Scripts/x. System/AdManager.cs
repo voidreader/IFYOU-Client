@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Services.Mediation;
 using Unity.Services.Core;
+using UnityEngine.Analytics;
+
 using LitJson;
 
 #if UNITY_IOS
@@ -603,7 +605,39 @@ namespace PIERStory {
         
         #endregion
         
+        
+        
 
+        #region 유니티 애널리틱스
+
+        /// <summary>
+        /// 패키지 버튼 클릭
+        /// </summary>
+        /// <param name="_packageName"></param>
+        public void AnalyticsPackageButtonClick(string _packageName) {
+            AnalyticsEvent.Custom("packageButton", new Dictionary<string, object> {
+                {"product_id", _packageName}
+            });
+        }
+        
+        /// <summary>
+        /// 코인샵 오픈 
+        /// </summary>
+        /// <param name="__openPosition"></param>
+        public void AnalyticsCoinShopOpen(string __openPosition) {
+            AnalyticsEvent.Custom("openCoinShop", new Dictionary<string, object> {
+                {"openPosition", __openPosition}
+            });
+        }
+        
+
+        
+        public void AnalyticsEnter(string position) {
+            AnalyticsEvent.Custom(position, null);
+        }
+        
+        
+        #endregion
 
     }
 }

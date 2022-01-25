@@ -10,6 +10,7 @@ namespace PIERStory
     public class ViewMission : CommonView
     {
         public static Action OnCompleteReward = null;
+        public static Action OnRefreshProgressor = null;
         public static bool clickGetAll = false;
 
         public TextMeshProUGUI projectTitle;
@@ -37,6 +38,7 @@ namespace PIERStory
         private void Start()
         {
             OnCompleteReward = OnStartView;
+            OnRefreshProgressor = SetMissionProgressor;
         }
 
         public override void OnStartView()
@@ -111,14 +113,40 @@ namespace PIERStory
             #endregion
 
             projectTitle.text = StoryManager.main.CurrentProjectTitle;
+            
+            SetMissionProgressor();
+
+            missionScroll.verticalNormalizedPosition = 1f;
+            clickGetAll = false;
+        }
+        
+        void SetMissionProgressor() {
+            
+            
+            
+            int completeValue = 0;
+
+            // * 달성 후 보상 미수령 => 잠금 => 보상 받음 순서로 한다. 
+            // 달성 후 보상 미수령 상태             
+            foreach (MissionData missionData in UserManager.main.DictStoryMission.Values)
+            {
+                if (missionData.missionState == MissionState.unlocked)
+                {
+                    completeValue++;
+                }
+                else if (missionData.missionState == MissionState.finish)
+                {
+                    completeValue++;
+                }
+            }            
+            
+            Debug.Log(string.Format("### SetMissionProgressor [{0}]/[{1}]", completeValue, UserManager.main.DictStoryMission.Count));
+            
             missionProgressText.text = string.Format(SystemManager.GetLocalizedText("5032"), completeValue, UserManager.main.DictStoryMission.Count);
 
             float percentage = (float)completeValue / (float)UserManager.main.DictStoryMission.Count;
             missionPercent.text = string.Format("{0}%", Mathf.Round(percentage * 100));
             missionProgressBar.fillAmount = percentage;
-
-            missionScroll.verticalNormalizedPosition = 1f;
-            clickGetAll = false;
         }
 
 

@@ -114,6 +114,8 @@ namespace PIERStory {
             
             
             mainToggle.SetIsOn(true);
+            
+            AdManager.main.AnalyticsEnter("mainEnter");
         }
         
         public override void OnStartView() {

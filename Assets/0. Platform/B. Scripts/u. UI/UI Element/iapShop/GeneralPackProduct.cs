@@ -123,6 +123,8 @@ namespace PIERStory
             PopupManager.main.ShowPopup(p, false);
             
             // BillingManager.main.RequestPurchaseGamebase(productID);
+            
+            AdManager.main.AnalyticsPackageButtonClick(productID);
         }
     }
     

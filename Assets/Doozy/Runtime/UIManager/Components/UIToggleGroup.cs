@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -9,6 +9,7 @@ using System.Linq;
 using Doozy.Runtime.Mody;
 using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Local
 
 namespace Doozy.Runtime.UIManager.Components
 {
@@ -245,36 +246,37 @@ namespace Doozy.Runtime.UIManager.Components
 
         protected override void Awake()
         {
-            base.Awake();
+            if (!Application.isPlaying) return;
             toggleGroupInitialized = false;
-            toggles.Clear();
+            base.Awake();
         }
 
         protected override void OnEnable()
         {
+            if (!Application.isPlaying) return;
             base.OnEnable();
-            IsOn = false;
             StartCoroutine(RefreshAllTogglesWithDelay());
         }
 
         private IEnumerator RefreshAllTogglesWithDelay()
         {
             yield return null;
-            if (FirstToggle != null && toggles.Contains(FirstToggle))
-            {
-                ToggleChangedValue(FirstToggle, false);
-            }
-            else
-            {
-                RefreshAllToggleValues();
-            }
+            RefreshAllToggleValues();
             toggleGroupInitialized = true;
         }
 
         protected override void OnDisable()
         {
+            if (!Application.isPlaying) return;
             base.OnDisable();
             toggleGroupInitialized = false;
+        }
+
+        protected override void InitializeToggle()
+        {
+            if (toggleInitialized) return;
+            AddToToggleGroup(toggleGroup);
+            toggleInitialized = true;
         }
 
         /// <summary> Clean the toggles list by removing any null references and duplicates </summary>
@@ -321,16 +323,13 @@ namespace Doozy.Runtime.UIManager.Components
         /// <param name="toggle"> Target toggle </param>
         public void AddToggle(UIToggle toggle)
         {
-            CleanToggles();
             if (toggle == null) return;
             if (toggle == this) return;
             if (toggles.Contains(toggle)) return;
             toggles.Add(toggle);
             toggle.toggleGroup = this;
-            toggle.UpdateValueFromGroup(false, false, true);
             if (!toggleGroupInitialized) return;
             AutoSortToggles();
-            // ToggleChangedValue(toggle);
             UpdateGroupValue(true);
         }
 
@@ -418,7 +417,7 @@ namespace Doozy.Runtime.UIManager.Components
             UpdateGroupValue(animateChange);
         }
 
-        protected internal override void UpdateValueFromGroup(bool newValue, bool animateChange, bool silent = false)
+        protected internal override void UpdateValueFromGroup(bool newValue, bool animateChange)
         {
             switch (mode)
             {
@@ -426,25 +425,25 @@ namespace Doozy.Runtime.UIManager.Components
                     if (newValue)
                     {
                         foreach (UIToggle toggle in toggles)
-                            toggle.UpdateValueFromGroup(true, animateChange, silent);
+                            toggle.UpdateValueFromGroup(true, animateChange);
 
                         break;
                     }
 
                     foreach (UIToggle toggle in toggles)
-                        toggle.UpdateValueFromGroup(false, animateChange, silent);
+                        toggle.UpdateValueFromGroup(false, animateChange);
 
                     break;
                 case ControlMode.OneToggleOn:
                     if (newValue)
                     {
                         foreach (UIToggle toggle in toggles)
-                            toggle.UpdateValueFromGroup(false, animateChange, silent);
+                            toggle.UpdateValueFromGroup(false, animateChange);
 
                         break;
                     }
 
-                    toggles[0].UpdateValueFromGroup(true, animateChange, silent);
+                    toggles[0].UpdateValueFromGroup(true, animateChange);
                     break;
                 case ControlMode.OneToggleOnEnforced:
                     break;
@@ -452,15 +451,15 @@ namespace Doozy.Runtime.UIManager.Components
                     if (newValue)
                     {
                         foreach (UIToggle toggle in toggles)
-                            toggle.UpdateValueFromGroup(true, animateChange, silent);
+                            toggle.UpdateValueFromGroup(true, animateChange);
 
                         break;
                     }
 
                     UIToggle firstToggle = toggles[0];
-                    firstToggle.UpdateValueFromGroup(true, animateChange, silent);
+                    firstToggle.UpdateValueFromGroup(true, animateChange);
                     foreach (UIToggle toggle in toggles.Where(t => t != firstToggle))
-                        toggle.UpdateValueFromGroup(false, animateChange, silent);
+                        toggle.UpdateValueFromGroup(false, animateChange);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -476,49 +475,67 @@ namespace Doozy.Runtime.UIManager.Components
             if (toggles.Count == 0)
                 return;
 
+            bool setFirstToggleOn;
+
             switch (mode)
             {
                 case ControlMode.Passive:
-                    //ignored
+                    setFirstToggleOn = false;
+                    foreach (UIToggle t in toggles)
+                        t.UpdateValueFromGroup(t.isOn, false);
                     break;
-
                 case ControlMode.OneToggleOn:
-                    if (numberOfTogglesOn > 1)
+                    setFirstToggleOn = numberOfTogglesOn > 1;
+                    if (!setFirstToggleOn)
                     {
                         foreach (UIToggle t in toggles)
-                            t.UpdateValueFromGroup(false, false);
-
-                        toggles[0].UpdateValueFromGroup(true, animateChange);
+                            t.UpdateValueFromGroup(t.isOn, false);
                     }
+                        
                     break;
                 case ControlMode.OneToggleOnEnforced:
-                    if (numberOfTogglesOn == 0 || numberOfTogglesOn > 1)
+                    setFirstToggleOn = numberOfTogglesOn == 0 || numberOfTogglesOn > 1;
+                    if (!setFirstToggleOn)
                     {
-                        foreach (UIToggle t in toggles)
-                            t.UpdateValueFromGroup(false, false);
-
-                        toggles[0].UpdateValueFromGroup(true, animateChange);
+                        GetFirstToggle()?.UpdateValueFromGroup(true, false);
                     }
                     break;
                 case ControlMode.AnyToggleOnEnforced:
-                {
-                    if (numberOfTogglesOn != 1)
+                    setFirstToggleOn = numberOfTogglesOn != 1;
+                    if (!setFirstToggleOn)
                     {
-                        foreach (UIToggle t in toggles)
-                            t.UpdateValueFromGroup(false, false);
-
-                        toggles[0].UpdateValueFromGroup(true, animateChange);
+                        foreach (UIToggle t in toggles.Where(t => t.isOn))
+                            t.UpdateValueFromGroup(true, false);
                     }
                     break;
-                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
+            if (setFirstToggleOn)
+            {
+                foreach (UIToggle t in toggles.Where(t => t != GetFirstToggle()))
+                    t.UpdateValueFromGroup(false, animateChange);
+                
+                GetFirstToggle()?.UpdateValueFromGroup(true, animateChange);
+            }
 
             UpdateGroupValue(animateChange);
         }
 
+        public UIToggle GetFirstToggle() =>
+            FirstToggle != null && toggles.Contains(FirstToggle)
+                ? FirstToggle
+                : toggles.Count == 0
+                    ? null
+                    : toggles[0];
+
+        private void SetAllTogglesOff(bool animateChange = false)
+        {
+            foreach (UIToggle t in toggles)
+                t.UpdateValueFromGroup(false, animateChange);
+        }
+        
         protected override void ToggleValue()
         {
             if (!IsActive() || !IsInteractable()) return;
@@ -587,7 +604,7 @@ namespace Doozy.Runtime.UIManager.Components
 
             UpdateGroupValue(animateChange);
 
-            OnClickCallback?.Execute();
+            behaviours.GetBehaviour(UIBehaviour.Name.PointerClick)?.Execute();
         }
 
         public void UpdateGroupValue(bool animateChange)
@@ -609,9 +626,7 @@ namespace Doozy.Runtime.UIManager.Components
             bool previousValue = isOn;
             bool newValue = anyOfTogglesOn;
             this.SetIsOn(anyOfTogglesOn, animateChange);
-            ValueChanged(previousValue, newValue, animateChange);
+            ValueChanged(previousValue, newValue, animateChange, true);
         }
-
-
     }
 }

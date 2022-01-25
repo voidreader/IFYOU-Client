@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -10,6 +10,7 @@ using Doozy.Runtime.UIManager.Events;
 using Doozy.Runtime.UIManager.Input;
 using Doozy.Runtime.UIManager.ScriptableObjects;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -80,6 +81,13 @@ namespace Doozy.Runtime.UIManager.Components
         [SerializeField] private UISelectionState CurrentUISelectionState;
         public UISelectionState currentUISelectionState => CurrentUISelectionState;
 
+        [SerializeField] private bool DeselectAfterPress;
+        public bool deselectAfterPress
+        {
+            get => DeselectAfterPress;
+            set => DeselectAfterPress = value;
+        }
+
         /// <summary> UISelectionState changed - callback invoked when selection state changed </summary>
         public UISelectionStateEvent OnSelectionStateChangedCallback;
 
@@ -107,7 +115,7 @@ namespace Doozy.Runtime.UIManager.Components
         /// <summary> Callbacks for the disabled selection state </summary>
         public UISelectableState disabledState => DisabledState;
 
-        private bool initialized { get; set; }
+        private bool selectableInitialized { get; set; }
 
         #if UNITY_EDITOR
 
@@ -135,26 +143,31 @@ namespace Doozy.Runtime.UIManager.Components
 
         #endregion
 
-
         protected override void Awake()
         {
-            if (Application.isPlaying)
-                BackButton.Initialize();
-
+            if (Application.isPlaying) BackButton.Initialize();
             targetGraphic = null;
             transition = Transition.None;
-
             m_RectTransform = GetComponent<RectTransform>();
-
-            initialized = false;
+            selectableInitialized = false;
             EnableAllStateEvents();
+        }
+
+        protected override void Start()
+        {
+            base.Start();
             RefreshState();
         }
 
         protected override void OnEnable()
         {
+            if(!Application.isPlaying)
+                return;
+            
             base.OnEnable();
-            RefreshState();
+            
+            if (selectableInitialized) 
+                RefreshState();
         }
 
         protected override void InstantClearState()
@@ -170,7 +183,7 @@ namespace Doozy.Runtime.UIManager.Components
             if (!gameObject.activeInHierarchy)
                 return;
 
-            if (initialized & currentUISelectionState == GetUISelectionState(state))
+            if (selectableInitialized & currentUISelectionState == GetUISelectionState(state))
                 return;
 
             SetState(GetUISelectionState(state));
@@ -187,7 +200,12 @@ namespace Doozy.Runtime.UIManager.Components
         /// <param name="state"> Target selection state </param>
         public UISelectable SetState(UISelectionState state)
         {
-            initialized = true;
+            selectableInitialized = true;
+            if (deselectAfterPress && CurrentUISelectionState == UISelectionState.Pressed && state == UISelectionState.Selected)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+                state = UISelectionState.Normal;
+            }
             OnSelectionStateChangedCallback?.Invoke(state);
             CurrentUISelectionState = state;
             CurrentStateName = state.ToString();

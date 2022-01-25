@@ -1,10 +1,11 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Doozy.Runtime.Common.Attributes;
 using Doozy.Runtime.Common.Events;
 using Doozy.Runtime.Common.Extensions;
 using Doozy.Runtime.Signals;
@@ -26,6 +27,7 @@ namespace Doozy.Runtime.UIManager.Components
     [SelectionBase]
     public partial class UISlider : UISelectableComponent<UISlider>, IDragHandler, IInitializePotentialDragHandler
     {
+        [ClearOnReload]
         private static SignalStream s_stream;
         /// <summary> Signal stream for this component type </summary>
         public static SignalStream stream => s_stream ?? (s_stream = SignalsService.GetStream(k_StreamCategory, nameof(UISlider)));

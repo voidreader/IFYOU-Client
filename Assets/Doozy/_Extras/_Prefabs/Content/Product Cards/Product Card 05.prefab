@@ -9,9 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4462940935192053902}
-  - component: {fileID: 4462940935192053911}
   - component: {fileID: 4462940935192053908}
-  - component: {fileID: 4462940935192053909}
   - component: {fileID: 4462940935192053906}
   - component: {fileID: 4462940935192053907}
   - component: {fileID: 4462940935192053904}
@@ -42,27 +40,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &4462940935192053911
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4462940935192053903}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &4462940935192053908
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -75,23 +52,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &4462940935192053909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4462940935192053903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!222 &4462940935192053906
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1202,9 +1162,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4462940935842176799}
-  - component: {fileID: 4462940935842176873}
   - component: {fileID: 4462940935842176870}
-  - component: {fileID: 4462940935842176871}
   - component: {fileID: 4462940935842176868}
   - component: {fileID: 4462940935842176869}
   - component: {fileID: 4462940935842176866}
@@ -1239,27 +1197,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &4462940935842176873
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4462940935842176796}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &4462940935842176870
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1272,23 +1209,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &4462940935842176871
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4462940935842176796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &4462940935842176868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1333,6 +1253,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -1390,10 +1311,11 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 4462940935842176796}
+    Selectable: {fileID: 4462940935842176868}
   Id:
     Category: None
     Name: None
-    Custom: 0
+    Custom: 1
 --- !u!222 &4462940935842176869
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3485,9 +3407,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4462940936127122549}
-  - component: {fileID: 4462940936127122556}
   - component: {fileID: 4462940936127122557}
-  - component: {fileID: 4462940936127122554}
   - component: {fileID: 4462940936127122555}
   - component: {fileID: 4462940936127122552}
   - component: {fileID: 4462940936127122553}
@@ -3520,27 +3440,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000015258789, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &4462940936127122556
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4462940936127122546}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &4462940936127122557
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3553,23 +3452,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &4462940936127122554
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4462940936127122546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!222 &4462940936127122555
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6028,9 +5910,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4462940936597542922}
-  - component: {fileID: 4462940936597542929}
   - component: {fileID: 4462940936597542926}
-  - component: {fileID: 4462940936597542927}
   - component: {fileID: 4462940936597542925}
   - component: {fileID: 4462940936597542924}
   m_Layer: 5
@@ -6060,27 +5940,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 32, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &4462940936597542929
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4462940936597542923}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &4462940936597542926
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -6093,23 +5952,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &4462940936597542927
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4462940936597542923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &4462940936597542925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6154,6 +5996,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -6211,21 +6054,21 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 4462940936597542923}
+    Selectable: {fileID: 4462940936597542925}
   Id:
     Category: None
     Name: None
-    Custom: 0
-  ToggleGroup: {fileID: 0}
-  OnClickCallback:
+    Custom: 1
+  OnToggleOnCallback:
     Enabled: 0
-    EventName: OnClickCallback
+    EventName: OnToggleOnCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
-  OnToggleOnCallback:
+  OnInstantToggleOnCallback:
     Enabled: 0
-    EventName: OnToggleOnCallback
+    EventName: OnInstantToggleOnCallback
     Runners: []
     Event:
       m_PersistentCalls:
@@ -6237,9 +6080,17 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls: []
+  OnInstantToggleOffCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 0}
 --- !u!114 &4462940936597542924
 MonoBehaviour:
   m_ObjectHideFlags: 0

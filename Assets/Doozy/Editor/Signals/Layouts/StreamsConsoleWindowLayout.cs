@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -8,6 +8,7 @@ using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
+using Doozy.Runtime.Common.Attributes;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
@@ -76,9 +77,9 @@ namespace Doozy.Editor.Signals.Layouts
             if (consoleRow.isHiddenByFilter) return;
             consoleRow.ApplyFilter(streamProviderGameObjectFilter, consoleRow.streamSignalProviderGameObjectLabel.text);
             if (consoleRow.isHiddenByFilter) return;
-            consoleRow.ApplyFilter(streamNameFilter, consoleRow.streamNameLabel.text);
-            if (consoleRow.isHiddenByFilter) return;
             consoleRow.ApplyFilter(streamCategoryFilter, consoleRow.streamCategoryLabel.text);
+            if (consoleRow.isHiddenByFilter) return;
+            consoleRow.ApplyFilter(streamNameFilter, consoleRow.streamNameLabel.text);
             if (consoleRow.isHiddenByFilter) return;
             consoleRow.ApplyFilter(streamInfoMessageFilter, consoleRow.streamInfoMessageLabel.text);
             if (consoleRow.isHiddenByFilter) return;
@@ -234,6 +235,7 @@ namespace Doozy.Editor.Signals.Layouts
 
         public override void OnDestroy()
         {
+            Debug.Log("Streams Console Layout - OnDestroy");
             base.OnDestroy();
             SignalsService.OnStreamAdded -= AddStream;
             SignalsService.OnStreamRemoved -= RemoveStream;
@@ -273,10 +275,12 @@ namespace Doozy.Editor.Signals.Layouts
         {
             for (int i = consoleRows.Count - 1; i >= 0; i--)
             {
-                if (consoleRows[i] != null && consoleRows[i].stream != null)
-                    continue;
+                StreamsConsoleRow row = consoleRows[i];
+                SignalStream stream = row?.stream;
+                bool isValid = row != null & stream != null & SignalsService.Streams.Values.Contains(stream);
+                if (isValid) continue;
                 consoleRows.RemoveAt(i);
-                consoleRows[i].Recycle();
+                row?.Recycle();
             }
         }
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -12,8 +12,16 @@ namespace Doozy.Runtime.Reactor.Animations
     [Serializable]
     public class UIAnimation : ReactorAnimation
     {
-        public RectTransform rectTransform { get; private set; }
-        public CanvasGroup canvasGroup { get; private set; }
+        public RectTransform rectTransform
+        {
+            get;
+            internal set;
+        }
+        public CanvasGroup canvasGroup
+        {
+            get;
+            internal set;
+        }
 
         [SerializeField] private UIAnimationType AnimationType;
         public UIAnimationType animationType
@@ -115,9 +123,10 @@ namespace Doozy.Runtime.Reactor.Animations
 
         public override void UpdateValues()
         {
-            Fade.UpdateValues(); //calculate fade
-            Scale.UpdateValues(); //calculate scale
-            Rotate.UpdateValues(); // calculate rotation
+            if (canvasGroup != null)
+                Fade.UpdateValues(); //calculate fade
+            Scale.UpdateValues();    //calculate scale
+            Rotate.UpdateValues();   // calculate rotation
 
             //update move settings after calculating scale
             {
@@ -134,7 +143,7 @@ namespace Doozy.Runtime.Reactor.Animations
             }
 
             Move.animationType = animationType; //enforce animation type
-            Move.UpdateValues(); //calculate position
+            Move.UpdateValues();                //calculate position
         }
 
         public override void StopAllReactionsOnTarget() =>
@@ -239,13 +248,13 @@ namespace Doozy.Runtime.Reactor.Animations
         {
             if (Move.isActive) Move.Reverse();
             else if (Move.enabled) Move.Play(PlayDirection.Reverse);
-            
+
             if (Rotate.isActive) Rotate.Reverse();
             else if (Rotate.enabled) Rotate.Play(PlayDirection.Reverse);
-            
+
             if (Scale.isActive) Scale.Reverse();
             else if (Scale.enabled) Scale.Play(PlayDirection.Reverse);
-            
+
             if (Fade.isActive) Fade.Reverse();
             else if (Fade.enabled) Fade.Play(PlayDirection.Reverse);
         }

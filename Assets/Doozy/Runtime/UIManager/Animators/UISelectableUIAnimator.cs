@@ -1,10 +1,9 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
 using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.UIManager.Components;
@@ -17,28 +16,14 @@ namespace Doozy.Runtime.UIManager.Animators
     /// <summary>
     /// Specialized animator component used to animate a RectTransform’s position, rotation, scale and alpha by listening to a target UISelectable (controller) selection state changes.
     /// </summary>
-    [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(CanvasGroup))]
-    [RequireComponent(typeof(GraphicRaycaster))]
     [RequireComponent(typeof(RectTransform))]
     [AddComponentMenu("Doozy/UI/Animators/Selectable/UI Selectable UI Animator")]
     public class UISelectableUIAnimator : BaseUISelectableAnimator
     {
-        private RectTransform m_RectTransform;
-        /// <summary> Reference to the RectTransform component </summary>
-        public RectTransform rectTransform => m_RectTransform ? m_RectTransform : m_RectTransform = GetComponent<RectTransform>();
-        
-        private Canvas m_Canvas;
-        /// <summary> Reference to the Canvas component </summary>
-        public Canvas canvas => m_Canvas ? m_Canvas : m_Canvas = GetComponent<Canvas>();
-
         private CanvasGroup m_CanvasGroup;
         /// <summary> Reference to the CanvasGroup component </summary>
         public CanvasGroup canvasGroup => m_CanvasGroup ? m_CanvasGroup : m_CanvasGroup = GetComponent<CanvasGroup>();
-
-        private GraphicRaycaster m_GraphicRaycaster;
-        /// <summary> Reference to the GraphicRaycaster component </summary>
-        public GraphicRaycaster graphicRaycaster => m_GraphicRaycaster ? m_GraphicRaycaster : m_GraphicRaycaster = GetComponent<GraphicRaycaster>();
 
         [SerializeField] private UIAnimation NormalAnimation;
         /// <summary> Animation for the Normal selection state </summary>
@@ -59,8 +44,6 @@ namespace Doozy.Runtime.UIManager.Animators
         [SerializeField] private UIAnimation DisabledAnimation;
         /// <summary> Animation for the Disabled selection state </summary>
         public UIAnimation disabledAnimation => DisabledAnimation;
-
-        public bool inLayoutGroup { get; private set; }
 
         /// <summary> Get the Animation triggered by the given selection state </summary>
         /// <param name="state"> Target selection state </param>
@@ -104,20 +87,20 @@ namespace Doozy.Runtime.UIManager.Animators
 
         protected override void Awake()
         {
+            if (!Application.isPlaying) return;
+            animatorInitialized = false;
             m_RectTransform = GetComponent<RectTransform>();
-            m_Canvas = GetComponent<Canvas>();
             m_CanvasGroup = GetComponent<CanvasGroup>();
-            m_GraphicRaycaster = GetComponent<GraphicRaycaster>();
-            
-            base.Awake();
             UpdateSettings();
+            Connect();
         }
 
         protected override void OnEnable()
         {
-            LayoutGroupCheck();
-            if (!inLayoutGroup)
-                Connect();
+            if (!Application.isPlaying) return;
+            base.OnEnable();
+            if (animatorInitialized & controller != null)
+                controller.RefreshState();
         }
 
         protected override void OnDestroy()
@@ -126,29 +109,33 @@ namespace Doozy.Runtime.UIManager.Animators
             foreach (UISelectionState state in UISelectable.uiSelectionStates)
                 GetAnimation(state)?.Recycle();
         }
-        
-        private void LayoutGroupCheck()
+
+        protected override void InitializeAnimator()
         {
-            System.Diagnostics.Debug.Assert(rectTransform != null, nameof(rectTransform) + " != null");
-            Transform parent = rectTransform.parent;
-            LayoutGroup layoutGroup = parent != null ? parent.GetComponent<LayoutGroup>() : null;
-            inLayoutGroup = layoutGroup != null;
-            if (layoutGroup == null) return;
-            LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.GetComponent<RectTransform>());
             StartCoroutine(InitializeInLayoutGroup());
         }
 
         private IEnumerator InitializeInLayoutGroup()
         {
-            yield return null;     //wait 1 frame
-            yield return null;     //wait 1 frame
+            if (!inLayoutGroup)
+            {
+                animatorInitialized = true;
+                yield break;
+            }
+
+            yield return null; //wait 1 frame
+            yield return null; //wait 1 frame
+            // yield return null; //wait 1 frame
+
             UpdateStartPosition(); //get new position set by the layout group
-            Connect();             //connect to the target controller
+            animatorInitialized = true;
+            Connect();
         }
 
-        private void UpdateStartPosition()
+        public void UpdateStartPosition()
         {
-            if (!inLayoutGroup) return;
+            // if (!inLayoutGroup) return;
+
             foreach (UISelectionState state in UISelectable.uiSelectionStates)
             {
                 UIAnimation uiAnimation = GetAnimation(state);

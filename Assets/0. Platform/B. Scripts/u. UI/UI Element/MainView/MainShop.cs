@@ -33,7 +33,7 @@ namespace PIERStory {
         }
         
         public void OnCompleteShowAnimation() {
-            packageToggle.SetIsOn(true);
+            // packageToggle.SetIsOn(true);
         }
         
         /// <summary>
@@ -41,6 +41,7 @@ namespace PIERStory {
         /// </summary>
         public void InitShopTop() {
             topSpecialProduct.InitPackage("starter_pack");
+            packageToggle.SetIsOn(true);
         }
         
         /// <summary>
@@ -71,9 +72,12 @@ namespace PIERStory {
              for (int i=0; i<listGeneralPackProducts.Count;i++) {
                  listGeneralPackProducts[i].gameObject.SetActive(false);
              }
+            
+            
+            if(BillingManager.main == null || BillingManager.main.productMasterJSON == null)
+                return;
              
-             int packIndex = 0;
-             
+            int packIndex = 0;
              
             for(int i=0; i<BillingManager.main.productMasterJSON.Count;i++) {
                 

@@ -1,12 +1,12 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
+using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.UIManager.Editors.Components;
 using Doozy.Runtime.UIElements.Extensions;
@@ -152,7 +152,7 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
         }
 
 
-        protected static FluidToggleButtonTab GetTab(UISelectionState state, FluidAnimatedContainer targetContainer) =>
-            GetTab(targetContainer, state.ToString(), $"{state} selection state animation");
+        protected static FluidToggleButtonTab GetTab(UISelectionState state, FluidAnimatedContainer targetContainer, EditorSelectableColorInfo selectableColor) =>
+            GetTab(targetContainer, state.ToString(), $"{state} selection state animation", selectableColor);
     }
 }

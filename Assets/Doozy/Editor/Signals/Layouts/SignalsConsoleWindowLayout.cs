@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -9,6 +9,8 @@ using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
+using Doozy.Editor.UIElements;
+using Doozy.Runtime.Common.Attributes;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
@@ -37,6 +39,9 @@ namespace Doozy.Editor.Signals.Layouts
 
         public int consoleHistorySteps { get; private set; } = 20;
 
+        private VisualElement toolbarContainer { get; set; }
+        private FluidButton clearLogButton { get; set; }
+
         private ScrollView consoleScrollableContainer { get; set; }
         private List<SignalsConsoleRow> consoleRows { get; set; }
 
@@ -63,13 +68,6 @@ namespace Doozy.Editor.Signals.Layouts
         private List<Filter> filters { get; set; }
         private bool anyFilterIsActive => filters.Any(f => f.isActive);
 
-
-        public void ClearFilters()
-        {
-            foreach (Filter filter in filters)
-                filter.Clear();
-        }
-
         private void ApplyFilters()
         {
 
@@ -83,7 +81,7 @@ namespace Doozy.Editor.Signals.Layouts
             }
         }
 
-        private void Refresh()
+        private void ClearFilters()
         {
             filters.ForEach(f => f.Clear());
         }
@@ -150,6 +148,17 @@ namespace Doozy.Editor.Signals.Layouts
                         .Get("No signals detected", EditorMicroAnimations.Signals.Placeholders.OnlineSignal)
                         .SetStyleFlexGrow(1)
                         .Hide();
+
+                toolbarContainer =
+                    DesignUtils.GetToolbarContainer();
+
+                clearLogButton =
+                    FluidButton.Get()
+                        .SetLabelText("Clear")
+                        .SetIcon(EditorMicroAnimations.EditorUI.Icons.Clear)
+                        .SetButtonStyle(ButtonStyle.Contained)
+                        .SetElementSize(ElementSize.Tiny)
+                        .SetOnClick(ClearLog);
 
                 consoleScrollableContainer = new ScrollView() { viewDataKey = nameof(consoleScrollableContainer) };
                 consoleRows = new List<SignalsConsoleRow>();
@@ -229,7 +238,7 @@ namespace Doozy.Editor.Signals.Layouts
                         {
                             showGuid = evt.newValue;
                             streamGuidFilter.Clear();
-                            Refresh();
+                            ClearFilters();
                         });
 
 
@@ -250,6 +259,13 @@ namespace Doozy.Editor.Signals.Layouts
                     .AddChild(signalFiltersContainer)
                     .AddChild(streamFiltersContainer);
 
+                header
+                    .AddChild
+                    (
+                        toolbarContainer
+                            .AddChild(clearLogButton)
+                    );
+
                 content.Clear();
                 content
                     .AddChild(placeholderOffline)
@@ -264,6 +280,7 @@ namespace Doozy.Editor.Signals.Layouts
 
         private void UpdatePlayModeDependentElements()
         {
+            toolbarContainer.SetStyleDisplay(EditorApplication.isPlaying ? DisplayStyle.Flex : DisplayStyle.None);
             consoleScrollableContainer.SetStyleDisplay(EditorApplication.isPlaying ? DisplayStyle.Flex : DisplayStyle.None);
             placeholderOffline.Toggle(!EditorApplication.isPlaying);
             placeholderNoSignals.Toggle(EditorApplication.isPlaying & consoleRows.Count == 0);
@@ -401,6 +418,31 @@ namespace Doozy.Editor.Signals.Layouts
             if (row == null) return;
             row.Recycle();
             consoleRows.Remove(row);
+            UpdatePlayModeDependentElements();
+        }
+
+        //unused
+        private void CleanLog()
+        {
+            for (int i = consoleRows.Count - 1; i >= 0; i--)
+            {
+                SignalsConsoleRow row = consoleRows[i];
+                SignalStream stream = row?.signal.stream;
+                bool isValid = row != null & stream != null & SignalsService.Streams.Values.Contains(stream);
+                if (isValid) continue;
+                consoleRows.RemoveAt(i);
+                if (row != null) consoleScrollableContainer.Remove(row);
+                row?.Recycle();
+            }
+            UpdatePlayModeDependentElements();
+        }
+
+        public void ClearLog()
+        {
+            foreach (SignalsConsoleRow row in consoleRows)
+                row?.Recycle();
+            consoleRows.Clear();
+            consoleScrollableContainer.RecycleAndClear();
             UpdatePlayModeDependentElements();
         }
     }

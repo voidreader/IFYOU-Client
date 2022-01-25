@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -59,6 +59,7 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
         protected FluidToggleButtonTab statesTabButton { get; set; }
 
         protected FluidToggleCheckbox interactableCheckbox { get; set; }
+        protected FluidToggleCheckbox deselectAfterPressCheckbox { get; set; }
 
         protected FluidToggleGroup toggleGroup { get; set; }
 
@@ -68,13 +69,13 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
         protected FluidToggleButtonTab selectedStateButton { get; set; }
         protected FluidToggleButtonTab disabledStateButton { get; set; }
 
-        protected SerializedProperty interactableProperty { get; set; }
-        protected SerializedProperty navigationModeProperty { get; set; }
-        protected SerializedProperty navigationProperty { get; set; }
-        protected SerializedProperty navigationSelectOnDownProperty { get; set; }
-        protected SerializedProperty navigationSelectOnLeftProperty { get; set; }
-        protected SerializedProperty navigationSelectOnRightProperty { get; set; }
-        protected SerializedProperty navigationSelectOnUpProperty { get; set; }
+        protected SerializedProperty propertyInteractable { get; set; }
+        protected SerializedProperty propertyNavigationMode { get; set; }
+        protected SerializedProperty propertyNavigation { get; set; }
+        protected SerializedProperty propertyNavigationSelectOnDown { get; set; }
+        protected SerializedProperty propertyNavigationSelectOnLeft { get; set; }
+        protected SerializedProperty propertyNavigationSelectOnRight { get; set; }
+        protected SerializedProperty propertyNavigationSelectOnUp { get; set; }
 
         protected SerializedProperty propertyCurrentUISelectionState { get; set; }
         protected SerializedProperty propertyCurrentStateName { get; set; }
@@ -83,6 +84,8 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
         protected SerializedProperty propertyPressedState { get; set; }
         protected SerializedProperty propertySelectedState { get; set; }
         protected SerializedProperty propertyDisabledState { get; set; }
+        protected SerializedProperty propertyDeselectAfterPress { get; set; }
+
 
         public override VisualElement CreateInspectorGUI()
         {
@@ -105,7 +108,9 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
         protected virtual void OnDestroy()
         {
             componentHeader?.Recycle();
+
             interactableCheckbox?.Recycle();
+            deselectAfterPressCheckbox?.Recycle();
 
             toggleGroup?.Recycle();
             settingsTabButton?.Recycle();
@@ -127,7 +132,7 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
 
         protected virtual void FindProperties()
         {
-            interactableProperty = serializedObject.FindProperty("m_Interactable");
+            propertyInteractable = serializedObject.FindProperty("m_Interactable");
 
             propertyCurrentUISelectionState = serializedObject.FindProperty("CurrentUISelectionState");
             propertyCurrentStateName = serializedObject.FindProperty("CurrentStateName");
@@ -137,12 +142,14 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
             propertySelectedState = serializedObject.FindProperty("SelectedState");
             propertyDisabledState = serializedObject.FindProperty("DisabledState");
 
-            navigationProperty = serializedObject.FindProperty("m_Navigation");
-            navigationModeProperty = navigationProperty.FindPropertyRelative("m_Mode");
-            navigationSelectOnUpProperty = navigationProperty.FindPropertyRelative("m_SelectOnUp");
-            navigationSelectOnDownProperty = navigationProperty.FindPropertyRelative("m_SelectOnDown");
-            navigationSelectOnLeftProperty = navigationProperty.FindPropertyRelative("m_SelectOnLeft");
-            navigationSelectOnRightProperty = navigationProperty.FindPropertyRelative("m_SelectOnRight");
+            propertyNavigation = serializedObject.FindProperty("m_Navigation");
+            propertyNavigationMode = propertyNavigation.FindPropertyRelative("m_Mode");
+            propertyNavigationSelectOnUp = propertyNavigation.FindPropertyRelative("m_SelectOnUp");
+            propertyNavigationSelectOnDown = propertyNavigation.FindPropertyRelative("m_SelectOnDown");
+            propertyNavigationSelectOnLeft = propertyNavigation.FindPropertyRelative("m_SelectOnLeft");
+            propertyNavigationSelectOnRight = propertyNavigation.FindPropertyRelative("m_SelectOnRight");
+
+            propertyDeselectAfterPress = serializedObject.FindProperty("DeselectAfterPress");
         }
 
         protected virtual void InitializeEditor()
@@ -151,34 +158,38 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
 
             root = new VisualElement();
 
-            componentHeader = 
+            componentHeader =
                 FluidComponentHeader.Get()
-                .SetElementSize(ElementSize.Large);
+                    .SetElementSize(ElementSize.Large);
 
             interactableCheckbox = FluidToggleCheckbox.Get()
                 .SetLabelText("Interactable")
                 .SetTooltip("Can the Selectable be interacted with?")
-                .BindToProperty(interactableProperty);
+                .BindToProperty(propertyInteractable);
 
-            statesAnimatedContainer = 
+            deselectAfterPressCheckbox = FluidToggleCheckbox.Get()
+                .SetLabelText("Deselect after Press")
+                .BindToProperty(propertyDeselectAfterPress);
+
+            statesAnimatedContainer =
                 new FluidAnimatedContainer()
                     .SetName("States")
                     .SetClearOnHide(false)
                     .Hide(false);
-            
-            navigationAnimatedContainer = 
+
+            navigationAnimatedContainer =
                 new FluidAnimatedContainer()
                     .SetName("Navigation")
                     .SetClearOnHide(true)
                     .Hide(false);
-            
-            settingsAnimatedContainer = 
+
+            settingsAnimatedContainer =
                 new FluidAnimatedContainer()
                     .SetName("Settings")
                     .SetClearOnHide(false)
                     .Show(false);
 
-            toggleGroup = 
+            toggleGroup =
                 FluidToggleGroup.Get()
                     .SetControlMode(FluidToggleGroup.ControlMode.OneToggleOnEnforced);
 
@@ -190,13 +201,13 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
                 .SetOnValueChanged(evt => settingsAnimatedContainer.Toggle(evt.newValue))
                 .SetIsOn(true, false)
                 .AddToToggleGroup(toggleGroup);
-            
+
             statesTabButton = DesignUtils.GetTabButtonForComponentSection(statesIconTextures, selectableAccentColor);
             statesTabButton
                 .SetLabelText("States")
                 .SetOnValueChanged(evt => statesAnimatedContainer.Toggle(evt.newValue))
                 .AddToToggleGroup(toggleGroup);
-            
+
             InitializeStates();
             InitializeNavigation();
         }
@@ -214,7 +225,7 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
                     .AddChild(disabledStateButton)
                     .AddChild(DesignUtils.spaceBlock)
                 : DesignUtils.flexibleSpace;
-        
+
         protected virtual void Compose()
         {
 
@@ -255,6 +266,9 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
                                 (
                                     DesignUtils.row
                                         .AddChild(interactableCheckbox)
+                                        .AddChild(DesignUtils.spaceBlock)
+                                        .AddChild(deselectAfterPressCheckbox)
+                                        .AddChild(DesignUtils.spaceBlock)
                                         .AddChild(GetStateButtons())
                                 )
                         )
@@ -353,7 +367,7 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
 
             navigationAnimatedContainer.SetOnShowCallback(() =>
             {
-                navigationModeEnumField = DesignUtils.NewEnumField(navigationModeProperty).SetStyleFlexGrow(1).SetStyleHeight(26);
+                navigationModeEnumField = DesignUtils.NewEnumField(propertyNavigationMode).SetStyleFlexGrow(1).SetStyleHeight(26);
                 navigationModeEnumField.RegisterValueChangedCallback(evt =>
                 {
                     if (evt?.newValue == null) return;
@@ -379,16 +393,16 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
                     .SetOnShowCallback(() =>
                     {
                         explicitNavigationAnimatedContainer.AddContent(DesignUtils.spaceBlock);
-                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Up", EditorMicroAnimations.EditorUI.Arrows.ArrowUp, navigationSelectOnUpProperty));
+                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Up", EditorMicroAnimations.EditorUI.Arrows.ArrowUp, propertyNavigationSelectOnUp));
                         explicitNavigationAnimatedContainer.AddContent(DesignUtils.spaceBlock);
-                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Down", EditorMicroAnimations.EditorUI.Arrows.ArrowDown, navigationSelectOnDownProperty));
+                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Down", EditorMicroAnimations.EditorUI.Arrows.ArrowDown, propertyNavigationSelectOnDown));
                         explicitNavigationAnimatedContainer.AddContent(DesignUtils.spaceBlock);
-                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Left", EditorMicroAnimations.EditorUI.Arrows.ArrowLeft, navigationSelectOnLeftProperty));
+                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Left", EditorMicroAnimations.EditorUI.Arrows.ArrowLeft, propertyNavigationSelectOnLeft));
                         explicitNavigationAnimatedContainer.AddContent(DesignUtils.spaceBlock);
-                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Right", EditorMicroAnimations.EditorUI.Arrows.ArrowRight, navigationSelectOnRightProperty));
+                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Right", EditorMicroAnimations.EditorUI.Arrows.ArrowRight, propertyNavigationSelectOnRight));
                         explicitNavigationAnimatedContainer.Bind(serializedObject);
                     })
-                    .Toggle((Navigation.Mode)navigationModeProperty.enumValueIndex == Navigation.Mode.Explicit, false);
+                    .Toggle((Navigation.Mode)propertyNavigationMode.enumValueIndex == Navigation.Mode.Explicit, false);
 
                 navigationAnimatedContainer
                     .AddContent(DesignUtils.spaceBlock)

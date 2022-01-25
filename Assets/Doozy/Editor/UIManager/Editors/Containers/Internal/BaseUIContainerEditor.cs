@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -74,6 +74,8 @@ namespace Doozy.Editor.UIManager.Editors.Containers.Internal
         protected FluidField customStartPositionField { get; set; }
         protected FluidField onStartBehaviourField { get; set; }
         protected FluidField whenHiddenField { get; set; }
+        protected FluidField clearSelectedField { get; set; }
+        protected FluidField autoSelectAfterShowField { get; set; }
 
         protected FluidToggleButtonTab callbacksTabButton { get; set; }
         protected FluidToggleButtonTab settingsTabButton { get; set; }
@@ -85,6 +87,11 @@ namespace Doozy.Editor.UIManager.Editors.Containers.Internal
         protected FluidToggleSwitch disableGameObjectWhenHiddenSwitch { get; set; }
         protected FluidToggleSwitch disableGraphicRaycasterWhenHiddenSwitch { get; set; }
         protected FluidToggleSwitch useCustomStartPositionSwitch { get; set; }
+        protected FluidToggleSwitch clearSelectedOnHideSwitch { get; set; }
+        protected FluidToggleSwitch clearSelectedOnShowSwitch { get; set; }
+        protected FluidToggleSwitch autoSelectAfterShowSwitch { get; set; }
+
+        protected ObjectField autoSelectTargetObjectField { get; set; }
 
         protected VisualElement callbacksTab { get; set; }
 
@@ -101,6 +108,10 @@ namespace Doozy.Editor.UIManager.Editors.Containers.Internal
         protected SerializedProperty propertyDisableGameObjectWhenHidden { get; set; }
         protected SerializedProperty propertyDisableCanvasWhenHidden { get; set; }
         protected SerializedProperty propertyDisableGraphicRaycasterWhenHidden { get; set; }
+        protected SerializedProperty propertyClearSelectedOnHide { get; set; }
+        protected SerializedProperty propertyClearSelectedOnShow { get; set; }
+        protected SerializedProperty propertyAutoSelectAfterShow { get; set; }
+        protected SerializedProperty propertyAutoSelectTarget { get; set; }
 
         protected virtual void OnDestroy()
         {
@@ -121,6 +132,8 @@ namespace Doozy.Editor.UIManager.Editors.Containers.Internal
             customStartPositionField?.Recycle();
             onStartBehaviourField?.Recycle();
             whenHiddenField?.Recycle();
+            clearSelectedField?.Recycle();
+            autoSelectAfterShowField?.Recycle();
 
             callbacksTabButton?.Recycle();
             settingsTabButton?.Recycle();
@@ -130,6 +143,9 @@ namespace Doozy.Editor.UIManager.Editors.Containers.Internal
             disableGameObjectWhenHiddenSwitch?.Recycle();
             disableGraphicRaycasterWhenHiddenSwitch?.Recycle();
             useCustomStartPositionSwitch?.Recycle();
+            clearSelectedOnHideSwitch?.Recycle();
+            clearSelectedOnShowSwitch?.Recycle();
+            autoSelectAfterShowSwitch?.Recycle();
         }
 
         public override VisualElement CreateInspectorGUI()
@@ -154,6 +170,10 @@ namespace Doozy.Editor.UIManager.Editors.Containers.Internal
             propertyDisableGameObjectWhenHidden = serializedObject.FindProperty(nameof(UIContainer.DisableGameObjectWhenHidden));
             propertyDisableCanvasWhenHidden = serializedObject.FindProperty(nameof(UIContainer.DisableCanvasWhenHidden));
             propertyDisableGraphicRaycasterWhenHidden = serializedObject.FindProperty(nameof(UIContainer.DisableGraphicRaycasterWhenHidden));
+            propertyClearSelectedOnHide = serializedObject.FindProperty(nameof(UIContainer.ClearSelectedOnHide));
+            propertyClearSelectedOnShow = serializedObject.FindProperty(nameof(UIContainer.ClearSelectedOnShow));
+            propertyAutoSelectAfterShow = serializedObject.FindProperty(nameof(UIContainer.AutoSelectAfterShow));
+            propertyAutoSelectTarget = serializedObject.FindProperty(nameof(UIContainer.AutoSelectTarget));
         }
 
         protected virtual void InitializeEditor()
@@ -198,6 +218,7 @@ namespace Doozy.Editor.UIManager.Editors.Containers.Internal
             InitializeAutoHideAfterShow();
             InitializeCustomStartPosition();
             InitializeWhenHidden();
+            InitializeSelected();
         }
 
         protected virtual VisualElement GetShowHideControls()
@@ -563,6 +584,64 @@ namespace Doozy.Editor.UIManager.Editors.Containers.Internal
                 );
         }
 
+        protected virtual void InitializeSelected()
+        {
+            clearSelectedOnShowSwitch =
+                FluidToggleSwitch.Get()
+                    .SetLabelText("Show")
+                    .SetTooltip("If TRUE, when this container is shown, any GameObject that is selected by the EventSystem.current will get deselected")
+                    .BindToProperty(propertyClearSelectedOnShow)
+                    .SetToggleAccentColor(selectableAccentColor);
+
+            clearSelectedOnHideSwitch =
+                FluidToggleSwitch.Get()
+                    .SetLabelText("Hide")
+                    .SetTooltip("If TRUE, when this container is hidden, any GameObject that is selected by the EventSystem.current will get deselected")
+                    .BindToProperty(propertyClearSelectedOnHide)
+                    .SetToggleAccentColor(selectableAccentColor);
+
+            clearSelectedField =
+                FluidField.Get()
+                    .SetLabelText("Clear Selected on")
+                    .AddFieldContent
+                    (
+                        DesignUtils.row
+                            .AddChild(clearSelectedOnShowSwitch)
+                            .AddChild(DesignUtils.spaceBlock)
+                            .AddChild(clearSelectedOnHideSwitch)
+                    )
+                    .SetStyleMinWidth(150);
+
+
+            autoSelectAfterShowSwitch =
+                FluidToggleSwitch.Get()
+                    .SetTooltip("If TRUE, after this container has been shown, the referenced selectable GameObject will get automatically selected by EventSystem.current")
+                    .BindToProperty(propertyAutoSelectAfterShow)
+                    .SetToggleAccentColor(selectableAccentColor);
+
+            autoSelectTargetObjectField =
+                DesignUtils.NewObjectField(propertyAutoSelectTarget, typeof(GameObject))
+                    .SetTooltip("Reference to the GameObject that should be selected after this view has been shown. Works only if AutoSelectAfterShow is TRUE");
+
+            autoSelectTargetObjectField.SetEnabled(propertyAutoSelectAfterShow.boolValue);
+            autoSelectAfterShowSwitch.SetOnValueChanged(evt =>
+            {
+                if (evt?.newValue == null) return;
+                autoSelectTargetObjectField.SetEnabled(evt.newValue);
+            });
+
+            autoSelectAfterShowField =
+                FluidField.Get()
+                    .SetLabelText("Auto select GameObject after Show")
+                    .AddFieldContent
+                    (
+                        DesignUtils.row
+                            .AddChild(autoSelectAfterShowSwitch)
+                            .AddChild(DesignUtils.spaceBlock)
+                            .AddChild(autoSelectTargetObjectField)
+                    );
+        }
+
         protected virtual void Compose()
         {
             root
@@ -610,6 +689,14 @@ namespace Doozy.Editor.UIManager.Editors.Containers.Internal
                                 .AddChild(customStartPositionField)
                                 .AddChild(DesignUtils.spaceBlock)
                                 .AddChild(whenHiddenField)
+                                .AddChild(DesignUtils.spaceBlock)
+                                .AddChild
+                                (
+                                    DesignUtils.row
+                                        .AddChild(clearSelectedField)
+                                        .AddChild(DesignUtils.spaceBlock)
+                                        .AddChild(autoSelectAfterShowField)
+                                )
                                 .AddChild(DesignUtils.spaceBlock)
                         )
                 )

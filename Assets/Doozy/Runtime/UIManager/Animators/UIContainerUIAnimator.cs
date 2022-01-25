@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -16,27 +16,13 @@ namespace Doozy.Runtime.UIManager.Animators
     /// Specialized animator component used to animate a RectTransform’s position, rotation, scale and alpha by listening to a target UIContainer (controller) show/hide commands.
     /// </summary>
     [AddComponentMenu("Doozy/UI/Animators/Container/UI Container UI Animator")]
-    [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(CanvasGroup))]
-    [RequireComponent(typeof(GraphicRaycaster))]
     [RequireComponent(typeof(RectTransform))]
     public class UIContainerUIAnimator : BaseUIContainerAnimator
     {
-        private RectTransform m_RectTransform;
-        /// <summary> Reference to the RectTransform component </summary>
-        public RectTransform rectTransform => m_RectTransform ? m_RectTransform : m_RectTransform = GetComponent<RectTransform>();
-
-        private Canvas m_Canvas;
-        /// <summary> Reference to the Canvas component </summary>
-        public Canvas canvas => m_Canvas ? m_Canvas : m_Canvas = GetComponent<Canvas>();
-
         private CanvasGroup m_CanvasGroup;
         /// <summary> Reference to the CanvasGroup component </summary>
         public CanvasGroup canvasGroup => m_CanvasGroup ? m_CanvasGroup : m_CanvasGroup = GetComponent<CanvasGroup>();
-
-        private GraphicRaycaster m_GraphicRaycaster;
-        /// <summary> Reference to the GraphicRaycaster component </summary>
-        public GraphicRaycaster graphicRaycaster => m_GraphicRaycaster ? m_GraphicRaycaster : m_GraphicRaycaster = GetComponent<GraphicRaycaster>();
 
         [SerializeField] private UIAnimation ShowAnimation;
         /// <summary> Container Show Animation </summary>
@@ -45,8 +31,6 @@ namespace Doozy.Runtime.UIManager.Animators
         [SerializeField] private UIAnimation HideAnimation;
         /// <summary> Container Hide Animation </summary>
         public UIAnimation hideAnimation => HideAnimation;
-
-        public bool inLayoutGroup { get; private set; }
 
         #if UNITY_EDITOR
         protected override void Reset()
@@ -71,20 +55,20 @@ namespace Doozy.Runtime.UIManager.Animators
 
         protected override void Awake()
         {
+            if (!Application.isPlaying) return;
+            animatorInitialized = false;
             m_RectTransform = GetComponent<RectTransform>();
-            m_Canvas = GetComponent<Canvas>();
             m_CanvasGroup = GetComponent<CanvasGroup>();
-            m_GraphicRaycaster = GetComponent<GraphicRaycaster>();
-            
-            base.Awake();
             UpdateSettings();
-            LayoutGroupCheck();
+            Connect();
         }
 
-        protected override void OnEnable()
+        protected override void OnDisable()
         {
-            if (!inLayoutGroup)
-                Connect();
+            if (!Application.isPlaying) return;
+            base.OnDisable();
+            if (showAnimation.isPlaying) showAnimation.SetProgressAtOne();
+            if (hideAnimation.isPlaying) hideAnimation.SetProgressAtOne();
         }
 
         protected override void OnDestroy()
@@ -94,29 +78,30 @@ namespace Doozy.Runtime.UIManager.Animators
             HideAnimation?.Recycle();
         }
 
-        private void LayoutGroupCheck()
+        protected override void InitializeAnimator()
         {
-            System.Diagnostics.Debug.Assert(rectTransform != null, nameof(rectTransform) + " != null");
-            Transform parent = rectTransform.parent;
-            LayoutGroup layoutGroup = parent != null ? parent.GetComponent<LayoutGroup>() : null;
-            inLayoutGroup = layoutGroup != null;
-            if (layoutGroup == null) return;
-            LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.GetComponent<RectTransform>());
             StartCoroutine(InitializeInLayoutGroup());
         }
 
         private IEnumerator InitializeInLayoutGroup()
         {
-            yield return null;     //wait 1 frame
-            yield return null;     //wait 1 frame
+            if (!inLayoutGroup)
+            {
+                animatorInitialized = true;
+                yield break;
+            }
+
+            yield return null; //wait 1 frame
+            yield return null; //wait 1 frame
+
             UpdateStartPosition(); //get new position set by the layout group
-            Connect();             //connect to the target controller
+            animatorInitialized = true;
+            Connect();
         }
 
-        private void UpdateStartPosition()
+        public void UpdateStartPosition()
         {
-            if (!inLayoutGroup)
-                return;
+            // if (!inLayoutGroup) return;
 
             if (ShowAnimation?.Move != null)
             {

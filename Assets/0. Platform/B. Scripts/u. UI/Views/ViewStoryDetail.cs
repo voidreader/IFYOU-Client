@@ -118,6 +118,9 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
 
             sortText.text = SystemManager.GetLocalizedText("5029");
+            
+            
+            toggleRegular.SetIsOn(true);
         }
 
 

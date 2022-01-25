@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -15,24 +15,14 @@ namespace Doozy.Runtime.Reactor.Animators
     /// <summary>
     /// Specialized animator component used to animate a RectTransform’s position, rotation, scale and alpha.
     /// </summary>
-    [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(CanvasGroup))]
-    [RequireComponent(typeof(GraphicRaycaster))]
     [RequireComponent(typeof(RectTransform))]
     [AddComponentMenu("Doozy/Reactor/Animators/UI Animator")]
     public class UIAnimator : ReactorAnimator
     {
-        private Canvas m_Canvas;
-        /// <summary> Reference to the Canvas component </summary>
-        public Canvas canvas => m_Canvas ? m_Canvas : m_Canvas = GetComponent<Canvas>();
-
         private CanvasGroup m_CanvasGroup;
         /// <summary> Reference to the CanvasGroup component </summary>
         public CanvasGroup canvasGroup => m_CanvasGroup ? m_CanvasGroup : m_CanvasGroup = GetComponent<CanvasGroup>();
-
-        private GraphicRaycaster m_GraphicRaycaster;
-        /// <summary> Reference to the GraphicRaycaster component </summary>
-        public GraphicRaycaster graphicRaycaster => m_GraphicRaycaster ? m_GraphicRaycaster : m_GraphicRaycaster = GetComponent<GraphicRaycaster>();
 
         private RectTransform m_RectTransform;
         /// <summary> Reference to the RectTransform component </summary>
@@ -41,28 +31,51 @@ namespace Doozy.Runtime.Reactor.Animators
         [SerializeField] private UIAnimation Animation;
         public new UIAnimation animation => Animation ??= new UIAnimation(rectTransform, canvasGroup);
 
-        public bool inLayoutGroup { get; private set; }
+        protected bool inLayoutGroup { get; set; }
 
         protected override void Awake()
         {
-            m_Canvas = GetComponent<Canvas>();
+            if (!Application.isPlaying) return;
+            animatorInitialized = false;
             m_CanvasGroup = GetComponent<CanvasGroup>();
-            m_GraphicRaycaster = GetComponent<GraphicRaycaster>();
             m_RectTransform = GetComponent<RectTransform>();
             base.Awake();
         }
 
+        protected override void Start()
+        {
+            if (!Application.isPlaying) return;
+            ValidateAnimation();
+            InitializeAnimator();
+            RunBehaviour(OnStartBehaviour);
+        }
 
         protected override void OnEnable()
         {
+            if (!Application.isPlaying) return;
             ValidateAnimation();
-            LayoutGroupCheck();
-
-            if (inLayoutGroup)
-                return;
-            
-            UpdateValues();
             RunBehaviour(OnEnableBehaviour);
+        }
+
+        protected override void InitializeAnimator()
+        {
+            StartCoroutine(InitializeInLayoutGroup());
+        }
+
+        private IEnumerator InitializeInLayoutGroup()
+        {
+            if (!inLayoutGroup)
+            {
+                animatorInitialized = true;
+                yield break;
+            }
+
+            yield return null; //wait 1 frame
+            yield return null; //wait 1 frame
+
+            UpdateStartPosition(); //get new position set by the layout group
+            UpdateValues();
+            animatorInitialized = true;
         }
 
         public override void Play(PlayDirection playDirection)
@@ -77,7 +90,6 @@ namespace Doozy.Runtime.Reactor.Animators
             animation.Play(inReverse);
         }
 
-
         public override void SetTarget(object target) =>
             SetTarget(target as RectTransform);
 
@@ -89,8 +101,7 @@ namespace Doozy.Runtime.Reactor.Animators
 
         public override void ValidateAnimation()
         {
-            if (animation.rectTransform != null)
-                return;
+            if (animation.rectTransform != null) return;
             SetTarget(rectTransform);
             UpdateValues();
         }
@@ -137,30 +148,9 @@ namespace Doozy.Runtime.Reactor.Animators
         protected override void Recycle() =>
             animation?.Recycle();
 
-        private void LayoutGroupCheck()
+        public void UpdateStartPosition()
         {
-            System.Diagnostics.Debug.Assert(rectTransform != null, nameof(rectTransform) + " != null");
-            Transform parent = rectTransform.parent;
-            LayoutGroup layoutGroup = parent != null ? parent.GetComponent<LayoutGroup>() : null;
-            inLayoutGroup = layoutGroup != null;
-            if (layoutGroup == null) return;
-            LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.GetComponent<RectTransform>());
-            StartCoroutine(InitializeInLayoutGroup());
-        }
-
-        private IEnumerator InitializeInLayoutGroup()
-        {
-            yield return null;
-            yield return null;
-            UpdateStartPosition();
-            
-            UpdateValues();
-            RunBehaviour(OnEnableBehaviour);
-        }
-
-        private void UpdateStartPosition()
-        {
-            if (!inLayoutGroup) return;
+            // if (!inLayoutGroup) return;
             if (animation.Move == null) return;
             if (animation.Move.isActive) return;
             animation.startPosition = rectTransform.anchoredPosition3D;

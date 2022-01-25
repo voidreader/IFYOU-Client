@@ -1,10 +1,11 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Doozy.Runtime.Common.Attributes;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Containers.Internal;
 using UnityEngine;
@@ -28,6 +29,7 @@ namespace Doozy.Runtime.UIManager.Containers
         /// <summary> Get all the hidden views (return all views that are either in the isHidden or isHiding state) </summary>
         public static IEnumerable<UIView> hiddenViews => database.Where(view => view.isHidden || view.isHiding);
 
+        [ClearOnReload]
         private static SignalStream s_stream;
         /// <summary> Signal stream for this component type </summary>
         public static SignalStream stream => s_stream ??= SignalsService.GetStream(k_StreamCategory, nameof(UIView));
@@ -37,18 +39,6 @@ namespace Doozy.Runtime.UIManager.Containers
 
         /// <summary> Category Name Id </summary>
         public UIViewId Id;
-
-        /// <summary> If TRUE, when this container is hidden, the EventSystem.current selected GameObject will get deselected </summary>
-        public bool ClearSelectedOnHide;
-
-        /// <summary> If TRUE, when this UIView is shown, any button that is selected (EventSystem.current) will get deselected </summary>
-        public bool ClearSelectedOnShow;
-
-        /// <summary> If TRUE, after this container has been shown, the referenced selectable GameObject will get automatically selected by EventSystem.current </summary>
-        public bool AutoSelectAfterShow;
-
-        /// <summary> Reference to the GameObject that should be selected after this container has been shown. Works only if AutoSelectAfterShow is TRUE </summary>
-        public GameObject AutoSelectTarget;
 
         public UIView()
         {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Doozy.Runtime.Common;
+using Doozy.Runtime.Common.Attributes;
 using UnityEngine;
 
 namespace Doozy.Runtime.Mody
@@ -289,6 +290,7 @@ namespace Doozy.Runtime.Mody
         /// <summary>
         /// Database that contains all the Modules that are available at runtime at any given point in time.
         /// </summary>
+        [ClearOnReload(newInstance: true)]
         private static readonly ListDatabase<GameObject, ModyModule> Database = new ListDatabase<GameObject, ModyModule>();
 
         /// <summary>

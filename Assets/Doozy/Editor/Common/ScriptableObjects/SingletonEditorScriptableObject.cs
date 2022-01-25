@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -28,6 +28,12 @@ namespace Doozy.Editor.Common.ScriptableObjects
             }
         }
 
+        public static void Restore()
+        {
+            EditorUtility.SetDirty(instance);
+            AssetDatabase.SaveAssetIfDirty(instance);
+        }
+        
         public static void UndoRecord(string message)
         {
             Undo.RecordObject(instance, message);
@@ -36,7 +42,8 @@ namespace Doozy.Editor.Common.ScriptableObjects
 
         public static void Save(bool refreshAssetDatabase = false)
         {
-            AssetDatabase.SaveAssets();
+            EditorUtility.SetDirty(instance);
+            AssetDatabase.SaveAssetIfDirty(instance);
             if (refreshAssetDatabase) AssetDatabase.Refresh();
         }
     }

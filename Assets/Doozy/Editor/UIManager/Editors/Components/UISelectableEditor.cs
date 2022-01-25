@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -35,7 +35,7 @@ namespace Doozy.Editor.UIManager.Editors.Components
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(UISelectable)))
                 .SetIcon(selectableIconTextures.ToList())
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048707076/UISelectable?atlOrigin=eyJpIjoiOWU1NTFiYjc0ZmRiNGRiYWIwNmU5NGIzZjE1YzZhN2IiLCJwIjoiYyJ9")
-                .AddYouTubeButton("www.youtube.com/c/DoozyEntertainment");
+                .AddYouTubeButton();
         }
 
         protected override void Compose()

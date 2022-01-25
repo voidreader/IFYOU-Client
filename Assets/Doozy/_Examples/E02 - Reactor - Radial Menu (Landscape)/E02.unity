@@ -2996,15 +2996,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 73970486}
-  - component: {fileID: 73970497}
   - component: {fileID: 73970496}
-  - component: {fileID: 73970495}
   - component: {fileID: 73970494}
   - component: {fileID: 73970493}
   - component: {fileID: 73970492}
   - component: {fileID: 73970491}
-  - component: {fileID: 73970490}
   - component: {fileID: 73970489}
+  - component: {fileID: 73970490}
   - component: {fileID: 73970488}
   - component: {fileID: 73970487}
   m_Layer: 5
@@ -5119,6 +5117,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -5176,27 +5175,11 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 73970485}
+    Selectable: {fileID: 73970494}
   Id:
     Category: Button
     Name: Ease
     Custom: 1
---- !u!114 &73970495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 73970485}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!225 &73970496
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5209,27 +5192,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!223 &73970497
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 73970485}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1001 &108334476
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7145,6 +7107,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -7233,7 +7196,9 @@ MonoBehaviour:
           Name: None
           Custom: 1
       Cooldown: 0
+      Selectable: {fileID: 232525831}
     SignalSource: {fileID: 232525829}
+    Selectable: {fileID: 232525831}
   Id:
     Category: None
     Name: None
@@ -12050,6 +12015,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -12138,7 +12104,9 @@ MonoBehaviour:
           Name: None
           Custom: 1
       Cooldown: 0
+      Selectable: {fileID: 723925015}
     SignalSource: {fileID: 723925013}
+    Selectable: {fileID: 723925015}
   Id:
     Category: None
     Name: None
@@ -15635,6 +15603,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -15723,7 +15692,9 @@ MonoBehaviour:
           Name: None
           Custom: 1
       Cooldown: 0
+      Selectable: {fileID: 913587741}
     SignalSource: {fileID: 913587739}
+    Selectable: {fileID: 913587741}
   Id:
     Category: None
     Name: None
@@ -16132,8 +16103,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2008682237}
   m_HandleRect: {fileID: 2008682236}
   m_Direction: 2
-  m_Value: 1.0000002
-  m_Size: 0.46186247
+  m_Value: 1
+  m_Size: 0.4618182
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -17154,14 +17125,14 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
   Id:
     Category: View
     Name: Ease
     Custom: 1
-  ClearSelectedOnHide: 0
-  ClearSelectedOnShow: 0
-  AutoSelectAfterShow: 0
-  AutoSelectTarget: {fileID: 0}
 --- !u!114 &1002242469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21045,14 +21016,14 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
   Id:
     Category: View
     Name: Reactor
     Custom: 1
-  ClearSelectedOnHide: 0
-  ClearSelectedOnShow: 0
-  AutoSelectAfterShow: 0
-  AutoSelectTarget: {fileID: 0}
 --- !u!114 &1099925168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21333,6 +21304,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -21390,6 +21362,7 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 1122737359}
+    Selectable: {fileID: 1122737361}
   Id:
     Category: Ease
     Name: Play
@@ -21508,7 +21481,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 605.7583, y: 0}
+  m_AnchoredPosition: {x: 605.845, y: 0}
   m_SizeDelta: {x: 800, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1135771622
@@ -22695,14 +22668,14 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
   Id:
     Category: View
     Name: PlayMode
     Custom: 1
-  ClearSelectedOnHide: 0
-  ClearSelectedOnShow: 0
-  AutoSelectAfterShow: 0
-  AutoSelectTarget: {fileID: 0}
 --- !u!114 &1191288986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23402,7 +23375,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 605.7583, y: 0}
+  m_AnchoredPosition: {x: 605.845, y: 0}
   m_SizeDelta: {x: 800, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1258151285
@@ -24084,6 +24057,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -24172,7 +24146,9 @@ MonoBehaviour:
           Name: None
           Custom: 1
       Cooldown: 0
+      Selectable: {fileID: 1317103582}
     SignalSource: {fileID: 1317103580}
+    Selectable: {fileID: 1317103582}
   Id:
     Category: None
     Name: None
@@ -25097,15 +25073,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1361790213}
-  - component: {fileID: 1361790224}
   - component: {fileID: 1361790223}
-  - component: {fileID: 1361790222}
   - component: {fileID: 1361790221}
   - component: {fileID: 1361790220}
   - component: {fileID: 1361790219}
   - component: {fileID: 1361790218}
-  - component: {fileID: 1361790217}
   - component: {fileID: 1361790216}
+  - component: {fileID: 1361790217}
   - component: {fileID: 1361790215}
   - component: {fileID: 1361790214}
   m_Layer: 5
@@ -27220,6 +27194,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -27277,27 +27252,11 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 1361790212}
+    Selectable: {fileID: 1361790221}
   Id:
     Category: Button
     Name: PlayMode
     Custom: 1
---- !u!114 &1361790222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1361790212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!225 &1361790223
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -27310,27 +27269,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!223 &1361790224
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1361790212}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1001 &1362151214
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38136,7 +38074,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 605.7583, y: 0}
+  m_AnchoredPosition: {x: 605.845, y: 0}
   m_SizeDelta: {x: 800, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1728418747
@@ -38810,15 +38748,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1784188159}
-  - component: {fileID: 1784188168}
   - component: {fileID: 1784188167}
-  - component: {fileID: 1784188166}
   - component: {fileID: 1784188165}
   - component: {fileID: 1784188164}
   - component: {fileID: 1784188163}
   - component: {fileID: 1784188162}
-  - component: {fileID: 1784188161}
   - component: {fileID: 1784188160}
+  - component: {fileID: 1784188161}
   - component: {fileID: 1784188170}
   - component: {fileID: 1784188169}
   m_Layer: 5
@@ -40729,6 +40665,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -40786,27 +40723,11 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 1784188158}
+    Selectable: {fileID: 1784188165}
   Id:
     Category: Button
     Name: Reactor
     Custom: 1
---- !u!114 &1784188166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1784188158}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!225 &1784188167
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -40819,27 +40740,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!223 &1784188168
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1784188158}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!114 &1784188169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43971,7 +43871,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 605.7583, y: 0}
+  m_AnchoredPosition: {x: 605.845, y: 0}
   m_SizeDelta: {x: 800, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1914453745

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -18,7 +18,19 @@ namespace Doozy.Runtime.Common
 
         [SerializeField] private List<T> Items;
         public List<T> items => Items ??= new List<T> { new T() };
-        public bool isEmpty => items.Count < 2 && items[0].category.Equals(defaultCategory);
+        public bool isEmpty
+        {
+            get
+            {
+                if (!ContainsCategory(defaultCategory))
+                {
+                    items.Add((T)new CategoryNameItem(defaultCategory, defaultName));
+                    CleanDatabase();
+                }
+
+                return items.Count < 2;
+            }
+        }
 
         #region Category
 
@@ -166,7 +178,7 @@ namespace Doozy.Runtime.Common
             items.Clear();
             items.Add(new T()); //add the default values
         }
-        
+
         /// <summary> Remove null or empty entries and sort the group by category and then by name </summary>
         public void CleanDatabase()
         {

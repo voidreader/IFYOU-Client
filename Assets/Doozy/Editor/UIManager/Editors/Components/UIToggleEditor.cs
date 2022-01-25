@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -48,21 +48,28 @@ namespace Doozy.Editor.UIManager.Editors.Components
 
         private ObjectField toggleGroupObjectField { get; set; }
         private FluidToggleCheckbox isOnCheckbox { get; set; }
-        
+
         private SerializedProperty propertyId { get; set; }
         private SerializedProperty propertyBehaviours { get; set; }
         private SerializedProperty propertyIsOn { get; set; }
         private SerializedProperty propertyToggleGroup { get; set; }
-        private SerializedProperty propertyOnClick { get; set; }
-        private SerializedProperty propertyOnToggleOn { get; set; }
-        private SerializedProperty propertyOnToggleOff { get; set; }
+        private SerializedProperty propertyOnToggleOnCallback { get; set; }
+        private SerializedProperty propertyOnInstantToggleOnCallback { get; set; }
+        private SerializedProperty propertyOnToggleOffCallback { get; set; }
+        private SerializedProperty propertyOnInstantToggleOffCallback { get; set; }
         private SerializedProperty propertyOnValueChanged { get; set; }
 
-        private bool hasOnClickCallback => castedTarget != null && castedTarget.OnClickCallback is { Enabled: true } && castedTarget.OnClickCallback.hasEvents | castedTarget.OnClickCallback.hasRunners;
         private bool hasOnToggleOnCallback => castedTarget != null && castedTarget.OnToggleOnCallback is { Enabled: true } && castedTarget.OnToggleOnCallback.hasEvents | castedTarget.OnToggleOnCallback.hasRunners;
+        private bool hasOnInstantToggleOnCallback => castedTarget != null && castedTarget.OnInstantToggleOnCallback is { Enabled: true } && castedTarget.OnInstantToggleOnCallback.hasEvents | castedTarget.OnInstantToggleOnCallback.hasRunners;
         private bool hasOnToggleOffCallback => castedTarget != null && castedTarget.OnToggleOffCallback is { Enabled: true } && castedTarget.OnToggleOffCallback.hasEvents | castedTarget.OnToggleOffCallback.hasRunners;
+        private bool hasOnInstantToggleOffCallback => castedTarget != null && castedTarget.OnInstantToggleOffCallback is { Enabled: true } && castedTarget.OnInstantToggleOffCallback.hasEvents | castedTarget.OnInstantToggleOffCallback.hasRunners;
         private bool hasOnValueChangedCallback => castedTarget != null && castedTarget.OnValueChangedCallback?.GetPersistentEventCount() > 0;
-        private bool hasCallbacks => hasOnClickCallback | hasOnToggleOnCallback | hasOnToggleOffCallback | hasOnValueChangedCallback;
+        private bool hasCallbacks =>
+            hasOnToggleOnCallback |
+            hasOnInstantToggleOnCallback |
+            hasOnToggleOffCallback |
+            hasOnInstantToggleOffCallback |
+            hasOnValueChangedCallback;
 
         protected override void OnDestroy()
         {
@@ -74,7 +81,7 @@ namespace Doozy.Editor.UIManager.Editors.Components
             toggleGroupField?.Recycle();
 
             isOnCheckbox?.Recycle();
-            
+
             callbacksAnimatedContainer?.Dispose();
         }
 
@@ -86,9 +93,10 @@ namespace Doozy.Editor.UIManager.Editors.Components
             propertyBehaviours = serializedObject.FindProperty("Behaviours");
             propertyIsOn = serializedObject.FindProperty("IsOn");
             propertyToggleGroup = serializedObject.FindProperty("ToggleGroup");
-            propertyOnClick = serializedObject.FindProperty(nameof(UIToggle.OnClickCallback));
-            propertyOnToggleOn = serializedObject.FindProperty(nameof(UIToggle.OnToggleOnCallback));
-            propertyOnToggleOff = serializedObject.FindProperty(nameof(UIToggle.OnToggleOffCallback));
+            propertyOnToggleOnCallback = serializedObject.FindProperty(nameof(UIToggle.OnToggleOnCallback));
+            propertyOnInstantToggleOnCallback = serializedObject.FindProperty(nameof(UIToggle.OnInstantToggleOnCallback));
+            propertyOnToggleOffCallback = serializedObject.FindProperty(nameof(UIToggle.OnToggleOffCallback));
+            propertyOnInstantToggleOffCallback = serializedObject.FindProperty(nameof(UIToggle.OnInstantToggleOffCallback));
             propertyOnValueChanged = serializedObject.FindProperty(nameof(UIToggle.OnValueChangedCallback));
         }
 
@@ -101,7 +109,7 @@ namespace Doozy.Editor.UIManager.Editors.Components
                 .SetComponentNameText((ObjectNames.NicifyVariableName(nameof(UIToggle))))
                 .SetIcon(toggleIconTextures.ToList())
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048084542/UIToggle?atlOrigin=eyJpIjoiNjQ4NmRmNjIyNjY2NDM5YmEyOTBlMzhhZjFmZWI0ZDciLCJwIjoiYyJ9")
-                .AddYouTubeButton("www.youtube.com/c/DoozyEntertainment");
+                .AddYouTubeButton();
 
 
             idField = FluidField.Get().AddFieldContent(DesignUtils.NewPropertyField(propertyId));
@@ -111,16 +119,16 @@ namespace Doozy.Editor.UIManager.Editors.Components
                     .SetLabelText("Is On")
                     .BindToProperty(propertyIsOn);
 
-            toggleGroupObjectField = 
+            toggleGroupObjectField =
                 DesignUtils.NewObjectField(propertyToggleGroup, typeof(UIToggleGroup))
-                .SetStyleFlexGrow(1);
-            
+                    .SetStyleFlexGrow(1);
+
             toggleGroupField =
                 FluidField.Get()
                     .SetLabelText("Toggle Group")
                     .SetIcon(toggleGroupIconTextures)
                     .AddFieldContent(toggleGroupObjectField);
-            
+
             InitializeCallbacks();
         }
 
@@ -144,12 +152,14 @@ namespace Doozy.Editor.UIManager.Editors.Components
                 callbacksAnimatedContainer
                     .fluidContainer
                     .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(GetField(propertyOnClick, buttonClickIconTextures, "Click", "Callbacks triggered then the toggle is clicked"))
+                    .AddChild(GetField(propertyOnToggleOnCallback, toggleOnIconTextures, "Toggle ON - Toggle became ON", "Callbacks triggered then the toggle value changed from OFF to ON"))
                     .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(GetField(propertyOnToggleOn, toggleOnIconTextures, "Toggle ON - Toggle became ON", "Callbacks triggered then the toggle value changed from OFF to ON"))
+                    .AddChild(GetField(propertyOnInstantToggleOnCallback, toggleOnIconTextures, "Instant Toggle ON - Toggle became ON (without animations)", "Callbacks triggered then the toggle value changed from OFF to ON (without animations)"))
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(GetField(propertyOnToggleOffCallback, toggleOffIconTextures, "Toggle OFF - Toggle became OFF", "Callbacks triggered then the toggle value changed from ON to OFF"))
                     .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(GetField(propertyOnToggleOff, toggleOffIconTextures, "Toggle OFF - Toggle became OFF", "Callbacks triggered then the toggle value changed from ON to OFF"))
-                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(GetField(propertyOnInstantToggleOffCallback, toggleOffIconTextures, "Instant Toggle OFF - Toggle became OFF (without animations)", "Callbacks triggered then the toggle value changed from ON to OFF (without animations)"))
+                    .AddChild(DesignUtils.spaceBlock2X)
                     .AddChild(GetField(propertyOnValueChanged, toggleIconTextures, "Toggle Value Changed", "Callbacks triggered then the toggle value changed"))
                     .AddChild(DesignUtils.endOfLineBlock);
 
@@ -245,6 +255,9 @@ namespace Doozy.Editor.UIManager.Editors.Components
                                 (
                                     DesignUtils.row
                                         .AddChild(interactableCheckbox)
+                                        .AddChild(DesignUtils.spaceBlock)
+                                        .AddChild(deselectAfterPressCheckbox)
+                                        .AddChild(DesignUtils.spaceBlock)
                                         .AddChild(GetStateButtons())
                                 )
                                 .AddChild(DesignUtils.spaceBlock)

@@ -1,18 +1,21 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System.Collections.Generic;
+using Doozy.Editor.Common.Utils;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Runtime.UIElements.Extensions;
+using Doozy.Runtime.UIManager.Input;
 using Doozy.Runtime.UIManager.ScriptableObjects;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
+using ObjectNames = Doozy.Runtime.Common.Utils.ObjectNames;
 
 namespace Doozy.Editor.UIManager.Layouts.Settings
 {
@@ -41,6 +44,27 @@ namespace Doozy.Editor.UIManager.Layouts.Settings
         private FluidField playerIndexField { get; set; }
         private FluidField playerMultiplayerMode { get; set; }
         private FluidField playerBackButtonCooldown { get; set; }
+
+        private FluidToggleButtonTab inputSystemPackageTabButton { get; set; }
+        private FluidToggleButtonTab legacyInputManagerTabButton { get; set; }
+        private FluidToggleButtonTab customInputTabButton { get; set; }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            multiplayerModeSwitch?.Recycle();
+            playerIndexField?.Recycle();
+            playerMultiplayerMode?.Recycle();
+            playerBackButtonCooldown?.Recycle();
+            resetPlayerIndexButton?.Recycle();
+            resetBackButtonCooldownButton?.Recycle();
+            resetMultiplayerModeButton?.Recycle();
+            saveButton?.Recycle();
+
+            inputSystemPackageTabButton?.Recycle();
+            legacyInputManagerTabButton?.Recycle();
+            customInputTabButton?.Recycle();
+        }
 
         public InputSettingsWindowLayout()
         {
@@ -82,7 +106,7 @@ namespace Doozy.Editor.UIManager.Layouts.Settings
                     .SetTooltip("Reset")
                     .SetOnClick(() =>
                     {
-                        propertyDefaultPlayerIndex.intValue = UIManagerInputSettings.k_LifeTheUniverseAndEverything;
+                        propertyDefaultPlayerIndex.intValue = -UIManagerInputSettings.k_LifeTheUniverseAndEverything;
                         serializedObject.ApplyModifiedProperties();
                     });
 
@@ -158,12 +182,70 @@ namespace Doozy.Editor.UIManager.Layouts.Settings
                         AssetDatabase.SaveAssets();
                     });
 
+            FluidToggleButtonTab GetTab() =>
+                FluidToggleButtonTab.Get()
+                    .SetToggleAccentColor(selectableAccentColor)
+                    .SetContainerColorOff(DesignUtils.tabButtonColorOff);
+            
+            inputSystemPackageTabButton =
+                GetTab()
+                    .SetLabelText($"{ObjectNames.NicifyVariableName(InputHandling.InputSystemPackage.ToString())}")
+                    .SetTabPosition(TabPosition.TabOnLeft)
+                    .SetOnClick(() =>
+                    {
+                        DefineSymbolsUtils.RemoveGlobalDefine("LEGACY_INPUT_MANGER");
+                        DefineSymbolsUtils.AddGlobalDefine("INPUT_SYSTEM_PACKAGE");
+                        legacyInputManagerTabButton.isOn = false;
+                        customInputTabButton.isOn = false;
+                    });
+
+            legacyInputManagerTabButton =
+                GetTab()
+                    .SetLabelText($"{ObjectNames.NicifyVariableName(InputHandling.LegacyInputManager.ToString())}")
+                    .SetTabPosition(TabPosition.TabInCenter)
+                    .SetOnClick(() =>
+                    {
+                        DefineSymbolsUtils.RemoveGlobalDefine("INPUT_SYSTEM_PACKAGE");
+                        DefineSymbolsUtils.AddGlobalDefine("LEGACY_INPUT_MANGER");
+                        inputSystemPackageTabButton.isOn = false;
+                        customInputTabButton.isOn = false;
+                    });
+
+            customInputTabButton =
+                GetTab()
+                    .SetLabelText($"{ObjectNames.NicifyVariableName(InputHandling.CustomInput.ToString())}")
+                    .SetTabPosition(TabPosition.TabOnRight)
+                    .SetOnClick(() =>
+                    {
+                        DefineSymbolsUtils.RemoveGlobalDefine("INPUT_SYSTEM_PACKAGE");
+                        DefineSymbolsUtils.RemoveGlobalDefine("LEGACY_INPUT_MANGER");
+                        inputSystemPackageTabButton.isOn = false;
+                        legacyInputManagerTabButton.isOn = false;
+                    });
+            
+            inputSystemPackageTabButton.isOn = UIManagerInputSettings.k_InputHandling == InputHandling.InputSystemPackage;
+            legacyInputManagerTabButton.isOn = UIManagerInputSettings.k_InputHandling == InputHandling.LegacyInputManager;
+            customInputTabButton.isOn = UIManagerInputSettings.k_InputHandling == InputHandling.CustomInput;
+
             content.Bind(serializedObject);
         }
 
         private void Compose()
         {
             content
+                .AddChild
+                (
+                    DesignUtils.row
+                        .SetStyleFlexGrow(0)
+                        .AddChild(DesignUtils.flexibleSpace)
+                        .AddChild(inputSystemPackageTabButton)
+                        .AddSpace(1,1)
+                        .AddChild(legacyInputManagerTabButton)
+                        .AddSpace(1,1)
+                        .AddChild(customInputTabButton)
+                        .AddChild(DesignUtils.flexibleSpace)
+                )
+                .AddChild(DesignUtils.spaceBlock4X)
                 .AddChild(playerIndexField)
                 .AddChild(DesignUtils.spaceBlock)
                 .AddChild(playerMultiplayerMode)
@@ -178,19 +260,6 @@ namespace Doozy.Editor.UIManager.Layouts.Settings
                         .AddChild(saveButton)
                 )
                 ;
-        }
-
-        public override void OnDestroy()
-        {
-            base.OnDestroy();
-            multiplayerModeSwitch?.Recycle();
-            playerIndexField?.Recycle();
-            playerMultiplayerMode?.Recycle();
-            playerBackButtonCooldown?.Recycle();
-            resetPlayerIndexButton?.Recycle();
-            resetBackButtonCooldownButton?.Recycle();
-            resetMultiplayerModeButton?.Recycle();
-            saveButton?.Recycle();
         }
     }
 }

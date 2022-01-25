@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -22,7 +22,7 @@ namespace Doozy.Runtime.UIManager.Listeners
     [AddComponentMenu("Doozy/UI/Listeners/UI Button Listener")]
     public class UIButtonListener : BaseListener, IUseMultiplayerInfo
     {
-          /// <summary> Reference to the UIManager Input Settings </summary>
+        /// <summary> Reference to the UIManager Input Settings </summary>
         public static UIManagerInputSettings inputSettings => UIManagerInputSettings.instance;
 
         /// <summary> True if Multiplayer Mode is enabled </summary>
@@ -32,7 +32,7 @@ namespace Doozy.Runtime.UIManager.Listeners
 
         /// <summary> UIButton Id </summary>
         public UIButtonId buttonId => ButtonId;
-        
+
         /// <summary> UnityAction callback executed when the listener is triggered </summary>
         public UnityAction<UIButtonSignalData> signalCallback { get; }
 

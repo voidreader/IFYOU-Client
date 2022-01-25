@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -18,9 +18,6 @@ namespace Doozy.Runtime.Nody
     [AddComponentMenu("Doozy/UI/Nody/Flow Controller")]
     public class FlowController : MonoBehaviour, IUseMultiplayerInfo
     {
-        
-        public static FlowController main = null;
-        
         /// <summary> Reference to the UIManager Input Settings </summary>
         public static UIManagerInputSettings inputSettings => UIManagerInputSettings.instance;
 
@@ -58,12 +55,7 @@ namespace Doozy.Runtime.Nody
 
         private void Awake()
         {
-            if(main != null) {
-                Destroy(this.gameObject);
-                return;
-            }
-            
-            main = this;
+            if(!Application.isPlaying) return;
             
             if (DontDestroyOnSceneChange)
                 DontDestroyOnLoad(gameObject);
@@ -75,19 +67,22 @@ namespace Doozy.Runtime.Nody
 
         private IEnumerator Start()
         {
+            if(!Application.isPlaying) yield break;
             yield return null;
             SetFlowGraph(Flow);
         }
 
         private void OnEnable()
         {
+            if(!Application.isPlaying) return;
             if (initialized)
                 SetFlowGraph(Flow);
         }
 
         private void OnDisable()
         {
-            if (Flow != null)
+            if(!Application.isPlaying) return;
+            if (initialized && Flow != null)
                 Flow.Stop();
         }
 

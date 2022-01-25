@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -20,8 +20,8 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
     {
         protected const float k_MarginLeft = 35;
 
-        protected static Color accentColor => EditorColors.Reactor.Red;
-        protected static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Reactor.Red;
+        protected virtual Color accentColor => EditorColors.Reactor.Red;
+        protected virtual EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Reactor.Red;
 
         protected VisualElement root { get; set; }
         protected FluidComponentHeader componentHeader { get; set; }
@@ -121,8 +121,8 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
             return container;
         }
 
-        protected static FluidToggleButtonTab GetTab(FluidAnimatedContainer targetContainer, string labelText, string tooltip) =>
-            DesignUtils.GetTabButtonForComponentSection(null, selectableAccentColor)
+        protected static FluidToggleButtonTab GetTab(FluidAnimatedContainer targetContainer, string labelText, string tooltip, EditorSelectableColorInfo selectableColor) =>
+            DesignUtils.GetTabButtonForComponentSection(null, selectableColor)
                 .SetLabelText(labelText)
                 .SetTooltip(tooltip)
                 .SetOnValueChanged(evt => targetContainer.Toggle(evt.newValue));

@@ -36,7 +36,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: -161, y: 416.00003}
+  Position: {x: -161, y: 416}
   Trigger: 2
   SignalPayload:
     StreamId:
@@ -117,7 +117,7 @@ MonoBehaviour:
     StreamId:
       Category: Music
       Name: Stop
-      Custom: 0
+      Custom: 1
     SignalValueType: 0
     IntegerValue: 0
     BooleanValue: 0
@@ -168,7 +168,7 @@ MonoBehaviour:
   RunUpdate: 0
   RunFixedUpdate: 0
   RunLateUpdate: 0
-  NodeState: 2
+  NodeState: 0
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
@@ -233,12 +233,12 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: 0.0000021457672, y: 416}
+  Position: {x: 0, y: 416}
   Payload:
     StreamId:
       Category: Music
       Name: Stop
-      Custom: 1
+      Custom: 0
     SignalValueType: 0
     IntegerValue: 0
     BooleanValue: 0
@@ -340,7 +340,7 @@ MonoBehaviour:
   - {fileID: 4445825358677256859}
   - {fileID: 8673402858132437171}
   RootNode: {fileID: 166908779398436844}
-  ActiveNode: {fileID: -4934940936190843952}
+  ActiveNode: {fileID: 0}
 --- !u!114 &166908779398436844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -589,8 +589,8 @@ MonoBehaviour:
     Direction: 0
     Capacity: 1
     Connections:
-    - 04ef9574-caf5-48e0-9b24-7dcefb6b2b73
     - 80b5c79f-9fdc-4c6b-be94-6dd9ad8e9a25
+    - 04ef9574-caf5-48e0-9b24-7dcefb6b2b73
     Value: 
     ValueTypeQualifiedName: 
     CanBeDeleted: 0

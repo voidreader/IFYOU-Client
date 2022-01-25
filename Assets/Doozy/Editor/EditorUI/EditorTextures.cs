@@ -452,6 +452,8 @@ namespace Doozy.Editor.EditorUI
 
                 public enum TextureName
                 {
+                    AnimatorProgressTarget,
+                    AudioMixerProgressTarget,
                     ColorAnimation,
                     ColorAnimator,
                     ColorTarget,
@@ -459,16 +461,26 @@ namespace Doozy.Editor.EditorUI
                     FrameByFrameAnimation,
                     FrameByFrameAnimator,
                     Heartbeat,
+                    ImageProgressTarget,
+                    ProgressTarget,
                     Reactor,
+                    SignalProgressTarget,
                     SpriteAnimation,
                     SpriteAnimator,
                     SpriteTarget,
+                    TextMeshProProgressTarget,
+                    TextProgressTarget,
                     UIAnimation,
                     UIAnimationData,
-                    UIAnimator
+                    UIAnimator,
+                    UnityEventProgressTarget
                 }
                 
 
+                private static Texture2D s_AnimatorProgressTarget;
+                public static Texture2D AnimatorProgressTarget => s_AnimatorProgressTarget ? s_AnimatorProgressTarget : s_AnimatorProgressTarget = GetTexture2D(TextureName.AnimatorProgressTarget);
+                private static Texture2D s_AudioMixerProgressTarget;
+                public static Texture2D AudioMixerProgressTarget => s_AudioMixerProgressTarget ? s_AudioMixerProgressTarget : s_AudioMixerProgressTarget = GetTexture2D(TextureName.AudioMixerProgressTarget);
                 private static Texture2D s_ColorAnimation;
                 public static Texture2D ColorAnimation => s_ColorAnimation ? s_ColorAnimation : s_ColorAnimation = GetTexture2D(TextureName.ColorAnimation);
                 private static Texture2D s_ColorAnimator;
@@ -483,20 +495,32 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D FrameByFrameAnimator => s_FrameByFrameAnimator ? s_FrameByFrameAnimator : s_FrameByFrameAnimator = GetTexture2D(TextureName.FrameByFrameAnimator);
                 private static Texture2D s_Heartbeat;
                 public static Texture2D Heartbeat => s_Heartbeat ? s_Heartbeat : s_Heartbeat = GetTexture2D(TextureName.Heartbeat);
+                private static Texture2D s_ImageProgressTarget;
+                public static Texture2D ImageProgressTarget => s_ImageProgressTarget ? s_ImageProgressTarget : s_ImageProgressTarget = GetTexture2D(TextureName.ImageProgressTarget);
+                private static Texture2D s_ProgressTarget;
+                public static Texture2D ProgressTarget => s_ProgressTarget ? s_ProgressTarget : s_ProgressTarget = GetTexture2D(TextureName.ProgressTarget);
                 private static Texture2D s_Reactor;
                 public static Texture2D Reactor => s_Reactor ? s_Reactor : s_Reactor = GetTexture2D(TextureName.Reactor);
+                private static Texture2D s_SignalProgressTarget;
+                public static Texture2D SignalProgressTarget => s_SignalProgressTarget ? s_SignalProgressTarget : s_SignalProgressTarget = GetTexture2D(TextureName.SignalProgressTarget);
                 private static Texture2D s_SpriteAnimation;
                 public static Texture2D SpriteAnimation => s_SpriteAnimation ? s_SpriteAnimation : s_SpriteAnimation = GetTexture2D(TextureName.SpriteAnimation);
                 private static Texture2D s_SpriteAnimator;
                 public static Texture2D SpriteAnimator => s_SpriteAnimator ? s_SpriteAnimator : s_SpriteAnimator = GetTexture2D(TextureName.SpriteAnimator);
                 private static Texture2D s_SpriteTarget;
                 public static Texture2D SpriteTarget => s_SpriteTarget ? s_SpriteTarget : s_SpriteTarget = GetTexture2D(TextureName.SpriteTarget);
+                private static Texture2D s_TextMeshProProgressTarget;
+                public static Texture2D TextMeshProProgressTarget => s_TextMeshProProgressTarget ? s_TextMeshProProgressTarget : s_TextMeshProProgressTarget = GetTexture2D(TextureName.TextMeshProProgressTarget);
+                private static Texture2D s_TextProgressTarget;
+                public static Texture2D TextProgressTarget => s_TextProgressTarget ? s_TextProgressTarget : s_TextProgressTarget = GetTexture2D(TextureName.TextProgressTarget);
                 private static Texture2D s_UIAnimation;
                 public static Texture2D UIAnimation => s_UIAnimation ? s_UIAnimation : s_UIAnimation = GetTexture2D(TextureName.UIAnimation);
                 private static Texture2D s_UIAnimationData;
                 public static Texture2D UIAnimationData => s_UIAnimationData ? s_UIAnimationData : s_UIAnimationData = GetTexture2D(TextureName.UIAnimationData);
                 private static Texture2D s_UIAnimator;
                 public static Texture2D UIAnimator => s_UIAnimator ? s_UIAnimator : s_UIAnimator = GetTexture2D(TextureName.UIAnimator);
+                private static Texture2D s_UnityEventProgressTarget;
+                public static Texture2D UnityEventProgressTarget => s_UnityEventProgressTarget ? s_UnityEventProgressTarget : s_UnityEventProgressTarget = GetTexture2D(TextureName.UnityEventProgressTarget);
                 
             }
 
@@ -601,6 +625,7 @@ namespace Doozy.Editor.EditorUI
                     SignalBroadcaster,
                     SignalProvider,
                     SignalReceiver,
+                    SignalSender,
                     SignalStream,
                     StreamDatabase
                 }
@@ -618,6 +643,8 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D SignalProvider => s_SignalProvider ? s_SignalProvider : s_SignalProvider = GetTexture2D(TextureName.SignalProvider);
                 private static Texture2D s_SignalReceiver;
                 public static Texture2D SignalReceiver => s_SignalReceiver ? s_SignalReceiver : s_SignalReceiver = GetTexture2D(TextureName.SignalReceiver);
+                private static Texture2D s_SignalSender;
+                public static Texture2D SignalSender => s_SignalSender ? s_SignalSender : s_SignalSender = GetTexture2D(TextureName.SignalSender);
                 private static Texture2D s_SignalStream;
                 public static Texture2D SignalStream => s_SignalStream ? s_SignalStream : s_SignalStream = GetTexture2D(TextureName.SignalStream);
                 private static Texture2D s_StreamDatabase;
@@ -689,7 +716,11 @@ namespace Doozy.Editor.EditorUI
                     MultiplayerInfo,
                     PopupDatabase,
                     SignalListener,
+                    SignalToAudioSource,
+                    SignalToColorTarget,
+                    SignalToSpriteTarget,
                     SlidersDatabase,
+                    SpriteSwapper,
                     TogglesDatabase,
                     Tooltip,
                     UIButtonListener,
@@ -716,8 +747,16 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D PopupDatabase => s_PopupDatabase ? s_PopupDatabase : s_PopupDatabase = GetTexture2D(TextureName.PopupDatabase);
                 private static Texture2D s_SignalListener;
                 public static Texture2D SignalListener => s_SignalListener ? s_SignalListener : s_SignalListener = GetTexture2D(TextureName.SignalListener);
+                private static Texture2D s_SignalToAudioSource;
+                public static Texture2D SignalToAudioSource => s_SignalToAudioSource ? s_SignalToAudioSource : s_SignalToAudioSource = GetTexture2D(TextureName.SignalToAudioSource);
+                private static Texture2D s_SignalToColorTarget;
+                public static Texture2D SignalToColorTarget => s_SignalToColorTarget ? s_SignalToColorTarget : s_SignalToColorTarget = GetTexture2D(TextureName.SignalToColorTarget);
+                private static Texture2D s_SignalToSpriteTarget;
+                public static Texture2D SignalToSpriteTarget => s_SignalToSpriteTarget ? s_SignalToSpriteTarget : s_SignalToSpriteTarget = GetTexture2D(TextureName.SignalToSpriteTarget);
                 private static Texture2D s_SlidersDatabase;
                 public static Texture2D SlidersDatabase => s_SlidersDatabase ? s_SlidersDatabase : s_SlidersDatabase = GetTexture2D(TextureName.SlidersDatabase);
+                private static Texture2D s_SpriteSwapper;
+                public static Texture2D SpriteSwapper => s_SpriteSwapper ? s_SpriteSwapper : s_SpriteSwapper = GetTexture2D(TextureName.SpriteSwapper);
                 private static Texture2D s_TogglesDatabase;
                 public static Texture2D TogglesDatabase => s_TogglesDatabase ? s_TogglesDatabase : s_TogglesDatabase = GetTexture2D(TextureName.TogglesDatabase);
                 private static Texture2D s_Tooltip;

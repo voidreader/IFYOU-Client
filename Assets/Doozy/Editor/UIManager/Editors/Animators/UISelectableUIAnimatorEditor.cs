@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -12,7 +12,6 @@ using Doozy.Editor.UIManager.Editors.Animators.Internal;
 using Doozy.Runtime.UIElements.Extensions;
 using Doozy.Runtime.UIManager;
 using Doozy.Runtime.UIManager.Animators;
-using Doozy.Runtime.UIManager.Components;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -69,7 +68,7 @@ namespace Doozy.Editor.UIManager.Editors.Animators
                     .SetComponentTypeText("UI Animator")
                     .SetIcon(uiAnimatorIconTextures.ToList())
                     .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048543277/UISelectable+UI+Animator?atlOrigin=eyJpIjoiMDNjZTc2YWZhZjlhNDU0N2E1YzdmOThjMzQwODJmMWIiLCJwIjoiYyJ9")
-                    .AddYouTubeButton("www.youtube.com/c/DoozyEntertainment");
+                    .AddYouTubeButton();
             
             // foreach (UISelectionState state in UISelectable.uiSelectionStates)
             //     castedTarget.GetAnimation(state).SetTarget(castedTarget.rectTransform);
@@ -97,11 +96,11 @@ namespace Doozy.Editor.UIManager.Editors.Animators
             selectedTabContainer = GetTabContainer();
             disabledTabContainer = GetTabContainer();
 
-            normalTabButton = GetTab(UISelectionState.Normal, normalAnimatedContainer);
-            highlightedTabButton = GetTab(UISelectionState.Highlighted, highlightedAnimatedContainer);
-            pressedTabButton = GetTab(UISelectionState.Pressed, pressedAnimatedContainer);
-            selectedTabButton = GetTab(UISelectionState.Selected, selectedAnimatedContainer);
-            disabledTabButton = GetTab(UISelectionState.Disabled, disabledAnimatedContainer);
+            normalTabButton = GetTab(UISelectionState.Normal, normalAnimatedContainer, selectableAccentColor);
+            highlightedTabButton = GetTab(UISelectionState.Highlighted, highlightedAnimatedContainer, selectableAccentColor);
+            pressedTabButton = GetTab(UISelectionState.Pressed, pressedAnimatedContainer, selectableAccentColor);
+            selectedTabButton = GetTab(UISelectionState.Selected, selectedAnimatedContainer, selectableAccentColor);
+            disabledTabButton = GetTab(UISelectionState.Disabled, disabledAnimatedContainer, selectableAccentColor);
            
             normalTabIndicators = new UIAnimatorIndicators().Initialize(propertyNormalAnimation, normalTabButton, normalTabContainer);
             highlightedTabIndicators = new UIAnimatorIndicators().Initialize(propertyHighlightedAnimation, highlightedTabButton, highlightedTabContainer);

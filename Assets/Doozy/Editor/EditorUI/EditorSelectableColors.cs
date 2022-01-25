@@ -341,14 +341,18 @@ namespace Doozy.Editor.EditorUI
             
             public enum ColorName
             {
+                AudioComponent,
                 InputComponent,
                 LayoutComponent,
                 ListenerComponent,
                 Settings,
-                UIComponent
+                UIComponent,
+                VisualComponent
             }
             
 
+            private static EditorSelectableColorInfo s_AudioComponent;
+            public static EditorSelectableColorInfo AudioComponent => s_AudioComponent ?? (s_AudioComponent = GetSelectableColorInfo(ColorName.AudioComponent));
             private static EditorSelectableColorInfo s_InputComponent;
             public static EditorSelectableColorInfo InputComponent => s_InputComponent ?? (s_InputComponent = GetSelectableColorInfo(ColorName.InputComponent));
             private static EditorSelectableColorInfo s_LayoutComponent;
@@ -359,6 +363,8 @@ namespace Doozy.Editor.EditorUI
             public static EditorSelectableColorInfo Settings => s_Settings ?? (s_Settings = GetSelectableColorInfo(ColorName.Settings));
             private static EditorSelectableColorInfo s_UIComponent;
             public static EditorSelectableColorInfo UIComponent => s_UIComponent ?? (s_UIComponent = GetSelectableColorInfo(ColorName.UIComponent));
+            private static EditorSelectableColorInfo s_VisualComponent;
+            public static EditorSelectableColorInfo VisualComponent => s_VisualComponent ?? (s_VisualComponent = GetSelectableColorInfo(ColorName.VisualComponent));
             
         }
     }

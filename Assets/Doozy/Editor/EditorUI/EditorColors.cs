@@ -421,15 +421,19 @@ namespace Doozy.Editor.EditorUI
                 
             public enum ColorName
             {
+                AudioComponent,
                 InputComponent,
                 LayoutComponent,
                 ListenerComponent,
                 Settings,
                 UIComponent,
-                UIMenuItemBackground
+                UIMenuItemBackground,
+                VisualComponent
             }
             
 
+            private static Color? s_AudioComponent;
+            public static Color AudioComponent => (Color) (s_AudioComponent ?? (s_AudioComponent = GetColor(ColorName.AudioComponent)));
             private static Color? s_InputComponent;
             public static Color InputComponent => (Color) (s_InputComponent ?? (s_InputComponent = GetColor(ColorName.InputComponent)));
             private static Color? s_LayoutComponent;
@@ -442,6 +446,8 @@ namespace Doozy.Editor.EditorUI
             public static Color UIComponent => (Color) (s_UIComponent ?? (s_UIComponent = GetColor(ColorName.UIComponent)));
             private static Color? s_UIMenuItemBackground;
             public static Color UIMenuItemBackground => (Color) (s_UIMenuItemBackground ?? (s_UIMenuItemBackground = GetColor(ColorName.UIMenuItemBackground)));
+            private static Color? s_VisualComponent;
+            public static Color VisualComponent => (Color) (s_VisualComponent ?? (s_VisualComponent = GetColor(ColorName.VisualComponent)));
           
         }
     }

@@ -1,9 +1,8 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System.Collections.Generic;
-using Doozy.Runtime.Common;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -42,7 +41,7 @@ namespace Doozy.Runtime.UIElements.Extensions
             templateContainer.style.alignSelf = new StyleEnum<Align>(Align.Stretch);
             target.AddChild(templateContainer);
             #else
-			Debugger.LogWarning("This method works only in the Editor");
+			Doozy.Runtime.Common.Debugger.LogWarning("This method works only in the Editor");
             #endif
             return target;
         }
@@ -71,7 +70,7 @@ namespace Doozy.Runtime.UIElements.Extensions
             #if UNITY_EDITOR
             return target.AddClass(UnityEditor.EditorGUIUtility.isProSkin ? "Dark" : "Light");
             #else
-			Debugger.LogWarning("This method works only in the Editor");
+			Doozy.Runtime.Common.Debugger.LogWarning("This method works only in the Editor");
 			return target;
             #endif
         }
@@ -119,7 +118,7 @@ namespace Doozy.Runtime.UIElements.Extensions
             #if UNITY_EDITOR
             target.AddStyle(UnityEditor.AssetDatabase.LoadAssetAtPath<StyleSheet>(styleSheetPath));
             #else
-			Debugger.LogWarning("This method works only in the Editor");
+			Doozy.Runtime.Common.Debugger.LogWarning("This method works only in the Editor");
             #endif
             return target;
         }
@@ -1497,7 +1496,7 @@ namespace Doozy.Runtime.UIElements.Extensions
             #if UNITY_EDITOR
             target.SetStyleBackgroundImage(UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath));
             #else
-			Debugger.LogWarning("This method works only in the Editor");
+			Doozy.Runtime.Common.Debugger.LogWarning("This method works only in the Editor");
             #endif
             return target;
         }
@@ -2099,7 +2098,7 @@ namespace Doozy.Runtime.UIElements.Extensions
             width *= ratio;
             return target.SetStyleSize(width, height);
         }
-        
+
         /// <summary>
         /// Resize the element, to the given texture size, proportionately to the given width
         /// <para/> Adjusts the height automatically
@@ -2111,7 +2110,7 @@ namespace Doozy.Runtime.UIElements.Extensions
         {
             if (texture == null)
                 return target;
-            
+
             float width = texture.width;
             float height = texture.height;
             float ratio = referenceWidth / width;
@@ -2119,7 +2118,7 @@ namespace Doozy.Runtime.UIElements.Extensions
             height *= ratio;
             return target.SetStyleSize(width, height);
         }
-        
+
         /// <summary>
         /// Resize the element, to the given texture size, proportionately to the given height
         /// <para/> Adjusts the width automatically
@@ -2131,7 +2130,7 @@ namespace Doozy.Runtime.UIElements.Extensions
         {
             if (texture == null)
                 return target;
-            
+
             float width = texture.width;
             float height = texture.height;
             float ratio = referenceHeight / height;
@@ -2139,7 +2138,7 @@ namespace Doozy.Runtime.UIElements.Extensions
             width *= ratio;
             return target.SetStyleSize(width, height);
         }
-        
+
         /// <summary>
         /// Resize the element, to its own background image texture size, proportionately to the given width
         /// <para/> Adjusts the height automatically
@@ -2148,7 +2147,7 @@ namespace Doozy.Runtime.UIElements.Extensions
         /// <param name="referenceWidth"> Target width </param>
         public static T ResizeToTextureWidth<T>(this T target, float referenceWidth) where T : VisualElement =>
             target.ResizeToTextureWidth(target.GetStyleBackgroundImageTexture2D(), referenceWidth);
-        
+
         /// <summary>
         /// Resize the element, to its own background image texture size, proportionately to the given height
         /// <para/> Adjusts the width automatically
@@ -2429,11 +2428,11 @@ namespace Doozy.Runtime.UIElements.Extensions
             }
 
             if (!target.HasParent()) return other;
-            VisualElement parent = target.parent; //get the target parent
+            VisualElement parent = target.parent;                      //get the target parent
             int targetIndexInParentHierarchy = parent.IndexOf(target); //get the 'child index' of the target inside the parent's hierarchy
-            target.RemoveFromHierarchy(); //remove the target from its parent hierarchy
-            parent.Insert(targetIndexInParentHierarchy, other); //insert the element back to the parent at the initial target's index
-            return other; //return a reference to the element
+            target.RemoveFromHierarchy();                              //remove the target from its parent hierarchy
+            parent.Insert(targetIndexInParentHierarchy, other);        //insert the element back to the parent at the initial target's index
+            return other;                                              //return a reference to the element
         }
 
         public static bool IsFocused<T>(this T target) where T : VisualElement =>

@@ -834,7 +834,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnHiddenCallback:
-    Enabled: 1
+    Enabled: 0
     EventName: OnHiddenCallback
     Runners: []
     Event:
@@ -850,6 +850,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!114 &65092084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1952,6 +1956,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 1
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -2009,21 +2014,21 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 274771425}
+    Selectable: {fileID: 274771427}
   Id:
     Category: None
     Name: None
-    Custom: 0
-  ToggleGroup: {fileID: 0}
-  OnClickCallback:
+    Custom: 1
+  OnToggleOnCallback:
     Enabled: 0
-    EventName: OnClickCallback
+    EventName: OnToggleOnCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
-  OnToggleOnCallback:
+  OnInstantToggleOnCallback:
     Enabled: 0
-    EventName: OnToggleOnCallback
+    EventName: OnInstantToggleOnCallback
     Runners: []
     Event:
       m_PersistentCalls:
@@ -2035,9 +2040,17 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls: []
+  OnInstantToggleOffCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 0}
   ToggleGroupValue: 2
   Mode: 2
   HasMixedValues: 1
@@ -2049,7 +2062,7 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls: []
-  FirstToggle: {fileID: 0}
+  FirstToggle: {fileID: 1327325720}
 --- !u!114 &274771428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3962,6 +3975,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!114 &473534596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4884,7 +4901,7 @@ MonoBehaviour:
   StreamId:
     Category: Music
     Name: Stop
-    Custom: 0
+    Custom: 1
 --- !u!114 &519484031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5203,7 +5220,7 @@ MonoBehaviour:
   StreamId:
     Category: Music
     Name: Stop
-    Custom: 0
+    Custom: 1
 --- !u!114 &616841942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7536,9 +7553,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1091950708}
-  - component: {fileID: 1091950717}
   - component: {fileID: 1091950716}
-  - component: {fileID: 1091950715}
   - component: {fileID: 1091950714}
   - component: {fileID: 1091950713}
   - component: {fileID: 1091950712}
@@ -7616,6 +7631,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -7673,18 +7689,11 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 1091950707}
+    Selectable: {fileID: 1091950709}
   Id:
     Category: Tab
     Name: UIMenu
     Custom: 1
-  ToggleGroup: {fileID: 274771427}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
   OnToggleOnCallback:
     Enabled: 1
     EventName: OnToggleOnCallback
@@ -7696,6 +7705,26 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
             DoozyRuntime
           m_MethodName: Show
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
+  OnInstantToggleOnCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOnCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1742390539}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantShow
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -7724,10 +7753,31 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
+          m_CallState: 1
+  OnInstantToggleOffCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1742390539}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantHide
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
           m_CallState: 2
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 274771427}
 --- !u!114 &1091950710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8365,23 +8415,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1091950707}
   m_CullTransparentMesh: 1
---- !u!114 &1091950715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1091950707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!225 &1091950716
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8394,27 +8427,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!223 &1091950717
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1091950707}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &1141720542
 GameObject:
   m_ObjectHideFlags: 0
@@ -11628,9 +11640,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1327325719}
-  - component: {fileID: 1327325728}
   - component: {fileID: 1327325727}
-  - component: {fileID: 1327325726}
   - component: {fileID: 1327325725}
   - component: {fileID: 1327325724}
   - component: {fileID: 1327325723}
@@ -11638,7 +11648,7 @@ GameObject:
   - component: {fileID: 1327325721}
   - component: {fileID: 1327325720}
   m_Layer: 5
-  m_Name: Tab - Reactor
+  m_Name: Tab - Reactor #
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11706,8 +11716,9 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
   MultiplayerInfo: {fileID: 0}
-  IsOn: 1
+  IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -11765,18 +11776,11 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 1327325718}
+    Selectable: {fileID: 1327325720}
   Id:
     Category: Tab
     Name: Reactor
     Custom: 1
-  ToggleGroup: {fileID: 274771427}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
   OnToggleOnCallback:
     Enabled: 1
     EventName: OnToggleOnCallback
@@ -11788,6 +11792,26 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
             DoozyRuntime
           m_MethodName: Show
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
+  OnInstantToggleOnCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOnCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 65092083}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantShow
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -11816,10 +11840,31 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
+          m_CallState: 1
+  OnInstantToggleOffCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 65092083}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantHide
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
           m_CallState: 2
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 274771427}
 --- !u!114 &1327325721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12457,23 +12502,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1327325718}
   m_CullTransparentMesh: 1
---- !u!114 &1327325726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1327325718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!225 &1327325727
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -12486,27 +12514,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!223 &1327325728
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1327325718}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &1331947994
 GameObject:
   m_ObjectHideFlags: 0
@@ -13299,7 +13306,7 @@ MonoBehaviour:
   StreamId:
     Category: Music
     Name: Stop
-    Custom: 0
+    Custom: 1
 --- !u!114 &1341295727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13518,9 +13525,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1360688752}
-  - component: {fileID: 1360688761}
   - component: {fileID: 1360688760}
-  - component: {fileID: 1360688759}
   - component: {fileID: 1360688758}
   - component: {fileID: 1360688757}
   - component: {fileID: 1360688756}
@@ -13598,6 +13603,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -13655,18 +13661,11 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 1360688751}
+    Selectable: {fileID: 1360688753}
   Id:
     Category: Tab
     Name: Nody
     Custom: 1
-  ToggleGroup: {fileID: 274771427}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
   OnToggleOnCallback:
     Enabled: 1
     EventName: OnToggleOnCallback
@@ -13678,6 +13677,26 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
             DoozyRuntime
           m_MethodName: Show
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
+  OnInstantToggleOnCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOnCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 473534595}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantShow
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -13706,10 +13725,31 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
+          m_CallState: 1
+  OnInstantToggleOffCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 473534595}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantHide
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
           m_CallState: 2
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 274771427}
 --- !u!114 &1360688754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14347,23 +14387,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1360688751}
   m_CullTransparentMesh: 1
---- !u!114 &1360688759
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1360688751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!225 &1360688760
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -14376,27 +14399,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!223 &1360688761
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1360688751}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &1362553493
 GameObject:
   m_ObjectHideFlags: 0
@@ -16412,7 +16414,7 @@ MonoBehaviour:
   StreamId:
     Category: Music
     Name: Stop
-    Custom: 0
+    Custom: 1
 --- !u!114 &1700589075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17986,6 +17988,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!114 &1742390540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18137,9 +18143,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1815661728}
-  - component: {fileID: 1815661737}
   - component: {fileID: 1815661736}
-  - component: {fileID: 1815661735}
   - component: {fileID: 1815661734}
   - component: {fileID: 1815661733}
   - component: {fileID: 1815661732}
@@ -18217,6 +18221,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -18274,18 +18279,11 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 1815661727}
+    Selectable: {fileID: 1815661729}
   Id:
     Category: Tab
     Name: Signals
     Custom: 1
-  ToggleGroup: {fileID: 274771427}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
   OnToggleOnCallback:
     Enabled: 1
     EventName: OnToggleOnCallback
@@ -18297,6 +18295,26 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
             DoozyRuntime
           m_MethodName: Show
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
+  OnInstantToggleOnCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOnCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1961195450}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantShow
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -18325,10 +18343,31 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
+          m_CallState: 1
+  OnInstantToggleOffCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1961195450}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantHide
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
           m_CallState: 2
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 274771427}
 --- !u!114 &1815661730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18966,23 +19005,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1815661727}
   m_CullTransparentMesh: 1
---- !u!114 &1815661735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1815661727}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!225 &1815661736
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -18995,27 +19017,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!223 &1815661737
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1815661727}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &1874299104
 GameObject:
   m_ObjectHideFlags: 0
@@ -20535,6 +20536,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!114 &1961195451
 MonoBehaviour:
   m_ObjectHideFlags: 0

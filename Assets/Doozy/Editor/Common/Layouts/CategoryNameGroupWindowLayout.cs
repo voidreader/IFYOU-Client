@@ -1,10 +1,9 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Doozy.Editor.EditorUI;
@@ -359,8 +358,8 @@ namespace Doozy.Editor.Common.Layouts
             exportDatabaseNameTextField = new TextField().ResetLayout();
             exportField = FluidField.Get("Database Name").AddFieldContent(exportDatabaseNameTextField);
 
-            exportToggleGroup = new FluidToggleGroup().SetLabelText("Select All").SetControlMode(FluidToggleGroup.ControlMode.Passive, false);
-            importToggleGroup = new FluidToggleGroup().SetLabelText("Select All").SetControlMode(FluidToggleGroup.ControlMode.Passive, false).SetStyleDisplay(DisplayStyle.None);
+            exportToggleGroup = new FluidToggleGroup().SetLabelText("Select All").SetControlMode(FluidToggleGroup.ControlMode.Passive);
+            importToggleGroup = new FluidToggleGroup().SetLabelText("Select All").SetControlMode(FluidToggleGroup.ControlMode.Passive).SetStyleDisplay(DisplayStyle.None);
 
             exportScrollableContent = new ScrollView();
             importScrollableContent = new ScrollView();

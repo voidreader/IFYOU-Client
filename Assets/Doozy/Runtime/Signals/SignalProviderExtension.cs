@@ -141,12 +141,14 @@ namespace Doozy.Runtime.Signals
                 {
                     Deselected,
                     Selected,
+                    Submit,
                 }
 
                 public static readonly List<ProviderAttributes> AttributesList = new List<ProviderAttributes>
                 {
                     new ProviderAttributes(k_ProviderType, k_ProviderCategory, Name.Deselected.ToString(), typeof(Doozy.Runtime.UIManager.Triggers.UIDeselectedTrigger)),
                     new ProviderAttributes(k_ProviderType, k_ProviderCategory, Name.Selected.ToString(), typeof(Doozy.Runtime.UIManager.Triggers.UISelectedTrigger)),
+                    new ProviderAttributes(k_ProviderType, k_ProviderCategory, Name.Submit.ToString(), typeof(Doozy.Runtime.UIManager.Triggers.UISubmitTrigger)),
                 };
             }
 

@@ -1482,7 +1482,7 @@ namespace PIERStory
             int quantity = SystemManager.GetJsonNodeInt(result["reward"], "quantity");
             
             // 재화 획득 팝업 6201
-            SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6201"), quantity, SystemManager.main.GetCurrencyImageURL(currency), SystemManager.main.GetCurrencyImageURL(currency));
+            SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6201"), quantity, SystemManager.main.GetCurrencyImageURL(currency), SystemManager.main.GetCurrencyImageKey(currency));
             
         }
         

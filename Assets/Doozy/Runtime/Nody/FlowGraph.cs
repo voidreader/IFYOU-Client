@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -287,7 +287,7 @@ namespace Doozy.Runtime.Nody
 
         public void Resume()
         {
-
+            //ToDo: Resume graph
         }
 
         /// <summary> Stop the graph </summary>
@@ -368,8 +368,6 @@ namespace Doozy.Runtime.Nody
             flowClone.RootNode = RootNode.Clone().SetFlowGraph(flowClone);
             flowClone.nodes = nodes.ConvertAll(n => n.Clone());
             flowClone.UpdateNodes();
-            flowClone.name = flowClone.name + UnityEngine.Random.Range(0,1000).ToString();
-            flowClone.GraphName = flowClone.name;
             return flowClone;
         }
 

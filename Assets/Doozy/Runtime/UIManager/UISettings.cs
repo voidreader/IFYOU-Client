@@ -1,13 +1,15 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using Doozy.Runtime.Common.Attributes;
 using UnityEngine;
 
 namespace Doozy.Runtime.UIManager
 {
     public static class UISettings
     {
+        [ClearOnReload(resetValue: false)]
         private static bool initialized { get; set; }
         private static void Initialize()
         {
@@ -20,6 +22,7 @@ namespace Doozy.Runtime.UIManager
         /// <para/> = 0 : FALSE (UI interactions are NOT disabled)
         /// <para/> > 0 : TRUE (UI interactions are disabled)
         /// </summary>
+        [ClearOnReload(resetValue: 0)]
         private static int s_interactionsDisableLevel;
 
         /// <summary> TRUE if the UI interactions are disabled </summary>
@@ -36,6 +39,6 @@ namespace Doozy.Runtime.UIManager
         /// <summary> Disables UI Interactions (by increasing the additive bool by one level) </summary>
         public static void DisableUIInteractions() =>
             s_interactionsDisableLevel++;
-        
+
     }
 }

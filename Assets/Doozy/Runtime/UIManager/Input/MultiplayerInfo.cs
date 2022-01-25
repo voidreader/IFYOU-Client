@@ -1,10 +1,14 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using Doozy.Runtime.UIManager.ScriptableObjects;
 using UnityEngine;
+
+#if INPUT_SYSTEM_PACKAGE
 using UnityEngine.InputSystem;
+#endif
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Runtime.UIManager.Input
@@ -22,12 +26,13 @@ namespace Doozy.Runtime.UIManager.Input
 
         /// <summary> True if Multiplayer Mode is enabled </summary>
         public static bool multiplayerMode => inputSettings.multiplayerMode;
-        
+
         [SerializeField] private bool AutoUpdate = true;
-        [SerializeField] private PlayerInput PlayerInput;
         [SerializeField] private int CustomPlayerIndex;
         [SerializeField] private bool UseCustomPlayerIndex;
 
+        #if INPUT_SYSTEM_PACKAGE
+        [SerializeField] private PlayerInput PlayerInput;
         public bool hasPlayerInput => playerInput != null;
        
         public PlayerInput playerInput
@@ -35,6 +40,28 @@ namespace Doozy.Runtime.UIManager.Input
             get => PlayerInput;
             set => PlayerInput = value;
         }
+        #endif
+
+        #if INPUT_SYSTEM_PACKAGE
+        
+        public int playerIndex =>
+            useCustomPlayerIndex
+                ? customPlayerIndex
+                : hasPlayerInput
+                    ? playerInput.playerIndex
+                    : inputSettings.defaultPlayerIndex;
+        
+        #else
+
+        public int playerIndex =>
+            useCustomPlayerIndex
+                ? customPlayerIndex
+                : inputSettings.defaultPlayerIndex;
+        
+        #endif
+
+        public bool ignorePlayerIndex =>
+            playerIndex == inputSettings.defaultPlayerIndex;
 
         public int customPlayerIndex
         {
@@ -52,25 +79,18 @@ namespace Doozy.Runtime.UIManager.Input
             set => UseCustomPlayerIndex = value;
         }
 
-        public int playerIndex =>
-            useCustomPlayerIndex
-                ? customPlayerIndex
-                : hasPlayerInput
-                    ? playerInput.playerIndex
-                    : inputSettings.defaultPlayerIndex;
-
-        public bool ignorePlayerIndex => 
-            playerIndex == inputSettings.defaultPlayerIndex; 
-        
         public bool autoUpdate
         {
             get => AutoUpdate;
             set => AutoUpdate = value;
         }
 
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private void GetReferences()
         {
+            #if INPUT_SYSTEM_PACKAGE
             PlayerInput ??= GetComponent<PlayerInput>();
+            #endif
         }
 
         private void Reset()
@@ -101,19 +121,21 @@ namespace Doozy.Runtime.UIManager.Input
             autoUpdate = value;
             return this;
         }
-        
+
+        #if INPUT_SYSTEM_PACKAGE
         public MultiplayerInfo SetPlayerInput(PlayerInput value)
         {
             PlayerInput = value;
             return this;
         }
-        
+        #endif
+
         public MultiplayerInfo SetCustomPlayerIndex(int value)
         {
             customPlayerIndex = value;
             return this;
         }
-        
+
         public MultiplayerInfo SetUseCustomPlayerIndex(bool value)
         {
             useCustomPlayerIndex = value;

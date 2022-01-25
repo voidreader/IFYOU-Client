@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -14,6 +14,7 @@ using Doozy.Runtime.UIManager.Input;
 using Doozy.Runtime.UIManager.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -69,7 +70,7 @@ namespace Doozy.Runtime.UIManager.Containers
         private RectTransform m_RectTransform;
         /// <summary> Reference to the RectTransform component </summary>
         public RectTransform rectTransform => m_RectTransform ? m_RectTransform : m_RectTransform = GetComponent<RectTransform>();
-
+        
         /// <summary> Container behaviour on Start </summary>
         public ContainerBehaviour OnStartBehaviour = ContainerBehaviour.Disabled;
 
@@ -165,6 +166,18 @@ namespace Doozy.Runtime.UIManager.Containers
         /// <summary> If TRUE, when this container gets hidden, the GraphicRaycaster component found on the same GameObject this container component is attached to, will be disabled </summary>
         public bool DisableGraphicRaycasterWhenHidden = true;
 
+        /// <summary> If TRUE, when this container is shown, any GameObject that is selected by the EventSystem.current will get deselected </summary>
+        public bool ClearSelectedOnShow;
+        
+        /// <summary> If TRUE, when this container is hidden, any GameObject that is selected by the EventSystem.current will get deselected </summary>
+        public bool ClearSelectedOnHide;
+
+        /// <summary> If TRUE, after this container has been shown, the referenced selectable GameObject will get automatically selected by EventSystem.current </summary>
+        public bool AutoSelectAfterShow;
+
+        /// <summary> Reference to the GameObject that should be selected after this container has been shown. Works only if AutoSelectAfterShow is TRUE </summary>
+        public GameObject AutoSelectTarget;
+        
         private HashSet<Reaction> m_ShowReactions;
         internal HashSet<Reaction> showReactions => m_ShowReactions ??= new HashSet<Reaction>();
 
@@ -207,11 +220,11 @@ namespace Doozy.Runtime.UIManager.Containers
 
         protected virtual void Awake()
         {
+            if (!Application.isPlaying) return;
             BackButton.Initialize();
 
             m_Canvas = GetComponent<Canvas>();
             m_GraphicRaycaster = GetComponent<GraphicRaycaster>();
-            m_RectTransform = GetComponent<RectTransform>();
             hasCanvasGroup = canvasGroup != null;
 
             showReactions.Remove(null);
@@ -227,16 +240,19 @@ namespace Doozy.Runtime.UIManager.Containers
 
         protected virtual void OnEnable()
         {
+            if (!Application.isPlaying) return;
             hasCanvasGroup = canvasGroup != null;
         }
 
         protected virtual void Start()
         {
+            if (!Application.isPlaying) return;
             RunBehaviour(OnStartBehaviour);
         }
 
         protected virtual void OnDisable()
         {
+            if (!Application.isPlaying) return;
             StopIsShowingCoroutine();
             StopIsHidingCoroutine();
 
@@ -292,11 +308,19 @@ namespace Doozy.Runtime.UIManager.Containers
 
             ExecutedCommand(ShowHideExecute.InstantShow);
 
+            if (ClearSelectedOnShow)
+            {
+                EventSystem.current.SetSelectedGameObject(null); //clear any selected
+            }
+
+            if (AutoSelectAfterShow && AutoSelectTarget != null) //check that the auto select option is enabled and that a GameObject has been referenced
+            {
+                EventSystem.current.SetSelectedGameObject(AutoSelectTarget); //select the referenced target
+            }
+            
             visibilityState = VisibilityState.IsShowing;
             visibilityState = VisibilityState.Visible;
         }
-
-
 
         public void InstantHide()
         {
@@ -307,6 +331,11 @@ namespace Doozy.Runtime.UIManager.Containers
 
             ExecutedCommand(ShowHideExecute.InstantHide);
 
+            if (ClearSelectedOnHide)
+            {
+                EventSystem.current.SetSelectedGameObject(null); //clear any selected
+            }
+            
             visibilityState = VisibilityState.IsHiding;
             visibilityState = VisibilityState.Hidden;
         }
@@ -350,6 +379,16 @@ namespace Doozy.Runtime.UIManager.Containers
 
             ExecutedCommand(ShowHideExecute.Show);
 
+            if (ClearSelectedOnShow)
+            {
+                EventSystem.current.SetSelectedGameObject(null); //clear any selected
+            }
+
+            if (AutoSelectAfterShow && AutoSelectTarget != null) //check that the auto select option is enabled and that a GameObject has been referenced
+            {
+                EventSystem.current.SetSelectedGameObject(AutoSelectTarget); //select the referenced target
+            }
+            
             m_CoroutineIsShowing = StartCoroutine(IsShowing());
         }
 
@@ -364,8 +403,8 @@ namespace Doozy.Runtime.UIManager.Containers
         private IEnumerator IsShowing()
         {
             StopIsHidingCoroutine();
-            yield return null;
             visibilityState = VisibilityState.IsShowing;
+            yield return null;
             while (isShowing)
             {
                 yield return null;
@@ -400,6 +439,11 @@ namespace Doozy.Runtime.UIManager.Containers
 
             ExecutedCommand(ShowHideExecute.Hide);
 
+            if (ClearSelectedOnHide)
+            {
+                EventSystem.current.SetSelectedGameObject(null); //clear any selected
+            }
+            
             m_CoroutineIsHiding = StartCoroutine(IsHiding());
         }
 
@@ -414,8 +458,8 @@ namespace Doozy.Runtime.UIManager.Containers
         private IEnumerator IsHiding()
         {
             StopIsShowingCoroutine();
-            yield return null;
             visibilityState = VisibilityState.IsHiding;
+            yield return null;
             while (isHiding)
             {
                 yield return null;

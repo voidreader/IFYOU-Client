@@ -1,7 +1,8 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using Doozy.Runtime.Common.Attributes;
 using UnityEngine;
 
 namespace Doozy.Runtime.Common.ScriptableObjects
@@ -13,6 +14,7 @@ namespace Doozy.Runtime.Common.ScriptableObjects
         private static string assetFolderPath => $"{RuntimePath.path}/Data/Resources/";
         private static string assetFilePath => $"{assetFolderPath}/{assetFileName}";
 
+        [ClearOnReload]
         private static T s_instance;
 
         public static T instance
@@ -37,5 +39,27 @@ namespace Doozy.Runtime.Common.ScriptableObjects
                 return s_instance;
             }
         }
+        
+        #if UNITY_EDITOR
+        
+        public static void Restore()
+        {
+            UnityEditor.EditorUtility.SetDirty(instance);
+        }
+        
+        public static void UndoRecord(string message)
+        {
+            UnityEditor.Undo.RecordObject(instance, message);
+            UnityEditor.EditorUtility.SetDirty(instance);
+        }
+
+        public static void Save(bool refreshAssetDatabase = false)
+        {
+            UnityEditor.EditorUtility.SetDirty(instance);
+            UnityEditor.AssetDatabase.SaveAssets();
+            if (refreshAssetDatabase) UnityEditor.AssetDatabase.Refresh();
+        }
+        
+        #endif
     }
 }

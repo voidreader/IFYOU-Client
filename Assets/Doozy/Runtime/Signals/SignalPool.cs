@@ -1,9 +1,10 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
 using System.Collections.Generic;
+using Doozy.Runtime.Common.Attributes;
 
 namespace Doozy.Runtime.Signals
 {
@@ -11,8 +12,10 @@ namespace Doozy.Runtime.Signals
     {
         private static HashSet<Signal> pool { get; set; }
 
+        [ClearOnReload(resetValue: false)]
         private static bool initialized { get; set; }
 
+        [ExecuteOnReload]
         private static void Initialize()
         {
             if (initialized) return;

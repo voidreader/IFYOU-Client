@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -25,7 +25,6 @@ namespace Doozy.Editor.UIManager.Editors.Animators
     public class UIContainerUIAnimatorEditor : BaseUIContainerAnimatorEditor
     {
         public static IEnumerable<Texture2D> uiAnimatorIconTextures => EditorMicroAnimations.Reactor.Icons.UIAnimator;
-        public static IEnumerable<Texture2D> uiAnimationIconTextures => EditorMicroAnimations.Reactor.Icons.UIAnimation;
 
         public UIContainerUIAnimator castedTarget => (UIContainerUIAnimator)target;
         public IEnumerable<UIContainerUIAnimator> castedTargets => targets.Cast<UIContainerUIAnimator>();
@@ -52,7 +51,7 @@ namespace Doozy.Editor.UIManager.Editors.Animators
                 .SetComponentTypeText("UI Animator")
                 .SetIcon(uiAnimatorIconTextures.ToList())
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048707091/UIContainer+UI+Animator?atlOrigin=eyJpIjoiZGRjNzc3ZGFkZDljNGQwMGJmMDMzMTMwMmFmYTNjNTUiLCJwIjoiYyJ9")
-                .AddYouTubeButton("www.youtube.com/c/DoozyEntertainment");
+                .AddYouTubeButton();
 
             // castedTarget.showAnimation.SetTarget(castedTarget.rectTransform);
             // castedTarget.hideAnimation.SetTarget(castedTarget.rectTransform);
@@ -74,8 +73,8 @@ namespace Doozy.Editor.UIManager.Editors.Animators
             showTabContainer = GetTabContainer();
             hideTabContainer = GetTabContainer();
 
-            showTabButton = GetTab(showAnimatedContainer, "Show", "Show animation");
-            hideTabButton = GetTab(hideAnimatedContainer, "Hide", "Hide animation");
+            showTabButton = GetTab(showAnimatedContainer, "Show", "Show animation", selectableAccentColor);
+            hideTabButton = GetTab(hideAnimatedContainer, "Hide", "Hide animation", selectableAccentColor);
 
             showTabIndicators = new UIAnimatorIndicators().Initialize(propertyShowAnimation, showTabButton, showTabContainer);
             hideTabIndicators = new UIAnimatorIndicators().Initialize(propertyHideAnimation, hideTabButton, hideTabContainer);

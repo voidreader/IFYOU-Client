@@ -1,7 +1,6 @@
 ﻿using Doozy.Editor.Common.Utils;
 using Doozy.Editor.EditorUI.ScriptableObjects;
 using UnityEditor;
-using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Editor.EditorUI.Processors

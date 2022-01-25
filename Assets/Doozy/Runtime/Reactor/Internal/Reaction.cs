@@ -1,9 +1,10 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
 using System.Linq;
+using Doozy.Runtime.Common.Attributes;
 using Doozy.Runtime.Common.Extensions;
 using Doozy.Runtime.Reactor.Easings;
 using Doozy.Runtime.Reactor.Ticker;
@@ -738,9 +739,13 @@ namespace Doozy.Runtime.Reactor.Internal
 
         public const int k_DefaultIntId = -1234;
 
+        [ClearOnReload(true)]
         internal static readonly ReactionDictionary<object> ReactionByObjectId = new ReactionDictionary<object>();
+        [ClearOnReload(true)]
         internal static readonly ReactionDictionary<string> ReactionByStringId = new ReactionDictionary<string>();
+        [ClearOnReload(true)]
         internal static readonly ReactionDictionary<int> ReactionByIntId = new ReactionDictionary<int>();
+        [ClearOnReload(true)]
         internal static readonly ReactionDictionary<object> ReactionByTargetObject = new ReactionDictionary<object>();
 
         public bool hasObjectId { get; internal set; }

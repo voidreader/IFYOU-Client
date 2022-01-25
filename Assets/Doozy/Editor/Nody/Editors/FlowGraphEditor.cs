@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -75,7 +75,7 @@ namespace Doozy.Editor.Nody.Editors
                 .SetComponentNameText((ObjectNames.NicifyVariableName(nameof(FlowGraph))))
                 .SetIcon(flowGraphIconTextures.ToList())
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048182819/Flow+Graph?atlOrigin=eyJpIjoiYWU4MDJiOTg5MWEwNDUzZTg1ZDUyZWU2N2U1NTRkODMiLCJwIjoiYyJ9")
-                .AddYouTubeButton("www.youtube.com/c/DoozyEntertainment");
+                .AddYouTubeButton();
         }
 
         private void Compose()

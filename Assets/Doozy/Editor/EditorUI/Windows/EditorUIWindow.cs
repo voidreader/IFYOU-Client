@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Doozy.Editor.EditorUI.Components;
-using Doozy.Editor.EditorUI.ScriptableObjects;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.ScriptableObjects.Fonts;
 using Doozy.Editor.EditorUI.ScriptableObjects.Layouts;
@@ -14,10 +13,8 @@ using Doozy.Editor.EditorUI.ScriptableObjects.MicroAnimations;
 using Doozy.Editor.EditorUI.ScriptableObjects.Styles;
 using Doozy.Editor.EditorUI.ScriptableObjects.Textures;
 using Doozy.Editor.EditorUI.Windows.Internal;
-using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Doozy.Editor.EditorUI.Windows

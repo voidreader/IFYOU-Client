@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -30,7 +30,17 @@ namespace Doozy.Editor.EditorUI.Utils
         public const int k_Spacing3X = k_Spacing * 3;
         public const int k_Spacing4X = k_Spacing * 4;
         public const int k_EndOfLineSpacing = k_Spacing * 6;
+        public const int k_ToolbarHeight = 32;
 
+        public static VisualElement GetToolbarContainer() =>
+            row
+                .SetStyleHeight(k_ToolbarHeight)
+                .SetStylePaddingLeft(k_Spacing)
+                .SetStylePaddingRight(k_Spacing)
+                .SetStyleAlignItems(Align.Center)
+                .SetStyleJustifyContent(Justify.FlexEnd)
+                .SetStyleBackgroundColor(EditorColors.Default.BoxBackground);
+        
         public static VisualElement GetSpaceBlock(int size, string name = "") =>
             GetSpaceBlock(size, size, name);
 

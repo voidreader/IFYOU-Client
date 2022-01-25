@@ -15,7 +15,7 @@ namespace Doozy.Editor.UIManager.UIMenu
     public static class UIMenuContextMenu
     {
         private const int MENU_ITEM_PRIORITY = 11;
-        private const string MENU_PATH = "GameObject/Doozy/";
+        private const string MENU_PATH = "GameObject/Doozy";
 
         public static class Component
         {
@@ -431,15 +431,6 @@ namespace Doozy.Editor.UIManager.UIMenu
 
                 [MenuItem(CATEGORY_MENU_PATH + "Switch (Tiny)", false, MENU_ITEM_PRIORITY)]
                 public static void CreateSwitchTiny(MenuCommand command) => UIMenuUtils.AddToScene(TYPE_NAME, CATEGORY_NAME, "SwitchTiny");
-            }
-
-            public static class Test
-            {
-                private const string CATEGORY_NAME = "Test";
-                private const string CATEGORY_MENU_PATH = TYPE_MENU_PATH + CATEGORY_NAME + "/";
-
-                [MenuItem(CATEGORY_MENU_PATH + "Game Object", false, MENU_ITEM_PRIORITY)]
-                public static void CreateGameObject(MenuCommand command) => UIMenuUtils.AddToScene(TYPE_NAME, CATEGORY_NAME, "GameObject");
             }
         }
 

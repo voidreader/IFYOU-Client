@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -74,7 +74,7 @@ namespace Doozy.Editor.UIManager.Editors.Listeners
                     .SetComponentNameText((ObjectNames.NicifyVariableName(nameof(SignalListener))))
                     .SetIcon(componentIconTextures.ToList())
                     .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048772618/Signal+Listener?atlOrigin=eyJpIjoiNmM1M2MyZDg1ZDM4NGYzZTljMWM3ZWZiNDYyZjg2MjAiLCJwIjoiYyJ9")
-                    .AddYouTubeButton("www.youtube.com/c/DoozyEntertainment");
+                    .AddYouTubeButton();
 
             streamIdPropertyField =
                 DesignUtils.NewPropertyField(propertyStreamId);

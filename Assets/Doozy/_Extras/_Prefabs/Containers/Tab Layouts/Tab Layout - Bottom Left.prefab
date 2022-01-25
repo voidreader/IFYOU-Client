@@ -9,9 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6409100396326514829}
-  - component: {fileID: 6409100396326514836}
   - component: {fileID: 6409100396326514837}
-  - component: {fileID: 6409100396326514834}
   - component: {fileID: 6409100396326514835}
   - component: {fileID: 6409100396326514832}
   - component: {fileID: 6409100396326514833}
@@ -46,27 +44,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &6409100396326514836
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409100396326514826}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &6409100396326514837
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -79,23 +56,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &6409100396326514834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409100396326514826}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!222 &6409100396326514835
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -777,6 +737,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -834,18 +795,11 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 6409100396326514826}
+    Selectable: {fileID: 6409100396326514828}
   Id:
     Category: None
     Name: None
-    Custom: 0
-  ToggleGroup: {fileID: 6409100396911035551}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
+    Custom: 1
   OnToggleOnCallback:
     Enabled: 1
     EventName: OnToggleOnCallback
@@ -857,6 +811,26 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
             DoozyRuntime
           m_MethodName: Show
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  OnInstantToggleOnCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOnCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6409100397732432229}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantShow
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -886,9 +860,30 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  OnInstantToggleOffCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6409100397732432229}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantHide
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 6409100396911035551}
 --- !u!1 &6409100396493588214
 GameObject:
   m_ObjectHideFlags: 0
@@ -1738,9 +1733,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6409100396637997227}
-  - component: {fileID: 6409100396637997234}
   - component: {fileID: 6409100396637997235}
-  - component: {fileID: 6409100396637997232}
   - component: {fileID: 6409100396637997233}
   - component: {fileID: 6409100396637997230}
   - component: {fileID: 6409100396637997231}
@@ -1775,27 +1768,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &6409100396637997234
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409100396637997224}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &6409100396637997235
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1808,23 +1780,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &6409100396637997232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409100396637997224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!222 &6409100396637997233
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2506,6 +2461,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -2563,18 +2519,11 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 6409100396637997224}
+    Selectable: {fileID: 6409100396637997226}
   Id:
     Category: None
     Name: None
-    Custom: 0
-  ToggleGroup: {fileID: 6409100396911035551}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
+    Custom: 1
   OnToggleOnCallback:
     Enabled: 1
     EventName: OnToggleOnCallback
@@ -2586,6 +2535,26 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
             DoozyRuntime
           m_MethodName: Show
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  OnInstantToggleOnCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOnCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6409100398104017329}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantShow
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2615,9 +2584,30 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  OnInstantToggleOffCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6409100398104017329}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantHide
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 6409100396911035551}
 --- !u!1 &6409100396648131315
 GameObject:
   m_ObjectHideFlags: 0
@@ -2808,11 +2798,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.88, g: 0.88, b: 0.88, a: 1}
-      ToValue: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      FromValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
+      ToValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       CurrentValue: {r: 0, g: 0, b: 0, a: 0}
       Enabled: 1
-      StartColor: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      StartColor: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -2888,11 +2878,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.88, g: 0.88, b: 0.88, a: 1}
-      ToValue: {r: 0.98, g: 0.98, b: 0.98, a: 1}
+      FromValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
+      ToValue: {r: 1, g: 1, b: 1, a: 1}
       CurrentValue: {r: 0, g: 0, b: 0, a: 0}
       Enabled: 1
-      StartColor: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      StartColor: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -2968,11 +2958,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.88, g: 0.88, b: 0.88, a: 1}
-      ToValue: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+      FromValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
+      ToValue: {r: 0.86078435, g: 0.86078435, b: 0.86078435, a: 1}
       CurrentValue: {r: 0, g: 0, b: 0, a: 0}
       Enabled: 1
-      StartColor: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      StartColor: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -3048,11 +3038,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      FromValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       ToValue: {r: 1, g: 1, b: 1, a: 1}
       CurrentValue: {r: 0, g: 0, b: 0, a: 0}
       Enabled: 1
-      StartColor: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      StartColor: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -3128,11 +3118,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.88, g: 0.88, b: 0.88, a: 1}
-      ToValue: {r: 0.88, g: 0.88, b: 0.88, a: 0.5}
+      FromValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
+      ToValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 0.5}
       CurrentValue: {r: 0, g: 0, b: 0, a: 0}
       Enabled: 1
-      StartColor: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      StartColor: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -3405,15 +3395,16 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   MultiplayerInfo: {fileID: 0}
   IsOn: 1
-  CurrentUISelectionState: 0
+  CurrentUISelectionState: 4
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
-  CurrentStateName: Normal
+  CurrentStateName: Disabled
   NormalState:
     StateType: 0
     StateName: Normal
@@ -3467,21 +3458,21 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 6409100396911035549}
+    Selectable: {fileID: 6409100396911035551}
   Id:
     Category: None
     Name: None
-    Custom: 0
-  ToggleGroup: {fileID: 0}
-  OnClickCallback:
+    Custom: 1
+  OnToggleOnCallback:
     Enabled: 0
-    EventName: OnClickCallback
+    EventName: OnToggleOnCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
-  OnToggleOnCallback:
+  OnInstantToggleOnCallback:
     Enabled: 0
-    EventName: OnToggleOnCallback
+    EventName: OnInstantToggleOnCallback
     Runners: []
     Event:
       m_PersistentCalls:
@@ -3493,9 +3484,17 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls: []
+  OnInstantToggleOffCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 0}
   ToggleGroupValue: 2
   Mode: 2
   HasMixedValues: 1
@@ -3521,9 +3520,7 @@ GameObject:
   - component: {fileID: 6409100396942475339}
   - component: {fileID: 6409100396942475336}
   - component: {fileID: 6409100396942475337}
-  - component: {fileID: 6409100396942475334}
   - component: {fileID: 6409100396942475335}
-  - component: {fileID: 6409100396942475332}
   - component: {fileID: 6409100396942475333}
   - component: {fileID: 6409100396942475330}
   m_Layer: 5
@@ -3683,27 +3680,6 @@ MonoBehaviour:
   m_FlexibleWidth: 1
   m_FlexibleHeight: 1
   m_LayoutPriority: 1
---- !u!223 &6409100396942475334
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409100396942475328}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &6409100396942475335
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3716,23 +3692,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &6409100396942475332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409100396942475328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &6409100396942475333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3812,11 +3771,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
-      ToValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
+      FromValue: {r: 0.32, g: 0.32, b: 0.32, a: 1}
+      ToValue: {r: 0.32, g: 0.32, b: 0.32, a: 1}
       CurrentValue: {r: 0.93927187, g: 0.037198782, b: 0.24768251, a: 1}
       Enabled: 1
-      StartColor: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
+      StartColor: {r: 0.32, g: 0.32, b: 0.32, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -3892,11 +3851,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
-      ToValue: {r: 0.5784314, g: 0.5784314, b: 0.5784314, a: 1}
+      FromValue: {r: 0.32, g: 0.32, b: 0.32, a: 1}
+      ToValue: {r: 0.42, g: 0.42, b: 0.42, a: 1}
       CurrentValue: {r: 1, g: 0.17647064, b: 0.3686275, a: 1}
       Enabled: 1
-      StartColor: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
+      StartColor: {r: 0.32, g: 0.32, b: 0.32, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -3972,11 +3931,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
-      ToValue: {r: 0.3784314, g: 0.3784314, b: 0.3784314, a: 1}
+      FromValue: {r: 0.32, g: 0.32, b: 0.32, a: 1}
+      ToValue: {r: 0.22, g: 0.22, b: 0.22, a: 1}
       CurrentValue: {r: 0, g: 0, b: 0, a: 0}
       Enabled: 1
-      StartColor: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
+      StartColor: {r: 0.32, g: 0.32, b: 0.32, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -4052,11 +4011,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
-      ToValue: {r: 0.6784314, g: 0.6784314, b: 0.6784314, a: 1}
+      FromValue: {r: 0.32, g: 0.32, b: 0.32, a: 1}
+      ToValue: {r: 0.52, g: 0.52, b: 0.52, a: 1}
       CurrentValue: {r: 0.8, g: 0.8, b: 0.8, a: 1}
       Enabled: 1
-      StartColor: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
+      StartColor: {r: 0.32, g: 0.32, b: 0.32, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -4132,11 +4091,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
-      ToValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 0.5}
+      FromValue: {r: 0.32, g: 0.32, b: 0.32, a: 1}
+      ToValue: {r: 0.32, g: 0.32, b: 0.32, a: 0.5}
       CurrentValue: {r: 0.74, g: 0.74, b: 0.74, a: 1}
       Enabled: 1
-      StartColor: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
+      StartColor: {r: 0.32, g: 0.32, b: 0.32, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -4523,6 +4482,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &6409100397226688446
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5219,6 +5182,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &6409100397732432231
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5797,9 +5764,7 @@ GameObject:
   - component: {fileID: 6409100397965320027}
   - component: {fileID: 6409100397965320024}
   - component: {fileID: 6409100397965320025}
-  - component: {fileID: 6409100397965320022}
   - component: {fileID: 6409100397965320023}
-  - component: {fileID: 6409100397965320020}
   - component: {fileID: 6409100397965320021}
   - component: {fileID: 6409100397965320018}
   m_Layer: 5
@@ -5959,27 +5924,6 @@ MonoBehaviour:
   m_FlexibleWidth: 1
   m_FlexibleHeight: 1
   m_LayoutPriority: 1
---- !u!223 &6409100397965320022
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409100397965320016}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &6409100397965320023
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5992,23 +5936,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &6409100397965320020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409100397965320016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &6409100397965320021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6569,6 +6496,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &6409100398104017331
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7147,9 +7078,7 @@ GameObject:
   - component: {fileID: 6409100398124164875}
   - component: {fileID: 6409100398124164872}
   - component: {fileID: 6409100398124164873}
-  - component: {fileID: 6409100398124164870}
   - component: {fileID: 6409100398124164871}
-  - component: {fileID: 6409100398124164868}
   - component: {fileID: 6409100398124164869}
   - component: {fileID: 6409100398124164866}
   m_Layer: 5
@@ -7309,27 +7238,6 @@ MonoBehaviour:
   m_FlexibleWidth: 1
   m_FlexibleHeight: 1
   m_LayoutPriority: 1
---- !u!223 &6409100398124164870
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409100398124164864}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &6409100398124164871
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7342,23 +7250,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &6409100398124164868
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409100398124164864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &6409100398124164869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7438,11 +7329,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
-      ToValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
+      FromValue: {r: 0.32, g: 0.32, b: 0.32, a: 1}
+      ToValue: {r: 0.32, g: 0.32, b: 0.32, a: 1}
       CurrentValue: {r: 0.93927187, g: 0.037198782, b: 0.24768251, a: 1}
       Enabled: 1
-      StartColor: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
+      StartColor: {r: 0.32, g: 0.32, b: 0.32, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -7518,11 +7409,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
-      ToValue: {r: 0.5784314, g: 0.5784314, b: 0.5784314, a: 1}
+      FromValue: {r: 0.32, g: 0.32, b: 0.32, a: 1}
+      ToValue: {r: 0.42, g: 0.42, b: 0.42, a: 1}
       CurrentValue: {r: 1, g: 0.17647064, b: 0.3686275, a: 1}
       Enabled: 1
-      StartColor: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
+      StartColor: {r: 0.32, g: 0.32, b: 0.32, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -7598,11 +7489,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
-      ToValue: {r: 0.3784314, g: 0.3784314, b: 0.3784314, a: 1}
+      FromValue: {r: 0.32, g: 0.32, b: 0.32, a: 1}
+      ToValue: {r: 0.22, g: 0.22, b: 0.22, a: 1}
       CurrentValue: {r: 0, g: 0, b: 0, a: 0}
       Enabled: 1
-      StartColor: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
+      StartColor: {r: 0.32, g: 0.32, b: 0.32, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -7678,11 +7569,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
-      ToValue: {r: 0.6784314, g: 0.6784314, b: 0.6784314, a: 1}
+      FromValue: {r: 0.32, g: 0.32, b: 0.32, a: 1}
+      ToValue: {r: 0.52, g: 0.52, b: 0.52, a: 1}
       CurrentValue: {r: 0.8, g: 0.8, b: 0.8, a: 1}
       Enabled: 1
-      StartColor: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
+      StartColor: {r: 0.32, g: 0.32, b: 0.32, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -7758,11 +7649,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
-      ToValue: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 0.5}
+      FromValue: {r: 0.32, g: 0.32, b: 0.32, a: 1}
+      ToValue: {r: 0.32, g: 0.32, b: 0.32, a: 0.5}
       CurrentValue: {r: 0.74, g: 0.74, b: 0.74, a: 1}
       Enabled: 1
-      StartColor: {r: 0.4784314, g: 0.4784314, b: 0.4784314, a: 1}
+      StartColor: {r: 0.32, g: 0.32, b: 0.32, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -7978,11 +7869,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.88, g: 0.88, b: 0.88, a: 1}
-      ToValue: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      FromValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
+      ToValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       CurrentValue: {r: 0, g: 0, b: 0, a: 0}
       Enabled: 1
-      StartColor: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      StartColor: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -8058,11 +7949,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.88, g: 0.88, b: 0.88, a: 1}
-      ToValue: {r: 0.98, g: 0.98, b: 0.98, a: 1}
+      FromValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
+      ToValue: {r: 1, g: 1, b: 1, a: 1}
       CurrentValue: {r: 0, g: 0, b: 0, a: 0}
       Enabled: 1
-      StartColor: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      StartColor: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -8138,11 +8029,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.88, g: 0.88, b: 0.88, a: 1}
-      ToValue: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+      FromValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
+      ToValue: {r: 0.86078435, g: 0.86078435, b: 0.86078435, a: 1}
       CurrentValue: {r: 0, g: 0, b: 0, a: 0}
       Enabled: 1
-      StartColor: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      StartColor: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -8218,11 +8109,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      FromValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       ToValue: {r: 1, g: 1, b: 1, a: 1}
       CurrentValue: {r: 0, g: 0, b: 0, a: 0}
       Enabled: 1
-      StartColor: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      StartColor: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -8298,11 +8189,11 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {r: 0.88, g: 0.88, b: 0.88, a: 1}
-      ToValue: {r: 0.88, g: 0.88, b: 0.88, a: 0.5}
+      FromValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
+      ToValue: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 0.5}
       CurrentValue: {r: 0, g: 0, b: 0, a: 0}
       Enabled: 1
-      StartColor: {r: 0.88, g: 0.88, b: 0.88, a: 1}
+      StartColor: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {r: 1, g: 1, b: 1, a: 1}
@@ -8324,9 +8215,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6409100398190600050}
-  - component: {fileID: 6409100398190600061}
   - component: {fileID: 6409100398190600058}
-  - component: {fileID: 6409100398190600059}
   - component: {fileID: 6409100398190600056}
   - component: {fileID: 6409100398190600057}
   - component: {fileID: 6409100398190600054}
@@ -8361,27 +8250,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &6409100398190600061
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409100398190600051}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &6409100398190600058
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8394,23 +8262,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &6409100398190600059
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409100398190600051}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!222 &6409100398190600056
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9092,6 +8943,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 1
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -9149,18 +9001,11 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 6409100398190600051}
+    Selectable: {fileID: 6409100398190600053}
   Id:
     Category: None
     Name: None
-    Custom: 0
-  ToggleGroup: {fileID: 6409100396911035551}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
+    Custom: 1
   OnToggleOnCallback:
     Enabled: 1
     EventName: OnToggleOnCallback
@@ -9172,6 +9017,26 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
             DoozyRuntime
           m_MethodName: Show
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  OnInstantToggleOnCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOnCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6409100397226688444}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantShow
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -9201,6 +9066,27 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  OnInstantToggleOffCallback:
+    Enabled: 1
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6409100397226688444}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: InstantHide
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 6409100396911035551}

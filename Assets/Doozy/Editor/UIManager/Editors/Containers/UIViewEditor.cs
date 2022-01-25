@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -30,10 +30,6 @@ namespace Doozy.Editor.UIManager.Editors.Containers
         private FluidField idField { get; set; }
 
         protected SerializedProperty propertyId { get; set; }
-        protected SerializedProperty propertyClearSelectedOnHide { get; set; }
-        protected SerializedProperty propertyClearSelectedOnShow { get; set; }
-        protected SerializedProperty propertyAutoSelectAfterShow { get; set; }
-        protected SerializedProperty propertyAutoSelectTarget { get; set; }
 
         protected override void OnDestroy()
         {
@@ -47,10 +43,6 @@ namespace Doozy.Editor.UIManager.Editors.Containers
             base.FindProperties();
 
             propertyId = serializedObject.FindProperty(nameof(UIView.Id));
-            propertyClearSelectedOnHide = serializedObject.FindProperty(nameof(UIView.ClearSelectedOnHide));
-            propertyClearSelectedOnShow = serializedObject.FindProperty(nameof(UIView.ClearSelectedOnShow));
-            propertyAutoSelectAfterShow = serializedObject.FindProperty(nameof(UIView.AutoSelectAfterShow));
-            propertyAutoSelectTarget = serializedObject.FindProperty(nameof(UIView.AutoSelectTarget));
         }
 
         protected override void InitializeEditor()
@@ -61,14 +53,13 @@ namespace Doozy.Editor.UIManager.Editors.Containers
                 .SetComponentNameText(nameof(UIView))
                 .SetIcon(viewsIconTextures.ToList())
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048281106/UIView?atlOrigin=eyJpIjoiMGIxNThlOTZjNTA3NDIyOWI3NWMzNTQ3MWZkYjE5ZTYiLCJwIjoiYyJ9")
-                .AddYouTubeButton("www.youtube.com/c/DoozyEntertainment");
+                .AddYouTubeButton();
 
             #region UIView Id
 
             idField = FluidField.Get().AddFieldContent(DesignUtils.NewPropertyField(propertyId));
 
             #endregion
-
         }
 
         protected override void Compose()
@@ -126,6 +117,14 @@ namespace Doozy.Editor.UIManager.Editors.Containers
                                 .AddChild(customStartPositionField)
                                 .AddChild(DesignUtils.spaceBlock)
                                 .AddChild(whenHiddenField)
+                                .AddChild(DesignUtils.spaceBlock)
+                                .AddChild
+                                (
+                                    DesignUtils.row
+                                        .AddChild(clearSelectedField)
+                                        .AddChild(DesignUtils.spaceBlock)
+                                        .AddChild(autoSelectAfterShowField)
+                                )
                                 .AddChild(DesignUtils.spaceBlock)
                         )
                 )

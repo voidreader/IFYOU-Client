@@ -1,16 +1,22 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
 using System.Collections.Generic;
+using Doozy.Runtime.Common.Attributes;
 using Doozy.Runtime.UIManager.ScriptableObjects;
 using UnityEngine;
+
+#if INPUT_SYSTEM_PACKAGE
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
+#endif
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 // ReSharper disable UnusedMember.Global
+// ReSharper disable CollectionNeverQueried.Global
 
 namespace Doozy.Runtime.UIManager.Input
 {
@@ -23,10 +29,13 @@ namespace Doozy.Runtime.UIManager.Input
     {
         /// <summary> Reference to the UIManager Input Settings </summary>
         public static UIManagerInputSettings inputSettings => UIManagerInputSettings.instance;
-        
+
+        [ClearOnReload(newInstance: true)]
+        // ReSharper disable once CollectionNeverUpdated.Global
         public static HashSet<InputToSignal> database { get; } = new HashSet<InputToSignal>();
         public static void CleanDatabase() => database.Remove(null);
 
+        #if INPUT_SYSTEM_PACKAGE
         [SerializeField] private bool AutoConnect;
         [SerializeField] private InputSystemUIInputModule UIInputModule;
         [SerializeField] private PlayerInput PlayerInput;
@@ -98,6 +107,11 @@ namespace Doozy.Runtime.UIManager.Input
         public InputToSignal Connect()
         {
             if (isConnected) return this;
+            if (action != null)
+            {
+                action.performed -= OnActionPerformed;
+                m_Action = null;
+            }
             (bool isValid, string message) = IsValid();
             if (!isValid)
             {
@@ -127,7 +141,7 @@ namespace Doozy.Runtime.UIManager.Input
             Connect();
             return this;
         }
-        
+
         public InputToSignal ConnectToCustomAction(string actionName)
         {
             Disconnect();
@@ -181,5 +195,68 @@ namespace Doozy.Runtime.UIManager.Input
                     ? (false, $"Not Valid: {nameof(m_Action)} is null")
                     : (true, "Valid");
         }
+        #endif
+
+        #if LEGACY_INPUT_MANGER
+
+        public const KeyCode k_BackButtonKeyCode = KeyCode.Escape;
+        public const string k_BackButtonVirtualButtonName = "Cancel";
+        
+        [SerializeField] private LegacyInputMode InputMode;
+        [SerializeField] private KeyCode KeyCode;
+        [SerializeField] private string VirtualButtonName;
+        [SerializeField] private int PlayerIndex;
+        
+        public LegacyInputMode inputMode
+        {
+            get => InputMode;
+            set => InputMode = value;
+        }
+        public KeyCode keyCode
+        {
+            get => KeyCode;
+            set => KeyCode = value;
+        }
+        public string virtualButtonName
+        {
+            get => VirtualButtonName;
+            set => VirtualButtonName = value;
+        }
+        public int playerIndex
+        {
+            get => PlayerIndex;
+            set => PlayerIndex = value;
+        }
+
+        private void Reset()
+        {
+            InputMode = LegacyInputMode.None;
+            KeyCode = default;
+            VirtualButtonName = string.Empty;
+            PlayerIndex = inputSettings.defaultPlayerIndex;
+        }
+
+        private void Update()
+        {
+            if (UISettings.interactionsDisabled) return;
+            bool execute;
+            switch (InputMode)
+            {
+                case LegacyInputMode.None:
+                    execute = false;
+                    break;
+                case LegacyInputMode.KeyCode:
+                    execute = UnityEngine.Input.GetKeyDown(keyCode);
+                    break;
+                case LegacyInputMode.VirtualButton:
+                    execute = UnityEngine.Input.GetKeyDown(virtualButtonName);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            if (!execute) return;
+            InputStream.stream.SendSignal(new InputSignalData(inputMode, keyCode, virtualButtonName, playerIndex));
+        }
+        #endif
     }
 }

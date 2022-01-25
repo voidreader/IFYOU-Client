@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -40,16 +40,26 @@ namespace Doozy.Runtime.UIManager
 
         public void Connect()
         {
-            if (!Enabled) return;
-            if (receiver.isConnected) return;
+            if (!Enabled) 
+                return;
+            
+            if (receiver.isConnected) 
+                return;
+            
             receiver.Connect();
+            
+            if(!receiver.isConnected)
+                return;
+            
             receiver.providerReference.cooldown = cooldown;
             receiver.onSignal += Execute;
         }
 
         public void Disconnect()
         {
-            if (!receiver.isConnected) return;
+            if (!receiver.isConnected) 
+                return;
+            
             receiver.Disconnect();
             receiver.onSignal -= Execute;
         }

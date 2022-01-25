@@ -9,9 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7682746735738646746}
-  - component: {fileID: 7682746735738646736}
   - component: {fileID: 7682746735738646737}
-  - component: {fileID: 7682746735738646750}
   - component: {fileID: 7682746735738646749}
   - component: {fileID: 7682746735738646751}
   m_Layer: 5
@@ -41,27 +39,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 24, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &7682746735738646736
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7682746735738646747}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &7682746735738646737
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -74,23 +51,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &7682746735738646750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7682746735738646747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &7682746735738646749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +95,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -192,10 +153,11 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 7682746735738646747}
+    Selectable: {fileID: 7682746735738646749}
   Id:
     Category: None
     Name: None
-    Custom: 0
+    Custom: 1
 --- !u!114 &7682746735738646751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,9 +187,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7682746736418446665}
-  - component: {fileID: 7682746736418446657}
   - component: {fileID: 7682746736418446670}
-  - component: {fileID: 7682746736418446671}
   - component: {fileID: 7682746736418446668}
   - component: {fileID: 7682746736418446669}
   - component: {fileID: 7682746736418446666}
@@ -259,27 +219,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000015258789, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &7682746736418446657
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7682746736418446710}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &7682746736418446670
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -292,23 +231,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &7682746736418446671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7682746736418446710}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!222 &7682746736418446668
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -374,6 +296,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Controller: {fileID: 7682746735738646749}
   IsOn: 0
+  ToggleCommand: 2
   ColorTarget: {fileID: 7682746736418446666}
   NormalAnimation:
     OnPlayCallback:
@@ -789,6 +712,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Controller: {fileID: 7682746735738646749}
   IsOn: 0
+  ToggleCommand: 2
   NormalAnimation:
     OnPlayCallback:
       m_PersistentCalls:

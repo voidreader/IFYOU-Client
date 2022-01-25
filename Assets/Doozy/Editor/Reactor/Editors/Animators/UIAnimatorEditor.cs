@@ -1,9 +1,8 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Utils;
@@ -54,7 +53,7 @@ namespace Doozy.Editor.Reactor.Editors.Animators
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(UIAnimator)))
                 .SetIcon(uiAnimatorIconTextures.ToList())
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048150050/UI+Animator?atlOrigin=eyJpIjoiYzMxOTZiNGQwYmRjNGVkNTkxOTA1MGYyNzBlMGFmZWIiLCJwIjoiYyJ9")
-                .AddYouTubeButton("www.youtube.com/c/DoozyEntertainment");
+                .AddYouTubeButton();
 
             animationTabContainer =
                 new VisualElement();

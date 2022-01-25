@@ -1,4 +1,4 @@
-// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -24,7 +24,8 @@ namespace Doozy.Runtime.UIManager
             PointerMiddleClick,
             PointerRightClick,
             Selected,
-            Deselected
+            Deselected,
+            Submit
         }
 
         private static List<string> s_behaviourNames;
@@ -58,6 +59,7 @@ namespace Doozy.Runtime.UIManager
                        Name.PointerRightClick  => SignalProvider.Local.Pointer.GetProviderId(SignalProvider.Local.Pointer.Name.RightClick),
                        Name.Selected           => SignalProvider.Local.UI.GetProviderId(SignalProvider.Local.UI.Name.Selected),
                        Name.Deselected         => SignalProvider.Local.UI.GetProviderId(SignalProvider.Local.UI.Name.Deselected),
+                       Name.Submit             => SignalProvider.Local.UI.GetProviderId(SignalProvider.Local.UI.Name.Submit),
                        _                       => throw new ArgumentOutOfRangeException(nameof(behaviourName), behaviourName, null)
                    };
         }

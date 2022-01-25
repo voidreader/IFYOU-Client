@@ -1,8 +1,9 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Doozy.Runtime.Reactor.Animators.Internal
@@ -19,31 +20,50 @@ namespace Doozy.Runtime.Reactor.Animators.Internal
         /// <summary> animator behaviour on Enable </summary>
         public AnimatorBehaviour OnEnableBehaviour = AnimatorBehaviour.Disabled;
         
+        protected bool animatorInitialized { get; set; }
+        
         protected virtual void Awake()
         {
+            if(!Application.isPlaying) return;
+            animatorInitialized = false;
             ValidateAnimation();
         }
-
+        
         protected virtual void OnEnable()
         {
+            if(!Application.isPlaying) return;
             ValidateAnimation();
-            UpdateValues();
+            // UpdateValues();
             RunBehaviour(OnEnableBehaviour);
         }
 
         protected virtual void Start()
         {
-            UpdateValues();
+            if(!Application.isPlaying) return;
+            ValidateAnimation();
+            // UpdateValues();
             RunBehaviour(OnStartBehaviour);
         }
 
         protected virtual void OnDestroy()
         {
+            if(!Application.isPlaying) return;
             Recycle();
         }
 
+        protected virtual void InitializeAnimator()
+        {
+            animatorInitialized = true;
+        }
+        
         protected void RunBehaviour(AnimatorBehaviour behaviour)
         {
+            if (!animatorInitialized)
+            {
+                StartCoroutine(RunBehaviourDelayed(behaviour));
+                return;
+            }
+            
             switch (behaviour)
             {
                 case AnimatorBehaviour.Disabled:
@@ -51,6 +71,7 @@ namespace Doozy.Runtime.Reactor.Animators.Internal
                     return;
                 
                 case AnimatorBehaviour.PlayForward:
+                  
                     Play(PlayDirection.Forward);
                     return;
                 
@@ -69,6 +90,12 @@ namespace Doozy.Runtime.Reactor.Animators.Internal
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        protected IEnumerator RunBehaviourDelayed(AnimatorBehaviour behaviour)
+        {
+            yield return new WaitUntil(() => animatorInitialized);
+            RunBehaviour(behaviour);
         }
 
         public virtual void Play(bool inReverse = false) =>

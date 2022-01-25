@@ -1,9 +1,8 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
@@ -52,7 +51,7 @@ namespace Doozy.Editor.Reactor.Editors
                 .SetIcon(heartbeatIconTextures.ToList())
                 .SetElementSize(ElementSize.Large)
                 .AddManualButton("www.bit.ly/DoozyKnowledgeBase4")
-                .AddYouTubeButton("www.youtube.com/c/DoozyEntertainment");
+                .AddYouTubeButton();
         }
 
         private void Compose()

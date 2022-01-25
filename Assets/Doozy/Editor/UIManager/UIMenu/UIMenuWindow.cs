@@ -1,9 +1,8 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Doozy.Editor.EditorUI;
@@ -410,7 +409,7 @@ namespace Doozy.Editor.UIManager.UIMenu
                     .SetLabelText(prefabTypeName)
                     .SetElementSize(ElementSize.Normal)
                     .SetContentPadding(0)
-                    .SetContentLeftPadding(16)
+                    .SetContentLeftPadding()
                     .SetStyleMarginBottom(DesignUtils.k_Spacing2X)
                     .SetIsOn(EditorPrefs.GetBool(editorPrefsKey), false);
 
@@ -465,7 +464,7 @@ namespace Doozy.Editor.UIManager.UIMenu
                     .SetName(categoryName)
                     .SetLabelText(categoryName)
                     .SetElementSize(ElementSize.Small)
-                    .SetContentPadding(4)
+                    .SetContentPadding()
                     .SetStyleMarginTop(DesignUtils.k_Spacing)
                     .SetIsOn(EditorPrefs.GetBool(editorPrefsKey), false);
 

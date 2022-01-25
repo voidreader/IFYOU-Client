@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -54,7 +54,15 @@ namespace Doozy.Runtime.Signals
 
         public void Connect()
         {
-            if (isConnected) return;
+            if (!Application.isPlaying)
+            {
+                Disconnect();
+                return;
+            }
+            
+            if (isConnected) 
+                return;
+            
             switch (streamConnection)
             {
                 case StreamConnection.None: return;
@@ -102,7 +110,9 @@ namespace Doozy.Runtime.Signals
 
         public void Disconnect()
         {
-            if (!isConnected) return;
+            if (!isConnected) 
+                return;
+            
             SignalStream streamReference = stream;
             stream = null;
             isConnected = false;

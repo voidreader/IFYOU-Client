@@ -40,8 +40,8 @@ namespace Doozy.Editor.EditorUI
         private FluidComponentHeader m_FluidHeader;
         public FluidComponentHeader fluidHeader =>
             m_FluidHeader ??= FluidComponentHeader.Get()
-                .AddManualButton(manualURL)
-                .AddYouTubeButton(youTubeURL);
+                .AddManualButton()
+                .AddYouTubeButton();
 
         public VisualElement root { get; private set; }
 

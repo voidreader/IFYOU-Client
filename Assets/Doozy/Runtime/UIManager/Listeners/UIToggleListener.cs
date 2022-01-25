@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -67,9 +67,9 @@ namespace Doozy.Runtime.UIManager.Listeners
             if (!signal.hasValue) return;
             if (!(signal.valueAsObject is UIToggleSignalData data)) return;
             if (Command != CommandToggle.Any && Command != data.state) return; //check toggle state
-            if (!ToggleId.Category.Equals(data.toggleCategory)) return;     //check category
-            if (!ToggleId.Name.Equals(data.toggleName)) return;             //check name
-            if (multiplayerMode && playerIndex != data.playerIndex) return; //check player index (if multiplayer)
+            if (!ToggleId.Category.Equals(data.toggleCategory)) return;        //check category
+            if (!ToggleId.Name.Equals(data.toggleName)) return;                //check name
+            if (multiplayerMode && playerIndex != data.playerIndex) return;    //check player index (if multiplayer)
 
             signalCallback?.Invoke(data);
             Callback?.Execute(signal);

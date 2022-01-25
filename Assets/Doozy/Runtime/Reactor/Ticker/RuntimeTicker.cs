@@ -1,16 +1,19 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using Doozy.Runtime.Common;
+using Doozy.Runtime.Common.Attributes;
 using Doozy.Runtime.Reactor.ScriptableObjects;
 using UnityEngine;
+// ReSharper disable UnusedMember.Local
 
 namespace Doozy.Runtime.Reactor.Ticker
 {
     /// <summary> Runtime Tick Service - ticks all registered targets at runtime </summary>
     public class RuntimeTicker : SingletonBehaviour<RuntimeTicker>
     {
+        [ClearOnReload]
         private static TickService s_service;
         public static TickService service
         {
@@ -23,10 +26,17 @@ namespace Doozy.Runtime.Reactor.Ticker
             }
         }
 
+        [ExecuteOnReload]
+        private static void OnReload()
+        {
+            ResetTime();
+        }
+        
         /// <summary> Time.realtimeSinceStartup </summary>
         public static float timeSinceStartup => Time.realtimeSinceStartup;
         private static float tickInterval => service.tickInterval;
         private static double s_elapsedTime, s_lastTickTime;
+        
         private bool initialized { get; set; }
 
         private void Initialize()

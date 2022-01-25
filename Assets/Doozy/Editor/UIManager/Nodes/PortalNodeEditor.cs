@@ -1,4 +1,4 @@
-// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -75,7 +75,7 @@ namespace Doozy.Editor.UIManager.Nodes
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(PortalNode)))
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048182826/Portal+Node?atlOrigin=eyJpIjoiNTJhMWI3NTBiNTBhNDg2M2I2Mzc2ZTQyOGIzZjY5MmMiLCJwIjoiYyJ9")
-                .AddYouTubeButton("www.youtube.com/c/DoozyEntertainment");
+                .AddYouTubeButton();
 
             icon =
                 new Image()

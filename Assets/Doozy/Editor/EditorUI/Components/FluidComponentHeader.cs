@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+﻿// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -206,14 +206,14 @@ namespace Doozy.Editor.EditorUI.Components
         private FluidButton GetNewButton(IEnumerable<Texture2D> textures, string buttonTooltip) =>
             GetNewButton(buttonTooltip).SetIcon(textures);
 
-        public FluidComponentHeader AddManualButton(string url)
+        public FluidComponentHeader AddManualButton(string url = "http://bit.ly/DoozyKnowledgeBase4")
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode) return this; //do not add Manual button in play mode
             return AddElement(GetNewButton(EditorMicroAnimations.EditorUI.Icons.BookOpen, "Manual")
                 .SetOnClick(() => Application.OpenURL(url)));
         }
 
-        public FluidComponentHeader AddYouTubeButton(string url)
+        public FluidComponentHeader AddYouTubeButton(string url = "www.youtube.com/c/DoozyEntertainment")
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode) return this; //do not add YouTube button in play mode
             return AddElement(GetNewButton(EditorMicroAnimations.EditorUI.Icons.Youtube, "YouTube")

@@ -885,6 +885,8 @@ namespace Doozy.Editor.EditorUI
 
                 public enum AnimationName
                 {
+                    AnimatorProgressTarget,
+                    AudioMixerProgressTarget,
                     ColorAnimation,
                     ColorAnimator,
                     ColorTarget,
@@ -895,6 +897,7 @@ namespace Doozy.Editor.EditorUI
                     FrameByFrameAnimation,
                     FrameByFrameAnimator,
                     Heartbeat,
+                    ImageProgressTarget,
                     Move,
                     MoveOnOff,
                     MoveToDot,
@@ -914,15 +917,23 @@ namespace Doozy.Editor.EditorUI
                     Scale,
                     ScaleOnOff,
                     ScaleToDot,
+                    SignalProgressTarget,
                     SpriteAnimation,
                     SpriteAnimator,
                     SpriteTarget,
+                    TextMeshProProgressTarget,
+                    TextProgressTarget,
                     UIAnimation,
                     UIAnimationPreset,
-                    UIAnimator
+                    UIAnimator,
+                    UnityEventProgressTarget
                 }
 
 
+                private static List<Texture2D> s_AnimatorProgressTarget;
+                public static List<Texture2D> AnimatorProgressTarget => s_AnimatorProgressTarget = s_AnimatorProgressTarget ?? GetTextures(AnimationName.AnimatorProgressTarget);
+                private static List<Texture2D> s_AudioMixerProgressTarget;
+                public static List<Texture2D> AudioMixerProgressTarget => s_AudioMixerProgressTarget = s_AudioMixerProgressTarget ?? GetTextures(AnimationName.AudioMixerProgressTarget);
                 private static List<Texture2D> s_ColorAnimation;
                 public static List<Texture2D> ColorAnimation => s_ColorAnimation = s_ColorAnimation ?? GetTextures(AnimationName.ColorAnimation);
                 private static List<Texture2D> s_ColorAnimator;
@@ -943,6 +954,8 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> FrameByFrameAnimator => s_FrameByFrameAnimator = s_FrameByFrameAnimator ?? GetTextures(AnimationName.FrameByFrameAnimator);
                 private static List<Texture2D> s_Heartbeat;
                 public static List<Texture2D> Heartbeat => s_Heartbeat = s_Heartbeat ?? GetTextures(AnimationName.Heartbeat);
+                private static List<Texture2D> s_ImageProgressTarget;
+                public static List<Texture2D> ImageProgressTarget => s_ImageProgressTarget = s_ImageProgressTarget ?? GetTextures(AnimationName.ImageProgressTarget);
                 private static List<Texture2D> s_Move;
                 public static List<Texture2D> Move => s_Move = s_Move ?? GetTextures(AnimationName.Move);
                 private static List<Texture2D> s_MoveOnOff;
@@ -981,18 +994,26 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> ScaleOnOff => s_ScaleOnOff = s_ScaleOnOff ?? GetTextures(AnimationName.ScaleOnOff);
                 private static List<Texture2D> s_ScaleToDot;
                 public static List<Texture2D> ScaleToDot => s_ScaleToDot = s_ScaleToDot ?? GetTextures(AnimationName.ScaleToDot);
+                private static List<Texture2D> s_SignalProgressTarget;
+                public static List<Texture2D> SignalProgressTarget => s_SignalProgressTarget = s_SignalProgressTarget ?? GetTextures(AnimationName.SignalProgressTarget);
                 private static List<Texture2D> s_SpriteAnimation;
                 public static List<Texture2D> SpriteAnimation => s_SpriteAnimation = s_SpriteAnimation ?? GetTextures(AnimationName.SpriteAnimation);
                 private static List<Texture2D> s_SpriteAnimator;
                 public static List<Texture2D> SpriteAnimator => s_SpriteAnimator = s_SpriteAnimator ?? GetTextures(AnimationName.SpriteAnimator);
                 private static List<Texture2D> s_SpriteTarget;
                 public static List<Texture2D> SpriteTarget => s_SpriteTarget = s_SpriteTarget ?? GetTextures(AnimationName.SpriteTarget);
+                private static List<Texture2D> s_TextMeshProProgressTarget;
+                public static List<Texture2D> TextMeshProProgressTarget => s_TextMeshProProgressTarget = s_TextMeshProProgressTarget ?? GetTextures(AnimationName.TextMeshProProgressTarget);
+                private static List<Texture2D> s_TextProgressTarget;
+                public static List<Texture2D> TextProgressTarget => s_TextProgressTarget = s_TextProgressTarget ?? GetTextures(AnimationName.TextProgressTarget);
                 private static List<Texture2D> s_UIAnimation;
                 public static List<Texture2D> UIAnimation => s_UIAnimation = s_UIAnimation ?? GetTextures(AnimationName.UIAnimation);
                 private static List<Texture2D> s_UIAnimationPreset;
                 public static List<Texture2D> UIAnimationPreset => s_UIAnimationPreset = s_UIAnimationPreset ?? GetTextures(AnimationName.UIAnimationPreset);
                 private static List<Texture2D> s_UIAnimator;
                 public static List<Texture2D> UIAnimator => s_UIAnimator = s_UIAnimator ?? GetTextures(AnimationName.UIAnimator);
+                private static List<Texture2D> s_UnityEventProgressTarget;
+                public static List<Texture2D> UnityEventProgressTarget => s_UnityEventProgressTarget = s_UnityEventProgressTarget ?? GetTextures(AnimationName.UnityEventProgressTarget);
 
             }
 
@@ -1023,6 +1044,7 @@ namespace Doozy.Editor.EditorUI
                     SignalOnOff,
                     SignalProvider,
                     SignalReceiver,
+                    SignalSender,
                     SignalStream,
                     StreamDatabase
                 }
@@ -1044,6 +1066,8 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> SignalProvider => s_SignalProvider = s_SignalProvider ?? GetTextures(AnimationName.SignalProvider);
                 private static List<Texture2D> s_SignalReceiver;
                 public static List<Texture2D> SignalReceiver => s_SignalReceiver = s_SignalReceiver ?? GetTextures(AnimationName.SignalReceiver);
+                private static List<Texture2D> s_SignalSender;
+                public static List<Texture2D> SignalSender => s_SignalSender = s_SignalSender ?? GetTextures(AnimationName.SignalSender);
                 private static List<Texture2D> s_SignalStream;
                 public static List<Texture2D> SignalStream => s_SignalStream = s_SignalStream ?? GetTextures(AnimationName.SignalStream);
                 private static List<Texture2D> s_StreamDatabase;
@@ -1117,7 +1141,11 @@ namespace Doozy.Editor.EditorUI
                     SceneDirector,
                     SceneLoader,
                     SignalListener,
+                    SignalToAudioSource,
+                    SignalToColorTarget,
+                    SignalToSpriteTarget,
                     SlidersDatabase,
+                    SpriteSwapper,
                     TogglesDatabase,
                     UIButtonListener,
                     UIContainer,
@@ -1184,8 +1212,16 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> SceneLoader => s_SceneLoader = s_SceneLoader ?? GetTextures(AnimationName.SceneLoader);
                 private static List<Texture2D> s_SignalListener;
                 public static List<Texture2D> SignalListener => s_SignalListener = s_SignalListener ?? GetTextures(AnimationName.SignalListener);
+                private static List<Texture2D> s_SignalToAudioSource;
+                public static List<Texture2D> SignalToAudioSource => s_SignalToAudioSource = s_SignalToAudioSource ?? GetTextures(AnimationName.SignalToAudioSource);
+                private static List<Texture2D> s_SignalToColorTarget;
+                public static List<Texture2D> SignalToColorTarget => s_SignalToColorTarget = s_SignalToColorTarget ?? GetTextures(AnimationName.SignalToColorTarget);
+                private static List<Texture2D> s_SignalToSpriteTarget;
+                public static List<Texture2D> SignalToSpriteTarget => s_SignalToSpriteTarget = s_SignalToSpriteTarget ?? GetTextures(AnimationName.SignalToSpriteTarget);
                 private static List<Texture2D> s_SlidersDatabase;
                 public static List<Texture2D> SlidersDatabase => s_SlidersDatabase = s_SlidersDatabase ?? GetTextures(AnimationName.SlidersDatabase);
+                private static List<Texture2D> s_SpriteSwapper;
+                public static List<Texture2D> SpriteSwapper => s_SpriteSwapper = s_SpriteSwapper ?? GetTextures(AnimationName.SpriteSwapper);
                 private static List<Texture2D> s_TogglesDatabase;
                 public static List<Texture2D> TogglesDatabase => s_TogglesDatabase = s_TogglesDatabase ?? GetTextures(AnimationName.TogglesDatabase);
                 private static List<Texture2D> s_UIButtonListener;

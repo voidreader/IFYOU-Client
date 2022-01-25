@@ -21,8 +21,8 @@ namespace PIERStory {
         public static Action OnProfileChange = null;        // 프사, 테두리 변경시 호출
         public static Action<string> OnCategoryList;
         
-        public bool isView = false;
-        public bool isStartView = false;
+        // public bool isView = false;
+        // public bool isStartView = false;
         
         
         [Header("로비")]
@@ -55,6 +55,7 @@ namespace PIERStory {
         [SerializeField] GameObject prefabStoryElement; // 프리팹
         [SerializeField] GameObject NoInterestStory; // 관심작품 없음
         [SerializeField] Transform categoryParent;
+        [SerializeField] UIToggle likeToggle; // 카테고리 좋아요 토글 
                 
         
 
@@ -92,10 +93,12 @@ namespace PIERStory {
         
         public override void OnView()
         {
+            /*
             if(isView)
                 return;
                 
             isView = true; 
+            */
             
             base.OnView();
 
@@ -108,14 +111,19 @@ namespace PIERStory {
             LobbyManager.main.RequestPlatformLoadingImages(); // 플랫폼 로딩 이미지 다운로드 처리 
             
             UserManager.main.SetNewNickname(UserManager.main.nickname);
+            
+            
+            mainToggle.SetIsOn(true);
         }
         
         public override void OnStartView() {
             
+            /*
             if(isStartView)
                 return;
                 
             isStartView = true; 
+            */
             
             base.OnStartView();
             
@@ -150,6 +158,8 @@ namespace PIERStory {
             mLevelText.text = levelText.text;
             mExpGauge.fillAmount = expGauge.fillAmount;
             mExpText.text = expText.text;
+            
+            
         }
 
         /// <summary>
@@ -497,6 +507,10 @@ namespace PIERStory {
                
             }
             
+        }
+        
+        public void OnShowCategory() {
+            likeToggle.SetIsOn(true);
         }
         
         /// <summary>

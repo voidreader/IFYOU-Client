@@ -191,6 +191,10 @@ namespace PIERStory
         public const string KR_SCREEN_EFFECT_GRAYSCALE_CH = "흑백인물";
 
         public const string KR_SCREEN_EFFECT_CAMERA_FLASH = "플래시";
+        
+        public const string KR_SCREEN_EFFECT_BUBBLES = "비눗방울";
+        public const string KR_SCREEN_EFFECT_DAMAGE = "타격";
+        public const string KR_SCREEN_EFFECT_WAVE_LINE = "웨이브라인";
 
         // 화면 연출 파라미터 설정값
         public const string KR_PARAM_VALUE_ANIMATION = "애니메이션";

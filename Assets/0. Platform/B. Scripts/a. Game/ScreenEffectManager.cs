@@ -14,8 +14,6 @@ namespace PIERStory
         public Camera modelRenderCamC;
         public Camera generalCam;
         
-        
-        
 
         #region 카메라 오브젝트 component에 스크립트로 제어하는 연출
 
@@ -49,6 +47,7 @@ namespace PIERStory
         [Tooltip("비")] public ParticleSystem rainParticle;
         [Tooltip("폭설")] public ParticleSystem heavySnowParticle;
         [Tooltip("눈")] public ParticleSystem snow;
+        public ParticleSystem[] snowParticles;
         [Tooltip("렌즈플레어1")] public ParticleSystem lensFlare1;
         public ParticleSystem flareGlow1;
         [Tooltip("렌즈플레어2")] public ParticleSystem lensFlare2;
@@ -575,7 +574,16 @@ namespace PIERStory
                     int reminisceForce = 1;
 
                     if (__params != null)
+                    {
                         ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_LEVEL, ref reminisceForce);
+
+                        if (__params[0].Contains("밝음"))
+                        {
+                            reminisceLight.gameObject.SetActive(true);
+                            reminisceLight.Play(true);
+                            break;
+                        }
+                    }
 
                     switch (reminisceForce)
                     {
@@ -890,7 +898,39 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_SNOW:
+
+                    int snowLevel = 2;
+
+                    if (__params != null)
+                        ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_LEVEL, ref snowLevel);
+
+                    snowLevel = Mathf.Clamp(snowLevel, 1, 3);
+
+                    var snowBackEmission = snowParticles[0].emission;
+                    var snowFront1Emission = snowParticles[1].emission;
+                    var snowFront2Emission = snowParticles[2].emission;
+
+                    switch(snowLevel)
+                    {
+                        case 1:
+                            snowBackEmission.rateOverTime = 4;
+                            snowFront1Emission.rateOverTime = 1;
+                            snowFront2Emission.rateOverTime = 1;
+                            break;
+                        case 2:
+                            snowBackEmission.rateOverTime = 8;
+                            snowFront1Emission.rateOverTime = 2;
+                            snowFront2Emission.rateOverTime = 2;
+                            break;
+                        case 3:
+                            snowBackEmission.rateOverTime = 12;
+                            snowFront1Emission.rateOverTime = 4;
+                            snowFront2Emission.rateOverTime = 3;
+                            break;
+                    }
+
                     snow.gameObject.SetActive(true);
+                    snow.Play(true);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BLOOD_HIT:
@@ -928,6 +968,71 @@ namespace PIERStory
 
                     StartCoroutine(DisableBloodEffect(bloodTime));
 
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BUBBLES:
+
+                    int bubbleLevel = 2;
+
+                    if (__params != null)
+                        ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_LEVEL, ref bubbleLevel);
+
+                    bubbleLevel = Mathf.Clamp(bubbleLevel, 1, 3);
+
+                    var bubbles = bubble.main;
+
+                    switch (bubbleLevel)
+                    {
+                        case 1:
+                            bubbles.maxParticles = 3;
+                            break;
+                        case 2:
+                            bubbles.maxParticles = 5;
+                            break;
+                        case 3: bubbles.maxParticles = 10;
+                            break;
+                    }
+
+                    bubble.gameObject.SetActive(true);
+                    bubble.Play(true);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_DAMAGE:
+
+                    if(__params == null || __params[0].Contains("둔기"))
+                    {
+                        bluntStrike.gameObject.SetActive(true);
+                        bluntStrike.Play(true);
+                        break;
+                    }
+
+                    if(__params[0].Contains("검"))
+                    {
+                        blade.gameObject.SetActive(true);
+                        blade.Play(true);
+                        break;
+                    }
+
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
+
+                    float waveAngle = 0f, waveY = 1f;
+
+                    if(__params != null)
+                    {
+                        ScriptRow.GetParam<float>(__params, "각도", ref waveAngle);
+                        ScriptRow.GetParam<float>(__params, "높이", ref waveY);
+                    }
+
+                    waveAngle = Mathf.Clamp(waveAngle, 0, 360);
+                    waveY = Mathf.Clamp(waveY, -6, 8);
+
+                    waveLine.gameObject.transform.eulerAngles = new Vector3(0, 0, waveAngle);
+                    waveLine.gameObject.transform.position = new Vector3(0, waveY, 0);
+
+                    waveLine.gameObject.SetActive(true);
+                    waveLine.Play(true);
                     break;
             }
         }
@@ -1030,7 +1135,18 @@ namespace PIERStory
                     snow.gameObject.SetActive(false);
                     break;
 
+                case GameConst.KR_SCREEN_EFFECT_BUBBLES:
+                    bubble.gameObject.SetActive(false);
+                    break;
 
+                case GameConst.KR_SCREEN_EFFECT_DAMAGE:
+                    bluntStrike.gameObject.SetActive(false);
+                    blade.gameObject.SetActive(false);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
+                    waveLine.gameObject.SetActive(false);
+                    break;
             }
         }
 
@@ -1093,6 +1209,10 @@ namespace PIERStory
 
                 case GameConst.KR_SCREEN_EFFECT_REMINISCE:
                     reminisce.enabled = false;
+
+                    if (reminisceLight.gameObject.activeSelf)
+                        reminisceLight.gameObject.SetActive(false);
+
                     break;
             }
         }

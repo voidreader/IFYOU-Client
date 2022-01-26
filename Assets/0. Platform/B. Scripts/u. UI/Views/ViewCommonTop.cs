@@ -13,6 +13,8 @@ namespace PIERStory {
         public static bool isBackgroundShow = true; // 배경 보여지고 있는지 
         public static string staticCurrentTopOwner = string.Empty; // static owner.
         public static Action OnClickButtonAction = null;    // 다용도 버튼 Action 저장용도
+        
+        public static Action OnRefreshSuperUser = null; // 슈퍼유저 표기용도 
 
 
         [SerializeField] GameObject backButton; // 뒤로가기 버튼 
@@ -49,6 +51,8 @@ namespace PIERStory {
         
         
         [SerializeField] bool backgroundSignalValue = true;
+        
+        [SerializeField] GameObject superUserSign; // 슈퍼유저 표시 
         
         
         // Stream, Signal
@@ -132,6 +136,8 @@ namespace PIERStory {
             signalStreamTopMultipleButtonText.ConnectReceiver(signalReceiverTopMultipleButtonText);
             signalStreamRecover.ConnectReceiver(signalReceiverRecover);
             signalStreamSaveState.ConnectReceiver(signalReceiverSaveState);
+            
+            OnRefreshSuperUser = SetSuperUser;
         }
         
         void OnDisable() {
@@ -154,6 +160,22 @@ namespace PIERStory {
             
             // propertyHorizontalLayout.enabled = false;
             
+            SetSuperUser();
+        }
+        
+        
+        /// <summary>
+        /// 슈퍼유저 표기 
+        /// </summary>
+        void SetSuperUser() {
+            
+            if(UserManager.main == null || string.IsNullOrEmpty(UserManager.main.userKey)) {
+                superUserSign.SetActive(false);
+                return;
+            }
+            
+            Debug.Log("### SetSuperUser ###");
+            superUserSign.SetActive(UserManager.main.CheckAdminUser());
         }
         
         public void OnSignalControlBackButton(bool __flag) {
@@ -404,6 +426,9 @@ namespace PIERStory {
         /// 코인 클릭 이벤트 
         /// </summary>
         public void OnClickCoin() {
+            
+            Debug.Log("### OnClickCoin ###");
+            
             SystemManager.main.OpenCoinShopWebview();
             
             AdManager.main.AnalyticsCoinShopOpen("top");

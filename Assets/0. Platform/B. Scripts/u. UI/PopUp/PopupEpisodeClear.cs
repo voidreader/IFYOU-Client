@@ -70,6 +70,13 @@ namespace PIERStory {
         /// </summary>        
         public void OnClickDouble() {
             
+            // 광고 재생이 가능한지 체크 
+            if(!AdManager.main.CheckRewardedAdPossible()) {
+                
+                SystemManager.ShowSimpleAlertLocalize("6093");
+                return;
+            }
+            
             // 광고 호출한다.
             AdManager.main.ShowRewardAdWithCallback(DoubleReward);
         }

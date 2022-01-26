@@ -3766,6 +3766,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7222715303000001564}
   - component: {fileID: 1677433672677793676}
+  - component: {fileID: 3968772441037691629}
   m_Layer: 5
   m_Name: Popup - LevelUp
   m_TagString: Untagged
@@ -3820,7 +3821,7 @@ MonoBehaviour:
   autoDestroyTime: 0
   isOverlayUse: 1
   addQueue: 0
-  mainCanvasGroup: {fileID: 0}
+  mainCanvasGroup: {fileID: 3968772441037691629}
   textLevel: {fileID: 4081401163473009299}
   textSpecialGiftName: {fileID: 8152378686986840971}
   textNormalGiftQuantity: {fileID: 4725336517661737203}
@@ -3840,6 +3841,18 @@ MonoBehaviour:
   currency_name: 
   beforeLevel: 0
   currentLevel: 0
+--- !u!225 &3968772441037691629
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7222715303000001565}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7805134876127270200
 GameObject:
   m_ObjectHideFlags: 0

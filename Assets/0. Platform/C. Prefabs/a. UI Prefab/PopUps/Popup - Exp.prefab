@@ -988,6 +988,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7365328696199000709}
   - component: {fileID: 2197805305152484829}
+  - component: {fileID: 3671303228847361316}
   m_Layer: 5
   m_Name: Popup - Exp
   m_TagString: Untagged
@@ -1042,7 +1043,7 @@ MonoBehaviour:
   autoDestroyTime: 3
   isOverlayUse: 1
   addQueue: 0
-  mainCanvasGroup: {fileID: 0}
+  mainCanvasGroup: {fileID: 3671303228847361316}
   imageBar: {fileID: 1306108765369524185}
   textExp: {fileID: 4592453526155481586}
   textlevel: {fileID: 7968158395257034089}
@@ -1055,6 +1056,18 @@ MonoBehaviour:
   currentLevel: 0
   beforeLevel: 0
   isLevelUpExpected: 0
+--- !u!225 &3671303228847361316
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7365328696199000708}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7365328697594995981
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,7 +1131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5882353}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1186,7 +1199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 4
+  OnStartBehaviour: 1
   OnShowCallback:
     Enabled: 0
     EventName: OnShowCallback
@@ -2097,7 +2110,7 @@ MonoBehaviour:
       FromValue: {x: -720.00006, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 1
+      Enabled: 0
       AnimationType: 0
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -2266,7 +2279,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.4
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -2292,11 +2305,11 @@ MonoBehaviour:
       FromValue: 1
       ToValue: 1
       CurrentValue: 0
-      Enabled: 0
+      Enabled: 1
       StartAlpha: 1
-      FromReferenceValue: 0
-      ToReferenceValue: 0
-      FromCustomValue: 1
+      FromReferenceValue: 2
+      ToReferenceValue: 2
+      FromCustomValue: 0
       ToCustomValue: 1
       FromOffset: 0
       ToOffset: 0

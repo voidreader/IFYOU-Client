@@ -544,6 +544,20 @@ namespace PIERStory {
         }
         
         /// <summary>
+        /// 영상 광고 가능한지. 
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckRewardedAdPossible() {
+            if(rewardedAd == null)
+                return false;
+                
+            if(rewardedAd.AdState == AdState.Loaded)
+                return true;
+                
+            return false;
+        }
+        
+        /// <summary>
         /// 콜백이 있는 동영상 광고 재생 
         /// </summary>
         /// <param name="callback"></param>

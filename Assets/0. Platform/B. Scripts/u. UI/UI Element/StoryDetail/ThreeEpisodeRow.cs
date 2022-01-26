@@ -148,5 +148,16 @@ namespace PIERStory {
                     ListRows[i].ShowSpreadButton();
             }
         }
+        
+        /// <summary>
+        /// 에피소드의 구매 상태 업데이트 
+        /// </summary>
+        public void RefreshEpisodePurchaseState() {
+            for(int i=0; i<ListRows.Count;i++) {
+                if(ListRows[i].gameObject.activeSelf) {
+                    ListRows[i].SetPurchaseState();
+                }
+            }
+        }
     }
 }

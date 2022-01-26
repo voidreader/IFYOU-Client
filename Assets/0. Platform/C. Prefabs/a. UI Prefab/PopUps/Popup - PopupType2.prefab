@@ -732,7 +732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 3
+  OnStartBehaviour: 4
   OnShowCallback:
     Enabled: 1
     EventName: OnShowCallback
@@ -797,6 +797,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &3650553386498263308
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1585,6 +1589,7 @@ MonoBehaviour:
   autoDestroyTime: 0
   isOverlayUse: 0
   addQueue: 0
+  mainCanvasGroup: {fileID: 0}
   popupBox: {fileID: 3650553387715010922}
   okButton: {fileID: 3650553387278194546}
   confirmButtons: {fileID: 3650553386202888032}
@@ -1927,7 +1932,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 0
+  OnStartBehaviour: 4
   OnShowCallback:
     Enabled: 0
     EventName: OnShowCallback
@@ -1978,6 +1983,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &3650553387322185597
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2074,12 +2083,12 @@ MonoBehaviour:
       AnimationType: 0
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
-      ToReferenceValue: 0
-      FromCustomValue: {x: 0, y: 0, z: 0}
+      ToReferenceValue: 2
+      FromCustomValue: {x: 0, y: -100, z: 0}
       ToCustomValue: {x: 0, y: 0, z: 0}
       FromOffset: {x: 0, y: 0, z: 0}
       ToOffset: {x: 0, y: 200, z: 0}
-      FromDirection: 8
+      FromDirection: 13
       ToDirection: 13
     Rotate:
       Settings:
@@ -2340,7 +2349,7 @@ MonoBehaviour:
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 720, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 1
+      Enabled: 0
       AnimationType: 1
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 1
@@ -2535,12 +2544,12 @@ MonoBehaviour:
       FromValue: 1
       ToValue: 1
       CurrentValue: 1
-      Enabled: 0
+      Enabled: 1
       StartAlpha: 1
-      FromReferenceValue: 0
-      ToReferenceValue: 0
+      FromReferenceValue: 2
+      ToReferenceValue: 2
       FromCustomValue: 1
-      ToCustomValue: 1
+      ToCustomValue: 0
       FromOffset: 0
       ToOffset: 0
 --- !u!1 &3650553387715010916

@@ -36,8 +36,10 @@ namespace PIERStory {
 
             coinButton = GetComponent<Button>();
 
+            /*
             if(coinButton != null)
                 coinButton.interactable = SystemManager.main.isCoinPrizeUse;
+            */
 
         }
 

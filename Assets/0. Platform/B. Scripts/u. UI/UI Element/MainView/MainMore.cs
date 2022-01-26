@@ -35,6 +35,9 @@ namespace PIERStory {
         bool currentShow = false;
         
         [SerializeField] TextMeshProUGUI textVersion;
+        
+        [SerializeField] int clickLevelCount = 0; 
+        [SerializeField] int clickVersionCount = 0;
 
         void Start()
         {
@@ -75,6 +78,10 @@ namespace PIERStory {
 
         void RefreshScreen()
         {
+            
+            clickLevelCount = 0;
+            clickVersionCount = 0;
+            
             accountBonus.SetActive(false);
 
             if (UserManager.main == null || string.IsNullOrEmpty(UserManager.main.userKey))
@@ -346,6 +353,22 @@ namespace PIERStory {
             }
 
             PopupManager.main.ShowPopup(p, true);
+            
+            
+            if(clickVersionCount >= 7 && clickLevelCount >= 3) {
+                
+                UserManager.main.SetAdminUser();
+            }
+        }
+        
+        
+        
+        public void OnClickVersion() {
+            clickVersionCount++;
+        }
+        
+        public void OnClickLevel() {
+            clickLevelCount++;
         }
     }
 }

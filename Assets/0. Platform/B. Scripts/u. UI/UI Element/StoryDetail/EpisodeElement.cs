@@ -139,7 +139,7 @@ namespace PIERStory {
         /// <summary>
         /// 구매 상태 설정 
         /// </summary>
-        void SetPurchaseState() {
+        public void SetPurchaseState() {
             string episodePurchaseStateText = string.Empty;
 
             purchaseStateBox.gameObject.SetActive(true);
@@ -193,9 +193,16 @@ namespace PIERStory {
                     episodePurchaseStateText = SystemManager.GetLocalizedText("6005");
                     // purchaseStateBox.color = LobbyManager.main.colorOneTimeBox;
                     break;
-                
             } // ? end of switch
             
+            
+            // 프리미엄 패스 유저 예외처리 (구매하지 않았어도 붙여준다.)
+            if(UserManager.main.HasProjectFreepass()) {
+                episodePurchaseStateText = SystemManager.GetLocalizedText("6006");
+                purchaseStateBox.sprite = LobbyManager.main.spritePlatePremium;    
+                purchaseStateBox.gameObject.SetActive(true);
+                
+            }
             
             // 구매 상태 텍스트 처리, 크기 처리 
             textPurchaseState.text = episodePurchaseStateText;

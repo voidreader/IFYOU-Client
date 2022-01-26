@@ -81,7 +81,10 @@ namespace PIERStory
             SystemManager.HideNetworkLoading();
 
             UserManager.OnRequestEpisodeReset = this.OnStartView;
+            
             UserManager.OnFreepassPurchase = this.SetFreepassInfo;
+            UserManager.OnFreepassPurchase += this.RefreshAllEpisodePurchaseState;
+            
             RefreshStoryDetail = this.OnStartView;
 
             // * 튜토리얼 관련 팝업 오픈을 OnView로 옮겼습니다. 
@@ -243,6 +246,23 @@ namespace PIERStory
             StoryManager.main.UpdateRegularEpisodeData();
             ShowEpisodeList(true);
         }
+        
+        
+        /// <summary>
+        /// 프리패스 구매 후 사용되는 구매 상태 업데이트 EpisodeElement에 대한 처리 
+        /// </summary>
+        public void RefreshAllEpisodePurchaseState() {
+    
+            for(int i=0; i<ListThreeEpisodeRows.Count;i++) {
+                if(!ListThreeEpisodeRows[i].gameObject.activeSelf)
+                    continue;
+                    
+                ListThreeEpisodeRows[i].RefreshEpisodePurchaseState();
+            }
+            
+        }
+        
+        
 
         /// <summary>
         /// 에피소드 리스트를 보여주세요! 제발!
@@ -313,6 +333,8 @@ namespace PIERStory
         {
             textTotalEpisodeCount.text = string.Format(SystemManager.GetLocalizedText("10000"), episodeCount + unlockEndingCount);
             textDetailEpisodeCount.text = string.Format(SystemManager.GetLocalizedText("6054"), episodeCount, unlockEndingCount);
+            
+            textSpecialEpisodeExplain.gameObject.SetActive(false);
         }
 
         /// <summary>

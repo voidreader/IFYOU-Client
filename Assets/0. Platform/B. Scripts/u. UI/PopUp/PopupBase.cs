@@ -56,17 +56,12 @@ namespace PIERStory {
 
         public virtual void Show()
         {
-            if(mainCanvasGroup != null)
-                mainCanvasGroup.alpha = 1;   
-
             StartCoroutine(ShowEnumerator());
             SetAutoDestroy();
         }
         
         IEnumerator ShowEnumerator() {
             
-            if(content.inTransition)
-                yield break;
             
             yield return null;
             
@@ -86,6 +81,11 @@ namespace PIERStory {
                 content.Show();
             }
             
+            yield return null;
+            
+            if(mainCanvasGroup != null)
+                mainCanvasGroup.alpha = 1;               
+            
         }
         
         
@@ -93,11 +93,11 @@ namespace PIERStory {
         /// 팝업 Hide
         /// </summary>
         public virtual void Hide() {
+
+            BackButton.blockBackInput = false; // block 해제
             
             if(content.inTransition)
                 return;
-            
-            BackButton.blockBackInput = false; // block 해제
             
             
             if(isOverlayUse && overlay != null)

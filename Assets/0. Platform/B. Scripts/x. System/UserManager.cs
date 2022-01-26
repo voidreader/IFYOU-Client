@@ -19,6 +19,7 @@ namespace PIERStory
     {
         public static UserManager main = null;
         
+        [SerializeField] bool isAdminUser = false; // 슈퍼유저
 
         [HideInInspector] public JsonData userJson = null; // 계정정보 (table_account) 
         [HideInInspector] public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)
@@ -327,6 +328,10 @@ namespace PIERStory
             if(__accountInfo.ContainsKey("profile")) { // 프로필 정보가 있을때만. 
                 userProfile = __accountInfo["profile"];
             }
+            
+            // 슈퍼유저 처리 
+            // isAdminUser = SystemManager.GetJsonNodeBool(userJson, "admin");
+            
         }
         
         public void SetNewNickname(string __newNickname) {
@@ -905,19 +910,19 @@ namespace PIERStory
             return userJson["pincode"].ToString();
         }
 
+        public void SetAdminUser() {
+            SystemManager.ShowSimpleAlert("슈퍼유저로 변경되었습니다.");
+            isAdminUser = true;
+            ViewCommonTop.OnRefreshSuperUser?.Invoke();
+        }
+
         /// <summary>
         /// 어드민 유저 체크 
         /// </summary>
         /// <returns>true : 어드민 유저임, false : 일반 유저임</returns>
         public bool CheckAdminUser()
         {
-            if (!userJson.ContainsKey("admin"))
-                return false;
-
-            if (userJson["admin"].ToString() == "1")
-                return true;
-
-            return false;
+            return isAdminUser;
         }
 
         /// <summary>

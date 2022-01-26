@@ -83,14 +83,21 @@ namespace PIERStory
         }
 
         #region OnClick Event
+        
+        
+        
+
 
         /// <summary>
         /// 스킵 처리 
         /// </summary>
         public void SkipScene()
         {
+            
+            
             // 스킵이 가능하지 않으면 아무것도 실행하지 않는다.
-            if (!GameManager.main.skipable) {
+            // 어드민 유저도 아니고 스킵도 가능하지 않으면 return. 
+            if (!GameManager.main.skipable && !UserManager.main.CheckAdminUser() ) {
                 // OnClickBlockSkip();
                 return;
             }
@@ -115,9 +122,18 @@ namespace PIERStory
             GameManager.main.isThreadHold = false;
             GameManager.main.isWaitingScreenTouch = false;
         }
+        
+        
+        
 
         public void OnClickBlockSkip()
         {
+            
+            if(UserManager.main.CheckAdminUser()) {
+                SkipScene();
+                return;
+            }
+            
             SystemManager.ShowSimpleAlertLocalize("6171");
         }
 

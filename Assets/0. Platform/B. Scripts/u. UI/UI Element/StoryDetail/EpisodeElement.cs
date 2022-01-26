@@ -273,19 +273,18 @@ namespace PIERStory {
             // * 이전이나 블록 상태. 
             if(episodeData.episodeState == EpisodeState.Prev || episodeData.episodeState == EpisodeState.Block) {
                 
-
-                // 프리패스가 아니면 엔딩에 도달할 때까지 리셋하지 못해! 엔딩은 종속(?)된 정규 챕터가 존재함
-                if((!UserManager.main.HasProjectFreepass() && episodeData.dependEpisode == "-1") || !UserManager.main.CheckAdminUser())
-                {
+                // 프리미엄 패스, 슈퍼유저만 자유롭게 리셋 가능 
+                // 그 외에는 엔딩을 봐야지만 가능 
+                if(UserManager.main.HasProjectFreepass() || UserManager.main.CheckAdminUser()) {
+                    // Reset 호출 
+                    Debug.Log("Call Reset");
+                    Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_EPISODE_RESET, episodeData, string.Empty);
+                    return;
+                }
+                else {
                     SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("6199"));
                     return;
                 }
-
-                Debug.Log("Call Reset");
-                
-                // Reset 호출 
-                Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_EPISODE_RESET, episodeData, string.Empty);
-                return;
             }
             
             

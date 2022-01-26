@@ -269,7 +269,8 @@ namespace PIERStory
             
             // * 립싱크 기능 추가 2022.01.25 
             // 립싱크 모션 유무 체크 
-            if(DictMotion.ContainsKey(motionName + "_M") && CheckLipSyncTemplate(__row.template)) {
+            // 모션_M 있고, 대화형 템플릿, 립싱크 관련 제어 컬럼 값 없을때 처리 
+            if(DictMotion.ContainsKey(motionName + "_M") && CheckLipSyncTemplate(__row.template) && string.IsNullOrEmpty(__row.controlMouthCommand)) {
                 motionName = motionName + "_M"; // 립싱크 모션으로 변경 
             }
             

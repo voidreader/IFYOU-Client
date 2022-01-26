@@ -48,6 +48,7 @@ namespace PIERStory
         public string control = string.Empty;                   // 행 '제어' 파라매터 2021.07.02 추가
         public string[] controlParams = null;                   // 제어파라매터 배열 
         public string controlAlternativeName = string.Empty;    // 대체 이름
+        public string controlMouthCommand = string.Empty; // 립싱크 제어 
 
         public string selection_group = string.Empty;
         public string selection_no = string.Empty;
@@ -265,14 +266,19 @@ namespace PIERStory
 
             // 제어 요소 가져온다.
 
-            // 대체 이름! 
+            // 대체 이름! (화자=철수)
             GetParam<string>(controlParams, GameConst.ROW_CONTROL_ALTERNATIVE_NAME, ref controlAlternativeName);
 
-            // 라이브 오브제 지속시간 관련
+            // 라이브 오브제 지속시간 관련 (유지=2)
             GetParam<string>(controlParams, GameConst.ROW_CONTROL_MAINTAIN, ref controlAlternativeName);
 
-            // 나레이션, 배경 관련
+            // 나레이션, 배경 관련 (반전=배경)
             GetParam<string>(controlParams, GameConst.ROW_CONTROL_REVERSAL, ref controlAlternativeName);
+            
+            // 립싱크 관련 (입=닫아)
+            GetParam<string>(controlParams, GameConst.ROW_CONTROL_MOUTH, ref controlMouthCommand); 
+            
+            
         }
 
         void CreateResourceKey()

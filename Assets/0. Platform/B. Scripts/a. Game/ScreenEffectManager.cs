@@ -616,9 +616,6 @@ namespace PIERStory
         {
             int fogLevel = 3;
 
-            var frontFogEmission = bgFogs[0].emission;
-            var backFogEmission = bgFogs[1].emission;
-
             switch (__effect)
             {
                 case GameConst.KR_SCREEN_EFFECT_FIRE:
@@ -750,30 +747,23 @@ namespace PIERStory
                         ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_DISTRIBUTION, ref fogLevel);
 
                     fogLevel = Mathf.Clamp(fogLevel, 1, 5);
-                    frontFogEmission = bgFogs[0].emission;
-                    backFogEmission = bgFogs[1].emission;
 
                     switch (fogLevel)
                     {
                         case 1:
-                            frontFogEmission.rateOverTime = 1f;
-                            backFogEmission.rateOverTime = 1f;
+                            FogSet(1, false);
                             break;
                         case 2:
-                            frontFogEmission.rateOverTime = 2f;
-                            backFogEmission.rateOverTime = 2f;
+                            FogSet(2, false);
                             break;
                         case 3:
-                            frontFogEmission.rateOverTime = 3f;
-                            backFogEmission.rateOverTime = 3f;
+                            FogSet(3, false);
                             break;
                         case 4:
-                            frontFogEmission.rateOverTime = 4f;
-                            backFogEmission.rateOverTime = 4f;
+                            FogSet(4, false);
                             break;
                         case 5:
-                            frontFogEmission.rateOverTime = 5f;
-                            backFogEmission.rateOverTime = 5f;
+                            FogSet(5, false);
                             break;
                     }
 
@@ -787,30 +777,23 @@ namespace PIERStory
                         ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_DISTRIBUTION, ref fogLevel);
 
                     fogLevel = Mathf.Clamp(fogLevel, 1, 5);
-                    frontFogEmission = screenFogs[0].emission;
-                    backFogEmission = screenFogs[1].emission;
 
                     switch (fogLevel)
                     {
                         case 1:
-                            frontFogEmission.rateOverTime = 1f;
-                            backFogEmission.rateOverTime = 1f;
+                            FogSet(1, true);
                             break;
                         case 2:
-                            frontFogEmission.rateOverTime = 2f;
-                            backFogEmission.rateOverTime = 2f;
+                            FogSet(2, true);
                             break;
                         case 3:
-                            frontFogEmission.rateOverTime = 3f;
-                            backFogEmission.rateOverTime = 3f;
+                            FogSet(3, true);
                             break;
                         case 4:
-                            frontFogEmission.rateOverTime = 4f;
-                            backFogEmission.rateOverTime = 4f;
+                            FogSet(4, true);
                             break;
                         case 5:
-                            frontFogEmission.rateOverTime = 5f;
-                            backFogEmission.rateOverTime = 5f;
+                            FogSet(5, true);
                             break;
                     }
 
@@ -1059,6 +1042,36 @@ namespace PIERStory
                 glitterEmission.rateOverTime = __rateOverTime;
             }
         }
+
+
+        /// <summary>
+        /// 안개 셋팅
+        /// </summary>
+        /// <param name="__rateOverTime">시간당 갯수</param>
+        /// <param name="isScreen">배경만인지? 스크린 전체인지</param>
+        void FogSet(int __rateOverTime, bool isScreen)
+        {
+            var fogEmission = bgFog.emission;
+
+            if(!isScreen)
+            {
+                for(int i=2;i<bgFogs.Length;i++)
+                {
+                    fogEmission = bgFogs[i].emission;
+                    fogEmission.rateOverTime = __rateOverTime;
+                }
+            }
+            else
+            {
+                for (int i = 2; i < screenFogs.Length; i++)
+                {
+                    fogEmission = screenFogs[i].emission;
+                    fogEmission.rateOverTime = __rateOverTime;
+                }
+            }
+        }
+
+
 
         /// <summary>
         /// 비눗방울 단계 조절

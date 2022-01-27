@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 335719138154917144}
   - component: {fileID: 1351948299951427982}
+  - component: {fileID: 3820867305973243232}
   m_Layer: 5
   m_Name: Popup - EpisodeClearReward
   m_TagString: Untagged
@@ -64,10 +65,23 @@ MonoBehaviour:
   autoDestroyTime: 0
   isOverlayUse: 1
   addQueue: 0
+  mainCanvasGroup: {fileID: 3820867305973243232}
   iconImage: {fileID: 1351948298614058898}
   textQuantity: {fileID: 1351948300489591671}
   iconURL: 
   iconKey: 
+--- !u!225 &3820867305973243232
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 335719138154917145}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &335719139845569168
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 0
+  OnStartBehaviour: 1
   OnShowCallback:
     Enabled: 0
     EventName: OnShowCallback
@@ -238,6 +252,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &2522592363606287324
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -935,7 +953,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 0
+  OnStartBehaviour: 1
   OnShowCallback:
     Enabled: 1
     EventName: OnShowCallback
@@ -970,7 +988,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnHiddenCallback:
-    Enabled: 1
+    Enabled: 0
     EventName: OnHiddenCallback
     Runners: []
     Event:
@@ -998,6 +1016,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &154568384589337216
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1934,6 +1956,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isRawImage: 1
   useFade: 1
+  isLoadComplete: 0
   imageURL: 
   imageKey: 
   targetImage: {fileID: 0}

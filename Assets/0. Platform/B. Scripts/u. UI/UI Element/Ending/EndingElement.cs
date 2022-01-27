@@ -36,8 +36,12 @@ namespace PIERStory
 
         #region OnClick Button Event
 
+        /// <summary>
+        /// 엔딩 플레이!
+        /// </summary>
         public void OnClickStartEnding()
         {
+            UserManager.main.useRecord = false; // 엔딩 플레이는 useRecord를 false 처리한다. 
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, endingData, string.Empty);
         }
 

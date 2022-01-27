@@ -157,7 +157,10 @@ namespace PIERStory {
             
             
             if(Input.GetKeyDown(KeyCode.R)) { // 경험치 획득 
-                // NetworkLoader.main.UpdateUserExp(50, "event", -1);
+                // // NetworkLoader.main.UpdateUserExp(50, "event", -1);
+                PopupBase sidePopup = PopupManager.main.GetPopup(GameConst.POPUP_SIDE_ALERT);
+                PopupManager.main.ShowPopup(sidePopup, true);
+                
             }
         }
 

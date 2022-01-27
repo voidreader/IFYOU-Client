@@ -389,7 +389,7 @@ namespace PIERStory {
             // 잠금여부에 따른 스프라이트 변경
             if(isLock) {
                 imageSelection.sprite = GameSpriteHolder.main.spriteSelectionLock;
-                textSelection.text = string.Empty; // 잠긴 선택지에서는 텍스트 보이지 않음 
+                // textSelection.text = string.Empty; // 잠긴 선택지에서는 텍스트 보이지 않음 
             }
             else {
                 imageSelection.sprite = GameSpriteHolder.main.spriteSelectionUnlock;

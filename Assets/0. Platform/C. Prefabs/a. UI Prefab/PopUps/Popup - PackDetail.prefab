@@ -222,6 +222,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isRawImage: 1
   useFade: 1
+  isLoadComplete: 0
   imageURL: 
   imageKey: 
   targetImage: {fileID: 0}
@@ -684,7 +685,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 0
+  OnStartBehaviour: 1
   OnShowCallback:
     Enabled: 1
     EventName: OnShowCallback
@@ -731,7 +732,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnHiddenCallback:
-    Enabled: 1
+    Enabled: 0
     EventName: OnHiddenCallback
     Runners: []
     Event:
@@ -759,6 +760,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &7769849345368369043
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1456,7 +1461,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 0
+  OnStartBehaviour: 1
   OnShowCallback:
     Enabled: 0
     EventName: OnShowCallback
@@ -1495,6 +1500,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &5400699496270272207
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2181,6 +2190,7 @@ MonoBehaviour:
   autoDestroyTime: 0
   isOverlayUse: 1
   addQueue: 0
+  mainCanvasGroup: {fileID: 0}
   detailImage: {fileID: 8518913239689120092}
   productID: 
 --- !u!1 &8215912639667665919

@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 0
+  OnStartBehaviour: 1
   OnShowCallback:
     Enabled: 1
     EventName: OnShowCallback
@@ -127,7 +127,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnHiddenCallback:
-    Enabled: 1
+    Enabled: 0
     EventName: OnHiddenCallback
     Runners: []
     Event:
@@ -155,6 +155,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &778640314223155235
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -890,6 +894,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &778640314241410318
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1597,6 +1605,7 @@ MonoBehaviour:
   autoDestroyTime: 0
   isOverlayUse: 0
   addQueue: 0
+  mainCanvasGroup: {fileID: 0}
   progressBar: {fileID: 2842405921385222693}
   timer: 0
 --- !u!1 &778640315980128010

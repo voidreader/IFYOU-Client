@@ -668,49 +668,23 @@ namespace PIERStory
                     switch (glitterLevel)
                     {
                         case 1:
-                            for(int i=2;i<glitters.Length;i++)
-                            {
-                                if (i == 2 || i == 5)
-                                    glitters[i].gameObject.SetActive(true);
-                                else
-                                    glitters[i].gameObject.SetActive(false);
-                            }
+                            GlitterSet(1, 1);
                             break;
 
                         case 2:
-                            for (int i = 2; i < glitters.Length; i++)
-                            {
-                                if (i == 2 || i == 5 || i == 6)
-                                    glitters[i].gameObject.SetActive(true);
-                                else
-                                    glitters[i].gameObject.SetActive(false);
-                            }
+                            GlitterSet(2, 1);
                             break;
 
                         case 3:
-                            for (int i = 2; i < glitters.Length; i++)
-                            {
-                                if (i == 2 || i== 3 || i == 5 || i == 6)
-                                    glitters[i].gameObject.SetActive(true);
-                                else
-                                    glitters[i].gameObject.SetActive(false);
-                            }
+                            GlitterSet(3, 2);
                             break;
 
                         case 4:
-                            for (int i = 2; i < glitters.Length; i++)
-                            {
-                                if (i != 7)
-                                    glitters[i].gameObject.SetActive(true);
-                                else
-                                    glitters[i].gameObject.SetActive(false);
-                            }
+                            GlitterSet(4, 3);
                             break;
 
                         case 5:
-                            for (int i = 2; i < glitters.Length; i++)
-                                glitters[i].gameObject.SetActive(true);
-
+                            GlitterSet(10, 8);
                             break;
                     }
 
@@ -1048,7 +1022,30 @@ namespace PIERStory
             bleeding_3.gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// 반짝이 세팅
+        /// </summary>
+        /// <param name="__max">최대값</param>
+        /// <param name="__rateOverTime">시간당 나오는 갯수</param>
+        void GlitterSet(int __max, int __rateOverTime)
+        {
+            var glitterMain = glitter.main;
+            var glitterEmission = glitter.emission;
 
+            for(int i=2;i<glitters.Length;i++)
+            {
+                glitterMain = glitters[i].main;
+                glitterMain.maxParticles = __max;
+
+                glitterEmission = glitters[i].emission;
+                glitterEmission.rateOverTime = __rateOverTime;
+            }
+        }
+
+        /// <summary>
+        /// 비눗방울 단계 조절
+        /// </summary>
+        /// <param name="__max"></param>
         void SoapBubbleSet(int __max)
         {
             var bubbleMain = bubble.main;

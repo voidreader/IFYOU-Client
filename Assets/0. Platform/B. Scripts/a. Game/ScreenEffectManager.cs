@@ -63,6 +63,7 @@ namespace PIERStory
         [Tooltip("둔기 타격")] public ParticleSystem bluntStrike;
         [Tooltip("검 베기")] public ParticleSystem blade;
         [Tooltip("비눗방울")] public ParticleSystem bubble;
+        public ParticleSystem[] bubbles;
         [Tooltip("회상, 밝음")] public ParticleSystem reminisceLight;
         [Tooltip("신비로운 경계라인")] public ParticleSystem waveLine;
 
@@ -979,17 +980,16 @@ namespace PIERStory
 
                     bubbleLevel = Mathf.Clamp(bubbleLevel, 1, 3);
 
-                    var bubbles = bubble.main;
-
                     switch (bubbleLevel)
                     {
                         case 1:
-                            bubbles.maxParticles = 3;
+                            SoapBubbleSet(3);
                             break;
                         case 2:
-                            bubbles.maxParticles = 5;
+                            SoapBubbleSet(5);
                             break;
-                        case 3: bubbles.maxParticles = 10;
+                        case 3:
+                            SoapBubbleSet(10);
                             break;
                     }
 
@@ -1046,8 +1046,21 @@ namespace PIERStory
             bleeding_1.gameObject.SetActive(false);
             bleeding_2.gameObject.SetActive(false);
             bleeding_3.gameObject.SetActive(false);
-
         }
+
+
+        void SoapBubbleSet(int __max)
+        {
+            var bubbleMain = bubble.main;
+
+            for (int i = 0; i < bubbles.Length; i++)
+            {
+                bubbleMain = bubbles[i].main;
+                bubbleMain.maxParticles = __max;
+            }
+        }
+
+
 
         #region 카메라 플래시
 

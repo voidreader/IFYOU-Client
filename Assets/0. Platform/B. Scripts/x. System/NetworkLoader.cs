@@ -710,6 +710,21 @@ namespace PIERStory
         }
 
 
+        /// <summary>
+        /// 출석 보상 리스트 요청
+        /// </summary>
+        public void RequestAttendanceList()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "getAttendanceList";
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+
+            SendPost(UserManager.main.CallbackGetAttendacneList, sending);
+        }
+
+
+
+
         #region 메인 프로모션
 
         public void RequestPromotionList()

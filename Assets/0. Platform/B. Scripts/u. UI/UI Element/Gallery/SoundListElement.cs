@@ -60,7 +60,16 @@ namespace PIERStory
         public void ShowDetailSoundList()
         {
             if (voiceData == null)
+            {
+                // 공개중인 BGM list가 없으면 무한로딩에 빠지므로 팝업 띄워주고 빠져나가게 하자
+                if(UserManager.main.currentStoryJson["bgm"] == null || UserManager.main.currentStoryJson["bgms"].Count == 0)
+                {
+                    SystemManager.ShowMessageWithLocalize("80111", true);
+                    return;
+                }
+
                 ViewSoundDetail.SetSoundDetail(true, SystemManager.GetJsonNode(UserManager.main.currentStoryJson, "bgms"), soundThumbnail.downloadedSprite, SystemManager.GetLocalizedText("6139"));
+            }
             else
                 ViewSoundDetail.SetSoundDetail(false, voiceData, soundThumbnail.downloadedSprite, string.Format(SystemManager.GetLocalizedText("6058"), StoryManager.main.GetNametagName(voiceMaster)));
 

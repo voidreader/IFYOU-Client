@@ -25,6 +25,7 @@ namespace PIERStory {
         [SerializeField] GameObject popupAccount;
         [SerializeField] GameObject popupAchivement;
         [SerializeField] GameObject popupAdvertisementShow;
+        public GameObject popupAttendance;
         [SerializeField] GameObject popupCoupon;
         [SerializeField] GameObject popupEndingAlert;
         [SerializeField] GameObject popupEpisodeClearReward;
@@ -247,6 +248,11 @@ namespace PIERStory {
                 DictPopup["AdvertisementShow"] = popupAdvertisementShow;
             else 
                 DictPopup.Add("AdvertisementShow", popupAdvertisementShow);
+
+            if (DictPopup.ContainsKey("Attendance"))
+                DictPopup["Attendance"] = popupAttendance;
+            else
+                DictPopup.Add("Attendance", popupAttendance);
                 
             if(DictPopup.ContainsKey("Coupon")) 
                 DictPopup["Coupon"] = popupCoupon;

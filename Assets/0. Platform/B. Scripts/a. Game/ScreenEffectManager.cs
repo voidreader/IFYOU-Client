@@ -668,9 +668,9 @@ namespace PIERStory
                     switch (glitterLevel)
                     {
                         case 1:
-                            for(int i=0;i<glitters.Length;i++)
+                            for(int i=2;i<glitters.Length;i++)
                             {
-                                if (i == 0 || i == 3)
+                                if (i == 2 || i == 5)
                                     glitters[i].gameObject.SetActive(true);
                                 else
                                     glitters[i].gameObject.SetActive(false);
@@ -678,9 +678,9 @@ namespace PIERStory
                             break;
 
                         case 2:
-                            for (int i = 0; i < glitters.Length; i++)
+                            for (int i = 2; i < glitters.Length; i++)
                             {
-                                if (i == 0 || i == 3 || i == 4)
+                                if (i == 2 || i == 5 || i == 6)
                                     glitters[i].gameObject.SetActive(true);
                                 else
                                     glitters[i].gameObject.SetActive(false);
@@ -688,9 +688,9 @@ namespace PIERStory
                             break;
 
                         case 3:
-                            for (int i = 0; i < glitters.Length; i++)
+                            for (int i = 2; i < glitters.Length; i++)
                             {
-                                if (i == 0 || i== 1 || i == 3 || i == 4)
+                                if (i == 2 || i== 3 || i == 5 || i == 6)
                                     glitters[i].gameObject.SetActive(true);
                                 else
                                     glitters[i].gameObject.SetActive(false);
@@ -698,9 +698,9 @@ namespace PIERStory
                             break;
 
                         case 4:
-                            for (int i = 0; i < glitters.Length; i++)
+                            for (int i = 2; i < glitters.Length; i++)
                             {
-                                if (i != 5)
+                                if (i != 7)
                                     glitters[i].gameObject.SetActive(true);
                                 else
                                     glitters[i].gameObject.SetActive(false);
@@ -708,7 +708,7 @@ namespace PIERStory
                             break;
 
                         case 5:
-                            for (int i = 0; i < glitters.Length; i++)
+                            for (int i = 2; i < glitters.Length; i++)
                                 glitters[i].gameObject.SetActive(true);
 
                             break;

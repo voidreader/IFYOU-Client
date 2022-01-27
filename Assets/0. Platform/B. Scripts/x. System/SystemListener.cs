@@ -8,6 +8,12 @@ namespace PIERStory {
     {
         public static SystemListener main = null;
         
+        // * 엔딩플레이 (엔딩에서 바로 플레이)
+        SignalStream streamReceiveEndingPlay;
+        SignalReceiver receiverEndingPlay;
+        public bool isEndingPlay = false; // 엔딩플레이 여부 
+        
+        
         
         #region 리셋 관련
         public EpisodeData resetTargetEpisode; // 리셋을 해서 돌아갈 에피소드 데이터 
@@ -53,6 +59,11 @@ namespace PIERStory {
             // * 방금 플레이했던 에피소드의 데이터 수신 
             signalStreamEpisodeEnd = SignalStream.Get(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END);
             signalReceiverEpisodeEnd = new SignalReceiver().SetOnSignalCallback(OnEpisodeEndCurrentSignal);
+            
+            
+            // * 엔딩 플레이 
+            streamReceiveEndingPlay = SignalStream.Get(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_ENDING_PLAY);
+            receiverEndingPlay = new SignalReceiver().SetOnSignalCallback(OnEndingPlaySignal);
             
         }
         
@@ -127,6 +138,13 @@ namespace PIERStory {
                 Signal.Send(LobbyConst.STREAM_GAME, "showEpisodeEnd", string.Empty);
 
             }
+        }
+        
+        
+        void OnEndingPlaySignal(Signal signal)
+        {
+            Debug.Log("### OnEndingPlaySignal ###");
+            isEndingPlay = true;
         }
     }
 }

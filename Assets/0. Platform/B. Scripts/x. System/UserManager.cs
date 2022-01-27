@@ -1037,11 +1037,18 @@ namespace PIERStory
             return resultEpisodeRecord[NODE_UNLOCK_SIDE];
         }
 
+        /// <summary>
+        /// 에피소드 클리어 후 미션 해금 체크 
+        /// </summary>
+        /// <param name="__useQueue"></param>
+        public void ShowCompleteMissionByEpisode(bool __useQueue = true) {
+            ShowCompleteMission(resultEpisodeRecord[NODE_UNLOCK_MISSION], __useQueue);
+        }
 
         /// <summary>
         /// 완료된 미션 리스트 큐에 추가
         /// </summary>
-        public void ShowCompleteMission(JsonData __j)
+        public void ShowCompleteMission(JsonData __j, bool __useQueue = true)
         {
             Debug.Log("Check ShowCompleteMission");
             
@@ -1072,7 +1079,7 @@ namespace PIERStory
                 // AppsFlyerSDK.AppsFlyer.sendEvent("MISSION_CLEAR_"+ currentMissionData["mission_id"].ToString(), null);
                 popUp.Data.SetImagesSprites(spriteMissionPopup);
                 popUp.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("5086"), currentMissionData["mission_name"].ToString()));
-                PopupManager.main.ShowPopup(popUp, true, false);
+                PopupManager.main.ShowPopup(popUp, __useQueue, false);
                 Debug.Log("Show Mission Popup");   
             }
             
@@ -1359,7 +1366,7 @@ namespace PIERStory
         }
         
         /// <summary>
-        /// 정규 에피소드 끝났니? 
+        /// 정규 에피소드 끝났니?  (다음 에피소드가 엔딩인 경우)
         /// </summary>
         /// <returns></returns>
         public bool CheckUserProjectRegularEpisodeFinal() {
@@ -1367,10 +1374,16 @@ namespace PIERStory
             if(!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
                 return false;
                 
+            // 
             for(int i=0; i<currentStoryJson[NODE_PROJECT_CURRENT].Count; i++) {
-                if(currentStoryJson[NODE_PROJECT_CURRENT][i]["is_special"].ToString() == "0") { // is_special 이니?
-                    return SystemManager.GetJsonNodeBool(currentStoryJson[NODE_PROJECT_CURRENT][i], "is_final");
+                
+                // 정규 에피소드, 다음에피소드가 엔딩인지.  
+                if(!SystemManager.GetJsonNodeBool(currentStoryJson[NODE_PROJECT_CURRENT][i], "is_special")
+                    && SystemManager.GetJsonNodeBool(currentStoryJson[NODE_PROJECT_CURRENT][i], "is_ending")) {
+                    return true;
                 }
+                
+                
             }            
            
             return false;
@@ -1673,8 +1686,7 @@ namespace PIERStory
             SetNodeUserEpisodeHistory(resultEpisodeRecord[NODE_EPISODE_HISTORY]); // 히스토리 
             SetNodeUserEpisodeProgress(resultEpisodeRecord[NODE_EPISODE_PROGRESS]); // 진행도 
             
-            // 미션 
-            ShowCompleteMission(resultEpisodeRecord[NODE_UNLOCK_MISSION]);
+
 
             
             // played scene count 업데이트 
@@ -1686,31 +1698,11 @@ namespace PIERStory
                 
                 // * EpisodeData는 StoryManager로부터 시작해서 모두 참조가 같으므로 따로 변수를 만들어서 처리한다. 
                 GameManager.main.updatedEpisodeSceneProgressValue = float.Parse(resultEpisodeRecord["playedSceneCount"].ToString());
-                
             }
             
-            // * 최초 보상 정보 처리
-            JsonData firstReward = GetNodeFirstClearResult();
-            
-            if(firstReward == null || firstReward.Count == 0)
-                return;
-                
-           
-            // 최초 보상 있으면 팝업 호출
-            PopupBase p = PopupManager.main.GetPopup("EpisodeFirstReward");
-            if(p == null) {
-                Debug.LogError("First reward popup is null");
-                return;
-            }
-            
-            Debug.Log(">> First Reward exists : " + JsonMapper.ToStringUnicode(firstReward[0]));
-            
-            
-            p.Data.SetContentJson(firstReward[0]); // 첫번째 로우 (항상 1개만 온다)
-            PopupManager.main.ShowPopup(p, false, false); // 보여주기. 
             
             // 뱅크 설정 (리프레시 없이)
-            SetBankInfo(resultEpisodeRecord, false);
+            // SetBankInfo(resultEpisodeRecord, false);
             
         }
 

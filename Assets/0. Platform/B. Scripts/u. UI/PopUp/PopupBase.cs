@@ -31,6 +31,11 @@ namespace PIERStory {
                 mainCanvasGroup.alpha = 0;
         }
         
+        public void InitPopup() {
+            if(mainCanvasGroup != null)
+                mainCanvasGroup.alpha = 0;
+        }
+        
         public void SetAutoDestroy() {
             
             // overlay 사용시에만 백버튼 막기
@@ -88,6 +93,18 @@ namespace PIERStory {
             
         }
         
+        IEnumerator RoutineHide() {
+            
+            while(content.inTransition) {
+                yield return null;   
+            }
+            
+            yield return null;
+            
+            SelfDestroy();
+            
+        }
+        
         
         /// <summary>
         /// 팝업 Hide
@@ -96,6 +113,7 @@ namespace PIERStory {
 
             BackButton.blockBackInput = false; // block 해제
             
+            // 중복 호출을 막음. 
             if(content.inTransition)
                 return;
             
@@ -105,6 +123,8 @@ namespace PIERStory {
                 
                 
             content.Hide();
+            
+            StartCoroutine(RoutineHide());
         }
         
         public void InstanteShow() {

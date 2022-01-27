@@ -80,7 +80,7 @@ namespace PIERStory {
         /// 각 씬의 담당 매니저에서 따로 호출해줘야한다. (LobbyManager, GameManager)
         /// </summary>
         public void InitPopupManager() {
-            StopCoroutine(PopupQueueRoutine());
+            // StopCoroutine(PopupQueueRoutine());
             
             // 팝업 큐 루틴 시작 
             StartCoroutine(PopupQueueRoutine());
@@ -99,8 +99,8 @@ namespace PIERStory {
                 yield return null;
                 
                 // * 현재 보여지고 있는 큐 팝업이 있으면, 대기 
-                while(CurrentQueuePopup) {
-                    yield return new WaitForSeconds(0.1f);
+                while(CurrentQueuePopup != null && CurrentQueuePopup.gameObject.activeSelf) {
+                    yield return null;
                 }
                 
                 // * 팝업 큐에 팝업이 없으면 대기
@@ -110,10 +110,9 @@ namespace PIERStory {
                 
                 // 큐에서 하나 가져온다. 
                 CurrentQueuePopup = PopupQueue.Dequeue();
-                yield return null;
                 
                 if(CurrentQueuePopup != null) {
-                    Debug.Log(">> PopupQueueRoutine New popup show!");
+                    Debug.Log("<color=yellow>### PopupQueueRoutine New popup show!</color>");
                     
                     CurrentQueuePopup.Show(); // 보여주기 
                 }
@@ -139,6 +138,7 @@ namespace PIERStory {
             
             GameObject clone = Instantiate(DictPopup[popupName], popupCanvas.transform);
             PopupBase popup = clone.GetComponent<PopupBase>();
+            popup.InitPopup(); // 알파값을 0으로 만들기. 
            
             return popup;
         }
@@ -170,7 +170,7 @@ namespace PIERStory {
             if (popup == null) return;
             
             if(addToPopupQueue) {
-                Debug.Log("### Added Popup Queue. " + popup.name);
+                Debug.Log("<color=yellow>### Added Popup Queue. </color>" + popup.name);
                 PopupQueue.Enqueue(popup);  // 큐를 통해 실행.
             }
             else {

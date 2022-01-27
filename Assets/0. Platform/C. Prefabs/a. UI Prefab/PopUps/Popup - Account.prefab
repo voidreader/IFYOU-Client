@@ -1115,6 +1115,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5814569971483111047}
   - component: {fileID: 2478538212649196491}
+  - component: {fileID: 2237618554398256030}
   m_Layer: 5
   m_Name: Popup - Account
   m_TagString: Untagged
@@ -1169,6 +1170,7 @@ MonoBehaviour:
   autoDestroyTime: 0
   isOverlayUse: 1
   addQueue: 0
+  mainCanvasGroup: {fileID: 2237618554398256030}
   icon: {fileID: 3901849551112246085}
   frame: {fileID: 5105432172536022677}
   groupBonus: {fileID: 6836213605551368668}
@@ -1181,6 +1183,18 @@ MonoBehaviour:
   iconGuest: {fileID: 21300000, guid: 517b1c3a9bcb2bc4ea072a5a2e8110ee, type: 3}
   iconGoogle: {fileID: 21300000, guid: c99bdcbbeee51ee4c84b5449ee145b5b, type: 3}
   iconApple: {fileID: 21300000, guid: 9015cb84abca4544c9577f6251f79045, type: 3}
+--- !u!225 &2237618554398256030
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5814569971483111046}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5814569973148432655
 GameObject:
   m_ObjectHideFlags: 0
@@ -1313,7 +1327,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 0
+  OnStartBehaviour: 1
   OnShowCallback:
     Enabled: 0
     EventName: OnShowCallback
@@ -1352,6 +1366,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &8582517499969200195
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2105,7 +2123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 0
+  OnStartBehaviour: 1
   OnShowCallback:
     Enabled: 1
     EventName: OnShowCallback
@@ -2152,7 +2170,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnHiddenCallback:
-    Enabled: 1
+    Enabled: 0
     EventName: OnHiddenCallback
     Runners: []
     Event:
@@ -2180,6 +2198,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &6213865167266337055
 CanvasGroup:
   m_ObjectHideFlags: 0

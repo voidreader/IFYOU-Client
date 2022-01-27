@@ -156,6 +156,8 @@ namespace PIERStory {
         public const string SIGNAL_SHOW_ILLUSTDETAIL = "showIllustDetail";
         public const string SIGNAL_SHOW_ENDINGDETAIL = "showEndingDetail";
         public const string SIGNAL_ENDINGDATA = "endingData";
+        
+        public const string SIGNAL_ENDING_PLAY = "EndingPlay";
 
         #endregion
 

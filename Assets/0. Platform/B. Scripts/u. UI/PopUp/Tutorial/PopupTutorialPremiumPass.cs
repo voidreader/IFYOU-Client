@@ -24,5 +24,9 @@ namespace PIERStory
             UserManager.main.UpdateTutorialStep(3);
             Hide();
         }
+        
+        void OnDestroy() {
+            OpenNextTutorial();
+        }
     }
 }

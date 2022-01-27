@@ -196,7 +196,7 @@ namespace PIERStory
         {
             Debug.Log(">>>>> GameManager Start <<<<<");
 
-            PopupManager.main.InitPopupManager();
+            // PopupManager.main.InitPopupManager();
             
             yield return null;
             
@@ -1912,6 +1912,7 @@ namespace PIERStory
             // * 이동 컬럼에 아무 데이이터가 없는 경우와, 있는 경우 
             if (string.IsNullOrEmpty(__nextEpisodeID))
             {
+                // 이동컬럼에 아무것도 없는 경우는 리스트상의 다음 에피소드를 지정한다. 
                 __nextEpisodeID = string.Empty;
 
                 // 챕터의 경우에만 처리. 사이드 엔딩은 진행하지 않음 
@@ -1945,6 +1946,53 @@ namespace PIERStory
             NetworkLoader.main.UpdateEpisodeCompleteRecord(nextEpisodeData);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             SystemManager.HideNetworkLoading();
+            
+            
+            // 게임 종료되었으면 사운드도 다 종료해주고, 가끔 스킵해도 배경음이 남아있는 경우도 있으니 Mute까지 해준다
+            foreach (GameSoundCtrl sc in SoundGroup)
+            {
+                sc.StopAudioClip();
+                sc.MuteAudioClip();
+            }            
+            
+            
+            
+            // * 여기까지 통신 완료하고 후 처리 진행...!!! 2022.01.27 팝업 순서를 변경한다. 
+            // * 사이드 => 엔딩 => 미션 => 첫클리어 보상의 순서. 
+            
+            
+            // * 1. 에피소드 클리어 후 사이드 해금 체크 
+            #region 사이드
+            
+            JsonData sideData = UserManager.main.GetNodeUnlockSide();
+            // 사이드 해금이 있는 경우
+            if (sideData != null && sideData.Count > 0)
+            {
+                PopupBase sidePopup = PopupManager.main.GetPopup(GameConst.POPUP_SIDE_ALERT);
+
+                for (int i = 0; i < sideData.Count; i++)
+                {
+                    string sideId = SystemManager.GetJsonNodeString(sideData[i], CommonConst.COL_EPISODE_ID);
+
+                    for (int j = 0; j < StoryManager.main.SideEpisodeList.Count; j++)
+                    {
+                        if (StoryManager.main.SideEpisodeList[j].episodeID.Equals(sideId))
+                        {
+                            sidePopup.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("6185"), StoryManager.main.SideEpisodeList[j].episodeTitle));
+                            sidePopup.Data.imageURL = StoryManager.main.SideEpisodeList[j].squareImageURL;
+                            sidePopup.Data.imageKey = StoryManager.main.SideEpisodeList[j].squareImageKey;
+                            PopupManager.main.ShowPopup(sidePopup, true, false);
+                            break;
+                        }
+                    }
+                }
+                
+                yield return null;
+            }            
+            #endregion
+            
+            // * 2. 열린 엔딩 체크 
+            #region 엔딩
 
             // 다음 에피소드가 엔딩인 경우
             if (nextEpisodeData != null && nextEpisodeData.episodeType == EpisodeType.Ending)
@@ -1967,49 +2015,39 @@ namespace PIERStory
 
 
                 PopupManager.main.ShowPopup(endingPopup, true, false);
-
-
                 yield return new WaitForSeconds(0.1f);
 
-                yield return new WaitUntil(() => PopupManager.main.PopupQueue.Count < 1);
-
                 Debug.Log("<color=yellow>Ending Alert close </color>");
-            }
+            }            
+            
+            
+            #endregion
+            
 
-            // 완료 통신을 하고 나면 사이드 해금을 체크할 수 있다
-            JsonData sideData = UserManager.main.GetNodeUnlockSide();
-
-            // 사이드 해금이 있는 경우
-            if (sideData != null && sideData.Count > 0)
-            {
-                PopupBase sidePopup = PopupManager.main.GetPopup(GameConst.POPUP_SIDE_ALERT);
-
-                for (int i = 0; i < sideData.Count; i++)
-                {
-                    string sideId = SystemManager.GetJsonNodeString(sideData[i], CommonConst.COL_EPISODE_ID);
-
-                    for (int j = 0; j < StoryManager.main.SideEpisodeList.Count; j++)
-                    {
-                        if (StoryManager.main.SideEpisodeList[j].episodeID.Equals(sideId))
-                        {
-                            sidePopup.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("6185"), StoryManager.main.SideEpisodeList[j].episodeTitle));
-                            sidePopup.Data.imageURL = StoryManager.main.SideEpisodeList[j].squareImageURL;
-                            sidePopup.Data.imageKey = StoryManager.main.SideEpisodeList[j].squareImageKey;
-                            PopupManager.main.ShowPopup(sidePopup, true, false);
-                            break;
-                        }
-                    }
+            // * 3. 미션 해금
+            UserManager.main.ShowCompleteMissionByEpisode(false);
+            
+            // * 첫 클리어 보상 
+            #region 첫 클리어 보상 
+            JsonData firstReward = UserManager.main.GetNodeFirstClearResult();  // 최초 보상 노드 가져오기 
+            if(firstReward != null && firstReward.Count > 0) {
+                // 최초 보상 있으면 팝업 호출
+                Debug.Log(">> First Reward exists : " + JsonMapper.ToStringUnicode(firstReward[0]));
+                
+                PopupBase p = PopupManager.main.GetPopup("EpisodeFirstReward");
+                if(p == null) {
+                    Debug.LogError("First reward popup is null");
                 }
+                else {
+                    p.Data.SetContentJson(firstReward[0]); // 첫번째 로우 (항상 1개만 온다)
+                    PopupManager.main.ShowPopup(p, true, false); // 보여주기.  (queue 사용으로 변경)                    
+                }
+                
+                yield return null;
 
-                yield return new WaitUntil(() => PopupManager.main.PopupQueue.Count < 1);
-            }
-
-            // 게임 종료되었으면 사운드도 다 종료해주고, 가끔 스킵해도 배경음이 남아있는 경우도 있으니 Mute까지 해준다
-            foreach (GameSoundCtrl sc in SoundGroup)
-            {
-                sc.StopAudioClip();
-                sc.MuteAudioClip();
-            }
+            } // 첫 클리어 보상 팝업 끝 
+            #endregion
+            
 
             Debug.Log("Signal Send for Episode END !!!!!!");
 

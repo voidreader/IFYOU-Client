@@ -732,9 +732,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 4
+  OnStartBehaviour: 1
   OnShowCallback:
-    Enabled: 1
+    Enabled: 0
     EventName: OnShowCallback
     Runners: []
     Event:
@@ -761,7 +761,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnHideCallback:
-    Enabled: 1
+    Enabled: 0
     EventName: OnHideCallback
     Runners: []
     Event:
@@ -1100,7 +1100,7 @@ MonoBehaviour:
       Enabled: 1
       StartAlpha: 1
       FromReferenceValue: 2
-      ToReferenceValue: 0
+      ToReferenceValue: 1
       FromCustomValue: 0
       ToCustomValue: 1
       FromOffset: 0
@@ -1534,6 +1534,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3650553387037731645}
   - component: {fileID: 3650553387037731650}
+  - component: {fileID: 8791760733090148288}
   m_Layer: 5
   m_Name: Popup - PopupType2
   m_TagString: Untagged
@@ -1589,12 +1590,24 @@ MonoBehaviour:
   autoDestroyTime: 0
   isOverlayUse: 0
   addQueue: 0
-  mainCanvasGroup: {fileID: 0}
+  mainCanvasGroup: {fileID: 8791760733090148288}
   popupBox: {fileID: 3650553387715010922}
   okButton: {fileID: 3650553387278194546}
   confirmButtons: {fileID: 3650553386202888032}
   spritePositiveBackground: {fileID: 21300000, guid: 32a87f217d204c843ba1be3bc9b80211, type: 3}
   spriteNegativeBackground: {fileID: 21300000, guid: 5c1cde38a312f6c478477872f200bad4, type: 3}
+--- !u!225 &8791760733090148288
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3650553387037731644}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3650553387058550590
 GameObject:
   m_ObjectHideFlags: 0
@@ -1932,14 +1945,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 4
+  OnStartBehaviour: 1
   OnShowCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnShowCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3650553387037731650}
+          m_TargetAssemblyTypeName: PIERStory.PopupGameType, Assembly-CSharp
+          m_MethodName: Show
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnVisibleCallback:
     Enabled: 0
     EventName: OnVisibleCallback
@@ -1955,7 +1980,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnHiddenCallback:
-    Enabled: 1
+    Enabled: 0
     EventName: OnHiddenCallback
     Runners: []
     Event:

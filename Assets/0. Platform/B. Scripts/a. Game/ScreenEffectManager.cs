@@ -37,7 +37,8 @@ namespace PIERStory
         [Tooltip("불 파티클")] public ParticleSystem fire;
         [Tooltip("반짝이 파티클")] public ParticleSystem glitter;
         ParticleSystem[] glitters;
-        [Tooltip("원형빛")] public ParticleSystem bokeh;
+        [Tooltip("원형빛1")] public ParticleSystem bokeh1;
+        [Tooltip("원형빛2")] public ParticleSystem bokeh2;
         [Tooltip("육각형빛")] public ParticleSystem hexagonLight;
         [Tooltip("배경만 안개")] public ParticleSystem bgFog;
         ParticleSystem[] bgFogs;
@@ -719,7 +720,24 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT:
-                    bokeh.gameObject.SetActive(true);
+
+                    int bokehType = 1;
+
+                    if (__params != null)
+                        ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_TYPE, ref bokehType);
+
+                    bokehType = Mathf.Clamp(bokehType, 1, 2);
+
+                    switch (bokehType)
+                    {
+                        case 1:
+                            bokeh1.gameObject.SetActive(true);
+                            break;
+                        case 2:
+                            bokeh2.gameObject.SetActive(true);
+                            break;
+                    }
+
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_HEX_LIGHT:
@@ -1135,7 +1153,8 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT:
-                    bokeh.gameObject.SetActive(false);
+                    bokeh1.gameObject.SetActive(false);
+                    bokeh2.gameObject.SetActive(false);
                     break;
                 case GameConst.KR_SCREEN_EFFECT_HEX_LIGHT:
                     hexagonLight.gameObject.SetActive(false);

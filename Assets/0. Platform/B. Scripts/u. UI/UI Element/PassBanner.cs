@@ -192,6 +192,13 @@ namespace PIERStory {
             
             // 할인 가격 구하기 
             saleFreepassPrice = (int)(originFreepassPrice * (1-discountFloat));
+            if(saleFreepassPrice < 3)
+                saleFreepassPrice = 3;
+                
+            if(originFreepassPrice < 3) {
+                originFreepassPrice = 3;
+            }
+            
             textTimedealPrice.text = saleFreepassPrice.ToString(); 
             
             // 타이머 사용!

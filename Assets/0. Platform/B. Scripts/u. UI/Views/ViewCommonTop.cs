@@ -1,3 +1,4 @@
+using System.Collections;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +29,7 @@ namespace PIERStory {
         public GameObject multipleButton;       // 여러 용도(저장, 변경 등)로 사용될 버튼
         public TextMeshProUGUI multipleButtonText;      // 다용도 버튼에 들어가는 텍스트
 
+        public GameObject attendanceButton;     // 출석 이벤트 버튼
 
         
         [SerializeField] GameObject logo; // 로고
@@ -68,6 +70,8 @@ namespace PIERStory {
         SignalStream signalStreamTopMultipleButtonText;
         SignalStream signalStreamRecover;
         SignalStream signalStreamSaveState;
+
+        SignalStream signalStreamAttendace;
         
         
         SignalReceiver signalReceiverTopBackground;
@@ -81,6 +85,8 @@ namespace PIERStory {
         SignalReceiver signalReceiverTopMultipleButtonText;
         SignalReceiver signalReceiverRecover;
         SignalReceiver signalReceiverSaveState;
+
+        SignalReceiver signalReceiverAttendance;
         
         private void Awake() {
             // Background 
@@ -118,6 +124,10 @@ namespace PIERStory {
             // 상태 저장 시그널 추가
             signalStreamSaveState = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE);
             signalReceiverSaveState = new SignalReceiver().SetOnSignalCallback(OnTopSaveState);
+
+
+            signalStreamAttendace = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE);
+            signalReceiverAttendance = new SignalReceiver().SetOnSignalCallback(OnShowAttendance);
         }
         
         private void Start() {
@@ -138,6 +148,8 @@ namespace PIERStory {
             signalStreamSaveState.ConnectReceiver(signalReceiverSaveState);
             
             OnRefreshSuperUser = SetSuperUser;
+
+            signalStreamAttendace.ConnectReceiver(signalReceiverAttendance);
         }
         
         void OnDisable() {
@@ -152,6 +164,8 @@ namespace PIERStory {
             signalStreamTopMultipleButtonText.DisconnectReceiver(signalReceiverTopMultipleButtonText);
             signalStreamRecover.DisconnectReceiver(signalReceiverRecover);
             signalStreamSaveState.DisconnectReceiver(signalReceiverSaveState);
+
+            signalStreamAttendace.DisconnectReceiver(signalReceiverAttendance);
         }
         
         public override void OnView()
@@ -408,6 +422,18 @@ namespace PIERStory {
             }
         }
 
+        void OnShowAttendance(Signal s)
+        {
+            if(!s.hasValue)
+            {
+                attendanceButton.SetActive(false);
+                return;
+            }
+
+            bool isShow = s.GetValueUnsafe<bool>();
+            attendanceButton.SetActive(isShow);
+        }
+
         public void OnClickMultipleButton()
         {
             OnClickButtonAction?.Invoke();
@@ -432,6 +458,24 @@ namespace PIERStory {
             SystemManager.main.OpenCoinShopWebview();
             
             AdManager.main.AnalyticsCoinShopOpen("top");
+        }
+
+
+
+        public void OnClickOpenAttendanceList()
+        {
+            SystemManager.ShowNetworkLoading();
+            StartCoroutine(OpenAttendanceList());
+        }
+
+        IEnumerator OpenAttendanceList()
+        {
+            NetworkLoader.main.RequestAttendanceList();
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            SystemManager.HideNetworkLoading();
+
+            PopupBase p = PopupManager.main.GetPopup("Attendance");
+            PopupManager.main.ShowPopup(p, true);
         }
     }
 }

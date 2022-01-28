@@ -102,11 +102,22 @@ namespace PIERStory {
             
             base.OnView();
 
-            // 튜토리얼 끝났고, 앱 첫 시작할 때, 출석보상 먼저
-            if (UserManager.main.tutorialStep > 2 && SystemManager.appFirstExecute && !StoryManager.enterGameScene)
+            // 튜토리얼 끝났고
+            if (UserManager.main.tutorialStep > 2)
             {
-                PopupBase p = PopupManager.main.GetPopup("Attendance");
-                PopupManager.main.ShowPopup(p, true);
+                // 출석보상 안 먹었으면 무조건 또 띄워!
+                if(!UserManager.main.TodayAttendanceCheck())
+                {
+                    PopupBase p = PopupManager.main.GetPopup("Attendance");
+                    PopupManager.main.ShowPopup(p, true);
+                }
+                
+                // 앱 첫실행 시에만 출석보상 체크하고 띄워!
+                if (SystemManager.appFirstExecute && !StoryManager.enterGameScene && !PlayerPrefs.HasKey("noticeOneday"))
+                {
+                    PopupBase p = PopupManager.main.GetPopup("Notice");
+                    PopupManager.main.ShowPopup(p, true);
+                }
             }
 
             LobbyManager.main.RequestPlatformLoadingImages(); // 플랫폼 로딩 이미지 다운로드 처리 
@@ -187,6 +198,7 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, true, string.Empty);
         }
 
         
@@ -258,22 +270,6 @@ namespace PIERStory {
             OnMoveStarShop = MoveToStarShop;
         }
 
-
-        public void OnClickOpenAttendanceList()
-        {
-            SystemManager.ShowNetworkLoading();
-            StartCoroutine(OpenAttendanceList());
-        }
-
-        IEnumerator OpenAttendanceList()
-        {
-            NetworkLoader.main.RequestAttendanceList();
-            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
-            SystemManager.HideNetworkLoading();
-
-            PopupBase p = PopupManager.main.GetPopup("Attendance");
-            PopupManager.main.ShowPopup(p, true);
-        }
 
 
 
@@ -442,6 +438,7 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
         }
         
         /// <summary>
@@ -562,6 +559,7 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
         }
         
         #endregion
@@ -576,6 +574,7 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
         }
 
 
@@ -698,6 +697,7 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             // Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, "더보기", string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
         }
 
 

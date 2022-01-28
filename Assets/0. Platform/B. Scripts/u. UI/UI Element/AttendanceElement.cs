@@ -10,6 +10,8 @@ namespace PIERStory
 {
     public class AttendanceElement : MonoBehaviour
     {
+        public Image dayHighlight;
+
         public ImageRequireDownload currencyIcon;
         public TextMeshProUGUI amountText;
 
@@ -19,30 +21,53 @@ namespace PIERStory
         string attendanceId = string.Empty;
         int daySeq = 0;
 
+        string currency = string.Empty;
         string imageUrl = string.Empty;
         string imageKey = string.Empty;
 
         bool isReceive = false;
         bool clickCheck = false;
+        bool current = false;
 
         public void InitAttendanceReward(JsonData __j)
         {
             attendanceId = SystemManager.GetJsonNodeString(__j, "attendance_id");
             daySeq = SystemManager.GetJsonNodeInt(__j, "day_seq");
 
+            currency = SystemManager.GetJsonNodeString(__j, "currency");
+
             imageUrl = SystemManager.GetJsonNodeString(__j, "icon_image_url");
             imageKey = SystemManager.GetJsonNodeString(__j, "icon_image_key");
 
             isReceive = SystemManager.GetJsonNodeBool(__j, "is_receive");
             clickCheck = SystemManager.GetJsonNodeBool(__j, "click_check");
+            current = SystemManager.GetJsonNodeBool(__j, "current");
 
-            currencyIcon.SetDownloadURL(imageUrl, imageKey);
             amountText.text = SystemManager.GetJsonNodeString(__j, "quantity");
 
-            if(isReceive)
+            if(currency == "coin")
+                currencyIcon.GetComponent<Image>().sprite = LobbyManager.main.spriteAttendanceCoin;
+            else if(currency =="gem")
+            {
+                if(daySeq == 7)
+                    currencyIcon.GetComponent<Image>().sprite = LobbyManager.main.spriteAttendanceStars;
+                else
+                    currencyIcon.GetComponent<Image>().sprite = LobbyManager.main.spriteAttendanceStar;
+            }
+            else
+                currencyIcon.SetDownloadURL(imageUrl, imageKey);
+
+
+            if (isReceive)
                 coverOverlay.gameObject.SetActive(true);
             else
                 coverOverlay.gameObject.SetActive(false);
+
+            if (current && clickCheck)
+            {
+                dayHighlight.gameObject.SetActive(true);
+                dayHighlight.DOFade(0f, 1.5f).SetLoops(-1, LoopType.Yoyo);
+            }
 
             gameObject.SetActive(true);
         }
@@ -75,6 +100,7 @@ namespace PIERStory
                 return;
             }
 
+            dayHighlight.gameObject.SetActive(false);
             coverOverlay.color = new Color(1, 1, 1, 0);
             checkIcon.color = new Color(1, 1, 1, 0);
             coverOverlay.gameObject.SetActive(true);

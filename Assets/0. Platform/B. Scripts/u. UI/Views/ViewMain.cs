@@ -102,10 +102,11 @@ namespace PIERStory {
             
             base.OnView();
 
-            if (UserManager.main.tutorialStep > 2 && SystemManager.appFirstExecute && !PlayerPrefs.HasKey("noticeOneday") && !StoryManager.enterGameScene)
+            // 튜토리얼 끝났고, 앱 첫 시작할 때, 출석보상 먼저
+            if (UserManager.main.tutorialStep > 2 && SystemManager.appFirstExecute && !StoryManager.enterGameScene)
             {
-                PopupBase p = PopupManager.main.GetPopup("Notice");
-                PopupManager.main.ShowPopup(p, false);
+                PopupBase p = PopupManager.main.GetPopup("Attendance");
+                PopupManager.main.ShowPopup(p, true);
             }
 
             LobbyManager.main.RequestPlatformLoadingImages(); // 플랫폼 로딩 이미지 다운로드 처리 
@@ -256,6 +257,25 @@ namespace PIERStory {
             promotionScroll.Setup();
             OnMoveStarShop = MoveToStarShop;
         }
+
+
+        public void OnClickOpenAttendanceList()
+        {
+            SystemManager.ShowNetworkLoading();
+            StartCoroutine(OpenAttendanceList());
+        }
+
+        IEnumerator OpenAttendanceList()
+        {
+            NetworkLoader.main.RequestAttendanceList();
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            SystemManager.HideNetworkLoading();
+
+            PopupBase p = PopupManager.main.GetPopup("Attendance");
+            PopupManager.main.ShowPopup(p, true);
+        }
+
+
 
         void MoveToStarShop()
         {

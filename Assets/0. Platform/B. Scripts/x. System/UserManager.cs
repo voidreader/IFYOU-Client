@@ -471,6 +471,31 @@ namespace PIERStory
             Debug.Log("출석 보상 리스트 : " + JsonMapper.ToStringUnicode(userAttendanceList));
         }
 
+        /// <summary>
+        /// 오늘의 출석체크 보상을 받았는지 체크합니다
+        /// </summary>
+        /// <returns></returns>
+        public bool TodayAttendanceCheck()
+        {
+            string attendanceId = string.Empty;
+
+            for (int i = 0; i < userAttendanceList["attendance"].Count; i++)
+            {
+                attendanceId = userAttendanceList["attendance"][i].ToString();
+
+                for (int j = 0; j < userAttendanceList[attendanceId].Count; j++)
+                {
+                    if (!SystemManager.GetJsonNodeBool(userAttendanceList[attendanceId][j], "current"))
+                        continue;
+
+                    // 클릭할 수 있는게 있다면 아직 안받은거야
+                    if (SystemManager.GetJsonNodeBool(userAttendanceList[attendanceId][j], "click_check"))
+                        return false;
+                }
+            }
+
+            return true;
+        }
 
 
         /// <summary>

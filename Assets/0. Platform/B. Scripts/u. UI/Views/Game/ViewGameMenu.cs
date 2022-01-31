@@ -33,14 +33,11 @@ namespace PIERStory
         
         void Start() {
             
-            
             // 배너 등장시에만 처리. 
             if(AdManager.main.isIronSourceBannerLoad) {
                 // rect.
                 footer.anchoredPosition = new Vector2(0, footer.anchoredPosition.y + 120);
             }
-            
-            
         }
         
         public override void OnStartView()
@@ -57,7 +54,6 @@ namespace PIERStory
                 blockRetryButton.SetActive(true);
                 skipButton.SetActive(false);
                 blockSkipButton.SetActive(true);
-
             }
             else
             {
@@ -83,9 +79,6 @@ namespace PIERStory
         }
 
         #region OnClick Event
-        
-        
-        
 
 
         /// <summary>
@@ -93,8 +86,6 @@ namespace PIERStory
         /// </summary>
         public void SkipScene()
         {
-            
-            
             // 스킵이 가능하지 않으면 아무것도 실행하지 않는다.
             // 어드민 유저도 아니고 스킵도 가능하지 않으면 return. 
             if (!GameManager.main.skipable && !UserManager.main.CheckAdminUser() ) {
@@ -117,6 +108,9 @@ namespace PIERStory
             // 시간 흐름중 스킵하면 시간흐름용 fadeImage를 비활성화 해버린다
             if (GameManager.main.currentRow.template.Equals(GameConst.TEMPLATE_FLOWTIME))
                 ViewGame.main.fadeImage.gameObject.SetActive(false);
+
+            if (GameManager.main.currentRow.template.Equals(GameConst.TEMPLATE_MOVEIN))
+                ViewGame.main.placeTextBG.gameObject.SetActive(false);
 
             GameManager.main.useSkip = true;
             GameManager.main.isThreadHold = false;

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using BestHTTP;
+
 using LitJson;
 using Toast.Gamebase;
 using Doozy.Runtime.Signals;
@@ -78,12 +78,15 @@ namespace PIERStory {
         public Sprite spriteNavMoreOn;
         public Sprite spriteNavMoreOff;
         
-        [Space]
-        [Header("카테고리")] 
+        [Space][Header("카테고리")]         
         public Sprite spriteGenreOn;
         public Sprite spriteGenreOff;
         
         
+        [Space][Header("출석 보상 재화")]
+        public Sprite spriteAttendanceCoin;
+        public Sprite spriteAttendanceStar;
+        public Sprite spriteAttendanceStars;
         
         [Header("== 컬러 ==")]
         

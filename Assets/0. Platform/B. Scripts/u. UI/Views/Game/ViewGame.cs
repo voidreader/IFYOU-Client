@@ -1087,8 +1087,6 @@ namespace PIERStory
             }
             episodeNum.text = textEpisodeNum;
             
-
-
             // 투명도 0으로 만들어서 안보이게 하기
             placeTextBG.color = new Color(placeTextBG.color.r, placeTextBG.color.g, placeTextBG.color.b, 0f);
             episodeNum.color = new Color(episodeNum.color.r, episodeNum.color.g, episodeNum.color.b, 1f);

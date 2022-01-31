@@ -68,5 +68,11 @@ namespace PIERStory
             // 우편을 모두 수령했습니다.
             SystemManager.ShowSimpleAlertLocalize("80063");
         }
+
+        public void OnClickCoinShop()
+        {
+            SystemManager.main.OpenCoinShopWebview();
+            AdManager.main.AnalyticsCoinShopOpen("top");
+        }
     }
 }

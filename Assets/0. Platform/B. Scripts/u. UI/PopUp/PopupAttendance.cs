@@ -1,5 +1,4 @@
 ﻿using LitJson;
-using UnityEngine;
 
 namespace PIERStory
 {
@@ -22,13 +21,13 @@ namespace PIERStory
             attendanceList = UserManager.main.userAttendanceList;
             bool allReceive = true;
 
-            for (int i = 0; i < attendanceList["atendance"].Count; i++)
+            for (int i = 0; i < attendanceList["attendance"].Count; i++)
             {
-                attendanceId = attendanceList["atendance"][i].ToString();
+                attendanceId = attendanceList["attendance"][i].ToString();
 
                 for (int j = 0; j < attendanceList[attendanceId].Count; j++)
                 {
-                    if (!SystemManager.GetJsonNodeBool(attendanceList[attendanceId][j], "is_receive"))
+                    if (SystemManager.GetJsonNodeBool(attendanceList[attendanceId][j], "current") && SystemManager.GetJsonNodeBool(attendanceList[attendanceId][j], "click_check"))
                     {
                         allReceive = false;
                         break;
@@ -38,6 +37,12 @@ namespace PIERStory
                 // 모두 받지 않았으면 이 반복문을 빠져나간다
                 if (!allReceive)
                     break;
+
+                // 마지막 날까지 다 받았고, 다음으로 넘어갈게 있지만 아직 다음날이 아닌경우 이 반복문을 빠져나가야 해
+                if (i + 1 < attendanceList["attendance"].Count && !SystemManager.GetJsonNodeBool(attendanceList[attendanceList["attendance"][i + 1].ToString()][0], "is_receive") && !SystemManager.GetJsonNodeBool(attendanceList[attendanceList["attendance"][i + 1].ToString()][0], "click_check") && !SystemManager.GetJsonNodeBool(attendanceList[attendanceList["attendance"][i + 1].ToString()][0], "current"))
+                {
+                    break;
+                }
             }
 
 
@@ -45,17 +50,5 @@ namespace PIERStory
                 attendanceElements[i].InitAttendanceReward(attendanceList[attendanceId][i]);
 
         }
-
-        public override void Hide()
-        {
-            base.Hide();
-
-            if (SystemManager.appFirstExecute && !PlayerPrefs.HasKey("noticeOneday"))
-            {
-                PopupBase p = PopupManager.main.GetPopup("Notice");
-                PopupManager.main.ShowPopup(p, true);
-            }
-        }
-
     }
 }

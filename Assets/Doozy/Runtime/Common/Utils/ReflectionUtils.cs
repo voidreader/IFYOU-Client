@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
 
@@ -29,45 +30,25 @@ namespace Doozy.Runtime.Common.Utils
         {
             get
             {
-                // Debug.Log($"{nameof(ReflectionUtils)} > {nameof(doozyEditorAssembly)}");
                 if (s_doozyEditorAssembly != null) return s_doozyEditorAssembly;
                 foreach (Assembly assembly in domainAssemblies)
                 {
-                    foreach (TypeInfo typeInfo in assembly.DefinedTypes)
-                    {
-                        if (typeInfo.Namespace == null ||
-                            !typeInfo.Namespace.Contains("Doozy.Editor."))
-                            continue;
-
-                        s_doozyEditorAssembly = assembly;
-                        return s_doozyEditorAssembly;
-                    }
+                    if (!assembly.DefinedTypes.Any(typeInfo => typeInfo.Namespace != null && typeInfo.Namespace.Contains("Doozy.Editor.")))
+                        continue;
+                    s_doozyEditorAssembly = assembly;
+                    return s_doozyEditorAssembly;
                 }
                 return s_doozyEditorAssembly;
             }
         }
 
         private static Assembly s_doozyRuntimeAssembly;
-
-        public static Assembly doozyRuntimeAssembly
-        {
-            get
-            {
-                // Debug.Log($"{nameof(ReflectionUtils)} > {nameof(doozyRuntimeAssembly)}");
-                return s_doozyRuntimeAssembly ??= Assembly.GetAssembly(typeof(ReflectionUtils));
-            }
-        }
+        public static Assembly doozyRuntimeAssembly => 
+            s_doozyRuntimeAssembly ??= Assembly.GetAssembly(typeof(ReflectionUtils));
 
         private static IEnumerable<Type> s_doozyRuntimeTypes;
-
-        public static IEnumerable<Type> doozyRuntimeTypes
-        {
-            get
-            {
-                // Debug.Log($"{nameof(ReflectionUtils)} > {nameof(doozyRuntimeTypes)}");
-                return s_doozyRuntimeTypes ??= doozyRuntimeAssembly.GetTypes();
-            }
-        }
+        public static IEnumerable<Type> doozyRuntimeTypes => 
+            s_doozyRuntimeTypes ??= doozyRuntimeAssembly.GetTypes();
 
 
         /// <summary>

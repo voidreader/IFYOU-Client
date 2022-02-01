@@ -130,7 +130,6 @@ namespace Doozy.Runtime.UIManager.Animators
         public override void Play(UISelectionState state) =>
             GetAnimation(state)?.Play();
 
-
         private void ResetAnimation(UISelectionState state)
         {
             ColorAnimation a = GetAnimation(state);
@@ -164,5 +163,34 @@ namespace Doozy.Runtime.UIManager.Animators
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
         }
+
+        /// <summary> Set the Start Color for all animations </summary>
+        /// <param name="color"> New start color </param>
+        public void SetStartColor(Color color)
+        {
+            foreach (UISelectionState state in UISelectable.uiSelectionStates)
+            {
+                ColorAnimation colorAnimation = GetAnimation(state);
+                if (colorAnimation == null) continue;
+                colorAnimation.startColor = color;
+            }
+
+            if (controller == null) return;
+            controller.RefreshState();
+        }
+
+        /// <summary> Set the Start Color for the target selection state </summary>
+        /// <param name="color"> New start color </param>
+        /// <param name="selectionState"> Target selection state </param>
+        public void SetStartColor(Color color, UISelectionState selectionState)
+        {
+            ColorAnimation colorAnimation = GetAnimation(selectionState);
+            if (colorAnimation == null) return;
+            colorAnimation.startColor = color;
+            if (controller == null) return;
+            if (controller.currentUISelectionState != selectionState) return;
+            controller.RefreshState();
+        }
+
     }
 }

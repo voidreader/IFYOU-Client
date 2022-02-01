@@ -319,13 +319,18 @@ namespace Doozy.Editor.Reactor.Editors
                 };
                 // item.schedule.Execute(() => item.propertyField.Children().First().SetStyleDisplay(DisplayStyle.None));
             };
-            progressTargetsFluidListView.listView.itemHeight = 34;
+            #if UNITY_2021_2_OR_NEWER
+            progressTargetsFluidListView.listView.fixedItemHeight = 30;
+            progressTargetsFluidListView.SetPreferredListHeight((int)progressTargetsFluidListView.listView.fixedItemHeight * 6);
+            #else
+            progressTargetsFluidListView.listView.itemHeight = 30;
             progressTargetsFluidListView.SetPreferredListHeight(progressTargetsFluidListView.listView.itemHeight * 6);
+            #endif
             progressTargetsFluidListView.SetDynamicListHeight(false);
             progressTargetsFluidListView.HideFooterWhenEmpty(true);
             progressTargetsFluidListView.UseSmallEmptyListPlaceholder(true);
             progressTargetsFluidListView.emptyListPlaceholder.SetIcon(EditorMicroAnimations.EditorUI.Placeholders.EmptyListViewSmall);
-            
+
             //ADD ITEM BUTTON (plus button)
             progressTargetsFluidListView.AddNewItemButtonCallback += () =>
             {

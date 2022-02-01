@@ -322,7 +322,11 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
                     disabledStateButton.SetIsOn(state == UISelectionState.Disabled);
                 }
 
-                currentStateEnumField.RegisterValueChangedCallback(evt => UpdateStateButtons((UISelectionState)evt.newValue));
+                currentStateEnumField.RegisterValueChangedCallback(evt =>
+                {
+                    if(evt?.newValue == null) return;
+                    UpdateStateButtons((UISelectionState)evt.newValue);
+                });
                 UpdateStateButtons((UISelectionState)propertyCurrentUISelectionState.enumValueIndex);
             }
 

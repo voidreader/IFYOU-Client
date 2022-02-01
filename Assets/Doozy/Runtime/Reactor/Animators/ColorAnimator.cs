@@ -18,14 +18,14 @@ namespace Doozy.Runtime.Reactor.Animators
         [SerializeField] private ReactorColorTarget ColorTarget;
         /// <summary> Reference to a color target component </summary>
         public ReactorColorTarget colorTarget => ColorTarget;
-        
+
         /// <summary> Check if a color target is referenced or not </summary>
         public bool hasTarget => ColorTarget != null;
-        
+
         [SerializeField] private ColorAnimation Animation;
         /// <summary> Color Animation </summary>
         public new ColorAnimation animation => Animation ?? (Animation = new ColorAnimation(colorTarget));
-        
+
         #if UNITY_EDITOR
         private void Reset()
         {
@@ -38,88 +38,84 @@ namespace Doozy.Runtime.Reactor.Animators
         public void FindTarget()
         {
             if (ColorTarget != null)
+            {
+                if (animation.colorTarget != ColorTarget)
+                    animation.SetTarget(ColorTarget);
                 return;
-            
+            }
+
             ColorTarget = ReactorColorTarget.FindTarget(gameObject);
+            if (ColorTarget != null) animation.SetTarget(ColorTarget);
         }
 
         protected override void Awake()
         {
+            if (!Application.isPlaying) return;
             base.Awake();
             FindTarget();
-            
-            if(ColorTarget != null)
-                animation.SetTarget(ColorTarget);
         }
 
-        public override void Play(PlayDirection playDirection)
-        {
-            base.Play(playDirection);
+        public override void Play(PlayDirection playDirection) =>
             animation.Play(playDirection);
-        }
-        
-        public override void Play(bool inReverse = false)
-        {
-            base.Play(inReverse);
+
+        public override void Play(bool inReverse = false) =>
             animation.Play(inReverse);
-        }
-        
+
         public override void SetTarget(object target) =>
             SetTarget(target as ReactorColorTarget);
 
-        public void SetTarget(ReactorColorTarget target) => 
+        public void SetTarget(ReactorColorTarget target) =>
             animation.SetTarget(target);
-        
-        public override void ResetToStartValues(bool forced = false) => 
+
+        public override void ResetToStartValues(bool forced = false) =>
             animation.ResetToStartValues(forced);
 
-        public override void ValidateAnimation()
+        public override void UpdateSettings()
         {
-            if (animation.colorTarget != null)
-                return;
+            if (animation.colorTarget != null) return;
             SetTarget(colorTarget);
-            UpdateValues();
+            if (animation.isPlaying) UpdateValues();
         }
-        
-        public override void UpdateValues() => 
+
+        public override void UpdateValues() =>
             animation.UpdateValues();
 
-        public override void PlayToProgress(float toProgress) => 
+        public override void PlayToProgress(float toProgress) =>
             animation.PlayToProgress(toProgress);
-        
-        public override void PlayFromProgress(float fromProgress) => 
+
+        public override void PlayFromProgress(float fromProgress) =>
             animation.PlayFromProgress(fromProgress);
-        
-        public override void PlayFromToProgress(float fromProgress, float toProgress) => 
+
+        public override void PlayFromToProgress(float fromProgress, float toProgress) =>
             animation.PlayFromToProgress(fromProgress, toProgress);
-        
-        public override void Stop() => 
+
+        public override void Stop() =>
             animation.Stop();
-        
-        public override void Finish() => 
+
+        public override void Finish() =>
             animation.Finish();
 
-        public override void Reverse() => 
+        public override void Reverse() =>
             animation.Reverse();
-        
-        public override void Rewind() => 
+
+        public override void Rewind() =>
             animation.Rewind();
 
-        public override void Pause() => 
+        public override void Pause() =>
             animation.Pause();
-        
-        public override void Resume() => 
+
+        public override void Resume() =>
             animation.Resume();
-        
-        public override void SetProgressAtOne() => 
+
+        public override void SetProgressAtOne() =>
             animation.SetProgressAtOne();
-        
-        public override void SetProgressAtZero() => 
+
+        public override void SetProgressAtZero() =>
             animation.SetProgressAtZero();
-        
-        public override void SetProgressAt(float targetProgress) => 
+
+        public override void SetProgressAt(float targetProgress) =>
             animation.SetProgressAt(targetProgress);
-        
+
         protected override void Recycle() =>
             animation?.Recycle();
 

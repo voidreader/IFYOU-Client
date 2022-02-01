@@ -5,6 +5,7 @@
 using System.Collections;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.Reactor.Animators.Internal;
+using Doozy.Runtime.UIManager.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 // ReSharper disable MemberCanBePrivate.Global
@@ -31,7 +32,7 @@ namespace Doozy.Runtime.Reactor.Animators
         [SerializeField] private UIAnimation Animation;
         public new UIAnimation animation => Animation ??= new UIAnimation(rectTransform, canvasGroup);
 
-        protected bool inLayoutGroup { get; set; }
+        private bool isInLayoutGroup { get; set; }
 
         protected override void Awake()
         {
@@ -39,54 +40,39 @@ namespace Doozy.Runtime.Reactor.Animators
             animatorInitialized = false;
             m_CanvasGroup = GetComponent<CanvasGroup>();
             m_RectTransform = GetComponent<RectTransform>();
-            base.Awake();
-        }
-
-        protected override void Start()
-        {
-            if (!Application.isPlaying) return;
-            ValidateAnimation();
-            InitializeAnimator();
-            RunBehaviour(OnStartBehaviour);
+            rectTransform.GetLayoutGroupInParent()?.GetUIBehaviourHandler();
         }
 
         protected override void OnEnable()
         {
             if (!Application.isPlaying) return;
-            ValidateAnimation();
-            RunBehaviour(OnEnableBehaviour);
+            isInLayoutGroup = rectTransform.IsInLayoutGroup();
+            base.OnEnable();
         }
 
-        protected override void InitializeAnimator()
+        private void OnRectTransformDimensionsChange()
         {
-            StartCoroutine(InitializeInLayoutGroup());
-        }
-
-        private IEnumerator InitializeInLayoutGroup()
-        {
-            if (!inLayoutGroup)
-            {
-                animatorInitialized = true;
-                yield break;
-            }
-
-            yield return null; //wait 1 frame
-            yield return null; //wait 1 frame
-
+            if (!isInLayoutGroup) return;
             UpdateStartPosition(); //get new position set by the layout group
-            UpdateValues();
-            animatorInitialized = true;
         }
 
         public override void Play(PlayDirection playDirection)
         {
-            base.Play(playDirection);
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.Play(playDirection));
+                return;
+            }
             animation.Play(playDirection);
         }
 
         public override void Play(bool inReverse = false)
         {
-            base.Play(inReverse);
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.Play(inReverse));
+                return;
+            }
             animation.Play(inReverse);
         }
 
@@ -99,51 +85,134 @@ namespace Doozy.Runtime.Reactor.Animators
         public override void ResetToStartValues(bool forced = false) =>
             animation.ResetToStartValues(forced);
 
-        public override void ValidateAnimation()
+        public override void UpdateSettings()
         {
-            if (animation.rectTransform != null) return;
-            SetTarget(rectTransform);
-            UpdateValues();
+            SetTarget(rectTransform, canvasGroup);
+            if (animation.isPlaying) UpdateValues();
         }
 
         public override void UpdateValues() =>
             animation.UpdateValues();
 
-        public override void PlayToProgress(float toProgress) =>
+        public override void PlayToProgress(float toProgress)
+        {
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.PlayToProgress(toProgress));
+                return;
+            }
             animation.PlayToProgress(toProgress);
+        }
 
-        public override void PlayFromProgress(float fromProgress) =>
+        public override void PlayFromProgress(float fromProgress)
+        {
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.PlayFromProgress(fromProgress));
+                return;
+            }
             animation.PlayFromProgress(fromProgress);
+        }
 
-        public override void PlayFromToProgress(float fromProgress, float toProgress) =>
+        public override void PlayFromToProgress(float fromProgress, float toProgress)
+        {
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.PlayFromToProgress(fromProgress, toProgress));
+                return;
+            }
             animation.PlayFromToProgress(fromProgress, toProgress);
+        }
 
-        public override void Stop() =>
+        public override void Stop()
+        {
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.Stop());
+                return;
+            }
             animation.Stop();
+        }
 
-        public override void Finish() =>
+        public override void Finish()
+        {
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.Finish());
+                return;
+            }
             animation.Finish();
+        }
 
-        public override void Reverse() =>
+        public override void Reverse()
+        {
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.Reverse());
+                return;
+            }
             animation.Reverse();
+        }
 
-        public override void Rewind() =>
+        public override void Rewind()
+        {
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.Rewind());
+                return;
+            }
             animation.Rewind();
+        }
 
-        public override void Pause() =>
+        public override void Pause()
+        {
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.Pause());
+                return;
+            }
             animation.Pause();
+        }
 
-        public override void Resume() =>
+        public override void Resume()
+        {
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.Resume());
+                return;
+            }
             animation.Resume();
+        }
 
-        public override void SetProgressAtOne() =>
+        public override void SetProgressAtOne()
+        {
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.SetProgressAtOne());
+                return;
+            }
             animation.SetProgressAtOne();
+        }
 
-        public override void SetProgressAtZero() =>
+        public override void SetProgressAtZero()
+        {
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => animation.SetProgressAtZero());
+                return;
+            }
             animation.SetProgressAtZero();
+        }
 
-        public override void SetProgressAt(float targetProgress) =>
+        public override void SetProgressAt(float targetProgress)
+        {
+            if (!animatorInitialized)
+            {
+                DelayExecution(() => SetProgressAt(targetProgress));
+                return;
+            }
             animation.SetProgressAt(targetProgress);
+        }
 
         protected override void Recycle() =>
             animation?.Recycle();
@@ -152,9 +221,8 @@ namespace Doozy.Runtime.Reactor.Animators
         {
             // if (!inLayoutGroup) return;
             if (animation.Move == null) return;
-            if (animation.Move.isActive) return;
             animation.startPosition = rectTransform.anchoredPosition3D;
-            animation.UpdateValues();
+            if (animation.isPlaying) animation.UpdateValues();
         }
     }
 }

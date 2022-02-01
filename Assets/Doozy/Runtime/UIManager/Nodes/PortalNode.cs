@@ -106,10 +106,10 @@ namespace Doozy.Runtime.UIManager.Nodes
 
         private void StopListeners()
         {
-            streamListener.Stop();
-            uiButtonListener.Stop();
-            uiToggleListener.Stop();
-            uiViewListener.Stop();
+            streamListener?.Stop();
+            uiButtonListener?.Stop();
+            uiToggleListener?.Stop();
+            uiViewListener?.Stop();
         }
 
         private void OnSignal()

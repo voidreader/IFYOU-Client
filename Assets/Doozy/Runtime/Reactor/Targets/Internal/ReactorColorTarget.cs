@@ -23,7 +23,6 @@ namespace Doozy.Runtime.Reactor.Targets
         public abstract Color GetColor();
         public abstract void SetColor(Color value);
 
-
         //ToDo: [Maybe] create an automated system that writes code to generate color targets (a factory pattern)
         public static ReactorColorTarget FindTarget(GameObject gameObject)
         {

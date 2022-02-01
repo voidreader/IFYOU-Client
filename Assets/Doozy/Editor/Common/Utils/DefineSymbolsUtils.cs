@@ -104,7 +104,7 @@ namespace Doozy.Editor.Common.Utils
 				if (deletingDoozy)
 				{
 					RemoveGlobalDefine("INPUT_SYSTEM_PACKAGE");
-					RemoveGlobalDefine("LEGACY_INPUT_MANGER");
+					RemoveGlobalDefine("LEGACY_INPUT_MANAGER");
 				}
 				return AssetDeleteResult.DidNotDelete;
 			}

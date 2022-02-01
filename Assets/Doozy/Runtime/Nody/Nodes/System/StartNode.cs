@@ -3,6 +3,7 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
+using System.Collections;
 using Doozy.Runtime.Nody.Nodes.Internal;
 
 namespace Doozy.Runtime.Nody.Nodes.System

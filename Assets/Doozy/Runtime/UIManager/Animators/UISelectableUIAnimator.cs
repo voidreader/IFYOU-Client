@@ -3,13 +3,13 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
-using System.Collections;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.UIManager.Components;
+using Doozy.Runtime.UIManager.Utils;
 using UnityEngine;
-using UnityEngine.UI;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Runtime.UIManager.Animators
 {
@@ -44,6 +44,8 @@ namespace Doozy.Runtime.UIManager.Animators
         [SerializeField] private UIAnimation DisabledAnimation;
         /// <summary> Animation for the Disabled selection state </summary>
         public UIAnimation disabledAnimation => DisabledAnimation;
+
+        private bool isInLayoutGroup { get; set; }
 
         /// <summary> Get the Animation triggered by the given selection state </summary>
         /// <param name="state"> Target selection state </param>
@@ -91,16 +93,14 @@ namespace Doozy.Runtime.UIManager.Animators
             animatorInitialized = false;
             m_RectTransform = GetComponent<RectTransform>();
             m_CanvasGroup = GetComponent<CanvasGroup>();
-            UpdateSettings();
-            Connect();
+            rectTransform.GetLayoutGroupInParent()?.GetUIBehaviourHandler();
         }
 
         protected override void OnEnable()
         {
             if (!Application.isPlaying) return;
             base.OnEnable();
-            if (animatorInitialized & controller != null)
-                controller.RefreshState();
+            isInLayoutGroup = rectTransform.IsInLayoutGroup();
         }
 
         protected override void OnDestroy()
@@ -110,38 +110,21 @@ namespace Doozy.Runtime.UIManager.Animators
                 GetAnimation(state)?.Recycle();
         }
 
-        protected override void InitializeAnimator()
+        private void OnRectTransformDimensionsChange()
         {
-            StartCoroutine(InitializeInLayoutGroup());
-        }
-
-        private IEnumerator InitializeInLayoutGroup()
-        {
-            if (!inLayoutGroup)
-            {
-                animatorInitialized = true;
-                yield break;
-            }
-
-            yield return null; //wait 1 frame
-            yield return null; //wait 1 frame
-            // yield return null; //wait 1 frame
-
+            if (!isConnected) return;
+            if (!isInLayoutGroup) return;
             UpdateStartPosition(); //get new position set by the layout group
-            animatorInitialized = true;
-            Connect();
         }
 
         public void UpdateStartPosition()
         {
-            // if (!inLayoutGroup) return;
-
             foreach (UISelectionState state in UISelectable.uiSelectionStates)
             {
                 UIAnimation uiAnimation = GetAnimation(state);
                 if (uiAnimation?.Move == null) continue;
                 uiAnimation.startPosition = rectTransform.anchoredPosition3D;
-                uiAnimation.UpdateValues();
+                if (uiAnimation.isPlaying) uiAnimation.UpdateValues();
             }
         }
 
@@ -154,7 +137,7 @@ namespace Doozy.Runtime.UIManager.Animators
         public override void UpdateSettings()
         {
             foreach (UISelectionState state in UISelectable.uiSelectionStates)
-                GetAnimation(state).SetTarget(rectTransform);
+                GetAnimation(state).SetTarget(rectTransform, canvasGroup);
         }
 
         public override void StopAllReactions()

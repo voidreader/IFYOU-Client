@@ -2,6 +2,7 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.Reactor.Targets;
@@ -14,15 +15,15 @@ namespace Doozy.Runtime.UIManager.Animators
     /// Specialized animator component used to animate the Color for a Reactor Color Target by listening to a UIContainer (controller) show/hide commands.
     /// </summary>
     [AddComponentMenu("Doozy/UI/Animators/Container/UI Container Color Animator")]
-    public class UIContainerColorAnimator: BaseUIContainerAnimator
+    public class UIContainerColorAnimator : BaseUIContainerAnimator
     {
         [SerializeField] private ReactorColorTarget ColorTarget;
         /// <summary> Reference to a color target component </summary>
         public ReactorColorTarget colorTarget => ColorTarget;
-        
+
         /// <summary> Check if a color target is referenced or not </summary>
         public bool hasColorTarget => ColorTarget != null;
-        
+
         [SerializeField] private ColorAnimation ShowAnimation;
         /// <summary> Container Show Animation </summary>
         public ColorAnimation showAnimation => ShowAnimation;
@@ -30,7 +31,7 @@ namespace Doozy.Runtime.UIManager.Animators
         [SerializeField] private ColorAnimation HideAnimation;
         /// <summary> Container Hide Animation </summary>
         public ColorAnimation hideAnimation => HideAnimation;
-        
+
         #if UNITY_EDITOR
         protected override void Reset()
         {
@@ -45,35 +46,35 @@ namespace Doozy.Runtime.UIManager.Animators
             base.Reset();
         }
         #endif
-        
+
         public void FindTarget()
         {
             if (ColorTarget != null)
                 return;
-            
+
             ColorTarget = ReactorColorTarget.FindTarget(gameObject);
             UpdateSettings();
         }
-        
+
         protected override void Awake()
         {
             FindTarget();
             UpdateSettings();
             base.Awake();
         }
-        
+
         protected override void OnDestroy()
         {
             base.OnDestroy();
             ShowAnimation?.Recycle();
             HideAnimation?.Recycle();
         }
-        
+
         protected override void ConnectToController()
         {
             base.ConnectToController();
             if (!controller) return;
-            
+
             controller.showReactions.Add(ShowAnimation.animation);
             controller.hideReactions.Add(HideAnimation.animation);
         }
@@ -82,11 +83,11 @@ namespace Doozy.Runtime.UIManager.Animators
         {
             base.DisconnectFromController();
             if (!controller) return;
-            
+
             controller.showReactions.Remove(ShowAnimation.animation);
             controller.hideReactions.Remove(HideAnimation.animation);
         }
-        
+
         public override void Show() =>
             ShowAnimation?.Play(PlayDirection.Forward);
 
@@ -95,7 +96,7 @@ namespace Doozy.Runtime.UIManager.Animators
 
         public override void InstantShow() =>
             ShowAnimation?.SetProgressAtOne();
-        
+
         public override void InstantHide() =>
             HideAnimation?.SetProgressAtOne();
 
@@ -104,16 +105,16 @@ namespace Doozy.Runtime.UIManager.Animators
 
         public override void ReverseHide() =>
             HideAnimation?.Reverse();
-        
+
         public override void UpdateSettings()
         {
-            if(colorTarget == null)
+            if (colorTarget == null)
                 return;
-            
+
             ShowAnimation?.SetTarget(colorTarget);
             HideAnimation?.SetTarget(colorTarget);
         }
-        
+
         public override void StopAllReactions()
         {
             ShowAnimation?.Stop();
@@ -126,6 +127,49 @@ namespace Doozy.Runtime.UIManager.Animators
             target.animation.enabled = true;
             target.animation.fromReferenceValue = ReferenceValue.CurrentValue;
             target.animation.settings.duration = UIContainer.k_DefaultAnimationDuration;
+        }
+
+        /// <summary> Set the Start Color for all animations </summary>
+        /// <param name="color"> New start color </param>
+        public void SetStartColor(Color color)
+        {
+            SetStartColorForShow(color);
+            SetStartColorForHide(color);
+        }
+
+        /// <summary> Set the Start Color for the Show animation </summary>
+        /// <param name="color"> New start color </param>
+        public void SetStartColorForShow(Color color)
+        {
+            if (ShowAnimation == null) return;
+            ShowAnimation.startColor = color;
+            if (controller == null) return;
+            switch (controller.visibilityState)
+            {
+                case VisibilityState.Visible:
+                    ShowAnimation.SetProgressAtOne();
+                    break;
+                case VisibilityState.IsShowing:
+                    ShowAnimation.Play();
+                    break;
+            }
+        }
+
+        /// <summary> Set the Start Color for the Hide animation </summary>
+        /// <param name="color"> New start color </param>
+        public void SetStartColorForHide(Color color)
+        {
+            if (ShowAnimation == null) return;
+            ShowAnimation.startColor = color;
+            switch (controller.visibilityState)
+            {
+                case VisibilityState.Hidden:
+                    HideAnimation.SetProgressAtOne();
+                    break;
+                case VisibilityState.IsHiding:
+                    HideAnimation.Play();
+                    break;
+            }
         }
     }
 }

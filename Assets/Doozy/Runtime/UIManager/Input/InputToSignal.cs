@@ -197,7 +197,7 @@ namespace Doozy.Runtime.UIManager.Input
         }
         #endif
 
-        #if LEGACY_INPUT_MANGER
+        #if LEGACY_INPUT_MANAGER
 
         public const KeyCode k_BackButtonKeyCode = KeyCode.Escape;
         public const string k_BackButtonVirtualButtonName = "Cancel";
@@ -249,7 +249,7 @@ namespace Doozy.Runtime.UIManager.Input
                     execute = UnityEngine.Input.GetKeyDown(keyCode);
                     break;
                 case LegacyInputMode.VirtualButton:
-                    execute = UnityEngine.Input.GetKeyDown(virtualButtonName);
+                    execute = UnityEngine.Input.GetButtonDown(virtualButtonName);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

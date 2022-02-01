@@ -2,12 +2,11 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
-using System.Collections;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.UIManager.Containers;
+using Doozy.Runtime.UIManager.Utils;
 using UnityEngine;
-using UnityEngine.UI;
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Runtime.UIManager.Animators
@@ -32,6 +31,8 @@ namespace Doozy.Runtime.UIManager.Animators
         /// <summary> Container Hide Animation </summary>
         public UIAnimation hideAnimation => HideAnimation;
 
+        private bool isInLayoutGroup { get; set; }
+        
         #if UNITY_EDITOR
         protected override void Reset()
         {
@@ -59,8 +60,14 @@ namespace Doozy.Runtime.UIManager.Animators
             animatorInitialized = false;
             m_RectTransform = GetComponent<RectTransform>();
             m_CanvasGroup = GetComponent<CanvasGroup>();
-            UpdateSettings();
-            Connect();
+            rectTransform.GetLayoutGroupInParent()?.GetUIBehaviourHandler();
+        }
+
+        protected override void OnEnable()
+        {
+            if (!Application.isPlaying) return;
+            base.OnEnable();
+            isInLayoutGroup = rectTransform.IsInLayoutGroup();
         }
 
         protected override void OnDisable()
@@ -78,41 +85,25 @@ namespace Doozy.Runtime.UIManager.Animators
             HideAnimation?.Recycle();
         }
 
-        protected override void InitializeAnimator()
+        private void OnRectTransformDimensionsChange()
         {
-            StartCoroutine(InitializeInLayoutGroup());
-        }
-
-        private IEnumerator InitializeInLayoutGroup()
-        {
-            if (!inLayoutGroup)
-            {
-                animatorInitialized = true;
-                yield break;
-            }
-
-            yield return null; //wait 1 frame
-            yield return null; //wait 1 frame
-
+            if (!isConnected) return;
+            if (!isInLayoutGroup) return;
             UpdateStartPosition(); //get new position set by the layout group
-            animatorInitialized = true;
-            Connect();
         }
-
+        
         public void UpdateStartPosition()
         {
-            // if (!inLayoutGroup) return;
-
             if (ShowAnimation?.Move != null)
             {
                 ShowAnimation.startPosition = rectTransform.anchoredPosition3D;
-                ShowAnimation.UpdateValues();
+                if (ShowAnimation.isPlaying) ShowAnimation.UpdateValues();
             }
 
             if (HideAnimation?.Move != null)
             {
                 HideAnimation.startPosition = rectTransform.anchoredPosition3D;
-                HideAnimation.UpdateValues();
+                if (HideAnimation.isPlaying) HideAnimation.UpdateValues();
             }
         }
 
@@ -168,8 +159,8 @@ namespace Doozy.Runtime.UIManager.Animators
 
         public override void UpdateSettings()
         {
-            ShowAnimation?.SetTarget(rectTransform);
-            HideAnimation?.SetTarget(rectTransform);
+            ShowAnimation?.SetTarget(rectTransform, canvasGroup);
+            HideAnimation?.SetTarget(rectTransform, canvasGroup);
         }
 
         public override void StopAllReactions()

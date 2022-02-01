@@ -104,7 +104,7 @@ namespace Doozy.Runtime.UIManager.Input
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                #elif LEGACY_INPUT_MANGER
+                #elif LEGACY_INPUT_MANAGER
                 if (data.inputMode == LegacyInputMode.None) return;
                 switch (data.inputMode)
                 {
@@ -181,7 +181,7 @@ namespace Doozy.Runtime.UIManager.Input
             }
             #endif
 
-            #if LEGACY_INPUT_MANGER
+            #if LEGACY_INPUT_MANAGER
             switch (data.inputMode)
             {
                 case LegacyInputMode.None:

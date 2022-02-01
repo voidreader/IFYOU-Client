@@ -104,10 +104,11 @@ namespace Doozy.Runtime.Nody
                 Flow.LateUpdate();
         }
 
-        /// <summary> Starts the graph after 1 frame </summary>
+        /// <summary> Starts the graph at the end of the second frame </summary>
         private IEnumerator StartGraph()
         {
             yield return null;
+            yield return new WaitForEndOfFrame();
 
             if (Flow == null)
                 yield break;

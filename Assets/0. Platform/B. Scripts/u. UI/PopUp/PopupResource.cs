@@ -37,7 +37,7 @@ namespace PIERStory {
         /// 뱅킹정보 리프레시 
         /// </summary>
         public void OnClickOK() {
-            UserManager.main.SetBankInfo(Data.contentJson); // 뱅킹정보 리프레시 
+            // UserManager.main.SetBankInfo(Data.contentJson); // 뱅킹정보 리프레시 
         }
         
         /*

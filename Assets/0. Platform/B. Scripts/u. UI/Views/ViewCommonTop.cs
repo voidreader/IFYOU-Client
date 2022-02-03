@@ -30,6 +30,7 @@ namespace PIERStory {
         public TextMeshProUGUI multipleButtonText;      // 다용도 버튼에 들어가는 텍스트
 
         public GameObject attendanceButton;     // 출석 이벤트 버튼
+        public GameObject howToPlayButton; // How to play 버튼 
 
         
         [SerializeField] GameObject logo; // 로고
@@ -421,17 +422,25 @@ namespace PIERStory {
                 multipleButtonText.text = label;
             }
         }
-
+        
+        /// <summary>
+        /// 출석체크 플로팅 버튼 보여주기, 감추기 시그널
+        /// </summary>
+        /// <param name="s"></param>
         void OnShowAttendance(Signal s)
         {
             if(!s.hasValue)
             {
                 attendanceButton.SetActive(false);
+                howToPlayButton.SetActive(false);
+                
                 return;
             }
 
             bool isShow = s.GetValueUnsafe<bool>();
+            
             attendanceButton.SetActive(isShow);
+            howToPlayButton.SetActive(isShow);
         }
 
         public void OnClickMultipleButton()
@@ -476,6 +485,22 @@ namespace PIERStory {
 
             PopupBase p = PopupManager.main.GetPopup("Attendance");
             PopupManager.main.ShowPopup(p, true);
+        }
+        
+        
+        /// <summary>
+        /// How to play 처리 
+        /// </summary>
+        public void OnClickHowToPlay() {
+            PopupBase p = PopupManager.main.GetPopup("HowToPlay");
+            
+            if(p == null) {
+                Debug.LogError("No How to play popup");
+                return;
+            }
+            
+            PopupManager.main.ShowPopup(p, false);
+            
         }
     }
 }

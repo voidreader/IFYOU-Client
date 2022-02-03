@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
@@ -11,6 +12,7 @@ namespace PIERStory
     public class AttendanceElement : MonoBehaviour
     {
         public Image dayHighlight;
+        public GameObject rewardToday;
 
         public ImageRequireDownload currencyIcon;
         public TextMeshProUGUI amountText;
@@ -63,14 +65,45 @@ namespace PIERStory
             else
                 coverOverlay.gameObject.SetActive(false);
 
+            gameObject.SetActive(true);
+        }
+
+        private void Start()
+        {
             if (current && clickCheck)
             {
                 dayHighlight.gameObject.SetActive(true);
-                dayHighlight.DOFade(0.3f, 1.5f).SetLoops(-1, LoopType.Yoyo);
+                rewardToday.SetActive(true);
+                StartCoroutine(SpriteShiny());
             }
-
-            gameObject.SetActive(true);
         }
+
+
+        #region Material 연출
+
+        IEnumerator SpriteShiny()
+        {
+            Sequence seq = DOTween.Sequence();
+            seq.Append(dayHighlight.DOFade(0.3f, 1.5f).SetDelay(0.5f));
+            seq.Append(dayHighlight.DOFade(1f, 1.5f));
+            seq.SetLoops(-1);
+
+            //dayHighlight.DOFade(0.3f, 1.5f).SetLoops(-1, LoopType.Yoyo);
+
+            Material todayFrame = rewardToday.GetComponent<Image>().material;
+            const float animTime = 2f;
+
+            while(rewardToday.gameObject.activeSelf)
+            {
+                todayFrame.DOFloat(1f, "_ShineLocation", animTime);
+                yield return new WaitForSeconds(animTime);
+                todayFrame.SetFloat("_ShineLocation", 0f);
+            }
+        }
+
+        #endregion
+
+
 
         /// <summary>
         /// 출석보상 받기
@@ -100,7 +133,10 @@ namespace PIERStory
                 return;
             }
 
+            UserManager.main.SetNotificationInfo(JsonMapper.ToObject(res.DataAsText));
+
             dayHighlight.gameObject.SetActive(false);
+            rewardToday.SetActive(false);
             coverOverlay.color = new Color(1, 1, 1, 0);
             checkIcon.color = new Color(1, 1, 1, 0);
             coverOverlay.gameObject.SetActive(true);

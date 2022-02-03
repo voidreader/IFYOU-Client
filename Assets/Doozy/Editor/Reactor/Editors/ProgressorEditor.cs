@@ -206,7 +206,12 @@ namespace Doozy.Editor.Reactor.Editors
                 if (evt?.newValue == null) return;
                 customResetValueFluidField.SetEnabled((ResetValue)evt.newValue == ResetValue.CustomValue);
             });
-            root.schedule.Execute(() => customResetValueFluidField.SetEnabled((ResetValue)resetValueOnEnableEnumField.value == ResetValue.CustomValue));
+            root.schedule.Execute(() =>
+            {
+                if (customResetValueFluidField == null) return;
+                if (resetValueOnEnableEnumField?.value == null) return;
+                customResetValueFluidField.SetEnabled((ResetValue)resetValueOnEnableEnumField.value == ResetValue.CustomValue);
+            });
 
 
             settingsAnimatedContainer

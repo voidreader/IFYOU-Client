@@ -187,6 +187,8 @@ namespace Doozy.Runtime.UIManager.Containers
         private Coroutine m_AutoHideCoroutine;
         private Coroutine m_CoroutineIsShowing;
         private Coroutine m_CoroutineIsHiding;
+        private Coroutine m_DisableGameObjectWithDelayCoroutine;
+
 
         public UIContainer()
         {
@@ -461,6 +463,7 @@ namespace Doozy.Runtime.UIManager.Containers
 
         private void StopIsHidingCoroutine()
         {
+            StopDisableGameObject();
             if (m_CoroutineIsHiding == null)
                 return;
             StopCoroutine(m_CoroutineIsHiding);
@@ -469,6 +472,7 @@ namespace Doozy.Runtime.UIManager.Containers
 
         private IEnumerator IsHiding()
         {
+            StopDisableGameObject();
             StopIsShowingCoroutine();
             visibilityState = VisibilityState.IsHiding;
             yield return null;
@@ -538,17 +542,31 @@ namespace Doozy.Runtime.UIManager.Containers
             canvas.enabled = !DisableCanvasWhenHidden;                     //disable the canvas, if the option is enabled
             graphicRaycaster.enabled = !DisableGraphicRaycasterWhenHidden; //disable the graphic raycaster, if the option is enabled
             if (hasCanvasGroup) canvasGroup.blocksRaycasts = graphicRaycaster.enabled;
-            gameObject.SetActive(!DisableGameObjectWhenHidden); //set the active state to false, if the option is enabled
-            // StartCoroutine(DisableGameObjectWithDelay());
+            StartDisableGameObject();
+        }
+
+        private void StartDisableGameObject()
+        {
+            StopDisableGameObject();
+            m_DisableGameObjectWithDelayCoroutine = StartCoroutine(DisableGameObjectWithDelay());
+        }
+
+        private void StopDisableGameObject()
+        {
+            if (m_DisableGameObjectWithDelayCoroutine == null)
+                return;
+            StopCoroutine(m_DisableGameObjectWithDelayCoroutine);
+            m_DisableGameObjectWithDelayCoroutine = null;
         }
 
         private IEnumerator DisableGameObjectWithDelay()
         {
             //we need to wait for 3 frames to make sure all the connected animators have had enough time to initialize (it takes 2 frames for a position animator to get its start position from a layout group (THANKS UNITY!!!) FML)
-            yield return null; //wait 1 frame (1 for the money)
-            yield return null; //wait 1 frame (2 for the show)
-            yield return null; //wait 1 frame (3 to get ready)
+            // yield return null; //wait 1 frame (1 for the money)
+            // yield return null; //wait 1 frame (2 for the show)
+            // yield return null; //wait 1 frame (3 to get ready)
             // ...and 4 to f@#king go!
+            yield return new WaitForEndOfFrame();
             gameObject.SetActive(!DisableGameObjectWhenHidden); //set the active state to false, if the option is enabled
         }
 

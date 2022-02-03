@@ -2,6 +2,7 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System;
 using System.Collections.Generic;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
@@ -57,6 +58,11 @@ namespace Doozy.Editor.Reactor.Editors.Targets
                 targetFluidField.iconReaction?.Play();
             });
 
+            if (!Enum.IsDefined(typeof(ProgressTarget.Mode), propertyTargetMode.enumValueIndex))
+            {
+                Debug.Log("WTF");
+            }
+            
             targetModeEnumField =
                 DesignUtils.NewEnumField(propertyTargetMode)
                     .SetStyleFlexGrow(1);

@@ -311,6 +311,14 @@ namespace PIERStory {
         /// </summary>
         public void OnClickPremiumPlay() {
             
+            
+            if(UserManager.main.CheckAdminUser()) {
+                // 어드민 유저 구매 없이 진행
+                SystemManager.main.givenEpisodeData = episodeData;
+                PurchasePostProcess(true);
+                return;
+            }
+            
             // 프리패스가 없으면 재화 체크하기
             // 프리패스가 없거나, 영구 구매기록이 없을때 재화 체크
             if(!UserManager.main.HasProjectFreepass() || episodeData.purchaseState != PurchaseState.Permanent)

@@ -67,6 +67,14 @@ namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
         private void Reset()
         {
             Target = Target ? Target : GetComponent<TMP_Text>();
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Value;
+        }
+
+        private void OnValidate()
+        {
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Value;
         }
         #endif
 
@@ -74,14 +82,12 @@ namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
         {
             if (!m_Initialized) Init();
             if (target == null) return;
-
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Value;
             m_TargetValue = 0;
             switch (targetMode)
             {
-                case Mode.EasedProgress:
-                    m_TargetValue = progressor.easedProgress;
-                    break;
-                case Mode.LinearProgress:
+                case Mode.Progress:
                     m_TargetValue = progressor.progress;
                     break;
                 case Mode.Value:

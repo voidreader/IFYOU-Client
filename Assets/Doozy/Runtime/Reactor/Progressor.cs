@@ -58,10 +58,6 @@ namespace Doozy.Runtime.Reactor
         /// <summary> Current Progress </summary>
         public float progress => Progress;
 
-        [SerializeField] protected float EasedProgress;
-        /// <summary> Current Eased Progress </summary>
-        public float easedProgress => EasedProgress;
-
         [SerializeField] protected float CustomResetValue;
         /// <summary> Custom Reset Value </summary>
         public float customResetValue
@@ -85,7 +81,6 @@ namespace Doozy.Runtime.Reactor
 
         public FloatEvent OnValueChanged;
         public FloatEvent OnProgressChanged;
-        public FloatEvent OnEasedProgressChanged;
 
         private bool initialized { get; set; }
 
@@ -157,13 +152,11 @@ namespace Doozy.Runtime.Reactor
         /// <summary> Update current value and trigger callbacks </summary>
         public virtual void UpdateProgressor()
         {
-            Progress = reaction.progress;
-            EasedProgress = reaction.easedProgress;
             CurrentValue = reaction.currentValue;
+            Progress = Mathf.InverseLerp(fromValue, toValue, currentValue);
 
             OnValueChanged?.Invoke(CurrentValue);
             OnProgressChanged?.Invoke(Progress);
-            OnEasedProgressChanged?.Invoke(EasedProgress);
 
             bool foundNullTarget = false;
             foreach (ProgressTarget target in ProgressTargets)
@@ -216,16 +209,43 @@ namespace Doozy.Runtime.Reactor
 
         /// <summary> Play from the current value to the given valur </summary>
         /// <param name="value"> To value </param>
-        public void PlayToValue(float value) =>
-            PlayToProgress(reaction.GetProgressAtValue(Mathf.Clamp(value, fromValue, toValue)));
+        public void PlayToValue(float value)
+        {
+            value = Mathf.Clamp(value, fromValue, toValue); //clamp the value
+            
+            if (Math.Abs(value - fromValue) < 0.001f)
+            {
+                PlayToProgress(0f);
+                return;
+            }
+
+            if (Math.Abs(value - toValue) < 0.001f)
+            {
+                PlayToProgress(1f);
+                return;
+            }
+            
+            PlayToProgress(Mathf.InverseLerp(fromValue, toValue, value));
+        }
 
         /// <summary> Play from the current progress to the given end progress (to) </summary>
         /// <param name="toProgress"> To (end) progress </param>
         public void PlayToProgress(float toProgress)
         {
-            reaction.SetFrom(FromValue);
-            reaction.SetTo(ToValue);
-            reaction.PlayToProgress(toProgress);
+            float p = Mathf.Clamp01(toProgress); //clamp the progress
+
+            switch (p)
+            {
+                case 0:
+                    reaction.Play(currentValue, fromValue);
+                    break;
+                case 1:
+                    reaction.Play(currentValue, toValue);
+                    break;
+                default:
+                    reaction.Play(currentValue, Mathf.Lerp(fromValue, toValue, p));
+                    break;
+            }
         }
 
         public void Stop() =>

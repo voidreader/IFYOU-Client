@@ -3,7 +3,6 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System.Collections;
-using Doozy.Runtime.UIManager.Utils;
 using UnityEngine;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -60,6 +59,7 @@ namespace Doozy.Runtime.UIManager.Animators
             animatorInitialized = false;
             m_RectTransform = GetComponent<RectTransform>();
             UpdateSettings();
+            ConnectToController();
         }
 
         protected virtual void OnEnable()
@@ -104,6 +104,7 @@ namespace Doozy.Runtime.UIManager.Animators
         protected IEnumerator ConnectLater()
         {
             yield return new WaitForEndOfFrame();
+            if (isConnected) yield break;
             UpdateSettings();
             Connect();
         }

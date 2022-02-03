@@ -325,8 +325,9 @@ namespace Doozy.Runtime.Nody
             if (activeSubGraph != null)
                 activeSubGraph.FixedUpdate();
 
-            foreach (FlowNode node in globalNodes.Where(node => node != activeNode && node.runFixedUpdate))
-                node.FixedUpdate();
+            foreach (FlowNode node in globalNodes)
+                if (node != activeNode && node.runFixedUpdate)
+                    node.FixedUpdate();
         }
 
         /// <summary> LateUpdate is called every frame, after all Update functions have been called and if this flow has been loaded by a controller </summary>
@@ -338,8 +339,9 @@ namespace Doozy.Runtime.Nody
             if (activeSubGraph != null)
                 activeSubGraph.LateUpdate();
 
-            foreach (FlowNode node in globalNodes.Where(node => node != activeNode && node.runLateUpdate))
-                node.LateUpdate();
+            foreach (FlowNode node in globalNodes)
+                if (node != activeNode && node.runLateUpdate)
+                    node.LateUpdate();
         }
 
         /// <summary> Update is called every frame, if this flow has been loaded by a controller </summary>
@@ -351,15 +353,17 @@ namespace Doozy.Runtime.Nody
             if (activeSubGraph != null)
                 activeSubGraph.Update();
 
-            foreach (FlowNode node in globalNodes.Where(node => node != activeNode && node.runUpdate))
-                node.Update();
+            foreach (FlowNode node in globalNodes)
+                if (node != activeNode && node.runUpdate)
+                    node.Update();
         }
 
         /// <summary> Refresh all the references for the graph's nodes </summary>
         public void UpdateNodes()
         {
             Nodes = Nodes.Where(n => n != null).ToList();
-            Nodes.ForEach(node => node.SetFlowGraph(this));
+            foreach (FlowNode node in Nodes)
+                node.SetFlowGraph(this);
         }
 
         public FlowGraph Clone()

@@ -2,6 +2,7 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System;
 using UnityEngine;
 using UnityEngine.Audio;
 using static UnityEngine.Mathf;
@@ -40,7 +41,15 @@ namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
         #if UNITY_EDITOR
         private void Reset()
         {
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Value;
             targetMode = Mode.Value;
+        }
+
+        private void OnValidate()
+        {
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Value;
         }
         #endif
         
@@ -52,6 +61,8 @@ namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
         public override void UpdateTarget(Progressor progressor)
         {
             if(target == null) return;
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Value;
             if (UseLogarithmicConversion)
             {
                 target.SetFloat(ExposedParameterName, GetLogarithmicValue(progressor.progress));

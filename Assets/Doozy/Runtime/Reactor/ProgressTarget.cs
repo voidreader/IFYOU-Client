@@ -10,10 +10,8 @@ namespace Doozy.Runtime.Reactor
     {
         public enum Mode
         {
-            /// <summary> Reaction progress that takes easing into account </summary>
-            EasedProgress,
-            /// <summary> Reaction progress that ignores easing </summary>
-            LinearProgress,
+            /// <summary> Reaction progress value </summary>
+            Progress,
             /// <summary> Progressor current value </summary>
             Value
         }

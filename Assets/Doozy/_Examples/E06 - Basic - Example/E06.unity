@@ -771,14 +771,14 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
   Id:
     Category: Example
     Name: Two
     Custom: 1
-  ClearSelectedOnHide: 0
-  ClearSelectedOnShow: 0
-  AutoSelectAfterShow: 0
-  AutoSelectTarget: {fileID: 0}
 --- !u!114 &18707599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2750,6 +2750,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -2807,6 +2808,7 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 252396810}
+    Selectable: {fileID: 252396817}
   Id:
     Category: Example
     Name: Back
@@ -5133,6 +5135,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -5190,6 +5193,7 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 1027509453}
+    Selectable: {fileID: 1027509460}
   Id:
     Category: Example
     Name: Next
@@ -6023,17 +6027,17 @@ MonoBehaviour:
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
   AutoHideAfterShowDelay: 0
-  DisableGameObjectWhenHidden: 0
+  DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
   Id:
     Category: Example
     Name: One
     Custom: 1
-  ClearSelectedOnHide: 0
-  ClearSelectedOnShow: 0
-  AutoSelectAfterShow: 0
-  AutoSelectTarget: {fileID: 0}
 --- !u!114 &1128683435
 MonoBehaviour:
   m_ObjectHideFlags: 0

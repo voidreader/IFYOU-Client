@@ -24,7 +24,15 @@ namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
         private void Reset()
         {
             Target = Target ? Target : GetComponent<Animator>();
-            targetMode = Mode.LinearProgress;
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Progress;
+            targetMode = Mode.Progress;
+        }
+
+        private void OnValidate()
+        {
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Progress;
         }
         #endif
 
@@ -33,12 +41,11 @@ namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
             if (target == null) return;
             if (!target.gameObject.activeSelf) return;
             if (!target.isActiveAndEnabled) return;
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Progress;
             switch (targetMode)
             {
-                case Mode.EasedProgress:
-                    target.SetFloat(ParameterName, progressor.easedProgress);
-                    break;
-                case Mode.LinearProgress:
+                case Mode.Progress:
                     target.SetFloat(ParameterName, progressor.progress);
                     break;
                 case Mode.Value:

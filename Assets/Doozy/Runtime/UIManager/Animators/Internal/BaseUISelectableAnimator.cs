@@ -27,12 +27,14 @@ namespace Doozy.Runtime.UIManager.Animators
 
         protected override void ConnectToController()
         {
+            if (controller == null) return;
             controller.OnSelectionStateChangedCallback.AddListener(OnSelectionStateChanged);
             StartCoroutine(UpdateStateLater());
         }
 
         protected override void DisconnectFromController()
         {
+            if (controller == null) return;
             controller.OnSelectionStateChangedCallback.RemoveListener(OnSelectionStateChanged);
         }
 

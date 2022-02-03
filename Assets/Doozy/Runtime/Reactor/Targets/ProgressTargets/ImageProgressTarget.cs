@@ -16,18 +16,25 @@ namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
         private void Reset()
         {
             Target = Target ? Target : GetComponent<Image>();
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Value;
+        }
+
+        private void OnValidate()
+        {
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Value;
         }
         #endif
         
         public override void UpdateTarget(Progressor progressor)
         {
             if(target == null) return;
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Value;
             switch (targetMode)
             {
-                case Mode.EasedProgress:
-                    target.fillAmount = Clamp01(progressor.easedProgress);
-                    break;
-                case Mode.LinearProgress:
+                case Mode.Progress:
                     target.fillAmount = Clamp01(progressor.progress);
                     break;
                 case Mode.Value:

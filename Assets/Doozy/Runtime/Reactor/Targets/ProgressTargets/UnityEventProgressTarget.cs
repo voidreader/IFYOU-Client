@@ -40,17 +40,24 @@ namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
         /// <summary> Internal variable used to get the updated target value </summary>
         private float m_TargetValue;
         
+        #if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Value;
+        }
+        #endif
+
+        
         public override void UpdateTarget(Progressor progressor)
         {
             if (target == null) return;
-
+            if (!Enum.IsDefined(typeof(Mode), targetMode))
+                targetMode = Mode.Value;
             m_TargetValue = 0;
             switch (targetMode)
             {
-                case Mode.EasedProgress:
-                    m_TargetValue = progressor.easedProgress;
-                    break;
-                case Mode.LinearProgress:
+                case Mode.Progress:
                     m_TargetValue = progressor.progress;
                     break;
                 case Mode.Value:

@@ -38,8 +38,15 @@ namespace PIERStory
             foreach (MailElement me in mailElements)
                 me.gameObject.SetActive(false);
 
-            for (int i = 0; i < UserManager.main.notReceivedMailJson["mailList"].Count; i++)
+    
+
+            for (int i = 0; i < UserManager.main.notReceivedMailJson["mailList"].Count; i++) {
+                
+                if(i >= mailElements.Length) 
+                    break;
+                
                 mailElements[i].InitMailInfo(UserManager.main.notReceivedMailJson["mailList"][i]);
+            }
         }
 
 

@@ -36,12 +36,22 @@ namespace PIERStory {
             // packageToggle.SetIsOn(true);
         }
         
+        public void DelayInitShop() {
+            StartCoroutine(RoutineInitShop());
+        }
+        
+        IEnumerator RoutineInitShop() {
+            yield return new WaitForSeconds(0.1f);
+            InitShopTop();
+        }
+        
         /// <summary>
         /// 상점 상단 초기화 
         /// </summary>
         public void InitShopTop() {
             topSpecialProduct.InitPackage("starter_pack");
             packageToggle.SetIsOn(true);
+            InitPackContainer();
         }
         
         /// <summary>

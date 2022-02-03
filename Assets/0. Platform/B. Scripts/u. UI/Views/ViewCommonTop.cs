@@ -52,6 +52,8 @@ namespace PIERStory {
         bool previousMultipleButtonShow = false; // 멀티 버튼 보여주기
         string previousMultipleLabelText = string.Empty; // 멀티 버튼 텍스트
         
+        bool previousAttendanceButtonShow = false; 
+        bool previousHowToPlayButtonShop = false; // 
         
         [SerializeField] bool backgroundSignalValue = true;
         
@@ -244,6 +246,10 @@ namespace PIERStory {
             
             // 멀티플 버튼 레이블
             previousMultipleLabelText = multipleButtonText.text;
+            
+            // 플로팅 버튼 친구들
+            previousAttendanceButtonShow = attendanceButton.activeSelf;
+            previousHowToPlayButtonShop = howToPlayButton.activeSelf;
         }
         
         /// <summary>
@@ -272,6 +278,11 @@ namespace PIERStory {
             // 멀티플 버튼 레이블
             multipleButtonText.text = previousMultipleLabelText;
             
+            
+            // 출석버튼, 하우투플레이 버튼             
+            attendanceButton.SetActive(previousAttendanceButtonShow);
+            howToPlayButton.SetActive(previousHowToPlayButtonShop);
+           
             
         }
 

@@ -141,14 +141,14 @@ namespace Doozy.Runtime.UIManager.Nodes
 
         private void StopListeners()
         {
-            backButtonListener.Stop();
+            backButtonListener?.Stop();
 
-            uiButtonListener.Stop();
-            uiToggleListener.Stop();
-            uiViewListener.Stop();
+            uiButtonListener?.Stop();
+            uiToggleListener?.Stop();
+            uiViewListener?.Stop();
 
-            streamListeners.ForEach(listener => listener.Stop());
-            streamListeners.Clear();
+            streamListeners?.ForEach(listener => listener.Stop());
+            streamListeners?.Clear();
         }
 
         private void OnBackButton(Signal signal)

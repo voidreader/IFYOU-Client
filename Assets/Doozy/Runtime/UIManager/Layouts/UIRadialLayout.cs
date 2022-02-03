@@ -377,9 +377,10 @@ namespace Doozy.Runtime.UIManager.Layouts
 
         private IEnumerator UpdateAnimatorsStartPosition()
         {
+            LayoutRebuilder.MarkLayoutForRebuild(rectTransform);
             yield return null;
-            
-            Canvas.ForceUpdateCanvases();
+
+            // Canvas.ForceUpdateCanvases();
             
             for (int i = 0; i < transform.childCount; i++)
             {
@@ -387,13 +388,18 @@ namespace Doozy.Runtime.UIManager.Layouts
                 if (child == null) continue;
 
                 UIAnimator uiAnimator = child.GetComponent<UIAnimator>();
-                if (uiAnimator != null) uiAnimator.UpdateStartPosition();
+                if (uiAnimator != null)
+                {
+                    uiAnimator.animation.startPosition = uiAnimator.rectTransform.anchoredPosition3D;
+                    uiAnimator.animation.startRotation = uiAnimator.rectTransform.localEulerAngles;
+                    if (uiAnimator.animation.isPlaying) uiAnimator.UpdateValues();
+                }
 
                 UIContainerUIAnimator uiContainerAnimator = child.GetComponent<UIContainerUIAnimator>();
-                if (uiContainerAnimator != null) uiContainerAnimator.UpdateStartPosition();
+                if (uiContainerAnimator != null) uiContainerAnimator.UpdateSettings();
 
                 UISelectableUIAnimator uiSelectableUIAnimator = child.GetComponent<UISelectableUIAnimator>();
-                if (uiSelectableUIAnimator != null) uiSelectableUIAnimator.UpdateStartPosition();
+                if (uiSelectableUIAnimator != null) uiSelectableUIAnimator.UpdateSettings();
             }
 
             runUpdateAnimatorsStartPosition = false;

@@ -73,7 +73,11 @@ namespace Doozy.Editor.Windows
                 "Assets/Doozy/Runtime/Data/Resources/ReactorSettings.asset",
 
                 //UIManager Input Settings .asset
-                "Assets/Doozy/Runtime/Data/Resources/UIManagerInputSettings.asset"
+                "Assets/Doozy/Runtime/Data/Resources/UIManagerInputSettings.asset",
+                
+                //Assembly Definitions
+                "Assets/Doozy/Editor/Doozy.Editor.asmdef",
+                "Assets/Doozy/Runtime/Doozy.Runtime.asmdef"
             };
 
         private Color accentColor => EditorColors.Default.UnityThemeInversed;
@@ -218,7 +222,7 @@ namespace Doozy.Editor.Windows
 
         private static void RunUpdateBot()
         {
-            UpdateBot.Run();
+            UpdateBot.Execute();
         }
 
         private void UpdateVersion()

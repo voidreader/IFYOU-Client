@@ -311,7 +311,7 @@ namespace PIERStory
             }
         }
 
-        void HandlePreProcessTemplate()
+        public virtual void HandlePreProcessTemplate()
         {
             switch (template)
             {
@@ -425,7 +425,7 @@ namespace PIERStory
                     break;
             }
 
-            OnRowInitialized();
+            OnRowInitialized?.Invoke();
         }
 
         #region 액션 처리
@@ -435,7 +435,7 @@ namespace PIERStory
         /// </summary>
         /// <param name="__cb">콜백</param>
         /// <param name="__isInstant">즉시실행 여부. 스킵 사용여부</param>
-        public void ProcessRowAction(Action __cb, bool __isInstant = false)
+        public virtual void ProcessRowAction(Action __cb, bool __isInstant = false)
         {
             // 상황에 대한 처리
             if (!string.IsNullOrEmpty(scene_id))
@@ -579,7 +579,7 @@ namespace PIERStory
         {
             if (!rowData.ContainsKey(__columnName))
             {
-                Debug.LogError("[" + __columnName + "] required!");
+                // Debug.LogError("[" + __columnName + "] required!");
                 return true;
             }
 

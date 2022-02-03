@@ -13,7 +13,7 @@ namespace Doozy.Runtime.UIManager.ScriptableObjects
     {
         #if INPUT_SYSTEM_PACKAGE
         public const InputHandling k_InputHandling = InputHandling.InputSystemPackage;
-        #elif LEGACY_INPUT_MANGER
+        #elif LEGACY_INPUT_MANAGER
         public const InputHandling k_InputHandling = InputHandling.LegacyInputManager;
         #else //CustomInput
         public const InputHandling k_InputHandling = InputHandling.CustomInput;

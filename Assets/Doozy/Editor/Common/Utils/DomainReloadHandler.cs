@@ -7,12 +7,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Doozy.Runtime.Common.Attributes;
+using Doozy.Runtime.Common.Utils;
 using UnityEngine;
 
 namespace Doozy.Editor.Common.Utils
 {
     public static class DomainReloadHandler
     {
+        private static Assembly doozyEditorAssembly => ReflectionUtils.doozyEditorAssembly;
+        private static Assembly doozyRuntimeAssembly => ReflectionUtils.doozyRuntimeAssembly;
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void OnRuntimeLoad()
         {
@@ -95,27 +99,60 @@ namespace Doozy.Editor.Common.Utils
             const BindingFlags flags = BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public;
             var members = new List<MemberInfo>();
 
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            //EDITOR
+            try
             {
-                try
-                {
-                    //Methods
-                    members.AddRange(from t in assembly.GetTypes()
-                                     where t.IsClass
-                                     where !t.IsGenericParameter
-                                     from m in t.GetMethods(flags)
-                                     where !m.ContainsGenericParameters
-                                     where m.IsDefined(typeof(TAttribute), inherit)
-                                     select m);
-                }
-                catch (ReflectionTypeLoadException)
-                {
-                    //ignored
-                }
+                //Methods
+                members.AddRange(from t in doozyEditorAssembly.GetTypes()
+                                 where t.IsClass
+                                 where !t.IsGenericParameter
+                                 from m in t.GetMethods(flags)
+                                 where !m.ContainsGenericParameters
+                                 where m.IsDefined(typeof(TAttribute), inherit)
+                                 select m);
             }
-
+            catch (ReflectionTypeLoadException)
+            {
+                //ignored
+            }
+            
+            //RUNTIME
+            try
+            {
+                //Methods
+                members.AddRange(from t in doozyRuntimeAssembly.GetTypes()
+                                 where t.IsClass
+                                 where !t.IsGenericParameter
+                                 from m in t.GetMethods(flags)
+                                 where !m.ContainsGenericParameters
+                                 where m.IsDefined(typeof(TAttribute), inherit)
+                                 select m);
+            }
+            catch (ReflectionTypeLoadException)
+            {
+                //ignored
+            }
+            
+            // foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            // {
+            //     try
+            //     {
+            //         //Methods
+            //         members.AddRange(from t in assembly.GetTypes()
+            //                          where t.IsClass
+            //                          where !t.IsGenericParameter
+            //                          from m in t.GetMethods(flags)
+            //                          where !m.ContainsGenericParameters
+            //                          where m.IsDefined(typeof(TAttribute), inherit)
+            //                          select m);
+            //     }
+            //     catch (ReflectionTypeLoadException)
+            //     {
+            //         //ignored
+            //     }
+            // }
+            
             return members;
-
         }
 
         private static IEnumerable<MemberInfo> GetMembers<TAttribute>(bool inherit) where TAttribute : System.Attribute
@@ -123,31 +160,77 @@ namespace Doozy.Editor.Common.Utils
             const BindingFlags flags = BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy;
             var members = new List<MemberInfo>();
 
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            //EDITOR
+            try
             {
-                try
+                foreach (Type type in doozyEditorAssembly.GetTypes())
                 {
-                    foreach (Type type in assembly.GetTypes())
-                    {
-                        if (!type.IsClass) continue;
+                    if (!type.IsClass) continue;
 
-                        //Fields
-                        members.AddRange(type.GetFields(flags).Cast<MemberInfo>().Where(member => member.IsDefined(typeof(TAttribute), inherit)));
+                    //Fields
+                    members.AddRange(type.GetFields(flags).Cast<MemberInfo>().Where(member => member.IsDefined(typeof(TAttribute), inherit)));
 
-                        //Properties
-                        members.AddRange(type.GetProperties(flags).Cast<MemberInfo>().Where(member => member.IsDefined(typeof(TAttribute), inherit)));
+                    //Properties
+                    members.AddRange(type.GetProperties(flags).Cast<MemberInfo>().Where(member => member.IsDefined(typeof(TAttribute), inherit)));
 
-                        //Events
-                        members.AddRange((from eventInfo in type.GetEvents(flags) where eventInfo.IsDefined(typeof(TAttribute), inherit) select GetEventField(type, eventInfo.Name)).Cast<MemberInfo>());
-                    }
-
-                }
-                catch (ReflectionTypeLoadException)
-                {
-                    //ignored
+                    //Events
+                    members.AddRange((from eventInfo in type.GetEvents(flags) where eventInfo.IsDefined(typeof(TAttribute), inherit) select GetEventField(type, eventInfo.Name)).Cast<MemberInfo>());
                 }
 
             }
+            catch (ReflectionTypeLoadException)
+            {
+                //ignored
+            }
+            
+            //RUNTIME
+            try
+            {
+                foreach (Type type in doozyRuntimeAssembly.GetTypes())
+                {
+                    if (!type.IsClass) continue;
+
+                    //Fields
+                    members.AddRange(type.GetFields(flags).Cast<MemberInfo>().Where(member => member.IsDefined(typeof(TAttribute), inherit)));
+
+                    //Properties
+                    members.AddRange(type.GetProperties(flags).Cast<MemberInfo>().Where(member => member.IsDefined(typeof(TAttribute), inherit)));
+
+                    //Events
+                    members.AddRange((from eventInfo in type.GetEvents(flags) where eventInfo.IsDefined(typeof(TAttribute), inherit) select GetEventField(type, eventInfo.Name)).Cast<MemberInfo>());
+                }
+
+            }
+            catch (ReflectionTypeLoadException)
+            {
+                //ignored
+            }
+
+            // foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            // {
+            //     try
+            //     {
+            //         foreach (Type type in assembly.GetTypes())
+            //         {
+            //             if (!type.IsClass) continue;
+            //
+            //             //Fields
+            //             members.AddRange(type.GetFields(flags).Cast<MemberInfo>().Where(member => member.IsDefined(typeof(TAttribute), inherit)));
+            //
+            //             //Properties
+            //             members.AddRange(type.GetProperties(flags).Cast<MemberInfo>().Where(member => member.IsDefined(typeof(TAttribute), inherit)));
+            //
+            //             //Events
+            //             members.AddRange((from eventInfo in type.GetEvents(flags) where eventInfo.IsDefined(typeof(TAttribute), inherit) select GetEventField(type, eventInfo.Name)).Cast<MemberInfo>());
+            //         }
+            //
+            //     }
+            //     catch (ReflectionTypeLoadException)
+            //     {
+            //         //ignored
+            //     }
+            // }
+
 
             return members;
         }
@@ -156,7 +239,7 @@ namespace Doozy.Editor.Common.Utils
         {
             const BindingFlags flags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic;
             FieldInfo field = null;
-            
+
             while (type != null)
             {
 

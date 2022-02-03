@@ -18,16 +18,6 @@ namespace Doozy.Runtime.UIManager.Animators
         {
             if (controller == null) return;
             controller.showHideExecute += Execute;
-            // StartCoroutine(ExecuteFirstCommand());
-        }
-
-        private IEnumerator ExecuteFirstCommand()
-        {
-            yield return null;
-            yield return null;
-            // D($"ConnectToController - executed first command: {controller.executedFirstCommand} - command: {controller.previouslyExecutedCommand}");
-            if (controller.executedFirstCommand)
-                Execute(controller.previouslyExecutedCommand);
         }
 
         protected override void DisconnectFromController()

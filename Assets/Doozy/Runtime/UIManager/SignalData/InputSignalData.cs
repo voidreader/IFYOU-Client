@@ -47,7 +47,7 @@ namespace Doozy.Runtime.UIManager
         }
         #endif
 
-        #if LEGACY_INPUT_MANGER
+        #if LEGACY_INPUT_MANAGER
         public LegacyInputMode inputMode { get; }
         public UnityEngine.KeyCode keyCode { get; }
         public string virtualButtonName { get; }

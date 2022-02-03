@@ -46,7 +46,7 @@ namespace Doozy.Editor.UIManager.Editors.Input
             return root;
         }
 
-        #if !INPUT_SYSTEM_PACKAGE && !LEGACY_INPUT_MANGER
+        #if !INPUT_SYSTEM_PACKAGE && !LEGACY_INPUT_MANAGER
         private void InitializeEditor()
         {
             root = new VisualElement();
@@ -203,7 +203,7 @@ namespace Doozy.Editor.UIManager.Editors.Input
 
         #endif
 
-        #if LEGACY_INPUT_MANGER
+        #if LEGACY_INPUT_MANAGER
         private EnumField inputModeEnumField { get; set; }
         private EnumField keyCodeEnumField { get; set; }
         private TextField virtualButtonNameTextField { get; set; }

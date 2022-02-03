@@ -58,19 +58,19 @@ namespace Doozy.Runtime.Common
 
 		public static void Log(object message, UnityEngine.Object context = null)
 		{
-			// message = DoozyPrefix(LogType.Log) + message;
+			message = DoozyPrefix(LogType.Log) + message;
 			logger.Log(message, context);
 		}
 
 		public static void LogWarning(object message, UnityEngine.Object context = null)
 		{
-			// message = DoozyPrefix(LogType.Warning) + message;
+			message = DoozyPrefix(LogType.Warning) + message;
 			logger.LogWarning(message, context);
 		}
 
 		public static void LogError(object message, UnityEngine.Object context = null)
 		{
-			// message = DoozyPrefix(LogType.Error) + message;
+			message = DoozyPrefix(LogType.Error) + message;
 			logger.LogError(message, context);
 		}
 	}

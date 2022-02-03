@@ -174,7 +174,9 @@ namespace PIERStory
         const string NODE_SELECTION_PROGRESS = "selectionProgress"; // 선택지 프로그레스 
         
         const string NODE_FREEPASS_TIMEDEAL = "userFreepassTimedeal"; // 유저 프리패스 타임딜
-        const string NODE_RESET_DATA = "resetData"; // 유저 작품 리셋데이터        
+        const string NODE_RESET_DATA = "resetData"; // 유저 작품 리셋데이터   
+        
+        const string NODE_USER_SNIPPET = "userSnippet"; // 유저 스니핏 
 
         #endregion
 
@@ -383,6 +385,14 @@ namespace PIERStory
         public void SetStoryUserData(JsonData __j)
         {
             currentStoryJson = __j;
+            
+            
+            // 스니핏 추가 
+            if(CheckHasUserSnippet()) {
+                if(SnippetManager.main != null) {
+                    SnippetManager.main.InitSnippet(GetUserSnippet());
+                }
+            }
             
             #region 미션 
             currentStoryMissionJSON = GetNodeProjectMissions();
@@ -2445,5 +2455,26 @@ namespace PIERStory
         }
         
         
+        #region 유저 스니핏
+        
+        /// <summary>
+        /// 유저 스니핏 NODE
+        /// </summary>
+        /// <returns></returns>
+        public JsonData GetUserSnippet() {
+            return currentStoryJson[NODE_USER_SNIPPET];
+        }
+        
+        /// <summary>
+        /// 유저 스니핏 존재 여부 
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckHasUserSnippet() {
+            
+            return GetUserSnippet().ContainsKey("snippetScript") && GetUserSnippet()["snippetScript"].Count > 0;
+            
+        }
+        
+        #endregion
     }
 }

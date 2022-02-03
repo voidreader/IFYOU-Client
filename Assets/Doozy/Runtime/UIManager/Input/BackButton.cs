@@ -29,7 +29,7 @@ namespace Doozy.Runtime.UIManager.Input
     [DisallowMultipleComponent]
     public class BackButton : SingletonBehaviour<BackButton>
     {
-        #if LEGACY_INPUT_MANGER
+        #if LEGACY_INPUT_MANAGER
         public const KeyCode k_BackButtonKeyCode = KeyCode.Escape;
         public const string k_BackButtonVirtualButtonName = "Cancel";
         #endif
@@ -102,12 +102,13 @@ namespace Doozy.Runtime.UIManager.Input
 
         /// <summary> True if the 'Back' button functionality is enabled and is not in cooldown </summary>
         public bool canFire => isEnabled && !inCooldown;
-        public static bool blockBackInput = false;
 
         /// <summary> Flag marked as True if a InputToSignal set to listen for the 'Back' button exists in the scene </summary>
         public bool hasInput { get; private set; }
 
         private bool initialized { get; set; }
+        
+        public static bool blockBackInput = false;
 
         public static void Initialize()
         {
@@ -139,7 +140,7 @@ namespace Doozy.Runtime.UIManager.Input
                 Fire(data);
                 #endif
 
-                #if LEGACY_INPUT_MANGER
+                #if LEGACY_INPUT_MANAGER
                 if (!(signal.valueAsObject is InputSignalData data)) return;
                 switch (data.inputMode)
                 {
@@ -175,7 +176,7 @@ namespace Doozy.Runtime.UIManager.Input
                 Fire(new InputSignalData(UIInputActionName.Cancel, data.playerIndex));
                 #endif
 
-                #if LEGACY_INPUT_MANGER
+                #if LEGACY_INPUT_MANAGER
                 Fire(new InputSignalData(LegacyInputMode.KeyCode, BackButton.k_BackButtonKeyCode, BackButton.k_BackButtonVirtualButtonName, data.playerIndex));
                 #endif
 
@@ -240,7 +241,8 @@ namespace Doozy.Runtime.UIManager.Input
         /// </summary>
         public static void Fire(InputSignalData data)
         {
-            Debug.Log("BackButton Fire #1");
+            if(blockBackInput)
+                return;
             
             if (applicationIsQuitting) return;
             if (!instance.canFire) return;
@@ -254,8 +256,8 @@ namespace Doozy.Runtime.UIManager.Input
         /// </summary>
         public static void Fire()
         {
-            
-            Debug.Log("BackButton Fire #2");
+            if(blockBackInput)
+                return;
             
             if (applicationIsQuitting) return;
             if (!instance.canFire) return;
@@ -304,7 +306,7 @@ namespace Doozy.Runtime.UIManager.Input
         /// <param name="target"> Target gameObject </param>
         private static void AddInputToSignalToGameObject(GameObject target)
         {
-            #if !INPUT_SYSTEM_PACKAGE && !LEGACY_INPUT_MANGER
+            #if !INPUT_SYSTEM_PACKAGE && !LEGACY_INPUT_MANAGER
             return;
             #endif
 
@@ -324,7 +326,7 @@ namespace Doozy.Runtime.UIManager.Input
                     .ConnectToAction(UIInputActionName.Cancel);
                 #endif
 
-                #if LEGACY_INPUT_MANGER
+                #if LEGACY_INPUT_MANAGER
                 InputToSignal its = target.AddComponent<InputToSignal>();
                 its.inputMode = LegacyInputMode.KeyCode;
                 its.keyCode = BackButton.k_BackButtonKeyCode;
@@ -348,7 +350,7 @@ namespace Doozy.Runtime.UIManager.Input
                 target.inputActionName.Equals(UIInputActionName.Cancel.ToString());
             #endif
 
-            #if LEGACY_INPUT_MANGER
+            #if LEGACY_INPUT_MANAGER
             return
                 target != null &&
                 target.inputMode switch

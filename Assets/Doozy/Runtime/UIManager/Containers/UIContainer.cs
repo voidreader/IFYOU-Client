@@ -340,14 +340,26 @@ namespace Doozy.Runtime.UIManager.Containers
             visibilityState = VisibilityState.Hidden;
         }
 
-        public void InstantToggle(bool show)
+        /// <summary>
+        /// Toggles the visibility state.
+        /// If Visible or IsShowing calls InstantHide.
+        /// If Hidden or IsHiding calls InstantShow.
+        /// </summary>
+        public void InstantToggle()
         {
-            if (show)
+            switch(visibilityState)
             {
-                InstantShow();
-                return;
+                case VisibilityState.Visible:
+                case VisibilityState.IsShowing:
+                    InstantHide();
+                    break;
+                case VisibilityState.Hidden:
+                case VisibilityState.IsHiding:
+                    InstantShow();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            InstantHide();
         }
 
         #endregion
@@ -477,14 +489,26 @@ namespace Doozy.Runtime.UIManager.Containers
             m_CoroutineIsHiding = null;
         }
 
-        public void Toggle(bool show)
+        /// <summary>
+        /// Toggles the visibility state.
+        /// If Visible or IsShowing calls Hide.
+        /// If Hidden or IsHiding calls Show.
+        /// </summary>
+        public void Toggle()
         {
-            if (show)
+            switch(visibilityState)
             {
-                Show();
-                return;
+                case VisibilityState.Visible:
+                case VisibilityState.IsShowing:
+                    Hide();
+                    break;
+                case VisibilityState.Hidden:
+                case VisibilityState.IsHiding:
+                    Show();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            Hide();
         }
 
         #endregion

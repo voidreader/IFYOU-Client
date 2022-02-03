@@ -193,7 +193,7 @@ namespace Doozy.Editor.UIManager.Layouts.Settings
                     .SetTabPosition(TabPosition.TabOnLeft)
                     .SetOnClick(() =>
                     {
-                        DefineSymbolsUtils.RemoveGlobalDefine("LEGACY_INPUT_MANGER");
+                        DefineSymbolsUtils.RemoveGlobalDefine("LEGACY_INPUT_MANAGER");
                         DefineSymbolsUtils.AddGlobalDefine("INPUT_SYSTEM_PACKAGE");
                         legacyInputManagerTabButton.isOn = false;
                         customInputTabButton.isOn = false;
@@ -206,7 +206,7 @@ namespace Doozy.Editor.UIManager.Layouts.Settings
                     .SetOnClick(() =>
                     {
                         DefineSymbolsUtils.RemoveGlobalDefine("INPUT_SYSTEM_PACKAGE");
-                        DefineSymbolsUtils.AddGlobalDefine("LEGACY_INPUT_MANGER");
+                        DefineSymbolsUtils.AddGlobalDefine("LEGACY_INPUT_MANAGER");
                         inputSystemPackageTabButton.isOn = false;
                         customInputTabButton.isOn = false;
                     });
@@ -218,7 +218,7 @@ namespace Doozy.Editor.UIManager.Layouts.Settings
                     .SetOnClick(() =>
                     {
                         DefineSymbolsUtils.RemoveGlobalDefine("INPUT_SYSTEM_PACKAGE");
-                        DefineSymbolsUtils.RemoveGlobalDefine("LEGACY_INPUT_MANGER");
+                        DefineSymbolsUtils.RemoveGlobalDefine("LEGACY_INPUT_MANAGER");
                         inputSystemPackageTabButton.isOn = false;
                         legacyInputManagerTabButton.isOn = false;
                     });

@@ -509,7 +509,7 @@ namespace PIERStory
                 RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData["coin"], "image_url"), SystemManager.GetJsonNodeString(baseCurrencyData["coin"], "image_key"), null);
             }
             if(baseCurrencyData != null && baseCurrencyData.ContainsKey("gem")) {
-                RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData["gem"], "image_url"), SystemManager.GetJsonNodeString(baseCurrencyData["coin"], "image_key"), null);
+                RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData["gem"], "image_url"), SystemManager.GetJsonNodeString(baseCurrencyData["gem"], "image_key"), null);
             }
             
             

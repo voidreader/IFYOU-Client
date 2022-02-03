@@ -45,8 +45,16 @@ namespace PIERStory
             
             
             // 재화 아이콘 처리 
-            currencyURL = SystemManager.GetJsonNodeString(__j, "icon_image_url");
-            currencyKey = SystemManager.GetJsonNodeString(__j, "icon_image_key");
+            if(currency == "gem" || currency == "coin") {
+                currencyURL = SystemManager.main.GetCurrencyImageURL(currency);
+                currencyKey = SystemManager.main.GetCurrencyImageKey(currency);
+            }
+            else {
+                currencyURL = SystemManager.GetJsonNodeString(__j, "icon_image_url");
+                currencyKey = SystemManager.GetJsonNodeString(__j, "icon_image_key");
+            }
+            
+            
             currencyIcon.SetDownloadURL(currencyURL, currencyKey);
             
             // 재화 이름 

@@ -672,7 +672,7 @@ namespace PIERStory
                 if (UserManager.main.useRecord)
                     ShowGameEnd(null);
                 else
-                    SystemManager.ShowGamePopup("다시 보시겠습니까?", RetryPlay, EndGame);
+                    SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("6203"), RetryPlay, EndGame);
             }
 
             isPlaying = false;

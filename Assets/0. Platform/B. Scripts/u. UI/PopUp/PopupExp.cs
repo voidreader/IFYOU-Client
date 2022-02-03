@@ -10,6 +10,8 @@ namespace PIERStory {
 
     public class PopupExp : PopupBase
     {
+        public bool isLevelUpCall = false;
+        
         [SerializeField] Image imageBar; // 경험치 바
         [SerializeField] TextMeshProUGUI textExp; // 경험치 
         [SerializeField] TextMeshProUGUI textlevel; // 레벨 
@@ -130,6 +132,12 @@ namespace PIERStory {
                 Debug.LogError("No reward data... T_T");
                 return;
             }
+            
+            if(isLevelUpCall)
+                return;
+                
+            isLevelUpCall = true;
+            
             
             // 레벨이 달라진 경우, 
             // 레벨업 팝업 호출

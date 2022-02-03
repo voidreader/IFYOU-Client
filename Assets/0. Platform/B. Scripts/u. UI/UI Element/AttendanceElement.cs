@@ -91,12 +91,12 @@ namespace PIERStory
             //dayHighlight.DOFade(0.3f, 1.5f).SetLoops(-1, LoopType.Yoyo);
 
             Material todayFrame = rewardToday.GetComponent<Image>().material;
-            const float animTime = 2f;
+            const float animTime = 1f;
 
             while(rewardToday.gameObject.activeSelf)
             {
                 todayFrame.DOFloat(1f, "_ShineLocation", animTime);
-                yield return new WaitForSeconds(animTime);
+                yield return new WaitForSeconds(animTime * 2);
                 todayFrame.SetFloat("_ShineLocation", 0f);
             }
         }
@@ -143,6 +143,8 @@ namespace PIERStory
             coverOverlay.DOFade(1f, 0.4f);
             checkIcon.DOFade(1f, 0.2f).SetDelay(0.2f);
             checkIcon.transform.DOPunchScale(Vector3.one * 1.5f, 0.4f).SetDelay(0.3f);
+
+            SystemManager.ShowSimpleAlertLocalize("6177");
         }
         
     }

@@ -66,7 +66,7 @@ namespace PIERStory
             if (current && clickCheck)
             {
                 dayHighlight.gameObject.SetActive(true);
-                dayHighlight.DOFade(0f, 1.5f).SetLoops(-1, LoopType.Yoyo);
+                dayHighlight.DOFade(0.3f, 1.5f).SetLoops(-1, LoopType.Yoyo);
             }
 
             gameObject.SetActive(true);

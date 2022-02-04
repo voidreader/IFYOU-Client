@@ -1964,6 +1964,8 @@ namespace PIERStory
             // * 1. 에피소드 클리어 후 사이드 해금 체크 
             #region 사이드
             
+            Debug.Log("### 사이드 에피소드 오픈 체크 시작 ###");
+            
             JsonData sideData = UserManager.main.GetNodeUnlockSide();
             // 사이드 해금이 있는 경우
             if (sideData != null && sideData.Count > 0)
@@ -1987,12 +1989,18 @@ namespace PIERStory
                     }
                 }
                 
-                yield return null;
-            }            
+                yield return new WaitForSeconds(0.1f);
+            }
+            
+            Debug.Log("### 사이드 에피소드 오픈 체크 종료 ###");
+                        
             #endregion
             
             // * 2. 열린 엔딩 체크 
             #region 엔딩
+            
+            
+            Debug.Log("### 엔딩 오픈 체크 시작 ###");
 
             // 다음 에피소드가 엔딩인 경우
             if (nextEpisodeData != null && nextEpisodeData.episodeType == EpisodeType.Ending)
@@ -2020,6 +2028,7 @@ namespace PIERStory
                 Debug.Log("<color=yellow>Ending Alert close </color>");
             }            
             
+            Debug.Log("### 엔딩 오픈 체크 종료 ###");
             
             #endregion
             
@@ -2043,7 +2052,7 @@ namespace PIERStory
                     PopupManager.main.ShowPopup(p, true, false); // 보여주기.  (queue 사용으로 변경)                    
                 }
                 
-                yield return null;
+                yield return new WaitForSeconds(0.1f);
 
             } // 첫 클리어 보상 팝업 끝 
             #endregion

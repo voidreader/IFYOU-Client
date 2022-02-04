@@ -24,13 +24,20 @@ namespace PIERStory
         public UIToggle normalToggle;
         public UIToggle fastToggle;
 
-        bool currentShow = false;
+        private void Start()
+        {
+            normalToggle.isOn = true;
+            SetAutoPlayNormal();
+
+            slowToggle.OnToggleOffCallback.Execute();
+            normalToggle.OnToggleOnCallback.Execute();
+            fastToggle.OnToggleOffCallback.Execute();
+        }
+
 
         public override void OnStartView()
         {
             base.OnStartView();
-
-            currentShow = true;
 
             voiceToggle.isOn = PlayerPrefs.GetInt(GameConst.VOICE_MUTE) > 0 ? false : true;
             bgmToggle.isOn = PlayerPrefs.GetInt(GameConst.BGM_MUTE) > 0 ? false : true;
@@ -45,49 +52,31 @@ namespace PIERStory
 
         public void VoiceToggleOn()
         {
-            if (!currentShow)
-                return;
-
             ToggleEvent(voiceButton, GameConst.VOICE_MUTE, 1, true);
         }
 
         public void VoiceToggleOff()
         {
-            if (!currentShow)
-                return;
-
             ToggleEvent(voiceButton, GameConst.VOICE_MUTE, 1, false);
         }
 
         public void BGMToggleOn()
         {
-            if (!currentShow)
-                return;
-
             ToggleEvent(bgmButton, GameConst.BGM_MUTE, 0, true);
         }
 
         public void BGMToggleOff()
         {
-            if (!currentShow)
-                return;
-
             ToggleEvent(bgmButton, GameConst.BGM_MUTE, 0, false);
         }
 
         public void SoundEffectToggleOn()
         {
-            if (!currentShow)
-                return;
-
             ToggleEvent(seButton, GameConst.SOUNDEFFECT_MUTE, 2, true);
         }
 
         public void SoundEffectToggleOff()
         {
-            if (!currentShow)
-                return;
-
             ToggleEvent(seButton, GameConst.SOUNDEFFECT_MUTE, 2, false);
         }
 
@@ -115,27 +104,18 @@ namespace PIERStory
         // AutoPlayToggle 설정
         public void SetAutoPlaySlow()
         {
-            if (!currentShow)
-                return;
-
             if (slowToggle.isOn && GameManager.main != null)
                 PlayerPrefs.SetFloat(GameConst.AUTO_PLAY, GameConst.slowDelay);
         }
 
         public void SetAutoPlayNormal()
         {
-            if (!currentShow)
-                return;
-
             if (normalToggle.isOn && GameManager.main != null)
                 PlayerPrefs.SetFloat(GameConst.AUTO_PLAY, GameConst.normalDelay);
         }
 
         public void SetAutoPlayFast()
         {
-            if (!currentShow)
-                return;
-
             if (fastToggle.isOn && GameManager.main != null)
                 PlayerPrefs.SetFloat(GameConst.AUTO_PLAY, GameConst.fastDelay);
         }

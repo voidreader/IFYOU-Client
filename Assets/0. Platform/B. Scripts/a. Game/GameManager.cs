@@ -576,7 +576,7 @@ namespace PIERStory
             // ! 띠배너 광고 
             AdManager.main.LoadBanner();
 
-            autoPlayCorountine = RoutineAutoPlay();
+            main.autoPlayCorountine = RoutineAutoPlay();
 
 
             // 모든 라인을, 혹은 종료 명령어를 만날때까지 계속해! 
@@ -750,39 +750,38 @@ namespace PIERStory
 
         public void StartAutoPlay()
         {
-            if (autoPlayCorountine == null)
+            if (main.autoPlayCorountine == null)
                 return;
 
+            main.autoPlayCorountine = null;
+            main.autoPlayCorountine = RoutineAutoPlay();
             StartCoroutine(main.autoPlayCorountine);
         }
 
         public void StopAutoPlay()
         {
-            if (autoPlayCorountine == null)
+            if (main.autoPlayCorountine == null)
                 return;
 
             StopCoroutine(main.autoPlayCorountine);
-            isAutoPlay = false;
+            main.isAutoPlay = false;
         }
 
         IEnumerator RoutineAutoPlay()
         {
             Debug.Log("RoutineAutoPlay Start!");
 
-            isAutoPlay = true;
+            main.isAutoPlay = true;
 
             while (isPlaying)
             {
                 if (AdManager.main.isAdShowing)
                 {
-                    isAutoPlay = false;
+                    main.isAutoPlay = false;
                     yield break;
                 }
 
                 yield return new WaitUntil(() => !isThreadHold);
-
-                if (!isWaitingScreenTouch)
-                    continue;
 
                 if (!isThreadHold && isWaitingScreenTouch)
                 {
@@ -796,13 +795,7 @@ namespace PIERStory
                     else
                         yield return new WaitForSeconds(PlayerPrefs.GetFloat(GameConst.AUTO_PLAY));
 
-                    if (!isWaitingScreenTouch)
-                        continue;
-
-                    Debug.Log(">> Auto Click <<");
-
-                    if (!isThreadHold)
-                        isWaitingScreenTouch = false;
+                    isWaitingScreenTouch = false;
                 }
 
                 yield return null;

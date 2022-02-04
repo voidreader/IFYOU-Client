@@ -1668,7 +1668,7 @@ namespace PIERStory
         /// <summary>
         /// 하단에 생기는 까만 정말 간단한 팝업
         /// </summary>
-        public static void ShowSimpleAlert(string __message)
+        public static void ShowSimpleAlert(string __message, bool addQueue = true)
         {
             PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_SIMPLE_ALERT);
 
@@ -1680,13 +1680,13 @@ namespace PIERStory
 
             p.Data.SetLabelsTexts(__message);
 
-            PopupManager.main.ShowPopup(p, true);
+            PopupManager.main.ShowPopup(p, addQueue);
         }
 
         
-        public static void ShowSimpleAlertLocalize(string __texId)
+        public static void ShowSimpleAlertLocalize(string __texId, bool addQueue = true)
         {
-            ShowSimpleAlert(GetLocalizedText(__texId));
+            ShowSimpleAlert(GetLocalizedText(__texId), addQueue);
         }
 
 

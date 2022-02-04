@@ -287,6 +287,8 @@ namespace PIERStory
                 SetEpisodeList(StoryManager.main.RegularEpisodeList);
                 SetRegularEpisodeCountText(StoryManager.main.regularEpisodeCount, StoryManager.main.unlockEndingCount);
 
+                sortText.text = SystemManager.GetLocalizedText("5029");
+
                 // 빠른플레이 및 엔딩 알림 
                 SetRegularExtraNotification();
             }

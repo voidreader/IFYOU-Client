@@ -1224,9 +1224,6 @@ namespace PIERStory
             // 키 높이에 의한 말풍선 위치 조절
             switch (speakerTall)
             {
-                case 0:
-                    rtransform.anchoredPosition = new Vector2(posX, posY - 300);
-                    break;
                 case 1:
                     rtransform.anchoredPosition = new Vector2(posX, posY - 240);
                     break;

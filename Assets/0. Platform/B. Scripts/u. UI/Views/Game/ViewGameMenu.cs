@@ -38,6 +38,8 @@ namespace PIERStory
                 // rect.
                 footer.anchoredPosition = new Vector2(0, footer.anchoredPosition.y + 120);
             }
+
+            OffAutoPlay();
         }
         
         public override void OnStartView()
@@ -116,8 +118,6 @@ namespace PIERStory
             GameManager.main.isThreadHold = false;
             GameManager.main.isWaitingScreenTouch = false;
         }
-        
-        
         
 
         public void OnClickBlockSkip()

@@ -78,13 +78,15 @@ namespace PIERStory
 
         void CalcAllProjectDataSize()
         {
-            for(int i=0;i<StoryManager.main.listTotalStory.Count;i++)
+            totalDataSize = 0;
+
+            for (int i = 0; i < StoryManager.main.listTotalStory.Count; i++)
             {
                 // 프로젝트 폴더 경로
                 string path = Application.persistentDataPath + "/" + StoryManager.main.listTotalStory[i].projectID;
                 dirInfo = new DirectoryInfo(path);
 
-                if(dirInfo.Exists)
+                if (dirInfo.Exists)
                 {
                     long size = 0;
 
@@ -124,6 +126,12 @@ namespace PIERStory
                 if (dirInfo.Exists)
                     ES3.DeleteDirectory(path);
             }
+
+            foreach (GameObject g in projectPrefabs)
+                Destroy(g);
+
+            projectPrefabs.Clear();
+            CalcAllProjectDataSize();
         }
     }
 }

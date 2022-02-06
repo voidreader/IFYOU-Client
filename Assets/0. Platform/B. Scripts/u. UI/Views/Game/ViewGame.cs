@@ -187,6 +187,14 @@ namespace PIERStory
 
             // 입력 받았어요!
             GameManager.main.isWaitingScreenTouch = false;
+
+            // 자동진행 중인데 터치를 누른거라면
+            if(GameManager.main.isAutoPlay)
+            {
+                // 자동진행을 멈춰줬다가 다시 시작!
+                GameManager.main.StopAutoPlay();
+                GameManager.main.StartAutoPlay();
+            }
         }
 
 
@@ -1092,11 +1100,14 @@ namespace PIERStory
             episodeNum.color = new Color(episodeNum.color.r, episodeNum.color.g, episodeNum.color.b, 1f);
             placeNameText.color = new Color(placeNameText.color.r, placeNameText.color.g, placeNameText.color.b, 1f);
 
+
+            // 스킵인 경우 여길 아예 타지 맙시다
+            if (GameManager.main.useSkip)
+                return;
+
             placeTag.Join(placeTextBG.DOFade(1f, 1f).SetDelay(1f).OnStart(() =>
             {
-                // 스킵이 아닌 경우에만 활성화 한다
-                if (!GameManager.main.useSkip)
-                    placeTextBG.gameObject.SetActive(true);
+                placeTextBG.gameObject.SetActive(true);
             }));
 
             // 동일한 속도로 글자 타이핑 애니메이션

@@ -144,7 +144,7 @@ namespace PIERStory
             checkIcon.DOFade(1f, 0.2f).SetDelay(0.2f);
             checkIcon.transform.DOPunchScale(Vector3.one * 1.5f, 0.4f).SetDelay(0.3f);
 
-            SystemManager.ShowSimpleAlertLocalize("6177");
+            SystemManager.ShowSimpleAlertLocalize("6177", false);
         }
         
     }

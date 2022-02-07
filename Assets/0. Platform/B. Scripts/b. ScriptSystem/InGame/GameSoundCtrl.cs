@@ -49,7 +49,7 @@ namespace PIERStory
                     audioSource.Pause();
                     audioSource.clip = DictSound[keyName].audioClip;
                     audioSource.Play();
-                    audioSource.DOFade(DictSound[keyName].volume, 1.5f).SetDelay(1f);
+                    audioSource.DOFade(PlayerPrefs.GetFloat(GameConst.BGM_VOLUME), 1.5f).SetDelay(1f);
                 });
             }
             else
@@ -57,7 +57,7 @@ namespace PIERStory
                 audioSource.volume = 0f;
                 audioSource.clip = DictSound[keyName].audioClip;
                 audioSource.Play();
-                audioSource.DOFade(DictSound[keyName].volume, 1.5f);
+                audioSource.DOFade(PlayerPrefs.GetFloat(GameConst.BGM_VOLUME), 1.5f);
             }
         }
 
@@ -74,7 +74,6 @@ namespace PIERStory
 
             audioSource.clip = DictSound[keyName].audioClip;
             audioSource.loop = false;
-            audioSource.volume = DictSound[keyName].volume;
             audioSource.Play();
         }
 
@@ -88,9 +87,7 @@ namespace PIERStory
 
             audioSource.clip = DictSound[keyName].audioClip;
             audioSource.loop = false;
-            audioSource.volume = DictSound[keyName].volume;
             audioSource.PlayOneShot(audioSource.clip);
-
         }
 
 
@@ -134,6 +131,11 @@ namespace PIERStory
         public void UnmuteAudioClip()
         {
             audioSource.mute = false;
+        }
+
+        public void ChangeSoundVolume(float __value)
+        {
+            audioSource.volume = __value;
         }
 
         public bool GetIsPlaying { get { return audioSource.isPlaying; } }

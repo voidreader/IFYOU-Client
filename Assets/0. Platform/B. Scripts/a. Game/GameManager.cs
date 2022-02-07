@@ -225,11 +225,9 @@ namespace PIERStory
                 StoryManager.main.RequestStoryInfo(StoryManager.main.CurrentProject);
             }
 
-            SoundSetting(GameConst.BGM_MUTE, 0);
-            SoundSetting(GameConst.VOICE_MUTE, 1);
-            SoundSetting(GameConst.SOUNDEFFECT_MUTE, 2);
-
-
+            SoundSetting(GameConst.BGM_VOLUME, 0);
+            SoundSetting(GameConst.VOICE_VOLUME, 1);
+            SoundSetting(GameConst.SOUNDEFFECT_VOLUME, 2);
         }
 
         void Update()
@@ -269,14 +267,9 @@ namespace PIERStory
         void SoundSetting(string key, int soundIndex)
         {
             if (!PlayerPrefs.HasKey(key))
-                PlayerPrefs.SetInt(key, 0);
-            else
-            {
-                if (PlayerPrefs.GetInt(key) < 1)
-                    SoundGroup[soundIndex].UnmuteAudioClip();
-                else
-                    SoundGroup[soundIndex].MuteAudioClip();
-            }
+                PlayerPrefs.SetFloat(key, 1f);
+
+            SoundGroup[soundIndex].ChangeSoundVolume(PlayerPrefs.GetFloat(key));
         }
 
         public void RequestEpisodeScript()

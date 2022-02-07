@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Doozy.Runtime.UIManager.Components;
-using BestHTTP;
+
 using TMPro;
 using LitJson;
+using BestHTTP;
 using DG.Tweening;
+using Doozy.Runtime.UIManager.Components;
 
 namespace PIERStory
 {
@@ -17,7 +18,6 @@ namespace PIERStory
         
         
         public GameObject rewardInfo;
-        public GameObject missionProceeding;        // 미션 진행중
         public GameObject getRewardButton;          // 미션 보상받기
         public GameObject completeMark;             // 미션 완료 도장
         
@@ -26,9 +26,16 @@ namespace PIERStory
         public ImageRequireDownload currencyIcon;
         public TextMeshProUGUI expText;
         public TextMeshProUGUI currencyAmount;
-        // public TextMeshProUGUI missionState;
-        
-        
+        public Image border;
+        public Image button;
+        public TextMeshProUGUI getRewardText;
+
+        Color pinkColor = new Color32(255, 163, 212, 255);
+        Color orangeColor = new Color32(254, 200, 150, 255);
+        Color violetColor = new Color32(197, 198, 254, 255);
+
+        Color disableGreyColor = new Color32(248, 248, 248, 255);
+
         public MissionState state;
 
         
@@ -57,6 +64,14 @@ namespace PIERStory
 
             SetCurrencyIcon(missionData.rewardQuantity);
             SetMissionState(missionData.missionState);
+            MissionGradeColor();
+
+            // 버튼 비활성화 표기
+            if (missionData.missionState == MissionState.locked)
+            {
+                getRewardText.color = HexCodeChanger.HexToColor("C4C4C4");
+                button.color = disableGreyColor;
+            }
         }
 
         public void HighlightHidden(int lockCount)
@@ -80,8 +95,6 @@ namespace PIERStory
         void SetMissionState(MissionState __state)
         {
             rewardInfo.SetActive(true);
-            getRewardButton.SetActive(false);
-            missionProceeding.SetActive(false);
             completeMark.SetActive(false);
             
             state = __state;
@@ -89,10 +102,7 @@ namespace PIERStory
             switch (__state)
             {
                 case MissionState.unlocked:
-                    getRewardButton.SetActive(true);
                     getRewardButton.GetComponent<UIButton>().interactable = true;
-                    
-                    missionProceeding.SetActive(false);
                     break;
                 case MissionState.finish:
                     rewardInfo.SetActive(false);
@@ -100,11 +110,56 @@ namespace PIERStory
                     break;
 
                 default:
-                    getRewardButton.SetActive(false);
-                    missionProceeding.SetActive(true);
+                    getRewardButton.GetComponent<UIButton>().interactable = false;
                     break;
             }
         }
+
+
+        /// <summary>
+        /// 미션 등급화
+        /// </summary>
+        void MissionGradeColor()
+        {
+            getRewardText.color = HexCodeChanger.HexToColor("404040");
+
+            // 미션 등급화
+            if (missionData.rewardExp >= 100)
+            {
+                border.color = Color.white;
+                button.color = Color.white;
+
+                border.sprite = LobbyManager.main.spriteGradientBorder;
+                button.sprite = LobbyManager.main.spriteGradientButton;
+                return;
+            }
+
+
+            border.sprite = LobbyManager.main.spriteWhiteBorder;
+            button.sprite = LobbyManager.main.spriteWhiteButton;
+
+            if (missionData.rewardExp >= 20)
+            {
+                border.color = violetColor;
+                button.color = new Color(violetColor.r, violetColor.g, violetColor.b, violetColor.a * 0.7f);
+                return;
+            }
+
+            if (missionData.rewardExp >= 7)
+            {
+                border.color = orangeColor;
+                button.color = new Color(orangeColor.r, orangeColor.g, orangeColor.b, orangeColor.a * 0.7f);
+                return;
+            }
+
+
+            if (missionData.rewardExp >= 1)
+            {
+                border.color = pinkColor;
+                button.color = new Color(pinkColor.r, pinkColor.g, pinkColor.b, pinkColor.a * 0.7f);
+            }
+        }
+
 
         public void OnClickGetReward()
         {

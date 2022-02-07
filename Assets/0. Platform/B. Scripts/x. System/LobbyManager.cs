@@ -38,17 +38,10 @@ namespace PIERStory {
         public Sprite spriteLockVoice;
 
         [Header("미션View Sprite")]
-        public Sprite spriteLockOverlay;          // 클리어하지 못한 미션 overlay
-        public Sprite spriteClearOverlay;         // 보상 수령이 끝난 overlay
-
-        public Sprite spriteGetReward;      // 단일 미션 보상
-        public Sprite spriteLockReward;     // 해금하지 않은 미션
-        public Sprite spriteGotReward;      // 이미 받은 미션 보상
-
-        public Sprite spriteOpenMissionStroke;      // 해금, 수령 미션 테두리
-        public Sprite spriteLockMissionStroke;      // 해금되지 않은 테두리
-
-        public Sprite spriteHiddenMissionBadge;     // 히든미션
+        public Sprite spriteWhiteBorder;        // 흰색 바탕 코인박스 하단 border
+        public Sprite spriteWhiteButton;        // 흰색 바탕 보상받기 버튼
+        public Sprite spriteGradientBorder;     // 그라데이션 들어간 코인박스 하단 border
+        public Sprite spriteGradientButton;     // 그라데이션 들어간 보상받기 버튼
         
         [Header("에피소드 관련 Sprite")]
         public Sprite spriteEpisodePrevCover; // 과거 커버

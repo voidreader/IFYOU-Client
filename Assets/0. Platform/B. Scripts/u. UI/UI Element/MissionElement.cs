@@ -65,6 +65,13 @@ namespace PIERStory
             SetCurrencyIcon(missionData.rewardQuantity);
             SetMissionState(missionData.missionState);
             MissionGradeColor();
+
+            // 버튼 비활성화 표기
+            if (missionData.missionState == MissionState.locked)
+            {
+                getRewardText.color = HexCodeChanger.HexToColor("C4C4C4");
+                button.color = disableGreyColor;
+            }
         }
 
         public void HighlightHidden(int lockCount)
@@ -114,29 +121,9 @@ namespace PIERStory
         /// </summary>
         void MissionGradeColor()
         {
-            border.sprite = LobbyManager.main.spriteWhiteBorder;
-            button.sprite = LobbyManager.main.spriteWhiteButton;
             getRewardText.color = HexCodeChanger.HexToColor("404040");
 
             // 미션 등급화
-            if (missionData.rewardExp >= 1)
-            {
-                border.color = pinkColor;
-                button.color = new Color(pinkColor.r, pinkColor.g, pinkColor.b, pinkColor.a * 0.7f);
-            }
-
-            if (missionData.rewardExp >= 7)
-            {
-                border.color = orangeColor;
-                button.color = new Color(orangeColor.r, orangeColor.g, orangeColor.b, orangeColor.a * 0.7f);
-            }
-
-            if (missionData.rewardExp >= 20)
-            {
-                border.color = violetColor;
-                button.color = new Color(violetColor.r, violetColor.g, violetColor.b, violetColor.a * 0.7f);
-            }
-
             if (missionData.rewardExp >= 100)
             {
                 border.color = Color.white;
@@ -144,14 +131,32 @@ namespace PIERStory
 
                 border.sprite = LobbyManager.main.spriteGradientBorder;
                 button.sprite = LobbyManager.main.spriteGradientButton;
+                return;
             }
 
 
-            // 버튼 비활성화 표기
-            if(missionData.missionState == MissionState.locked)
+            border.sprite = LobbyManager.main.spriteWhiteBorder;
+            button.sprite = LobbyManager.main.spriteWhiteButton;
+
+            if (missionData.rewardExp >= 20)
             {
-                getRewardText.color = HexCodeChanger.HexToColor("C4C4C4");
-                button.color = disableGreyColor;
+                border.color = violetColor;
+                button.color = new Color(violetColor.r, violetColor.g, violetColor.b, violetColor.a * 0.7f);
+                return;
+            }
+
+            if (missionData.rewardExp >= 7)
+            {
+                border.color = orangeColor;
+                button.color = new Color(orangeColor.r, orangeColor.g, orangeColor.b, orangeColor.a * 0.7f);
+                return;
+            }
+
+
+            if (missionData.rewardExp >= 1)
+            {
+                border.color = pinkColor;
+                button.color = new Color(pinkColor.r, pinkColor.g, pinkColor.b, pinkColor.a * 0.7f);
             }
         }
 

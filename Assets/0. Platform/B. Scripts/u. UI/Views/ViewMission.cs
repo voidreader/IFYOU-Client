@@ -120,9 +120,11 @@ namespace PIERStory
             missionScroll.verticalNormalizedPosition = 1f;
             clickGetAll = false;
         }
-
-        void SetMissionProgressor()
-        {
+        
+        void SetMissionProgressor() {
+            
+            
+            
             int completeValue = 0;
 
             // * 달성 후 보상 미수령 => 잠금 => 보상 받음 순서로 한다. 
@@ -130,13 +132,17 @@ namespace PIERStory
             foreach (MissionData missionData in UserManager.main.DictStoryMission.Values)
             {
                 if (missionData.missionState == MissionState.unlocked)
+                {
                     completeValue++;
+                }
                 else if (missionData.missionState == MissionState.finish)
+                {
                     completeValue++;
-            }
-
+                }
+            }            
+            
             Debug.Log(string.Format("### SetMissionProgressor [{0}]/[{1}]", completeValue, UserManager.main.DictStoryMission.Count));
-
+            
             missionProgressText.text = string.Format(SystemManager.GetLocalizedText("5032"), completeValue, UserManager.main.DictStoryMission.Count);
 
             float percentage = (float)completeValue / (float)UserManager.main.DictStoryMission.Count;

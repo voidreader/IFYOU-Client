@@ -830,6 +830,10 @@ namespace PIERStory
 
         IEnumerator RoutinePhoneEnter()
         {
+            // 스킵을 사용중에는 전화등장 연출을 하지 않는다
+            if (GameManager.main.useSkip)
+                yield break;
+
             // 위치 초기화
             phoneImage.GetComponent<RectTransform>().DOAnchorPosY(0f, 0.7f).SetEase(Ease.OutBack);
 

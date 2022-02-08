@@ -9,13 +9,15 @@ namespace PIERStory
 
         string template = string.Empty;
         string scriptData = string.Empty;
-
+        string control = string.Empty;
+        string[] sceneIds = new string[2];
 
         public RowActionPhoneCall(ScriptRow __row)
         {
             scriptRow = __row;
             template = scriptRow.template;
             scriptData = scriptRow.script_data;
+            control = scriptRow.controlAlternativeName;
         }
 
         public void DoAction(Action __actionCallback, bool __isInstant = false)
@@ -32,12 +34,13 @@ namespace PIERStory
                     break;
                 case GameConst.TEMPLATE_PHONE_SELF:
                     PhoneTalkerProcess(__isInstant, true);
+                    ViewGame.main.ShowCallBackgrond();
                     break;
                 case GameConst.TEMPLATE_PHONE_PARTNER:
                     PhoneTalkerProcess(__isInstant, false);
+                    ViewGame.main.ShowCallBackgrond();
                     break;
             }
-
 
             if (__isInstant && GameManager.main.RenderingPass())
             {
@@ -45,8 +48,37 @@ namespace PIERStory
                 return;
             }
 
-            // 전화관련 액션이 들어오면 무조건 화면에 전화기를 띄워준다.
-            ViewGame.main.ActivePhoneImage(template);
+            if (template == GameConst.TEMPLATE_PHONECALL && !string.IsNullOrEmpty(control))
+            {
+                switch (control)
+                {
+                    case "받기":
+                    default:
+                        ViewGame.main.ShowPhoneImage(true, true);
+                        break;
+
+                    case "끊기":
+                        ViewGame.main.ShowPhoneImage(true, false);
+                        break;
+                    case "선택":
+                        sceneIds = scriptData.Split(GameConst.SPLIT_SCREEN_EFFECT_V[0]);
+
+                        if(sceneIds.Length != 2)
+                        {
+                            GameManager.ShowMissingComponent(template, "사건ID가 2개가 아닙니다");
+                            return;
+                        }
+
+                        ViewGame.main.ShowPhoneImage(true, true, sceneIds[0], sceneIds[1]);
+                        break;
+                    case "걸기":
+                        ViewGame.main.ShowPhoneImage(false, false);
+                        break;
+                    case "제거":
+                        ViewGame.main.CleanUpPhone();
+                        break;
+                }
+            }
         }
 
 

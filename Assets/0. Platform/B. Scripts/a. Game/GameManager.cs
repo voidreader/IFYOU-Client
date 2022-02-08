@@ -575,13 +575,7 @@ namespace PIERStory
             // 모든 라인을, 혹은 종료 명령어를 만날때까지 계속해! 
             while (currentRow != null && isPlaying)
             {
-                if (UserManager.main.tutorialStep < 2)
-                {
-                    //OpenTutorialPopUp();
-                    //yield return new WaitUntil(() => gamePopup != null);        // Show
-                    //yield return new WaitUntil(() => gamePopup == null);        // HIde
-                }
-
+                
                 // * 이어하기 추가 처리
                 // * 조심스럽게 바꿔본다. 2021.12.08
                 // * 망했다. 다시 바꾼다. 2021.12.15
@@ -707,7 +701,7 @@ namespace PIERStory
         /// <summary>
         /// 타겟 상황ID로 이동시키기 
         /// </summary>
-        void MoveToTargetSceneID(string __sceneID)
+        public void MoveToTargetSceneID(string __sceneID)
         {
             targetRow = -1;
 
@@ -1845,6 +1839,8 @@ namespace PIERStory
             if (main.useSkip)
                 return;
 
+            if(UserManager.main.CheckAdminUser())
+                SystemManager.ShowMessageAlert(string.Format("{0} : {1}", __template, __data), false);
         }
 
         /// <summary>

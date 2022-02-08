@@ -107,7 +107,8 @@ namespace PIERStory
         public const string ROW_CONTROL_ALTERNATIVE_NAME = "화자";    // 대체 이름
         public const string ROW_CONTROL_MAINTAIN = "유지";            // 라이브 오브제 지속시간
         public const string ROW_CONTROL_REVERSAL = "반전";            // 배경 반전
-        public const string ROW_CONTROL_MOUTH = "입"; // 립싱크 제어용도 
+        public const string ROW_CONTROL_MOUTH = "입";                 // 립싱크 제어용도 
+        public const string ROW_CONTROL_PHONE = "전화";               // 전화 템플릿 관련 제어
 
 
         // 스크립트 템플릿

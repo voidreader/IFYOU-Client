@@ -276,9 +276,10 @@ namespace PIERStory
             GetParam<string>(controlParams, GameConst.ROW_CONTROL_REVERSAL, ref controlAlternativeName);
             
             // 립싱크 관련 (입=닫아)
-            GetParam<string>(controlParams, GameConst.ROW_CONTROL_MOUTH, ref controlMouthCommand); 
-            
-            
+            GetParam<string>(controlParams, GameConst.ROW_CONTROL_MOUTH, ref controlMouthCommand);
+
+            // 전화 관련 (전화 = 받기, 끊기, 선택, 걸기, 제거)
+            GetParam<string>(controlParams, GameConst.ROW_CONTROL_PHONE, ref controlAlternativeName);
         }
 
         void CreateResourceKey()

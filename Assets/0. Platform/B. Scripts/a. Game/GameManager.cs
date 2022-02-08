@@ -1961,18 +1961,25 @@ namespace PIERStory
             Debug.Log("### 사이드 에피소드 오픈 체크 시작 ###");
             
             JsonData sideData = UserManager.main.GetNodeUnlockSide();
+            
+            if(sideData != null) 
+                Debug.Log(JsonMapper.ToStringUnicode(sideData));
+            
             // 사이드 해금이 있는 경우
             if (sideData != null && sideData.Count > 0)
             {
+                Debug.Log("### 해금된 사이드 에피소드 존재함!! :: " + sideData.Count);
+                
                 PopupBase sidePopup = PopupManager.main.GetPopup(GameConst.POPUP_SIDE_ALERT);
 
                 for (int i = 0; i < sideData.Count; i++)
                 {
-                    string sideId = SystemManager.GetJsonNodeString(sideData[i], CommonConst.COL_EPISODE_ID);
+                    string unlockSideID = SystemManager.GetJsonNodeString(sideData[i], CommonConst.COL_EPISODE_ID);
+                    Debug.Log("### unlockSideID : " + unlockSideID);
 
                     for (int j = 0; j < StoryManager.main.SideEpisodeList.Count; j++)
                     {
-                        if (StoryManager.main.SideEpisodeList[j].episodeID.Equals(sideId))
+                        if (StoryManager.main.SideEpisodeList[j].episodeID == unlockSideID)
                         {
                             sidePopup.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("6185"), StoryManager.main.SideEpisodeList[j].episodeTitle));
                             sidePopup.Data.imageURL = StoryManager.main.SideEpisodeList[j].squareImageURL;

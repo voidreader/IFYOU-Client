@@ -25,7 +25,8 @@ namespace PIERStory {
         
         public CanvasGroup mainCanvasGroup = null; // 메인 캔버스 그룹 
          
-        public bool isShow = false;
+        public bool isShow = false; // Show 중복 호출 방지
+        public bool isOnShow = false; // OnShow 중복 호출 방지.. 
         
         void Awake() {
             if(mainCanvasGroup != null)

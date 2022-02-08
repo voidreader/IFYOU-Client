@@ -133,8 +133,10 @@ namespace PIERStory {
         /// 쇼 끝나고 실행된다.
         /// </summary>
         public void OnShow() {
-            if(isShow)
+            if(isOnShow)
                 return;
+                
+            isOnShow = true;
             
             aura.DOFade(1, 1).SetLoops(-1, LoopType.Yoyo);
             PopupManager.main.PlayConfetti();

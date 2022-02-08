@@ -108,8 +108,10 @@ namespace PIERStory {
         /// </summary>
         public void OnShow() {
             
-            if(isShow)
+            if(isOnShow)
                 return;
+                
+            isOnShow = true;
             
             Debug.Log("### OnShow PopupEXP ###");
             

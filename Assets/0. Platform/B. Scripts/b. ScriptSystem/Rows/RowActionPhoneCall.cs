@@ -48,7 +48,7 @@ namespace PIERStory
                 return;
             }
 
-            if (template == GameConst.TEMPLATE_PHONECALL && !string.IsNullOrEmpty(control))
+            if (template == GameConst.TEMPLATE_PHONECALL)
             {
                 switch (control)
                 {
@@ -61,6 +61,7 @@ namespace PIERStory
                         ViewGame.main.ShowPhoneImage(true, false);
                         break;
                     case "선택":
+                        scriptData = scriptData.Replace(" ", "");
                         sceneIds = scriptData.Split(GameConst.SPLIT_SCREEN_EFFECT_V[0]);
 
                         if(sceneIds.Length != 2)
@@ -80,7 +81,6 @@ namespace PIERStory
                 }
             }
         }
-
 
         /// <summary>
         /// 전화 통화중 로그 기록 및 말풍선 활성화

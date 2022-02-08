@@ -70,6 +70,7 @@ namespace PIERStory
             if (missionData.missionState == MissionState.locked)
             {
                 getRewardText.color = HexCodeChanger.HexToColor("C4C4C4");
+                button.sprite = LobbyManager.main.spriteWhiteButton;
                 button.color = disableGreyColor;
             }
         }

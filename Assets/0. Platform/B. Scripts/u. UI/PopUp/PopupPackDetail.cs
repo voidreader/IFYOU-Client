@@ -14,6 +14,9 @@ namespace PIERStory {
    
         
         public override void Show() {
+            if(isShow)
+                return;
+            
             base.Show();
             
             productID = Data.targetData; // 제품 ID

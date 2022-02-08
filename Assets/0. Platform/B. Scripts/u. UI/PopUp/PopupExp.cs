@@ -46,6 +46,11 @@ namespace PIERStory {
         }
         
         public override void Show() {
+
+            if(isShow)
+                return;
+            
+            Debug.Log("### Show PopupEXP ###");
             
             base.Show();
             // Data.conetntj
@@ -102,6 +107,12 @@ namespace PIERStory {
         /// Show 애니메이션 끝나고 호출 
         /// </summary>
         public void OnShow() {
+            
+            if(isShow)
+                return;
+            
+            Debug.Log("### OnShow PopupEXP ###");
+            
             float nextProgress = 0;
             
             

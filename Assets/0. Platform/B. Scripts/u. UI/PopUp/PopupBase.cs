@@ -25,6 +25,7 @@ namespace PIERStory {
         
         public CanvasGroup mainCanvasGroup = null; // 메인 캔버스 그룹 
          
+        public bool isShow = false;
         
         void Awake() {
             if(mainCanvasGroup != null)
@@ -61,6 +62,8 @@ namespace PIERStory {
 
         public virtual void Show()
         {
+            isShow = true;
+            
             StartCoroutine(ShowEnumerator());
             SetAutoDestroy();
         }
@@ -73,7 +76,7 @@ namespace PIERStory {
             if(isOverlayUse) {
                 overlay.enabled = true;
                 
-                if(overlay.OnStartBehaviour != Doozy.Runtime.UIManager.ContainerBehaviour.Show)
+                if(overlay.OnStartBehaviour != Doozy.Runtime.UIManager.ContainerBehaviour.Show && !overlay.inTransition)
                     overlay.Show();
             }
             
@@ -81,7 +84,7 @@ namespace PIERStory {
             
             // Debug.Log(gameObject.name + " " + content.OnStartBehaviour.ToString());
             
-            if( content.OnStartBehaviour != Doozy.Runtime.UIManager.ContainerBehaviour.Show) {
+            if( content.OnStartBehaviour != Doozy.Runtime.UIManager.ContainerBehaviour.Show && !content.inTransition) {
                 Debug.Log("content show");
                 content.Show();
             }

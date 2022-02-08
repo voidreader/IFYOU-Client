@@ -13,6 +13,9 @@ namespace PIERStory {
         
         public override void Show()
         {
+            if(isShow)
+                return;
+            
             base.Show();
             InitPassBanner();
         }

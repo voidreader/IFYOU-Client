@@ -182,6 +182,12 @@ namespace PIERStory
         {
             // 더미 캐릭터고 스탠딩 캐릭터고 여기에서 다 관리하기 떄문에 이 스크립트에서 자체적으로 SetActive true/false 해주면 된다. 이동 및 크기 변경도 마찬가지
             Debug.Log(string.Format("PlayCubismAnimation [{0}], [{1}]", __row.speaker, characterPos));
+            
+            if(ViewGame.main.userCall)
+            {
+                ViewGame.main.userCall = false;
+                ViewGame.main.HIdePhoneImage();
+            }
 
             #region autoPlay value
             autoPlay = __row.autoplay_row < 1 ? false : true;

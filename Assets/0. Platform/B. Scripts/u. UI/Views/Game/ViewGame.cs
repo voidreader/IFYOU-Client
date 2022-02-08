@@ -82,7 +82,7 @@ namespace PIERStory
         string hangUpSceneId = string.Empty;
         string answerSceneId = string.Empty;
         bool timeEnd = false;
-        bool userCall = false;                  // 전화를 걸었는가?
+        public bool userCall = false;                  // 전화를 걸었는가?
 
 
         [Header("***메신저***")]
@@ -705,6 +705,7 @@ namespace PIERStory
             if(!phoneRing)
             {
                 userCall = true;
+                timeEnd = true;
                 connectMark.SetActive(true);
                 callButtons.SetActive(false);
                 GameManager.main.isThreadHold = false;
@@ -744,6 +745,7 @@ namespace PIERStory
                     answerSceneId = string.Empty;
                 }
 
+                timeEnd = true;
                 ShowCallBackgrond();
             });
         }

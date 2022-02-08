@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -532,6 +534,13 @@ namespace PIERStory {
 
             // 통신 
             NetworkLoader.main.UpdateUserProjectCurrent(episodeData.episodeID, lastPlaySceneID, lastPlayScriptNO);
+            
+            
+            AppsFlyerSDK.AppsFlyer.sendEvent("episode_start", new Dictionary<string, string>() {
+                { "project_id", StoryManager.main.CurrentProjectID },
+                { "episode_id", StoryManager.main.CurrentEpisodeID }
+            });
+            
         }        
         
                 

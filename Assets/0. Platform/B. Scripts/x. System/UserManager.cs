@@ -258,6 +258,9 @@ namespace PIERStory
             // 유저 정보 불러왔으면, Lobby로 진입을 요청합니다. 
             completeReadUserData = true;
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CONNECT_SERVER, string.Empty);
+            
+            
+            AppsFlyerSDK.AppsFlyer.sendEvent("user_login", null);
         }
 
         /// <summary>

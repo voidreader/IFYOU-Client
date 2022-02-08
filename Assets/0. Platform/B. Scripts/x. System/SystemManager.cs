@@ -313,7 +313,7 @@ namespace PIERStory
                 return;
             }
             
-            //AppsFlyerSDK.AppsFlyer.sendEvent("APP_OPEN", null);
+            
             
             // 언어정보 설정!
             SetCurrentLanguageCode(); 
@@ -351,6 +351,10 @@ namespace PIERStory
         /// <param name="launchingInfo"></param>
         /// <param name="error"></param>
         void OnGamebaseInitialize(GamebaseResponse.Launching.LaunchingInfo launchingInfo, GamebaseError error) {
+            
+            
+            AppsFlyerSDK.AppsFlyer.sendEvent("app_open", null);
+            
             // 초기화 실패했을 경우에 대한 처리. 
             if (!Gamebase.IsSuccess(error))
             {
@@ -753,7 +757,6 @@ namespace PIERStory
                 Debug.Log("Gamebase Guest Login <<<<<");
 
                 Gamebase.Login(GamebaseAuthProvider.GUEST, OnCallbackLogin);
-                // AppsFlyerSDK.AppsFlyer.sendEvent("USER_UID", null);
                 return;
             }
 

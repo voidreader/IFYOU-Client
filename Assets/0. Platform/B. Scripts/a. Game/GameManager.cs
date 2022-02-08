@@ -570,6 +570,12 @@ namespace PIERStory
             AdManager.main.LoadBanner();
 
             main.autoPlayCorountine = RoutineAutoPlay();
+            
+            // 
+            AppsFlyerSDK.AppsFlyer.sendEvent("episode_loading_done", new Dictionary<string, string>() {
+                { "project_id", StoryManager.main.CurrentProjectID },
+                { "episode_id", StoryManager.main.CurrentEpisodeID }
+            });
 
 
             // 모든 라인을, 혹은 종료 명령어를 만날때까지 계속해! 
@@ -1891,6 +1897,13 @@ namespace PIERStory
             // 안전을 위해..
             yield return new WaitForSeconds(0.1f);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            
+            
+            
+            AppsFlyerSDK.AppsFlyer.sendEvent("episode_end", new Dictionary<string, string>() {
+                { "project_id", StoryManager.main.CurrentProjectID },
+                { "episode_id", StoryManager.main.CurrentEpisodeID }
+            });
 
 
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터

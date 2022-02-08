@@ -69,14 +69,20 @@ namespace PIERStory
         public GameObject phoneCall;
         public TextMeshProUGUI callName;
 
-        public Image callBackground;
+        public CanvasGroup callBG;
+        public Image callBackground;            // 전화중 배경에 깔리는 배경(?), overlay같은거
         public Image callIcon;
+        public GameObject connectMark;          // 전화연결중 표기
         public TextMeshProUGUI calledName;
         public TextMeshProUGUI callTime;
-        public Image phoneCallCircle1;
-        public Image phoneCallCircle2;
-        public Image phoneCallCircle3;
+        public GameObject callButtons;          // 전화버튼 2개를 담고 있는 Object
+        public GameObject hangUpButton;         // 전화끊기 버튼
+        public GameObject answerButton;         // 전화받기 버튼
+
+        string hangUpSceneId = string.Empty;
+        string answerSceneId = string.Empty;
         bool timeEnd = false;
+        bool userCall = false;                  // 전화를 걸었는가?
 
 
         [Header("***메신저***")]
@@ -650,6 +656,10 @@ namespace PIERStory
 
         public void HIdePhoneImage()
         {
+            // 전화를 걸었던 상황이면 폰을 지우지 않는다
+            if (userCall)
+                return;
+
             phoneOverlay.SetActive(false);
             phoneImage.SetActive(false);
             phoneCall.SetActive(false);
@@ -660,83 +670,138 @@ namespace PIERStory
 
         #region 전화
 
+
         /// <summary>
-        /// 핸드폰 화면 실행 코루틴. 버튼에 연결해서 사용
+        /// 전화기 보여주기
         /// </summary>
-        public void PhoneCallButton()
+        /// <param name="phoneRing">true = 전화가 옴, false = 전화를 검</param>
+        /// <param name="isAnswer">true = 전화 받기만 가능, false = 전화 끊기만 가능</param>
+        /// <param name="__hangUpId">끊기 눌렀을 때의 sceneId</param>
+        /// <param name="__answerId">받기 눌렀을 떄의 sceneId</param>
+        public void ShowPhoneImage(bool phoneRing, bool isAnswer, string __hangUpId = "", string __answerId = "")
         {
-            timeEnd = false;
+            phoneImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1350);
 
-            // fade 전 투명도 0
-            callBackground.color = new Color(callBackground.color.r, callBackground.color.g, callBackground.color.b, 0f);
-            callIcon.color = new Color(callIcon.color.r, callIcon.color.g, callIcon.color.b, 0f);
-            calledName.color = new Color(calledName.color.r, calledName.color.g, calledName.color.b, 0f);
-            callTime.color = new Color(callTime.color.r, callTime.color.g, callTime.color.b, 0f);
-            callBackground.gameObject.SetActive(true);
-            callTime.text = "0:00";
+            phoneOverlay.SetActive(true);
+            phoneImage.SetActive(true);
+            phoneCall.SetActive(true);
+            connectMark.SetActive(false);
+            callButtons.SetActive(true);
+            hangUpButton.SetActive(true);
+            answerButton.SetActive(true);
+            messengerOverlay.gameObject.SetActive(false);
 
-            const float animTime = 0.7f;
-
-            Sequence hangUp = DOTween.Sequence();
-            hangUp.Append(phoneImage.GetComponent<RectTransform>().DOAnchorPosY(-1350f, 0.5f));
-            hangUp.Append(callBackground.DOFade(1f, animTime));
-            hangUp.Join(callIcon.DOFade(1f, animTime));
-            hangUp.Join(calledName.DOFade(1f, animTime));
-            hangUp.Join(callTime.DOFade(1f, animTime));
-            hangUp.OnComplete(() =>
+            // 전화 선택 템플릿으로 scene Id를 전달 받은 경우
+            if (!string.IsNullOrEmpty(__hangUpId) && !string.IsNullOrEmpty(__answerId))
             {
+                hangUpSceneId = __hangUpId;
+                answerSceneId = __answerId;
 
+                StartCoroutine(RoutinePhoneEnter());
+                return;
+            }
+
+            // 전화를 걸은 경우
+            if(!phoneRing)
+            {
+                userCall = true;
+                connectMark.SetActive(true);
+                callButtons.SetActive(false);
                 GameManager.main.isThreadHold = false;
-                GameManager.main.isWaitingScreenTouch = false;
+            }
 
-                //통화시간 진행하기
-                StartCoroutine(PhoneTimer());
-            });
+            // 전화 받기만 가능한 경우
+            if (isAnswer)
+                hangUpButton.SetActive(false);
+            else
+                answerButton.SetActive(false);
+
+            StartCoroutine(RoutinePhoneEnter());
         }
 
 
         /// <summary>
-        /// 전화기 활성화 혹은 전화 화면 활성화
+        /// 전화 받기 버튼 누를시
         /// </summary>
-        public void ActivePhoneImage(string template)
+        public void AnswerPhoneButton()
         {
-            if (template.Equals(GameConst.TEMPLATE_PHONECALL))
-            {
-                phoneOverlay.SetActive(true);
-                phoneImage.SetActive(true);
-                phoneCall.SetActive(true);
-                messengerOverlay.gameObject.SetActive(false);
+            timeEnd = false;
 
-                timeEnd = true;
+            // fade 전 투명도 0
+            callBG.alpha = 0f;
+            callTime.text = "0:00";
+            const float animTime = 0.7f;
 
-                // 전화 걸려왔을 때 연출
-                if (!GameManager.main.useSkip)
-                    StartCoroutine(RoutinePhoneEnter());
-            }
-            else
+            callBackground.gameObject.SetActive(true);
+            callBG.DOFade(1f, animTime).OnComplete(() =>
             {
-                if (phoneCall.activeSelf)
+                GameManager.main.isThreadHold = false;
+                GameManager.main.isWaitingScreenTouch = false;
+
+                if (!string.IsNullOrEmpty(answerSceneId))
                 {
-                    phoneOverlay.SetActive(false);
-                    phoneImage.SetActive(false);
-                    phoneCall.SetActive(false);
+                    GameManager.main.MoveToTargetSceneID(answerSceneId);
+                    answerSceneId = string.Empty;
                 }
 
-                if (timeEnd)
+                ShowCallBackgrond();
+            });
+        }
+
+        // 전화 끊기 버튼 누를시
+        public void HangUpPhoneButton()
+        {
+            CleanUpPhone();
+        }
+
+        
+        /// <summary>
+        /// 화면에서 폰 치우기, 전화 끊기
+        /// </summary>
+        public void CleanUpPhone()
+        {
+            // 폰을 아무튼 화면에서 치웠으니 false로 만들어준다
+            userCall = false;
+
+            phoneImage.GetComponent<RectTransform>().DOAnchorPosY(-1350f, 0.5f).OnComplete(() =>
+            {
+                GameManager.main.isThreadHold = false;
+                GameManager.main.isWaitingScreenTouch = false;
+
+                if(!string.IsNullOrEmpty(hangUpSceneId))
                 {
-                    timeEnd = false;
-
-                    int timer = GameManager.isResumePlay ? UnityEngine.Random.Range(30, 80) : 0;
-                    if ((timer % 60) < 10f)
-                        callTime.text = string.Format("{0}:0{1}", (timer / 60 % 60), (timer % 60));
-                    else
-                        callTime.text = string.Format("{0}:{1}", (timer / 60 % 60), (timer % 60));
-
-                    StartCoroutine(PhoneTimer(timer));
+                    GameManager.main.MoveToTargetSceneID(hangUpSceneId);
+                    hangUpSceneId = string.Empty;
                 }
+            });
+        }
 
-                callBackground.gameObject.SetActive(true);
+        /// <summary>
+        /// 통화중에 사용하는 전화배경 깔기
+        /// </summary>
+        public void ShowCallBackgrond()
+        {
+            if (phoneCall.activeSelf)
+            {
+                phoneOverlay.SetActive(false);
+                phoneImage.SetActive(false);
+                phoneCall.SetActive(false);
             }
+
+            if (timeEnd)
+            {
+                timeEnd = false;
+
+                int timer = GameManager.isResumePlay ? UnityEngine.Random.Range(30, 80) : 0;
+                if ((timer % 60) < 10f)
+                    callTime.text = string.Format("{0}:0{1}", (timer / 60 % 60), (timer % 60));
+                else
+                    callTime.text = string.Format("{0}:{1}", (timer / 60 % 60), (timer % 60));
+
+                StartCoroutine(PhoneTimer(timer));
+            }
+
+            callBackground.gameObject.SetActive(true);
         }
 
         IEnumerator PhoneTimer(int second = 0)
@@ -764,70 +829,15 @@ namespace PIERStory
         IEnumerator RoutinePhoneEnter()
         {
             // 위치 초기화
-            phoneImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1150);
             phoneImage.GetComponent<RectTransform>().DOAnchorPosY(0f, 0.7f).SetEase(Ease.OutBack);
 
             yield return new WaitForSeconds(0.7f);
-            Handheld.Vibrate();
 
-            StartCoroutine(PhoneCallCircleMove());
-        }
-
-        /// <summary>
-        /// 통화 버튼쪽 물결 처리
-        /// </summary>
-        IEnumerator PhoneCallCircleMove()
-        {
-            const float animTime = 0.12f;
-            int circleCount = 0;
-            bool isFirstTime = true;
-
-            // 전화 받을 때까지 계속 돈다
-            while (phoneCall.activeSelf)
+            while(!callBackground.gameObject.activeSelf)
             {
-                switch (circleCount)
-                {
-                    case 0:
-                        phoneCallCircle3.DOFade(0f, animTime);
-                        if (!isFirstTime)
-                            yield return new WaitForSeconds(1f);
-                        break;
-
-                    case 1:
-                        phoneCallCircle1.DOFade(1f, animTime);
-                        break;
-
-                    case 2:
-                        phoneCallCircle2.DOFade(1f, animTime);
-                        break;
-
-                    case 3:
-                        phoneCallCircle3.DOFade(1f, animTime);
-                        break;
-
-                    case 4:
-                        phoneCallCircle1.DOFade(0f, animTime);
-                        break;
-
-                    case 5:
-                        phoneCallCircle2.DOFade(0f, animTime);
-                        break;
-
-                }
-
-                circleCount++;
-
-                if (circleCount > 5)
-                {
-                    circleCount = 0;
-                    Handheld.Vibrate();
-
-                    if (isFirstTime)
-                        isFirstTime = false;
-                }
-
-                yield return new WaitForSeconds(animTime);
-            }
+                Handheld.Vibrate();
+                yield return new WaitForSeconds(1.2f);
+            }    
         }
 
         /// <summary>
@@ -835,8 +845,8 @@ namespace PIERStory
         /// </summary>
         public void SetPhoneCallInfo(ScriptRow __row)
         {
-            callName.text = GameManager.main.GetNotationName(__row);
-            calledName.text = GameManager.main.GetNotationName(__row);
+            callName.text = __row.speaker;
+            calledName.text = __row.speaker;
         }
 
         #endregion

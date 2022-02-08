@@ -17,7 +17,7 @@ namespace PIERStory
             scriptRow = __row;
             template = scriptRow.template;
             scriptData = scriptRow.script_data;
-            control = scriptRow.controlAlternativeName;
+            control = scriptRow.controlCallCommand;
         }
 
         public void DoAction(Action __actionCallback, bool __isInstant = false)

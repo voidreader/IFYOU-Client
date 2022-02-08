@@ -49,6 +49,7 @@ namespace PIERStory
         public string[] controlParams = null;                   // 제어파라매터 배열 
         public string controlAlternativeName = string.Empty;    // 대체 이름
         public string controlMouthCommand = string.Empty; // 립싱크 제어 
+        public string controlCallCommand = string.Empty;        // 전화 제어
 
         public string selection_group = string.Empty;
         public string selection_no = string.Empty;
@@ -279,7 +280,7 @@ namespace PIERStory
             GetParam<string>(controlParams, GameConst.ROW_CONTROL_MOUTH, ref controlMouthCommand);
 
             // 전화 관련 (전화 = 받기, 끊기, 선택, 걸기, 제거)
-            GetParam<string>(controlParams, GameConst.ROW_CONTROL_PHONE, ref controlAlternativeName);
+            GetParam<string>(controlParams, GameConst.ROW_CONTROL_PHONE, ref controlCallCommand);
         }
 
         void CreateResourceKey()

@@ -851,8 +851,8 @@ namespace PIERStory
         /// </summary>
         public void SetPhoneCallInfo(ScriptRow __row)
         {
-            callName.text = __row.speaker;
-            calledName.text = __row.speaker;
+            callName.text = GameManager.main.GetNotationName(__row);
+            calledName.text = GameManager.main.GetNotationName(__row);
         }
 
         #endregion

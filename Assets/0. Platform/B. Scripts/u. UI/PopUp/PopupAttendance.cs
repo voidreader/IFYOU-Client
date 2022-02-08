@@ -12,6 +12,9 @@ namespace PIERStory
 
         public override void Show()
         {
+            if(isShow)
+                return;
+            
             base.Show();
 
             // 목록 초기화

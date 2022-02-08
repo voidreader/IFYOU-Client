@@ -41,6 +41,9 @@ namespace PIERStory {
         
         public override void Show()
         {
+            if(isShow)
+                return;
+            
             base.Show();
             
             StartCoroutine(CheckTime());
@@ -130,6 +133,9 @@ namespace PIERStory {
         /// 쇼 끝나고 실행된다.
         /// </summary>
         public void OnShow() {
+            if(isShow)
+                return;
+            
             aura.DOFade(1, 1).SetLoops(-1, LoopType.Yoyo);
             PopupManager.main.PlayConfetti();
             

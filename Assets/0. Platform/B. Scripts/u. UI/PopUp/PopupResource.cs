@@ -18,6 +18,9 @@ namespace PIERStory {
         
         public override void Show()
         {
+            if(isShow)
+                return;
+            
             base.Show();
             
             // 아이콘 처리

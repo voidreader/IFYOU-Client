@@ -115,7 +115,7 @@ namespace PIERStory {
                 CurrentQueuePopup = PopupQueue.Dequeue();
                 
                 if(CurrentQueuePopup != null) {
-                    Debug.Log("<color=yellow>### PopupQueueRoutine New popup show!</color>");
+                    Debug.Log("<color=yellow>### PopupQueueRoutine New popup show!</color> : " + CurrentQueuePopup.name);
                     
                     CurrentQueuePopup.Show(); // 보여주기 
                 }

@@ -23,8 +23,13 @@ namespace PIERStory {
         
         
         
+        
+        
         public override void Show()
         {
+            if(isShow)
+                return;
+            
             Debug.Log(">>> PopupEpisodeClear SHOW");
             
             base.Show();

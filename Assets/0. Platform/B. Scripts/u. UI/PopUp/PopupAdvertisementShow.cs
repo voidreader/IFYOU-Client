@@ -14,6 +14,9 @@ namespace PIERStory {
         bool isInvoked = false;
         
         public override void Show() {
+            if(isShow)
+                return;
+            
             base.Show();
             
             StartCoroutine(RoutineTimer());

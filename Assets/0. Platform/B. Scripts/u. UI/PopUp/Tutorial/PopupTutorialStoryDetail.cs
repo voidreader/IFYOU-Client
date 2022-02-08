@@ -11,6 +11,9 @@ namespace PIERStory
 
         public override void Show()
         {
+            if(isShow)
+                return;
+            
             base.Show();
 
             EpisodeData episodeData = StoryManager.main.RegularEpisodeList[0];

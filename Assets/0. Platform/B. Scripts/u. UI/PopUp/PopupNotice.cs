@@ -11,6 +11,9 @@ namespace PIERStory
 
         public override void Show()
         {
+            if(isShow)
+                return;
+            
             base.Show();
 
             foreach (NoticeElement ne in noticeElements)

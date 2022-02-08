@@ -12,6 +12,10 @@ namespace PIERStory {
 
         // Start is called before the first frame update
         public override void Show() {
+            
+            if(isShow)
+                return;
+            
             //base 호출하지 않음 
             base.Show();
 

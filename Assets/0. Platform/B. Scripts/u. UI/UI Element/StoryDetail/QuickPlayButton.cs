@@ -23,7 +23,8 @@ namespace PIERStory {
         [SerializeField] Transform iconParent; // 아이콘 트랜스폼 
         
         void InitControls() {
-            bubble.SetActive(true);
+            // bubble.SetActive(true);
+            bubble.GetComponent<Doozy.Runtime.UIManager.Containers.UIContainer>().Show();
             
             iconParent.DOKill();
             iconParent.localPosition = Vector3.zero;

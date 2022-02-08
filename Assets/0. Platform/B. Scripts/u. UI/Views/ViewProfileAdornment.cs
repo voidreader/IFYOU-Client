@@ -60,7 +60,7 @@ namespace PIERStory
             ViewCommonTop.OnClickButtonAction = OnClickSaveProfile;
             OnSelectCanel = SelectCancel;
             
-            AdManager.main.AnalyticsEnter("profileEnter");
+            AdManager.main.AnalyticsEnter("profile_enter");
         }
 
 

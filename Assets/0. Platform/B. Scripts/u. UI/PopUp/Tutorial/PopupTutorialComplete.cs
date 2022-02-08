@@ -10,9 +10,7 @@ namespace PIERStory
             
             base.Show();
             
-            AdManager.main.AnalyticsEnter("tutorialClear");
-            
-            AppsFlyerSDK.AppsFlyer.sendEvent("tutorial_clear", null);
+            AdManager.main.AnalyticsEnter("tutorial_clear");
         }
     }
 }

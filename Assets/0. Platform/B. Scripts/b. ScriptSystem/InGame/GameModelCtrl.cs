@@ -276,7 +276,7 @@ namespace PIERStory
             // * 립싱크 기능 추가 2022.01.25 
             // 립싱크 모션 유무 체크 
             // 모션_M 있고, 대화형 템플릿, 립싱크 관련 제어 컬럼 값 없을때 처리 
-            if(DictMotion.ContainsKey(motionName + "_M") && CheckLipSyncTemplate(__row.template) && string.IsNullOrEmpty(__row.controlMouthCommand)) {
+            if(DictMotion.ContainsKey(motionName + "_M") && CheckLipSyncTemplate(__row.template, __row.script_data) && string.IsNullOrEmpty(__row.controlMouthCommand)) {
                 motionName = motionName + "_M"; // 립싱크 모션으로 변경 
             }
             
@@ -290,10 +290,13 @@ namespace PIERStory
         /// </summary>
         /// <param name="__template"></param>
         /// <returns></returns>
-        bool CheckLipSyncTemplate(string __template) {
+        bool CheckLipSyncTemplate(string __template, string __data) {
+            
+            if(string.IsNullOrEmpty(__data) || string.IsNullOrEmpty(__template))
+                return false;
             
             // 대화, 외침, 속삭임, 중요대사
-            if(!string.IsNullOrEmpty(__template) || (__template == GameConst.TEMPLATE_TALK ||  __template == GameConst.TEMPLATE_YELL ||  __template == GameConst.TEMPLATE_WHISPER ||  __template == GameConst.TEMPLATE_SPEECH))
+            if(__template == GameConst.TEMPLATE_TALK ||  __template == GameConst.TEMPLATE_YELL ||  __template == GameConst.TEMPLATE_WHISPER ||  __template == GameConst.TEMPLATE_SPEECH)
                 return true;
                 
             return false;

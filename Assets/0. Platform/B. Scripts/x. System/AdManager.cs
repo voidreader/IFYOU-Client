@@ -629,9 +629,11 @@ namespace PIERStory {
         /// </summary>
         /// <param name="_packageName"></param>
         public void AnalyticsPackageButtonClick(string _packageName) {
-            AnalyticsEvent.Custom("packageButton", new Dictionary<string, object> {
-                {"product_id", _packageName}
-            });
+            
+            AppsFlyerSDK.AppsFlyer.sendEvent("package_button",new Dictionary<string, string> {
+                {"openPosition", _packageName}
+            });            
+            
         }
         
         /// <summary>
@@ -639,15 +641,17 @@ namespace PIERStory {
         /// </summary>
         /// <param name="__openPosition"></param>
         public void AnalyticsCoinShopOpen(string __openPosition) {
-            AnalyticsEvent.Custom("openCoinShop", new Dictionary<string, object> {
+            
+            AppsFlyerSDK.AppsFlyer.sendEvent("open_coin_hop",new Dictionary<string, string> {
                 {"openPosition", __openPosition}
             });
+            
         }
         
 
         
         public void AnalyticsEnter(string position) {
-            AnalyticsEvent.Custom(position, null);
+            AppsFlyerSDK.AppsFlyer.sendEvent(position, null);
         }
         
         

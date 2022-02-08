@@ -29,6 +29,10 @@ public class AppsFlyerObjectScript : MonoBehaviour , IAppsFlyerConversionData
         AppsFlyer.initSDK(devKey, appID, getConversionData ? this : null);
 #endif
         //******************************/
+        
+        #if UNITY_IOS && !UNITY_EDITOR
+        AppsFlyeriOS.waitForATTUserAuthorizationWithTimeoutInterval(60);
+        #endif        
  
         AppsFlyer.startSDK();
     }

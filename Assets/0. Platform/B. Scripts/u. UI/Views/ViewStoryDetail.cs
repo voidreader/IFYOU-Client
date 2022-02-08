@@ -103,7 +103,6 @@ namespace PIERStory
                 }
             }
             
-            AdManager.main.AnalyticsEnter("storyEnter");
             
             AppsFlyerSDK.AppsFlyer.sendEvent("story_enter", new Dictionary<string, string>() {
                 { "project_id", StoryManager.main.CurrentProjectID }

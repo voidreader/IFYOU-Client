@@ -175,8 +175,6 @@ namespace PIERStory {
             mLevelText.text = levelText.text;
             mExpGauge.fillAmount = expGauge.fillAmount;
             mExpText.text = expText.text;
-            
-            
         }
 
         /// <summary>

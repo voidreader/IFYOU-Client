@@ -133,6 +133,8 @@ namespace PIERStory
                 return;
             }
 
+            // 보상을 받았으니 리스트를 갱신해주자
+            NetworkLoader.main.RequestAttendanceList();
             UserManager.main.SetNotificationInfo(JsonMapper.ToObject(res.DataAsText));
 
             dayHighlight.gameObject.SetActive(false);

@@ -19,7 +19,7 @@ namespace PIERStory {
         public int LabelsCount { get { return Labels.Count; } }
         public bool HasButtons { get { return Buttons.Count > 0; } }
         
-        public List<UIButton> Buttons = new List<UIButton>();
+        public List<Button> Buttons = new List<Button>();
         
         public List<Image> Images = new List<Image>();
         public List<TextMeshProUGUI> Labels = new List<TextMeshProUGUI>();
@@ -40,25 +40,32 @@ namespace PIERStory {
         public bool isConfirm = true;
         public bool isPositive = true;      // 팝업의 타입이 긍정타입인지 부정타입인지
 
-        /*
-        public void SetButtonsCallbacks(params Action[] callbacks)
+        
+        /// <summary>
+        /// 버튼 텍스트 처리 
+        /// </summary>
+        /// <param name="buttonTexts"></param>
+        public void SetButtonsText(params string[] buttonTexts)
         {
-            if (callbacks == null || callbacks.Length == 0 || !HasButtons) {
-                Debug.Log("SetButtonsCallbacks, WrUnityActionong!");
+            if (buttonTexts == null || buttonTexts.Length == 0 || !HasButtons) {
+                Debug.Log("SetButtonsText, No Button here!");
                 return;
             }
             
             for (int i = 0; i < Buttons.Count; i++)
             {
-                UIButton button = Buttons[i];
+                Button button = Buttons[i];
                 if (button == null) continue;
-                if (callbacks[i] == null) continue;
                 
-                // button.set
-                button.behaviours.HasBehaviour()
+                TextMeshProUGUI textButton = button.gameObject.GetComponentInChildren<TextMeshProUGUI>();
+                
+                if(textButton == null) continue;
+                
+                
+                textButton.text = buttonTexts[i];
             }
         }
-        */
+        
 
 
         /// <summary>

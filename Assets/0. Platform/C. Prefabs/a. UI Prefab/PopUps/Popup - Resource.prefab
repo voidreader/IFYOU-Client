@@ -407,7 +407,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3637248887536678255}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
@@ -537,7 +537,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4105737924243008366}
         m_TargetAssemblyTypeName: PIERStory.PopupBase, Assembly-CSharp
-        m_MethodName: Hide
+        m_MethodName: OnClickNegative
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -838,7 +838,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3637248887749453353}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
@@ -2529,7 +2529,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Data:
     targetData: 
-    Buttons: []
+    Buttons:
+    - {fileID: 2719017875014777314}
+    - {fileID: 2855114687891189148}
     Images: []
     Labels:
     - {fileID: 3637248888663311926}
@@ -2544,6 +2546,8 @@ MonoBehaviour:
   isOverlayUse: 1
   addQueue: 0
   mainCanvasGroup: {fileID: 5242425049990753749}
+  isShow: 0
+  isOnShow: 0
   icon: {fileID: 4729459650390487170}
   textQuantity: {fileID: 6206341446772499878}
   groupConfirm: {fileID: 3637248887310475293}

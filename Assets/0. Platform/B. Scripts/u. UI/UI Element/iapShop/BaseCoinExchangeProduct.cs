@@ -25,6 +25,8 @@ namespace PIERStory {
         [SerializeField] GameObject btnFreeDisable;
 
         [SerializeField] bool isAvailable = false; // 사용 가능 
+        [SerializeField] int price = 0;
+        [SerializeField] int quantity = 0;
     
         /// <summary>
         /// 초기화 
@@ -59,9 +61,13 @@ namespace PIERStory {
             }
             
             
+            quantity = SystemManager.GetJsonNodeInt(exchangeData, "coin_quantity") + SystemManager.GetJsonNodeInt(exchangeData, "bonus_quantity");
+            
             textQuantity.text = SystemManager.GetJsonNodeString(exchangeData, "coin_quantity");
             textNormalBonus.text = SystemManager.GetJsonNodeString(exchangeData, "bonus_quantity");
             textPrice.text = SystemManager.GetJsonNodeString(exchangeData, "star_quantity");
+            
+            price = SystemManager.GetJsonNodeInt(exchangeData, "star_quantity");
             
             if(SystemManager.GetJsonNodeInt(exchangeData, "bonus_quantity") > 0)
                 groupNormalBonus.SetActive(true);
@@ -71,13 +77,30 @@ namespace PIERStory {
             // this.gameObject.SetActive(true);
         }
         
-        
+                
+        /// <summary>
+        /// 버튼 클릭
+        /// </summary>
         public void OnClickExchange() {
             if(exchangeData == null)
                 return;
                 
             Debug.Log("OnClickExchange");
-                
+            
+            // 확인 팝업 
+            // 스타 {0}개를 사용하여 코인 {1}개를 구입하겠습니까? (6204)
+            // 구매(5039) / 취소 (5038)
+            SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6204"), price.ToString(), quantity.ToString())
+                                            , quantity
+                                            , SystemManager.main.GetCurrencyImageURL("coin")
+                                            , SystemManager.main.GetCurrencyImageKey("coin")
+                                            , Exchange
+                                            , SystemManager.GetLocalizedText("5039")
+                                            , SystemManager.GetLocalizedText("5038"));
+                                            
+        }
+        
+        void Exchange() {
             // 환전 시작 
             BillingManager.main.ExchangeStarToCoin(exchangeProductID);
         }

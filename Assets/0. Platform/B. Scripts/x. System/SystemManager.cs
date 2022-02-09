@@ -1585,7 +1585,7 @@ namespace PIERStory
         /// <param name="__url"></param>
         /// <param name="__key"></param>
         /// <param name="__positive"></param>
-        public static void ShowResourceConfirm (string __message, string __url, string __key, Action __positive) {
+        public static void ShowResourceConfirm (string __message, int __quantity, string __url, string __key, Action __positive, string __textPositive = "", string __textNegative = "") {
             PopupBase p = PopupManager.main.GetPopup("Resource");
             
             if (p == null)
@@ -1594,10 +1594,21 @@ namespace PIERStory
                 return;
             }
             
+            if(string.IsNullOrEmpty(__textPositive)) {
+                __textPositive = SystemManager.GetLocalizedText("5041");
+            }
+            
+            if(string.IsNullOrEmpty(__textNegative)) {
+                __textNegative = SystemManager.GetLocalizedText("5040");
+            }
+            
+            
             p.Data.isConfirm = true;
             p.Data.imageURL = __url;
             p.Data.imageKey = __key;
-            p.Data.SetLabelsTexts(__message);
+            p.Data.SetLabelsTexts(__message, __quantity.ToString());
+            p.Data.SetButtonsText(__textPositive, __textNegative);
+            
             p.Data.positiveButtonCallback = __positive;
             
             PopupManager.main.ShowPopup(p, false);

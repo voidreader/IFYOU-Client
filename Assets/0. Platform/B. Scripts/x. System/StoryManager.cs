@@ -114,14 +114,15 @@ namespace PIERStory
         JsonData minicutJSON = null; // 이미지 미니컷 정보 
         JsonData dressCodeJson = null; // 의상 정보
         JsonData emoticonJson = null; // 이모티콘 정보(백그라운드 다운로드)
-        JsonData loadingJson = null;    // 로딩 스크린 정보
+        public JsonData loadingJson = null;    // 로딩 스크린 정보
+        public JsonData loadingDetailJson = null; // 로딩 디테일 정보 
         [SerializeField] Dictionary<string, byte[]> DictDownloadedEmoticons = new Dictionary<string, byte[]>(); // 다운받아놓은 이모티콘 bytes. 
         [SerializeField] int CountDownloadingEmoticon = 0; // 이모티콘 다운로드 카운팅용! 
         [SerializeField] bool isDownloadEmoticonsSaved = false; // 이모티콘 다운로드 1회 실행했는지 체크용 변수
 
         Dictionary<string, byte[]> DictDownloadedLoadings = new Dictionary<string, byte[]>();       // 다운 받아놓은 로딩화면 bytes
-        int countDownloadingLoading = 0;        // 로딩화면 다운로드 카운팅용
-        bool isDownloadLoadingsSaved = false;   // 로딩화면 다운로드 1회 실행했는지 체크용 변수
+        [SerializeField] int countDownloadingLoading = 0;        // 로딩화면 다운로드 카운팅용
+        [SerializeField] bool isDownloadLoadingsSaved = false;   // 로딩화면 다운로드 1회 실행했는지 체크용 변수
 
 
         
@@ -433,14 +434,28 @@ namespace PIERStory
             }
             
             Debug.Log("#### Callback Story Info");
-
+            
+            
             // 작품의 기준정보, 작품과 관련된 유저 정보.. 엄청나게 많이 온다. 
             // 모든 정보는 받아와서 UserManager에게 넘겨주고 (사용자 정보가 포함되어있다.) 
             // 기준 정보만 StoryManager에서 보관하는 방식 
             ProjectDetailJson = JsonMapper.ToObject(res.DataAsText);
             // 유저 정보 할당 
-            UserManager.main.SetStoryUserData(ProjectDetailJson);
+            UserManager.main.SetStoryUserData(ProjectDetailJson);            
+            
+            StartCoroutine(EnteringStory()); // 코루틴으로 변경 2022.02.10
 
+        }
+        
+        IEnumerator EnteringStory() {
+
+            // 로딩 이미지 다운로드 요청
+            DownloadProjectAllEpisodeLoading();
+            
+            // 뚝뚝 끊기는걸 방지하기 위해 프레임을 나눈다. 
+            yield return null; 
+            
+            
             #region 말풍선 밑작업
 
             // 말풍선의 경우 데이터가 많아서, 버전 관리를 통해서 신규 버전이 있을때만 서버에서 내려받도록 합니다. 
@@ -464,6 +479,8 @@ namespace PIERStory
             #endregion
 
 
+            yield return null;
+        
             // 말풍선 정보 세팅
             SetBubbles();
 
@@ -474,6 +491,8 @@ namespace PIERStory
             SetProjectModels();
             SetProjectLiveIllusts();
             SetProjectLiveObjects();
+            
+            yield return null;
             
 
             // 프로젝트 기준정보 설정 
@@ -549,12 +568,46 @@ namespace PIERStory
             #endregion
 
             Debug.Log(string.Format("<color=yellow>[{0}] Episodes are loaded </color>", EpisodeListJson.Count));
-
+            yield return null; 
+            
+            // * 로딩으로 사용할 이미지 다운받는것을 대기 
+            while(countDownloadingLoading > 0)
+                yield return new WaitForSeconds(0.1f);
+            
+            Debug.Log("### loading image download done");
+            
+            
+            // 완료했으면 loadingJson, loaindgDetailJson 재할당.
+            // loadingJson은 처음에는 다운로드를 위해 episodeLoadingList 노드를 사용했지만 
+            // 그 후에는 loading 노드를 사용한다. 
+            loadingJson = SystemManager.GetJsonNode(ProjectDetailJson, GameConst.NODE_LOADING);
+            loadingDetailJson = SystemManager.GetJsonNode(ProjectDetailJson, GameConst.NODE_LOADING_DETAIL);
+        
 
             // 기초작업 완료 후 View 오픈 요청 
-            OpenViewStoryDetail(); 
+            OpenViewStoryDetail();             
+            
+        }
+        
+        
+        /// <summary>
+        /// 스토리 상세화면으로 진입하도록 이벤트 봬기. 
+        /// 로비에서 진입시 이 부분에서 View 이동
+        /// </summary>
+        void OpenViewStoryDetail()
+        {
+            Debug.Log("### Open StoryLoading");
+            // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
+            
+            // 로딩으로 진입하도록 처리 
+            Signal.Send(LobbyConst.STREAM_IFYOU, "moveStoryLoading", "open!");
 
         }
+        
+        
+        
+        
+        
         
         
         /// <summary>
@@ -564,25 +617,6 @@ namespace PIERStory
             for(int i=0; i<ListCurrentProjectEpisodes.Count;i++) {
                 ListCurrentProjectEpisodes[i].SetEpisodePlayState();
             }    
-        }
-
-
-        /// <summary>
-        /// 스토리 상세화면으로 진입하도록 이벤트 봬기. 
-        /// 로비에서 진입시 이 부분에서 View 이동
-        /// </summary>
-        void OpenViewStoryDetail()
-        {
-            Debug.Log("OpenViewStoryDetail");
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
-            // ViewStoryDetail
-            /*
-            if (!enterGameScene)
-            {
-                Debug.Log("OpenViewStoryDetail");
-                Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
-            }
-            */
         }
 
         #region 네임태그 관련 메소드 
@@ -1637,6 +1671,9 @@ namespace PIERStory
 
             string imageUrl = string.Empty;
             string imageKey = string.Empty;
+            
+            Debug.Log("###  DownloadProjectAllEpisodeLoading count : " + loadingJson.Count);
+            
 
             for (int i = 0; i < loadingJson.Count; i++)
             {
@@ -1660,35 +1697,12 @@ namespace PIERStory
         {
             // 다운로드에 실패해도 카운트는 차감한다.
             countDownloadingLoading--;
-
-            if (request.State != HTTPRequestStates.Finished)
-                return;
-
-            // 다운로드 성공했으면, 로컬에 저장은 하지말고 모아놓는다. 
-            if (DictDownloadedLoadings.ContainsKey(request.Tag.ToString()))
-                return;
-
-            // 추가 
-            DictDownloadedLoadings.Add(request.Tag.ToString(), response.Data);
-
-            if (countDownloadingLoading <= 0)
-                SaveDownloadedLoadings();
+            
+            if(request.State == HTTPRequestStates.Finished && response.IsSuccess) {
+                ES3.SaveRaw(response.Data, request.Tag.ToString());
+            }
         }
 
-        void SaveDownloadedLoadings()
-        {
-            if (isDownloadLoadingsSaved)
-                return;
-
-            Debug.Log(">> SaveDownloadedLoadings Starts!");
-
-            foreach (string key in DictDownloadedLoadings.Keys)
-                ES3.SaveRaw(DictDownloadedLoadings[key], key);
-
-            DictDownloadedLoadings.Clear();
-            isDownloadLoadingsSaved = true;
-        }
-        
         
         #endregion
     

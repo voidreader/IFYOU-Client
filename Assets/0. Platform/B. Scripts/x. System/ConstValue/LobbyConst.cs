@@ -44,6 +44,8 @@ namespace PIERStory {
         public const string SUMMARY = "summary";
         public const string WRITER = "writer";
         
+        public const string ORIGINAL = "original";
+        
         public const string SORTKEY = "sortkey";
         
         public const string IS_LOCK = "is_lock";
@@ -160,6 +162,7 @@ namespace PIERStory {
         public const string SIGNAL_ENDINGDATA = "endingData";
         
         public const string SIGNAL_ENDING_PLAY = "EndingPlay";
+        public const string SIGNAL_INTRODUCE = "introduceStory";
 
         #endregion
 

@@ -57,7 +57,8 @@ namespace PIERStory {
             }
             
             // 스토리매니저에게 작품 상세정보 요청 
-            StoryManager.main.RequestStoryInfo(storyData);
+            // StoryManager.main.RequestStoryInfo(storyData);
+            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, storyData);
             
         }
     }

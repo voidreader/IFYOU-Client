@@ -19,6 +19,8 @@ namespace PIERStory {
         public string writer = string.Empty; // 원작자 
         public string summary = string.Empty; // 요약 
         
+        public string original = string.Empty; // 원작 
+        
         public int sortKey = 0; //  정렬 순서 
         public string bubbleSetID =  string.Empty; // 말풍선 세트 ID 
         
@@ -64,6 +66,7 @@ namespace PIERStory {
             title = SystemManager.GetJsonNodeString(originData, LobbyConst.STORY_TITLE);
             summary = SystemManager.GetJsonNodeString(originData, LobbyConst.SUMMARY);
             writer = SystemManager.GetJsonNodeString(originData, LobbyConst.WRITER); 
+            original = SystemManager.GetJsonNodeString(originData, LobbyConst.ORIGINAL); 
             
             sortKey = SystemManager.GetJsonNodeInt(originData, LobbyConst.SORTKEY); 
             bubbleSetID = SystemManager.GetJsonNodeString(originData, LobbyConst.STORY_BUBBLE_ID); 
@@ -87,7 +90,7 @@ namespace PIERStory {
             projectProgress = SystemManager.GetJsonNodeFloat(originData, LobbyConst.STORY_PROJECT_PROGRESS)   ;
             
             // 
-            isPlaying = isLock = SystemManager.GetJsonNodeBool(originData, LobbyConst.STORY_IS_PLAYING); 
+            isPlaying = SystemManager.GetJsonNodeBool(originData, LobbyConst.STORY_IS_PLAYING); 
             
             //
             genre = SystemManager.GetJsonNodeString(originData, "genre");

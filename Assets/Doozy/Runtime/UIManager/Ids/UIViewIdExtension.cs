@@ -62,6 +62,7 @@ namespace Doozy.Runtime.UIManager
             IfyouPlay,
             IfyouSelection,
             IllustDetail,
+            Introduce,
             Language,
             Lobby,
             Main,
@@ -77,6 +78,7 @@ namespace Doozy.Runtime.UIManager
             Snippet,
             SoundDetail,
             StoryDetail,
+            StoryLoading,
             Title,
             UserPlayHistory
         }    

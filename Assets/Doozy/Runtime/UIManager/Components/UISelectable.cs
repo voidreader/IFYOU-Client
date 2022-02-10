@@ -161,13 +161,9 @@ namespace Doozy.Runtime.UIManager.Components
 
         protected override void OnEnable()
         {
-            if(!Application.isPlaying)
-                return;
-            
             base.OnEnable();
-            
-            if (selectableInitialized) 
-                RefreshState();
+            if (!Application.isPlaying) return;
+            if (selectableInitialized) RefreshState();
         }
 
         protected override void InstantClearState()

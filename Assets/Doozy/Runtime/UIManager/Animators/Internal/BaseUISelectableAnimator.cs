@@ -4,7 +4,6 @@
 
 using System.Collections;
 using Doozy.Runtime.UIManager.Components;
-using Doozy.Runtime.UIManager.Utils;
 using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberCanBeProtected.Global

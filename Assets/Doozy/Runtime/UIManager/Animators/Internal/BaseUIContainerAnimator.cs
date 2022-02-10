@@ -18,6 +18,8 @@ namespace Doozy.Runtime.UIManager.Animators
         {
             if (controller == null) return;
             controller.showHideExecute += Execute;
+            if (controller.executedFirstCommand)
+                Execute(controller.previouslyExecutedCommand);
         }
 
         protected override void DisconnectFromController()
@@ -33,7 +35,7 @@ namespace Doozy.Runtime.UIManager.Animators
                 StopCoroutine(executeCommandCoroutine);
                 executeCommandCoroutine = null;
             }
-            
+
             if (!animatorInitialized)
             {
                 executeCommandCoroutine = StartCoroutine(ExecuteCommandAfterAnimatorInitialized(execute));

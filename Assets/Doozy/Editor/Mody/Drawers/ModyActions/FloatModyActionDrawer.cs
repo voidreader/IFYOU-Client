@@ -20,7 +20,7 @@ namespace Doozy.Editor.Mody.Drawers.ModyActions
             
             VisualElement drawer = new VisualElement().SetStyleOverflow(Overflow.Hidden);
             FluidComponentHeader header = NewActionHeader(modyAction);
-            FluidAnimatedContainer animatedContainer = new FluidAnimatedContainer().Hide(false);
+            FluidAnimatedContainer animatedContainer = new FluidAnimatedContainer().SetClearOnHide(true).Hide(false);
             FluidToggleIconButton expandCollapseButton = NewExpandCollapseActionButton(header, animatedContainer);
             ConnectHeaderToExpandCollapseButton(header, expandCollapseButton);
             FluidToggleSwitch disableSwitch = NewDisableActionSwitch(property);

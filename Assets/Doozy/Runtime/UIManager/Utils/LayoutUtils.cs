@@ -12,8 +12,13 @@ namespace Doozy.Runtime.UIManager.Utils
     {
         /// <summary> Returns TRUE if the target RectTransform's parent is a LayoutGroup </summary>
         /// <param name="target"> Target RectTransform </param>
-        public static bool IsInLayoutGroup(this RectTransform target) =>
-            target.GetLayoutGroupInParent() != null;
+        public static bool IsInLayoutGroup(this RectTransform target)
+        {
+            if (!target.GetLayoutGroupInParent()) return false;
+            LayoutElement layoutElement = target.GetComponent<LayoutElement>();
+            if (layoutElement == null) return true;
+            return layoutElement.ignoreLayout == false;
+        }
 
         /// <summary> Returns the LayoutGroup of the target RectTransform. Returns null if there is no LayoutGroup </summary>
         /// <param name="target"> Target RectTransform </param>
@@ -30,7 +35,7 @@ namespace Doozy.Runtime.UIManager.Utils
             UIBehaviourHandler handler = target.GetComponent<UIBehaviourHandler>() ?? target.gameObject.AddComponent<UIBehaviourHandler>();
             return handler;
         }
-        
+
         /// <summary>
         /// Returns the UIBehaviourHandler attached to the target LayoutGroup.
         /// If one does not exist, it gets automatically added.

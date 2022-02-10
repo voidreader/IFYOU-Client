@@ -12,6 +12,7 @@ namespace Doozy.Runtime.UIManager.Animators
     [RequireComponent(typeof(RectTransform))]
     public abstract class BaseTargetComponentAnimator<T> : MonoBehaviour where T : MonoBehaviour
     {
+        // ReSharper disable once InconsistentNaming
         protected RectTransform m_RectTransform;
         /// <summary> Reference to the RectTransform component </summary>
         public RectTransform rectTransform => m_RectTransform ? m_RectTransform : m_RectTransform = GetComponent<RectTransform>();

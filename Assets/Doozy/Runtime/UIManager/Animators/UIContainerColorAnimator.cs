@@ -47,6 +47,7 @@ namespace Doozy.Runtime.UIManager.Animators
         }
         #endif
 
+        /// <summary> Find ColorTarget </summary>
         public void FindTarget()
         {
             if (ColorTarget != null)
@@ -88,24 +89,31 @@ namespace Doozy.Runtime.UIManager.Animators
             controller.hideReactions.Remove(HideAnimation.animation);
         }
 
+        /// <summary> Play the show animation </summary>
         public override void Show() =>
             ShowAnimation?.Play(PlayDirection.Forward);
 
+        /// <summary> Play the hide animation </summary>
         public override void Hide() =>
             HideAnimation?.Play(PlayDirection.Forward);
 
+        /// <summary> Set show animation's progress at one </summary>
         public override void InstantShow() =>
             ShowAnimation?.SetProgressAtOne();
 
+        /// <summary> Set hide animation's progress at one </summary>
         public override void InstantHide() =>
             HideAnimation?.SetProgressAtOne();
 
+        /// <summary> Reverse the show animation (if playing) </summary>
         public override void ReverseShow() =>
             ShowAnimation?.Reverse();
 
+        /// <summary> Reverse the hide animation (if playing) </summary>
         public override void ReverseHide() =>
             HideAnimation?.Reverse();
 
+        /// <summary> Update the animations settings (if a colorTarget is referenced) </summary>
         public override void UpdateSettings()
         {
             if (colorTarget == null)
@@ -115,6 +123,7 @@ namespace Doozy.Runtime.UIManager.Animators
             HideAnimation?.SetTarget(colorTarget);
         }
 
+        /// <summary> Stop all animations </summary>
         public override void StopAllReactions()
         {
             ShowAnimation?.Stop();

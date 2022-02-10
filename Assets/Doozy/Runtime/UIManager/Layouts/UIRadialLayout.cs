@@ -4,8 +4,10 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.Reactor.Animators;
 using Doozy.Runtime.UIManager.Animators;
+using Doozy.Runtime.UIManager.Components;
 using Doozy.Runtime.UIManager.Layouts.Internal;
 using UnityEngine;
 using UnityEngine.UI;
@@ -276,7 +278,7 @@ namespace Doozy.Runtime.UIManager.Layouts
             CalculateRadial();
         }
         #endif
-        
+
         protected override void OnEnable()
         {
             if (!Application.isPlaying) return;
@@ -319,7 +321,7 @@ namespace Doozy.Runtime.UIManager.Layouts
             if (Application.isPlaying & !runUpdateAnimatorsStartPosition)
             {
                 runUpdateAnimatorsStartPosition = true;
-                StartCoroutine(UpdateAnimatorsStartPosition());
+                UpdateAnimatorsStartValues();
             }
 
             rectTransform.sizeDelta = new Vector2(Radius, Radius) * 2f;
@@ -375,13 +377,10 @@ namespace Doozy.Runtime.UIManager.Layouts
             }
         }
 
-        private IEnumerator UpdateAnimatorsStartPosition()
+        private void UpdateAnimatorsStartValues()
         {
             LayoutRebuilder.MarkLayoutForRebuild(rectTransform);
-            yield return null;
 
-            // Canvas.ForceUpdateCanvases();
-            
             for (int i = 0; i < transform.childCount; i++)
             {
                 var child = transform.GetChild(i) as RectTransform;
@@ -395,11 +394,32 @@ namespace Doozy.Runtime.UIManager.Layouts
                     if (uiAnimator.animation.isPlaying) uiAnimator.UpdateValues();
                 }
 
-                UIContainerUIAnimator uiContainerAnimator = child.GetComponent<UIContainerUIAnimator>();
-                if (uiContainerAnimator != null) uiContainerAnimator.UpdateSettings();
+                UIContainerUIAnimator uiContainerUIAnimator = child.GetComponent<UIContainerUIAnimator>();
+                if (uiContainerUIAnimator != null)
+                {
+                    if (uiContainerUIAnimator.isConnected && uiContainerUIAnimator.controller.isVisible)
+                    {
+                        uiContainerUIAnimator.showAnimation.startPosition = uiContainerUIAnimator.rectTransform.anchoredPosition3D;
+                        uiContainerUIAnimator.showAnimation.startRotation = uiContainerUIAnimator.rectTransform.localEulerAngles;
+                    }
+                    // uiContainerAnimator.UpdateSettings();
+                }
 
                 UISelectableUIAnimator uiSelectableUIAnimator = child.GetComponent<UISelectableUIAnimator>();
-                if (uiSelectableUIAnimator != null) uiSelectableUIAnimator.UpdateSettings();
+                if (uiSelectableUIAnimator != null)
+                {
+                    if (uiSelectableUIAnimator.isConnected && uiSelectableUIAnimator.controller.currentUISelectionState == UISelectionState.Normal & !uiSelectableUIAnimator.anyAnimationIsActive)
+                    {
+                        foreach (UISelectionState state in UISelectable.uiSelectionStates)
+                        {
+                            UIAnimation uiAnimation = uiSelectableUIAnimator.GetAnimation(state);
+                            if (uiAnimation == null) continue;
+                            uiAnimation.startPosition = uiAnimation.rectTransform.anchoredPosition3D;
+                            uiAnimation.startRotation = uiAnimation.rectTransform.localEulerAngles;
+                        }
+                    }
+                    // uiSelectableUIAnimator.UpdateSettings();
+                }
             }
 
             runUpdateAnimatorsStartPosition = false;

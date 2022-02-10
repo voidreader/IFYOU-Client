@@ -2,14 +2,38 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System;
 using UnityEngine;
 using static UnityEngine.Mathf;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Runtime.Reactor
 {
     public static class ReactorUtils
     {
+        public static MoveDirection Reverse(this MoveDirection target)
+        {
+            switch (target)
+            {
+                case MoveDirection.Left: return MoveDirection.Right;
+                case MoveDirection.Top: return MoveDirection.Bottom;
+                case MoveDirection.Right: return MoveDirection.Left;
+                case MoveDirection.Bottom: return MoveDirection.Top;
+                case MoveDirection.TopLeft: return MoveDirection.BottomRight;
+                case MoveDirection.TopCenter: return MoveDirection.BottomCenter;
+                case MoveDirection.TopRight: return MoveDirection.BottomLeft;
+                case MoveDirection.MiddleLeft: return MoveDirection.MiddleRight;
+                case MoveDirection.MiddleCenter: return MoveDirection.MiddleCenter;
+                case MoveDirection.MiddleRight: return MoveDirection.MiddleLeft;
+                case MoveDirection.BottomLeft: return MoveDirection.TopRight;
+                case MoveDirection.BottomCenter: return MoveDirection.TopCenter;
+                case MoveDirection.BottomRight: return MoveDirection.TopLeft;
+                case MoveDirection.CustomPosition: return MoveDirection.CustomPosition;
+                default: throw new ArgumentOutOfRangeException(nameof(target), target, null);
+            }
+        }
+
         /// <summary> Get the 'to' (end) position por a move out (hide) animation </summary>
         /// <param name="target"> Target RectTransform </param>
         /// <param name="moveToDirection"> Direction to where the animation goes to </param>
@@ -45,8 +69,8 @@ namespace Doozy.Runtime.Reactor
         public static Vector3 GetTargetPosition(RectTransform target, MoveDirection moveDirection, Vector3 startPosition, Vector3 targetLocalScale, Vector3 targetLocalEulerAngles)
         {
             if (target == null) return Vector3.zero; //null target
-            Canvas canvas = target.GetComponent<Canvas>(); //get canvas
-            if (canvas != null && target.gameObject == canvas.rootCanvas.gameObject) return Vector3.zero; //found canvas, but it's root canvas (cannot calculate)
+            // Canvas canvas = target.GetComponent<Canvas>();                          //get canvas
+            // if (canvas != null && canvas == canvas.rootCanvas) return Vector3.zero; //found canvas, but it's root canvas (cannot calculate)
 
             RectTransform parent = target.parent.GetComponent<RectTransform>(); //get parent RectTransform
             parent.ForceUpdateRectTransforms();
@@ -117,7 +141,7 @@ namespace Doozy.Runtime.Reactor
             Vector3 position;
             float xDirection = 0;
             float yDirection = 0;
-            
+
             switch (moveDirection)
             {
                 case MoveDirection.Left:
@@ -227,7 +251,7 @@ namespace Doozy.Runtime.Reactor
 
             float offsetX = (newWidth - width) / 2f;
             float offsetY = (newHeight - height) / 2f;
-            
+
             position = new Vector3
             (
                 position.x + offsetX * xDirection,

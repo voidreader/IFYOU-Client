@@ -41,15 +41,14 @@ namespace Doozy.Editor.Mody.Components
 
         public FluidAnimatedContainer animatedContainer { get; }
 
-
         public ModyActionsDrawer parentDrawer { get; set; }
 
         public ModyActionsDrawerItem(SerializedProperty actionProperty)
         {
             this.actionProperty = actionProperty;
-            animatedContainer = new FluidAnimatedContainer();
             actionNameProperty = this.actionProperty.FindPropertyRelative("ActionName");
             actionEnabledProperty = this.actionProperty.FindPropertyRelative("ActionEnabled");
+            animatedContainer = new FluidAnimatedContainer().SetName(actionNameProperty.stringValue);
 
             animatedContainer.OnShowCallback = () =>
             {

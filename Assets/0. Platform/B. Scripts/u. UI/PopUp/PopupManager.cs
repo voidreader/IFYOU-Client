@@ -43,6 +43,7 @@ namespace PIERStory {
         public GameObject popupTutorialFreeplay;
         [SerializeField] GameObject popupTutorialMain;
         public GameObject popupTutorialPremiumpass;
+        public GameObject popupTutorialSlide;
         public GameObject popupTutorialStarplay;
         [SerializeField] GameObject popupTutorialStoryDetail;
         
@@ -310,7 +311,7 @@ namespace PIERStory {
                 DictPopup[CommonConst.POPUP_SIMPLE_ALERT] = popupSimpleAlert;
             else 
                 DictPopup.Add(CommonConst.POPUP_SIMPLE_ALERT, popupSimpleAlert);
-                
+            
             if(DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_TUTORIAL_COMPLETE)) 
                 DictPopup[CommonConst.POPUP_TUTORIAL_TUTORIAL_COMPLETE] = popupTutorialComplete;
             else 
@@ -335,6 +336,11 @@ namespace PIERStory {
                 DictPopup[CommonConst.POPUP_TUTORIAL_PREMIUM_PASS] = popupTutorialPremiumpass;
             else
                 DictPopup.Add(CommonConst.POPUP_TUTORIAL_PREMIUM_PASS, popupTutorialPremiumpass);
+
+            if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_SLIDE))
+                DictPopup[CommonConst.POPUP_TUTORIAL_SLIDE] = popupTutorialSlide;
+            else
+                DictPopup.Add(CommonConst.POPUP_TUTORIAL_SLIDE, popupTutorialSlide);
 
             if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_STAR_PLAY))
                 DictPopup[CommonConst.POPUP_TUTORIAL_STAR_PLAY] = popupTutorialStarplay;

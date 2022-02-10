@@ -671,8 +671,6 @@ namespace PIERStory
             if (!SystemManager.appFirstExecute)
                 SystemManager.appFirstExecute = true;
                 
-            if(StoryManager.enterGameScene)
-                StoryManager.enterGameScene = false;
         }
         
         /// <summary>
@@ -1151,6 +1149,11 @@ namespace PIERStory
                 Debug.Log("No Clear Mission");
                 return;
             }
+
+            // 게임 화면에서 미션팝업을 꺼뒀으면 여길 타지말자
+            if (GameManager.main != null && PlayerPrefs.GetInt(GameConst.MISSION_POPUP) != 1)
+                return;
+
             
             for(int i=0; i<__j.Count;i++) {
                 CompleteMissions.Enqueue(__j[i]);

@@ -290,7 +290,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 39751a2257579664b98781dc33a517bc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3e6c6bdfbe6a59e4d800a95cfcfc464f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -749,14 +749,14 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
   Id:
     Category: Game
     Name: InGameMenu
     Custom: 0
-  ClearSelectedOnHide: 0
-  ClearSelectedOnShow: 0
-  AutoSelectAfterShow: 0
-  AutoSelectTarget: {fileID: 0}
 --- !u!114 &508574641374012874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1329,7 +1329,11 @@ MonoBehaviour:
   disableSkip: {fileID: 21300000, guid: 30514f83fe814dc40b14129c8115d5e6, type: 3}
   playButton: {fileID: 508574641555084114}
   playToggle: {fileID: 508574641192806302}
-  autoPlayToggle: {fileID: 5075527161555608223}
+  autoPlayToggleAnimator: {fileID: 1788703520350948942}
+  spritePlay: {fileID: 21300000, guid: b7854d3f339c6434c896cb02970b1d37, type: 3}
+  spritePlayInactive: {fileID: 21300000, guid: 96a90641dc4019540ab83bb460176f65, type: 3}
+  spriteToggleOn: {fileID: 21300000, guid: 39751a2257579664b98781dc33a517bc, type: 3}
+  spriteToggleOff: {fileID: 21300000, guid: 3e6c6bdfbe6a59e4d800a95cfcfc464f, type: 3}
   retryButton: {fileID: 508574641523132467}
   blockRetryButton: {fileID: 2988401569789670116}
   skipButton: {fileID: 508574642758312891}
@@ -1468,7 +1472,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5075527161555608223}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Components.UIToggle, DoozyRuntime
         m_MethodName: set_isOn
         m_Mode: 6
@@ -1667,7 +1671,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 315, y: 60}
-  m_SizeDelta: {x: 180, y: 54}
+  m_SizeDelta: {x: 170, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &910286228223468388
 CanvasRenderer:
@@ -1828,7 +1832,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b7854d3f339c6434c896cb02970b1d37, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 96a90641dc4019540ab83bb460176f65, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3468,6 +3472,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -3542,7 +3547,7 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
-          - m_Target: {fileID: 5075527161555608223}
+          - m_Target: {fileID: 0}
             m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Components.UIToggle,
               DoozyRuntime
             m_MethodName: set_isOn
@@ -5596,6 +5601,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &508574642407708603
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -6315,6 +6324,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -6377,7 +6387,7 @@ MonoBehaviour:
       Event:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 5075527161555608223}
+          - m_Target: {fileID: 0}
             m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Components.UIToggle,
               DoozyRuntime
             m_MethodName: set_isOn
@@ -6819,7 +6829,7 @@ GameObject:
   - component: {fileID: 508574642889030465}
   - component: {fileID: 2383299210802722893}
   - component: {fileID: 6259963407822532590}
-  - component: {fileID: 5075527161555608223}
+  - component: {fileID: 8547501030683149509}
   m_Layer: 5
   m_Name: AutoPlayButton
   m_TagString: Untagged
@@ -6887,7 +6897,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5075527161555608223
+--- !u!114 &8547501030683149509
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6896,7 +6906,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 508574642889030466}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c280f307c5864a0e8ec79c0ccf09565f, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -6927,145 +6937,22 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
-  MultiplayerInfo: {fileID: 0}
-  IsOn: 0
-  CurrentUISelectionState: 0
-  OnSelectionStateChangedCallback:
+  m_TargetGraphic: {fileID: 6259963407822532590}
+  m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
-  CurrentStateName: Normal
-  NormalState:
-    StateType: 0
-    StateName: Normal
-    StateEvent:
-      Enabled: 1
-      EventName: Unnamed
-      Runners: []
-      Event:
-        m_PersistentCalls:
-          m_Calls: []
-  HighlightedState:
-    StateType: 1
-    StateName: Highlighted
-    StateEvent:
-      Enabled: 1
-      EventName: Unnamed
-      Runners: []
-      Event:
-        m_PersistentCalls:
-          m_Calls: []
-  PressedState:
-    StateType: 2
-    StateName: Pressed
-    StateEvent:
-      Enabled: 1
-      EventName: Unnamed
-      Runners: []
-      Event:
-        m_PersistentCalls:
-          m_Calls: []
-  SelectedState:
-    StateType: 3
-    StateName: Selected
-    StateEvent:
-      Enabled: 1
-      EventName: Unnamed
-      Runners: []
-      Event:
-        m_PersistentCalls:
-          m_Calls: []
-  DisabledState:
-    StateType: 4
-    StateName: Disabled
-    StateEvent:
-      Enabled: 1
-      EventName: Unnamed
-      Runners: []
-      Event:
-        m_PersistentCalls:
-          m_Calls: []
-  Behaviours:
-    Behaviours: []
-    SignalSource: {fileID: 508574642889030466}
-    Selectable: {fileID: 5075527161555608223}
-  Id:
-    Category: None
-    Name: None
-    Custom: 0
-  ToggleGroup: {fileID: 0}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
-  OnToggleOnCallback:
-    Enabled: 1
-    EventName: OnToggleOnCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1788703520350948942}
-          m_TargetAssemblyTypeName: Doozy.Runtime.Reactor.Animators.UIAnimator, DoozyRuntime
-          m_MethodName: Play
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 508574641374012876}
-          m_TargetAssemblyTypeName: PIERStory.ViewGameMenu, Assembly-CSharp
-          m_MethodName: OnAutoPlay
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  OnToggleOffCallback:
-    Enabled: 1
-    EventName: OnToggleOffCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1788703520350948942}
-          m_TargetAssemblyTypeName: Doozy.Runtime.Reactor.Animators.UIAnimator, DoozyRuntime
-          m_MethodName: Play
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 508574641374012876}
-          m_TargetAssemblyTypeName: PIERStory.ViewGameMenu, Assembly-CSharp
-          m_MethodName: OffAutoPlay
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-  OnValueChangedCallback:
-    m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 508574641374012876}
+        m_TargetAssemblyTypeName: PIERStory.ViewGameMenu, Assembly-CSharp
+        m_MethodName: OnClickAutoPlay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &508574642937988399
 GameObject:
   m_ObjectHideFlags: 0
@@ -7198,6 +7085,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 0
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &508574642937988396
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8658,9 +8549,7 @@ GameObject:
   - component: {fileID: 1357183422324989836}
   - component: {fileID: 3163054520284022848}
   - component: {fileID: 7001435036045868295}
-  - component: {fileID: 4644846920221934485}
   - component: {fileID: 2493756672720916013}
-  - component: {fileID: 6317668612327130794}
   - component: {fileID: 1788703520350948942}
   m_Layer: 5
   m_Name: Toggle
@@ -8685,7 +8574,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 6, y: -2}
+  m_AnchoredPosition: {x: -6, y: -2}
   m_SizeDelta: {x: 28, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3163054520284022848
@@ -8726,27 +8615,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!223 &4644846920221934485
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6770626098471430454}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!225 &2493756672720916013
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8759,23 +8627,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &6317668612327130794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6770626098471430454}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 1081098039
 --- !u!114 &1788703520350948942
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -78,6 +78,7 @@ namespace PIERStory
         public const string POPUP_TUTORIAL_STORYDETAIL = "TutorialStoryDetail";
         public const string POPUP_TUTORIAL_FREE_PLAY = "TutorialFreeplay";
         public const string POPUP_TUTORIAL_STAR_PLAY = "TutorialStarplay";
+        public const string POPUP_TUTORIAL_SLIDE = "TutorialSlide";
         public const string POPUP_TUTORIAL_PREMIUM_PASS = "TutorialPremiumpass";
         public const string POPUP_TUTORIAL_EPISODE_START = "TutorialEpisodeStart";
         public const string POPUP_TUTORIAL_TUTORIAL_COMPLETE = "TutorialComplete";

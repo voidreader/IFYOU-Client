@@ -157,7 +157,7 @@ namespace PIERStory {
 
             if(UserManager.main.tutorialStep < 2)
             {
-                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MAIN);
+                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_SLIDE);
                 PopupManager.main.ShowPopup(p, false);
                 SystemManager.appFirstExecute = false;
             }

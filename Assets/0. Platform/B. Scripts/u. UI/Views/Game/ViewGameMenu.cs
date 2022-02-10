@@ -2,8 +2,9 @@
 using UnityEngine.UI;
 
 using TMPro;
-using Doozy.Runtime.UIManager.Components;
 using Doozy.Runtime.UIManager.Containers;
+using Doozy.Runtime.Reactor.Animators;
+
 
 namespace PIERStory
 {
@@ -20,7 +21,12 @@ namespace PIERStory
         [Header("AutoPlay")]
         public Image playButton;
         public Image playToggle;
-        public UIToggle autoPlayToggle;
+        public UIAnimator autoPlayToggleAnimator;
+
+        public Sprite spritePlay;
+        public Sprite spritePlayInactive;
+        public Sprite spriteToggleOn;
+        public Sprite spriteToggleOff;
 
         [Header("Division Free")]
         public GameObject retryButton;
@@ -38,8 +44,6 @@ namespace PIERStory
                 // rect.
                 footer.anchoredPosition = new Vector2(0, footer.anchoredPosition.y + 120);
             }
-
-            OffAutoPlay();
         }
         
         public override void OnStartView()
@@ -165,19 +169,25 @@ namespace PIERStory
             GameManager.main.QuitGame();
         }
 
-        public void OnAutoPlay()
+
+        public void OnClickAutoPlay()
         {
-            GameManager.main.StartAutoPlay();
-            playButton.color = Color.white;
-            playToggle.color = Color.white;
+            if(GameManager.main.isAutoPlay)
+            {
+                GameManager.main.StopAutoPlay();
+                playButton.sprite = spritePlayInactive;
+                playToggle.sprite = spriteToggleOff;
+                autoPlayToggleAnimator.Play(true);
+            }
+            else
+            {
+                GameManager.main.StartAutoPlay();
+                playButton.sprite = spritePlay;
+                playToggle.sprite = spriteToggleOn;
+                autoPlayToggleAnimator.Play();
+            }
         }
 
-        public void OffAutoPlay()
-        {
-            GameManager.main.StopAutoPlay();
-            playButton.color = Color.grey;
-            playToggle.color = Color.grey;
-        }
 
         /// <summary>
         /// 처음부터 버튼 클릭 

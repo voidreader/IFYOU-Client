@@ -1,11 +1,25 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+using Doozy.Runtime.Reactor.Animators;
 
 namespace PIERStory
 {
     public class ViewGameOption : CommonView
     {
+        [Header("Alert Toggles")]
+        public UIAnimator missionAnimator;
+        public UIAnimator illustAnimator;
+
+        public Image missionToggle;
+        public Image illustToggle;
+
+        public RectTransform missionToggleHandle;
+        public RectTransform illustToggleHandle;
+
+        public Sprite spriteToggleOn;
+        public Sprite spriteToggleOff;
+
         [Header("Sound sliders")]
         public Slider voiceSlider;
         public Slider bgmSlider;
@@ -18,7 +32,7 @@ namespace PIERStory
         public Sprite spriteSoundOn;
         public Sprite spriteSoundOff;
 
-        [Header("AutoPlay Toggles")]
+        [Header("AutoPlay Switches")]
         public GameObject slowToggle;
         public GameObject normalToggle;
         public GameObject fastToggle;
@@ -28,6 +42,8 @@ namespace PIERStory
         public override void OnStartView()
         {
             base.OnStartView();
+
+            AlertSetting();
 
             voiceSlider.value = PlayerPrefs.GetFloat(GameConst.VOICE_VOLUME);
             bgmSlider.value = PlayerPrefs.GetFloat(GameConst.BGM_VOLUME);
@@ -53,6 +69,35 @@ namespace PIERStory
 
 
         #region OnButtonEvent
+
+        public void OnClickMissionPopup()
+        {
+            if (PlayerPrefs.GetInt(GameConst.MISSION_POPUP) == 1)
+            {
+                missionToggle.sprite = spriteToggleOff;
+                missionAnimator.Play(true);
+            }
+            else
+            {
+                missionToggle.sprite = spriteToggleOn;
+                missionAnimator.Play();
+            }
+        }
+
+
+        public void OnClickIllustPopup()
+        {
+            if (PlayerPrefs.GetInt(GameConst.ILLUST_POPUP) == 1)
+            {
+                illustToggle.sprite = spriteToggleOff;
+                illustAnimator.Play(true);
+            }
+            else
+            {
+                illustToggle.sprite = spriteToggleOn;
+                illustAnimator.Play();
+            }
+        }
 
 
         public void OnChangedVoiceVolume()
@@ -124,6 +169,42 @@ namespace PIERStory
         }
 
         #endregion
+
+
+        void AlertSetting()
+        {
+            // 미션 팝업 세팅
+            if (!PlayerPrefs.HasKey(GameConst.MISSION_POPUP))
+                PlayerPrefs.SetInt(GameConst.MISSION_POPUP, 1);
+
+            if (PlayerPrefs.GetInt(GameConst.MISSION_POPUP) == 1)
+            {
+                missionToggle.sprite = spriteToggleOn;
+                missionToggleHandle.anchoredPosition = new Vector2(11, -3);
+            }
+            else
+            {
+                missionToggle.sprite = spriteToggleOff;
+                missionToggleHandle.anchoredPosition = new Vector2(-11, -3);
+            }
+
+
+            // 일러스트 팝업 세팅
+            if (!PlayerPrefs.HasKey(GameConst.ILLUST_POPUP))
+                PlayerPrefs.SetInt(GameConst.ILLUST_POPUP, 1);
+
+
+            if (PlayerPrefs.GetInt(GameConst.ILLUST_POPUP) == 1)
+            {
+                illustToggle.sprite = spriteToggleOn;
+                illustToggleHandle.anchoredPosition = new Vector2(11, -3);
+            }
+            else
+            {
+                illustToggle.sprite = spriteToggleOff;
+                illustToggleHandle.anchoredPosition = new Vector2(-11, -3);
+            }
+        }
 
 
         void AutoPlayerToggleInit()

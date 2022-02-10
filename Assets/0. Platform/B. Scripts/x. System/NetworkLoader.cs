@@ -417,7 +417,6 @@ namespace PIERStory
 
         void CallbackUpdateScriptMission(HTTPRequest req, HTTPResponse res)
         {
-            
             GameManager.main.isThreadHold = false;      // 통신이 완료된 후에 행을 진행해준다
 
             if (!CheckResponseValidation(req, res))

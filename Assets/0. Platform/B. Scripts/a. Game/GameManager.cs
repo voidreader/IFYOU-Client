@@ -540,7 +540,7 @@ namespace PIERStory
             // 모든 리소스 로딩을 완료할때까지 기다리기!
             yield return new WaitUntil(() => currentPage.IsPageInitialized());
             Debug.Log("<color=yellow> Current Page is just initialized! </color>");
-            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_GAME, "gameLoadingComplete", string.Empty);
+            Signal.Send(LobbyConst.STREAM_GAME, "gameLoadingComplete", string.Empty);
 
             // 페이지에게 실행할 Row를 요청한다.(얘는 첫번째 행)
             ScriptRow currentRow = currentPage.GetNextRow();
@@ -1853,6 +1853,10 @@ namespace PIERStory
         /// </summary>
         public void ShowAchieveIllust(string illustName)
         {
+            // 일러스트 획득 팝업을 꺼둔 경우 일러스트 획득 팝업을 띄우지 않는다
+            if (PlayerPrefs.GetInt(GameConst.ILLUST_POPUP) != 1)
+                return;
+
             Debug.Log("ShowAchieveIllust : " + illustName);
 
             PopupBase popup = PopupManager.main.GetPopup(SystemConst.POPUP_ILLUST_ACHIEVEMENT);
@@ -1865,7 +1869,6 @@ namespace PIERStory
             popup.Data.SetImagesSprites(spriteIllustPopup);
             popup.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("5085"), illustName));
             PopupManager.main.ShowPopup(popup, true, false);
-
         }
 
 

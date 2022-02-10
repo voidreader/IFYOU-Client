@@ -20,10 +20,12 @@ namespace PIERStory
 
         #region 게임씬 플레이 관련
 
+        public const string MISSION_POPUP = "missionPopUp";
+        public const string ILLUST_POPUP = "illustPopUp";
+
         public const string VOICE_VOLUME = "voiceVolume";
         public const string BGM_VOLUME = "BGMVolume";
         public const string SOUNDEFFECT_VOLUME = "seVolume";
-
 
         public const string AUTO_PLAY = "autoplay";
 

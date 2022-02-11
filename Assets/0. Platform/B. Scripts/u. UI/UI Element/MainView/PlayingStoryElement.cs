@@ -42,7 +42,8 @@ namespace PIERStory {
         /// 클릭!
         /// </summary>
         public void OnClickElement() {
-            StoryManager.main.RequestStoryInfo(storyData);
+            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, storyData);
+            // StoryManager.main.RequestStoryInfo(storyData);
         }
     }
 

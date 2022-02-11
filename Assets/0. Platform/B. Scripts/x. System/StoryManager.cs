@@ -5,6 +5,8 @@ using BestHTTP;
 using Sirenix.OdinInspector;
 using System.Collections;
 using Doozy.Runtime.Signals;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace PIERStory
 {
@@ -603,9 +605,6 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_IFYOU, "moveStoryLoading", "open!");
 
         }
-        
-        
-        
         
         
         

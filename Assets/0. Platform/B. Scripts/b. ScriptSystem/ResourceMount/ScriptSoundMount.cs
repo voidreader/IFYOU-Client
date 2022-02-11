@@ -4,6 +4,11 @@ using UnityEngine;
 using LitJson;
 using BestHTTP;
 
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
+
+
 namespace PIERStory
 {
     [Serializable]
@@ -33,6 +38,13 @@ namespace PIERStory
 
         public float volume = 1f;
         public string type = "bgm";
+        
+        
+        public bool isAddressable = false; // 어드레서블 에셋인지 아닌지. (2022.02.11)
+        public string addressableKey = string.Empty; // 어드레서블 키 
+        
+        public AsyncOperationHandle<AudioClip> mountedAddressable;
+        
 
         public ScriptSoundMount(string __type, JsonData __j, Action __cb)
         {
@@ -49,14 +61,99 @@ namespace PIERStory
             volume = float.Parse(SystemManager.GetJsonNodeString(resourceData, GAME_VOLUME));
             type = SystemManager.GetJsonNodeString(resourceData, SOUND_TYPE);
 
-            // 생성과 동시에 로드하도록 변경
-            MountSound();
-        }
 
+            // * 생성과 동시에 로드
+            // * 보이스는 에셋번들 거쳐서 처리             
+            if(template == GameConst.COL_VOICE)
+                MountVoice();
+            else 
+                MountSound();
+
+        }
+        
+        /// <summary>
+        /// 어드레서블 키 
+        /// </summary>
+        /// <param name="__templage"></param>
+        /// <returns></returns>
+        string GetAddressableKey(string __templage) {
+            
+            string middleKey = string.Empty;
+            string key = string.Empty;
+            
+            switch(__templage) {
+                case GameConst.COL_VOICE:
+                middleKey = "/voice/";
+                break;
+            }
+            
+            // 중간 키 없으면 엠티 리턴 
+            if(string.IsNullOrEmpty(middleKey)) {
+                return string.Empty;
+            }
+            
+            key = StoryManager.main.CurrentProjectID + middleKey + sound_name;
+            
+            if(sound_key.Contains(".mp3")) {
+                key += ".mp3";
+            }
+            else if(sound_key.Contains(".wav")) {
+                key += ".wav";
+            }
+            else {
+                return string.Empty;
+            }
+            
+            return key;
+            
+            
+        }
+        
+        
+        /// <summary>
+        /// 보이스 - 어드레서블 마운트
+        /// </summary>
+        void MountVoice() {
+            addressableKey = GetAddressableKey(template);
+            
+            Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
+                
+                // 에셋번들 있음 
+               if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0)  {
+                   Addressables.LoadAssetAsync<AudioClip>(addressableKey).Completed += (handle) => {
+                       if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공!
+                            
+                            isAddressable = true; // 어드레서블을 사용합니다. 
+                            mountedAddressable = handle; // 메모리 해제를 위한 변수.
+                            
+                            audioClip = handle.Result; // 오디오클립 설정 
+                            
+                            SendSuccessMessage(); // 성공처리 
+                       }
+                       else {
+                           Debug.Log(">> Failed LoadAssetAsync " + sound_name);
+                           MountSound();
+                       }
+                   }; // end of LoadAssetAsync
+               }
+               else {
+                   // 없음
+                   MountSound();
+               }
+            }; // ? end of LoadResourceLocationsAsync            
+            
+        }
+        
+
+        /// <summary>
+        /// 오디오 클립 불러오기 
+        /// </summary>
         void MountSound()
         {
             try
             {
+                
+                
                 if (ES3.FileExists(sound_key))
                 {
                     if (sound_key.Contains("mp3") || sound_key.Contains("MP3"))

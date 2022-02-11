@@ -4,6 +4,10 @@ using UnityEngine;
 using LitJson;
 using BestHTTP;
 
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
+
 namespace PIERStory
 {
     [Serializable]
@@ -36,6 +40,11 @@ namespace PIERStory
         public float offsetY = 0;
 
         public bool isResized = false; // 이미지 크기 조정 되었음! 기본값 false. 미니컷에서 사용
+        
+        public bool isAddressable = false; // 어드레서블 에셋인지 아닌지. (2022.02.11)
+        public string addressableKey = string.Empty; // 어드레서블 키 
+        
+        public AsyncOperationHandle<Sprite> mountedAddressable;
 
         public ScriptImageMount(string __type, JsonData __j, Action __cb)
         {
@@ -79,14 +88,88 @@ namespace PIERStory
 
                 case GameConst.TEMPLATE_BACKGROUND:
                 case GameConst.TEMPLATE_MOVEIN:
-                    DownloadImage(); // ! 배경도 다운로드만 처리해놓는다. 2021.07.23
+                    SetBackgroundImage(); // 배경 처리 2022.02.11
                     return;
             }
 
-            // 실제 이미지 불러오기 처리 (배경, 이모티콘)
+            // 실제 이미지 불러오기 처리 (일러스트, 이모티콘)
             LoadImage();
         }
+        
+        string GetAddressableKey(string __templage) {
+            
+            string middleKey = string.Empty;
+            string key = string.Empty;
+            
+            switch(__templage) {
+                case GameConst.TEMPLATE_BACKGROUND:
+                middleKey = "/bg/";
+                break;
+                
+                case "emoticon":
+                middleKey = "/emoticon/";
+                break;
+            }
+            
+            // 중간 키 없으면 엠티 리턴 
+            if(string.IsNullOrEmpty(middleKey)) {
+                return string.Empty;
+            }
+            
+            key = StoryManager.main.CurrentProjectID + middleKey + imageName;
+            
+            if(imageKey.Contains(".jpg")) {
+                key += ".jpg";
+            }
+            else if(imageKey.Contains(".png")) {
+                key += ".png";
+            }
+            else {
+                return string.Empty;
+            }
+            
+            return key;
+            
+            
+        }
+        
+        
+        /// <summary>
+        /// 배경 이미지 관리 처리 
+        /// </summary>
+        void SetBackgroundImage() {
+            
+            addressableKey = GetAddressableKey(template);
+            
+            Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
+                
+                // 에셋번들 있음 
+               if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0)  {
+                   Addressables.LoadAssetAsync<Sprite>(addressableKey).Completed += (handle) => {
+                       if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공!
+                            
+                            isAddressable = true; // 어드레서블을 사용합니다. 
+                            mountedAddressable = handle; // 메모리 해제를 위한 변수.
+                            SendSuccessMessage(); // 성공처리 
+                       }
+                       else {
+                           Debug.Log(">> Failed LoadAssetAsync " + imageName);
+                           DownloadImage();
+                       }
+                   }; // end of LoadAssetAsync
+               }
+               else {
+                   // 없음
+                   DownloadImage();
+               }
+            }; // ? end of LoadResourceLocationsAsync
+            
+        }
 
+
+        /// <summary>
+        /// 백그라운드, 장소진입, 미니컷
+        /// </summary>
         void DownloadImage()
         {
             // 로컬 체크 
@@ -182,11 +265,20 @@ namespace PIERStory
 
         /// <summary>
         /// 미리 생성하지 않고, 필요할때 Sprite 및 Texture 생성 
+        /// 배경과 미니컷에서 사용중 (2022.02.11)
         /// </summary>
         public bool CreateRealtimeSprite()
         {
             try
             {
+                
+                // 어드레서블은 asyncOperationHandle에서 가져온다.
+                if(isAddressable) {
+                    sprite = mountedAddressable.Result;
+                    return true;
+                }
+                
+                
                 // 둘다 생성되어있으면 Create 할 필요 없음 
                 if (texture != null && sprite != null)
                     return true;
@@ -262,6 +354,13 @@ namespace PIERStory
 
                     default:
                         return;
+                }
+                
+                // 어드레서블은 어드레서블로 release처리. 
+                if(isAddressable) {
+                    sprite = null;
+                    Addressables.Release(mountedAddressable);
+                    return; 
                 }
 
                 // 이 오브젝트 파괴

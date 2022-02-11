@@ -39,7 +39,9 @@ namespace PIERStory
 
             // 수동 호출. 
             System.GC.Collect();
-            Resources.UnloadUnusedAssets();
+            
+            // * 2022.02.11 UnloadUnusedAssets은 어드레서블 에셋에 영향을 끼치기 때문에 더이상 사용하지 않음
+            // Resources.UnloadUnusedAssets();
 
             Debug.Log("Intermission Start #2");
             yield return new WaitForSeconds(0.2f);

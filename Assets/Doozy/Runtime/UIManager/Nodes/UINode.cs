@@ -59,12 +59,12 @@ namespace Doozy.Runtime.UIManager.Nodes
         {
             base.OnEnter(previousNode, previousPort);
 
-            StartTimer();
-            StartListeners();
-
             if (OnEnterHideAllViews) UIView.HideAllViews();
             OnEnterShowViews.ForEach(v => v.Show(flowGraph.controller.playerIndex));
             OnEnterHideViews.ForEach(v => v.Hide(flowGraph.controller.playerIndex));
+            
+            StartListeners();
+            StartTimer();
         }
 
         public override void OnExit()
@@ -96,6 +96,12 @@ namespace Doozy.Runtime.UIManager.Nodes
 
             if (targetPort == null) //no port was found -> do not initialize a reaction (no need)
                 return;
+
+            if (minDuration <= 0)
+            {
+                GoToNextNode(targetPort);
+                return;
+            }
 
             timerReaction =
                 Reaction

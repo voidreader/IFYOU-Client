@@ -22,7 +22,7 @@ namespace Doozy.Runtime.Reactor.ScriptableObjects
     public class UIAnimationPreset : ScriptableObject
     {
         private const string DEFAULT_ASSET_FILENAME = "AnimationPreset";
-        private static string dataFolderPath => $"{RuntimePath.path}/_Data/UIAnimationPresets";
+        private static string dataFolderPath => $"{RuntimePath.path}/Data/UIAnimationPresets";
         private string dataFileName => DataFileName(animationType, category, presetName);
         private string dataFilePath => $"{dataFolderPath}/{dataFileName}";
 

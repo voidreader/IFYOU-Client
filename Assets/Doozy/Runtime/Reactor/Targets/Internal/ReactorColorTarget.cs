@@ -9,21 +9,30 @@ using UnityEngine.UI;
 
 namespace Doozy.Runtime.Reactor.Targets
 {
+    /// <summary> Base class for all ColorTargets animated by a color reaction </summary>
     [Serializable]
     public abstract class ReactorColorTarget : MonoBehaviour
     {
         public abstract Type targetType { get; }
         
+        /// <summary> ColorTarget's color </summary>
         public Color color
         {
             get => GetColor();
             set => SetColor(value);
         }
 
+        /// <summary> Get ColorTarget's color </summary>
         public abstract Color GetColor();
+        
+        /// <summary> Set ColorTarget's color </summary>
+        /// <param name="value"> New color </param>
         public abstract void SetColor(Color value);
 
         //ToDo: [Maybe] create an automated system that writes code to generate color targets (a factory pattern)
+        
+        /// <summary> Find a ColorTarget on the given target GameObject </summary>
+        /// <param name="gameObject"> Target GameObject </param>
         public static ReactorColorTarget FindTarget(GameObject gameObject)
         {
             ReactorColorTarget[] array = gameObject.GetComponents<ReactorColorTarget>();

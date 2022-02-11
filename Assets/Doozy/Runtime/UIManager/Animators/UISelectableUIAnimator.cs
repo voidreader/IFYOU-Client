@@ -6,8 +6,10 @@ using System;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.UIManager.Components;
+using Doozy.Runtime.UIManager.Layouts;
 using Doozy.Runtime.UIManager.Utils;
 using UnityEngine;
+using UnityEngine.UI;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -45,7 +47,12 @@ namespace Doozy.Runtime.UIManager.Animators
         /// <summary> Animation for the Disabled selection state </summary>
         public UIAnimation disabledAnimation => DisabledAnimation;
 
+        public bool anyAnimationIsActive => normalAnimation.isActive || highlightedAnimation.isActive || pressedAnimation.isActive || selectedAnimation.isActive || disabledAnimation.isActive;
         private bool isInLayoutGroup { get; set; }
+        private Vector3 localPosition { get; set; }
+        private UIBehaviourHandler uiBehaviourHandler { get; set; }
+        private bool updateStartPositionInLateUpdate { get; set; }
+        private bool playStateAnimationFromLateUpdate { get; set; }
 
         /// <summary> Get the Animation triggered by the given selection state </summary>
         /// <param name="state"> Target selection state </param>
@@ -87,20 +94,30 @@ namespace Doozy.Runtime.UIManager.Animators
         }
         #endif
 
+
         protected override void Awake()
         {
             if (!Application.isPlaying) return;
             animatorInitialized = false;
             m_RectTransform = GetComponent<RectTransform>();
             m_CanvasGroup = GetComponent<CanvasGroup>();
-            rectTransform.GetLayoutGroupInParent()?.GetUIBehaviourHandler();
+            UpdateLayout();
         }
 
         protected override void OnEnable()
         {
             if (!Application.isPlaying) return;
+            playStateAnimationFromLateUpdate = true;
             base.OnEnable();
-            isInLayoutGroup = rectTransform.IsInLayoutGroup();
+            UpdateLayout();
+            updateStartPositionInLateUpdate = true;
+        }
+
+        protected override void OnDisable()
+        {
+            if (!Application.isPlaying) return;
+            base.OnDisable();
+            RefreshLayout();
         }
 
         protected override void OnDestroy()
@@ -114,7 +131,48 @@ namespace Doozy.Runtime.UIManager.Animators
         {
             if (!isConnected) return;
             if (!isInLayoutGroup) return;
-            UpdateStartPosition(); //get new position set by the layout group
+            updateStartPositionInLateUpdate = true;
+        }
+
+        private void LateUpdate()
+        {
+            if (!animatorInitialized) return;
+
+            if (playStateAnimationFromLateUpdate)
+            {
+                if (isConnected)
+                {
+                    Play(controller.currentUISelectionState);
+                    playStateAnimationFromLateUpdate = false;
+                }
+            }
+
+            if (!isInLayoutGroup) return;
+            if (!isConnected) return;
+            if (anyAnimationIsActive) return;
+            if (!updateStartPositionInLateUpdate && localPosition == rectTransform.localPosition) return;
+            if (controller.currentUISelectionState != UISelectionState.Normal) return;
+            if (CanvasUpdateRegistry.IsRebuildingLayout()) return;
+            RefreshLayout();
+            UpdateStartPosition();
+        }
+
+        private void UpdateLayout()
+        {
+            isInLayoutGroup = rectTransform.IsInLayoutGroup();
+            uiBehaviourHandler = null;
+            if (!isInLayoutGroup) return;
+            LayoutGroup layout = rectTransform.GetLayoutGroupInParent();
+            if (layout == null) return;
+            uiBehaviourHandler = layout.GetUIBehaviourHandler();
+            System.Diagnostics.Debug.Assert(uiBehaviourHandler != null, nameof(uiBehaviourHandler) + " != null");
+            uiBehaviourHandler.SetDirty();
+        }
+
+        private void RefreshLayout()
+        {
+            if (uiBehaviourHandler == null) return;
+            uiBehaviourHandler.RefreshLayout();
         }
 
         public void UpdateStartPosition()
@@ -122,10 +180,11 @@ namespace Doozy.Runtime.UIManager.Animators
             foreach (UISelectionState state in UISelectable.uiSelectionStates)
             {
                 UIAnimation uiAnimation = GetAnimation(state);
-                if (uiAnimation?.Move == null) continue;
                 uiAnimation.startPosition = rectTransform.anchoredPosition3D;
-                if (uiAnimation.isPlaying) uiAnimation.UpdateValues();
+                if (uiAnimation.Move.isPlaying) uiAnimation.Move.UpdateValues();
             }
+            localPosition = rectTransform.localPosition;
+            updateStartPositionInLateUpdate = false;
         }
 
         public override bool IsStateEnabled(UISelectionState state)
@@ -146,8 +205,15 @@ namespace Doozy.Runtime.UIManager.Animators
                 GetAnimation(state)?.Stop();
         }
 
-        public override void Play(UISelectionState state) =>
+        public override void Play(UISelectionState state)
+        {
+            if (playStateAnimationFromLateUpdate)
+            {
+                GetAnimation(state)?.SetProgressAtOne();
+                return;
+            }
             GetAnimation(state)?.Play();
+        }
 
         private static void ResetAnimation(UIAnimation target)
         {

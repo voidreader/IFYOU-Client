@@ -51,6 +51,7 @@ namespace Doozy.Editor.UIManager.Editors.Components
         private FluidField toggleModeField { get; set; }
         private FluidField autoSortField { get; set; }
 
+        private FluidToggleCheckbox overrideInteractabilityForTogglesToggle { get; set; }
         private FluidToggleCheckbox isOnToggle { get; set; }
         private FluidToggleCheckbox hasMixedValuesToggle { get; set; }
 
@@ -65,6 +66,7 @@ namespace Doozy.Editor.UIManager.Editors.Components
 
         private SerializedProperty propertyId { get; set; }
         private SerializedProperty propertyBehaviours { get; set; }
+        private SerializedProperty propertyOverrideInteractabilityForToggles { get; set; }
         private SerializedProperty propertyIsOn { get; set; }
         private SerializedProperty propertyToggleGroup { get; set; }
         private SerializedProperty propertyOnToggleOnCallback { get; set; }
@@ -93,6 +95,8 @@ namespace Doozy.Editor.UIManager.Editors.Components
 
             firstToggleField?.Recycle();
 
+            overrideInteractabilityForTogglesToggle?.Recycle();
+
             isOnToggle?.Recycle();
             hasMixedValuesToggle?.Recycle();
 
@@ -105,6 +109,7 @@ namespace Doozy.Editor.UIManager.Editors.Components
 
             propertyId = serializedObject.FindProperty(nameof(UIToggleGroup.Id));
             propertyBehaviours = serializedObject.FindProperty("Behaviours");
+            propertyOverrideInteractabilityForToggles = serializedObject.FindProperty("OverrideInteractabilityForToggles");
             propertyIsOn = serializedObject.FindProperty("IsOn");
             propertyToggleGroup = serializedObject.FindProperty("ToggleGroup");
             propertyOnToggleOnCallback = serializedObject.FindProperty(nameof(UIToggleGroup.OnToggleOnCallback));
@@ -132,6 +137,7 @@ namespace Doozy.Editor.UIManager.Editors.Components
                 .AddYouTubeButton();
 
             idField = FluidField.Get().AddFieldContent(DesignUtils.NewPropertyField(propertyId));
+            overrideInteractabilityForTogglesToggle = FluidToggleCheckbox.Get().SetLabelText("Override interactabilty for connected UIToggles").BindToProperty(propertyOverrideInteractabilityForToggles).SetTooltip("Override and control the interactable state for all the connected UIToggles");
             isOnToggle = FluidToggleCheckbox.Get().SetLabelText("Is On").BindToProperty(propertyIsOn);
             hasMixedValuesToggle = FluidToggleCheckbox.Get().SetLabelText("Has Mixed Values").BindToProperty(propertyHasMixedValues);
             hasMixedValuesToggle.SetEnabled(false);
@@ -353,6 +359,8 @@ namespace Doozy.Editor.UIManager.Editors.Components
                         .AddContent
                         (
                             DesignUtils.column
+                                .AddChild(DesignUtils.spaceBlock)
+                                .AddChild(overrideInteractabilityForTogglesToggle)
                                 .AddChild(DesignUtils.spaceBlock)
                                 .AddChild
                                 (

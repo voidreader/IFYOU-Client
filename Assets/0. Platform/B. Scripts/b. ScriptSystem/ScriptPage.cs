@@ -474,7 +474,7 @@ namespace PIERStory
             }
 
             // 유저 드레스 Progress의 모델 수집 
-            CollectUserDressProgressModelResource(UserManager.main.GetNodeDressProgress());
+            // CollectUserDressProgressModelResource(UserManager.main.GetNodeDressProgress());
         }
 
 

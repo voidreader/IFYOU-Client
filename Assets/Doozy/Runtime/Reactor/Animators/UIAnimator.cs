@@ -2,9 +2,9 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
-using System.Collections;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.Reactor.Animators.Internal;
+using Doozy.Runtime.UIManager.Layouts;
 using Doozy.Runtime.UIManager.Utils;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,6 +33,10 @@ namespace Doozy.Runtime.Reactor.Animators
         public new UIAnimation animation => Animation ??= new UIAnimation(rectTransform, canvasGroup);
 
         private bool isInLayoutGroup { get; set; }
+        private Vector3 localPosition { get; set; }
+        private UIBehaviourHandler uiBehaviourHandler { get; set; }
+        private bool updateStartPositionInLateUpdate { get; set; }
+        private float lastMoveAnimationProgress { get; set; }
 
         protected override void Awake()
         {
@@ -40,20 +44,70 @@ namespace Doozy.Runtime.Reactor.Animators
             animatorInitialized = false;
             m_CanvasGroup = GetComponent<CanvasGroup>();
             m_RectTransform = GetComponent<RectTransform>();
-            rectTransform.GetLayoutGroupInParent()?.GetUIBehaviourHandler();
+            UpdateLayout();
         }
 
         protected override void OnEnable()
         {
             if (!Application.isPlaying) return;
-            isInLayoutGroup = rectTransform.IsInLayoutGroup();
             base.OnEnable();
+            UpdateLayout();
+            updateStartPositionInLateUpdate = true;
+        }
+
+        private void OnDisable()
+        {
+            RefreshLayout();
         }
 
         private void OnRectTransformDimensionsChange()
         {
+            if (!animatorInitialized) return;
             if (!isInLayoutGroup) return;
-            UpdateStartPosition(); //get new position set by the layout group
+            updateStartPositionInLateUpdate = true;
+        }
+
+        private void LateUpdate()
+        {
+            if (!animatorInitialized) return;
+            if (!isInLayoutGroup) return;
+            if (animation.isActive)
+            {
+                lastMoveAnimationProgress = animation.Move.progress;
+                return;
+            }
+            if (localPosition != rectTransform.localPosition) updateStartPositionInLateUpdate = true;
+            if (!updateStartPositionInLateUpdate) return;
+            if (CanvasUpdateRegistry.IsRebuildingLayout()) return;
+            UpdateStartPosition();
+            RefreshLayout();
+        }
+
+        private void UpdateLayout()
+        {
+            isInLayoutGroup = rectTransform.IsInLayoutGroup();
+            uiBehaviourHandler = null;
+            if (!isInLayoutGroup) return;
+            LayoutGroup layout = rectTransform.GetLayoutGroupInParent();
+            if (layout == null) return;
+            uiBehaviourHandler = layout.GetUIBehaviourHandler();
+            System.Diagnostics.Debug.Assert(uiBehaviourHandler != null, nameof(uiBehaviourHandler) + " != null");
+            uiBehaviourHandler.SetDirty();
+        }
+
+        private void RefreshLayout()
+        {
+            if (uiBehaviourHandler == null) return;
+            uiBehaviourHandler.RefreshLayout();
+        }
+
+        public void UpdateStartPosition()
+        {
+            // if (name.Contains("#")) Debug.Log($"({Time.frameCount}) [{name}] {nameof(UpdateStartPosition)} sp:({animation.startPosition}) rp:({rectTransform.anchoredPosition}) lp:({rectTransform.localPosition})");
+            animation.startPosition = rectTransform.anchoredPosition3D;
+            if (animation.isPlaying) animation.UpdateValues();
+            localPosition = rectTransform.localPosition;
+            updateStartPositionInLateUpdate = false;
         }
 
         public override void Play(PlayDirection playDirection)
@@ -216,13 +270,5 @@ namespace Doozy.Runtime.Reactor.Animators
 
         protected override void Recycle() =>
             animation?.Recycle();
-
-        public void UpdateStartPosition()
-        {
-            // if (!inLayoutGroup) return;
-            if (animation.Move == null) return;
-            animation.startPosition = rectTransform.anchoredPosition3D;
-            if (animation.isPlaying) animation.UpdateValues();
-        }
     }
 }

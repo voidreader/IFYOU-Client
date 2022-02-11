@@ -256,9 +256,11 @@ namespace Doozy.Runtime.UIManager.Input
         /// </summary>
         public static void Fire()
         {
+            
             if(blockBackInput)
                 return;
-            
+                
+                
             if (applicationIsQuitting) return;
             if (!instance.canFire) return;
             stream.SendSignal(); //this sends a Signal (ping)

@@ -92,13 +92,6 @@ namespace Doozy.Runtime.UIManager.Animators
             UpdateSettings();
         }
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            if (animatorInitialized & controller != null)
-                controller.RefreshState();
-        }
-
         protected override void OnDestroy()
         {
             base.OnDestroy();

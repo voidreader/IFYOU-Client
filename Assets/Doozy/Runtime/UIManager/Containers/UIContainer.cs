@@ -62,7 +62,7 @@ namespace Doozy.Runtime.UIManager.Containers
 
         /// <summary> TRUE if a CanvasGroup component is attached </summary>
         public bool hasCanvasGroup { get; private set; }
-        
+
         private GraphicRaycaster m_GraphicRaycaster;
         /// <summary> Reference to the GraphicRaycaster component </summary>
         public GraphicRaycaster graphicRaycaster => m_GraphicRaycaster ? m_GraphicRaycaster : m_GraphicRaycaster = GetComponent<GraphicRaycaster>();
@@ -70,7 +70,7 @@ namespace Doozy.Runtime.UIManager.Containers
         private RectTransform m_RectTransform;
         /// <summary> Reference to the RectTransform component </summary>
         public RectTransform rectTransform => m_RectTransform ? m_RectTransform : m_RectTransform = GetComponent<RectTransform>();
-        
+
         /// <summary> Container behaviour on Start </summary>
         public ContainerBehaviour OnStartBehaviour = ContainerBehaviour.Disabled;
 
@@ -168,7 +168,7 @@ namespace Doozy.Runtime.UIManager.Containers
 
         /// <summary> If TRUE, when this container is shown, any GameObject that is selected by the EventSystem.current will get deselected </summary>
         public bool ClearSelectedOnShow;
-        
+
         /// <summary> If TRUE, when this container is hidden, any GameObject that is selected by the EventSystem.current will get deselected </summary>
         public bool ClearSelectedOnHide;
 
@@ -177,7 +177,7 @@ namespace Doozy.Runtime.UIManager.Containers
 
         /// <summary> Reference to the GameObject that should be selected after this container has been shown. Works only if AutoSelectAfterShow is TRUE </summary>
         public GameObject AutoSelectTarget;
-        
+
         private HashSet<Reaction> m_ShowReactions;
         internal HashSet<Reaction> showReactions => m_ShowReactions ??= new HashSet<Reaction>();
 
@@ -189,6 +189,9 @@ namespace Doozy.Runtime.UIManager.Containers
         private Coroutine m_CoroutineIsHiding;
         private Coroutine m_DisableGameObjectWithDelayCoroutine;
 
+        protected bool showAnimationIsActive => showReactions.Any(show => show.isActive);
+        protected bool hideAnimationIsActive => hideReactions.Any(hide => hide.isActive);
+        protected bool anyAnimationIsActive => showAnimationIsActive | hideAnimationIsActive;
 
         public UIContainer()
         {
@@ -319,7 +322,7 @@ namespace Doozy.Runtime.UIManager.Containers
             {
                 EventSystem.current.SetSelectedGameObject(AutoSelectTarget); //select the referenced target
             }
-            
+
             visibilityState = VisibilityState.IsShowing;
             visibilityState = VisibilityState.Visible;
         }
@@ -337,7 +340,7 @@ namespace Doozy.Runtime.UIManager.Containers
             {
                 EventSystem.current.SetSelectedGameObject(null); //clear any selected
             }
-            
+
             visibilityState = VisibilityState.IsHiding;
             visibilityState = VisibilityState.Hidden;
         }
@@ -349,7 +352,7 @@ namespace Doozy.Runtime.UIManager.Containers
         /// </summary>
         public void InstantToggle()
         {
-            switch(visibilityState)
+            switch (visibilityState)
             {
                 case VisibilityState.Visible:
                 case VisibilityState.IsShowing:
@@ -402,14 +405,13 @@ namespace Doozy.Runtime.UIManager.Containers
             {
                 EventSystem.current.SetSelectedGameObject(AutoSelectTarget); //select the referenced target
             }
-            
+
             m_CoroutineIsShowing = StartCoroutine(IsShowing());
         }
 
         private void StopIsShowingCoroutine()
         {
-            if (m_CoroutineIsShowing == null)
-                return;
+            if (m_CoroutineIsShowing == null) return;
             StopCoroutine(m_CoroutineIsShowing);
             m_CoroutineIsShowing = null;
         }
@@ -418,21 +420,12 @@ namespace Doozy.Runtime.UIManager.Containers
         {
             StopIsHidingCoroutine();
             visibilityState = VisibilityState.IsShowing;
-            yield return null;
-            while (isShowing)
+            yield return new WaitForEndOfFrame();
+            while (anyAnimationIsActive)
             {
                 yield return null;
-                bool showIsActive = showReactions.Any(show => show.isActive);
-                bool hideIsActive = hideReactions.Any(hide => hide.isActive);
-
-                if (showIsActive || hideIsActive)
-                    continue;
-
-                visibilityState = VisibilityState.Visible;
             }
-
-            ExecutedCommand(ShowHideExecute.InstantShow);
-
+            visibilityState = VisibilityState.Visible;
             m_CoroutineIsShowing = null;
         }
 
@@ -444,9 +437,7 @@ namespace Doozy.Runtime.UIManager.Containers
             if (isShowing)
             {
                 StopIsShowingCoroutine();
-
                 ExecutedCommand(ShowHideExecute.ReverseShow);
-
                 m_CoroutineIsHiding = StartCoroutine(IsHiding());
                 return;
             }
@@ -457,15 +448,14 @@ namespace Doozy.Runtime.UIManager.Containers
             {
                 EventSystem.current.SetSelectedGameObject(null); //clear any selected
             }
-            
+
             m_CoroutineIsHiding = StartCoroutine(IsHiding());
         }
 
         private void StopIsHidingCoroutine()
         {
             StopDisableGameObject();
-            if (m_CoroutineIsHiding == null)
-                return;
+            if (m_CoroutineIsHiding == null) return;
             StopCoroutine(m_CoroutineIsHiding);
             m_CoroutineIsHiding = null;
         }
@@ -475,21 +465,12 @@ namespace Doozy.Runtime.UIManager.Containers
             StopDisableGameObject();
             StopIsShowingCoroutine();
             visibilityState = VisibilityState.IsHiding;
-            yield return null;
-            while (isHiding)
+            yield return new WaitForEndOfFrame();
+            while (anyAnimationIsActive)
             {
                 yield return null;
-                bool showIsActive = showReactions.Any(show => show.isActive);
-                bool hideIsActive = hideReactions.Any(hide => hide.isActive);
-
-                if (showIsActive || hideIsActive)
-                    continue;
-
-                visibilityState = VisibilityState.Hidden;
             }
-
-            ExecutedCommand(ShowHideExecute.InstantHide);
-
+            visibilityState = VisibilityState.Hidden;
             m_CoroutineIsHiding = null;
         }
 
@@ -500,7 +481,7 @@ namespace Doozy.Runtime.UIManager.Containers
         /// </summary>
         public void Toggle()
         {
-            switch(visibilityState)
+            switch (visibilityState)
             {
                 case VisibilityState.Visible:
                 case VisibilityState.IsShowing:
@@ -520,14 +501,12 @@ namespace Doozy.Runtime.UIManager.Containers
         private void ExecuteOnShow()
         {
             OnShowCallback.Execute();
-            // showHideCommand?.Invoke(ShowHideCommand.Show);
         }
 
         private void ExecuteOnHide()
         {
             OnHideCallback.Execute();
             StopAutoHide();
-            // showHideCommand?.Invoke(ShowHideCommand.Hide);
         }
 
         private void ExecuteOnVisible()
@@ -562,14 +541,13 @@ namespace Doozy.Runtime.UIManager.Containers
         private IEnumerator DisableGameObjectWithDelay()
         {
             //we need to wait for 3 frames to make sure all the connected animators have had enough time to initialize (it takes 2 frames for a position animator to get its start position from a layout group (THANKS UNITY!!!) FML)
-            // yield return null; //wait 1 frame (1 for the money)
+            yield return null; //wait 1 frame (1 for the money)
             // yield return null; //wait 1 frame (2 for the show)
             // yield return null; //wait 1 frame (3 to get ready)
             // ...and 4 to f@#king go!
-            yield return new WaitForEndOfFrame();
+            // yield return new WaitForEndOfFrame();
             gameObject.SetActive(!DisableGameObjectWhenHidden); //set the active state to false, if the option is enabled
         }
-
 
         private void StartAutoHide()
         {

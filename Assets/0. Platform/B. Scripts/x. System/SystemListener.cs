@@ -13,6 +13,14 @@ namespace PIERStory {
         SignalReceiver receiverEndingPlay;
         public bool isEndingPlay = false; // 엔딩플레이 여부 
         
+        #region 소개 페이지
+        public StoryData introduceStory; //  소개 페이지의 작품 
+        
+        SignalReceiver signalReceiverIntroduceStory;
+        SignalStream signalStreamIntroduceStory;
+        
+        #endregion
+        
         
         
         #region 리셋 관련
@@ -65,6 +73,9 @@ namespace PIERStory {
             streamReceiveEndingPlay = SignalStream.Get(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_ENDING_PLAY);
             receiverEndingPlay = new SignalReceiver().SetOnSignalCallback(OnEndingPlaySignal);
             
+            signalStreamIntroduceStory = SignalStream.Get(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE);
+            signalReceiverIntroduceStory = new SignalReceiver().SetOnSignalCallback(OnIntroduceStorySignal);
+            
         }
         
         // Start is called before the first frame update
@@ -75,6 +86,8 @@ namespace PIERStory {
             
             signalStreamNextData.ConnectReceiver(signalReceiverNextData);
             signalStreamEpisodeEnd.ConnectReceiver(signalReceiverEpisodeEnd);
+            
+            signalStreamIntroduceStory.ConnectReceiver(signalReceiverIntroduceStory);
         }
         
         void OnDisable() {
@@ -83,6 +96,9 @@ namespace PIERStory {
             
             signalStreamNextData.DisconnectReceiver(signalReceiverNextData);
             signalStreamEpisodeEnd.DisconnectReceiver(signalReceiverEpisodeEnd);
+            
+            
+            signalStreamIntroduceStory.DisconnectReceiver(signalReceiverIntroduceStory);
         }
         
         
@@ -145,6 +161,16 @@ namespace PIERStory {
         {
             Debug.Log("### OnEndingPlaySignal ###");
             isEndingPlay = true;
+        }
+        
+        void OnIntroduceStorySignal (Signal signal) {
+            if(!signal.hasValue) {
+                Debug.LogError("No Story data!!! in OnIntroduceStorySignal");
+                return;
+            }
+            
+            introduceStory = signal.GetValueUnsafe<StoryData>();
+            
         }
     }
 }

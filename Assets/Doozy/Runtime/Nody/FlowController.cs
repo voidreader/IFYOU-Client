@@ -7,6 +7,7 @@ using Doozy.Runtime.Common.Extensions;
 using Doozy.Runtime.UIManager.Input;
 using Doozy.Runtime.UIManager.ScriptableObjects;
 using UnityEngine;
+using UnityEngine.Events;
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Runtime.Nody
@@ -27,7 +28,15 @@ namespace Doozy.Runtime.Nody
         [SerializeField] private bool DontDestroyOnSceneChange;
         [SerializeField] private FlowGraph Flow;
         [SerializeField] private FlowType FlowType = FlowType.Global;
+        [SerializeField] private UnityEvent OnStart = new UnityEvent();
+        [SerializeField] private UnityEvent OnStop = new UnityEvent();
 
+        /// <summary> Event triggered when the FlowController starts controlling a flow graph </summary>
+        public UnityEvent onStart => OnStart ?? (OnStart = new UnityEvent());
+        
+        /// <summary> Event triggered when the FlowController stops controlling a flow graph </summary>
+        public UnityEvent onStop => OnStop ?? (OnStop = new UnityEvent());
+        
         /// <summary> Don't destroy on load (when the scene changes) the GameObject this component is attached to </summary>
         public bool dontDestroyOnSceneChange
         {
@@ -51,7 +60,9 @@ namespace Doozy.Runtime.Nody
 
         #endregion
 
-        private bool initialized { get; set; }
+        
+        /// <summary> Flag used to keep track for when this FlowController has been initialized </summary>
+        public bool initialized { get; private set; }
 
         private void Awake()
         {
@@ -83,7 +94,10 @@ namespace Doozy.Runtime.Nody
         {
             if(!Application.isPlaying) return;
             if (initialized && Flow != null)
+            {
                 Flow.Stop();
+                onStop?.Invoke();
+            }
         }
 
         private void Update()
@@ -116,6 +130,7 @@ namespace Doozy.Runtime.Nody
             initialized = true;
             Flow.controller = this;
             Flow.Start();
+            onStart?.Invoke();
         }
 
         /// <summary> Set a new flow graph to this controller </summary>
@@ -125,6 +140,7 @@ namespace Doozy.Runtime.Nody
             if (initialized & Flow != null)
             {
                 Flow.Stop();
+                onStop?.Invoke();
                 Flow.controller = null;
                 Flow = null;
             }

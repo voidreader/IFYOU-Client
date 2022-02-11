@@ -83,6 +83,14 @@ namespace Doozy.Runtime.UIManager.Components
 
         #endregion
 
+        [SerializeField] private bool OverrideInteractabilityForToggles;
+        /// <summary> Override and control the interactable state for all the connected UIToggles </summary>
+        public bool overrideInteractabilityForToggles
+        {
+            get => OverrideInteractabilityForToggles;
+            set => OverrideInteractabilityForToggles = value;
+        }
+
         [SerializeField] private Value ToggleGroupValue;
         /// <summary>
         /// Toggle group value
@@ -270,6 +278,14 @@ namespace Doozy.Runtime.UIManager.Components
             if (!Application.isPlaying) return;
             base.OnDisable();
             toggleGroupInitialized = false;
+        }
+
+        private void LateUpdate()
+        {
+            if (!toggleGroupInitialized) return;
+            if (!overrideInteractabilityForToggles) return;
+            foreach (UIToggle toggle in toggles)
+                toggle.interactable = interactable;
         }
 
         protected override void InitializeToggle()
@@ -491,7 +507,7 @@ namespace Doozy.Runtime.UIManager.Components
                         foreach (UIToggle t in toggles)
                             t.UpdateValueFromGroup(t.isOn, false);
                     }
-                        
+
                     break;
                 case ControlMode.OneToggleOnEnforced:
                     setFirstToggleOn = numberOfTogglesOn == 0 || numberOfTogglesOn > 1;
@@ -516,7 +532,7 @@ namespace Doozy.Runtime.UIManager.Components
             {
                 foreach (UIToggle t in toggles.Where(t => t != GetFirstToggle()))
                     t.UpdateValueFromGroup(false, animateChange);
-                
+
                 GetFirstToggle()?.UpdateValueFromGroup(true, animateChange);
             }
 
@@ -535,7 +551,7 @@ namespace Doozy.Runtime.UIManager.Components
             foreach (UIToggle t in toggles)
                 t.UpdateValueFromGroup(false, animateChange);
         }
-        
+
         protected override void ToggleValue()
         {
             if (!IsActive() || !IsInteractable()) return;

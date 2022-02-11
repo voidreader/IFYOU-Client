@@ -17,10 +17,14 @@ namespace PIERStory
         static bool isMinicut = false;
 
         public RectTransform viewRect;
+        public Image buttonIcon;        // 일러스트 상세 내용 보이기/숨기기 버튼 아이콘
+        public Sprite spriteEyeOpen;
+        public Sprite spriteEyeClose;
         
         public ImageRequireDownload illustImage;
         public RawImage liveRenderTexture;
 
+        public GameObject illustContents;
         public TextMeshProUGUI illustTitle;
         public TextMeshProUGUI illustSummary;
 
@@ -84,6 +88,8 @@ namespace PIERStory
 
             illustTitle.text = title;
             illustSummary.text = summary;
+            buttonIcon.sprite = spriteEyeOpen;
+            illustContents.SetActive(true);
         }
 
         public override void OnHideView()
@@ -131,6 +137,20 @@ namespace PIERStory
                 ratioScale = 0.9f;
 
             illustImage.GetComponent<Image>().rectTransform.localScale = Vector3.one * ratioScale;
+        }
+
+        public void OnClickAcitveIllustContents()
+        {
+            if(illustContents.activeSelf)
+            {
+                illustContents.SetActive(false);
+                buttonIcon.sprite = spriteEyeClose;
+            }
+            else
+            {
+                illustContents.SetActive(true);
+                buttonIcon.sprite = spriteEyeOpen;
+            }
         }
     }
 }

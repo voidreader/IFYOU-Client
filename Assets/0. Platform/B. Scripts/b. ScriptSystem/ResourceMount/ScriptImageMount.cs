@@ -1,8 +1,12 @@
 ﻿using System;
 using UnityEngine;
-
+using UnityEngine.U2D;
 using LitJson;
 using BestHTTP;
+
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
 
 namespace PIERStory
 {
@@ -36,6 +40,12 @@ namespace PIERStory
         public float offsetY = 0;
 
         public bool isResized = false; // 이미지 크기 조정 되었음! 기본값 false. 미니컷에서 사용
+        
+        public bool isAddressable = false; // 어드레서블 에셋인지 아닌지. (2022.02.11)
+        public string addressableKey = string.Empty; // 어드레서블 키 
+        
+        public AsyncOperationHandle<SpriteAtlas> mountedAtalsAddressable; // 스프라이트 아틀라스 어드레서블
+        public AsyncOperationHandle<Sprite> mountedSpriteAddressable; // 스프라이트 어드레서블
 
         public ScriptImageMount(string __type, JsonData __j, Action __cb)
         {
@@ -73,20 +83,155 @@ namespace PIERStory
                     // isResized 컬럼을 통해 미니컷 이미지의 크기를 0.65 스케일로 줄일지, 그냥 원본 크기를 사용할지를 처리합니다. 
                     if (SystemManager.GetJsonNodeString(resourceData, COL_RESIZE).Equals("1"))
                         isResized = true;
-
                     DownloadImage(); // ! 미니컷은 다운로드만 처리해보자 2021.07.23
                     return;
 
                 case GameConst.TEMPLATE_BACKGROUND:
                 case GameConst.TEMPLATE_MOVEIN:
-                    DownloadImage(); // ! 배경도 다운로드만 처리해놓는다. 2021.07.23
+                    SetBackgroundImage(); // 배경 처리 2022.02.11
                     return;
+                
+                case GameConst.COL_EMOTICON:
+                    
+                    // speaker 있는 경우.
+                    if(!string.IsNullOrEmpty(speaker)) {
+                        SetEmoticonImage();
+                    }
+                    
+                break;
+                
             }
 
-            // 실제 이미지 불러오기 처리 (배경, 이모티콘)
+            // 실제 이미지 불러오기 처리 (일러스트)
             LoadImage();
         }
+        
+        /// <summary>
+        /// 어드레서블 에셋 키 설정하고 GET하기 
+        /// </summary>
+        /// <param name="__template"></param>
+        /// <returns></returns>
+        string GetAddressableKey(string __template) {
+            
+            string middleKey = string.Empty;
+            string key = string.Empty;
+            
+            switch(__template) {
+                case GameConst.TEMPLATE_BACKGROUND:
+                middleKey = "/bg/";
+                break;
+                
+                case "emoticon":
+                middleKey = "/emoticon/";
+                break;
+            }
+            
+            // 중간 키 없으면 엠티 리턴 
+            if(string.IsNullOrEmpty(middleKey)) {
+                return string.Empty;
+            }
+            
+            key = StoryManager.main.CurrentProjectID + middleKey + imageName;
+            
+            
+            // 배경은 spriteatlas 사용 
+            if(__template == GameConst.TEMPLATE_BACKGROUND) {
+                key += ".spriteatlas";
+            }
+            else {
+                if(imageKey.Contains(".jpg")) {
+                    key += ".jpg";
+                }
+                else if(imageKey.Contains(".png")) {
+                    key += ".png";
+                }
+                else {
+                    return string.Empty;
+                }    
+            }
+            
+            return key;
+            
+            
+        }
+        
+        
+        /// <summary>
+        /// 배경 이미지 관리 처리 
+        /// </summary>
+        void SetBackgroundImage() {
+            
+            addressableKey = GetAddressableKey(template);
+            
+            Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
+                
+                // 에셋번들 있음 
+               if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0)  {
+                   
+                   // 배경은 POT (2의 지수) 이슈로 인해서 SpriteAtals로 불러오도록 처리 
+                   Addressables.LoadAssetAsync<SpriteAtlas>(addressableKey).Completed += (handle) => {
+                       if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공!
+                            
+                            isAddressable = true; // 어드레서블을 사용합니다. 
+                            mountedAtalsAddressable = handle; // 메모리 해제를 위한 변수.
+                            sprite = mountedAtalsAddressable.Result.GetSprite(imageName); // 이미지 이름으로 스프라이트 할당 
+                            
+                            // 어드레서블에서 가져오는 이미지는 스케일이 무조건 1이다.
+                            gameScale = 1;
+                            
+                            SendSuccessMessage(); // 성공처리 
+                       }
+                       else {
+                           Debug.Log(">> Failed LoadAssetAsync " + imageName);
+                           DownloadImage();
+                       }
+                   }; // end of LoadAssetAsync
+               }
+               else {
+                   // 없음
+                   DownloadImage();
+               }
+            }; // ? end of LoadResourceLocationsAsync
+            
+        } // ? end of background 
+        
+        /// <summary>
+        /// 이모티콘 이미지 세팅 
+        /// </summary>
+        void SetEmoticonImage() {
+            addressableKey = GetAddressableKey(template);
+            Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
+                
+                // 에셋번들 있음 
+               if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0)  {
+                   
+                   // 배경은 POT (2의 지수) 이슈로 인해서 SpriteAtals로 불러오도록 처리 
+                   Addressables.LoadAssetAsync<Sprite>(addressableKey).Completed += (handle) => {
+                       if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공!
+                            
+                            isAddressable = true; // 어드레서블을 사용합니다. 
+                            mountedSpriteAddressable = handle; // 메모리 해제를 위한 변수.
+                            sprite = handle.Result;
+                            
+                            SendSuccessMessage(); // 성공처리 
+                       }
+                       else {
+                           Debug.Log(">> Failed LoadAssetAsync " + imageName);
+                           LoadImage();
+                       }
+                   }; // end of LoadAssetAsync
+               }
+               else {
+                   // 없음
+                   LoadImage();
+               }
+            }; // ? end of LoadResourceLocationsAsync            
+        } // ? end of SetEmoticonImage
 
+
+        /// <summary>
+        /// 백그라운드, 장소진입, 미니컷
+        /// </summary>
         void DownloadImage()
         {
             // 로컬 체크 
@@ -182,11 +327,21 @@ namespace PIERStory
 
         /// <summary>
         /// 미리 생성하지 않고, 필요할때 Sprite 및 Texture 생성 
+        /// 배경과 미니컷에서 사용중 (2022.02.11)
         /// </summary>
         public bool CreateRealtimeSprite()
         {
             try
             {
+                
+                // 어드레서블은 asyncOperationHandle에서 가져온다.
+                if(isAddressable && template == GameConst.TEMPLATE_BACKGROUND)  {
+                    // sprite를 LoadAssetAsync 시점에 하는것으로 처리한다 .
+                    //sprite = mountedAtalsAddressable.Result.GetSprite(addressableKey);
+                    return true;
+                }
+                
+                
                 // 둘다 생성되어있으면 Create 할 필요 없음 
                 if (texture != null && sprite != null)
                     return true;
@@ -262,6 +417,19 @@ namespace PIERStory
 
                     default:
                         return;
+                }
+                
+                // 어드레서블은 어드레서블로 release처리. 
+                if(isAddressable) {
+                    sprite = null;
+                    
+                    if(template == GameConst.COL_EMOTICON)
+                        Addressables.Release(mountedSpriteAddressable);
+                    else if (template == GameConst.TEMPLATE_BACKGROUND)
+                        Addressables.Release(mountedAtalsAddressable);
+                    
+                    
+                    return; 
                 }
 
                 // 이 오브젝트 파괴

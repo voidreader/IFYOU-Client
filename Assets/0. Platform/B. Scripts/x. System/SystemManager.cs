@@ -86,7 +86,7 @@ namespace PIERStory
         // 개인정보 보호 정책 및 이용약관 URL
         string privacyURL = string.Empty;
         string termsOfUseURL = string.Empty;
-        
+        public string contentsURL = string.Empty; // 리소스 다운로드 URL 
         
         
         
@@ -578,10 +578,9 @@ namespace PIERStory
             
             privacyURL = GetJsonNodeString(masterInfo, "privacy_url");
             termsOfUseURL = GetJsonNodeString(masterInfo, "terms_url"); 
+            contentsURL = GetJsonNodeString(masterInfo, "contents_url"); 
             
-            
-            
-            
+           
 
             // 디바이스 정보 불러다놓고, 
             localVer = GetDeviceLocalVer();

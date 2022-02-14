@@ -1,9 +1,14 @@
 ﻿using UnityEngine;
 using BestHTTP;
 
+
 using LitJson;
 using Toast.Gamebase;
 using Doozy.Runtime.Signals;
+
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
 
 namespace PIERStory {
 
@@ -122,9 +127,22 @@ namespace PIERStory {
             yield return null;
             yield return new WaitForSeconds(0.1f);
             
+            // 어드레서블 카탈로그 로드 
+            InitAddressableCatalog();
             
             // * 로비씬 시작을 알린다. 
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyPlay"); 
+        }
+        
+        
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        void InitAddressableCatalog() {
+            Addressables.LoadContentCatalogAsync("https://d2dvrqwa14jiay.cloudfront.net/bundle/Android/catalog_1.json").Completed += (op) => {
+            Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
+        };
         }
         
         

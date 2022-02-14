@@ -84,6 +84,7 @@ namespace PIERStory
         public const string COL_REQUISITE = "requisite";
         public const string COL_CHARACTER_EXPRESSION = "character_expression";
         public const string COL_EMOTICON_EXPRESSION = "emoticon_expression";
+        public const string COL_EMOTICON = "emoticon";
         public const string COL_IN_EFFECT = "in_effect";
         public const string COL_OUT_EFFECT = "out_effect";
         public const string COL_BUBBLE_SIZE = "bubble_size";

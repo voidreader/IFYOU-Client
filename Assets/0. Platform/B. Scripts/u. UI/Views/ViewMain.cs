@@ -18,11 +18,7 @@ namespace PIERStory {
     {
         public static Action OnMoveStarShop = null;
         public static Action OnProfileSetting = null;
-        public static Action OnProfileChange = null;        // 프사, 테두리 변경시 호출
         public static Action<string> OnCategoryList;
-        
-        // public bool isView = false;
-        // public bool isStartView = false;
         
         
         [Header("로비")]
@@ -56,7 +52,6 @@ namespace PIERStory {
         [SerializeField] GameObject NoInterestStory; // 관심작품 없음
         [SerializeField] Transform categoryParent;
         [SerializeField] UIToggle likeToggle; // 카테고리 좋아요 토글 
-                
         
 
         [Header("프로필")]
@@ -66,15 +61,22 @@ namespace PIERStory {
         public GameObject standingObjectPrefab;
         public Transform textObjectParent;
         public GameObject textObjectPrefab;
-        public UIContainer profileBriefContainer;
         public ImageRequireDownload profilePortrait;
         public ImageRequireDownload profileFrame;
         public TextMeshProUGUI nickname;
         public TextMeshProUGUI levelText;
         public TextMeshProUGUI expText;
         public Image expGauge;
-        bool decoMode = true;       // true = 꾸미기 모드, false = 프로필 꾸미기
         List<GameObject> createObject = new List<GameObject>();
+
+        [Space(20)]
+        public GameObject editButton;
+        public GameObject profileBrief;
+        public Image showButtonImage;
+        public UIToggleGroup navigationBottom;
+
+        public Sprite spriteVisable;
+        public Sprite spriteInvisable;
 
         [Header("더보기")]
         public TextMeshProUGUI userPincode;
@@ -93,13 +95,6 @@ namespace PIERStory {
         
         public override void OnView()
         {
-            /*
-            if(isView)
-                return;
-                
-            isView = true; 
-            */
-            
             base.OnView();
 
             // 튜토리얼 끝났고
@@ -132,22 +127,15 @@ namespace PIERStory {
             AppsFlyerSDK.AppsFlyer.sendEvent("main_enter", null);
             
         }
-        
-        public override void OnStartView() {
-            
-            /*
-            if(isStartView)
-                return;
-                
-            isStartView = true; 
-            */
-            
+
+        public override void OnStartView()
+        {
+
             base.OnStartView();
-            
+
             InitLobby();
 
             OnProfileSetting = InitProfile;
-            OnProfileChange = ProfileChange;
 
             // 카테고리 
             InitCategory();
@@ -155,7 +143,7 @@ namespace PIERStory {
             InitProfile();
             InitAddMore();
 
-            if(UserManager.main.tutorialStep < 2)
+            if (UserManager.main.tutorialStep < 2)
             {
                 PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_SLIDE);
                 PopupManager.main.ShowPopup(p, false);
@@ -171,7 +159,6 @@ namespace PIERStory {
             expText.text = string.Format("{0}/{1}", UserManager.main.exp, totalExp);
 
             // (더보기) 닉네임, 레벨, 경험치
-
             mLevelText.text = levelText.text;
             mExpGauge.fillAmount = expGauge.fillAmount;
             mExpText.text = expText.text;
@@ -198,7 +185,6 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, true, string.Empty);
         }
 
@@ -206,24 +192,29 @@ namespace PIERStory {
         public void OnClickTabNavigation(int index) {
             switch(index) {
                 case 0:  // 로비
-                OnLobbyTab();
+                    navigationBottom.enabled = true;
+                    OnLobbyTab();
                 break;
                 
                 case 1:  // 카테고리
-                OnCategoryTab();
+                    navigationBottom.enabled = true;
+                    OnCategoryTab();
                 break;
                 
                 case 2: // 상점
-                OnShopTab();
+                    navigationBottom.enabled = true;
+                    OnShopTab();
                 break;
 
                 case 3:
                     break;
 
                 case 4:     // 프로필
+                    navigationBottom.enabled = false;
                     OnProfile();
                     break;
                 case 5:     // 더보기
+                    navigationBottom.enabled = true;
                     OnAddMore();
                     break;
             }
@@ -438,7 +429,6 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
         }
         
@@ -576,7 +566,6 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
         }
 
@@ -594,7 +583,7 @@ namespace PIERStory {
 
             if (profileCurrency.Count > 0)
             {
-                bool hasBG = false, hasPortrait = false;
+                bool hasFrame = false;
                 // currency List 화면에 배포
                 for (int i = 0; i < profileCurrency.Count; i++)
                 {
@@ -604,7 +593,6 @@ namespace PIERStory {
                             background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY));
                             background.GetComponent<RectTransform>().sizeDelta = new Vector2(SystemManager.GetJsonNodeFloat(profileCurrency[i], LobbyConst.NODE_WIDTH), SystemManager.GetJsonNodeFloat(profileCurrency[i], LobbyConst.NODE_HEIGHT));
                             background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_POS_X)), 0f);
-                            hasBG = true;
                             break;
 
                         case LobbyConst.NODE_BADGE:
@@ -623,21 +611,17 @@ namespace PIERStory {
 
                         case LobbyConst.NODE_PORTRAIT:
                             profilePortrait.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY));
-                            hasPortrait = true;
                             break;
                         case LobbyConst.NODE_FRAME:
                             profileFrame.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY), true);
+                            hasFrame = true;
                             break;
                     }
                 }
 
-                // 배경을 지정하지 않은 경우
-                if (!hasBG)
-                    background.SetTexture2D(null);
-
-                // 프로필 사진 지정 안한 경우
-                if (!hasPortrait)
-                    profilePortrait.SetTexture2D(null);
+                // 프로필 테두리를 지정하지 않은 경우
+                if (!hasFrame)
+                    profileFrame.SetTexture2D(LobbyManager.main.textureNoneFrame);
             }
 
             if (profileText.Count > 0)
@@ -654,10 +638,8 @@ namespace PIERStory {
 
         }
 
-        public void OnClickDecoMode(bool __decoMode)
+        public void OnClickDecoMode()
         {
-            decoMode = __decoMode;
-
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = LobbyConst.FUNC_GET_PROFILE_CURRENCY_OWN_LIST;
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
@@ -676,15 +658,29 @@ namespace PIERStory {
             // 통신이 완료된 후, 사용자가 소지하고 있는 프로필 재화 정보를 받은 뒤, 페이지를 넘긴다.
             UserManager.main.userProfileCurrency = JsonMapper.ToObject(res.DataAsText);
 
-            if(decoMode)
-                Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_DECO_MODE, string.Empty);
-            else
-                Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_PROFILE_DECO, string.Empty);
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_DECO_MODE, string.Empty);
         }
 
-        void ProfileChange()
+        /// <summary>
+        /// 프로필 자세히 보기
+        /// </summary>
+        public void OnClickShowProfileDetail()
         {
-            profileBriefContainer.Show();
+            if(showButtonImage.sprite == spriteVisable)
+            {
+                editButton.SetActive(false);
+                profileBrief.SetActive(false);
+                showButtonImage.sprite = spriteInvisable;
+                navigationBottom.gameObject.SetActive(false);
+                
+            }
+            else
+            {
+                editButton.SetActive(true);
+                profileBrief.SetActive(true);
+                showButtonImage.sprite = spriteVisable;
+                navigationBottom.gameObject.SetActive(true);
+            }
         }
 
         #endregion
@@ -699,7 +695,6 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             // Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, "더보기", string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
         }
 

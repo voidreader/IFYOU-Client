@@ -20,8 +20,31 @@ namespace PIERStory
         public static Action<JsonData, ProfileItemElement> OnStickerSetting = null;
         public static Action<JsonData, ProfileItemElement> OnStandingSetting = null;
         public static Action<StandingElement> OnControlStanding = null;
+        public static Action<string, string, string> OnProfileFrameSetting = null;
+        public static Action<string, string, string> OnProfilePortraitSetting = null;
 
-        [Header("배경 Tab")]
+        public UIContainer listContentContainer;
+
+        [Header("간단 프로필 관련")]
+        public ImageRequireDownload profileFrame;
+        public ImageRequireDownload profilePortrait;
+        public TextMeshProUGUI levelText;
+        public TextMeshProUGUI nicknameText;
+        public TextMeshProUGUI expText;
+        public Image expGauge;
+
+        string frameName = string.Empty;
+        string portraitName = string.Empty;
+
+        public GameObject profileBriefContent;
+        public Image profileBriefShowButton;
+        public Sprite spriteVisable;
+        public Sprite spriteInvisable;
+
+        [Header("닉네임 변경 관련")]
+        public TMP_InputField nicknameInputField;
+
+        [Space][Header("배경 Tab")]
         public ImageRequireDownload background;     // 배경 이미지
         public MoveBackground moveBg;               
         public GameObject bgPrefab;                 // 배경 리스트에 들어가는 element
@@ -31,7 +54,8 @@ namespace PIERStory
         public GameObject noneBGItem;               // 보유 배경 재화가 없는 경우 표시
 
         [Space][Header("데코 Obect")]
-        public Transform decoObjects;               // 스탠딩, 뱃지, 말풍선 등이 생성될 Parent(root)
+        public Transform standingObjects;           // 스탠딩이 생성될 Parent(root)
+        public Transform decoObjects;               // 뱃지, 스티커가 생성될 Parent(root)
 
         [Header("스탠딩 캐릭터 Tab")]
         public Transform standingElementListContent;
@@ -43,7 +67,6 @@ namespace PIERStory
         StandingElement controlStanding;            // 제어할 스탠딩 오브젝트
         JsonData controlStandingData;
         ProfileItemElement controlStandingItemElement;
-        StandingElement[] screenStand = new StandingElement[3];        // 화면에 서 있는 스탠딩
         public UIToggle[] bottomToggles;
         public UIContainer bottomContainer;
 
@@ -59,6 +82,16 @@ namespace PIERStory
         public Transform stickerElementListContent; // 뱃지element가 들어갈 parent
         public GameObject stickerScroll;
         public GameObject noneStickerItem;          // 보유 스티커 재화가 없는 경우 표시
+
+
+        [Header("프로필 테두리 Tab")]
+        public GameObject frameListElement;
+        public Transform frameListContent;
+
+        [Header("프로필 초상화 Tab")]
+        public GameObject portraitListElement;
+        public Transform portraitListContent;
+
 
         [Space][Header("Text Tab")]
         public TextMeshProUGUI fontSizeText;        // 폰트 사이즈 설정 숫자
@@ -76,8 +109,6 @@ namespace PIERStory
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
 
-            ViewCommonTop.OnClickButtonAction = OnCllickSaveDeco;
-
             profileCurrencyList = UserManager.main.userProfileCurrency;
 
             OnDisableAllOptionals = OnClickAllDisable;
@@ -86,7 +117,11 @@ namespace PIERStory
             OnStickerSetting = ProfileStickerSetting;
             OnStandingSetting = ProfileStandingSetting;
             OnControlStanding = SelectControlStanding;
+            OnProfileFrameSetting = SetProfileFrame;
+            OnProfilePortraitSetting = SetProfilePortrait;
+            
             background.OnDownloadImage = SetBackgroundLoading;
+
 
             #region 프로필 꾸미기모드 사용자 세팅
 
@@ -114,23 +149,37 @@ namespace PIERStory
                             createObject.Add(itemElement.gameObject);
                             break;
                         case LobbyConst.NODE_STANDING:
-                            StandingElement standingElement = Instantiate(standingPrefab, decoObjects).GetComponent<StandingElement>();
+                            StandingElement standingElement = Instantiate(standingPrefab, standingObjects).GetComponent<StandingElement>();
                             standingElement.SetProfileStanding(profileCurrency[j]);
-
-                            // 위치에 따라서 배열에 넣는 위치도 다름
-                            if (standingElement.standingRect.anchoredPosition.x < 0)
-                                screenStand[0] = standingElement;
-                            else if (standingElement.standingRect.anchoredPosition.x == 0)
-                                screenStand[1] = standingElement;
-                            else
-                                screenStand[2] = standingElement;
-
                             createObject.Add(standingElement.gameObject);
+                            break;
+
+                        case LobbyConst.NODE_PORTRAIT:
+
+                            if(string.IsNullOrEmpty(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY)))
+                            {
+                                RemoveFrame();
+                                break;
+                            }
+
+                            profilePortrait.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_KEY));
+                            portraitName = SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY);
+
+                            break;
+
+                        case LobbyConst.NODE_FRAME:
+                            profileFrame.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_KEY));
+                            frameName = SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY);
                             break;
                     }
                 }
             }
-            
+
+            levelText.text = string.Format("Lv. {0}", UserManager.main.level);
+            int totalExp = SystemManager.main.GetLevelMaxExp((UserManager.main.level + 1).ToString());
+            expGauge.fillAmount = (float)UserManager.main.exp / (float)totalExp;
+            expText.text = string.Format("{0}/{1}", UserManager.main.exp, totalExp);
+            profileBriefContent.SetActive(true);
 
             // 텍스트
             JsonData profileText = SystemManager.GetJsonNode(UserManager.main.userProfile, LobbyConst.NODE_TEXT);
@@ -160,14 +209,18 @@ namespace PIERStory
             // 스티커
             LoadStickerData();
 
-            // 말풍선
+            // 테두리
+            LoadFrameData();
 
+            // 초상화
+            LoadPortraitData();
 
             #endregion
 
             #region 사용자 세팅 element와 재화 element 연결
 
-            
+            bool outLoop = false;
+
             for (int i = 0; i < createObject.Count; i++)
             {
                 if (createObject[i].GetComponent<ProfileItemElement>() == null)
@@ -178,11 +231,20 @@ namespace PIERStory
                     if (decoObjects.GetChild(j).GetComponent<ItemElement>() != null && createObject[i].GetComponent<ProfileItemElement>().currencyName == decoObjects.GetChild(j).GetComponent<ItemElement>().currencyName)
                     {
                         decoObjects.GetChild(j).GetComponent<ItemElement>().profileDecoElement = createObject[i].GetComponent<ProfileItemElement>();
+                        outLoop = true;
                         break;
                     }
-                    else if (decoObjects.GetChild(j).GetComponent<StandingElement>() != null && createObject[i].GetComponent<ProfileItemElement>().currencyName == decoObjects.GetChild(j).GetComponent<StandingElement>().currencyName)
+                }
+
+                if (outLoop)
+                    continue;
+
+                for (int j = 0; j < standingObjects.childCount; j++)
+                {
+                    if (standingObjects.GetChild(j).GetComponent<StandingElement>() != null && createObject[i].GetComponent<ProfileItemElement>().currencyName == standingObjects.GetChild(j).GetComponent<StandingElement>().currencyName)
                     {
-                        decoObjects.GetChild(j).GetComponent<StandingElement>().profileItemElement = createObject[i].GetComponent<ProfileItemElement>();
+                        standingObjects.GetChild(j).GetComponent<StandingElement>().profileItemElement = createObject[i].GetComponent<ProfileItemElement>();
+                        outLoop = false;
                         break;
                     }
                 }
@@ -201,11 +263,7 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_MULTIPLE_BUTTON_LABEL, SystemManager.GetLocalizedText("6097"), string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5124"), string.Empty);
-
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
 
             AdManager.main.AnalyticsEnter("deco_enter");
         }
@@ -259,7 +317,7 @@ namespace PIERStory
         void LoadBackgroundData()
         {
             // 배경 재화를 보유하지 못한 경우
-            if (!profileCurrencyList.ContainsKey(LobbyConst.NODE_WALLPAPER) || profileCurrencyList[LobbyConst.NODE_WALLPAPER] == null)
+            if (!CheckListable(LobbyConst.NODE_WALLPAPER))
             {
                 profileBgScroll.SetActive(false);
                 noneBGItem.SetActive(true);
@@ -269,24 +327,8 @@ namespace PIERStory
             profileBgScroll.SetActive(true);
             noneBGItem.SetActive(false);
 
-            ProfileItemElement listElement = null;
-
-            for (int i = 0; i < profileCurrencyList[LobbyConst.NODE_WALLPAPER].Count; i++)
-            {
-                listElement = Instantiate(bgPrefab, bgElementListContent).GetComponent<ProfileItemElement>();
-                listElement.InitCurrencyListElement(profileCurrencyList[LobbyConst.NODE_WALLPAPER][i]);
-
-                createObject.Add(listElement.gameObject);
-            }
+            CreateListObject(LobbyConst.NODE_WALLPAPER, bgPrefab, bgElementListContent);
         }
-
-
-        public void OnClickDeleteBackground()
-        {
-            background.SetTexture2D(null);
-            moveBg.currencyName = string.Empty;
-        }
-
 
         void ProfileBackgrounSetting(JsonData __j, ProfileItemElement profileDeco)
         {
@@ -303,6 +345,8 @@ namespace PIERStory
             for (int i = 0; i < textObjects.childCount; i++)
                 textObjects.GetChild(i).GetComponent<Image>().raycastTarget = false;
 
+            for (int i = 0; i < standingObjects.childCount; i++)
+                standingObjects.GetChild(i).GetComponent<Image>().raycastTarget = false;
 
             profileBgScroll.SetActive(false);
             bgScrolling.SetActive(true);
@@ -320,6 +364,9 @@ namespace PIERStory
 
             for (int i = 0; i < textObjects.childCount; i++)
                 textObjects.GetChild(i).GetComponent<Image>().raycastTarget = true;
+
+            for (int i = 0; i < standingObjects.childCount; i++)
+                standingObjects.GetChild(i).GetComponent<Image>().raycastTarget = true;
         }
 
         #endregion
@@ -328,7 +375,7 @@ namespace PIERStory
 
         void LoadStandingData()
         {
-            if(!profileCurrencyList.ContainsKey(LobbyConst.NODE_STANDING) || profileCurrencyList[LobbyConst.NODE_STANDING] == null)
+            if(!CheckListable(LobbyConst.NODE_STANDING))
             {
                 profileStandingScroll.SetActive(false);
                 noneStandingItem.SetActive(true);
@@ -338,23 +385,29 @@ namespace PIERStory
             profileStandingScroll.SetActive(true);
             noneStandingItem.SetActive(false);
 
-            ProfileItemElement listElement = null;
-
-            for(int i=0;i<profileCurrencyList[LobbyConst.NODE_STANDING].Count;i++)
-            {
-                listElement = Instantiate(standingListPrefab, standingElementListContent).GetComponent<ProfileItemElement>();
-                listElement.InitCurrencyListElement(profileCurrencyList[LobbyConst.NODE_STANDING][i]);
-                createObject.Add(listElement.gameObject);
-            }
+            CreateListObject(LobbyConst.NODE_STANDING, standingListPrefab, standingElementListContent);
         }
 
+        /// <summary>
+        /// 스탠딩 캐릭터 화면에 셋팅
+        /// </summary>
+        /// <param name="__j"></param>
+        /// <param name="profileStanding"></param>
         void ProfileStandingSetting(JsonData __j, ProfileItemElement profileStanding)
         {
+            if (standingObjects.childCount >= 3)
+                return;
+
             profileStandingScroll.SetActive(false);
             standingController.SetActive(true);
 
             controlStandingData = __j;
             controlStandingItemElement = profileStanding;
+            controlStanding = Instantiate(standingPrefab, standingObjects).GetComponent<StandingElement>();
+            controlStanding.NewStanding(controlStandingData, controlStandingItemElement);
+            controlStanding.standingRect.anchoredPosition = Vector2.zero;
+            createObject.Add(controlStanding.gameObject);
+            BlockExcludeStandingControl();
         }
 
         /// <summary>
@@ -362,6 +415,10 @@ namespace PIERStory
         /// </summary>
         void SelectControlStanding(StandingElement standing)
         {
+            // 이미 제어중인 경우 return
+            if (standingController.activeSelf)
+                return;
+
             controlStanding = standing;
 
             for (int i = 0; i < bottomToggles.Length; i++)
@@ -377,59 +434,9 @@ namespace PIERStory
 
             profileStandingScroll.SetActive(false);
             standingController.SetActive(true);
+            BlockExcludeStandingControl();
         }
 
-        void CreateStandingCharacter()
-        {
-            if (controlStanding != null)
-                return;
-
-            controlStanding = Instantiate(standingPrefab, decoObjects).GetComponent<StandingElement>();
-            controlStanding.NewStanding(controlStandingData, controlStandingItemElement);
-        }
-
-        /// <summary>
-        /// 선택된 곳은 비활성화
-        /// </summary>
-        void DisableScreenStand(int index)
-        {
-            for(int i=0;i<screenStand.Length;i++)
-            {
-                if (screenStand[i] == null)
-                    continue;
-
-                if (i == index)
-                {
-                    if (controlStanding == screenStand[i])
-                        break;
-                    else
-                        screenStand[i].gameObject.SetActive(false);
-                }
-                else
-                    screenStand[i].gameObject.SetActive(true);
-            }
-        }
-
-        public void OnClickPositionLeft()
-        {
-            CreateStandingCharacter();
-            controlStanding.standingRect.anchoredPosition = new Vector2(-controlStanding.standingRect.sizeDelta.x * 0.25f, 0f);
-            DisableScreenStand(0);
-        }
-
-        public void OnClickPositionCenter()
-        {
-            CreateStandingCharacter();
-            controlStanding.standingRect.anchoredPosition = Vector2.zero;
-            DisableScreenStand(1);
-        }
-
-        public void OnClickPositioneRight()
-        {
-            CreateStandingCharacter();
-            controlStanding.standingRect.anchoredPosition = new Vector2(controlStanding.standingRect.sizeDelta.x * 0.25f, 0f);
-            DisableScreenStand(2);
-        }
 
         public void OnClickPositionFlip()
         {
@@ -456,133 +463,44 @@ namespace PIERStory
                 }
             }
 
-            for (int i = 0; i < screenStand.Length; i++)
-            {
-                if (screenStand[i] == controlStanding)
-                {
-                    screenStand[i] = null;
-                    break;
-                }
-            }
-
             controlStanding.RemoveFromScreen();
             Destroy(controlStanding.gameObject);
             profileStandingScroll.SetActive(true);
             standingController.SetActive(false);
-        }
 
-        public void OnClickCancleControl()
-        {
-            // 기존의 화면의 것을 제어해준 것이라면 다시 취소해주고
-            if(IsScreenStading())
-            {
-                for (int i = 0; i < screenStand.Length; i++)
-                {
-                    if (screenStand[i] == null)
-                        continue;
+            for (int i = 0; i < decoObjects.childCount; i++)
+                decoObjects.GetChild(i).GetComponent<Image>().raycastTarget = true;
 
-                    screenStand[i].RollbackTransform();
-                    screenStand[i].gameObject.SetActive(true);
-                }
-            }
-            else
-            {
-                if (controlStanding != null)
-                {
-                    controlStanding.RemoveFromScreen();
-                    Destroy(controlStanding.gameObject);
-                }
-                else
-                    controlStandingItemElement.currentCount--;
-            }
-
-            controlStanding = null;
-
-            profileStandingScroll.SetActive(true);
-            standingController.SetActive(false);
+            for (int i = 0; i < standingObjects.childCount; i++)
+                standingObjects.GetChild(i).GetComponent<Image>().raycastTarget = true;
         }
 
         public void OnClickStandingFix()
         {
-            if(IsScreenStading())
-            {
-                for(int i=0;i<screenStand.Length;i++)
-                {
-                    if (screenStand[i] == null)
-                        continue;
-
-                    // 기존에 있던 스탠딩을 제어해준 것이면 있던 위치에서 지워준다
-                    if (screenStand[i] == controlStanding)
-                        screenStand[i] = null;
-                }
-            }
-            else
-            {
-                // 신규 스탠딩의 경우에는 생성List에 추가해준다
-                createObject.Add(controlStanding.gameObject);
-            }
-
-            // 이미 그 자리에 누가 있었으면 없애버려
-            if (controlStanding.standingRect.anchoredPosition.x < 0 && screenStand[0] != null)
-                RemoveSwapObject(0);
-            else if (controlStanding.standingRect.anchoredPosition.x == 0 && screenStand[1] != null)
-                RemoveSwapObject(1);
-            else if (controlStanding.standingRect.anchoredPosition.x > 0 && screenStand[2] != null)
-                RemoveSwapObject(2);
-
-            // 0보다 작으면 좌측, 0이면 중앙, 0보다 크면 우측
-            if (controlStanding.standingRect.anchoredPosition.x < 0)
-                screenStand[0] = controlStanding;
-            else if (controlStanding.standingRect.anchoredPosition.x == 0)
-                screenStand[1] = controlStanding;
-            else
-                screenStand[2] = controlStanding;
-
             controlStanding.SetRectTransInfo();
-
             controlStanding = null;
 
             profileStandingScroll.SetActive(true);
             standingController.SetActive(false);
+
+            for (int i = 0; i < decoObjects.childCount; i++)
+                decoObjects.GetChild(i).GetComponent<Image>().raycastTarget = true;
+
+            for (int i = 0; i < standingObjects.childCount; i++)
+                standingObjects.GetChild(i).GetComponent<Image>().raycastTarget = true;
         }
 
-        /// <summary>
-        /// 화면에 서 있던 캐릭터 제어한건지 체크
-        /// </summary>
-        /// <returns></returns>
-        bool IsScreenStading()
+        void BlockExcludeStandingControl()
         {
-            for (int i = 0; i < screenStand.Length; i++)
-            {
-                if (screenStand[i] == null)
-                    continue;
+            for (int i = 0; i < decoObjects.childCount; i++)
+                decoObjects.GetChild(i).GetComponent<Image>().raycastTarget = false;
 
-                if (screenStand[i] == controlStanding)
-                    return true;
+            for(int i=0;i<standingObjects.childCount;i++)
+            {
+                if (standingObjects.GetChild(i).GetComponent<StandingElement>() != controlStanding)
+                    standingObjects.GetChild(i).GetComponent<Image>().raycastTarget = false;
             }
 
-            return false;
-        }
-
-        /// <summary>
-        /// 해당 위치에서 변경하는 경우 삭제
-        /// </summary>
-        /// <param name="index"></param>
-        void RemoveSwapObject(int index)
-        {
-            for (int i = 0; i < createObject.Count; i++)
-            {
-                // List에서 삭제
-                if (createObject[i] == screenStand[index].gameObject)
-                {
-                    createObject.Remove(createObject[i]);
-                    break;
-                }
-            }
-
-            // object 파괴
-            screenStand[index].RemoveFromScreen();
-            Destroy(screenStand[index].gameObject);
         }
 
         #endregion
@@ -591,7 +509,7 @@ namespace PIERStory
 
         void LoadBadgeData()
         {
-            if(!profileCurrencyList.ContainsKey(LobbyConst.NODE_BADGE) || profileCurrencyList[LobbyConst.NODE_BADGE] == null)
+            if (!CheckListable(LobbyConst.NODE_BADGE))
             {
                 badgeScroll.SetActive(false);
                 noneBadgeItem.SetActive(true);
@@ -601,14 +519,7 @@ namespace PIERStory
             badgeScroll.SetActive(true);
             noneBadgeItem.SetActive(false);
 
-            ProfileItemElement listElement = null;
-
-            for(int i=0;i<profileCurrencyList[LobbyConst.NODE_BADGE].Count;i++)
-            {
-                listElement = Instantiate(badgeListPrefab, badgeElementListContent).GetComponent<ProfileItemElement>();
-                listElement.InitCurrencyListElement(profileCurrencyList[LobbyConst.NODE_BADGE][i]);
-                createObject.Add(listElement.gameObject);
-            }
+            CreateListObject(LobbyConst.NODE_BADGE, badgeListPrefab, badgeElementListContent);
         }
 
         void ProfileBadgeSetting(JsonData __j, ProfileItemElement profileDeco)
@@ -624,7 +535,7 @@ namespace PIERStory
 
         void LoadStickerData()
         {
-            if (!profileCurrencyList.ContainsKey(LobbyConst.NODE_STICKER) || profileCurrencyList[LobbyConst.NODE_STICKER] == null)
+            if (!CheckListable(LobbyConst.NODE_STICKER))
             {
                 stickerScroll.SetActive(false);
                 noneStickerItem.SetActive(true);
@@ -634,14 +545,7 @@ namespace PIERStory
             stickerScroll.SetActive(true);
             noneStickerItem.SetActive(false);
 
-            ProfileItemElement listElement = null;
-
-            for (int i = 0; i < profileCurrencyList[LobbyConst.NODE_STICKER].Count; i++)
-            {
-                listElement = Instantiate(itemListPrefab, stickerElementListContent).GetComponent<ProfileItemElement>();
-                listElement.InitCurrencyListElement(profileCurrencyList[LobbyConst.NODE_STICKER][i]);
-                createObject.Add(listElement.gameObject);
-            }
+            CreateListObject(LobbyConst.NODE_STICKER, itemListPrefab, stickerElementListContent);
         }
 
         void ProfileStickerSetting(JsonData __j, ProfileItemElement profileDeco)
@@ -649,6 +553,60 @@ namespace PIERStory
             ItemElement stickerElement = Instantiate(stickerObjectPrefab, decoObjects).GetComponent<ItemElement>();
             stickerElement.NewProfileItem(__j, profileDeco);
             createObject.Add(stickerElement.gameObject);
+        }
+
+        #endregion
+
+
+        #region 프로필사진 테두리 관련
+
+        void LoadFrameData()
+        {
+            if (!CheckListable(LobbyConst.NODE_FRAME))
+                return;
+
+            CreateListObject(LobbyConst.NODE_FRAME, frameListElement, frameListContent);
+        }
+
+        public void RemoveFrame()
+        {
+            for (int i = 1; i < frameListContent.childCount; i++)
+                frameListContent.GetChild(i).GetComponent<ProfileItemElement>().useCheckIcon.SetActive(false);
+
+            profileFrame.SetTexture2D(LobbyManager.main.textureNoneFrame);
+            frameName = string.Empty;
+        }
+
+        void SetProfileFrame(string __url, string __key, string __currency)
+        {
+            for (int i = 1; i < frameListContent.childCount; i++)
+                frameListContent.GetChild(i).GetComponent<ProfileItemElement>().useCheckIcon.SetActive(false);
+
+            profileFrame.gameObject.SetActive(true);
+            profileFrame.SetDownloadURL(__url, __key);
+            frameName = __currency;
+        }
+
+        #endregion
+
+
+        #region 프로필 초상화 관련
+
+        void LoadPortraitData()
+        {
+            if (!CheckListable(LobbyConst.NODE_PORTRAIT))
+                return;
+
+            CreateListObject(LobbyConst.NODE_PORTRAIT, portraitListElement, portraitListContent);
+        }
+
+        void SetProfilePortrait(string __url, string __key, string __currency)
+        {
+            for (int i = 0; i < portraitListContent.childCount; i++)
+                portraitListContent.GetChild(i).GetComponent<ProfileItemElement>().useCheckIcon.SetActive(false);
+
+            profilePortrait.SetDownloadURL(__url, __key);
+            portraitName = __currency;
         }
 
         #endregion
@@ -708,10 +666,114 @@ namespace PIERStory
 
         #endregion
 
+
+        #region OnClickEvent
+        
         /// <summary>
-        /// 꾸미기 한거 저장
+        /// 간단 프로필(프로필 초상화, 테두리 그룹 보이기/숨기기)
         /// </summary>
-        void OnCllickSaveDeco()
+        public void OnClickShowProfileBrief() 
+        {
+            if (profileBriefContent.activeSelf)
+            {
+                profileBriefContent.SetActive(false);
+                profileBriefShowButton.sprite = spriteInvisable;
+            }
+            else
+            {
+                profileBriefContent.SetActive(true);
+                profileBriefShowButton.sprite = spriteVisable;
+            }
+        }
+
+
+        /// <summary>
+        /// 하단의 버튼을 통해 스크롤 영역 보이게 하기
+        /// </summary>
+        public void OnClickShowContent()
+        {
+            if (ToggleOnCheck() && bottomContainer.isHidden)
+                bottomContainer.Show();
+            else if (!ToggleOnCheck() && bottomContainer.isVisible)
+                bottomContainer.Hide();
+        }
+
+
+        /// <summary>
+        /// 꾸미기 오브젝트(캐릭터, 뱃지, 스티커) 모두 삭제
+        /// </summary>
+        public void OnClickDeleteAllDecoObject()
+        {
+            for (int i = 0; i < decoObjects.childCount; i++)
+                Destroy(decoObjects.GetChild(i).gameObject);
+
+            for (int i = 0; i < textObjects.childCount; i++)
+                Destroy(textObjects.GetChild(i).gameObject);
+
+            for (int i = 0; i < standingObjects.childCount; i++)
+                Destroy(standingObjects.GetChild(i).gameObject);
+        }
+
+
+        /// <summary>
+        /// 닉네임 표기 일단 변경
+        /// </summary>
+        public void OnClickSubmitNIckname()
+        {
+            nicknameText.text = nicknameInputField.text;
+        }
+
+
+        /// <summary>
+        /// 꾸미기 한거 저장하는데 닉네임 먼저 저장함
+        /// </summary>
+        public void OnCllickSave()
+        {
+            // 닉네임 체크를 먼저 한다
+            // 닉네임이 공백인가?
+            if(string.IsNullOrEmpty(nicknameText.text))
+            {
+                SystemManager.ShowMessageWithLocalize("6199", false);
+                return;
+            }
+
+            // 닉네임 변경을 하지 않았다면
+            if(nicknameText.text == UserManager.main.nickname)
+            {
+                SaveDeco();
+                return;
+            }
+
+            JsonData nickname = new JsonData();
+            nickname[CommonConst.FUNC] = "updateUserNickname";
+            nickname["nickname"] = nicknameText.text;
+
+            NetworkLoader.main.SendPost(OnUpdateNickname, nickname);
+        }
+        
+
+        void OnUpdateNickname(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                try
+                {
+                    Debug.Log("Failed OnUpdateNickname : " + res.DataAsText);
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e.StackTrace);
+                }
+                return;
+            }
+
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            UserManager.main.SetNewNickname(result["nickname"].ToString());
+
+            SaveDeco();
+        }
+
+        void SaveDeco()
         {
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = LobbyConst.FUNC_USER_PROFILE_SAVE;
@@ -721,7 +783,7 @@ namespace PIERStory
 
             int sortingOrder = 0;
 
-            if(!string.IsNullOrEmpty(moveBg.currencyName))
+            if (!string.IsNullOrEmpty(moveBg.currencyName))
             {
                 // 배경 먼저 넣는다. 배경은 무조건 sortingOrder값을 0으로 가져간다
                 JsonData bgData = new JsonData();
@@ -736,29 +798,59 @@ namespace PIERStory
                 sending[LobbyConst.NODE_CURRENCY_LIST].Add(bgData);
             }
 
-            // 이제 화면에 들어간 스탠딩(미구현), 뱃지, 말풍선(미구현)을 넣어준다
+            // 스탠딩을 먼저 넣어준다
+            for (int i = 0; i < standingObjects.childCount; i++)
+            {
+                sortingOrder++;
+                sending[LobbyConst.NODE_CURRENCY_LIST].Add(standingObjects.GetChild(i).GetComponent<StandingElement>().SaveStandingData(sortingOrder));
+            }
+
+
+            // 이제 화면에 들어간 뱃지, 스티커를 넣어준다
             for (int i = 0; i < decoObjects.childCount; i++)
             {
                 sortingOrder++;
-
-                if (decoObjects.GetChild(i).GetComponent<ItemElement>() != null)
-                    sending[LobbyConst.NODE_CURRENCY_LIST].Add(decoObjects.GetChild(i).GetComponent<ItemElement>().SaveJsonData(sortingOrder));
-                else if (decoObjects.GetChild(i).GetComponent<StandingElement>() != null && decoObjects.GetChild(i).gameObject.activeSelf)
-                    sending[LobbyConst.NODE_CURRENCY_LIST].Add(decoObjects.GetChild(i).GetComponent<StandingElement>().SaveStandingData(sortingOrder));
+                sending[LobbyConst.NODE_CURRENCY_LIST].Add(decoObjects.GetChild(i).GetComponent<ItemElement>().SaveJsonData(sortingOrder));
             }
 
+            // frame 넣기
+            JsonData frameData = new JsonData();
+            frameData[LobbyConst.NODE_CURRENCY] = frameName;
+            frameData[LobbyConst.NODE_SORTING_ORDER] = 0;
+            frameData[LobbyConst.NODE_POS_X] = 0f;
+            frameData[LobbyConst.NODE_POS_Y] = 0f;
+            frameData[LobbyConst.NODE_WIDTH] = profileFrame.downloadedSprite.rect.width;
+            frameData[LobbyConst.NODE_HEIGHT] = profileFrame.downloadedSprite.rect.height;
+            frameData[LobbyConst.NODE_ANGLE] = 0f;
+
+            sending[LobbyConst.NODE_CURRENCY_LIST].Add(frameData);
+
+            JsonData portraitData = new JsonData();
+            portraitData[LobbyConst.NODE_CURRENCY] = portraitName;
+            portraitData[LobbyConst.NODE_SORTING_ORDER] = 0;
+            portraitData[LobbyConst.NODE_POS_X] = 0f;
+            portraitData[LobbyConst.NODE_POS_Y] = 0f;
+            portraitData[LobbyConst.NODE_WIDTH] = profilePortrait.downloadedSprite.rect.width;
+            portraitData[LobbyConst.NODE_HEIGHT] = profilePortrait.downloadedSprite.rect.height;
+            portraitData[LobbyConst.NODE_ANGLE] = 0f;
+
+            sending[LobbyConst.NODE_CURRENCY_LIST].Add(portraitData);
+
             // text list를 만들어서 생성한 텍스트 값을 Json화해서 넣는다.
+            /*
             sending[LobbyConst.NODE_TEXT_LIST] = JsonMapper.ToObject("[]");
 
             for (int i = 0; i < textObjects.childCount; i++)
                 sending[LobbyConst.NODE_TEXT_LIST].Add(textObjects.GetChild(i).GetComponent<DecoTextElement>().SaveJsonData(i));
+
+            */
 
             NetworkLoader.main.SendPost(CallbackSaveDeco, sending, true);
         }
 
         void CallbackSaveDeco(HTTPRequest req, HTTPResponse res)
         {
-            if(!NetworkLoader.CheckResponseValidation(req, res))
+            if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackSaveDeco");
                 return;
@@ -772,6 +864,8 @@ namespace PIERStory
             SystemManager.ShowSimpleAlertLocalize("6122");
         }
 
+        #endregion
+
         void SetBackgroundLoading()
         {
             SystemManager.HideNetworkLoading();
@@ -781,6 +875,55 @@ namespace PIERStory
                 background.GetComponent<RectTransform>().sizeDelta *= 2f;
 
             moveBg.enabled = true;
+        }
+
+        /// <summary>
+        /// 리스트를 생성할 수 있는가?
+        /// </summary>
+        /// <param name="key">json key값</param>
+        bool CheckListable(string key)
+        {
+            if (!profileCurrencyList.ContainsKey(key))
+                return false;
+
+            if (profileCurrencyList[key] == null)
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// 스크롤의 리스트에 생성하기
+        /// </summary>
+        /// <param name="key">json key값</param>
+        /// <param name="listObject">list prefab</param>
+        /// <param name="parent">list가 생성될 위치의 부모(transform)</param>
+        void CreateListObject(string key, GameObject listObject, Transform parent)
+        {
+            ProfileItemElement listElement = null;
+
+            for (int i = 0; i < profileCurrencyList[key].Count; i++)
+            {
+                listElement = Instantiate(listObject, parent).GetComponent<ProfileItemElement>();
+                listElement.InitCurrencyListElement(profileCurrencyList[key][i]);
+
+                createObject.Add(listElement.gameObject);
+            }
+        }
+
+        /// <summary>
+        /// Toggle이 한개라도 On인지 체크
+        /// </summary>
+        /// <returns></returns>
+        bool ToggleOnCheck()
+        {
+            for (int i = 0; i < bottomToggles.Length; i++)
+            {
+                if (bottomToggles[i].isOn)
+                    return true;
+            }
+
+            return false;
         }
     }
 }

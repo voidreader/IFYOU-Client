@@ -5,7 +5,7 @@ using LitJson;
 
 namespace PIERStory
 {
-    public class StandingElement : MonoBehaviour, IPointerClickHandler
+    public class StandingElement : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public ImageRequireDownload standingImage;
         public ProfileItemElement profileItemElement;
@@ -13,8 +13,11 @@ namespace PIERStory
 
         public string currencyName = string.Empty;
         float posX = 0f, posY = 0f;
-        float width = 300f, height = 300f;
+        float width = 800f, height = 300f;
         float angle = 0f;
+
+        const float movalbeWidth = 250f;
+        float startX = 0f, dragX = 0f, originX = 0f, calcPosX;
 
         public void NewStanding(JsonData __j, ProfileItemElement connectElement)
         {
@@ -41,17 +44,6 @@ namespace PIERStory
 
             angle = SystemManager.GetJsonNodeFloat(__j, LobbyConst.NODE_ANGLE);
 
-            RollbackTransform();
-
-            if (connectElement != null)
-                profileItemElement = connectElement;
-        }
-
-        /// <summary>
-        /// 위치 값, 뒤집기 등 원상복귀
-        /// </summary>
-        public void RollbackTransform()
-        {
             standingRect.anchoredPosition = new Vector2(posX, posY);
             standingRect.sizeDelta = new Vector2(width, height);
 
@@ -59,6 +51,9 @@ namespace PIERStory
                 standingRect.localScale = new Vector3(-1f, 1f, 1f);
             else
                 standingRect.localScale = Vector3.one;
+
+            if (connectElement != null)
+                profileItemElement = connectElement;
         }
 
         /// <summary>
@@ -71,7 +66,6 @@ namespace PIERStory
 
             width = standingRect.sizeDelta.x;
             height = standingRect.sizeDelta.y;
-
 
             if (standingRect.localScale.x == -1)
                 angle = 180f;
@@ -88,6 +82,29 @@ namespace PIERStory
                 profileItemElement.currentCount--;
         }
 
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            startX = eventData.position.x;
+            originX = GetComponent<RectTransform>().anchoredPosition.x;
+        }
+
+        
+        public void OnDrag(PointerEventData eventData)
+        {
+            dragX = eventData.position.x;
+            calcPosX = originX + (dragX - startX);
+
+            if (calcPosX > -movalbeWidth && calcPosX < movalbeWidth)
+                GetComponent<RectTransform>().anchoredPosition = new Vector2(calcPosX, 0f);
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            if (calcPosX <= -movalbeWidth)
+                GetComponent<RectTransform>().anchoredPosition = new Vector2(-movalbeWidth, 0f);
+            else if(calcPosX >= movalbeWidth)
+                GetComponent<RectTransform>().anchoredPosition = new Vector2(movalbeWidth, 0f);
+        }
 
         public void OnPointerClick(PointerEventData eventData)
         {
@@ -114,5 +131,6 @@ namespace PIERStory
 
             return data;
         }
+
     }
 }

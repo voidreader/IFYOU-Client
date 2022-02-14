@@ -53,11 +53,8 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_MULTIPLE_BUTTON_LABEL, SystemManager.GetLocalizedText("5153"), string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5152"), string.Empty);
 
-            ViewCommonTop.OnClickButtonAction = OnClickSaveProfile;
             OnSelectCanel = SelectCancel;
             
             AdManager.main.AnalyticsEnter("profile_enter");
@@ -174,7 +171,7 @@ namespace PIERStory
             Debug.Log(JsonMapper.ToStringUnicode(UserManager.main.userProfile));
             ViewMain.OnProfileSetting?.Invoke();
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SAVE_PROFILE_DECO);
-            ViewMain.OnProfileChange?.Invoke();
+            //ViewMain.OnProfileChange?.Invoke();
 
         }
 

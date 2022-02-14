@@ -9,6 +9,7 @@ namespace PIERStory
     {
         public ImageRequireDownload icon;
         public TextMeshProUGUI countText;
+        public GameObject useCheckIcon;
 
         JsonData currencyData;
         public string currencyName = string.Empty;
@@ -27,6 +28,14 @@ namespace PIERStory
 
             if (countText != null)
                 SetCountText();
+
+            if(useCheckIcon != null)
+            {
+                if (currentCount == 1)
+                    useCheckIcon.SetActive(true);
+                else
+                    useCheckIcon.SetActive(false);
+            }
         }
 
         public void OnClickSelectBackground()
@@ -64,6 +73,20 @@ namespace PIERStory
             currentCount++;
             ViewProfileDeco.OnStandingSetting?.Invoke(currencyData, this);
         }
+
+        public void OnClickSelectFrame()
+        {
+            ViewProfileDeco.OnProfileFrameSetting?.Invoke(SystemManager.GetJsonNodeString(currencyData, LobbyConst.NODE_ICON_URL), SystemManager.GetJsonNodeString(currencyData, LobbyConst.NODE_ICON_KEY), SystemManager.GetJsonNodeString(currencyData, LobbyConst.NODE_CURRENCY));
+            useCheckIcon.SetActive(true);
+        }
+
+
+        public void OnClickSelectPortrait()
+        {
+            ViewProfileDeco.OnProfilePortraitSetting?.Invoke(SystemManager.GetJsonNodeString(currencyData, LobbyConst.NODE_ICON_URL), SystemManager.GetJsonNodeString(currencyData, LobbyConst.NODE_ICON_KEY), SystemManager.GetJsonNodeString(currencyData, LobbyConst.NODE_CURRENCY));
+            useCheckIcon.SetActive(true);
+        }
+
 
         public void SetCountText()
         {

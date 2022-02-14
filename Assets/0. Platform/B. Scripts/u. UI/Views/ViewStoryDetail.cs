@@ -81,10 +81,10 @@ namespace PIERStory
             SystemManager.HideNetworkLoading();
 
             UserManager.OnRequestEpisodeReset = this.OnStartView;
-            
+
             UserManager.OnFreepassPurchase = this.SetFreepassInfo;
             UserManager.OnFreepassPurchase += this.RefreshAllEpisodePurchaseState;
-            
+
             RefreshStoryDetail = this.OnStartView;
 
             // * 튜토리얼 관련 팝업 오픈을 OnView로 옮겼습니다. 
@@ -94,16 +94,8 @@ namespace PIERStory
                 if (UserManager.main.tutorialFirstProjectID != 0)
                     UserManager.main.RequestTutorialReward();
             }
-            else
-            {
-                if (UserManager.main.tutorialStep < 2)
-                {
-                    PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_STORYDETAIL);
-                    PopupManager.main.ShowPopup(p, false);
-                }
-            }
-            
-            
+
+
             AppsFlyerSDK.AppsFlyer.sendEvent("story_enter", new Dictionary<string, string>() {
                 { "project_id", StoryManager.main.CurrentProjectID }
             });

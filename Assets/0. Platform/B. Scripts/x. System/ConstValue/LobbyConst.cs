@@ -62,7 +62,7 @@ namespace PIERStory {
         // 프로필 꾸미기 관련 const string
         public const string FUNC_GET_PROFILE_CURRENCY_OWN_LIST = "getProfileCurrencyOwnList";       // 소유한 프로필 재화 리스트
         public const string FUNC_GET_PROFILE_CURRENCY_CURRENT = "getProfileCurrencyCurrent";        // 현재 저장된 프로필 재화 정보
-        public const string FUNC_USER_PROFILE_SAVE = "userProfileSave";
+        public const string FUNC_USER_PROFILE_SAVE = "userProfileSaveVer2";
         public const string NODE_PORTRAIT = "portrait";
         public const string NODE_FRAME = "frame";
         public const string NODE_WALLPAPER = "wallpaper";
@@ -125,7 +125,6 @@ namespace PIERStory {
         public const string SIGNAL_UPDATE_EPISODE_SCENE_COUNT = "updateEpisodeSceneCount";
         public const string SIGNAL_CONNECT_SERVER = "connectingDone";
         public const string SIGNAL_MOVE_DECO_MODE = "moveDecoMode";
-        public const string SIGNAL_MOVE_PROFILE_DECO = "moveProfileDeco";
         public const string SIGNAL_SAVE_PROFILE_DECO = "saveProfileDeco";
         
         public const string SIGNAL_EPISODE_START = "EpisodeStart";
@@ -147,9 +146,6 @@ namespace PIERStory {
         public const string TOP_SIGNAL_SHOW_MAIL_BUTTON = "topSignalShowMailButton";        // 재화 그룹의 메일버튼 활성화
         
         public const string TOP_SIGNAL_SHOW_BACK_BUTTON = "topSignalShowBackButton"; // 백버튼 처리
-
-        public const string TOP_SIGNAL_SHOW_MULTIPLE_BUTTON = "topSignalShowMultipleButton";            // 다용도 버튼 활성화
-        public const string TOP_SIGNAL_MULTIPLE_BUTTON_LABEL = "topSignalMultipleButtonLabel";          // 다용도 버튼 내에 들어가는 텍스트
 
         public const string TOP_SIGNAL_CHANGE_OWNER = "topSignalChangeOwner"; // 오너 변경 
         public const string TOP_SIGNAL_RECOVER = "topSignalRecover"; // 상단 상태 복원 

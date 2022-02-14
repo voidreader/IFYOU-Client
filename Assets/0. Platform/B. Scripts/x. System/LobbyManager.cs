@@ -32,6 +32,11 @@ namespace PIERStory {
         public Sprite spriteOneTimeIcon; // 1회권
         public Sprite spriteFreepassIcon; // 프리패스 아이콘
         public Sprite spriteInappOriginIcon; // 인앱 구매확정 메일 아이콘
+
+        [Header("프로필")]
+        public Texture2D textureNoneFrame;
+
+
         
         [Header("갤러리 - 사운드 BGMSprite")]
         public Sprite spriteOpenVoice;

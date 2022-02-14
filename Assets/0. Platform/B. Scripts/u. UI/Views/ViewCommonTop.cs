@@ -13,7 +13,6 @@ namespace PIERStory {
     {
         public static bool isBackgroundShow = true; // 배경 보여지고 있는지 
         public static string staticCurrentTopOwner = string.Empty; // static owner.
-        public static Action OnClickButtonAction = null;    // 다용도 버튼 Action 저장용도
         
         public static Action OnRefreshSuperUser = null; // 슈퍼유저 표기용도 
 
@@ -25,9 +24,6 @@ namespace PIERStory {
         [SerializeField] HorizontalLayoutGroup propertyHorizontalLayout;
         public GameObject mailButton;           // 프로퍼티 그룹의 메일 버튼
         [SerializeField] GameObject mailNotify; // 메일 알림 표시 
-        
-        public GameObject multipleButton;       // 여러 용도(저장, 변경 등)로 사용될 버튼
-        public TextMeshProUGUI multipleButtonText;      // 다용도 버튼에 들어가는 텍스트
 
         public GameObject attendanceButton;     // 출석 이벤트 버튼
         public GameObject howToPlayButton; // How to play 버튼 
@@ -49,9 +45,6 @@ namespace PIERStory {
         
         bool previousLogoShow = false; // 로고 보여주기 
         
-        bool previousMultipleButtonShow = false; // 멀티 버튼 보여주기
-        string previousMultipleLabelText = string.Empty; // 멀티 버튼 텍스트
-        
         bool previousAttendanceButtonShow = false; 
         bool previousHowToPlayButtonShop = false; // 
         
@@ -69,8 +62,6 @@ namespace PIERStory {
         SignalStream signalStreamTopMail;
         SignalStream signalStreamTopChangeOwner;
         SignalStream signalStreamTopBackButton;
-        SignalStream signalStreamTopMultipleButton;
-        SignalStream signalStreamTopMultipleButtonText;
         SignalStream signalStreamRecover;
         SignalStream signalStreamSaveState;
 
@@ -84,8 +75,6 @@ namespace PIERStory {
         SignalReceiver signalReceiverTopMail;
         SignalReceiver signalReceiverTopChangeOwner;
         SignalReceiver signalReceiverTopBackButton;
-        SignalReceiver siganlReceiverTopMultipleButton;
-        SignalReceiver signalReceiverTopMultipleButtonText;
         SignalReceiver signalReceiverRecover;
         SignalReceiver signalReceiverSaveState;
 
@@ -114,12 +103,6 @@ namespace PIERStory {
             signalStreamTopBackButton = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON);
             signalReceiverTopBackButton = new SignalReceiver().SetOnSignalCallback(OnTopBackButtonSignal);
 
-            // 몇가지 예외적으로 다용도로 사용될 버튼 활성화 및 Action 추가
-            signalStreamTopMultipleButton = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MULTIPLE_BUTTON);
-            siganlReceiverTopMultipleButton = new SignalReceiver().SetOnSignalCallback(OnTopMultipleSignal);
-            signalStreamTopMultipleButtonText = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_MULTIPLE_BUTTON_LABEL);
-            signalReceiverTopMultipleButtonText = new SignalReceiver().SetOnSignalCallback(OnTopMultipleLabelSignal);
-            
 
             // 복원 시그널 추가
             signalStreamRecover = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER);
@@ -145,8 +128,6 @@ namespace PIERStory {
             signalStreamTopMail.ConnectReceiver(signalReceiverTopMail);
             signalStreamTopChangeOwner.ConnectReceiver(signalReceiverTopChangeOwner);
             signalStreamTopBackButton.ConnectReceiver(signalReceiverTopBackButton);
-            signalStreamTopMultipleButton.ConnectReceiver(siganlReceiverTopMultipleButton);
-            signalStreamTopMultipleButtonText.ConnectReceiver(signalReceiverTopMultipleButtonText);
             signalStreamRecover.ConnectReceiver(signalReceiverRecover);
             signalStreamSaveState.ConnectReceiver(signalReceiverSaveState);
             
@@ -163,8 +144,6 @@ namespace PIERStory {
             signalStreamTopMail.DisconnectReceiver(signalReceiverTopMail);
             signalStreamTopChangeOwner.DisconnectReceiver(signalReceiverTopChangeOwner);
             signalStreamTopBackButton.DisconnectReceiver(signalReceiverTopBackButton);
-            signalStreamTopMultipleButton.DisconnectReceiver(siganlReceiverTopMultipleButton);
-            signalStreamTopMultipleButtonText.DisconnectReceiver(signalReceiverTopMultipleButtonText);
             signalStreamRecover.DisconnectReceiver(signalReceiverRecover);
             signalStreamSaveState.DisconnectReceiver(signalReceiverSaveState);
 
@@ -241,11 +220,6 @@ namespace PIERStory {
             previousMailShow = mailButton.activeSelf;
             previousLogoShow = !previousBackButtonShow;
             
-            // 멀티플 버튼
-            previousMultipleButtonShow = multipleButton.activeSelf;
-            
-            // 멀티플 버튼 레이블
-            previousMultipleLabelText = multipleButtonText.text;
             
             // 플로팅 버튼 친구들
             previousAttendanceButtonShow = attendanceButton.activeSelf;
@@ -271,12 +245,6 @@ namespace PIERStory {
             
             mailButton.SetActive(previousMailShow);
             logo.SetActive(!previousBackButtonShow);
-            
-            // 멀티플 버튼
-            multipleButton.SetActive(previousMultipleButtonShow);
-            
-            // 멀티플 버튼 레이블
-            multipleButtonText.text = previousMultipleLabelText;
             
             
             // 출석버튼, 하우투플레이 버튼             
@@ -414,26 +382,7 @@ namespace PIERStory {
             }
         }
 
-        void OnTopMultipleSignal(Signal s)
-        {
-            if(s.hasValue)
-            {
-                bool isShow = s.GetValueUnsafe<bool>();
-                multipleButton.SetActive(isShow);
-            }
-            else
-                multipleButton.SetActive(false);
-        }
 
-        void OnTopMultipleLabelSignal(Signal s)
-        {
-            if(s.hasValue)
-            {
-                string label = s.GetValueUnsafe<string>();
-                multipleButtonText.text = label;
-            }
-        }
-        
         /// <summary>
         /// 출석체크 플로팅 버튼 보여주기, 감추기 시그널
         /// </summary>
@@ -454,11 +403,7 @@ namespace PIERStory {
             howToPlayButton.SetActive(isShow);
         }
 
-        public void OnClickMultipleButton()
-        {
-            OnClickButtonAction?.Invoke();
-        }
-        
+
         /// <summary>
         /// 메일 알림 표시 
         /// </summary>

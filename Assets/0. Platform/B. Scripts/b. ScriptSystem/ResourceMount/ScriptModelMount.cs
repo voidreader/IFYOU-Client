@@ -213,8 +213,6 @@ namespace PIERStory
                 file_key = SystemManager.GetJsonNodeString(resourceData[i], CommonConst.COL_FILE_KEY);
                 file_url = SystemManager.GetJsonNodeString(resourceData[i], CommonConst.COL_FILE_URL);
                 
-                // * AWS CloudFront 사용으로 URL 조정
-                file_url = SystemManager.main.contentsURL + file_key;
 
                 // 파일이 없거나, 다운로드 버전이 더 높으면!
                 if (!ES3.FileExists(GetCubismRelativePath(file_key)) || modelVersion < downloadModelVersion)

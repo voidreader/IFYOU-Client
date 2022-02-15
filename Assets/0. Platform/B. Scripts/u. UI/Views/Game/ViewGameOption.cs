@@ -74,11 +74,13 @@ namespace PIERStory
         {
             if (PlayerPrefs.GetInt(GameConst.MISSION_POPUP) == 1)
             {
+                PlayerPrefs.SetInt(GameConst.MISSION_POPUP, 0);
                 missionToggle.sprite = spriteToggleOff;
                 missionAnimator.Play(true);
             }
             else
             {
+                PlayerPrefs.SetInt(GameConst.MISSION_POPUP, 1);
                 missionToggle.sprite = spriteToggleOn;
                 missionAnimator.Play();
             }
@@ -89,11 +91,13 @@ namespace PIERStory
         {
             if (PlayerPrefs.GetInt(GameConst.ILLUST_POPUP) == 1)
             {
+                PlayerPrefs.SetInt(GameConst.ILLUST_POPUP, 0);
                 illustToggle.sprite = spriteToggleOff;
                 illustAnimator.Play(true);
             }
             else
             {
+                PlayerPrefs.SetInt(GameConst.ILLUST_POPUP, 1);
                 illustToggle.sprite = spriteToggleOn;
                 illustAnimator.Play();
             }

@@ -712,6 +712,21 @@ namespace PIERStory
 
             for (int i = 0; i < standingObjects.childCount; i++)
                 Destroy(standingObjects.GetChild(i).gameObject);
+
+            // 스탠딩 갯수 초기화
+            for (int i = 0; i < standingElementListContent.childCount; i++)
+                standingElementListContent.GetChild(i).GetComponent<ProfileItemElement>().currentCount = 0;
+
+            // 뱃지 갯수 초기화
+            for (int i = 0; i < badgeElementListContent.childCount; i++)
+                badgeElementListContent.GetChild(i).GetComponent<ProfileItemElement>().currentCount = 0;
+
+            // 스티커 갯수 초기화
+            for (int i = 0; i < stickerElementListContent.childCount; i++)
+            {
+                stickerElementListContent.GetChild(i).GetComponent<ProfileItemElement>().currentCount = 0;
+                stickerElementListContent.GetChild(i).GetComponent<ProfileItemElement>().SetCountText();
+            }
         }
 
 
@@ -737,7 +752,7 @@ namespace PIERStory
                 return;
             }
 
-            // 닉네임 변경을 하지 않았다면
+            // 닉네임 변경을 하지 않았다면 꾸미기 저장 바로~
             if(nicknameText.text == UserManager.main.nickname)
             {
                 SaveDeco();
@@ -770,9 +785,13 @@ namespace PIERStory
             JsonData result = JsonMapper.ToObject(res.DataAsText);
             UserManager.main.SetNewNickname(result["nickname"].ToString());
 
+            // 닉네임 걸릴 것 없으니 프로필 꾸민거 저장하자!
             SaveDeco();
         }
 
+        /// <summary>
+        /// 프로필 꾸미기 저장하기
+        /// </summary>
         void SaveDeco()
         {
             JsonData sending = new JsonData();

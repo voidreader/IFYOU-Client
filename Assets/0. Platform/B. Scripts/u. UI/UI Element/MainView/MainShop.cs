@@ -43,15 +43,20 @@ namespace PIERStory {
         IEnumerator RoutineInitShop() {
             yield return new WaitForSeconds(0.1f);
             InitShopTop();
+            yield return new WaitForSeconds(0.1f);
+            InitPackContainer();
         }
         
         /// <summary>
         /// 상점 상단 초기화 
         /// </summary>
         public void InitShopTop() {
+            
+            Debug.Log("### InitShopTop() ###");
+            
             topSpecialProduct.InitPackage("starter_pack");
             packageToggle.SetIsOn(true);
-            InitPackContainer();
+            // InitPackContainer();
         }
         
         /// <summary>
@@ -78,6 +83,8 @@ namespace PIERStory {
         /// 패키지 컨테이너 초기화 
         /// </summary>
          public void InitPackContainer() {
+             
+             Debug.Log("## InitPackContainer");
              
              for (int i=0; i<listGeneralPackProducts.Count;i++) {
                  listGeneralPackProducts[i].gameObject.SetActive(false);

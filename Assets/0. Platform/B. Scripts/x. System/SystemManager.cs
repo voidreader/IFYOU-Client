@@ -242,7 +242,7 @@ namespace PIERStory
             Debug.Log(">>> System RAM Check :: " + SystemInfo.systemMemorySize);
             
             // 
-            if(SystemInfo.systemMemorySize >= 4000) {
+            if(SystemInfo.systemMemorySize >= 3000) {
                 Debug.Log(">> Quality Up");
                 
                 // 퀄리티 설정 0이 가장 낮은 퀄리티 half res

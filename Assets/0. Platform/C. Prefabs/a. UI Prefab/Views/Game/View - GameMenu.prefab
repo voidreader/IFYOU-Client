@@ -1435,7 +1435,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -1472,10 +1472,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Components.UIToggle, DoozyRuntime
-        m_MethodName: set_isOn
-        m_Mode: 6
+      - m_Target: {fileID: 508574641374012876}
+        m_TargetAssemblyTypeName: PIERStory.ViewGameMenu, Assembly-CSharp
+        m_MethodName: StopAutoPlay
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1758,6 +1758,18 @@ MonoBehaviour:
       - m_Target: {fileID: 508574641374012876}
         m_TargetAssemblyTypeName: PIERStory.ViewGameMenu, Assembly-CSharp
         m_MethodName: OnClickReplay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 508574641374012876}
+        m_TargetAssemblyTypeName: PIERStory.ViewGameMenu, Assembly-CSharp
+        m_MethodName: StopAutoPlay
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3547,11 +3559,10 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
-          - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Components.UIToggle,
-              DoozyRuntime
-            m_MethodName: set_isOn
-            m_Mode: 6
+          - m_Target: {fileID: 508574641374012876}
+            m_TargetAssemblyTypeName: PIERStory.ViewGameMenu, Assembly-CSharp
+            m_MethodName: StopAutoPlay
+            m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -6387,11 +6398,10 @@ MonoBehaviour:
       Event:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Components.UIToggle,
-              DoozyRuntime
-            m_MethodName: set_isOn
-            m_Mode: 6
+          - m_Target: {fileID: 508574641374012876}
+            m_TargetAssemblyTypeName: PIERStory.ViewGameMenu, Assembly-CSharp
+            m_MethodName: StopAutoPlay
+            m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

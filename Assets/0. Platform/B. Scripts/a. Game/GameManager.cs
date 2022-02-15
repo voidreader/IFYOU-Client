@@ -1734,6 +1734,9 @@ namespace PIERStory
         /// </summary>
         public void CleanScreenWithoutBackground()
         {
+            ViewGame.main.userCall = false;
+            ViewGame.main.HIdePhoneImage();
+
             HideImageResources();
 
             HideCharacters();

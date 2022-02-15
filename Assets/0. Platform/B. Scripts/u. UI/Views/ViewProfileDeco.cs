@@ -120,8 +120,6 @@ namespace PIERStory
             OnProfileFrameSetting = SetProfileFrame;
             OnProfilePortraitSetting = SetProfilePortrait;
             
-            background.OnDownloadImage = SetBackgroundLoading;
-
 
             #region 프로필 꾸미기모드 사용자 세팅
 
@@ -330,6 +328,7 @@ namespace PIERStory
 
         void ProfileBackgrounSetting(JsonData __j, ProfileItemElement profileDeco)
         {
+            background.OnDownloadImage = SetBackgroundLoading;
             SystemManager.ShowNetworkLoading();
             background.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_KEY), true);
             background.transform.localPosition = Vector3.zero;

@@ -1280,6 +1280,9 @@ namespace PIERStory
             // * Nody로 연결하지 않음
             // * 종종 Flow가 매끄럽지 않은 경우가 있다.
             
+            if(viewGameMenu.inTransition)
+                return;
+            
             viewGameMenu.Show();
         }
         

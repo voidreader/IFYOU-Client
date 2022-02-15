@@ -204,6 +204,9 @@ namespace PIERStory
         
         public void OnClickBack() {
             
+            if(viewGameMenu.inTransition)
+                return;
+            
             viewGameMenu.Hide();
         }
 

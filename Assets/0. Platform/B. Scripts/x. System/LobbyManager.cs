@@ -140,6 +140,9 @@ namespace PIERStory {
         /// 
         /// </summary>
         void InitAddressableCatalog() {
+            
+            Debug.Log("#### InitAddressableCatalog ###");
+            
             Addressables.LoadContentCatalogAsync("https://d2dvrqwa14jiay.cloudfront.net/bundle/Android/catalog_1.json").Completed += (op) => {
             Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
         };

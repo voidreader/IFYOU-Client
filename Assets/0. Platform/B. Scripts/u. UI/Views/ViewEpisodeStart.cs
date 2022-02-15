@@ -317,22 +317,28 @@ namespace PIERStory {
             // 프리패스가 없거나, 영구 구매기록이 없을때 재화 체크
             if(!UserManager.main.HasProjectFreepass() || episodeData.purchaseState != PurchaseState.Permanent)
             {
-                // 돈없을때 처리 
-                if (episodeData.currencyStarPlay == "coin" && !UserManager.main.CheckCoinProperty(episodeData.priceStarPlaySale))
-                {
-                    SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80013"));
-                    return;
-                }
+                                
+                // * 이어서 플레이가 아닐떄만 돈 체크를 할것.
+                if(!isEpisodeContinuePlay) {
+                    
+                    // 돈없을때 처리 
+                    if (episodeData.currencyStarPlay == "coin" && !UserManager.main.CheckCoinProperty(episodeData.priceStarPlaySale))
+                    {
+                        SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80013"));
+                        return;
+                    }
 
-                if (episodeData.currencyStarPlay == "gem" && !UserManager.main.CheckGemProperty(episodeData.priceStarPlaySale))
-                {
-                    SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80014"));
+                    if (episodeData.currencyStarPlay == "gem" && !UserManager.main.CheckGemProperty(episodeData.priceStarPlaySale))
+                    {
+                        SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80014"));
+                        return;
+                    }
+                    
+                    // 진행             
+                    PurchaseEpisode(PurchaseState.Permanent, episodeData.currencyStarPlay, episodeData.priceStarPlaySale);
                     return;
+                    
                 }
-                
-                // 진행             
-                PurchaseEpisode(PurchaseState.Permanent, episodeData.currencyStarPlay, episodeData.priceStarPlaySale);
-                return;
             }
 
             // 프리패스 구매이거나, 영구 구매기록이 있는 경우

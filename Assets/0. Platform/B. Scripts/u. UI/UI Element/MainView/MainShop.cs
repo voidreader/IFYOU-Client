@@ -41,9 +41,12 @@ namespace PIERStory {
         }
         
         IEnumerator RoutineInitShop() {
+            
+            Debug.Log("## RoutineInitShop ##");
+            
             yield return new WaitForSeconds(0.1f);
             InitShopTop();
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
             InitPackContainer();
         }
         
@@ -55,7 +58,7 @@ namespace PIERStory {
             Debug.Log("### InitShopTop() ###");
             
             topSpecialProduct.InitPackage("starter_pack");
-            packageToggle.SetIsOn(true);
+            // packageToggle.SetIsOn(true);
             // InitPackContainer();
         }
         
@@ -91,8 +94,10 @@ namespace PIERStory {
              }
             
             
-            if(BillingManager.main == null || BillingManager.main.productMasterJSON == null)
+            if(BillingManager.main == null || BillingManager.main.productMasterJSON == null) {
+                Debug.Log("## BillingManager is not inited");
                 return;
+            }
              
             int packIndex = 0;
              

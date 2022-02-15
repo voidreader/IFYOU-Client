@@ -91,7 +91,7 @@ namespace PIERStory {
                 if(bundleCheckHandle.Result.Count > 0) {
                     // 번들 있음
                     hasBundle  = true;
-                   
+                   Debug.Log("#### This project has bundle!!!! ####");
                 }
                 else {
                     // 번들 없음 
@@ -121,6 +121,7 @@ namespace PIERStory {
             }
             
             
+            Debug.Log("### Asset bundle download start ###");
             // 다운로드 해야한다. 
             AsyncOperationHandle downloadHandle =  Addressables.DownloadDependenciesAsync(__projectID);
             downloadHandle.Completed += (op) => {
@@ -131,6 +132,10 @@ namespace PIERStory {
                 loadingBar.fillAmount = downloadHandle.PercentComplete;
                 yield return null;
             }
+            
+            
+            
+            Debug.Log("#### This project bundle download doen! ####");
             
         }
             

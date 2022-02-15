@@ -44,7 +44,8 @@ namespace PIERStory
 
         public void OnClickPromotionBanner()
         {
-            StoryManager.main.RequestStoryInfo(storyData);
+            // StoryManager.main.RequestStoryInfo(storyData);
+            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, storyData);
         }
 
     }

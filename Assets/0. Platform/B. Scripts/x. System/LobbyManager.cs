@@ -142,13 +142,19 @@ namespace PIERStory {
         void InitAddressableCatalog() {
             
             Debug.Log("#### InitAddressableCatalog ###");
+            string catalogURL = string.Empty;
             
-            #if UNITEY_IOS
-            Addressables.LoadContentCatalogAsync("https://d2dvrqwa14jiay.cloudfront.net/bundle/iOS/catalog_1.json").Completed += (op) => {
+            #if UNITY_IOS
+            catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/bundle/iOS/catalog_1.json";
+            
             #else
-            Addressables.LoadContentCatalogAsync("https://d2dvrqwa14jiay.cloudfront.net/bundle/Android/catalog_1.json").Completed += (op) => {
+            catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/bundle/Android/catalog_1.json";
+            
             #endif
             
+            Debug.Log("### InitAddressableCatalog URL ::  " +  catalogURL);
+            
+            Addressables.LoadContentCatalogAsync(catalogURL).Completed += (op) => {
             
             Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
         };

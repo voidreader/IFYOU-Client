@@ -130,6 +130,7 @@ namespace PIERStory
 
             if (profileCurrency.Count > 0)
             {
+                bool hasFrame = false;
                 // 배경, 스탠딩, 스티커 
                 for (int j = 0; j < profileCurrency.Count; j++)
                 {
@@ -155,13 +156,6 @@ namespace PIERStory
                             break;
 
                         case LobbyConst.NODE_PORTRAIT:
-
-                            if(string.IsNullOrEmpty(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY)))
-                            {
-                                RemoveFrame();
-                                break;
-                            }
-
                             profilePortrait.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_KEY));
                             portraitName = SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY);
 
@@ -170,9 +164,13 @@ namespace PIERStory
                         case LobbyConst.NODE_FRAME:
                             profileFrame.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_KEY));
                             frameName = SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY);
+                            hasFrame = true;
                             break;
                     }
                 }
+
+                if (!hasFrame)
+                    RemoveFrame();
             }
 
             levelText.text = string.Format("Lv. {0}", UserManager.main.level);
@@ -582,7 +580,6 @@ namespace PIERStory
             for (int i = 1; i < frameListContent.childCount; i++)
                 frameListContent.GetChild(i).GetComponent<ProfileItemElement>().useCheckIcon.SetActive(false);
 
-            profileFrame.gameObject.SetActive(true);
             profileFrame.SetDownloadURL(__url, __key);
             frameName = __currency;
         }
@@ -838,8 +835,8 @@ namespace PIERStory
             frameData[LobbyConst.NODE_SORTING_ORDER] = 0;
             frameData[LobbyConst.NODE_POS_X] = 0f;
             frameData[LobbyConst.NODE_POS_Y] = 0f;
-            frameData[LobbyConst.NODE_WIDTH] = profileFrame.downloadedSprite.rect.width;
-            frameData[LobbyConst.NODE_HEIGHT] = profileFrame.downloadedSprite.rect.height;
+            frameData[LobbyConst.NODE_WIDTH] = profileFrame.downloadedTexture.width;
+            frameData[LobbyConst.NODE_HEIGHT] = profileFrame.downloadedTexture.height;
             frameData[LobbyConst.NODE_ANGLE] = 0f;
 
             sending[LobbyConst.NODE_CURRENCY_LIST].Add(frameData);

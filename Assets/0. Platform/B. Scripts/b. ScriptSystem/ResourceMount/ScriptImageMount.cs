@@ -182,7 +182,8 @@ namespace PIERStory
                             SendSuccessMessage(); // 성공처리 
                        }
                        else {
-                           Debug.Log(">> Failed LoadAssetAsync " + imageName);
+                           
+                           Debug.Log(">> Failed LoadAssetAsync " + imageName + " / " + handle.OperationException.Message);
                            DownloadImage();
                        }
                    }; // end of LoadAssetAsync

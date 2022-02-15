@@ -143,7 +143,13 @@ namespace PIERStory {
             
             Debug.Log("#### InitAddressableCatalog ###");
             
+            #if UNITEY_IOS
+            Addressables.LoadContentCatalogAsync("https://d2dvrqwa14jiay.cloudfront.net/bundle/iOS/catalog_1.json").Completed += (op) => {
+            #else
             Addressables.LoadContentCatalogAsync("https://d2dvrqwa14jiay.cloudfront.net/bundle/Android/catalog_1.json").Completed += (op) => {
+            #endif
+            
+            
             Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
         };
         }

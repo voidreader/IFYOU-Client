@@ -161,7 +161,7 @@ namespace PIERStory
                 StopAutoPlay();
             else
             {
-                GameManager.main.StartAutoPlay();
+                GameManager.main.isAutoPlay = true;
                 playButton.sprite = spritePlay;
                 playToggle.sprite = spriteToggleOn;
                 autoPlayToggleAnimator.Play();
@@ -192,7 +192,8 @@ namespace PIERStory
 
         public void StopAutoPlay()
         {
-            GameManager.main.StopAutoPlay();
+            GameManager.main.isAutoPlay = false;
+            GameManager.main.flowTime = 0f;
             playButton.sprite = spritePlayInactive;
             playToggle.sprite = spriteToggleOff;
             autoPlayToggleAnimator.Play(true);

@@ -108,7 +108,7 @@ namespace PIERStory {
                 }
                 
                 // 앱 첫실행 시에만 출석보상 체크하고 띄워!
-                if (SystemManager.appFirstExecute && !StoryManager.enterGameScene && !PlayerPrefs.HasKey("noticeOneday"))
+                if (SystemManager.appFirstExecute && !StoryManager.enterGameScene && !PlayerPrefs.HasKey("noticeOneday") && SystemManager.main.noticeData.Count > 0)
                 {
                     PopupBase p = PopupManager.main.GetPopup("Notice");
                     PopupManager.main.ShowPopup(p, true);

@@ -139,36 +139,17 @@ namespace PIERStory {
                 
                 if(__flag)
                 {
-                    // 자동 재생 중이라면
-                    if (GameManager.main.isAutoPlay)
-                        GameManager.main.StopAutoPlay();
-
                     foreach (GameSoundCtrl sc in GameManager.main.SoundGroup)
                         sc.PlayAudioClip(false);
                 }
                 else
                 {
-                    if (GameManager.main.isAutoPlay)
-                        GameManager.main.StartAutoPlay();
-
                     if (!GameManager.main.isPlaying)
                         return;
 
                     foreach (GameSoundCtrl sc in GameManager.main.SoundGroup)
                         sc.PlayAudioClip(true);
                 }
-
-
-                if (GameManager.main.isAutoPlay)
-                {
-                    if(__flag)
-                        GameManager.main.StopAutoPlay();
-                    else
-                        GameManager.main.StartAutoPlay();
-                }
-
-
-
             }
         }
         

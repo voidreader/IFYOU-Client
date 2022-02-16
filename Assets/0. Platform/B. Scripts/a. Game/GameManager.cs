@@ -133,8 +133,8 @@ namespace PIERStory
 
 
         // 자동 재생
-        IEnumerator autoPlayCorountine;
-
+        public float flowTime = 0f;
+        float delayTime = 0f;
 
         #region Properties
 
@@ -568,8 +568,6 @@ namespace PIERStory
 
             // ! 띠배너 광고 
             AdManager.main.LoadBanner();
-
-            main.autoPlayCorountine = RoutineAutoPlay();
             
             // 
             AppsFlyerSDK.AppsFlyer.sendEvent("episode_loading_done", new Dictionary<string, string>() {
@@ -625,9 +623,44 @@ namespace PIERStory
 
                     while (isThreadHold) // Row가 동작중에는 멈춰 있습니다. 
                         yield return null;
-
+                    
                     while (isWaitingScreenTouch) // 화면을 터치해줘야 다음으로 넘어갑니다.
+                    {
+                        // 자동 재생을 사용하는 경우
+                        if (isAutoPlay)
+                        {
+                            delayTime = PlayerPrefs.GetFloat(GameConst.AUTO_PLAY);
+                            flowTime += Time.deltaTime;
+
+                            // 자동재생 쓰는데 광고 재생되면 꺼질때까지 멈춥시다
+                            if (AdManager.main.isAdShowing)
+                            {
+                                yield return new WaitUntil(() => !AdManager.main.isAdShowing);
+                                yield return null;
+                            }
+
+                            // 보이스를 사용한다면 보이스가 다 재생될 때까지 기다리고
+                            if (SoundGroup[1].GetIsPlaying)
+                            {
+                                yield return new WaitUntil(() => !SoundGroup[1].GetIsPlaying);
+                                delayTime = 2f;
+
+                                while (flowTime < delayTime)
+                                {
+                                    flowTime += Time.deltaTime;
+                                    yield return null;
+                                }
+                            }
+
+                            if (flowTime >= delayTime)
+                            {
+                                isWaitingScreenTouch = false;
+                                flowTime = 0f;
+                            }
+                        }
+
                         yield return null;
+                    }
                 }
 
                 isJustSkipStop = false; // 한번 액션이 일어났으면 false로 변경.
@@ -738,63 +771,6 @@ namespace PIERStory
                 StartCoroutine(RoutineEpisodePlay());
         }
 
-
-        #region AutoPlay 
-
-        public void StartAutoPlay()
-        {
-            if (main.autoPlayCorountine == null)
-                return;
-
-            main.autoPlayCorountine = null;
-            main.autoPlayCorountine = RoutineAutoPlay();
-            StartCoroutine(main.autoPlayCorountine);
-        }
-
-        public void StopAutoPlay()
-        {
-            if (main.autoPlayCorountine == null)
-                return;
-
-            StopCoroutine(main.autoPlayCorountine);
-            main.isAutoPlay = false;
-        }
-
-        IEnumerator RoutineAutoPlay()
-        {
-            Debug.Log("RoutineAutoPlay Start!");
-
-            main.isAutoPlay = true;
-
-            while (isPlaying)
-            {
-                if (AdManager.main.isAdShowing)
-                {
-                    main.isAutoPlay = false;
-                    yield break;
-                }
-
-                yield return new WaitUntil(() => !isThreadHold);
-
-                if (!isThreadHold && isWaitingScreenTouch)
-                {
-                    // 보이스가 재생이 끝날때까지 대기
-                    if (SoundGroup[1].GetIsPlaying)
-                    {
-                        Debug.Log(">> SoundGroup[1].GetIsPlaying");
-                        yield return new WaitUntil(() => !SoundGroup[1].GetIsPlaying);
-                        yield return new WaitForSeconds(2f);
-                    }
-                    else
-                        yield return new WaitForSeconds(PlayerPrefs.GetFloat(GameConst.AUTO_PLAY));
-
-                    isWaitingScreenTouch = false;
-                }
-
-                yield return null;
-            }
-        }
-        #endregion
 
         /// <summary>
         /// 말풍선(대화 관련 처리 시작)

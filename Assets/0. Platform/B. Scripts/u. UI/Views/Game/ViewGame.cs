@@ -193,14 +193,6 @@ namespace PIERStory
 
             // 입력 받았어요!
             GameManager.main.isWaitingScreenTouch = false;
-
-            // 자동진행 중인데 터치를 누른거라면
-            if(GameManager.main.isAutoPlay)
-            {
-                // 자동진행을 멈춰줬다가 다시 시작!
-                GameManager.main.StopAutoPlay();
-                GameManager.main.StartAutoPlay();
-            }
         }
 
 

@@ -948,6 +948,7 @@ namespace PIERStory
         
         static void OnResourceDownloadFail() {
             SystemManager.LoadLobbyScene();
+            main.isDownloadFailMessageShow = false;
         }
         
         /// <summary>
@@ -961,8 +962,7 @@ namespace PIERStory
             string exceptionMessage = string.Empty;
             
             // * 리소스 다운로드는 에러 핸들링이 일반 서버 통신과는 달라서 여기서 처리한다. 
-            switch(request.State)             {
-                
+            switch(request.State) {
                 
                 case HTTPRequestStates.Finished:
                     if(response.IsSuccess) {
@@ -976,27 +976,27 @@ namespace PIERStory
                     }
                     else {
                         
-                        // 없는 리소스 허용하면, true 리턴 
-                        /*
-                        if(SystemManager.main.allowMissingResource)
-                            return true;
-                        */  
                         
                         // * AWS S3의 경우, 리소스가 없는 경우에 대해서는 request는 완료,
                         // * response에서 fail을 준다. 
                         // * 이 경우는 서버 설정에 따라 진입을 막을지 허용할지 처리한다. allow_missing_resource
-                        exceptionMessage = string.Format("{0}-{1} Message: {2}", response.StatusCode, response.Message, response.DataAsText);
-                        // main.ReportRequestError(request.Uri.ToString(), exceptionMessage); // 오류 전송 
-                        Debug.Log(string.Format("!!! Download response fail [{0}]", exceptionMessage));
-                        return false; // 종료
+                        try { 
+                            exceptionMessage = string.Format("{0}-{1} Response Message", response.StatusCode, response.Message);
+                        }
+                        catch(System.Exception e) {
+                            exceptionMessage = "finished but response is fail";
+                            
+                        }
                         
+                        Debug.LogError(string.Format("!!! Download response fail [{0}]", exceptionMessage));
                         
                     }
+                    break;
                 
                 
                 default:
-                exceptionMessage = request.State.ToString();
-                Debug.Log(string.Format("!!! Download request fail [{0}]", exceptionMessage));
+                    exceptionMessage = request.State.ToString();
+                    Debug.LogError(string.Format("!!! Download request fail [{0}]", exceptionMessage));
                 break;
             }
 
@@ -1007,12 +1007,13 @@ namespace PIERStory
                 Debug.LogError("Download Fail : " + exceptionMessage);
                 main.downloadFailCount++;
                 
-                if(!main.isDownloadFailMessageShow && main.downloadFailCount >= 5) {
+                if(!main.isDownloadFailMessageShow && main.downloadFailCount >= 10) {
                     SystemManager.HideNetworkLoading();
                     
                     // ! 오류 메세지. 
                     // 게임 밖으로 내보낸다. 
                     SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("80084"), OnResourceDownloadFail, OnResourceDownloadFail, false);
+                    main.isDownloadFailMessageShow = true; // 메세지 중복 호출 막는다. 
                     return false; // 이제 그만 보내. 
                 }
                 

@@ -297,8 +297,7 @@ namespace PIERStory {
                 PurchasePostProcess(true);
             }
         }
-
-        
+       
         
         /// <summary>
         /// 스타플레이, 프리미엄 패스 플레이 
@@ -313,38 +312,37 @@ namespace PIERStory {
                 return;
             }
             
-            // 프리패스가 없으면 재화 체크하기
-            // 프리패스가 없거나, 영구 구매기록이 없을때 재화 체크
-            if(!UserManager.main.HasProjectFreepass() || episodeData.purchaseState != PurchaseState.Permanent)
+            
+            // 프리패스 유저는 그냥 진행. 
+            if(UserManager.main.HasProjectFreepass()) {
+                SystemManager.main.givenEpisodeData = episodeData;
+                PurchasePostProcess(true);
+                return;                
+            }
+            
+            // * 스타플레이에서의 이어하기인 경우 재화체크 하지 않음 
+            if(episodeData.purchaseState == PurchaseState.Permanent) {
+                SystemManager.main.givenEpisodeData = episodeData;
+                PurchasePostProcess(true);
+                return;    
+            }
+            
+            // * 여기서부터 구매 처리 로직 (가격 체크 및 구매)
+            // 재화 체크 코인, 스타
+            if (episodeData.currencyStarPlay == "coin" && !UserManager.main.CheckCoinProperty(episodeData.priceStarPlaySale))
             {
-                                
-                // * 이어서 플레이가 아닐떄만 돈 체크를 할것.
-                if(!isEpisodeContinuePlay) {
-                    
-                    // 돈없을때 처리 
-                    if (episodeData.currencyStarPlay == "coin" && !UserManager.main.CheckCoinProperty(episodeData.priceStarPlaySale))
-                    {
-                        SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80013"));
-                        return;
-                    }
-
-                    if (episodeData.currencyStarPlay == "gem" && !UserManager.main.CheckGemProperty(episodeData.priceStarPlaySale))
-                    {
-                        SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80014"));
-                        return;
-                    }
-                    
-                    // 진행             
-                    PurchaseEpisode(PurchaseState.Permanent, episodeData.currencyStarPlay, episodeData.priceStarPlaySale);
-                    return;
-                    
-                }
+                SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80013"));
+                return;
             }
 
-            // 프리패스 구매이거나, 영구 구매기록이 있는 경우
-            SystemManager.main.givenEpisodeData = episodeData;
-            PurchasePostProcess(true);
-                
+            if (episodeData.currencyStarPlay == "gem" && !UserManager.main.CheckGemProperty(episodeData.priceStarPlaySale))
+            {
+                SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80014"));
+                return;
+            }
+            
+            // 구매 진행
+            PurchaseEpisode(PurchaseState.Permanent, episodeData.currencyStarPlay, episodeData.priceStarPlaySale);
             
         }
         

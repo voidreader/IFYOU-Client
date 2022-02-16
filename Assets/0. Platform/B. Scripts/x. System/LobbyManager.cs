@@ -121,6 +121,7 @@ namespace PIERStory {
         System.Collections.IEnumerator Start() {
 
 
+
             // * 팝업매니저 초기화(로비씬)
             PopupManager.main.InitPopupManager();
             
@@ -144,6 +145,9 @@ namespace PIERStory {
             Debug.Log("#### InitAddressableCatalog ###");
             string catalogURL = string.Empty;
             
+            //Addressables.CleanBundleCache();
+            
+            
             #if UNITY_IOS
             catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/bundle/iOS/catalog_1.json";
             
@@ -157,6 +161,9 @@ namespace PIERStory {
             Addressables.LoadContentCatalogAsync(catalogURL).Completed += (op) => {
             
             Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
+            
+            // Addressables.CheckForCatalogUpdates();
+            
         };
         }
         

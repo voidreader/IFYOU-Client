@@ -85,6 +85,8 @@ namespace PIERStory {
             
             
             if( bundleCheckHandle.Status != AsyncOperationStatus.Succeeded) { // 실패
+                    Debug.Log("#### This project LoadResourceLocationsAsync failed !!!! ####");
+            
                     hasBundle = false;
             }
             else { // 성공이지만 
@@ -94,6 +96,9 @@ namespace PIERStory {
                    Debug.Log("#### This project has bundle!!!! ####");
                 }
                 else {
+                    
+                    Debug.Log("#### This project has zero bundle!!!! ####");
+                    
                     // 번들 없음 
                     hasBundle = false;
                 }

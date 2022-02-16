@@ -991,7 +991,7 @@ namespace PIERStory
                         Debug.LogError(string.Format("!!! Download response fail [{0}]", exceptionMessage));
                         
                     }
-                    break;
+                    break; // ? end of Finished 
                 
                 
                 default:
@@ -1001,7 +1001,9 @@ namespace PIERStory
             }
 
             
-            
+            // * 요청이 올바르게 처리되지 못한경우 exceptionMessage가 할당된다. 
+            // * 한번에 날아간 여러개의 다운로드 요청을 합해서 실패 카운트가 10 이상이면 로비로 되돌려보낸다. 
+            // * 실패 요청은 1초 후에 재시도 처리한다.
             if(!string.IsNullOrEmpty(exceptionMessage)) {
                 // 시간초과이거나, 다운받지 못한 경우... 
                 Debug.LogError("Download Fail : " + exceptionMessage);
@@ -1017,7 +1019,9 @@ namespace PIERStory
                     return false; // 이제 그만 보내. 
                 }
                 
-                request.Send(); // 다시 보낸다.  
+                // 요청 다시 시도한다.
+                main.ResendRequest(request);
+
             }
             
             
@@ -1025,6 +1029,23 @@ namespace PIERStory
             return false;
 
         }
+        
+        /// <summary>
+        /// 실패 요청에 대해서 다시 요청하기 (코루틴 연계)
+        /// </summary>
+        /// <param name="__request"></param>
+        public void ResendRequest(HTTPRequest __request) {
+            StartCoroutine(RoutineResend(__request));
+        }
+        
+        IEnumerator RoutineResend(HTTPRequest __request)  {
+            yield return new WaitForSeconds(1); // 1초 있다가 재시도 
+            
+            Debug.Log(string.Format("******* Request again [{0}]", __request.Uri.ToString()));
+            
+            __request.Send();
+        }
+        
         
         /// <summary>
         /// request의 헤더에 있는 retryCount 가져오기 

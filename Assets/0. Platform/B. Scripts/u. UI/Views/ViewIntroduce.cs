@@ -9,6 +9,7 @@ using DG.Tweening;
 namespace PIERStory {
     public class ViewIntroduce : CommonView
     {
+        public Doozy.Runtime.UIManager.Containers.UIContainer container;
         
         [SerializeField] ImageRequireDownload mainThumbnail;    // 썸네일 
         
@@ -55,6 +56,10 @@ namespace PIERStory {
                 SystemManager.ShowMessageWithLocalize("6061", true);
                 return;
             }
+            
+            // 트윈 동작중에 클릭되지 않게. 
+            if(container.inTransition)
+                return;
             
             // 스토리매니저에게 작품 상세정보 요청 
             StoryManager.main.RequestStoryInfo(introduceStory);

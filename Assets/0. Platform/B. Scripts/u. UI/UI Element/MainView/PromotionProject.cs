@@ -22,7 +22,7 @@ namespace PIERStory
             // 프로젝트 Id값을 받아서 해당 id와 동일한 storyData를 찾아서 넣어준다
             storyData = StoryManager.main.FindProject(__projectId);
             
-            Debug.Log("SetPromotionProject detail count : " + detail.Count);
+            // Debug.Log("SetPromotionProject detail count : " + detail.Count);
             
             for (int i = 0; i < detail.Count; i++)
             {

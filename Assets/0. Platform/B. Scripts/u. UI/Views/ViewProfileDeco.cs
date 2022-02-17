@@ -178,6 +178,7 @@ namespace PIERStory
             profileBriefContent.SetActive(true);
 
             // 텍스트
+            /*
             JsonData profileText = SystemManager.GetJsonNode(UserManager.main.userProfile, LobbyConst.NODE_TEXT);
 
             if (profileText.Count > 0)
@@ -189,6 +190,7 @@ namespace PIERStory
                     createObject.Add(textElement.gameObject);
                 }
             }
+            */
 
             #endregion
 

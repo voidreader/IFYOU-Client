@@ -112,6 +112,7 @@ namespace PIERStory
         public const string ROW_CONTROL_REVERSAL = "반전";            // 배경 반전
         public const string ROW_CONTROL_MOUTH = "입";                 // 립싱크 제어용도 
         public const string ROW_CONTROL_PHONE = "전화";               // 전화 템플릿 관련 제어
+        public const string ROW_CONTROL_STATE = "상태";
 
 
         // 스크립트 템플릿
@@ -153,6 +154,7 @@ namespace PIERStory
         public const string TEMPLATE_MISSION = "mission";           //미션
         public const string TEMPLATE_ANGLE_MOVE = "angle_move";     //앵글 이동
         public const string TEMPLATE_CLEAR_SCREEN = "clear_screen"; //화면 정리
+        public const string TEMPLATE_GAME_MESSAGE = "game_message";
 
 
         // 화면 연출

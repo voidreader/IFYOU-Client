@@ -30,6 +30,7 @@ namespace PIERStory {
         [SerializeField] GameObject popupEndingAlert;
         [SerializeField] GameObject popupEpisodeClearReward;
         [SerializeField] GameObject popupExp;
+        public GameObject popupGameMessage;
         [SerializeField] GameObject popupLevelUp;
         [SerializeField] GameObject popupMessageAlert;
         [SerializeField] GameObject popupType1;
@@ -270,6 +271,12 @@ namespace PIERStory {
                 DictPopup["EXP"] = popupExp;
             else 
                 DictPopup.Add("EXP", popupExp);
+
+
+            if (DictPopup.ContainsKey(GameConst.TEMPLATE_GAME_MESSAGE))
+                DictPopup[GameConst.TEMPLATE_GAME_MESSAGE] = popupGameMessage;
+            else
+                DictPopup.Add(GameConst.TEMPLATE_GAME_MESSAGE, popupGameMessage);
                 
             if(DictPopup.ContainsKey("LevelUp")) 
                 DictPopup["LevelUp"] = popupLevelUp;

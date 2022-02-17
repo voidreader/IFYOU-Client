@@ -624,6 +624,7 @@ namespace PIERStory {
                     profileFrame.SetTexture2D(LobbyManager.main.textureNoneFrame);
             }
 
+            /*
             if (profileText.Count > 0)
             {
                 // 텍스트
@@ -635,7 +636,7 @@ namespace PIERStory {
                     createObject.Add(textElement.gameObject);
                 }
             }
-
+            */
         }
 
         public void OnClickDecoMode()

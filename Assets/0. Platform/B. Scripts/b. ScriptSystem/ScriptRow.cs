@@ -50,6 +50,7 @@ namespace PIERStory
         public string controlAlternativeName = string.Empty;    // 대체 이름
         public string controlMouthCommand = string.Empty; // 립싱크 제어 
         public string controlCallCommand = string.Empty;        // 전화 제어
+        
 
         public string selection_group = string.Empty;
         public string selection_no = string.Empty;
@@ -281,6 +282,9 @@ namespace PIERStory
 
             // 전화 관련 (전화 = 받기, 끊기, 선택, 걸기, 제거)
             GetParam<string>(controlParams, GameConst.ROW_CONTROL_PHONE, ref controlCallCommand);
+
+            // 게임 메시지 관련
+            GetParam<string>(controlParams, GameConst.ROW_CONTROL_STATE, ref controlAlternativeName);
         }
 
         void CreateResourceKey()
@@ -351,6 +355,10 @@ namespace PIERStory
 
                 case GameConst.TEMPLATE_FLOWTIME:
                     rowAction = new RowActionFlowTime(this);
+                    break;
+
+                case GameConst.TEMPLATE_GAME_MESSAGE:
+                    rowAction = new RowActionGameMessage(this);
                     break;
 
                 case GameConst.TEMPLATE_ILLUST:

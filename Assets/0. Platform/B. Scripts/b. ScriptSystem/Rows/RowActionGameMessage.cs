@@ -19,7 +19,7 @@ namespace PIERStory
             GameManager.main.isWaitingScreenTouch = false;
 
             // 스킵을 사용한 경우 화면에 띄우지 않는다
-            if(__isInstant)
+            if(__isInstant || string.IsNullOrEmpty(scriptRow.script_data))
             {
                 __actionCallback();
                 return;

@@ -18,6 +18,7 @@ namespace PIERStory
 
         const float movalbeWidth = 250f;
         float startX = 0f, dragX = 0f, originX = 0f, calcPosX;
+        public bool selected = false;
 
         public void NewStanding(JsonData __j, ProfileItemElement connectElement)
         {
@@ -84,6 +85,9 @@ namespace PIERStory
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            if (!selected)
+                return;
+
             startX = eventData.position.x;
             originX = GetComponent<RectTransform>().anchoredPosition.x;
         }
@@ -91,6 +95,9 @@ namespace PIERStory
         
         public void OnDrag(PointerEventData eventData)
         {
+            if (!selected)
+                return;
+
             dragX = eventData.position.x;
             calcPosX = originX + (dragX - startX);
 
@@ -100,6 +107,9 @@ namespace PIERStory
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            if (!selected)
+                return;
+
             if (calcPosX <= -movalbeWidth)
                 GetComponent<RectTransform>().anchoredPosition = new Vector2(-movalbeWidth, 0f);
             else if(calcPosX >= movalbeWidth)
@@ -110,6 +120,7 @@ namespace PIERStory
         {
             ViewProfileDeco.OnDisableAllOptionals?.Invoke();
             ViewProfileDeco.OnControlStanding?.Invoke(this);
+            selected = true;
         }
 
         public JsonData SaveStandingData(int sortingOrder)

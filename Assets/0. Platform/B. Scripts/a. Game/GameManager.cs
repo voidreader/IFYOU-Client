@@ -642,13 +642,18 @@ namespace PIERStory
                             // 보이스를 사용한다면 보이스가 다 재생될 때까지 기다리고
                             if (SoundGroup[1].GetIsPlaying)
                             {
-                                yield return new WaitUntil(() => !SoundGroup[1].GetIsPlaying);
-                                delayTime = 2f;
-
-                                while (flowTime < delayTime)
-                                {
-                                    flowTime += Time.deltaTime;
+                                while (SoundGroup[1].GetIsPlaying && isWaitingScreenTouch)
                                     yield return null;
+
+                                if(isWaitingScreenTouch)
+                                {
+                                    delayTime = 2f;
+
+                                    while (flowTime < delayTime)
+                                    {
+                                        flowTime += Time.deltaTime;
+                                        yield return null;
+                                    }
                                 }
                             }
 

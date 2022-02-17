@@ -22,17 +22,14 @@ namespace PIERStory {
         public Image pushAlert;                 // 푸쉬 알림
         public Image nightPushAlert;            // 야간 푸쉬 알림
         public Image dataUseAgree;              // 데이터 사용 허용
-        public UIToggle pushToggle;
-        public UIToggle nightPushToggle;
-        public UIToggle dataUseToggle;
-
-        public UIAnimator nightPushAnimator;
-        public GameObject blockNightPushToggle;
+        public UIAnimator pushAlertAnimator;
+        public UIAnimator nightAlertAnimator;
+        public UIAnimator networkAgreeAnimator;
+        
 
         public Sprite spriteToggleOn;
         public Sprite spriteToggleOff;
 
-        bool currentShow = false;
         
         [SerializeField] TextMeshProUGUI textVersion;
         
@@ -57,23 +54,11 @@ namespace PIERStory {
 
         public void ShowMainMore()
         {
-            currentShow = true;
 
-            // 데이터 사용 허용
-            if (PlayerPrefs.GetInt(SystemConst.KEY_NETWORK_DOWNLOAD) > 0) {
-                // dataUseToggle.isOn = true;
-                dataUseToggle.SetIsOn(true, false);
-                
-            }
-            else {
-                // dataUseToggle.isOn = false;
-                dataUseToggle.SetIsOn(false, false);
-            }
         }
 
         public void HideMainMore()
         {
-            currentShow = false;
         }
 
         void RefreshScreen()
@@ -102,131 +87,141 @@ namespace PIERStory {
 
             #region 게임베이스 push
 
-            if (Application.isEditor) {
-                pushToggle.SetIsOn(false, false); 
-                nightPushToggle.SetIsOn(false, false);                
+            if (Application.isEditor)          
                 return;
-            }
-
 
             // 푸시 토글 세팅 
-            if(SystemManager.main.pushTokenInfo == null) {
-                
+            if (SystemManager.main.pushTokenInfo == null)
+            {
+
             }
-            else {
-                pushToggle.SetIsOn(SystemManager.main.pushTokenInfo.agreement.adAgreement, false); 
-                nightPushToggle.SetIsOn(SystemManager.main.pushTokenInfo.agreement.adAgreementNight, false);                
+            else
+            {
+                if (SystemManager.main.pushTokenInfo.agreement.adAgreement)
+                {
+                    pushAlert.sprite = spriteToggleOn;
+                    pushAlertAnimator.GetComponent<RectTransform>().anchoredPosition = new Vector2(11, -3);
+                    nightPushAlert.color = Color.white;
+                }
+                else
+                {
+                    pushAlert.sprite = spriteToggleOff;
+                    pushAlertAnimator.GetComponent<RectTransform>().anchoredPosition = new Vector2(-11, -3);
+                    nightPushAlert.color = new Color32(153, 153, 153, 255);
+                }
+
+                if(SystemManager.main.pushTokenInfo.agreement.adAgreementNight)
+                {
+                    nightPushAlert.sprite = spriteToggleOn;
+                    nightAlertAnimator.GetComponent<RectTransform>().anchoredPosition = new Vector2(11, -3);
+                }
+                else
+                {
+                    nightPushAlert.sprite = spriteToggleOff;
+                    nightAlertAnimator.GetComponent<RectTransform>().anchoredPosition = new Vector2(-11, -3);
+                }
+
+                if(PlayerPrefs.GetInt(SystemConst.KEY_NETWORK_DOWNLOAD) == 1)
+                {
+                    dataUseAgree.sprite = spriteToggleOn;
+                    networkAgreeAnimator.GetComponent<RectTransform>().anchoredPosition = new Vector2(11, -3);
+                }
+                else
+                {
+                    dataUseAgree.sprite = spriteToggleOff;
+                    networkAgreeAnimator.GetComponent<RectTransform>().anchoredPosition = new Vector2(-11, -3);
+                }
             }
             
-            if (pushToggle.isOn)
-                pushToggle.OnToggleOnCallback.Execute();
-            else
-                pushToggle.OnToggleOffCallback.Execute();
-
-
-            if (nightPushToggle.isOn)
-                nightPushToggle.OnToggleOnCallback.Execute();
-            else
-                nightPushToggle.OnToggleOffCallback.Execute();
             #endregion
 
-
-        }
-        
-        void RefreshPushSettings() {
-
         }
         
 
-
+        
         /// <summary>
-        /// 푸쉬 알림 On
+        /// 푸쉬 알림 토글 클릭
         /// </summary>
-        public void ToggleOnPushAlert()
+        public void OnClickPushAlert()
         {
-            if(SystemManager.main == null)
+            if (pushAlertAnimator.animation.isPlaying)
                 return;
-            
-            pushAlert.sprite = spriteToggleOn;
-            nightPushAlert.color = Color.white;
-            blockNightPushToggle.SetActive(false);
 
-            SystemManager.main.PushRegister(pushToggle.isOn, nightPushToggle.isOn);
+            // 푸쉬 토글이 On이면
+            if(SystemManager.main.pushTokenInfo.agreement.adAgreement)
+            {
+                // 야간 푸쉬알림도 On이었다면
+                if(SystemManager.main.pushTokenInfo.agreement.adAgreementNight)
+                {
+                    nightPushAlert.sprite = spriteToggleOff;
+                    nightAlertAnimator.Play(true);
+                }
+
+                SystemManager.main.PushRegister(false, false);
+                pushAlert.sprite = spriteToggleOff;
+                pushAlertAnimator.Play(true);
+                nightPushAlert.color = new Color32(153, 153, 153, 255);
+            }
+            else
+            {
+                SystemManager.main.PushRegister(true, false);
+                pushAlert.sprite = spriteToggleOn;
+                nightPushAlert.color = Color.white;
+                pushAlertAnimator.Play();
+            }
         }
 
         /// <summary>
-        /// 푸쉬 알림 OFf
+        /// 야간 푸쉬 알림 토글 클릭
         /// </summary>
-        public void ToggleOffPushAlert()
+        public void OnClickNightAlert()
         {
-            if(SystemManager.main == null)
+            // 푸쉬 토글이 On이 아니면 팝업만 띄우고 막는다
+            if(!SystemManager.main.pushTokenInfo.agreement.adAgreement)
+            {
+                SystemManager.ShowSimpleAlertLocalize("6033");
                 return;
-            
-            pushAlert.sprite = spriteToggleOff;
+            }
 
-            if(nightPushToggle.isOn)
-                nightPushToggle.isOn = false;
+            // 애니메이션 중이어도 막는다
+            if (nightAlertAnimator.animation.isPlaying)
+                return;
 
-            nightPushAlert.color = new Color32(153, 153, 153, 255);
-            blockNightPushToggle.SetActive(true);
-
-            SystemManager.main.PushRegister(pushToggle.isOn, false);
-        }
-
-
-        /// <summary>
-        /// 야간 푸쉬 알림 On
-        /// </summary>
-        public void ToggleOnNightPushAlert()
-        {
-            nightPushAnimator.Play();
-            nightPushAlert.sprite = spriteToggleOn;
-
-            if(SystemManager.main != null)
+            // 야간 알림이 On이면
+            if(SystemManager.main.pushTokenInfo.agreement.adAgreementNight)
+            {
+                SystemManager.main.PushRegister(true, false);
+                nightPushAlert.sprite = spriteToggleOff;
+                nightAlertAnimator.Play(true);
+            }
+            else
+            {
                 SystemManager.main.PushRegister(true, true);
+                nightPushAlert.sprite = spriteToggleOn;
+                nightAlertAnimator.Play();
+            }
         }
 
         /// <summary>
-        /// 야간 푸쉬 알림 Off
+        /// 데이터 사용
         /// </summary>
-        public void ToggleOffNightPushAlert()
+        public void OnClickDataUse()
         {
-            nightPushAnimator.Play(true);
-            nightPushAlert.sprite = spriteToggleOff;
-            SystemManager.main.PushRegister(pushToggle.isOn, false);
+            // 데이터 사용 허용중이면
+            if(PlayerPrefs.GetInt(SystemConst.KEY_NETWORK_DOWNLOAD) == 1)
+            {
+                PlayerPrefs.SetInt(SystemConst.KEY_NETWORK_DOWNLOAD, 0);
+                dataUseAgree.sprite = spriteToggleOff;
+                networkAgreeAnimator.Play(true);
+            }
+            else
+            {
+                PlayerPrefs.SetInt(SystemConst.KEY_NETWORK_DOWNLOAD, 1);
+                dataUseAgree.sprite = spriteToggleOn;
+                networkAgreeAnimator.Play();
+            }
         }
 
-        /// <summary>
-        /// 푸쉬 알림이 꺼져있을 때, 야간 푸쉬 터치를 막는다
-        /// </summary>
-        public void BlockNightPushToggle()
-        {
-            SystemManager.ShowSimpleAlertLocalize("6033");
-        }
-
-        /// <summary>
-        /// 데이터 사용 허용 On
-        /// </summary>
-        public void ToggleOnDataUse()
-        {
-            if (!currentShow)
-                return;
-
-            dataUseAgree.sprite = spriteToggleOn;
-            PlayerPrefs.SetInt(SystemConst.KEY_NETWORK_DOWNLOAD, 1);
-        }
-
-        /// <summary>
-        /// 데이터 사용 허용 Off
-        /// </summary>
-        public void ToggleOffDataUse()
-        {
-            if (!currentShow)
-                return;
-
-            dataUseAgree.sprite = spriteToggleOff;
-            PlayerPrefs.SetInt(SystemConst.KEY_NETWORK_DOWNLOAD, 0);
-        }
 
         /// <summary>
         /// 언어

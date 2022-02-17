@@ -111,6 +111,9 @@ namespace PIERStory
         /// </summary>
         public void StopAudioClip()
         {
+            if (audioSource.clip == null)
+                return;
+
             audioSource.Stop();
             audioSource.clip = null;
         }

@@ -286,6 +286,7 @@ namespace PIERStory
             // 배경 제어 끄고
             profileBgScroll.SetActive(true);
             bgScrolling.SetActive(false);
+            background.OnDownloadImage = null;
 
             // 스탠딩 제어 끄고
             profileStandingScroll.SetActive(true);
@@ -403,6 +404,7 @@ namespace PIERStory
             controlStanding = Instantiate(standingPrefab, standingObjects).GetComponent<StandingElement>();
             controlStanding.NewStanding(controlStandingData, controlStandingItemElement);
             controlStanding.standingRect.anchoredPosition = Vector2.zero;
+            controlStanding.selected = true;
             createObject.Add(controlStanding.gameObject);
             BlockExcludeStandingControl();
         }
@@ -417,6 +419,7 @@ namespace PIERStory
                 return;
 
             controlStanding = standing;
+            controlStanding.selected = true;
 
             for (int i = 0; i < bottomToggles.Length; i++)
             {
@@ -475,6 +478,7 @@ namespace PIERStory
         public void OnClickStandingFix()
         {
             controlStanding.SetRectTransInfo();
+            controlStanding.selected = false;
             controlStanding = null;
 
             profileStandingScroll.SetActive(true);
@@ -487,6 +491,9 @@ namespace PIERStory
                 standingObjects.GetChild(i).GetComponent<Image>().raycastTarget = true;
         }
 
+        /// <summary>
+        /// 스탠딩 캐릭터 움직이는 동안 클릭되는 것 막기
+        /// </summary>
         void BlockExcludeStandingControl()
         {
             for (int i = 0; i < decoObjects.childCount; i++)
@@ -497,7 +504,6 @@ namespace PIERStory
                 if (standingObjects.GetChild(i).GetComponent<StandingElement>() != controlStanding)
                     standingObjects.GetChild(i).GetComponent<Image>().raycastTarget = false;
             }
-
         }
 
         #endregion

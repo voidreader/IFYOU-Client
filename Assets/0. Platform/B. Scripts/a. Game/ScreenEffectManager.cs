@@ -151,7 +151,7 @@ namespace PIERStory
         /// </summary>
         public void StartCharacterTint(Color __color, float __activeTime)
         {
-            ViewGame.main.modelRenders[1].color = new Color(__color.r, __color.g, __color.b);
+            ViewGame.main.modelRenders[1].color = __color;
 
             if (__activeTime > 0)
                 StartCoroutine(RoutineStayTintState(__activeTime));

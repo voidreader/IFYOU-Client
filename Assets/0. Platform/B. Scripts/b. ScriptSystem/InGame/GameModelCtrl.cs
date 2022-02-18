@@ -73,7 +73,7 @@ namespace PIERStory
         /// 모델 세팅
         /// </summary>
         /// <param name="dir">해당 캐릭터 시선 방향</param>
-        public void SetModel(CubismModel __model, string dir)
+        public void SetModel(CubismModel __model, string dir, bool __isAssetBundle = false)
         {
             model = __model;
             modelType = CommonConst.MODEL_TYPE_LIVE2D;
@@ -655,6 +655,7 @@ namespace PIERStory
                 model.Drawables[i].gameObject.AddComponent<BoxCollider>();
                 
             // ! 컬라이더 붙이고 없애는데 프레임 딜레이 필요하다.
+            
         }
         
         IEnumerator DelayRemoveColliders() {

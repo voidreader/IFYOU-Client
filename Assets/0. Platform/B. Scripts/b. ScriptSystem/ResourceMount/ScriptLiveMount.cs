@@ -84,6 +84,7 @@ namespace PIERStory
 
             if (resourceData == null || resourceData.Count == 0) // 데이터가 없을 경우 
             {
+                NetworkLoader.main.ReportRequestError(liveName, "No resources");
                 SendFailMessage();
                 return;
             }
@@ -185,7 +186,6 @@ namespace PIERStory
             // byte로 받기 때문에 파일을 저장한다. 
             // 로컬 세이브 
             ES3.SaveRaw(res.Data, GetCubismRelativePath(SystemManager.GetJsonNodeString(requestJSON, CommonConst.COL_FILE_KEY)), SystemManager.noEncryptionSetting); // requestJSON의 키를 저장경로로 사용 할 것!
-
             SetMinusAssetCount();
         }
 
@@ -273,6 +273,9 @@ namespace PIERStory
             if (liveImage == null)
             {
                 Debug.LogError("Error in creating Live2D Model : " + liveName);
+                
+                NetworkLoader.main.ReportRequestError(liveName, "It's failed to create CubismModel");
+                
                 SendFailMessage();
                 return;
             }

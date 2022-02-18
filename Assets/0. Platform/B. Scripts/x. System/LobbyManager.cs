@@ -145,7 +145,7 @@ namespace PIERStory {
             Debug.Log("#### InitAddressableCatalog ###");
             string catalogURL = string.Empty;
             
-            //Addressables.CleanBundleCache();
+            // Addressables.CleanBundleCache();
             
             
             #if UNITY_IOS
@@ -162,9 +162,9 @@ namespace PIERStory {
             
             Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
             
-            // Addressables.CheckForCatalogUpdates();
+
             
-        };
+            };
         }
         
         

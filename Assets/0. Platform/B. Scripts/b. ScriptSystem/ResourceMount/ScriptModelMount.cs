@@ -12,6 +12,11 @@ using Live2D.Cubism.Viewer;
 using Live2D.Cubism.Rendering;
 using Live2D.Cubism.Framework.Json;
 
+// Addressable
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
+
 namespace PIERStory
 {
     [Serializable]
@@ -65,6 +70,12 @@ namespace PIERStory
 
         // path 설정할때, string path = Application.persistentDataPath + /프로젝트id/ + file_key로 설정해주어야 한다. 
         MonoBehaviour pageParent = null;
+        
+        // * Addressable 관련 추가
+        public bool isAddressable = false;
+        public string addressableKey = string.Empty; // 어드레서블 키 
+        public bool isLegacyAnimation = true; // 애니메이션 진행 방식 (false : CubismModelController, true : Animation)
+        public AsyncOperationHandle<GameObject> mountedModelAddressable; 
 
         /// <summary>
         /// ScriptRow 기반으로 모델을 가져온다.
@@ -174,6 +185,82 @@ namespace PIERStory
 
             }
         }
+        
+        
+        /// <summary>
+        /// 에셋번들로 등록된 모델 로드 
+        /// </summary>
+        void InitAddressableCubismModel() {
+            addressableKey = GetAddressableKey();
+            Debug.Log("## Check Model asset key :: " + addressableKey);
+            
+            // 에셋번들 있는지 체크 
+            Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
+                if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0) {
+                    
+                    Addressables.InstantiateAsync(addressableKey, Vector3.zero, Quaternion.identity).Completed += (handle) => {
+                        
+                        if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공 
+                            
+                            mountedModelAddressable = handle;
+                            model = mountedModelAddressable.Result.GetComponent<CubismModel>();
+                            
+                            // CubismModel이 없다..!? 
+                            if(model == null) {
+                                Debug.LogError("Error in creating Live2D Model in addressable : " + originModelName);
+                                NetworkLoader.main.ReportRequestError(originModelName, "It's failed to create CubismModel in addressable");
+                                SendFailMessage();
+                                return;
+                            }
+                            
+                            isAddressable = true;
+                            
+                            // * InstantiateCubismModel
+                            
+                            // * CreateCubismModel
+                            modelController.SetModel(model, direction, isAddressable);
+                            model.transform.SetParent(modelCharacter.transform);
+                            // 스케일 조정 및 크기 조정 
+                            model.transform.localScale = new Vector3(gameScale, gameScale, 1);
+                            model.transform.localPosition = new Vector3(offset_x, offset_y, 0);
+                            // 레이어 변경 
+                            model.GetComponent<CubismRenderController>().SortingLayer = GameConst.LAYER_MODEL;
+                            model.GetComponent<CubismRenderController>().SortingMode = CubismSortingMode.BackToFrontOrder;
+                            modelController.ChangeLayerRecursively(modelCharacter.transform, GameConst.LAYER_MODEL_C);
+                            
+                            
+                            // * PrepareCubismMotions
+                            
+                            // 마무리 
+                            isModelCreated = true;
+                            
+                            // boxCollider 처리 => 키 체크
+                            if(modelController != null) 
+                                modelController.SetBoxColliders();
+                                
+                            
+                            // 로딩 완료!
+                            SendSuccessMessage();
+                            
+                            
+                        }
+                        else { // * 실패 
+                            Debug.Log(">> Failed LoadAssetAsync " + originModelName + " / " + handle.OperationException.Message);
+                            InitCubismModel();
+                        }
+                        
+                    }; // ? end of InstantiateAsync
+                    
+                    
+                }
+                else {  // 에셋번들에 없는 캐릭터. 
+                    
+                    InitCubismModel(); // 기존 캐릭터 로드 로직 호출 
+                }
+            }; // ? end of LoadResourceLocationsAsync
+            
+        }
+
 
         /// <summary>
         /// 모델 본격 로드!
@@ -202,6 +289,7 @@ namespace PIERStory
             if (resourceData.Count <= 1)
             {
                 Debug.Log("Not enougth Data");
+                NetworkLoader.main.ReportRequestError(originModelName, "No resources");
                 SendFailMessage();
                 return;
             }
@@ -359,6 +447,7 @@ namespace PIERStory
             if (model == null)
             {
                 Debug.LogError("Error in creating Live2D Model : " + originModelName);
+                NetworkLoader.main.ReportRequestError(originModelName, "It's failed to create CubismModel");
                 SendFailMessage();
                 return;
             }
@@ -458,6 +547,17 @@ namespace PIERStory
             OnMountCompleted();
 
             SaveModelVersion(downloadModelVersion);
+        }
+        
+        
+        /// <summary>
+        /// 어드레서블 에셋용 키 
+        /// </summary>
+        /// <returns></returns>
+        string GetAddressableKey() {
+            string key = StoryManager.main.CurrentProjectID + "/model/" + originModelName + ".prefab";
+
+            return key;
         }
     }
 }

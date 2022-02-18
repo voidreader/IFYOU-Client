@@ -990,6 +990,9 @@ namespace PIERStory
                         
                         Debug.LogError(string.Format("!!! Download response fail [{0}]", exceptionMessage));
                         
+                        // 서버로 리포트 
+                        main.ReportRequestError(request.Uri.ToString(), string.Format("Request is finished, but response failed [{0}]", response.StatusCode));
+                        
                     }
                     break; // ? end of Finished 
                 
@@ -997,6 +1000,9 @@ namespace PIERStory
                 default:
                     exceptionMessage = request.State.ToString();
                     Debug.LogError(string.Format("!!! Download request fail [{0}]", exceptionMessage));
+                    
+                    // 서버로 리포트 
+                    main.ReportRequestError(request.Uri.ToString(), string.Format("Request failed. [{0}]", request.State.ToString()));
                 break;
             }
 

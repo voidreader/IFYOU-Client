@@ -6,11 +6,22 @@ using UnityEngine.UI;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
+using Live2D.Cubism.Core;
+using Live2D.Cubism.Rendering;
+using Live2D.Cubism.Framework.Motion;
 
 public class AddressableManager : MonoBehaviour
 {
     public Image image;
     public Sprite sprite;
+    
+    public string assetKey = "";
+    public Transform modelParent;
+    public GameObject loadedObject = null;
+    public Animation modelAnim = null;
+    public string modelName = string.Empty;
+    
+    public List<AnimationClip> ListClips = null;
     
     // Start is called before the first frame update
     void Start()
@@ -21,7 +32,20 @@ public class AddressableManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    }
+    
+    public void OnClickPlayAnimation() {
         
+        
+        // motionController.PlayAnimation(ListClips[UnityEngine.Random.Range(0, ListClips.Count)], 0, CubismMotionPriority.PriorityForce);
+        loadedObject.GetComponent<CubismMotionController>().PlayAnimation(ListClips[UnityEngine.Random.Range(0, ListClips.Count)], 0, CubismMotionPriority.PriorityForce);
+        
+        /*
+        string motionName = ListClips[UnityEngine.Random.Range(0, ListClips.Count)].name;
+        Debug.Log("OnClickPlayAnimation : " + motionName);
+        
+        modelAnim.CrossFade(motionName, 0.3f);
+        */
     }
     
     public void OnClickUpdateCatalog() {
@@ -35,7 +59,7 @@ public class AddressableManager : MonoBehaviour
     }
     
     IEnumerator CheckingBundle() {
-        AsyncOperationHandle<IList<IResourceLocation>> bundleCheckHandle = Addressables.LoadResourceLocationsAsync("57");
+        AsyncOperationHandle<IList<IResourceLocation>> bundleCheckHandle = Addressables.LoadResourceLocationsAsync(assetKey);
         yield return bundleCheckHandle;
         
         Debug.Log("### " + bundleCheckHandle.Status.ToString());
@@ -47,16 +71,80 @@ public class AddressableManager : MonoBehaviour
     }
     
     public void OnClickLoadBundle() {
-        Addressables.LoadAssetAsync<SpriteAtlas>("BG00_노을").Completed += (op) => {
+        
+        
+        
+        Addressables.InstantiateAsync(modelName, Vector3.zero, Quaternion.identity).Completed += (op) => {
+            if(op.Status != AsyncOperationStatus.Succeeded) {
+                Debug.Log("Failed to InstantiateAsync");
+                Addressables.Release(op);
+                return;
+            }
             
-            sprite = op.Result.GetSprite("BG00_노을");
-            image.sprite = sprite;
-          // image.SetNativeSize();
+            loadedObject = op.Result;
+            
+            Live2D.Cubism.Core.CubismModel model = loadedObject.GetComponent<CubismModel>();
+            
+            Shader cubismShader = Shader.Find("Live2D Cubism/Unlit");
+            
+            
+            /*            
+            Material[] materials;
+            materials = loadedObject.GetComponentsInChildren<Material>();
+            for(int j=0; j<materials.Length;j++) {
+                materials[j].shader = cubismShader;
+            }
+            */
+            
+            
+            for(int i=0;i <model.Drawables.Length;i++) {
+                 CubismRenderer render = model.Drawables[i].gameObject.GetComponent<CubismRenderer>();
+                 
+                 render.Material.shader = cubismShader;
+                 
+            }
+        
+            loadedObject.transform.localEulerAngles = Vector3.zero;
+            loadedObject.transform.localScale = Vector3.one * 5;
+            
+            
+            // CubismMotionController motionController = loadedObject.GetComponent<CubismMotionController>();
+            ModelClips clips = loadedObject.GetComponent<ModelClips>();
+            ListClips = clips.ListClips;
+            
+            Debug.Log("Clip Count : " +  clips.ListClips.Count);
+            
+            /*
+            modelAnim = loadedObject.AddComponent<Animation>();
+            
+            for(int i =0; i<ListClips.Count;i++) {
+                
+                // Debug.Log(ListClips[i].name);
+                ListClips[i].legacy = true;
+                
+                
+                modelAnim.AddClip(ListClips[i], ListClips[i].name);
+            }
+            */
+            
+
+            Debug.Log("Done InstantiateAsync");
         };
+        
+        /*
+        Addressables.LoadAssetAsync<GameObject>("narim").Completed += (op) => {
+            
+            
+            
+            // sprite = op.Result.GetSprite("BG00_노을");
+            // image.sprite = sprite;
+            // image.SetNativeSize();
+        };
+        */
     }
     
     public void OnClickDownloadBundle() {
-        Addressables.GetDownloadSizeAsync("57").Completed += (op) => {
+        Addressables.GetDownloadSizeAsync(assetKey).Completed += (op) => {
             Debug.Log("### GetDownloadSizeAsync : " + op.Result);
             
             if(op.Result > 0) {
@@ -68,6 +156,8 @@ public class AddressableManager : MonoBehaviour
             }
         };
     }
+    
+
     
     
     

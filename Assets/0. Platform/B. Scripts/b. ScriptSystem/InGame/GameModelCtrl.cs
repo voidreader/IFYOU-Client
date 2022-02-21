@@ -282,9 +282,17 @@ namespace PIERStory
                 motionName = motionName + "_M"; // 립싱크 모션으로 변경 
             }
             
+            // legacy 아니고, motionController 사용.
+            if(motionController != null) {
+                motionController.PlayAnimation(DictMotion[motionName], 0, CubismMotionPriority.PriorityForce);
+            }
+            else {
+                // 클립 재생 - 생 다운로드, 혹은 fade Motion 없음 
+                modelAnim.CrossFade(motionName, 0.3f);    
+            }
+            
 
-            // 클립 재생 
-            modelAnim.CrossFade(motionName, 0.3f);
+            
         }
         
         /// <summary>

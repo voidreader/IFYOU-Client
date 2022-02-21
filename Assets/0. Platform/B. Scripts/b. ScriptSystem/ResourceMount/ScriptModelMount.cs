@@ -62,11 +62,11 @@ namespace PIERStory
         public GameModelCtrl modelController = null;
 
         // 크기와 위치정보 
-        float gameScale = 10;
-        float offset_x = 0;
-        float offset_y = 0;
+        [SerializeField] float gameScale = 10;
+        [SerializeField] float offset_x = 0;
+        [SerializeField] float offset_y = 0;
         // 시선 방향
-        string direction = GameConst.VIEWDIRECTION_CENTER;
+        [SerializeField] string direction = GameConst.VIEWDIRECTION_CENTER;
 
         bool isDressModel = false;
 
@@ -139,6 +139,14 @@ namespace PIERStory
             modelController = modelCharacter.AddComponent<GameModelCtrl>();
             modelController.speaker = speaker;
             modelController.originModelName = originModelName;
+            
+            if(resourceData.Count > 0) {
+                // scale과 offset 위치 정보
+                gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_GAME_SCALE));
+                offset_x = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_X));
+                offset_y = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_Y));
+                direction = SystemManager.GetJsonNodeString(resourceData[0], GameConst.COL_DIRECTION);
+            }
 
             // 데이터 가져왔으면, 모델 초기화 시작한다. 
             // InitCubismModel();
@@ -310,11 +318,12 @@ namespace PIERStory
                         continue;
                         
                     // file_key에 이름+ motion3.json 있으면 dict에 넣는다. 
-                    if(file_key.Contains(clips.ListClips[i].name + GameConst.MOTION3_JSON)) {
+                    if(file_key.Contains("/" + clips.ListClips[i].name + GameConst.MOTION3_JSON)) {
                         
-                        clips.ListClips[i].name = motion_name;
+                        
                         if(isLegacyAnimation) {
                             clips.ListClips[i].legacy = true; // import로 생성된경우 false인지 true인지 잘 몰라서..
+                            clips.ListClips[i].name = motion_name;
                         }
                         
                         // Dict에 추가하기. 
@@ -335,9 +344,14 @@ namespace PIERStory
             
 
             Debug.Log(originModelName + " motions : " + debugMotionName);
+            
             modelController.motionController = cubismMotionController; // Live2D 고유 모델 컨트롤러 
             modelController.modelAnim = anim; // legacy 용도
             modelController.DictMotion = DictMotion; 
+            
+            if(isLegacyAnimation) { 
+                modelController.motionController = null; 
+            }
             
             
             // 마무리 
@@ -365,12 +379,6 @@ namespace PIERStory
             unloadAssetCount = totalAssetCount;
 
             // Debug.Log(JsonMapper.ToStringUnicode(resourceData));
-
-            // scale과 offset 위치 정보
-            gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_GAME_SCALE));
-            offset_x = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_X));
-            offset_y = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_Y));
-            direction = SystemManager.GetJsonNodeString(resourceData[0], GameConst.COL_DIRECTION);
 
             // 다운로드 모델 버전 
             downloadModelVersion = int.Parse(SystemManager.GetJsonNodeString(resourceData[0], MODEL_VER));

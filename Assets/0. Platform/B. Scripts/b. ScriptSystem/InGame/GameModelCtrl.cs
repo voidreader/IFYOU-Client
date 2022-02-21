@@ -7,6 +7,7 @@ using DG.Tweening;
 
 using Live2D.Cubism.Core;
 using Live2D.Cubism.Rendering;
+using Live2D.Cubism.Framework.Motion;
 
 namespace PIERStory
 {
@@ -15,6 +16,7 @@ namespace PIERStory
         CubismRenderController cubismRender = null;
         public string modelType = "live2d";
         public CubismModel model = null;
+        public CubismMotionController motionController = null;
         [HideInInspector] public Animation modelAnim;
         [HideInInspector] public Dictionary<string, AnimationClip> DictMotion;
         [HideInInspector] public RawImage currRenderTexture;        // 현재 그려지고 있는 곳

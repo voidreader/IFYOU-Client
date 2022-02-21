@@ -11,6 +11,8 @@ using Live2D.Cubism.Core;
 using Live2D.Cubism.Viewer;
 using Live2D.Cubism.Rendering;
 using Live2D.Cubism.Framework.Json;
+using Live2D.Cubism.Framework.Motion;
+using Live2D.Cubism.Framework.MotionFade;
 
 // Addressable
 using UnityEngine.AddressableAssets;
@@ -139,7 +141,10 @@ namespace PIERStory
             modelController.originModelName = originModelName;
 
             // 데이터 가져왔으면, 모델 초기화 시작한다. 
-            InitCubismModel();
+            // InitCubismModel();
+            // * InitCubismModel 사용하지 않고 InitAddressableCubismModel 먼저 호출 
+            // 2022.02.21
+            InitAddressableCubismModel(); 
         }
 
         /// <summary>
@@ -198,6 +203,7 @@ namespace PIERStory
             Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
                 if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0) {
                     
+                    // ! Instantiate 됩니다!!
                     Addressables.InstantiateAsync(addressableKey, Vector3.zero, Quaternion.identity).Completed += (handle) => {
                         
                         if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공 
@@ -213,35 +219,8 @@ namespace PIERStory
                                 return;
                             }
                             
-                            isAddressable = true;
-                            
-                            // * InstantiateCubismModel
-                            
-                            // * CreateCubismModel
-                            modelController.SetModel(model, direction, isAddressable);
-                            model.transform.SetParent(modelCharacter.transform);
-                            // 스케일 조정 및 크기 조정 
-                            model.transform.localScale = new Vector3(gameScale, gameScale, 1);
-                            model.transform.localPosition = new Vector3(offset_x, offset_y, 0);
-                            // 레이어 변경 
-                            model.GetComponent<CubismRenderController>().SortingLayer = GameConst.LAYER_MODEL;
-                            model.GetComponent<CubismRenderController>().SortingMode = CubismSortingMode.BackToFrontOrder;
-                            modelController.ChangeLayerRecursively(modelCharacter.transform, GameConst.LAYER_MODEL_C);
-                            
-                            
-                            // * PrepareCubismMotions
-                            
-                            // 마무리 
-                            isModelCreated = true;
-                            
-                            // boxCollider 처리 => 키 체크
-                            if(modelController != null) 
-                                modelController.SetBoxColliders();
-                                
-                            
-                            // 로딩 완료!
-                            SendSuccessMessage();
-                            
+                            // 불러오고 추가 세팅 시작 
+                            SetAddressableCubismModel();
                             
                         }
                         else { // * 실패 
@@ -259,6 +238,118 @@ namespace PIERStory
                 }
             }; // ? end of LoadResourceLocationsAsync
             
+        }
+        
+        
+        /// <summary>
+        /// 불러오기 성공 후 초기화 처리 
+        /// </summary>
+        void SetAddressableCubismModel() {
+            
+            isAddressable = true; // 트루!                                      
+            isLegacyAnimation = false;
+            
+            // * CreateCubismModel
+            modelController.SetModel(model, direction, isAddressable);
+            model.transform.SetParent(modelCharacter.transform);
+            // 스케일 조정 및 크기 조정 
+            model.transform.localScale = new Vector3(gameScale, gameScale, 1);
+            model.transform.localPosition = new Vector3(offset_x, offset_y, 0);
+            // 레이어 변경 
+            model.GetComponent<CubismRenderController>().SortingLayer = GameConst.LAYER_MODEL;
+            model.GetComponent<CubismRenderController>().SortingMode = CubismSortingMode.BackToFrontOrder;
+            modelController.ChangeLayerRecursively(modelCharacter.transform, GameConst.LAYER_MODEL_C);
+            
+            // * 어드레서블 에셋을 통한 생성인 경우는 Shader 처리 추가 필요. 
+            Shader cubismShader = Shader.Find("Live2D Cubism/Unlit");
+            CubismRenderer render;
+            for(int i=0;i <model.Drawables.Length;i++) {
+                render = model.Drawables[i].gameObject.GetComponent<CubismRenderer>();
+                render.Material.shader = cubismShader;
+            }                            
+            
+            
+            // * PrepareCubismMotions 모션 준비
+            ModelClips clips = model.gameObject.GetComponent<ModelClips>();  // 에셋번들에서 받아온 AnimationClips. 
+            
+            
+            // * 페이드 모션 체크. 리스트에 저장된 페이드오브젝트와 클립 개수가 안맞으면 legacy로 돌린다. 
+            CubismFadeController cubismFadeController = model.gameObject.GetComponent<CubismFadeController>();
+            CubismMotionController cubismMotionController = model.gameObject.GetComponent<CubismMotionController>();
+            if(cubismFadeController.CubismFadeMotionList == null || cubismFadeController.CubismFadeMotionList.CubismFadeMotionObjects.Length != clips.ListClips.Count) {
+                isLegacyAnimation = true;
+                Debug.Log(originModelName +" is legacy animation from asset bundle");
+                
+                if(anim == null) {
+                    anim = model.gameObject.AddComponent<Animation>(); // legacy에서는 애니메이션 추가 
+                }
+                
+                
+                // legacy인 경우 일부 Component 비활성화 한다.
+                cubismFadeController.enabled = false;
+                cubismMotionController.enabled = false; 
+            }
+            
+            
+            string file_key = string.Empty;
+            string motion_name = string.Empty;
+            string debugMotionName = string.Empty;
+            
+            // * legacy는 이전에 생으로 다운받아 생성하는 그 방식. 
+            // DictMotion 갖추기
+            for(int i=0; i<clips.ListClips.Count;i++) {
+                
+                file_key = string.Empty;
+                motion_name = string.Empty;
+                
+                for(int j=0; j<resourceData.Count;j++) {
+                    file_key = SystemManager.GetJsonNodeString(resourceData[j], CommonConst.COL_FILE_KEY);
+                    motion_name = SystemManager.GetJsonNodeString(resourceData[j], CommonConst.MOTION_NAME);
+                    
+                    if (!file_key.Contains(GameConst.MOTION3_JSON) || string.IsNullOrEmpty(motion_name))
+                        continue;
+                        
+                    // file_key에 이름+ motion3.json 있으면 dict에 넣는다. 
+                    if(file_key.Contains(clips.ListClips[i].name + GameConst.MOTION3_JSON)) {
+                        
+                        clips.ListClips[i].name = motion_name;
+                        if(isLegacyAnimation) {
+                            clips.ListClips[i].legacy = true; // import로 생성된경우 false인지 true인지 잘 몰라서..
+                        }
+                        
+                        // Dict에 추가하기. 
+                        if(!DictMotion.ContainsKey(motion_name)) {
+                            DictMotion.Add(motion_name, clips.ListClips[i]); // ADD    
+                            debugMotionName += motion_name +", ";
+                            
+                            if(isLegacyAnimation && anim != null) {
+                                anim.AddClip(clips.ListClips[i], motion_name);
+                            }
+                            
+                        }
+                    }
+                    
+                } // ? end of j for
+            } // ? end of i for
+            // ? motion 처리 완료 
+            
+
+            Debug.Log(originModelName + " motions : " + debugMotionName);
+            modelController.motionController = cubismMotionController; // Live2D 고유 모델 컨트롤러 
+            modelController.modelAnim = anim; // legacy 용도
+            modelController.DictMotion = DictMotion; 
+            
+            
+            // 마무리 
+            isModelCreated = true;
+            
+            // boxCollider 처리 => 키 체크
+            if(modelController != null) 
+                modelController.SetBoxColliders();
+                
+            
+            // 로딩 완료!
+            SendSuccessMessage();            
         }
 
 
@@ -373,8 +464,8 @@ namespace PIERStory
             isResourceDownloadComplete = true; // 리소스 다운로드 완료 
             
 
-            // ! 테스트를 위해 감춘다.!
-            // InstantiateCubismModel();
+            // 로드와 동시에 Instantitae.
+            InstantiateCubismModel();
             
             // ! 여기서 성공 메세지 
             SendSuccessMessage();

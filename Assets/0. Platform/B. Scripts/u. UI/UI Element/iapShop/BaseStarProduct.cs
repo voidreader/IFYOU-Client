@@ -176,7 +176,21 @@ namespace PIERStory {
             for(int i=0; i< productDetailJSON.Count; i++) {
                 // 메인이면서 화폐가 보석인것만. 
                 if(SystemManager.GetJsonNodeString(productDetailJSON[i], "currency") == "coin") { 
-                    quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], "quantity"));
+
+                    
+
+                    // 첫 구매 코인 보너스 체크할것. 
+                    if(SystemManager.GetJsonNodeBool(productDetailJSON[i], "first_purchase")) {
+                        
+                        if(!hasPurchaseHistory)
+                            quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], "quantity"));    
+                    }
+                    else {
+                        quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], "quantity"));    
+                    }
+                    
+                    
+   
                 }
             }
             

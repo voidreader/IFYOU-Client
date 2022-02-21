@@ -169,6 +169,9 @@ namespace PIERStory
                     PlayerPrefs.DeleteKey("noticeOneday");
             }
 
+            if (!PlayerPrefs.HasKey(GameConst.AUTO_PLAY))
+                PlayerPrefs.SetFloat(GameConst.AUTO_PLAY, GameConst.normalDelay);
+
             // * 화면 어두워지지 않도록 설정 
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
@@ -861,7 +864,10 @@ namespace PIERStory
                     Debug.Log(string.Format("### Push TokenInfo = pushAlert : {0}, nightPush : {1}", data.agreement.adAgreement, data.agreement.adAgreementNight));
                 }
                 else
+                {
                     Debug.LogError(string.Format("### QueryToken response failed. Error : {0}", error));
+                    PushRegister(true, true);
+                }
                     
                     
                 // MainMore.OnRefreshMore?.Invoke();
@@ -1077,6 +1083,7 @@ namespace PIERStory
                     if(nightAdPush)
                         AppsFlyerSDK.AppsFlyer.sendEvent("APP_NIGHTADINFORM", null);
                     */
+                    QueryPushTokenInfo();
 
                 }
                 else

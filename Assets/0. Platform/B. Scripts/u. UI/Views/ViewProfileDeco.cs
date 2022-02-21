@@ -293,7 +293,6 @@ namespace PIERStory
             // 스탠딩 제어 끄고
             profileStandingScroll.SetActive(true);
             standingController.SetActive(false);
-            
         }
 
         /// <summary>
@@ -367,6 +366,8 @@ namespace PIERStory
 
             for (int i = 0; i < standingObjects.childCount; i++)
                 standingObjects.GetChild(i).GetComponent<Image>().raycastTarget = true;
+
+            background.OnDownloadImage = null;
         }
 
         #endregion

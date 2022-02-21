@@ -183,6 +183,8 @@ namespace PIERStory
 
             if(fadeValue == 0)
             {
+                cam._Fade = 1f;
+
                 while(cam._Fade < 1)
                 {
                     animTime += Time.deltaTime / __animTime;
@@ -192,6 +194,8 @@ namespace PIERStory
             }
             else
             {
+                cam._Fade = 0f;
+
                 while (cam._Fade > 0)
                 {
                     animTime += Time.deltaTime / __animTime;
@@ -309,6 +313,7 @@ namespace PIERStory
             {
                 case GameConst.KR_SCREEN_EFFECT_GRAYSCALE:
                     screenGrayScale.enabled = true;
+                    screenGrayScale._Fade = 1f;
 
                     if (__params != null)
                         SetGrayScaleFade(__params, screenGrayScale);
@@ -317,6 +322,7 @@ namespace PIERStory
 
                 case GameConst.KR_SCREEN_EFFECT_GRAYSCALE_BG:
                     bgGrayScale.enabled = true;
+                    bgGrayScale._Fade = 1f;
 
                     if (__params != null)
                         SetGrayScaleFade(__params, bgGrayScale);

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using Toast.Gamebase;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.Reactor.Animators;
-using Doozy.Runtime.UIManager.Components;
 using TMPro;
 
 namespace PIERStory {
@@ -93,7 +92,7 @@ namespace PIERStory {
             // 푸시 토글 세팅 
             if (SystemManager.main.pushTokenInfo == null)
             {
-
+                SystemManager.main.QueryPushTokenInfo();
             }
             else
             {
@@ -144,7 +143,7 @@ namespace PIERStory {
         /// </summary>
         public void OnClickPushAlert()
         {
-            if (pushAlertAnimator.animation.isPlaying)
+            if (pushAlertAnimator.animation.isPlaying || nightAlertAnimator.animation.isPlaying)
                 return;
 
             // 푸쉬 토글이 On이면
@@ -176,19 +175,19 @@ namespace PIERStory {
         /// </summary>
         public void OnClickNightAlert()
         {
+            // 애니메이션 중이어도 막는다
+            if (pushAlertAnimator.animation.isPlaying || nightAlertAnimator.animation.isPlaying)
+                return;
+
             // 푸쉬 토글이 On이 아니면 팝업만 띄우고 막는다
-            if(!SystemManager.main.pushTokenInfo.agreement.adAgreement)
+            if (!SystemManager.main.pushTokenInfo.agreement.adAgreement)
             {
                 SystemManager.ShowSimpleAlertLocalize("6033");
                 return;
             }
 
-            // 애니메이션 중이어도 막는다
-            if (nightAlertAnimator.animation.isPlaying)
-                return;
-
             // 야간 알림이 On이면
-            if(SystemManager.main.pushTokenInfo.agreement.adAgreementNight)
+            if (SystemManager.main.pushTokenInfo.agreement.adAgreementNight)
             {
                 SystemManager.main.PushRegister(true, false);
                 nightPushAlert.sprite = spriteToggleOff;

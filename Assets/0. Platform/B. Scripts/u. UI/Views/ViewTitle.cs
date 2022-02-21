@@ -123,6 +123,7 @@ namespace PIERStory {
         
         IEnumerator RoutinePrepareMainPage() {
 
+            SystemManager.main.QueryPushTokenInfo();
             NetworkLoader.main.RequestNoticeList();     // 공지사항 리스트 요청
             NetworkLoader.main.RequestPromotionList();  // 프로모션 리스트 요청
             NetworkLoader.main.RequestComingSoonList(); // 커밍순 리스트 요청

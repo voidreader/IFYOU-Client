@@ -697,7 +697,6 @@ namespace PIERStory
             if(!phoneRing)
             {
                 userCall = true;
-                timeEnd = true;
                 connectMark.SetActive(true);
                 callButtons.SetActive(false);
                 GameManager.main.isThreadHold = false;
@@ -718,7 +717,7 @@ namespace PIERStory
         /// </summary>
         public void AnswerPhoneButton()
         {
-            timeEnd = false;
+            timeEnd = true;
 
             // fade 전 투명도 0
             callBG.alpha = 0f;
@@ -737,7 +736,6 @@ namespace PIERStory
                     answerSceneId = string.Empty;
                 }
 
-                timeEnd = true;
                 ShowCallBackgrond();
             });
         }
@@ -828,6 +826,7 @@ namespace PIERStory
 
             // 위치 초기화
             phoneImage.GetComponent<RectTransform>().DOAnchorPosY(0f, 0.7f).SetEase(Ease.OutBack);
+            timeEnd = true;
 
             yield return new WaitForSeconds(0.7f);
 

@@ -79,6 +79,7 @@ namespace Doozy.Runtime.UIManager
             SoundDetail,
             StoryDetail,
             StoryLoading,
+            StoryLobby,
             Title,
             UserPlayHistory
         }    

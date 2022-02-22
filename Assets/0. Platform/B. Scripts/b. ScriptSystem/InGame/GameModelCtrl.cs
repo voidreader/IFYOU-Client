@@ -282,7 +282,7 @@ namespace PIERStory
                 motionName = motionName + "_M"; // 립싱크 모션으로 변경 
             }
             
-            // legacy 아니고, motionController 사용.
+            // * 에셋번들과 다운로드로 생성한 모델에서 플레이 방식이 다르다. 
             if(motionController != null) {
                 motionController.PlayAnimation(DictMotion[motionName], 0, CubismMotionPriority.PriorityForce);
             }

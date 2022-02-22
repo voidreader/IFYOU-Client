@@ -76,7 +76,6 @@ namespace PIERStory
         // * Addressable 관련 추가
         public bool isAddressable = false;
         public string addressableKey = string.Empty; // 어드레서블 키 
-        public bool isLegacyAnimation = true; // 애니메이션 진행 방식 (false : CubismModelController, true : Animation)
         public AsyncOperationHandle<GameObject> mountedModelAddressable; 
 
         /// <summary>
@@ -216,19 +215,9 @@ namespace PIERStory
                         
                         if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공 
                             
-                            mountedModelAddressable = handle;
-                            model = mountedModelAddressable.Result.GetComponent<CubismModel>();
-                            
-                            // CubismModel이 없다..!? 
-                            if(model == null) {
-                                Debug.LogError("Error in creating Live2D Model in addressable : " + originModelName);
-                                NetworkLoader.main.ReportRequestError(originModelName, "It's failed to create CubismModel in addressable");
-                                SendFailMessage();
-                                return;
-                            }
-                            
+                           
                             // 불러오고 추가 세팅 시작 
-                            SetAddressableCubismModel();
+                            SetAddressableCubismModel(handle);
                             
                         }
                         else { // * 실패 
@@ -252,10 +241,58 @@ namespace PIERStory
         /// <summary>
         /// 불러오기 성공 후 초기화 처리 
         /// </summary>
-        void SetAddressableCubismModel() {
+        void SetAddressableCubismModel(AsyncOperationHandle<GameObject> __result) {
+            
+            // * 에셋번들로 불러왔지만, FadeMotion 과 실제 모션 개수가 일치하지 않는 경우는 다시 파괴하고
+            // * 기존 로딩 로직을 시작해야한다. 
+            
+            mountedModelAddressable = __result;
+            model = mountedModelAddressable.Result.GetComponent<CubismModel>(); 
+            
+            // CubismModel이 없다..!? 
+            if(model == null) {
+                Debug.LogError("Error in creating Live2D Model in addressable : " + originModelName);
+                NetworkLoader.main.ReportRequestError(originModelName, "It's failed to create CubismModel in addressable");
+                SendFailMessage();
+                return;
+            }
+            
+            
+            // * 모션 체크를 최우선으로 시작한다. 
+            ModelClips clips = model.gameObject.GetComponent<ModelClips>();  // 에셋번들에서 받아온 AnimationClips. 
+            
+            
+            // * 페이드 모션 체크. 리스트에 저장된 페이드오브젝트와 클립 개수가 안맞으면 사용하지 않는다
+            CubismFadeController cubismFadeController = model.gameObject.GetComponent<CubismFadeController>();
+            CubismMotionController cubismMotionController = model.gameObject.GetComponent<CubismMotionController>();
+            if(cubismFadeController == null ||
+                cubismMotionController == null ||
+                cubismFadeController.CubismFadeMotionList == null || 
+                cubismFadeController.CubismFadeMotionList.CubismFadeMotionObjects.Length != clips.ListClips.Count) {
+                
+                
+                // ! 생성한 에셋을 release 시키고, 다시 기존 로직을 호출한다. 
+                Addressables.ReleaseInstance(mountedModelAddressable);
+                InitCubismModel();
+                return;
+                
+                /*
+                isLegacyAnimation = true;
+                Debug.Log(originModelName +" is legacy animation from asset bundle");
+                
+                if(anim == null) {
+                    anim = model.gameObject.AddComponent<Animation>(); // legacy에서는 애니메이션 추가 
+                }
+                
+                
+                // legacy인 경우 일부 Component 비활성화 한다.
+                cubismFadeController.enabled = false;
+                cubismMotionController.enabled = false; 
+                */
+            }  // ? 모션 체크 종료                 
+            
             
             isAddressable = true; // 트루!                                      
-            isLegacyAnimation = false;
             
             // * CreateCubismModel
             modelController.SetModel(model, direction, isAddressable);
@@ -268,6 +305,7 @@ namespace PIERStory
             model.GetComponent<CubismRenderController>().SortingMode = CubismSortingMode.BackToFrontOrder;
             modelController.ChangeLayerRecursively(modelCharacter.transform, GameConst.LAYER_MODEL_C);
             
+            
             // * 어드레서블 에셋을 통한 생성인 경우는 Shader 처리 추가 필요. 
             Shader cubismShader = Shader.Find("Live2D Cubism/Unlit");
             CubismRenderer render;
@@ -275,28 +313,6 @@ namespace PIERStory
                 render = model.Drawables[i].gameObject.GetComponent<CubismRenderer>();
                 render.Material.shader = cubismShader;
             }                            
-            
-            
-            // * PrepareCubismMotions 모션 준비
-            ModelClips clips = model.gameObject.GetComponent<ModelClips>();  // 에셋번들에서 받아온 AnimationClips. 
-            
-            
-            // * 페이드 모션 체크. 리스트에 저장된 페이드오브젝트와 클립 개수가 안맞으면 legacy로 돌린다. 
-            CubismFadeController cubismFadeController = model.gameObject.GetComponent<CubismFadeController>();
-            CubismMotionController cubismMotionController = model.gameObject.GetComponent<CubismMotionController>();
-            if(cubismFadeController.CubismFadeMotionList == null || cubismFadeController.CubismFadeMotionList.CubismFadeMotionObjects.Length != clips.ListClips.Count) {
-                isLegacyAnimation = true;
-                Debug.Log(originModelName +" is legacy animation from asset bundle");
-                
-                if(anim == null) {
-                    anim = model.gameObject.AddComponent<Animation>(); // legacy에서는 애니메이션 추가 
-                }
-                
-                
-                // legacy인 경우 일부 Component 비활성화 한다.
-                cubismFadeController.enabled = false;
-                cubismMotionController.enabled = false; 
-            }
             
             
             string file_key = string.Empty;
@@ -320,21 +336,10 @@ namespace PIERStory
                     // file_key에 이름+ motion3.json 있으면 dict에 넣는다. 
                     if(file_key.Contains("/" + clips.ListClips[i].name + GameConst.MOTION3_JSON)) {
                         
-                        
-                        if(isLegacyAnimation) {
-                            clips.ListClips[i].legacy = true; // import로 생성된경우 false인지 true인지 잘 몰라서..
-                            clips.ListClips[i].name = motion_name;
-                        }
-                        
                         // Dict에 추가하기. 
                         if(!DictMotion.ContainsKey(motion_name)) {
                             DictMotion.Add(motion_name, clips.ListClips[i]); // ADD    
                             debugMotionName += motion_name +", ";
-                            
-                            if(isLegacyAnimation && anim != null) {
-                                anim.AddClip(clips.ListClips[i], motion_name);
-                            }
-                            
                         }
                     }
                     
@@ -346,25 +351,23 @@ namespace PIERStory
             Debug.Log(originModelName + " motions : " + debugMotionName);
             
             modelController.motionController = cubismMotionController; // Live2D 고유 모델 컨트롤러 
-            modelController.modelAnim = anim; // legacy 용도
+            modelController.modelAnim = null;
             modelController.DictMotion = DictMotion; 
-            
-            if(isLegacyAnimation) { 
-                modelController.motionController = null; 
-            }
             
             
             // 마무리 
             isModelCreated = true;
             
             // boxCollider 처리 => 키 체크
+            /*
             if(modelController != null) 
                 modelController.SetBoxColliders();
+            */
                 
             
             // 로딩 완료!
             SendSuccessMessage();            
-        }
+        } // ? 어드레서블 모델 생성 완료 
 
 
         /// <summary>
@@ -510,9 +513,11 @@ namespace PIERStory
             // ! 키 체크를 위해 박스 컬라이더 추가
             // SetBoxColliders();
             
+            /*
             if(modelController != null) {
                 modelController.SetBoxColliders();
             }
+            */
             
         }
 

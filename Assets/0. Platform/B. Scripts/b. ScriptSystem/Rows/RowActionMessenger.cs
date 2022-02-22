@@ -53,14 +53,13 @@ namespace PIERStory
 
         public void EndAction()
         {
+            // 다음 템플릿이 선택지 템플릿이 아니면 일단 무조건 숨기기
+            if (!GameManager.main.IsSameTemplate(GameManager.main.nextRow, GameConst.TEMPLATE_SELECTION))
+                ViewGame.main.messenger.SetActive(false);
+
             // 다음 템플릿이 종료이면 내용 삭제 및 비활성화
             if (GameManager.main.IsSameTemplate(GameManager.main.nextRow, GameConst.TEMPLATE_EXIT))
                 ViewGame.main.DestoryAllContents();
-
-            // 메시지 관련 템플릿 또는 선택지 템플릿도 아니면 메시지 숨기기
-            if (!GameManager.main.IsSameTemplate(GameManager.main.nextRow, "message") &&
-                !GameManager.main.IsSameTemplate(GameManager.main.nextRow, GameConst.TEMPLATE_SELECTION))
-                ViewGame.main.messenger.SetActive(false);
 
             // 메시지 도착 템플릿의 종료Action으로는 폰이미지를 숨겨준다
             if (template.Equals(GameConst.TEMPLATE_MESSAGE_RECEIVE))

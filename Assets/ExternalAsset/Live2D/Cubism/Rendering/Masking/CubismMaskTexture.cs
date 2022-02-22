@@ -303,6 +303,7 @@ namespace Live2D.Cubism.Rendering.Masking
             CubismMaskCommandBuffer.RemoveSource(this);
         }
         
+        
         /// <summary>
         /// 메모리 누수에 대한 추가 처리.
         /// </summary>
@@ -311,7 +312,8 @@ namespace Live2D.Cubism.Rendering.Masking
             Debug.Log("DeleteRenderTexture");
             
              DestroyImmediate(_renderTexture)  ; 
-        }
+        }        
+        
 
         #endregion
 

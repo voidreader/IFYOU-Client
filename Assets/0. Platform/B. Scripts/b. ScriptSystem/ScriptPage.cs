@@ -342,13 +342,15 @@ namespace PIERStory
             }
 
             yield return null;
+            yield return null;
+            yield return null;
 
             // 모델들 한테 충돌체 주고 키 체크 
-            /*
+            
             for (int i = 0; i < ListModelMount.Count; i++)
             {
                 if (ListModelMount[i].modelController != null)
-                    ListModelMount[i].SetBoxColliders();
+                    ListModelMount[i].modelController.SetBoxColliders();
             }
 
             // 잠깐.. 충돌체에게 시간을 주자.. 
@@ -364,7 +366,7 @@ namespace PIERStory
                 if (ListModelMount[i].modelController != null)
                     ListModelMount[i].modelController.RemoveColliders();
             }
-            */
+            
 
             Debug.Log("Character Model Loading Done");
         }

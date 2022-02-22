@@ -7,6 +7,7 @@ using DG.Tweening;
 
 using Live2D.Cubism.Core;
 using Live2D.Cubism.Rendering;
+using Live2D.Cubism.Framework.Motion;
 
 namespace PIERStory
 {
@@ -15,6 +16,7 @@ namespace PIERStory
         CubismRenderController cubismRender = null;
         public string modelType = "live2d";
         public CubismModel model = null;
+        public CubismMotionController motionController = null;
         [HideInInspector] public Animation modelAnim;
         [HideInInspector] public Dictionary<string, AnimationClip> DictMotion;
         [HideInInspector] public RawImage currRenderTexture;        // 현재 그려지고 있는 곳
@@ -73,7 +75,7 @@ namespace PIERStory
         /// 모델 세팅
         /// </summary>
         /// <param name="dir">해당 캐릭터 시선 방향</param>
-        public void SetModel(CubismModel __model, string dir)
+        public void SetModel(CubismModel __model, string dir, bool __isAssetBundle = false)
         {
             model = __model;
             modelType = CommonConst.MODEL_TYPE_LIVE2D;
@@ -280,9 +282,17 @@ namespace PIERStory
                 motionName = motionName + "_M"; // 립싱크 모션으로 변경 
             }
             
+            // * 에셋번들과 다운로드로 생성한 모델에서 플레이 방식이 다르다. 
+            if(motionController != null) {
+                motionController.PlayAnimation(DictMotion[motionName], 0, CubismMotionPriority.PriorityForce);
+            }
+            else {
+                // 클립 재생 - 생 다운로드, 혹은 fade Motion 없음 
+                modelAnim.CrossFade(motionName, 0.3f);    
+            }
+            
 
-            // 클립 재생 
-            modelAnim.CrossFade(motionName, 0.3f);
+            
         }
         
         /// <summary>
@@ -655,6 +665,7 @@ namespace PIERStory
                 model.Drawables[i].gameObject.AddComponent<BoxCollider>();
                 
             // ! 컬라이더 붙이고 없애는데 프레임 딜레이 필요하다.
+            
         }
         
         IEnumerator DelayRemoveColliders() {

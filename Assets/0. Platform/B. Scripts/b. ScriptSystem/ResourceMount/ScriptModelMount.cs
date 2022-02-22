@@ -11,6 +11,13 @@ using Live2D.Cubism.Core;
 using Live2D.Cubism.Viewer;
 using Live2D.Cubism.Rendering;
 using Live2D.Cubism.Framework.Json;
+using Live2D.Cubism.Framework.Motion;
+using Live2D.Cubism.Framework.MotionFade;
+
+// Addressable
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
 
 namespace PIERStory
 {
@@ -55,16 +62,21 @@ namespace PIERStory
         public GameModelCtrl modelController = null;
 
         // 크기와 위치정보 
-        float gameScale = 10;
-        float offset_x = 0;
-        float offset_y = 0;
+        [SerializeField] float gameScale = 10;
+        [SerializeField] float offset_x = 0;
+        [SerializeField] float offset_y = 0;
         // 시선 방향
-        string direction = GameConst.VIEWDIRECTION_CENTER;
+        [SerializeField] string direction = GameConst.VIEWDIRECTION_CENTER;
 
         bool isDressModel = false;
 
         // path 설정할때, string path = Application.persistentDataPath + /프로젝트id/ + file_key로 설정해주어야 한다. 
         MonoBehaviour pageParent = null;
+        
+        // * Addressable 관련 추가
+        public bool isAddressable = false;
+        public string addressableKey = string.Empty; // 어드레서블 키 
+        public AsyncOperationHandle<GameObject> mountedModelAddressable; 
 
         /// <summary>
         /// ScriptRow 기반으로 모델을 가져온다.
@@ -126,9 +138,20 @@ namespace PIERStory
             modelController = modelCharacter.AddComponent<GameModelCtrl>();
             modelController.speaker = speaker;
             modelController.originModelName = originModelName;
+            
+            if(resourceData.Count > 0) {
+                // scale과 offset 위치 정보
+                gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_GAME_SCALE));
+                offset_x = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_X));
+                offset_y = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_Y));
+                direction = SystemManager.GetJsonNodeString(resourceData[0], GameConst.COL_DIRECTION);
+            }
 
             // 데이터 가져왔으면, 모델 초기화 시작한다. 
-            InitCubismModel();
+            // InitCubismModel();
+            // * InitCubismModel 사용하지 않고 InitAddressableCubismModel 먼저 호출 
+            // 2022.02.21
+            InitAddressableCubismModel(); 
         }
 
         /// <summary>
@@ -174,6 +197,178 @@ namespace PIERStory
 
             }
         }
+        
+        
+        /// <summary>
+        /// 에셋번들로 등록된 모델 로드 
+        /// </summary>
+        void InitAddressableCubismModel() {
+            addressableKey = GetAddressableKey();
+            Debug.Log("## Check Model asset key :: " + addressableKey);
+            
+            // 에셋번들 있는지 체크 
+            Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
+                if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0) {
+                    
+                    // ! Instantiate 됩니다!!
+                    Addressables.InstantiateAsync(addressableKey, Vector3.zero, Quaternion.identity).Completed += (handle) => {
+                        
+                        if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공 
+                            
+                           
+                            // 불러오고 추가 세팅 시작 
+                            SetAddressableCubismModel(handle);
+                            
+                        }
+                        else { // * 실패 
+                            Debug.Log(">> Failed LoadAssetAsync " + originModelName + " / " + handle.OperationException.Message);
+                            InitCubismModel();
+                        }
+                        
+                    }; // ? end of InstantiateAsync
+                    
+                    
+                }
+                else {  // 에셋번들에 없는 캐릭터. 
+                    
+                    InitCubismModel(); // 기존 캐릭터 로드 로직 호출 
+                }
+            }; // ? end of LoadResourceLocationsAsync
+            
+        }
+        
+        
+        /// <summary>
+        /// 불러오기 성공 후 초기화 처리 
+        /// </summary>
+        void SetAddressableCubismModel(AsyncOperationHandle<GameObject> __result) {
+            
+            // * 에셋번들로 불러왔지만, FadeMotion 과 실제 모션 개수가 일치하지 않는 경우는 다시 파괴하고
+            // * 기존 로딩 로직을 시작해야한다. 
+            
+            mountedModelAddressable = __result;
+            model = mountedModelAddressable.Result.GetComponent<CubismModel>(); 
+            
+            // CubismModel이 없다..!? 
+            if(model == null) {
+                Debug.LogError("Error in creating Live2D Model in addressable : " + originModelName);
+                NetworkLoader.main.ReportRequestError(originModelName, "It's failed to create CubismModel in addressable");
+                SendFailMessage();
+                return;
+            }
+            
+            
+            // * 모션 체크를 최우선으로 시작한다. 
+            ModelClips clips = model.gameObject.GetComponent<ModelClips>();  // 에셋번들에서 받아온 AnimationClips. 
+            
+            
+            // * 페이드 모션 체크. 리스트에 저장된 페이드오브젝트와 클립 개수가 안맞으면 사용하지 않는다
+            CubismFadeController cubismFadeController = model.gameObject.GetComponent<CubismFadeController>();
+            CubismMotionController cubismMotionController = model.gameObject.GetComponent<CubismMotionController>();
+            if(cubismFadeController == null ||
+                cubismMotionController == null ||
+                cubismFadeController.CubismFadeMotionList == null || 
+                cubismFadeController.CubismFadeMotionList.CubismFadeMotionObjects.Length != clips.ListClips.Count) {
+                
+                
+                // ! 생성한 에셋을 release 시키고, 다시 기존 로직을 호출한다. 
+                Addressables.ReleaseInstance(mountedModelAddressable);
+                InitCubismModel();
+                return;
+                
+                /*
+                isLegacyAnimation = true;
+                Debug.Log(originModelName +" is legacy animation from asset bundle");
+                
+                if(anim == null) {
+                    anim = model.gameObject.AddComponent<Animation>(); // legacy에서는 애니메이션 추가 
+                }
+                
+                
+                // legacy인 경우 일부 Component 비활성화 한다.
+                cubismFadeController.enabled = false;
+                cubismMotionController.enabled = false; 
+                */
+            }  // ? 모션 체크 종료                 
+            
+            
+            isAddressable = true; // 트루!                                      
+            
+            // * CreateCubismModel
+            modelController.SetModel(model, direction, isAddressable);
+            model.transform.SetParent(modelCharacter.transform);
+            // 스케일 조정 및 크기 조정 
+            model.transform.localScale = new Vector3(gameScale, gameScale, 1);
+            model.transform.localPosition = new Vector3(offset_x, offset_y, 0);
+            // 레이어 변경 
+            model.GetComponent<CubismRenderController>().SortingLayer = GameConst.LAYER_MODEL;
+            model.GetComponent<CubismRenderController>().SortingMode = CubismSortingMode.BackToFrontOrder;
+            modelController.ChangeLayerRecursively(modelCharacter.transform, GameConst.LAYER_MODEL_C);
+            
+            
+            // * 어드레서블 에셋을 통한 생성인 경우는 Shader 처리 추가 필요. 
+            Shader cubismShader = Shader.Find("Live2D Cubism/Unlit");
+            CubismRenderer render;
+            for(int i=0;i <model.Drawables.Length;i++) {
+                render = model.Drawables[i].gameObject.GetComponent<CubismRenderer>();
+                render.Material.shader = cubismShader;
+            }                            
+            
+            
+            string file_key = string.Empty;
+            string motion_name = string.Empty;
+            string debugMotionName = string.Empty;
+            
+            // * legacy는 이전에 생으로 다운받아 생성하는 그 방식. 
+            // DictMotion 갖추기
+            for(int i=0; i<clips.ListClips.Count;i++) {
+                
+                file_key = string.Empty;
+                motion_name = string.Empty;
+                
+                for(int j=0; j<resourceData.Count;j++) {
+                    file_key = SystemManager.GetJsonNodeString(resourceData[j], CommonConst.COL_FILE_KEY);
+                    motion_name = SystemManager.GetJsonNodeString(resourceData[j], CommonConst.MOTION_NAME);
+                    
+                    if (!file_key.Contains(GameConst.MOTION3_JSON) || string.IsNullOrEmpty(motion_name))
+                        continue;
+                        
+                    // file_key에 이름+ motion3.json 있으면 dict에 넣는다. 
+                    if(file_key.Contains("/" + clips.ListClips[i].name + GameConst.MOTION3_JSON)) {
+                        
+                        // Dict에 추가하기. 
+                        if(!DictMotion.ContainsKey(motion_name)) {
+                            DictMotion.Add(motion_name, clips.ListClips[i]); // ADD    
+                            debugMotionName += motion_name +", ";
+                        }
+                    }
+                    
+                } // ? end of j for
+            } // ? end of i for
+            // ? motion 처리 완료 
+            
+
+            Debug.Log(originModelName + " motions : " + debugMotionName);
+            
+            modelController.motionController = cubismMotionController; // Live2D 고유 모델 컨트롤러 
+            modelController.modelAnim = null;
+            modelController.DictMotion = DictMotion; 
+            
+            
+            // 마무리 
+            isModelCreated = true;
+            
+            // boxCollider 처리 => 키 체크
+            /*
+            if(modelController != null) 
+                modelController.SetBoxColliders();
+            */
+                
+            
+            // 로딩 완료!
+            SendSuccessMessage();            
+        } // ? 어드레서블 모델 생성 완료 
+
 
         /// <summary>
         /// 모델 본격 로드!
@@ -188,12 +383,6 @@ namespace PIERStory
 
             // Debug.Log(JsonMapper.ToStringUnicode(resourceData));
 
-            // scale과 offset 위치 정보
-            gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_GAME_SCALE));
-            offset_x = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_X));
-            offset_y = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_Y));
-            direction = SystemManager.GetJsonNodeString(resourceData[0], GameConst.COL_DIRECTION);
-
             // 다운로드 모델 버전 
             downloadModelVersion = int.Parse(SystemManager.GetJsonNodeString(resourceData[0], MODEL_VER));
             Debug.Log(string.Format("InitCubismModel, totalFiles[{0}], ver[{1}], newVer[{2}]", totalAssetCount, modelVersion, downloadModelVersion));
@@ -202,6 +391,7 @@ namespace PIERStory
             if (resourceData.Count <= 1)
             {
                 Debug.Log("Not enougth Data");
+                NetworkLoader.main.ReportRequestError(originModelName, "No resources");
                 SendFailMessage();
                 return;
             }
@@ -285,8 +475,8 @@ namespace PIERStory
             isResourceDownloadComplete = true; // 리소스 다운로드 완료 
             
 
-            // ! 테스트를 위해 감춘다.!
-            // InstantiateCubismModel();
+            // 로드와 동시에 Instantitae.
+            InstantiateCubismModel();
             
             // ! 여기서 성공 메세지 
             SendSuccessMessage();
@@ -323,9 +513,11 @@ namespace PIERStory
             // ! 키 체크를 위해 박스 컬라이더 추가
             // SetBoxColliders();
             
+            /*
             if(modelController != null) {
                 modelController.SetBoxColliders();
             }
+            */
             
         }
 
@@ -359,6 +551,7 @@ namespace PIERStory
             if (model == null)
             {
                 Debug.LogError("Error in creating Live2D Model : " + originModelName);
+                NetworkLoader.main.ReportRequestError(originModelName, "It's failed to create CubismModel");
                 SendFailMessage();
                 return;
             }
@@ -458,6 +651,17 @@ namespace PIERStory
             OnMountCompleted();
 
             SaveModelVersion(downloadModelVersion);
+        }
+        
+        
+        /// <summary>
+        /// 어드레서블 에셋용 키 
+        /// </summary>
+        /// <returns></returns>
+        string GetAddressableKey() {
+            string key = StoryManager.main.CurrentProjectID + "/model/" + originModelName + ".prefab";
+
+            return key;
         }
     }
 }

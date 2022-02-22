@@ -26,6 +26,7 @@ namespace PIERStory {
         public string episodeSummary = string.Empty; // 에피소드 스토리 요약 
         
         public string combinedEpisodeTitle = string.Empty; // 에피소드 순번과 타이틀의 조합 
+        public string storyLobbyTitle = string.Empty; // 스토리 로비에서 사용하는 타이틀과 순번 조합 
         
         public string endingType = string.Empty;  // 엔딩 타입 
         public string dependEpisode = string.Empty;  // 의존 에피소드 
@@ -126,16 +127,19 @@ namespace PIERStory {
                 case "chapter":
                 episodeType = EpisodeType.Chapter;
                 combinedEpisodeTitle = string.Format(SystemManager.GetLocalizedText("6090"),  episodeNO) + episodeTitle;
+                storyLobbyTitle = string.Format("EP {0}. ", episodeNO) + episodeTitle;
                 break;
                 
                 case "ending":
                 episodeType = EpisodeType.Ending;
                 combinedEpisodeTitle = "Ending. " + episodeTitle;
+                storyLobbyTitle = combinedEpisodeTitle;
                 break;
                 
                 case "side":
                 episodeType = EpisodeType.Side;
                 combinedEpisodeTitle = "Special. " + episodeTitle;
+                storyLobbyTitle = combinedEpisodeTitle;
                 break;
             }
             

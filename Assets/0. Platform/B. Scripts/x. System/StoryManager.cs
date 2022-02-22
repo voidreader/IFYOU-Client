@@ -384,13 +384,14 @@ namespace PIERStory
             
             // 통신 준비 
             JsonData sendingData = new JsonData();
-            sendingData["func"] = NetworkLoader.FUNC_SELECTED_STORY_INFO;
-            sendingData["project_id"] = __storyData.projectID;
+            sendingData[CommonConst.FUNC] = NetworkLoader.FUNC_SELECTED_STORY_INFO;
+            sendingData[CommonConst.COL_PROJECT_ID] = __storyData.projectID;
             
             // 로컬에 저장되어 있었던, 프로젝트와 연결된 말풍선 세트 정보를 함께 전송한다. 
             // 달라진 부분이 있는 경우에만 말풍선 세트 정보를 새로 받는다 (텍스트가 많다.)
             sendingData["clientBubbleSetID"] = currentBubbleSetID; 
             sendingData["userBubbleVersion"] = currentBubbleSetVersion; // 유저가 저장하고 있던 말풍선 세트의 버전 정보를 전달 
+            sendingData[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
 
             // 선택지 히스토리 통신도 함께 진행합시다(여기서 받으면 선택지 페이지 안들어갔다고 해도, 에피소드 종료 페이지에서 사용해야함)
             UserManager.main.SetCurrentStorySelectionList(__storyData.projectID);
@@ -600,13 +601,10 @@ namespace PIERStory
         {
             Debug.Log("### Open StoryLoading");
             // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
-            
+
             // 로딩으로 진입하도록 처리 
             Signal.Send(LobbyConst.STREAM_IFYOU, "moveStoryLoading", "open!");
-
         }
-        
-        
         
         
         /// <summary>

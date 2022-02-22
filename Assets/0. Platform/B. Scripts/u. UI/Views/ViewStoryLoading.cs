@@ -53,8 +53,6 @@ namespace PIERStory {
                 textInfo.text = SystemManager.GetJsonNodeString(StoryManager.main.loadingDetailJson[loadingTextIndex], "loading_text");
             }
             
-            
-            
         }
         
         
@@ -72,7 +70,8 @@ namespace PIERStory {
             Debug.Log("### FillProgressorOnly ###");
             
             loadingBar.DOFillAmount(1, 3).OnComplete(()=> {
-                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
+                //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", "Testing");
             });
         }
         
@@ -130,7 +129,8 @@ namespace PIERStory {
             // 다운로드 해야한다. 
             AsyncOperationHandle downloadHandle =  Addressables.DownloadDependenciesAsync(__projectID);
             downloadHandle.Completed += (op) => {
-                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
+                //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", "Testing");
             };
             
             while(!downloadHandle.IsDone) {
@@ -138,10 +138,7 @@ namespace PIERStory {
                 yield return null;
             }
             
-            
-            
             Debug.Log("#### This project bundle download doen! ####");
-            
         }
             
 

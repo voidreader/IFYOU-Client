@@ -854,7 +854,9 @@ namespace PIERStory
         /// 푸시 토큰 정보 불러오기 
         /// </summary>
         public void QueryPushTokenInfo() {
-                
+
+            if (Application.isEditor)
+                return;
                     
             Gamebase.Push.QueryTokenInfo((data, error) =>
             {

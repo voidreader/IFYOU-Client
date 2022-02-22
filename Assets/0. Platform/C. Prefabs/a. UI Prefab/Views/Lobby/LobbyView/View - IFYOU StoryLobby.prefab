@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3176920105515433037}
   - component: {fileID: 3176920105515433036}
   - component: {fileID: 3176920105515433043}
+  - component: {fileID: 1029581001435266576}
   m_Layer: 5
   m_Name: View - IFYOU StoryLobby
   m_TagString: Untagged
@@ -108,26 +109,88 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   OnStartBehaviour: 1
   OnShowCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnShowCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3176920105565012810}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: Show
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1029581001435266576}
+          m_TargetAssemblyTypeName: PIERStory.ViewStoryLobby, Assembly-CSharp
+          m_MethodName: OnStartView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnVisibleCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnVisibleCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1029581001435266576}
+          m_TargetAssemblyTypeName: PIERStory.ViewStoryLobby, Assembly-CSharp
+          m_MethodName: OnView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnHideCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnHideCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3176920105565012810}
+          m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
+            DoozyRuntime
+          m_MethodName: Hide
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1029581001435266576}
+          m_TargetAssemblyTypeName: PIERStory.ViewStoryLobby, Assembly-CSharp
+          m_MethodName: OnHideView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnHiddenCallback:
     Enabled: 0
     EventName: OnHiddenCallback
@@ -706,6 +769,38 @@ MonoBehaviour:
       ToCustomValue: 1
       FromOffset: 0
       ToOffset: 0
+--- !u!114 &1029581001435266576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3176920105515433041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13ec6e18f9adc31499c053a9b8d0fa40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  background: {fileID: 3176920106735518835}
+  characterParent: {fileID: 3176920106577229373}
+  stickerParent: {fileID: 3176920106465802638}
+  stickerObjectPrefab: {fileID: 1799763528473091271, guid: 703dc03694bf0854d97c6a56ec92f44d, type: 3}
+  typeToggles:
+  - {fileID: 3176920105553551860}
+  - {fileID: 3176920106953411054}
+  - {fileID: 3176920105772055241}
+  - {fileID: 3176920106704237735}
+  decoListContainer: {fileID: 3176920106254825520}
+  mainContainer: {fileID: 3176920105565012810}
+  decoContainer: {fileID: 3176920105778886071}
+  bgListPrefab: {fileID: 2759310972141563739, guid: 020bc81c9a219ca47a42fe79a6d5428b, type: 3}
+  bgListContent: {fileID: 3176920107011948566}
+  badgeListPrefab: {fileID: 3747037791786388773, guid: 0a971d6013fb11f4eb9b8dc728877a6d, type: 3}
+  badgeListContent: {fileID: 3176920107351242408}
+  stickerListPrefab: {fileID: 3747037791786388773, guid: ce28d772c20a2b848976a6f8dcd3b692, type: 3}
+  stickerListContent: {fileID: 3176920107046838134}
+  standingListPrefab: {fileID: 3747037791786388773, guid: b18916334aa0ac944832e8ac1ef7879e, type: 3}
+  standingListContent: {fileID: 3176920107530962999}
 --- !u!1 &3176920106465802637
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,7 +862,8 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 5432523864297704506}
   m_Father: {fileID: 3176920106766614915}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -812,7 +908,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3176920106735518829
 CanvasRenderer:
@@ -951,6 +1047,78 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &6018063555964543811
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5432523864297704506}
+  - component: {fileID: 981534393725960479}
+  - component: {fileID: 4814003600571121531}
+  m_Layer: 5
+  m_Name: RawImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5432523864297704506
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6018063555964543811}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3176920106577229373}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1548, y: 1548}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &981534393725960479
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6018063555964543811}
+  m_CullTransparentMesh: 1
+--- !u!114 &4814003600571121531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6018063555964543811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 8400000, guid: bf87d7463e8a1444aa843c2a169e39db, type: 2}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1001 &7996062222421846571
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1046,6 +1214,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainContainer
       objectReference: {fileID: 0}
+    - target: {fileID: 4819142117070241001, guid: 349f5d64d876d7641976fe4be172eb3a, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4819142117070241001, guid: 349f5d64d876d7641976fe4be172eb3a, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4819142117070241001, guid: 349f5d64d876d7641976fe4be172eb3a, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1029581001435266576}
+    - target: {fileID: 4819142117070241001, guid: 349f5d64d876d7641976fe4be172eb3a, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4819142117070241001, guid: 349f5d64d876d7641976fe4be172eb3a, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickDecoMode
+      objectReference: {fileID: 0}
+    - target: {fileID: 4819142117070241001, guid: 349f5d64d876d7641976fe4be172eb3a, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PIERStory.ViewStoryLobby, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4819142117070241001, guid: 349f5d64d876d7641976fe4be172eb3a, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 349f5d64d876d7641976fe4be172eb3a, type: 3}
 --- !u!224 &3176920105565012809 stripped
@@ -1053,6 +1249,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4819142116944914786, guid: 349f5d64d876d7641976fe4be172eb3a, type: 3}
   m_PrefabInstance: {fileID: 7996062222421846571}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3176920105565012810 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4819142116944914785, guid: 349f5d64d876d7641976fe4be172eb3a, type: 3}
+  m_PrefabInstance: {fileID: 7996062222421846571}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b71aa88e9bf8432f89217a09c5a0b21c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8945649031370569013
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1075,18 +1282,74 @@ PrefabInstance:
     - target: {fileID: 5779213867809636754, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
       propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 1029581001435266576}
+    - target: {fileID: 5779213867809636754, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickShowDecoListContainer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213867809636754, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PIERStory.ViewStoryLobby, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213867809636757, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213867809636757, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213867809636757, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213867809636757, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5779213867844243259, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5779213867844243259, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickSaveDeco
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213867844243259, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PIERStory.ViewStoryLobby, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5779213868026657168, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
       propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5779213868063128794, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213868063128794, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213868063128794, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213868063128794, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5779213868063128795, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
       propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 1029581001435266576}
+    - target: {fileID: 5779213868063128795, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickShowDecoListContainer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213868063128795, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PIERStory.ViewStoryLobby, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5779213868373378170, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1104,9 +1367,37 @@ PrefabInstance:
       propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5779213868810638528, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213868810638528, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213868810638528, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213868810638528, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213868810638529, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: IsOn
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5779213868810638529, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
       propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 1029581001435266576}
+    - target: {fileID: 5779213868810638529, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickShowDecoListContainer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213868810638529, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PIERStory.ViewStoryLobby, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5779213868995202608, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
       propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1139,6 +1430,30 @@ PrefabInstance:
     - target: {fileID: 5779213869029134332, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
       propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 1029581001435266576}
+    - target: {fileID: 5779213869029134332, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickShowDecoListContainer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213869029134332, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PIERStory.ViewStoryLobby, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213869029134335, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213869029134335, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213869029134335, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779213869029134335, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5779213869030817920, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
       propertyPath: m_Name
@@ -1235,3 +1550,89 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5779213869030817923, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
   m_PrefabInstance: {fileID: 8945649031370569013}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3176920105778886071 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5779213869030817922, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+  m_PrefabInstance: {fileID: 8945649031370569013}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b71aa88e9bf8432f89217a09c5a0b21c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3176920106254825520 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5779213868437179653, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+  m_PrefabInstance: {fileID: 8945649031370569013}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b71aa88e9bf8432f89217a09c5a0b21c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!224 &3176920107011948566 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5779213868116391203, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+  m_PrefabInstance: {fileID: 8945649031370569013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &3176920107530962999 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5779213867561598210, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+  m_PrefabInstance: {fileID: 8945649031370569013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &3176920107351242408 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5779213867382965149, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+  m_PrefabInstance: {fileID: 8945649031370569013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &3176920107046838134 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5779213868156480067, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+  m_PrefabInstance: {fileID: 8945649031370569013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3176920105553551860 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5779213868810638529, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+  m_PrefabInstance: {fileID: 8945649031370569013}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c280f307c5864a0e8ec79c0ccf09565f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3176920106953411054 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5779213868063128795, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+  m_PrefabInstance: {fileID: 8945649031370569013}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c280f307c5864a0e8ec79c0ccf09565f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3176920105772055241 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5779213869029134332, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+  m_PrefabInstance: {fileID: 8945649031370569013}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c280f307c5864a0e8ec79c0ccf09565f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3176920106704237735 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5779213867809636754, guid: 0d562d80d26c36e4b8fd76a13a5e936f, type: 3}
+  m_PrefabInstance: {fileID: 8945649031370569013}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c280f307c5864a0e8ec79c0ccf09565f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

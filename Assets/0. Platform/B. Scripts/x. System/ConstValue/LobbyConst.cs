@@ -63,6 +63,7 @@ namespace PIERStory {
         public const string FUNC_GET_PROFILE_CURRENCY_OWN_LIST = "getProfileCurrencyOwnList";       // 소유한 프로필 재화 리스트
         public const string FUNC_GET_PROFILE_CURRENCY_CURRENT = "getProfileCurrencyCurrent";        // 현재 저장된 프로필 재화 정보
         public const string FUNC_USER_PROFILE_SAVE = "userProfileSaveVer2";
+        public const string FUNC_SAVE_USER_STORY_PROFILE = "saveUserStoryProfile";
         public const string NODE_PORTRAIT = "portrait";
         public const string NODE_FRAME = "frame";
         public const string NODE_WALLPAPER = "wallpaper";

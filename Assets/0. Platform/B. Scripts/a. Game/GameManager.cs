@@ -1214,7 +1214,8 @@ namespace PIERStory
                 // 최초 등록시에는 key와 value 를 같게 등록한다. 
                 DictModelByDress.Add(currentPage.ListRows[i].speaker, currentPage.ListRows[i].speaker);
             }
-
+            
+            /*
             dressProgress = UserManager.main.GetNodeDressProgress();
 
             // DictModelByDress 를 수집하고 유저 데이터 기반해서 재설정
@@ -1223,6 +1224,7 @@ namespace PIERStory
                 if (DictModelByDress.ContainsKey(SystemManager.GetJsonNodeString(dressProgress[i], GameConst.COL_SPEAKER)))
                     DictModelByDress[SystemManager.GetJsonNodeString(dressProgress[i], GameConst.COL_SPEAKER)] = SystemManager.GetJsonNodeString(dressProgress[i], GameConst.COL_MODEL_NAME);
             }
+            */
 
         }
 

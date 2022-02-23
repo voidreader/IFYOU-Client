@@ -17,6 +17,9 @@ namespace PIERStory
         public List<ScriptLiveMount> ListLiveObjectMount = new List<ScriptLiveMount>();     // Live2D 오브제
         public List<ScriptBubbleMount> ListBubbleMount = new List<ScriptBubbleMount>();     // 말풍선 친구들
         public List<ScriptSoundMount> ListSoundMount = new List<ScriptSoundMount>();        // bgm, voice, se(Sound effect)
+        
+        public List<string> ListFailedModelMount = new List<string>(); // 마운트 실패한 캐릭터 모델 
+        
 
         JsonData pageData = null;
         JsonData scriptData = null;
@@ -126,7 +129,7 @@ namespace PIERStory
 
             // 동시진행
             StartCoroutine(RoutineLoadingLiveObjects());                                    // 라이브 오브제
-            StartCoroutine(RoutineLoadingModels());                                         // 캐릭터 모델 
+            // StartCoroutine(RoutineLoadingModels());                                         // 캐릭터 모델 
             StartCoroutine(RoutineLoadingImage(GameConst.TEMPLATE_BACKGROUND));             // 배경 
             StartCoroutine(RoutineLoadingImage(GameConst.TEMPLATE_ILLUST));                 // 일러스트 
             StartCoroutine(RoutineLoadingLiveIllusts());                                    // 라이브 일러스트
@@ -139,6 +142,8 @@ namespace PIERStory
             StartCoroutine(RoutineLoadingSound(GameConst.TEMPLATE_BGM));                    // 배경음
             StartCoroutine(RoutineLoadingSound(GameConst.COL_VOICE));                       // 음성 
             StartCoroutine(RoutineLoadingSound(COL_SOUND_EFFECT));                          // SE
+            
+            yield return StartCoroutine(RoutineLoadingModels()); // 여기로 이동... 
 
             yield return new WaitUntil(() => GetCurrentLoadingCount() <= 0);
             yield return new WaitForSeconds(0.5f);
@@ -233,13 +238,19 @@ namespace PIERStory
                 GameManager.main.AddLiveIllust(ListLiveIllustMount[i]);
                 ListLiveIllustMount[i].SetLiveImageUseCount(GetLiveIllustUseCount(ListLiveIllustMount[i].liveName));
             }
-
+            
+            yield return null;
+            
+            Debug.Log("### LIST MODEL MOUNT CHECK ### :: " + ListModelMount.Count);
+            ListFailedModelMount.Clear();
 
             // 캐릭터 모델 처리 
             for (int i = 0; i < ListModelMount.Count; i++)
             {
-                if (!ListModelMount[i].isMounted)
+                if (!ListModelMount[i].isMounted) {
+                    ListFailedModelMount.Add(ListModelMount[i].originModelName);
                     continue;
+                }
 
                 // GameManaer에게 추가해준다. 
                 GameManager.main.AddGameModel(ListModelMount[i].originModelName, ListModelMount[i]);
@@ -338,8 +349,11 @@ namespace PIERStory
                 checker = pageModelCount;
                 ListModelMount[i].SetModelDataFromStoryManager();
 
-                yield return new WaitUntil(() => checker > pageModelCount); // 모델 하나씩.. 
+                // yield return new WaitUntil(() => checker > pageModelCount); // 모델 하나씩.. 
             }
+            
+            yield return new WaitUntil(()=> pageModelCount > 0);
+            
 
             yield return null;
             yield return null;
@@ -481,11 +495,13 @@ namespace PIERStory
 
 
         /// <summary>
-        /// 모델 리소스 수집하기
+        /// 기본 모델 리소스 수집하기
         /// </summary>
         /// <param name="__row"></param>
         void CollectDemandedModelResource(ScriptRow __row)
         {
+            
+            // 화자의 대표 기본모델만 수집한다.
             if (GameManager.main.AddLoadingModel(__row.speaker))
             {
                 ScriptModelMount mounter = new ScriptModelMount(__row.rowData, OnModelMountInitialized, this);
@@ -562,8 +578,10 @@ namespace PIERStory
             targetModelName = StoryManager.main.GetTargetDressModelNameByDressName(speaker, dress_name);
 
             // 일치하는 드레스 코드 없으면 끝!
-            if (string.IsNullOrEmpty(targetModelName))
+            if (string.IsNullOrEmpty(targetModelName)) {
+                GameManager.ShowMissingComponent("의상", string.Format("[{0}]의 [{1}] 의상 없음!!",speaker, dress_name));
                 return;
+            }
 
             // 중복 로딩을 막기 위해 똑같이 쓴다.
             if (GameManager.main.AddLoadingModel(targetModelName))

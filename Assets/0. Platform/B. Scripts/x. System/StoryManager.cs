@@ -1512,6 +1512,20 @@ namespace PIERStory
         }
         
         /// <summary>
+        /// 정규 에피소드 찾기 (ID로!)
+        /// </summary>
+        /// <param name="__episodeID"></param>
+        /// <returns></returns>
+        public static EpisodeData GetRegularEpisodeByID(string __episodeID) {
+            for(int i=0; i<main.ListCurrentProjectEpisodes.Count; i++) {
+                if(main.ListCurrentProjectEpisodes[i].episodeID == __episodeID)
+                    return main.ListCurrentProjectEpisodes[i];
+            }
+            
+            return null;
+        }
+        
+        /// <summary>
         /// 정규 에피소드의 다음 순서 에피소드 찾기 
         /// </summary>
         /// <param name="currentEpisodeData"></param>

@@ -27,6 +27,7 @@ namespace PIERStory {
         
         public string combinedEpisodeTitle = string.Empty; // 에피소드 순번과 타이틀의 조합 
         public string storyLobbyTitle = string.Empty; // 스토리 로비에서 사용하는 타이틀과 순번 조합 
+        public string flowPrefix = string.Empty; // 플로우맵에서 사용되는 에피소드 제목 Prefix
         
         public string endingType = string.Empty;  // 엔딩 타입 
         public string dependEpisode = string.Empty;  // 의존 에피소드 
@@ -128,12 +129,16 @@ namespace PIERStory {
                 episodeType = EpisodeType.Chapter;
                 combinedEpisodeTitle = string.Format(SystemManager.GetLocalizedText("6090"),  episodeNO) + episodeTitle;
                 storyLobbyTitle = string.Format("EP {0}. ", episodeNO) + episodeTitle;
+                flowPrefix = "EP" + string.Format("{0:D2}", episodeNO);
                 break;
                 
                 case "ending":
                 episodeType = EpisodeType.Ending;
                 combinedEpisodeTitle = "Ending. " + episodeTitle;
                 storyLobbyTitle = combinedEpisodeTitle;
+                
+                flowPrefix = "Ending";
+                
                 break;
                 
                 case "side":

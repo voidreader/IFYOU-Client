@@ -1451,8 +1451,10 @@ namespace PIERStory
         public JsonData GetUserProjectRegularEpisodeCurrent() {
             // 얘는 순서에 영향을 받지 않는다. 리스트에서만 사용한다.
             
-            if(!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
+            if(!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT)) {
+                Debug.LogError("No project current node here");
                 return null;
+            }
                 
             for(int i=0; i<currentStoryJson[NODE_PROJECT_CURRENT].Count; i++) {
                 if(currentStoryJson[NODE_PROJECT_CURRENT][i]["is_special"].ToString() == "0") // is_special 이니?

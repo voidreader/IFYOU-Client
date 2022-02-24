@@ -13,11 +13,11 @@ using Live2D.Cubism.Rendering;
 using Live2D.Cubism.Framework.Json;
 using Live2D.Cubism.Framework.Motion;
 using Live2D.Cubism.Framework.MotionFade;
+using Live2D.Cubism.Framework.Raycasting;
 
 // Addressable
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-
 
 namespace PIERStory
 {
@@ -68,8 +68,6 @@ namespace PIERStory
         // 시선 방향
         [SerializeField] string direction = GameConst.VIEWDIRECTION_CENTER;
 
-        bool isDressModel = false;
-
         // path 설정할때, string path = Application.persistentDataPath + /프로젝트id/ + file_key로 설정해주어야 한다. 
         MonoBehaviour pageParent = null;
         
@@ -86,7 +84,7 @@ namespace PIERStory
             speaker = SystemManager.GetJsonNodeString(__j, GameConst.COL_SPEAKER);
             originModelName = speaker; // row 기반의 생성은 모델명 = 화자 이다. 
 
-            Initialize(__cb, __parent, false);
+            Initialize(__cb, __parent);
         }
 
         /// <summary>
@@ -100,19 +98,32 @@ namespace PIERStory
             speaker = __speaker;
             originModelName = __originModelName;
 
-            Initialize(__cb, __parent, true);
+            Initialize(__cb, __parent);
         }
+
+        /// <summary>
+        /// 꾸미기형 로비에서 스탠딩 캐릭터를 생성할 때 호출하는 함수
+        /// </summary>
+        /// <param name="__originModelName"></param>
+        /// <param name="__cb"></param>
+        /// <param name="__parent"></param>
+        public ScriptModelMount(string __originModelName, Action __cb, MonoBehaviour __parent)
+        {
+            originModelName = __originModelName;
+
+            Initialize(__cb, __parent);
+        }
+
 
         /// <summary>
         /// 초기화 작업
         /// </summary>
         /// <param name="dressCheck">의상 체크</param>
-        void Initialize(Action __cb, MonoBehaviour __parent, bool dressCheck)
+        void Initialize(Action __cb, MonoBehaviour __parent)
         {
             pageParent = __parent;
             OnMountCompleted = __cb;
             DictMotion = new Dictionary<string, AnimationClip>();
-            isDressModel = dressCheck;
 
             LoadModelVersion(originModelName); // 모델 버전 로드
         }
@@ -131,7 +142,11 @@ namespace PIERStory
             modelCharacter.name = originModelName;
 
             // 생성된 GameObject를 ModelLoader에 붙인다
-            GameManager.main.SetModelParent(modelCharacter.transform);
+            if (GameManager.main != null)
+                GameManager.main.SetModelParent(modelCharacter.transform);
+            else
+                LobbyManager.main.SetLiveParent(modelCharacter.transform);
+
             modelCharacter.transform.localPosition = Vector3.zero;
 
             // GameModelCtrl은 생성한 GameObejct에 Addcomponent해준다
@@ -305,7 +320,7 @@ namespace PIERStory
             model.GetComponent<CubismRenderController>().SortingMode = CubismSortingMode.BackToFrontOrder;
             modelController.ChangeLayerRecursively(modelCharacter.transform, GameConst.LAYER_MODEL_C);
             
-            
+
             // * 어드레서블 에셋을 통한 생성인 경우는 Shader 처리 추가 필요. 
             Shader cubismShader = Shader.Find("Live2D Cubism/Unlit");
             CubismRenderer render;
@@ -339,6 +354,7 @@ namespace PIERStory
                         // Dict에 추가하기. 
                         if(!DictMotion.ContainsKey(motion_name)) {
                             DictMotion.Add(motion_name, clips.ListClips[i]); // ADD    
+                            modelController.motionLists.Add(motion_name);
                             debugMotionName += motion_name +", ";
                         }
                     }
@@ -607,6 +623,7 @@ namespace PIERStory
                 if (!DictMotion.ContainsKey(motion_name))
                 {
                     DictMotion.Add(motion_name, clip);
+                    modelController.motionLists.Add(motion_name);
                     anim.AddClip(clip, motion_name); // 클립추가 !
                 }
 

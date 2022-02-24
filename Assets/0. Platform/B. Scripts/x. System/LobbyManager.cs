@@ -41,6 +41,9 @@ namespace PIERStory {
         [Header("프로필")]
         public Texture2D textureNoneFrame;
 
+        [Header("작품 로비")]
+        public SpriteRenderer lobbyBackground;
+
 
         
         [Header("갤러리 - 사운드 BGMSprite")]
@@ -92,7 +95,6 @@ namespace PIERStory {
         public Sprite spriteAttendanceStars;
         
         [Header("== 컬러 ==")]
-        
         public Color colorFreeBox = Color.white;
         
         public Color colorNavOn = Color.white;
@@ -223,7 +225,7 @@ namespace PIERStory {
 
 
 
-        public void SetIllustParent(Transform __model)
+        public void SetLiveParent(Transform __model)
         {
             __model.SetParent(transform);
         }

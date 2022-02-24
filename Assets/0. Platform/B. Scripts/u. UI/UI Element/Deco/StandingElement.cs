@@ -32,6 +32,29 @@ namespace PIERStory
             profileItemElement = connectElement;
         }
 
+
+        public void SetStanding(JsonData __j, ProfileItemElement connectElement = null)
+        {
+            currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
+
+            // model_id가 0보다 적은 경우 live2D 스탠딩 캐릭터가 없는 것
+            if(SystemManager.GetJsonNodeInt(__j, "model_id") < 0)
+            {
+                string url = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_URL),
+                    key = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_KEY);
+
+                standingImage.gameObject.SetActive(true);
+                SystemManager.ShowNetworkLoading();
+                standingImage.OnDownloadImage = SystemManager.HideNetworkLoading;
+                standingImage.SetDownloadURL(url, key, true);
+                profileItemElement = connectElement;
+                return;
+            }
+
+            standingImage.gameObject.SetActive(false);
+        }
+
+
         public void SetProfileStanding(JsonData __j, ProfileItemElement connectElement = null)
         {
             currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);

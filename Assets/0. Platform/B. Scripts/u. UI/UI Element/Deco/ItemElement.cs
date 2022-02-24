@@ -66,7 +66,8 @@ namespace PIERStory
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            ViewProfileDeco.OnDisableAllOptionals?.Invoke();
+            //ViewProfileDeco.OnDisableAllOptionals?.Invoke();
+            ViewStoryLobby.OnDisableAllOptionals?.Invoke();
             optionals.SetActive(true);
 
             foreach (GameObject g in buttons)
@@ -99,7 +100,8 @@ namespace PIERStory
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            ViewProfileDeco.OnDisableAllOptionals?.Invoke();
+            //ViewProfileDeco.OnDisableAllOptionals?.Invoke();
+            ViewStoryLobby.OnDisableAllOptionals?.Invoke();
             optionals.SetActive(true);
         }
 

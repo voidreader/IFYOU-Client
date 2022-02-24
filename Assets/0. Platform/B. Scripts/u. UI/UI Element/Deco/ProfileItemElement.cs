@@ -40,7 +40,8 @@ namespace PIERStory
 
         public void OnClickSelectBackground()
         {
-            ViewProfileDeco.OnBackgroundSetting?.Invoke(currencyData, this);
+            //ViewProfileDeco.OnBackgroundSetting?.Invoke(currencyData, this);
+            ViewStoryLobby.OnSelectBackground?.Invoke(currencyData);
         }
 
         public void OnClickSelectBadge()
@@ -49,7 +50,7 @@ namespace PIERStory
                 return;
 
             currentCount++;
-            ViewProfileDeco.OnBadgeSetting?.Invoke(currencyData, this);
+            //ViewProfileDeco.OnBadgeSetting?.Invoke(currencyData, this);
         }
 
         /// <summary>
@@ -62,7 +63,7 @@ namespace PIERStory
 
             currentCount++;
             SetCountText();
-            ViewProfileDeco.OnStickerSetting?.Invoke(currencyData, this);
+            //ViewProfileDeco.OnStickerSetting?.Invoke(currencyData, this);
         }
 
         public void OnClickSelectStanding()
@@ -71,7 +72,8 @@ namespace PIERStory
                 return;
 
             currentCount++;
-            ViewProfileDeco.OnStandingSetting?.Invoke(currencyData, this);
+            //ViewProfileDeco.OnStandingSetting?.Invoke(currencyData, this);
+            ViewStoryLobby.OnSelectCharacter?.Invoke(currencyData);
         }
 
         public void OnClickSelectFrame()

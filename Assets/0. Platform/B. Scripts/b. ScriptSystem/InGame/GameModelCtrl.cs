@@ -8,6 +8,7 @@ using DG.Tweening;
 using Live2D.Cubism.Core;
 using Live2D.Cubism.Rendering;
 using Live2D.Cubism.Framework.Motion;
+using Live2D.Cubism.Framework.Raycasting;
 
 namespace PIERStory
 {
@@ -20,6 +21,7 @@ namespace PIERStory
         [HideInInspector] public Animation modelAnim;
         [HideInInspector] public Dictionary<string, AnimationClip> DictMotion;
         [HideInInspector] public RawImage currRenderTexture;        // 현재 그려지고 있는 곳
+        public List<string> motionLists = new List<string>();
         
         [SerializeField] bool isModelActivated = false; // 모델이 한번이라도 Activate 되었었지에 대한 변수
         [SerializeField] string motionName = string.Empty; // 플레이할 모션 이름 
@@ -67,6 +69,9 @@ namespace PIERStory
             // height는 width를 구하기 위해 필요한 변수이다
             // 실질적으로 사용되는 곳은 SlideIn/out의 연출이 일어날 때인데, 화면 바깥에서 들어오게 하기 위함임
             // generalCam은 일러스트, 라이브오브제, 모델 등 실질적 화면에 렌더해주는 Camera이며, 이 카메라를 기점으로 height, width를 구하고 있음
+            if (GameManager.main == null)
+                return;
+
             height = 2 * ScreenEffectManager.main.generalCam.orthographicSize;
             width = height * ScreenEffectManager.main.generalCam.aspect;
         }
@@ -81,6 +86,10 @@ namespace PIERStory
             modelType = CommonConst.MODEL_TYPE_LIVE2D;
             direction = dir;
             // 처음 그려지는 곳은 무조건 중앙이다.
+
+            if (GameManager.main == null)
+                return;
+
             currRenderTexture = ViewGame.main.modelRenders[1];
         }
 

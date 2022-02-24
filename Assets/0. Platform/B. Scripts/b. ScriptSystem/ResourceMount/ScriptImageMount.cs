@@ -54,26 +54,50 @@ namespace PIERStory
 
             template = __type;
 
-            imageName = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_NAME);
-            imageUrl = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_URL);
-            imageKey = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_KEY);
-
-            // 이모티콘의 경우 speaker 정보 필요함
-            if (template != GameConst.TEMPLATE_BACKGROUND
-                && template != GameConst.TEMPLATE_ILLUST
-                && template != GameConst.TEMPLATE_IMAGE
-                && resourceData.ContainsKey(COL_EMOTICON_OWNER))
+            if(GameManager.main !=null)
             {
-                speaker = SystemManager.GetJsonNodeString(resourceData, COL_EMOTICON_OWNER);
-            }
+                imageName = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_NAME);
+                imageUrl = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_URL);
+                imageKey = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_KEY);
 
-            // 추가 정보
-            if(resourceData.ContainsKey(CommonConst.COL_GAME_SCALE))
-                gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_GAME_SCALE));
-            if (resourceData.ContainsKey(CommonConst.COL_OFFSET_X))
-                offsetX = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_OFFSET_X));
-            if (resourceData.ContainsKey(CommonConst.COL_OFFSET_Y))
-                offsetY = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_OFFSET_Y));
+                // 이모티콘의 경우 speaker 정보 필요함
+                if (template != GameConst.TEMPLATE_BACKGROUND
+                    && template != GameConst.TEMPLATE_ILLUST
+                    && template != GameConst.TEMPLATE_IMAGE
+                    && resourceData.ContainsKey(COL_EMOTICON_OWNER))
+                {
+                    speaker = SystemManager.GetJsonNodeString(resourceData, COL_EMOTICON_OWNER);
+                }
+
+                // 추가 정보
+                if (resourceData.ContainsKey(CommonConst.COL_GAME_SCALE))
+                    gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_GAME_SCALE));
+                if (resourceData.ContainsKey(CommonConst.COL_OFFSET_X))
+                    offsetX = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_OFFSET_X));
+                if (resourceData.ContainsKey(CommonConst.COL_OFFSET_Y))
+                    offsetY = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_OFFSET_Y));
+            }
+            else
+            {
+                imageName = SystemManager.GetJsonNodeString(resourceData, "origin_name");
+                imageUrl = SystemManager.GetJsonNodeString(resourceData, LobbyConst.NODE_CURRENCY_URL);
+                imageKey = SystemManager.GetJsonNodeString(resourceData, LobbyConst.NODE_CURRENCY_KEY);
+
+                JsonData backgroundData = UserManager.main.currentStoryJson["backgrounds"];
+
+                for (int i = 0; i < backgroundData.Count; i++)
+                {
+                    if (SystemManager.GetJsonNodeString(backgroundData[i], CommonConst.COL_IMAGE_NAME) == imageName)
+                    {
+                        gameScale = SystemManager.GetJsonNodeFloat(backgroundData[i], CommonConst.COL_GAME_SCALE);
+                        break;
+                    }
+                }
+
+                offsetX = SystemManager.GetJsonNodeFloat(resourceData, LobbyConst.NODE_POS_X);
+                offsetY = SystemManager.GetJsonNodeFloat(resourceData, LobbyConst.NODE_POS_Y);
+            }
+            
 
 
             switch (template)
@@ -105,6 +129,7 @@ namespace PIERStory
             // 실제 이미지 불러오기 처리 (일러스트)
             LoadImage();
         }
+
         
         /// <summary>
         /// 어드레서블 에셋 키 설정하고 GET하기 

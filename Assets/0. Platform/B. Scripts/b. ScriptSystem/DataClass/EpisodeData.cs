@@ -32,6 +32,9 @@ namespace PIERStory {
         public string endingType = string.Empty;  // 엔딩 타입 
         public string dependEpisode = string.Empty;  // 의존 에피소드 
         public bool endingOpen = false; // 엔딩 오픈 여부 
+        
+        public int nextOpenMin = 0; // 열람 대기 시간 
+        
         public float totalSceneCount = 0f;         // 진행률(분모)
         public float playedSceneCount = 0f;        // 플레이어 진행률(분자)
         public float sceneProgressorValue = 0; // 씬 프로그레서 값 
@@ -95,7 +98,7 @@ namespace PIERStory {
             endingType = SystemManager.GetJsonNodeString(episodeJSON, "ending_type");
             dependEpisode = SystemManager.GetJsonNodeString(episodeJSON, "depend_episode");
             
-
+            nextOpenMin = SystemManager.GetJsonNodeInt(episodeJSON, "next_open_min");
             
             // 에피소드에 등장한는 갤러리 이미지
             

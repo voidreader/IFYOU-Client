@@ -26,7 +26,7 @@ namespace PIERStory {
         [Space]
         [Header("Controls")]
         // 스토리 플레이 버튼
-        public StoryPlayButton storyPlayButton;
+        public StoryPlayButton storyPlayButton; // 중앙 플레이 버튼
         
         public RectTransform groupStoryContents; // 스토리 컨텐츠 그룹 
         
@@ -35,7 +35,12 @@ namespace PIERStory {
         public GameObject groupOpenTimer; // 오픈 타이머
         public TextMeshProUGUI textOpenTimer; // 오픈 타이머 
         
-        public GameObject mailNotify;
+        public GameObject mailNotify; // 상단 메일 알림 
+        
+        public RectTransform rectContentsGroup; // 컨텐츠 그룹 
+        public CanvasGroup canvasGroupContents; // 컨텐츠 그룹 canvas group
+        public RectTransform arrowGroupContetns; // 컨텐츠 그룹 화살표 
+        
         
         
         [SerializeField] RectTransform flowMap; // flow map 
@@ -53,6 +58,14 @@ namespace PIERStory {
         public long openDateTick;
         public TimeSpan timeDiff; // 오픈시간까지 남은 차이 
         [SerializeField] bool isOpenTimeCountable = false; // 타이머 카운팅이 가능한지 
+        
+        
+        
+        // 그룹 컨텐츠 변수들 
+        public Vector2 posGroupContentsOrigin; // 그룹 컨텐츠 기본 위치 
+        public Vector2 posGroupContentsOpen; // 그룹 컨텐츠 열림 위치 
+        bool inTransitionGroupContents; // 그룹 컨텐츠 트랜지션 여부 
+        
         
         
         void Update() {
@@ -94,7 +107,7 @@ namespace PIERStory {
                         
     
             // 컨텐츠 그룹 초기화 
-            InitStoryContensGroup();
+            InitContentsGroup();
             
             
             // Flow 처리 
@@ -102,6 +115,41 @@ namespace PIERStory {
 
         }
         
+        #region 컨텐츠 그룹 제어 (앨범, 스페셜 에피소드, 엔딩, 미션)
+        
+        /// <summary>
+        /// 컨텐츠 그룹 초기화 
+        /// </summary>
+        void InitContentsGroup() {
+            rectContentsGroup.DOKill();
+            rectContentsGroup.anchoredPosition = posGroupContentsOrigin; // 기본 위치로 지정 
+            canvasGroupContents.alpha = 0.8f; 
+        }
+        
+        /// <summary>
+        /// 컨텐츠 그룹 열고 닫기 
+        /// </summary>
+        public void OnClickContentsArrow() {
+            
+            if(inTransitionFlow)
+                return;
+                
+            if(rectContentsGroup.anchoredPosition.x < -300) { // 열림 
+                rectContentsGroup.DOAnchorPos(posGroupContentsOpen, 0.2f).OnStart(()=>{inTransitionGroupContents = true;}).OnComplete(()=> {inTransitionGroupContents = false;});
+                canvasGroupContents.DOFade(1, 0.2f);
+                arrowGroupContetns.localScale = new Vector3(-1, 1, 1);
+            }
+            else { // 닫힘 
+                rectContentsGroup.DOAnchorPos(posGroupContentsOrigin, 0.2f).OnStart(()=>{inTransitionGroupContents = true;}).OnComplete(()=> {inTransitionGroupContents = false;});
+                canvasGroupContents.DOFade(0.8f, 0.2f);
+                arrowGroupContetns.localScale = Vector3.one;
+            }
+        }
+        
+        #endregion
+        
+        
+        #region 플로우 맵 제어 
         
         /// <summary>
         /// FlowMap 초기화 
@@ -109,6 +157,7 @@ namespace PIERStory {
         void InitFlowMap() {
             
             flowMap.anchoredPosition = new Vector2(-820, 0); // flowmap 위치
+            bool isMatchEpisode = false; // 아래 for문에서 사용 
 
             
             // 비활성화 시키고 
@@ -126,7 +175,52 @@ namespace PIERStory {
                 ListFlowElements[i].InitFlowElement(StoryManager.main.ListCurrentProjectEpisodes[i]);
             }
             
+            // 다시 돌리면서 타이머 설정 추가 
+            for(int i=0; i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++) {
+                if(i >= ListFlowElements.Count)
+                    break;
+                    
+                if(ListFlowElements[i].currentEpisode.episodeID == currentEpisodeID) {
+                    isMatchEpisode = true;   
+                    ListFlowElements[i].SetOpenTime(openDateTick); // tick 전달한다. 
+                    continue; 
+                }
+                
+                // 연달아 오픈을 위한 추가 처리
+                if(isMatchEpisode 
+                    && ListFlowElements[i].currentEpisode.episodeType == EpisodeType.Chapter
+                    && ListFlowElements[i].currentEpisode.nextOpenMin == 0) {
+                        
+                        // for문 매칭 이후 next_open_min이 0인 경우에는 동일한 대기시간으로 처리한다.
+                        ListFlowElements[i].SetOpenTime(openDateTick);
+                        
+                }
+                
+                if(isMatchEpisode && ListFlowElements[i].currentEpisode.episodeType == EpisodeType.Chapter
+                    && ListFlowElements[i].currentEpisode.nextOpenMin > 0) {
+                    
+                    // 연달아 오픈이 종료되었다고 판단하고 break
+                    break;        
+                }
+            } // ? end of initFlow
+            
         }
+        
+        public void OnClickFlowOpen() {
+            if(inTransitionFlow)           
+                return;
+                
+            flowMap.DOAnchorPos(new Vector2(-85, 0), 0.5f).OnStart(()=> {inTransitionFlow = true;}).OnComplete(()=>{inTransitionFlow = false;});
+        }
+        
+        public void OnClickFlowClose() {
+            if(inTransitionFlow)           
+                    return;   
+                    
+            flowMap.DOAnchorPos(new Vector2(-820, 0), 0.5f).OnStart(()=> {inTransitionFlow = true;}).OnComplete(()=>{inTransitionFlow = false;});
+        }  
+        
+        #endregion
         
 
         
@@ -205,17 +299,6 @@ namespace PIERStory {
 
         }
         
-        void InitStoryContensGroup() {
-            
-            // TODO 컨트롤 초기화 
-            /*
-            groupStoryContents.DOKill();
-            groupStoryContents.anchoredPosition = new Vector2(-355, 0);
-            */
-            
-            // TODO 그룹... 
-        }
-        
         
         /// <summary>
         /// 오픈시간까지 남은시간 구하기 (UTC 기준, 서버에서도 UTC로 준다. )
@@ -255,19 +338,7 @@ namespace PIERStory {
         
         #region 버튼 이벤트 
         
-        public void OnClickFlowOpen() {
-            if(inTransitionFlow)           
-                return;
-                
-            flowMap.DOAnchorPos(new Vector2(-85, 0), 0.6f).OnStart(()=> {inTransitionFlow = true;}).OnComplete(()=>{inTransitionFlow = false;});
-        }
-        
-        public void OnClickFlowClose() {
-            if(inTransitionFlow)           
-                    return;   
-                    
-            flowMap.DOAnchorPos(new Vector2(-820, 0), 0.6f).OnStart(()=> {inTransitionFlow = true;}).OnComplete(()=>{inTransitionFlow = false;});
-        }
+
         
         #endregion
         

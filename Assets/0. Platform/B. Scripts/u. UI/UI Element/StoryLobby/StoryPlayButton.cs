@@ -73,7 +73,7 @@ namespace PIERStory {
             
             
             // 씬 진행도.
-            progressor.SetValueAt(__progressorValue);
+            progressor.SetProgressAt(__progressorValue);
             
         }
         

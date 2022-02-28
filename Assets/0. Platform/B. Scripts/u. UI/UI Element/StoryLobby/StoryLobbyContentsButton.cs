@@ -30,22 +30,67 @@ namespace PIERStory {
             
             newSign.SetActive(false); 
             
+            
+            // 컨텐츠 타입에 따라 처리가 다르다. 
             switch(contentsType) {
                 case StoryContentsType.Gallery:
+                CheckNewGalleryData();
                 break;
                 
                 case StoryContentsType.Ending:
+                CheckNewEndingData();
                 break;
                 
-                case StoryContentsType.Selection:
+                case StoryContentsType.Special:
+                CheckNewSpecialEpisodes();
                 break;
                 
                 case StoryContentsType.Mission:
+                CheckUnlockMission(); 
                 break;
                 
             }
             
+        }
+        
+        
+        /// <summary>
+        /// 알림 표시 처리 
+        /// </summary>
+        /// <param name="__flag"></param>
+        void SetNotification(bool __flag) {
+            newSign.SetActive(__flag);
+        }
+        
+        
+        /// <summary>
+        /// 미션 데이터 체크 
+        /// </summary>
+        void CheckUnlockMission() {
+            
+            // * 미션은 보상받지 않은 미션이 있는 경우에 보여준다. 
+            int unlockMissionCount = UserManager.main.GetUnlockStateMissionCount();
+            
+            if(unlockMissionCount > 0) {
+                SetNotification(true);
+            }
+            else {
+                SetNotification(false);
+            }
         }        
+        
+        void CheckNewSpecialEpisodes() {
+            
+        }
+        
+        
+        void CheckNewEndingData() {
+            
+        }
+        
+        void CheckNewGalleryData() {
+            
+        }
         
     }
 }

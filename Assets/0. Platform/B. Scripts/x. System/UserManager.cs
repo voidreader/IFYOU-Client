@@ -175,7 +175,6 @@ namespace PIERStory
         const string NODE_SELECTION_PROGRESS = "selectionProgress"; // 선택지 프로그레스 
         
         const string NODE_FREEPASS_TIMEDEAL = "userFreepassTimedeal"; // 유저 프리패스 타임딜
-        const string NODE_RESET_DATA = "resetData"; // 유저 작품 리셋데이터   
         
         const string NODE_USER_SNIPPET = "userSnippet"; // 유저 스니핏 
 
@@ -1451,8 +1450,10 @@ namespace PIERStory
         public JsonData GetUserProjectRegularEpisodeCurrent() {
             // 얘는 순서에 영향을 받지 않는다. 리스트에서만 사용한다.
             
-            if(!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
+            if(!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT)) {
+                Debug.LogError("No project current node here");
                 return null;
+            }
                 
             for(int i=0; i<currentStoryJson[NODE_PROJECT_CURRENT].Count; i++) {
                 if(currentStoryJson[NODE_PROJECT_CURRENT][i]["is_special"].ToString() == "0") // is_special 이니?
@@ -1849,7 +1850,6 @@ namespace PIERStory
             
             SetNodeUserProjectCurrent(resultEpisodeReset[NODE_PROJECT_CURRENT]);  // projectCurrent
             SetNodeUserProjectSelectionProgress(resultEpisodeReset[NODE_SELECTION_PROGRESS]); // 선택지 기록 
-            SetProjectResetData(resultEpisodeReset[NODE_RESET_DATA]); // 리셋 기록 
             
             SetBankInfo(resultEpisodeReset); // 뱅크 정보 업데이트 
             
@@ -1963,26 +1963,14 @@ namespace PIERStory
                 return 0;
             }
             
-            return SystemManager.GetJsonNodeInt(currentStoryJson[NODE_RESET_DATA], "resetPrice");
+            return SystemManager.main.firsetResetPrice;
+
         }
         
         
-        /// <summary>
-        /// 프로젝트 리셋 카운트
-        /// </summary>
-        /// <returns></returns>
-        public int GetProjectResetCount() {
-            return SystemManager.GetJsonNodeInt(currentStoryJson[NODE_RESET_DATA], "reset_count");
-        }
+
         
         
-        /// <summary>
-        /// 작품 리셋정보 갱신하기 
-        /// </summary>
-        /// <param name="__newData"></param>
-        public void SetProjectResetData(JsonData __newData) {
-            currentStoryJson[NODE_RESET_DATA] = __newData;
-        }
         
         
         

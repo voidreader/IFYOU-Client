@@ -79,8 +79,9 @@ namespace PIERStory
         public int maxAdCharge = 0;             // 일일 최대 무료 충전 횟수
         
         public string coinShopURL = string.Empty; // 코인샵 URL
-        int firsetResetPrice = 0; // 최초 리셋 가격
+        public int firsetResetPrice = 0; // 최초 리셋 가격
         int resetIncrementRate = 0; //리셋 증가비율 
+        public int episodeOpenPricePer = 0; // 에피소드 시간단축오픈 10분당 코인 가격 
         
         
         // 개인정보 보호 정책 및 이용약관 URL
@@ -578,6 +579,8 @@ namespace PIERStory
             coinShopURL = GetJsonNodeString(masterInfo, "coinshop_url"); // 코인샵 URL
             firsetResetPrice = GetJsonNodeInt(masterInfo, "first_reset_price"); // 최초 리셋 비용 
             resetIncrementRate = GetJsonNodeInt(masterInfo, "reset_increment_rate"); // 리셋 비용 증가비율 
+            
+            episodeOpenPricePer = GetJsonNodeInt(masterInfo, "open_price_per"); // 에피소드 시간단축 오픈 10분당 코인 가격
             
             privacyURL = GetJsonNodeString(masterInfo, "privacy_url");
             termsOfUseURL = GetJsonNodeString(masterInfo, "terms_url"); 
@@ -1562,6 +1565,27 @@ namespace PIERStory
 
         #region 시스템(앱) 팝업
         
+        
+        /// <summary>
+        /// 리셋 팝업 호출 
+        /// </summary>
+        /// <param name="__targetEpisode"></param>
+        public static void ShowFlowResetPopup(EpisodeData __targetEpisode) {
+            
+            Debug.Log("## ShowFlowResetPopup : " + __targetEpisode.episodeTitle);
+            
+            // Signal 보내고 팝업 호출 
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_EPISODE_RESET, __targetEpisode, string.Empty);
+            
+            PopupBase p = PopupManager.main.GetPopup("Reset"); 
+            if(p == null) {
+                Debug.LogError(">> No Reset Popup");
+                return; 
+            }
+            
+            // 팝업 호출!
+            PopupManager.main.ShowPopup(p, false);
+        }
         
         /// <summary>
         /// 리소스 획득 팝업 (OK)

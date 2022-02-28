@@ -33,6 +33,7 @@ namespace PIERStory
         public const string FUNC_UPDATE_EPISODE_COMPLETE_RECORD = "updateUserEpisodePlayRecord"; // 에피소드 플레이 완료 기록 
         public const string FUNC_UPDATE_EPISODE_START_RECORD = "insertUserEpisodeStartRecord"; // 에피소드 플레이 시작 기록 
         public const string FUNC_RESET_EPISODE_PROGRESS = "resetUserEpisodeProgress"; // 에피소드 진행도 리셋 
+        public const string FUNC_RESET_EPISODE_PROGRESS_TYPE2 = "resetUserEpisodeProgressType2"; // 에피소드 진행도 리셋 신규 15버전 2022.02.28 
 
         public const string FUNC_UPDATE_USER_VOICE_HISTORY = "updateUserVoiceHistory";      // 보이스 해금 갱신
         public const string FUNC_UPDATE_USER_ILLUST_HISTORY = "updateUserIllustHistory";    // 일러스트 해금 갱신
@@ -586,8 +587,9 @@ namespace PIERStory
             JsonData sending = new JsonData();
             sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
             sending["episodeID"] = __resetEpisodeID; // 타겟 에피소드 
+            sending["price"] = SystemManager.main.firsetResetPrice; // 리셋 가격
             sending["isFree"] = __isFree; // 무료 유료 처리 
-            sending[CommonConst.FUNC] = FUNC_RESET_EPISODE_PROGRESS;
+            sending[CommonConst.FUNC] = FUNC_RESET_EPISODE_PROGRESS_TYPE2;
 
 
             // 통신 시작!

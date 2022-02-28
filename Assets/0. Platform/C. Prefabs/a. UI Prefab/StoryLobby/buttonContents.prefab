@@ -220,8 +220,8 @@ GameObject:
   - component: {fileID: 7152652672612586248}
   - component: {fileID: 3771353734883090381}
   - component: {fileID: 8334944389284228268}
-  - component: {fileID: 8785562785002065097}
   - component: {fileID: 4155626522948130139}
+  - component: {fileID: 1856312570208025592}
   m_Layer: 5
   m_Name: buttonContents
   m_TagString: Untagged
@@ -289,7 +289,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8785562785002065097
+--- !u!114 &4155626522948130139
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -298,7 +298,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 9005521734368792349}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 72c85313b30142f40849d90d63570ebc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  contentsType: 0
+  hasNewContents: 0
+  newSign: {fileID: 7046305912839120112}
+--- !u!114 &1856312570208025592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9005521734368792349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77c6d918500348269ab48ea9646e337b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -308,7 +323,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -329,25 +344,73 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 8334944389284228268}
-  m_OnClick:
+  m_TargetGraphic: {fileID: 0}
+  MultiplayerInfo: {fileID: 0}
+  IsOn: 0
+  CurrentUISelectionState: 0
+  DeselectAfterPress: 0
+  OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4155626522948130139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9005521734368792349}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72c85313b30142f40849d90d63570ebc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  contentsType: 0
-  hasNewContents: 0
-  newSign: {fileID: 7046305912839120112}
+  CurrentStateName: Normal
+  NormalState:
+    StateType: 0
+    StateName: Normal
+    StateEvent:
+      Enabled: 1
+      EventName: Unnamed
+      Runners: []
+      Event:
+        m_PersistentCalls:
+          m_Calls: []
+  HighlightedState:
+    StateType: 1
+    StateName: Highlighted
+    StateEvent:
+      Enabled: 1
+      EventName: Unnamed
+      Runners: []
+      Event:
+        m_PersistentCalls:
+          m_Calls: []
+  PressedState:
+    StateType: 2
+    StateName: Pressed
+    StateEvent:
+      Enabled: 1
+      EventName: Unnamed
+      Runners: []
+      Event:
+        m_PersistentCalls:
+          m_Calls: []
+  SelectedState:
+    StateType: 3
+    StateName: Selected
+    StateEvent:
+      Enabled: 1
+      EventName: Unnamed
+      Runners: []
+      Event:
+        m_PersistentCalls:
+          m_Calls: []
+  DisabledState:
+    StateType: 4
+    StateName: Disabled
+    StateEvent:
+      Enabled: 1
+      EventName: Unnamed
+      Runners: []
+      Event:
+        m_PersistentCalls:
+          m_Calls: []
+  Behaviours:
+    Behaviours: []
+    SignalSource: {fileID: 9005521734368792349}
+    Selectable: {fileID: 1856312570208025592}
+  Id:
+    Category: Lobby
+    Name: Gallery
+    Custom: 0
 --- !u!1001 &3970667263274998987
 PrefabInstance:
   m_ObjectHideFlags: 0

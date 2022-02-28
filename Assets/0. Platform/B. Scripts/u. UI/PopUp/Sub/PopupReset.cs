@@ -8,7 +8,10 @@ using Doozy.Runtime.Signals;
 
 
 namespace PIERStory {
-
+    
+    /// <summary>
+    /// 구 Reset 뷰 (이름은 팝업인데 뷰..)
+    /// </summary>
     public class PopupReset : CommonView
     {
         [SerializeField] TextMeshProUGUI textResetExplain; // 설명
@@ -37,8 +40,8 @@ namespace PIERStory {
             targetEpisode = SystemListener.main.resetTargetEpisode;
             
             // 현재 작품의 리셋 가격과 리셋 횟수 가져오기. 
-            currentResetCount = UserManager.main.GetProjectResetCount();
-            currentResetPrice = UserManager.main.GetProjectResetPrice();
+            // currentResetCount = UserManager.main.GetProjectResetCount();
+            // currentResetPrice = UserManager.main.GetProjectResetPrice();
             
             // 소모가격 세팅 
             textResetCoinPrice.text = currentResetPrice.ToString();

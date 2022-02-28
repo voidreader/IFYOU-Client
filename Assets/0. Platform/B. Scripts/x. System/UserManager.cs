@@ -175,7 +175,6 @@ namespace PIERStory
         const string NODE_SELECTION_PROGRESS = "selectionProgress"; // 선택지 프로그레스 
         
         const string NODE_FREEPASS_TIMEDEAL = "userFreepassTimedeal"; // 유저 프리패스 타임딜
-        const string NODE_RESET_DATA = "resetData"; // 유저 작품 리셋데이터   
         
         const string NODE_USER_SNIPPET = "userSnippet"; // 유저 스니핏 
 
@@ -1851,7 +1850,6 @@ namespace PIERStory
             
             SetNodeUserProjectCurrent(resultEpisodeReset[NODE_PROJECT_CURRENT]);  // projectCurrent
             SetNodeUserProjectSelectionProgress(resultEpisodeReset[NODE_SELECTION_PROGRESS]); // 선택지 기록 
-            SetProjectResetData(resultEpisodeReset[NODE_RESET_DATA]); // 리셋 기록 
             
             SetBankInfo(resultEpisodeReset); // 뱅크 정보 업데이트 
             
@@ -1965,26 +1963,14 @@ namespace PIERStory
                 return 0;
             }
             
-            return SystemManager.GetJsonNodeInt(currentStoryJson[NODE_RESET_DATA], "resetPrice");
+            return SystemManager.main.firsetResetPrice;
+
         }
         
         
-        /// <summary>
-        /// 프로젝트 리셋 카운트
-        /// </summary>
-        /// <returns></returns>
-        public int GetProjectResetCount() {
-            return SystemManager.GetJsonNodeInt(currentStoryJson[NODE_RESET_DATA], "reset_count");
-        }
+
         
         
-        /// <summary>
-        /// 작품 리셋정보 갱신하기 
-        /// </summary>
-        /// <param name="__newData"></param>
-        public void SetProjectResetData(JsonData __newData) {
-            currentStoryJson[NODE_RESET_DATA] = __newData;
-        }
         
         
         

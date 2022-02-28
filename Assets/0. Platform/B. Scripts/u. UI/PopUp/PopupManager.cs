@@ -50,7 +50,7 @@ namespace PIERStory {
         [SerializeField] GameObject popupResource; // 리소스 표현  팝업 
         [SerializeField] GameObject popupHowToPlay; // How to play 팝업
         
-        
+        [SerializeField] GameObject popupFlowReset; // 리셋.        
          
         private void Awake() {
             if(main != null) {
@@ -353,6 +353,11 @@ namespace PIERStory {
                 DictPopup["HowToPlay"] = popupHowToPlay;
             else 
                 DictPopup.Add("HowToPlay", popupHowToPlay);
+                
+            if(DictPopup.ContainsKey("Reset")) 
+                DictPopup["Reset"] = popupFlowReset;
+            else 
+                DictPopup.Add("Reset", popupFlowReset);
         }
         
         #endregion

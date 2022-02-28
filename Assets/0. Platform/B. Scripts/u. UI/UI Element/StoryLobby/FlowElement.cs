@@ -359,6 +359,10 @@ namespace PIERStory {
         
         public void OnClickIcon() {
             
+            // 리셋에 대한 처리다. 
+            if(currentEpisode.episodeState == EpisodeState.Prev || currentEpisode.episodeState == EpisodeState.Block) {
+                SystemManager.ShowFlowResetPopup(currentEpisode); // 리셋 호출.
+            }
         }
 
     }

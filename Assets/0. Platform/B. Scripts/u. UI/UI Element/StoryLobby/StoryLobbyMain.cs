@@ -21,6 +21,7 @@ namespace PIERStory {
         public StatePlayButton currentPlayState = StatePlayButton.inactive; // 현재 에피소드 플레이 상태 
         
         public List<FlowElement> ListFlowElements; // Flow 맵 개체들 
+        public List<StoryLobbyContentsButton> ListContentsButton; // 컨텐츠 버튼 
         
         
         [Space]
@@ -28,7 +29,7 @@ namespace PIERStory {
         // 스토리 플레이 버튼
         public StoryPlayButton storyPlayButton; // 중앙 플레이 버튼
         
-        public RectTransform groupStoryContents; // 스토리 컨텐츠 그룹 
+        
         
         public Image imageEpisodeTitle; // 에피소드 타이틀 배경 
         public TextMeshProUGUI textEpisodeTitle; // 에피소드 타이틀 
@@ -40,6 +41,7 @@ namespace PIERStory {
         public RectTransform rectContentsGroup; // 컨텐츠 그룹 
         public CanvasGroup canvasGroupContents; // 컨텐츠 그룹 canvas group
         public RectTransform arrowGroupContetns; // 컨텐츠 그룹 화살표 
+        public GameObject groupStoryContentsBlock; // 접혀있는 상태에서 터치 못하게 하려고..
         
         
         
@@ -124,6 +126,13 @@ namespace PIERStory {
             rectContentsGroup.DOKill();
             rectContentsGroup.anchoredPosition = posGroupContentsOrigin; // 기본 위치로 지정 
             canvasGroupContents.alpha = 0.8f; 
+            
+            for(int i=0; i< ListContentsButton.Count;i++) {
+                ListContentsButton[i].InitContentsButton();
+            }
+            
+            groupStoryContentsBlock.SetActive(true);
+            
         }
         
         /// <summary>
@@ -138,11 +147,16 @@ namespace PIERStory {
                 rectContentsGroup.DOAnchorPos(posGroupContentsOpen, 0.2f).OnStart(()=>{inTransitionGroupContents = true;}).OnComplete(()=> {inTransitionGroupContents = false;});
                 canvasGroupContents.DOFade(1, 0.2f);
                 arrowGroupContetns.localScale = new Vector3(-1, 1, 1);
+                
+                groupStoryContentsBlock.SetActive(false);
+                
             }
             else { // 닫힘 
                 rectContentsGroup.DOAnchorPos(posGroupContentsOrigin, 0.2f).OnStart(()=>{inTransitionGroupContents = true;}).OnComplete(()=> {inTransitionGroupContents = false;});
                 canvasGroupContents.DOFade(0.8f, 0.2f);
                 arrowGroupContetns.localScale = Vector3.one;
+                
+                groupStoryContentsBlock.SetActive(true);
             }
         }
         

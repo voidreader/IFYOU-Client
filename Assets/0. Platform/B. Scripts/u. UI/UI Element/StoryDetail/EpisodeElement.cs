@@ -275,18 +275,13 @@ namespace PIERStory {
             // * 이전이나 블록 상태. 
             if(episodeData.episodeState == EpisodeState.Prev || episodeData.episodeState == EpisodeState.Block) {
                 
-                // 프리미엄 패스, 슈퍼유저만 자유롭게 리셋 가능 
-                // 그 외에는 엔딩을 봐야지만 가능 
-                if(UserManager.main.HasProjectFreepass() || UserManager.main.CheckAdminUser() || UserManager.main.CheckUserProjectRegularEpisodeFinal()) {
-                    // Reset 호출 
-                    Debug.Log("Call Reset");
-                    Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_EPISODE_RESET, episodeData, string.Empty);
-                    return;
-                }
-                else {
-                    SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("6199"));
-                    return;
-                }
+                // * 리셋 조건 개정(2022.02.28) 
+                // * 자유롭게 리셋 할 수 있도록 변경한다. 
+                //if(UserManager.main.HasProjectFreepass() || UserManager.main.CheckAdminUser() || UserManager.main.CheckUserProjectRegularEpisodeFinal()) {
+                // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_EPISODE_RESET, episodeData, string.Empty);
+                // SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("6199"));                    
+                
+                SystemManager.ShowFlowResetPopup(episodeData);
             }
             
             UserManager.main.useRecord = true;

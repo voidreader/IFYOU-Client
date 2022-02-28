@@ -106,6 +106,10 @@ namespace PIERStory {
             Debug.Log("### LoadResourceLocationsAsync END, hasBundle : " + hasBundle);
             
             if(!hasBundle) {
+                ViewStoryLobby.OnDecorateSet?.Invoke();
+                
+                yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
+
                 FillProgressorOnly();
                 yield break;
             }
@@ -120,6 +124,10 @@ namespace PIERStory {
             
             // 다운로드 할 데이터 없음 
             if(getDownloadSizeHandle.Result <= 0) {
+                ViewStoryLobby.OnDecorateSet?.Invoke();
+                
+                yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
+
                 FillProgressorOnly();
                 yield break;
             }
@@ -130,14 +138,19 @@ namespace PIERStory {
             AsyncOperationHandle downloadHandle =  Addressables.DownloadDependenciesAsync(__projectID);
             downloadHandle.Completed += (op) => {
                 //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
-                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", "Testing");
+
             };
             
             while(!downloadHandle.IsDone) {
                 loadingBar.fillAmount = downloadHandle.PercentComplete;
                 yield return null;
             }
+
+            ViewStoryLobby.OnDecorateSet?.Invoke();
+            yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
             
+            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", "Testing");
+
             Debug.Log("#### This project bundle download doen! ####");
         }
             

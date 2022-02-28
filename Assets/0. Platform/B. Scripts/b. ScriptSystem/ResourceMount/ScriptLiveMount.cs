@@ -289,7 +289,7 @@ namespace PIERStory
             if (GameManager.main != null)
                 GameManager.main.SetIllustParent(liveImage.transform);
             else
-                LobbyManager.main.SetIllustParent(liveImage.transform);
+                LobbyManager.main.SetLiveParent(liveImage.transform);
 
 
             // 스케일 조정 및 크기 조정 

@@ -121,8 +121,8 @@ namespace PIERStory
                     if(!string.IsNullOrEmpty(speaker)) {
                         SetEmoticonImage();
                     }
+                    return;
                     
-                break;
                 
             }
 

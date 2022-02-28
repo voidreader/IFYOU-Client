@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using LitJson;
+using Doozy.Runtime.Signals;
+using UnityEngine.SceneManagement;
 
 
 namespace PIERStory {
@@ -68,7 +70,8 @@ namespace PIERStory {
         public Vector2 posGroupContentsOpen; // 그룹 컨텐츠 열림 위치 
         bool inTransitionGroupContents; // 그룹 컨텐츠 트랜지션 여부 
         
-        
+        bool isGameStarting = false; // 게임 시작했는지 체크, 중복 입력 막기 위해서.
+        [SerializeField] bool isEpisodeContinuePlay = false; // 에피소드 이어하기 상태? 
         
         void Update() {
             if(!isOpenTimeCountable) {
@@ -92,6 +95,8 @@ namespace PIERStory {
             currentStoryData =  StoryManager.main.CurrentProject; // 현재 작품 
             projectCurrentJSON = UserManager.main.GetUserProjectRegularEpisodeCurrent(); // 작품상에서 현재 위치 
             
+            isEpisodeContinuePlay = false;
+            
             // 에피소드 타이틀 초기화
             SetEpisodeTitleText(string.Empty);
             
@@ -103,6 +108,10 @@ namespace PIERStory {
             currentEpisodeID = SystemManager.GetJsonNodeString(projectCurrentJSON, "episode_id");
             currentEpisodeData = StoryManager.GetRegularEpisodeByID(currentEpisodeID);
             hasPremium = UserManager.main.HasProjectFreepass();
+            
+            if(LobbyManager.main != null && CheckResumePossible()) {
+                isEpisodeContinuePlay = true;
+            }
             
 
             SetPlayState(); // 플레이 및 타이머 설정 
@@ -350,9 +359,108 @@ namespace PIERStory {
         
         
         
-        #region 버튼 이벤트 
+        #region 플레이 처리 
         
+        public void OnClickPlay() {
+            
+            // * 임시 로직
+            SystemManager.main.givenEpisodeData = currentEpisodeData;
+            SystemManager.ShowNetworkLoading(); 
+            
+            // * 구매기록이 없으면, 구매처리를 한다. (0원)
+            if(!currentEpisodeData.CheckExistsPurchaseData()) {
+                UserManager.OnRequestEpisodePurchase = PurchasePostProcess;
+                NetworkLoader.main.PurchaseEpisode(currentEpisodeData.episodeID, PurchaseState.Permanent, currentEpisodeData.currencyStarPlay, "0");
+            }
+            else {
+                PurchasePostProcess(true);
+            }
+        }
 
+        
+        /// <summary>
+        /// 구매 후 처리. 
+        /// </summary>
+        /// <param name="__isPurchaseSuccess"></param>
+        void PurchasePostProcess(bool __isPurchaseSuccess)
+        {
+            Debug.Log(">> PurchasePostProcess : + " + __isPurchaseSuccess);
+            
+            if (!__isPurchaseSuccess)
+            {
+                Debug.LogError("Error in purchase");
+                SystemManager.HideNetworkLoading();
+                return;
+            }
+            
+            if(isGameStarting)
+                return;
+            
+            // * 구매 성공시,  현재 에피소드의 구매 정보를 갱신한다. 
+            // ! 구매 정보는 갱신하고, 플레이 버튼들은 변경하지 않는다. 
+            currentEpisodeData.SetPurchaseState();
+            
+            
+            StartGame();
+            
+        } // ? End of purchasePostProcess        
+        
+        
+        /// <summary>
+        /// 찐 게임 start
+        /// </summary>
+        void StartGame()
+        {
+            Debug.Log("Game Start!!!!!");
+            
+            Signal.Send(LobbyConst.STREAM_COMMON, "GameBegin", string.Empty);
+            IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
+            
+            SystemManager.ShowNetworkLoading(); // 게임시작할때 어색하지 않게, 네트워크 로딩 추가 
+            
+            // 다음 에피소드 진행 
+            // * 2021.09.23 iOS 메모리 이슈를 해결하기 위해 중간 Scene을 거쳐서 실행하도록 처리 
+            // * GameScene에서 게임이 시작되는 경우만!
+            if(GameManager.main != null) {
+                SceneManager.LoadSceneAsync("Intermission", LoadSceneMode.Single).allowSceneActivation = true;
+            }
+            else {
+                SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single).allowSceneActivation = true;
+            }
+            
+            // true로 변경해놓는다.
+            isGameStarting = true;
+            
+            // ! 이어하기 체크 
+            string lastPlaySceneID = null;
+            long lastPlayScriptNO = 0;
+
+            // 플레이 지점 저장 정보를 가져오자. 
+            if (isEpisodeContinuePlay)
+            { // 이어하기 가능한 상태.
+                Debug.Log("<color=yellow>CONTINUE PLAY</color>");
+            
+                lastPlaySceneID = projectCurrentJSON["scene_id"].ToString();
+                lastPlayScriptNO = long.Parse(projectCurrentJSON["script_no"].ToString());
+
+                GameManager.SetResumeGame(lastPlaySceneID, lastPlayScriptNO);
+            }
+            else
+            {
+                GameManager.SetNewGame(); // 새로운 게임
+            }
+
+            // 통신 
+            NetworkLoader.main.UpdateUserProjectCurrent(currentEpisodeData.episodeID, lastPlaySceneID, lastPlayScriptNO);
+            
+            
+            AppsFlyerSDK.AppsFlyer.sendEvent("episode_start", new Dictionary<string, string>() {
+                { "project_id", StoryManager.main.CurrentProjectID },
+                { "episode_id", StoryManager.main.CurrentEpisodeID }
+            });
+            
+        }               
+        
         
         #endregion
         

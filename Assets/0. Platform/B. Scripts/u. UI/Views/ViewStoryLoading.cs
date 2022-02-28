@@ -126,7 +126,7 @@ namespace PIERStory {
             if(getDownloadSizeHandle.Result <= 0) {
                 ViewStoryLobby.OnDecorateSet?.Invoke();
                 
-                yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
+                // yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
 
                 FillProgressorOnly();
                 yield break;
@@ -147,7 +147,7 @@ namespace PIERStory {
             }
 
             ViewStoryLobby.OnDecorateSet?.Invoke();
-            yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
+            // yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
             
             Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", "Testing");
 

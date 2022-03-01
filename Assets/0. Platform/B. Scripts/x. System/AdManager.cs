@@ -298,10 +298,26 @@ namespace PIERStory {
         /// </summary>
         /// <param name="__isRewarded">동영상 광고</param>
         void ShowAdvertisementReady(bool __isRewarded) {
-            if(__isRewarded)
+            if(__isRewarded) {
+                
+                // 광고 준비되었는지 체크 추가
+                if(rewardedAd == null || rewardedAd.AdState != AdState.Loaded) {
+                    CreateRewardAd();
+                    return;
+                }
+                    
                 OnShowAdvertisement = ShowRewardAd;
-            else 
+            }
+            else {
+                
+                // 광고 준비되었는지 체크 추가
+                if(interstitialAd == null || interstitialAd.AdState != AdState.Loaded) {
+                    CreateInterstitial();
+                    return;
+                }
+                
                 OnShowAdvertisement = ShowInterstitial;
+            }
                 
             
             PopupBase p = PopupManager.main.GetPopup("AdvertisementShow");

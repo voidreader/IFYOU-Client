@@ -715,6 +715,11 @@ namespace PIERStory
                     break;
                 } // ? end of switch
                 
+                // 영어랑 한글만 지원. 
+                if(currentGamebaseLanguageCode != GamebaseDisplayLanguageCode.Korean && currentGamebaseLanguageCode != GamebaseDisplayLanguageCode.English) {
+                    currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.English;
+                }
+                
                 ES3.Save<string>(SystemConst.KEY_LANG, currentGamebaseLanguageCode.ToUpper()); // 저장한다. 
             }
             
@@ -732,6 +737,11 @@ namespace PIERStory
                 
             if(string.IsNullOrEmpty(currentGamebaseLanguageCode))
                 currentAppLanguageCode = "EN";
+                
+            // 영어랑 한글만 지원 
+            if(currentAppLanguageCode != "EN" && currentAppLanguageCode != "KO") {
+                currentAppLanguageCode = "EN"; 
+            }
         
             currentAppLanguageCode = currentAppLanguageCode.ToUpper();
         }

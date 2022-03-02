@@ -6,9 +6,9 @@ using UnityEngine.InputSystem;
 
 using LitJson;
 using BestHTTP;
+using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Containers;
 using Doozy.Runtime.UIManager.Components;
-using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
@@ -17,7 +17,7 @@ namespace PIERStory
         public static Action OnDecorateSet = null;
         public static Action OnDisableAllOptionals = null;
         public static Action<JsonData> OnSelectBackground = null;
-        public static Action<JsonData> OnSelectCharacter = null;
+        public static Action<JsonData, ProfileItemElement> OnSelectStanding = null;
 
 
         public static bool loadComplete = false;
@@ -51,6 +51,9 @@ namespace PIERStory
         public GameObject standingListPrefab;
         public Transform standingListContent;
         GameModelCtrl controlModel;
+        public GameObject standingListScroll;
+        public GameObject standingController;
+        public GameObject usageStandingControl;
 
         [Space][Header("배경 관련")]
         public GameObject bgListPrefab;
@@ -64,16 +67,13 @@ namespace PIERStory
         public Transform stickerListContent;
         
 
-        
-
-
         int totalDecoLoad = 0;
 
         private void Awake()
         {
             OnDecorateSet = DecorateSetting;
             OnSelectBackground = SelectBackground;
-            OnSelectCharacter = SelectLiveCharacter;
+            OnSelectStanding = SelectLiveCharacter;
         }
 
         private void Start()
@@ -125,6 +125,10 @@ namespace PIERStory
                 Destroy(g);
 
             createObjects.Clear();
+
+            usageStandingControl.SetActive(false);
+
+            loadComplete = false;
         }
 
         #region 통상적(Main)
@@ -183,6 +187,12 @@ namespace PIERStory
             storyProfile = SystemManager.GetJsonNode(UserManager.main.currentStoryJson, "storyProfile");
             totalDecoLoad = storyProfile.Count;
 
+            if (totalDecoLoad == 0)
+            {
+                loadComplete = true;
+                return;
+            }
+
             for (int i = 0; i < storyProfile.Count; i++)
             {
                 switch (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE))
@@ -205,7 +215,7 @@ namespace PIERStory
                             break;
                         }
 
-                        ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(storyProfile[i], GameConst.COL_MODEL_NAME), CharacterInstantComplete, LobbyManager.main);
+                        ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(storyProfile[i], GameConst.COL_MODEL_NAME), CharacterLoadComplete, LobbyManager.main);
                         character.SetModelDataFromStoryManager();
 
                         if (SystemManager.main.hasSafeArea)
@@ -276,7 +286,7 @@ namespace PIERStory
 
         void CheckLoadComplete()
         {
-            if (totalDecoLoad == 0)
+            if (totalDecoLoad <= 0)
                 loadComplete = true;
         }
 
@@ -284,6 +294,7 @@ namespace PIERStory
         {
             cursor = context.ReadValue<Vector2>();
 
+            // 배경 드래그
             if(moveBg)
             {
                 if (context.started)
@@ -302,6 +313,7 @@ namespace PIERStory
                 }
             }
 
+            // 스탠딩 캐릭터 드래그
             if(moveCharacter)
             {
                 if (context.started)
@@ -318,6 +330,35 @@ namespace PIERStory
                     if (moveX > (-camWidth * 0.25f) && moveX < (camWidth * 0.25f))
                         controlModel.transform.localPosition = new Vector3(moveX, controlModel.transform.localPosition.y, 0f);
                 }
+            }
+        }
+
+        /// <summary>
+        ///  선택된 항목 배열 재정리
+        /// </summary>
+        void SortingList(Transform content)
+        {
+            ProfileItemElement item = null;
+            int sortIndex = 0, i =0;
+
+            // 자식들을 조회해서
+            while (content.childCount > sortIndex)
+            {
+                item = content.GetChild(i).GetComponent<ProfileItemElement>();
+
+                // currentCount가 1이상인 애들을 우선적으로 두고
+                if(item.currentCount >= 1 && item.totalCount > 0)
+                {
+                    item.transform.SetSiblingIndex(sortIndex);
+                    sortIndex++;
+                    i++;
+                    continue;
+                }
+
+
+                // 다음은 구매한 애들을 두번째
+
+                // 마지막이 아직 미구매 상품
             }
         }
 
@@ -369,20 +410,29 @@ namespace PIERStory
         #region 스탠딩 캐릭터 세팅
 
         /// <summary>
+        /// 로비 진입시 스탠딩 캐릭터 생성 완료
+        /// </summary>
+        void CharacterLoadComplete()
+        {
+            totalDecoLoad--;
+
+            CheckLoadComplete();
+        }
+
+
+        /// <summary>
         /// 캐릭터 생성 완료
         /// </summary>
         void CharacterInstantComplete()
         {
-            if (totalDecoLoad > 0)
-                totalDecoLoad--;
-
             if(controlModel != null)
             {
                 controlModel.modelAnim.Play(controlModel.motionLists[0]);
 
-                for(int i=0;i<controlModel.motionLists.Count;i++)
+                for (int i = 0; i < controlModel.motionLists.Count; i++)
                 {
-                    if(controlModel.motionLists[i].Contains("기본") && !controlModel.motionLists[i].Contains("M"))
+                    // 생성되고 난 후, 기본 모션을 세팅한다
+                    if (controlModel.motionLists[i].Contains("기본") && !controlModel.motionLists[i].Contains("M"))
                     {
                         controlModel.modelAnim.Play(controlModel.motionLists[i]);
                         break;
@@ -390,31 +440,109 @@ namespace PIERStory
                 }
             }
 
-            CheckLoadComplete();
+            // 화면에 이미 스탠딩이 있다면 SortingOrder 값을 증가시켜준다.
+            if (liveModels.Count > 1)
+                controlModel.model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 500;
+
+            controlModel.ChangeLayerRecursively(controlModel.transform, GameConst.LAYER_MODEL_L);
         }
 
-        void SelectLiveCharacter(JsonData standingData)
+        /// <summary>
+        /// 스탠딩 캐릭터 선택
+        /// </summary>
+        void SelectLiveCharacter(JsonData __j, ProfileItemElement standingElement)
         {
-            // 화면에는 최대 2명의 캐릭터만 세울 수 있다
-            if (liveModels.Count > 2)
-                return;
+            // 신규 생성인지, 기존 선택인지 분별해주자
+            // 신규 생성인 경우
+            if(standingElement.currentCount < 1)
+            {
+                // 화면에는 최대 2명의 캐릭터만 세울 수 있다
+                if (liveModels.Count >= 2)
+                    return;
 
-            ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(standingData, GameConst.COL_MODEL_NAME), CharacterInstantComplete, LobbyManager.main);
-            character.SetModelDataFromStoryManager();
+                standingElement.currentCount++;
 
-            if (SystemManager.main.hasSafeArea)
-                character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_SAFEAREA_POS_Y + 1, 0);
+                // 캐릭터 생성
+                ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(__j, GameConst.COL_MODEL_NAME), CharacterInstantComplete, LobbyManager.main);
+                character.SetModelDataFromStoryManager();
+
+                if (SystemManager.main.hasSafeArea)
+                    character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_SAFEAREA_POS_Y + 1, 0);
+                else
+                    character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_ORIGIN_POS_Y + 1, 0);
+
+                liveModels.Add(character.modelController);
+                createObjects.Add(character.modelController.gameObject);
+
+                controlModel = character.modelController;
+            }
             else
-                character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_ORIGIN_POS_Y + 1, 0);
+            {
+                // 생성이 아니면 찾기
+                foreach (GameModelCtrl model in liveModels)
+                {
+                    if (model.originModelName == SystemManager.GetJsonNodeString(__j, GameConst.COL_MODEL_NAME))
+                    {
+                        controlModel = model;
+                        break;
+                    }
+                }
 
-            liveModels.Add(character.modelController);
-            createObjects.Add(character.modelController.gameObject);
+                controlModel.ChangeLayerRecursively(controlModel.transform, GameConst.LAYER_MODEL_L);
+            }
 
-            controlModel = character.modelController;
+            usageStandingControl.SetActive(true);
+
+            standingListScroll.SetActive(false);
+            standingController.SetActive(true);
+
             moveCharacter = true;
         }
 
 
+        /// <summary>
+        /// 제어중인 스탠딩 뒤집기
+        /// </summary>
+        public void OnClickFlipStanding()
+        {
+            if (controlModel.transform.localScale.x < 0)
+                controlModel.transform.localScale = Vector3.one;
+            else
+                controlModel.transform.localScale = new Vector3(-1f, 1f, 1f);
+        }
+
+        /// <summary>
+        /// 제어중인 스탠딩 삭제(파괴)
+        /// </summary>
+        public void OnClickDeleteStanding()
+        {
+            // 리스트에서 해당 오브젝트 삭제
+            createObjects.Remove(controlModel.gameObject);
+            liveModels.Remove(controlModel);
+
+            // 파괴
+            Destroy(controlModel.gameObject);
+            ReturnCharacterList();
+        }
+
+
+        public void OnClickFixPosition()
+        {
+            controlModel.ChangeLayerRecursively(controlModel.transform, GameConst.LAYER_MODEL_C);
+
+            ReturnCharacterList();
+        }
+
+        void ReturnCharacterList()
+        {
+            moveCharacter = false;
+
+            usageStandingControl.SetActive(false);
+            standingListScroll.SetActive(true);
+            standingController.SetActive(false);
+
+            controlModel = null;
+        }
 
 
         #endregion

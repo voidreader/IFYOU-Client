@@ -718,6 +718,7 @@ namespace PIERStory
         public void AnswerPhoneButton()
         {
             timeEnd = true;
+            phoneImage.GetComponent<RectTransform>().DOAnchorPosY(-1350f, 0.5f);
 
             // fade 전 투명도 0
             callBG.alpha = 0f;
@@ -725,7 +726,7 @@ namespace PIERStory
             const float animTime = 0.7f;
 
             callBackground.gameObject.SetActive(true);
-            callBG.DOFade(1f, animTime).OnComplete(() =>
+            callBG.DOFade(1f, animTime).SetDelay(0.5f).OnComplete(() =>
             {
                 GameManager.main.isThreadHold = false;
                 GameManager.main.isWaitingScreenTouch = false;

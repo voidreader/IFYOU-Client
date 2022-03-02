@@ -122,7 +122,11 @@ namespace PIERStory {
             // 디테일 관련 처리 
             detailFrame.sizeDelta = sizeDetailOrigin;
             detailArrow.eulerAngles = Vector3.zero;
-            
+            rectOrigin.sizeDelta = sizeNormalBody;
+            layoutElement.minWidth = sizeDetailOrigin.x;
+            layoutElement.minHeight = sizeDetailOrigin.y;
+
+            // Summary 및 게이지 처리             
             textSummary.text = currentEpisode.episodeSummary;
             if(currentEpisode.episodeGalleryImageProgressValue > -1) {
                 groupIllustProgressor.SetActive(true);

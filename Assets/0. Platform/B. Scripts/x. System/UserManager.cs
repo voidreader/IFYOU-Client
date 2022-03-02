@@ -1827,7 +1827,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 에피소드 리셋 프로그레스 
+        /// 에피소드 리셋 프로그레스 콜백
         /// </summary>
         /// <param name="req"></param>
         /// <param name="res"></param>
@@ -1859,7 +1859,10 @@ namespace PIERStory
 
             // * Doozy Nody StoryDetail로 돌아가기 위한 이벤트 생성 
             // * ViewStoryDetail 에서 이 시그널을 Listener를 통해서 받는다. (Inspector)
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CLOSE_RESET, string.Empty);
+            // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CLOSE_RESET, string.Empty);
+            
+            // 리셋 콜백
+            StoryLobbyMain.OnCallbackReset?.Invoke();
             
 
         }

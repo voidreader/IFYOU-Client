@@ -14,6 +14,8 @@ namespace PIERStory {
 
     public class StoryLobbyMain : MonoBehaviour
     {
+        public static Action OnCallbackReset = null; // 리셋 콜백
+        
         
         public StoryData currentStoryData;
         JsonData projectCurrentJSON = null;
@@ -73,7 +75,14 @@ namespace PIERStory {
         bool isGameStarting = false; // 게임 시작했는지 체크, 중복 입력 막기 위해서.
         [SerializeField] bool isEpisodeContinuePlay = false; // 에피소드 이어하기 상태? 
         
+        private void Start() {
+            OnCallbackReset = RefreshAfterReset; // Action 연결
+        }
+        
         void Update() {
+            
+            // * 기다무 시스템 관련 타이밍 처리 
+            
             if(!isOpenTimeCountable) {
                 return;
             }
@@ -92,6 +101,35 @@ namespace PIERStory {
             
             Debug.Log("## InitStoryLobbyControls");
             
+            // 기본정보 
+            InitBaseInfo();
+
+            SetPlayState(); // 플레이 및 타이머 설정 
+                        
+    
+            // 컨텐츠 그룹 초기화 
+            InitContentsGroup();
+            
+            
+            // Flow 처리 
+            InitFlowMap();
+
+        }
+        
+        /// <summary>
+        /// 리셋 후 리프레시
+        /// </summary>
+        void RefreshAfterReset() {
+            Debug.Log(" >> RefreshAfterReset");
+            InitBaseInfo();
+            SetPlayState();
+            InitFlowMap();
+        }
+        
+        /// <summary>
+        /// 기본정보 처리
+        /// </summary>
+        void InitBaseInfo() {
             currentStoryData =  StoryManager.main.CurrentProject; // 현재 작품 
             projectCurrentJSON = UserManager.main.GetUserProjectRegularEpisodeCurrent(); // 작품상에서 현재 위치 
             
@@ -113,18 +151,8 @@ namespace PIERStory {
                 isEpisodeContinuePlay = true;
             }
             
-
-            SetPlayState(); // 플레이 및 타이머 설정 
-                        
-    
-            // 컨텐츠 그룹 초기화 
-            InitContentsGroup();
-            
-            
-            // Flow 처리 
-            InitFlowMap();
-
         }
+        
         
         #region 컨텐츠 그룹 제어 (앨범, 스페셜 에피소드, 엔딩, 미션)
         

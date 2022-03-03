@@ -132,7 +132,7 @@ namespace PIERStory {
             textSelection.text = selectionText;
 
             // 일러스트(이미지, CG) 획득이 있는지
-            if (GameManager.main.NextProgressHaveIllust(targetSceneID))
+            if (GameManager.main.CheckNextSceneHasIllust(targetSceneID))
                 illustIcon.SetActive(true);
             else
                 illustIcon.SetActive(false);

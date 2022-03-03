@@ -372,6 +372,7 @@ namespace PIERStory {
                     ViewGame.main.selectionInfo.DOFade(0f, 0.4f);
                     canvasGroup.DOFade(0, 0.4f).OnComplete(() => {
                         SetState(SelectionState.None);
+                        ViewGame.main.selectionInfoText.text = string.Empty;
                     });
 
                     imageAura.DOKill();

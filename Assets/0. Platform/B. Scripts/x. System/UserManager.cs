@@ -2550,11 +2550,11 @@ namespace PIERStory
             for (int i = 0; i < selectionPurchaseData.Count; i++)
             {
                 // 선택지 그룹이 같은게 아니면 넘겨넘겨
-                if (SystemManager.GetJsonNodeString(selectionPurchaseData, GameConst.COL_SELECTION_GROUP) != __selectionGroup)
+                if (SystemManager.GetJsonNodeString(selectionPurchaseData[i], GameConst.COL_SELECTION_GROUP) != __selectionGroup)
                     continue;
 
                 // 같은 선택지 그룹 내에서 같은 번호면 구매한적이 있으니 true 반환
-                if (SystemManager.GetJsonNodeString(selectionPurchaseData, GameConst.COL_SELECTION_NO) == __selectionNo)
+                if (SystemManager.GetJsonNodeString(selectionPurchaseData[i], GameConst.COL_SELECTION_NO) == __selectionNo)
                     return true;
             }
 

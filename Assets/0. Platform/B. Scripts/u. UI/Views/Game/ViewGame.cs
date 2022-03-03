@@ -136,6 +136,7 @@ namespace PIERStory
         private void Awake()
         {
             main = this;
+            selectionInfoText.text = string.Empty;
         }
 
         void Update()
@@ -428,7 +429,9 @@ namespace PIERStory
             selectionBackground.color = CommonConst.COLOR_BLACK_TRANSPARENT;
             selectionBackground.gameObject.SetActive(true);
             selectionBackground.DOFade(0.7f, 1);
-            selectionInfo.DOFade(1f, 1f);
+
+            if (!string.IsNullOrEmpty(selectionInfoText.text))
+                selectionInfo.DOFade(1f, 1f);
             
             if(!UserManager.main.isSelectionTutorialClear) {
                 selectionTutorialText.color = CommonConst.COLOR_BLACK_TRANSPARENT;
@@ -454,7 +457,7 @@ namespace PIERStory
             // 마지막 선택지부터 stack처럼 쌓기
             for (int i = ListSelectionRows.Count - 1; i >= 0; i--)
             {
-                ListGameSelection[i].SetSelection(ListSelectionRows[i], i);
+                ListGameSelection[i].SetSelection(ListSelectionRows[i], ListSelectionRows.Count - 1 - i);
                 ListAppearSelection.Add(ListGameSelection[i]); // appear에 추가. 
             }
 
@@ -480,7 +483,6 @@ namespace PIERStory
         /// <param name="__selectionIndex">선택지 버튼 인덱스</param>
         public void ChooseSelection(string __targetSceneID, int __selectionIndex)
         {
-            
             SetBlockScreenActiveFlag(true); // 입력 막기.(안전빵 )
             
             // 백그라운드 제거 

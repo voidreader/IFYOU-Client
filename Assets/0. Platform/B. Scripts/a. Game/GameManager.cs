@@ -1130,6 +1130,46 @@ namespace PIERStory
         }
 
         /// <summary>
+        /// 이동된 이후 행에 일러스트(이미지, 일러스트)가 있는지 체크
+        /// </summary>
+        /// <returns></returns>
+        public bool NextProgressHaveIllust(string __sceneID)
+        {
+            targetRow = -1;
+
+            for (int i = 0; i < currentPage.ListRows.Count; i++)
+            {
+                // 상황 ID를 찾는다
+                if (currentPage.ListRows[i].scene_id == __sceneID)
+                    targetRow = i;
+            }
+
+            if (targetRow < 0)
+            {
+                ShowMissingComponent("이동하려는 상황ID 없음", __sceneID);
+                return false;
+            }
+
+            for (int i = targetRow; i < currentPage.ListRows.Count; i++)
+            {
+                // 행을 진행하다가 다음 사건ID를 만나게 된다면 일러스트가 존재하지 않으므로 return false를 해준다
+                if (!string.IsNullOrEmpty(currentPage.ListRows[i].scene_id) && currentPage.ListRows[i].scene_id != __sceneID)
+                    return false;
+
+                switch (currentPage.ListRows[i].template)
+                {
+                    case GameConst.TEMPLATE_ILLUST:
+                    case GameConst.TEMPLATE_IMAGE:
+                    case GameConst.TEMPLATE_LIVE_ILLUST:
+                    case GameConst.TEMPLATE_LIVE_OBJECT:
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// 마지막 화자와 파라매터의 화자가 동일한지 체크한다. 
         /// </summary>
         /// <param name="nextSpeaker">이번에 말할 화자</param>

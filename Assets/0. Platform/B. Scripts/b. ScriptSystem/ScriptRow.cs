@@ -48,9 +48,10 @@ namespace PIERStory
         public string control = string.Empty;                   // 행 '제어' 파라매터 2021.07.02 추가
         public string[] controlParams = null;                   // 제어파라매터 배열 
         public string controlAlternativeName = string.Empty;    // 대체 이름
-        public string controlMouthCommand = string.Empty; // 립싱크 제어 
+        public string controlMouthCommand = string.Empty;       // 립싱크 제어 
         public string controlCallCommand = string.Empty;        // 전화 제어
-        
+        public int selectionPrice = -1;
+
 
         public string selection_group = string.Empty;
         public string selection_no = string.Empty;
@@ -285,6 +286,11 @@ namespace PIERStory
 
             // 게임 메시지 관련
             GetParam<string>(controlParams, GameConst.ROW_CONTROL_STATE, ref controlAlternativeName);
+
+            // 과금 선택지 관련(스타=n)
+            GetParam<int>(controlParams, GameConst.ROW_CONTROL_STAR, ref selectionPrice);
+
+
         }
 
         void CreateResourceKey()

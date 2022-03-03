@@ -1581,6 +1581,8 @@ namespace PIERStory
         public void SetPurchaseSelection(string __data)
         {
             JsonData data = JsonMapper.ToObject(__data);
+
+            // 여기 Exception 날 수 있음
             currentStoryJson[NODE_SELECTION_PURCHASE][StoryManager.main.CurrentEpisodeID] = data;
         }
         
@@ -2509,6 +2511,10 @@ namespace PIERStory
         /// <returns></returns>
         public bool IsPurchaseSelection(string __episodeID, string __selectionGroup, string __selectionNo)
         {
+            // key값이 없으면 구매한 적이 없는 에피소드
+            if (!currentStoryJson[NODE_SELECTION_PURCHASE].ContainsKey(__episodeID))
+                return false;
+
             JsonData selectionPurchaseData = currentStoryJson[NODE_SELECTION_PURCHASE][__episodeID];
 
             for (int i = 0; i < selectionPurchaseData.Count; i++)

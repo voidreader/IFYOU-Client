@@ -1133,7 +1133,7 @@ namespace PIERStory
         /// 이동된 이후 행에 일러스트(이미지, 일러스트)가 있는지 체크
         /// </summary>
         /// <returns></returns>
-        public bool NextProgressHaveIllust(string __sceneID)
+        public bool CheckNextSceneHasIllust(string __sceneID)
         {
             targetRow = -1;
 

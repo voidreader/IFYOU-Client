@@ -8,13 +8,19 @@ using DG.Tweening;
 using LitJson;
 using Doozy.Runtime.Signals;
 using UnityEngine.SceneManagement;
+using BestHTTP;
 
 
 namespace PIERStory {
 
     public class StoryLobbyMain : MonoBehaviour
     {
+        
+        public static Action OnRefreshSuperUser = null; // 슈퍼유저 표기용도 
         public static Action OnCallbackReset = null; // 리셋 콜백
+        public static Action CallbackReduceWaitingTimeSuccess = null; // 시간감소 콜백 (성공)
+        public static Action CallbackReduceWaitingTimeFail = null; // 시간감소 콜백(실패)
+        public static Action<EpisodeData> SuperUserFlowEpisodeStart = null; // 플로우맵 슈퍼유저 에피소드 시작하기 
         
         
         public StoryData currentStoryData;
@@ -32,7 +38,9 @@ namespace PIERStory {
         [Header("Controls")]
         // 스토리 플레이 버튼
         public StoryPlayButton storyPlayButton; // 중앙 플레이 버튼
-        
+        public TextMeshProUGUI textWaitingCoinPrice; // 남은시간에 따른 오픈 코인 가격 
+        public TextMeshProUGUI textReduceWaitingTime; // 광고보고 줄어드는 시간 TextMeshPro
+        public GameObject menuReduceWaitingTime; // 대기시간 줄어들기 메뉴 
         
         
         public Image imageEpisodeTitle; // 에피소드 타이틀 배경 
@@ -47,7 +55,7 @@ namespace PIERStory {
         public RectTransform arrowGroupContetns; // 컨텐츠 그룹 화살표 
         public GameObject groupStoryContentsBlock; // 접혀있는 상태에서 터치 못하게 하려고..
         
-        
+        public GameObject objectSuperUser;
         
         [SerializeField] RectTransform flowMap; // flow map 
         bool inTransitionFlow = false;
@@ -74,18 +82,29 @@ namespace PIERStory {
         
         bool isGameStarting = false; // 게임 시작했는지 체크, 중복 입력 막기 위해서.
         [SerializeField] bool isEpisodeContinuePlay = false; // 에피소드 이어하기 상태? 
+        bool isWaitingResponse = false; //  서버 응답 기다리는 중인지. 
         
         private void Start() {
-            OnCallbackReset = RefreshAfterReset; // Action 연결
+            // Action 연결
+            OnCallbackReset = RefreshAfterReset; 
+            CallbackReduceWaitingTimeSuccess = RefreshAfterReduceWaitingTime; 
+            CallbackReduceWaitingTimeFail = FailReduceWaitingTime;
+            
+            // 슈퍼유저 관련 처리 
+            SuperUserFlowEpisodeStart = SuperUserEpisodeStart;
+            OnRefreshSuperUser = SetSuperUser;
         }
         
         void Update() {
             
             // * 기다무 시스템 관련 타이밍 처리 
-            
             if(!isOpenTimeCountable) {
                 return;
             }
+            
+            // 서버 응답 대기중에는 타이머 체크하지 않음. 
+            if(isWaitingResponse)
+                return; 
             
             // 타이머 처리 
             if(Time.frameCount % 5 == 0) {
@@ -113,6 +132,8 @@ namespace PIERStory {
             
             // Flow 처리 
             InitFlowMap();
+            
+            SetSuperUser();
 
         }
         
@@ -124,12 +145,36 @@ namespace PIERStory {
             InitBaseInfo();
             SetPlayState();
             InitFlowMap();
+
         }
+        
+        /// <summary>
+        /// 오픈시간 감소 후 리프레시 
+        /// </summary>
+        void RefreshAfterReduceWaitingTime() {
+            
+            Debug.Log(" >> RefreshAfterReduceWaitingTime");
+            
+            InitBaseInfo();
+            SetPlayState();
+            
+            isWaitingResponse = false;
+            
+            menuReduceWaitingTime.SetActive(false); // 메뉴 닫기 
+        }
+        
+        void FailReduceWaitingTime() {
+            
+            isWaitingResponse = false;
+        }
+        
         
         /// <summary>
         /// 기본정보 처리
         /// </summary>
         void InitBaseInfo() {
+            textReduceWaitingTime.text = SystemManager.main.waitingReduceTimeAD.ToString() +" min"; // 광고보고 차감되는 시간 SysteManager..
+           
             currentStoryData =  StoryManager.main.CurrentProject; // 현재 작품 
             projectCurrentJSON = UserManager.main.GetUserProjectRegularEpisodeCurrent(); // 작품상에서 현재 위치 
             
@@ -261,14 +306,14 @@ namespace PIERStory {
             if(inTransitionFlow)           
                 return;
                 
-            flowMap.DOAnchorPos(new Vector2(-85, 0), 0.5f).OnStart(()=> {inTransitionFlow = true;}).OnComplete(()=>{inTransitionFlow = false;});
+            flowMap.DOAnchorPos(new Vector2(-85, 0), 0.3f).OnStart(()=> {inTransitionFlow = true;}).OnComplete(()=>{inTransitionFlow = false;});
         }
         
         public void OnClickFlowClose() {
             if(inTransitionFlow)           
                     return;   
                     
-            flowMap.DOAnchorPos(new Vector2(-820, 0), 0.5f).OnStart(()=> {inTransitionFlow = true;}).OnComplete(()=>{inTransitionFlow = false;});
+            flowMap.DOAnchorPos(new Vector2(-820, 0), 0.3f).OnStart(()=> {inTransitionFlow = true;}).OnComplete(()=>{inTransitionFlow = false;});
         }  
         
         #endregion
@@ -290,6 +335,8 @@ namespace PIERStory {
             Debug.Log("## timeDiff : " + timeDiff.Ticks);
             
             isOpenTimeCountable = false;
+            
+            
             if(timeDiff.Ticks > 0) {
                 isOpenTimeCountable = true; // 시간 돌아간다. 
                 currentPlayState = StatePlayButton.inactive;
@@ -301,11 +348,13 @@ namespace PIERStory {
             
             groupOpenTimer.SetActive(isOpenTimeCountable);
             textEpisodeTitle.gameObject.SetActive(!isOpenTimeCountable);
+            
          
                  
             // 스토리 플레이버튼 초기화 
             storyPlayButton.SetPlayButton(currentPlayState, currentEpisodeData.sceneProgressorValue, CheckResumePossible());
-            storyPlayButton.SetTimeOpenPrice(GetEpisodeTimeOpenPrice());
+            // storyPlayButton.SetTimeOpenPrice(GetEpisodeTimeOpenPrice());
+            textWaitingCoinPrice.text = GetEpisodeTimeOpenPrice().ToString();
             
             InitEpisodeTitleColor();
             
@@ -363,7 +412,8 @@ namespace PIERStory {
                 return string.Empty;
             }
             
-            storyPlayButton.SetTimeOpenPrice(GetEpisodeTimeOpenPrice()); // 가격이 10분마다 변한다. 
+            // storyPlayButton.SetTimeOpenPrice(GetEpisodeTimeOpenPrice()); 
+            textWaitingCoinPrice.text = GetEpisodeTimeOpenPrice().ToString(); // 가격이 10분마다 변한다. 
             
             return string.Format ("{0:D2}:{1:D2}:{2:D2}",timeDiff.Hours ,timeDiff.Minutes, timeDiff.Seconds);
         }
@@ -387,9 +437,71 @@ namespace PIERStory {
         
         
         
-        #region 플레이 처리 
+        #region 플레이 버튼 관련 처리 
+        
+        /// <summary>
+        /// 광고 보고 오픈 시간 차감처리 
+        /// </summary>
+        public void OnClickReduceWaitingTimeAD() {
+            AdManager.main.ShowRewardAdWithCallback(RequestReduceWaitingTimeAD);
+        }
+        
+        void RequestReduceWaitingTimeAD(bool isRewarded) {
+            
+            if(!isRewarded)
+                return;
+            
+            JsonData j = new JsonData();
+
+            j["project_id"] = StoryManager.main.CurrentProjectID;
+            j["func"] = "requestWaitingEpisodeWithAD";
+
+            NetworkLoader.main.SendPost(UserManager.main.CallbackReduceWaitingTime, j);
+        }
+        
+        
+        
+        /// <summary>
+        /// 코인 써서 오픈 시간 차감 처리 
+        /// </summary>
+        public void OnClickReduceWaitingTimeCoin() {
+            
+            isWaitingResponse = true;  // 서버 응답 
+            
+            JsonData j = new JsonData();
+            
+            j["project_id"] = StoryManager.main.CurrentProjectID;
+            j["price"] = GetEpisodeTimeOpenPrice();
+            j["func"] = "requestWaitingEpisodeWithCoin";
+
+            NetworkLoader.main.SendPost(UserManager.main.CallbackReduceWaitingTime, j);
+        }
+        
         
         public void OnClickPlay() {
+            
+            // 카운팅 돌아가는 도중에는 플레이가 아니고, 코인으로 감소하기 
+            if(isOpenTimeCountable) {
+                
+                // 오픈 메뉴 띄운다. 
+                menuReduceWaitingTime.SetActive(true);
+                
+                // int openPrice = GetEpisodeTimeOpenPrice();
+                
+                // SystemManager.ShowResourceConfirm(SystemManager.GetLocalizedText("6221"), GetEpisodeTimeOpenPrice(), )
+                /*
+                SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6221"), openPrice)
+                                , openPrice
+                                , SystemManager.main.GetCurrencyImageURL("coin")
+                                , SystemManager.main.GetCurrencyImageKey("coin")
+                                , OnClickReduceWaitingTimeCoin
+                                , SystemManager.GetLocalizedText("5041")
+                                , SystemManager.GetLocalizedText("5040"));
+                */
+                // OnClickReduceWaitingTimeCoin();
+                return;
+            }
+            
             
             // * 임시 로직
             SystemManager.main.givenEpisodeData = currentEpisodeData;
@@ -437,7 +549,7 @@ namespace PIERStory {
         /// <summary>
         /// 찐 게임 start
         /// </summary>
-        void StartGame()
+        void StartGame(bool __isNewGameForce = false)
         {
             Debug.Log("Game Start!!!!!");
             
@@ -458,6 +570,12 @@ namespace PIERStory {
             
             // true로 변경해놓는다.
             isGameStarting = true;
+            
+            if(__isNewGameForce) {
+                GameManager.SetNewGame(); // 새로운 게임
+                return;
+            }
+            
             
             // ! 이어하기 체크 
             string lastPlaySceneID = null;
@@ -497,7 +615,32 @@ namespace PIERStory {
         
         public static long ConvertServerTimeTick(long __serverTick) {
             return (__serverTick * 10000) + addTick;
-        }     
+        } 
+        
+        
+        /// <summary>
+        /// 슈퍼유저 
+        /// </summary>
+        /// <param name="__episodeData"></param>
+        void SuperUserEpisodeStart(EpisodeData __episodeData) {
+            SystemManager.main.givenEpisodeData = __episodeData;
+            SystemManager.ShowNetworkLoading();
+            StartGame(true);
+        }
+        
+        /// <summary>
+        /// 슈퍼유저 표기 
+        /// </summary>
+        void SetSuperUser() {
+            
+            if(UserManager.main == null || string.IsNullOrEmpty(UserManager.main.userKey)) {
+                objectSuperUser.SetActive(false);
+                return;
+            }
+            
+            Debug.Log("### SetSuperUser ###");
+            objectSuperUser.SetActive(UserManager.main.CheckAdminUser());
+        }
         
     }
 }

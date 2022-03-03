@@ -368,6 +368,20 @@ namespace PIERStory {
                 SystemManager.ShowFlowResetPopup(currentEpisode); // 리셋 호출.
             }
         }
+        
+        /// <summary>
+        /// 플로우 자체를 버튼처럼 사용할 수 있게 변경.
+        /// </summary>
+        public void OnClickFlow() {
+            if(UserManager.main.CheckAdminUser()) {
+                SystemManager.ShowLobbyPopup("슈퍼 유저입니다. 선택한 에피소드를 플레이 하겠습니까?", SuperUserEpisodeStart, null, true);
+            }
+        }
+        
+        void SuperUserEpisodeStart() {
+            // 바로 시작 
+                StoryLobbyMain.SuperUserFlowEpisodeStart?.Invoke(currentEpisode);
+        }
 
     }
 }

@@ -1861,10 +1861,37 @@ namespace PIERStory
             // * ViewStoryDetail 에서 이 시그널을 Listener를 통해서 받는다. (Inspector)
             // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CLOSE_RESET, string.Empty);
             
+            // 팝업창 모두 닫는다.
+            PopupManager.main.HideActivePopup();            
+            
+            
             // 리셋 콜백
             StoryLobbyMain.OnCallbackReset?.Invoke();
+        }
+        
+        
+        /// <summary>
+        /// 에피소드 기다리는 시간 감소 콜백 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        public void CallbackReduceWaitingTime(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                StoryLobbyMain.CallbackReduceWaitingTimeFail?.Invoke();
+                return;
+            }
             
-
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            Debug.Log(JsonMapper.ToStringUnicode(result));
+            
+            // 메세지 띄우고,  projectCurrent, bank 업데이트 
+            SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6220"), true);
+            SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);  // projectCurrent
+            SetBankInfo(result); // 뱅크 정보 업데이트             
+            
+            
+            // StoryLobbyMain 리프레시 요청 
+            StoryLobbyMain.CallbackReduceWaitingTimeSuccess?.Invoke();
         }
 
 

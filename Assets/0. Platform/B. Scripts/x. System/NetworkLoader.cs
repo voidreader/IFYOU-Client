@@ -62,7 +62,7 @@ namespace PIERStory
 
 
         // 게임베이스 Launching 정보 조회 
-        const string FUNC_GAMEBASE_LAUNCHING = "https://api-lnc.cloud.toast.com/launching/v3.0/appkeys/csYXV5DuW8h22Xxo/configurations";
+        const string FUNC_GAMEBASE_LAUNCHING = "https://api-lnc.cloud.toast.com/launching/v3.0/appkeys/tcKCFua98jaMTiae/configurations";
         #endregion
         
         // * 기본 파라매터 
@@ -105,11 +105,6 @@ namespace PIERStory
         // Start is called before the first frame update
         void Start()
         {
-            if (SystemManager.main.isTestServerAccess)
-                _url = CommonConst.TEST_SERVER_URL;
-            else
-                _url = CommonConst.LIVE_SERVER_URL;
-
         }
         
         public void SetURL(string __url) {

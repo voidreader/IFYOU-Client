@@ -82,6 +82,7 @@ namespace PIERStory
         public int firsetResetPrice = 0; // 최초 리셋 가격
         int resetIncrementRate = 0; //리셋 증가비율 
         public int episodeOpenPricePer = 0; // 에피소드 시간단축오픈 10분당 코인 가격 
+        public int waitingReduceTimeAD = 0; // 광고보고 차감되는 에피소드 열림시간. (분)
         
         
         // 개인정보 보호 정책 및 이용약관 URL
@@ -106,8 +107,8 @@ namespace PIERStory
         public JsonData noticeData = null;          // 공지사항 데이터 
 
 
-        string messageRequireUpdate = string.Empty;
-        string messageTestVersion = string.Empty;
+        
+        
         const string KEY_ENCRYPTION = "imageEncrypt_2"; // 암호화 여부 
         
         #region 내장폰트
@@ -285,8 +286,12 @@ namespace PIERStory
             {
                 if (launchingJSON["header"]["isSuccessful"].IsBoolean && bool.Parse(launchingJSON["header"]["isSuccessful"].ToString()) == true)
                 {
-                    messageRequireUpdate = launchingJSON["launching"]["maintenance"]["message"]["requestUpdate"].ToString();
-                    messageTestVersion = launchingJSON["launching"]["maintenance"]["message"]["tester"].ToString();
+                    // 테스트 서버의 경우 코인샵 변경 
+                    if(isTestServerAccess) {
+                        coinShopURL =launchingJSON["launching"]["server"]["test_coinshop_url"].ToString();    
+                    }
+                    
+                    
                 }
                 else
                 {
@@ -296,7 +301,7 @@ namespace PIERStory
             catch (Exception e)
             {
                 Debug.Log(e.StackTrace);
-                launchingJSON = true;
+                launchingJSON = null;
             }
         } // ? CallbackGamebaseLaunching
 
@@ -410,18 +415,13 @@ namespace PIERStory
             // * 폰트 에셋 번들도 이 시점에서 받아야 한다. 
             RequestGameServerInfo();
             RequestAppCommonResources();
+            
+            isTestServerAccess = false; 
         
             // 통신 완료까지 대기 
             while(!isServerInfoReceived || !isAppCommonResourcesReceived)
                 yield return null;      
                 
-            #region Gamebase Launching 
-            isLaunchingCalled = false; 
-            NetworkLoader.main.RequestGamebaseLaunching(CallbackGamebaseLaunching);
-            while (!isLaunchingCalled) // 응답 받을때까지 기다리기. 
-                yield return null;
-            #endregion
-            
             
             // * 상태에 따른 추가 처리 용도 
             switch (clientStatus)
@@ -433,9 +433,7 @@ namespace PIERStory
                     break;
 
                 case GamebaseLaunchingStatus.IN_TEST: // 테스트 버전
-                    // 테스트 버전이라는 팝업 알림 처리  
-                    // 21.09.02 밴을 걸었을 때, 런칭 상태를 먼저 확인하기 떄문에 밴에 관한 팝업이 뜨지를 않는다
-                    //ShowSimpleMessagePopUp(messageTestVersion);
+                    isTestServerAccess = true; // 테스트 버전.
                     break;
 
                 case GamebaseLaunchingStatus.IN_REVIEW: // iOS & Android 심사
@@ -444,7 +442,9 @@ namespace PIERStory
 
                 case GamebaseLaunchingStatus.REQUIRE_UPDATE: // 업그레이드 필수
                     // 각 스토어 페이지를 열어주고 앱은 종료 처리 
-                    ShowLobbyPopup(messageRequireUpdate, Application.Quit, null, false);
+
+                    ShowLobbyPopup(GetLocalizedText("3"), ForwardToStore, ForwardToStore, false);
+                    
                     isServerValid = false;
                     break;
 
@@ -461,6 +461,15 @@ namespace PIERStory
                     isServerValid = false;
                     break;
             } // ? end of switch
+            
+            
+            #region Gamebase Launching 
+            isLaunchingCalled = false; 
+            NetworkLoader.main.RequestGamebaseLaunching(CallbackGamebaseLaunching);
+            while (!isLaunchingCalled) // 응답 받을때까지 기다리기. 
+                yield return null;
+            #endregion
+            
             
             // 게임베이스 이용약관 Query.
             QueryGamebaseTerms(); 
@@ -581,6 +590,8 @@ namespace PIERStory
             resetIncrementRate = GetJsonNodeInt(masterInfo, "reset_increment_rate"); // 리셋 비용 증가비율 
             
             episodeOpenPricePer = GetJsonNodeInt(masterInfo, "open_price_per"); // 에피소드 시간단축 오픈 10분당 코인 가격
+            waitingReduceTimeAD = GetJsonNodeInt(masterInfo, "reduce_waiting_time_ad"); // 광고보고 단축되는 시간 .
+            
             
             privacyURL = GetJsonNodeString(masterInfo, "privacy_url");
             termsOfUseURL = GetJsonNodeString(masterInfo, "terms_url"); 
@@ -2092,6 +2103,11 @@ namespace PIERStory
 
 
         }
+        
+        void ForwardToStore() {
+            Application.OpenURL("http://onelink.to/g9ja38");
+        }
+        
         
         /// <summary>
         /// 기본 재화의 아이콘 URL 

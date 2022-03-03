@@ -77,7 +77,11 @@ namespace PIERStory {
             
         }
         
-        public void SetTimeOpenPrice(int __price) {
+        /// <summary>
+        /// 신규 디자인에서 사용하지 않음 ㅠㅠ 
+        /// </summary>
+        /// <param name="__price"></param>
+        void SetTimeOpenPrice(int __price) {
             openPrice = __price;
             
             if(openPrice < 0)

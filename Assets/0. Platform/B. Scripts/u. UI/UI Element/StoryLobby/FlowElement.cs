@@ -122,7 +122,11 @@ namespace PIERStory {
             // 디테일 관련 처리 
             detailFrame.sizeDelta = sizeDetailOrigin;
             detailArrow.eulerAngles = Vector3.zero;
-            
+            rectOrigin.sizeDelta = sizeNormalBody;
+            layoutElement.minWidth = sizeDetailOrigin.x;
+            layoutElement.minHeight = sizeDetailOrigin.y;
+
+            // Summary 및 게이지 처리             
             textSummary.text = currentEpisode.episodeSummary;
             if(currentEpisode.episodeGalleryImageProgressValue > -1) {
                 groupIllustProgressor.SetActive(true);
@@ -363,6 +367,20 @@ namespace PIERStory {
             if(currentEpisode.episodeState == EpisodeState.Prev || currentEpisode.episodeState == EpisodeState.Block) {
                 SystemManager.ShowFlowResetPopup(currentEpisode); // 리셋 호출.
             }
+        }
+        
+        /// <summary>
+        /// 플로우 자체를 버튼처럼 사용할 수 있게 변경.
+        /// </summary>
+        public void OnClickFlow() {
+            if(UserManager.main.CheckAdminUser()) {
+                SystemManager.ShowLobbyPopup("슈퍼 유저입니다. 선택한 에피소드를 플레이 하겠습니까?", SuperUserEpisodeStart, null, true);
+            }
+        }
+        
+        void SuperUserEpisodeStart() {
+            // 바로 시작 
+                StoryLobbyMain.SuperUserFlowEpisodeStart?.Invoke(currentEpisode);
         }
 
     }

@@ -175,7 +175,9 @@ namespace PIERStory
         const string NODE_SELECTION_PROGRESS = "selectionProgress"; // 선택지 프로그레스 
         
         const string NODE_FREEPASS_TIMEDEAL = "userFreepassTimedeal"; // 유저 프리패스 타임딜
-        
+        const string NODE_SELECTION_PURCHASE = "selectionPurchase";
+
+
         const string NODE_USER_SNIPPET = "userSnippet"; // 유저 스니핏 
 
         #endregion
@@ -548,6 +550,23 @@ namespace PIERStory
                 DictStoryMission[__missionID] = __data;
                 
             }
+        }
+
+        /// <summary>
+        /// 선택지 구매
+        /// </summary>
+        public void PurchaseSelection(string __selectionGroup, string __selectionNo, int __price, OnRequestFinishedDelegate __cb)
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "purchaseSelection";
+            sending[CommonConst.COL_USERKEY] = userKey;
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
+            sending[CommonConst.COL_EPISODE_ID] = StoryManager.main.CurrentEpisodeID;
+            sending[GameConst.COL_SELECTION_GROUP] = __selectionGroup;
+            sending[GameConst.COL_SELECTION_NO] = __selectionNo;
+            sending["price"] = __price;
+
+            NetworkLoader.main.SendPost(__cb, sending, true);
         }
 
 
@@ -970,7 +989,6 @@ namespace PIERStory
 
         #region 유저 노드 제어 
 
-        
 
         /// <summary>
         /// 유저 계정 노드 
@@ -1240,11 +1258,6 @@ namespace PIERStory
 
 
    
-
-
-
-
-
         /// <summary>
         /// 프로젝트 도전과제 정보
         /// </summary>
@@ -1254,8 +1267,6 @@ namespace PIERStory
         }
 
 
-        
-        
         /// <summary>
         /// 유저 갤러리 이미지 리스트 및 오픈 기록  
         /// 일반, 라이브 페어 시스템 적용
@@ -1266,11 +1277,6 @@ namespace PIERStory
         }
         
         
-
-
-
-
-        
         /// <summary>
         /// 유저 갤러리 이미지 목록 및 해금 정보 업데이트 
         /// </summary>
@@ -1280,9 +1286,6 @@ namespace PIERStory
         }
 
         
-
-
-
 
         /// <summary>
         /// 유저 에피소드 진행도 
@@ -1361,19 +1364,17 @@ namespace PIERStory
             currentStoryJson[NODE_NEXT_EPISODE] = __j;
             string.Format("SetNodeUserNextEpisode [{0}]", JsonMapper.ToStringUnicode(__j));
         }
-        
-        
+
+
         /// <summary>
         /// 유저 작품별 컬렉션 진행도 
         /// </summary>
         /// <returns></returns>
-        public JsonData GetNodeUserCollectionProgress() {
-            
-            
-            
-            if(currentStoryJson == null || !currentStoryJson.ContainsKey(NODE_COLLECTION_PROGRESS))
+        public JsonData GetNodeUserCollectionProgress()
+        {
+            if (currentStoryJson == null || !currentStoryJson.ContainsKey(NODE_COLLECTION_PROGRESS))
                 return null;
-            
+
             return currentStoryJson[NODE_COLLECTION_PROGRESS];
         }
         
@@ -1573,6 +1574,17 @@ namespace PIERStory
         }
         
         
+        /// <summary>
+        /// 선택지 구매 목록 갱신
+        /// </summary>
+        /// <param name="__data"></param>
+        public void SetPurchaseSelection(string __data)
+        {
+            JsonData data = JsonMapper.ToObject(__data);
+
+            // 여기 Exception 날 수 있음
+            currentStoryJson[NODE_SELECTION_PURCHASE][StoryManager.main.CurrentEpisodeID] = data;
+        }
         
 
 
@@ -2316,25 +2328,26 @@ namespace PIERStory
             // 목록에 겂거나, 이미 해금되었다. 
             return false;
         }
-        
+
         /// <summary>
         ///  갤러리에서 사용되는 이미지들의 퍼블릭 네임 가져오기 
         /// </summary>
         /// <param name="__id"></param>
         /// <param name="__type"></param>
         /// <returns></returns>
-        public string GetGalleryImagePublicName(string __id, string __type) {
-            for(int i=0;i<GetUserGalleryImage().Count;i++) {
-                
-                if(SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_id") == __id
-                    && SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_type") == __type) {
-                        
-                        return SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "public_name");
+        public string GetGalleryImagePublicName(string __id, string __type)
+        {
+            for (int i = 0; i < GetUserGalleryImage().Count; i++)
+            {
+
+                if (SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_id") == __id
+                    && SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_type") == __type)
+                {
+
+                    return SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "public_name");
                 }
-                
-                
             }
-            
+
             return string.Empty;
         }
 
@@ -2483,17 +2496,16 @@ namespace PIERStory
         /// <param name="imageName">이미지(라이브오브제) 이름</param>
         public bool CheckMinicutUnlockable(string imageName, string minicutType)
         {
-                
-            
             // 노드 루프돌면서 오픈된 기록이 있는지 체크한다.
-            for(int i=0;i< GetUserGalleryImage().Count;i++)
+            for (int i = 0; i < GetUserGalleryImage().Count; i++)
             {
-                    if(SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], LobbyConst.ILLUST_NAME) == imageName
-                        && SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_type") == minicutType
-                        && !SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "illust_open")) {
-                        
-                        return true; // 해금 가능
-                    }
+                if (SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], LobbyConst.ILLUST_NAME) == imageName
+                    && SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_type") == minicutType
+                    && !SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "illust_open"))
+                {
+
+                    return true; // 해금 가능
+                }
             }
 
             return false; // 데이터가 없다. 불가능
@@ -2521,6 +2533,33 @@ namespace PIERStory
             currentStoryJson[NODE_FREEPASS_TIMEDEAL] = __data;
         }
         
+
+        /// <summary>
+        /// 해당 에피소드의 선택한 선택지를 구매한적 있는지 체크체크
+        /// </summary>
+        /// <param name="__episodeID"></param>
+        /// <returns></returns>
+        public bool IsPurchaseSelection(string __episodeID, string __selectionGroup, string __selectionNo)
+        {
+            // key값이 없으면 구매한 적이 없는 에피소드
+            if (!currentStoryJson[NODE_SELECTION_PURCHASE].ContainsKey(__episodeID))
+                return false;
+
+            JsonData selectionPurchaseData = currentStoryJson[NODE_SELECTION_PURCHASE][__episodeID];
+
+            for (int i = 0; i < selectionPurchaseData.Count; i++)
+            {
+                // 선택지 그룹이 같은게 아니면 넘겨넘겨
+                if (SystemManager.GetJsonNodeString(selectionPurchaseData, GameConst.COL_SELECTION_GROUP) != __selectionGroup)
+                    continue;
+
+                // 같은 선택지 그룹 내에서 같은 번호면 구매한적이 있으니 true 반환
+                if (SystemManager.GetJsonNodeString(selectionPurchaseData, GameConst.COL_SELECTION_NO) == __selectionNo)
+                    return true;
+            }
+
+            return false;
+        }
         
         #region 유저 스니핏
         

@@ -113,6 +113,7 @@ namespace PIERStory
         public const string ROW_CONTROL_MOUTH = "입";                 // 립싱크 제어용도 
         public const string ROW_CONTROL_PHONE = "전화";               // 전화 템플릿 관련 제어
         public const string ROW_CONTROL_STATE = "상태";
+        public const string ROW_CONTROL_STAR = "스타";                // 과금선택지 재화 제어
 
 
         // 스크립트 템플릿

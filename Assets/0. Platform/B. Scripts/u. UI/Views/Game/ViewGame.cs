@@ -41,7 +41,7 @@ namespace PIERStory
 
         
         [Space][Space][Header("**선택지**")]
-        public GameObject selectionInfo;
+        public CanvasGroup selectionInfo;
         public TextMeshProUGUI selectionInfoText;       // 선택지 안내 텍스트
         public Image selectionTutorialText;     // 선택지 튜토리얼 안내문구
         public Image selectionBackground; // 선택지 나올때 음영처리를 위한 백그라운드 이미지
@@ -428,15 +428,17 @@ namespace PIERStory
             selectionBackground.color = CommonConst.COLOR_BLACK_TRANSPARENT;
             selectionBackground.gameObject.SetActive(true);
             selectionBackground.DOFade(0.7f, 1);
+            selectionInfo.DOFade(1f, 1f);
             
             if(!UserManager.main.isSelectionTutorialClear) {
                 selectionTutorialText.color = CommonConst.COLOR_BLACK_TRANSPARENT;
                 selectionTutorialText.gameObject.SetActive(true);
                 selectionTutorialText.DOFade(1, 1);    
             }
-            
-            
 
+
+            // 선택지 셋팅
+            /*
             for (int i = 0; i < ListSelectionRows.Count; i++)
             {
                 if(i >= ListGameSelection.Count) {
@@ -444,6 +446,14 @@ namespace PIERStory
                     break;
                 }
                 
+                ListGameSelection[i].SetSelection(ListSelectionRows[i], i);
+                ListAppearSelection.Add(ListGameSelection[i]); // appear에 추가. 
+            }
+            */
+
+            // 마지막 선택지부터 stack처럼 쌓기
+            for (int i = ListSelectionRows.Count - 1; i >= 0; i--)
+            {
                 ListGameSelection[i].SetSelection(ListSelectionRows[i], i);
                 ListAppearSelection.Add(ListGameSelection[i]); // appear에 추가. 
             }
@@ -499,8 +509,7 @@ namespace PIERStory
             // * 모든 선택지가 퇴장했다. 
             if (ListAppearSelection.Count == 0)
             {
-                SetBlockScreenActiveFlag(false); // 입력막기 풀기. 
-                selectionInfo.SetActive(false);  // 선택지 안내 비활성화
+                SetBlockScreenActiveFlag(false); // 입력막기 풀기.
                 HideSelection(); // Selection 처리 완료
             }
         }
@@ -534,7 +543,7 @@ namespace PIERStory
         public void SetSelectionInfoText(string __info)
         {
             selectionInfoText.text = __info;
-            selectionInfo.SetActive(true);
+            selectionInfo.alpha = 0f;
         }
 
 

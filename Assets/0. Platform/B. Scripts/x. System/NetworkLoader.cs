@@ -366,22 +366,7 @@ namespace PIERStory
             request.Send();
         }
 
-        /// <summary>
-        /// 유저 호감도 업데이트 
-        /// </summary>
-        /// <param name="__favorName">호감도 이름</param>
-        /// <param name="__score">점수</param>
-        /// <param name="__cb">콜백</param>
-        public void UpdateUserFavor(string __favorName, int __score, OnRequestFinishedDelegate __cb)
-        {
-            JsonData sending = new JsonData();
-            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 
-            sending["favor_name"] = __favorName; // 호감도 이름
-            sending["score"] = __score; // 스코어 
-            sending["func"] = FUNC_UPDATE_USER_FAVOR_HISTORY; // func 지정 
-
-            SendPost(__cb, sending);
-        }
+        
 
 
         /// <summary>

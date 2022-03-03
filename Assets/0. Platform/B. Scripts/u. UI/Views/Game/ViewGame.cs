@@ -41,6 +41,8 @@ namespace PIERStory
 
         
         [Space][Space][Header("**선택지**")]
+        public GameObject selectionInfo;
+        public TextMeshProUGUI selectionInfoText;       // 선택지 안내 텍스트
         public Image selectionTutorialText;     // 선택지 튜토리얼 안내문구
         public Image selectionBackground; // 선택지 나올때 음영처리를 위한 백그라운드 이미지
         public List<ScriptRow> ListSelectionRows = new List<ScriptRow>(); // 현재보여지는 선택지 정보의 스크립트 데이터 
@@ -479,10 +481,8 @@ namespace PIERStory
                 selectionTutorialText.DOFade(0, 0.5f).OnComplete(()=>{ selectionTutorialText.gameObject.SetActive(false);});
             }
             
-            
             // 사건 ID 미리할당. 
             GameManager.main.targetSelectionSceneID = __targetSceneID;
-           
         }
         
         /// <summary>
@@ -491,18 +491,18 @@ namespace PIERStory
         /// <param name="__selection"></param>
         public void RemoveListAppearSelection(IFYouGameSelectionCtrl __selection)
         {
-            
             // IFYouGameSelectionCtrl에서 상태가 None으로 변경되면서 호출된다. 
             ListAppearSelection.Remove(__selection);
             
             Debug.Log(">> RemoveListAppearSelection, count : " + ListAppearSelection.Count);
 
             // * 모든 선택지가 퇴장했다. 
-            if (ListAppearSelection.Count == 0) {
+            if (ListAppearSelection.Count == 0)
+            {
                 SetBlockScreenActiveFlag(false); // 입력막기 풀기. 
+                selectionInfo.SetActive(false);  // 선택지 안내 비활성화
                 HideSelection(); // Selection 처리 완료
             }
-            
         }
 
         /// <summary>
@@ -510,7 +510,6 @@ namespace PIERStory
         /// </summary>
         public void HideSelection()
         {
-            
             Debug.Log(">> HideSelection");
         
             GameManager.main.isSelectionInputWait = false;
@@ -523,12 +522,22 @@ namespace PIERStory
             // 메신저 중이었다면 비활성화
             if (messenger.activeSelf)
                 messenger.SetActive(false);
-
             
             // * 광고처리 추가 
             AdManager.main.PlaySelectionAD();
-
         }
+
+        /// <summary>
+        /// 선택지 안내 문구 세팅
+        /// </summary>
+        /// <param name="text"></param>
+        public void SetSelectionInfoText(string __info)
+        {
+            selectionInfoText.text = __info;
+            selectionInfo.SetActive(true);
+        }
+
+
 
 
         #endregion

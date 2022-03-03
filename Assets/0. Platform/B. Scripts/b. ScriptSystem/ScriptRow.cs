@@ -321,6 +321,10 @@ namespace PIERStory
         {
             switch (template)
             {
+                case GameConst.TEMPLATE_ABILITY:
+                    rowAction = new RowActionAbility(this);
+                    break;
+
                 case GameConst.TEMPLATE_ANGLE_MOVE:
                     rowAction = new RowActionAngleMove(this);
                     break;
@@ -347,10 +351,6 @@ namespace PIERStory
 
                 case GameConst.TEMPLATE_EXIT:
                     rowAction = new RowActionExit(this);
-                    break;
-
-                case GameConst.TEMPLATE_FAVOR:
-                    rowAction = new RowActionFavor(this);
                     break;
 
                 case GameConst.TEMPLATE_FLOWTIME:
@@ -423,6 +423,10 @@ namespace PIERStory
 
                 case GameConst.TEMPLATE_SELECTION:
                     rowAction = new RowActionSelection(this);
+                    break;
+
+                case GameConst.TEMPLATE_SELECTION_INFO:
+                    rowAction = new RowActionSelectionInfo(this);
                     break;
 
                 case GameConst.TEMPLATE_TALK:

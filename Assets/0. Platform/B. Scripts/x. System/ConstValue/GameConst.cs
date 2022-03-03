@@ -125,6 +125,7 @@ namespace PIERStory
         public const string TEMPLATE_SPEECH = "speech";             // 중요대사
 
         public const string TEMPLATE_SELECTION = "selection";
+        public const string TEMPLATE_SELECTION_INFO = "selection_info";     // 선택지안내
         public const string TEMPLATE_PHONECALL = "phonecall";               //전화
         public const string TEMPLATE_PHONE_SELF = "phone_self";             //전화본인
         public const string TEMPLATE_PHONE_PARTNER = "phone_partner";       //전화상대
@@ -150,7 +151,7 @@ namespace PIERStory
         public const string TEMPLATE_FLOWTIME = "flow_time";        //시간 흐름
         public const string TEMPLATE_BGM = "bgm";                   //배경음
         public const string TEMPLATE_BGM_REMOVE = "bgm_remove";     //배경음 제거
-        public const string TEMPLATE_FAVOR = "favor";               //호감도
+        public const string TEMPLATE_ABILITY = "ability";           //능력치
         public const string TEMPLATE_MISSION = "mission";           //미션
         public const string TEMPLATE_ANGLE_MOVE = "angle_move";     //앵글 이동
         public const string TEMPLATE_CLEAR_SCREEN = "clear_screen"; //화면 정리

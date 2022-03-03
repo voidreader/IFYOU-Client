@@ -13,8 +13,7 @@ namespace PIERStory
 
         JsonData currencyData;
         public string currencyName = string.Empty;
-        int totalCount = 1;
-        public int currentCount = 0;
+        public int totalCount = 1, currentCount = 0;
         
 
         public void InitCurrencyListElement(JsonData __j)
@@ -68,12 +67,7 @@ namespace PIERStory
 
         public void OnClickSelectStanding()
         {
-            if (totalCount <= currentCount)
-                return;
-
-            currentCount++;
-            //ViewProfileDeco.OnStandingSetting?.Invoke(currencyData, this);
-            ViewStoryLobby.OnSelectCharacter?.Invoke(currencyData);
+            ViewStoryLobby.OnSelectStanding?.Invoke(currencyData, this);
         }
 
         public void OnClickSelectFrame()

@@ -173,6 +173,12 @@ namespace PIERStory
             if (!PlayerPrefs.HasKey(GameConst.AUTO_PLAY))
                 PlayerPrefs.SetFloat(GameConst.AUTO_PLAY, GameConst.normalDelay);
 
+            if (!PlayerPrefs.HasKey(GameConst.MISSION_POPUP))
+                PlayerPrefs.SetInt(GameConst.MISSION_POPUP, 1);
+
+            if (!PlayerPrefs.HasKey(GameConst.ILLUST_POPUP))
+                PlayerPrefs.SetInt(GameConst.ILLUST_POPUP, 1);
+
             // * 화면 어두워지지 않도록 설정 
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
 

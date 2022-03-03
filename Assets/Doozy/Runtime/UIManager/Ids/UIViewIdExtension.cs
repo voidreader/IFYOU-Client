@@ -36,6 +36,7 @@ namespace Doozy.Runtime.UIManager
         {
             EpisodeStart,
             Mail,
+            StarShop,
             Top
         }
 

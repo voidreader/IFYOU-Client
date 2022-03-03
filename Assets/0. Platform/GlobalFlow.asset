@@ -1166,7 +1166,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 0, y: 417}
+  Position: {x: -0.00001180172, y: 417.00006}
   OnEnterShowViews:
   - Id:
       Category: Common
@@ -1211,6 +1211,70 @@ MonoBehaviour:
   Passthrough: 1
   ClearGraphHistory: 0
   Position: {x: 2154.0005, y: 1129.0002}
+--- !u!114 &-4157490902061599624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 14a6f57d-3284-4a79-9521-552e6aee9385
+  NodeType: 0
+  NodeName: Shop
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 14a6f57d-3284-4a79-9521-552e6aee9385
+    PortId: 8356c4e9-f626-4ac9-beb0-1659bceea9f4
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - e8f3e80a-9779-4ae6-a4ea-314dfb55a96e
+    Value: '{"CanGoBack":true}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 14a6f57d-3284-4a79-9521-552e6aee9385
+    PortId: 6d592b3e-90d9-4f4a-a177-2604e3667e64
+    Direction: 1
+    Capacity: 0
+    Connections: []
+    Value: '{"Trigger":0,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 0
+  Position: {x: -0.00005722046, y: 542}
+  OnEnterShowViews:
+  - Id:
+      Category: Common
+      Name: StarShop
+      Custom: 0
+    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
+  OnExitHideViews:
+  - Id:
+      Category: Common
+      Name: StarShop
+      Custom: 0
+    Mode: 0
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
 --- !u!114 &-4121138070047781917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1738,6 +1802,8 @@ MonoBehaviour:
   - {fileID: -8451576045349666151}
   - {fileID: -9108271990163937834}
   - {fileID: 6933821233132180530}
+  - {fileID: 4756520612618192472}
+  - {fileID: -4157490902061599624}
   RootNode: {fileID: 3282273850073061226}
   ActiveNode: {fileID: 0}
 --- !u!114 &314016154523122154
@@ -2442,6 +2508,72 @@ MonoBehaviour:
     Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
+--- !u!114 &4756520612618192472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b2479a69f56cf54c96de81c44e8ad1a, type: 3}
+  m_Name: Portal
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 9bf57976-7c53-4869-b7a0-06e51c99f9bf
+  NodeType: 1
+  NodeName: Shop Portal
+  NodeDescription: 
+  InputPorts: []
+  OutputPorts:
+  - NodeId: 9bf57976-7c53-4869-b7a0-06e51c99f9bf
+    PortId: e8f3e80a-9779-4ae6-a4ea-314dfb55a96e
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 8356c4e9-f626-4ac9-beb0-1659bceea9f4
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: -239, y: 541.7543}
+  Trigger: 0
+  SignalPayload:
+    StreamId:
+      Category: Common
+      Name: Shop
+      Custom: 0
+    SignalValueType: 0
+    IntegerValue: 0
+    BooleanValue: 0
+    FloatValue: 0
+    StringValue: 
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+    Vector4Value: {x: 0, y: 0, z: 0, w: 0}
+  ButtonId:
+    Category: None
+    Name: None
+    Custom: 0
+  ToggleId:
+    Category: None
+    Name: None
+    Custom: 0
+  CommandToggle: 2
+  ViewId:
+    Category: None
+    Name: None
+    Custom: 0
+  CommandShowHide: 0
 --- !u!114 &5046532316096942247
 MonoBehaviour:
   m_ObjectHideFlags: 0

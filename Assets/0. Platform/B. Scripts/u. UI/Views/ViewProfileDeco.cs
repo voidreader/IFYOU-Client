@@ -46,7 +46,6 @@ namespace PIERStory
 
         [Space][Header("배경 Tab")]
         public ImageRequireDownload background;     // 배경 이미지
-        public MoveBackground moveBg;               
         public GameObject bgPrefab;                 // 배경 리스트에 들어가는 element
         public Transform bgElementListContent;      // 배경element가 들어갈 parent
         public GameObject profileBgScroll;          // 배경 리스트 scroll object
@@ -113,7 +112,6 @@ namespace PIERStory
 
             OnDisableAllOptionals = OnClickAllDisable;
             OnBackgroundSetting = ProfileBackgrounSetting;
-            OnBadgeSetting = ProfileBadgeSetting;
             OnStickerSetting = ProfileStickerSetting;
             OnStandingSetting = ProfileStandingSetting;
             OnControlStanding = SelectControlStanding;
@@ -138,14 +136,11 @@ namespace PIERStory
                             background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY_KEY));
                             background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_POS_X)), 0f);
                             background.GetComponent<RectTransform>().sizeDelta = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_WIDTH)), float.Parse(SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_HEIGHT)));
-                            moveBg.currencyName = SystemManager.GetJsonNodeString(profileCurrency[j], LobbyConst.NODE_CURRENCY);
+                            
                             break;
 
                         case LobbyConst.NODE_BADGE:
                         case LobbyConst.NODE_STICKER:
-                            ItemElement itemElement = Instantiate(stickerObjectPrefab, decoObjects).GetComponent<ItemElement>();
-                            itemElement.SetProfileItem(profileCurrency[j]);
-                            createObject.Add(itemElement.gameObject);
                             break;
                         case LobbyConst.NODE_STANDING:
                             StandingElement standingElement = Instantiate(standingPrefab, standingObjects).GetComponent<StandingElement>();
@@ -201,9 +196,6 @@ namespace PIERStory
             // 캐릭터 스탠딩
             LoadStandingData();
 
-            // 뱃지
-            LoadBadgeData();
-
             // 스티커
             LoadStickerData();
 
@@ -226,12 +218,14 @@ namespace PIERStory
 
                 for (int j = 0; j < decoObjects.childCount; j++)
                 {
+                    /*
                     if (decoObjects.GetChild(j).GetComponent<ItemElement>() != null && createObject[i].GetComponent<ProfileItemElement>().currencyName == decoObjects.GetChild(j).GetComponent<ItemElement>().currencyName)
                     {
                         decoObjects.GetChild(j).GetComponent<ItemElement>().profileDecoElement = createObject[i].GetComponent<ProfileItemElement>();
                         outLoop = true;
                         break;
                     }
+                    */
                 }
 
                 if (outLoop)
@@ -302,8 +296,8 @@ namespace PIERStory
         {
             for(int i=0;i<decoObjects.childCount;i++)
             {
-                if (decoObjects.GetChild(i).GetComponent<ItemElement>() != null)
-                    decoObjects.GetChild(i).GetComponent<ItemElement>().DisableOptionals();
+                //if (decoObjects.GetChild(i).GetComponent<ItemElement>() != null)
+                //    decoObjects.GetChild(i).GetComponent<ItemElement>().DisableOptionals();
             }
 
             for (int i = 0; i < textObjects.childCount; i++)
@@ -335,7 +329,6 @@ namespace PIERStory
             background.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_KEY), true);
             background.transform.localPosition = Vector3.zero;
             
-            moveBg.currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
 
             // 배경 위에 뭔가 있으면 화면 드래그가 안되니까 rayCast를 화면 제외하고 다 꺼주자
             for (int i = 0; i < decoObjects.childCount; i++)
@@ -355,7 +348,6 @@ namespace PIERStory
         {
             profileBgScroll.SetActive(true);
             bgScrolling.SetActive(false);
-            moveBg.enabled = false;
 
             // 배경 설정 끝냈으니까 다시 raycastTargtet을 켜주자
             for (int i = 0; i < decoObjects.childCount; i++)
@@ -511,31 +503,6 @@ namespace PIERStory
 
         #endregion
 
-        #region 뱃지
-
-        void LoadBadgeData()
-        {
-            if (!CheckListable(LobbyConst.NODE_BADGE))
-            {
-                badgeScroll.SetActive(false);
-                noneBadgeItem.SetActive(true);
-                return;
-            }
-
-            badgeScroll.SetActive(true);
-            noneBadgeItem.SetActive(false);
-
-            CreateListObject(LobbyConst.NODE_BADGE, badgeListPrefab, badgeElementListContent);
-        }
-
-        void ProfileBadgeSetting(JsonData __j, ProfileItemElement profileDeco)
-        {
-            ItemElement badgeElement = Instantiate(stickerObjectPrefab, decoObjects).GetComponent<ItemElement>();
-            badgeElement.NewProfileItem(__j, profileDeco);
-            createObject.Add(badgeElement.gameObject);
-        }
-
-        #endregion
 
         #region 스티커 관련
 
@@ -556,9 +523,11 @@ namespace PIERStory
 
         void ProfileStickerSetting(JsonData __j, ProfileItemElement profileDeco)
         {
+            /*
             ItemElement stickerElement = Instantiate(stickerObjectPrefab, decoObjects).GetComponent<ItemElement>();
             stickerElement.NewProfileItem(__j, profileDeco);
             createObject.Add(stickerElement.gameObject);
+            */
         }
 
         #endregion
@@ -807,21 +776,7 @@ namespace PIERStory
 
             int sortingOrder = 0;
 
-            if (!string.IsNullOrEmpty(moveBg.currencyName))
-            {
-                // 배경 먼저 넣는다. 배경은 무조건 sortingOrder값을 0으로 가져간다
-                JsonData bgData = new JsonData();
-                bgData[LobbyConst.NODE_CURRENCY] = moveBg.currencyName;
-                bgData[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
-                bgData[LobbyConst.NODE_POS_X] = moveBg.bgObject.anchoredPosition.x;
-                bgData[LobbyConst.NODE_POS_Y] = moveBg.bgObject.anchoredPosition.y;
-                bgData[LobbyConst.NODE_WIDTH] = moveBg.bgObject.sizeDelta.x;
-                bgData[LobbyConst.NODE_HEIGHT] = moveBg.bgObject.sizeDelta.y;
-                bgData[LobbyConst.NODE_ANGLE] = 0;
-
-                sending[LobbyConst.NODE_CURRENCY_LIST].Add(bgData);
-            }
-
+           
             // 스탠딩을 먼저 넣어준다
             for (int i = 0; i < standingObjects.childCount; i++)
             {
@@ -834,7 +789,7 @@ namespace PIERStory
             for (int i = 0; i < decoObjects.childCount; i++)
             {
                 sortingOrder++;
-                sending[LobbyConst.NODE_CURRENCY_LIST].Add(decoObjects.GetChild(i).GetComponent<ItemElement>().SaveJsonData(sortingOrder));
+                //sending[LobbyConst.NODE_CURRENCY_LIST].Add(decoObjects.GetChild(i).GetComponent<ItemElement>().SaveJsonData(sortingOrder));
             }
 
             // frame 넣기
@@ -883,7 +838,6 @@ namespace PIERStory
             // 저장이 완료되면 다시 ViewMain으로 간다
             UserManager.main.userProfile = JsonMapper.ToObject(res.DataAsText);
             Debug.Log(JsonMapper.ToStringUnicode(UserManager.main.userProfile));
-            ViewMain.OnProfileSetting?.Invoke();
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SAVE_PROFILE_DECO);
             SystemManager.ShowSimpleAlertLocalize("6122");
         }
@@ -897,8 +851,6 @@ namespace PIERStory
             // 높이가 1200 미만이면 비율 2배수하기
             if (background.GetComponent<RectTransform>().sizeDelta.y < 1200)
                 background.GetComponent<RectTransform>().sizeDelta *= 2f;
-
-            moveBg.enabled = true;
         }
 
         /// <summary>

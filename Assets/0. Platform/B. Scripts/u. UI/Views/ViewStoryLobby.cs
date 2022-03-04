@@ -18,6 +18,7 @@ namespace PIERStory
         public static Action OnDisableAllOptionals = null;
         public static Action<JsonData> OnSelectBackground = null;
         public static Action<JsonData, ProfileItemElement> OnSelectStanding = null;
+        public static Action<JsonData, ProfileItemElement> OnStickerSetting = null;
 
 
         public static bool loadComplete = false;
@@ -30,6 +31,7 @@ namespace PIERStory
         List<GameObject> createObjects = new List<GameObject>();
         public List<UIToggle> typeToggles;
         public UIContainer decoListContainer;
+        public GameObject coinShopButton;
         List<GameModelCtrl> liveModels = new List<GameModelCtrl>();
 
         bool moveBg = false;
@@ -114,7 +116,6 @@ namespace PIERStory
         {
             base.OnView();
 
-            
         }
 
         public override void OnHideView()
@@ -128,6 +129,7 @@ namespace PIERStory
 
             usageStandingControl.SetActive(false);
 
+            LobbyManager.main.lobbyBackground.sprite = null;
             loadComplete = false;
         }
 
@@ -162,6 +164,10 @@ namespace PIERStory
             CreateListObject(LobbyConst.NODE_STANDING, standingListPrefab, standingListContent);
             CreateListObject(LobbyConst.NODE_STICKER, stickerListPrefab, stickerListContent);
 
+            SortingList(bgListContent);
+            SortingList(stickerListContent);
+            StandingListSort();
+
             // 화면의 활성화된 것과 리스트 재화와 연결
 
 
@@ -169,6 +175,11 @@ namespace PIERStory
 
             mainContainer.Hide();
             decoContainer.Show();
+
+            foreach (UIToggle toggle in typeToggles)
+                toggle.GetComponentInChildren<CanvasGroup>().alpha = 1f;
+
+            Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobbyDeco", string.Empty);
         }
 
 
@@ -197,16 +208,24 @@ namespace PIERStory
             {
                 switch (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE))
                 {
-                    case LobbyConst.NODE_WALLPAPER:
+                    case LobbyConst.NODE_WALLPAPER:     // 배경
                         bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, storyProfile[i], BGLoadComplete);
                         bgCurrency = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);
                         LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_POS_X), 0, 0);
                         break;
 
-                    case LobbyConst.NODE_BADGE:
-                    case LobbyConst.NODE_STICKER:
+                    case GameConst.NODE_SCRIPT:         // 대사
+                        
+
                         break;
-                    case LobbyConst.NODE_STANDING:
+                    case LobbyConst.NODE_STICKER:       // 스티커
+
+                        StickerElement sticker = Instantiate(stickerObjectPrefab, stickerParent).GetComponent<StickerElement>();
+                        sticker.SetStickerElement(storyProfile[i]);
+                        createObjects.Add(sticker.gameObject);
+
+                        break;
+                    case LobbyConst.NODE_STANDING:      // 스탠딩 캐릭터
 
                         // live2D는 LobbyManager를 부모로해서 만들고, 그냥 이미지는 StandingElement를 생성하자
                         if (SystemManager.GetJsonNodeInt(storyProfile[i], "model_id") < 0)
@@ -270,7 +289,7 @@ namespace PIERStory
         void DisableAllStickerOptionals()
         {
             for (int i = 0; i < stickerParent.childCount; i++)
-                stickerParent.GetChild(i).GetComponent<ItemElement>().DisableOptionals();
+                stickerParent.GetChild(i).GetComponent<StickerElement>().DisableControlBox();
         }
 
         /// <summary>
@@ -279,9 +298,21 @@ namespace PIERStory
         public void OnClickShowDecoListContainer()
         {
             if (ToggleOnCheck() && decoListContainer.isHidden)
+            {
                 decoListContainer.Show();
+                coinShopButton.SetActive(false);
+
+                foreach (UIToggle toggle in typeToggles)
+                    toggle.GetComponentInChildren<CanvasGroup>().alpha = 0.3f;
+            }
             else if (!ToggleOnCheck() && decoListContainer.isVisible)
+            {
                 decoListContainer.Hide();
+                coinShopButton.SetActive(true);
+
+                foreach (UIToggle toggle in typeToggles)
+                    toggle.GetComponentInChildren<CanvasGroup>().alpha = 1f;
+            }
         }
 
         void CheckLoadComplete()
@@ -334,31 +365,74 @@ namespace PIERStory
         }
 
         /// <summary>
+        /// 스탠딩 캐릭터 리스트 정렬
+        /// </summary>
+        void StandingListSort()
+        {
+            ProfileItemElement[] items = standingListContent.GetComponentsInChildren<ProfileItemElement>();
+
+            int sortIndex = 0;
+
+            // currentCount가 1이상인 애들을 우선적으로 두고
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (items[i].currentCount >= 1)
+                {
+                    items[i].transform.SetSiblingIndex(sortIndex);
+                    items[i].useCheckIcon.SetActive(true);
+                    sortIndex++;
+                }
+            }
+
+            // 다음은 구매한 애들을 두번째
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (items[i].currentCount < 1 && items[i].totalCount > 0)
+                {
+                    items[i].transform.SetSiblingIndex(sortIndex);
+                    items[i].useCheckIcon.SetActive(false);
+                    sortIndex++;
+                }
+            }
+
+            // 미구매 상품
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (items[i].currentCount < 1 && items[i].totalCount == 0)
+                {
+                    items[i].transform.SetSiblingIndex(sortIndex);
+                    items[i].useCheckIcon.SetActive(false);
+                    sortIndex++;
+                }
+            }
+        }
+
+        /// <summary>
         ///  선택된 항목 배열 재정리
         /// </summary>
         void SortingList(Transform content)
         {
-            ProfileItemElement item = null;
-            int sortIndex = 0, i =0;
+            ProfileItemElement[] items = content.GetComponentsInChildren<ProfileItemElement>();
 
-            // 자식들을 조회해서
-            while (content.childCount > sortIndex)
+            int sortIndex = 0;
+
+            for (int i = 0; i < items.Length; i++)
             {
-                item = content.GetChild(i).GetComponent<ProfileItemElement>();
-
-                // currentCount가 1이상인 애들을 우선적으로 두고
-                if(item.currentCount >= 1 && item.totalCount > 0)
+                if (items[i].totalCount > 0)
                 {
-                    item.transform.SetSiblingIndex(sortIndex);
+                    items[i].transform.SetSiblingIndex(sortIndex);
                     sortIndex++;
-                    i++;
-                    continue;
                 }
+            }
 
-
-                // 다음은 구매한 애들을 두번째
-
-                // 마지막이 아직 미구매 상품
+            // 미구매 상품
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (items[i].currentCount < 1 && items[i].totalCount == 0)
+                {
+                    items[i].transform.SetSiblingIndex(sortIndex);
+                    sortIndex++;
+                }
             }
         }
 
@@ -384,6 +458,9 @@ namespace PIERStory
             bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, bgData, BGLoadComplete);
             bgCurrency = SystemManager.GetJsonNodeString(bgData, LobbyConst.NODE_CURRENCY);
             LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(0f, 0f, 0f);
+
+            for (int i = 0; i < bgListContent.childCount; i++)
+                bgListContent.GetChild(i).GetComponent<ProfileItemElement>().currentCount = 0;
 
             bgListScroll.SetActive(false);
             bgScrolling.SetActive(true);
@@ -442,7 +519,7 @@ namespace PIERStory
 
             // 화면에 이미 스탠딩이 있다면 SortingOrder 값을 증가시켜준다.
             if (liveModels.Count > 1)
-                controlModel.model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 500;
+                controlModel.model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 800;
 
             controlModel.ChangeLayerRecursively(controlModel.transform, GameConst.LAYER_MODEL_L);
         }
@@ -516,6 +593,16 @@ namespace PIERStory
         /// </summary>
         public void OnClickDeleteStanding()
         {
+            for (int i = 0; i < standingListContent.childCount; i++)
+            {
+                if (standingListContent.GetChild(i).GetComponent<ProfileItemElement>().modelName == controlModel.originModelName)
+                {
+                    standingListContent.GetChild(i).GetComponent<ProfileItemElement>().currentCount--;
+                    break;
+                }
+            }
+
+
             // 리스트에서 해당 오브젝트 삭제
             createObjects.Remove(controlModel.gameObject);
             liveModels.Remove(controlModel);
@@ -537,12 +624,21 @@ namespace PIERStory
         {
             moveCharacter = false;
 
+            StandingListSort();
+
             usageStandingControl.SetActive(false);
             standingListScroll.SetActive(true);
             standingController.SetActive(false);
 
             controlModel = null;
         }
+
+
+        #endregion
+
+        #region 스티커 관련
+
+
 
 
         #endregion

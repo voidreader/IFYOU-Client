@@ -17,7 +17,6 @@ namespace PIERStory {
     public class ViewMain : CommonView
     {
         public static Action OnMoveStarShop = null;
-        public static Action OnProfileSetting = null;
         public static Action<string> OnCategoryList;
         
         
@@ -135,12 +134,9 @@ namespace PIERStory {
 
             InitLobby();
 
-            OnProfileSetting = InitProfile;
-
             // 카테고리 
             InitCategory();
 
-            InitProfile();
             InitAddMore();
 
             if (UserManager.main.tutorialStep < 2)
@@ -570,75 +566,7 @@ namespace PIERStory {
         }
 
 
-        void InitProfile()
-        {
-            // 남아있는게 있으면 일단 다 뿌셔뿌셔
-            foreach (GameObject g in createObject)
-                Destroy(g);
-
-            createObject.Clear();
-
-            JsonData profileCurrency = SystemManager.GetJsonNode(UserManager.main.userProfile, LobbyConst.NODE_CURRENCY);
-            JsonData profileText = SystemManager.GetJsonNode(UserManager.main.userProfile, LobbyConst.NODE_TEXT);
-
-            if (profileCurrency.Count > 0)
-            {
-                bool hasFrame = false;
-                // currency List 화면에 배포
-                for (int i = 0; i < profileCurrency.Count; i++)
-                {
-                    switch (SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_TYPE))
-                    {
-                        case LobbyConst.NODE_WALLPAPER:
-                            background.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY));
-                            background.GetComponent<RectTransform>().sizeDelta = new Vector2(SystemManager.GetJsonNodeFloat(profileCurrency[i], LobbyConst.NODE_WIDTH), SystemManager.GetJsonNodeFloat(profileCurrency[i], LobbyConst.NODE_HEIGHT));
-                            background.GetComponent<RectTransform>().anchoredPosition = new Vector2(float.Parse(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_POS_X)), 0f);
-                            break;
-
-                        case LobbyConst.NODE_BADGE:
-                        case LobbyConst.NODE_STICKER:
-                            ItemElement deco = Instantiate(decoObjectPrefab, decoObjectParent).GetComponent<ItemElement>();
-                            deco.SetProfileItem(profileCurrency[i]);
-                            deco.GetComponent<Image>().raycastTarget = false;       // 프로필 페이지에서 선택되면 안돼!
-                            createObject.Add(deco.gameObject);
-                            break;
-                        case LobbyConst.NODE_STANDING:
-                            StandingElement standingElement = Instantiate(standingObjectPrefab, decoObjectParent).GetComponent<StandingElement>();
-                            standingElement.SetProfileStanding(profileCurrency[i]);
-                            standingElement.GetComponent<Image>().raycastTarget = false;
-                            createObject.Add(standingElement.gameObject);
-                            break;
-
-                        case LobbyConst.NODE_PORTRAIT:
-                            profilePortrait.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY));
-                            break;
-                        case LobbyConst.NODE_FRAME:
-                            profileFrame.SetDownloadURL(SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(profileCurrency[i], LobbyConst.NODE_CURRENCY_KEY), true);
-                            hasFrame = true;
-                            break;
-                    }
-                }
-
-                // 프로필 테두리를 지정하지 않은 경우
-                if (!hasFrame)
-                    profileFrame.SetTexture2D(LobbyManager.main.textureNoneFrame);
-            }
-
-            /*
-            if (profileText.Count > 0)
-            {
-                // 텍스트
-                for (int i = 0; i < profileText.Count; i++)
-                {
-                    DecoTextElement textElement = Instantiate(textObjectPrefab, textObjectParent).GetComponent<DecoTextElement>();
-                    textElement.SetProfileText(profileText[i]);
-                    textElement.GetComponent<Image>().raycastTarget = false;
-                    createObject.Add(textElement.gameObject);
-                }
-            }
-            */
-        }
-
+       
         public void OnClickDecoMode()
         {
             JsonData sending = new JsonData();

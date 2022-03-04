@@ -271,6 +271,10 @@ namespace PIERStory {
                 ListFlowElements[i].InitFlowElement(StoryManager.main.ListCurrentProjectEpisodes[i]);
             }
             
+            // 프리미엄 패스 유저는 타이머를 돌리지 않음 
+            if(hasPremium)
+                return; 
+            
             // 다시 돌리면서 타이머 설정 추가 
             for(int i=0; i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++) {
                 if(i >= ListFlowElements.Count)

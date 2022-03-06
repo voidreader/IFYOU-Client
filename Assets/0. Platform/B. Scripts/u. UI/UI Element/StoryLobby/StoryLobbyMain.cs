@@ -261,14 +261,19 @@ namespace PIERStory {
                 ListFlowElements[i].gameObject.SetActive(false);
             }
             
+            int flowIndex = 0;
             
             // EpisodeData 할당 처리
             for(int i=0; i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++) {
                 
-                if(i >= ListFlowElements.Count)
+                if(flowIndex >= ListFlowElements.Count)
                     break;
                 
-                ListFlowElements[i].InitFlowElement(StoryManager.main.ListCurrentProjectEpisodes[i]);
+                // 스페셜 에피소드는 제외. 
+                if(StoryManager.main.ListCurrentProjectEpisodes[i].episodeType == EpisodeType.Side)
+                    continue;
+                
+                ListFlowElements[flowIndex++].InitFlowElement(StoryManager.main.ListCurrentProjectEpisodes[i]);
             }
             
             // 프리미엄 패스 유저는 타이머를 돌리지 않음 

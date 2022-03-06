@@ -303,6 +303,22 @@ namespace PIERStory
         }
         
         /// <summary>
+        /// 로비에서 모션 재생하기 
+        /// </summary>
+        /// <param name="__clip"></param>
+        public void PlayLobbyAnimation(string __motionName) {
+            // * 에셋번들과 다운로드로 생성한 모델에서 플레이 방식이 다르다. 
+            if(motionController != null) {
+                motionController.PlayAnimation(DictMotion[__motionName], 0, CubismMotionPriority.PriorityForce);
+            }
+            else {
+                // 클립 재생 - 생 다운로드, 혹은 fade Motion 없음 
+                modelAnim.CrossFade(__motionName, 0.3f);    
+                
+            }
+        }
+        
+        /// <summary>
         /// 립싱크 가능 템플릿 체크 
         /// </summary>
         /// <param name="__template"></param>

@@ -157,6 +157,8 @@ namespace PIERStory {
             ViewStoryLobby.OnDecorateSet?.Invoke();
             yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
             
+            yield return new WaitForSeconds(0.1f);
+            
             Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", "Testing");
 
             Debug.Log("#### This project bundle download doen! ####");

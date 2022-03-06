@@ -30,7 +30,8 @@ namespace PIERStory
         List<GameObject> createObjects = new List<GameObject>();
         public List<UIToggle> typeToggles;
         public UIContainer decoListContainer;
-        List<GameModelCtrl> liveModels = new List<GameModelCtrl>();
+        public List<GameModelCtrl> liveModels = new List<GameModelCtrl>();
+        public List<ScriptModelMount> listModelMounts = new List<ScriptModelMount>();
 
         bool moveBg = false;
         bool moveCharacter = false;
@@ -87,22 +88,11 @@ namespace PIERStory
 
             // Action 세팅
             OnDisableAllOptionals = DisableAllStickerOptionals;
+            
+            // 캐릭터 모션 제어 
+            StartCoroutine(DelayLiveModelAnimation());
 
-            // 스탠딩 캐릭터 기본 모션 세팅
-            foreach (GameModelCtrl gm in liveModels)
-            {
-                gm.modelAnim.Play(gm.motionLists[0]);
-
-                for(int i=0;i<gm.motionLists.Count;i++)
-                {
-                    if(gm.motionLists[i].Contains("기본") && !gm.motionLists[i].Contains("M"))
-                    {
-                        gm.modelAnim.CrossFade(gm.motionLists[i]);
-                        break;
-                    }
-                }
-            }
-
+            // 여기 밑에 상단 관련 제어.. 필요한가??
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty); 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
@@ -130,6 +120,36 @@ namespace PIERStory
 
             loadComplete = false;
         }
+        
+        
+        /// <summary>
+        /// 모델 생성 후 일정의 시간차가 필요하다. (특히 에셋번들로 생성된 경우)
+        /// </summary>
+        /// <returns></returns>
+        System.Collections.IEnumerator DelayLiveModelAnimation() {
+            
+            // 0.1초 간격준다. 
+            yield return new WaitForSeconds(0.1f);
+            
+            // 스탠딩 캐릭터 기본 모션 세팅
+            foreach (GameModelCtrl gm in liveModels)
+            {
+                
+                // 임시로 랜덤하게 재생한다. 
+                gm.PlayLobbyAnimation(gm.motionLists[UnityEngine.Random.Range(0, gm.motionLists.Count)]);
+
+                for(int i=0;i<gm.motionLists.Count;i++)
+                {
+                    if(gm.motionLists[i].Contains("기본") && !gm.motionLists[i].Contains("M"))
+                    {
+                        // 번들용과 다운로드에서 애니메이션 재생 구분처리 해주어야한다. 
+                        gm.PlayLobbyAnimation(gm.motionLists[i]);
+                        break;
+                    }
+                }
+            }
+        }
+        
 
         #region 통상적(Main)
 
@@ -183,6 +203,9 @@ namespace PIERStory
         /// </summary>
         void DecorateSetting()
         {
+            liveModels.Clear();
+            listModelMounts.Clear();
+            
             // 이 작업이 StoryLoading에서 이뤄져야해
             storyProfile = SystemManager.GetJsonNode(UserManager.main.currentStoryJson, "storyProfile");
             totalDecoLoad = storyProfile.Count;
@@ -225,6 +248,7 @@ namespace PIERStory
 
                         liveModels.Add(character.modelController);
                         createObjects.Add(character.modelController.gameObject);
+                        listModelMounts.Add(character);
 
                         break;
                 }

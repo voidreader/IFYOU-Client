@@ -299,9 +299,23 @@ namespace PIERStory
                 // 클립 재생 - 생 다운로드, 혹은 fade Motion 없음 
                 modelAnim.CrossFade(motionName, 0.3f);    
             }
-            
-
-            
+           
+        }
+        
+        /// <summary>
+        /// 로비에서 모션 재생하기 
+        /// </summary>
+        /// <param name="__clip"></param>
+        public void PlayLobbyAnimation(string __motionName) {
+            // * 에셋번들과 다운로드로 생성한 모델에서 플레이 방식이 다르다. 
+            if(motionController != null) {
+                motionController.PlayAnimation(DictMotion[__motionName], 0, CubismMotionPriority.PriorityForce);
+            }
+            else {
+                // 클립 재생 - 생 다운로드, 혹은 fade Motion 없음 
+                modelAnim.CrossFade(__motionName, 0.3f);    
+                
+            }
         }
         
         /// <summary>
@@ -319,6 +333,27 @@ namespace PIERStory
                 return true;
                 
             return false;
+        }
+        
+        
+        /// <summary>
+        /// 캐릭터가 비활성화 될때는 립싱크를 멈추게 한다. 
+        /// </summary>
+        void OffLipSync() {
+            if(!motionName.Contains("_M")) 
+                return;
+                
+            motionName = motionName.Replace("_M", ""); // _M 을 제거
+            
+            // 립싱크 아닌 모션을 재생처리 
+            if(motionController != null) {
+                motionController.PlayAnimation(DictMotion[motionName], 0, CubismMotionPriority.PriorityForce);
+            }
+            else {
+                // 클립 재생 - 생 다운로드, 혹은 fade Motion 없음 
+                modelAnim.CrossFade(motionName, 0.3f);    
+            }            
+            
         }
         
 
@@ -522,6 +557,8 @@ namespace PIERStory
                 ViewGame.main.modelRenders[1].color = new Color(1, 1, 1, 1);
 
             OnMoveCompleted();
+            
+            OffLipSync(); // 립싱크 OFF 추가 
         }
 
         /// <summary>

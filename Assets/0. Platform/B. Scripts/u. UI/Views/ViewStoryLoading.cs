@@ -36,7 +36,7 @@ namespace PIERStory {
             
             textTitle.text = string.Empty;
             textInfo.text = string.Empty;
-            textPercentage.text = string.Empty;
+            textPercentage.text = "0%";
             loadingBar.fillAmount = 0;
             
             
@@ -65,6 +65,10 @@ namespace PIERStory {
             StartCoroutine(CheckingBundleExists(StoryManager.main.CurrentProjectID));
         }
         
+        void Update() {
+            textPercentage.text = GetFillAmountPercentage();    
+        }
+        
         void FillProgressorOnly() {
             
             Debug.Log("### FillProgressorOnly ###");
@@ -73,6 +77,10 @@ namespace PIERStory {
                 //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
                 Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", "Testing");
             });
+        }
+        
+        string GetFillAmountPercentage() {
+            return Mathf.RoundToInt(loadingBar.fillAmount * 100).ToString() + "%";
         }
         
         
@@ -148,6 +156,8 @@ namespace PIERStory {
 
             ViewStoryLobby.OnDecorateSet?.Invoke();
             yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
+            
+            yield return new WaitForSeconds(0.1f);
             
             Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", "Testing");
 

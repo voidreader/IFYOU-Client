@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 using LitJson;
 
@@ -144,6 +145,9 @@ namespace PIERStory
             StartCoroutine(RoutineLoadingSound(COL_SOUND_EFFECT));                          // SE
             
             yield return StartCoroutine(RoutineLoadingModels()); // 여기로 이동... 
+            
+            Debug.Log("### RoutineLoadingModels End");
+            
 
             yield return new WaitUntil(() => GetCurrentLoadingCount() <= 0);
             yield return new WaitForSeconds(0.5f);
@@ -342,6 +346,8 @@ namespace PIERStory
         /// </summary>
         IEnumerator RoutineLoadingModels()
         {
+            Debug.Log("### RoutineLoadingModels START");
+            
             int checker = 0;
 
             for (int i = 0; i < ListModelMount.Count; i++)
@@ -463,6 +469,10 @@ namespace PIERStory
         void CollectAllEpisodeModels()
         {
             Debug.Log("<color=yellow>Collecting Model Resources</color>");
+            
+            
+            // * 2022.03 의상 정보를 먼저 정의한다는 전제하에 의상 정보로만 수집처리  
+            // * 더이상 기본 의상을 미리 불러놓지 않는다. (리소스 낭비..)
 
             for (int i = 0; i < ListRows.Count; i++)
             {
@@ -470,8 +480,14 @@ namespace PIERStory
                     continue;
 
                 // 모델 리소스 수집 
+                /*
                 if (ListRows[i].IsSpeakable)
                     CollectDemandedModelResource(ListRows[i]);
+                */
+                
+                // 의상 기준으로 캐릭터 모델 수집
+                if (ListRows[i].IsValidDress)
+                    CollectDemandedDressModelResource(ListRows[i]);
 
                 // 라이브 오브제 
                 if (ListRows[i].template.Equals(GameConst.TEMPLATE_LIVE_OBJECT))
@@ -482,11 +498,13 @@ namespace PIERStory
                     CollectDemandedLiveIllustResource(ListRows[i]);
             }
 
-            // 의상 템플릿 수집
+            // 의상 템플릿이 없는 경우에 대한 처리
             for (int i = 0; i < ListRows.Count; i++)
             {
-                if (ListRows[i].IsValidDress)
-                    CollectDemandedDressModelResource(ListRows[i]);
+                // speakable 인데, 화자에 해당하는 모델이 없으면, 기본 모델을 불러와야한다. 
+                if(ListRows[i].IsSpeakable && ListModelMount.Count(mount => mount.speaker == ListRows[i].speaker) <= 0) {
+                    CollectDemandedModelResource(ListRows[i]);
+                }
             }
 
             // 유저 드레스 Progress의 모델 수집 

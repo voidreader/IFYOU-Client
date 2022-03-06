@@ -285,6 +285,7 @@ namespace PIERStory
                 cubismFadeController.CubismFadeMotionList == null || 
                 cubismFadeController.CubismFadeMotionList.CubismFadeMotionObjects.Length != clips.ListClips.Count) {
                 
+                Debug.LogError("#### Not match fade and motion Clips");
                 
                 // ! 생성한 에셋을 release 시키고, 다시 기존 로직을 호출한다. 
                 Addressables.ReleaseInstance(mountedModelAddressable);

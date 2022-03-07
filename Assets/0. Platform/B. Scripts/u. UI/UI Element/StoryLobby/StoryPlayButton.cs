@@ -13,7 +13,9 @@ namespace PIERStory {
     public enum StatePlayButton {
         inactive,
         active,
-        premium
+        premium,
+        
+        End
     }
     
     public class StoryPlayButton : MonoBehaviour
@@ -21,7 +23,7 @@ namespace PIERStory {
         public int openPrice = 0;
         
         public TextMeshProUGUI textPlay;
-        public TextMeshProUGUI textPrice; // 기다리면 무료에서의 코인 가격 
+        // public TextMeshProUGUI textPrice; // 기다리면 무료에서의 코인 가격 
         
         public Image premiumAura;
         public Image foregroundProgressor;
@@ -41,6 +43,7 @@ namespace PIERStory {
         
         public GameObject groupPlay; // 활성 상태일때의 그룹 
         public GameObject groupOpen; // 비활성화 상태일때 가격 그룹
+        public GameObject groupReset; // 스토리 종료 상태일때의 그룹 
         
         
         [Space]
@@ -87,7 +90,8 @@ namespace PIERStory {
             if(openPrice < 0)
                 openPrice = 0;
             
-            textPrice.text = openPrice.ToString();
+            // textPrice.text = openPrice.ToString();
+            // Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = true; 
         }
         
         
@@ -102,6 +106,7 @@ namespace PIERStory {
             // 그룹으로 나눴다..!
             groupOpen.SetActive(false);
             groupPlay.SetActive(false);
+            groupReset.SetActive(false);
             
             switch(stateButton) {
                 case StatePlayButton.inactive:
@@ -110,12 +115,22 @@ namespace PIERStory {
                 foregroundProgressor.gameObject.SetActive(false);
                 
                 groupOpen.SetActive(true);
-                textPrice.text = string.Empty;
+                // textPrice.text = string.Empty;
                 
                 
                 break;
                 
-                case StatePlayButton.active:
+                case StatePlayButton.End:
+                backgroundProgressor.sprite = spriteInactiveBorder; // 게이지 안씀 
+                foregroundProgressor.gameObject.SetActive(false);
+                
+                groupReset.SetActive(true);
+                // textPrice.text = string.Empty;
+                
+                break;
+                
+                
+                case StatePlayButton.active: // 활성 상태 
                 
                 groupPlay.SetActive(true);
                 
@@ -127,7 +142,7 @@ namespace PIERStory {
                 
                 break;
                 
-                case StatePlayButton.premium:
+                case StatePlayButton.premium: // 프리미엄 패스 유저 
                 
                 groupPlay.SetActive(true);
                 
@@ -143,10 +158,6 @@ namespace PIERStory {
             
             icon.SetNativeSize();
             
-        }
-        
-        public void OnClickPlayButton() {
-            Debug.Log("### OnClickPlayButton ###");
         }
         
         

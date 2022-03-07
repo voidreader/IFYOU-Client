@@ -1551,6 +1551,19 @@ namespace PIERStory
             return null;
         }
         
+        public static EpisodeData GetFirstRegularEpisodeData() {
+            for(int i=0; i<main.RegularEpisodeList.Count;i++) {
+                if(main.RegularEpisodeList[i].episodeType == EpisodeType.Ending || main.RegularEpisodeList[i].episodeType == EpisodeType.Side)
+                    continue;
+                    
+                if(main.RegularEpisodeList[i].episodeNO == "1"){
+                    return main.RegularEpisodeList[i];
+                }
+            }
+            
+            return null;
+        }
+        
         
         #endregion
         

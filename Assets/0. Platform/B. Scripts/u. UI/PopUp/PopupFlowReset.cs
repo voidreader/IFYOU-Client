@@ -32,7 +32,12 @@ namespace PIERStory {
             groupDoubleButton.SetActive(!hasPremiumPass);
             groupSingleButton.SetActive(hasPremiumPass);
             
+            // 스토리 리셋인 경우 true로 전달됨
+            if(Data.isPositive)
+                return;
+            
             // 에피소드 {0}으로 돌아가 새로운 이야기를 시작한다네 
+            // FlowReset에서만 사용 
             textResetEpisode.text = string.Format(SystemManager.GetLocalizedText("6219"), targetEpisode.episodeNO);
             
         }
@@ -52,6 +57,9 @@ namespace PIERStory {
                 SystemManager.ShowMessageWithLocalize("80013", false);
                 return;
             }
+            
+            
+            Hide();
             
             // 유료 리셋 
             NetworkLoader.main.ResetEpisodeProgress(targetEpisode.episodeID, false);

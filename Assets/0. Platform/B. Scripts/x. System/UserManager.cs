@@ -1873,8 +1873,6 @@ namespace PIERStory
             // * ViewStoryDetail 에서 이 시그널을 Listener를 통해서 받는다. (Inspector)
             // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CLOSE_RESET, string.Empty);
             
-            // 팝업창 모두 닫는다.
-            PopupManager.main.HideActivePopup();            
             
             
             // 리셋 콜백

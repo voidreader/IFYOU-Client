@@ -13,6 +13,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "EscapeDecoMode",
+                    "type": "Button",
+                    "id": "0624437e-1eb2-40d8-8e7b-b6135d88a9f3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -81,6 +90,17 @@
                     "action": "DragScreen",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "4ef0ebbe-b0d8-4423-9716-60217ca1bd65",
+                    "path": "*/{Back}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EscapeDecoMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

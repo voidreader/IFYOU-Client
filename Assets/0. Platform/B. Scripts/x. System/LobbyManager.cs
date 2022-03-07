@@ -49,6 +49,8 @@ namespace PIERStory {
         [Header("갤러리 - 사운드 BGMSprite")]
         public Sprite spriteOpenVoice;
         public Sprite spriteLockVoice;
+        public Sprite toggleSelected;
+        public Sprite toggleUnselected;
 
         [Header("미션View Sprite")]
         public Sprite spriteWhiteBorder;        // 흰색 바탕 코인박스 하단 border

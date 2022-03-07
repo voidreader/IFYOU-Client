@@ -21,7 +21,7 @@ namespace PIERStory
         public TextMeshProUGUI soundPlaytime;
 
         [Header("Voice require")]
-        public Image voiceButtonImage;
+        public Image voiceButtonBoarderImage;
         public TextMeshProUGUI voiceScriptData;
         public GameObject lockIcon;
         public GameObject playingIcon;
@@ -107,13 +107,13 @@ namespace PIERStory
             {
                 if(isOpen)
                 {
-                    voiceButtonImage.sprite = LobbyManager.main.spriteOpenVoice;
+                    voiceButtonBoarderImage.sprite = LobbyManager.main.spriteOpenVoice;
                     voiceScriptData.gameObject.SetActive(true);
                     lockIcon.SetActive(false);
                 }
                 else
                 {
-                    voiceButtonImage.sprite = LobbyManager.main.spriteLockVoice;
+                    voiceButtonBoarderImage.sprite = LobbyManager.main.spriteLockVoice;
                     voiceScriptData.gameObject.SetActive(false);
                     lockIcon.SetActive(true);
                 }

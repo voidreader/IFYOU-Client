@@ -132,10 +132,8 @@ namespace PIERStory
             if (LobbyManager.main == null)
                 return;
 
-            illustToggleBG.sprite = LobbyManager.main.spriteGenreOn;
-            soundToggleBG.sprite = LobbyManager.main.spriteGenreOff;
-            illustToggleText.color = LobbyManager.main.colorGenreOn;
-            soundToggleText.color = LobbyManager.main.colorGenreOff;
+            illustToggleBG.sprite = LobbyManager.main.toggleSelected;
+            soundToggleBG.sprite = LobbyManager.main.toggleUnselected;
 
             IllustScroll.SetActive(true);
             soundScroll.SetActive(false);
@@ -143,10 +141,8 @@ namespace PIERStory
 
         public void EnableSoundList()
         {
-            illustToggleBG.sprite = LobbyManager.main.spriteGenreOff;
-            soundToggleBG.sprite = LobbyManager.main.spriteGenreOn;
-            illustToggleText.color = LobbyManager.main.colorGenreOff;
-            soundToggleText.color = LobbyManager.main.colorGenreOn;
+            illustToggleBG.sprite = LobbyManager.main.toggleUnselected;
+            soundToggleBG.sprite = LobbyManager.main.toggleSelected;
 
             IllustScroll.SetActive(false);
             soundScroll.SetActive(true);

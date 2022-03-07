@@ -56,6 +56,7 @@ namespace PIERStory
             currentCount++;
             SetCountText();
             //ViewProfileDeco.OnStickerSetting?.Invoke(currencyData, this);
+            ViewStoryLobby.OnStickerSetting?.Invoke(currencyData, this);
         }
 
         public void OnClickSelectStanding()

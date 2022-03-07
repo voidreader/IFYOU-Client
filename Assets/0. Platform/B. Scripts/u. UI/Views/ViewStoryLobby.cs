@@ -27,8 +27,10 @@ namespace PIERStory
         string bgCurrency = string.Empty;
         public Transform characterParent;
         public Transform stickerParent;
+        List<GameObject> decoObjects = new List<GameObject>();          // 화면에 꾸며놓은 Object들
+        List<GameObject> currencyElements = new List<GameObject>();     // 꾸미기 각 element들
+
         public GameObject stickerObjectPrefab;
-        List<GameObject> createObjects = new List<GameObject>();
         public List<UIToggle> typeToggles;
         public UIContainer decoListContainer;
         public GameObject coinShopButton;
@@ -77,6 +79,7 @@ namespace PIERStory
             OnDecorateSet = DecorateSetting;
             OnSelectBackground = SelectBackground;
             OnSelectStanding = SelectLiveCharacter;
+            OnStickerSetting = CreateStickerElement;
         }
 
         private void Start()
@@ -93,13 +96,6 @@ namespace PIERStory
             
             // 캐릭터 모션 제어 
             StartCoroutine(DelayLiveModelAnimation());
-
-            // 여기 밑에 상단 관련 제어.. 필요한가??
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty); 
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
         }
 
         public override void OnView()
@@ -112,10 +108,10 @@ namespace PIERStory
         {
             base.OnHideView();
 
-            foreach (GameObject g in createObjects)
+            foreach (GameObject g in decoObjects)
                 Destroy(g);
 
-            createObjects.Clear();
+            decoObjects.Clear();
 
             usageStandingControl.SetActive(false);
 
@@ -244,8 +240,8 @@ namespace PIERStory
                     case LobbyConst.NODE_STICKER:       // 스티커
 
                         StickerElement sticker = Instantiate(stickerObjectPrefab, stickerParent).GetComponent<StickerElement>();
-                        sticker.SetStickerElement(storyProfile[i]);
-                        createObjects.Add(sticker.gameObject);
+                        sticker.SetStickerElement(storyProfile[i], StickerLoadComplete);
+                        decoObjects.Add(sticker.gameObject);
 
                         break;
                     case LobbyConst.NODE_STANDING:      // 스탠딩 캐릭터
@@ -266,7 +262,7 @@ namespace PIERStory
                             character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_ORIGIN_POS_Y + 1, 0);
 
                         liveModels.Add(character.modelController);
-                        createObjects.Add(character.modelController.gameObject);
+                        decoObjects.Add(character.modelController.gameObject);
                         listModelMounts.Add(character);
 
                         break;
@@ -289,7 +285,7 @@ namespace PIERStory
                 listElement = Instantiate(listObject, parent).GetComponent<ProfileItemElement>();
                 listElement.InitCurrencyListElement(currencyLIst[key][i]);
 
-                createObjects.Add(listElement.gameObject);
+                currencyElements.Add(listElement.gameObject);
             }
         }
 
@@ -310,7 +306,7 @@ namespace PIERStory
         /// <summary>
         /// 모든 스티커,뱃지 옵셔널 박스 비활성화
         /// </summary>
-        void DisableAllStickerOptionals()
+        public void DisableAllStickerOptionals()
         {
             for (int i = 0; i < stickerParent.childCount; i++)
                 stickerParent.GetChild(i).GetComponent<StickerElement>().DisableControlBox();
@@ -327,7 +323,10 @@ namespace PIERStory
                 coinShopButton.SetActive(false);
 
                 foreach (UIToggle toggle in typeToggles)
-                    toggle.GetComponentInChildren<CanvasGroup>().alpha = 0.3f;
+                {
+                    if (!toggle.isOn)
+                        toggle.GetComponentInChildren<CanvasGroup>().alpha = 0.3f;
+                }
             }
             else if (!ToggleOnCheck() && decoListContainer.isVisible)
             {
@@ -339,6 +338,22 @@ namespace PIERStory
             }
         }
 
+        /// <summary>
+        /// 게임형 로비 꾸미기모드 빠져나옴
+        /// </summary>
+        public void HideDecoContainer()
+        {
+            foreach (GameObject g in currencyElements)
+                Destroy(g);
+
+            currencyElements.Clear();
+        }
+
+
+
+        /// <summary>
+        /// 불러오기 완료
+        /// </summary>
         void CheckLoadComplete()
         {
             if (totalDecoLoad <= 0)
@@ -573,7 +588,7 @@ namespace PIERStory
                     character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_ORIGIN_POS_Y + 1, 0);
 
                 liveModels.Add(character.modelController);
-                createObjects.Add(character.modelController.gameObject);
+                decoObjects.Add(character.modelController.gameObject);
 
                 controlModel = character.modelController;
             }
@@ -626,9 +641,8 @@ namespace PIERStory
                 }
             }
 
-
             // 리스트에서 해당 오브젝트 삭제
-            createObjects.Remove(controlModel.gameObject);
+            decoObjects.Remove(controlModel.gameObject);
             liveModels.Remove(controlModel);
 
             // 파괴
@@ -662,6 +676,20 @@ namespace PIERStory
 
         #region 스티커 관련
 
+        void StickerLoadComplete()
+        {
+            if (totalDecoLoad > 0)
+                totalDecoLoad--;
+
+            CheckLoadComplete();
+        }
+
+        void CreateStickerElement(JsonData __j, ProfileItemElement stickerListElement)
+        {
+            StickerElement sticker = Instantiate(stickerObjectPrefab, stickerParent).GetComponent<StickerElement>();
+            sticker.CreateSticker(__j, stickerListElement);
+            decoObjects.Add(sticker.gameObject);
+        }
 
 
 

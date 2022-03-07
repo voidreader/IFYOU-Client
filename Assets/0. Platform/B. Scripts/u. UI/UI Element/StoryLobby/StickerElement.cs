@@ -37,9 +37,10 @@ namespace PIERStory
         /// 생성한 스티커 세팅
         /// </summary>
         /// <param name="__j"></param>
-        public void SetStickerElement(JsonData __j)
+        public void SetStickerElement(JsonData __j, System.Action endCallback)
         {
             currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
+            stickerImage.OnDownloadImage = endCallback;
             stickerImage.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY_KEY));
 
             posX = SystemManager.GetJsonNodeFloat(__j, LobbyConst.NODE_POS_X);

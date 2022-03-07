@@ -364,7 +364,10 @@ namespace PIERStory
             if (totalDecoLoad <= 0)
                 loadComplete = true;
 
-            StartCoroutine(DelayLiveModelAnimation());
+            if(loadComplete)
+                StartCoroutine(DelayLiveModelAnimation());
+                
+                
         }
 
         public void OnDragScreen(InputAction.CallbackContext context)

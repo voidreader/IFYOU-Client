@@ -54,6 +54,8 @@ namespace PIERStory
             SetCurrentEpisodeInfo();
             
             // 다음 에피소드 정보 설정  
+            // * 2022.03.07 무조건 목록으로 가도록 변경한다. 
+            /*
             if(nextData != null && nextData.isValidData) { // 다음 에피소드 있음
                 nextEpisodeButton.SetActive(true);
                 retryButton.SetActive(false);
@@ -62,6 +64,10 @@ namespace PIERStory
                 nextEpisodeButton.SetActive(false);
                 retryButton.SetActive(true);
             }
+            */
+            
+            nextEpisodeButton.SetActive(false);
+            retryButton.SetActive(false);
 
 
             // 에피소드가 완료되었으니 모든 사운드를 멈춘다

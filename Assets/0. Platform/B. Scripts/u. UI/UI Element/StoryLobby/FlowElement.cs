@@ -111,6 +111,7 @@ namespace PIERStory {
         public void InitFlowElement(EpisodeData __episode) {
             
             this.gameObject.SetActive(true);
+            rectCover.gameObject.SetActive(false);
             
             isOpenTimeCountable = false;
             

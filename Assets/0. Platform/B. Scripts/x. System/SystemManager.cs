@@ -1599,9 +1599,37 @@ namespace PIERStory
                 return; 
             }
             
+            // * StoryReset과 FlowReset은 같은 스크립트 파일을 공유해서, 이렇게 구분한다.
+            p.Data.isPositive = false;
+            
             // 팝업 호출!
             PopupManager.main.ShowPopup(p, false);
         }
+        
+        
+        /// <summary>
+        /// 스토리 리셋 팝업 호출 
+        /// </summary>
+        /// <param name="__targetEpisode"></param>
+        public static void ShowStoryResetPopup(EpisodeData __targetEpisode) {
+            Debug.Log("## ShowStoryResetPopup : " + __targetEpisode.episodeTitle);
+            
+            // Signal 보내고 팝업 호출 
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_EPISODE_RESET, __targetEpisode, string.Empty);
+            
+            PopupBase p = PopupManager.main.GetPopup("StoryReset"); 
+            if(p == null) {
+                Debug.LogError(">> No Reset Popup");
+                return; 
+            }
+            
+            // * StoryReset과 FlowReset은 같은 스크립트 파일을 공유해서, 이렇게 구분한다.
+            p.Data.isPositive = true; 
+            
+            // 팝업 호출!
+            PopupManager.main.ShowPopup(p, false);
+        }
+        
         
         /// <summary>
         /// 리소스 획득 팝업 (OK)

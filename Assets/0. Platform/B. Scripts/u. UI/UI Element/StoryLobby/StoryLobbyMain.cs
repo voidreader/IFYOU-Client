@@ -83,6 +83,12 @@ namespace PIERStory {
         bool isGameStarting = false; // 게임 시작했는지 체크, 중복 입력 막기 위해서.
         [SerializeField] bool isEpisodeContinuePlay = false; // 에피소드 이어하기 상태? 
         bool isWaitingResponse = false; //  서버 응답 기다리는 중인지. 
+        [SerializeField] bool isFinal = false; // 엔딩 도착 상태
+        
+        [SerializeField] Color colorEpisodeTitleNormal; // 타이틀 노멀엔딩 색상
+        [SerializeField] Color colorEpisodeTitleHidden; // 타이틀 히든엔딩 
+        [SerializeField] Color colorEpisodeTitleHappy; // 타이틀 해피 
+        [SerializeField] Color colorEpisodeTitleSad; // 타이틀 새드 
         
         private void Start() {
             // Action 연결
@@ -361,16 +367,34 @@ namespace PIERStory {
                 currentPlayState = hasPremium ? StatePlayButton.premium : StatePlayButton.active;
             }
             
-            groupOpenTimer.SetActive(isOpenTimeCountable);
-            textEpisodeTitle.gameObject.SetActive(!isOpenTimeCountable);
             
-         
-                 
-            // 스토리 플레이버튼 초기화 
-            storyPlayButton.SetPlayButton(currentPlayState, currentEpisodeData.sceneProgressorValue, CheckResumePossible());
-            // storyPlayButton.SetTimeOpenPrice(GetEpisodeTimeOpenPrice());
-            textWaitingCoinPrice.text = GetEpisodeTimeOpenPrice().ToString();
+            isFinal = false;
             
+            // 현재 순번 에피소드가 마지막, 엔딩이면 isFinal 변수 처리 
+            if(SystemManager.GetJsonNodeBool(projectCurrentJSON, "is_final") 
+                && SystemManager.GetJsonNodeBool(projectCurrentJSON, "is_ending")) {
+                isFinal = true;        
+            }
+            
+            
+            // 파이널인지 아닌지에 따라 다르게 처리한다.
+            if(isFinal) {
+                // 플레이 버튼을 리셋플레이로 변경한다.    
+                storyPlayButton.SetPlayButton(StatePlayButton.End, 0, false);
+                
+                groupOpenTimer.SetActive(false);
+                textEpisodeTitle.gameObject.SetActive(true);
+            }
+            else {
+                groupOpenTimer.SetActive(isOpenTimeCountable);
+                textEpisodeTitle.gameObject.SetActive(!isOpenTimeCountable);
+                
+                    
+                // 스토리 플레이버튼 초기화 
+                storyPlayButton.SetPlayButton(currentPlayState, currentEpisodeData.sceneProgressorValue, CheckResumePossible());
+                textWaitingCoinPrice.text = GetEpisodeTimeOpenPrice().ToString();                
+            }
+
             InitEpisodeTitleColor();
             
         }
@@ -400,18 +424,48 @@ namespace PIERStory {
         /// </summary>
         void InitEpisodeTitleColor() {
             
-            // 타이틀 설정 
-            SetEpisodeTitleText(currentEpisodeData.storyLobbyTitle);
             
-            if(currentPlayState == StatePlayButton.inactive) {
-                imageEpisodeTitle.sprite = spriteInactiveEpisodeTitleBG;    
-                // textEpisodeTitle.color = Color.white;
-            }
-            else {
+            // * 여기도 파이널 여부 추가 체크 
+            if(isFinal) {
                 imageEpisodeTitle.sprite = spriteActiveEpisodeTitleBG;    
-                // textEpisodeTitle.color = Color.black;
+                textEpisodeTitle.color = Color.black;
+                string endingText = string.Empty;
+                               
+                if(currentEpisodeData.endingType == "hidden") { // 히든
+                    imageEpisodeTitle.color = colorEpisodeTitleHidden;
+                    textEpisodeTitle.color = Color.white;
+                    // endingText = "Hidden Ending";
+                }
+                else if(currentEpisodeData.endingType == "final") { // 해피
+                    imageEpisodeTitle.color = colorEpisodeTitleHappy;
+                    // endingText = "Final Ending";
+                }
+                else if(currentEpisodeData.endingType == "normal") { // 노멀 
+                    imageEpisodeTitle.color = colorEpisodeTitleNormal;
+                    // endingText = "Normal Ending";
+                }
+                else if(currentEpisodeData.endingType == "sad") { // 새드 
+                    imageEpisodeTitle.color = colorEpisodeTitleSad;
+                    // endingText = "Sad Ending";
+                }
+                
+                // textEpisodeTitle.text = endingText;
+                SetEpisodeTitleText(currentEpisodeData.storyLobbyTitle);
+                
             }
-
+            else { // 엔딩 도달하지 않았을 경우 일반 처리 
+                // 타이틀 설정 
+                SetEpisodeTitleText(currentEpisodeData.storyLobbyTitle);
+                
+                if(currentPlayState == StatePlayButton.inactive) {
+                    imageEpisodeTitle.sprite = spriteInactiveEpisodeTitleBG;    
+                    imageEpisodeTitle.color = Color.white; // 색상 초기화 
+                }
+                else {
+                    imageEpisodeTitle.sprite = spriteActiveEpisodeTitleBG;    
+                    textEpisodeTitle.color = Color.black;
+                }                
+            }
         }
         
         
@@ -514,6 +568,23 @@ namespace PIERStory {
                 // OnClickReduceWaitingTimeCoin();
                 return;
             }
+            
+            // * 엔딩 도달한 경우는 Reset을 띄운다.
+            if(storyPlayButton.stateButton == StatePlayButton.End) {
+                
+                EpisodeData firstEpisode = StoryManager.GetFirstRegularEpisodeData(); // 첫 에피소드 
+                
+                // 데이터 이상할때..
+                if(firstEpisode == null || !firstEpisode.isValidData) {
+                    SystemManager.ShowMessageAlert("Episode data is not valid", false);
+                    return;
+                }
+                
+                SystemManager.ShowStoryResetPopup(firstEpisode);
+                return;
+            }
+            
+            
             
             
             // * 임시 로직

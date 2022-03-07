@@ -16,7 +16,7 @@ namespace PIERStory {
     public class StoryLobbyMain : MonoBehaviour
     {
         
-        public static Action OnRefreshSuperUser = null; // 슈퍼유저 표기용도 
+        
         public static Action OnCallbackReset = null; // 리셋 콜백
         public static Action CallbackReduceWaitingTimeSuccess = null; // 시간감소 콜백 (성공)
         public static Action CallbackReduceWaitingTimeFail = null; // 시간감소 콜백(실패)
@@ -48,14 +48,14 @@ namespace PIERStory {
         public GameObject groupOpenTimer; // 오픈 타이머
         public TextMeshProUGUI textOpenTimer; // 오픈 타이머 
         
-        public GameObject mailNotify; // 상단 메일 알림 
+        
         
         public RectTransform rectContentsGroup; // 컨텐츠 그룹 
         public CanvasGroup canvasGroupContents; // 컨텐츠 그룹 canvas group
         public RectTransform arrowGroupContetns; // 컨텐츠 그룹 화살표 
         public GameObject groupStoryContentsBlock; // 접혀있는 상태에서 터치 못하게 하려고..
         
-        public GameObject objectSuperUser;
+        
         
         [SerializeField] RectTransform flowMap; // flow map 
         bool inTransitionFlow = false;
@@ -92,7 +92,7 @@ namespace PIERStory {
             
             // 슈퍼유저 관련 처리 
             SuperUserFlowEpisodeStart = SuperUserEpisodeStart;
-            OnRefreshSuperUser = SetSuperUser;
+            
         }
         
         void Update() {
@@ -133,7 +133,8 @@ namespace PIERStory {
             // Flow 처리 
             InitFlowMap();
             
-            SetSuperUser();
+            // 슈퍼유저 
+            StoryLobbyTop.OnRefreshSuperUser?.Invoke();
 
         }
         
@@ -438,9 +439,7 @@ namespace PIERStory {
             return true;
         }
         
-         void RefreshMailNotification(int __cnt) {
-            mailNotify.SetActive(__cnt > 0);
-        }
+ 
         
         
         
@@ -637,19 +636,7 @@ namespace PIERStory {
             StartGame(true);
         }
         
-        /// <summary>
-        /// 슈퍼유저 표기 
-        /// </summary>
-        void SetSuperUser() {
-            
-            if(UserManager.main == null || string.IsNullOrEmpty(UserManager.main.userKey)) {
-                objectSuperUser.SetActive(false);
-                return;
-            }
-            
-            Debug.Log("### SetSuperUser ###");
-            objectSuperUser.SetActive(UserManager.main.CheckAdminUser());
-        }
+
         
     }
 }

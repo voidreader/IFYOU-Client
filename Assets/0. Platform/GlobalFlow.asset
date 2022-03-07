@@ -180,11 +180,11 @@ MonoBehaviour:
   RunUpdate: 0
   RunFixedUpdate: 0
   RunLateUpdate: 0
-  NodeState: 0
+  NodeState: 2
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 2320, y: -306.75613}
+  Position: {x: 2320, y: -307}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -200,6 +200,16 @@ MonoBehaviour:
   - Id:
       Category: Common
       Name: Top
+      Custom: 0
+    Mode: 0
+  - Id:
+      Category: IFYOU
+      Name: Gallery
+      Custom: 0
+    Mode: 0
+  - Id:
+      Category: IFYOU
+      Name: Ending
       Custom: 0
     Mode: 1
   OnExitShowViews: []
@@ -859,13 +869,18 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 2069, y: 78.99997}
+  Position: {x: 2066.8506, y: 78.00001}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
       Name: Gallery
       Custom: 0
     Mode: 0
+  - Id:
+      Category: Common
+      Name: Top
+      Custom: 0
+    Mode: 1
   OnEnterHideViews: []
   OnExitShowViews: []
   OnExitHideViews: []
@@ -1899,7 +1914,7 @@ MonoBehaviour:
   - {fileID: -39831475969407255}
   - {fileID: -1696560947312704860}
   RootNode: {fileID: 3282273850073061226}
-  ActiveNode: {fileID: 0}
+  ActiveNode: {fileID: -9108271990163937834}
 --- !u!114 &314016154523122154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2453,6 +2468,11 @@ MonoBehaviour:
       Name: Mission
       Custom: 0
     Mode: 0
+  - Id:
+      Category: Common
+      Name: Top
+      Custom: 0
+    Mode: 1
   OnEnterHideViews: []
   OnExitShowViews: []
   OnExitHideViews:
@@ -2864,13 +2884,18 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 1697.0001, y: 125.500046}
+  Position: {x: 1697, y: 125.99999}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
       Name: Ending
       Custom: 0
     Mode: 0
+  - Id:
+      Category: Common
+      Name: Top
+      Custom: 0
+    Mode: 1
   OnEnterHideViews: []
   OnExitShowViews: []
   OnExitHideViews: []

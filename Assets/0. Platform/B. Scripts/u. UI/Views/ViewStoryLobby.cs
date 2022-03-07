@@ -98,6 +98,7 @@ namespace PIERStory
             StartCoroutine(DelayLiveModelAnimation());
         }
 
+
         public override void OnView()
         {
             base.OnView();
@@ -278,6 +279,10 @@ namespace PIERStory
         /// <param name="parent">list가 생성될 위치의 부모(transform)</param>
         void CreateListObject(string key, GameObject listObject, Transform parent)
         {
+            // 만약 해당 key값을 포함하지 않으면 실행하지 않음
+            if (!currencyLIst.ContainsKey(key))
+                return;
+
             ProfileItemElement listElement = null;
 
             for (int i = 0; i < currencyLIst[key].Count; i++)
@@ -358,6 +363,8 @@ namespace PIERStory
         {
             if (totalDecoLoad <= 0)
                 loadComplete = true;
+
+            StartCoroutine(DelayLiveModelAnimation());
         }
 
         public void OnDragScreen(InputAction.CallbackContext context)
@@ -400,6 +407,37 @@ namespace PIERStory
                     if (moveX > (-camWidth * 0.25f) && moveX < (camWidth * 0.25f))
                         controlModel.transform.localPosition = new Vector3(moveX, controlModel.transform.localPosition.y, 0f);
                 }
+            }
+        }
+
+        public void OnEscapeDeocoMode(InputAction.CallbackContext context)
+        {
+            EscapeDecoMode();
+        }
+
+        public void OnClickBackDecoMode()
+        {
+            EscapeDecoMode();
+        }
+
+        void EscapeDecoMode()
+        {
+            // 꾸미기 모드(편집 모드) 중인데 back버튼 입력을 받으면
+            if (!mainContainer.isActiveAndEnabled && decoContainer.isActiveAndEnabled)
+            {
+                decoContainer.Hide();
+
+                // 수정한게 있든 없든 일단 다 뿌셔!
+                foreach (GameObject g in decoObjects)
+                    Destroy(g);
+
+                decoObjects.Clear();
+                LobbyManager.main.lobbyBackground.sprite = null;
+
+                // 서버에 저장되어 있는 기반으로 다시 만들어!
+                DecorateSetting();
+
+                mainContainer.Show();
             }
         }
 
@@ -705,6 +743,26 @@ namespace PIERStory
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
             sending[LobbyConst.NODE_CURRENCY_LIST] = JsonMapper.ToObject("[]");
+
+            int sortingOrder = 0;
+
+            // 배경 추가
+            JsonData bgData = new JsonData();
+            bgData[LobbyConst.NODE_CURRENCY] = bgCurrency;
+            bgData[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
+            bgData[LobbyConst.NODE_POS_X] = LobbyManager.main.lobbyBackground.transform.localPosition.x;
+            bgData[LobbyConst.NODE_POS_Y] = 0f;
+            bgData[LobbyConst.NODE_WIDTH] = LobbyManager.main.lobbyBackground.transform.localScale.x;
+            bgData[LobbyConst.NODE_HEIGHT] = LobbyManager.main.lobbyBackground.transform.localScale.x;
+            bgData[LobbyConst.NODE_ANGLE] = 0f;
+
+            sending[LobbyConst.NODE_CURRENCY_LIST].Add(bgData);
+
+
+            // 캐릭터 추가
+
+
+            // 스티커 및 대사 추가
 
             NetworkLoader.main.SendPost(CallbackSaveDeco, sending, true);
         }

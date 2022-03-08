@@ -20,8 +20,17 @@ namespace PIERStory
         public static Action<JsonData, ProfileItemElement> OnSelectStanding = null;
         public static Action<JsonData, ProfileItemElement> OnStickerSetting = null;
 
-
         public static bool loadComplete = false;
+
+        [Header("메인 관련 제어")]
+        public GameObject backButton;               // 뒤로가기 버튼
+        public GameObject premiumpassButton;        // 프리미엄 패스 버튼
+        public GameObject showDetailButton;         // 꾸미기 자세히 보기 버튼
+
+        public Image showDetailIcon;
+        public Sprite spriteIconEyeOpen;
+        public Sprite spriteIconEyeClose;
+
 
         ScriptImageMount bg;
         string bgCurrency = string.Empty;
@@ -103,6 +112,11 @@ namespace PIERStory
         {
             base.OnView();
 
+            if(UserManager.main.gameComplete)
+            {
+                RateGame.Instance.IncreaseCustomEvents();
+                UserManager.main.gameComplete = false;
+            }
         }
 
         public override void OnHideView()
@@ -187,8 +201,11 @@ namespace PIERStory
 
             // 화면의 활성화된 것과 리스트 재화와 연결
 
+            // 상단의 프리미엄 패스, 버튼 두개 비활성화
+            premiumpassButton.SetActive(false);
+            showDetailButton.SetActive(false);
 
-
+            ActiveInteractable(true);
 
             mainContainer.Hide();
             decoContainer.Show();
@@ -199,9 +216,29 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobbyDeco", string.Empty);
         }
 
+        /// <summary>
+        /// 로비 꾸며놓은거 자세히 보기
+        /// </summary>
+        public void ShowLobbyDetail()
+        {
+            if(mainContainer.isActiveAndEnabled)
+            {
+                backButton.SetActive(false);
+                premiumpassButton.SetActive(false);
+                showDetailIcon.sprite = spriteIconEyeClose;
+                mainContainer.Hide();
+            }
+            else
+            {
+                backButton.SetActive(true);
+                premiumpassButton.SetActive(true);
+                showDetailIcon.sprite = spriteIconEyeOpen;
+                mainContainer.Show();
+            }
+        }
+
 
         #endregion
-
 
 
         #region 작품 꾸미기 모드 
@@ -258,10 +295,11 @@ namespace PIERStory
                         character.SetModelDataFromStoryManager();
 
                         if (SystemManager.main.hasSafeArea)
-                            character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_SAFEAREA_POS_Y + 1, 0);
+                            character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_SAFEAREA_POS_Y, 0);
                         else
-                            character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_ORIGIN_POS_Y + 1, 0);
+                            character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_ORIGIN_POS_Y, 0);
 
+                        character.modelController.currencyName = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);
                         liveModels.Add(character.modelController);
                         decoObjects.Add(character.modelController.gameObject);
                         listModelMounts.Add(character);
@@ -352,6 +390,9 @@ namespace PIERStory
                 Destroy(g);
 
             currencyElements.Clear();
+
+            premiumpassButton.SetActive(true);
+            showDetailButton.SetActive(true);
         }
 
 
@@ -365,9 +406,10 @@ namespace PIERStory
                 loadComplete = true;
 
             if(loadComplete)
+            {
                 StartCoroutine(DelayLiveModelAnimation());
-                
-                
+                ActiveInteractable(false);
+            }
         }
 
         public void OnDragScreen(InputAction.CallbackContext context)
@@ -542,6 +584,9 @@ namespace PIERStory
             for (int i = 0; i < bgListContent.childCount; i++)
                 bgListContent.GetChild(i).GetComponent<ProfileItemElement>().currentCount = 0;
 
+
+            ActiveInteractable(false);
+
             bgListScroll.SetActive(false);
             bgScrolling.SetActive(true);
             moveBg = true;
@@ -556,10 +601,9 @@ namespace PIERStory
             bgListScroll.SetActive(true);
             bgScrolling.SetActive(false);
             moveBg = false;
-            
+
             // 배경 설정 끝냈으니 raycastTarget을 켜준다
-            for (int i = 0; i < stickerParent.childCount; i++)
-                stickerParent.GetChild(i).GetComponent<Image>().raycastTarget = true;
+            ActiveInteractable(true);
         }
 
         #endregion
@@ -628,6 +672,7 @@ namespace PIERStory
                 else
                     character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_ORIGIN_POS_Y + 1, 0);
 
+                character.modelController.currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
                 liveModels.Add(character.modelController);
                 decoObjects.Add(character.modelController.gameObject);
 
@@ -732,6 +777,15 @@ namespace PIERStory
             decoObjects.Add(sticker.gameObject);
         }
 
+        /// <summary>
+        /// 스티커가 움직일 수 있게 raycaster 활성화/비활성화
+        /// </summary>
+        /// <param name="__interactable"></param>
+        void ActiveInteractable(bool __interactable)
+        {
+            for (int i = 0; i < stickerParent.childCount; i++)
+                stickerParent.GetChild(i).GetComponent<Image>().raycastTarget = __interactable;
+        }
 
 
         #endregion
@@ -750,22 +804,47 @@ namespace PIERStory
             int sortingOrder = 0;
 
             // 배경 추가
-            JsonData bgData = new JsonData();
-            bgData[LobbyConst.NODE_CURRENCY] = bgCurrency;
-            bgData[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
-            bgData[LobbyConst.NODE_POS_X] = LobbyManager.main.lobbyBackground.transform.localPosition.x;
-            bgData[LobbyConst.NODE_POS_Y] = 0f;
-            bgData[LobbyConst.NODE_WIDTH] = LobbyManager.main.lobbyBackground.transform.localScale.x;
-            bgData[LobbyConst.NODE_HEIGHT] = LobbyManager.main.lobbyBackground.transform.localScale.x;
-            bgData[LobbyConst.NODE_ANGLE] = 0f;
+            JsonData data = new JsonData();
+            data[LobbyConst.NODE_CURRENCY] = bgCurrency;
+            data[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
+            data[LobbyConst.NODE_POS_X] = LobbyManager.main.lobbyBackground.transform.localPosition.x;
+            data[LobbyConst.NODE_POS_Y] = 0f;
+            data[LobbyConst.NODE_WIDTH] = LobbyManager.main.lobbyBackground.transform.localScale.x;
+            data[LobbyConst.NODE_HEIGHT] = LobbyManager.main.lobbyBackground.transform.localScale.x;
+            data[LobbyConst.NODE_ANGLE] = 0f;
 
-            sending[LobbyConst.NODE_CURRENCY_LIST].Add(bgData);
+            sending[LobbyConst.NODE_CURRENCY_LIST].Add(data);
 
+            sortingOrder++;
 
             // 캐릭터 추가
+            foreach(GameModelCtrl character in liveModels)
+            {
+                data[LobbyConst.NODE_CURRENCY] = character.currencyName;
+                data[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
+                data[LobbyConst.NODE_POS_X] = character.transform.localPosition.x;
+                data[LobbyConst.NODE_POS_Y] = 0f;
+                data[LobbyConst.NODE_WIDTH] = 0f;
+                data[LobbyConst.NODE_HEIGHT] = 0f;
 
+                if (character.transform.localScale.x < 0)
+                    data[LobbyConst.NODE_ANGLE] = 180f;
+                else
+                    data[LobbyConst.NODE_ANGLE] = 0f;
 
-            // 스티커 및 대사 추가
+                sending[LobbyConst.NODE_CURRENCY_LIST].Add(data);
+
+                sortingOrder++;
+            }
+
+            // 22.03.08 스티커만 추가
+            for (int i = 0; i < stickerParent.childCount; i++)
+            {
+                sending[LobbyConst.NODE_CURRENCY_LIST].Add(stickerParent.GetChild(i).GetComponent<StickerElement>().StickerJsonData(sortingOrder));
+
+                sortingOrder++;
+            }
+
 
             NetworkLoader.main.SendPost(CallbackSaveDeco, sending, true);
         }
@@ -779,6 +858,10 @@ namespace PIERStory
             }
 
             storyProfile = JsonMapper.ToObject(res.DataAsText);
+            UserManager.main.currentStoryJson["storyProfile"] = storyProfile;
+            
+            ActiveInteractable(false);
+            DisableAllStickerOptionals();
 
             decoContainer.Hide();
             mainContainer.Show();

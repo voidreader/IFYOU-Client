@@ -21,8 +21,10 @@ namespace PIERStory
         [HideInInspector] public Animation modelAnim;
         [HideInInspector] public Dictionary<string, AnimationClip> DictMotion;
         [HideInInspector] public RawImage currRenderTexture;        // 현재 그려지고 있는 곳
-        public List<string> motionLists = new List<string>();
-        
+
+        [HideInInspector] public List<string> motionLists = new List<string>();
+        [HideInInspector] public string currencyName = string.Empty;    // 로비 꾸미기에서만 사용될 값
+
         [SerializeField] bool isModelActivated = false; // 모델이 한번이라도 Activate 되었었지에 대한 변수
         [SerializeField] string motionName = string.Empty; // 플레이할 모션 이름 
 

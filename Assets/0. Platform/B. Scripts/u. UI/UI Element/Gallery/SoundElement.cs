@@ -31,7 +31,7 @@ namespace PIERStory
 
         Color titleColor = new Color32(51, 51, 51, 255);
         Color timeColor = new Color32(153, 153, 153, 255);
-        Color playColor = new Color32(243, 140, 161, 255);
+        Color playColor = new Color32(255, 0, 128, 255);
 
         public void SetBGMElement(int index, JsonData __j)
         {

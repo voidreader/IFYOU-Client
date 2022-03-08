@@ -394,9 +394,12 @@ MonoBehaviour:
     episodeTitle: 
     episodeSummary: 
     combinedEpisodeTitle: 
+    storyLobbyTitle: 
+    flowPrefix: 
     endingType: 
     dependEpisode: 
     endingOpen: 0
+    nextOpenMin: 0
     totalSceneCount: 0
     playedSceneCount: 0
     sceneProgressorValue: 0
@@ -423,6 +426,7 @@ MonoBehaviour:
   isWaitingScreenTouch: 0
   useSkip: 0
   skipable: 0
+  isAutoPlay: 0
   isJustSkipStop: 0
   inGameMenu: {fileID: 0}
   currentSceneId: 
@@ -442,6 +446,8 @@ MonoBehaviour:
     offsetX: 0
     offsetY: 0
     isResized: 0
+    isAddressable: 0
+    addressableKey: 
   indexPoolBG: 0
   PoolSpriteBG:
   - {fileID: 4073639716051730705}
@@ -485,6 +491,8 @@ MonoBehaviour:
     offsetX: 0
     offsetY: 0
     isResized: 0
+    isAddressable: 0
+    addressableKey: 
   currentMinicut: {fileID: 0}
   defaultImage: {fileID: 0}
   illustPillar: {fileID: 1138654295600481145}
@@ -500,6 +508,12 @@ MonoBehaviour:
     unloadAssetCount: 0
     modelCharacter: {fileID: 0}
     modelController: {fileID: 0}
+    gameScale: 0
+    offset_x: 0
+    offset_y: 0
+    direction: 
+    isAddressable: 0
+    addressableKey: 
   characterModels:
   - {fileID: 0}
   - {fileID: 0}
@@ -526,12 +540,12 @@ MonoBehaviour:
   ListLoadingModel: []
   indexPoolIllust: 0
   gameNetworkLoadingScreen: {fileID: 0}
-  spriteSelectionNormalBase: {fileID: 21300000, guid: 5a1eed4ff374776418f127f03389eff1, type: 3}
-  spriteSelectionLockedBase: {fileID: 21300000, guid: 376d9512c8539a14d8b698f69cf9e47d, type: 3}
-  spriteSelectionUnlockedBase: {fileID: 21300000, guid: a909de6a2e738aa4ca5db94af6dc5af6, type: 3}
-  spriteSelectionLockIcon: {fileID: 21300000, guid: f777c6b780914ac4caa4958e52ebabfb, type: 3}
-  spriteSelectionUnlockIcon: {fileID: 21300000, guid: 0ac6a25c2cb46684a8dfa655c881a8d4, type: 3}
-  spriteIllustPopup: {fileID: 21300000, guid: 7e68e731568179c47b9905bbb4e8afb4, type: 3}
+  spriteSelectionNormalBase: {fileID: 21300000, guid: 7f13984de6d47a6488d54372bb114d1f, type: 3}
+  spriteSelectionLockedBase: {fileID: 21300000, guid: 8658c365b2f70c041b7cb3adaed878a8, type: 3}
+  spriteSelectionUnlockedBase: {fileID: 21300000, guid: 415c442ea4040aa46acd6a536a530dbc, type: 3}
+  spriteInappOriginIcon: {fileID: 21300000, guid: 2a247d77ccda2a344ad74c71cc797b2d, type: 3}
+  spriteIllustPopup: {fileID: 21300000, guid: 54e2ce0f80c3b154f904f1c7a8c5084e, type: 3}
+  flowTime: 0
 --- !u!1 &1138654296053884051
 GameObject:
   m_ObjectHideFlags: 0

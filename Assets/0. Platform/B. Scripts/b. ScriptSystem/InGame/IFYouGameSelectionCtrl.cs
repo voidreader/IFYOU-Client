@@ -33,10 +33,10 @@ namespace PIERStory {
 
 
         #region const & readonly
-        static readonly Vector2 originSizeDelta = new Vector2(600, 80); // 기본 크기 
-        static readonly Vector2 focusSizeDelta = new Vector2(640, 86); // 포커스 크기 
+        static readonly Vector2 originSizeDelta = new Vector2(550, 90); // 기본 크기 
+        static readonly Vector2 focusSizeDelta = new Vector2(590, 96); // 포커스 크기 
         const int originPosY = -260; // 기본 첫번재 선택지 높이 250
-        const int offsetPosY = 130; // offset  -120
+        const int offsetPosY = 120; // offset  -120
         #endregion
 
 
@@ -55,7 +55,6 @@ namespace PIERStory {
         public GameObject selectionPrice;
         public TextMeshProUGUI priceText;
         public GameObject freepassTicket;
-        public GameObject lockIcon;
         [SerializeField] bool isButtonSelected = false; // 버튼 선택됨!
         [SerializeField] bool isLock = false; // 잠금 여부 
         [SerializeField] bool isFilling = false; // 채워짐 
@@ -208,7 +207,7 @@ namespace PIERStory {
 
             this.transform.localScale = Vector3.one; // 스케일 
 
-            imageSelection.sprite = GameSpriteHolder.main.spriteSelectionNormal; // 버튼 스프라이트
+            imageSelection.sprite = GameManager.main.spriteSelectionNormalBase; // 버튼 스프라이트
 
             // 크기SizeDelta 초기화 
             imageSelection.rectTransform.sizeDelta = originSizeDelta;
@@ -410,11 +409,11 @@ namespace PIERStory {
 
             // 잠금여부에 따른 스프라이트 변경
             if (isLock) {
-                imageSelection.sprite = GameSpriteHolder.main.spriteSelectionLock;
+                imageSelection.sprite = GameManager.main.spriteSelectionLockedBase;
                 // textSelection.text = string.Empty; // 잠긴 선택지에서는 텍스트 보이지 않음 
             }
             else {
-                imageSelection.sprite = GameSpriteHolder.main.spriteSelectionUnlock;
+                imageSelection.sprite = GameManager.main.spriteSelectionUnlockedBase;
             }
 
         }

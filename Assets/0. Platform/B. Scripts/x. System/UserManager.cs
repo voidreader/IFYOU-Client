@@ -104,6 +104,7 @@ namespace PIERStory
         public bool isSelectionTutorialClear = false; // 선택지 튜토리얼 초기화 여부 
         public bool isHowToPlayClear = false; // How to play 튜토리얼 초기화 여부 
         public int tutorialFirstProjectID = 0; // 튜토리얼 첫번째 프로젝트  
+        public bool gameComplete = false;
         
         public int adCharge = 0;
         
@@ -2365,7 +2366,7 @@ namespace PIERStory
 
                 for(int i=0;i < __j.Count;i++)
                 {
-                    if (CheckGalleryImage(SystemManager.GetJsonNodeString(__j[i], "illust_id"), SystemManager.GetJsonNodeString(__j[i], "gallery_type")))
+                    if (ObtainGalleryImage(SystemManager.GetJsonNodeString(__j[i], "illust_id"), SystemManager.GetJsonNodeString(__j[i], "gallery_type")))
                         getGallery += 1f;
                 }
 
@@ -2407,7 +2408,7 @@ namespace PIERStory
         /// 갤러리 이미지를 획득 했는지 체크
         /// </summary>
         /// <param name="__illustId">illust, live_illust, minicut, live_object id값</param>
-        bool CheckGalleryImage(string __galleryId, string __galleryType)
+        bool ObtainGalleryImage(string __galleryId, string __galleryType)
         {
 
             for (int i = 0; i < GetUserGalleryImage().Count; i++)
@@ -2416,6 +2417,22 @@ namespace PIERStory
                 if(SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_id") == __galleryId
                     && SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_type") == __galleryType
                     && SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "illust_open"))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 갤러리에 있는 공개된 일러스트(이미지, 일러스트)인지 확인
+        /// </summary>
+        /// <param name="__illustName"></param>
+        /// <returns>true = 존재, false = 비공개용</returns>
+        public bool RevealedGalleryImage(string __illustName)
+        {
+            for(int i=0;i<GetUserGalleryImage().Count;i++)
+            {
+                if (SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_name") == __illustName)
                     return true;
             }
 

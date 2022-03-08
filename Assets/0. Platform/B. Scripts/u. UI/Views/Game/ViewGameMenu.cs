@@ -53,6 +53,14 @@ namespace PIERStory
             // 타이틀 처리 타입, 순번, 타이틀 조합
             textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
 
+            
+            // BM 변경으로 블락하지 않음. (2022.03.08)
+            retryButton.SetActive(true);
+            blockRetryButton.SetActive(false);
+            skipButton.SetActive(true);
+            blockSkipButton.SetActive(false);
+            
+            /*
             // 무료(광고) 플레이인 경우 보여주는 버튼을 아예 변경해준다
             if(GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD)
             {
@@ -68,6 +76,7 @@ namespace PIERStory
                 skipButton.SetActive(true);
                 blockSkipButton.SetActive(false);
             }
+            */
         }
 
         /// <summary>

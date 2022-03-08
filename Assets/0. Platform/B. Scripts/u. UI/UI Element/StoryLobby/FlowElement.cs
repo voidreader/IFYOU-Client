@@ -295,6 +295,10 @@ namespace PIERStory {
         /// <param name="__isOpen"></param>
         void RefreshOpenTimeState(bool __isOpen) {
             
+            // 엔딩 무시하기.
+            if(currentEpisode.episodeType == EpisodeType.Ending)
+                return;
+            
             // 미래, 현재 상태에 따라 처리가 달라져야 한다.
             if(currentEpisode.episodeState == EpisodeState.Current) {
                 

@@ -95,6 +95,8 @@ namespace PIERStory
                 loadingBar.fillAmount = GameManager.main.GetPagePrepValue();
                 textPercentage.text = Mathf.RoundToInt(loadingBar.fillAmount * 100).ToString() + "%";
             }
+            
+            Debug.Log("Page Resource loading Done!!!");
 
             yield return new WaitUntil(() => GameManager.main.GetCurrentPageInitialized());
             

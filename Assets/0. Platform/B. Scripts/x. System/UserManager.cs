@@ -1903,6 +1903,40 @@ namespace PIERStory
             // StoryLobbyMain 리프레시 요청 
             StoryLobbyMain.CallbackReduceWaitingTimeSuccess?.Invoke();
         }
+        
+        
+        /// <summary>
+        /// 코인으로 기다무 해금처리에 대한 콜백 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        public void CallbackReduceWaitingTimeWithCoin(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                StoryLobbyMain.CallbackReduceWaitingTimeFail?.Invoke();
+                return;
+            }
+            
+            
+            // * 코인으로 구매한 경우 서버에서 Permanent로 구매처리를 진행하기 때문에
+            // * 아래에서 PurchaseHistory를 다시 받아온다. 
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            Debug.Log(JsonMapper.ToStringUnicode(result));
+            
+            // 메세지 띄우고,  projectCurrent, bank 업데이트 
+            SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6220"), true);
+            SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);  // projectCurrent
+            SetBankInfo(result); // 뱅크 정보 업데이트             
+            
+            //에피소드 구매 기록 
+            if (result.ContainsKey(NODE_PURCHASE_HIST))
+                SetNodeEpisodePurchaseHistory(result[NODE_PURCHASE_HIST]);
+            
+            
+            
+            // StoryLobbyMain 리프레시 요청 
+            StoryLobbyMain.CallbackReduceWaitingTimeSuccess?.Invoke();
+        }
+        
 
 
         /// <summary>

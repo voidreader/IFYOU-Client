@@ -120,8 +120,12 @@ namespace PIERStory
 
         #endregion
         
-        //[SerializeField] UniWebView defaultWebview = null;
-        [SerializeField] GameObject prefabWebview;
+        #region 공용 스프라이트
+        [Space][Header("공용 스프라이트")]
+        public Sprite spriteCoinSmall; // 기본 재화 작은 코인
+        public Sprite spriteStarSmall; // 기본 재화 작은 스타
+        #endregion
+        
 
         // * 비암호화 저장 세팅 (디폴트는 암호화)        
         public static ES3Settings noEncryptionSetting;

@@ -690,8 +690,8 @@ namespace PIERStory
         /// </summary>
         /// <returns></returns>
         public string GetDebugLoadingCount() {
-            return string.Format("pageImageResourceCount[{0}] / pageModelCount[{1}] / pageLiveIllustCount[{2}] / pageLiveObjectCount[{3}] / pageBubbleResourceCount[{4}] / pageSoundResourceCount[{5}]"
-            , pageImageResourceCount, pageModelCount, pageLiveIllustCount , pageLiveObjectCount , pageBubbleResourceCount , pageSoundResourceCount);
+            return string.Format("pageImageResourceCount[{0}] / pageModelCount[{1}] / pageLiveIllustCount[{2}] / pageLiveObjectCount[{3}] / pageBubbleResourceCount[{4}] / pageSoundResourceCount[{5}] / GetCurrentLoadingCount[{6}]"
+            , pageImageResourceCount, pageModelCount, pageLiveIllustCount , pageLiveObjectCount , pageBubbleResourceCount , pageSoundResourceCount, GetCurrentLoadingCount());
         }
 
 

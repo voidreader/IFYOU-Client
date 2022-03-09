@@ -672,7 +672,7 @@ namespace PIERStory
                     }
                     catch (Exception e)
                     {
-                        Debug.LogError(e.Message);
+                        Debug.LogError(e.Message + " : " + __paramName +"/" + paramValue.ToString());
                         v = default(T);
                     }
                 }

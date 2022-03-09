@@ -232,13 +232,6 @@ namespace PIERStory {
                 {
                     purchaseState = PurchaseState.Permanent; // 영구적인 구매 상태 
                 }
-                else if (purchaseData["purchase_type"].ToString() == "OneTime"){ // OneTime
-                    purchaseState = PurchaseState.OneTime;
-                    OneTimePlayable = SystemManager.GetJsonNodeBool(purchaseData, "onetime_playable");
-                }
-                else if (purchaseData["purchase_type"].ToString() == "Rent"){ // 
-                    purchaseState = PurchaseState.Rent;
-                }
                 else if (purchaseData["purchase_type"].ToString() == "AD"){ // 
                     purchaseState = PurchaseState.AD;
                 }
@@ -246,10 +239,10 @@ namespace PIERStory {
             else
             {
                 // 구매 내역이 없는 경우에 대한 처리 
-                if(priceStarPlaySale < 1)
-                    purchaseState = PurchaseState.Free; // 무료!
-                else 
-                    purchaseState = PurchaseState.None;
+                // 2022.03.08 BM 변경으로 무조건 None 처리 
+                purchaseState = PurchaseState.None;
+                
+                    
             }
         } // ? SetPurchaseState
         

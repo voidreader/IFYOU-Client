@@ -202,11 +202,15 @@ namespace PIERStory {
             
             currentEpisodeID = SystemManager.GetJsonNodeString(projectCurrentJSON, "episode_id");
             currentEpisodeData = StoryManager.GetRegularEpisodeByID(currentEpisodeID);
+            currentEpisodeData.SetPurchaseState(); // 구매기록 refresh.
+            
+            
             hasPremium = UserManager.main.HasProjectFreepass();
             
             if(LobbyManager.main != null && CheckResumePossible()) {
                 isEpisodeContinuePlay = true;
             }
+            
             
         }
         
@@ -456,6 +460,7 @@ namespace PIERStory {
             else { // 엔딩 도달하지 않았을 경우 일반 처리 
                 // 타이틀 설정 
                 SetEpisodeTitleText(currentEpisodeData.storyLobbyTitle);
+                imageEpisodeTitle.color = Color.white;
                 
                 if(currentPlayState == StatePlayButton.inactive) {
                     imageEpisodeTitle.sprite = spriteInactiveEpisodeTitleBG;    
@@ -541,7 +546,9 @@ namespace PIERStory {
             j["price"] = GetEpisodeTimeOpenPrice();
             j["func"] = "requestWaitingEpisodeWithCoin";
 
-            NetworkLoader.main.SendPost(UserManager.main.CallbackReduceWaitingTime, j);
+            // ! 코인으로 여는거랑, 광고로 여는거랑 콜백이 달라요!
+            // * 코인으로 열면, 해당 에피소드는 Permanent로 구매처리가 같이 진행된다. 
+            NetworkLoader.main.SendPost(UserManager.main.CallbackReduceWaitingTimeWithCoin, j);
         }
         
         
@@ -582,22 +589,45 @@ namespace PIERStory {
                 
                 SystemManager.ShowStoryResetPopup(firstEpisode);
                 return;
-            }
+            } // ? 엔딩 도달한 경우 처리 끝
             
             
             
             
-            // * 임시 로직
+            // 에피소드 진입 처리 
             SystemManager.main.givenEpisodeData = currentEpisodeData;
             SystemManager.ShowNetworkLoading(); 
             
-            // * 구매기록이 없으면, 구매처리를 한다. (0원)
-            if(!currentEpisodeData.CheckExistsPurchaseData()) {
-                UserManager.OnRequestEpisodePurchase = PurchasePostProcess;
-                NetworkLoader.main.PurchaseEpisode(currentEpisodeData.episodeID, PurchaseState.Permanent, currentEpisodeData.currencyStarPlay, "0");
+            PurchaseState episodePurchaseState = currentEpisodeData.purchaseState;
+            
+            
+            // * 프리미엄 패스 구매 여부 체크 필요. 
+            if(hasPremium) {
+                
+                if(episodePurchaseState != PurchaseState.Permanent) {
+                    
+                    // 구매상태가 영구적인 상태가 아니라면 재구매 처리한다. 
+                    UserManager.OnRequestEpisodePurchase = PurchasePostProcess;
+                    NetworkLoader.main.PurchaseEpisode(currentEpisodeData.episodeID, PurchaseState.Permanent, currentEpisodeData.currencyStarPlay, "0");
+                }
+                else {
+                    PurchasePostProcess(true); // 영구적인 상태라면 그냥 바로 진행 
+                }
+                
             }
             else {
-                PurchasePostProcess(true);
+                // * 프리미엄 패스 유저 아님 
+                
+                // 영구적인 상태가 아니라면 AD로 진행 
+                // nextOpenMin이 0보다 커야한다 (기다무 대상 에피소드)
+                if(episodePurchaseState != PurchaseState.Permanent && currentEpisodeData.nextOpenMin > 0) {
+                    
+                    UserManager.OnRequestEpisodePurchase = PurchasePostProcess;
+                    NetworkLoader.main.PurchaseEpisode(currentEpisodeID, PurchaseState.AD, "none", "0");
+                }
+                else { // 영구적인 상태라면 그냥 바로 진행
+                    PurchasePostProcess(true); // 그냥 진행 
+                }
             }
         }
 

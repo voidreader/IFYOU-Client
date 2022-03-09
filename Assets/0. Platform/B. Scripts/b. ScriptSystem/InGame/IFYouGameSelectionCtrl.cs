@@ -322,11 +322,11 @@ namespace PIERStory {
                     break;
 
                 case SelectionState.Fill:
-                    imageSelection.rectTransform.DOSizeDelta(focusSizeDelta, 0.3f); // 사이즈 커진다. 
+                    // imageSelection.rectTransform.DOSizeDelta(focusSizeDelta, 0.3f); // 사이즈 커진다. 
                     imageAura.DOFade(1, 0.3f); // 아우라 알파값!
 
                     imageBar.DOKill();
-                    imageBar.DOFillAmount(1, 1f).SetEase(Ease.Linear).OnComplete(() => {
+                    imageBar.DOFillAmount(1, 0.6f).SetEase(Ease.Linear).OnComplete(() => {
                         SetState(SelectionState.Select);
                     });
 

@@ -126,9 +126,9 @@ namespace PIERStory
         [Header("Sprite resources")]
         public Sprite spriteSelectionNormalBase = null;     // 일반 선택지 
         public Sprite spriteSelectionLockedBase = null;     // 선택지 잠금 상태
-        public Sprite spriteSelectionUnlockedBase = null;   // 선택지 활성 상태 스프라이트 
-        public Sprite spriteSelectionLockIcon = null;
-        public Sprite spriteSelectionUnlockIcon = null;
+        public Sprite spriteSelectionUnlockedBase = null;   // 선택지 활성 상태 스프라이트
+        public Sprite spriteInappOriginIcon = null;         // 메일함에서 사용하는 아이콘
+        
         public Sprite spriteIllustPopup = null;             // 일러스트 획득 팝업 아이콘
 
 
@@ -1130,7 +1130,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 이동된 이후 행에 일러스트(이미지, 일러스트)가 있는지 체크
+        /// 이동된 이후 행에 갤러리 공개용 일러스트(이미지, 일러스트)가 있는지 체크
         /// </summary>
         /// <returns></returns>
         public bool CheckNextSceneHasIllust(string __sceneID)
@@ -1162,7 +1162,12 @@ namespace PIERStory
                     case GameConst.TEMPLATE_IMAGE:
                     case GameConst.TEMPLATE_LIVE_ILLUST:
                     case GameConst.TEMPLATE_LIVE_OBJECT:
-                        return true;
+
+                        // 공개용 일러스트인지 체크
+                        if (UserManager.main.RevealedGalleryImage(currentPage.ListRows[i].script_data))
+                            return true;
+                        else
+                            return false;
                 }
             }
 

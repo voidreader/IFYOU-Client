@@ -215,6 +215,7 @@ namespace PIERStory
 
         public void OnClickReturnLobby()
         {
+            UserManager.main.gameComplete = true;
             GameManager.main.EndGame();
         }
 

@@ -4,12 +4,16 @@
     using UnityEngine;
     using UnityEngine.UI;
 
+    using TMPro;
+
     public class StarsPopup : MonoBehaviour
     {
-        public Text mainText;
-        public Text sendButton;
-        public Text notNowButton;
-        public Text neverButton;
+        public TextMeshProUGUI mainText;
+        public TextMeshProUGUI subText;
+
+        public TextMeshProUGUI sendButton;
+        public TextMeshProUGUI notNowButton;
+
         public Transform starsHolder;
         public Button send;
 
@@ -21,10 +25,12 @@
         /// </summary>
         private void Start()
         {
-            mainText.text = RateGame.Instance.RateGameSettings.mainText;
+            //mainText.text = RateGame.Instance.RateGameSettings.mainText;
+
             if (!string.IsNullOrEmpty(RateGame.Instance.RateGameSettings.sendButton))
             {
-                sendButton.text = RateGame.Instance.RateGameSettings.sendButton;
+                //sendButton.text = RateGame.Instance.RateGameSettings.sendButton;
+                sendButton.text = PIERStory.SystemManager.GetLocalizedText("5159");
             }
             else
             {
@@ -32,7 +38,7 @@
             }
             if (!string.IsNullOrEmpty(RateGame.Instance.RateGameSettings.notNowButton))
             {
-                notNowButton.text = RateGame.Instance.RateGameSettings.notNowButton;
+                //notNowButton.text = RateGame.Instance.RateGameSettings.notNowButton;
             }
             else
             {
@@ -41,12 +47,13 @@
 
             if (!string.IsNullOrEmpty(RateGame.Instance.RateGameSettings.neverButton))
             {
-                neverButton.text = RateGame.Instance.RateGameSettings.neverButton;
+                //neverButton.text = RateGame.Instance.RateGameSettings.neverButton;
             }
             else
             {
-                neverButton.transform.parent.gameObject.SetActive(false);
+                //neverButton.transform.parent.gameObject.SetActive(false);
             }
+
             send.interactable = false;
             for (int i = 0; i < starsHolder.childCount; i++)
             {
@@ -100,10 +107,12 @@
             if (starNUmber + 1 < RateGame.Instance.RateGameSettings.minStarsToSend)
             {
                 openUrl = false;
+                sendButton.text = PIERStory.SystemManager.GetLocalizedText("5159");
             }
             else
             {
                 openUrl = true;
+                sendButton.text = PIERStory.SystemManager.GetLocalizedText("5160");
             }
             for (int i = 0; i < starsHolder.childCount; i++)
             {

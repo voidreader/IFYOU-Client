@@ -72,7 +72,7 @@ namespace PIERStory
                 if(LobbyManager.main != null)                
                     currencyIcon.SetTexture2D(LobbyManager.main.spriteInappOriginIcon.texture);
                 else 
-                    currencyIcon.SetTexture2D(GameSpriteHolder.main.spriteInappOriginIcon.texture);
+                    currencyIcon.SetTexture2D(GameManager.main.spriteInappOriginIcon.texture);
                     
                     
                 mailContent.text = SystemManager.GetLocalizedText("80083");

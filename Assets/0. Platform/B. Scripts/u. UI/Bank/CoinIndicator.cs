@@ -91,26 +91,7 @@ namespace PIERStory {
             
             Debug.Log(finalURL);
             
-                
-            /*
-            GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
-            configuration.title = "";
-            configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
-            configuration.colorR = 98;
-            configuration.colorG = 132;
-            configuration.colorB = 207;
-            configuration.colorA = 255;
-            configuration.barHeight = 30;
-            configuration.isBackButtonVisible = false;
-            // configuration.contentMode = GamebaseWebViewContentMode.MOBILE;
 
-            
-            Gamebase.Webview.ShowWebView(finalURL, configuration, (error) =>{ 
-                Debug.Log("Webview Closed");
-                NetworkLoader.main.RequestUserBaseProperty();
-                // AppsFlyerSDK.AppsFlyer.sendEvent("USER_TICKETEVENT_SITE", null);
-            }, null, null);
-            */
         }
     }
 }

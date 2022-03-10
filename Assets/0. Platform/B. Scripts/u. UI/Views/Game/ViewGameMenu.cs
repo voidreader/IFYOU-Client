@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
-
+using LitJson;
 using TMPro;
 using Doozy.Runtime.Reactor.Animators;
 using Doozy.Runtime.UIManager.Containers;
@@ -10,6 +11,7 @@ namespace PIERStory
 {
     public class ViewGameMenu : CommonView
     {
+        
         [SerializeField] RectTransform footer;
         [SerializeField] UIView viewGameMenu; // 게임메뉴. 
 
@@ -183,8 +185,22 @@ namespace PIERStory
         /// </summary>
         public void OnClickReplay()
         {
-            SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("6039"), GameManager.main.RetryPlay, null);
+            SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("6039"), ProceedStartOver, null);
         }
+        
+        
+        /// <summary>
+        /// 처음으로 돌아가기 할때 서버통신으로 통해 현재 회차의 진행도 제거. 
+        /// </summary>
+        void ProceedStartOver() {
+            JsonData sendingData = new JsonData();
+            sendingData["func"] = "resetPlayingEpisode";
+            sendingData["project_id"] = StoryManager.main.CurrentProjectID;
+            sendingData["episode_id"] = StoryManager.main.CurrentEpisodeID;
+            
+            NetworkLoader.main.SendPost(UserManager.main.CallbackStartOverEpisode, sendingData, true);
+        }
+        
 
         public void OnClickBlockReplay()
         {

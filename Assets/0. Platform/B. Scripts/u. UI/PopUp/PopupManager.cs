@@ -52,6 +52,7 @@ namespace PIERStory {
         
         [SerializeField] GameObject popupFlowReset; // 리셋.        
         [SerializeField] GameObject popupStoryReset; // 스토리 전체 리셋 1화로.. 
+        [SerializeField] GameObject popupGameAbility; // 게임 능력치 증감 안내 메세지 
          
         private void Awake() {
             if(main != null) {
@@ -364,6 +365,11 @@ namespace PIERStory {
                 DictPopup["StoryReset"] = popupStoryReset;
             else 
                 DictPopup.Add("StoryReset", popupStoryReset);
+                
+            if(DictPopup.ContainsKey("GameAbility")) 
+                DictPopup["GameAbility"] = popupGameAbility;
+            else 
+                DictPopup.Add("GameAbility", popupGameAbility);
         }
         
         #endregion

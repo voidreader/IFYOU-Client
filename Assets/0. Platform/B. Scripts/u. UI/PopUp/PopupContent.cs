@@ -39,6 +39,8 @@ namespace PIERStory {
          */
         public bool isConfirm = true;
         public bool isPositive = true;      // 팝업의 타입이 긍정타입인지 부정타입인지
+        
+        public int contentValue = 0;
 
         
         /// <summary>

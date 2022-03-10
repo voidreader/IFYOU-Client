@@ -92,10 +92,8 @@ namespace PIERStory
             if (StoryManager.enterGameScene)
                 StoryManager.enterGameScene = false;
 
-
-            AppsFlyerSDK.AppsFlyer.sendEvent("story_enter", new Dictionary<string, string>() {
-                { "project_id", StoryManager.main.CurrentProjectID }
-            });
+           
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("StoryEnter", new Firebase.Analytics.Parameter("project_id", StoryManager.main.CurrentProjectID));
         }
 
         public override void OnStartView()

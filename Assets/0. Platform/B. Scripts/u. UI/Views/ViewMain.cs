@@ -121,9 +121,8 @@ namespace PIERStory {
             
             mainToggle.SetIsOn(true);
             
-            AdManager.main.AnalyticsEnter("mainEnter");
             
-            AppsFlyerSDK.AppsFlyer.sendEvent("main_enter", null);
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("MainEnter");
             
         }
 

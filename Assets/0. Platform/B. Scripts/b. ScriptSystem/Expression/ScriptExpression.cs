@@ -15,6 +15,18 @@ namespace PIERStory
 
         public int ID = -1;
         
+        [SerializeField] string origin = string.Empty;
+        [SerializeField] string speaker = string.Empty; // 화자 
+        [SerializeField] string ability = string.Empty; // 능력이름 
+        [SerializeField] int conditionValue = 0; // 조건 값 
+        [SerializeField] int currentValue = 0;
+        
+        [SerializeField] string inequation = string.Empty; // 부등식 수식 
+        
+        const string prefixAbility = "@";
+        
+        
+        
 
         /// <summary>
         /// 새 표현식 생성
@@ -23,6 +35,7 @@ namespace PIERStory
         /// <param name="__priority"></param>
         public ScriptExpression(string __exp, int __priority, bool __operator, int __id)
         {
+            origin = __exp;
             expression = __exp;
             prioriry = __priority;
             isOperator = __operator;
@@ -120,6 +133,105 @@ namespace PIERStory
             string exp = __expression;
             bool isSceneID = false;
             int scene_id = 0;
+            
+            Debug.Log(string.Format("### CalcSingleExpression Start[{0}]", exp));
+          
+            
+            // * 2022.03 
+            // * 능력치 조건 추가 
+            if(exp.Contains(prefixAbility)) {
+
+                Debug.Log("### It's ability expression");
+
+                string[] spliteExp;
+                
+                // 필수적으로 '_' 화자,능력치 구분자
+                // >, <, =, >=, <= 5개의 부등식 필요하다. 
+                
+                if(!exp.Contains("_")) {
+                    Debug.Log(string.Format("!!! Can't Verify this {0} !!!", expression));
+                    return true; // 일단 true로 준다.
+                }
+                
+                // 부등식 수식 체크...
+                if(exp.Contains("<=")) {
+                    inequation = "<=";
+                }
+                else if(exp.Contains(">=")) {
+                    inequation = ">=";
+                }
+                else if(!exp.Contains("=") && exp.Contains("<")) {
+                    inequation = "<";
+                }
+                else if(!exp.Contains("=") && exp.Contains(">")) {
+                    inequation = ">";
+                }
+                else if(!exp.Contains("<") && !exp.Contains(">") && exp.Contains("=")) {
+                    inequation = "=";
+                }
+                else {
+                    Debug.Log(string.Format("!!! Can't Verify this {0} !!!", expression));
+                    return true; // 일단 true로 준다.
+                } // ? END 부등식 체크 종료
+                
+                exp = exp.Replace(prefixAbility, ""); // 골뱅이제거
+                spliteExp = exp.Split('_'); // 화자 추출 
+                speaker = spliteExp[0]; 
+                
+                // 화자 체크 
+                if(string.IsNullOrEmpty(speaker)) {
+                    Debug.Log(string.Format("!!! Wrong speaker {0} !!!", expression));
+                    return true; 
+                }
+                
+                exp = spliteExp[1]; // @케일_매력>=80 에서 매력>=80 만 남기기. 
+                ability = exp.Split(inequation[0])[0]; // 능력 빼내기. 
+                
+                // 능력이름 체크
+                if(string.IsNullOrEmpty(ability)) {
+                    Debug.Log(string.Format("!!! Wrong ability {0} !!!", expression));
+                    return true; 
+                }
+                
+               // 값 빼내기 
+                exp = exp.Replace(ability, "") ; // >=80 만 남기고
+                exp = exp.Replace(inequation, ""); // 80만 남긴다. 
+                
+                // 조건 값 파싱 
+                int.TryParse(exp, out conditionValue);
+                
+                // 조건 값 체크 
+                if(conditionValue == 0) {
+                    // 0이면.. 의심해봐야한다. (리턴은 하지 않음)
+                    Debug.Log("#### the ability value is zero " + expression);
+                }
+                
+                // 화자, 능력, 조건값을 찾았으면 UserManager 통해서 체크할것
+                currentValue = UserManager.main.GetSpeakerAbilityValue(speaker, ability);
+                
+                Debug.Log(string.Format("Speaker[{0}]/Ability[{1}]/current[{2}]/condition[{3}]", speaker, ability, currentValue, conditionValue));
+                
+                // 이제 수식에 따라.. 체크 ㅠ
+                switch(inequation) {
+                    case "<":
+                        return conditionValue > currentValue; // 현재 값이 조건보다 작다
+                    case ">":
+                        return conditionValue < currentValue; // 현재 값이 조건보다 크다
+                    case "=":
+                        return conditionValue == currentValue; // 같다. 
+                    case ">=":
+                        return conditionValue <= currentValue; // 현재 값이 조건보다 크거나 같다. 
+                    case "<=":
+                        return conditionValue >= currentValue; // 현재 값이 조건보다 작거나 같다. 
+                }
+                
+                // 여기까지 오면 안되는데..?
+                Debug.Log("#### weird ability inequation " + expression);
+                return true;
+                
+            } // ? END 능력치 조건 처리 완료
+            
+            
 
             if (exp.Contains("!"))
             {

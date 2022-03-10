@@ -59,13 +59,10 @@ namespace PIERStory
         [SerializeField]
         List<string> DebugProjectChallenges = new List<string>();
 
-        [SerializeField]
-        List<string> DebugUserChallenges = new List<string>();
 
         [SerializeField]
         List<string> DebugProjectFavors = new List<string>();
-        [SerializeField]
-        List<string> DebugUserFavors = new List<string>();
+        
 
         #endregion
 
@@ -179,7 +176,9 @@ namespace PIERStory
         const string NODE_SELECTION_PURCHASE = "selectionPurchase";
 
 
-        const string NODE_USER_SNIPPET = "userSnippet"; // 유저 스니핏 
+        
+        public const string NODE_USER_ABILITY = "ability"; // 포장된 유저 능력치
+        public const string NODE_RAW_STORY_ABILITY = "rawStoryAbility"; // 스토리 누적 능력치 RAW 데이터 
 
         #endregion
 
@@ -393,13 +392,7 @@ namespace PIERStory
         {
             currentStoryJson = __j;
             
-            
-            // 스니핏 추가 
-            if(CheckHasUserSnippet()) {
-                if(SnippetManager.main != null) {
-                    SnippetManager.main.InitSnippet(GetUserSnippet());
-                }
-            }
+
             
             #region 미션 
             currentStoryMissionJSON = GetNodeProjectMissions();
@@ -1593,6 +1586,9 @@ namespace PIERStory
 
         #region 통신 콜백 
         
+        
+        
+        
         /// <summary>
         /// 에피소드 첫 보상 콜백 
         /// </summary>
@@ -1866,6 +1862,9 @@ namespace PIERStory
             
             SetBankInfo(resultEpisodeReset); // 뱅크 정보 업데이트 
             
+            UpdateUserAbility(resultEpisodeReset[NODE_USER_ABILITY]); // 능력치 
+            UpdateRawStoryAbility(resultEpisodeReset[NODE_RAW_STORY_ABILITY]);
+            
             
             // 알림 팝업 후 목록화면 갱신처리 
             SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("6167"));
@@ -1873,12 +1872,41 @@ namespace PIERStory
             // * Doozy Nody StoryDetail로 돌아가기 위한 이벤트 생성 
             // * ViewStoryDetail 에서 이 시그널을 Listener를 통해서 받는다. (Inspector)
             // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CLOSE_RESET, string.Empty);
-            
-            
+           
             
             // 리셋 콜백
             StoryLobbyMain.OnCallbackReset?.Invoke();
         }
+        
+        /// <summary>
+        /// 처음으로 돌아가기 콜백 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackStartOverEpisode(HTTPRequest req, HTTPResponse res)
+        {
+            // TODO 통신 실패했을 때 처리 필요해..
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackStartOverEpisode");
+                return;
+            }
+
+            resultEpisodeReset = JsonMapper.ToObject(res.DataAsText);
+            Debug.Log(JsonMapper.ToStringUnicode(resultEpisodeReset));
+
+
+            SetNodeStorySceneProgress(resultEpisodeReset[NODE_SCENE_PROGRESS]); // 씬 progress
+            SetNodeUserProjectCurrent(resultEpisodeReset[NODE_PROJECT_CURRENT]);  // projectCurrent
+            SetNodeUserProjectSelectionProgress(resultEpisodeReset[NODE_SELECTION_PROGRESS]); // 선택지 기록 
+            
+            UpdateUserAbility(resultEpisodeReset[NODE_USER_ABILITY]); // 능력치 
+            UpdateRawStoryAbility(resultEpisodeReset[NODE_RAW_STORY_ABILITY]);
+            
+            
+            // 통신 완료 후 게임매니저 메소드 호출 
+            GameManager.main.RetryPlay();
+        }        
         
         
         /// <summary>
@@ -2610,26 +2638,152 @@ namespace PIERStory
             return false;
         }
         
-        #region 유저 스니핏
+        #region 유저 능력치 관련 메소드 
         
-        /// <summary>
-        /// 유저 스니핏 NODE
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetUserSnippet() {
-            return currentStoryJson[NODE_USER_SNIPPET];
+        public JsonData GetUserAbility() {
+            if(!currentStoryJson.ContainsKey(NODE_USER_ABILITY)) {
+                return null;
+            }
+            
+            return currentStoryJson[NODE_USER_ABILITY];
+        }
+        
+        public JsonData GetRawStoryAbility() {
+            if(!currentStoryJson.ContainsKey(NODE_RAW_STORY_ABILITY)) {
+                return null;
+            }
+            
+            return currentStoryJson[NODE_RAW_STORY_ABILITY];
         }
         
         /// <summary>
-        /// 유저 스니핏 존재 여부 
+        /// 유저 능력치 json 갱신 
         /// </summary>
-        /// <returns></returns>
-        public bool CheckHasUserSnippet() {
+        /// <param name="__newData"></param>
+        public void UpdateUserAbility(JsonData __newData) {
+            currentStoryJson[NODE_USER_ABILITY] = __newData;
             
-            return GetUserSnippet().ContainsKey("snippetScript") && GetUserSnippet()["snippetScript"].Count > 0;
+            Debug.Log("###  UpdateUserAbility : " + JsonMapper.ToStringUnicode(currentStoryJson[NODE_USER_ABILITY]));
+        }
+        
+        /// <summary>
+        /// 스토리 누적 능력치 갱신 
+        /// </summary>
+        /// <param name="__newData"></param>
+        public void UpdateRawStoryAbility(JsonData __newData) {
+            currentStoryJson[NODE_RAW_STORY_ABILITY] = __newData;
+        }
+        
+        
+        /// <summary>
+        /// 현재 작품의 화자, 능력치에 해당하는 수치 가져오기 
+        /// </summary>
+        /// <param name="__speaker"></param>
+        /// <param name="__ability"></param>
+        /// <returns></returns>
+        public int GetSpeakerAbilityValue (string __speaker, string __ability) {
+            
+            // key 체크 
+            if(!GetUserAbility().ContainsKey(__speaker)) {
+                Debug.LogError(string.Format("No match speaker in [{0}/{1}]", __speaker, __ability));
+                return 0;
+            }
+            
+            for(int i=0; i<GetUserAbility()[__speaker].Count;i++) {
+                if(GetUserAbility()[__speaker][i]["ability_name"].ToString() == __ability) {
+                    return SystemManager.GetJsonNodeInt(GetUserAbility()[__speaker][i], "current_value");
+                }
+            }
+            
+            Debug.LogError(string.Format("No match ability in [{0}/{1}]", __speaker, __ability));
+            return 0;
             
         }
         
-        #endregion
+        /// <summary>
+        /// 현재 작품의 화자, 능력치에 해당하는 Percentage 가져오기 
+        /// </summary>
+        /// <param name="__speaker"></param>
+        /// <param name="__ability"></param>
+        /// <returns></returns>
+        public int GetSpeakerAbilityPercentage (string __speaker, string __ability) {
+            
+            int currentValue = 0;
+            int maxValue = 0;
+            
+            // key 체크 
+            if(!GetUserAbility().ContainsKey(__speaker)) {
+                Debug.LogError(string.Format("No match speaker in [{0}/{1}]", __speaker, __ability));
+                return 0;
+            }
+            
+            for(int i=0; i<GetUserAbility()[__speaker].Count;i++) {
+                if(GetUserAbility()[__speaker][i]["ability_name"].ToString() == __ability) {
+                    currentValue = SystemManager.GetJsonNodeInt(GetUserAbility()[__speaker][i], "current_value");
+                    maxValue = SystemManager.GetJsonNodeInt(GetUserAbility()[__speaker][i], "max_value");
+                    break;
+                }
+            }
+            
+            // 백분율 
+            return Mathf.RoundToInt((float)currentValue / (float)maxValue * 100f);
+            
+            
+        }
+        
+        /// <summary>
+        /// 화자, 능력치 json 
+        /// </summary>
+        /// <param name="__speaker"></param>
+        /// <param name="__ability"></param>
+        /// <returns></returns>
+        public JsonData GetSpeakerAbilityJSON(string __speaker, string __ability) {
+            // key 체크 
+            if(!GetUserAbility().ContainsKey(__speaker)) {
+                Debug.LogError(string.Format("No match speaker in [{0}/{1}]", __speaker, __ability));
+                return null;
+            }
+            
+            for(int i=0; i<GetUserAbility()[__speaker].Count;i++) {
+                if(GetUserAbility()[__speaker][i]["ability_name"].ToString() == __ability) {
+                    return GetUserAbility()[__speaker][i];
+                }
+            }
+            
+            Debug.LogError(string.Format("No match ability in [{0}/{1}]", __speaker, __ability));
+            return null;
+        }
+        
+        /// <summary>
+        /// 에피소드, 씬에서 이미 획득한 능력치 정보가 있는지 체크 
+        /// </summary>
+        /// <param name="__episode_id"></param>
+        /// <param name="__scene_id"></param>
+        /// <param name="__abilityName"></param>
+        /// <param name="__value"></param>
+        /// <returns></returns>
+        public bool CheckSceneAbilityHistory(string __episode_id, string __scene_id, string __speaker, string __abilityName, int __value) {
+            
+            if(GetRawStoryAbility() == null)
+                return false;
+                
+            for(int i=0; i<GetRawStoryAbility().Count;i++) {
+                if(SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], "episode_id") == __episode_id
+                    && SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], "scene_id") == __scene_id
+                    && SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], "speaker") == __speaker
+                    && SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], "ability_name") == __abilityName
+                    && SystemManager.GetJsonNodeInt(GetRawStoryAbility()[i], "add_value") == __value) 
+                    return true; // 데이터 있음 
+                    
+            }
+            
+            
+            return false;
+        }
+        
+        
+        
+        #endregion 
+
     }
 }

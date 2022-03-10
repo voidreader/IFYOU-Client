@@ -54,7 +54,7 @@ namespace PIERStory
         public bool ParseScriptExpression(string __expression)
         {
 
-            expression = __expression;
+            expression = __expression.Replace(" ", ""); // 공백제거 
             expressionID = 0;
 
             int maxPriority = 0; // 우선순위 체크용 
@@ -311,7 +311,7 @@ namespace PIERStory
             
             while(index < expression.Length)
             {
-
+                // 한글자씩 체크하면서 오퍼레이터 만나면 string으로 모아서 전달
                 c = expression[index]; // 한글자씩!
 
                 // 공백을 만나면 continue 시켜주자. 

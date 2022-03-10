@@ -52,6 +52,7 @@ namespace PIERStory {
         [SerializeField] Image imageAura; // 아우라 이미지 
         public GameObject illustIcon;
         [SerializeField] TextMeshProUGUI textSelection; //  텍스트
+        public Image lockIcon;
         public GameObject selectionPrice;
         public TextMeshProUGUI priceText;
         public GameObject freepassTicket;
@@ -400,20 +401,26 @@ namespace PIERStory {
 
             // 조건 컬럼에 값이 없으면 그냥 끝!
             if (string.IsNullOrEmpty(requisite))
+            {
+                lockIcon.gameObject.SetActive(false);
                 return;
+            }
 
             // imageSelection.sprite = GameSpriteHolder.main.spriteSelectionNormal
 
             // 잠금 여부 
             isLock = !ScriptExpressionParser.main.ParseScriptExpression(requisite);
+            lockIcon.gameObject.SetActive(true);
 
             // 잠금여부에 따른 스프라이트 변경
             if (isLock) {
                 imageSelection.sprite = GameManager.main.spriteSelectionLockedBase;
+                lockIcon.sprite = GameManager.main.spriteSelectionLockIcon;
                 // textSelection.text = string.Empty; // 잠긴 선택지에서는 텍스트 보이지 않음 
             }
             else {
                 imageSelection.sprite = GameManager.main.spriteSelectionUnlockedBase;
+                lockIcon.sprite = GameManager.main.spriteSelectionUnlockIcon;
             }
 
         }

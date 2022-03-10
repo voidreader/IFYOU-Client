@@ -103,8 +103,6 @@ namespace PIERStory
             // Action 세팅
             OnDisableAllOptionals = DisableAllStickerOptionals;
             
-            // 캐릭터 모션 제어 
-            StartCoroutine(DelayLiveModelAnimation());
         }
 
 
@@ -295,11 +293,15 @@ namespace PIERStory
                         character.SetModelDataFromStoryManager();
 
                         if (SystemManager.main.hasSafeArea)
-                            character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_SAFEAREA_POS_Y, 0);
+                            character.modelController.transform.localPosition = new Vector3(SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_POS_X), GameConst.MODEL_PARENT_SAFEAREA_POS_Y, 0);
                         else
-                            character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_ORIGIN_POS_Y, 0);
+                            character.modelController.transform.localPosition = new Vector3(SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_POS_X), GameConst.MODEL_PARENT_ORIGIN_POS_Y, 0);
 
                         character.modelController.currencyName = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);
+
+                        if (SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_ANGLE) > 0)
+                            character.modelController.transform.localScale = new Vector3(-1, 1, 1);
+
                         liveModels.Add(character.modelController);
                         decoObjects.Add(character.modelController.gameObject);
                         listModelMounts.Add(character);
@@ -393,6 +395,12 @@ namespace PIERStory
 
             premiumpassButton.SetActive(true);
             showDetailButton.SetActive(true);
+
+            foreach(GameModelCtrl models in liveModels)
+                models.ChangeLayerRecursively(models.transform, GameConst.LAYER_MODEL_C);
+
+            moveBg = false;
+            moveCharacter = false;
         }
 
 
@@ -628,14 +636,14 @@ namespace PIERStory
         {
             if(controlModel != null)
             {
-                controlModel.modelAnim.Play(controlModel.motionLists[0]);
+                controlModel.PlayLobbyAnimation(controlModel.motionLists[0]);
 
                 for (int i = 0; i < controlModel.motionLists.Count; i++)
                 {
                     // 생성되고 난 후, 기본 모션을 세팅한다
                     if (controlModel.motionLists[i].Contains("기본") && !controlModel.motionLists[i].Contains("M"))
                     {
-                        controlModel.modelAnim.Play(controlModel.motionLists[i]);
+                        controlModel.PlayLobbyAnimation(controlModel.motionLists[i]);
                         break;
                     }
                 }
@@ -804,35 +812,36 @@ namespace PIERStory
             int sortingOrder = 0;
 
             // 배경 추가
-            JsonData data = new JsonData();
-            data[LobbyConst.NODE_CURRENCY] = bgCurrency;
-            data[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
-            data[LobbyConst.NODE_POS_X] = LobbyManager.main.lobbyBackground.transform.localPosition.x;
-            data[LobbyConst.NODE_POS_Y] = 0f;
-            data[LobbyConst.NODE_WIDTH] = LobbyManager.main.lobbyBackground.transform.localScale.x;
-            data[LobbyConst.NODE_HEIGHT] = LobbyManager.main.lobbyBackground.transform.localScale.x;
-            data[LobbyConst.NODE_ANGLE] = 0f;
+            JsonData bgData = new JsonData();
+            bgData[LobbyConst.NODE_CURRENCY] = bgCurrency;
+            bgData[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
+            bgData[LobbyConst.NODE_POS_X] = LobbyManager.main.lobbyBackground.transform.localPosition.x;
+            bgData[LobbyConst.NODE_POS_Y] = 0f;
+            bgData[LobbyConst.NODE_WIDTH] = LobbyManager.main.lobbyBackground.transform.localScale.x;
+            bgData[LobbyConst.NODE_HEIGHT] = LobbyManager.main.lobbyBackground.transform.localScale.x;
+            bgData[LobbyConst.NODE_ANGLE] = 0f;
 
-            sending[LobbyConst.NODE_CURRENCY_LIST].Add(data);
+            sending[LobbyConst.NODE_CURRENCY_LIST].Add(bgData);
 
             sortingOrder++;
 
             // 캐릭터 추가
             foreach(GameModelCtrl character in liveModels)
             {
-                data[LobbyConst.NODE_CURRENCY] = character.currencyName;
-                data[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
-                data[LobbyConst.NODE_POS_X] = character.transform.localPosition.x;
-                data[LobbyConst.NODE_POS_Y] = 0f;
-                data[LobbyConst.NODE_WIDTH] = 0f;
-                data[LobbyConst.NODE_HEIGHT] = 0f;
+                JsonData modelData = new JsonData();
+                modelData[LobbyConst.NODE_CURRENCY] = character.currencyName;
+                modelData[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
+                modelData[LobbyConst.NODE_POS_X] = character.transform.localPosition.x;
+                modelData[LobbyConst.NODE_POS_Y] = 0f;
+                modelData[LobbyConst.NODE_WIDTH] = 0f;
+                modelData[LobbyConst.NODE_HEIGHT] = 0f;
 
                 if (character.transform.localScale.x < 0)
-                    data[LobbyConst.NODE_ANGLE] = 180f;
+                    modelData[LobbyConst.NODE_ANGLE] = 180f;
                 else
-                    data[LobbyConst.NODE_ANGLE] = 0f;
+                    modelData[LobbyConst.NODE_ANGLE] = 0f;
 
-                sending[LobbyConst.NODE_CURRENCY_LIST].Add(data);
+                sending[LobbyConst.NODE_CURRENCY_LIST].Add(modelData);
 
                 sortingOrder++;
             }
@@ -841,10 +850,8 @@ namespace PIERStory
             for (int i = 0; i < stickerParent.childCount; i++)
             {
                 sending[LobbyConst.NODE_CURRENCY_LIST].Add(stickerParent.GetChild(i).GetComponent<StickerElement>().StickerJsonData(sortingOrder));
-
                 sortingOrder++;
             }
-
 
             NetworkLoader.main.SendPost(CallbackSaveDeco, sending, true);
         }
@@ -858,6 +865,7 @@ namespace PIERStory
             }
 
             storyProfile = JsonMapper.ToObject(res.DataAsText);
+            Debug.Log(JsonMapper.ToStringUnicode(storyProfile));
             UserManager.main.currentStoryJson["storyProfile"] = storyProfile;
             
             ActiveInteractable(false);

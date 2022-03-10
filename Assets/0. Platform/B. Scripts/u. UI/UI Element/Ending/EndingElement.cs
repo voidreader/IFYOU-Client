@@ -16,6 +16,12 @@ namespace PIERStory
         public TextMeshProUGUI endingType;
         public TextMeshProUGUI endingTitle;
 
+        public UnityEngine.UI.Image replayIcon;
+        public GameObject showChoiceButton;
+
+        readonly Vector2 openEndingSize = new Vector2(660, 500);
+        readonly Vector2 lockEndingSize = new Vector2(660, 435);
+
         EpisodeData endingData;
 
         public void InitEndingInfo(EpisodeData epiData)
@@ -28,7 +34,21 @@ namespace PIERStory
             else
                 endingType.text = SystemManager.GetLocalizedText("5088");
 
-            endingTitle.text = epiData.episodeTitle;
+
+            if (endingData.endingOpen)
+            {
+                endingTitle.text = epiData.episodeTitle;
+                GetComponent<RectTransform>().sizeDelta = openEndingSize;
+                showChoiceButton.SetActive(true);
+            }
+            else
+            {
+                EpisodeData dependEpisodeData = StoryManager.GetRegularEpisodeByID(epiData.dependEpisode);
+
+                endingTitle.text = string.Format("{0}\n EP{1}", "귀속 에피소드", dependEpisodeData.episodeNO);
+                GetComponent<RectTransform>().sizeDelta = lockEndingSize;
+                showChoiceButton.SetActive(false);
+            }
 
             gameObject.SetActive(true);
         }
@@ -41,6 +61,11 @@ namespace PIERStory
         /// </summary>
         public void OnClickStartEnding()
         {
+            // 아직 열지 못했다면 플레이 놉!
+            if (!endingData.endingOpen)
+                return;
+
+
             UserManager.main.useRecord = false; // 엔딩 플레이는 useRecord를 false 처리한다. 
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, endingData, string.Empty);
         }

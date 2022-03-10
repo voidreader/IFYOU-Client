@@ -261,7 +261,7 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CONNECT_SERVER, string.Empty);
             
             
-            AppsFlyerSDK.AppsFlyer.sendEvent("user_login", null);
+            Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventLogin);
         }
 
         /// <summary>
@@ -1185,7 +1185,7 @@ namespace PIERStory
                 Debug.Log("Mission : " + JsonMapper.ToStringUnicode(currentMissionData)); // 체크용도 
              
              
-                // AppsFlyerSDK.AppsFlyer.sendEvent("MISSION_CLEAR_"+ currentMissionData["mission_id"].ToString(), null);
+                
                 popUp.Data.SetImagesSprites(spriteMissionPopup);
                 popUp.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("5086"), currentMissionData["mission_name"].ToString()));
                 PopupManager.main.ShowPopup(popUp, __useQueue, false);
@@ -2561,7 +2561,6 @@ namespace PIERStory
             for(int i=0; i < GetNodeUserRawVoiceHistory().Count;i++) {
                 if(SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], CommonConst.SOUND_NAME) == soundName) {
                     GetNodeUserRawVoiceHistory()[i][CommonConst.IS_OPEN] = 1; // 오픈처리
-                    // AppsFlyerSDK.AppsFlyer.sendEvent("VOICE_ACQUIRE_[" + SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], "speaker") + " ]_[" + SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], "sound_id") + "]", null);
                     return;
                 }
             }

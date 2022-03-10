@@ -88,7 +88,7 @@ namespace PIERStory {
 
             InitUnityMediation();
             
-            InitIronSource();
+            
         }
         
         /// <summary>
@@ -154,86 +154,7 @@ namespace PIERStory {
         }
         
         
-        #region ironSource
-        /// <summary>
-        /// 아이언 소스 
-        /// </summary>
-        void InitIronSource() {
-            
-            
-            
-            #if UNITY_ANDROID
-            ironSourceKey = ironSource_android;
-            #else
-            ironSourceKey = ironSource_ios;
-            #endif
-            
-            IronSource.Agent.init(ironSourceKey);
-            IronSource.Agent.validateIntegration();
-            
-            InitBanner();
-        }
-        
-        /// <summary>
-        /// 배너 초기화
-        /// </summary>
-        void InitBanner() {
-            IronSourceEvents.onBannerAdLoadedEvent += BannerAdLoadedEvent;
-            IronSourceEvents.onBannerAdLoadFailedEvent += BannerAdLoadFailedEvent;        
-            IronSourceEvents.onBannerAdClickedEvent += BannerAdClickedEvent; 
-        }
-        
-        /// <summary>
-        /// 띠배너 불러오기
-        /// </summary>
-        public void LoadBanner() {
-            
-            if(!useBannerAD) {
-                Debug.Log("Off Banner AD");
-                return;
-            }
-
-
-            // 무료 유저가 아니면 광고 재생 되지 않음
-            if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState != PurchaseState.AD)
-                return;            
-            
-            isIronSourceBannerLoad = false;
-            
-            IronSource.Agent.loadBanner(IronSourceBannerSize.BANNER, IronSourceBannerPosition.BOTTOM);
-            
-            
-            
-        }
-        
-        /// <summary>
-        /// 띠배너 감추기
-        /// </summary>
-        public void HideBanner() {
-            
-            if(!isIronSourceBannerLoad)
-                return;
-                
-            if(!useBannerAD)
-                return;
-                
-            IronSource.Agent.hideBanner();
-        }
-        
-        void BannerAdLoadedEvent() {
-            Debug.Log("#### ironSourceBanner Loaded");
-            isIronSourceBannerLoad = true;
-        }
-        
-        void BannerAdLoadFailedEvent(IronSourceError error) {
-            Debug.Log("#### ironSource bannder fail : " + error.getDescription());
-        }
-        
-        void BannerAdClickedEvent() {
-            
-        }
-        
-        #endregion
+       
         
         
         /// <summary>
@@ -611,9 +532,7 @@ namespace PIERStory {
         /// <param name="_packageName"></param>
         public void AnalyticsPackageButtonClick(string _packageName) {
             
-            AppsFlyerSDK.AppsFlyer.sendEvent("package_button",new Dictionary<string, string> {
-                {"openPosition", _packageName}
-            });            
+           Firebase.Analytics.FirebaseAnalytics.LogEvent("PackageButton", new Firebase.Analytics.Parameter("package", _packageName));
             
         }
         
@@ -623,16 +542,17 @@ namespace PIERStory {
         /// <param name="__openPosition"></param>
         public void AnalyticsCoinShopOpen(string __openPosition) {
             
-            AppsFlyerSDK.AppsFlyer.sendEvent("open_coin_hop",new Dictionary<string, string> {
-                {"openPosition", __openPosition}
-            });
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("OpenCoinShop", new Firebase.Analytics.Parameter("position", __openPosition));
+
             
         }
         
 
         
         public void AnalyticsEnter(string position) {
-            AppsFlyerSDK.AppsFlyer.sendEvent(position, null);
+            
+            Firebase.Analytics.FirebaseAnalytics.LogEvent(position);
+            
         }
         
         

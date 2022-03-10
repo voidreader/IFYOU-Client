@@ -196,13 +196,13 @@ namespace PIERStory
                 // 코원 프로젝트 
                 gamebaseAPP_ID = "qtV3HLW5";
                 gamebaseLogger_ID = "7eGOB7zE5dQx4yTC";
-                //AppsFlyerSDK.AppsFlyer.useAppsFlyer = true;
+                
             }
             else { 
                 // 피어 프로젝트 
                 gamebaseAPP_ID = "6swpd3Jp";
                 gamebaseLogger_ID = "6WMxzJjo6i5Z5iXm";
-                // AppsFlyerSDK.AppsFlyer.useAppsFlyer = false;
+                
             }
             
             
@@ -372,7 +372,8 @@ namespace PIERStory
         void OnGamebaseInitialize(GamebaseResponse.Launching.LaunchingInfo launchingInfo, GamebaseError error) {
             
             
-            AppsFlyerSDK.AppsFlyer.sendEvent("app_open", null);
+            
+            Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventAppOpen);
             
             // 초기화 실패했을 경우에 대한 처리. 
             if (!Gamebase.IsSuccess(error))
@@ -1102,13 +1103,7 @@ namespace PIERStory
                 {
                     Debug.Log("RegisterPush succeeded.");
 
-                    /*
-                    if(adPush)
-                        AppsFlyerSDK.AppsFlyer.sendEvent("APP_ADINFORM", null);
 
-                    if(nightAdPush)
-                        AppsFlyerSDK.AppsFlyer.sendEvent("APP_NIGHTADINFORM", null);
-                    */
                     QueryPushTokenInfo();
 
                 }

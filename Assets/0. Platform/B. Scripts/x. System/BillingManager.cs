@@ -179,28 +179,6 @@ namespace PIERStory {
             
             NetworkLoader.main.SendPost(OnRequestPurchaseReward, sendData, true);
             
-            // 구매 내역. (첫 구매 판단 여부)
-            /*
-            bool hasPurchaseHistory = BillingManager.main.CheckProductPurchaseHistory(receipt.gamebaseProductId); 
-            string eventName = string.Empty;
-            
-            if(hasPurchaseHistory)
-                eventName = "USER_PURCHASE_";
-            else 
-                eventName = "USER_FRIST_PURCHASE_";
-            
-            // AppsFlyer 수익 처리 추가             
-            eventName += receipt.gamebaseProductId;
-            AppsFlyerSDK.AppsFlyer.sendEvent(eventName, null); 
-            
-            // 추가 (통합 인앱결제)
-            Dictionary<string, string> appsflyerParam = new Dictionary<string, string>();
-            // id, price, 통화
-            appsflyerParam.Add("af_product", receipt.gamebaseProductId); 
-            appsflyerParam.Add("af_revenue", receipt.price.ToString());
-            appsflyerParam.Add("af_currency", receipt.currency);
-            AppsFlyerSDK.AppsFlyer.sendEvent("IN_APP_PURCHASE", appsflyerParam);
-            */
             
             // 통합 인앱결제
             Dictionary<string, string> eventValues = new Dictionary<string, string>();

@@ -567,13 +567,12 @@ namespace PIERStory
             CheckResumePlayValidation();
 
             // ! 띠배너 광고 
-            AdManager.main.LoadBanner();
+            // AdManager.main.LoadBanner();
             
-            // 
-            AppsFlyerSDK.AppsFlyer.sendEvent("episode_loading_done", new Dictionary<string, string>() {
-                { "project_id", StoryManager.main.CurrentProjectID },
-                { "episode_id", StoryManager.main.CurrentEpisodeID }
-            });
+
+            
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("EpisodeLoadingDone", new Firebase.Analytics.Parameter("project_id", StoryManager.main.CurrentProjectID)
+            , new Firebase.Analytics.Parameter("episode_id", StoryManager.main.CurrentEpisodeID));
 
 
             // 모든 라인을, 혹은 종료 명령어를 만날때까지 계속해! 
@@ -695,7 +694,7 @@ namespace PIERStory
             GarbageCollect();
 
             // 띠배너 보여주고 있었다면 감추기.
-            AdManager.main.HideBanner();
+            // AdManager.main.HideBanner();
 
             if (isPlaying)
             {
@@ -1910,7 +1909,7 @@ namespace PIERStory
         {
             Debug.Log("ShowGameEnd :: " + __nextEpisodeID);
 
-            AdManager.main.HideBanner();
+            // AdManager.main.HideBanner();
 
             useSkip = false;
             isPlaying = false; // 게임 플레이 정지.
@@ -1927,11 +1926,9 @@ namespace PIERStory
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
             
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("EpisodeEnd", new Firebase.Analytics.Parameter("project_id", StoryManager.main.CurrentProjectID)
+            , new Firebase.Analytics.Parameter("episode_id", StoryManager.main.CurrentEpisodeID));
             
-            AppsFlyerSDK.AppsFlyer.sendEvent("episode_end", new Dictionary<string, string>() {
-                { "project_id", StoryManager.main.CurrentProjectID },
-                { "episode_id", StoryManager.main.CurrentEpisodeID }
-            });
 
 
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터

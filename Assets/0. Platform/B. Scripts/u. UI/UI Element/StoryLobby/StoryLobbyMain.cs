@@ -714,10 +714,8 @@ namespace PIERStory {
             NetworkLoader.main.UpdateUserProjectCurrent(currentEpisodeData.episodeID, lastPlaySceneID, lastPlayScriptNO);
             
             
-            AppsFlyerSDK.AppsFlyer.sendEvent("episode_start", new Dictionary<string, string>() {
-                { "project_id", StoryManager.main.CurrentProjectID },
-                { "episode_id", StoryManager.main.CurrentEpisodeID }
-            });
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("EpisodeStart", new Firebase.Analytics.Parameter("project_id", StoryManager.main.CurrentProjectID)
+            , new Firebase.Analytics.Parameter("episode_id", StoryManager.main.CurrentEpisodeID));
             
         }               
         

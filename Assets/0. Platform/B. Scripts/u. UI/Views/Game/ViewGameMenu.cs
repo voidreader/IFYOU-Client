@@ -1,8 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using LitJson;
+
 using TMPro;
+using LitJson;
 using Doozy.Runtime.Reactor.Animators;
 using Doozy.Runtime.UIManager.Containers;
 
@@ -32,17 +32,11 @@ namespace PIERStory
 
         [Header("Division Free")]
         public GameObject retryButton;
-        public GameObject blockRetryButton;
         public GameObject skipButton;
-        public GameObject blockSkipButton;
 
         [Space(10)]
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
         
-        void Start() {
-            
-
-        }
         
         public override void OnStartView()
         {
@@ -54,27 +48,7 @@ namespace PIERStory
             
             // BM 변경으로 블락하지 않음. (2022.03.08)
             retryButton.SetActive(true);
-            blockRetryButton.SetActive(false);
             skipButton.SetActive(true);
-            blockSkipButton.SetActive(false);
-            
-            /*
-            // 무료(광고) 플레이인 경우 보여주는 버튼을 아예 변경해준다
-            if(GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD)
-            {
-                retryButton.SetActive(false);
-                blockRetryButton.SetActive(true);
-                skipButton.SetActive(false);
-                blockSkipButton.SetActive(true);
-            }
-            else
-            {
-                retryButton.SetActive(true);
-                blockRetryButton.SetActive(false);
-                skipButton.SetActive(true);
-                blockSkipButton.SetActive(false);
-            }
-            */
         }
 
         /// <summary>
@@ -131,17 +105,6 @@ namespace PIERStory
         }
         
 
-        public void OnClickBlockSkip()
-        {
-            
-            if(UserManager.main.CheckAdminUser()) {
-                SkipScene();
-                return;
-            }
-            
-            SystemManager.ShowSimpleAlertLocalize("6171");
-        }
-
         /// <summary>
         /// 로그 오픈 
         /// </summary>
@@ -197,11 +160,6 @@ namespace PIERStory
             NetworkLoader.main.SendPost(UserManager.main.CallbackStartOverEpisode, sendingData, true);
         }
         
-
-        public void OnClickBlockReplay()
-        {
-            SystemManager.ShowSimpleAlertLocalize("6172");
-        }
         
         public void OnClickBack() {
             

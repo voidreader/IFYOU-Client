@@ -30,6 +30,7 @@ namespace PIERStory {
         public static List<IFYouGameSelectionCtrl> ListStacks = new List<IFYouGameSelectionCtrl>(); // 현재 선택지에 사용되는 친구들 
         static bool isOneOfSelectionPointerDown = false; // 선택지 중 하나라도 누르고 있는 경우 true로 변환 
         public static bool isChooseCompleted = false; // 선택 완료 (다른거 누를 수 없도록 막는다)
+        public bool isPurchaseSelection = false;     // 구매해야 하는 선택지인가요?
 
 
         #region const & readonly
@@ -163,7 +164,10 @@ namespace PIERStory {
                     if (UserManager.main.IsPurchaseSelection(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no))
                         priceText.text = "0";
                     else
+                    {
+                        isPurchaseSelection = true;
                         priceText.text = scriptRow.selectionPrice.ToString();
+                    }
                 }
             }
 
@@ -526,6 +530,9 @@ namespace PIERStory {
 
             // 선택지 선택완료 처리
             SelectionSelected();
+
+            if (ViewGame.main.commonTop.isActiveAndEnabled)
+                ViewGame.main.commonTop.Hide();
         }
     }
 }

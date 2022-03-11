@@ -43,12 +43,12 @@ namespace PIERStory
         [Space][Space][Header("**선택지**")]
         public CanvasGroup selectionInfo;
         public TextMeshProUGUI selectionInfoText;       // 선택지 안내 텍스트
-        public Image selectionTutorialText;     // 선택지 튜토리얼 안내문구
-        public Image selectionBackground; // 선택지 나올때 음영처리를 위한 백그라운드 이미지
+        public Image selectionTutorialText;             // 선택지 튜토리얼 안내문구
+        public Image selectionBackground;               // 선택지 나올때 음영처리를 위한 백그라운드 이미지
         public List<ScriptRow> ListSelectionRows = new List<ScriptRow>(); // 현재보여지는 선택지 정보의 스크립트 데이터 
         public List<IFYouGameSelectionCtrl> ListGameSelection = new List<IFYouGameSelectionCtrl>(); // UI에 저장된 선택지들 
         public List<IFYouGameSelectionCtrl> ListAppearSelection = new List<IFYouGameSelectionCtrl>(); // 활성화된 선택지 
-        
+        public UIView commonTop;
         
         
         public GameObject screenInputBlocker = null;            // 연출중 입력막고싶다..!
@@ -430,6 +430,7 @@ namespace PIERStory
             selectionBackground.gameObject.SetActive(true);
             selectionBackground.DOFade(0.7f, 1);
 
+            // 선택지 안내 표출
             if (!string.IsNullOrEmpty(selectionInfoText.text))
                 selectionInfo.DOFade(1f, 1f);
             
@@ -457,10 +458,32 @@ namespace PIERStory
             // 마지막 선택지부터 stack처럼 쌓기
             for (int i = ListSelectionRows.Count - 1; i >= 0; i--)
             {
+                ListGameSelection[i].isPurchaseSelection = false;
                 ListGameSelection[i].SetSelection(ListSelectionRows[i], ListSelectionRows.Count - 1 - i);
                 ListAppearSelection.Add(ListGameSelection[i]); // appear에 추가. 
             }
 
+            bool hasPurchaseSelection = false;
+
+            for (int i = 0; i < ListAppearSelection.Count; i++)
+            {
+                if (ListAppearSelection[i].isPurchaseSelection)
+                {
+                    hasPurchaseSelection = true;
+                    break;
+                }
+            }
+
+            // 구매해야하는 선택지가 있다면
+            if(hasPurchaseSelection)
+            {
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
+                commonTop.Show();
+            }
         }
 
 

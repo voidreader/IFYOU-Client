@@ -7,6 +7,7 @@ using Unity.Services.Core;
 using UnityEngine.Analytics;
 
 using LitJson;
+using Firebase;
 
 #if UNITY_IOS
 using UnityEngine.iOS;
@@ -25,6 +26,10 @@ namespace PIERStory {
         public static Action OnShowAdvertisement;
         
         public static Action<bool> OnCompleteRewardAD = null; // 동영상 광고 보고 콜백
+        
+        // * Firebase
+        FirebaseApp app;
+        
         
         // * 광고 도중 터치 막기 위한 변수.
         public bool isAdShowing = false; // 현재 광고가 보여지고 있다.
@@ -90,6 +95,25 @@ namespace PIERStory {
             
             
         }
+        
+        void InitFirebase() {
+            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
+                var dependencyStatus = task.Result;
+                if (dependencyStatus == Firebase.DependencyStatus.Available) {
+                // Create and hold a reference to your FirebaseApp,
+                // where app is a Firebase.FirebaseApp property of your application class.
+                    app = Firebase.FirebaseApp.DefaultInstance;
+                    Debug.Log("### Firebase Init done");
+
+                // Set a flag here to indicate whether Firebase is ready to use by your app.
+                } else {
+                UnityEngine.Debug.LogError(System.String.Format(
+                    "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+                // Firebase Unity SDK is not safe to use here.
+                }                
+            });
+        }
+        
         
         /// <summary>
         /// 추적 권한 요청 

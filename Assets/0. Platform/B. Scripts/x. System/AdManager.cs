@@ -95,6 +95,7 @@ namespace PIERStory {
         }
         
         void InitFirebase() {
+            /*
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
                 var dependencyStatus = task.Result;
                 if (dependencyStatus == Firebase.DependencyStatus.Available) {
@@ -110,6 +111,7 @@ namespace PIERStory {
                 // Firebase Unity SDK is not safe to use here.
                 }                
             });
+            */
         }
         
         

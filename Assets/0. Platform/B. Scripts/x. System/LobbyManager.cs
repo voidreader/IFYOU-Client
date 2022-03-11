@@ -69,6 +69,9 @@ namespace PIERStory {
         public Sprite spritePlateStarPlay; // 스타플레이 플레이트
         public Sprite spritePlateFree; // 프리 플레이트
         public Sprite spritePlatePremium; // 패스 플레이트
+
+        public Sprite spriteEpisodeOpen;    // 열린 스페셜, 엔딩 에피소드
+        public Sprite spriteEpisodeLock;    // 잠긴 스페셜, 엔딩 에피소드
         
                 
         

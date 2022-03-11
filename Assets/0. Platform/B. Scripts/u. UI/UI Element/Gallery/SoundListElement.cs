@@ -43,9 +43,9 @@ namespace PIERStory
             int unlockCount = 0;
             voiceTotalCount = 0;
 
-            for (int i=0;i<__voiceData.Count;i++)
+            for (int i = 0; i < __voiceData.Count; i++)
             {
-                for(int j=0;j<__voiceData[i].Count;j++)
+                for (int j = 0; j < __voiceData[i].Count; j++)
                 {
                     if (SystemManager.GetJsonNodeBool(__voiceData[i][j], CommonConst.IS_OPEN))
                         unlockCount++;
@@ -53,7 +53,7 @@ namespace PIERStory
                 voiceTotalCount += __voiceData[i].Count;
             }
 
-            voiceInfo.text = string.Format(SystemManager.GetLocalizedText("6058") + "\n<color=#A0A0A0FF>{1} / {2}</color>", StoryManager.main.GetNametagName(voiceMaster), unlockCount, voiceTotalCount);
+            voiceInfo.text = string.Format(SystemManager.GetLocalizedText("6058") + "\n<size=60>{1} / {2}</size>", StoryManager.main.GetNametagName(voiceMaster), unlockCount, voiceTotalCount);
             gameObject.SetActive(true);
         }
 

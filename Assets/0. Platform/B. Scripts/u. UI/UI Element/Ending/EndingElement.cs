@@ -39,6 +39,7 @@ namespace PIERStory
             {
                 endingTitle.text = epiData.episodeTitle;
                 GetComponent<RectTransform>().sizeDelta = openEndingSize;
+
                 showChoiceButton.SetActive(true);
             }
             else

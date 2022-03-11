@@ -1182,10 +1182,6 @@ namespace PIERStory
                     adjustmentPosY += 100; // 4:3 비율은 100 더한다. 
                         
                 
-                // banner 관련된 내용 추가. 
-                // 배너 사용하면 살짝 올려야한다.
-                if(AdManager.main.isIronSourceBannerLoad)
-                    adjustmentPosY += 100; // 다시 100 플러스.                
                 
             }
             

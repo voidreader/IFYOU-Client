@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Services.Mediation;
 using Unity.Services.Core;
-using UnityEngine.Analytics;
+
 
 using LitJson;
 using Firebase;
+using Facebook.Unity;
 
 #if UNITY_IOS
 using UnityEngine.iOS;
@@ -40,12 +41,7 @@ namespace PIERStory {
         [SerializeField] int gamePlayRowCount = 0;
         [SerializeField] bool isRewarded = false; // 영상광고 끝까지 재생되었는지. 
         
-        [Space]
-        [Header("IronSource")] 
-        [SerializeField] string ironSource_android = string.Empty;
-        [SerializeField] string ironSource_ios = string.Empty;
-        [SerializeField] string ironSourceKey = string.Empty;
-        public bool isIronSourceBannerLoad = false;
+        
         
         JsonData serverData = null;
         
@@ -93,7 +89,9 @@ namespace PIERStory {
 
             InitUnityMediation();
             
+            InitFirebase();
             
+            InitFacebook();
         }
         
         void InitFirebase() {
@@ -579,6 +577,37 @@ namespace PIERStory {
             
         }
         
+        
+        #endregion
+
+        #region 페이스북
+        
+        void InitFacebook() {
+            if (!FB.IsInitialized) {
+                // Initialize the Facebook SDK
+                FB.Init(InitCallback, OnHideUnity);
+            } else {
+                // Already initialized, signal an app activation App Event
+                FB.ActivateApp();
+            }
+        }
+        
+        private void InitCallback ()
+        {
+            if (FB.IsInitialized) {
+                // Signal an app activation App Event
+                FB.ActivateApp();
+                // Continue with Facebook SDK
+                // ...
+            } else {
+                Debug.Log("Failed to Initialize the Facebook SDK");
+            }
+        }
+
+        private void OnHideUnity (bool isGameShown)
+        {
+            
+        }
         
         #endregion
 

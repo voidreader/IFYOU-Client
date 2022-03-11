@@ -41,11 +41,7 @@ namespace PIERStory
         
         void Start() {
             
-            // 배너 등장시에만 처리. 
-            if(AdManager.main.isIronSourceBannerLoad) {
-                // rect.
-                footer.anchoredPosition = new Vector2(0, footer.anchoredPosition.y + 120);
-            }
+
         }
         
         public override void OnStartView()

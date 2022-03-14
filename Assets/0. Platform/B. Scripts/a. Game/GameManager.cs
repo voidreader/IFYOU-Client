@@ -119,18 +119,25 @@ namespace PIERStory
         // 인덱스들 
         public int indexPoolIllust = 0;
 
-        [Space]
+        [Space(20)]
         public NetworkLoadingScreen gameNetworkLoadingScreen;
 
-        [Space]
-        [Header("Sprite resources")]
+        [Space][Header("Sprite resources")]
         public Sprite spriteSelectionNormalBase = null;     // 일반 선택지 
         public Sprite spriteSelectionLockedBase = null;     // 선택지 잠금 상태
         public Sprite spriteSelectionUnlockedBase = null;   // 선택지 활성 상태 스프라이트
         public Sprite spriteSelectionLockIcon = null;       // 선택지 잠김 아이콘
         public Sprite spriteSelectionUnlockIcon = null;     // 선택지 잠김 풀림 아이콘
+
+        [Space]
         public Sprite spriteInappOriginIcon = null;         // 메일함에서 사용하는 아이콘
-        
+
+        [Space]
+        public Sprite spriteGameMessageNormal = null;       // 게임 메시지 일반
+        public Sprite spriteGameMessagePositive = null;     // 게임 메시지 긍정
+        public Sprite spriteGameMessageNegative = null;     // 게임 메시지 부정
+
+        [Space]
         public Sprite spriteIllustPopup = null;             // 일러스트 획득 팝업 아이콘
 
 

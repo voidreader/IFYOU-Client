@@ -53,10 +53,8 @@ namespace PIERStory {
         public Sprite toggleUnselected;
 
         [Header("미션View Sprite")]
-        public Sprite spriteWhiteBorder;        // 흰색 바탕 코인박스 하단 border
-        public Sprite spriteWhiteButton;        // 흰색 바탕 보상받기 버튼
-        public Sprite spriteGradientBorder;     // 그라데이션 들어간 코인박스 하단 border
-        public Sprite spriteGradientButton;     // 그라데이션 들어간 보상받기 버튼
+        public Sprite spriteGetReward;          // 얻을 수 있는 보상 버튼
+        public Sprite spriteGotReward;          // 얻은 보상 버튼
         
         [Header("에피소드 관련 Sprite")]
         public Sprite spriteEpisodePrevCover; // 과거 커버

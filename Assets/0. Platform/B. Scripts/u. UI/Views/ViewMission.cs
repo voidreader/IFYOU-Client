@@ -13,7 +13,6 @@ namespace PIERStory
         public static Action OnRefreshProgressor = null;
         public static bool clickGetAll = false;
 
-        public TextMeshProUGUI projectTitle;
         public TextMeshProUGUI missionProgressText;
         public TextMeshProUGUI missionPercent;
         public Image missionProgressBar;
@@ -112,8 +111,6 @@ namespace PIERStory
             }
 
             #endregion
-
-            projectTitle.text = StoryManager.main.CurrentProjectTitle;
             
             SetMissionProgressor();
 

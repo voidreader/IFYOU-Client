@@ -476,8 +476,10 @@ namespace PIERStory
 
             for (int i = 0; i < ListRows.Count; i++)
             {
+                /*
                 if (string.IsNullOrEmpty(ListRows[i].resource_key))
                     continue;
+                */
 
                 // 모델 리소스 수집 
                 /*
@@ -600,6 +602,9 @@ namespace PIERStory
                 GameManager.ShowMissingComponent("의상", string.Format("[{0}]의 [{1}] 의상 없음!!",speaker, dress_name));
                 return;
             }
+            
+            Debug.Log(string.Format("<color=cyan> [{0}]: [{1}]/[{2}]] </color>", speaker, dress_name, targetModelName));
+            
 
             // 중복 로딩을 막기 위해 똑같이 쓴다.
             if (GameManager.main.AddLoadingModel(targetModelName))

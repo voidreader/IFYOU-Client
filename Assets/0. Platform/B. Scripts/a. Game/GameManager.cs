@@ -378,11 +378,19 @@ namespace PIERStory
         /// </summary>
         void InitGameResourceObjects()
         {
-            for (int i = 0; i < PoolSpriteBG.Count; i++)
+            for (int i = 0; i < PoolSpriteBG.Count; i++) {
+                if(PoolSpriteBG[i] == null)
+                    continue;
+                    
                 PoolSpriteBG[i].gameObject.SetActive(false);
+            }
 
-            for (int i = 0; i < PoolIllust.Count; i++)
+            for (int i = 0; i < PoolIllust.Count; i++) {
+                if(PoolIllust[i] == null)
+                    continue;
+                
                 PoolIllust[i].gameObject.SetActive(false);
+            }
 
             indexPoolIllust = 0;
             indexPoolBG = 0;

@@ -22,7 +22,7 @@ namespace PIERStory {
         
         
         public StoryData currentStoryData;
-        JsonData projectCurrentJSON = null;
+        public JsonData projectCurrentJSON = null;
         public string currentEpisodeID = string.Empty; // 현재 순번의 에피소드 ID 
         public EpisodeData currentEpisodeData; // 현재 순번의 에피소드 데이터 
         public bool hasPremium = false; // 프리미엄 패스 보유 여부 
@@ -72,7 +72,7 @@ namespace PIERStory {
         public DateTime openDate;
         public long openDateTick;
         public TimeSpan timeDiff; // 오픈시간까지 남은 차이 
-        [SerializeField] bool isOpenTimeCountable = false; // 타이머 카운팅이 가능한지 
+        [SerializeField] protected bool isOpenTimeCountable = false; // 타이머 카운팅이 가능한지 
         
         
         
@@ -82,14 +82,14 @@ namespace PIERStory {
         bool inTransitionGroupContents; // 그룹 컨텐츠 트랜지션 여부 
         
         bool isGameStarting = false; // 게임 시작했는지 체크, 중복 입력 막기 위해서.
-        [SerializeField] bool isEpisodeContinuePlay = false; // 에피소드 이어하기 상태? 
+        [SerializeField] protected bool isEpisodeContinuePlay = false; // 에피소드 이어하기 상태? 
         bool isWaitingResponse = false; //  서버 응답 기다리는 중인지. 
-        [SerializeField] bool isFinal = false; // 엔딩 도착 상태
+        public bool isFinal = false; // 엔딩 도착 상태
         
-        [SerializeField] Color colorEpisodeTitleNormal; // 타이틀 노멀엔딩 색상
-        [SerializeField] Color colorEpisodeTitleHidden; // 타이틀 히든엔딩 
-        [SerializeField] Color colorEpisodeTitleHappy; // 타이틀 해피 
-        [SerializeField] Color colorEpisodeTitleSad; // 타이틀 새드 
+        public Color colorEpisodeTitleNormal; // 타이틀 노멀엔딩 색상
+        public Color colorEpisodeTitleHidden; // 타이틀 히든엔딩 
+        public Color colorEpisodeTitleHappy; // 타이틀 해피 
+        public Color colorEpisodeTitleSad; // 타이틀 새드 
         
         private void Start() {
             // Action 연결
@@ -102,7 +102,7 @@ namespace PIERStory {
             
         }
         
-        void Update() {
+        protected virtual void Update() {
             
             // * 기다무 시스템 관련 타이밍 처리 
             if(!isOpenTimeCountable) {
@@ -122,7 +122,7 @@ namespace PIERStory {
         /// <summary>
         /// 스토리 로비 
         /// </summary>
-        public void InitStoryLobbyControls() {
+        public virtual void InitStoryLobbyControls() {
             
             
             Debug.Log("## InitStoryLobbyControls");
@@ -392,7 +392,7 @@ namespace PIERStory {
         /// <summary>
         /// 상태 및 오픈 타이머 설정 
         /// </summary>
-        void SetPlayState() {
+        public void SetPlayState() {
             // 에피소드 오픈 시간 처리
             openDateTick = ConvertServerTimeTick(long.Parse(projectCurrentJSON["next_open_tick"].ToString()));
             openDate = new DateTime(openDateTick); // 틱으로 오픈 시간 생성 
@@ -451,7 +451,7 @@ namespace PIERStory {
         /// 에피소드 기다리면 무료 오픈 가격 구하기 
         /// </summary>
         /// <returns></returns>
-        int GetEpisodeTimeOpenPrice() {
+        protected int GetEpisodeTimeOpenPrice() {
             if(currentPlayState != StatePlayButton.inactive)
                 return 0;
                 
@@ -463,14 +463,14 @@ namespace PIERStory {
         /// 에피소드 타이틀 텍스트 설정 
         /// </summary>
         /// <param name="__text"></param>
-        void SetEpisodeTitleText(string __text) {
+        protected void SetEpisodeTitleText(string __text) {
             textEpisodeTitle.text = __text;
         }
         
         /// <summary>
         /// 타이틀 정보 처리 
         /// </summary>
-        void InitEpisodeTitleColor() {
+        protected void InitEpisodeTitleColor() {
             
             
             // * 여기도 파이널 여부 추가 체크 
@@ -522,7 +522,7 @@ namespace PIERStory {
         /// 오픈시간까지 남은시간 구하기 (UTC 기준, 서버에서도 UTC로 준다. )
         /// </summary>
         /// <returns></returns>        
-        string GetOpenRemainTime() {
+        protected string GetOpenRemainTime() {
             timeDiff = openDate - DateTime.UtcNow;
             
             if(timeDiff.Ticks < 0) {

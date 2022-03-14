@@ -78,6 +78,7 @@ namespace Doozy.Runtime.UIManager
             Shop,
             Snippet,
             SoundDetail,
+            SpecialEpisode,
             StoryDetail,
             StoryLoading,
             StoryLobby,

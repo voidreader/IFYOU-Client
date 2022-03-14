@@ -12,9 +12,11 @@ namespace PIERStory {
             base.Update();
         }
         
-        new void InitStoryLobbyControls() {
+        public override void InitStoryLobbyControls() {
+            
+            Debug.Log("## EpisodeEndControls.InitStoryLobbyControls ");
                         
-            InitBaseInfo(); // 기본정보
+            this.InitBaseInfo(); // 기본정보
 
             SetPlayState(); // 플레이 및 타이머 설정 
         }
@@ -22,7 +24,10 @@ namespace PIERStory {
         /// <summary>
         /// 거의 똑같은데 마지막만 다름 
         /// </summary>
-        public void InitBaseInfo() {
+        void InitBaseInfo() {
+            
+            Debug.Log("## EpisodeEndControls.InitBaseInfo");
+            
             textReduceWaitingTime.text = SystemManager.main.waitingReduceTimeAD.ToString() +" min"; // 광고보고 차감되는 시간 SysteManager..
            
             currentStoryData =  StoryManager.main.CurrentProject; // 현재 작품 

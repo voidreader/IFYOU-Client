@@ -121,7 +121,7 @@ namespace PIERStory {
         /// <summary>
         /// 스토리 로비 
         /// </summary>
-        public void InitStoryLobbyControls() {
+        public virtual void InitStoryLobbyControls() {
             
             
             Debug.Log("## InitStoryLobbyControls");

@@ -912,6 +912,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0d14f84774d4c14cbdbbacc813831e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentStoryData:
+    projectID: 
+    title: 
+    writer: 
+    summary: 
+    original: 
+    sortKey: 0
+    bubbleSetID: 
+    isCredit: 0
+    bannerURL: 
+    bannerKey: 
+    thumbnailURL: 
+    thumbnailKey: 
+    circleImageURL: 
+    circleImageKey: 
+    episodeFinishImageURL: 
+    episodeFinishImageKey: 
+    premiumPassURL: 
+    premiumPassKey: 
+    isLock: 0
+    colorCode: 000000
+    projectProgress: 0
+    isPlaying: 0
+    genre: 
   episodeImage: {fileID: 669336049437141916}
   episodeEndControls: {fileID: 280537779323609733}
 --- !u!1001 &1514406971335863171
@@ -1008,6 +1032,18 @@ PrefabInstance:
     - target: {fileID: 6125200692612866329, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8148857192743911775, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 280537779323609733}
+    - target: {fileID: 8148857192743911775, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickPlay
+      objectReference: {fileID: 0}
+    - target: {fileID: 8148857192743911775, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
+      propertyPath: Behaviours.Behaviours.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PIERStory.StoryLobbyMain, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}

@@ -302,6 +302,8 @@ namespace PIERStory
                         if (SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_ANGLE) > 0)
                             character.modelController.transform.localScale = new Vector3(-1, 1, 1);
 
+                        
+
                         liveModels.Add(character.modelController);
                         decoObjects.Add(character.modelController.gameObject);
                         listModelMounts.Add(character);
@@ -356,6 +358,15 @@ namespace PIERStory
             for (int i = 0; i < stickerParent.childCount; i++)
                 stickerParent.GetChild(i).GetComponent<StickerElement>().DisableControlBox();
         }
+
+        /// <summary>
+        /// 작품 코인샵 열기
+        /// </summary>
+        public void OnClickOpenCoinShop()
+        {
+
+        }
+
 
         /// <summary>
         /// 하단의 버튼을 통해 스크롤 영역 보이게 하기
@@ -624,6 +635,9 @@ namespace PIERStory
         void CharacterLoadComplete()
         {
             totalDecoLoad--;
+
+            if (liveModels.Count > 1)
+                liveModels[1].model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 800;
 
             CheckLoadComplete();
         }

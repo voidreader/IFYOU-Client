@@ -1,21 +1,19 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using DG.Tweening;
-using LitJson;
-using Doozy.Runtime.Signals;
 using UnityEngine.SceneManagement;
-using BestHTTP;
+
+using TMPro;
+using LitJson;
+using DG.Tweening;
+using Doozy.Runtime.Signals;
 
 
 namespace PIERStory {
 
     public class StoryLobbyMain : MonoBehaviour
     {
-        
         
         public static Action OnCallbackReset = null; // 리셋 콜백
         public static Action CallbackReduceWaitingTimeSuccess = null; // 시간감소 콜백 (성공)
@@ -47,9 +45,12 @@ namespace PIERStory {
         public TextMeshProUGUI textEpisodeTitle; // 에피소드 타이틀 
         public GameObject groupOpenTimer; // 오픈 타이머
         public TextMeshProUGUI textOpenTimer; // 오픈 타이머 
-        
-        
-        
+
+        public GameObject abilityBriefPrefab;           // 캐릭터 능력치 간소화 prefab
+        public Transform characterStatusContent;
+        public DanielLochner.Assets.SimpleScrollSnap.SimpleScrollSnap abilityBriefScroll;
+        public GameObject scrollNextButton;
+
         public RectTransform rectContentsGroup; // 컨텐츠 그룹 
         public CanvasGroup canvasGroupContents; // 컨텐츠 그룹 canvas group
         public RectTransform arrowGroupContetns; // 컨텐츠 그룹 화살표 
@@ -138,16 +139,23 @@ namespace PIERStory {
             
             // Flow 처리 
             InitFlowMap();
-            
-            
-            
+
+            InitAbilityBreif();
+
             // 슈퍼유저 
             StoryLobbyTop.OnRefreshSuperUser?.Invoke();
             
             // 게임형로비 상단 초기화
             StoryLobbyTop.OnInitializeStoryLobbyTop?.Invoke();
-
         }
+
+
+        public void MainContainerHide()
+        {
+            for (int i = 0; i < characterStatusContent.childCount; i++)
+                Destroy(characterStatusContent.GetChild(i).gameObject);
+        }
+
         
         /// <summary>
         /// 리셋 후 리프레시
@@ -343,6 +351,42 @@ namespace PIERStory {
         
         #endregion
         
+        /// <summary>
+        /// 캐릭터 능력치 간소화 표기
+        /// </summary>
+        void InitAbilityBreif()
+        {
+            // 캐릭터 능력치가 없으면 생성하지 말자
+            if (UserManager.main.DictStoryAbility.Count == 0)
+            {
+                abilityBriefScroll.gameObject.SetActive(false);
+                scrollNextButton.SetActive(false);
+                return;
+            }
+
+            CharacterAbilityBriefElement abilityBrief = null;
+            abilityBriefScroll.gameObject.SetActive(true);
+            scrollNextButton.SetActive(true);
+
+            foreach (string key in UserManager.main.DictStoryAbility.Keys)
+            {
+                for (int i = 0; i < UserManager.main.DictStoryAbility[key].Count; i++)
+                {
+                    // 메인 능력치만 뽑아서 넣어준다
+                    if (UserManager.main.DictStoryAbility[key][i].isMain)
+                    {
+                        abilityBrief = Instantiate(abilityBriefPrefab, characterStatusContent).GetComponent<CharacterAbilityBriefElement>();
+                        abilityBrief.InitAbilityBrief(UserManager.main.DictStoryAbility[key][i]);
+                        break;
+                    }
+                }
+            }
+
+
+            // 생성 후 panel 수 갱신
+            abilityBriefScroll.Setup();
+        }
+
 
         
         /// <summary>

@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 namespace PIERStory {
 
     public class EpisodeEndControls : StoryLobbyMain
     {
+        
+        public TextMeshProUGUI textSummary;
 
         protected override void Update() {
             base.Update();

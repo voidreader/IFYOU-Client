@@ -98,6 +98,7 @@ namespace PIERStory
                 playSound = GetComponent<AudioSource>();
 
             title.text = soundTitle;
+            titleImage.sprite = null;
             titleImage.sprite = titleSprite;
 
             OnPlayBGM = PlayBGM;

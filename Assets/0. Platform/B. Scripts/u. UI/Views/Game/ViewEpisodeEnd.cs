@@ -35,13 +35,16 @@ namespace PIERStory
             
             // 관련 컨트롤 초기화
             episodeEndControls.InitStoryLobbyControls();
+            
+            ViewCommonTop.OnBackAction = OnClickReturnLobby;
 
         }
 
         public override void OnHideView()
         {
             base.OnHideView();
-
+            ViewCommonTop.OnBackAction = null; // 액션 초기화 
+            
         }
 
 

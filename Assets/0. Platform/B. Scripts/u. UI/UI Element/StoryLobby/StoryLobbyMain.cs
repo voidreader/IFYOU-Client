@@ -711,7 +711,7 @@ namespace PIERStory {
         {
             Debug.Log("Game Start!!!!!");
             
-            Signal.Send(LobbyConst.STREAM_COMMON, "GameBegin", string.Empty);
+            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN, string.Empty);
             IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
             
             SystemManager.ShowNetworkLoading(); // 게임시작할때 어색하지 않게, 네트워크 로딩 추가 
@@ -719,12 +719,10 @@ namespace PIERStory {
             // 다음 에피소드 진행 
             // * 2021.09.23 iOS 메모리 이슈를 해결하기 위해 중간 Scene을 거쳐서 실행하도록 처리 
             // * GameScene에서 게임이 시작되는 경우만!
-            if(GameManager.main != null) {
-                SceneManager.LoadSceneAsync("Intermission", LoadSceneMode.Single).allowSceneActivation = true;
-            }
-            else {
-                SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single).allowSceneActivation = true;
-            }
+            if(GameManager.main != null)
+                SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            else
+                SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
             
             // true로 변경해놓는다.
             isGameStarting = true;

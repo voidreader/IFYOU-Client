@@ -145,13 +145,12 @@ namespace PIERStory
             // 스탠딩 캐릭터 기본 모션 세팅
             foreach (GameModelCtrl gm in liveModels)
             {
-                
                 // 임시로 랜덤하게 재생한다. 
                 gm.PlayLobbyAnimation(gm.motionLists[UnityEngine.Random.Range(0, gm.motionLists.Count)]);
 
-                for(int i=0;i<gm.motionLists.Count;i++)
+                for (int i = 0; i < gm.motionLists.Count; i++)
                 {
-                    if(gm.motionLists[i].Contains("기본") && !gm.motionLists[i].Contains("M"))
+                    if (gm.motionLists[i].Contains("기본") && !gm.motionLists[i].Contains("M"))
                     {
                         // 번들용과 다운로드에서 애니메이션 재생 구분처리 해주어야한다. 
                         gm.PlayLobbyAnimation(gm.motionLists[i]);
@@ -159,6 +158,9 @@ namespace PIERStory
                     }
                 }
             }
+
+            if (liveModels.Count > 1)
+                liveModels[1].model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 800;
         }
         
 
@@ -197,7 +199,25 @@ namespace PIERStory
             SortingList(stickerListContent);
             StandingListSort();
 
-            // 화면의 활성화된 것과 리스트 재화와 연결
+            // 화면에 생성된 object와 재화 listElement 연결
+            for (int i = 0; i < decoObjects.Count; i++)
+            {
+                // 스티커가 아니면 건너뛰기
+                if (decoObjects[i].GetComponent<StickerElement>() == null)
+                    continue;
+
+                for (int j = 0; j < currencyElements.Count; j++)
+                {
+                    // 재화명이 같은 것을 찾아서 연결
+                    if(decoObjects[i].GetComponent<StickerElement>().currencyName == currencyElements[j].GetComponent<ProfileItemElement>().currencyName)
+                    {
+                        decoObjects[i].GetComponent<StickerElement>().currencyElement = currencyElements[j].GetComponent<ProfileItemElement>();
+                        break;
+                    }
+                }
+            }
+
+
 
             // 상단의 프리미엄 패스, 버튼 두개 비활성화
             premiumpassButton.SetActive(false);
@@ -248,7 +268,7 @@ namespace PIERStory
         {
             liveModels.Clear();
             listModelMounts.Clear();
-            
+
             // 이 작업이 StoryLoading에서 이뤄져야해
             storyProfile = SystemManager.GetJsonNode(UserManager.main.currentStoryJson, "storyProfile");
             totalDecoLoad = storyProfile.Count;
@@ -270,7 +290,7 @@ namespace PIERStory
                         break;
 
                     case GameConst.NODE_SCRIPT:         // 대사
-                        
+
 
                         break;
                     case LobbyConst.NODE_STICKER:       // 스티커
@@ -301,8 +321,6 @@ namespace PIERStory
 
                         if (SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_ANGLE) > 0)
                             character.modelController.transform.localScale = new Vector3(-1, 1, 1);
-
-                        
 
                         liveModels.Add(character.modelController);
                         decoObjects.Add(character.modelController.gameObject);
@@ -365,6 +383,8 @@ namespace PIERStory
         public void OnClickOpenCoinShop()
         {
 
+
+
         }
 
 
@@ -410,8 +430,11 @@ namespace PIERStory
             foreach(GameModelCtrl models in liveModels)
                 models.ChangeLayerRecursively(models.transform, GameConst.LAYER_MODEL_C);
 
+            usageStandingControl.SetActive(false);
+
             moveBg = false;
             moveCharacter = false;
+            loadComplete = false;
         }
 
 
@@ -635,9 +658,6 @@ namespace PIERStory
         void CharacterLoadComplete()
         {
             totalDecoLoad--;
-
-            if (liveModels.Count > 1)
-                liveModels[1].model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 800;
 
             CheckLoadComplete();
         }

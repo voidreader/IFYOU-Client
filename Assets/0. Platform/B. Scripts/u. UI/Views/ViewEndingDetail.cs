@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using TMPro;
 using LitJson;
@@ -128,7 +129,18 @@ namespace PIERStory
 
         public void OnClickStartEnding()
         {
-            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, endingData, string.Empty);
+            UserManager.main.useRecord = false;         // 엔딩 플레이는 useRecord를 false 처리한다. 
+            IntermissionManager.isMovingLobby = false;  // 게임으로 진입하도록 요청
+
+            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN, string.Empty);
+
+            if (GameManager.main != null)
+                SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            else
+                SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
+
+            GameManager.SetNewGame();
+            NetworkLoader.main.UpdateUserProjectCurrent(endingData.episodeID, null, 0);
         }
     }
 }

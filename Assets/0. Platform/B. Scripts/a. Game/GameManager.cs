@@ -209,7 +209,7 @@ namespace PIERStory
             
             yield return null;
             
-            Signal.Send(LobbyConst.STREAM_COMMON, "GamePlay"); // 게임씬 시작을 알린다. 
+            Signal.Send(LobbyConst.STREAM_COMMON, GameConst.SIGNAL_GAME_PLAY); // 게임씬 시작을 알린다. 
 
             GarbageCollect();
 
@@ -1384,7 +1384,7 @@ namespace PIERStory
             // 네트워크 창을 띄우고. 로비 씬으로 돌아가야한다.
             SystemManager.ShowNetworkLoading();
             IntermissionManager.isMovingLobby = true;
-            SceneManager.LoadSceneAsync("Intermission", LoadSceneMode.Single).allowSceneActivation = true;
+            SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
         }
 
         /// <summary>
@@ -1410,11 +1410,11 @@ namespace PIERStory
             Debug.Log("RetryPlay");
             isPlaying = false;
             
-            Signal.Send(LobbyConst.STREAM_COMMON, "GameBegin"); // 노드 제어
+            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN); // 노드 제어
 
             // 씬 로드 
             IntermissionManager.isMovingLobby = false;
-            SceneManager.LoadSceneAsync("Intermission", LoadSceneMode.Single).allowSceneActivation = true;
+            SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
         }
 
 

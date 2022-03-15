@@ -5,7 +5,7 @@ using LitJson;
 
 namespace PIERStory
 {
-    public class StickerElement : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+    public class StickerElement : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public ImageRequireDownload stickerImage;
         public GameObject[] controlButtons;
@@ -56,31 +56,37 @@ namespace PIERStory
             elementRect.sizeDelta = new Vector2(width, height);
             elementRect.eulerAngles = new Vector3(0, 0, angle);
         }
+        
 
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            ViewStoryLobby.OnDisableAllOptionals?.Invoke();
-            controlBox.SetActive(true);
-        }
-
-
+        /// <summary>
+        /// 제어 박스 비활성화
+        /// </summary>
         public void DisableControlBox()
         {
             controlBox.SetActive(false);
         }
 
+        /// <summary>
+        /// 삭제
+        /// </summary>
+        public void OnClickDeleteObject()
+        {
+            currencyElement.currentCount--;
+            currencyElement.SetCountText();
+
+            Destroy(gameObject);
+        }
+
+
         #region Drag Action
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            ViewStoryLobby.OnDisableAllOptionals?.Invoke();
-            controlBox.SetActive(true);
+            OnClickObect();
 
             foreach (GameObject g in controlButtons)
                 g.SetActive(false);
         }
-
 
         public void OnDrag(PointerEventData eventData)
         {
@@ -96,6 +102,14 @@ namespace PIERStory
 
         #endregion
 
+
+        public void OnClickObect()
+        {
+            ViewStoryLobby.OnDisableAllOptionals?.Invoke();
+            controlBox.SetActive(true);
+        }
+
+
         public JsonData StickerJsonData(int sortingOrder)
         {
             JsonData data = new JsonData();
@@ -110,6 +124,5 @@ namespace PIERStory
 
             return data;
         }
-
     }
 }

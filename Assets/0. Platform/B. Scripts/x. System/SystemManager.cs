@@ -1970,7 +1970,7 @@ namespace PIERStory
         
         public static void LoadLobbyScene() {
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin");
-            SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Single).allowSceneActivation = true;
+            SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
         }
 
         private void OnApplicationQuit()

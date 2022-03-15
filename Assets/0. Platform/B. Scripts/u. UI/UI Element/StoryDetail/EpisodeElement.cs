@@ -285,7 +285,6 @@ namespace PIERStory {
             }
             
             UserManager.main.useRecord = true;
-            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, episodeData, string.Empty);
         }
         
         /// <summary>

@@ -31,13 +31,15 @@ namespace PIERStory
         public TextMeshProUGUI subAbilityName_2;
         public TextMeshProUGUI subAbilityPercent_2;
 
+        ScrollRect scroll;
+        RectTransform scrollRect;
 
         public void InitMainAbility(AbilityData __abilityData)
         {
             subAbility_1.SetActive(false);
             subAbility_2.SetActive(false);
 
-            imageThumbnail.SetDownloadURL(__abilityData.backgroundUrl, __abilityData.backgroundKey);
+            imageThumbnail.SetDownloadURL(__abilityData.backgroundUrl, __abilityData.backgroundKey, true);
             speakerName.text =  StoryManager.main.GetNametagName(__abilityData.speaker);
 
             mainAbilityIcon.SetDownloadURL(__abilityData.iconDesignUrl, __abilityData.iconDesignKey);
@@ -45,6 +47,12 @@ namespace PIERStory
             mainAbilityGauge.fillAmount = __abilityData.abilityPercent;
 
             mainAbilityPercent.text = string.Format("{0}%", Math.Truncate(__abilityData.abilityPercent * 100f));
+
+            gameObject.SetActive(true);
+
+            scroll = GetComponentInParent<ScrollRect>();
+            scrollRect = scroll.GetComponent<RectTransform>();
+            GetComponent<RectTransform>().sizeDelta = new Vector2(GetComponent<RectTransform>().sizeDelta.x, scrollRect.rect.height);
         }
 
         public void InitFirstSubAbility(AbilityData __subAbilityData)

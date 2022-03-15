@@ -89,5 +89,11 @@ namespace PIERStory
         public static Color COLOR_IMAGE_TRANSPARENT = new Color(1, 1, 1, 0);
         public static Color COLOR_BLACK_TRANSPARENT = new Color(0, 0, 0, 0);
         public static Color COLOR_GRAY_TRANSPARENT = new Color(0.26275f, 0.26275f, 0.26275f, 0);
+
+
+        // Scene name
+        public const string SCENE_LOBBY = "Lobby";
+        public const string SCENE_GAME = "Game";
+        public const string SCENE_INTERMISSION = "Intermission";
     }
 }

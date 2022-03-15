@@ -14,6 +14,7 @@ namespace PIERStory
         
         [SerializeField] RectTransform footer;
         [SerializeField] UIView viewGameMenu; // 게임메뉴. 
+        public GameObject replayButton;
 
         [Header("Skip")]
         public Image skipButtonIcon;
@@ -36,8 +37,16 @@ namespace PIERStory
 
         [Space(10)]
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
-        
-        
+
+        private void Start()
+        {
+            if (UserManager.main.CheckAdminUser())
+                replayButton.SetActive(true);
+            else
+                replayButton.SetActive(false);
+        }
+
+
         void Update() {
             if(Input.GetKeyDown(KeyCode.S)) {
                 SkipScene();

@@ -17,7 +17,7 @@ namespace PIERStory
             {
                 for (int i = 0; i < UserManager.main.DictStoryAbility[key].Count; i++)
                 {
-                    // 능력치값 세팅
+                    // 능력치값 세팅. 서버 정렬로 첫번쨰는 main 능력치가 오고 있음
                     if (i == 0)
                         characterAbilityElements[j].InitMainAbility(UserManager.main.DictStoryAbility[key][i]);
                     else if (i == 1)
@@ -25,11 +25,8 @@ namespace PIERStory
                     else
                         characterAbilityElements[j].InitSecondSubAbility(UserManager.main.DictStoryAbility[key][i]);
                 }
-
-                characterAbilityElements[j].gameObject.SetActive(true);
                 j++;
             }
-
         }
 
 

@@ -41,6 +41,8 @@ namespace PIERStory
         public const string SIGNAL_UPDATE_EPISODE = "updateCurrentData";
         public const string SIGNAL_NEXT_EPISODE = "nextEpisode";
 
+        public const string SIGNAL_GAME_PLAY = "GamePlay";
+
         #region 게임 스크립트 관련
 
         public const string LAYER_UI = "UI";

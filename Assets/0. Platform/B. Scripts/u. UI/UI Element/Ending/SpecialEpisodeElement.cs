@@ -2,8 +2,6 @@
 using UnityEngine.UI;
 
 using TMPro;
-using LitJson;
-using BestHTTP;
 using Doozy.Runtime.Signals;
 using UnityEngine.SceneManagement;
 
@@ -98,26 +96,21 @@ namespace PIERStory
             if(!specialEpisode.isUnlock)
                 return;
             
-            
-            Signal.Send(LobbyConst.STREAM_COMMON, "GameBegin", string.Empty);
+            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN, string.Empty);
             IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
             
-            if(GameManager.main != null) {
-                SceneManager.LoadSceneAsync("Intermission", LoadSceneMode.Single).allowSceneActivation = true;
-            }
-            else {
-                SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single).allowSceneActivation = true;
-            }
+            if(GameManager.main != null) 
+                SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            else 
+                SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
+            
             
             GameManager.SetNewGame();
             // 통신 
             NetworkLoader.main.UpdateUserProjectCurrent(specialEpisode.episodeID, null, 0);
             
-            
             Firebase.Analytics.FirebaseAnalytics.LogEvent("SpecialEpisodeStart", "episode_id", specialEpisode.episodeID);
-            
         }
-
 
         #endregion
     }

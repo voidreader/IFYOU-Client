@@ -127,8 +127,9 @@ namespace PIERStory {
         public const string SIGNAL_CONNECT_SERVER = "connectingDone";
         public const string SIGNAL_MOVE_DECO_MODE = "moveDecoMode";
         public const string SIGNAL_SAVE_PROFILE_DECO = "saveProfileDeco";
-        
-        public const string SIGNAL_EPISODE_START = "EpisodeStart";
+
+        public const string SIGNAL_GAME_BEGIN = "GameBegin";
+
         public const string SIGNAL_EPISODE_RESET = "EpisodeReset";
         
         public const string SIGNAL_LANGUAGE = "language";

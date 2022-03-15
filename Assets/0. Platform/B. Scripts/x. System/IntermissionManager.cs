@@ -56,13 +56,13 @@ namespace PIERStory
                 {
                     // 로비씬으로 이동
                     Debug.Log("From Intermission to Lobby");
-                    SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Single).allowSceneActivation = true;
+                    SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
                 }
                 else
                 {
                     // 게임 씬으로 이동처리 
                     Debug.Log("From Intermission to Game");
-                    SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single).allowSceneActivation = true;
+                    SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
                 }
             }
             else

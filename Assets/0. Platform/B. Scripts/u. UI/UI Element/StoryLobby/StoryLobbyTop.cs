@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Doozy.Runtime.Signals;
 
 
 namespace PIERStory {
@@ -56,6 +57,18 @@ namespace PIERStory {
             
             Debug.Log("### SetSuperUser ###");
             objectSuperUser.SetActive(UserManager.main.CheckAdminUser());
+        }
+        
+        public void OnClickMail() {
+            Signal.Send(LobbyConst.STREAM_COMMON, "Mail", string.Empty);
+        }
+        
+        public void OnClickShop() {
+            Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);
+        }
+        
+        public void OnClickCoin() {
+            SystemManager.main.OpenCoinShopWebview();
         }
     }
 }

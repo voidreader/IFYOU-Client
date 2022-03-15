@@ -74,6 +74,8 @@ namespace PIERStory {
         public TimeSpan timeDiff; // 오픈시간까지 남은 차이 
         [SerializeField] protected bool isOpenTimeCountable = false; // 타이머 카운팅이 가능한지 
         
+        public int totalMin = 0; // 기다리면 무료 남은시간 분.
+        public int waitingReducePrice = 0;// 기다리면 무료 강제 열기에 필요한 코인 가격 
         
         
         // 그룹 컨텐츠 변수들 
@@ -171,7 +173,7 @@ namespace PIERStory {
         /// <summary>
         /// 오픈시간 감소 후 리프레시 
         /// </summary>
-        void RefreshAfterReduceWaitingTime() {
+        protected void RefreshAfterReduceWaitingTime() {
             
             Debug.Log(" >> RefreshAfterReduceWaitingTime");
             
@@ -183,7 +185,7 @@ namespace PIERStory {
             menuReduceWaitingTime.SetActive(false); // 메뉴 닫기 
         }
         
-        void FailReduceWaitingTime() {
+        protected void FailReduceWaitingTime() {
             
             isWaitingResponse = false;
         }
@@ -454,6 +456,13 @@ namespace PIERStory {
         protected int GetEpisodeTimeOpenPrice() {
             if(currentPlayState != StatePlayButton.inactive)
                 return 0;
+                
+            totalMin = (int)(timeDiff.TotalMinutes); // 남은시간 분단위로 가져오기 
+            waitingReducePrice = totalMin / 10 * SystemManager.main.episodeOpenPricePer;
+            
+            // 최소가격 설정 
+            if(waitingReducePrice < SystemManager.main.episodeOpenPricePer)
+                waitingReducePrice = SystemManager.main.episodeOpenPricePer;
                 
             return timeDiff.Minutes / 10 * SystemManager.main.episodeOpenPricePer;    
         }

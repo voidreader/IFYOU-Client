@@ -561,13 +561,13 @@ namespace PIERStory
         /// 에피소드 진행도 리셋 
         /// </summary>
         /// <param name="resetEpisodeID">타겟 에피소드</param>
-        public void ResetEpisodeProgress(string __resetEpisodeID, bool __isFree)
+        public void ResetEpisodeProgress(string __resetEpisodeID, int __price, bool __isFree)
         {
             // 에피소드 리셋은 반드시 통신이 완료되고 다음이 진행되어야 합니다. 
             JsonData sending = new JsonData();
             sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
             sending["episodeID"] = __resetEpisodeID; // 타겟 에피소드 
-            sending["price"] = SystemManager.main.firsetResetPrice; // 리셋 가격
+            sending["price"] = __price; // 리셋 가격
             sending["isFree"] = __isFree; // 무료 유료 처리 
             sending[CommonConst.FUNC] = FUNC_RESET_EPISODE_PROGRESS_TYPE2;
 

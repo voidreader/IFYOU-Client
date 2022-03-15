@@ -18,6 +18,8 @@ namespace PIERStory {
         public override void InitStoryLobbyControls() {
             
             Debug.Log("## EpisodeEndControls.InitStoryLobbyControls ");
+            CallbackReduceWaitingTimeSuccess = RefreshAfterReduceWaitingTime; 
+            CallbackReduceWaitingTimeFail = FailReduceWaitingTime;
                         
             this.InitBaseInfo(); // 기본정보
 
@@ -52,6 +54,8 @@ namespace PIERStory {
             
             hasPremium = UserManager.main.HasProjectFreepass();
             isEpisodeContinuePlay = false;
+            
+            textSummary.text = currentEpisodeData.episodeSummary; // 요약정보 추가 
             
         }
       

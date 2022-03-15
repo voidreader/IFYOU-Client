@@ -40,6 +40,14 @@ namespace PIERStory {
             // FlowReset에서만 사용 
             textResetEpisode.text = string.Format(SystemManager.GetLocalizedText("6219"), targetEpisode.episodeNO);
             
+            // 엔딩에 도달하면 반값으로 처리 
+            if(UserManager.main.CheckReachFinal()) {
+                resetPrice = Mathf.RoundToInt(resetPrice * 0.5f);
+            }
+            
+            // 가격
+            textResetCoinPrice.text = resetPrice.ToString();
+            
         }
         
         
@@ -62,7 +70,7 @@ namespace PIERStory {
             Hide();
             
             // 유료 리셋 
-            NetworkLoader.main.ResetEpisodeProgress(targetEpisode.episodeID, false);
+            NetworkLoader.main.ResetEpisodeProgress(targetEpisode.episodeID, resetPrice, false);
         }
         
         /// <summary>

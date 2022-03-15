@@ -1484,6 +1484,24 @@ namespace PIERStory
         }
         
         /// <summary>
+        /// 현재 열람중인 작품이 마지막에 도달했는지 체크 
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckReachFinal() {
+            JsonData current = GetUserProjectRegularEpisodeCurrent();
+            
+            if(current == null)
+                return false;
+                
+            if(SystemManager.GetJsonNodeBool(current, "is_final") 
+                && SystemManager.GetJsonNodeBool(current, "is_ending")) {
+                return true;
+            }
+            
+            return false;
+        }
+        
+        /// <summary>
         /// 정규 에피소드 끝났니?  (다음 에피소드가 엔딩인 경우)
         /// </summary>
         /// <returns></returns>
@@ -1954,7 +1972,15 @@ namespace PIERStory
             
             
             // StoryLobbyMain 리프레시 요청 
-            StoryLobbyMain.CallbackReduceWaitingTimeSuccess?.Invoke();
+            // 게임씬과 로비씬에서 담당 스크립트가 다르다 .
+            if(GameManager.main != null) {
+                EpisodeEndControls.CallbackReduceWaitingTimeSuccess?.Invoke();
+            }
+            else {
+                StoryLobbyMain.CallbackReduceWaitingTimeSuccess?.Invoke();    
+            }
+            
+            
         }
         
         
@@ -1987,7 +2013,13 @@ namespace PIERStory
             
             
             // StoryLobbyMain 리프레시 요청 
-            StoryLobbyMain.CallbackReduceWaitingTimeSuccess?.Invoke();
+            // 게임씬과 로비씬에서 담당 스크립트가 다르다 .
+            if(GameManager.main != null) {
+                EpisodeEndControls.CallbackReduceWaitingTimeSuccess?.Invoke();
+            }
+            else {
+                StoryLobbyMain.CallbackReduceWaitingTimeSuccess?.Invoke();    
+            }
         }
         
 

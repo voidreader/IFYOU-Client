@@ -58,6 +58,10 @@ namespace PIERStory
         /// </summary>
         public void OnClickStartSpecialEpisode()
         {
+            
+            if(!specialEpisode.isUnlock)
+                return;            
+            
             SystemManager.main.givenEpisodeData = specialEpisode;
             SystemManager.ShowNetworkLoading(); 
             
@@ -93,8 +97,7 @@ namespace PIERStory
         /// </summary>
         void StartSpecialEpisode() {
             
-            if(!specialEpisode.isUnlock)
-                return;
+            
             
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN, string.Empty);
             IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청

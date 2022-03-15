@@ -89,7 +89,7 @@ namespace PIERStory {
         /// </summary>
         public void OnClickPremiumPassReset() {
             // 공짜 리셋 
-            NetworkLoader.main.ResetEpisodeProgress(targetEpisode.episodeID, true);
+            NetworkLoader.main.ResetEpisodeProgress(targetEpisode.episodeID, 0, true);
         }
         
     }

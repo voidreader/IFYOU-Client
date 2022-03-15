@@ -65,7 +65,7 @@ namespace PIERStory {
             
             
             // 리셋 
-            NetworkLoader.main.ResetEpisodeProgress(targetEpisode.episodeID, true);
+            NetworkLoader.main.ResetEpisodeProgress(targetEpisode.episodeID, currentResetPrice, true);
         }
         
         

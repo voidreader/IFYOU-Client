@@ -15,6 +15,7 @@ namespace PIERStory {
         public static string staticCurrentTopOwner = string.Empty; // static owner.
         
         public static Action OnRefreshSuperUser = null; // 슈퍼유저 표기용도 
+        public static Action OnBackAction = null; // 백 버튼 터치 추가 액션 필요시 사용
 
 
         [SerializeField] GameObject backButton; // 뒤로가기 버튼 
@@ -457,6 +458,14 @@ namespace PIERStory {
             
             PopupManager.main.ShowPopup(p, false);
             
+        }
+        
+        
+        /// <summary>
+        /// 백버튼 터치 추가 액션 
+        /// </summary>
+        public void OnClickBack() {
+            OnBackAction?.Invoke();
         }
     }
 }

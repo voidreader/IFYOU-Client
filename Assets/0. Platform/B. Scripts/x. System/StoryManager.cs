@@ -1312,6 +1312,8 @@ namespace PIERStory
                 if (dressCodeJson[i][GameConst.COL_DRESSMODEL_NAME].ToString() == __speaker
                         && dressCodeJson[i][GameConst.COL_DRESS_NAME].ToString() == __dressName)
                 {
+                    Debug.Log(string.Format("targetDress [{0}]/[{1}] = [{2}]", __speaker, __dressName, dressCodeJson[i][GameConst.COL_MODEL_NAME].ToString()));
+                    
                     return dressCodeJson[i][GameConst.COL_MODEL_NAME].ToString();
                 }
             }

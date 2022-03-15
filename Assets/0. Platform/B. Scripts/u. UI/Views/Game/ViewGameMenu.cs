@@ -38,6 +38,13 @@ namespace PIERStory
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
         
         
+        void Update() {
+            if(Input.GetKeyDown(KeyCode.S)) {
+                SkipScene();
+            }
+        }
+        
+        
         public override void OnStartView()
         {
             base.OnStartView();

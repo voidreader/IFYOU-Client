@@ -51,7 +51,7 @@ namespace PIERStory
             GameManager.main.UpdateModelByDress(speaker, connected_model_name);
 
             // 통신 해줘야한다. 
-            UserManager.main.UpdateDressProgress(speaker, dress_id);
+            // UserManager.main.UpdateDressProgress(speaker, dress_id);
 
             SendComplete();
         }

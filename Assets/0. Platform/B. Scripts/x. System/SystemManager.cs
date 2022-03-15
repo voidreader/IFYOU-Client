@@ -243,6 +243,12 @@ namespace PIERStory
             noEncryptionSetting = new ES3Settings(ES3.EncryptionType.None, "password");
         }
         
+        void Update() {
+            if(Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.S)) {
+                UserManager.main.SetAdminUser();
+            }
+        }
+        
         /// <summary>
         /// iOS 퀄리티 런타임으로 변경하기
         /// </summary>

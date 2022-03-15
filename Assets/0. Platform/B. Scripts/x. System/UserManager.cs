@@ -125,6 +125,9 @@ namespace PIERStory
         public Dictionary<int, MissionData> DictStoryMission; // 미션 Dictionary
         public Sprite spriteMissionPopup;       // 미션 팝업에서 사용되는 아이콘
 
+        JsonData currentStoryAbilityJson = null;    // 현재 선택한 작품의 능력치 Json
+        public Dictionary<string, List<AbilityData>> DictStoryAbility;
+
         #region static const 
 
         // getUserSelectedStory를 통해 받아온 작품 관련 정보 
@@ -403,6 +406,27 @@ namespace PIERStory
                 MissionData missionData = new MissionData(currentStoryMissionJSON[i]);
                 DictStoryMission.Add(missionData.missionID, missionData);
             }
+
+            #endregion
+
+            #region 능력치
+
+            currentStoryAbilityJson = currentStoryJson["ability"];
+            DictStoryAbility = new Dictionary<string, List<AbilityData>>();
+
+            foreach(string key in currentStoryAbilityJson.Keys)
+            {
+                List<AbilityData> abilityDatas = new List<AbilityData>();
+
+                for (int i = 0; i < currentStoryAbilityJson[key].Count; i++)
+                {
+                    AbilityData abilityData = new AbilityData(currentStoryAbilityJson[key][i]);
+                    abilityDatas.Add(abilityData);
+                }
+
+                DictStoryAbility.Add(key, abilityDatas);
+            }
+
             
             #endregion
 
@@ -1793,7 +1817,7 @@ namespace PIERStory
             // 노드 저장!
             SetNodeUserEpisodeHistory(resultEpisodeRecord[NODE_EPISODE_HISTORY]); // 히스토리 
             SetNodeUserEpisodeProgress(resultEpisodeRecord[NODE_EPISODE_PROGRESS]); // 진행도 
-            
+            SetNodeUserProjectCurrent(resultEpisodeRecord[NODE_PROJECT_CURRENT]);
 
 
             

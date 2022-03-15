@@ -103,6 +103,8 @@ namespace PIERStory {
             foregroundProgressor.gameObject.SetActive(true);
             premiumAura.gameObject.SetActive(false);
             
+            textPlay.text = "PLAY";
+            
             // 그룹으로 나눴다..!
             groupOpen.SetActive(false);
             groupPlay.SetActive(false);
@@ -124,7 +126,17 @@ namespace PIERStory {
                 backgroundProgressor.sprite = spriteInactiveBorder; // 게이지 안씀 
                 foregroundProgressor.gameObject.SetActive(false);
                 
-                groupReset.SetActive(true);
+                // 로비에서 사용할때랑 에피소드 종료에서 사용할때랑 다름 
+                if (LobbyManager.main != null) {
+                    groupReset.SetActive(true);
+                }
+                else {
+                    groupPlay.SetActive(true);
+                    textPlay.text = "Lobby";
+                }
+                
+                
+                
                 // textPrice.text = string.Empty;
                 
                 break;

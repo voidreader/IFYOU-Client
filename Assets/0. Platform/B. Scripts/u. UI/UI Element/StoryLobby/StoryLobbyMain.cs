@@ -620,8 +620,15 @@ namespace PIERStory {
                 return;
             }
             
-            // * 엔딩 도달한 경우는 Reset을 띄운다.
+            // * 엔딩까지 모두 보고 마지막에 도달한 경우는 Reset을 띄운다.
             if(storyPlayButton.stateButton == StatePlayButton.End) {
+                
+                // 게임씬에서 마지막에 도달한 경우 로비로 돌려보낸다.
+                if(GameManager.main != null) {
+                    UserManager.main.gameComplete = true;
+                    GameManager.main.EndGame();
+                    return;
+                }
                 
                 EpisodeData firstEpisode = StoryManager.GetFirstRegularEpisodeData(); // 첫 에피소드 
                 

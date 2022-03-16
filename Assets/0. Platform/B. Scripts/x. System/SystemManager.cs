@@ -122,8 +122,8 @@ namespace PIERStory
         
         #region 공용 스프라이트
         [Space][Header("공용 스프라이트")]
-        public Sprite spriteCoinSmall; // 기본 재화 작은 코인
-        public Sprite spriteStarSmall; // 기본 재화 작은 스타
+        public Sprite spriteCoin;       // 150~200 사이 사이즈 코인
+        public Sprite spriteStar;       // 150~200 사이 사이즈 스타
         #endregion
         
 
@@ -1992,15 +1992,6 @@ namespace PIERStory
         }
         
         
-        /// <summary>
-        /// 스페셜 에피소드 해금 메세지 팝업 처리 
-        /// </summary>
-        /// <param name="__j">해금된 에피소드 array</param>
-        public void ShowUnlockSidePopUp(JsonData __j)
-        {
-
-        }
-         
          /// <summary>
         /// 확인받고, 게임베이스 탈퇴처리 진행.
         /// </summary>
@@ -2112,8 +2103,6 @@ namespace PIERStory
             }
             
             
-            
-            
             string uidParam = string.Format("?uid={0}", UserManager.main.GetUserPinCode());
             string langParam = string.Format("&lang={0}", SystemManager.main.currentAppLanguageCode);
             
@@ -2137,9 +2126,6 @@ namespace PIERStory
                 NetworkLoader.main.RequestUserBaseProperty();
             }, null, null);            
             
-            
-
-
         }
         
         void ForwardToStore() {
@@ -2156,7 +2142,7 @@ namespace PIERStory
             if(baseCurrencyData == null || !baseCurrencyData.ContainsKey(__currency))
                 return string.Empty;
                 
-            return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], "image_url");
+            return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], CommonConst.COL_IMAGE_URL);
         }
         
         
@@ -2169,10 +2155,21 @@ namespace PIERStory
             if(baseCurrencyData == null || !baseCurrencyData.ContainsKey(__currency))
                 return string.Empty;
                 
-            return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], "image_key");
+            return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], CommonConst.COL_IMAGE_KEY);
         }
         
+        /// <summary>
+        /// 상점으로 보내는 팝업 호출
+        /// </summary>
+        public static void ShowConnectingShopPopup(Sprite __currencyIcon, int __insufficientAmount)
+        {
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_CONNECTING_SHOP);
 
+            p.Data.SetLabelsTexts(__insufficientAmount.ToString());
+            p.Data.SetImagesSprites(__currencyIcon);
+
+            PopupManager.main.ShowPopup(p, false);
+        }
          
     }
 }

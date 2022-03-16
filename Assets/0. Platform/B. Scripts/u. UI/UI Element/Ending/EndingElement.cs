@@ -17,7 +17,8 @@ namespace PIERStory
         public TextMeshProUGUI endingType;
         public TextMeshProUGUI endingTitle;
 
-        public UnityEngine.UI.Image replayIcon;
+        public UnityEngine.UI.Image buttonBox;
+        public GameObject newSign;
         public GameObject showChoiceButton;
 
         readonly Vector2 openEndingSize = new Vector2(660, 500);
@@ -40,6 +41,7 @@ namespace PIERStory
             {
                 endingTitle.text = epiData.episodeTitle;
                 GetComponent<RectTransform>().sizeDelta = openEndingSize;
+                buttonBox.sprite = LobbyManager.main.spriteEpisodeOpen;
 
                 showChoiceButton.SetActive(true);
             }
@@ -49,8 +51,11 @@ namespace PIERStory
 
                 endingTitle.text = string.Format("{0}\n EP{1}", "귀속 에피소드", dependEpisodeData.episodeNO);
                 GetComponent<RectTransform>().sizeDelta = lockEndingSize;
+                buttonBox.sprite = LobbyManager.main.spriteEpisodeLock;
                 showChoiceButton.SetActive(false);
             }
+
+            newSign.SetActive(!UserManager.main.IsCompleteEpisode(epiData.episodeID));
 
             gameObject.SetActive(true);
         }

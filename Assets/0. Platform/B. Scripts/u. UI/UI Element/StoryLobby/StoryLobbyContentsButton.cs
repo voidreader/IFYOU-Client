@@ -86,6 +86,11 @@ namespace PIERStory {
         
         void CheckNewEndingData() {
             
+            if(UserManager.main.GetInCompleteEndingCount() > 0)
+                SetNotification(true);
+            else
+                SetNotification(false);
+
         }
         
         void CheckNewGalleryData() {

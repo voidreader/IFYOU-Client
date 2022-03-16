@@ -46,6 +46,11 @@ namespace PIERStory
             ViewCommonTop.OnBackAction = null; // 액션 초기화 
             
         }
+        
+        
+        void OnDestroy() {
+            ViewCommonTop.OnBackAction = null; // 액션 초기화 
+        }
 
 
         #region OnClick event
@@ -61,12 +66,18 @@ namespace PIERStory
         /// </summary>
         public void OnClickReturnLobby()
         {
-            // ViewEpisodeEnd 활성화 되어있지 않으면 동작하지 않음 .
-            if(!this.gameObject.activeSelf)
-                return;
+            try {
             
-            UserManager.main.gameComplete = true;
-            GameManager.main.EndGame();
+                // ViewEpisodeEnd 활성화 되어있지 않으면 동작하지 않음 .
+                if(!this.gameObject.activeSelf)
+                    return;
+                
+                UserManager.main.gameComplete = true;
+                GameManager.main.EndGame();
+            }
+            catch(System.Exception e) {
+                ViewCommonTop.OnBackAction = null; // 액션 초기화 
+            }
         }
 
         #endregion

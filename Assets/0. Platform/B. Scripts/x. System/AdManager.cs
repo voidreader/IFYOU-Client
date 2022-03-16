@@ -31,6 +31,7 @@ namespace PIERStory {
         // * Firebase
         FirebaseApp app;
         
+        public bool isPaidSelection = false; // 유료 선택지 선택됨. 
         
         // * 광고 도중 터치 막기 위한 변수.
         public bool isAdShowing = false; // 현재 광고가 보여지고 있다.
@@ -265,6 +266,14 @@ namespace PIERStory {
         /// 선택지 선택 후 광고
         /// </summary>
         public void PlaySelectionAD() {
+            
+            // 유료선택지에서 광고를 안뜨게 하려고. 
+            if(isPaidSelection) {
+                isPaidSelection = false;
+                return;
+            }
+            
+            
             if(!useSelectionAD) 
                 return;
                 

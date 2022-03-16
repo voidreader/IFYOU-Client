@@ -1878,7 +1878,21 @@ namespace PIERStory
         
         #endregion
    
+        #region 
         
+        /// <summary>
+        /// 모든 정규 에피소드 구매 상태 업데이트 
+        /// </summary>
+        public void RefreshRegularEpisodesPurchaseState() {
+            if(RegularEpisodeList == null)
+                return;
+                
+            for(int i=0; i<RegularEpisodeList.Count;i++) {
+                RegularEpisodeList[i].SetPurchaseState();
+            }
+        }
+        
+        #endregion
     }
     
 }

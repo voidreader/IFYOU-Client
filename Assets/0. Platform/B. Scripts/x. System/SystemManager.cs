@@ -244,7 +244,7 @@ namespace PIERStory
         }
         
         void Update() {
-            if(Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.S)) {
+            if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.S)) {
                 UserManager.main.SetAdminUser();
             }
         }

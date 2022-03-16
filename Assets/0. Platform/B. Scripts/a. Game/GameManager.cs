@@ -1905,7 +1905,7 @@ namespace PIERStory
 
             Debug.Log("ShowAchieveIllust : " + illustName);
 
-            PopupBase popup = PopupManager.main.GetPopup(SystemConst.POPUP_ILLUST_ACHIEVEMENT);
+            PopupBase popup = PopupManager.main.GetPopup(GameConst.POPUP_ACHIEVEMENT_ILLUST);
             if (popup == null)
             {
                 Debug.LogError("No Popup");
@@ -2091,7 +2091,7 @@ namespace PIERStory
                 // 최초 보상 있으면 팝업 호출
                 Debug.Log(">> First Reward exists : " + JsonMapper.ToStringUnicode(firstReward[0]));
                 
-                PopupBase p = PopupManager.main.GetPopup("EpisodeFirstReward");
+                PopupBase p = PopupManager.main.GetPopup(GameConst.POPUP_EPISODE_FIRST_REWARD);
                 if(p == null) {
                     Debug.LogError("First reward popup is null");
                 }

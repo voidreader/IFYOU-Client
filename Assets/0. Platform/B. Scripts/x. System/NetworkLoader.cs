@@ -537,8 +537,6 @@ namespace PIERStory
             if(UserManager.main.tutorialFirstProjectID > 0 && UserManager.main.tutorialStep == 1)
                 UserManager.main.UpdateTutorialStep(2);
 
-            if (!UserManager.main.useRecord)
-                return;
 
             // Progress와 History 둘 다 저장이 된다. (progress는 is_clear가 업데이트)
             JsonData sending = new JsonData();
@@ -550,6 +548,7 @@ namespace PIERStory
 
             sending["func"] = FUNC_UPDATE_EPISODE_COMPLETE_RECORD;
             sending["ver"] = 10; // 버전 2022.01.24
+            sending["useRecord"] = UserManager.main.useRecord;
 
             // 에피소드 완료 기록을 하면서 현재 선택지 기록을 갱신한다
             UserManager.main.SetCurrentStorySelectionList(StoryManager.main.CurrentProjectID);

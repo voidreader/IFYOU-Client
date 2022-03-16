@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Text;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+
 using LitJson;
 using BestHTTP;
 using Doozy.Runtime.Signals;
-using Sirenix.OdinInspector;
-using System.Linq;
 
 namespace PIERStory
 {
@@ -32,7 +32,6 @@ namespace PIERStory
         public List<CoinIndicator> ListCoinIndicators = new List<CoinIndicator>(); // 코인 표시기
         public List<GemIndicator> ListGemIndicators = new List<GemIndicator>(); // 젬 표시기
         public List<NicknameIndicator> ListNicknameIndicators = new List<NicknameIndicator>(); // 닉네임 표시기
-        
         
         
         [HideInInspector] public Queue<JsonData> OpenSideStories = new Queue<JsonData>();     // 해금된 사이드 에피소드 목록
@@ -256,8 +255,7 @@ namespace PIERStory
             
             // 유저 정보
             SetUserInfo(userJson);
-           
-            
+
 
             // 유저 정보 불러왔으면, Lobby로 진입을 요청합니다. 
             completeReadUserData = true;
@@ -342,7 +340,7 @@ namespace PIERStory
             }
             
             // 슈퍼유저 처리 
-            // isAdminUser = SystemManager.GetJsonNodeBool(userJson, "admin");
+            isAdminUser = SystemManager.GetJsonNodeBool(userJson, "admin");
             
         }
         
@@ -394,7 +392,6 @@ namespace PIERStory
         public void SetStoryUserData(JsonData __j)
         {
             currentStoryJson = __j;
-            
 
             
             #region 미션 
@@ -442,7 +439,10 @@ namespace PIERStory
             for (int i = 0; i < GetNodeProjectMissions().Count; i++)
                 DebugProjectChallenges.Add(JsonMapper.ToStringUnicode(GetNodeProjectMissions()[i]));
         }
-        
+
+
+        #region 선택지 관련
+
         /// <summary>
         /// 작품 선택하는 순간 해당 작품의 선택지 내역도 함께 불러온다
         /// </summary>
@@ -470,28 +470,64 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 프로필 페이지 저장해둔 데이터 소환
+        /// 선택지 구매
         /// </summary>
-        public void GetProfileCurrent()
+        public void PurchaseSelection(string __selectionGroup, string __selectionNo, int __price, OnRequestFinishedDelegate __cb)
         {
             JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = LobbyConst.FUNC_GET_PROFILE_CURRENCY_CURRENT;
+            sending[CommonConst.FUNC] = "purchaseSelection";
             sending[CommonConst.COL_USERKEY] = userKey;
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
+            sending[CommonConst.COL_EPISODE_ID] = StoryManager.main.CurrentEpisodeID;
+            sending[GameConst.COL_SELECTION_GROUP] = __selectionGroup;
+            sending[GameConst.COL_SELECTION_NO] = __selectionNo;
+            sending["price"] = __price;
 
-            NetworkLoader.main.SendPost(CallbackGetProfileCurrent, sending);
+            NetworkLoader.main.SendPost(__cb, sending, true);
         }
 
-        void CallbackGetProfileCurrent(HTTPRequest req, HTTPResponse res)
+        /// <summary>
+        /// 선택지 구매 목록 갱신
+        /// </summary>
+        /// <param name="__data"></param>
+        public void SetPurchaseSelection(string __data)
         {
-            if(!NetworkLoader.CheckResponseValidation(req, res))
+            JsonData data = JsonMapper.ToObject(__data);
+
+            // 여기 Exception 날 수 있음
+            currentStoryJson[NODE_SELECTION_PURCHASE][StoryManager.main.CurrentEpisodeID] = data;
+        }
+
+
+        /// <summary>
+        /// 해당 에피소드의 선택한 선택지를 구매한적 있는지 체크체크
+        /// </summary>
+        /// <param name="__episodeID"></param>
+        /// <returns></returns>
+        public bool IsPurchaseSelection(string __episodeID, string __selectionGroup, string __selectionNo)
+        {
+            // key값이 없으면 구매한 적이 없는 에피소드
+            if (!currentStoryJson[NODE_SELECTION_PURCHASE].ContainsKey(__episodeID))
+                return false;
+
+            JsonData selectionPurchaseData = currentStoryJson[NODE_SELECTION_PURCHASE][__episodeID];
+
+            for (int i = 0; i < selectionPurchaseData.Count; i++)
             {
-                Debug.LogError("Failed CallbackGetProfileCurrent");
-                return;
+                // 선택지 그룹이 같은게 아니면 넘겨넘겨
+                if (SystemManager.GetJsonNodeString(selectionPurchaseData[i], GameConst.COL_SELECTION_GROUP) != __selectionGroup)
+                    continue;
+
+                // 같은 선택지 그룹 내에서 같은 번호면 구매한적이 있으니 true 반환
+                if (SystemManager.GetJsonNodeString(selectionPurchaseData[i], GameConst.COL_SELECTION_NO) == __selectionNo)
+                    return true;
             }
 
-            userProfile = JsonMapper.ToObject(res.DataAsText);
+            return false;
         }
 
+
+        #endregion
 
         public void CallbackGetAttendacneList(HTTPRequest req, HTTPResponse res)
         {
@@ -532,6 +568,9 @@ namespace PIERStory
         }
 
 
+        #region 작품 미션
+
+
         /// <summary>
         /// 완료된 미션이었는지 체크한다
         /// </summary>
@@ -570,22 +609,51 @@ namespace PIERStory
             }
         }
 
-        /// <summary>
-        /// 선택지 구매
-        /// </summary>
-        public void PurchaseSelection(string __selectionGroup, string __selectionNo, int __price, OnRequestFinishedDelegate __cb)
-        {
-            JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "purchaseSelection";
-            sending[CommonConst.COL_USERKEY] = userKey;
-            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
-            sending[CommonConst.COL_EPISODE_ID] = StoryManager.main.CurrentEpisodeID;
-            sending[GameConst.COL_SELECTION_GROUP] = __selectionGroup;
-            sending[GameConst.COL_SELECTION_NO] = __selectionNo;
-            sending["price"] = __price;
+        #endregion
 
-            NetworkLoader.main.SendPost(__cb, sending, true);
+        /// <summary>
+        /// 플레이 미완된 엔딩 갯수
+        /// </summary>
+        /// <returns></returns>
+        public int GetInCompleteEndingCount()
+        {
+            int incompleteCount = 0;
+
+            foreach(EpisodeData endingData in StoryManager.main.ListCurrentProjectEpisodes)
+            {
+                // 엔딩인 경우
+                if(endingData.episodeType == EpisodeType.Ending)
+                {
+                    for (int i = 0; i < GetNodeUserEpisodeHistory().Count; i++)
+                    {
+                        if (!IsCompleteEpisode(endingData.episodeID))
+                        {
+                            incompleteCount++;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return 0;
         }
+
+        /// <summary>
+        /// 해당 화 플레이 완료 기록이 있나요?
+        /// </summary>
+        /// <param name="__episodeId"></param>
+        /// <returns></returns>
+        public bool IsCompleteEpisode(string __episodeId)
+        {
+            for (int i = 0; i < GetNodeUserEpisodeHistory().Count; i++)
+            {
+                if (GetNodeUserEpisodeHistory()[i].ToString() == __episodeId)
+                    return true;
+            }
+
+            return false;
+        }
+
 
 
         #region 튜토리얼 Update 통신
@@ -860,22 +928,22 @@ namespace PIERStory
             ListNicknameIndicators.Add(__receiver);
             RefreshGemIndicators(); 
         }
-        
+
         /// <summary>
         /// 닉네임 표시 업데이트 
         /// </summary>
-        void RefreshNicknameIndicators(string __nick) {
-            for(int i = ListNicknameIndicators.Count-1; i>= 0; i--)
+        void RefreshNicknameIndicators(string __nick)
+        {
+            for (int i = ListNicknameIndicators.Count - 1; i >= 0; i--)
             {
                 if (!ListNicknameIndicators[i])
                     ListNicknameIndicators.RemoveAt(i);
             }
-            
-            for(int i=0; i<ListNicknameIndicators.Count;i++) {
+
+            for (int i = 0; i < ListNicknameIndicators.Count; i++)
+            {
                 ListNicknameIndicators[i].RefreshNickname(__nick);
             }
-            
-        
         }
         
         
@@ -930,8 +998,6 @@ namespace PIERStory
             // 붙어있는 표시기들 refresh 처리 
             RefreshCoinIndicators();
             RefreshGemIndicators();
-
-            
         }
         
         
@@ -941,10 +1007,7 @@ namespace PIERStory
         public void RefreshIndicators() {
             RefreshCoinIndicators();
             RefreshGemIndicators();
-
         }
-        
-        
         
 
         /// <summary>
@@ -1001,6 +1064,37 @@ namespace PIERStory
             {
                 ListGemIndicators[i].RefreshGem(gem);
             }
+        }
+
+
+        /// <summary>
+        /// 필요한 가격만큼 보석을 보유하고 있는지 체크 
+        /// </summary>
+        /// <param name="__requirePrice"></param>
+        /// <returns></returns>
+        public bool CheckGemProperty(int __requirePrice)
+        {
+            /*
+            if(CheckAdminUser())
+                return true;
+            */
+
+            return __requirePrice <= gem;
+        }
+
+        /// <summary>
+        /// 필요한 가격만큼 코인을 보유하고 있는지 체크 
+        /// </summary>
+        /// <param name="__requirePrice"></param>
+        /// <returns></returns>
+        public bool CheckCoinProperty(int __requirePrice)
+        {
+            /*
+            if(CheckAdminUser())
+                return true;
+            */
+
+            return __requirePrice <= coin;
         }
 
         #endregion
@@ -1198,7 +1292,7 @@ namespace PIERStory
             while(CompleteMissions.Count > 0) {
                 
                 // popup 변수를 여러개가 공유할 수 없음. 매번 새로 만들어줘야된다. 
-                PopupBase popUp = PopupManager.main.GetPopup(SystemConst.POPUP_ILLUST_ACHIEVEMENT);
+                PopupBase popUp = PopupManager.main.GetPopup(GameConst.POPUP_ACHIEVEMENT_ILLUST);
                 if (popUp == null)
                 {
                     Debug.LogError("No AchieveMission Popup");
@@ -1500,28 +1594,28 @@ namespace PIERStory
             
             return false;
         }
-        
+
         /// <summary>
         /// 정규 에피소드 끝났니?  (다음 에피소드가 엔딩인 경우)
         /// </summary>
         /// <returns></returns>
-        public bool CheckUserProjectRegularEpisodeFinal() {
-            
-            if(!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
+        public bool CheckUserProjectRegularEpisodeFinal()
+        {
+            if (!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
                 return false;
-                
+
             // 
-            for(int i=0; i<currentStoryJson[NODE_PROJECT_CURRENT].Count; i++) {
-                
+            for (int i = 0; i < currentStoryJson[NODE_PROJECT_CURRENT].Count; i++)
+            {
+
                 // 정규 에피소드, 다음에피소드가 엔딩인지.  
-                if(!SystemManager.GetJsonNodeBool(currentStoryJson[NODE_PROJECT_CURRENT][i], "is_special")
-                    && SystemManager.GetJsonNodeBool(currentStoryJson[NODE_PROJECT_CURRENT][i], "is_ending")) {
+                if (!SystemManager.GetJsonNodeBool(currentStoryJson[NODE_PROJECT_CURRENT][i], "is_special")
+                    && SystemManager.GetJsonNodeBool(currentStoryJson[NODE_PROJECT_CURRENT][i], "is_ending"))
+                {
                     return true;
                 }
-                
-                
-            }            
-           
+            }
+
             return false;
         }
         
@@ -1610,24 +1704,12 @@ namespace PIERStory
         }
         
         
-        /// <summary>
-        /// 선택지 구매 목록 갱신
-        /// </summary>
-        /// <param name="__data"></param>
-        public void SetPurchaseSelection(string __data)
-        {
-            JsonData data = JsonMapper.ToObject(__data);
-
-            // 여기 Exception 날 수 있음
-            currentStoryJson[NODE_SELECTION_PURCHASE][StoryManager.main.CurrentEpisodeID] = data;
-        }
         
 
 
         #endregion
 
         #region 통신 콜백 
-        
         
         
         
@@ -1685,13 +1767,8 @@ namespace PIERStory
                 SetBankInfo(result, false);
             }
             
-            
-            
-            
             // 팝업 화면 호출 
             SystemManager.main.ShowExpGain(result);
-            
-            
         }
         
         
@@ -1838,7 +1915,6 @@ namespace PIERStory
             SetNodeUserProjectCurrent(resultEpisodeRecord[NODE_PROJECT_CURRENT]);
 
 
-            
             // played scene count 업데이트 
             if(resultEpisodeRecord.ContainsKey("playedSceneCount")) {
                 Debug.Log(JsonMapper.ToStringUnicode(resultEpisodeRecord["playedSceneCount"]));
@@ -1847,7 +1923,7 @@ namespace PIERStory
                 
                 
                 // * EpisodeData는 StoryManager로부터 시작해서 모두 참조가 같으므로 따로 변수를 만들어서 처리한다. 
-                GameManager.main.updatedEpisodeSceneProgressValue = float.Parse(resultEpisodeRecord["playedSceneCount"].ToString());
+                GameManager.main.updatedEpisodeSceneProgressValue = SystemManager.GetJsonNodeFloat(resultEpisodeRecord, "playedSceneCount");
             }
             
             
@@ -2421,8 +2497,9 @@ namespace PIERStory
 
         #endregion
 
-        
-        
+
+        #region 일러스트 관련
+
         /// <summary>
         /// 현재 일러스트가 해금가능한지 체크한다.
         /// </summary>
@@ -2468,32 +2545,7 @@ namespace PIERStory
             return string.Empty;
         }
 
-        
-        /// <summary>
-        /// Gallery Image의 progressor 값 계산
-        /// </summary>
-        /// <param name="__j">episode, side의 galleryImage key 값이 입력되는 jsonData를 받아온다</param>
-        /// <returns>gallery Image의 퍼센테이지 계산 결과값</returns>
-        public float CalcGalleryImage(JsonData __j)
-        {
-            float galleryValue = -1f;
 
-            if(__j.Count > 0)
-            {
-                float getGallery = 0f;
-
-                for(int i=0;i < __j.Count;i++)
-                {
-                    if (ObtainGalleryImage(SystemManager.GetJsonNodeString(__j[i], "illust_id"), SystemManager.GetJsonNodeString(__j[i], "gallery_type")))
-                        getGallery += 1f;
-                }
-
-                galleryValue = getGallery / __j.Count;
-            }
-
-            return galleryValue;
-        }
-        
         public float CalcEpisodeGalleryProgress(string __episodeID) {
             
             int totalEpisodeImage = 0;
@@ -2558,34 +2610,30 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 필요한 가격만큼 보석을 보유하고 있는지 체크 
+        /// 해금된 이미지(라이브 오브제)인지 check
         /// </summary>
-        /// <param name="__requirePrice"></param>
-        /// <returns></returns>
-        public bool CheckGemProperty(int __requirePrice)
+        /// <param name="imageName">이미지(라이브오브제) 이름</param>
+        public bool CheckMinicutUnlockable(string imageName, string minicutType)
         {
-            /*
-            if(CheckAdminUser())
-                return true;
-            */
-            
-            return __requirePrice <= gem;
+            // 노드 루프돌면서 오픈된 기록이 있는지 체크한다.
+            for (int i = 0; i < GetUserGalleryImage().Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], LobbyConst.ILLUST_NAME) == imageName
+                    && SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_type") == minicutType
+                    && !SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "illust_open"))
+                {
+
+                    return true; // 해금 가능
+                }
+            }
+
+            return false; // 데이터가 없다. 불가능
         }
 
-        /// <summary>
-        /// 필요한 가격만큼 코인을 보유하고 있는지 체크 
-        /// </summary>
-        /// <param name="__requirePrice"></param>
-        /// <returns></returns>
-        public bool CheckCoinProperty(int __requirePrice)
-        {
-            /*
-            if(CheckAdminUser())
-                return true;
-            */
-            
-            return __requirePrice <= coin;
-        }
+        #endregion
+
+
+        #region 갤러리 - 보이스 관련
 
         /// <summary>
         /// 해금된 voice인지 check
@@ -2622,26 +2670,7 @@ namespace PIERStory
             }
         }
 
-        /// <summary>
-        /// 해금된 이미지(라이브 오브제)인지 check
-        /// </summary>
-        /// <param name="imageName">이미지(라이브오브제) 이름</param>
-        public bool CheckMinicutUnlockable(string imageName, string minicutType)
-        {
-            // 노드 루프돌면서 오픈된 기록이 있는지 체크한다.
-            for (int i = 0; i < GetUserGalleryImage().Count; i++)
-            {
-                if (SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], LobbyConst.ILLUST_NAME) == imageName
-                    && SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_type") == minicutType
-                    && !SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "illust_open"))
-                {
-
-                    return true; // 해금 가능
-                }
-            }
-
-            return false; // 데이터가 없다. 불가능
-        }
+        #endregion
 
         
         /// <summary>
@@ -2665,33 +2694,6 @@ namespace PIERStory
             currentStoryJson[NODE_FREEPASS_TIMEDEAL] = __data;
         }
         
-
-        /// <summary>
-        /// 해당 에피소드의 선택한 선택지를 구매한적 있는지 체크체크
-        /// </summary>
-        /// <param name="__episodeID"></param>
-        /// <returns></returns>
-        public bool IsPurchaseSelection(string __episodeID, string __selectionGroup, string __selectionNo)
-        {
-            // key값이 없으면 구매한 적이 없는 에피소드
-            if (!currentStoryJson[NODE_SELECTION_PURCHASE].ContainsKey(__episodeID))
-                return false;
-
-            JsonData selectionPurchaseData = currentStoryJson[NODE_SELECTION_PURCHASE][__episodeID];
-
-            for (int i = 0; i < selectionPurchaseData.Count; i++)
-            {
-                // 선택지 그룹이 같은게 아니면 넘겨넘겨
-                if (SystemManager.GetJsonNodeString(selectionPurchaseData[i], GameConst.COL_SELECTION_GROUP) != __selectionGroup)
-                    continue;
-
-                // 같은 선택지 그룹 내에서 같은 번호면 구매한적이 있으니 true 반환
-                if (SystemManager.GetJsonNodeString(selectionPurchaseData[i], GameConst.COL_SELECTION_NO) == __selectionNo)
-                    return true;
-            }
-
-            return false;
-        }
         
         #region 유저 능력치 관련 메소드 
         

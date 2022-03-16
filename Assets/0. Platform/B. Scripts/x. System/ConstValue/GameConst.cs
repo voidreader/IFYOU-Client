@@ -20,8 +20,16 @@ namespace PIERStory
 
         #region 게임씬 플레이 관련
 
+        // 팝업
         public const string MISSION_POPUP = "missionPopUp";
         public const string ILLUST_POPUP = "illustPopUp";
+
+        public const string POPUP_ACHIEVEMENT_ILLUST = "AchivementIllust";
+        public const string POPUP_EPISODE_FIRST_REWARD = "EpisodeFirstReward";
+        public const string POPUP_ENDING_ALERT = "EndingAlert";
+        public const string POPUP_SIDE_ALERT = "SideAlert";
+        public const string POPUP_GAME_ABILITY = "GameAbility";
+
 
         public const string VOICE_VOLUME = "voiceVolume";
         public const string BGM_VOLUME = "BGMVolume";
@@ -33,8 +41,7 @@ namespace PIERStory
         public const float normalDelay = 3f;
         public const float slowDelay = 5f;
 
-        public const string POPUP_ENDING_ALERT = "EndingAlert";
-        public const string POPUP_SIDE_ALERT = "SideAlert";
+        
 
         public const string SIGNAL_EPISODE_END = "episodeEnd";
         public const string SIGNAL_NEXT_DATA = "nextData";
@@ -270,6 +277,7 @@ namespace PIERStory
         public const float IMAGE_SCALE_SMALL = 0.67F; // 미니컷 이미지 게임에 맞게 고정 값
 
         #endregion
+
 
         #endregion
     }

@@ -23,9 +23,6 @@ namespace PIERStory
         public Image getAllButton;
         public TextMeshProUGUI getAllText;
 
-        const string IS_HIDDEN = "is_hidden";
-        const string UNLOCK_STATE = "unlock_state";
-
         public Color32 getAllOpenColor = new Color32(51, 51, 51, 255);
         public Color32 getAllLockColor = new Color32(153, 153, 153, 255);
 
@@ -56,7 +53,15 @@ namespace PIERStory
 
             // ! 경험치 관련 문제로 잠시 모든 보상 받기 비활성화.
             // SetGetAllButtonState();
+            
+            SetMissionProgressor();
 
+            missionScroll.verticalNormalizedPosition = 1f;
+            clickGetAll = false;
+        }
+
+        void SetMissionProgressor()
+        {
             #region mission setting
 
             int lockHiddenMissionCount = 0;     // 공개되지 않은 히든미션 count
@@ -91,7 +96,7 @@ namespace PIERStory
                 }
             }
 
-  
+
             // 히든엔딩 갯수 표기
             if (lockHiddenMissionCount > 0)
             {
@@ -111,15 +116,8 @@ namespace PIERStory
             }
 
             #endregion
-            
-            SetMissionProgressor();
 
-            missionScroll.verticalNormalizedPosition = 1f;
-            clickGetAll = false;
-        }
-
-        void SetMissionProgressor()
-        {
+            /*
             int completeValue = 0;
 
             // * 달성 후 보상 미수령 => 잠금 => 보상 받음 순서로 한다. 
@@ -131,7 +129,8 @@ namespace PIERStory
                 else if (missionData.missionState == MissionState.finish)
                     completeValue++;
             }
-
+            */
+            
             Debug.Log(string.Format("### SetMissionProgressor [{0}]/[{1}]", completeValue, UserManager.main.DictStoryMission.Count));
 
             missionProgressText.text = string.Format(SystemManager.GetLocalizedText("5032"), completeValue, UserManager.main.DictStoryMission.Count);

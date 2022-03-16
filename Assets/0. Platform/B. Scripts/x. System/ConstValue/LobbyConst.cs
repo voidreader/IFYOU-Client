@@ -164,6 +164,14 @@ namespace PIERStory {
 
         #endregion
 
+        #region 팝업 이름
+
+        
+
+
+        #endregion
+
+
         public static Color colorBlueBlue = new Color(0.384f,0.5176f,1,1);
 
         #region PlayerPrefs Key Value

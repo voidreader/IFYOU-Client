@@ -13,9 +13,11 @@ namespace PIERStory
         public ImageRequireDownload endingBanner;
         public TextMeshProUGUI endingType;
         public TextMeshProUGUI endingTitle;
+        public GameObject newSign;
 
         public Transform scrollContent;
 
+        [Space][Header("엔딩 선택지 관련")]
         public GameObject episodeTitlePrefab;
         public GameObject selectionScriptPrefab;
         public GameObject emptyPrefab;
@@ -85,6 +87,8 @@ namespace PIERStory
                 endingType.text = SystemManager.GetLocalizedText("5088");
 
             endingTitle.text = endingData.episodeTitle;
+
+            newSign.SetActive(!UserManager.main.IsCompleteEpisode(endingData.episodeID));
 
             int episodeIndex = 0;
 

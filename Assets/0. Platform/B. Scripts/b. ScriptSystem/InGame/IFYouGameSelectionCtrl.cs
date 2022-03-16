@@ -480,8 +480,7 @@ namespace PIERStory {
             // 프리패스도 아닌데 돈도 없어!
             if (!UserManager.main.HasProjectFreepass() && !UserManager.main.CheckGemProperty(scriptRow.selectionPrice))
             {
-                // 일단은 돈없다는 메시지 띄워주기
-                SystemManager.ShowMessageWithLocalize("80014", false);
+                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteStar, scriptRow.selectionPrice - UserManager.main.gem);
 
                 SetState(SelectionState.Idle);
                 SetOtherSelectionState(this, SelectionState.Idle);

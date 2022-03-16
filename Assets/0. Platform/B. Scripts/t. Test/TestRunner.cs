@@ -47,9 +47,8 @@ namespace PIERStory {
                 
                 PopupManager.main.ShowPopup(p, false, false);
                 */
-                PopupBase popup = PopupManager.main.GetPopup(SystemConst.POPUP_ILLUST_ACHIEVEMENT);
+                PopupBase popup = PopupManager.main.GetPopup(GameConst.POPUP_ACHIEVEMENT_ILLUST);
                 PopupManager.main.ShowPopup(popup, true, false);                
-                
             }
         }
         

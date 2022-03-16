@@ -481,6 +481,9 @@ namespace PIERStory
                     continue;
                 */
 
+                if (string.IsNullOrEmpty(ListRows[i].template))
+                    continue;
+
                 // 모델 리소스 수집 
                 /*
                 if (ListRows[i].IsSpeakable)

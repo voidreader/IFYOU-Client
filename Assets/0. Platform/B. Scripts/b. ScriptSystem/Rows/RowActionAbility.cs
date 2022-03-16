@@ -105,7 +105,7 @@ namespace PIERStory
             UserManager.main.UpdateRawStoryAbility(result[UserManager.NODE_RAW_STORY_ABILITY]);
             
             // 팝업 띄워주기 
-            PopupBase p = PopupManager.main.GetPopup("GameAbility");
+            PopupBase p = PopupManager.main.GetPopup(GameConst.POPUP_GAME_ABILITY);
             p.Data.contentJson = UserManager.main.GetSpeakerAbilityJSON(speaker, abilityName);
             p.Data.contentValue = addValue;
             

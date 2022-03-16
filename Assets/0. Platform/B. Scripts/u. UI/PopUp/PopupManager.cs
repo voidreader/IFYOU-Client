@@ -26,6 +26,7 @@ namespace PIERStory {
         [SerializeField] GameObject popupAchivement;
         [SerializeField] GameObject popupAdvertisementShow;
         public GameObject popupAttendance;
+        public GameObject popupConnectingShop;
         [SerializeField] GameObject popupCoupon;
         [SerializeField] GameObject popupEndingAlert;
         [SerializeField] GameObject popupEpisodeClearReward;
@@ -239,10 +240,10 @@ namespace PIERStory {
             else 
                 DictPopup.Add("Account", popupAccount);
                 
-            if(DictPopup.ContainsKey("AchivementIllust")) 
-                DictPopup["AchivementIllust"] = popupAchivement;
+            if(DictPopup.ContainsKey(GameConst.POPUP_ACHIEVEMENT_ILLUST)) 
+                DictPopup[GameConst.POPUP_ACHIEVEMENT_ILLUST] = popupAchivement;
             else 
-                DictPopup.Add("AchivementIllust", popupAchivement);
+                DictPopup.Add(GameConst.POPUP_ACHIEVEMENT_ILLUST, popupAchivement);
                 
             if(DictPopup.ContainsKey("AdvertisementShow")) 
                 DictPopup["AdvertisementShow"] = popupAdvertisementShow;
@@ -258,16 +259,21 @@ namespace PIERStory {
                 DictPopup["Coupon"] = popupCoupon;
             else 
                 DictPopup.Add("Coupon", popupCoupon);
-                
-            if(DictPopup.ContainsKey("EndingAlert")) 
-                DictPopup["EndingAlert"] = popupEndingAlert;
+
+            if (DictPopup.ContainsKey(CommonConst.POPUP_CONNECTING_SHOP))
+                DictPopup[CommonConst.POPUP_CONNECTING_SHOP] = popupConnectingShop;
+            else
+                DictPopup.Add(CommonConst.POPUP_CONNECTING_SHOP, popupConnectingShop);
+
+            if(DictPopup.ContainsKey(GameConst.POPUP_ENDING_ALERT)) 
+                DictPopup[GameConst.POPUP_ENDING_ALERT] = popupEndingAlert;
             else 
-                DictPopup.Add("EndingAlert", popupEndingAlert);
+                DictPopup.Add(GameConst.POPUP_ENDING_ALERT, popupEndingAlert);
                 
-            if(DictPopup.ContainsKey("EpisodeFirstReward")) 
-                DictPopup["EpisodeFirstReward"] = popupEpisodeClearReward;
+            if(DictPopup.ContainsKey(GameConst.POPUP_EPISODE_FIRST_REWARD)) 
+                DictPopup[GameConst.POPUP_EPISODE_FIRST_REWARD] = popupEpisodeClearReward;
             else 
-                DictPopup.Add("EpisodeFirstReward", popupEpisodeClearReward);
+                DictPopup.Add(GameConst.POPUP_EPISODE_FIRST_REWARD, popupEpisodeClearReward);
                 
             if(DictPopup.ContainsKey("EXP")) 
                 DictPopup["EXP"] = popupExp;
@@ -305,10 +311,10 @@ namespace PIERStory {
             else 
                 DictPopup.Add("PremiumPass", popupPremiumPass);
                 
-            if(DictPopup.ContainsKey("SideAlert")) 
-                DictPopup["SideAlert"] = popupSideAlert;
+            if(DictPopup.ContainsKey(GameConst.POPUP_SIDE_ALERT)) 
+                DictPopup[GameConst.POPUP_SIDE_ALERT] = popupSideAlert;
             else 
-                DictPopup.Add("SideAlert", popupSideAlert);
+                DictPopup.Add(GameConst.POPUP_SIDE_ALERT, popupSideAlert);
                 
             if(DictPopup.ContainsKey(CommonConst.POPUP_SIMPLE_ALERT)) 
                 DictPopup[CommonConst.POPUP_SIMPLE_ALERT] = popupSimpleAlert;
@@ -366,10 +372,10 @@ namespace PIERStory {
             else 
                 DictPopup.Add("StoryReset", popupStoryReset);
                 
-            if(DictPopup.ContainsKey("GameAbility")) 
-                DictPopup["GameAbility"] = popupGameAbility;
+            if(DictPopup.ContainsKey(GameConst.POPUP_GAME_ABILITY)) 
+                DictPopup[GameConst.POPUP_GAME_ABILITY] = popupGameAbility;
             else 
-                DictPopup.Add("GameAbility", popupGameAbility);
+                DictPopup.Add(GameConst.POPUP_GAME_ABILITY, popupGameAbility);
         }
         
         #endregion

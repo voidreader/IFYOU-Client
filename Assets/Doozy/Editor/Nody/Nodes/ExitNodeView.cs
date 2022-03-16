@@ -16,7 +16,7 @@ namespace Doozy.Editor.Nody.Nodes
     {
         public override Type nodeType => typeof(ExitNode);
         public override Texture2D nodeIconTexture => EditorTextures.Nody.Icons.ExitNode;
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.ExitNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.ExitNode;
         
         public ExitNodeView(FlowGraphView graphView, FlowNode node) : base(graphView, node)
         {
@@ -27,7 +27,7 @@ namespace Doozy.Editor.Nody.Nodes
         {
             base.InitializeView();
 
-            this.SetIcon(EditorMicroAnimations.Nody.Icons.ExitNode);
+            this.SetIcon(EditorSpriteSheets.Nody.Icons.ExitNode);
         }
     }
 }

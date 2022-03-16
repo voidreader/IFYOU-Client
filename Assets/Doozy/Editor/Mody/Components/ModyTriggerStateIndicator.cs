@@ -46,8 +46,8 @@ namespace Doozy.Editor.Mody.Components
 
         public ModyProviderStateIndicator()
         {
-            runningIndicator = GetIndicator(EditorMicroAnimations.EditorUI.Icons.Duration).SetEnabledColor(runningColor).IconIsLooping(true);
-            cooldownIndicator = GetIndicator(EditorMicroAnimations.EditorUI.Icons.Cooldown).SetEnabledColor(cooldownColor).IconIsLooping(true);
+            runningIndicator = GetIndicator(EditorSpriteSheets.EditorUI.Icons.Duration).SetEnabledColor(runningColor).IconIsLooping(true);
+            cooldownIndicator = GetIndicator(EditorSpriteSheets.EditorUI.Icons.Cooldown).SetEnabledColor(cooldownColor).IconIsLooping(true);
 
             runningProgressBar = FluidProgressBar.Get().SetIndicatorColor(runningColor);
             cooldownProgressBar = FluidProgressBar.Get().SetIndicatorColor(cooldownColor);

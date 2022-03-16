@@ -46,7 +46,7 @@ namespace Doozy.Editor.Reactor.Windows
         private ReactorPresetsWindowLayout m_PresetsWindowLayout;
         private ReactorSettingsWindowLayout m_SettingsWindowLayout;
 
-        public IEnumerable<Texture2D> reactorIconTextures => EditorMicroAnimations.Reactor.Icons.ReactorIconToFull;
+        public IEnumerable<Texture2D> reactorIconTextures => EditorSpriteSheets.Reactor.Icons.ReactorIconToFull;
 
         protected override void OnEnable()
         {

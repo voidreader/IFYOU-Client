@@ -5,6 +5,7 @@
 // ReSharper disable UnusedMemberInSuper.Global
 namespace Doozy.Runtime.Mody
 {
+	/// <summary> Interface used by ModyModules to interact with ModyActions </summary>
 	public interface IHaveActions
 	{
 		/// <summary> Get the Action with the given Action name. </summary>

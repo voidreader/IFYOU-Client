@@ -164,7 +164,7 @@ namespace Doozy.Editor.EditorUI.Components
                 FluidToggleButtonTab.Get()
                     .SetElementSize(ElementSize.Normal)
                     .SetTabPosition(TabPosition.TabOnTop)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Components.CarretRightToDown)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Components.CarretRightToDown)
                     .SetAnimationTrigger(IconAnimationTrigger.OnValueChanged);
 
             tabButton.SetOnValueChanged(value => schedule.Execute(ValueChanged));

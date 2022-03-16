@@ -15,7 +15,7 @@ namespace Doozy.Editor.UIManager.Editors.Triggers
     [CustomEditor(typeof(UISubmitTrigger))]
     public class UISubmitTriggerEditor : ModyTriggerEditor<UISubmitTrigger>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorMicroAnimations.EditorUI.Icons.Border;
+        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.EditorUI.Icons.Border;
         
         public override VisualElement CreateInspectorGUI()
         {

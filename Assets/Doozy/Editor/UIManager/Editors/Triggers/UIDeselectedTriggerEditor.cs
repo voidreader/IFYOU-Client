@@ -15,7 +15,7 @@ namespace Doozy.Editor.UIManager.Editors.Triggers
     [CustomEditor(typeof(UIDeselectedTrigger))]
     public class UIDeselectedTriggerEditor : ModyTriggerEditor<UIDeselectedTrigger>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorMicroAnimations.EditorUI.Icons.Selectable;
+        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.EditorUI.Icons.Selectable;
 
         public override VisualElement CreateInspectorGUI()
         {

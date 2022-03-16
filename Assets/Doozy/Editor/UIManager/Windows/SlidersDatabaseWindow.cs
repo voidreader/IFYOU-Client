@@ -33,7 +33,10 @@ namespace Doozy.Editor.UIManager.Windows
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            ((FluidWindowLayout) windowLayout).Dispose();
+            var layout = (FluidWindowLayout)windowLayout;
+            if (layout == null) return;
+            layout?.OnDestroy();
+            layout?.Dispose();
         }  
     }
 }

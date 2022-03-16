@@ -17,7 +17,7 @@ namespace Doozy.Editor.UIManager.Nodes
     [CustomEditor(typeof(BackButtonNode))]
     public class BackButtonNodeEditor : FlowNodeEditor
     {
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.BackButtonNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.BackButtonNode;
 
         private SerializedProperty propertyNodeCommand { get; set; }
 

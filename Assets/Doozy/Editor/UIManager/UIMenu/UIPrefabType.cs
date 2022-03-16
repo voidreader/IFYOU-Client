@@ -6,8 +6,8 @@ namespace Doozy.Editor.UIManager.UIMenu
 {
     public enum UIPrefabType
     {
-        Component,
-        Container,
+        Components,
+        Containers,
         Content,
         Custom
     }

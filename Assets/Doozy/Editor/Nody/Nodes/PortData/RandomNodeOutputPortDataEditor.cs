@@ -62,7 +62,7 @@ namespace Doozy.Editor.Nody.Nodes.PortData
 
             connectionIndicator =
                 EnabledIndicator.Get()
-                    .SetIcon(EditorMicroAnimations.Nody.Icons.One)
+                    .SetIcon(EditorSpriteSheets.Nody.Icons.One)
                     .SetEnabledColor(EditorColors.Nody.Output)
                     .SetSize(20)
                     .Toggle(port.isConnected, true);
@@ -102,7 +102,7 @@ namespace Doozy.Editor.Nody.Nodes.PortData
                 .AddChild(slider)
                 .AddChild
                 (
-                    FluidButton.Get(EditorMicroAnimations.EditorUI.Icons.Reset)
+                    FluidButton.Get(EditorSpriteSheets.EditorUI.Icons.Reset)
                         .SetElementSize(ElementSize.Tiny)
                         .SetTooltip("Reset weight")
                         .SetOnClick(() =>

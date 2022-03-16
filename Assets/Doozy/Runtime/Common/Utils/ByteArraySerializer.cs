@@ -9,15 +9,24 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Doozy.Runtime.Common.Utils
 {
+    /// <summary> Helper class for serialization and deserialization of types </summary>
     public static class ByteArraySerializer
     {
-        public static byte[] Serialize<T>(this T m)
+        /// <summary> Serialize the given data type </summary>
+        /// <param name="data"> Data to be serialized </param>
+        /// <typeparam name="T"> Data type </typeparam>
+        /// <returns> The representation of the given data as a byte array </returns>
+        public static byte[] Serialize<T>(this T data)
         {
             using var ms = new MemoryStream();
-            new BinaryFormatter().Serialize(ms, m);
+            new BinaryFormatter().Serialize(ms, data);
             return ms.ToArray();
         }
 
+        /// <summary> Deserialize the given byte array </summary>
+        /// <param name="byteArray"> Byte array</param>
+        /// <typeparam name="T"> Data type </typeparam>
+        /// <returns> The data deserialized from the byte array </returns>
         public static T Deserialize<T>(this byte[] byteArray)
         {
             using var ms = new MemoryStream(byteArray);

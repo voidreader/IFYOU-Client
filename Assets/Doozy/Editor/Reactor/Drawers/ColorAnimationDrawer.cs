@@ -33,9 +33,9 @@ namespace Doozy.Editor.Reactor.Drawers
         private static Color accentColor => EditorColors.Reactor.Red;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Reactor.Red;
 
-        private static IEnumerable<Texture2D> colorAnimationIconTextures => EditorMicroAnimations.Reactor.Icons.ColorAnimation;
-        private static IEnumerable<Texture2D> unityEventIconTextures => EditorMicroAnimations.EditorUI.Icons.UnityEvent;
-        private static IEnumerable<Texture2D> resetIconTextures => EditorMicroAnimations.EditorUI.Icons.Reset;
+        private static IEnumerable<Texture2D> colorAnimationIconTextures => EditorSpriteSheets.Reactor.Icons.ColorAnimation;
+        private static IEnumerable<Texture2D> unityEventIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
+        private static IEnumerable<Texture2D> resetIconTextures => EditorSpriteSheets.EditorUI.Icons.Reset;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {}
 

@@ -8,52 +8,94 @@ using UnityEngine;
 
 namespace Doozy.Runtime.Reactor.Animations
 {
+    /// <summary>
+    /// Data class used to store settings for an <see cref="UIAnimation"/>.
+    /// This class is also used for presets.
+    /// </summary>
     [Serializable]
     public class UIAnimationSettings
     {
         [SerializeField] private UIAnimationType AnimationType;
+        /// <summary> Type of UI animation </summary>
         public UIAnimationType animationType => AnimationType;
 
+        /// <summary> Enabled state for the Move reaction </summary>
         public bool MoveEnabled;
+        /// <summary> Setting for the 'From' reference value </summary>
         public ReferenceValue MoveFromReferenceValue;
+        /// <summary> Setting for the 'To' reference value </summary>
         public ReferenceValue MoveToReferenceValue;
+        /// <summary> Setting for the 'From' custom value </summary>
         public Vector3 MoveFromCustomValue;
+        /// <summary> Setting for the 'To' custom value </summary>
         public Vector3 MoveToCustomValue;
+        /// <summary> Setting for the 'From' offset </summary>
         public Vector3 MoveFromOffset;
+        /// <summary> Setting for the 'To' offset </summary>
         public Vector3 MoveToOffset;
+        /// <summary> Setting for the 'From' direction </summary>
         public MoveDirection MoveFromDirection;
+        /// <summary> Setting for the 'To' direction </summary>
         public MoveDirection MoveToDirection;
+        /// <summary> Reaction setting for the Move reaction </summary>
         public ReactionSettings MoveReactionSettings;
 
+        /// <summary> Enabled state for the Rotate reaction </summary>
         public bool RotateEnabled;
+        /// <summary> Setting for the 'From' reference value </summary>
         public ReferenceValue RotateFromReferenceValue;
+        /// <summary> Setting for the 'To' reference value </summary>
         public ReferenceValue RotateToReferenceValue;
+        /// <summary> Setting for the 'From' custom value </summary>
         public Vector3 RotateFromCustomValue;
+        /// <summary> Setting for the 'To' custom value </summary>
         public Vector3 RotateToCustomValue;
+        /// <summary> Setting for the 'From' offset </summary>
         public Vector3 RotateFromOffset;
+        /// <summary> Setting for the 'To' offset </summary>
         public Vector3 RotateToOffset;
+        /// <summary> Reaction setting for the Rotate reaction </summary>
         public ReactionSettings RotateReactionSettings;
 
+        /// <summary> Enabled state for the Scale reaction </summary>
         public bool ScaleEnabled;
+        /// <summary> Setting for the 'From' reference value </summary>
         public ReferenceValue ScaleFromReferenceValue;
+        /// <summary> Setting for the 'To' reference value </summary>
         public ReferenceValue ScaleToReferenceValue;
+        /// <summary> Setting for the 'From' custom value </summary>
         public Vector3 ScaleFromCustomValue;
+        /// <summary> Setting for the 'To' custom value </summary>
         public Vector3 ScaleToCustomValue;
+        /// <summary> Setting for the 'From' offset </summary>
         public Vector3 ScaleFromOffset;
+        /// <summary> Setting for the 'To' offset </summary>
         public Vector3 ScaleToOffset;
+        /// <summary> Reaction setting for the Scale reaction </summary>
         public ReactionSettings ScaleReactionSettings;
 
+        /// <summary> Enabled state for the Fade reaction </summary>
         public bool FadeEnabled;
+        /// <summary> Setting for the 'From' reference value </summary>
         public ReferenceValue FadeFromReferenceValue;
+        /// <summary> Setting for the 'To' reference value </summary>
         public ReferenceValue FadeToReferenceValue;
+        /// <summary> Setting for the 'From' custom value </summary>
         public float FadeFromCustomValue;
+        /// <summary> Setting for the 'To' custom value </summary>
         public float FadeToCustomValue;
+        /// <summary> Setting for the 'From' offset </summary>
         public float FadeFromOffset;
+        /// <summary> Setting for the 'To' offset </summary>
         public float FadeToOffset;
+        /// <summary> Reaction setting for the Fade reaction </summary>
         public ReactionSettings FadeReactionSettings;
 
+        /// <summary> Construct a new UIAnimationSettings (with the default animation type set to custom) </summary>
         public UIAnimationSettings() : this(UIAnimationType.Custom) {}
 
+        /// <summary> Construct a new UIAnimationSettings with the given animation type; </summary>
+        /// <param name="animationType"> Animation type </param>
         public UIAnimationSettings(UIAnimationType animationType)
         {
             AnimationType = animationType;
@@ -63,9 +105,14 @@ namespace Doozy.Runtime.Reactor.Animations
             FadeReactionSettings = new ReactionSettings();
         }
 
+        /// <summary> Construct a new UIAnimationSettings with the settings of the given source </summary>
+        /// <param name="source"> Other UIAnimationSettings used as a source for the settings </param>
         public UIAnimationSettings(UIAnimation source) =>
             GetAnimationSettings(source);
 
+        /// <summary> Apply the settings to the target UIAnimation (copy the setting to the target) </summary>
+        /// <param name="target"> Target UIAnimation </param>
+        /// <exception cref="NullReferenceException"> Target UIAnimation is null </exception>
         public void SetAnimationSettings(UIAnimation target)
         {
             _ = target ?? throw new NullReferenceException(nameof(target));
@@ -112,6 +159,9 @@ namespace Doozy.Runtime.Reactor.Animations
             target.Fade.ApplyReactionSettings(FadeReactionSettings);
         }
 
+        /// <summary> Get the settings from a source UIAnimation (copy the settings from the source) </summary>
+        /// <param name="source"> Source UIAnimation </param>
+        /// <exception cref="NullReferenceException"> Target UIAnimation is null </exception>
         public void GetAnimationSettings(UIAnimation source)
         {
             _ = source ?? throw new NullReferenceException(nameof(source));
@@ -156,7 +206,15 @@ namespace Doozy.Runtime.Reactor.Animations
             FadeToOffset = source.Fade.toOffset;
             FadeReactionSettings = new ReactionSettings(source.Fade.settings);
         }
-
+        
+        /// <summary>
+        /// Apply the settings from the source UIAnimationSettings to the target UIAnimation
+        /// (copy the settings from the source to the target)
+        /// <para/> FROM UIAnimationSettings TO UIAnimation 
+        /// </summary>
+        /// <param name="source"> Source UIAnimationSettings </param>
+        /// <param name="target"> Target UIAnimation </param>
+        /// <exception cref="NullReferenceException"> Source and/or Target UIAnimations are null </exception>
         public static void SetAnimationSettings(UIAnimationSettings source, UIAnimation target)
         {
             _ = source ?? throw new NullReferenceException(nameof(source));
@@ -164,6 +222,14 @@ namespace Doozy.Runtime.Reactor.Animations
             source.SetAnimationSettings(target);
         }
 
+        /// <summary>
+        /// Get the settings from the source UIAnimation to the target UIAnimationSettings
+        /// (copy the settings from the source to the target)
+        /// <para/> FROM UIAnimation TO UIAnimationSettings 
+        /// </summary>
+        /// <param name="source"> Source UIAnimation </param>
+        /// <param name="target"> Target UIAnimationSettings </param>
+        /// <exception cref="NullReferenceException"> Source and/or Target UIAnimations are null </exception>
         public static void GetAnimationSettings(UIAnimation source, UIAnimationSettings target)
         {
             _ = source ?? throw new NullReferenceException(nameof(source));

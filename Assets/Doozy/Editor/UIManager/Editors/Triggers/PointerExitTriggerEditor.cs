@@ -15,7 +15,7 @@ namespace Doozy.Editor.UIManager.Editors.Triggers
     [CustomEditor(typeof(PointerExitTrigger))]
     public class PointerExitTriggerEditor : ModyTriggerEditor<PointerExitTrigger>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorMicroAnimations.EditorUI.Icons.PointerExit;
+        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.EditorUI.Icons.PointerExit;
 
         public override VisualElement CreateInspectorGUI()
         {

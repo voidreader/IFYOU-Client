@@ -13,6 +13,7 @@ using Doozy.Runtime.UIElements.Extensions;
 using UnityEngine;
 using UnityEngine.UIElements;
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberCanBeProtected.Global
 
 namespace Doozy.Editor.EditorUI.Components
 {
@@ -30,7 +31,9 @@ namespace Doozy.Editor.EditorUI.Components
         {
             body.RecycleAndClear();
             SetAccentColor(EditorColors.EditorUI.Amber);
-            fillReaction.SetProgressAtZero();
+            fillReaction
+                .SetTextures(EditorSpriteSheets.EditorUI.Widgets.CircularGauge)
+                .SetProgressAtZero();
         }
 
         public override void Recycle(bool debug = false)
@@ -61,9 +64,8 @@ namespace Doozy.Editor.EditorUI.Components
             fillReaction =
                 fill.GetTexture2DReaction()
                     .SetEditorHeartbeat()
-                    .SetTextures(EditorMicroAnimations.EditorUI.Widgets.CircularGaugeFillBackground)
+                    .SetTextures(EditorSpriteSheets.EditorUI.Widgets.CircularGauge)
                     .SetDuration(0.5f);
-
 
             Reset();
         }
@@ -71,7 +73,6 @@ namespace Doozy.Editor.EditorUI.Components
         public FluidCircularGauge SetAccentColor(Color color) =>
             SetFillBackgroundColor(color.WithAlpha(0.15f))
                 .SetFillColor(color);
-
 
         public FluidCircularGauge SetBodyColor(Color color)
         {
@@ -108,6 +109,5 @@ namespace Doozy.Editor.EditorUI.Components
             fillReaction.PlayToProgress(progress);
             return this;
         }
-
     }
 }

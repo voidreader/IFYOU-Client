@@ -7,6 +7,10 @@ using UnityEngine;
 
 namespace Doozy.Runtime.Nody.Nodes.Internal
 {
+    /// <summary>
+    /// Base class for system nodes.
+    /// <para/> A system node is a specialized node that performs graph specific tasks in a flow graph.
+    /// </summary>
     [Serializable]
     public abstract class SystemNode : FlowNode
     {

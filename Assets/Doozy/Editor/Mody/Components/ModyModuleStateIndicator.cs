@@ -46,7 +46,7 @@ namespace Doozy.Editor.Mody.Components
 
             iconReaction =
                 indicatorBar
-                    .GetTexture2DReaction(EditorMicroAnimations.Mody.Effects.Running)
+                    .GetTexture2DReaction(EditorSpriteSheets.Mody.Effects.Running)
                     .SetEditorHeartbeat().SetLoops(-1);
 
             UpdateState(Disabled);

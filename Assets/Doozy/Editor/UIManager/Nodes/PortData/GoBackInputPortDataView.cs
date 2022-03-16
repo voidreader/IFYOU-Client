@@ -54,7 +54,7 @@ namespace Doozy.Editor.UIManager.Nodes.PortData
             goBackTab =
                 FluidToggleIconButton.Get()
                     .SetElementSize(ElementSize.Tiny)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Back)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Back)
                     .SetToggleAccentColor(EditorSelectableColors.Nody.BackFlow)
                     .SetTooltip("Toggle the 'Back' button functionality for this node")
                     .SetStyleMarginLeft(DesignUtils.k_Spacing);
@@ -62,7 +62,7 @@ namespace Doozy.Editor.UIManager.Nodes.PortData
             enabledIndicator =
                 EnabledIndicator.Get()
                     .SetEnabledColor(EditorColors.Nody.BackFlow)
-                    .SetIcon(EditorMicroAnimations.Nody.Effects.BackFlowIndicator)
+                    .SetIcon(EditorSpriteSheets.Nody.Effects.BackFlowIndicator)
                     .SetPickingMode(PickingMode.Ignore)
                     .SetStylePosition(Position.Absolute)
                     .SetSize(1, 30)

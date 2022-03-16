@@ -9,6 +9,7 @@ using UnityEngine.Events;
 
 namespace Doozy.Runtime.Mody.Actions
 {
+    /// <summary> Valueless <see cref="ModyAction"/> </summary>
     [Serializable]
     public class SimpleModyAction : ModyAction
     {

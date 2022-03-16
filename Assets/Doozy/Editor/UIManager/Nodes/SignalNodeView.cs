@@ -21,7 +21,7 @@ namespace Doozy.Editor.UIManager.Nodes
     {
         public override Type nodeType => typeof(SignalNode);
         public override Texture2D nodeIconTexture => EditorTextures.Nody.Icons.SignalNode;
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.SignalNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.SignalNode;
 
         private SerializedProperty propertyStreamIdCategory { get; }
         private SerializedProperty propertyStreamIdName { get; }

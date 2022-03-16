@@ -90,20 +90,20 @@ namespace Doozy.Editor.UIManager.Drawers
         {
             switch (behaviour)
             {
-                case UIBehaviour.Name.PointerEnter: return EditorMicroAnimations.EditorUI.Icons.PointerEnter;
-                case UIBehaviour.Name.PointerExit: return EditorMicroAnimations.EditorUI.Icons.PointerExit;
-                case UIBehaviour.Name.PointerDown: return EditorMicroAnimations.EditorUI.Icons.PointerDown;
-                case UIBehaviour.Name.PointerUp: return EditorMicroAnimations.EditorUI.Icons.PointerUp;
-                case UIBehaviour.Name.PointerClick: return EditorMicroAnimations.EditorUI.Icons.ButtonClick;
-                case UIBehaviour.Name.PointerDoubleClick: return EditorMicroAnimations.EditorUI.Icons.ButtonDoubleClick;
-                case UIBehaviour.Name.PointerLongClick: return EditorMicroAnimations.EditorUI.Icons.ButtonLongClick;
-                case UIBehaviour.Name.PointerLeftClick: return EditorMicroAnimations.EditorUI.Icons.ButtonLeftClick;
-                case UIBehaviour.Name.PointerMiddleClick: return EditorMicroAnimations.EditorUI.Icons.ButtonMiddleClick;
-                case UIBehaviour.Name.PointerRightClick: return EditorMicroAnimations.EditorUI.Icons.ButtonRightClick;
-                case UIBehaviour.Name.Selected: return EditorMicroAnimations.EditorUI.Icons.Selected;
-                case UIBehaviour.Name.Deselected: return EditorMicroAnimations.EditorUI.Icons.Deselected;
-                case UIBehaviour.Name.Submit: return EditorMicroAnimations.EditorUI.Icons.Border;
-                default: return EditorMicroAnimations.EditorUI.Icons.QuestionMark;
+                case UIBehaviour.Name.PointerEnter: return EditorSpriteSheets.EditorUI.Icons.PointerEnter;
+                case UIBehaviour.Name.PointerExit: return EditorSpriteSheets.EditorUI.Icons.PointerExit;
+                case UIBehaviour.Name.PointerDown: return EditorSpriteSheets.EditorUI.Icons.PointerDown;
+                case UIBehaviour.Name.PointerUp: return EditorSpriteSheets.EditorUI.Icons.PointerUp;
+                case UIBehaviour.Name.PointerClick: return EditorSpriteSheets.EditorUI.Icons.ButtonClick;
+                case UIBehaviour.Name.PointerDoubleClick: return EditorSpriteSheets.EditorUI.Icons.ButtonDoubleClick;
+                case UIBehaviour.Name.PointerLongClick: return EditorSpriteSheets.EditorUI.Icons.ButtonLongClick;
+                case UIBehaviour.Name.PointerLeftClick: return EditorSpriteSheets.EditorUI.Icons.ButtonLeftClick;
+                case UIBehaviour.Name.PointerMiddleClick: return EditorSpriteSheets.EditorUI.Icons.ButtonMiddleClick;
+                case UIBehaviour.Name.PointerRightClick: return EditorSpriteSheets.EditorUI.Icons.ButtonRightClick;
+                case UIBehaviour.Name.Selected: return EditorSpriteSheets.EditorUI.Icons.Selected;
+                case UIBehaviour.Name.Deselected: return EditorSpriteSheets.EditorUI.Icons.Deselected;
+                case UIBehaviour.Name.Submit: return EditorSpriteSheets.EditorUI.Icons.Border;
+                default: return EditorSpriteSheets.EditorUI.Icons.QuestionMark;
             }
         }
     }

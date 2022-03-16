@@ -19,7 +19,7 @@ namespace Doozy.Editor.UIManager.Editors.Modules
     [CustomEditor(typeof(AudioSourceModule), true)]
     public sealed class AudioSourceModuleEditor : ModyModuleEditor<AudioSourceModule>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorMicroAnimations.EditorUI.Icons.Sound;
+        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.EditorUI.Icons.Sound;
 
         public override VisualElement CreateInspectorGUI()
         {

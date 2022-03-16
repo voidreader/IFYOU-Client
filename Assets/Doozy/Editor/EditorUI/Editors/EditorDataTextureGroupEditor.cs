@@ -21,7 +21,7 @@ namespace Doozy.Editor.EditorUI.Editors
     {
         private EditorDataTextureGroup castedTarget => (EditorDataTextureGroup)target;
 
-        public VisualElement root  { get; private set; }
+        public VisualElement root { get; private set; }
         public FluidButton loadFilesFromFolderButton { get; private set; }
         public FluidField categoryComponentField { get; private set; }
         public FluidField nameComponentField { get; private set; }
@@ -31,41 +31,25 @@ namespace Doozy.Editor.EditorUI.Editors
         private SerializedProperty arrayProperty { get; set; }
         private List<SerializedProperty> itemsSource { get; set; }
 
-        public override VisualElement CreateInspectorGUI()
-        {
-            InitializeEditor();
-            root
-                .AddSpace(0, DesignUtils.k_Spacing)
-                .AddChild(categoryComponentField)
-                .AddSpace(0, DesignUtils.k_Spacing / 2f)
-                .AddChild(nameComponentField)
-                .AddSpace(0, DesignUtils.k_Spacing)
-                .AddChild(prefixComponentField)
-                .AddSpace(0, DesignUtils.k_Spacing * 2)
-                .AddChild
-                (
-                    DesignUtils.row
-                        .AddChild(DesignUtils.flexibleSpace)
-                        .AddChild(loadFilesFromFolderButton)
-                        .AddChild(DesignUtils.flexibleSpace)
-                )
-                .AddSpace(0, DesignUtils.k_Spacing * 2)
-                .AddChild(fluidListView);
-            return root;
-        }
-
         private void OnDestroy()
         {
             categoryComponentField?.Recycle();
             nameComponentField?.Recycle();
             prefixComponentField?.Recycle();
-            
+
             loadFilesFromFolderButton?.Dispose();
-            
+
             if (fluidListView == null) return;
             foreach (VisualElement element in fluidListView.toolbarElements)
                 if (element is IDisposable disposable)
                     disposable.Dispose();
+        }
+
+        public override VisualElement CreateInspectorGUI()
+        {
+            InitializeEditor();
+            Compose();
+            return root;
         }
 
         private static string ListViewTitle(string groupName) =>
@@ -93,14 +77,14 @@ namespace Doozy.Editor.EditorUI.Editors
             root = new VisualElement();
 
             loadFilesFromFolderButton = FluidButton.Get()
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Search)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Search)
                 .SetLabelText("Load all .png files from the current folder")
                 .SetAccentColor(EditorSelectableColors.EditorUI.Amber)
                 .SetButtonStyle(ButtonStyle.Contained)
                 .SetElementSize(ElementSize.Small)
                 .SetOnClick(LoadTexturesFromFolder);
 
-            categoryComponentField = FluidField.Get("Texture Category Name").SetIcon(EditorMicroAnimations.EditorUI.Components.EditorTextureGroup);
+            categoryComponentField = FluidField.Get("Texture Category Name").SetIcon(EditorSpriteSheets.EditorUI.Components.EditorTextureGroup);
             TextField categoryTextField = DesignUtils.NewTextField("GroupCategory", true).SetStyleFlexGrow(1);
             categoryTextField.RegisterValueChangedCallback(evt =>
             {
@@ -108,7 +92,7 @@ namespace Doozy.Editor.EditorUI.Editors
                 categoryComponentField?.iconReaction?.Play();
             });
             categoryComponentField.AddFieldContent(categoryTextField);
-            
+
             nameComponentField = FluidField.Get("Group Name (parent folder name)");
             TextField nameTextField = DesignUtils.NewTextField("GroupName", true).SetStyleFlexGrow(1).DisableElement();
             nameTextField.RegisterValueChangedCallback(evt =>
@@ -123,6 +107,33 @@ namespace Doozy.Editor.EditorUI.Editors
             prefixComponentField.AddFieldContent(prefixTextField);
 
             InitializeListView();
+        }
+
+        private void Compose()
+        {
+            root
+                .AddSpace(0, DesignUtils.k_Spacing)
+                .AddChild(categoryComponentField)
+                .AddSpace(0, DesignUtils.k_Spacing / 2f)
+                .AddChild(nameComponentField)
+                .AddSpace(0, DesignUtils.k_Spacing)
+                .AddChild
+                (
+                    DesignUtils.row
+                        .AddChild(prefixComponentField)
+                        .AddChild(DesignUtils.spaceBlock)
+                        .AddChild(FluidToggleSwitch.Get("Ignore Texture Settings").BindToProperty(serializedObject.FindProperty("IgnoreTextureSettings")))
+                )
+                .AddSpace(0, DesignUtils.k_Spacing * 2)
+                .AddChild
+                (
+                    DesignUtils.row
+                        .AddChild(DesignUtils.flexibleSpace)
+                        .AddChild(loadFilesFromFolderButton)
+                        .AddChild(DesignUtils.flexibleSpace)
+                )
+                .AddSpace(0, DesignUtils.k_Spacing * 2)
+                .AddChild(fluidListView);
         }
 
         private void InitializeListView()
@@ -161,7 +172,7 @@ namespace Doozy.Editor.EditorUI.Editors
                     }
                 };
             };
-            
+
             #if UNITY_2021_2_OR_NEWER
             fluidListView.listView.fixedItemHeight = 96;
             fluidListView.SetPreferredListHeight((int)fluidListView.listView.fixedItemHeight * 4);
@@ -169,7 +180,7 @@ namespace Doozy.Editor.EditorUI.Editors
             fluidListView.listView.itemHeight = 96;
             fluidListView.SetPreferredListHeight(fluidListView.listView.itemHeight * 4);
             #endif
-            
+
             fluidListView.SetDynamicListHeight(false);
 
             //ADD ITEM BUTTON (plus button)

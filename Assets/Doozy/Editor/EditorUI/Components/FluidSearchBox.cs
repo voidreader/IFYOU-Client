@@ -54,9 +54,9 @@ namespace Doozy.Editor.EditorUI.Components
         #region Empty Search Placeholder
 
         private const float PLACEHOLDER_ANIMATION_DURATION = 1f;
-        public Image emptySearchPlaceholderImage { get; }
-        public Texture2DReaction emptySearchPlaceholderAnimation { get; private set; }
-        public static List<Texture2D> emptySearchPlaceholderTextures { get; private set; }
+        private Image emptySearchPlaceholderImage { get; }
+        private Texture2DReaction emptySearchPlaceholderAnimation { get; set; }
+        private static IEnumerable<Texture2D> emptySearchPlaceholderTextures => EditorSpriteSheets.EditorUI.Placeholders.EmptySearch;
 
         #endregion
 
@@ -79,7 +79,6 @@ namespace Doozy.Editor.EditorUI.Components
             rightLabel = searchInfoContainer.Q<Label>(nameof(rightLabel)).SetPickingMode(PickingMode.Ignore);
 
             Color placeholderColor = EditorColors.Default.Placeholder;
-            emptySearchPlaceholderTextures = emptySearchPlaceholderTextures ?? EditorMicroAnimations.EditorUI.Placeholders.EmptySearch;
 
             //searchTextFieldInput
             const float searchTextFieldInputPaddingLeft = 22;
@@ -123,7 +122,7 @@ namespace Doozy.Editor.EditorUI.Components
                     .GetTexture2DReaction(emptySearchPlaceholderTextures)
                     .SetEditorHeartbeat()
                     .SetDuration(PLACEHOLDER_ANIMATION_DURATION);
-
+            
             emptySearchPlaceholderImage.SetStyleSize(emptySearchPlaceholderAnimation.current.width, emptySearchPlaceholderAnimation.current.height); //update placeholder image size to match the animation texture size
             emptySearchPlaceholderImage.AddManipulator(new Clickable(ClearSearch));
 
@@ -131,21 +130,21 @@ namespace Doozy.Editor.EditorUI.Components
             //INJECT SEARCH ICON BUTTON
             buttonContainer.Insert(0,
                 searchButton =
-                    GetNewSearchButton(EditorMicroAnimations.EditorUI.Icons.Search)
+                    GetNewSearchButton(EditorSpriteSheets.EditorUI.Icons.Search)
                         .SetOnClick(() => searchTextFieldInput.Focus())
             );
 
             //INJECT CANCEL SEARCH ICON BUTTON
             buttonContainer.Insert(1,
                 cancelSearchButton =
-                    GetNewSearchButton(EditorMicroAnimations.EditorUI.Icons.Close)
+                    GetNewSearchButton(EditorSpriteSheets.EditorUI.Icons.Close)
                         .SetAccentColor(EditorSelectableColors.EditorUI.Red)
                         .SetOnClick(ClearSearch)
             );
 
             //INITIALIZE SEARCH TAB BUTTON (that gets injected in the menu and is used to show search results content)
             searchTabButton =
-                FluidToggleButtonTab.Get(SEARCH_TEXT, EditorMicroAnimations.EditorUI.Icons.Search)
+                FluidToggleButtonTab.Get(SEARCH_TEXT, EditorSpriteSheets.EditorUI.Icons.Search)
                     .SetElementSize(ElementSize.Small)
                     .SetStyleMarginBottom(8)
                     .SetTabPosition(TabPosition.FloatingTab)

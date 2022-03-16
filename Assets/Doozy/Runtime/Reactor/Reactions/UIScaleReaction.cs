@@ -13,7 +13,7 @@ namespace Doozy.Runtime.Reactor.Reactions
     public class UIScaleReaction : Vector3Reaction
     {
         public RectTransform rectTransform { get; private set; }
-        
+
         [SerializeField] private bool Enabled;
         public bool enabled
         {
@@ -25,16 +25,20 @@ namespace Doozy.Runtime.Reactor.Reactions
         public Vector3 startScale
         {
             get => StartScale;
-            set => StartScale = value;
+            set
+            {
+                StartScale = value;
+                if (isActive) UpdateValues();
+            }
         }
-        
+
         [SerializeField] private ReferenceValue FromReferenceValue = ReferenceValue.StartValue;
         public ReferenceValue fromReferenceValue
         {
             get => FromReferenceValue;
             set => FromReferenceValue = value;
         }
-        
+
         [SerializeField] private ReferenceValue ToReferenceValue = ReferenceValue.StartValue;
         public ReferenceValue toReferenceValue
         {
@@ -48,7 +52,7 @@ namespace Doozy.Runtime.Reactor.Reactions
             get => FromCustomValue;
             set => FromCustomValue = value;
         }
-        
+
         [SerializeField] private Vector3 ToCustomValue;
         public Vector3 toCustomValue
         {
@@ -62,7 +66,7 @@ namespace Doozy.Runtime.Reactor.Reactions
             get => FromOffset;
             set => FromOffset = value;
         }
-        
+
         [SerializeField] private Vector3 ToOffset;
         public Vector3 toOffset
         {
@@ -75,7 +79,7 @@ namespace Doozy.Runtime.Reactor.Reactions
             get => rectTransform.localScale.SetZToOne();
             set => rectTransform.localScale = value.SetZToOne();
         }
-        
+
         public override void Reset()
         {
             base.Reset();
@@ -100,7 +104,7 @@ namespace Doozy.Runtime.Reactor.Reactions
             setter = value => currentScale = value;
             return this;
         }
-        
+
         public override void Play(bool inReverse = false)
         {
             if (!isActive)
@@ -128,7 +132,7 @@ namespace Doozy.Runtime.Reactor.Reactions
             SetFrom(GetValue(FromReferenceValue, FromOffset, FromCustomValue));
             SetTo(GetValue(ToReferenceValue, ToOffset, ToCustomValue));
         }
-        
+
         private Vector3 GetValue(ReferenceValue referenceValue, Vector3 offset, Vector3 customValue)
         {
             return referenceValue switch

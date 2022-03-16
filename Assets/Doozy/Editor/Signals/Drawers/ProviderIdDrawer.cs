@@ -42,7 +42,7 @@ namespace Doozy.Editor.Signals.Drawers
             var typeInvisibleEnumField = DesignUtils.NewEnumField(typeSerializedProperty.propertyPath, true);
 
             var triggerIconImage = NewTriggerIconImage();
-            var triggerIconReaction = triggerIconImage.GetTexture2DReaction(EditorMicroAnimations.Mody.Icons.ModyTrigger).SetEditorHeartbeat().SetDuration(0.4f);
+            var triggerIconReaction = triggerIconImage.GetTexture2DReaction(EditorSpriteSheets.Mody.Icons.ModyTrigger).SetEditorHeartbeat().SetDuration(0.4f);
             triggerIconImage.AddManipulator(new Clickable(() => triggerIconReaction?.Play()));
 
             var buttonLocalProvider = NewProviderButton(ProviderType.Local).SetTabPosition(TabPosition.TabOnTop).SetTooltip("Local Signal Provider\nAttached to this GameObject");

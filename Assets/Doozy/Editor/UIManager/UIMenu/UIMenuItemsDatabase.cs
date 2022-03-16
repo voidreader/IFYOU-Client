@@ -43,13 +43,12 @@ namespace Doozy.Editor.UIManager.UIMenu
         [SerializeField] private string DatabaseDescription = $"Collection of all the menu items that make up the Prefabs Menu";
         public string databaseDescription => DatabaseDescription;
 
-
         [SerializeField] private List<UIMenuItem> Database;
         public List<UIMenuItem> database
         {
             get
             {
-                if (Database == null) Database = new List<UIMenuItem>();
+                Database ??= new List<UIMenuItem>();
                 RemoveNullEntries();
                 return Database;
             }
@@ -171,9 +170,9 @@ namespace Doozy.Editor.UIManager.UIMenu
             string cleanPrefabName = prefabName.RemoveWhitespaces().RemoveAllSpecialCharacters();
 
             foreach (UIMenuItem item in instance.database
-                .Where(item => item.cleanPrefabTypeName.Equals(cleanPrefabTypeName))
-                .Where(item => item.cleanPrefabCategory.Equals(cleanPrefabCategory))
-                .Where(item => item.cleanPrefabName.Equals(cleanPrefabName)))
+                         .Where(item => item.cleanPrefabTypeName.Equals(cleanPrefabTypeName))
+                         .Where(item => item.cleanPrefabCategory.Equals(cleanPrefabCategory))
+                         .Where(item => item.cleanPrefabName.Equals(cleanPrefabName)))
             {
                 return item;
             }
@@ -187,16 +186,26 @@ namespace Doozy.Editor.UIManager.UIMenu
         {
             instance.RemoveNullEntries();
 
-            string cleanPrefabTypeName = prefabTypeName.RemoveWhitespaces().RemoveAllSpecialCharacters();
-            string cleanPrefabCategory = prefabCategory.RemoveWhitespaces().RemoveAllSpecialCharacters();
-
             return
                 instance.database
-                    .Where(item => item.cleanPrefabTypeName.Equals(cleanPrefabTypeName))
-                    .Where(item => item.cleanPrefabCategory.Equals(cleanPrefabCategory))
+                    .Where(item => item.cleanPrefabTypeName.Equals(prefabTypeName.RemoveWhitespaces().RemoveAllSpecialCharacters()))
+                    .Where(item => item.cleanPrefabCategory.Equals(prefabCategory.RemoveWhitespaces().RemoveAllSpecialCharacters()))
                     .OrderBy(item => item.cleanPrefabName)
                     .ToList();
         }
+
+        public static List<UIMenuItem> GetPrefabTypeMenuItems(string prefabTypeName)
+        {
+            instance.RemoveNullEntries();
+            return
+                instance.database
+                    .Where(item => item.cleanPrefabTypeName.Equals(prefabTypeName.RemoveWhitespaces().RemoveAllSpecialCharacters()))
+                    .OrderBy(item => item.cleanPrefabName)
+                    .ToList();
+        }
+
+        public static List<UIMenuItem> GetItems() =>
+            instance.database.ToList();
 
         private static void SaveAndRefreshAssetDatabase(bool save, bool refresh)
         {
@@ -215,46 +224,28 @@ namespace Doozy.Editor.UIManager.UIMenu
                     .Distinct()
                     .ToList();
             list.Sort();
-            
+
+            void MoveItemToTop(string item)
+            {
+                if (!list.Contains(item)) return;
+                list.Remove(item);
+                list.Insert(0, item);
+            }
+
             //custom sort
             // - Component
             // - Container
             // - Content
-            // - Layout
-            // - Misc
+            // - Layouts
+            // - Scripts
             // - anything else
-            {
-                if (list.Contains("Misc"))
-                {
-                    list.Remove("Misc");
-                    list.Insert(0, "Misc");
-                }
-                
-                if (list.Contains("Layout"))
-                {
-                    list.Remove("Layout");
-                    list.Insert(0, "Layout");
-                }
-                
-                if (list.Contains("Content"))
-                {
-                    list.Remove("Content");
-                    list.Insert(0, "Content");
-                }
 
-                if (list.Contains("Container"))
-                {
-                    list.Remove("Container");
-                    list.Insert(0, "Container");
-                }
+            MoveItemToTop("Scripts");
+            MoveItemToTop("Layouts");
+            MoveItemToTop(UIPrefabType.Content.ToString());
+            MoveItemToTop(UIPrefabType.Containers.ToString());
+            MoveItemToTop(UIPrefabType.Components.ToString());
 
-                if (list.Contains("Component"))
-                {
-                    list.Remove("Component");
-                    list.Insert(0, "Component");
-                }
-            }
-            
             return list;
         }
 

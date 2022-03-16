@@ -7,8 +7,9 @@ using UnityEngine;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
-namespace Doozy.Runtime.UIElements.Extensions
+namespace Doozy.Runtime.Common.Extensions
 {
+    /// <summary> Extension methods for the RectTransform class </summary>
     public static class RectTransformExtensions
     {
         /// <summary> Copies the RectTransform settings </summary>

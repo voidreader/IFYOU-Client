@@ -126,7 +126,7 @@ namespace Doozy.Editor.Nody
 
             loadGraphButton =
                 sideMenu.AddButton("Load", selectableAccentColor, false)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Load)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Load)
                     .SetOnClick(() =>
                     {
                         saveGraphButton.schedule.Execute(() => loadGraphButton.SetIsOn(false));
@@ -140,7 +140,7 @@ namespace Doozy.Editor.Nody
 
             saveGraphButton =
                 sideMenu.AddButton("Save", selectableAccentColor, false)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Save)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Save)
                     .SetIsOn(false)
                     .SetOnClick(() =>
                     {
@@ -160,7 +160,7 @@ namespace Doozy.Editor.Nody
 
             closeGraphButton =
                 sideMenu.AddButton("Close", selectableAccentColor, false)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Close)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Close)
                     .SetIsOn(false)
                     .SetOnClick(() =>
                     {
@@ -181,7 +181,7 @@ namespace Doozy.Editor.Nody
 
             openInspectorButton =
                 sideMenu.AddButton("Inspector", selectableAccentColor, false)
-                    .SetIcon(EditorMicroAnimations.Nody.Icons.Nody)
+                    .SetIcon(EditorSpriteSheets.Nody.Icons.Nody)
                     .SetIsOn(NodyInspectorWindow.isOpen)
                     .SetOnClick(() =>
                     {
@@ -214,7 +214,7 @@ namespace Doozy.Editor.Nody
             showMinimapButton =
                 sideMenu
                     .AddButton("MiniMap", selectableAccentColor, false)
-                    .SetIcon(EditorMicroAnimations.Nody.Icons.Minimap)
+                    .SetIcon(EditorSpriteSheets.Nody.Icons.Minimap)
                     .SetIsOn(miniMap.isVisible)
                     .SetOnValueChanged(evt =>
                     {
@@ -256,7 +256,7 @@ namespace Doozy.Editor.Nody
                 DesignUtils.GetNewTinyButton
                     (
                         string.Empty,
-                        EditorMicroAnimations.EditorUI.Icons.Location,
+                        EditorSpriteSheets.EditorUI.Icons.Location,
                         EditorSelectableColors.Default.ButtonIcon,
                         "Ping the opened graph in the Project view"
                     )

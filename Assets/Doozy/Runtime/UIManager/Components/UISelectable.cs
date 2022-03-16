@@ -32,7 +32,7 @@ namespace Doozy.Runtime.UIManager.Components
         public MultiplayerInfo multiplayerInfo => MultiplayerInfo;
         public bool hasMultiplayerInfo => multiplayerInfo != null;
         public int playerIndex => multiplayerMode & hasMultiplayerInfo ? multiplayerInfo.playerIndex : inputSettings.defaultPlayerIndex;
-        public void SetMultiplayerInfo(MultiplayerInfo info) => MultiplayerInfo = info;
+        public void SetMultiplayerInfo(MultiplayerInfo reference) => MultiplayerInfo = reference;
 
         #endregion
 

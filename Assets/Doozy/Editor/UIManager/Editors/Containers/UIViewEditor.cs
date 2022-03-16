@@ -22,7 +22,7 @@ namespace Doozy.Editor.UIManager.Editors.Containers
     [CustomEditor(typeof(UIView), true)]
     public class UIViewEditor : BaseUIContainerEditor
     {
-        public static IEnumerable<Texture2D> viewsIconTextures => EditorMicroAnimations.UIManager.Icons.Views;
+        public static IEnumerable<Texture2D> viewsIconTextures => EditorSpriteSheets.UIManager.Icons.UIView;
 
         public UIView castedTarget => (UIView)target;
         public IEnumerable<UIView> castedTargets => targets.Cast<UIView>();
@@ -73,6 +73,8 @@ namespace Doozy.Editor.UIManager.Editors.Containers
                         .AddChild(settingsTabButton)
                         .AddChild(DesignUtils.spaceBlock2X)
                         .AddChild(callbacksTab)
+                        .AddChild(DesignUtils.spaceBlock4X)
+                        .AddChild(progressorsTab)
                         .AddChild(DesignUtils.spaceBlock2X)
                         .AddChild(DesignUtils.flexibleSpace)
                         .AddChild(DesignUtils.spaceBlock2X)
@@ -96,8 +98,7 @@ namespace Doozy.Editor.UIManager.Editors.Containers
                         )
                 )
                 .AddChild(DesignUtils.spaceBlock)
-                .AddChild(GetShowHideControls())
-                .AddChild(callbacksAnimatedContainer)
+                .AddChild(GetRuntimeControls())
                 .AddChild
                 (
                     settingsAnimatedContainer
@@ -109,25 +110,27 @@ namespace Doozy.Editor.UIManager.Editors.Containers
                                 .AddChild
                                 (
                                     DesignUtils.row
-                                        .AddChild(onStartBehaviourField)
+                                        .AddChild(onStartBehaviourFluidField)
                                         .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(autoHideAfterShowField)
+                                        .AddChild(autoHideAfterShowFluidField)
                                 )
                                 .AddChild(DesignUtils.spaceBlock)
-                                .AddChild(customStartPositionField)
+                                .AddChild(customStartPositionFluidField)
                                 .AddChild(DesignUtils.spaceBlock)
-                                .AddChild(whenHiddenField)
+                                .AddChild(whenHiddenFluidField)
                                 .AddChild(DesignUtils.spaceBlock)
                                 .AddChild
                                 (
                                     DesignUtils.row
-                                        .AddChild(clearSelectedField)
+                                        .AddChild(clearSelectedFluidField)
                                         .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(autoSelectAfterShowField)
+                                        .AddChild(autoSelectAfterShowFluidField)
                                 )
                                 .AddChild(DesignUtils.spaceBlock)
                         )
                 )
+                .AddChild(callbacksAnimatedContainer)
+                .AddChild(progressorsAnimatedContainer)
                 .AddChild(DesignUtils.endOfLineBlock)
                 ;
         }

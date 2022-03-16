@@ -24,7 +24,7 @@ namespace Doozy.Editor.Signals.Layouts
         public override string layoutName => "Streams"; 
         public override Color accentColor => EditorColors.Signals.Stream;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Signals.Stream;
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.Signals.Icons.StreamDatabase;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.Signals.Icons.StreamDatabase;
         
         protected override Object targetObject => StreamIdDatabase.instance;
         protected override UnityAction onUpdateCallback => StreamIdDatabase.instance.onUpdateCallback;

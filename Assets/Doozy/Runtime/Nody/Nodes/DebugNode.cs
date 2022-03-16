@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Doozy.Runtime.Nody.Nodes
 {
     /// <summary>
-    /// Print a debug message in the Console
+    /// Simple node that when activated it prints a debug message in the Console
     /// </summary>
     [Serializable]
     [NodyMenuPath("Utils", "Debug")]

@@ -15,7 +15,7 @@ namespace Doozy.Editor.Nody.Nodes
     {
         public override Type nodeType => typeof(DebugNode);
         public override Texture2D nodeIconTexture => EditorTextures.Nody.Icons.DebugNode;
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.DebugNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.DebugNode;
 
         public DebugNodeView(FlowGraphView graphView, FlowNode node) : base(graphView, node)
         {

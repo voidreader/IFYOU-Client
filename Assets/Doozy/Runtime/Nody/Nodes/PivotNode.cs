@@ -11,8 +11,8 @@ using UnityEngine.Events;
 namespace Doozy.Runtime.Nody.Nodes
 {
     /// <summary>
-    /// Special node that has no functional role, but a visual one.
-    /// Helps redirect connections from one node to another and reduce visual clutter in the graph.
+    /// Special node that has a visual role instead of a functional one.
+    /// This node helps redirect connections from one node to another in a visual appealing way, to reduce visual clutter in the graph.
     /// </summary>
     [Serializable]
     [NodyMenuPath("Utils", "Pivot")]

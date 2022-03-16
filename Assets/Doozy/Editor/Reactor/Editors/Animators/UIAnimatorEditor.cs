@@ -23,8 +23,8 @@ namespace Doozy.Editor.Reactor.Editors.Animators
     [CanEditMultipleObjects]
     public class UIAnimatorEditor : BaseReactorAnimatorEditor
     {
-        public static IEnumerable<Texture2D> uiAnimatorIconTextures => EditorMicroAnimations.Reactor.Icons.UIAnimator;
-        public static IEnumerable<Texture2D> uiAnimationIconTextures => EditorMicroAnimations.Reactor.Icons.UIAnimation;
+        public static IEnumerable<Texture2D> uiAnimatorIconTextures => EditorSpriteSheets.Reactor.Icons.UIAnimator;
+        public static IEnumerable<Texture2D> uiAnimationIconTextures => EditorSpriteSheets.Reactor.Icons.UIAnimation;
 
         private UIAnimator castedTarget => (UIAnimator)target;
         private IEnumerable<UIAnimator> castedTargets => targets.Cast<UIAnimator>();

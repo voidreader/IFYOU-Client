@@ -16,7 +16,7 @@ namespace Doozy.Editor.Nody.Nodes
     {
         public override Type nodeType => typeof(RandomNode);
         public override Texture2D nodeIconTexture => EditorTextures.Nody.Icons.RandomNode;
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.RandomNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.RandomNode;
 
         private List<RandomNodeOutputPortDataView> portDataViews { get; set; } = new List<RandomNodeOutputPortDataView>();
 

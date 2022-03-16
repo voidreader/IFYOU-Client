@@ -2,6 +2,7 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System;
 using System.Collections.Generic;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
@@ -10,6 +11,7 @@ using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.Reactor.Internal;
 using Doozy.Runtime.Colors;
 using Doozy.Runtime.Common.Extensions;
+using Doozy.Runtime.Reactor.Easings;
 using Doozy.Runtime.Reactor.Extensions;
 using Doozy.Runtime.Reactor.Internal;
 using Doozy.Runtime.Reactor.Reactions;
@@ -17,18 +19,18 @@ using Doozy.Runtime.UIElements.Extensions;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Editor.UIManager.UIMenu
 {
     public class UIMenuItemButton : PoolableElement<UIMenuItemButton>
     {
-        private static IEnumerable<Texture2D> lockedIconTextures => EditorMicroAnimations.EditorUI.Icons.Locked;
+        private static IEnumerable<Texture2D> lockedIconTextures => EditorSpriteSheets.EditorUI.Icons.Locked;
 
         public override void Reset()
         {
             ResetAnimationTrigger();
 
-            this.SetTooltip(string.Empty);
             this.SetEnabled(true);
             this.ResetLayout();
             this.SetTooltip(string.Empty);
@@ -38,6 +40,9 @@ namespace Doozy.Editor.UIManager.UIMenu
             this.ClearInfoTagText();
             this.ClearOnClick();
             this.SetSelectionState(SelectionState.Normal);
+
+            Resize(UIMenuSettings.instance.itemSize);
+            zoomed = false;
         }
 
         public override void Dispose()
@@ -45,6 +50,7 @@ namespace Doozy.Editor.UIManager.UIMenu
             base.Dispose();
 
             iconReaction?.Recycle();
+            resizeReaction?.Recycle();
         }
 
         #region ButtonAnimationTrigger
@@ -80,8 +86,11 @@ namespace Doozy.Editor.UIManager.UIMenu
         public UnityAction OnClick;
 
         public Texture2DReaction iconReaction { get; internal set; }
+        public IntReaction resizeReaction { get; internal set; }
 
         public UIMenuItem menuItem { get; private set; }
+
+        public bool zoomed { get; private set; }
 
         public UIMenuItemButton()
         {
@@ -115,8 +124,26 @@ namespace Doozy.Editor.UIManager.UIMenu
             {
                 OnStateChanged = StateChanged,
                 OnClick = ExecuteOnClick,
-                OnPointerEnter = ExecuteOnPointerEnter
+                OnPointerEnter = ExecuteOnPointerEnter,
+                OnPointerLeave = ExecuteOnPointerLeave
             };
+
+            resizeReaction = Reaction.Get<IntReaction>()
+                .SetEditorHeartbeat()
+                .SetDuration(0.3f)
+                .SetEase(Ease.InOutExpo)
+                .SetSetter(Resize);
+
+            layoutContainer.RegisterCallback<MouseUpEvent>(evt =>
+            {
+                if (evt.button != 1) return;
+                if (zoomed)
+                {
+                    ZoomOut();
+                    return;
+                }
+                ZoomIn();
+            });
 
             //RESET
             {
@@ -131,6 +158,50 @@ namespace Doozy.Editor.UIManager.UIMenu
             }
         }
 
+        public void ZoomIn()
+        {
+            if (Math.Abs(layoutContainer.GetStyleWidth() - UIMenuSettings.k_MaxItemSize) < 0.001f)
+                return;
+
+            if (resizeReaction == null)
+                return;
+
+            resizeReaction.ClearOnFinishCallback();
+            resizeReaction.ClearOnStopCallback();
+            resizeReaction.SetOnFinishCallback(() =>
+            {
+                {
+                    PlayPreview();
+                    zoomed = true;
+                    resizeReaction.ClearOnFinishCallback();
+                }
+            });
+            resizeReaction.SetFrom(UIMenuSettings.instance.itemSize);
+            resizeReaction.SetTo(UIMenuSettings.k_MaxItemSize);
+            resizeReaction.Play();
+        }
+
+        public void ZoomOut()
+        {
+            if (Math.Abs(layoutContainer.GetStyleWidth() - UIMenuSettings.instance.itemSize) < 0.001f)
+                return;
+
+            if (resizeReaction == null)
+                return;
+
+            resizeReaction.ClearOnFinishCallback();
+            resizeReaction.ClearOnStopCallback();
+            resizeReaction.SetOnStopCallback(() =>
+            {
+                {
+                    Resize(UIMenuSettings.instance.itemSize);
+                    zoomed = false;
+                    resizeReaction.ClearOnStopCallback();
+                }
+            });
+            resizeReaction.PlayToValue(UIMenuSettings.instance.itemSize);
+        }
+
         private void StateChanged()
         {
             previewImage.SetStyleBackgroundImageTintColor(menuItem != null && menuItem.colorize ? fluidElement.iconColor : Color.white); //Preview Image - Icon Color
@@ -139,7 +210,11 @@ namespace Doozy.Editor.UIManager.UIMenu
             layoutContainer.SetStyleBackgroundColor(fluidElement.containerColor);                                                        //Background
 
             infoTag
-                .SetStyleColor(fluidElement.textColor.WithAlpha(0.6f))
+                .SetStyleColor(fluidElement.textColor.WithAlpha(0.8f))
+                .SetStyleBackgroundColor(fluidElement.containerBorderColor.WithAlpha(0.8f));
+
+            prefabNameLabel
+                .SetStyleColor(fluidElement.textColor.WithAlpha(0.8f))
                 .SetStyleBackgroundColor(fluidElement.containerBorderColor.WithAlpha(0.8f));
         }
 
@@ -148,16 +223,63 @@ namespace Doozy.Editor.UIManager.UIMenu
             if (selectionState == SelectionState.Disabled) return;
             OnClick?.Invoke();
             if (animationTrigger == ButtonAnimationTrigger.OnClick)
-                iconReaction?.Play();
+                PlayPreview();
         }
 
         public void ExecuteOnPointerEnter(PointerEnterEvent enterEvent = null)
         {
             if (selectionState == SelectionState.Disabled) return;
             if (animationTrigger == ButtonAnimationTrigger.OnPointerEnter)
-                iconReaction?.Play();
+                PlayPreview();
         }
 
+        public void ExecuteOnPointerLeave(PointerLeaveEvent leaveEvent = null)
+        {
+            StopPreview();
+        }
+
+        /// <summary> Resize the item to the given size </summary>
+        /// <param name="value"> Target size </param>
+        public void Resize(int value)
+        {
+            layoutContainer.SetStyleSize(value);
+            previewImage.SetStyleSize(value);
+
+            if (value <= UIMenuSettings.k_MinItemSize)
+            {
+                prefabNameLabel.SetStyleFontSize(8);
+                infoTag.SetStyleFontSize(8);
+                lockedIcon.SetStyleSize(16);
+                return;
+            }
+
+            if (value <= 160)
+            {
+                prefabNameLabel.SetStyleFontSize(9);
+                infoTag.SetStyleFontSize(9);
+                lockedIcon.SetStyleSize(18);
+                return;
+            }
+
+            prefabNameLabel.SetStyleFontSize(11);
+            infoTag.SetStyleFontSize(10);
+            lockedIcon.SetStyleSize(22);
+        }
+
+
+        /// <summary> Play preview animation </summary>
+        public void PlayPreview()
+        {
+            iconReaction?.Play();
+        }
+
+        /// <summary> Stop preview animation and set the first frame </summary>
+        public void StopPreview()
+        {
+            if (iconReaction == null) return;
+            if (!iconReaction.isActive) return;
+            iconReaction.SetProgressAtZero();
+        }
 
         public UIMenuItemButton SetUIMenuItem(UIMenuItem item)
         {
@@ -167,8 +289,9 @@ namespace Doozy.Editor.UIManager.UIMenu
             string prefabName = menuItem.prefabName;
             if (menuItem.hasInfoTag) prefabName = prefabName.Replace($"({menuItem.infoTag})", "");
             this.SetLabelText(prefabName);
-            this.SetTooltip(menuItem.prefabName);
+            // this.SetTooltip(menuItem.prefabName);
             this.SetIcon(UIMenuUtils.GetIconTextures(item));
+            iconReaction?.SetDuration(menuItem.animationDuration);
             this.SetInfoTagText(menuItem.infoTag);
             this.SetOnClick(() => menuItem.AddToScene());
 

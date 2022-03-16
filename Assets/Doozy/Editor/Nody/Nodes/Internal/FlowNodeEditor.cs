@@ -27,11 +27,11 @@ namespace Doozy.Editor.Nody.Nodes.Internal
 {
     public abstract class FlowNodeEditor : UnityEditor.Editor
     {
-        protected static IEnumerable<Texture2D> customNodeIconTextures => EditorMicroAnimations.Nody.Icons.CustomNode;
+        protected static IEnumerable<Texture2D> customNodeIconTextures => EditorSpriteSheets.Nody.Icons.CustomNode;
 
         public virtual Color nodeAccentColor => EditorColors.Nody.Color;
         public virtual EditorSelectableColorInfo nodeSelectableAccentColor => EditorSelectableColors.Nody.Color;
-        public virtual IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.CustomNode;
+        public virtual IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.CustomNode;
 
         protected VisualElement root { get; set; }
         protected FluidComponentHeader componentHeader { get; set; }
@@ -192,7 +192,7 @@ namespace Doozy.Editor.Nody.Nodes.Internal
                     deleteLockIcon
                         .GetTexture2DReaction()
                         .SetEditorHeartbeat()
-                        .SetTextures(EditorMicroAnimations.EditorUI.Icons.Locked);
+                        .SetTextures(EditorSpriteSheets.EditorUI.Icons.Locked);
 
                 deleteLockIcon.RegisterCallback<PointerEnterEvent>(evy => deleteLockIconReaction?.Play());
             }
@@ -232,7 +232,7 @@ namespace Doozy.Editor.Nody.Nodes.Internal
                     FluidButton.Get()
                         .SetElementSize(ElementSize.Small)
                         .SetAccentColor(EditorSelectableColors.Default.ButtonIcon)
-                        .SetIcon(EditorMicroAnimations.EditorUI.Icons.Copy);
+                        .SetIcon(EditorSpriteSheets.EditorUI.Icons.Copy);
                 button.SetStyleTextAlign(TextAnchor.MiddleLeft);
                 return button;
             }

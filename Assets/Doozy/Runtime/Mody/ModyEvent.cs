@@ -8,6 +8,9 @@ using UnityEngine.Events;
 
 namespace Doozy.Runtime.Mody
 {
+    /// <summary>
+    /// Specialized event  
+    /// </summary>
     [Serializable]
     public class ModyEvent : ModyEventBase
     {

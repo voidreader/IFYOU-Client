@@ -21,7 +21,7 @@ namespace Doozy.Editor.Reactor.Layouts
 {
     public sealed class ReactorSettingsWindowLayout : FluidWindowLayout
     {
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.EditorUI.Icons.Settings;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.EditorUI.Icons.Settings;
 
         private SerializedObject serializedObject { get; set; }
 
@@ -45,7 +45,7 @@ namespace Doozy.Editor.Reactor.Layouts
 
             editorFPSGauge =
                 new FPSGauge()
-                    .SetIcon(EditorMicroAnimations.Reactor.Icons.EditorHeartbeat)
+                    .SetIcon(EditorSpriteSheets.Reactor.Icons.EditorHeartbeat)
                     .SetTitle("Editor\nHeartbeat")
                     .SetValue("30")
                     .SetType("fps")
@@ -53,7 +53,7 @@ namespace Doozy.Editor.Reactor.Layouts
 
             runtimeFPSGauge =
                 new FPSGauge()
-                    .SetIcon(EditorMicroAnimations.Reactor.Icons.Heartbeat)
+                    .SetIcon(EditorSpriteSheets.Reactor.Icons.Heartbeat)
                     .SetTitle("Runtime\nHeartbeat")
                     .SetValue("30")
                     .SetType("fps")

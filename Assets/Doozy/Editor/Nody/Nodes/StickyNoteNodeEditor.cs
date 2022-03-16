@@ -16,7 +16,7 @@ namespace Doozy.Editor.Nody.Nodes
     public class StickyNoteNodeEditor : FlowNodeEditor
     {
         public override Color nodeAccentColor => EditorColors.Nody.StickyNote;
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.StickyNoteNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.StickyNoteNode;
         
         protected override void InitializeEditor()
         {

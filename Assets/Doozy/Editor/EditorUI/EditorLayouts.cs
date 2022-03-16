@@ -1,4 +1,4 @@
-// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -60,6 +60,7 @@ namespace Doozy.Editor.EditorUI
                 EditorColorInfo,
                 EditorMicroAnimationInfo,
                 EditorSelectableColorInfo,
+                EditorSpriteSheetInfo,
                 EditorTextureInfo,
                 EditorUIWindow,
                 FluidAnimatedContainer,
@@ -94,6 +95,8 @@ namespace Doozy.Editor.EditorUI
             public static VisualTreeAsset EditorMicroAnimationInfo => s_EditorMicroAnimationInfo ? s_EditorMicroAnimationInfo : s_EditorMicroAnimationInfo = GetVisualTreeAsset(LayoutName.EditorMicroAnimationInfo);
             private static VisualTreeAsset s_EditorSelectableColorInfo;
             public static VisualTreeAsset EditorSelectableColorInfo => s_EditorSelectableColorInfo ? s_EditorSelectableColorInfo : s_EditorSelectableColorInfo = GetVisualTreeAsset(LayoutName.EditorSelectableColorInfo);
+            private static VisualTreeAsset s_EditorSpriteSheetInfo;
+            public static VisualTreeAsset EditorSpriteSheetInfo => s_EditorSpriteSheetInfo ? s_EditorSpriteSheetInfo : s_EditorSpriteSheetInfo = GetVisualTreeAsset(LayoutName.EditorSpriteSheetInfo);
             private static VisualTreeAsset s_EditorTextureInfo;
             public static VisualTreeAsset EditorTextureInfo => s_EditorTextureInfo ? s_EditorTextureInfo : s_EditorTextureInfo = GetVisualTreeAsset(LayoutName.EditorTextureInfo);
             private static VisualTreeAsset s_EditorUIWindow;
@@ -280,7 +283,8 @@ namespace Doozy.Editor.EditorUI
             public enum LayoutName
             {
                 UIManagerWindow,
-                UIMenuItemButton                     
+                UIMenuItemButton,
+                UIMenuWindow                     
             }
             
 
@@ -288,6 +292,8 @@ namespace Doozy.Editor.EditorUI
             public static VisualTreeAsset UIManagerWindow => s_UIManagerWindow ? s_UIManagerWindow : s_UIManagerWindow = GetVisualTreeAsset(LayoutName.UIManagerWindow);
             private static VisualTreeAsset s_UIMenuItemButton;
             public static VisualTreeAsset UIMenuItemButton => s_UIMenuItemButton ? s_UIMenuItemButton : s_UIMenuItemButton = GetVisualTreeAsset(LayoutName.UIMenuItemButton);
+            private static VisualTreeAsset s_UIMenuWindow;
+            public static VisualTreeAsset UIMenuWindow => s_UIMenuWindow ? s_UIMenuWindow : s_UIMenuWindow = GetVisualTreeAsset(LayoutName.UIMenuWindow);
 
         }
 

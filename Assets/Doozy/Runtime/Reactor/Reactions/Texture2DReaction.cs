@@ -15,7 +15,7 @@ namespace Doozy.Runtime.Reactor.Reactions
     [Serializable]
     public class Texture2DReaction : DynamicReaction<Texture2D, int>
     {
-        private List<Texture2D> textures { get; set; }
+        public List<Texture2D> textures { get; private set; }
         public int numberOfFrames => textures?.Count ?? 0;
         public int firstFrame => 0;
         public int lastFrame => textures == null ? 0 : numberOfFrames - 1;

@@ -57,7 +57,7 @@ namespace Doozy.Editor.EditorUI.Drawers
 
             FluidButton button = 
                 FluidButton.Get()
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.SelectableColorGenerator)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.SelectableColorGenerator)
                 .SetTooltip(tooltip)
                 .AddClass("ESColorInfo")
                 .SetName(elementName)

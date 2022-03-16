@@ -1,4 +1,4 @@
-// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -59,6 +59,7 @@ namespace Doozy.Editor.EditorUI
                 EditorColorInfo,
                 EditorMicroAnimationInfo,
                 EditorSelectableColorInfo,
+                EditorSpriteSheetInfo,
                 EditorTextureInfo,
                 EditorUIWindow,
                 FieldIcon,
@@ -96,6 +97,8 @@ namespace Doozy.Editor.EditorUI
             public static StyleSheet EditorMicroAnimationInfo => s_EditorMicroAnimationInfo ? s_EditorMicroAnimationInfo : s_EditorMicroAnimationInfo = GetStyleSheet(StyleName.EditorMicroAnimationInfo);
             private static StyleSheet s_EditorSelectableColorInfo;
             public static StyleSheet EditorSelectableColorInfo => s_EditorSelectableColorInfo ? s_EditorSelectableColorInfo : s_EditorSelectableColorInfo = GetStyleSheet(StyleName.EditorSelectableColorInfo);
+            private static StyleSheet s_EditorSpriteSheetInfo;
+            public static StyleSheet EditorSpriteSheetInfo => s_EditorSpriteSheetInfo ? s_EditorSpriteSheetInfo : s_EditorSpriteSheetInfo = GetStyleSheet(StyleName.EditorSpriteSheetInfo);
             private static StyleSheet s_EditorTextureInfo;
             public static StyleSheet EditorTextureInfo => s_EditorTextureInfo ? s_EditorTextureInfo : s_EditorTextureInfo = GetStyleSheet(StyleName.EditorTextureInfo);
             private static StyleSheet s_EditorUIWindow;
@@ -287,13 +290,16 @@ namespace Doozy.Editor.EditorUI
             public enum StyleName
             {
                 UIManagerWindow,
-                UIMenuItemButton
+                UIMenuItemButton,
+                UIMenuWindow
             }
             
             private static StyleSheet s_UIManagerWindow;
             public static StyleSheet UIManagerWindow => s_UIManagerWindow ? s_UIManagerWindow : s_UIManagerWindow = GetStyleSheet(StyleName.UIManagerWindow);
             private static StyleSheet s_UIMenuItemButton;
-            public static StyleSheet UIMenuItemButton => s_UIMenuItemButton ? s_UIMenuItemButton : s_UIMenuItemButton = GetStyleSheet(StyleName.UIMenuItemButton);            
+            public static StyleSheet UIMenuItemButton => s_UIMenuItemButton ? s_UIMenuItemButton : s_UIMenuItemButton = GetStyleSheet(StyleName.UIMenuItemButton);
+            private static StyleSheet s_UIMenuWindow;
+            public static StyleSheet UIMenuWindow => s_UIMenuWindow ? s_UIMenuWindow : s_UIMenuWindow = GetStyleSheet(StyleName.UIMenuWindow);            
         }
 
     }

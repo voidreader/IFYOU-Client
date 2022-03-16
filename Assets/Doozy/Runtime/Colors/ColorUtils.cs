@@ -15,6 +15,7 @@
 using System;
 using Doozy.Runtime.Colors.Models;
 using UnityEngine;
+// ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
@@ -23,16 +24,20 @@ using UnityEngine;
 
 namespace Doozy.Runtime.Colors
 {
+	/// <summary>
+	/// Methods used to convert and modify color classes
+	/// </summary>
 #pragma warning disable 0219
 	public static class ColorUtils
 	{
 		#region Hue
 
-		/// <summary> Get the HUE from RGB values </summary>
+		/// <summary> Get the hue value from r,g,b values </summary>
 		/// <param name="r"> Red </param>
 		/// <param name="g"> Green </param>
 		/// <param name="b"> Blue </param>
-		/// <param name="factorize"> TRUE returns a value between 0 and 360 <para/> FALSE returns a value between 0 and 1 </param>
+		/// <param name="factorize"> If TRUE it returns a value between 0 and 360, otherwise it returns a value between 0 and 1 </param>
+		/// <returns> Hue value either factorized [0, 360] or not [0,1]</returns>
 		public static float Hue(float r, float g, float b, bool factorize = false)
 		{
 			if (r == g && g == b) return 0;
@@ -51,19 +56,21 @@ namespace Doozy.Runtime.Colors
 			// return hue / 360;                                       
 		}
 
-		/// <summary> Get the HUE value from RBG </summary>
-		/// <param name="value"></param>
-		/// <param name="factorize"> </param>
-		public static float RGBtoHUE(RGB value, bool factorize = false) =>
-			Hue(value.r, value.g, value.b, factorize);
+		/// <summary> Get the hue value from RGB </summary>
+		/// <param name="target"> Target RGB </param>
+		/// <param name="factorize"> If TRUE it returns a value between 0 and 360, otherwise it returns a value between 0 and 1 </param>
+		/// <returns> Hue value either factorized [0, 360] or not [0,1]</returns>
+		public static float RGBtoHUE(RGB target, bool factorize = false) =>
+			Hue(target.r, target.g, target.b, factorize);
 
-		/// <summary> Convert pure HUE to RGB </summary>
-		/// <param name="value"> HUE value </param>
-		public static RGB HUEtoRGB(float value)
+		/// <summary> Get <see cref="RGB"/> from hue </summary>
+		/// <param name="hue"> HUE value </param>
+		/// <returns> A new RGB </returns>
+		public static RGB HUEtoRGB(float hue)
 		{
-			float R = Mathf.Abs(value * 6 - 3) - 1;
-			float G = 2 - Mathf.Abs(value * 6 - 2);
-			float B = 2 - Mathf.Abs(value * 6 - 4);
+			float R = Mathf.Abs(hue * 6 - 3) - 1;
+			float G = 2 - Mathf.Abs(hue * 6 - 2);
+			float B = 2 - Mathf.Abs(hue * 6 - 4);
 			return new RGB(R, G, B);
 		}
 
@@ -72,29 +79,32 @@ namespace Doozy.Runtime.Colors
 		#region Color
 
 		/// <summary> Convert RGB to Color </summary>
-		/// <param name="value"> RGB value </param>
-		public static Color RGBtoCOLOR(RGB value) =>
-			new Color(value.r, value.g, value.g);
+		/// <param name="rgb"> RGB value </param>
+		/// <returns> A new Color </returns>
+		public static Color RGBtoCOLOR(RGB rgb) =>
+			new Color(rgb.r, rgb.g, rgb.g);
 
 		/// <summary> Convert HSL to Color </summary>
-		/// <param name="value"> HSL value </param>
-		public static Color HSLtoCOLOR(HSL value) =>
-			RGBtoCOLOR(value.ToRGB());
+		/// <param name="hsl"> HSL value </param>
+		/// <returns> A new Color </returns>
+		public static Color HSLtoCOLOR(HSL hsl) =>
+			RGBtoCOLOR(hsl.ToRGB());
 
 		/// <summary> Convert HSV to Color </summary>
-		/// <param name="value"> HSV value </param>
-		public static Color HSVtoCOLOR(HSV value) =>
-			RGBtoCOLOR(value.ToRGB());
+		/// <param name="hsv"> HSV value </param>
+		/// <returns> A new Color </returns>
+		public static Color HSVtoCOLOR(HSV hsv) =>
+			RGBtoCOLOR(hsv.ToRGB());
 
 		#endregion
 
 		#region HSL
 
-		/// <summary> Convert R G B values to HSL </summary>
+		/// <summary> Convert r,g,b values to HSL </summary>
 		/// <param name="r"> Red </param>
 		/// <param name="g"> Green </param>
 		/// <param name="b"> Blue </param>
-		/// <returns></returns>
+		/// <returns> A new HSL </returns>
 		public static HSL RGBtoHSL(float r, float g, float b)
 		{
 			//http://www.rapidtables.com/convert/color/rgb-to-hsl.htm
@@ -113,12 +123,14 @@ namespace Doozy.Runtime.Colors
 		}
 
 		/// <summary> Convert RGB to HSL </summary>
-		/// <param name="value"> RGB value </param>
-		public static HSL RGBtoHSL(RGB value) =>
-			RGBtoHSL(value.r, value.g, value.b);
+		/// <param name="rgb"> RGB value </param>
+		/// <returns> A new HSL </returns>
+		public static HSL RGBtoHSL(RGB rgb) =>
+			RGBtoHSL(rgb.r, rgb.g, rgb.b);
 
 		/// <summary> Convert Color to HSL </summary>
 		/// <param name="color"> Color value </param>
+		/// <returns> A new HSL </returns>
 		public static HSL COLORtoHSL(Color color) =>
 			RGBtoHSL(color.r, color.g, color.b);
 
@@ -126,10 +138,11 @@ namespace Doozy.Runtime.Colors
 
 		#region HSV / HSB
 
-		/// <summary> Convert R G B values to HSV </summary>
+		/// <summary> Convert r,g,b values to HSV </summary>
 		/// <param name="r"> Red </param>
 		/// <param name="g"> Green </param>
 		/// <param name="b"> Blue </param>
+		/// <returns> A new HSV </returns>
 		public static HSV RGBtoHSV(float r, float g, float b)
 		{
 			//http://www.rapidtables.com/convert/color/rgb-to-hsv.htm //http://www.easyrgb.com/en/math.php#text20
@@ -147,11 +160,13 @@ namespace Doozy.Runtime.Colors
 
 		/// <summary> Convert RGB to HSV </summary>
 		/// <param name="value"> RGB value </param>
+		/// <returns> A new HSV </returns>
 		public static HSV RGBtoHSV(RGB value) =>
 			RGBtoHSV(value.r, value.g, value.g);
 
 		/// <summary> Convert Color to HSV </summary>
 		/// <param name="color"> Color value </param>
+		/// <returns> A new HSV </returns>
 		public static HSV COLORtoHSV(Color color) =>
 			RGBtoHSV(color.r, color.g, color.b);
 
@@ -161,11 +176,13 @@ namespace Doozy.Runtime.Colors
 
 		/// <summary> Convert Color to RGB </summary>
 		/// <param name="color"> Color value </param>
+		/// <returns> A new RGB </returns>
 		public static RGB COLORtoRGB(Color color) =>
 			new RGB(color.r, color.g, color.b);
 
 		/// <summary> Convert HSL to RGB </summary>
 		/// <param name="value"> HSL value </param>
+		/// <returns> A new RGB </returns>
 		public static RGB HSLtoRGB(HSL value)
 		{
 			//http://www.rapidtables.com/convert/color/hsl-to-rgb.htm
@@ -219,6 +236,7 @@ namespace Doozy.Runtime.Colors
 
 		/// <summary> Convert HSV to RGB </summary>
 		/// <param name="value"> HSV value </param>
+		/// <returns> A new RGB </returns>
 		public static RGB HSVtoRGB(HSV value) //http://www.rapidtables.com/convert/color/hsv-to-rgb.htm
 		{
 			var hsv = new HSV(value.h, value.s, value.v);

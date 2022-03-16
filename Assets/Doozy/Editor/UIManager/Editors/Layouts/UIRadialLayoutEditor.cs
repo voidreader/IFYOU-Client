@@ -23,7 +23,7 @@ namespace Doozy.Editor.UIManager.Editors.Layouts
     [CustomEditor(typeof(UIRadialLayout), true)]
     public class UIRadialLayoutEditor : UnityEditor.Editor
     {
-        private static IEnumerable<Texture2D> radialLayoutIconTextures => EditorMicroAnimations.UIManager.Icons.RadialLayout;
+        private static IEnumerable<Texture2D> radialLayoutIconTextures => EditorSpriteSheets.UIManager.Icons.UIRadialLayout;
 
         private static Color accentColor => EditorColors.UIManager.LayoutComponent;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.LayoutComponent;

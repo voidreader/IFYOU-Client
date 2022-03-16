@@ -21,7 +21,7 @@ namespace Doozy.Editor.UIManager.Layouts
         public int order => 100;
         
         public override string layoutName => "Settings";
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.EditorUI.Icons.Settings;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.EditorUI.Icons.Settings;
 
         public override Color accentColor => EditorColors.UIManager.Settings;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.Settings;

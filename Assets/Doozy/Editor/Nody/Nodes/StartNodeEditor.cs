@@ -15,7 +15,7 @@ namespace Doozy.Editor.Nody.Nodes
     [CustomEditor(typeof(StartNode))]
     public class StartNodeEditor : FlowNodeEditor
     {
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.StartNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.StartNode;
         public override Color nodeAccentColor => EditorColors.Nody.StickyNote;
         
         

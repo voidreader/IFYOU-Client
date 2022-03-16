@@ -30,7 +30,10 @@ namespace Doozy.Editor.Signals.Windows
         protected override void OnDestroy()
         {
             base.OnDestroy(); 
-            ((StreamsDatabaseWindowLayout) windowLayout).OnDestroy();
+            var layout = (StreamsDatabaseWindowLayout)windowLayout;
+            if (layout == null) return;
+            layout.OnDestroy();
+            layout.Dispose();
         }
     }
 }

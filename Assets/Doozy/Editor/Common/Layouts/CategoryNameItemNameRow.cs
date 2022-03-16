@@ -162,28 +162,28 @@ namespace Doozy.Editor.Common.Layouts
         private static FluidToggleButtonTab NewButtonRename() =>
             FluidToggleButtonTab.Get()
                 .SetElementSize(ElementSize.Tiny)
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Edit)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Edit)
                 .SetToggleAccentColor(EditorSelectableColors.Default.Action)
                 .SetTooltip("Rename");
 
         private static FluidButton NewButtonSave() =>
             FluidButton.Get()
                 .SetElementSize(ElementSize.Tiny)
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Save)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Save)
                 .SetAccentColor(EditorSelectableColors.Default.Add)
                 .SetTooltip("Save");
 
         private static FluidButton NewButtonCancel() =>
             FluidButton.Get()
                 .SetElementSize(ElementSize.Tiny)
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Close)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Close)
                 .SetAccentColor(EditorSelectableColors.Default.Remove)
                 .SetTooltip("Cancel");
 
         private static FluidButton NewButtonRemoveItem() =>
             FluidButton.Get()
                 .SetElementSize(ElementSize.Tiny)
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Minus)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Minus)
                 .SetAccentColor(EditorSelectableColors.Default.Remove)
                 .SetTooltip("Remove");
 

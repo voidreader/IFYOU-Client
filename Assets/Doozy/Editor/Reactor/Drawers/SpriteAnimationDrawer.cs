@@ -23,7 +23,6 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
-using Object = UnityEngine.Object;
 
 namespace Doozy.Editor.Reactor.Drawers
 {
@@ -33,10 +32,10 @@ namespace Doozy.Editor.Reactor.Drawers
         private static Color accentColor => EditorColors.Reactor.Red;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Reactor.Red;
 
-        private static IEnumerable<Texture2D> spriteAnimationIconTextures => EditorMicroAnimations.Reactor.Icons.SpriteAnimation;
-        private static IEnumerable<Texture2D> unityEventIconTextures => EditorMicroAnimations.EditorUI.Icons.UnityEvent;
-        private static IEnumerable<Texture2D> resetIconTextures => EditorMicroAnimations.EditorUI.Icons.Reset;
-        private static IEnumerable<Texture2D> spriteIconTextures => EditorMicroAnimations.EditorUI.Icons.Sprite;
+        private static IEnumerable<Texture2D> spriteAnimationIconTextures => EditorSpriteSheets.Reactor.Icons.SpriteAnimation;
+        private static IEnumerable<Texture2D> unityEventIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
+        private static IEnumerable<Texture2D> resetIconTextures => EditorSpriteSheets.EditorUI.Icons.Reset;
+        private static IEnumerable<Texture2D> spriteIconTextures => EditorSpriteSheets.EditorUI.Icons.Sprite;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {}
 
@@ -340,7 +339,7 @@ namespace Doozy.Editor.Reactor.Drawers
             void OnDragUpdate(DragUpdatedEvent evt)
             {
                 bool isValid = DragAndDrop.objectReferences.Any(item => item is Texture);
-                if (!isValid) //check if it's a folder
+                if (!isValid) //check if it's a folder 
                 {
                     string assetPath = AssetDatabase.GetAssetPath(DragAndDrop.objectReferences[0]);
                     string[] paths = AssetDatabase.FindAssets($"t:{nameof(Texture)}", new[] { assetPath });
@@ -359,15 +358,33 @@ namespace Doozy.Editor.Reactor.Drawers
                     string[] guids = AssetDatabase.FindAssets($"t:{nameof(Texture)}", new[] { folderPath });
                     references.AddRange(guids.Select(guid => AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GUIDToAssetPath(guid))).OrderBy(item => item.name));
                 }
+                else //not a folder - look for sprite sheets
+                {
+                    var temp = references.ToList();
+                    references.Clear();
+                    foreach (Texture texture in temp.OfType<Texture>().ToList())
+                    {
+                        string assetPath = AssetDatabase.GetAssetPath(texture); //get sheet asset path
+                        
+                        if (texture.IsSpriteSheet())
+                        {
+                            references.AddRange(AssetDatabase.LoadAllAssetRepresentationsAtPath(assetPath).OfType<Sprite>().OrderBy(item => item.name));
+                        }
+                        else
+                        {
+                            references.Add(AssetDatabase.LoadAssetAtPath<Sprite>(assetPath));
+                        }
+                    }
+                }
 
                 if (references.Count == 0)
                     return;
 
                 arrayProperty.ClearArray();
-                foreach (Object reference in references)
+                foreach (Sprite sprite in references.OfType<Sprite>())
                 {
                     arrayProperty.InsertArrayElementAtIndex(arrayProperty.arraySize);
-                    arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1).objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GetAssetPath(reference));
+                    arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1).objectReferenceValue = sprite;
                 }
 
                 arrayProperty.serializedObject.ApplyModifiedProperties();

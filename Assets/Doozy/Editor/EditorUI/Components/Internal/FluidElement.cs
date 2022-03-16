@@ -4,7 +4,9 @@
 
 using System;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
+using Doozy.Editor.EditorUI.Utils;
 using Doozy.Runtime.Colors;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -160,7 +162,7 @@ namespace Doozy.Editor.EditorUI.Components.Internal
         public void StateChanged()
         {
             containerColor = buttonContainerSelectableColor.GetColor(selectionState);
-            containerBorderColor = containerColor.WithRGBShade(0.2f);
+            containerBorderColor = EditorGUIUtility.isProSkin ? containerColor.WithRGBShade(0.2f) : containerColor.WithRGBTint(0.2f);
             iconColor = hasAccentColor ? selectableAccentColor.normalColor : iconSelectableColor.GetColor(selectionState);
             textColor = hasAccentColor ? selectableAccentColor.normalColor : textSelectableColor.GetColor(selectionState);
 

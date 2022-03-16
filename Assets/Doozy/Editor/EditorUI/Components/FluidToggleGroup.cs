@@ -228,7 +228,7 @@ namespace Doozy.Editor.EditorUI.Components
             icon.AddClass(componentClassName);
 
             iconReaction
-                .SetTextures(EditorMicroAnimations.EditorUI.Components.Checkmark)
+                .SetTextures(EditorSpriteSheets.EditorUI.Components.Checkmark)
                 .SetDuration(0.15f);
 
             selectionState = SelectionState.Normal;

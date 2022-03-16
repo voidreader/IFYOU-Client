@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 namespace Doozy.Runtime.Mody.Actions
 {
+    /// <summary> <see cref="MetaModyAction{T}"/> with a Color32 value </summary>
     [Serializable]
     public class Color32ModyAction : MetaModyAction<Color32>
     {

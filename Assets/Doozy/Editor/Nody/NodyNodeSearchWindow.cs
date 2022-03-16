@@ -28,19 +28,16 @@ namespace Doozy.Editor.Nody
         public NodyNodeSearchWindow SetGraphView(FlowGraphView view)
         {
             graphView = view;
-            
             // Transparent icon to trick search window into indenting items
             transparentIcon = new Texture2D(1, 1);
             transparentIcon.SetPixel(0, 0, new Color(0, 0, 0, 0));
             transparentIcon.Apply();
-            
             return this;
         }
 
         private void OnDestroy()
         {
-            if (transparentIcon == null)
-                return;
+            if (transparentIcon == null) return;
             DestroyImmediate(transparentIcon);
             transparentIcon = null;
         }
@@ -67,30 +64,70 @@ namespace Doozy.Editor.Nody
             };
             return tree;
         }
-        
+
         public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
         {
             if (!(searchTreeEntry.userData is NodeTypeInfo nodeInfo))
                 return false;
-            
-            if(nodeInfo.type == typeof(Doozy.Runtime.Nody.Nodes.ApplicationQuitNode)) { graphView.CreateNode(typeof(Doozy.Runtime.Nody.Nodes.ApplicationQuitNode), true); return true;}
-            if(nodeInfo.type == typeof(Doozy.Runtime.Nody.Nodes.TimeScaleNode)) { graphView.CreateNode(typeof(Doozy.Runtime.Nody.Nodes.TimeScaleNode), true); return true;}
-            if(nodeInfo.type == typeof(Doozy.Runtime.UIManager.Nodes.BackButtonNode)) { graphView.CreateNode(typeof(Doozy.Runtime.UIManager.Nodes.BackButtonNode), true); return true;}
-            if(nodeInfo.type == typeof(Doozy.Runtime.UIManager.Nodes.PortalNode)) { graphView.CreateNode(typeof(Doozy.Runtime.UIManager.Nodes.PortalNode), true); return true;}
-            if(nodeInfo.type == typeof(Doozy.Runtime.UIManager.Nodes.SignalNode)) { graphView.CreateNode(typeof(Doozy.Runtime.UIManager.Nodes.SignalNode), true); return true;}
-            if(nodeInfo.type == typeof(Doozy.Runtime.UIManager.Nodes.UINode)) { graphView.CreateNode(typeof(Doozy.Runtime.UIManager.Nodes.UINode), true); return true;}
-            if(nodeInfo.type == typeof(Doozy.Runtime.Nody.Nodes.DebugNode)) { graphView.CreateNode(typeof(Doozy.Runtime.Nody.Nodes.DebugNode), true); return true;}
-            if(nodeInfo.type == typeof(Doozy.Runtime.Nody.Nodes.PivotNode)) { graphView.CreateNode(typeof(Doozy.Runtime.Nody.Nodes.PivotNode), true); return true;}
-            if(nodeInfo.type == typeof(Doozy.Runtime.Nody.Nodes.RandomNode)) { graphView.CreateNode(typeof(Doozy.Runtime.Nody.Nodes.RandomNode), true); return true;}
-            if(nodeInfo.type == typeof(Doozy.Runtime.Nody.Nodes.StickyNoteNode)) { graphView.CreateNode(typeof(Doozy.Runtime.Nody.Nodes.StickyNoteNode), true); return true;}
-                
+
+            if (nodeInfo.type == typeof(Doozy.Runtime.Nody.Nodes.ApplicationQuitNode))
+            {
+                graphView.CreateNode(typeof(Doozy.Runtime.Nody.Nodes.ApplicationQuitNode), true);
+                return true;
+            }
+            if (nodeInfo.type == typeof(Doozy.Runtime.Nody.Nodes.TimeScaleNode))
+            {
+                graphView.CreateNode(typeof(Doozy.Runtime.Nody.Nodes.TimeScaleNode), true);
+                return true;
+            }
+            if (nodeInfo.type == typeof(Doozy.Runtime.UIManager.Nodes.BackButtonNode))
+            {
+                graphView.CreateNode(typeof(Doozy.Runtime.UIManager.Nodes.BackButtonNode), true);
+                return true;
+            }
+            if (nodeInfo.type == typeof(Doozy.Runtime.UIManager.Nodes.PortalNode))
+            {
+                graphView.CreateNode(typeof(Doozy.Runtime.UIManager.Nodes.PortalNode), true);
+                return true;
+            }
+            if (nodeInfo.type == typeof(Doozy.Runtime.UIManager.Nodes.SignalNode))
+            {
+                graphView.CreateNode(typeof(Doozy.Runtime.UIManager.Nodes.SignalNode), true);
+                return true;
+            }
+            if (nodeInfo.type == typeof(Doozy.Runtime.UIManager.Nodes.UINode))
+            {
+                graphView.CreateNode(typeof(Doozy.Runtime.UIManager.Nodes.UINode), true);
+                return true;
+            }
+            if (nodeInfo.type == typeof(Doozy.Runtime.Nody.Nodes.DebugNode))
+            {
+                graphView.CreateNode(typeof(Doozy.Runtime.Nody.Nodes.DebugNode), true);
+                return true;
+            }
+            if (nodeInfo.type == typeof(Doozy.Runtime.Nody.Nodes.PivotNode))
+            {
+                graphView.CreateNode(typeof(Doozy.Runtime.Nody.Nodes.PivotNode), true);
+                return true;
+            }
+            if (nodeInfo.type == typeof(Doozy.Runtime.Nody.Nodes.RandomNode))
+            {
+                graphView.CreateNode(typeof(Doozy.Runtime.Nody.Nodes.RandomNode), true);
+                return true;
+            }
+            if (nodeInfo.type == typeof(Doozy.Runtime.Nody.Nodes.StickyNoteNode))
+            {
+                graphView.CreateNode(typeof(Doozy.Runtime.Nody.Nodes.StickyNoteNode), true);
+                return true;
+            }
+
             return false;
         }
 
         private class NodeTypeInfo
         {
             public Type type { get; }
-            
+
             public NodeTypeInfo(Type type)
             {
                 this.type = type;

@@ -1,4 +1,4 @@
-// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
+// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -24,6 +24,40 @@ namespace Doozy.Editor.EditorUI
     {
         public static class EditorUI
         {
+            public static class Cursors
+            {
+                private static EditorDataTextureGroup s_textureGroup;
+                private static EditorDataTextureGroup textureGroup =>
+                    s_textureGroup
+                        ? s_textureGroup
+                        : s_textureGroup = EditorDataTextureDatabase.GetTextureGroup("EditorUI","Cursors");
+
+                public static Texture2D GetTexture2D(TextureName textureName) =>
+                    textureGroup.GetTexture(textureName.ToString());
+
+                public enum TextureName
+                {
+                    ArrowsLeftRight,
+                    ArrowsMaximize,
+                    ArrowsMinimize,
+                    ArrowsUpDown,
+                    ArrowsUpDownLeftRight
+                }
+                
+
+                private static Texture2D s_ArrowsLeftRight;
+                public static Texture2D ArrowsLeftRight => s_ArrowsLeftRight ? s_ArrowsLeftRight : s_ArrowsLeftRight = GetTexture2D(TextureName.ArrowsLeftRight);
+                private static Texture2D s_ArrowsMaximize;
+                public static Texture2D ArrowsMaximize => s_ArrowsMaximize ? s_ArrowsMaximize : s_ArrowsMaximize = GetTexture2D(TextureName.ArrowsMaximize);
+                private static Texture2D s_ArrowsMinimize;
+                public static Texture2D ArrowsMinimize => s_ArrowsMinimize ? s_ArrowsMinimize : s_ArrowsMinimize = GetTexture2D(TextureName.ArrowsMinimize);
+                private static Texture2D s_ArrowsUpDown;
+                public static Texture2D ArrowsUpDown => s_ArrowsUpDown ? s_ArrowsUpDown : s_ArrowsUpDown = GetTexture2D(TextureName.ArrowsUpDown);
+                private static Texture2D s_ArrowsUpDownLeftRight;
+                public static Texture2D ArrowsUpDownLeftRight => s_ArrowsUpDownLeftRight ? s_ArrowsUpDownLeftRight : s_ArrowsUpDownLeftRight = GetTexture2D(TextureName.ArrowsUpDownLeftRight);
+                
+            }
+
             public static class Icons
             {
                 private static EditorDataTextureGroup s_textureGroup;
@@ -37,12 +71,14 @@ namespace Doozy.Editor.EditorUI
 
                 public enum TextureName
                 {
+                    API,
                     ButtonClick,
                     ButtonDoubleClick,
                     ButtonLeftClick,
                     ButtonLongClick,
                     ButtonMiddleClick,
                     ButtonRightClick,
+                    Camera,
                     Copy,
                     Cut,
                     Deselected,
@@ -73,6 +109,7 @@ namespace Doozy.Editor.EditorUI
                     Prefab,
                     SelectableStates,
                     Selected,
+                    SpriteSheet,
                     ToggleMixed,
                     ToggleOFF,
                     ToggleON,
@@ -81,10 +118,13 @@ namespace Doozy.Editor.EditorUI
                     Unity,
                     UnityEvent,
                     Unlocked,
-                    VisibilityChanged
+                    VisibilityChanged,
+                    Zoom
                 }
                 
 
+                private static Texture2D s_API;
+                public static Texture2D API => s_API ? s_API : s_API = GetTexture2D(TextureName.API);
                 private static Texture2D s_ButtonClick;
                 public static Texture2D ButtonClick => s_ButtonClick ? s_ButtonClick : s_ButtonClick = GetTexture2D(TextureName.ButtonClick);
                 private static Texture2D s_ButtonDoubleClick;
@@ -97,6 +137,8 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D ButtonMiddleClick => s_ButtonMiddleClick ? s_ButtonMiddleClick : s_ButtonMiddleClick = GetTexture2D(TextureName.ButtonMiddleClick);
                 private static Texture2D s_ButtonRightClick;
                 public static Texture2D ButtonRightClick => s_ButtonRightClick ? s_ButtonRightClick : s_ButtonRightClick = GetTexture2D(TextureName.ButtonRightClick);
+                private static Texture2D s_Camera;
+                public static Texture2D Camera => s_Camera ? s_Camera : s_Camera = GetTexture2D(TextureName.Camera);
                 private static Texture2D s_Copy;
                 public static Texture2D Copy => s_Copy ? s_Copy : s_Copy = GetTexture2D(TextureName.Copy);
                 private static Texture2D s_Cut;
@@ -157,6 +199,8 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D SelectableStates => s_SelectableStates ? s_SelectableStates : s_SelectableStates = GetTexture2D(TextureName.SelectableStates);
                 private static Texture2D s_Selected;
                 public static Texture2D Selected => s_Selected ? s_Selected : s_Selected = GetTexture2D(TextureName.Selected);
+                private static Texture2D s_SpriteSheet;
+                public static Texture2D SpriteSheet => s_SpriteSheet ? s_SpriteSheet : s_SpriteSheet = GetTexture2D(TextureName.SpriteSheet);
                 private static Texture2D s_ToggleMixed;
                 public static Texture2D ToggleMixed => s_ToggleMixed ? s_ToggleMixed : s_ToggleMixed = GetTexture2D(TextureName.ToggleMixed);
                 private static Texture2D s_ToggleOFF;
@@ -175,6 +219,8 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D Unlocked => s_Unlocked ? s_Unlocked : s_Unlocked = GetTexture2D(TextureName.Unlocked);
                 private static Texture2D s_VisibilityChanged;
                 public static Texture2D VisibilityChanged => s_VisibilityChanged ? s_VisibilityChanged : s_VisibilityChanged = GetTexture2D(TextureName.VisibilityChanged);
+                private static Texture2D s_Zoom;
+                public static Texture2D Zoom => s_Zoom ? s_Zoom : s_Zoom = GetTexture2D(TextureName.Zoom);
                 
             }
 
@@ -825,6 +871,7 @@ namespace Doozy.Editor.EditorUI
                     TabButtonTopLeft,
                     TabButtonTopRight,
                     UIMenuHeader128x32,
+                    UIMenuItem,
                     VerticalLayout
                 }
                 
@@ -893,6 +940,8 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D TabButtonTopRight => s_TabButtonTopRight ? s_TabButtonTopRight : s_TabButtonTopRight = GetTexture2D(TextureName.TabButtonTopRight);
                 private static Texture2D s_UIMenuHeader128x32;
                 public static Texture2D UIMenuHeader128x32 => s_UIMenuHeader128x32 ? s_UIMenuHeader128x32 : s_UIMenuHeader128x32 = GetTexture2D(TextureName.UIMenuHeader128x32);
+                private static Texture2D s_UIMenuItem;
+                public static Texture2D UIMenuItem => s_UIMenuItem ? s_UIMenuItem : s_UIMenuItem = GetTexture2D(TextureName.UIMenuItem);
                 private static Texture2D s_VerticalLayout;
                 public static Texture2D VerticalLayout => s_VerticalLayout ? s_VerticalLayout : s_VerticalLayout = GetTexture2D(TextureName.VerticalLayout);
                 

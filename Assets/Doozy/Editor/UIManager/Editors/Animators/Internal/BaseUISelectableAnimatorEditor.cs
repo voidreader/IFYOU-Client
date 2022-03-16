@@ -23,7 +23,7 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
     public abstract class BaseUISelectableAnimatorEditor : BaseTargetComponentAnimatorEditor
     {
         protected static IEnumerable<Texture2D> uiSelectableIconTextures => UISelectableEditor.selectableIconTextures;
-        protected static IEnumerable<Texture2D> uiSelectableAnimatorIconTextures => EditorMicroAnimations.UIManager.Icons.UISelectableAnimator;
+        protected static IEnumerable<Texture2D> uiSelectableAnimatorIconTextures => EditorSpriteSheets.UIManager.Icons.UISelectableAnimator;
 
         protected FluidToggleButtonTab normalTabButton { get; set; }
         protected FluidToggleButtonTab highlightedTabButton { get; set; }

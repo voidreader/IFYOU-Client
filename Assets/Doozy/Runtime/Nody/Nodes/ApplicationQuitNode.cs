@@ -9,7 +9,7 @@ using Doozy.Runtime.Nody.Nodes.Internal;
 namespace Doozy.Runtime.Nody.Nodes
 {
     /// <summary>
-    /// Exits play mode (if in the Unity Editor) or quits the application if in build mode
+    /// Simple node that when activated it exits play mode (if in the Unity Editor) or quits the application if in build mode
     /// </summary>
     [Serializable]
     [NodyMenuPath("System", "Application Quit")]

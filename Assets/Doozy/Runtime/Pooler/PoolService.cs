@@ -10,6 +10,8 @@ using UnityEngine.Events;
 
 namespace Doozy.Runtime.Pooler
 {
+    /// <summary> Pooling system for anything that implements the <see cref="IPoolable"/> interface </summary>
+    /// <typeparam name="T"> Any type that implements the <see cref="IPoolable"/> interface</typeparam>
     public class PoolService<T> where T : IPoolable, new()
     {
         /// <summary> Maximum number of items this pool can manage </summary>

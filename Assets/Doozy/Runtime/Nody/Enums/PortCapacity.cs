@@ -4,7 +4,7 @@
 
 namespace Doozy.Runtime.Nody
 {
-    /// <summary> Specify how many connections a port can have </summary>
+    /// <summary> Specify how many connections a connection port can have </summary>
     public enum PortCapacity
     {
         /// <summary> Port can only have a single connection </summary>

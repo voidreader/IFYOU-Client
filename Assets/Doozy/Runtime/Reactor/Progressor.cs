@@ -6,10 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Doozy.Runtime.Common.Events;
+using Doozy.Runtime.Common.Extensions;
 using Doozy.Runtime.Reactor.Internal;
 using Doozy.Runtime.Reactor.Reactions;
 using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberCanBeProtected.Global
 
 namespace Doozy.Runtime.Reactor
 {
@@ -17,6 +19,7 @@ namespace Doozy.Runtime.Reactor
     public class Progressor : MonoBehaviour
     {
         [SerializeField] private List<ProgressTarget> ProgressTargets;
+        /// <summary> Progress targets that get updated by this Progressor when activated </summary>
         public List<ProgressTarget> progressTargets
         {
             get
@@ -26,6 +29,17 @@ namespace Doozy.Runtime.Reactor
             }
         }
 
+        [SerializeField] private List<Progressor> ProgressorTargets;
+        /// <summary> Other Progressors that get updated by this Progressor when activated </summary>
+        public List<Progressor> progressorTargets
+        {
+            get
+            {
+                Initialize();
+                return progressorTargets;
+            }
+        }
+        
         [SerializeField] protected float FromValue = 0f;
         /// <summary> Start Value </summary>
         public float fromValue
@@ -77,9 +91,10 @@ namespace Doozy.Runtime.Reactor
             }
         }
 
-        public ResetValue ResetValueOnEnable = ResetValue.FromValue;
+        public ResetValue ResetValueOnEnable = ResetValue.Disabled;
 
         public FloatEvent OnValueChanged;
+        
         public FloatEvent OnProgressChanged;
 
         private bool initialized { get; set; }
@@ -88,6 +103,7 @@ namespace Doozy.Runtime.Reactor
         {
             if (initialized) return;
             ProgressTargets ??= new List<ProgressTarget>();
+            ProgressorTargets ??= new List<Progressor>();
             Reaction = Reaction ?? ReactionPool.Get<FloatReaction>();
             Reaction.SetFrom(fromValue);
             Reaction.SetTo(toValue);
@@ -126,6 +142,8 @@ namespace Doozy.Runtime.Reactor
         private void ValidateTargets() =>
             ProgressTargets = progressTargets.Where(t => t != null).Distinct().ToList();
 
+        /// <summary> Reset the Progressor to the given reset value </summary>
+        /// <param name="resetValue"> Value to reset to </param>
         protected void ResetCurrentValue(ResetValue resetValue)
         {
             if (resetValue == ResetValue.Disabled) return;
@@ -148,7 +166,6 @@ namespace Doozy.Runtime.Reactor
             }
         }
 
-
         /// <summary> Update current value and trigger callbacks </summary>
         public virtual void UpdateProgressor()
         {
@@ -158,28 +175,21 @@ namespace Doozy.Runtime.Reactor
             OnValueChanged?.Invoke(CurrentValue);
             OnProgressChanged?.Invoke(Progress);
 
-            bool foundNullTarget = false;
-            foreach (ProgressTarget target in ProgressTargets)
-            {
-                if (target == null)
-                {
-                    foundNullTarget = true;
-                    continue;
-                }
-                target.UpdateTarget(this);
-            }
-            if (foundNullTarget)
-                ProgressTargets = ProgressTargets.Where(t => t != null).ToList();
+            ProgressTargets.RemoveNulls();
+            ProgressTargets.ForEach(t => t.UpdateTarget(this));
+
+            ProgressorTargets.RemoveNulls();
+            ProgressorTargets.ForEach(p => p.SetProgressAt(Progress));
         }
 
-        /// <summary> Set the progressor's value at the given target value </summary>
+        /// <summary> Set the Progressor's current value to the given target value </summary>
         /// <param name="value"> Target value </param>
         public void SetValueAt(float value)
         {
             SetProgressAt(reaction.GetProgressAtValue(Mathf.Clamp(value, fromValue, toValue)));
         }
 
-        /// <summary> Set the progressor's progress at the given target progress </summary>
+        /// <summary> Set the Progressor's current progress to the given target progress </summary>
         /// <param name="targetProgress"> Target progress </param>
         public void SetProgressAt(float targetProgress)
         {
@@ -189,26 +199,29 @@ namespace Doozy.Runtime.Reactor
             UpdateProgressor();
         }
 
-        /// <summary> Set the progressor's progress at 1 </summary>
+        /// <summary> Set the Progressor's current progress to 1 (100%) </summary>
         public void SetProgressAtOne() =>
             SetProgressAt(1f);
 
-        /// <summary> Set the progressor's progress at 0 </summary>
+        /// <summary> Set the Progressor's current progress to 0 (0%) </summary>
         public void SetProgressAtZero() =>
             SetProgressAt(0f);
 
-        /// <summary> Play from the given start from value to the end to value </summary>
+        /// <summary> Play from start (from value) to end (to value), depending on the given PlayDirection </summary>
         /// <param name="direction"> Play direction </param>
         public void Play(PlayDirection direction) =>
             Play(direction == PlayDirection.Reverse);
 
-        /// <summary> Play from the given start from value to the end to value </summary>
+        /// <summary> Play from the given start (from value) to end (to value), or in reverse </summary>
         /// <param name="inReverse"> Play in reverse? </param>
-        public void Play(bool inReverse = false) =>
+        public void Play(bool inReverse = false)
+        {
+            reaction.SetValue(inReverse ? ToValue : FromValue);
             reaction.Play(FromValue, ToValue, inReverse);
+        }
 
-        /// <summary> Play from the current value to the given valur </summary>
-        /// <param name="value"> To value </param>
+        /// <summary> Play from the current value to the given target value </summary>
+        /// <param name="value"> Target value </param>
         public void PlayToValue(float value)
         {
             value = Mathf.Clamp(value, fromValue, toValue); //clamp the value
@@ -228,8 +241,8 @@ namespace Doozy.Runtime.Reactor
             PlayToProgress(Mathf.InverseLerp(fromValue, toValue, value));
         }
 
-        /// <summary> Play from the current progress to the given end progress (to) </summary>
-        /// <param name="toProgress"> To (end) progress </param>
+        /// <summary> Play from the current progress to the given target progress </summary>
+        /// <param name="toProgress"> Target progress </param>
         public void PlayToProgress(float toProgress)
         {
             float p = Mathf.Clamp01(toProgress); //clamp the progress
@@ -248,13 +261,25 @@ namespace Doozy.Runtime.Reactor
             }
         }
 
+        /// <summary> Stop the Progressor from playing </summary>
         public void Stop() =>
             reaction.Stop();
 
+        /// <summary> Reverse the Progressor's playing direction (works only if the Progressor is playing) </summary>
         public void Reverse() =>
             reaction.Reverse();
 
+        /// <summary> Rewind the Progressor to 0% if playing forward or to 100% if playing in reverse </summary>
         public void Rewind() =>
             reaction.Rewind();
+        
+        public float GetStartDelay() =>
+            reaction.isActive ? reaction.startDelay : reaction.settings.GetStartDelay();
+
+        public float GetDuration() =>
+            reaction.isActive ? reaction.duration : reaction.settings.GetDuration();
+
+        public float GetTotalDuration() =>
+            GetStartDelay() + GetDuration();
     }
 }

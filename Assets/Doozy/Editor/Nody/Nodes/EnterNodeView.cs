@@ -16,7 +16,7 @@ namespace Doozy.Editor.Nody.Nodes
     {
         public override Type nodeType => typeof(EnterNode);
         public override Texture2D nodeIconTexture => EditorTextures.Nody.Icons.EnterNode;
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.EnterNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.EnterNode;
         
         public EnterNodeView(FlowGraphView graphView, FlowNode node) : base(graphView, node)
         {
@@ -28,7 +28,7 @@ namespace Doozy.Editor.Nody.Nodes
         {
             base.InitializeView();
 
-            this.SetIcon(EditorMicroAnimations.Nody.Icons.EnterNode);
+            this.SetIcon(EditorSpriteSheets.Nody.Icons.EnterNode);
         }
     }
 }

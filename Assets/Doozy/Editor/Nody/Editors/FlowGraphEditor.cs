@@ -19,7 +19,7 @@ namespace Doozy.Editor.Nody.Editors
     [CustomEditor(typeof(FlowGraph), true)]
     public class FlowGraphEditor : UnityEditor.Editor
     {
-        private static IEnumerable<Texture2D> flowGraphIconTextures => EditorMicroAnimations.Nody.Icons.FlowGraph;
+        private static IEnumerable<Texture2D> flowGraphIconTextures => EditorSpriteSheets.Nody.Icons.FlowGraph;
         
         private static Color accentColor => EditorColors.Nody.Color;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Nody.Color;

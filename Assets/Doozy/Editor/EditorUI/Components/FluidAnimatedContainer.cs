@@ -111,6 +111,13 @@ namespace Doozy.Editor.EditorUI.Components
         public UnityAction OnHideCallback;
         public UnityAction<State> onStateChanged { get; set; }
 
+        public FluidAnimatedContainer(string name, bool clearOnHide) : this()
+        {
+            this
+                .SetName(name)
+                .SetClearOnHide(clearOnHide);
+        }
+
         public FluidAnimatedContainer()
         {
             Add(templateContainer = EditorLayouts.EditorUI.FluidAnimatedContainer.CloneTree());

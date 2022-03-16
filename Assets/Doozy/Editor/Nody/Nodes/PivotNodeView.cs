@@ -27,7 +27,7 @@ namespace Doozy.Editor.Nody.Nodes
         }
 
         public override Type nodeType => typeof(PivotNode);
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.PivotNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.PivotNode;
 
         private FluidButton orientationButton
         {
@@ -59,7 +59,7 @@ namespace Doozy.Editor.Nody.Nodes
 
             orientationButton =
                 FluidButton.Get()
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Reset)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Reset)
                     .SetElementSize(ElementSize.Tiny)
                     .SetButtonStyle(ButtonStyle.Clear)
                     .SetOnClick(() =>

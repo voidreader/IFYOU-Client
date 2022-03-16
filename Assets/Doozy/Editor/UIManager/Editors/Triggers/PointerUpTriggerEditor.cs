@@ -15,7 +15,7 @@ namespace Doozy.Editor.UIManager.Editors.Triggers
     [CustomEditor(typeof(PointerUpTrigger))]
     public class PointerUpTriggerEditor : ModyTriggerEditor<PointerUpTrigger>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorMicroAnimations.EditorUI.Icons.PointerUp;
+        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.EditorUI.Icons.PointerUp;
 
         public override VisualElement CreateInspectorGUI()
         {

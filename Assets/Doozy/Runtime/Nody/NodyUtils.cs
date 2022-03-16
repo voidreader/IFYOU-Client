@@ -10,11 +10,13 @@ using System.Linq;
 
 namespace Doozy.Runtime.Nody
 {
+    /// <summary> Utility methods for the Nody system </summary>
     public static class NodyUtils
     {
-        /// <summary> True if the given port (id) is found in the node's connections </summary>
+        /// <summary> Check if a port is connected to one of the ports of the given node </summary>
         /// <param name="port"> Target port </param>
         /// <param name="node"> Target node </param>
+        /// <returns> True if the given port (id) is found in the node's connections, false otherwise </returns>
         public static bool IsPortConnectedToNode(FlowPort port, FlowNode node)
         {
             if (port == null) return false; //null port -> nope
@@ -30,22 +32,23 @@ namespace Doozy.Runtime.Nody
             return connections.Contains(port.portId);
         }
 
-        /// <summary> True if at least one port from n1 is connected to another port in n2 </summary>
+        /// <summary> Check if two nodes have are connected </summary>
         /// <param name="n1"> Node 1 </param>
         /// <param name="n2"> Node 2 </param>
-        /// <returns></returns>
+        /// <returns> True if at least one port from n1 is connected to another port in n2, false otherwise </returns>
         public static bool IsNodeConnectedToNode(FlowNode n1, FlowNode n2)
         {
             if (n1 == null) return false; //null node -> nope
             if (n2 == null) return false; //null node -> nope
-            return 
-                n1.ports.Any(port => IsPortConnectedToNode(port, n2)) || 
+            return
+                n1.ports.Any(port => IsPortConnectedToNode(port, n2)) ||
                 n2.ports.Any(port => IsPortConnectedToNode(port, n1));
         }
 
-        /// <summary> True if the ports can connect </summary>
+        /// <summary> Check if a connection can be established between two ports </summary>
         /// <param name="p1"> Port 1 </param>
         /// <param name="p2"> Port 2 </param>
+        /// <returns> True if the ports can connect, false otherwise </returns>
         public static bool CanConnect(FlowPort p1, FlowPort p2)
         {
             if (p1 == null) return false;                      //port is null -> stop
@@ -61,6 +64,7 @@ namespace Doozy.Runtime.Nody
         /// <summary> Remove all connections for the given port </summary>
         /// <param name="port"> Target port </param>
         /// <param name="graph"> Parent graph </param>
+        /// <returns> True if the operation was successful, false otherwise </returns>
         public static bool DisconnectPort(FlowPort port, FlowGraph graph)
         {
             if (port == null) return false;  //null port -> cannot disconnect
@@ -85,9 +89,10 @@ namespace Doozy.Runtime.Nody
             return true;
         }
 
-        /// <summary> Remove all connections for the given port </summary>
+        /// <summary> Disconnect the given ports </summary>
         /// <param name="p1"> Port 1 </param>
         /// <param name="p2"> Port 2 </param>
+        /// <returns> True if the operation was successful, false otherwise </returns>
         public static bool DisconnectPortFromPort(FlowPort p1, FlowPort p2)
         {
             if (p1 == null) return false;                       //null port -> cannot disconnect
@@ -103,6 +108,7 @@ namespace Doozy.Runtime.Nody
         /// <summary> Remove all connections from the target port to the given node </summary>
         /// <param name="port"> Target port </param>
         /// <param name="node"> Target node </param>
+        /// <returns> True if the operation was successful, false otherwise </returns>
         public static bool DisconnectPortFromNode(FlowPort port, FlowNode node)
         {
             if (port == null) return false; //null port -> cannot disconnect
@@ -128,6 +134,7 @@ namespace Doozy.Runtime.Nody
         /// <summary> Remove all connections from the given node </summary>
         /// <param name="node"> Target node </param>
         /// <param name="graph"> Parent graph </param>
+        /// <returns> True if the operation was successful, false otherwise </returns>
         public static bool DisconnectNode(FlowNode node, FlowGraph graph)
         {
             if (node == null) return false;  //null node -> cannot disconnect
@@ -142,6 +149,7 @@ namespace Doozy.Runtime.Nody
         /// <summary> Remove all connections between the two nodes </summary>
         /// <param name="n1"> Node 1 </param>
         /// <param name="n2"> Node 2</param>
+        /// <returns> True if the operation was successful, false otherwise </returns>
         public static bool DisconnectNodeFromNode(FlowNode n1, FlowNode n2)
         {
             if (n1 == null) return false; //null node -> cannot disconnect

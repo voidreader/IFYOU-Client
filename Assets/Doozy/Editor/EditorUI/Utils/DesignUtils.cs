@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
@@ -40,7 +42,7 @@ namespace Doozy.Editor.EditorUI.Utils
                 .SetStyleAlignItems(Align.Center)
                 .SetStyleJustifyContent(Justify.FlexEnd)
                 .SetStyleBackgroundColor(EditorColors.Default.BoxBackground);
-        
+
         public static VisualElement GetSpaceBlock(int size, string name = "") =>
             GetSpaceBlock(size, size, name);
 
@@ -232,7 +234,7 @@ namespace Doozy.Editor.EditorUI.Utils
             FluidToggleButtonTab.Get()
                 .SetTabPosition(TabPosition.TabOnBottom)
                 .SetElementSize(ElementSize.Tiny)
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Label)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Label)
                 .SetLabelText("Name")
                 .SetContainerColorOff(tabButtonColorOff);
 
@@ -249,7 +251,7 @@ namespace Doozy.Editor.EditorUI.Utils
         /// <para/> Fluid button used under headers for in-editor actions
         /// </summary>
         public static FluidButton SystemButton_SortComponents(GameObject targetGameObject, params string[] customSortedComponentNames) =>
-            SystemButton(EditorMicroAnimations.EditorUI.Icons.SortAz)
+            SystemButton(EditorSpriteSheets.EditorUI.Icons.SortAz)
                 .SetTooltip("Sort the components, on this gameObject, in a custom alphabetical order")
                 .SetOnClick(() => EditorUtils.SortComponents(targetGameObject, customSortedComponentNames));
 
@@ -258,7 +260,7 @@ namespace Doozy.Editor.EditorUI.Utils
         /// <para/> Fluid button used under headers for in-editor actions
         /// </summary>
         public static FluidButton SystemButton_RenameComponent(GameObject targetGameObject, Func<string> newName) =>
-            SystemButton(EditorMicroAnimations.EditorUI.Icons.Edit)
+            SystemButton(EditorSpriteSheets.EditorUI.Icons.Edit)
                 .SetTooltip($"Rename GameObject")
                 .SetOnClick(() =>
                 {
@@ -271,7 +273,7 @@ namespace Doozy.Editor.EditorUI.Utils
         /// <para/> Fluid button used under headers for in-editor actions
         /// </summary>
         public static FluidButton SystemButton_RenameAsset(Object targetAsset, Func<string> newName) =>
-            SystemButton(EditorMicroAnimations.EditorUI.Icons.Edit)
+            SystemButton(EditorSpriteSheets.EditorUI.Icons.Edit)
                 .SetTooltip($"Rename Asset")
                 .SetOnClick(() =>
                 {
@@ -329,7 +331,177 @@ namespace Doozy.Editor.EditorUI.Utils
                 .SetTooltip(tooltip)
                 .SetButtonStyle(ButtonStyle.Contained)
                 .SetElementSize(ElementSize.Tiny);
+
+
+        /// <summary> Get a Fluid ListView for the given array property </summary>
+        /// <param name="arrayProperty"> Target arrayProperty (not checked; will result in error if a property of an array is not passed) </param>
+        /// <param name="listTitle"> Title displayed on top of the list </param>
+        /// <param name="listDescription"> Descriptions displayed below the title </param>
+        /// <param name="objectType"> Type of object this ListView handles </param>
+        /// <param name="allowDragAndDrop"> Drag and Drop functionality is added automatically if TRUE. Set FALSE if you want to no Drag and Drop or intend to implement a custom one </param>
+        public static FluidListView GetObjectListView(SerializedProperty arrayProperty, string listTitle, string listDescription, Type objectType, bool allowDragAndDrop = true)
+        {
+            var flv = new FluidListView();
+            var itemsSource = new List<SerializedProperty>();
+
+            flv.SetListTitle(listTitle);
+            flv.SetListDescription(listDescription);
+            flv.listView.selectionType = SelectionType.None;
+            flv.listView.itemsSource = itemsSource;
+            flv.listView.makeItem = () => new ObjectFluidListViewItem(flv, objectType);
+
+            flv.listView.bindItem = (element, i) =>
+            {
+                var item = (ObjectFluidListViewItem)element;
+                item.Update(i, itemsSource[i]);
+                item.OnRemoveButtonClick += itemProperty =>
+                {
+                    int propertyIndex = 0;
+                    for (int j = 0; j < arrayProperty.arraySize; j++)
+                    {
+                        if (itemProperty.propertyPath != arrayProperty.GetArrayElementAtIndex(j).propertyPath)
+                            continue;
+                        propertyIndex = j;
+                        break;
+                    }
+                    arrayProperty.DeleteArrayElementAtIndex(propertyIndex);
+                    arrayProperty.serializedObject.ApplyModifiedProperties();
+
+                    UpdateItemsSource();
+                };
+            };
+            #if UNITY_2021_2_OR_NEWER
+            flv.listView.fixedItemHeight = 30;
+            flv.SetPreferredListHeight((int)flv.listView.fixedItemHeight * 6);
+            #else
+            flv.listView.itemHeight = 30;
+            flv.SetPreferredListHeight(flv.listView.itemHeight * 6);
+            #endif
+            flv.SetDynamicListHeight(false);
+            flv.HideFooterWhenEmpty(true);
+            flv.UseSmallEmptyListPlaceholder(true);
+            flv.emptyListPlaceholder.SetIcon(EditorSpriteSheets.EditorUI.Placeholders.EmptyListViewSmall);
+
+            //ADD ITEM BUTTON (plus button)
+            flv.AddNewItemButtonCallback += () =>
+            {
+                arrayProperty.InsertArrayElementAtIndex(0);
+                arrayProperty.GetArrayElementAtIndex(0).objectReferenceValue = null;
+                arrayProperty.serializedObject.ApplyModifiedProperties();
+                UpdateItemsSource();
+            };
+
+            UpdateItemsSource();
+
+            int arraySize = arrayProperty.arraySize;
+            flv.schedule.Execute(() =>
+            {
+                if (arrayProperty.arraySize == arraySize) return;
+                arraySize = arrayProperty.arraySize;
+                UpdateItemsSource();
+
+            }).Every(100);
+
+            void UpdateItemsSource()
+            {
+                itemsSource.Clear();
+                for (int i = 0; i < arrayProperty.arraySize; i++)
+                    itemsSource.Add(arrayProperty.GetArrayElementAtIndex(i));
+
+                flv?.Update();
+            }
+
+            if (!allowDragAndDrop)
+                return flv;
+            
+            //Drag and Drop
+            {
+                flv.RegisterCallback<AttachToPanelEvent>(_ =>
+                {
+                    flv.RegisterCallback<DragUpdatedEvent>(OnDragUpdate);
+                    flv.RegisterCallback<DragPerformEvent>(OnDragPerformEvent);
+                });
+
+                flv.RegisterCallback<DetachFromPanelEvent>(_ =>
+                {
+                    flv.UnregisterCallback<DragUpdatedEvent>(OnDragUpdate);
+                    flv.UnregisterCallback<DragPerformEvent>(OnDragPerformEvent);
+                });
+
+                void OnDragUpdate(DragUpdatedEvent evt)
+                {
+                    bool isValid = DragAndDrop.objectReferences.Any(item => item.GetType() == objectType);
+                    if (!isValid)
+                    {
+                        foreach (Object item in DragAndDrop.objectReferences)
+                        {
+                            if (!(item is GameObject go))
+                                continue;
+                            if (go.GetComponent(objectType) == null)
+                                continue;
+                            isValid = true;
+                            break;
+                        }
+                    }
+                    if (!isValid) return;
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Generic;
+                }
+
+                void OnDragPerformEvent(DragPerformEvent evt)
+                {
+                    var references =
+                        DragAndDrop.objectReferences
+                            .Where(item => item != null)
+                            .OrderBy(item => item.name)
+                            .ToList();
+
+                    foreach (Object item in references)
+                    {
+                        bool addItem = item.GetType() == objectType;
+                        bool addComponent = false;
+
+                        switch (addItem)
+                        {
+                            case false when item is GameObject go:
+                                addComponent = go.GetComponent(objectType) != null;
+                                break;
+                            case true:
+                                bool canAddItem = true;
+                                for (int i = 0; i < arrayProperty.arraySize; i++)
+                                {
+                                    if (arrayProperty.GetArrayElementAtIndex(i).objectReferenceValue != item)
+                                        continue;
+                                    canAddItem = false;
+                                    break;
+                                }
+                                if (!canAddItem) continue;
+                                arrayProperty.InsertArrayElementAtIndex(arrayProperty.arraySize);
+                                arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1).objectReferenceValue = item;
+                                continue;
+                        }
+
+                        if (!addComponent)
+                            continue;
+
+                        bool canAddComponent = true;
+                        Component component = ((GameObject)item).GetComponent(objectType);
+                        for (int i = 0; i < arrayProperty.arraySize; i++)
+                        {
+                            if (arrayProperty.GetArrayElementAtIndex(i).objectReferenceValue != component)
+                                continue;
+                            canAddComponent = false;
+                            break;
+                        }
+                        if (!canAddComponent) continue;
+                        arrayProperty.InsertArrayElementAtIndex(arrayProperty.arraySize);
+                        arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1).objectReferenceValue = ((GameObject)item).GetComponent(objectType);
+                    }
+                    arrayProperty.serializedObject.ApplyModifiedProperties();
+                }
+            }
+
+            return flv;
+        }
+
     }
-
-
 }

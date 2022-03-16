@@ -18,7 +18,7 @@ namespace Doozy.Editor.EditorUI.WindowLayouts
     {
         public override string layoutName => "Micro-Animations";
         public override Texture2D staticIconTexture => EditorTextures.EditorUI.Icons.EditorMicroAnimationGroup;
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.EditorUI.Components.EditorMicroAnimationGroup;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.EditorUI.Components.EditorMicroAnimationGroup;
 
         protected override int maximumNumberOfItemsVisibleAtOnce => 4;
 

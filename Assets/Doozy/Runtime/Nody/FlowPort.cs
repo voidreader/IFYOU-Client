@@ -12,7 +12,7 @@ using UnityEngine.Events;
 
 namespace Doozy.Runtime.Nody
 {
-    /// <summary> Base class for all flow ports </summary>
+    /// <summary> Base class for all ports that facilitate connections between nodes in the Nody system </summary>
     [Serializable]
     public class FlowPort
     {
@@ -104,7 +104,7 @@ namespace Doozy.Runtime.Nody
         /// <summary> Returns the value TypeQualifiedName and automatically updates the m_valueType if needed </summary>
         private string valueTypeQualifiedName
         {
-            get { return ValueTypeQualifiedName; }
+            get => ValueTypeQualifiedName;
             set
             {
                 ValueTypeQualifiedName = value;
@@ -176,8 +176,8 @@ namespace Doozy.Runtime.Nody
             value = JsonUtility.ToJson(Activator.CreateInstance(valueType));
         }
 
-        /// <summary> Create a deep copy of another port </summary>
-        /// <param name="other"></param>
+        /// <summary> Construct a deep copy from another FlowPort </summary>
+        /// <param name="other"> Source port </param>
         public FlowPort(FlowPort other)
         {
             PortId = other.portId;

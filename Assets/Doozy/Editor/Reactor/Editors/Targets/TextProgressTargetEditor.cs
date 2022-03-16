@@ -20,7 +20,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
     [CustomEditor(typeof(TextProgressTarget), true)]
     public class TextProgressTargetEditor : ProgressTargetEditor
     {
-        public override IEnumerable<Texture2D> targetIconTextures => EditorMicroAnimations.Reactor.Icons.TextProgressTarget;
+        public override IEnumerable<Texture2D> targetIconTextures => EditorSpriteSheets.Reactor.Icons.TextProgressTarget;
 
         private FluidToggleSwitch wholeNumbersSwitch { get; set; }
         private SerializedProperty propertyWholeNumbers { get; set; }

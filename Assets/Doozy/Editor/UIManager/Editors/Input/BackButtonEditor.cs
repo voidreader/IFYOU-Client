@@ -22,8 +22,8 @@ namespace Doozy.Editor.UIManager.Editors.Input
         private static Color accentColor => EditorColors.UIManager.UIComponent;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.UIComponent;
 
-        private static IEnumerable<Texture2D> backIconTextures => EditorMicroAnimations.EditorUI.Icons.Back;
-        private static IEnumerable<Texture2D> disabledEnabledTextures => EditorMicroAnimations.EditorUI.Icons.DisabledEnabled;
+        private static IEnumerable<Texture2D> backIconTextures => EditorSpriteSheets.EditorUI.Icons.Back;
+        private static IEnumerable<Texture2D> disabledEnabledTextures => EditorSpriteSheets.EditorUI.Icons.DisabledEnabled;
 
         private VisualElement root { get; set; }
         private FluidComponentHeader componentHeader { get; set; }

@@ -26,12 +26,15 @@ namespace Doozy.Editor.EditorUI.ScriptableObjects.Textures
 
         [SerializeField] private string GroupCategory;
         internal string groupCategory => GroupCategory;
-        
+
         [SerializeField] private string GroupName;
         internal string groupName => GroupName;
 
         [SerializeField] private string RemovePrefixFromTextureName;
         internal string removePrefixFromTextureName => RemovePrefixFromTextureName;
+
+        [SerializeField] private bool IgnoreTextureSettings;
+        internal bool ignoreTextureSettings => IgnoreTextureSettings;
         
         [SerializeField]
         private List<EditorTextureInfo> Textures = new List<EditorTextureInfo>();
@@ -52,13 +55,13 @@ namespace Doozy.Editor.EditorUI.ScriptableObjects.Textures
         internal Texture2D GetTexture(string textureName)
         {
             string cleanName = textureName.RemoveWhitespaces().RemoveAllSpecialCharacters();
-            
+
             // foreach (EditorTextureInfo textureInfo in textures.Where(ti => ti.TextureName.RemoveWhitespaces().RemoveAllSpecialCharacters().Equals(cleanName)))
             foreach (EditorTextureInfo textureInfo in textures.Where(ti => ti.TextureName.Equals(cleanName)))
                 return textureInfo.TextureReference;
-            
+
             Debug.LogWarning($"Texture '{textureName}' not found! Returned null.");
-            
+
             return null;
         }
 
@@ -68,14 +71,18 @@ namespace Doozy.Editor.EditorUI.ScriptableObjects.Textures
             string assetPath = AssetDatabase.GetAssetPath(this);
             string assetParentFolderPath = assetPath.Replace($"{name}.asset", "");
             string[] files = Directory.GetFiles(assetParentFolderPath, "*.png", SearchOption.TopDirectoryOnly);
-            
+
             if (files.Length == 0)
             {
                 // AssetDatabase.MoveAssetToTrash(assetPath);
                 return;
             }
+
+            if (!IgnoreTextureSettings)
+            {
+                TextureUtils.SetTextureSettingsToGUI(files);
+            }
             
-            TextureUtils.SetTextureSettingsToGUI(files);
             List<Texture2D> textures2D = TextureUtils.GetTextures2D(assetParentFolderPath);
             foreach (Texture2D texture2D in textures2D)
                 Textures.Add(new EditorTextureInfo
@@ -94,16 +101,20 @@ namespace Doozy.Editor.EditorUI.ScriptableObjects.Textures
             string[] splitPath = path.Split('/');
             string folderName = splitPath[splitPath.Length - 2];
 
-            GroupCategory = GroupCategory.RemoveWhitespaces().RemoveAllSpecialCharacters();
+            GroupCategory =
+                GroupCategory.IsNullOrEmpty()
+                    ? "General"
+                    : GroupCategory.RemoveWhitespaces().RemoveAllSpecialCharacters();
+
             GroupName = folderName.RemoveWhitespaces().RemoveAllSpecialCharacters();
-            
+
             AssetDatabase.RenameAsset(path, $"{DEFAULT_ASSET_FILENAME}_{GroupName}_{groupCategory}");
 
             Textures = Textures ?? new List<EditorTextureInfo>();
-            
+
             RemoveNullEntries();
             RemoveDuplicates();
-            
+
             foreach (EditorTextureInfo textureInfo in Textures)
             {
                 string textureFileName = textureInfo.TextureReference.name;
@@ -116,8 +127,5 @@ namespace Doozy.Editor.EditorUI.ScriptableObjects.Textures
             EditorUtility.SetDirty(this);
             if (saveAssets) AssetDatabase.SaveAssets();
         }
-
     }
-
-
 }

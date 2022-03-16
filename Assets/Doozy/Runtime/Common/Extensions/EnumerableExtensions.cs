@@ -7,11 +7,13 @@ using System.Collections.Generic;
 
 namespace Doozy.Runtime.Common.Extensions
 {
+    /// <summary> Extension methods for the IEnumerable interface </summary>
     public static class EnumerableExtensions
     {
         /// <summary> Convert IEnumerable to HashSet </summary>
         /// <param name="source"> Source IEnumerable </param>
-        /// <param name="comparer"></param>
+        /// <param name="comparer">  Equality comparer for the set type </param>
+        /// <returns> A new HashSet </returns>
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null) =>
             new HashSet<T>(source, comparer);
     }

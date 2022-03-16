@@ -12,25 +12,25 @@ using static System.String;
 
 namespace Doozy.Runtime.Common.Extensions
 {
+    /// <summary> Extension methods for the string (String) class </summary>
     public static class StringExtensions
     {
         /// <summary> Remove all whitespaces from string </summary>
         /// <param name="target"> Target string </param>
+        /// <returns> Processed string </returns>
         public static string RemoveWhitespaces(this string target) =>
             Regex.Replace(target, @"\s+", "");
 
         /// <summary> Convert all whitespaces to single space </summary>
         /// <param name="target"> Target string </param>
+        /// <returns> Processed string </returns>
         public static string ConvertWhitespacesToSingleSpaces(this string target) =>
             Regex.Replace(target, @"\s+", " ");
 
         /// <summary> Reverse back or forward slashes </summary>
         /// <param name="target"> String value </param>
-        /// <param name="direction">
-        ///         0 - replace forward slash with back
-        /// <para/> 1 - replace back with forward slash
-        /// </param>
-        /// <returns></returns>
+        /// <param name="direction"> 0 - replace forward slash with back, 1 - replace back with forward slash </param>
+        /// <returns> Processed string </returns>
         public static string ReverseSlash(this string target, int direction)
         {
             switch (direction)
@@ -50,6 +50,7 @@ namespace Doozy.Runtime.Common.Extensions
         /// </summary>
         /// <param name="target"> String value to truncate </param>
         /// <param name="c"> Separator </param>
+        /// <returns> Processed string </returns>
         public static string LeftOf(this string target, char c)
         {
             int ndx = target.IndexOf(c);
@@ -64,6 +65,7 @@ namespace Doozy.Runtime.Common.Extensions
         /// </summary>
         /// <param name="target"> String value to truncate </param>
         /// <param name="c"> Separator </param>
+        /// <returns> Processed string </returns>
         public static string RightOf(this string target, char c)
         {
             int ndx = target.IndexOf(c);
@@ -72,32 +74,36 @@ namespace Doozy.Runtime.Common.Extensions
                 : target.Substring(ndx + 1);
         }
 
-
         /// <summary> Remove the last character from a string </summary>
         /// <param name="target"> String value </param>
+        /// <returns> Processed string </returns>
         public static string RemoveLastCharacter(this string target) =>
-            target.Substring(0, target.Length - 1);
+            target.Length > 0 ? target.Substring(0, target.Length - 1) : target;
 
         /// <summary> Remove the last number of characters from a string </summary>
         /// <param name="target"> String value </param>
         /// <param name="numberOfCharactersToRemove"> Number of characters to remove from the end of the target string </param>
+        /// <returns> Processed string </returns>
         public static string RemoveLast(this string target, int numberOfCharactersToRemove) =>
             target.IsNullOrEmpty() ? string.Empty : target.Substring(0, target.Length - numberOfCharactersToRemove);
 
         /// <summary> Remove the first character from a string </summary>
         /// <param name="target"> String value </param>
+        /// <returns> Processed string </returns>
         public static string RemoveFirstCharacter(this string target) =>
             target.Substring(1);
 
         /// <summary> Remove the first number of characters from a string </summary>
         /// <param name="target"> String value </param>
         /// <param name="numberOfCharactersToRemove"> Number of characters to remove from the start of the target string </param>
+        /// <returns> Processed string </returns>
         public static string RemoveFirst(this string target, int numberOfCharactersToRemove) =>
             target.Substring(numberOfCharactersToRemove);
 
         /// <summary> Remove all special characters from the string </summary>
         /// <param name="target"> String value </param>
         /// <returns> The adjusted string </returns>
+        /// <returns> Processed string </returns>
         public static string RemoveAllSpecialCharacters(this string target)
         {
             var sb = new StringBuilder(target.Length);
@@ -110,14 +116,13 @@ namespace Doozy.Runtime.Common.Extensions
         /// <seealso aref="https://stackoverflow.com/questions/7647716/how-to-remove-empty-lines-from-a-formatted-string"/>
         /// </summary>
         /// <param name="target"> String value </param>
-        public static string RemoveAllEmptyLines(this string target)
-        {
-            return Regex.Replace(target, @"^\s*$\n|\r", Empty, RegexOptions.Multiline).TrimEnd();
-        }
+        /// <returns> Processed string </returns>
+        public static string RemoveAllEmptyLines(this string target) =>
+            Regex.Replace(target, @"^\s*$\n|\r", Empty, RegexOptions.Multiline).TrimEnd();
 
         /// <summary> Replace Line Feeds </summary>
         /// <param name="target"> String value to remove line feeds from </param>
-        /// <returns> System.string </returns>
+        /// <returns> Processed string </returns>
         public static string ReplaceLineFeeds(this string target) =>
             Regex.Replace(target, @"^[\r\n]+|\.|[\r\n]+$", "");
 
@@ -397,7 +402,7 @@ namespace Doozy.Runtime.Common.Extensions
         /// <param name="target"> String value that must be encrypted </param>
         /// <param name="key"> Encryption key </param>
         /// <returns> A string representing a byte array separated by a minus sign </returns>
-        /// <exception cref="ArgumentException"> Occurs when stringToEncrypt or key is null or empty </exception>
+        // /// <exception cref="ArgumentException"> Occurs when stringToEncrypt or key is null or empty </exception>
         public static string Encrypt(this string target, string key)
         {
             var cspParameter = new CspParameters { KeyContainerName = key };
@@ -414,7 +419,7 @@ namespace Doozy.Runtime.Common.Extensions
         /// <param name="target"> String value that must be decrypted </param>
         /// <param name="key"> Decryption key </param>
         /// <returns> The decrypted string or null if decryption failed </returns>
-        /// <exception cref="ArgumentException"> Occurs when stringToDecrypt or key is null or empty </exception>
+        // /// <exception cref="ArgumentException"> Occurs when stringToDecrypt or key is null or empty </exception>
         public static string Decrypt(this string target, string key)
         {
             var cspParameters = new CspParameters { KeyContainerName = key };

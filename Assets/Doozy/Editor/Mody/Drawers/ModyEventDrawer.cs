@@ -81,7 +81,7 @@ namespace Doozy.Editor.Mody.Drawers
                     .ShowItemIndex(false)
                     .SetListDescription("Action Runners");
 
-            fluidListView.emptyListPlaceholder.SetIcon(EditorMicroAnimations.EditorUI.Placeholders.EmptyListViewSmall);
+            fluidListView.emptyListPlaceholder.SetIcon(EditorSpriteSheets.EditorUI.Placeholders.EmptyListViewSmall);
 
             fluidListView.listView.selectionType = SelectionType.None;
             fluidListView.listView.makeItem = () =>

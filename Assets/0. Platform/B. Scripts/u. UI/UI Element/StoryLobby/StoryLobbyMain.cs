@@ -102,6 +102,7 @@ namespace PIERStory {
             // 슈퍼유저 관련 처리 
             SuperUserFlowEpisodeStart = SuperUserEpisodeStart;
             
+            UserManager.OnFreepassPurchase = PostPurchasePremiumPass;
         }
         
         protected virtual void Update() {
@@ -119,6 +120,16 @@ namespace PIERStory {
             if(Time.frameCount % 5 == 0) {
                 textOpenTimer.text = GetOpenRemainTime();
             }
+        }
+        
+        /// <summary>
+        /// 프리미엄 패스 구매 후 호출 
+        /// </summary>
+        void PostPurchasePremiumPass() {
+            if(!this.gameObject.activeSelf)
+                return;
+            
+            InitStoryLobbyControls();
         }
         
         /// <summary>
@@ -464,7 +475,7 @@ namespace PIERStory {
             if(waitingReducePrice < SystemManager.main.episodeOpenPricePer)
                 waitingReducePrice = SystemManager.main.episodeOpenPricePer;
                 
-            return timeDiff.Minutes / 10 * SystemManager.main.episodeOpenPricePer;    
+            return waitingReducePrice;
         }
         
         

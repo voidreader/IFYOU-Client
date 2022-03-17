@@ -79,8 +79,18 @@ namespace PIERStory {
             }
         }        
         
+        /// <summary>
+        /// 신규 스페셜 에피소드 체크 
+        /// </summary>
         void CheckNewSpecialEpisodes() {
+            for(int i=0; i<StoryManager.main.SideEpisodeList.Count;i++) {
+                if(StoryManager.main.SideEpisodeList[i].isUnlock && StoryManager.main.SideEpisodeList[i].purchaseState == PurchaseState.None) {
+                    SetNotification(true);
+                    return;
+                }
+            }
             
+            SetNotification(false);
         }
         
         

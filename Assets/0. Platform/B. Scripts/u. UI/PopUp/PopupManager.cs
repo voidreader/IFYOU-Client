@@ -54,6 +54,7 @@ namespace PIERStory {
         [SerializeField] GameObject popupFlowReset; // 리셋.        
         [SerializeField] GameObject popupStoryReset; // 스토리 전체 리셋 1화로.. 
         [SerializeField] GameObject popupGameAbility; // 게임 능력치 증감 안내 메세지 
+        [SerializeField] GameObject popupSpecialEpisodeBuy; // 스페셜 에피소드 구매 
          
         private void Awake() {
             if(main != null) {
@@ -169,13 +170,17 @@ namespace PIERStory {
         /// <param name="addToPopupQueue"></param>
         /// <param name="instantAction"></param>
         public void ShowPopup(PopupBase popup, bool addToPopupQueue, bool instantAction = false) {
-            if (popup == null) return;
+            if (popup == null) {
+                Debug.Log("<color=yellow>### No Popup. </color>");
+                return;
+            }
             
             if(addToPopupQueue) {
                 Debug.Log("<color=yellow>### Added Popup Queue. </color>" + popup.name);
                 PopupQueue.Enqueue(popup);  // 큐를 통해 실행.
             }
             else {
+                Debug.Log("<color=yellow>### new Popup. </color>" + popup.name);
                 popup.Show(); // 독립적인 실행 
             }
         }
@@ -376,6 +381,11 @@ namespace PIERStory {
                 DictPopup[GameConst.POPUP_GAME_ABILITY] = popupGameAbility;
             else 
                 DictPopup.Add(GameConst.POPUP_GAME_ABILITY, popupGameAbility);
+                
+            if(DictPopup.ContainsKey(CommonConst.POPUP_SPECIAL_EPISODE_BUY)) 
+                DictPopup[CommonConst.POPUP_SPECIAL_EPISODE_BUY] = popupSpecialEpisodeBuy;
+            else 
+                DictPopup.Add(CommonConst.POPUP_SPECIAL_EPISODE_BUY, popupSpecialEpisodeBuy);
         }
         
         #endregion

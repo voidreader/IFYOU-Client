@@ -25,11 +25,18 @@ namespace PIERStory
         public Sprite spriteUnlock;
         public Sprite spriteLock;
         
+        public GameObject groupPrice; // 가격 정보 
+        public TextMeshProUGUI textPrice;  
+        public GameObject objNew; // 신규 마크 
+        public int playPrice = 0; 
+        
 
         public void InitSpecialEpisode(EpisodeData epiData)
         {
             specialEpisode = epiData;
             episodeBanner.SetDownloadURL(epiData.popupImageURL, epiData.popupImageKey);
+            groupPrice.SetActive(false);
+            objNew.SetActive(false);
 
 
             if(specialEpisode.isUnlock) { // 잠금해제된 상태 
@@ -47,6 +54,18 @@ namespace PIERStory
                 
                 imageInfo.sprite = spriteLock;
             }
+            
+            // 구매 상태에 따른 가격 표시 추가
+            if(specialEpisode.purchaseState == PurchaseState.None) {
+                groupPrice.SetActive(true);
+                textPrice.text = specialEpisode.priceStarPlaySale.ToString();
+                playPrice = specialEpisode.priceStarPlaySale;
+                
+                if(specialEpisode.isUnlock)
+                    objNew.SetActive(true);
+            }
+            
+            
             gameObject.SetActive(true);
         }
 
@@ -59,25 +78,63 @@ namespace PIERStory
         public void OnClickStartSpecialEpisode()
         {
             
+            // 잠긴 상태는 리턴. 
             if(!specialEpisode.isUnlock)
-                return;            
+                return;          
+                
+            Debug.Log("## OnClickStartSpecialEpisode");
+                
+            // 구매되지 않은 경우에만 띄운다. 
+            if(specialEpisode.purchaseState != PurchaseState.Permanent) {
+                
+                Debug.Log("## OnClickStartSpecialEpisode Not Permanent");
+                
+                
+                // 패스 유저는 그냥 0원 구매후 진행 
+                if(UserManager.main.HasProjectFreepass()) {
+                    UserManager.OnRequestEpisodePurchase = PurchasePostProcess;
+                    NetworkLoader.main.PurchaseEpisode(specialEpisode.episodeID, PurchaseState.Permanent, specialEpisode.currencyStarPlay, "0");
+                    
+                    SystemManager.main.givenEpisodeData = specialEpisode;
+                    SystemManager.ShowNetworkLoading(); 
+                    return;                    
+                }
+                
+                // 일반 유저 
+                // 팝업 오픈 
+                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_SPECIAL_EPISODE_BUY);
+                if(p == null) {
+                    Debug.LogError("SpecialEpisodeBuy Popup is null");
+                    return;
+                }
+                
+                p.Data.contentEpisode = specialEpisode; // 현재 에피소드 설정 
+                p.Data.positiveButtonCallback = StartSpecialEpisode; // 콜백 설정. 
+                PopupManager.main.ShowPopup(p, false, false);
+                
+                // Debug.Log("## OnClickStartSpecialEpisode Show Popup");
+                
+                return;
+                
+            } // 끝
             
+            
+            
+            
+            
+            // 구매된 경우는 플레이 처리 
             SystemManager.main.givenEpisodeData = specialEpisode;
             SystemManager.ShowNetworkLoading(); 
-            
-            // 0원으로 구매 처리 
-            if(specialEpisode.purchaseState != PurchaseState.Permanent) {
-                UserManager.OnRequestEpisodePurchase = PurchasePostProcess;
-                NetworkLoader.main.PurchaseEpisode(specialEpisode.episodeID, PurchaseState.Permanent, specialEpisode.currencyStarPlay, "0");
-            }
-            else {
-                
-                // 이미 구매기록 있다면, 그냥 진행 
-                PurchasePostProcess(true);
-            }
+            StartSpecialEpisode();
+  
         }
         
         
+
+        /// <summary>
+        /// 구매 후 처리 
+        /// </summary>
+        /// <param name="__isPurchaseSuccess"></param>
         void PurchasePostProcess(bool __isPurchaseSuccess) {
             if (!__isPurchaseSuccess)
             {
@@ -86,11 +143,8 @@ namespace PIERStory
                 return;
             }
             
-            specialEpisode.SetPurchaseState();
             StartSpecialEpisode();
-            
-        }
-        
+        }        
         
         /// <summary>
         /// 스페셜 에피소드 플레이 

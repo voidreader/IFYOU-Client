@@ -78,6 +78,7 @@ namespace PIERStory
         public const string POPUP_TUTORIAL_TUTORIAL_COMPLETE = "TutorialComplete";
 
         public const string POPUP_CONNECTING_SHOP = "ConnectingShop";
+        public const string POPUP_SPECIAL_EPISODE_BUY = "SpecialEpisodeBuy";
         
         // JSON COLUMN
         public const string JSON_EPISODE_SCENE_HISTORY = "sceneProgress";

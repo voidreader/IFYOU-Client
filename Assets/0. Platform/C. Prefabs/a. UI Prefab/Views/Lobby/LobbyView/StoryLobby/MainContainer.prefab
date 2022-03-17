@@ -2673,6 +2673,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
@@ -2879,6 +2882,8 @@ MonoBehaviour:
   spriteInactiveEpisodeTitleBG: {fileID: 21300000, guid: eb382ef3e9d836e4cb6a54df1eefc3ea, type: 3}
   openDateTick: 0
   isOpenTimeCountable: 0
+  totalMin: 0
+  waitingReducePrice: 0
   posGroupContentsOrigin: {x: -355, y: 0}
   posGroupContentsOpen: {x: -296, y: 0}
   isEpisodeContinuePlay: 0
@@ -4076,6 +4081,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: cc5a7c500f236c8448961d079a700e76, type: 3}
+    - target: {fileID: 6172452685768264341, guid: e63fa9d75698b5c4498ec5ad87fe59af, type: 3}
+      propertyPath: _textID
+      value: 5026
+      objectReference: {fileID: 0}
     - target: {fileID: 6612985423496197292, guid: e63fa9d75698b5c4498ec5ad87fe59af, type: 3}
       propertyPath: m_text
       value: Mission
@@ -4225,6 +4234,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 3bdfe57d9bbd3ea4ea05b64bfc2a995c, type: 3}
+    - target: {fileID: 6172452685768264341, guid: e63fa9d75698b5c4498ec5ad87fe59af, type: 3}
+      propertyPath: _textID
+      value: 6233
+      objectReference: {fileID: 0}
     - target: {fileID: 6612985423496197292, guid: e63fa9d75698b5c4498ec5ad87fe59af, type: 3}
       propertyPath: m_text
       value: Special
@@ -4378,6 +4391,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: c7bbc5e5a9490d84591960ef06853389, type: 3}
+    - target: {fileID: 6172452685768264341, guid: e63fa9d75698b5c4498ec5ad87fe59af, type: 3}
+      propertyPath: _textID
+      value: 5025
+      objectReference: {fileID: 0}
     - target: {fileID: 6612985423496197292, guid: e63fa9d75698b5c4498ec5ad87fe59af, type: 3}
       propertyPath: m_text
       value: Ending
@@ -4745,6 +4762,26 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 8032862828293252809}
+    - target: {fileID: 2431300039883048886, guid: 4b5957abe7a8b5b49b14e1012d7e4682, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2431300039883048886, guid: 4b5957abe7a8b5b49b14e1012d7e4682, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2431300039883048886, guid: 4b5957abe7a8b5b49b14e1012d7e4682, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 145
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464788180218908045, guid: 4b5957abe7a8b5b49b14e1012d7e4682, type: 3}
+      propertyPath: m_DefaultAnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464788180218908045, guid: 4b5957abe7a8b5b49b14e1012d7e4682, type: 3}
+      propertyPath: m_DefaultAnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5853297720961587774, guid: 4b5957abe7a8b5b49b14e1012d7e4682, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

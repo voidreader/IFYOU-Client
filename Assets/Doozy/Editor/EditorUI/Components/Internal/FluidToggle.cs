@@ -116,7 +116,7 @@ namespace Doozy.Editor.EditorUI.Components.Internal
             (
                 IconReaction =
                     icon.GetTexture2DReaction().SetEditorHeartbeat()
-                        .SetTextures(EditorMicroAnimations.EditorUI.Components.RadioCircle)
+                        .SetTextures(EditorSpriteSheets.EditorUI.Components.RadioCircle)
                         .SetDuration(Default.k_IconReactionDuration)
             );
 
@@ -125,7 +125,7 @@ namespace Doozy.Editor.EditorUI.Components.Internal
             m_MixedValuesIconReaction ??
             (
                 m_MixedValuesIconReaction = icon.GetTexture2DReaction().SetEditorHeartbeat()
-                    .SetTextures(EditorMicroAnimations.EditorUI.Components.LineMixedValues)
+                    .SetTextures(EditorSpriteSheets.EditorUI.Components.LineMixedValues)
                     .SetDuration(0.15f)
             );
 

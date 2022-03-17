@@ -2,8 +2,10 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using Doozy.Runtime.Common.Utils;
 using UnityEditor;
 using UnityEngine;
+// ReSharper disable MemberCanBeProtected.Global
 
 namespace Doozy.Editor.Common.ScriptableObjects
 {
@@ -23,6 +25,7 @@ namespace Doozy.Editor.Common.ScriptableObjects
                 s_instance = AssetDatabase.LoadAssetAtPath<T>(dataFilePath);
                 if (s_instance != null) return s_instance;
                 s_instance = CreateInstance<T>();
+                PathUtils.CreatePath(dataFolderPath);
                 AssetDatabase.CreateAsset(s_instance, dataFilePath);
                 return s_instance;
             }
@@ -33,7 +36,7 @@ namespace Doozy.Editor.Common.ScriptableObjects
             EditorUtility.SetDirty(instance);
             AssetDatabase.SaveAssetIfDirty(instance);
         }
-        
+
         public static void UndoRecord(string message)
         {
             Undo.RecordObject(instance, message);

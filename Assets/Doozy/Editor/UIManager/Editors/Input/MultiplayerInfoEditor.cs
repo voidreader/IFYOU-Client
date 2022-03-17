@@ -22,7 +22,7 @@ namespace Doozy.Editor.UIManager.Editors.Input
     [CustomEditor(typeof(MultiplayerInfo), true)]
     public class MultiplayerInfoEditor : UnityEditor.Editor
     {
-        private static IEnumerable<Texture2D> multiplayerInfoIconTextures => EditorMicroAnimations.UIManager.Icons.MultiplayerInfo;
+        private static IEnumerable<Texture2D> multiplayerInfoIconTextures => EditorSpriteSheets.UIManager.Icons.MultiplayerInfo;
 
         private static Color accentColor => EditorColors.UIManager.InputComponent;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.InputComponent;

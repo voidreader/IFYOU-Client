@@ -3,10 +3,13 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using Doozy.Runtime.Common.Attributes;
+using Doozy.Runtime.Common.Utils;
 using UnityEngine;
 
 namespace Doozy.Runtime.Common.ScriptableObjects
 {
+    /// <summary> Base ScriptableObject class that implements a modified singleton pattern to work for scriptable objects </summary>
+    /// <typeparam name="T"> Class type </typeparam>
     public class SingletonRuntimeScriptableObject<T> : ScriptableObject where T : ScriptableObject
     {
         private static string fileName => $"{typeof(T).Name}";
@@ -17,6 +20,7 @@ namespace Doozy.Runtime.Common.ScriptableObjects
         [ClearOnReload]
         private static T s_instance;
 
+        /// <summary> Get asset singleton instance </summary>
         public static T instance
         {
             get
@@ -33,20 +37,21 @@ namespace Doozy.Runtime.Common.ScriptableObjects
                 s_instance = CreateInstance<T>();
                 #if UNITY_EDITOR
                 {
+                    PathUtils.CreatePath(assetFolderPath);
                     UnityEditor.AssetDatabase.CreateAsset(s_instance, assetFilePath);
                 }
                 #endif
                 return s_instance;
             }
         }
-        
+
         #if UNITY_EDITOR
-        
+
         public static void Restore()
         {
             UnityEditor.EditorUtility.SetDirty(instance);
         }
-        
+
         public static void UndoRecord(string message)
         {
             UnityEditor.Undo.RecordObject(instance, message);
@@ -59,7 +64,7 @@ namespace Doozy.Runtime.Common.ScriptableObjects
             UnityEditor.AssetDatabase.SaveAssets();
             if (refreshAssetDatabase) UnityEditor.AssetDatabase.Refresh();
         }
-        
+
         #endif
     }
 }

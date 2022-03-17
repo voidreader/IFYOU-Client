@@ -8,6 +8,9 @@ using Random = UnityEngine.Random;
 
 namespace Doozy.Runtime.Common
 {
+    /// <summary>
+    /// Data class used to get random int values from a given [min,max] interval
+    /// </summary>
     [Serializable]
     public class RandomInt
     {
@@ -62,15 +65,22 @@ namespace Doozy.Runtime.Common
         /// <summary> Random value from the [MIN,MAX] interval </summary>
         private int random => Random.Range(MIN, MAX + 1);
 
+        /// <summary> Construct a new RandomInt using the [min,max] interval values from the other RandomInt </summary>
+        /// <param name="other"> Other RandomInt </param>
         public RandomInt(RandomInt other) : this(other.min, other.max) {}
 
+        /// <summary> Construct a new RandomInt with the default [min, max] interval of [0,1] </summary>
         public RandomInt() : this(0, 1) {}
 
-        public RandomInt(int minValue, int maxValue)
-        {
+        /// <summary> Construct a new RandomInt with the given min and max interval values </summary>
+        /// <param name="minValue"> Min value </param>
+        /// <param name="maxValue"> Max value </param>
+        public RandomInt(int minValue, int maxValue) =>
             Reset(minValue, maxValue);
-        }
 
+        /// <summary> Reset the interval to the given min and max values </summary>
+        /// <param name="minValue"> Min value </param>
+        /// <param name="maxValue"> Max value </param>
         public void Reset(int minValue = 0, int maxValue = 1)
         {
             MIN = minValue;

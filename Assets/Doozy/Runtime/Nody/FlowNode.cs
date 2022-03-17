@@ -13,11 +13,13 @@ using UnityEngine.Events;
 
 namespace Doozy.Runtime.Nody
 {
-    /// <summary> Base class for all flow nodes </summary>
+    /// <summary> Base class for all nodes in Nody system </summary>
     [Serializable]
     public abstract class FlowNode : ScriptableObject
     {
+        /// <summary> True is Multiplayer Mode is enabled </summary>
         public bool multiplayerMode => UIManagerInputSettings.instance.multiplayerMode & flowGraph.controller.hasMultiplayerInfo;
+        /// <summary> Default player index value (used for global user) </summary>
         public int playerIndex => flowGraph.controller.playerIndex;
         
         [SerializeField] private string FlowGraphId;

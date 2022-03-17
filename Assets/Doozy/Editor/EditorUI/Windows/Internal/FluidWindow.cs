@@ -2,6 +2,9 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System;
+using Doozy.Editor.Nody;
+using Doozy.Editor.UIElements;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -54,17 +57,32 @@ namespace Doozy.Editor.EditorUI.Windows.Internal
             instance.titleContent.text = windowTitle;
         }
 
+        protected virtual void Awake() {}
+
         protected virtual void OnEnable()
         {
             isOpen = true;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         }
 
         protected virtual void OnDisable()
         {
             isOpen = false;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
         }
 
         protected virtual void OnDestroy() {}
+
+        protected virtual void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            if (state == PlayModeStateChange.EnteredPlayMode)
+                return;
+            
+            OnDestroy();
+            root.RecycleAndClear();
+            CreateGUI();
+        }
 
         protected abstract void CreateGUI();
 

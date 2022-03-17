@@ -7,8 +7,13 @@ namespace Doozy.Runtime.Mody
 	/// <summary> Defines the all the methods available for an Action </summary>
 	public enum RunAction
 	{
+		/// <summary> Execute the Start method </summary>
 		Start,
+		
+		/// <summary> Execute the Stop method </summary>
 		Stop,
+		
+		/// <summary> Execute the Finish method </summary>
 		Finish
 	}
 }

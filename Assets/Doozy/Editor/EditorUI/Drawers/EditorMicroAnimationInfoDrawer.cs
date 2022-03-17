@@ -127,7 +127,7 @@ namespace Doozy.Editor.EditorUI.Drawers
 
             FluidButton playForwardButton =
                 FluidButton.Get()
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.PlayForward)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.PlayForward)
                     .SetAccentColor(EditorSelectableColors.EditorUI.LightGreen)
                     .SetTooltip("Play Forward")
                     .SetElementSize(ElementSize.Small)
@@ -136,7 +136,7 @@ namespace Doozy.Editor.EditorUI.Drawers
 
             FluidButton playReversedButton =
                 FluidButton.Get()
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.PlayReverse)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.PlayReverse)
                     .SetAccentColor(EditorSelectableColors.EditorUI.LightGreen)
                     .SetTooltip("Play Reversed")
                     .SetElementSize(ElementSize.Small)

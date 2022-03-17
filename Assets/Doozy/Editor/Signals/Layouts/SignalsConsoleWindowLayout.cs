@@ -23,7 +23,7 @@ namespace Doozy.Editor.Signals.Layouts
 {
     public sealed class SignalsConsoleWindowLayout : FluidWindowLayout
     {
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.Signals.Icons.Signal;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.Signals.Icons.Signal;
         public override Color accentColor => EditorColors.Signals.Signal;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Signals.Signal;
 
@@ -33,9 +33,9 @@ namespace Doozy.Editor.Signals.Layouts
         private static Color streamColor => EditorColors.Signals.Stream;
         private static EditorSelectableColorInfo streamSelectableColor => EditorSelectableColors.Signals.Stream;
 
-        private static IEnumerable<Texture2D> signalTextures => EditorMicroAnimations.Signals.Icons.Signal;
-        private static IEnumerable<Texture2D> streamTextures => EditorMicroAnimations.Signals.Icons.SignalStream;
-        private static IEnumerable<Texture2D> filterTextures => EditorMicroAnimations.EditorUI.Icons.Filter;
+        private static IEnumerable<Texture2D> signalTextures => EditorSpriteSheets.Signals.Icons.Signal;
+        private static IEnumerable<Texture2D> streamTextures => EditorSpriteSheets.Signals.Icons.SignalStream;
+        private static IEnumerable<Texture2D> filterTextures => EditorSpriteSheets.EditorUI.Icons.Filter;
 
         public int consoleHistorySteps { get; private set; } = 20;
 
@@ -139,13 +139,13 @@ namespace Doozy.Editor.Signals.Layouts
 
                 placeholderOffline =
                     FluidPlaceholder
-                        .Get("Signals is offline", EditorMicroAnimations.Signals.Placeholders.OfflineSignal)
+                        .Get("Signals is offline", EditorSpriteSheets.Signals.Placeholders.OfflineSignal)
                         .SetStyleFlexGrow(1)
                         .Hide();
 
                 placeholderNoSignals =
                     FluidPlaceholder
-                        .Get("No signals detected", EditorMicroAnimations.Signals.Placeholders.OnlineSignal)
+                        .Get("No signals detected", EditorSpriteSheets.Signals.Placeholders.OnlineSignal)
                         .SetStyleFlexGrow(1)
                         .Hide();
 
@@ -155,7 +155,7 @@ namespace Doozy.Editor.Signals.Layouts
                 clearLogButton =
                     FluidButton.Get()
                         .SetLabelText("Clear")
-                        .SetIcon(EditorMicroAnimations.EditorUI.Icons.Clear)
+                        .SetIcon(EditorSpriteSheets.EditorUI.Icons.Clear)
                         .SetButtonStyle(ButtonStyle.Contained)
                         .SetElementSize(ElementSize.Tiny)
                         .SetOnClick(ClearLog);
@@ -190,7 +190,7 @@ namespace Doozy.Editor.Signals.Layouts
                             .SetStyleMarginRight(DesignUtils.k_Spacing);
 
                     FluidButton buttonClear =
-                        FluidButton.Get(EditorMicroAnimations.EditorUI.Icons.Clear)
+                        FluidButton.Get(EditorSpriteSheets.EditorUI.Icons.Clear)
                             .SetElementSize(ElementSize.Tiny)
                             .SetStyleAlignSelf(Align.FlexEnd)
                             .SetOnClick(() => textField.value = string.Empty);

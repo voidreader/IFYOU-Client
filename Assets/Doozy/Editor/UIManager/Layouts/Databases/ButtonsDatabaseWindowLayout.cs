@@ -20,7 +20,7 @@ namespace Doozy.Editor.UIManager.Layouts.Databases
     public sealed class ButtonsDatabaseWindowLayout : CategoryNameGroupWindowLayout, IUIManagerDatabaseWindowLayout
     {
         public override string layoutName => "Buttons";
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.UIManager.Icons.ButtonsDatabase;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.UIManager.Icons.UIButtonDatabase;
         public override Color accentColor => EditorColors.UIManager.UIComponent;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.UIComponent;
 
@@ -38,9 +38,10 @@ namespace Doozy.Editor.UIManager.Layouts.Databases
         public ButtonsDatabaseWindowLayout()
         {
             AddHeader("Buttons Database", "UIButton Ids", animatedIconTextures);
-            sideMenu.SetMenuLevel(FluidSideMenu.MenuLevel.Level_2);
-            sideMenu.IsCollapsable(false);
-            sideMenu.SetAccentColor(selectableAccentColor);
+            sideMenu
+                .SetMenuLevel(FluidSideMenu.MenuLevel.Level_2)
+                .IsCollapsable(false)
+                .SetAccentColor(selectableAccentColor);
             Initialize();
         }
     }

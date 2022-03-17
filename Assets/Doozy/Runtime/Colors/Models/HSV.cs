@@ -37,15 +37,24 @@ namespace Doozy.Runtime.Colors.Models
 		/// <summary> Value - l ∊ [0, 1] </summary>
 		public float v;
 
+		/// <summary> Get a copy of this HSV </summary>
+		/// <returns> A new HSV </returns>
 		public HSV Copy() =>
 			new HSV(h, s, v);
 
+		/// <summary> Convert this HSV to a Color with the given alpha value </summary>
+		/// <param name="alpha"> Alpha value </param>
+		/// <returns> A new Color </returns>
 		public Color ToColor(float alpha = 1) =>
 			ColorUtils.HSVtoRGB(this).Validate().ToColor();
 
+		/// <summary> Convert this HSV to RGB </summary>
+		/// <returns> A new RGB </returns>
 		public RGB ToRGB() =>
 			ColorUtils.HSVtoRGB(this);
 
+		/// <summary> Validate HSV values </summary>
+		/// /// <returns> Returns itself </returns>
 		public HSV Validate()
 		{
 			h = ValidateColor(h, H.MIN, H.MAX);
@@ -57,6 +66,8 @@ namespace Doozy.Runtime.Colors.Models
 		private float ValidateColor(float value, float min, float max) =>
 			Mathf.Max(min, Mathf.Min(max, value));
 
+		/// <summary> Get factorized values </summary>
+		/// <returns> A new Vector3 with the factorized values of this HSV </returns>
 		public Vector3 Factorize() =>
 			new Vector3
 			{
@@ -68,6 +79,9 @@ namespace Doozy.Runtime.Colors.Models
 		private int FactorizeColor(float value, float min, float max, float f) =>
 			(int) Mathf.Max(min * f, Mathf.Min(max * f, Mathf.Round(value * f)));
 
+		/// <summary> Convert HSV to string </summary>
+		/// <param name="factorize"> If TRUE it uses factorized values </param>
+		/// <returns> Pretty string </returns>
 		public string ToString(bool factorize = false) =>
 			factorize
 				? $"hsv({Factorize().x}, {Factorize().y}%, {Factorize().z}%)"
@@ -76,24 +90,33 @@ namespace Doozy.Runtime.Colors.Models
 		/// <summary> Hue </summary>
 		public struct H
 		{
+			/// <summary> Minimum value </summary>
 			public const float MIN = 0;
+			/// <summary> Maximum value </summary>
 			public const float MAX = 1;
+			/// <summary> Factorize value </summary>
 			public const int F = 360;
 		}
 
 		/// <summary> Saturation </summary>
 		public struct S
 		{
+			/// <summary> Minimum value </summary>
 			public const float MIN = 0;
+			/// <summary> Maximum value </summary>
 			public const float MAX = 1;
+			/// <summary> Factorize value </summary>
 			public const int F = 100;
 		}
 
 		/// <summary> Value </summary>
 		public struct V
 		{
+			/// <summary> Minimum value </summary>
 			public const float MIN = 0;
+			/// <summary> Maximum value </summary>
 			public const float MAX = 1;
+			/// <summary> Factorize value </summary>
 			public const int F = 100;
 		}
 	}

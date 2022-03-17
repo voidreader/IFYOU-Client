@@ -103,7 +103,7 @@ namespace Doozy.Editor.Common.Layouts
                     FluidButton.Get()
                         .SetLabelText("Regenerate Enums")
                         .SetTooltip("Regenerate enum database accessors")
-                        .SetIcon(EditorMicroAnimations.EditorUI.Icons.EmptyList)
+                        .SetIcon(EditorSpriteSheets.EditorUI.Icons.EmptyList)
                         .SetElementSize(ElementSize.Tiny)
                         .SetButtonStyle(ButtonStyle.Contained)
                         .SetOnClick(() => runEnumGenerator?.Invoke());
@@ -113,7 +113,7 @@ namespace Doozy.Editor.Common.Layouts
 
 
                 placeholderEmptyDatabase =
-                    FluidPlaceholder.Get("Empty Database", EditorMicroAnimations.EditorUI.Placeholders.EmptyDatabase)
+                    FluidPlaceholder.Get("Empty Database", EditorSpriteSheets.EditorUI.Placeholders.EmptyDatabase)
                         .Hide();
 
                 selectedCategoryName = string.Empty;
@@ -248,30 +248,30 @@ namespace Doozy.Editor.Common.Layouts
             FluidButton.Get()
                 .SetStyleAlignSelf(Align.Center)
                 .SetElementSize(ElementSize.Tiny)
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Location)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Location)
                 .SetTooltip("Ping the asset in the Project view");
 
         private static FluidButton NewDeleteAssetButton() =>
             FluidButton.Get()
                 .SetStyleAlignSelf(Align.Center)
                 .SetElementSize(ElementSize.Tiny)
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Minus)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Minus)
                 .SetAccentColor(EditorSelectableColors.Default.Remove)
                 .SetTooltip("Delete Asset");
 
         private void InitializeImportExport()
         {
             placeholderNoRoamingDatabaseFound =
-                FluidPlaceholder.Get("No roaming databases found", EditorMicroAnimations.EditorUI.Placeholders.EmptySearch)
+                FluidPlaceholder.Get("No roaming databases found", EditorSpriteSheets.EditorUI.Placeholders.EmptySearch)
                     .Hide();
 
             placeholderExportEmptyDatabase =
-                FluidPlaceholder.Get("Empty Database", EditorMicroAnimations.EditorUI.Placeholders.EmptyDatabase)
+                FluidPlaceholder.Get("Empty Database", EditorSpriteSheets.EditorUI.Placeholders.EmptyDatabase)
                     .Hide();
 
             buttonImportExport = FluidToggleButtonTab.Get()
                 .SetLabelText("Import/Export").SetTooltip("Import/Export roaming databases")
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.GenericDatabase)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.GenericDatabase)
                 .SetElementSize(ElementSize.Small)
                 .SetOnValueChanged(change =>
                 {
@@ -304,7 +304,7 @@ namespace Doozy.Editor.Common.Layouts
                 });
 
             buttonExport =
-                NewButtonImportExport("Export", "Export selected categories", EditorMicroAnimations.EditorUI.Icons.Export)
+                NewButtonImportExport("Export", "Export selected categories", EditorSpriteSheets.EditorUI.Icons.Export)
                     .SetOnClick(() =>
                     {
                         if (exportToggles == null || exportToggles.Values.Count == 0)
@@ -324,7 +324,7 @@ namespace Doozy.Editor.Common.Layouts
                         UpdateImport();
                     });
 
-            buttonImport = NewButtonImportExport("Import", "Import selected roaming databases", EditorMicroAnimations.EditorUI.Icons.Import)
+            buttonImport = NewButtonImportExport("Import", "Import selected roaming databases", EditorSpriteSheets.EditorUI.Icons.Import)
                 .SetOnClick(() =>
                 {
                     if (importToggles == null || importToggles.Values.Count == 0)
@@ -352,7 +352,7 @@ namespace Doozy.Editor.Common.Layouts
                     .SetStyleMargins(DesignUtils.k_Spacing)
                     .SetElementSize(ElementSize.Tiny)
                     .SetButtonStyle(ButtonStyle.Contained)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Search)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Search)
                     .SetOnClick(UpdateImport);
 
             exportDatabaseNameTextField = new TextField().ResetLayout();
@@ -647,8 +647,9 @@ namespace Doozy.Editor.Common.Layouts
 
             buttonNewIdEditCategoryName =
                 FluidToggleButtonTab.Get()
+                    .SetLabelText("New Category")
                     .SetElementSize(ElementSize.Tiny)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Edit)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Edit)
                     .SetToggleAccentColor(selectableAddColor)
                     .SetTooltip($"Create a new {groupTypeName} category")
                     .SetStyleMarginLeft(DesignUtils.k_Spacing);
@@ -673,7 +674,7 @@ namespace Doozy.Editor.Common.Layouts
 
             buttonCreateNewId =
                 FluidButton.Get().SetButtonStyle(ButtonStyle.Contained).SetElementSize(ElementSize.Small).SetStyleAlignSelf(Align.Center)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Plus)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Plus)
                     .SetAccentColor(selectableAddColor)
                     .SetTooltip($"Create a new {groupTypeName} Id")
                     .SetOnClick(() =>

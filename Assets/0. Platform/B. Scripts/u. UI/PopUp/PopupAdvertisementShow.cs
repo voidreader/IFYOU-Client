@@ -92,6 +92,7 @@ namespace PIERStory {
             isPurchasePressed = true; // 버튼 눌렀음
             
             // 차감 통신 시작 
+            // 코인 차감이 되면, 서버에서 차감과 동시에 구매 상태를 AD => Permanent로 변경시킨다. 
             JsonData sendingData = new JsonData();
             sendingData["func"] = "requestRemoveCurrentAD";
             sendingData["price"] = 20;
@@ -113,6 +114,14 @@ namespace PIERStory {
             
             // 성공했으면 bank 업데이트 
             UserManager.main.SetBankInfo(result);
+            
+            // 구매기록 업데이트 
+            if (result.ContainsKey(UserManager.NODE_PURCHASE_HIST)) {
+                UserManager.main.SetNodeEpisodePurchaseHistory(result[UserManager.NODE_PURCHASE_HIST]);
+                StoryManager.main.RefreshRegularEpisodesPurchaseState();
+               
+               Debug.Log("GameManager.main.currentEpisodeData :: " + GameManager.main.currentEpisodeData.purchaseState.ToString()) ;
+            }
             
             // 이 팝업을 하이드
             base.Hide();

@@ -4,9 +4,12 @@
 
 namespace Doozy.Runtime.Nody
 {
+    /// <summary> Describes the typed of UI flows </summary>
     public enum FlowDirection
     {
+        /// <summary> Forward flow </summary>
         Forward,
+        /// <summary> Reverse flow </summary>
         Back
     }
 }

@@ -4,6 +4,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Doozy.Editor.Common.Extensions;
+using Doozy.Editor.EditorUI.ScriptableObjects.SpriteSheets;
+using Doozy.Editor.EditorUI.Utils;
 using Doozy.Runtime.Common.Extensions;
 using UnityEditor;
 using UnityEngine;
@@ -21,10 +24,15 @@ namespace Doozy.Editor.UIManager.UIMenu
     {
         private const string DEFAULT_ASSET_FILENAME = "Menu Item";
 
-        public string cleanAssetName => $"{DEFAULT_ASSET_FILENAME} - {PrefabTypeName} - {PrefabCategory} - {PrefabName}";
+        public string cleanAssetName => 
+            $"{DEFAULT_ASSET_FILENAME} - {PrefabTypeName} - {PrefabCategory} - {PrefabName}";
 
         [SerializeField] private GameObject Prefab;
-        public GameObject prefab => Prefab;
+        public GameObject prefab
+        {
+            get => Prefab;
+            set => Prefab = value;
+        }
 
         [SerializeField] private UIPrefabType PrefabType;
         public UIPrefabType prefabType
@@ -41,12 +49,7 @@ namespace Doozy.Editor.UIManager.UIMenu
         [SerializeField] private string PrefabTypeName;
         public string prefabTypeName
         {
-            get
-            {
-                if (PrefabType == UIPrefabType.Custom)
-                    return PrefabTypeName;
-                return PrefabType.ToString();
-            }
+            get => PrefabType == UIPrefabType.Custom ? PrefabTypeName : PrefabType.ToString();
             set
             {
                 PrefabType = UIPrefabType.Custom;
@@ -55,7 +58,11 @@ namespace Doozy.Editor.UIManager.UIMenu
         }
 
         [SerializeField] private string PrefabCategory;
-        public string prefabCategory => PrefabCategory;
+        public string prefabCategory
+        {
+            get => PrefabCategory;
+            set => PrefabCategory = value;
+        }
 
         [SerializeField] private string PrefabName;
         public string prefabName
@@ -63,24 +70,74 @@ namespace Doozy.Editor.UIManager.UIMenu
             get => PrefabName;
             set => PrefabName = value;
         }
-        
+
         [SerializeField] private PrefabInstantiateMode InstantiateMode;
-        public PrefabInstantiateMode instantiateMode => InstantiateMode;
+        public PrefabInstantiateMode instantiateMode
+        {
+            get => InstantiateMode;
+            set => InstantiateMode = value;
+        }
 
         [SerializeField] private bool LockInstantiateMode;
-        public bool lockInstantiateMode => LockInstantiateMode;
+        public bool lockInstantiateMode
+        {
+            get => LockInstantiateMode;
+            set => LockInstantiateMode = value;
+        }
 
-        [SerializeField] private bool Colorize = true;
-        public bool colorize => Colorize;
+        [SerializeField] private bool Colorize = false;
+        public bool colorize
+        {
+            get => Colorize;
+            set => Colorize = value;
+        }
+
+        [SerializeField] private float AnimationDuration = 0.6f;
+        public float animationDuration
+        {
+            get => AnimationDuration;
+            set => AnimationDuration = value;
+        }
 
         [SerializeField] private List<string> Tags;
-        public List<string> tags => Tags;
+        public List<string> tags
+        {
+            get => Tags;
+            set => Tags = value;
+        }
 
         [SerializeField] private string InfoTag;
-        public string infoTag => InfoTag;
+        public string infoTag
+        {
+            get => InfoTag;
+            set => InfoTag = value;
+        }
 
         [SerializeField] private List<Texture2D> Icon;
-        public List<Texture2D> icon => Icon;
+        public List<Texture2D> icon
+        {
+            get => Icon;
+            set => Icon = value;
+        }
+
+        [SerializeField] private Texture2D SpriteSheet;
+        public Texture2D spriteSheet => SpriteSheet;
+
+        [SerializeField] private EditorDataSpriteSheetTextures SpriteSheetTextures;
+        public EditorDataSpriteSheetTextures spriteSheetTextures
+        {
+            get => SpriteSheetTextures;
+            internal set => SpriteSheetTextures = value;
+        }
+
+        public bool hasSpriteSheet => 
+            spriteSheet != null && spriteSheet.IsSpriteSheet();
+
+        public void ProcessSpriteSheet()
+        {
+            if (!hasSpriteSheet) return;
+            Icon = spriteSheetTextures.textures;
+        }
 
         public string cleanPrefabTypeName => PrefabType != UIPrefabType.Custom ? PrefabType.ToString() : PrefabTypeName.RemoveWhitespaces().RemoveAllSpecialCharacters();
         public string cleanPrefabCategory => PrefabCategory.RemoveWhitespaces().RemoveAllSpecialCharacters();
@@ -97,15 +154,32 @@ namespace Doozy.Editor.UIManager.UIMenu
 
         public UIMenuItem()
         {
-            prefabType = UIPrefabType.Component;
+            prefabType = UIPrefabType.Components;
         }
 
         public UIMenuItem Validate()
         {
+            if (prefabType == UIPrefabType.Custom)
+            {
+                switch (PrefabTypeName)
+                {
+                    case "Container":
+                        prefabType = UIPrefabType.Containers;
+                        PrefabTypeName = UIPrefabType.Containers.ToString();
+                        EditorUtility.SetDirty(this);
+                        break;
+                    case "Component":
+                        prefabType = UIPrefabType.Components;
+                        PrefabTypeName = UIPrefabType.Components.ToString();
+                        EditorUtility.SetDirty(this);
+                        break;
+                }
+            }
+            
             if (name.Equals(cleanAssetName))
                 return this;
 
-            AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(this), cleanAssetName);
+            AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(this), $"{cleanAssetName}.asset");
             EditorUtility.SetDirty(this);
 
             return this;
@@ -138,6 +212,23 @@ namespace Doozy.Editor.UIManager.UIMenu
         public void AddToScene()
         {
             UIMenuUtils.AddToScene(this);
+        }
+
+        public void SetSpriteSheet(Texture2D texture)
+        {
+            EditorDataSpriteSheetTextures sheet =
+                CreateInstance<EditorDataSpriteSheetTextures>()
+                    .SetTextures(texture.GetTextures());
+
+            SpriteSheet = texture;
+            sheet.name = texture.name;
+            spriteSheetTextures = sheet;
+            EditorUtility.SetDirty(sheet);
+            AssetDatabase.AddObjectToAsset(sheet, this);
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssetIfDirty(sheet);
+            AssetDatabase.SaveAssetIfDirty(this);
+            ProcessSpriteSheet();            
         }
     }
 }

@@ -527,6 +527,8 @@ namespace PIERStory {
             // 노드 갱신해주고
             UserManager.main.SetPurchaseSelection(res.DataAsText);
 
+            AdManager.main.isPaidSelection = true; // 유료 선택지 선택됨
+
             // 선택지 선택완료 처리
             SelectionSelected();
 

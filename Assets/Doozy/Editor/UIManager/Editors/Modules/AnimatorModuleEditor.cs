@@ -20,7 +20,7 @@ namespace Doozy.Editor.UIManager.Editors.Modules
     [CustomEditor(typeof(AnimatorModule), true)]
     public class AnimatorModuleEditor : ModyModuleEditor<AnimatorModule>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorMicroAnimations.Reactor.Icons.UIAnimator;
+        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.Reactor.Icons.UIAnimator;
 
         private List<SerializedProperty> itemsSource { get; set; }
         private SerializedProperty arrayProperty { get; set; }
@@ -53,7 +53,7 @@ namespace Doozy.Editor.UIManager.Editors.Modules
                 .HideFooter(true)
                 .ShowItemIndex(false);
             
-            fluidListView.emptyListPlaceholder.SetIcon(EditorMicroAnimations.EditorUI.Placeholders.EmptyListViewSmall);
+            fluidListView.emptyListPlaceholder.SetIcon(EditorSpriteSheets.EditorUI.Placeholders.EmptyListViewSmall);
             fluidListView.listView.selectionType = SelectionType.None;
             fluidListView.listView.itemsSource = itemsSource;
             fluidListView.listView.makeItem = () => new AnimatorFluidListViewItem(fluidListView).SetStylePaddingLeft(DesignUtils.k_Spacing);

@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 namespace Doozy.Runtime.Mody.Actions
 {
+    /// <summary> <see cref="MetaModyAction{T}"/> with a Texture value </summary>
     [Serializable]
     public class TextureModyAction : MetaModyAction<Texture>
     {

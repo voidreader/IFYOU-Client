@@ -14,7 +14,7 @@ namespace Doozy.Editor.Nody.Nodes
     public class ApplicationQuitNodeView : FlowNodeView
     {
         public override Type nodeType => typeof(ApplicationQuitNode);
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.ApplicationQuitNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.ApplicationQuitNode;
 
         public ApplicationQuitNodeView(FlowGraphView graphView, FlowNode node) : base(graphView, node)
         {

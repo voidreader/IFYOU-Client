@@ -28,8 +28,8 @@ namespace Doozy.Editor.UIManager.Editors.Visual
         private static Color accentColor => EditorColors.UIManager.VisualComponent;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.VisualComponent;
 
-        private static IEnumerable<Texture2D> componentIconTextures => EditorMicroAnimations.UIManager.Icons.SignalToSpriteTarget;
-        private static IEnumerable<Texture2D> spriteTargetIconTextures => EditorMicroAnimations.Reactor.Icons.SpriteTarget;
+        private static IEnumerable<Texture2D> componentIconTextures => EditorSpriteSheets.UIManager.Icons.SignalToSpriteTarget;
+        private static IEnumerable<Texture2D> spriteTargetIconTextures => EditorSpriteSheets.Reactor.Icons.SpriteTarget;
         
         private VisualElement root { get; set; }
         private FluidComponentHeader componentHeader { get; set; }

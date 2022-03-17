@@ -5,18 +5,32 @@
 using System;
 using Doozy.Runtime.Reactor.Internal;
 using Doozy.Runtime.Reactor.Reactions;
+using UnityEditor;
 using UnityEngine;
 
 namespace Doozy.Runtime.Reactor.Animations
 {
+    /// <summary>
+    /// Reactor animation that works with a RectTransform.
+    /// It works as a combined animation for position, rotation, scale and alpha (transparency).
+    /// </summary>
     [Serializable]
     public class UIAnimation : ReactorAnimation
     {
+        /// <summary>
+        /// Target RectTransform for the animation
+        /// (animates the position, rotation and scale via the Move, Rotate and Scale animations)
+        /// </summary>
         public RectTransform rectTransform
         {
             get;
             internal set;
         }
+
+        /// <summary>
+        /// Target CanvasGroup for the animation
+        /// (animates group alpha via the Fade animation)
+        /// </summary>
         public CanvasGroup canvasGroup
         {
             get;
@@ -24,6 +38,7 @@ namespace Doozy.Runtime.Reactor.Animations
         }
 
         [SerializeField] private UIAnimationType AnimationType;
+        /// <summary> Type of animation. Used to show specialized settings and to sava/load dedicated presets </summary>
         public UIAnimationType animationType
         {
             get => AnimationType;
@@ -34,9 +49,13 @@ namespace Doozy.Runtime.Reactor.Animations
             }
         }
 
+        /// <summary> Move reaction designed to change the position of a target RectTransform </summary>
         public UIMoveReaction Move;
+        /// <summary> Rotate reaction designed to change the rotation of a target RectTransform </summary>
         public UIRotateReaction Rotate;
+        /// <summary> Scale reaction designed to change the scale of a target RectTransform </summary>
         public UIScaleReaction Scale;
+        /// <summary> Fade reaction designed to change the alpha value of a target CanvasGroup </summary>
         public UIFadeReaction Fade;
 
         /// <summary> Move start position value (RectTransform.anchoredPosition3D) </summary>
@@ -67,17 +86,35 @@ namespace Doozy.Runtime.Reactor.Animations
             set => Fade.startAlpha = value;
         }
 
+        /// <summary> Is the animation enabled </summary>
         public override bool isEnabled => Move.enabled | Rotate.enabled | Scale.enabled | Fade.enabled;
+        /// <summary> Is the animation in the idle state (is enabled, but not active) </summary>
         public override bool isIdle => Move.isIdle | Rotate.isIdle | Scale.isIdle | Fade.isIdle;
+        /// <summary> Is the animation in the active state (is enabled and either playing or paused) </summary>
         public override bool isActive => Move.isActive | Rotate.isActive | Scale.isActive | Fade.isActive;
+        /// <summary> Is the animation in the paused state (is enabled, started playing and then paused) </summary>
         public override bool isPaused => Move.isPaused | Rotate.isPaused | Scale.isPaused | Fade.isPaused;
+        /// <summary> Is the animation in the playing state (is enabled and started playing) </summary>
         public override bool isPlaying => Move.isPlaying || Rotate.isPlaying || Scale.isPlaying || Fade.isPlaying;
+        /// <summary> Is the animation in the start delay state (is enabled, started playing and waiting to start running after the start delay duration has passed) </summary>
         public override bool inStartDelay => Move.inStartDelay | Rotate.inStartDelay | Scale.inStartDelay | Fade.inStartDelay;
+        /// <summary> Is the animation in the loop delay state (is enabled, started playing and is between loops waiting to continue running after the loop delay duration has passed) </summary>
         public override bool inLoopDelay => Move.inLoopDelay | Rotate.inLoopDelay | Scale.inLoopDelay | Fade.inLoopDelay;
 
+        /// <summary> Construct a new UIAnimation with the given RectTransform target and CanvasGroup target </summary>
+        /// <param name="targetRectTransform"> Target RectTransform </param>
+        /// <param name="targetCanvasGroup"> Target CanvasGroup </param>
         public UIAnimation(RectTransform targetRectTransform, CanvasGroup targetCanvasGroup = null) =>
             SetTarget(targetRectTransform, targetCanvasGroup);
 
+        /// <summary>
+        /// Set the RectTransform target and CanvasGroup target.
+        /// <para/> If a CanvasGroup reference is not set, this method will try to get the reference by trying to get the component from the RectTransform.
+        /// <para/> If the CanvasGroup component is not found, one will be added and used as a reference.
+        /// </summary>
+        /// <param name="targetRectTransform"> RectTransform target </param>
+        /// <param name="targetCanvasGroup"> CanvasGroup target </param>
+        /// <exception cref="NullReferenceException"> RectTransform target is null </exception>
         public void SetTarget(RectTransform targetRectTransform, CanvasGroup targetCanvasGroup = null)
         {
             rectTransform = null;
@@ -91,6 +128,7 @@ namespace Doozy.Runtime.Reactor.Animations
             Initialize();
         }
 
+        /// <summary> Initialize the animation </summary>
         public void Initialize()
         {
             Move?.Stop(true);
@@ -113,6 +151,10 @@ namespace Doozy.Runtime.Reactor.Animations
             UpdateValues();
         }
 
+        /// <summary>
+        /// Recycle the reactions controlled by this animation.
+        /// <para/> Reactions are pooled can (and should) be recycled to improve overall performance. 
+        /// </summary>
         public override void Recycle()
         {
             Move?.Recycle();
@@ -121,6 +163,9 @@ namespace Doozy.Runtime.Reactor.Animations
             Fade?.Recycle();
         }
 
+        /// <summary>
+        /// Update the initial values for the reactions controlled by this animation
+        /// </summary>
         public override void UpdateValues()
         {
             if (canvasGroup != null)
@@ -146,9 +191,14 @@ namespace Doozy.Runtime.Reactor.Animations
             Move.UpdateValues();                //calculate position
         }
 
+        /// <summary>
+        /// Stop all the reactions controlled by this animation
+        /// </summary>
         public override void StopAllReactionsOnTarget() =>
             Reaction.StopAllReactionsByTargetObject(rectTransform, true);
 
+        /// <summary> Set the animation at the given progress value </summary>
+        /// <param name="targetProgress"> Target progress [0,1] </param>
         public override void SetProgressAt(float targetProgress)
         {
             base.SetProgressAt(targetProgress);
@@ -161,6 +211,8 @@ namespace Doozy.Runtime.Reactor.Animations
                 ResetToStartValues();
         }
 
+        /// <summary> Play the animation at the given progress value from the current value </summary>
+        /// <param name="toProgress"> To progress [0,1] </param>
         public override void PlayToProgress(float toProgress)
         {
             base.PlayToProgress(toProgress);
@@ -173,6 +225,8 @@ namespace Doozy.Runtime.Reactor.Animations
                 ResetToStartValues();
         }
 
+        /// <summary> Play the animation from the given progress value to the current value </summary>
+        /// <param name="fromProgress"> From progress [0,1] </param>
         public override void PlayFromProgress(float fromProgress)
         {
             base.PlayFromProgress(fromProgress);
@@ -185,6 +239,9 @@ namespace Doozy.Runtime.Reactor.Animations
                 ResetToStartValues();
         }
 
+        /// <summary> Play the animation from the given progress value to the given progress value </summary>
+        /// <param name="fromProgress"> From progress [0,1] </param>
+        /// <param name="toProgress"> To progress [0,1] </param>
         public override void PlayFromToProgress(float fromProgress, float toProgress)
         {
             base.PlayFromToProgress(fromProgress, toProgress);
@@ -197,6 +254,8 @@ namespace Doozy.Runtime.Reactor.Animations
                 ResetToStartValues();
         }
 
+        /// <summary> Play the animation all the way </summary>
+        /// <param name="inReverse"> Play the animation in reverse? </param>
         public override void Play(bool inReverse = false)
         {
             if (rectTransform == null)
@@ -218,6 +277,8 @@ namespace Doozy.Runtime.Reactor.Animations
             //     ResetToStartValues();
         }
 
+        /// <summary> Reset all the reactions to their initial values (if the animation is enabled) </summary>
+        /// <param name="forced"> If true, forced will ignore if the animation is enabled or not </param>
         public override void ResetToStartValues(bool forced = false)
         {
             if (forced | !Move.enabled) Move.SetValue(startPosition);
@@ -226,6 +287,10 @@ namespace Doozy.Runtime.Reactor.Animations
             if (forced | !Fade.enabled) Fade.SetValue(startAlpha);
         }
 
+        /// <summary>
+        /// Stop the animation.
+        /// Called every time the animation is stopped. Also called before calling Finish()
+        /// </summary>
         public override void Stop()
         {
             if (Move.isActive || Move.enabled) Move.Stop();
@@ -235,6 +300,10 @@ namespace Doozy.Runtime.Reactor.Animations
             base.Stop();
         }
 
+        /// <summary>
+        /// Finish the animation.
+        /// Called to mark that that animation completed playing.
+        /// </summary>
         public override void Finish()
         {
             if (Move.isActive || Move.enabled) Move.Finish();
@@ -244,6 +313,10 @@ namespace Doozy.Runtime.Reactor.Animations
             base.Finish();
         }
 
+        /// <summary>
+        /// Reverse the animation's direction while playing.
+        /// Works only if the animation is active (it either playing or paused)
+        /// </summary>
         public override void Reverse()
         {
             if (Move.isActive) Move.Reverse();
@@ -259,6 +332,9 @@ namespace Doozy.Runtime.Reactor.Animations
             else if (Fade.enabled) Fade.Play(PlayDirection.Reverse);
         }
 
+        /// <summary>
+        /// Rewind the animation to the start values
+        /// </summary>
         public override void Rewind()
         {
             if (Move.enabled) Move.Rewind();
@@ -267,6 +343,10 @@ namespace Doozy.Runtime.Reactor.Animations
             if (Fade.enabled) Fade.Rewind();
         }
 
+        /// <summary>
+        /// Pause the animation.
+        /// Works only if the animation is playing.
+        /// </summary>
         public override void Pause()
         {
             Move.Pause();
@@ -275,6 +355,10 @@ namespace Doozy.Runtime.Reactor.Animations
             Fade.Pause();
         }
 
+        /// <summary>
+        /// Resume a paused animation.
+        /// Works only if the animation is paused.
+        /// </summary>
         public override void Resume()
         {
             Move.Resume();
@@ -283,6 +367,30 @@ namespace Doozy.Runtime.Reactor.Animations
             Fade.Resume();
         }
 
+        public float GetStartDelay()
+        {
+            float move = Move.enabled ? Move.isActive ? Move.startDelay : Move.settings.GetStartDelay() : 0;
+            float rotate = Rotate.enabled ? Rotate.isActive ? Rotate.startDelay : Rotate.settings.GetStartDelay() : 0;
+            float scale = Scale.enabled ? Scale.isActive ? Scale.startDelay : Scale.settings.GetStartDelay() : 0;
+            float fade = Fade.enabled ? Fade.isActive ? Fade.startDelay : Fade.settings.GetStartDelay() : 0;
+            return move + rotate + scale + fade;
+        }
+
+        public float GetDuration()
+        {
+            float move = Move.enabled ? Move.isActive ? Move.duration : Move.settings.GetDuration() : 0;
+            float rotate = Rotate.enabled ? Rotate.isActive ? Rotate.duration : Rotate.settings.GetDuration() : 0;
+            float scale = Scale.enabled ? Scale.isActive ? Scale.duration : Scale.settings.GetDuration() : 0;
+            float fade = Fade.enabled ? Fade.isActive ? Fade.duration : Fade.settings.GetDuration() : 0;
+            return move + rotate + scale + fade;
+        }
+
+        public float GetTotalDuration() =>
+            GetStartDelay() + GetDuration();
+        
+        /// <summary>
+        /// Register all callbacks to the animation
+        /// </summary>
         protected override void RegisterCallbacks()
         {
             base.RegisterCallbacks();
@@ -320,6 +428,7 @@ namespace Doozy.Runtime.Reactor.Animations
             }
         }
 
+        /// <summary> Unregister OnPlayCallback </summary>
         protected override void UnregisterOnPlayCallbacks()
         {
             if (Move.enabled) Move.OnPlayCallback -= InvokeOnPlay;
@@ -328,6 +437,7 @@ namespace Doozy.Runtime.Reactor.Animations
             if (Fade.enabled) Fade.OnPlayCallback -= InvokeOnPlay;
         }
 
+        /// <summary> Unregister OnStopCallback </summary>
         protected override void UnregisterOnStopCallbacks()
         {
             if (Move.enabled) Move.OnStopCallback -= InvokeOnStop;
@@ -336,6 +446,7 @@ namespace Doozy.Runtime.Reactor.Animations
             if (Fade.enabled) Fade.OnStopCallback -= InvokeOnStop;
         }
 
+        /// <summary> Unregister OnFinishCallback </summary>
         protected override void UnregisterOnFinishCallbacks()
         {
             if (Move.enabled) Move.OnFinishCallback -= InvokeOnFinish;

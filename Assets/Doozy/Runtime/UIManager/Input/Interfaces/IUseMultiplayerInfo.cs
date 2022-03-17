@@ -9,6 +9,6 @@ namespace Doozy.Runtime.UIManager.Input
         public MultiplayerInfo multiplayerInfo { get; }
         public bool hasMultiplayerInfo { get; }
         
-        public void SetMultiplayerInfo(MultiplayerInfo info);
+        public void SetMultiplayerInfo(MultiplayerInfo reference);
     }
 }

@@ -6,6 +6,10 @@ using System;
 
 namespace Doozy.Runtime.Nody.Nodes.Internal
 {
+    /// <summary>
+    /// Base class for simple nodes.
+    /// <para/> Most nodes are simple nodes. Only one simple node can be active at in a graph.
+    /// </summary>
     [Serializable]
     public abstract class SimpleNode : FlowNode
     {

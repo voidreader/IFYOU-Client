@@ -19,7 +19,7 @@ namespace Doozy.Editor.Nody.Nodes
     [CustomEditor(typeof(PivotNode))]
     public class PivotNodeEditor : FlowNodeEditor
     {
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.PivotNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.PivotNode;
 
         private EnumField pivotOrientationEnumField { get; set; }
         private FluidField pivotOrientationField { get; set; }

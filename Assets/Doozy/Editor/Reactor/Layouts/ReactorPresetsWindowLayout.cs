@@ -26,7 +26,7 @@ namespace Doozy.Editor.Reactor.Layouts
 
         private SerializedObject serializedObject { get; }
 
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.Reactor.Icons.UIAnimationPreset;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.Reactor.Icons.UIAnimationPreset;
      
         public FluidPlaceholder comingSoonPlaceholder { get; private set; }
         
@@ -39,7 +39,7 @@ namespace Doozy.Editor.Reactor.Layouts
             
             comingSoonPlaceholder =
                 FluidPlaceholder.Get()
-                    .SetIcon(EditorMicroAnimations.EditorUI.Placeholders.ComingSoon)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Placeholders.ComingSoon)
                     .SetLabelText("Coming Soon")
                     .SetStyleFlexGrow(1)
                     .Show();
@@ -49,7 +49,7 @@ namespace Doozy.Editor.Reactor.Layouts
             
             FluidButton findLocationButton = FluidButton.Get()
                 .SetLabelText("Find Database Location")
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Location)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Location)
                 .SetAccentColor(EditorSelectableColors.Default.ButtonIcon)
                 .SetTooltip("Ping the UIAnimation Presets Database in the Project view")
                 .SetButtonStyle(ButtonStyle.Clear)
@@ -66,7 +66,7 @@ namespace Doozy.Editor.Reactor.Layouts
                 .SetElementSize(ElementSize.Small)
                 .SetStyleWidth(130)
                 .SetOnClick(() => UIAnimationPresetDatabase.instance.RefreshDatabase(true, true))
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Refresh);
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Refresh);
             
             //SIDE MENU - ToolbarContainer - Refresh button
             sideMenu

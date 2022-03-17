@@ -101,7 +101,9 @@ namespace PIERStory
             if(GameManager.main.isSelectionInputWait) {
                 SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6102"), true);
                 return;    
+                
             }
+            Debug.Log("## SkipScene ##");
             
             // Doozy.Runtime.UIManager.Input.BackButton.Fire(); // 백버튼 발동처리
             

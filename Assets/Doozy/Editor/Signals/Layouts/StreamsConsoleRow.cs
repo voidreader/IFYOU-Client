@@ -67,10 +67,10 @@ namespace Doozy.Editor.Signals.Layouts
         private Texture2DReaction streamIconReaction { get; set; }
         private ColorReaction colorReaction { get; set; }
 
-        private static IEnumerable<Texture2D> signalTextures => EditorMicroAnimations.Signals.Icons.SignalOnOff;
-        private static IEnumerable<Texture2D> metaSignalTextures => EditorMicroAnimations.Signals.Icons.MetaSignalOnOff;
-        private static IEnumerable<Texture2D> streamTextures => EditorMicroAnimations.Signals.Icons.SignalStream;
-        private static IEnumerable<Texture2D> locationTextures => EditorMicroAnimations.EditorUI.Icons.Location;
+        private static IEnumerable<Texture2D> signalTextures => EditorSpriteSheets.Signals.Icons.SignalOnOff;
+        private static IEnumerable<Texture2D> metaSignalTextures => EditorSpriteSheets.Signals.Icons.MetaSignalOnOff;
+        private static IEnumerable<Texture2D> streamTextures => EditorSpriteSheets.Signals.Icons.SignalStream;
+        private static IEnumerable<Texture2D> locationTextures => EditorSpriteSheets.EditorUI.Icons.Location;
 
         public bool pinned { get; set; }
         public UnityAction<StreamsConsoleRow> OnPinned;

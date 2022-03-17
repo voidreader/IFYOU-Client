@@ -13,9 +13,9 @@ using UnityEngine;
 namespace Doozy.Runtime.Nody.Nodes
 {
     /// <summary>
-    /// The TimeScale Node sets the scale at which the time is passing (it updates Time.timeScale). This can be used for slow motion effects.
-    /// It does that either instantly or over a set duration (animated).
-    /// The node can wait until the current Time.timeScale value has reached the target value, before activating the next node in the Graph.
+    /// TimeScale Node sets the scale at which the time is passing (it updates Time.timeScale). This can be used for slow motion effects.
+    /// It can do that that either instantly or over a set duration (animated).
+    /// The node can also wait until the current Time.timeScale value has reached the target value, before activating the next node in the Graph.
     /// </summary>
     [Serializable]
     [NodyMenuPath("Time", "TimeScale")]

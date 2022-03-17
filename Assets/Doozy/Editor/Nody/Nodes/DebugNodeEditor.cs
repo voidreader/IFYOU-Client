@@ -19,7 +19,7 @@ namespace Doozy.Editor.Nody.Nodes
     [CustomEditor(typeof(DebugNode))]
     public class DebugNodeEditor : FlowNodeEditor
     {
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.DebugNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.DebugNode;
 
         private FluidField messageField { get; set; }
         private TextField messageTextField { get; set; }

@@ -20,7 +20,7 @@ namespace Doozy.Editor.Nody.Nodes
     [CustomEditor(typeof(TimeScaleNode))]
     public class TimeScaleNodeEditor : FlowNodeEditor
     {
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.TimeScaleNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.TimeScaleNode;
 
         private FloatField targetValueFloatField { get; set; }
         private FluidToggleSwitch animateValueSwitch { get; set; }

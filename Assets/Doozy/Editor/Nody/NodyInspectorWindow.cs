@@ -62,7 +62,7 @@ namespace Doozy.Editor.Nody
             emptySelectionPlaceholder =
                 FluidPlaceholder.Get()
                     .SetStyleAlignSelf(Align.Center)
-                    .SetIcon(EditorMicroAnimations.Nody.Icons.Nody);
+                    .SetIcon(EditorSpriteSheets.Nody.Icons.Nody);
 
             placeholderContainer
                 .AddChild(emptySelectionPlaceholder);

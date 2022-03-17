@@ -15,7 +15,7 @@ namespace Doozy.Editor.UIManager.Editors.Triggers
     [CustomEditor(typeof(PointerMiddleClickTrigger))]
     public class PointerMiddleClickTriggerEditor : ModyTriggerEditor<PointerMiddleClickTrigger>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorMicroAnimations.EditorUI.Icons.ButtonMiddleClick;
+        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.EditorUI.Icons.ButtonMiddleClick;
 
         public override VisualElement CreateInspectorGUI()
         {

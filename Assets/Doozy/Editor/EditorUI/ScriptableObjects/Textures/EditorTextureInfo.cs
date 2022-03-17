@@ -14,7 +14,10 @@ namespace Doozy.Editor.EditorUI.ScriptableObjects.Textures
         public string TextureName;
         public Texture2D TextureReference;
         
-        public void ValidateName() =>
+        public EditorTextureInfo ValidateName()
+        {
             TextureName = TextureName.RemoveWhitespaces().RemoveAllSpecialCharacters();
+            return this;
+        }
     }
 }

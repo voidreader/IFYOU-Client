@@ -6,10 +6,14 @@ using System;
 
 namespace Doozy.Runtime.Nody.Nodes.PortData
 {
+    /// <summary> <see cref="RandomNode"/> output port value </summary>
     [Serializable]
     public class RandomNodeOutputPortData
     {
+        /// <summary> Default weight value </summary>
         public const int k_DefaultWeight = 100;
+        
+        /// <summary> Weight value </summary>
         public int Weight = k_DefaultWeight;
     }
 }

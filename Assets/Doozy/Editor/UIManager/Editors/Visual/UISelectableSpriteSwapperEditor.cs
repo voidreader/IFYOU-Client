@@ -29,9 +29,9 @@ namespace Doozy.Editor.UIManager.Editors.Visual
         protected override Color accentColor => EditorColors.UIManager.VisualComponent;
         protected override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.VisualComponent;
 
-        private static IEnumerable<Texture2D> uiSelectableIconTextures => EditorMicroAnimations.UIManager.Icons.UISelectable;
-        private static IEnumerable<Texture2D> spriteSwapperIconTextures => EditorMicroAnimations.UIManager.Icons.SpriteSwapper;
-        private static IEnumerable<Texture2D> spriteTargetIconTextures => EditorMicroAnimations.Reactor.Icons.SpriteTarget;
+        private static IEnumerable<Texture2D> uiSelectableIconTextures => EditorSpriteSheets.UIManager.Icons.UISelectable;
+        private static IEnumerable<Texture2D> spriteSwapperIconTextures => EditorSpriteSheets.UIManager.Icons.SpriteSwapper;
+        private static IEnumerable<Texture2D> spriteTargetIconTextures => EditorSpriteSheets.Reactor.Icons.SpriteTarget;
 
         private SerializedProperty propertySpriteTarget { get; set; }
         private SerializedProperty propertyNormalSprite { get; set; }

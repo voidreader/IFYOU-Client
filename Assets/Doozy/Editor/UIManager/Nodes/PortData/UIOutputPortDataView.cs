@@ -95,15 +95,15 @@ namespace Doozy.Editor.UIManager.Nodes.PortData
             switch (trigger)
             {
                 case UIOutputPortData.TriggerCondition.TimeDelay:
-                    return EditorMicroAnimations.EditorUI.Icons.Hourglass;
+                    return EditorSpriteSheets.EditorUI.Icons.Hourglass;
                 case UIOutputPortData.TriggerCondition.Signal:
-                    return EditorMicroAnimations.Signals.Icons.SignalStream;
+                    return EditorSpriteSheets.Signals.Icons.SignalStream;
                 case UIOutputPortData.TriggerCondition.UIButton:
-                    return EditorMicroAnimations.UIManager.Icons.Buttons;
+                    return EditorSpriteSheets.UIManager.Icons.UIButton;
                 case UIOutputPortData.TriggerCondition.UIToggle:
-                    return EditorMicroAnimations.UIManager.Icons.UIToggleCheckbox;
+                    return EditorSpriteSheets.UIManager.Icons.UIToggle;
                 case UIOutputPortData.TriggerCondition.UIView:
-                    return EditorMicroAnimations.UIManager.Icons.Views;
+                    return EditorSpriteSheets.UIManager.Icons.UIView;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(trigger), trigger, null);
             }

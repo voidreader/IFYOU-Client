@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Doozy.Runtime.Common.Extensions
 {
+    /// <summary> Extension methods for the Vector2 struct </summary>
     public static class Vector2Extensions
     {
         /// <summary> Round x and y to the given number of decimals </summary>

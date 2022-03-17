@@ -34,8 +34,8 @@ namespace Doozy.Editor.UIManager.Editors.Components
         public UISlider castedTarget => (UISlider)target;
         public IEnumerable<UISlider> castedTargets => targets.Cast<UISlider>();
 
-        public static IEnumerable<Texture2D> unityEventIconTextures => EditorMicroAnimations.EditorUI.Icons.UnityEvent;
-        public static IEnumerable<Texture2D> uiSliderIconTextures => EditorMicroAnimations.UIManager.Icons.UISlider;
+        public static IEnumerable<Texture2D> unityEventIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
+        public static IEnumerable<Texture2D> uiSliderIconTextures => EditorSpriteSheets.UIManager.Icons.UISlider;
 
         private EnabledIndicator callbacksTabIndicator { get; set; }
 

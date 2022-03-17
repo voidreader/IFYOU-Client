@@ -21,7 +21,6 @@ namespace Doozy.Runtime.Nody
     {
         /// <summary> Reference to the UIManager Input Settings </summary>
         public static UIManagerInputSettings inputSettings => UIManagerInputSettings.instance;
-
         /// <summary> True if Multiplayer Mode is enabled </summary>
         public static bool multiplayerMode => inputSettings.multiplayerMode;
 
@@ -56,7 +55,7 @@ namespace Doozy.Runtime.Nody
         public MultiplayerInfo multiplayerInfo => MultiplayerInfo;
         public bool hasMultiplayerInfo => multiplayerInfo != null;
         public int playerIndex => multiplayerMode & hasMultiplayerInfo ? multiplayerInfo.playerIndex : inputSettings.defaultPlayerIndex;
-        public void SetMultiplayerInfo(MultiplayerInfo info) => MultiplayerInfo = info;
+        public void SetMultiplayerInfo(MultiplayerInfo reference) => MultiplayerInfo = reference;
 
         #endregion
 

@@ -156,7 +156,7 @@ namespace PIERStory
         
         const string NODE_DRESS_PROGRESS = "dressProgress"; // 유저 의상 진행정보 (의상 템플릿 관련)
 
-        const string NODE_PURCHASE_HIST = "episodePurchase";  //episodePurchase 에피소드 구매 기록
+        public const string NODE_PURCHASE_HIST = "episodePurchase";  //episodePurchase 에피소드 구매 기록
         const string NODE_SCENE_PROGRESS = "sceneProgress"; // 사건ID 진행도. 조건 판정에 사용한다. 
         const string NODE_SCENE_HISTORY = "sceneHistory"; // 한번이라도 오픈한 사건 ID 기록 (삭제되지 않음)
         const string NODE_FIRST_CLEAR_RESULT = "firstClearResult";      // 에피소드 최초 클리어 보상
@@ -1795,14 +1795,23 @@ namespace PIERStory
             // * bank 
             SetBankInfo(result);
             
+            // projectCurrent갱신
+            SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);
+            
+            // 에피소드 구매 기록 갱신 
+            if (result.ContainsKey(NODE_PURCHASE_HIST)) {
+                SetNodeEpisodePurchaseHistory(result[NODE_PURCHASE_HIST]);
+                StoryManager.main.RefreshRegularEpisodesPurchaseState();
+            }
+                
             
             // 모든 팝업 비활성화 
             PopupManager.main.HideActivePopup();
             
-            // StoryDetail 갱신처리 
+            // 콜백 처리 
             OnFreepassPurchase?.Invoke();
             // 에피소드 시작화면 갱신
-            ViewEpisodeStart.OnRefreshPremiumPass?.Invoke();
+            //ViewEpisodeStart.OnRefreshPremiumPass?.Invoke();
             
             // View 종료를 위해 Event 처리 
             // Doozy.Engine.GameEventMessage.SendEvent("PurchaseFreepass"); 

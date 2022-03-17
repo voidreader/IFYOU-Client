@@ -9,7 +9,7 @@ using Doozy.Runtime.Nody.Nodes.Internal;
 namespace Doozy.Runtime.Nody.Nodes.System
 {
     /// <summary>
-    /// This is the first node that gets activated in any graph.
+    /// System node used as the first node that gets activated in a graph.
     /// It’s treated as the root node and it cannot be moved.
     /// </summary>
     [Serializable]

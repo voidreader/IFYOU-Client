@@ -28,9 +28,9 @@ namespace Doozy.Editor.Reactor.Editors.Animators
     [CanEditMultipleObjects]
     public class ColorAnimatorEditor : BaseReactorAnimatorEditor
     {
-        public static IEnumerable<Texture2D> colorAnimatorIconTextures => EditorMicroAnimations.Reactor.Icons.ColorAnimator;
-        public static IEnumerable<Texture2D> colorAnimationIconTextures => EditorMicroAnimations.Reactor.Icons.ColorAnimation;
-        public static IEnumerable<Texture2D> colorTargetIconTextures => EditorMicroAnimations.Reactor.Icons.ColorTarget;
+        public static IEnumerable<Texture2D> colorAnimatorIconTextures => EditorSpriteSheets.Reactor.Icons.ColorAnimator;
+        public static IEnumerable<Texture2D> colorAnimationIconTextures => EditorSpriteSheets.Reactor.Icons.ColorAnimation;
+        public static IEnumerable<Texture2D> colorTargetIconTextures => EditorSpriteSheets.Reactor.Icons.ColorTarget;
 
         private ColorAnimator castedTarget => (ColorAnimator)target;
         private IEnumerable<ColorAnimator> castedTargets => targets.Cast<ColorAnimator>();

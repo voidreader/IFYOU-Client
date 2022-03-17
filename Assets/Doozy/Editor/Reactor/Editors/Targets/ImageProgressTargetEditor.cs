@@ -14,7 +14,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
     [CustomEditor(typeof(ImageProgressTarget), true)]
     public sealed class ImageProgressTargetEditor : ProgressTargetEditor
     {
-        public override IEnumerable<Texture2D> targetIconTextures => EditorMicroAnimations.Reactor.Icons.ImageProgressTarget;
+        public override IEnumerable<Texture2D> targetIconTextures => EditorSpriteSheets.Reactor.Icons.ImageProgressTarget;
 
         protected override void InitializeEditor()
         {

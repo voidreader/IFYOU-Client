@@ -15,6 +15,7 @@ using Doozy.Runtime.UIElements.Extensions;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Editor.EditorUI.Components
 {
@@ -22,7 +23,7 @@ namespace Doozy.Editor.EditorUI.Components
     {
         public const float k_ExpandCollapseDuration = 0.3f;
         public const Ease k_ExpandCollapseEase = Ease.InOutExpo;
-        
+
         #region MenuState
 
         private enum MenuState
@@ -112,7 +113,7 @@ namespace Doozy.Editor.EditorUI.Components
         public VisualElement toolbarContainer { get; }
         public ScrollView buttonsScrollViewContainer { get; }
         public VisualElement footerContainer { get; }
-
+        
         public Texture2DReaction menuInfoIconReaction { get; set; }
 
         public FluidToggleGroup toggleGroup { get; }
@@ -271,7 +272,7 @@ namespace Doozy.Editor.EditorUI.Components
         }
 
         public bool hasCustomWidth { get; private set; }
-        private int customWidth { get; set; }
+        public int customWidth { get; private set; }
 
         public FluidSideMenu SetCustomWidth(int width)
         {
@@ -362,8 +363,7 @@ namespace Doozy.Editor.EditorUI.Components
             toolbarContainer = layoutContainer.Q<VisualElement>(nameof(toolbarContainer));
             buttonsScrollViewContainer = layoutContainer.Q<ScrollView>(nameof(buttonsScrollViewContainer));
             footerContainer = layoutContainer.Q<VisualElement>(nameof(footerContainer));
-
-
+            
             layoutContainer.AddManipulator(new Clickable(() =>
             {
                 if (isCollapsed)
@@ -438,7 +438,7 @@ namespace Doozy.Editor.EditorUI.Components
                 .Add
                 (
                     expandButton =
-                        GetNewExpandCollapseButton(EditorMicroAnimations.EditorUI.Arrows.ChevronRight)
+                        GetNewExpandCollapseButton(EditorSpriteSheets.EditorUI.Arrows.ChevronRight)
                             .SetName("ExpandButton")
                 );
 
@@ -446,7 +446,7 @@ namespace Doozy.Editor.EditorUI.Components
                 .Add
                 (
                     collapseButton =
-                        GetNewExpandCollapseButton(EditorMicroAnimations.EditorUI.Arrows.ChevronLeft)
+                        GetNewExpandCollapseButton(EditorSpriteSheets.EditorUI.Arrows.ChevronLeft)
                             .SetName("CollapseButton")
                 );
 
@@ -538,7 +538,7 @@ namespace Doozy.Editor.EditorUI.Components
                     expandCollapseReaction.SetValue(0f);
                 }
             });
-            
+
             expandButton.SetStyleDisplay(DisplayStyle.Flex);
             collapseButton.SetStyleDisplay(DisplayStyle.None);
             return this;

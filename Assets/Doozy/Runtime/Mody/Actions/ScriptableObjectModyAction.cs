@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 namespace Doozy.Runtime.Mody.Actions
 {
+    /// <summary> <see cref="MetaModyAction{T}"/> with a ScriptableObject value </summary>
     [Serializable]
     public class ScriptableObjectModyAction : MetaModyAction<ScriptableObject>
     {

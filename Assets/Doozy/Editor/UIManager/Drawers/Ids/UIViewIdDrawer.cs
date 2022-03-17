@@ -24,7 +24,7 @@ namespace Doozy.Editor.UIManager.Drawers
                 property,
                 () => UIViewIdDatabase.instance.database.GetCategories(),
                 targetCategory => UIViewIdDatabase.instance.database.GetNames(targetCategory),
-                EditorMicroAnimations.UIManager.Icons.ViewsDatabase,
+                EditorSpriteSheets.UIManager.Icons.UIViewDatabase,
                 ViewsDatabaseWindow.Open,
                 "Open Views Database Window",
                 UIViewIdDatabase.instance,

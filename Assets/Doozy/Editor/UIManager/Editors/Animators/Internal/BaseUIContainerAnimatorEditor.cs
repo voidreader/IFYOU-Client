@@ -17,8 +17,8 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
 {
     public abstract class BaseUIContainerAnimatorEditor : BaseTargetComponentAnimatorEditor
     {
-        protected static IEnumerable<Texture2D> uiContainerIconTextures => EditorMicroAnimations.UIManager.Icons.UIContainer;
-        protected static IEnumerable<Texture2D> uiContainerAnimatorIconTextures => EditorMicroAnimations.EditorUI.Icons.Animator;
+        protected static IEnumerable<Texture2D> uiContainerIconTextures => EditorSpriteSheets.UIManager.Icons.UIContainer;
+        protected static IEnumerable<Texture2D> uiContainerAnimatorIconTextures => EditorSpriteSheets.EditorUI.Icons.Animator;
 
         protected FluidToggleButtonTab showTabButton { get; set; }
         protected FluidToggleButtonTab hideTabButton { get; set; }

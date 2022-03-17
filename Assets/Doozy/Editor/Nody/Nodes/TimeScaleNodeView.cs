@@ -20,7 +20,7 @@ namespace Doozy.Editor.Nody.Nodes
     public class TimeScaleNodeView : FlowNodeView
     {
         public override Type nodeType => typeof(TimeScaleNode);
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.TimeScaleNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.TimeScaleNode;
 
         private SerializedProperty propertyTargetValue { get; }
         private Label targetValueLabel { get; }

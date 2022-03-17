@@ -4,27 +4,30 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Doozy.Editor.Common.Extensions;
+using Doozy.Editor.Common.Utils;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.Reactor.Components;
 using Doozy.Editor.UIElements;
 using Doozy.Runtime.Common.Extensions;
+using Doozy.Runtime.Reactor.Internal;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Editor.UIManager.UIMenu
 {
     [CustomEditor(typeof(UIMenuItem), true)]
+    [CanEditMultipleObjects]
     public class UIMenuItemEditor : UnityEditor.Editor
     {
-        private static IEnumerable<Texture2D> linkIconTextures => EditorMicroAnimations.EditorUI.Icons.Link;
-        private static IEnumerable<Texture2D> prefabIconTextures => EditorMicroAnimations.EditorUI.Icons.Prefab;
-        private static IEnumerable<Texture2D> lockedUnlockedIconTextures => EditorMicroAnimations.EditorUI.Icons.LockedUnlocked;
+        private static IEnumerable<Texture2D> lockedUnlockedIconTextures => EditorSpriteSheets.EditorUI.Icons.LockedUnlocked;
 
         public UIMenuItem castedTarget => (UIMenuItem)target;
         public IEnumerable<UIMenuItem> castedTargets => targets.Cast<UIMenuItem>();
@@ -32,15 +35,28 @@ namespace Doozy.Editor.UIManager.UIMenu
 
         private VisualElement root { get; set; }
         private FluidComponentHeader componentHeader { get; set; }
+        private VisualElement headerToolbar { get; set; }
+
+        public VisualElement prefabTypeContainer { get; private set; }
+        public VisualElement prefabTypeNameContainer { get; private set; }
+        public VisualElement prefabCategoryContainer { get; private set; }
+        public VisualElement prefabNameContainer { get; private set; }
+        public VisualElement instantiateModeContainer { get; private set; }
+        public VisualElement infoTagContainer { get; private set; }
+        public VisualElement iconContainer { get; private set; }
+        public VisualElement tagsContainer { get; private set; }
 
         private EnumField prefabTypeEnumField { get; set; }
         private EnumField instantiateModeEnumField { get; set; }
+
+        private FloatField animationDurationFloatField { get; set; }
 
         private FluidButton renameAssetButton { get; set; }
         private FluidButton saveButton { get; set; }
 
         private FluidField prefabFluidField { get; set; }
-        private FluidField prefabInfoField { get; set; }
+        private FluidField prefabInfoFluidField { get; set; }
+        private FluidField animationDurationFluidField { get; set; }
 
         private FluidListView iconTextures2DFluidListView { get; set; }
         private FluidListView tagsFluidListView { get; set; }
@@ -65,9 +81,12 @@ namespace Doozy.Editor.UIManager.UIMenu
         private SerializedProperty propertyInstantiateMode { get; set; }
         private SerializedProperty propertyLockInstantiateMode { get; set; }
         private SerializedProperty propertyColorize { get; set; }
+        private SerializedProperty propertyAnimationDuration { get; set; }
         private SerializedProperty propertyTags { get; set; }
         private SerializedProperty propertyInfoTag { get; set; }
+        private SerializedProperty propertyPreviewSize { get; set; }
         private SerializedProperty propertyIcon { get; set; }
+        private SerializedProperty propertySpriteSheet { get; set; }
 
         private void OnDestroy()
         {
@@ -75,7 +94,8 @@ namespace Doozy.Editor.UIManager.UIMenu
             renameAssetButton?.Recycle();
 
             prefabFluidField?.Recycle();
-            prefabInfoField?.Recycle();
+            prefabInfoFluidField?.Recycle();
+            animationDurationFluidField?.Recycle();
 
             lockInstantiateModeButton?.Recycle();
             colorizeSwitch?.Recycle();
@@ -101,9 +121,12 @@ namespace Doozy.Editor.UIManager.UIMenu
             propertyInstantiateMode = serializedObject.FindProperty("InstantiateMode");
             propertyLockInstantiateMode = serializedObject.FindProperty("LockInstantiateMode");
             propertyColorize = serializedObject.FindProperty("Colorize");
+            propertyAnimationDuration = serializedObject.FindProperty("AnimationDuration");
             propertyTags = serializedObject.FindProperty("Tags");
             propertyInfoTag = serializedObject.FindProperty("InfoTag");
+            propertyPreviewSize = serializedObject.FindProperty("PreviewSize");
             propertyIcon = serializedObject.FindProperty("Icon");
+            propertySpriteSheet = serializedObject.FindProperty("SpriteSheet");
         }
 
         private void InitializeEditor()
@@ -116,12 +139,13 @@ namespace Doozy.Editor.UIManager.UIMenu
                 FluidComponentHeader.Get()
                     .SetElementSize(ElementSize.Large)
                     .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(UIMenuItem)))
-                    .SetIcon(prefabIconTextures.ToList())
+                    .SetIcon(EditorSpriteSheets.UIManager.UIMenu.UIMenuItem)
                     .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048346625/UIMenu+Item?atlOrigin=eyJpIjoiMmE1NGJiMGRhMzc4NGNkZWFlMWI1OTFmNjMyMTc0ZmMiLCJwIjoiYyJ9")
+                    .AddApiButton("https://api.doozyui.com/api/Doozy.Editor.UIManager.UIMenu.UIMenuItem.html")
                     .AddYouTubeButton();
 
             saveButton =
-                DesignUtils.SystemButton(EditorMicroAnimations.EditorUI.Icons.Save)
+                DesignUtils.SystemButton(EditorSpriteSheets.EditorUI.Icons.Save)
                     .SetOnClick(() => { UIMenuItemsDatabase.instance.RefreshDatabase(); });
 
             renameAssetButton =
@@ -135,7 +159,7 @@ namespace Doozy.Editor.UIManager.UIMenu
             prefabFluidField =
                 FluidField.Get()
                     .SetLabelText("Prefab")
-                    .SetIcon(linkIconTextures)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Prefab)
                     .AddFieldContent(prefabObjectField);
 
             prefabTypeEnumField =
@@ -178,6 +202,16 @@ namespace Doozy.Editor.UIManager.UIMenu
                     .SetTooltip("Apply current Unity Theme color to the Preview Image")
                     .BindToProperty(propertyColorize);
 
+            animationDurationFloatField =
+                DesignUtils.NewFloatField(propertyAnimationDuration)
+                    .SetStyleFlexGrow(1);
+
+            animationDurationFluidField =
+                FluidField.Get("Animation Duration")
+                    .AddFieldContent(animationDurationFloatField)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Cooldown)
+                    .SetElementSize(ElementSize.Tiny);
+
             infoTagTextField =
                 DesignUtils.NewTextField(propertyInfoTag)
                     .ResetLayout()
@@ -188,71 +222,61 @@ namespace Doozy.Editor.UIManager.UIMenu
             Label GetLabel(string fieldName) =>
                 DesignUtils.NewFieldNameLabel(fieldName);
 
-            prefabInfoField =
+
+            prefabTypeContainer = DesignUtils.column.SetStyleWidth(128, 128, 128)
+                .AddChild(GetLabel("Prefab Type"))
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(prefabTypeEnumField);
+
+            prefabTypeNameContainer = DesignUtils.column
+                .AddChild(GetLabel("Prefab Type Name"))
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(prefabTypeNameTextField);
+
+            prefabCategoryContainer = DesignUtils.column
+                .AddChild(GetLabel("Prefab Category"))
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(prefabCategoryTextField);
+
+            prefabNameContainer = DesignUtils.column
+                .AddChild(GetLabel("Prefab Name"))
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(prefabNameTextField);
+
+            instantiateModeContainer = DesignUtils.column.SetStyleFlexGrow(0).AddChild(GetLabel("Instantiate Mode"))
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild
+                (
+                    DesignUtils.row
+                        .SetStyleFlexGrow(0)
+                        .AddChild(instantiateModeEnumField)
+                        .AddChild(lockInstantiateModeButton)
+                );
+
+            infoTagContainer = DesignUtils.column.SetStyleFlexGrow(0)
+                .AddChild(GetLabel("Info Tag"))
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(infoTagTextField);
+
+
+            prefabInfoFluidField =
                 FluidField.Get()
                     .AddFieldContent
                     (
                         DesignUtils.row
-                            .AddChild
-                            (
-                                DesignUtils.column
-                                    .SetStyleWidth(128, 128, 128)
-                                    .AddChild(GetLabel("Prefab Type"))
-                                    .AddChild(DesignUtils.spaceBlock)
-                                    .AddChild(prefabTypeEnumField)
-                            )
-                            .AddChild(DesignUtils.spaceBlock)
-                            .AddChild
-                            (
-                                DesignUtils.column
-                                    .AddChild(GetLabel("Prefab Type Name"))
-                                    .AddChild(DesignUtils.spaceBlock)
-                                    .AddChild(prefabTypeNameTextField)
-                            )
+                            .AddChild(prefabTypeContainer.SetStyleMarginRight(DesignUtils.k_Spacing))
+                            .AddChild(prefabTypeNameContainer)
                     )
                     .AddFieldContent(DesignUtils.spaceBlock)
                     .AddFieldContent
                     (
                         DesignUtils.row
-                            .AddChild
-                            (
-                                DesignUtils.column
-                                    .AddChild(GetLabel("Prefab Category"))
-                                    .AddChild(DesignUtils.spaceBlock)
-                                    .AddChild(prefabCategoryTextField)
-                            )
-                            .AddChild(DesignUtils.spaceBlock)
-                            .AddChild
-                            (
-                                DesignUtils.column
-                                    .AddChild(GetLabel("Prefab Name"))
-                                    .AddChild(DesignUtils.spaceBlock)
-                                    .AddChild(prefabNameTextField)
-                            )
-                            .AddChild(DesignUtils.spaceBlock)
-                            .AddChild
-                            (
-                                DesignUtils.column
-                                    .SetStyleFlexGrow(0)
-                                    .AddChild(GetLabel("Instantiate Mode"))
-                                    .AddChild(DesignUtils.spaceBlock)
-                                    .AddChild
-                                    (
-                                        DesignUtils.row
-                                            .SetStyleFlexGrow(0)
-                                            .AddChild(instantiateModeEnumField)
-                                            .AddChild(lockInstantiateModeButton)
-                                    )
-                            )
+                            .AddChild(prefabCategoryContainer.SetStyleMarginRight(DesignUtils.k_Spacing))
+                            .AddChild(prefabNameContainer.SetStyleMarginRight(DesignUtils.k_Spacing))
+                            .AddChild(instantiateModeContainer)
                     )
                     .AddFieldContent(DesignUtils.spaceBlock)
-                    .AddFieldContent(
-                        DesignUtils.column
-                            .SetStyleFlexGrow(0)
-                            .AddChild(GetLabel("Info Tag"))
-                            .AddChild(DesignUtils.spaceBlock)
-                            .AddChild(infoTagTextField)
-                    )
+                    .AddFieldContent(infoTagContainer)
                 ;
 
             prefabTypeNameTextField.SetEnabled((UIPrefabType)propertyPrefabType.enumValueIndex == UIPrefabType.Custom);
@@ -315,7 +339,7 @@ namespace Doozy.Editor.UIManager.UIMenu
                     UpdateItemsSource();
                 };
             };
-            
+
             #if UNITY_2021_2_OR_NEWER
             tagsFluidListView.listView.fixedItemHeight = 24;
             tagsFluidListView.SetPreferredListHeight((int)tagsFluidListView.listView.fixedItemHeight * 6);
@@ -323,12 +347,12 @@ namespace Doozy.Editor.UIManager.UIMenu
             tagsFluidListView.listView.itemHeight = 24;
             tagsFluidListView.SetPreferredListHeight(tagsFluidListView.listView.itemHeight * 6);
             #endif
-            
+
             tagsFluidListView.SetDynamicListHeight(false);
             tagsFluidListView.SetListTitle("Tags");
             tagsFluidListView.SetListDescription("List of tags used to describe this prefab");
             tagsFluidListView.UseSmallEmptyListPlaceholder(true);
-            tagsFluidListView.emptyListPlaceholder.SetIcon(EditorMicroAnimations.EditorUI.Placeholders.EmptyListViewSmall);
+            tagsFluidListView.emptyListPlaceholder.SetIcon(EditorSpriteSheets.EditorUI.Placeholders.EmptyListViewSmall);
 
 
             //ADD ITEM BUTTON (plus button)
@@ -401,7 +425,7 @@ namespace Doozy.Editor.UIManager.UIMenu
         private VisualElement GetIconContainer()
         {
             iconTexture2DAnimationInfo =
-                new Texture2DAnimationInfo(propertyIcon)
+                new Texture2DAnimationInfo(propertyIcon, castedTarget.spriteSheet)
                     .SetStyleMarginTop(DesignUtils.k_Spacing)
                     .HideSetTextureButton(true);
 
@@ -417,6 +441,14 @@ namespace Doozy.Editor.UIManager.UIMenu
 
             iconTexture2DAnimationInfo.SetStyleDisplay(propertyIcon.arraySize > 0 ? DisplayStyle.Flex : DisplayStyle.None);
 
+            content.schedule.Execute(() => { iconTexture2DAnimationInfo.reaction?.SetDuration(propertyAnimationDuration.floatValue); });
+            animationDurationFloatField.RegisterValueChangedCallback(evt =>
+            {
+                if (evt?.newValue == null) return;
+                iconTexture2DAnimationInfo?.reaction?.SetDuration(evt.newValue);
+            });
+
+            //Drag and Drop
             content.RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 content.RegisterCallback<DragUpdatedEvent>(OnDragUpdate);
@@ -435,7 +467,7 @@ namespace Doozy.Editor.UIManager.UIMenu
                 if (!isValid) //check if it's a folder
                 {
                     string assetPath = AssetDatabase.GetAssetPath(DragAndDrop.objectReferences[0]);
-                    string[] paths = AssetDatabase.FindAssets($"t:{nameof(Texture)}", new[] { assetPath });
+                    string[] paths = AssetDatabase.FindAssets($"t:{nameof(Texture2D)}", new[] { assetPath });
                     isValid = paths.Select(path => AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath(path))).Any(sprite => sprite != null);
                 }
                 if (!isValid) return;
@@ -444,12 +476,33 @@ namespace Doozy.Editor.UIManager.UIMenu
 
             void OnDragPerformEvent(DragPerformEvent evt)
             {
-                var references = DragAndDrop.objectReferences.Where(item => item != null && item is Texture).OrderBy(item => item.name).ToList();
+                var references =
+                    DragAndDrop.objectReferences
+                        .Where(item => item != null && item is Texture2D)
+                        .OrderBy(item => item.name)
+                        .ToList();
+
+                AssetUtils.RemoveSubAssets(castedTarget);
                 if (references.Count == 0) //check if it's a folder
                 {
                     string folderPath = AssetDatabase.GetAssetPath(DragAndDrop.objectReferences[0]);
-                    string[] guids = AssetDatabase.FindAssets($"t:{nameof(Texture)}", new[] { folderPath });
+                    string[] guids = AssetDatabase.FindAssets($"t:{nameof(Texture2D)}", new[] { folderPath });
                     references.AddRange(guids.Select(guid => AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath(guid))).OrderBy(item => item.name));
+                    propertySpriteSheet.objectReferenceValue = null;
+                    iconTextures2DFluidListView.SetStyleDisplay(DisplayStyle.Flex);
+                }
+                else //not a folder - look for sprite sheets
+                {
+                    foreach (Texture2D texture in references.OfType<Texture2D>().ToList().Where(texture => texture.IsSpriteSheet()))
+                    {
+                        propertySpriteSheet.objectReferenceValue = texture;
+                        propertySpriteSheet.serializedObject.ApplyModifiedProperties();
+                        castedTarget.SetSpriteSheet(texture);
+                        iconTexture2DAnimationInfo.spriteSheet = castedTarget.spriteSheet;
+                        iconTexture2DAnimationInfo.Update();
+                        iconTextures2DFluidListView.SetStyleDisplay(DisplayStyle.None);
+                        return;
+                    }
                 }
 
                 if (references.Count == 0)
@@ -466,6 +519,7 @@ namespace Doozy.Editor.UIManager.UIMenu
                 iconTexture2DAnimationInfo.Update();
             }
 
+            iconTextures2DFluidListView.SetStyleDisplay(castedTarget.spriteSheet == null ? DisplayStyle.Flex : DisplayStyle.None);
             iconTextures2DFluidListView.listView.selectionType = SelectionType.None;
             iconTextures2DFluidListView.listView.itemsSource = itemsSource;
             iconTextures2DFluidListView.listView.makeItem = () => new ObjectFluidListViewItem(iconTextures2DFluidListView, typeof(Texture2D));
@@ -489,7 +543,7 @@ namespace Doozy.Editor.UIManager.UIMenu
                     UpdateItemsSource();
                 };
             };
-            
+
             #if UNITY_2021_2_OR_NEWER
             iconTextures2DFluidListView.listView.fixedItemHeight = 24;
             iconTextures2DFluidListView.SetPreferredListHeight((int)iconTextures2DFluidListView.listView.fixedItemHeight * 6);
@@ -497,7 +551,7 @@ namespace Doozy.Editor.UIManager.UIMenu
             iconTextures2DFluidListView.listView.itemHeight = 24;
             iconTextures2DFluidListView.SetPreferredListHeight(iconTextures2DFluidListView.listView.itemHeight * 6);
             #endif
-            
+
             iconTextures2DFluidListView.SetDynamicListHeight(false);
             iconTextures2DFluidListView.UseSmallEmptyListPlaceholder(true);
             iconTextures2DFluidListView.SetListTitle("Prefab Preview");
@@ -599,28 +653,46 @@ namespace Doozy.Editor.UIManager.UIMenu
 
         private void Compose()
         {
+            headerToolbar = DesignUtils.row
+                .SetStyleMargins(50, -4, DesignUtils.k_Spacing2X, DesignUtils.k_Spacing2X)
+                .AddChild(DesignUtils.flexibleSpace)
+                .AddChild(saveButton)
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(renameAssetButton);
+
+            iconContainer = GetIconContainer();
+            tagsContainer = GetTagsContainer();
+
             root
                 .AddChild(componentHeader)
-                .AddChild
-                (
-                    DesignUtils.row
-                        .SetStyleMargins(50, -4, DesignUtils.k_Spacing2X, DesignUtils.k_Spacing2X)
-                        .AddChild(DesignUtils.flexibleSpace)
-                        .AddChild(saveButton)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild(renameAssetButton)
-                )
+                .AddChild(headerToolbar)
                 .AddChild(DesignUtils.spaceBlock)
                 .AddChild(prefabFluidField)
                 .AddChild(DesignUtils.spaceBlock)
-                .AddChild(prefabInfoField)
+                .AddChild(prefabInfoFluidField)
                 .AddChild(DesignUtils.endOfLineBlock)
-                .AddChild(GetIconContainer())
+                .AddChild(iconContainer)
                 .AddChild(DesignUtils.spaceBlock)
-                .AddChild(colorizeSwitch)
+                .AddChild
+                (
+                    DesignUtils.row
+                        .AddChild(colorizeSwitch.SetStyleMarginRight(DesignUtils.k_Spacing))
+                        .AddChild(animationDurationFluidField)
+                )
                 .AddChild(DesignUtils.endOfLineBlock)
-                .AddChild(GetTagsContainer())
+                .AddChild(tagsContainer)
                 .AddChild(DesignUtils.endOfLineBlock);
+        }
+
+        /// <summary> Used by the UIMenu Generator to use this editor as a settings panel for bulk items creation </summary>
+        public void UseAsSettings()
+        {
+            componentHeader.SetStyleDisplay(DisplayStyle.None);
+            headerToolbar.SetStyleDisplay(DisplayStyle.None);
+            prefabFluidField.SetStyleDisplay(DisplayStyle.None);
+            iconContainer.SetStyleDisplay(DisplayStyle.None);
+            colorizeSwitch.SetStyleDisplay(DisplayStyle.None);
+            prefabNameContainer.SetStyleDisplay(DisplayStyle.None);
         }
     }
 }

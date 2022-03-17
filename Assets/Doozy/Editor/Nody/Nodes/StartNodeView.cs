@@ -16,7 +16,7 @@ namespace Doozy.Editor.Nody.Nodes
     {
         public override Type nodeType => typeof(StartNode);
         public override Texture2D nodeIconTexture => EditorTextures.Nody.Icons.StartNode;
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.StartNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.StartNode;
         public override Color nodeAccentColor => EditorColors.Nody.StickyNote;
         
         public StartNodeView(FlowGraphView graphView, FlowNode node) : base(graphView, node)
@@ -29,7 +29,7 @@ namespace Doozy.Editor.Nody.Nodes
         {
             base.InitializeView();
 
-            this.SetIcon(EditorMicroAnimations.Nody.Icons.StartNode);
+            this.SetIcon(EditorSpriteSheets.Nody.Icons.StartNode);
         }
     }
 }

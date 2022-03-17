@@ -9,6 +9,8 @@ using UnityEngine;
 
 namespace Doozy.Runtime.Common
 {
+    /// <summary> Base MonoBehaviour clas that implements the singleton pattern </summary>
+    /// <typeparam name="T"> Class type </typeparam>
     public abstract class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehaviour
     {
         // ReSharper disable once StaticMemberInGenericType
@@ -19,6 +21,7 @@ namespace Doozy.Runtime.Common
         [ClearOnReload]
         private static T s_instance;
 
+        /// <summary> Get singleton instance </summary>
         public static T instance
         {
             get

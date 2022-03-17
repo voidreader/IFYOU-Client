@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Doozy.Editor.EditorUI;
+using Doozy.Runtime.Common.Extensions;
 using UnityEditor;
 using UnityEditor.Experimental.SceneManagement;
 using UnityEditor.SceneManagement;
@@ -296,11 +297,14 @@ namespace Doozy.Editor.UIManager.UIMenu
 
         public static IEnumerable<Texture2D> GetIconTextures(UIMenuItem item)
         {
-            List<Texture2D> textures = EditorMicroAnimations.EditorUI.Icons.QuestionMark;
+            List<Texture2D> textures = EditorSpriteSheets.EditorUI.Icons.QuestionMark;
             if (item == null) return textures;
 
-            if (item.hasAnimatedIcon)
+            if (item.hasAnimatedIcon | item.spriteSheet != null)
             {
+                if (item.spriteSheet != null)
+                    item.ProcessSpriteSheet();
+                
                 return item.icon;
             }
 
@@ -309,50 +313,36 @@ namespace Doozy.Editor.UIManager.UIMenu
                 return new[] { item.icon.First() };
             }
 
-            switch (item.prefabType)
+            string cleanPrefabTypeName = item.prefabTypeName.RemoveWhitespaces().RemoveAllSpecialCharacters();
+            foreach (EditorSpriteSheets.UIManager.UIMenu.SpriteSheetName sheetName in Enum.GetValues(typeof(EditorSpriteSheets.UIManager.UIMenu.SpriteSheetName)))
             {
-                case UIPrefabType.Component:
-                    textures = EditorMicroAnimations.UIManager.UIMenu.Component;
-
-                    break;
-                case UIPrefabType.Container:
-                    textures = EditorMicroAnimations.UIManager.UIMenu.Container;
-
-                    break;
-                case UIPrefabType.Content:
-                    textures = EditorMicroAnimations.UIManager.UIMenu.Content;
-
-                    break;
-                case UIPrefabType.Custom:
-                    textures = EditorMicroAnimations.UIManager.UIMenu.Custom;
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                if (!sheetName.ToString().Equals(cleanPrefabTypeName))
+                    continue;
+                textures = EditorSpriteSheets.UIManager.UIMenu.GetTextures(sheetName);
             }
-
+            
             //component
-            if (item.tags.Contains("button")) textures = EditorMicroAnimations.UIManager.UIMenu.Button;
-            if (item.tags.Contains("dropdown")) textures = EditorMicroAnimations.UIManager.UIMenu.Dropdown;
-            if (item.tags.Contains("toggle")) textures = EditorMicroAnimations.UIManager.UIMenu.Checkbox;
-            if (item.tags.Contains("checkbox")) textures = EditorMicroAnimations.UIManager.UIMenu.Checkbox;
-            if (item.tags.Contains("switch")) textures = EditorMicroAnimations.UIManager.UIMenu.Switch;
-            if (item.tags.Contains("radio")) textures = EditorMicroAnimations.UIManager.UIMenu.RadioButton;
-            if (item.tags.Contains("inputfield")) textures = EditorMicroAnimations.UIManager.UIMenu.InputField;
-            if (item.tags.Contains("inputField")) textures = EditorMicroAnimations.UIManager.UIMenu.InputField;
-            if (item.tags.Contains("input field")) textures = EditorMicroAnimations.UIManager.UIMenu.InputField;
-            if (item.tags.Contains("scrollbar")) textures = EditorMicroAnimations.UIManager.UIMenu.Scollbar;
-            if (item.tags.Contains("scrollview")) textures = EditorMicroAnimations.UIManager.UIMenu.ScrollView;
-            if (item.tags.Contains("slider")) textures = EditorMicroAnimations.UIManager.UIMenu.Slider;
+            if (item.tags.Contains("button")) textures = EditorSpriteSheets.UIManager.UIMenu.Button;
+            if (item.tags.Contains("dropdown")) textures = EditorSpriteSheets.UIManager.UIMenu.Dropdown;
+            if (item.tags.Contains("toggle")) textures = EditorSpriteSheets.UIManager.UIMenu.Checkbox;
+            if (item.tags.Contains("checkbox")) textures = EditorSpriteSheets.UIManager.UIMenu.Checkbox;
+            if (item.tags.Contains("switch")) textures = EditorSpriteSheets.UIManager.UIMenu.Switch;
+            if (item.tags.Contains("radio")) textures = EditorSpriteSheets.UIManager.UIMenu.RadioButton;
+            if (item.tags.Contains("inputfield")) textures = EditorSpriteSheets.UIManager.UIMenu.InputField;
+            if (item.tags.Contains("inputField")) textures = EditorSpriteSheets.UIManager.UIMenu.InputField;
+            if (item.tags.Contains("input field")) textures = EditorSpriteSheets.UIManager.UIMenu.InputField;
+            if (item.tags.Contains("scrollbar")) textures = EditorSpriteSheets.UIManager.UIMenu.Scollbar;
+            if (item.tags.Contains("scrollview")) textures = EditorSpriteSheets.UIManager.UIMenu.ScrollView;
+            if (item.tags.Contains("slider")) textures = EditorSpriteSheets.UIManager.UIMenu.Slider;
 
             //container
-            if (item.tags.Contains("view")) textures = EditorMicroAnimations.UIManager.Icons.Views;
+            if (item.tags.Contains("view")) textures = EditorSpriteSheets.UIManager.Icons.UIView;
 
             //layout
-            if (item.tags.Contains("layout") & item.tags.Contains("grid")) textures = EditorMicroAnimations.UIManager.UIMenu.GridLayout;
-            if (item.tags.Contains("layout") & item.tags.Contains("horizontal")) textures = EditorMicroAnimations.UIManager.UIMenu.HorizontalLayout;
-            if (item.tags.Contains("layout") & item.tags.Contains("vertical")) textures = EditorMicroAnimations.UIManager.UIMenu.VerticalLayout;
-            if (item.tags.Contains("layout") & item.tags.Contains("radial")) textures = EditorMicroAnimations.UIManager.UIMenu.RadialLayout;
+            if (item.tags.Contains("layout") & item.tags.Contains("grid")) textures = EditorSpriteSheets.UIManager.UIMenu.GridLayout;
+            if (item.tags.Contains("layout") & item.tags.Contains("horizontal")) textures = EditorSpriteSheets.UIManager.UIMenu.HorizontalLayout;
+            if (item.tags.Contains("layout") & item.tags.Contains("vertical")) textures = EditorSpriteSheets.UIManager.UIMenu.VerticalLayout;
+            if (item.tags.Contains("layout") & item.tags.Contains("radial")) textures = EditorSpriteSheets.UIManager.UIMenu.RadialLayout;
 
 
             return textures;

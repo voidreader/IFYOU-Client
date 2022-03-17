@@ -145,6 +145,15 @@ namespace Doozy.Runtime.Reactor.Animators
             if (animation.isPlaying) UpdateValues();
         }
 
+        public override float GetStartDelay() =>
+            animation.GetStartDelay();
+
+        public override float GetDuration() =>
+            animation.GetDuration();
+
+        public override float GetTotalDuration() =>
+            GetStartDelay() + GetDuration();
+
         public override void UpdateValues() =>
             animation.UpdateValues();
 
@@ -270,5 +279,33 @@ namespace Doozy.Runtime.Reactor.Animators
 
         protected override void Recycle() =>
             animation?.Recycle();
+        
+        /// <summary> Set a new start position value (RectTransform.anchoredPosition3D) for the animation </summary>
+        /// <param name="value"> New start position </param>
+        public void SetStartPosition(Vector3 value)
+        {
+            animation.startPosition = value;
+        }
+
+        /// <summary> Set a new start rotation value (RectTransform.localEulerAngles) for the animation </summary>
+        /// <param name="value"> New start rotation </param>
+        public void SetStartRotation(Vector3 value)
+        {
+            animation.startRotation = value;
+        }
+
+        /// <summary> Set a new start scale value (RectTransform.localScale) for the animation </summary>
+        /// <param name="value"> New start scale </param>
+        public void SetStartScale(Vector3 value)
+        {
+            animation.startScale = value;
+        }
+
+        /// <summary> Set a new start alpha value (CanvasGroup.alpha) for the animation </summary>
+        /// <param name="value"> New start scale </param>
+        public void SetStartAlpha(float value)
+        {
+            animation.startAlpha = value;
+        }
     }
 }

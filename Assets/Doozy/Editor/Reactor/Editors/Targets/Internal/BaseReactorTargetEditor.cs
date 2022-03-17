@@ -23,9 +23,9 @@ namespace Doozy.Editor.Reactor.Editors.Targets
         public static Color accentColor => EditorColors.Reactor.Red;
         public static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Reactor.Red;
 
-        public virtual IEnumerable<Texture2D> targetIconTextures => EditorMicroAnimations.Reactor.Icons.Reactor;
-        public static IEnumerable<Texture2D> linkIconTextures => EditorMicroAnimations.EditorUI.Icons.Link;
-        public static IEnumerable<Texture2D> unlinkIconTextures => EditorMicroAnimations.EditorUI.Icons.Unlink;
+        public virtual IEnumerable<Texture2D> targetIconTextures => EditorSpriteSheets.Reactor.Icons.ReactorIcon;
+        public static IEnumerable<Texture2D> linkIconTextures => EditorSpriteSheets.EditorUI.Icons.Link;
+        public static IEnumerable<Texture2D> unlinkIconTextures => EditorSpriteSheets.EditorUI.Icons.Unlink;
         
         protected VisualElement root { get; set; }
         protected FluidComponentHeader componentHeader { get; set; }

@@ -2,6 +2,7 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System;
 using System.Collections.Generic;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
@@ -15,14 +16,14 @@ using UnityEngine.UIElements;
 
 namespace Doozy.Editor.Reactor.Components
 {
-    public class ReactionControls : VisualElement
+    public class ReactionControls : VisualElement, IDisposable
     {
-        public static IEnumerable<Texture2D> firstFrameTextures => EditorMicroAnimations.EditorUI.Icons.FirstFrame;
-        public static IEnumerable<Texture2D> playForwardTextures => EditorMicroAnimations.EditorUI.Icons.PlayForward;
-        public static IEnumerable<Texture2D> stopTextures => EditorMicroAnimations.EditorUI.Icons.Stop;
-        public static IEnumerable<Texture2D> playReverseTextures => EditorMicroAnimations.EditorUI.Icons.PlayReverse;
-        public static IEnumerable<Texture2D> reverseTextures => EditorMicroAnimations.EditorUI.Icons.Reverse;
-        public static IEnumerable<Texture2D> lastFrameTextures => EditorMicroAnimations.EditorUI.Icons.LastFrame;
+        public static IEnumerable<Texture2D> firstFrameTextures => EditorSpriteSheets.EditorUI.Icons.FirstFrame;
+        public static IEnumerable<Texture2D> playForwardTextures => EditorSpriteSheets.EditorUI.Icons.PlayForward;
+        public static IEnumerable<Texture2D> stopTextures => EditorSpriteSheets.EditorUI.Icons.Stop;
+        public static IEnumerable<Texture2D> playReverseTextures => EditorSpriteSheets.EditorUI.Icons.PlayReverse;
+        public static IEnumerable<Texture2D> reverseTextures => EditorSpriteSheets.EditorUI.Icons.Reverse;
+        public static IEnumerable<Texture2D> lastFrameTextures => EditorSpriteSheets.EditorUI.Icons.LastFrame;
         
         public static EditorSelectableColorInfo accentColor => EditorSelectableColors.Reactor.Red;
         
@@ -38,6 +39,16 @@ namespace Doozy.Editor.Reactor.Components
         public FluidButton lastFrameButton { get; }
         public FluidButton reverseButton { get; }
 
+        public void Dispose()
+        {
+            playForwardButton?.Recycle();
+            stopButton?.Recycle();
+            playReverseButton?.Recycle();
+            firstFrameButton?.Recycle();
+            lastFrameButton?.Recycle();
+            reverseButton?.Recycle();
+        }
+        
         public ReactionControls()
         {
             Add(templateContainer = EditorLayouts.Reactor.ReactionControls.CloneTree());
@@ -107,5 +118,6 @@ namespace Doozy.Editor.Reactor.Components
                 .SetAccentColor(accentColor)
                 .SetTooltip(buttonTooltip)
                 .SetElementSize(ElementSize.Tiny);
+       
     }
 }

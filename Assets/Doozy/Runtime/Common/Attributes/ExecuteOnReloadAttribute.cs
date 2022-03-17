@@ -7,6 +7,9 @@ using System;
 
 namespace Doozy.Runtime.Common.Attributes
 {
+    /// <summary>
+    /// Attribute used by the <see cref="Doozy.Editor.Common.Utils.DomainReloadHandler"/> to execute a method on reload
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class ExecuteOnReloadAttribute : Attribute
     {

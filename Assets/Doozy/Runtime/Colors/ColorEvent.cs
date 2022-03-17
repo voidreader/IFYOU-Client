@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 namespace Doozy.Runtime.Colors
 {
+    /// <summary> UnityEvent with a Color parameter </summary>
     public class ColorEvent : UnityEvent<Color>
     {
     }

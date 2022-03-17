@@ -22,7 +22,7 @@ namespace Doozy.Editor.UIManager.Layouts
         
         public override string layoutName => "Databases";
         public override Texture2D staticIconTexture => EditorTextures.EditorUI.Icons.GenericDatabase;
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.EditorUI.Icons.GenericDatabase;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.EditorUI.Icons.GenericDatabase;
 
         public override Color accentColor => EditorColors.UIManager.UIComponent;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.UIComponent;

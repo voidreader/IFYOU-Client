@@ -35,8 +35,8 @@ namespace Doozy.Editor.UIManager.Editors.Components
         public UIScrollbar castedTarget => (UIScrollbar)target;
         public IEnumerable<UIScrollbar> castedTargets => targets.Cast<UIScrollbar>();
 
-        public static IEnumerable<Texture2D> unityEventIconTextures => EditorMicroAnimations.EditorUI.Icons.UnityEvent;
-        public static IEnumerable<Texture2D> uiScrollbarIconTextures => EditorMicroAnimations.UIManager.Icons.UIScrollbar;
+        public static IEnumerable<Texture2D> unityEventIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
+        public static IEnumerable<Texture2D> uiScrollbarIconTextures => EditorSpriteSheets.UIManager.Icons.UIScrollbar;
 
         private EnabledIndicator callbacksTabIndicator { get; set; }
 

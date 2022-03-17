@@ -21,6 +21,9 @@ namespace Doozy.Editor.EditorUI.Components
     {
         protected string EditorPrefsKey(string variableName) => $"{GetType().FullName} - {variableName}";
 
+        protected string sideMenuWidthKey => EditorPrefsKey($"{nameof(sideMenu)}.{nameof(sideMenu.customWidth)}");
+        protected string sideMenuIsCollapsedKey => EditorPrefsKey($"{nameof(sideMenu)}.{nameof(sideMenu.isCollapsed)}");
+
         public virtual string layoutName => "Unknown Layout Name";
         public virtual Texture2D staticIconTexture => null;
         public virtual List<Texture2D> animatedIconTextures => null;
@@ -35,6 +38,7 @@ namespace Doozy.Editor.EditorUI.Components
         public Label footerLabel { get; protected set; }
 
         public FluidSideMenu sideMenu { get; protected set; }
+        public FluidResizer sideMenuResizer { get; protected set; }
 
         public ScrollView searchResults { get; }
         public Dictionary<ISearchable, FluidSearchableItem> searchableItems { get; }
@@ -77,7 +81,11 @@ namespace Doozy.Editor.EditorUI.Components
             searchableItems = new Dictionary<ISearchable, FluidSearchableItem>();
 
             //SIDE MENU <<< ADD search, NOT collapsable, Menu Level 1, ColorName.Amber
-            menu.Add(sideMenu = new FluidSideMenu().AddSearch().IsCollapsable(false).SetMenuLevel(FluidSideMenu.MenuLevel.Level_1));
+            sideMenu =
+                new FluidSideMenu()
+                    .AddSearch()
+                    .IsCollapsable(false)
+                    .SetMenuLevel(FluidSideMenu.MenuLevel.Level_1);
 
             //SEARCH - clear the searchable items list (used to generate complex search results)
             searchableItems.Clear();
@@ -110,6 +118,40 @@ namespace Doozy.Editor.EditorUI.Components
                 if (sideMenu.searchBox.isSearching)
                     UpdateSearchResults();
             };
+
+            //COLLAPSABLE
+            sideMenu.OnCollapse += () => EditorPrefs.SetBool(sideMenuIsCollapsedKey, true);
+            sideMenu.OnExpand += () => EditorPrefs.SetBool(sideMenuIsCollapsedKey, false);
+            if (sideMenu.isCollapsable)
+            {
+                bool sideMenuIsCollapsed = EditorPrefs.GetBool(sideMenuIsCollapsedKey, false);
+                if (sideMenuIsCollapsed)
+                    sideMenu.CollapseMenu(false);
+                else
+                    sideMenu.ExpandMenu(false);
+            }
+                
+            //RESIZER
+            sideMenu.SetCustomWidth(EditorPrefs.GetInt(sideMenuWidthKey, 200));
+            sideMenuResizer = new FluidResizer(FluidResizer.Position.Right);
+            sideMenuResizer.onPointerMoveEvent += evt =>
+            {
+                if (sideMenu.isCollapsed) return;
+                sideMenu.SetCustomWidth((int)(sideMenu.customWidth + evt.deltaPosition.x));
+            };
+            sideMenuResizer.onPointerUp += evt =>
+            {
+                if (sideMenu.isCollapsed) return;
+                EditorPrefs.SetInt(sideMenuWidthKey, sideMenu.customWidth);
+            };
+
+            //ADD SideMenu to menu container
+            menu.Add
+            (
+                DesignUtils.row
+                    .AddChild(sideMenu)
+                    .AddChild(sideMenuResizer)
+            );
 
             //FOOTER
             footer

@@ -81,10 +81,10 @@ namespace Doozy.Editor.Signals.Layouts
         private Texture2DReaction streamIconReaction { get; set; }
         private ColorReaction colorReaction { get; set; }
 
-        private static IEnumerable<Texture2D> signalTextures => EditorMicroAnimations.Signals.Icons.Signal;
-        private static IEnumerable<Texture2D> metaSignalTextures => EditorMicroAnimations.Signals.Icons.MetaSignal;
-        private static IEnumerable<Texture2D> streamTextures => EditorMicroAnimations.Signals.Icons.SignalStream;
-        private static IEnumerable<Texture2D> locationTextures => EditorMicroAnimations.EditorUI.Icons.Location;
+        private static IEnumerable<Texture2D> signalTextures => EditorSpriteSheets.Signals.Icons.Signal;
+        private static IEnumerable<Texture2D> metaSignalTextures => EditorSpriteSheets.Signals.Icons.MetaSignal;
+        private static IEnumerable<Texture2D> streamTextures => EditorSpriteSheets.Signals.Icons.SignalStream;
+        private static IEnumerable<Texture2D> locationTextures => EditorSpriteSheets.EditorUI.Icons.Location;
 
         private static Color layoutContainerNormalColor => EditorColors.Default.FieldBackground;
         private static Color layoutContainerHoverColor => EditorColors.Default.WindowHeaderBackground;

@@ -8,11 +8,18 @@ using System;
 
 namespace Doozy.Runtime.Nody
 {
+    /// <summary> Attribute used to add nodes to the nodes menu inside the Nody window </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public class NodyMenuPathAttribute : Attribute
     {
+        /// <summary> Node category </summary>
         public string category { get; }
+        /// <summary> Node name </summary>
         public string name { get; }
+        
+        /// <summary> Construct a new NodyMenuPathAttribute with the given node category and node name </summary>
+        /// <param name="category"> Node category </param>
+        /// <param name="name"> Node name </param>
         public NodyMenuPathAttribute(string category, string name)
         {
             this.category = category;

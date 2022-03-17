@@ -9,6 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace Doozy.Runtime.Mody
 {
+    /// <summary> Specialized class responsible for running a <see cref="ModyAction"/> </summary>
     [Serializable]
     public class ModyActionRunner
     {
@@ -42,11 +43,11 @@ namespace Doozy.Runtime.Mody
         /// <summary> If the Action is in cooldown, should it be ignored and run anyway </summary>
         public bool IgnoreCooldown;
 
-        public ModyActionRunner()
-        {
+        /// <summary> Construct a new ModyActionRunner </summary>
+        public ModyActionRunner() =>
             Reset();
-        }
 
+        /// <summary> Reset the ModyActionRunner </summary>
         public void Reset()
         {
             Module = null;

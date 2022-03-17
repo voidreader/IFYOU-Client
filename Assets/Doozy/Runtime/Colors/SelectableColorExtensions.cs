@@ -7,18 +7,43 @@ using UnityEngine;
 
 namespace Doozy.Runtime.Colors
 {
+    /// <summary>
+    /// Extension methods for <see cref="SelectableColor"/>
+    /// </summary>
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public static class SelectableColorExtensions
     {
+        /// <summary>
+        /// Set the <see cref="SelectionState"/> for the target <see cref="SelectableColor"/>
+        /// </summary>
+        /// <param name="target"> Target <see cref="SelectableColor"/> </param>
+        /// <param name="state"> New <see cref="SelectionState"/> </param>
+        /// <typeparam name="T"> <see cref="SelectableColor"/> </typeparam>
+        /// <returns> Returns itself </returns>
         public static T SetState<T>(this T target, SelectionState state) where T : SelectableColor
         {
             target.SetSelectionState(state);
             return target;
         }
 
+        /// <summary>
+        /// Set a new color for both dark and light themes for the Normal state of the target <see cref="SelectableColor"/>
+        /// </summary>
+        /// <param name="target"> Target <see cref="SelectableColor"/> </param>
+        /// <param name="color"> New Color </param>
+        /// <typeparam name="T"> <see cref="SelectableColor"/> </typeparam>
+        /// <returns> Returns itself </returns>
         public static T SetNormalColor<T>(this T target, Color color) where T : SelectableColor =>
             target.SetNormalColor(color, color);
 
+        /// <summary>
+        /// Set new colors for dark and light themes for the Normal state of the target <see cref="SelectableColor"/> 
+        /// </summary>
+        /// <param name="target"> Target <see cref="SelectableColor"/> </param>
+        /// <param name="colorOnDark"> New Color for the dark theme </param>
+        /// <param name="colorOnLight"> New Color for the light theme </param>
+        /// <typeparam name="T"> <see cref="SelectableColor"/> </typeparam>
+        /// <returns> Returns itself </returns>
         public static T SetNormalColor<T>(this T target, Color colorOnDark, Color colorOnLight) where T : SelectableColor
         {
             target.Normal.ColorOnDark = colorOnDark;
@@ -30,9 +55,24 @@ namespace Doozy.Runtime.Colors
             return target;
         }
 
+        /// <summary>
+        /// Set a new color for both dark and light themes for the Highlighted state of the target <see cref="SelectableColor"/>
+        /// </summary>
+        /// <param name="target"> Target <see cref="SelectableColor"/> </param>
+        /// <param name="color"> New Color </param>
+        /// <typeparam name="T"> <see cref="SelectableColor"/> </typeparam>
+        /// <returns> Returns itself </returns>
         public static T SetHighlightedColor<T>(this T target, Color color) where T : SelectableColor =>
             target.SetHighlightedColor(color, color);
 
+        /// <summary>
+        /// Set new colors for dark and light themes for the Highlighted state of the target <see cref="SelectableColor"/> 
+        /// </summary>
+        /// <param name="target"> Target <see cref="SelectableColor"/> </param>
+        /// <param name="colorOnDark"> New Color for the dark theme </param>
+        /// <param name="colorOnLight"> New Color for the light theme </param>
+        /// <typeparam name="T"> <see cref="SelectableColor"/> </typeparam>
+        /// <returns> Returns itself </returns>
         public static T SetHighlightedColor<T>(this T target, Color colorOnDark, Color colorOnLight) where T : SelectableColor
         {
             target.Highlighted.ColorOnDark = colorOnDark;
@@ -44,9 +84,24 @@ namespace Doozy.Runtime.Colors
             return target;
         }
 
+        /// <summary>
+        /// Set a new color for both dark and light themes for the Pressed state of the target <see cref="SelectableColor"/>
+        /// </summary>
+        /// <param name="target"> Target <see cref="SelectableColor"/> </param>
+        /// <param name="color"> New Color </param>
+        /// <typeparam name="T"> <see cref="SelectableColor"/> </typeparam>
+        /// <returns> Returns itself </returns>
         public static T SetPressedColor<T>(this T target, Color color) where T : SelectableColor =>
             target.SetPressedColor(color, color);
 
+        /// <summary>
+        /// Set new colors for dark and light themes for the Pressed state of the target <see cref="SelectableColor"/> 
+        /// </summary>
+        /// <param name="target"> Target <see cref="SelectableColor"/> </param>
+        /// <param name="colorOnDark"> New Color for the dark theme </param>
+        /// <param name="colorOnLight"> New Color for the light theme </param>
+        /// <typeparam name="T"> <see cref="SelectableColor"/> </typeparam>
+        /// <returns> Returns itself </returns>
         public static T SetPressedColor<T>(this T target, Color colorOnDark, Color colorOnLight) where T : SelectableColor
         {
             target.Pressed.ColorOnDark = colorOnDark;
@@ -58,9 +113,24 @@ namespace Doozy.Runtime.Colors
             return target;
         }
 
+        /// <summary>
+        /// Set a new color for both dark and light themes for the Selected state of the target <see cref="SelectableColor"/>
+        /// </summary>
+        /// <param name="target"> Target <see cref="SelectableColor"/> </param>
+        /// <param name="color"> New Color </param>
+        /// <typeparam name="T"> <see cref="SelectableColor"/> </typeparam>
+        /// <returns> Returns itself </returns>
         public static T SetSelectedColor<T>(this T target, Color color) where T : SelectableColor =>
             target.SetSelectedColor(color, color);
 
+        /// <summary>
+        /// Set new colors for dark and light themes for the Selected state of the target <see cref="SelectableColor"/> 
+        /// </summary>
+        /// <param name="target"> Target <see cref="SelectableColor"/> </param>
+        /// <param name="colorOnDark"> New Color for the dark theme </param>
+        /// <param name="colorOnLight"> New Color for the light theme </param>
+        /// <typeparam name="T"> <see cref="SelectableColor"/> </typeparam>
+        /// <returns> Returns itself </returns>
         public static T SetSelectedColor<T>(this T target, Color colorOnDark, Color colorOnLight) where T : SelectableColor
         {
             target.Selected.ColorOnDark = colorOnDark;
@@ -72,9 +142,24 @@ namespace Doozy.Runtime.Colors
             return target;
         }
 
+        /// <summary>
+        /// Set a new color for both dark and light themes for the Disabled state of the target <see cref="SelectableColor"/>
+        /// </summary>
+        /// <param name="target"> Target <see cref="SelectableColor"/> </param>
+        /// <param name="color"> New Color </param>
+        /// <typeparam name="T"> <see cref="SelectableColor"/> </typeparam>
+        /// <returns> Returns itself </returns>
         public static T SetDisabledColor<T>(this T target, Color color) where T : SelectableColor =>
             target.SetDisabledColor(color, color);
 
+        /// <summary>
+        /// Set new colors for dark and light themes for the Disabled state of the target <see cref="SelectableColor"/> 
+        /// </summary>
+        /// <param name="target"> Target <see cref="SelectableColor"/> </param>
+        /// <param name="colorOnDark"> New Color for the dark theme </param>
+        /// <param name="colorOnLight"> New Color for the light theme </param>
+        /// <typeparam name="T"> <see cref="SelectableColor"/> </typeparam>
+        /// <returns> Returns itself </returns>
         public static T SetDisabledColor<T>(this T target, Color colorOnDark, Color colorOnLight) where T : SelectableColor
         {
             target.Disabled.ColorOnDark = colorOnDark;

@@ -18,7 +18,7 @@ namespace Doozy.Editor.EditorUI.WindowLayouts
     {
         public override string layoutName => "Textures";
         public override Texture2D staticIconTexture => EditorTextures.EditorUI.Icons.EditorTextureGroup;
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.EditorUI.Components.EditorTextureGroup;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.EditorUI.Components.EditorTextureGroup;
 
         protected override int maximumNumberOfItemsVisibleAtOnce => 5;
 

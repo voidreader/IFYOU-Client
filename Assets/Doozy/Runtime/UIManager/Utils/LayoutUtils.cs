@@ -20,6 +20,11 @@ namespace Doozy.Runtime.UIManager.Utils
             return layoutElement.ignoreLayout == false;
         }
 
+        /// <summary> Returns TRUE if the target RectTransform's contains a LayoutGroup </summary>
+        /// <param name="target"> Target RectTransform </param>
+        public static bool ContainsLayoutGroup(this RectTransform target) =>
+            target.GetComponentInChildren<LayoutGroup>();
+
         /// <summary> Returns the LayoutGroup of the target RectTransform. Returns null if there is no LayoutGroup </summary>
         /// <param name="target"> Target RectTransform </param>
         public static LayoutGroup GetLayoutGroupInParent(this RectTransform target) =>

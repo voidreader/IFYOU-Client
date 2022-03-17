@@ -26,7 +26,7 @@ namespace Doozy.Editor.UIManager.Nodes
 
         public override Type nodeType => typeof(UINode);
         public override Texture2D nodeIconTexture => EditorTextures.Nody.Icons.UINode;
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.UINode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.UINode;
 
         private List<UIOutputPortDataView> portDataViews { get; set; } = new List<UIOutputPortDataView>();
         private GoBackInputPortDataView goBackInputPortDataView { get; set; }
@@ -69,7 +69,7 @@ namespace Doozy.Editor.UIManager.Nodes
                     continue;
                 outputPortViews[i].portColor = EditorColors.Nody.BackFlow;
                 outputPortViews[i].SetEnabled(false);
-                portDataView.iconReaction.SetTextures(EditorMicroAnimations.EditorUI.Icons.Back);
+                portDataView.iconReaction.SetTextures(EditorSpriteSheets.EditorUI.Icons.Back);
                 portDataView.iconReaction.Play();
             }
 

@@ -32,6 +32,6 @@ namespace Doozy.Editor.EditorUI.WindowLayouts
                 .SetOnClick(onClickCallback)
                 .SetButtonStyle(ButtonStyle.Contained)
                 .SetElementSize(ElementSize.Small)
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Refresh);
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Refresh);
     }
 }

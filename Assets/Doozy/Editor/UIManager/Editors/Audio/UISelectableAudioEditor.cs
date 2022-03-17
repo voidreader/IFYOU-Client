@@ -29,7 +29,7 @@ namespace Doozy.Editor.UIManager.Editors.Audio
         protected override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.AudioComponent;
         
         private static IEnumerable<Texture2D> uiSelectableIconTextures => UISelectableEditor.selectableIconTextures;
-        private static IEnumerable<Texture2D> soundIconTextures => EditorMicroAnimations.EditorUI.Icons.Sound;
+        private static IEnumerable<Texture2D> soundIconTextures => EditorSpriteSheets.EditorUI.Icons.Sound;
 
         private SerializedProperty propertyAudioSource { get; set; }
         private SerializedProperty propertyNormalAudioClip { get; set; }
@@ -101,7 +101,7 @@ namespace Doozy.Editor.UIManager.Editors.Audio
             audioSourceFluidField =
                 FluidField.Get()
                     .SetLabelText("Audio Source")
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Sound)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Sound)
                     .AddFieldContent(audioSourceObjectField);
 
             normalAudioClipObjectField = DesignUtils.NewObjectField(propertyNormalAudioClip, typeof(AudioClip), false).SetStyleFlexGrow(1).SetTooltip("AudioClip played on Normal state");

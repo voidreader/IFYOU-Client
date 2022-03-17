@@ -49,7 +49,7 @@ namespace Doozy.Editor.Mody.Drawers.ModyActions
                     .SetAnimationTrigger(IconAnimationTrigger.OnValueChanged)
                     .SetStylePaddingLeft(DesignUtils.k_Spacing)
                     .SetStylePaddingRight(DesignUtils.k_Spacing)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Components.CarretRightToDown);
+                    .SetIcon(EditorSpriteSheets.EditorUI.Components.CarretRightToDown);
 
             button.SetToggleAccentColor(selectableAccentColor);
             button.iconReaction.SetDuration(FluidAnimatedContainer.k_ReactionDuration);
@@ -85,7 +85,7 @@ namespace Doozy.Editor.Mody.Drawers.ModyActions
             FluidComponentHeader header =
                 FluidComponentHeader.Get()
                     .SetElementSize(ElementSize.Tiny)
-                    .SetRotatedIcon(EditorMicroAnimations.Mody.Icons.ModyAction)
+                    .SetRotatedIcon(EditorSpriteSheets.Mody.Icons.ModyAction)
                     .SetAccentColor(accentColor)
                     .SetComponentNameText(modyAction.actionName)
                     .SetComponentTypeText(componentTypeName);
@@ -173,7 +173,7 @@ namespace Doozy.Editor.Mody.Drawers.ModyActions
                     .UseSmallEmptyListPlaceholder(true)
                     .HideFooterWhenEmpty(true);
 
-            fluidListView.emptyListPlaceholder.SetIcon(EditorMicroAnimations.EditorUI.Placeholders.EmptyListViewSmall);
+            fluidListView.emptyListPlaceholder.SetIcon(EditorSpriteSheets.EditorUI.Placeholders.EmptyListViewSmall);
 
             fluidListView.listView.selectionType = SelectionType.None;
             fluidListView.listView.itemsSource = itemsSource;
@@ -275,7 +275,7 @@ namespace Doozy.Editor.Mody.Drawers.ModyActions
                         .AddChild
                         (
                             FluidButton.Get()
-                                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Plus)
+                                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Plus)
                                 .SetAccentColor(EditorSelectableColors.Default.Add)
                                 .SetElementSize(ElementSize.Small)
                                 .SetTooltip($"Add a new Trigger for the '{actionNameProperty.stringValue}' Action")
@@ -300,7 +300,7 @@ namespace Doozy.Editor.Mody.Drawers.ModyActions
                             .AddChild
                             (
                                 FluidButton.Get()
-                                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Minus)
+                                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Minus)
                                     .SetAccentColor(EditorSelectableColors.Default.Remove)
                                     .SetStyleAlignSelf(Align.Center)
                                     .SetElementSize(ElementSize.Small)
@@ -348,7 +348,7 @@ namespace Doozy.Editor.Mody.Drawers.ModyActions
                 startDelayColor,
                 "Start Delay",
                 "Time interval before the Action executes its task, after it started running",
-                EditorMicroAnimations.EditorUI.Icons.StartDelay
+                EditorSpriteSheets.EditorUI.Icons.StartDelay
             );
 
         protected static FluidField GetDurationFluidField(SerializedProperty property) =>
@@ -359,7 +359,7 @@ namespace Doozy.Editor.Mody.Drawers.ModyActions
                 runningColor,
                 "Duration",
                 "Running time from start to finish. Does not include StartDelay. At 0 (zero) the Action's task happens instantly",
-                EditorMicroAnimations.EditorUI.Icons.Duration
+                EditorSpriteSheets.EditorUI.Icons.Duration
             );
 
         protected static FluidField GetCooldownFluidField(SerializedProperty property) =>
@@ -370,7 +370,7 @@ namespace Doozy.Editor.Mody.Drawers.ModyActions
                 cooldownColor,
                 "Cooldown",
                 "Cooldown time after the Action ran. During this time, the Action cannot Start running again",
-                EditorMicroAnimations.EditorUI.Icons.Cooldown
+                EditorSpriteSheets.EditorUI.Icons.Cooldown
             );
 
         protected static FluidField GetTimescaleFluidField(SerializedProperty property)
@@ -392,7 +392,7 @@ namespace Doozy.Editor.Mody.Drawers.ModyActions
                         "\n\nTimescale.Dependent - (Application Time)\nAffected by the application's timescale value"
                     )
                     .SetElementSize(ElementSize.Small)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.TimeScale)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.TimeScale)
                     .AddFieldContent(enumField);
             return field;
         }
@@ -452,7 +452,7 @@ namespace Doozy.Editor.Mody.Drawers.ModyActions
             (
                 property,
                 "OnStartEvents",
-                EditorMicroAnimations.EditorUI.Icons.EventsOnStart,
+                EditorSpriteSheets.EditorUI.Icons.EventsOnStart,
                 "Events triggered when this Action starts running"
             );
 
@@ -461,7 +461,7 @@ namespace Doozy.Editor.Mody.Drawers.ModyActions
             (
                 property,
                 "OnFinishEvents",
-                EditorMicroAnimations.EditorUI.Icons.EventsOnFinish,
+                EditorSpriteSheets.EditorUI.Icons.EventsOnFinish,
                 "Events triggered when this Action finished running"
             );
 

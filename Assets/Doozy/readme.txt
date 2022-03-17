@@ -6,19 +6,40 @@ GETTING STARTED
 ---
 After importing DoozyUI you can start using it without doing anything else.
 You can find a quick Getting Started guide at Assets/Doozy/_Extras/_Manual
-We recommend checking out the Knowledge Base to see the full documentation at http://bit.ly/DoozyKnowledgeBase4
+We recommend checking out the Knowledge Base to see the full documentation at http://docs.doozyui.com/
 
 
 LINKS
 ---
-Knowledge Base: http://bit.ly/DoozyKnowledgeBase4
-Help Desk: http://bit.ly/DoozyHelpDesk
+Doozy UI Manager
+http://doozyui.com/
 
-DoozyUI Website: http://doozyui.com/
-YouTube Channel (video tutorials): http://www.youtube.com/c/DoozyEntertainment
-Facebook Page: https://www.facebook.com/doozyentertainment
-Twitter: https://twitter.com/doozyplay
-Discord (invite): https://discord.gg/y9Axq7b
+Doozy UI Manager @ Unity Asset Store
+http://bit.ly/DoozyUIManager
+
+Scripting API
+http://api.doozyui.com/
+
+Knowledge Base
+http://docs.doozyui.com/
+
+Help Desk
+http://support.doozyui.com/
+
+Discord
+http://discord.doozyui.com/
+
+Twitter
+http://twitter.doozyui.com/
+
+YouTube
+http://youtube.doozyui.com/
+
+Facebook
+http://facebook.doozyui.com/
+
+Doozy UI - version 3 - Knowledge Base
+http://bit.ly/DoozyKnowledgeBase
 
 
 OTHER LINKS

@@ -18,7 +18,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
     [CustomEditor(typeof(AnimatorProgressTarget), true)]
     public class AnimatorProgressTargetEditor : ProgressTargetEditor
     {
-        public override IEnumerable<Texture2D> targetIconTextures => EditorMicroAnimations.Reactor.Icons.AnimatorProgressTarget;
+        public override IEnumerable<Texture2D> targetIconTextures => EditorSpriteSheets.Reactor.Icons.AnimatorProgressTarget;
 
         private TextField parameterNameTextField { get; set; }
         private FluidField parameterNameFluidField { get; set; }

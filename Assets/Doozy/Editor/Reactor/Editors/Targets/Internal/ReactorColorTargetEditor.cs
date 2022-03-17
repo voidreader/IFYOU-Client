@@ -15,7 +15,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
 {
     public abstract class ReactorColorTargetEditor : BaseReactorTargetEditor
     {
-        public override IEnumerable<Texture2D> targetIconTextures => EditorMicroAnimations.Reactor.Icons.ColorTarget;
+        public override IEnumerable<Texture2D> targetIconTextures => EditorSpriteSheets.Reactor.Icons.ColorTarget;
 
         protected override void InitializeEditor()
         {

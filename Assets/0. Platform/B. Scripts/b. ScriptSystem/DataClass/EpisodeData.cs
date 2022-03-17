@@ -18,6 +18,7 @@ namespace PIERStory {
         
         public string episodeID = string.Empty; // 에피소드 ID 
         public string episodeNO = string.Empty; // 에피소드 순번
+        public int episodeNumber = 0; // 순번.. int 필요해서;
         public string episodeTypeString = string.Empty; // 에피소드 타입
         
         public EpisodeType episodeType = EpisodeType.Chapter; // 에피소드 타입 enum
@@ -89,6 +90,7 @@ namespace PIERStory {
         void InitData() {
             episodeID = SystemManager.GetJsonNodeString(episodeJSON, "episode_id");
             episodeNO = SystemManager.GetJsonNodeString(episodeJSON, "chapter_number");
+            episodeNumber = SystemManager.GetJsonNodeInt(episodeJSON, "chapter_number");
             episodeTypeString = SystemManager.GetJsonNodeString(episodeJSON, "episode_type");
            
             episodeTitle = SystemManager.GetJsonNodeString(episodeJSON, "title");
@@ -132,7 +134,7 @@ namespace PIERStory {
                 episodeType = EpisodeType.Chapter;
                 combinedEpisodeTitle = string.Format(SystemManager.GetLocalizedText("6090"),  episodeNO) + episodeTitle;
                 storyLobbyTitle = string.Format("EP {0}. ", episodeNO) + episodeTitle;
-                flowPrefix = "EP" + string.Format("{0:D2}", episodeNO);
+                flowPrefix = "EP" + string.Format("{0:D2}", episodeNumber);
                 break;
                 
                 case "ending":

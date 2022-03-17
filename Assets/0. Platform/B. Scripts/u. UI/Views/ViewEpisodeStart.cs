@@ -21,7 +21,7 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textEpisodeTitle;
         [SerializeField] TextMeshProUGUI textEpisodeSummary;
         
-        [SerializeField] PassBanner passBanner; // 프리패스 배너 
+        // [SerializeField] PassBanner passBanner; // 프리패스 배너 
         
         
         [Space]
@@ -96,19 +96,20 @@ namespace PIERStory {
 
 
         void SetPremiumPass() {
-            // * 프리패스 추가 
-            if(UserManager.main.HasProjectFreepass()) {
-                passBanner.gameObject.SetActive(false);    
-                
-                // 뱃지 정보 추가 
-                premiumpassBadge.gameObject.SetActive(true);
-                premiumpassBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey);
-                
-                return;
-            }
             
-            passBanner.SetPremiumPass(true);
-            premiumpassBadge.gameObject.SetActive(false);
+            // * 프리패스 추가 
+            // if(UserManager.main.HasProjectFreepass()) {
+            //     passBanner.gameObject.SetActive(false);    
+                
+            //     // 뱃지 정보 추가 
+            //     premiumpassBadge.gameObject.SetActive(true);
+            //     premiumpassBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey);
+                
+            //     return;
+            // }
+            
+            // passBanner.SetPremiumPass(true);
+            // premiumpassBadge.gameObject.SetActive(false);
         }
         
         

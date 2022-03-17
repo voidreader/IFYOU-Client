@@ -174,7 +174,7 @@ namespace PIERStory
         const string NODE_PROJECT_CURRENT = "projectCurrent"; // 유저의 작품에서의 플레이 위치 
         const string NODE_SELECTION_PROGRESS = "selectionProgress"; // 선택지 프로그레스 
         
-        const string NODE_FREEPASS_TIMEDEAL = "userFreepassTimedeal"; // 유저 프리패스 타임딜
+
         const string NODE_SELECTION_PURCHASE = "selectionPurchase";
 
 
@@ -1166,9 +1166,6 @@ namespace PIERStory
         /// <returns></returns>
         public bool HasProjectFreepass()
         {
-            if (StoryManager.main.GetProjectFreepassNode() == null)
-                return false;
-
             if (SystemManager.GetJsonNodeBool(bankJson, "Free" + StoryManager.main.CurrentProjectID))
                 return true;
             else
@@ -1578,7 +1575,7 @@ namespace PIERStory
         }
         
         /// <summary>
-        /// 현재 열람중인 작품이 마지막에 도달했는지 체크 
+        /// 현재 열람중인 작품이 마지막에 도달했는지 체크 (엔딩까지 플레이 완료)
         /// </summary>
         /// <returns></returns>
         public bool CheckReachFinal() {
@@ -1593,6 +1590,23 @@ namespace PIERStory
             }
             
             return false;
+        }
+        
+        /// <summary>
+        /// 현재 열람중인 작품이 엔딩에 도달했는지 체크 (엔딩 플레이 완료 여부는 관계없음)
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckReachEnding() { 
+            JsonData current = GetUserProjectRegularEpisodeCurrent();
+            
+            if(current == null)
+                return false;
+                
+            if(SystemManager.GetJsonNodeBool(current, "is_ending")) {
+                return true;
+            }
+            
+            return false;            
         }
 
         /// <summary>
@@ -1977,7 +1991,7 @@ namespace PIERStory
             }
 
             resultEpisodeReset = JsonMapper.ToObject(res.DataAsText);
-            Debug.Log(JsonMapper.ToStringUnicode(resultEpisodeReset));
+            Debug.Log("CallbackUpdateEpisodeRecord : " + JsonMapper.ToStringUnicode(resultEpisodeReset));
 
 
             // ! 삭제 대상 아님 
@@ -1999,6 +2013,9 @@ namespace PIERStory
             // * Doozy Nody StoryDetail로 돌아가기 위한 이벤트 생성 
             // * ViewStoryDetail 에서 이 시그널을 Listener를 통해서 받는다. (Inspector)
             // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CLOSE_RESET, string.Empty);
+            
+            // refresh 플레이 상태 
+            StoryManager.main.RefreshRegularEpisodePlayState();
            
             
             // 리셋 콜백
@@ -2681,28 +2698,7 @@ namespace PIERStory
 
         #endregion
 
-        
-        /// <summary>
-        /// 유저 프리패스 타임딜 목록 가져오기
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetUserFreepassTimedeal() {
-            if(!currentStoryJson.ContainsKey(NODE_FREEPASS_TIMEDEAL)) {
-                Debug.Log("GetUserFreepassTimedeal, No Node");
-                return null;
-            }
-            
-            return currentStoryJson[NODE_FREEPASS_TIMEDEAL];
-        }
-        
-        /// <summary>
-        /// 유저 프리패스 타임딜 입력
-        /// </summary>
-        /// <param name="__data"></param>
-        public void SetUserFreepassTimedeal(JsonData __data) {
-            currentStoryJson[NODE_FREEPASS_TIMEDEAL] = __data;
-        }
-        
+
         
         #region 유저 능력치 관련 메소드 
         

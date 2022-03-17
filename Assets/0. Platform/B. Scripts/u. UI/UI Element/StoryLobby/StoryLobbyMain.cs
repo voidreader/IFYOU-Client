@@ -126,6 +126,8 @@ namespace PIERStory {
         /// 프리미엄 패스 구매 후 호출 
         /// </summary>
         void PostPurchasePremiumPass() {
+            Debug.Log(">>> PostPurchasePremiumPass <<<");
+            
             if(!this.gameObject.activeSelf)
                 return;
             
@@ -406,6 +408,25 @@ namespace PIERStory {
         /// 상태 및 오픈 타이머 설정 
         /// </summary>
         public void SetPlayState() {
+            
+            // * 스페셜 에피소드를 플레이 한 경우에 대한 예외처리 추가 
+            if(currentEpisodeData.episodeType == EpisodeType.Side) {
+                
+                Debug.Log("### ViewEpisodeEnd Special Episode");
+                
+                // 카운트 하지 않고, Lobby로 보내도록 해야한다. 
+                isOpenTimeCountable = false;
+                storyPlayButton.SetPlayButton(StatePlayButton.End, 0, false);
+                groupOpenTimer.SetActive(false);
+                textEpisodeTitle.gameObject.SetActive(true);
+                
+                InitEpisodeTitleColor(); 
+                
+                return;
+            }
+            
+            
+            
             // 에피소드 오픈 시간 처리
             openDateTick = ConvertServerTimeTick(long.Parse(projectCurrentJSON["next_open_tick"].ToString()));
             openDate = new DateTime(openDateTick); // 틱으로 오픈 시간 생성 
@@ -419,7 +440,9 @@ namespace PIERStory {
             isOpenTimeCountable = false;
             
             
-            if(timeDiff.Ticks > 0) {
+            
+            // 프리미엄 패스 유저는 tick 이 0보다 커도 기다무를 하지 않도록 처리 
+            if(timeDiff.Ticks > 0 && !hasPremium) {
                 isOpenTimeCountable = true; // 시간 돌아간다. 
                 currentPlayState = StatePlayButton.inactive;
             }
@@ -469,7 +492,7 @@ namespace PIERStory {
                 return 0;
                 
             totalMin = (int)(timeDiff.TotalMinutes); // 남은시간 분단위로 가져오기 
-            waitingReducePrice = totalMin / 10 * SystemManager.main.episodeOpenPricePer;
+            waitingReducePrice = totalMin / 10 * SystemManager.main.episodeOpenPricePer + SystemManager.main.episodeOpenPricePer;
             
             // 최소가격 설정 
             if(waitingReducePrice < SystemManager.main.episodeOpenPricePer)
@@ -491,6 +514,12 @@ namespace PIERStory {
         /// 타이틀 정보 처리 
         /// </summary>
         protected void InitEpisodeTitleColor() {
+            
+            if(currentEpisodeData.episodeType == EpisodeType.Side) {
+                imageEpisodeTitle.sprite = spriteActiveEpisodeTitleBG;    
+                textEpisodeTitle.color = Color.black;
+                SetEpisodeTitleText(currentEpisodeData.storyLobbyTitle);
+            }
             
             
             // * 여기도 파이널 여부 추가 체크 
@@ -602,6 +631,10 @@ namespace PIERStory {
         /// </summary>
         public void OnClickReduceWaitingTimeCoin() {
             
+            if(isWaitingResponse)
+                return;
+            
+            
             isWaitingResponse = true;  // 서버 응답 
             
             JsonData j = new JsonData();
@@ -612,7 +645,7 @@ namespace PIERStory {
 
             // ! 코인으로 여는거랑, 광고로 여는거랑 콜백이 달라요!
             // * 코인으로 열면, 해당 에피소드는 Permanent로 구매처리가 같이 진행된다. 
-            NetworkLoader.main.SendPost(UserManager.main.CallbackReduceWaitingTimeWithCoin, j);
+            NetworkLoader.main.SendPost(UserManager.main.CallbackReduceWaitingTimeWithCoin, j, true);
         }
         
         

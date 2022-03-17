@@ -40,8 +40,8 @@ namespace PIERStory {
             // FlowReset에서만 사용 
             textResetEpisode.text = string.Format(SystemManager.GetLocalizedText("6219"), targetEpisode.episodeNO);
             
-            // 엔딩에 도달하면 반값으로 처리 
-            if(UserManager.main.CheckReachFinal()) {
+            // 엔딩, 엔딩 플레이 완에 도달하면 반값으로 처리 
+            if(UserManager.main.CheckReachEnding()) {
                 resetPrice = Mathf.RoundToInt(resetPrice * 0.5f);
             }
             
@@ -67,7 +67,7 @@ namespace PIERStory {
             }
             
             
-            Hide();
+            base.Hide();
             
             // 유료 리셋 
             NetworkLoader.main.ResetEpisodeProgress(targetEpisode.episodeID, resetPrice, false);
@@ -77,10 +77,16 @@ namespace PIERStory {
         /// 프리미엄 패스 화면 오픈 
         /// </summary>
         public void OnClickPremiumPass() {
+            
+            
+            
             // 프리미엄 팝업 오픈 
             PopupBase p = PopupManager.main.GetPopup("PremiumPass");
                 
             PopupManager.main.ShowPopup(p, false, false);
+            
+            
+            base.Hide();
         }
         
         
@@ -88,6 +94,9 @@ namespace PIERStory {
         /// 프리미엄 패스 리셋 
         /// </summary>
         public void OnClickPremiumPassReset() {
+            
+            base.Hide();
+            
             // 공짜 리셋 
             NetworkLoader.main.ResetEpisodeProgress(targetEpisode.episodeID, 0, true);
         }

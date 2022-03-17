@@ -64,17 +64,24 @@ namespace PIERStory {
             passStory = StoryManager.main.CurrentProject;
             
             // 가격. 
-            originFreepassPrice = StoryManager.main.GetProjectFreepassPrice(true);
-            saleFreepassPrice = StoryManager.main.GetProjectFreepassPrice(false);
+            originFreepassPrice = StoryManager.main.GetProjectPremiumPassOriginPrice();
+            saleFreepassPrice = StoryManager.main.GetProjectPremiumPassCurrentPrice();
          
             
             // 타임딜 정보 가져오기 
-            userFreepassTimedealJSON = UserManager.main.GetUserFreepassTimedeal();       
+            userFreepassTimedealJSON = null;
             
             // 이미지 
             imagePass.SetDownloadURL(passStory.premiumPassURL, passStory.premiumPassKey);
+            
+            
+            normnalTitle.SetActive(true);
+            textOriginPrice.text = originFreepassPrice.ToString();
+            textSalePrice.text = saleFreepassPrice.ToString();
+            textSale.text = StoryManager.main.GetProjectPremiumPassCurrentDiscountString() + "%";
 
             // 일반 
+            /*
             if(userFreepassTimedealJSON == null || userFreepassTimedealJSON.Count == 0) {
                 Debug.Log("No Freepass User >> Normal Product");
                 
@@ -96,7 +103,7 @@ namespace PIERStory {
                 // * 타임딜
                 SetTimedeal();
             }            
-            
+            */
         }
         
         void SetTimedeal() {
@@ -165,7 +172,7 @@ namespace PIERStory {
         void TimeOver() {
             
             // 유저 프리패스 타임딜 노드를 없애준다. 
-            UserManager.main.SetUserFreepassTimedeal(null);
+            // UserManager.main.SetUserFreepassTimedeal(null);
             
             // 그리고 리프레시
             UserManager.OnFreepassPurchase?.Invoke();

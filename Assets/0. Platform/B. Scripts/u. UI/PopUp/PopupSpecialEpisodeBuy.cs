@@ -17,6 +17,7 @@ namespace PIERStory {
         [SerializeField] EpisodeData targetEpisode; // 플레이 대상 스페셜 에피소드
         
         [SerializeField] TextMeshProUGUI textPrice; // 리셋 코인 가격
+        [SerializeField] TextMeshProUGUI textContents; 
         
         public override void Show() {
             
@@ -30,6 +31,7 @@ namespace PIERStory {
             targetEpisode = Data.contentEpisode;
             
             textPrice.text = Data.contentEpisode.priceStarPlaySale.ToString();
+            textContents.text = string.Format(SystemManager.GetLocalizedText("6232"), targetEpisode.episodeTitle);
         }
         
         /// <summary>

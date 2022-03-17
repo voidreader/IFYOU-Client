@@ -14,12 +14,15 @@ namespace PIERStory {
     {
         [SerializeField] ImageRequireDownload iconImage;
         
-        [SerializeField] TextMeshProUGUI textQuantity;
+        [SerializeField] TextMeshProUGUI textBaseQuantity;
+        [SerializeField] TextMeshProUGUI textBonusQuantity;
         
         [SerializeField] string iconURL = string.Empty;
         [SerializeField] string iconKey = string.Empty;
         string currency = string.Empty;
-        int quantity = 0;
+        public int quantity = 0;
+        public int bonusQuantity = 0;
+        public int clearExp = 0;
         
         
         
@@ -41,10 +44,18 @@ namespace PIERStory {
             
             iconImage.SetDownloadURL(iconURL, iconKey);
             
-            quantity = SystemManager.GetJsonNodeInt(Data.contentJson, "quantity");
+            quantity = SystemManager.GetJsonNodeInt(Data.contentJson, "quantity"); // 보상 
+            bonusQuantity = quantity * 5; // 보너스 수량 
             
             // 수량
-            textQuantity.text = quantity.ToString();
+            textBaseQuantity.text = quantity.ToString() + " " + SystemManager.GetLocalizedText("2001");
+            textBonusQuantity.text = bonusQuantity.ToString() + " " + SystemManager.GetLocalizedText("2001");
+            
+            clearExp = SystemManager.GetJsonNodeInt(Data.contentJson, "first_reward_exp"); // 최초 클리어 경험치 
+            
+            // 경험치 얻을게 없으면 진행하지 않음.
+            if(clearExp <= 0)
+                return;
             
             Invoke("OnShow", 0.5f);
         }
@@ -54,7 +65,7 @@ namespace PIERStory {
             Debug.Log(">>>>> Update EXP <<<<<<");
             
             // * 최초 클리어 경험치 연계하기  
-            NetworkLoader.main.UpdateUserExp(10, "episode_clear", -1); // 경험치 현재 10으로 고정됨. 
+            NetworkLoader.main.UpdateUserExp(clearExp, "episode_clear", -1); 
             
         }
         

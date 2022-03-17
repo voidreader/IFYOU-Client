@@ -635,7 +635,7 @@ namespace PIERStory
                 }
             }
             
-            return 0;
+            return incompleteCount;
         }
 
         /// <summary>

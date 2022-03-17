@@ -29,9 +29,6 @@ namespace PIERStory
         [Space(20)][Header("선택지 관련")]
         public SimpleScrollSnap scrollSnap;
 
-        public TextMeshProUGUI currentRound;
-        public TextMeshProUGUI prevRound;
-
         public TextMeshProUGUI nonePlayText;
         public GameObject prevRoundScroll;
 
@@ -104,7 +101,6 @@ namespace PIERStory
             // 한번도 플레이한 적 없는 경우
             if (selectionData.Count < 1)
             {
-                currentRound.text = string.Format(SystemManager.GetLocalizedText("5130"), 0);
                 nonePlayText.gameObject.SetActive(true);
                 return;
             }

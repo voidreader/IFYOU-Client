@@ -2028,9 +2028,9 @@ namespace PIERStory
                     {
                         if (StoryManager.main.SideEpisodeList[j].episodeID == unlockSideID)
                         {
-                            sidePopup.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("6185"), StoryManager.main.SideEpisodeList[j].episodeTitle));
-                            sidePopup.Data.imageURL = StoryManager.main.SideEpisodeList[j].squareImageURL;
-                            sidePopup.Data.imageKey = StoryManager.main.SideEpisodeList[j].squareImageKey;
+                            sidePopup.Data.SetLabelsTexts(SystemManager.GetLocalizedText("6234"), StoryManager.main.SideEpisodeList[j].episodeTitle);
+                            sidePopup.Data.imageURL = StoryManager.main.SideEpisodeList[j].popupImageURL;
+                            sidePopup.Data.imageKey = StoryManager.main.SideEpisodeList[j].popupImageKey;
                             PopupManager.main.ShowPopup(sidePopup, true, false);
                             break;
                         }
@@ -2046,11 +2046,12 @@ namespace PIERStory
             
             // * 2. 열린 엔딩 체크 
             #region 엔딩
+            // * 2022.03.17 엔딩은 에피소드 종료화면에서 처리하기로 변경 
             
-            
-            Debug.Log("### 엔딩 오픈 체크 시작 ###");
+            // Debug.Log("### 엔딩 오픈 체크 시작 ###");
 
             // 다음 에피소드가 엔딩인 경우
+            /*
             if (nextEpisodeData != null && nextEpisodeData.episodeType == EpisodeType.Ending)
             {
 
@@ -2077,7 +2078,7 @@ namespace PIERStory
             }            
             
             Debug.Log("### 엔딩 오픈 체크 종료 ###");
-            
+            */
             #endregion
             
 

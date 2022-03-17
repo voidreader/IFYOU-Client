@@ -18,6 +18,8 @@ namespace PIERStory
         public override void OnStartView()
         {
             base.OnStartView();
+            
+            ViewCommonTop.isBackgroundShow = true;
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);

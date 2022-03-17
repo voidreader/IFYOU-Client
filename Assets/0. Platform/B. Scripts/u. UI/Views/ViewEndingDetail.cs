@@ -88,7 +88,7 @@ namespace PIERStory
 
             endingTitle.text = endingData.episodeTitle;
 
-            newSign.SetActive(!UserManager.main.IsCompleteEpisode(endingData.episodeID));
+            //  newSign.SetActive(!UserManager.main.IsCompleteEpisode(endingData.episodeID));
 
             int episodeIndex = 0;
 

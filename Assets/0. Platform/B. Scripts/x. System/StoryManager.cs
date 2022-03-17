@@ -131,8 +131,6 @@ namespace PIERStory
         // BGM 배너 URL & KEY
         [SerializeField] string bgmBannerURL = string.Empty; 
         [SerializeField] string bgmBannerKey = string.Empty;
-        public string freepassBannerURL = string.Empty;
-        public string freepassBannerKey = string.Empty;
         
         // 프리패스 뱃지 정보 
         public string freepassBadgeURL = string.Empty;
@@ -187,16 +185,14 @@ namespace PIERStory
         const string NODE_NAMETAG = "nametag";  // 네임태그 노드 
         
         const string NODE_CURRENCY = "currency"; // 프로젝트 화폐코드 
-        const string NODE_FREEPASS_PRICE = "freepassPrice"; // 프리패스 Price
         
         // * 프로젝트에 소속된 배너 및 관련 이미지 친구들 
         const string NODE_GALLERY_BANNER = "galleryBanner";
         const string NODE_BGM_BANNER = "bgmBanner";
-        const string NODE_FREEPASS_BANNER = "freepassBanner";
         
-        const string NODE_FREEPASS_ORIGIN_PRICE = "origin_freepass_price";
-        const string NODE_FREEPASS_SALE_PRICE = "sale_freepass_price";
-        const string NODE_FREEPASS_PRODUCT = "freepasProduct"; // 작품별 프리패스 타임딜 상품리스트
+        
+        const string NODE_PREMIUM_PRICE = "premiumPrice"; // 프리미엄 패스 가격정보 노드
+        
         
         const string NODE_PROJECT_ILLUSTS = "illusts"; // 프로젝트의 모든 일러스트 
         const string NODE_PROJECT_MINICUTS = "minicuts"; // 프로젝트의 모든 미니컷
@@ -695,8 +691,6 @@ namespace PIERStory
             // 프로젝트 귀속 이미지들 초기화 
             bgmBannerURL = string.Empty;
             bgmBannerURL = string.Empty;
-            freepassBannerURL = string.Empty;
-            freepassBannerKey = string.Empty;
             
             
             illustJson = GetNodeProjectIllusts(); // 일러스트 기본 정보 
@@ -717,10 +711,6 @@ namespace PIERStory
             bgmBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_KEY);
             SystemManager.RequestDownloadImage(bgmBannerURL, bgmBannerKey, null);
             
-            
-            // 프리미엄 패스 배너 
-            freepassBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_FREEPASS_BANNER), SystemConst.IMAGE_URL);
-            freepassBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, NODE_FREEPASS_BANNER), SystemConst.IMAGE_KEY);
             
             // 프리미엄 패스 뱃지
             freepassBadgeURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, "freepassBadge"), SystemConst.IMAGE_URL);
@@ -1806,74 +1796,42 @@ namespace PIERStory
         
         #endregion
         
-        #region 프리패스 친구들
+        #region 프리미엄 패스 친구들
         
         /// <summary>
-        /// 프리패스 가격 노드 가져오기
+        /// 대상 작품의 프리미엄 패스 최초 가격 
         /// </summary>
         /// <returns></returns>
-        public JsonData GetProjectFreepassNode() {
-            if(!ProjectDetailJson.ContainsKey(NODE_FREEPASS_PRICE))
-                return null;
-            
-            return ProjectDetailJson[NODE_FREEPASS_PRICE];
-            
-        }
-    
-        /// <summary>
-        /// 프리패스 가격 가져오기 
-        /// </summary>
-        /// <param name="__node">NODE_FREEPASS_ORIGIN_PRICE, NODE_FREEPASS_SALE_PRICE </param>
-        /// <returns></returns>
-        public int GetProjectFreepassPrice(bool __isOrigin) {
-            
-            string value = string.Empty;
-            
-            if(__isOrigin)
-                value = SystemManager.GetJsonNodeString(ProjectDetailJson[NODE_FREEPASS_PRICE], NODE_FREEPASS_ORIGIN_PRICE);
-            else 
-                value = SystemManager.GetJsonNodeString(ProjectDetailJson[NODE_FREEPASS_PRICE], NODE_FREEPASS_SALE_PRICE);
-            
-                
-            int price = 0;
-            
-            if(int.TryParse(value, out price))
-                return price;
-            else 
-                return -1;
-            
+        public int GetProjectPremiumPassOriginPrice() {
+            return SystemManager.GetJsonNodeInt(ProjectDetailJson[NODE_PREMIUM_PRICE], "origin_price");
         }
         
         /// <summary>
-        /// 작품별 프리패스 타임딜 상품리스트 가져오기
+        /// 대상 작품의 프리미엄 패스 현재 가격 
         /// </summary>
         /// <returns></returns>
-        public JsonData GetProjectFreepassProduct() {
-            if(!ProjectDetailJson.ContainsKey(NODE_FREEPASS_PRODUCT))
-                return null;
-            
-            return ProjectDetailJson[NODE_FREEPASS_PRODUCT];
+        public int GetProjectPremiumPassCurrentPrice() {
+            // 프리미엄 패스 가격은 대상 작품에서 사용된 스타, 코인 개수에 따라 차감된다. 
+            return SystemManager.GetJsonNodeInt(ProjectDetailJson[NODE_PREMIUM_PRICE], "sale_price");
         }
         
         /// <summary>
-        /// 특정 프리패스 상품 정보 가져오기 
+        /// 대상 작품의 프리미엄 패스 할인율 
         /// </summary>
-        /// <param name="__no"></param>
         /// <returns></returns>
-        public JsonData GetFreepassProductByNO(string __no) {
-            if(GetProjectFreepassProduct() == null)            
-                return null;
-                
-            for(int i=0; i<GetProjectFreepassProduct().Count;i++) {
-                
-                if(GetProjectFreepassProduct()[i]["freepass_no"].ToString() == __no) 
-                    return GetProjectFreepassProduct()[i]; // 찾았다!
-                
-            }
-            
-            return null;
+        public float GetProjectPremiumPassCurrentDiscount() {
+            return SystemManager.GetJsonNodeFloat(ProjectDetailJson[NODE_PREMIUM_PRICE], "discount");
         }
         
+        /// <summary>
+        /// 대상 작품의 프리미엄 패스 할인율 String ex: 0.3 => 30
+        /// </summary>
+        /// <returns></returns>
+        public string GetProjectPremiumPassCurrentDiscountString() {
+            return ( Mathf.RoundToInt(SystemManager.GetJsonNodeFloat(ProjectDetailJson[NODE_PREMIUM_PRICE], "discount") * 100)).ToString();
+        }
+
+
         
         
         #endregion
@@ -1890,6 +1848,18 @@ namespace PIERStory
             for(int i=0; i<RegularEpisodeList.Count;i++) {
                 RegularEpisodeList[i].SetPurchaseState();
             }
+        }
+        
+        /// <summary>
+        /// 모든 정규 에피소드 플레이 상태 업데이트 (미래과거현재)
+        /// </summary>
+        public void RefreshRegularEpisodePlayState() {
+            if(RegularEpisodeList == null)
+                return;
+                
+            for(int i=0; i<RegularEpisodeList.Count;i++) {
+                RegularEpisodeList[i].SetEpisodePlayState();
+            }            
         }
         
         #endregion

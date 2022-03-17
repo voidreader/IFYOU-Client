@@ -89,7 +89,7 @@ namespace PIERStory {
             
            
             // 타임딜 정보 가져오기 
-            userFreepassTimedealJSON = UserManager.main.GetUserFreepassTimedeal();
+            userFreepassTimedealJSON = null;
             
             // 일반 
             if(userFreepassTimedealJSON == null || userFreepassTimedealJSON.Count == 0) {
@@ -181,7 +181,7 @@ namespace PIERStory {
         void TimeOver() {
             
             // 유저 프리패스 타임딜 노드를 없애준다. 
-            UserManager.main.SetUserFreepassTimedeal(null);
+            // UserManager.main.SetUserFreepassTimedeal(null);
             
             // 그리고 리프레시
             UserManager.OnFreepassPurchase?.Invoke();

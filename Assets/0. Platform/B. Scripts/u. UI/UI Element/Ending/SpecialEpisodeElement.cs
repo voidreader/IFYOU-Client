@@ -150,7 +150,8 @@ namespace PIERStory
         /// 스페셜 에피소드 플레이 
         /// </summary>
         void StartSpecialEpisode() {
-            
+            SystemManager.main.givenEpisodeData = specialEpisode;
+            SystemManager.ShowNetworkLoading(); 
             
             
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN, string.Empty);

@@ -94,7 +94,7 @@ Material:
     m_Colors:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
     - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
-    - _FaceColor: {r: 1, g: 1, b: 1, a: 0}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
     - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
     - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1996,7 +1996,8 @@ MonoBehaviour:
     atlasWidth: 1024
     atlasHeight: 512
     characterSetSelectionMode: 7
-    characterSequence: " +,-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\uAD6C\uB9E4\uCCAB%:"
+    characterSequence: " %+,-.0123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+      \uAD6C\uB9E4\uCCAB"
     referencedFontAssetGUID: ba9ae1028e841494b9163d46ecef6c68
     referencedTextAssetGUID: b9359e537641d8a4b9fd01827758d3fb
     fontStyle: 0

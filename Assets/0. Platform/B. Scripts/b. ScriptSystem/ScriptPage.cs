@@ -243,7 +243,7 @@ namespace PIERStory
                 ListLiveIllustMount[i].SetLiveImageUseCount(GetLiveIllustUseCount(ListLiveIllustMount[i].liveName));
             }
             
-            yield return null;
+            yield return new WaitForSeconds(0.1f);
             
             Debug.Log("### LIST MODEL MOUNT CHECK ### :: " + ListModelMount.Count);
             ListFailedModelMount.Clear();
@@ -259,6 +259,13 @@ namespace PIERStory
                 // GameManaer에게 추가해준다. 
                 GameManager.main.AddGameModel(ListModelMount[i].originModelName, ListModelMount[i]);
             }
+            
+            for (int i = 0; i < ListModelMount.Count; i++)
+            {
+                if (ListModelMount[i].modelController != null)
+                    ListModelMount[i].modelController.RemoveColliders();
+            }            
+            
 
             GameManager.main.CollectDistinctSpeaker(); // 의상 시스템 연결고리 설정
 
@@ -366,6 +373,7 @@ namespace PIERStory
             yield return null;
 
             // 모델들 한테 충돌체 주고 키 체크 
+            Debug.Log("## Model SetBoxColliders ##");
             
             for (int i = 0; i < ListModelMount.Count; i++)
             {
@@ -380,12 +388,16 @@ namespace PIERStory
             yield return null;
             yield return null;
 
+
+            Debug.Log("## Model RemoveColliders ##");
+            /*
             // 다 했으면, 키 체크 안당한 모델까지 해서 RemoveColliders => 굳이 Colliders를 계속 갖고 있을 이유는 없으니까. 
             for (int i = 0; i < ListModelMount.Count; i++)
             {
                 if (ListModelMount[i].modelController != null)
                     ListModelMount[i].modelController.RemoveColliders();
             }
+            */
             
 
             Debug.Log("Character Model Loading Done");

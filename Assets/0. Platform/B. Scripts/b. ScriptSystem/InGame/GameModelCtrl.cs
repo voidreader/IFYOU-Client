@@ -695,6 +695,9 @@ namespace PIERStory
                 if (box != null)
                     box.enabled = false;
             }
+            
+            if(tallGrade < 0)
+                tallGrade = 3;
         }
         
         

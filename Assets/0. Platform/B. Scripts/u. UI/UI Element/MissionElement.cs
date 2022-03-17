@@ -92,6 +92,7 @@ namespace PIERStory
             missionText.gameObject.SetActive(false);
             rewardInfo.SetActive(false);
             missionProgress.SetActive(false);
+            rewardButton.gameObject.SetActive(false);
 
             hiddenText.text = string.Format(SystemManager.GetLocalizedText("6056"), lockCount);
         }
@@ -205,6 +206,7 @@ namespace PIERStory
         void RefreshViewMission() {
             // ViewMission.OnCompleteReward?.Invoke();
             ViewMission.OnRefreshProgressor?.Invoke();
+            rewardButton.GetComponent<UIButton>().interactable = true;
         }
     }
     

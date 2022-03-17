@@ -43,6 +43,7 @@ namespace PIERStory
                 GetComponent<RectTransform>().sizeDelta = openEndingSize;
                 buttonBox.sprite = LobbyManager.main.spriteEpisodeOpen;
 
+                newSign.SetActive(!UserManager.main.IsCompleteEpisode(epiData.episodeID));
                 showChoiceButton.SetActive(true);
             }
             else
@@ -52,10 +53,11 @@ namespace PIERStory
                 endingTitle.text = string.Format("{0}\n EP{1}", "귀속 에피소드", dependEpisodeData.episodeNO);
                 GetComponent<RectTransform>().sizeDelta = lockEndingSize;
                 buttonBox.sprite = LobbyManager.main.spriteEpisodeLock;
+
+                newSign.SetActive(false);
                 showChoiceButton.SetActive(false);
             }
 
-            newSign.SetActive(!UserManager.main.IsCompleteEpisode(epiData.episodeID));
 
             gameObject.SetActive(true);
         }

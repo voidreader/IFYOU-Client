@@ -617,10 +617,14 @@ namespace PIERStory
                 totalDecoLoad--;
 
             LobbyManager.main.lobbyBackground.sprite = null;
+
+            // 어드레서블에 없는 경우 이전 방식을 사용해서 다운만 받기 떄문에 LoadImage를 해서 생성도 해줘야함
+            if (bg.sprite == null)
+                bg.LoadImage();
+            
             LobbyManager.main.lobbyBackground.sprite = bg.sprite;
 
             movableWidth = Mathf.Abs(LobbyManager.main.lobbyBackground.size.x * LobbyManager.main.lobbyBackground.transform.localScale.x - camWidth) * 0.5f;
-
             CheckLoadComplete();
         }
 

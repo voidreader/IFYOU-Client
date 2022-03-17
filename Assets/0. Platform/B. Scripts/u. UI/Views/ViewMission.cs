@@ -48,9 +48,6 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5026"), string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
             
-            foreach (MissionElement me in missionElements)
-                me.gameObject.SetActive(false);
-
             // ! 경험치 관련 문제로 잠시 모든 보상 받기 비활성화.
             // SetGetAllButtonState();
             
@@ -144,6 +141,9 @@ namespace PIERStory
         public override void OnHideView()
         {
             base.OnHideView();
+
+            foreach (MissionElement me in missionElements)
+                me.gameObject.SetActive(false);
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
         }

@@ -25,7 +25,7 @@ namespace PIERStory
 
         public EndingElement[] endingElements;
 
-
+        /*
         [Space(20)][Header("선택지 관련")]
         public SimpleScrollSnap scrollSnap;
 
@@ -51,7 +51,7 @@ namespace PIERStory
 
         float startX = 0f, dragX = 0f;
         Vector2 cursor = Vector2.zero;
-
+        */
 
         public override void OnStartView()
         {
@@ -83,7 +83,7 @@ namespace PIERStory
                 }
             }
 
-
+            /*
             #region 이전, 현재회차 선택지 보기
 
             // 선택지 데이터
@@ -181,7 +181,7 @@ namespace PIERStory
             }
 
             #endregion
-
+            */
         }
 
 
@@ -198,14 +198,16 @@ namespace PIERStory
             for (int i = 0; i < endingElements.Length; i++)
                 endingElements[i].gameObject.SetActive(false);
 
+            StoryLobbyMain.OnInitializeContentGroup?.Invoke();
+
+            /*
             foreach (GameObject g in createObject)
                 Destroy(g);
-
-            StoryLobbyMain.OnInitializeContentGroup?.Invoke();
 
             createObject.Clear();
 
             prevRoundScroll.SetActive(true);
+            */
         }
 
         public void ShowEndingList()
@@ -227,6 +229,7 @@ namespace PIERStory
             choiceHistoryContents.SetActive(true);
         }
 
+        /*
 
         public void OnDragScreen(InputAction.CallbackContext context)
         {
@@ -248,6 +251,8 @@ namespace PIERStory
                     scrollSnap.GoToPreviousPanel();
             }
         }
+
+        */
 
     }
 }

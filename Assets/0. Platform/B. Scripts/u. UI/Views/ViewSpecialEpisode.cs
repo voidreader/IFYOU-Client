@@ -1,8 +1,7 @@
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 using TMPro;
 using Doozy.Runtime.Signals;
 
@@ -11,7 +10,6 @@ namespace PIERStory {
     {
         public List<SpecialEpisodeElement> ListSpecialEpisodes;
         public TextMeshProUGUI textProgress; // 수집율
-        public TextMeshProUGUI textInfo; //설명
         
         
         public Doozy.Runtime.Reactor.Progressor progressor;
@@ -46,10 +44,6 @@ namespace PIERStory {
             
             // 수집율 
             textProgress.text = string.Format(SystemManager.GetLocalizedText("6138"), openSpecialEpisodeCount, totalSpecialEpisodeCount);
-            
-            // 설명 
-            textInfo.text = string.Format(SystemManager.GetLocalizedText("6055"), StoryManager.main.SideEpisodeList.Count( ep => !ep.isUnlock));
-            
         }
         
         void InitSpecialEpisode() {

@@ -63,7 +63,7 @@ namespace PIERStory
 
             
             // BM 변경으로 블락하지 않음. (2022.03.08)
-            retryButton.SetActive(true);
+            retryButton.SetActive(UserManager.main.CheckAdminUser());
             skipButton.SetActive(true);
         }
 

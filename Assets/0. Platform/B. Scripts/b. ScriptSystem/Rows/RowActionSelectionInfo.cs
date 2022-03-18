@@ -28,6 +28,8 @@ namespace PIERStory
             // 스킵중일 수도 있으니 풀어주고
             GameManager.main.useSkip = false;
 
+            scriptRow.script_data = scriptRow.script_data.Replace("\\", "\n");
+
             ViewGame.main.SetSelectionInfoText(scriptRow.script_data);
         }
 

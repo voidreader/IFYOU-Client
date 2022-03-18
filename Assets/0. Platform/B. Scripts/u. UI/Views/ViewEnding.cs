@@ -201,6 +201,8 @@ namespace PIERStory
             foreach (GameObject g in createObject)
                 Destroy(g);
 
+            StoryLobbyMain.OnInitializeContentGroup?.Invoke();
+
             createObject.Clear();
 
             prevRoundScroll.SetActive(true);

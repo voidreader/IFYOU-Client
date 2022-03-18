@@ -454,6 +454,9 @@ namespace PIERStory {
             if (!UserManager.main.isSelectionTutorialClear) {
                 UserManager.main.RequestSelectionTutorialClear();
             }
+
+            if (ViewGame.main.commonTop.isVisible)
+                ViewGame.main.commonTop.Hide();
         }
 
         /// <summary>
@@ -531,9 +534,6 @@ namespace PIERStory {
 
             // 선택지 선택완료 처리
             SelectionSelected();
-
-            if (ViewGame.main.commonTop.isActiveAndEnabled)
-                ViewGame.main.commonTop.Hide();
         }
     }
 }

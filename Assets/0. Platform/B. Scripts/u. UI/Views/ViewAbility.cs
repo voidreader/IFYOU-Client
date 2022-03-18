@@ -1,4 +1,4 @@
-﻿
+﻿using UnityEngine.UI;
 
 using Doozy.Runtime.Signals;
 
@@ -7,6 +7,7 @@ namespace PIERStory
     public class ViewAbility : CommonView
     {
         public CharacterAbilityElement[] characterAbilityElements;
+        public ScrollRect scroll;
 
 
         public override void OnStartView()
@@ -20,6 +21,7 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5162"), string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
 
+            scroll.horizontalNormalizedPosition = 0f;
 
             int j = 0;
 

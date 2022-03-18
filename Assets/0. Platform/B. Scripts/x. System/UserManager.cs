@@ -622,7 +622,7 @@ namespace PIERStory
             foreach(EpisodeData endingData in StoryManager.main.ListCurrentProjectEpisodes)
             {
                 // 엔딩인 경우
-                if(endingData.episodeType == EpisodeType.Ending)
+                if(endingData.episodeType == EpisodeType.Ending && endingData.endingOpen)
                 {
                     for (int i = 0; i < GetNodeUserEpisodeHistory().Count; i++)
                     {

@@ -145,6 +145,8 @@ namespace PIERStory
             foreach (MissionElement me in missionElements)
                 me.gameObject.SetActive(false);
 
+            StoryLobbyMain.OnInitializeContentGroup?.Invoke();
+
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
         }
 

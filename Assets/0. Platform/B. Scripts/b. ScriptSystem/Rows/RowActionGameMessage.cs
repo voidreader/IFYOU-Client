@@ -25,6 +25,8 @@ namespace PIERStory
                 return;
             }
 
+            scriptRow.script_data = scriptRow.script_data.Replace("\\", "\n");
+
             PopupBase p = PopupManager.main.GetPopup(GameConst.TEMPLATE_GAME_MESSAGE);
             p.Data.SetLabelsTexts(scriptRow.script_data);
             p.Data.SetImagesSprites(GameManager.main.spriteGameMessageNormal);

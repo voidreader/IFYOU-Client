@@ -209,6 +209,7 @@ namespace PIERStory
         {
             Debug.Log(string.Format("<color=cyan>Init user info [{0}]</color>", __gamebaseID));
             gamebaseID = __gamebaseID;
+            //gamebaseID = "L3XR7YMXN4DPJ7HY";
 
             // 로그인 프로세스를 시작합니다. 
             ConnectServer();
@@ -490,12 +491,10 @@ namespace PIERStory
         /// 선택지 구매 목록 갱신
         /// </summary>
         /// <param name="__data"></param>
-        public void SetPurchaseSelection(string __data)
+        public void SetPurchaseSelection(JsonData __data)
         {
-            JsonData data = JsonMapper.ToObject(__data);
-
             // 여기 Exception 날 수 있음
-            currentStoryJson[NODE_SELECTION_PURCHASE][StoryManager.main.CurrentEpisodeID] = data;
+            currentStoryJson[NODE_SELECTION_PURCHASE][StoryManager.main.CurrentEpisodeID] = __data;
         }
 
 
@@ -887,6 +886,10 @@ namespace PIERStory
         /// </summary>
         /// <returns></returns>        
         public int GetUnlockStateMissionCount() {
+
+            if (DictStoryMission == null)
+                return 0;
+
             return DictStoryMission.Values.Count( mission => mission.missionState == MissionState.unlocked);
         }
 

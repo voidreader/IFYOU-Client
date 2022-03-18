@@ -242,9 +242,9 @@ namespace PIERStory
             }
             else if(context.canceled)
             {
-                if (startX - dragX > 4.5f)
+                if (startX - dragX > 550f)
                     scrollSnap.GoToNextPanel();
-                else if (startX - dragX < -4.5f)
+                else if (startX - dragX < -550f)
                     scrollSnap.GoToPreviousPanel();
             }
         }

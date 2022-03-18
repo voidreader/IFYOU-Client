@@ -527,8 +527,11 @@ namespace PIERStory {
                 return;
             }
 
+            LitJson.JsonData result = LitJson.JsonMapper.ToObject(res.DataAsText);
+
             // 노드 갱신해주고
-            UserManager.main.SetPurchaseSelection(res.DataAsText);
+            UserManager.main.SetPurchaseSelection(result);
+            UserManager.main.SetBankInfo(result);
 
             AdManager.main.isPaidSelection = true; // 유료 선택지 선택됨
 

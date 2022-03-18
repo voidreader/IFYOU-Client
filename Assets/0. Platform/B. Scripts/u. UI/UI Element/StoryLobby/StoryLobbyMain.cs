@@ -244,6 +244,10 @@ namespace PIERStory {
         /// 컨텐츠 그룹 초기화 
         /// </summary>
         void InitContentsGroup() {
+
+            if (rectContentsGroup == null)
+                return;
+
             rectContentsGroup.DOKill();
             rectContentsGroup.anchoredPosition = posGroupContentsOrigin; // 기본 위치로 지정 
             canvasGroupContents.alpha = 0.8f; 

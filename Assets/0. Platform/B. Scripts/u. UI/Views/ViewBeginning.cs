@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Doozy.Runtime.Signals;
+using BestHTTP;
+using LitJson;
 
 namespace PIERStory {
     public class ViewBeginning : CommonView
@@ -25,7 +27,29 @@ namespace PIERStory {
                 StoryManager.main.RequestStoryInfo(SystemManager.main.givenStoryData);
                 
                 ViewCommonTop.OnRefreshSuperUser?.Invoke(); // 게임플레이 후 다시 돌아왔을때 슈퍼 유저 마크 계속 유지되도록 처리
+                
+                // 다녀오면 리프레시 되도록 처리한다.
+                StoryManager.main.RequestStoryList(OnRequestStoryList);
+                
             }
         }
+        
+        
+                /// <summary>
+        /// callback 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        void OnRequestStoryList(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                return;
+            }
+            
+            Debug.Log(">> OnRequestStoryList : " + response.DataAsText);
+            
+            // 작품 리스트 받아와서 스토리 매니저에게 전달. 
+            StoryManager.main.SetStoryList(JsonMapper.ToObject(response.DataAsText));
+        }
+        
     }
 }

@@ -32,6 +32,14 @@ namespace PIERStory {
             groupDoubleButton.SetActive(!hasPremiumPass);
             groupSingleButton.SetActive(hasPremiumPass);
             
+            // 엔딩, 엔딩 플레이 완에 도달하면 반값으로 처리 
+            if(UserManager.main.CheckReachEnding()) {
+                resetPrice = Mathf.RoundToInt(resetPrice * 0.5f);
+            }
+            
+            // 가격
+            textResetCoinPrice.text = resetPrice.ToString();
+            
             // 스토리 리셋인 경우 true로 전달됨
             if(Data.isPositive)
                 return;
@@ -40,13 +48,7 @@ namespace PIERStory {
             // FlowReset에서만 사용 
             textResetEpisode.text = string.Format(SystemManager.GetLocalizedText("6219"), targetEpisode.episodeNO);
             
-            // 엔딩, 엔딩 플레이 완에 도달하면 반값으로 처리 
-            if(UserManager.main.CheckReachEnding()) {
-                resetPrice = Mathf.RoundToInt(resetPrice * 0.5f);
-            }
-            
-            // 가격
-            textResetCoinPrice.text = resetPrice.ToString();
+   
             
         }
         

@@ -55,6 +55,8 @@ namespace PIERStory {
             textProducer.text = SystemManager.GetLocalizedText("6180") + " / " + introduceStory.writer;
             textSummary.text = introduceStory.summary; // 요약 
             textGenre.text = SystemManager.GetLocalizedText("6181") + " / " + introduceStory.genre;
+            
+            SetLikeButtonState();
         }
         
         

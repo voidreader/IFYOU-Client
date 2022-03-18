@@ -48,8 +48,8 @@ namespace PIERStory {
             bonusQuantity = quantity * 5; // 보너스 수량 
             
             // 수량
-            textBaseQuantity.text = quantity.ToString() + " " + SystemManager.GetLocalizedText("2001");
-            textBonusQuantity.text = bonusQuantity.ToString() + " " + SystemManager.GetLocalizedText("2001");
+            textBaseQuantity.text = quantity.ToString() + " " + SystemManager.GetLocalizedText("6240");
+            textBonusQuantity.text = bonusQuantity.ToString() + " " + SystemManager.GetLocalizedText("6240");
             
             clearExp = SystemManager.GetJsonNodeInt(Data.contentJson, "first_reward_exp"); // 최초 클리어 경험치 
             

@@ -41,7 +41,7 @@ namespace PIERStory {
             
             
             if (StoryManager.main.loadingJson.Count > 0) {
-                loadingImage.SetDownloadURL(SystemManager.GetJsonNodeString(StoryManager.main.loadingJson[0], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(StoryManager.main.loadingJson[0], CommonConst.COL_IMAGE_KEY));
+                loadingImage.SetDownloadURL(SystemManager.GetJsonNodeString(StoryManager.main.loadingJson[0], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(StoryManager.main.loadingJson[0], CommonConst.COL_IMAGE_KEY), true);
             }
             else {
                 loadingImage.SetDownloadURL(string.Empty, string.Empty);

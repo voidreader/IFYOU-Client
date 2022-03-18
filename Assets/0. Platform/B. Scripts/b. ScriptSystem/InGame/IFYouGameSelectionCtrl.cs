@@ -56,7 +56,7 @@ namespace PIERStory {
         public Image lockIcon;
         public GameObject selectionPrice;
         public TextMeshProUGUI priceText;
-        public GameObject freepassTicket;
+        public ImageRequireDownload freepassBadge;
         [SerializeField] bool isButtonSelected = false; // 버튼 선택됨!
         [SerializeField] bool isLock = false; // 잠금 여부 
         [SerializeField] bool isFilling = false; // 채워짐 
@@ -130,6 +130,9 @@ namespace PIERStory {
             requisite = scriptRow.requisite;
             targetSceneID = scriptRow.target_scene_id;
 
+            if (selectionText.Contains("\\"))
+                selectionText = selectionText.Replace("\\", "");
+
             textSelection.text = selectionText;
 
             // 일러스트(이미지, CG) 획득이 있는지
@@ -138,13 +141,13 @@ namespace PIERStory {
             else
                 illustIcon.SetActive(false);
 
+            freepassBadge.gameObject.SetActive(false);
 
             // 과금 선택지 관련 세팅
             // 과금 선택지가 아님
             if (scriptRow.selectionPrice < 0)
             {
                 selectionPrice.SetActive(false);
-                freepassTicket.SetActive(false);
             }
             else
             {
@@ -153,12 +156,12 @@ namespace PIERStory {
                 if (UserManager.main.HasProjectFreepass())
                 {
                     selectionPrice.SetActive(false);
-                    freepassTicket.SetActive(true);
+                    freepassBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey);
+                    freepassBadge.gameObject.SetActive(true);
                 }
                 else
                 {
                     selectionPrice.SetActive(true);
-                    freepassTicket.SetActive(false);
 
                     // 선택지를 구매한 적이 있다면 0으로 표기해줄거야
                     if (UserManager.main.IsPurchaseSelection(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no))
@@ -489,6 +492,10 @@ namespace PIERStory {
                 SetOtherSelectionState(this, SelectionState.Idle);
                 return;
             }
+
+            // 프리패스 이용자이면 가격을 0원 처리 한다
+            if (UserManager.main.HasProjectFreepass())
+                scriptRow.selectionPrice = 0;
 
             UserManager.main.PurchaseSelection(scriptRow.selection_group, scriptRow.selection_no, scriptRow.selectionPrice, CallbackPurchaseSelection);
         }

@@ -75,9 +75,12 @@ namespace PIERStory
                 return;
 
             UserManager.main.useRecord = false;         // 엔딩 플레이는 useRecord를 false 처리한다. 
-            IntermissionManager.isMovingLobby = false;  // 게임으로 진입하도록 요청
+
+            SystemManager.main.givenEpisodeData = endingData;
+            SystemManager.ShowNetworkLoading();
 
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN, string.Empty);
+            IntermissionManager.isMovingLobby = false;  // 게임으로 진입하도록 요청
 
             if (GameManager.main != null)
                 SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;

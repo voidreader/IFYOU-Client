@@ -73,7 +73,7 @@ namespace PIERStory
         #region OnClick Button Event
 
         /// <summary>
-        /// 엔딩 플레이!
+        /// 스페셜 에피소드 플레이
         /// </summary>
         public void OnClickStartSpecialEpisode()
         {

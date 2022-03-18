@@ -494,7 +494,7 @@ namespace PIERStory
         public void SetPurchaseSelection(JsonData __data)
         {
             // 여기 Exception 날 수 있음
-            currentStoryJson[NODE_SELECTION_PURCHASE][StoryManager.main.CurrentEpisodeID] = __data;
+            currentStoryJson[NODE_SELECTION_PURCHASE][StoryManager.main.CurrentEpisodeID] = __data["list"];
         }
 
 

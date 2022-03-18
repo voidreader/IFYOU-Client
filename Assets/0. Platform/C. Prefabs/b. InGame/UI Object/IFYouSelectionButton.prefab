@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 1549932826498225763}
   - component: {fileID: 2176518855719275885}
   - component: {fileID: 2030998507032400969}
+  - component: {fileID: 7639783167704444955}
   m_Layer: 5
   m_Name: CurrencyIcon
   m_TagString: Untagged
@@ -168,8 +169,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -21.5, y: 0}
-  m_SizeDelta: {x: 43, y: 47}
+  m_AnchoredPosition: {x: -40, y: 0}
+  m_SizeDelta: {x: 70, y: 70}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &2176518855719275885
 CanvasRenderer:
@@ -193,13 +194,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0912bd61aba780b40ad0bb0afc73cd68, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -209,6 +210,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7639783167704444955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2955842138262371457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45574a5f4b0f3364d938313293b6a2f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isRawImage: 0
+  useFade: 1
+  isLoadComplete: 0
+  imageURL: 
+  imageKey: 
+  targetImage: {fileID: 2030998507032400969}
+  targetRawImage: {fileID: 0}
+  downloadedTexture: {fileID: 0}
+  downloadedSprite: {fileID: 0}
 --- !u!1 &3042052906310159560
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +321,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8096983412251948527
 RectTransform:
   m_ObjectHideFlags: 0
@@ -669,6 +691,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3689b6dd536dda042a59d0af282d501b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPurchaseSelection: 0
   currentState: 0
   selectionIndex: 0
   canvasGroup: {fileID: 7321211235086581084}
@@ -680,7 +703,7 @@ MonoBehaviour:
   lockIcon: {fileID: 1292277585722593128}
   selectionPrice: {fileID: 3997092292208115045}
   priceText: {fileID: 4207433875262396692}
-  freepassTicket: {fileID: 3314655174834569888}
+  freepassBadge: {fileID: 7639783167704444955}
   isButtonSelected: 0
   isLock: 0
   isFilling: 0

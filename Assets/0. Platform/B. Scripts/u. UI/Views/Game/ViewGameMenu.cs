@@ -31,20 +31,9 @@ namespace PIERStory
         public Sprite spriteToggleOn;
         public Sprite spriteToggleOff;
 
-        [Header("Division Free")]
-        public GameObject retryButton;
-        public GameObject skipButton;
 
         [Space(10)]
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
-
-        private void Start()
-        {
-            if (UserManager.main.CheckAdminUser())
-                replayButton.SetActive(true);
-            else
-                replayButton.SetActive(false);
-        }
 
 
         void Update() {
@@ -60,11 +49,6 @@ namespace PIERStory
             
             // 타이틀 처리 타입, 순번, 타이틀 조합
             textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
-
-            
-            // BM 변경으로 블락하지 않음. (2022.03.08)
-            retryButton.SetActive(true);
-            skipButton.SetActive(true);
         }
 
         /// <summary>

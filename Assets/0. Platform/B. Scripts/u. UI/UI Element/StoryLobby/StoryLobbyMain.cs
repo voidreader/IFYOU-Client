@@ -19,6 +19,7 @@ namespace PIERStory {
         public static Action CallbackReduceWaitingTimeSuccess = null; // 시간감소 콜백 (성공)
         public static Action CallbackReduceWaitingTimeFail = null; // 시간감소 콜백(실패)
         public static Action<EpisodeData> SuperUserFlowEpisodeStart = null; // 플로우맵 슈퍼유저 에피소드 시작하기 
+        public static Action OnInitializeContentGroup = null;
         
         
         public StoryData currentStoryData;
@@ -98,7 +99,8 @@ namespace PIERStory {
             OnCallbackReset = RefreshAfterReset; 
             CallbackReduceWaitingTimeSuccess = RefreshAfterReduceWaitingTime; 
             CallbackReduceWaitingTimeFail = FailReduceWaitingTime;
-            
+            OnInitializeContentGroup = InitContentsGroup;
+
             // 슈퍼유저 관련 처리 
             SuperUserFlowEpisodeStart = SuperUserEpisodeStart;
             
@@ -244,6 +246,10 @@ namespace PIERStory {
         /// 컨텐츠 그룹 초기화 
         /// </summary>
         void InitContentsGroup() {
+
+            if (rectContentsGroup == null)
+                return;
+
             rectContentsGroup.DOKill();
             rectContentsGroup.anchoredPosition = posGroupContentsOrigin; // 기본 위치로 지정 
             canvasGroupContents.alpha = 0.8f; 
@@ -382,6 +388,10 @@ namespace PIERStory {
             CharacterAbilityBriefElement abilityBrief = null;
             abilityBriefScroll.gameObject.SetActive(true);
             scrollNextButton.SetActive(true);
+
+            // 능력치 있는 캐릭터가 한 명뿐이라면 next버튼이 필요가 없지
+            if (UserManager.main.DictStoryAbility.Count == 1)
+                scrollNextButton.SetActive(false);
 
             foreach (string key in UserManager.main.DictStoryAbility.Keys)
             {

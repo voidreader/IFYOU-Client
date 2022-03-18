@@ -50,7 +50,7 @@ namespace PIERStory
             {
                 EpisodeData dependEpisodeData = StoryManager.GetRegularEpisodeByID(epiData.dependEpisode);
 
-                endingTitle.text = string.Format("{0}\n EP{1}", "귀속 에피소드", dependEpisodeData.episodeNO);
+                endingTitle.text = string.Format(SystemManager.GetLocalizedText("5165"), dependEpisodeData.episodeNO);
                 GetComponent<RectTransform>().sizeDelta = lockEndingSize;
                 buttonBox.sprite = LobbyManager.main.spriteEpisodeLock;
 

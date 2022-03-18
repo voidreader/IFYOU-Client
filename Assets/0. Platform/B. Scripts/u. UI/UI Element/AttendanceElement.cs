@@ -66,10 +66,7 @@ namespace PIERStory
                 coverOverlay.gameObject.SetActive(false);
 
             gameObject.SetActive(true);
-        }
 
-        private void Start()
-        {
             if (current && clickCheck)
             {
                 dayHighlight.gameObject.SetActive(true);
@@ -77,7 +74,6 @@ namespace PIERStory
                 StartCoroutine(SpriteShiny());
             }
         }
-
 
         #region Material 연출
 
@@ -102,8 +98,6 @@ namespace PIERStory
         }
 
         #endregion
-
-
 
         /// <summary>
         /// 출석보상 받기

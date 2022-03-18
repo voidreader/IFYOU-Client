@@ -454,6 +454,9 @@ namespace PIERStory {
             if (!UserManager.main.isSelectionTutorialClear) {
                 UserManager.main.RequestSelectionTutorialClear();
             }
+
+            if (ViewGame.main.commonTop.isVisible)
+                ViewGame.main.commonTop.Hide();
         }
 
         /// <summary>
@@ -524,16 +527,16 @@ namespace PIERStory {
                 return;
             }
 
+            LitJson.JsonData result = LitJson.JsonMapper.ToObject(res.DataAsText);
+
             // 노드 갱신해주고
-            UserManager.main.SetPurchaseSelection(res.DataAsText);
+            UserManager.main.SetPurchaseSelection(result);
+            UserManager.main.SetBankInfo(result);
 
             AdManager.main.isPaidSelection = true; // 유료 선택지 선택됨
 
             // 선택지 선택완료 처리
             SelectionSelected();
-
-            if (ViewGame.main.commonTop.isActiveAndEnabled)
-                ViewGame.main.commonTop.Hide();
         }
     }
 }

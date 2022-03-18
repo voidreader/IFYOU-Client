@@ -67,6 +67,7 @@ namespace PIERStory
         [SerializeField] float offset_y = 0;
         // 시선 방향
         [SerializeField] string direction = GameConst.VIEWDIRECTION_CENTER;
+        [SerializeField] int tallGrade = 0; // 키 추가 
 
         // path 설정할때, string path = Application.persistentDataPath + /프로젝트id/ + file_key로 설정해주어야 한다. 
         MonoBehaviour pageParent = null;
@@ -160,6 +161,7 @@ namespace PIERStory
                 offset_x = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_X));
                 offset_y = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_Y));
                 direction = SystemManager.GetJsonNodeString(resourceData[0], GameConst.COL_DIRECTION);
+                tallGrade = SystemManager.GetJsonNodeInt(resourceData[0], "tall_grade");
             }
 
             // 데이터 가져왔으면, 모델 초기화 시작한다. 
@@ -312,6 +314,8 @@ namespace PIERStory
             
             // * CreateCubismModel
             modelController.SetModel(model, direction, isAddressable);
+            modelController.SetTallGradeByAdmin(tallGrade);
+            
             model.transform.SetParent(modelCharacter.transform);
             // 스케일 조정 및 크기 조정 
             model.transform.localScale = new Vector3(gameScale, gameScale, 1);

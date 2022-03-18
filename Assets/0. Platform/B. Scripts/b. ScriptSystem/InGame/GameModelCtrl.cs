@@ -94,6 +94,14 @@ namespace PIERStory
 
             currRenderTexture = ViewGame.main.modelRenders[1];
         }
+        
+        /// <summary>
+        /// 키 어드민에서 지정하기 
+        /// </summary>
+        /// <param name="__tallGrade"></param>
+        public void SetTallGradeByAdmin(int __tallGrade) {
+            tallGrade= __tallGrade;
+        }
 
         /// <summary>
         /// 말하지 않는 스탠딩을 밀어주며, 스케일 값을 변경해준다

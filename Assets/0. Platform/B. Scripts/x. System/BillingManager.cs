@@ -181,12 +181,14 @@ namespace PIERStory {
             
             
             // 통합 인앱결제
+            /*
             Dictionary<string, string> eventValues = new Dictionary<string, string>();
             eventValues.Add(AFInAppEvents.CURRENCY, receipt.currency);
             eventValues.Add(AFInAppEvents.REVENUE, receipt.price.ToString());
             eventValues.Add(AFInAppEvents.ORDER_ID, receipt.gamebaseProductId);
             eventValues.Add("af_quantity", "1");
             AppsFlyerSDK.AppsFlyer.sendEvent(AFInAppEvents.PURCHASE, eventValues);
+            */
   
         }
         

@@ -98,8 +98,6 @@ namespace PIERStory
 
         public void EndAction()
         {
-            ViewGame.main.HIdePhoneImage();
-
             // 자동진행 아니고, 템플릿이 전화본인 혹은 전화상대인 경우
             if (scriptRow.autoplay_row < 1 && (template.Equals(GameConst.TEMPLATE_PHONE_SELF) || template.Equals(GameConst.TEMPLATE_PHONE_PARTNER)))
             {
@@ -112,10 +110,47 @@ namespace PIERStory
                 ViewGame.main.HidePhoneBubble(callReciever);
             }
 
+            if(!HoldPhoneCall())
+                ViewGame.main.HIdePhoneImage();
+
+
             // 전화 관련 템플릿 또는 선택지 템플릿이 아닐 때 말풍선 숨기기
+            /*
             if (!GameManager.main.IsSameTemplate(GameManager.main.currentRow, "phone") ||
                 !GameManager.main.IsSameTemplate(GameManager.main.currentRow, GameConst.TEMPLATE_SELECTION))
                 ViewGame.main.HideBubbles();
+            */
+        }
+
+        /// <summary>
+        /// 통화 화면 유지할지 말지 정하기
+        /// </summary>
+        /// <returns></returns>
+        bool HoldPhoneCall()
+        {
+            // 다음행이 전화 관련 템플릿인 경우 유지한다
+            if (GameManager.main.IsSameTemplate(GameManager.main.nextRow, "phone"))
+                return true;
+            
+            // 다음행이 선택지 안내라면 유지한다
+            if (GameManager.main.IsSameTemplate(GameManager.main.nextRow, GameConst.TEMPLATE_SELECTION_INFO))
+                return true;
+
+            // 다음행이 선택지라면 유지한다
+            if (GameManager.main.IsSameTemplate(GameManager.main.nextRow, GameConst.TEMPLATE_SELECTION))
+                return true;
+
+            // 다음 행이 게임메시지라면 유지한다
+            if (GameManager.main.IsSameTemplate(GameManager.main.nextRow, GameConst.TEMPLATE_GAME_MESSAGE))
+                return true;
+
+            // 다음 행이 능력지 템플릿이라면 유지한다
+            if (GameManager.main.IsSameTemplate(GameManager.main.nextRow, GameConst.TEMPLATE_ABILITY))
+                return true;
+
+
+            // 위의 경우들이 아니라면 메신저 창을 유지하지 않는다
+            return false;
         }
     }
 }

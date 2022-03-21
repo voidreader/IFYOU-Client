@@ -260,10 +260,21 @@ namespace PIERStory
             // iOS만 실행하도록 전처리 
             // iOS는 가장 낮은 퀄리티가 기본으로 세팅 되어있다. 
             // 21.11.09 세상에는 아직도 사양이 낮은 폰을 사용하는 사람이 있기 떄문에 AOS, IOS 할 것 없이 사양 다운을 해준다...
+            
+            int minRam = 3000;
+            
+            
+            #if UNITY_ANDROID
+            
+                minRam = 4200; // Android 에서는 4200으로 기준선 높인다 . 
+            
+            #endif
+            
             Debug.Log(">>> System RAM Check :: " + SystemInfo.systemMemorySize);
+            Debug.Log(">>> Limit RAM Check :: " + minRam);
             
             // 
-            if(SystemInfo.systemMemorySize >= 3000) {
+            if(SystemInfo.systemMemorySize >= minRam) {
                 Debug.Log(">> Quality Up");
                 
                 // 퀄리티 설정 0이 가장 낮은 퀄리티 half res

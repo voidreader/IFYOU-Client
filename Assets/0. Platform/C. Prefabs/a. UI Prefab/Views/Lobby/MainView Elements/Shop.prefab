@@ -328,7 +328,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 3819851223816581921}
           m_TargetAssemblyTypeName: PIERStory.MainShop, Assembly-CSharp
-          m_MethodName: InitShopTop
+          m_MethodName: DelayEnterFromMain
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -361,19 +361,10 @@ MonoBehaviour:
         m_Calls: []
   OnVisibilityChangedCallback:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3819851223816581921}
-        m_TargetAssemblyTypeName: PIERStory.MainShop, Assembly-CSharp
-        m_MethodName: OnCompleteShowAnimation
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 0
   AutoHideAfterShow: 0
@@ -1796,7 +1787,7 @@ MonoBehaviour:
     m_Left: 0
     m_Right: 0
     m_Top: 20
-    m_Bottom: 0
+    m_Bottom: 30
   m_ChildAlignment: 1
   m_Spacing: 30
   m_ChildForceExpandWidth: 0
@@ -3549,6 +3540,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 0
   AutoHideAfterShow: 0
@@ -4278,7 +4272,7 @@ MonoBehaviour:
     m_Left: 30
     m_Right: 0
     m_Top: 20
-    m_Bottom: 0
+    m_Bottom: 30
   m_ChildAlignment: 1
   m_Spacing: 30
   m_ChildForceExpandWidth: 0
@@ -5303,6 +5297,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 0
   AutoHideAfterShow: 0

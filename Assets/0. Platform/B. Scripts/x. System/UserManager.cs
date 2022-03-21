@@ -1656,6 +1656,9 @@ namespace PIERStory
             
         }
         
+        
+
+        
         /// <summary>
         /// 작품 선택지 선택 진행도 노드 저장 
         /// </summary>
@@ -1679,7 +1682,7 @@ namespace PIERStory
                 
             return currentStoryJson[NODE_SELECTION_PROGRESS][__episodeID];
         }
-        
+         
         /// <summary>
         /// 유저의 작품에서 첫번째 selection 터치 체크 
         /// </summary>
@@ -1709,9 +1712,18 @@ namespace PIERStory
                 return false;
             
             // 에피소드별 Progress를 체크해서 ... 비교 
-            for(int i=0; i<targetEpisode.Count;i++) {
-                if(targetEpisode[i]["target_scene_id"].ToString() == __targetSceneID)
+            // * 지나갔던 길은 다시 체크하지 않게 수정.
+            for(int i=0; i<targetEpisode.Count; i++) {
+                
+                if(targetEpisode[i]["target_scene_id"].ToString() == __targetSceneID 
+                    && !GameManager.main.CheckResumeSelectionPassed(targetEpisode[i])) {
+                    
+                    Debug.Log("## Move to __targetSceneID : " + __targetSceneID);
+                    
+                    // 루트 정보 저장하고 return true
+                    GameManager.main.AddResumeSelectionRoute(targetEpisode[i]);
                     return true;
+                }
             }
             
             // "target_scene_id": "1021",

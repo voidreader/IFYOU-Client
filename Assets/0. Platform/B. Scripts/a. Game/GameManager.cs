@@ -20,6 +20,7 @@ namespace PIERStory
         public static string lastPlaySceneId = string.Empty;
         public static long lastPlayScriptNo = 0;
         public static bool hasLastPlayScriptNo = false;     // 이어하기 타겟 script_no가 대본상에 존재하는지 체크
+        JsonData resumePlaySelectionJSON = null; // 이어하기 선택지 지나친 경로 정보 
 
         public EpisodeData currentEpisodeData = null;    // 선택한 에피소드 정보(JSON => Serializable Class)
         public float updatedEpisodeSceneProgressValue = 0; // 플레이 후에 업데이트된 사건 달성률 2021.12.14
@@ -581,6 +582,7 @@ namespace PIERStory
             // lastScriptNO는 스크립트를 편집하면 일치하는 행이 없을 수도 있다. 실행전에 미리 유효성 검사를 하고 진행한다.
 
             // ! 이어하기 유효성 검사 
+            InitSelectionProgressRoute();
             CheckResumePlayValidation();
 
             // ! 띠배너 광고 
@@ -2116,6 +2118,47 @@ namespace PIERStory
 
         #endregion
         
+        #region 이어하기 플레이, 선택지 루트 관련 메소드 추가 
+        
+        /// <summary>
+        /// 에피소드 시작전 selection progress 노드 초기화 
+        /// </summary>
+        /// <param name="__episodeID"></param>
+        public void InitSelectionProgressRoute() {
+            
+            // * 재귀 선택지 관련 처리 때문에 이 메소드 추가함. 
+            // * 이어하기에서 지나친 선택지를 여기에서 저장해준다. 
+            resumePlaySelectionJSON = JsonMapper.ToObject("[]"); // 배열로 만들어놓고 시작한다. 
+        }
+        
+        /// <summary>
+        /// 이어하기에서 선택지 지나쳤는지 체크하기 
+        /// </summary>
+        /// <param name="__targetData">선택지 정보</param>
+        /// <returns></returns>
+        public bool CheckResumeSelectionPassed(JsonData __targetData) {
+            
+            // 동일한 경로 있었으면 return true.
+            for(int i=0; i<resumePlaySelectionJSON.Count;i++) {
+                if(SystemManager.GetJsonNodeString(__targetData, "target_scene_id") == SystemManager.GetJsonNodeString(resumePlaySelectionJSON[i], "target_scene_id")) {
+                  return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        /// <summary>
+        /// 경로 추가 
+        /// </summary>
+        /// <param name="__j"></param>
+        public void AddResumeSelectionRoute(JsonData __j) {
+            resumePlaySelectionJSON.Add(__j);
+            
+            Debug.Log("### AddResumeSelectionRoute : " + JsonMapper.ToJson(resumePlaySelectionJSON));
+        }
+        
+        #endregion
         
         
     }

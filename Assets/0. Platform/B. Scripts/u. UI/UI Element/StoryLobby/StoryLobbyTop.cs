@@ -1,6 +1,7 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-
 using Doozy.Runtime.Signals;
 
 
@@ -15,7 +16,6 @@ namespace PIERStory {
         public GameObject objectSuperUser;
         
         public PassButton passButton;
-        public ImageRequireDownload passBadge;
         
         // Start is called before the first frame update
         void Start()
@@ -29,20 +29,16 @@ namespace PIERStory {
         void RefreshMailNotification(int __cnt) {
             mailNotify.SetActive(__cnt > 0);
         }
-
-
+        
+        
         /// <summary>
         /// 초기화
         /// </summary>
-        void InitStoryLobbyTop()
-        {
-            passBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey, true);
-            passBadge.gameObject.SetActive(UserManager.main.HasProjectFreepass());
+        void InitStoryLobbyTop() {
             passButton.gameObject.SetActive(!UserManager.main.HasProjectFreepass());
-
+            
             // 프리미엄 패스 정보 세팅하기 
-            if (passButton.gameObject.activeSelf)
-            {
+            if(passButton.gameObject.activeSelf) {
                 passButton.SetPremiumPass();
             }
         }

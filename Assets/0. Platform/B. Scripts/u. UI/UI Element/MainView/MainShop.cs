@@ -23,43 +23,20 @@ namespace PIERStory {
         
         [SerializeField] UIToggle packageToggle;
         [SerializeField] UIToggle normalToggle;
-
-
-        void Start()
-        {
+        
+        
+        
+        void Start() {
             OnRefreshNormalShop = InitNormalContainer;
             OnRefreshPackageShop = InitPackContainer;
+            OnRefreshTopShop = InitShopTop;
+                 
         }
-
-        public void DelayEnterFromMain()
-        {
-            StartCoroutine(RoutineEnterFromMain());
-            OnRefreshTopShop = EnterFromMain;
+        
+        public void OnCompleteShowAnimation() {
+            // packageToggle.SetIsOn(true);
         }
-
-        IEnumerator RoutineEnterFromMain()
-        {
-            yield return new WaitForSeconds(0.1f);
-            EnterFromMain();
-            yield return new WaitForSeconds(0.2f);
-            InitPackContainer();
-        }
-
-        public void DelayEnterFromSignal()
-        {
-            StartCoroutine(RoutineEnterFromSignal());
-            OnRefreshTopShop = EnterFromSignal;
-        }
-
-        IEnumerator RoutineEnterFromSignal()
-        {
-            yield return new WaitForSeconds(0.1f);
-            EnterFromSignal();
-            yield return new WaitForSeconds(0.2f);
-            InitPackContainer();
-        }
-
-        /*
+        
         public void DelayInitShop() {
             StartCoroutine(RoutineInitShop());
         }
@@ -81,38 +58,6 @@ namespace PIERStory {
             
             Debug.Log("### InitShopTop() ###");
             
-
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
-
-            // packageToggle.SetIsOn(true);
-            // InitPackContainer();
-        }
-        */
-
-        /// <summary>
-        /// 메인 로비로부터 진입할 때 상단 제어
-        /// </summary>
-        void EnterFromMain()
-        {
-            topSpecialProduct.InitPackage("starter_pack");
-
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
-        }
-
-
-        /// <summary>
-        /// 시그널로 호출되는 CommonView로 보여질 때 상단 제어
-        /// </summary>
-        void EnterFromSignal()
-        {
             topSpecialProduct.InitPackage("starter_pack");
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
@@ -121,23 +66,29 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5133"), string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
+
+            // packageToggle.SetIsOn(true);
+            // InitPackContainer();
         }
-
-
+        
         /// <summary>
         /// 일반 컨테이너 초기화
         /// </summary>
-        public void InitNormalContainer()
-        {
+        public void InitNormalContainer() {
+            
             // * container 콜백에서 실행된다. 
+            
             // 기본 스타 상품
-            for (int i = 0; i < listBaseStarProducts.Count; i++)
+            for(int i=0; i<listBaseStarProducts.Count;i++) {
                 listBaseStarProducts[i].InitProduct();
-
-
+            }
+            
+            
             // 코인 환전
-            for (int i = 0; i < listCoinExchangeProducts.Count; i++)
-                listCoinExchangeProducts[i].InitExchangeProduct();
+            for(int i=0; i<listCoinExchangeProducts.Count;i++) {
+                listCoinExchangeProducts[i].InitExchangeProduct();   
+            }
+            
         }
         
         /// <summary>

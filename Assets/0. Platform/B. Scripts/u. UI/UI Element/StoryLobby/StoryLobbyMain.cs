@@ -643,13 +643,6 @@ namespace PIERStory {
             
             if(isWaitingResponse)
                 return;
-
-            // 필요한 수만큼 가지고 있는지 체크해서 없으면 상점으로 보내는 팝업 띄워주기
-            if(!UserManager.main.CheckCoinProperty(GetEpisodeTimeOpenPrice()))
-            {
-                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteCoin, GetEpisodeTimeOpenPrice() - UserManager.main.coin);
-                return;
-            }
             
             
             isWaitingResponse = true;  // 서버 응답 

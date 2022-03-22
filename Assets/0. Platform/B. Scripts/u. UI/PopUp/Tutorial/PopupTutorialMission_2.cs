@@ -24,6 +24,7 @@ namespace PIERStory
             originalPrice = StoryManager.main.GetProjectPremiumPassOriginPrice();
             salePrice = (int)(originalPrice * 0.25f);
 
+            // 가격 세팅
             originalPriceText.text = originalPrice.ToString();
             salePriceText.text = salePrice.ToString();
 
@@ -65,6 +66,21 @@ namespace PIERStory
                 return;
             }
 
+            // 구매 후 처리 추가
+            UserManager.OnFreepassPurchase = CallbackFreepassPurcahse;
+            NetworkLoader.main.PurchaseProjectFreepass(string.Empty, originalPrice, salePrice);
+        }
+
+        void CallbackFreepassPurcahse()
+        {
+            // 구매를 했든, 프리 플레이를 했든 아무튼 튜토리얼 단계 레벨업이 필요함
+            // 구매했으니 
+        }
+
+
+        void UpdateTutorialStep()
+        {
+
         }
 
         /// <summary>
@@ -72,7 +88,8 @@ namespace PIERStory
         /// </summary>
         public void OnClickCloseSale()
         {
-
+            premiumContainer.Hide();
+            mainContainer.Show();
         }
 
         /// <summary>
@@ -80,23 +97,19 @@ namespace PIERStory
         /// </summary>
         public void OnClickPassInformation()
         {
-
+            helpContainer.Show();
         }
 
 
         #endregion
 
+        /// <summary>
+        /// Free play 버튼을 클릭해서 나온 container show Action
+        /// </summary>
         public void ShowFreePlayReward()
         {
 
         }
-
-
-        public void ShowNowOnlySale()
-        {
-
-        }
-
 
     }
 }

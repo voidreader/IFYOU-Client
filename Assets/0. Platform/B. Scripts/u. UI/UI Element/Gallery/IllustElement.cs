@@ -43,7 +43,7 @@ namespace PIERStory
             illustType = SystemManager.GetJsonNodeString(__j, "illust_type");
             
             // set native 되지 않게 변경함. 2022.01.17 
-            illustThumbnail.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.THUMBNAIL_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.THUMBNAIL_KEY));
+            illustThumbnail.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.THUMBNAIL_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.THUMBNAIL_KEY), true);
             isLive = SystemManager.GetJsonNodeString(__j, CommonConst.ILLUST_TYPE).Contains("live");
             isMinicut = illustType == "live_object" || illustType == "minicut" ? true : false;
             liveTag.SetActive(isLive);

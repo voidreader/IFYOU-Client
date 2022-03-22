@@ -361,8 +361,8 @@ namespace PIERStory
                     {
                         for (int j = i; j > 0; j--)
                         {
-                            // 선택지가 아닌행을 찾아서 첫 선택지 도입의 위치를 찾아서 lastPlayScriptNO를 갱신해준다
-                            if (!currentPage.ListRows[j].template.Equals(GameConst.TEMPLATE_SELECTION))
+                            // 선택지에 관련되지 않은 행을 찾아서 첫 선택지 도입의 위치를 찾아서 lastPlayScriptNO를 갱신해준다
+                            if (!currentPage.ListRows[j].template.Contains(GameConst.TEMPLATE_SELECTION))
                             {
                                 lastPlayScriptNo = currentPage.ListRows[j + 1].script_no;
                                 break;
@@ -589,7 +589,6 @@ namespace PIERStory
             // AdManager.main.LoadBanner();
             
 
-            
             Firebase.Analytics.FirebaseAnalytics.LogEvent("EpisodeLoadingDone", new Firebase.Analytics.Parameter("project_id", StoryManager.main.CurrentProjectID)
             , new Firebase.Analytics.Parameter("episode_id", StoryManager.main.CurrentEpisodeID));
 
@@ -599,8 +598,6 @@ namespace PIERStory
             {
                 
                 // * 이어하기 추가 처리
-                // * 조심스럽게 바꿔본다. 2021.12.08
-                // * 망했다. 다시 바꾼다. 2021.12.15
                 if (isResumePlay)
                 { // true일때만 호출해야한다.
                     // 정지 포인트에서 useSkip을 false로 바꿔야 한다. 
@@ -1376,7 +1373,6 @@ namespace PIERStory
         /// </summary>
         public void EndGame()
         {
-
             Debug.Log("EndGame");
             isPlaying = false;
             

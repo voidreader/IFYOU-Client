@@ -807,6 +807,18 @@ namespace PIERStory
             // LoginForLastLoggedInProvider 호출 , OnCallbackLogin으로 가기!
             Gamebase.LoginForLastLoggedInProvider(OnCallbackLogin);
         }
+        
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__providerName"></param>
+        public void LoginByExpireToken(string __providerName) {
+            
+            Debug.Log("### LoginByExpireToken : " + __providerName);
+            Gamebase.Login(__providerName, OnCallbackLogin);
+            
+        }
 
         /// <summary>
         /// 로그인 콜백!
@@ -838,6 +850,19 @@ namespace PIERStory
                     }
                 }
                 else {
+                    
+                    // Token 관련 메세지는 토큰만료 로그인 팝업을 띄워준다.
+                    // 2주 미접속시 토큰이 만료되어 이전 로그인 방식으로 로그인 할 수 없음 
+                    if(error.code == GamebaseErrorCode.AUTH_TOKEN_LOGIN_FAILED 
+                        || error.code == GamebaseErrorCode.AUTH_TOKEN_LOGIN_INVALID_LAST_LOGGED_IN_IDP 
+                        || error.code == GamebaseErrorCode.AUTH_TOKEN_LOGIN_INVALID_TOKEN_INFO
+                        || error.code == GamebaseErrorCode.AUTH_IDP_LOGIN_FAILED) {
+                            ShowAuthExpireTokenPopup();
+                            return;
+                        }
+                        
+                    
+                    
                     // ShowSimpleMessagePopUp("로그인 서버가 응답하지 않습니다. 다시 로그인을 시도합니다.");
                     LoginPlatform(true); // 강제로 게스트 로그인 시도.
                 }
@@ -2179,6 +2204,15 @@ namespace PIERStory
             p.Data.SetLabelsTexts(__insufficientAmount.ToString());
             p.Data.SetImagesSprites(__currencyIcon);
 
+            PopupManager.main.ShowPopup(p, false);
+        }
+        
+        /// <summary>
+        /// 로그인 인증 토큰 만료 안내 팝업 
+        /// </summary>
+        public static void ShowAuthExpireTokenPopup()
+        {
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_EXPIRE_TOKEN);
             PopupManager.main.ShowPopup(p, false);
         }
          

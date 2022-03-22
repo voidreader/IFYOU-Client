@@ -55,6 +55,8 @@ namespace PIERStory {
         [SerializeField] GameObject popupStoryReset; // 스토리 전체 리셋 1화로.. 
         [SerializeField] GameObject popupGameAbility; // 게임 능력치 증감 안내 메세지 
         [SerializeField] GameObject popupSpecialEpisodeBuy; // 스페셜 에피소드 구매 
+        
+        [SerializeField] GameObject popupExpireToken; // 로그인 토큰 만료 팝업 
          
         private void Awake() {
             if(main != null) {
@@ -386,6 +388,11 @@ namespace PIERStory {
                 DictPopup[CommonConst.POPUP_SPECIAL_EPISODE_BUY] = popupSpecialEpisodeBuy;
             else 
                 DictPopup.Add(CommonConst.POPUP_SPECIAL_EPISODE_BUY, popupSpecialEpisodeBuy);
+                
+            if(DictPopup.ContainsKey(CommonConst.POPUP_EXPIRE_TOKEN)) 
+                DictPopup[CommonConst.POPUP_EXPIRE_TOKEN] = popupExpireToken;
+            else 
+                DictPopup.Add(CommonConst.POPUP_EXPIRE_TOKEN, popupExpireToken);
         }
         
         #endregion

@@ -88,72 +88,60 @@ namespace PIERStory
                 return;
             }
 
-            Stack<string> roundKeyStack = new Stack<string>();
+            int episodeNum = 1;
 
-            foreach (string roundKey in selectionData.Keys)
-                roundKeyStack.Push(roundKey);
-
-            while (roundKeyStack.Count > 2)
-                roundKeyStack.Pop();
-
-            while(roundKeyStack.Count > 0)
+            foreach (string episodeTitle in selectionData.Keys)
             {
-                string roundKey = roundKeyStack.Pop();
-                int episodeNum = 1;
+                // 에피소드 제목 설정
+                SelectionEpisodeTitleElement titleElement = Instantiate(episodeTitlePrefab, currentContent).GetComponent<SelectionEpisodeTitleElement>();
+                titleElement.SetEpisodeTitle(episodeNum, episodeTitle);
+                episodeNum++;
+                createObject.Add(titleElement.gameObject);
 
-                foreach (string episodeTitle in selectionData[roundKey].Keys)
+                foreach (string prevScript in selectionData[episodeTitle].Keys)
                 {
-                    // 에피소드 제목 설정
-                    SelectionEpisodeTitleElement titleElement = Instantiate(episodeTitlePrefab, currentContent).GetComponent<SelectionEpisodeTitleElement>();
-                    titleElement.SetEpisodeTitle(episodeNum, episodeTitle);
-                    episodeNum++;
-                    createObject.Add(titleElement.gameObject);
+                    // 선택지 전 대사 설정
+                    SelectionPrevScriptElement prevScriptElement = Instantiate(prevScriptPrefab, currentContent).GetComponent<SelectionPrevScriptElement>();
+                    prevScriptElement.SetPrevScript(prevScript);
+                    createObject.Add(prevScriptElement.gameObject);
 
-                    foreach (string prevScript in selectionData[roundKey][episodeTitle].Keys)
+                    // 선택지 셋팅
+                    JsonData selectionGroup = selectionData[episodeTitle][prevScript];
+
+                    for (int i = 0; i < selectionGroup.Count; i++)
                     {
-                        // 선택지 전 대사 설정
-                        SelectionPrevScriptElement prevScriptElement = Instantiate(prevScriptPrefab, currentContent).GetComponent<SelectionPrevScriptElement>();
-                        prevScriptElement.SetPrevScript(prevScript);
-                        createObject.Add(prevScriptElement.gameObject);
+                        SelectionScriptElement selectionScript = Instantiate(selectionScriptPrefab, currentContent).GetComponent<SelectionScriptElement>();
+                        string scriptData = SystemManager.GetJsonNodeString(selectionGroup[i], "selection_content");
 
-                        // 선택지 셋팅
-                        JsonData selectionGroup = selectionData[roundKey][episodeTitle][prevScript];
+                        // 선택한 선택지인가?
+                        if (SystemManager.GetJsonNodeBool(selectionGroup[i], "selected"))
+                            selectionScript.SetSelectionScript(selectBoxSprite, scriptData, selectTextColor);
+                        else
+                            selectionScript.SetSelectionScript(unselectBoxSprite, scriptData, unSelectTextColor);
 
-                        for (int i = 0; i < selectionGroup.Count; i++)
-                        {
-                            SelectionScriptElement selectionScript = Instantiate(selectionScriptPrefab, currentContent).GetComponent<SelectionScriptElement>();
-                            string scriptData = SystemManager.GetJsonNodeString(selectionGroup[i], "selection_content");
-
-                            // 선택한 선택지인가?
-                            if (SystemManager.GetJsonNodeBool(selectionGroup[i], "selected"))
-                                selectionScript.SetSelectionScript(selectBoxSprite, scriptData, selectTextColor);
-                            else
-                                selectionScript.SetSelectionScript(unselectBoxSprite, scriptData, unSelectTextColor);
-
-                            createObject.Add(selectionScript.gameObject);
-                        }
+                        createObject.Add(selectionScript.gameObject);
                     }
-
-                    GameObject emptyBox = Instantiate(emptyPrefab, currentContent);
-                    createObject.Add(emptyBox);
                 }
 
-                // 엔딩 세팅
-                string endingType = SystemManager.GetJsonNodeString(endingData[roundKey][0], LobbyConst.ENDING_TYPE);
-
-                if (string.IsNullOrEmpty(endingType))
-                    return;
-
-                if (endingType == LobbyConst.COL_HIDDEN)
-                    endingType = SystemManager.GetLocalizedText("5087");
-                else
-                    endingType = SystemManager.GetLocalizedText("5088");
-
-                SelectionEndingTitleElement endingTitleElement = Instantiate(endingTitlePrefab, currentContent).GetComponent<SelectionEndingTitleElement>();
-                endingTitleElement.SetEndingTitle(string.Format("{0}. {1}", endingType, SystemManager.GetJsonNodeString(endingData[roundKey][0], "ending_title")));
-
-                createObject.Add(endingTitleElement.gameObject);
+                GameObject emptyBox = Instantiate(emptyPrefab, currentContent);
+                createObject.Add(emptyBox);
             }
+
+            // 엔딩 세팅
+            string endingType = SystemManager.GetJsonNodeString(endingData[0], LobbyConst.ENDING_TYPE);
+
+            if (string.IsNullOrEmpty(endingType))
+                return;
+
+            if (endingType == LobbyConst.COL_HIDDEN)
+                endingType = SystemManager.GetLocalizedText("5087");
+            else
+                endingType = SystemManager.GetLocalizedText("5088");
+
+            SelectionEndingTitleElement endingTitleElement = Instantiate(endingTitlePrefab, currentContent).GetComponent<SelectionEndingTitleElement>();
+            endingTitleElement.SetEndingTitle(string.Format("{0}. {1}", endingType, SystemManager.GetJsonNodeString(endingData[0], "ending_title")));
+
+            createObject.Add(endingTitleElement.gameObject);
 
             #endregion
         }

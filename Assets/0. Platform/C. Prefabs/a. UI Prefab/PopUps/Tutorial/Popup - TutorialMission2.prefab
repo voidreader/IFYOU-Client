@@ -523,7 +523,19 @@ MonoBehaviour:
       Runners: []
       Event:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 6310106047742705706}
+            m_TargetAssemblyTypeName: PIERStory.PopupTutorialMission_2, Assembly-CSharp
+            m_MethodName: OnClickCloseSale
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
       BehaviourName: 4
       Receiver:
         ConnectionMode: 1
@@ -1694,9 +1706,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PIERStory.PopupTutorialMission_1, Assembly-CSharp
-        m_MethodName: OnClickPlayButton
+      - m_Target: {fileID: 6310106047742705706}
+        m_TargetAssemblyTypeName: PIERStory.PopupTutorialMission_2, Assembly-CSharp
+        m_MethodName: OnClickFreePlay
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1717,6 +1729,7 @@ GameObject:
   - component: {fileID: 1198155715212689857}
   - component: {fileID: 1198155715212689859}
   - component: {fileID: 1198155715212689858}
+  - component: {fileID: 6154473877170469475}
   m_Layer: 5
   m_Name: NoAds
   m_TagString: Untagged
@@ -1741,7 +1754,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 300}
+  m_AnchoredPosition: {x: 0, y: 1200}
   m_SizeDelta: {x: 250, y: 249}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1198155715212689859
@@ -1782,6 +1795,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &6154473877170469475
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198155715212689856}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1198155715410658082
 GameObject:
   m_ObjectHideFlags: 0
@@ -2184,12 +2209,24 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnVisibleCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnVisibleCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 6310106047742705706}
+          m_TargetAssemblyTypeName: PIERStory.PopupTutorialMission_2, Assembly-CSharp
+          m_MethodName: ShowFreePlayReward
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnHideCallback:
     Enabled: 0
     EventName: OnHideCallback
@@ -3111,10 +3148,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Doozy.Runtime.UIManager.Containers.UIContainer,
-          DoozyRuntime
-        m_MethodName: Show
+      - m_Target: {fileID: 6310106047742705706}
+        m_TargetAssemblyTypeName: PIERStory.PopupTutorialMission_2, Assembly-CSharp
+        m_MethodName: OnClickPassInformation
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3299,7 +3335,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -3324,9 +3360,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PIERStory.PopupPass, Assembly-CSharp
-        m_MethodName: OnClickPurchase
+      - m_Target: {fileID: 6310106047742705706}
+        m_TargetAssemblyTypeName: PIERStory.PopupTutorialMission_2, Assembly-CSharp
+        m_MethodName: OnClickPassPurchase
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5830,12 +5866,14 @@ MonoBehaviour:
   mainCanvasGroup: {fileID: 0}
   isShow: 0
   isOnShow: 0
-  mainContainer: {fileID: 0}
-  premiumContainer: {fileID: 0}
-  helpContainer: {fileID: 0}
-  freeContainer: {fileID: 0}
-  originalPriceText: {fileID: 0}
-  salePriceText: {fileID: 0}
+  mainContainer: {fileID: 4072704490146758835}
+  premiumContainer: {fileID: 5515945638161377757}
+  helpContainer: {fileID: 2047276444095999805}
+  freeContainer: {fileID: 9115289646129554804}
+  projectPassImage: {fileID: 4806761188312163806}
+  originalPriceText: {fileID: 4806761188312168475}
+  salePriceText: {fileID: 4806761188312169350}
+  noAdsGroup: {fileID: 6154473877170469475}
 --- !u!1 &6310106048268353392
 GameObject:
   m_ObjectHideFlags: 0
@@ -6332,9 +6370,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PIERStory.PopupTutorialMission_1, Assembly-CSharp
-        m_MethodName: OnClickPlayButton
+      - m_Target: {fileID: 6310106047742705706}
+        m_TargetAssemblyTypeName: PIERStory.PopupTutorialMission_2, Assembly-CSharp
+        m_MethodName: OnClickSpecialSale
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

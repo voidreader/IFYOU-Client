@@ -132,6 +132,7 @@ namespace PIERStory
         // getUserSelectedStory를 통해 받아온 작품 관련 정보 
 
         const string FUNC_GET_TOP3_SELECTION_LIST = "getTop3SelectionList";
+        const string FUNC_GET_SELECTION_CURRENT = "getSelectionCurrent";
 
         public const string UN_UNREAD_MAIL_COUNT = "unreadMailCount"; // 미수신 메일 개수
         public const string UN_UNREAD_MAIL_LIST = "mailList"; // 미수신 메일 리스트
@@ -451,7 +452,7 @@ namespace PIERStory
         public void SetCurrentStorySelectionList(string __projectId)
         {
             JsonData sendingData = new JsonData();
-            sendingData[CommonConst.FUNC] = FUNC_GET_TOP3_SELECTION_LIST;
+            sendingData[CommonConst.FUNC] = FUNC_GET_SELECTION_CURRENT;
             sendingData[CommonConst.COL_USERKEY] = userKey;
             sendingData[CommonConst.COL_PROJECT_ID] = __projectId;
             sendingData[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;

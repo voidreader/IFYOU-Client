@@ -114,12 +114,11 @@ namespace PIERStory
                 ViewGame.main.HIdePhoneImage();
 
 
-            // 전화 관련 템플릿 또는 선택지 템플릿이 아닐 때 말풍선 숨기기
-            /*
+            // 현재 행이 전화 관련 템플릿 또는 선택지 템플릿이 아닐 때 말풍선 숨기기
+            // HidePhoneBubble만으로는 말풍선 자체를 Hide해주고 있지 않았음
             if (!GameManager.main.IsSameTemplate(GameManager.main.currentRow, "phone") ||
                 !GameManager.main.IsSameTemplate(GameManager.main.currentRow, GameConst.TEMPLATE_SELECTION))
                 ViewGame.main.HideBubbles();
-            */
         }
 
         /// <summary>

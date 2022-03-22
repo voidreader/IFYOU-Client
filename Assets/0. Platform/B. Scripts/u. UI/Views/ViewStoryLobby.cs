@@ -118,7 +118,6 @@ namespace PIERStory
 
             if(UserManager.main.gameComplete)
             {
-                RateGame.Instance.IncreaseCustomEvents();
                 RateGame.Instance.CanShowRate();
                 UserManager.main.gameComplete = false;
             }

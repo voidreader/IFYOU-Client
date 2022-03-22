@@ -31,7 +31,7 @@ namespace PIERStory
             // 현재 작품 정보에서 종료 이미지 가져오기 
             currentStoryData = StoryManager.main.CurrentProject;
             
-            
+            RateGame.Instance.IncreaseCustomEvents();
             episodeImage.SetDownloadURL(currentStoryData.episodeFinishImageURL, currentStoryData.episodeFinishImageKey); // 종료 이미지 처리 
             
             

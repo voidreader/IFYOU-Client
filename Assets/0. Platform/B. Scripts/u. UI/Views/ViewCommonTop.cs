@@ -327,16 +327,16 @@ namespace PIERStory {
         {
             if(!s.hasValue)
             {
-                attendanceButton.SetActive(false);
-                howToPlayButton.SetActive(false);
+                // attendanceButton.SetActive(false);
+                // howToPlayButton.SetActive(false);
                 
                 return;
             }
 
-            bool isShow = s.GetValueUnsafe<bool>();
+            // bool isShow = s.GetValueUnsafe<bool>();
             
-            attendanceButton.SetActive(isShow);
-            howToPlayButton.SetActive(isShow);
+            // attendanceButton.SetActive(isShow);
+            // howToPlayButton.SetActive(isShow);
         }
 
 

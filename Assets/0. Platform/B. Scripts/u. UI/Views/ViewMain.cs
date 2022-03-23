@@ -55,12 +55,13 @@ namespace PIERStory {
         public Sprite spriteVisable;
         public Sprite spriteInvisable;
 
+/*
         [Header("더보기")]
         public TextMeshProUGUI userPincode;
-        public TextMeshProUGUI mNickname;       // 더보기 페이지 닉네임
         public TextMeshProUGUI mLevelText;      // 더보기 페이지 레벨
         public TextMeshProUGUI mExpText;        // 더보기 페이지 경험치
         public Image mExpGauge;                 // 더보기 페이지 경험치바
+*/
         
 
         
@@ -123,6 +124,7 @@ namespace PIERStory {
 
 
             // (프로필) 닉네임, 레벨, 경험치
+            /*
             levelText.text = string.Format("Lv. {0}", UserManager.main.level);
 
             int totalExp = SystemManager.main.GetLevelMaxExp((UserManager.main.level + 1).ToString());
@@ -133,6 +135,7 @@ namespace PIERStory {
             mLevelText.text = levelText.text;
             mExpGauge.fillAmount = expGauge.fillAmount;
             mExpText.text = expText.text;
+            */
         }
 
         /// <summary>
@@ -336,7 +339,7 @@ namespace PIERStory {
         /// </summary>
         void InitAddMore()
         {
-            userPincode.text = string.Format("UID : {0}", UserManager.main.GetUserPinCode());
+            //userPincode.text = string.Format("UID : {0}", UserManager.main.GetUserPinCode());
         }
 
 
@@ -345,8 +348,8 @@ namespace PIERStory {
         /// </summary>
         public void OnClickCopyUID()
         {
-            UniClipboard.SetText(userPincode.text);
-            SystemManager.ShowSimpleAlertLocalize("6017");
+            // UniClipboard.SetText(userPincode.text);
+            // SystemManager.ShowSimpleAlertLocalize("6017");
         }
 
         

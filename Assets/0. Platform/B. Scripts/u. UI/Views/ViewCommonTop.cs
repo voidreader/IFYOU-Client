@@ -11,29 +11,26 @@ using Doozy.Runtime.Signals;
 namespace PIERStory {
     public class ViewCommonTop : CommonView
     {
-        public static bool isBackgroundShow = true; // 배경 보여지고 있는지 
-        public static string staticCurrentTopOwner = string.Empty; // static owner.
         
         public static Action OnRefreshSuperUser = null; // 슈퍼유저 표기용도 
         public static Action OnBackAction = null; // 백 버튼 터치 추가 액션 필요시 사용
 
 
         [SerializeField] GameObject backButton; // 뒤로가기 버튼 
-        [SerializeField] TextMeshProUGUI textViewName; // 뷰 이름 
-        [SerializeField] Image imageBackground; // 뒤의 흰 배경
+        [SerializeField] TextMeshProUGUI textViewName; // 뷰 이름  
         [SerializeField] GameObject groupProperty; // 프로퍼티 그룹 (재화, 메일, 등등)
-        [SerializeField] HorizontalLayoutGroup propertyHorizontalLayout;
         public GameObject mailButton;           // 프로퍼티 그룹의 메일 버튼
         [SerializeField] GameObject mailNotify; // 메일 알림 표시 
+        [SerializeField] GameObject moreNotify; // 설정 알림 표시 
 
         public GameObject attendanceButton;     // 출석 이벤트 버튼
         public GameObject howToPlayButton; // How to play 버튼 
+        
+        public GameObject bottomLine; // 하단 라인 
 
         
         [SerializeField] GameObject logo; // 로고
         
-        // * 현재 탑을 제어하는 owner를 설정하려고 했는데, 잠시 보류... 2021.12.07
-        [SerializeField] string topOwner = string.Empty;
         
         
         // 바로 이전 상태 저장 변수
@@ -49,19 +46,19 @@ namespace PIERStory {
         bool previousAttendanceButtonShow = false; 
         bool previousHowToPlayButtonShop = false; // 
         
-        [SerializeField] bool backgroundSignalValue = true;
+        
         
         [SerializeField] GameObject superUserSign; // 슈퍼유저 표시 
         
         
         // Stream, Signal
         
-        SignalStream signalStreamTopBackground;
+        
         SignalStream signalStreamTopViewName;
         SignalStream signalStreamTopViewNameExist;
         SignalStream signalStreamTopPropertyGroup;
         SignalStream signalStreamTopMail;
-        SignalStream signalStreamTopChangeOwner;
+        
         SignalStream signalStreamTopBackButton;
         SignalStream signalStreamRecover;
         SignalStream signalStreamSaveState;
@@ -69,12 +66,12 @@ namespace PIERStory {
         SignalStream signalStreamAttendace;
         
         
-        SignalReceiver signalReceiverTopBackground;
+        
         SignalReceiver signalReceiverTopViewName;
         SignalReceiver signalReceiverTopViewNameExist;
         SignalReceiver signalReceiverTopPropertyGroup;
         SignalReceiver signalReceiverTopMail;
-        SignalReceiver signalReceiverTopChangeOwner;
+        
         SignalReceiver signalReceiverTopBackButton;
         SignalReceiver signalReceiverRecover;
         SignalReceiver signalReceiverSaveState;
@@ -82,9 +79,7 @@ namespace PIERStory {
         SignalReceiver signalReceiverAttendance;
         
         private void Awake() {
-            // Background 
-            signalStreamTopBackground = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND);
-            signalReceiverTopBackground = new SignalReceiver().SetOnSignalCallback(OnTopBackgroundSignal);
+            
 
             signalStreamTopViewNameExist = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST);
             signalReceiverTopViewNameExist = new SignalReceiver().SetOnSignalCallback(OnTopViewNameExistSignal);
@@ -98,8 +93,7 @@ namespace PIERStory {
             signalStreamTopMail = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON);
             signalReceiverTopMail = new SignalReceiver().SetOnSignalCallback(OnTopMailSignal);
             
-            signalStreamTopChangeOwner = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_CHANGE_OWNER);
-            signalReceiverTopChangeOwner = new SignalReceiver().SetOnSignalCallback(OnTopChangeOwner);
+            
             
             signalStreamTopBackButton = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON);
             signalReceiverTopBackButton = new SignalReceiver().SetOnSignalCallback(OnTopBackButtonSignal);
@@ -122,12 +116,11 @@ namespace PIERStory {
             // 메일 알림 표시 추가
             UserManager.OnRefreshUnreadMailCount = RefreshMailNotification;
             
-            signalStreamTopBackground.ConnectReceiver(signalReceiverTopBackground);
             signalStreamTopViewNameExist.ConnectReceiver(signalReceiverTopViewNameExist);
             signalStreamTopViewName.ConnectReceiver(signalReceiverTopViewName);
             signalStreamTopPropertyGroup.ConnectReceiver(signalReceiverTopPropertyGroup);
             signalStreamTopMail.ConnectReceiver(signalReceiverTopMail);
-            signalStreamTopChangeOwner.ConnectReceiver(signalReceiverTopChangeOwner);
+            
             signalStreamTopBackButton.ConnectReceiver(signalReceiverTopBackButton);
             signalStreamRecover.ConnectReceiver(signalReceiverRecover);
             signalStreamSaveState.ConnectReceiver(signalReceiverSaveState);
@@ -138,12 +131,11 @@ namespace PIERStory {
         }
         
         void OnDisable() {
-            signalStreamTopBackground.DisconnectReceiver(signalReceiverTopBackground);
             signalStreamTopViewNameExist.DisconnectReceiver(signalReceiverTopViewNameExist);
             signalStreamTopViewName.DisconnectReceiver(signalReceiverTopViewName);
             signalStreamTopPropertyGroup.DisconnectReceiver(signalReceiverTopPropertyGroup);
             signalStreamTopMail.DisconnectReceiver(signalReceiverTopMail);
-            signalStreamTopChangeOwner.DisconnectReceiver(signalReceiverTopChangeOwner);
+            
             signalStreamTopBackButton.DisconnectReceiver(signalReceiverTopBackButton);
             signalStreamRecover.DisconnectReceiver(signalReceiverRecover);
             signalStreamSaveState.DisconnectReceiver(signalReceiverSaveState);
@@ -154,8 +146,7 @@ namespace PIERStory {
         public override void OnView()
         {
             base.OnView();
-            
-            // propertyHorizontalLayout.enabled = false;
+
             
             SetSuperUser();
         }
@@ -214,7 +205,6 @@ namespace PIERStory {
             Debug.Log("SavePreviousState");
             
             previousBackButtonShow = backButton.activeSelf;
-            previousBackgroundShow = backgroundSignalValue;
             previousGroupPropertyShow = groupProperty.activeSelf;
             previousTextViewNameShow = textViewName.gameObject.activeSelf;
             previousViewName = textViewName.text;
@@ -237,12 +227,6 @@ namespace PIERStory {
             textViewName.gameObject.SetActive(previousTextViewNameShow);
             textViewName.text = previousViewName;
             
-            if(previousBackgroundShow) {
-                imageBackground.DOFade(1, 0.4f);
-            }
-            else {
-                imageBackground.DOFade(0, 0.4f);
-            }
             
             mailButton.SetActive(previousMailShow);
             logo.SetActive(!previousBackButtonShow);
@@ -281,58 +265,9 @@ namespace PIERStory {
             
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="signal"></param>
-        void OnTopChangeOwner(Signal signal) {
-            
-          
-            if(string.IsNullOrEmpty(signal.message)) {
-                Debug.LogError("OnTopChangeOwner has no message");
-                return;
-            }
-            
-            staticCurrentTopOwner = topOwner = signal.message;
-            Debug.Log(">> Current Top Owner : " + topOwner);
-            
-        }
+
         
-        
-        /// <summary>
-        /// 백그라운드 관련 Signal 처리 
-        /// </summary>
-        /// <param name="signal"></param>
-        void OnTopBackgroundSignal(Signal signal) {
-            if(!signal.hasValue) {
-                Debug.LogError("OnTopBackgroundSignal has no value");
-                return;
-            }
-            
-            
-            backgroundSignalValue = signal.GetValueUnsafe<bool>();
-            
-            // 같으면 return.
-            if(backgroundSignalValue == isBackgroundShow) {
-                Debug.Log("OnTopBackgroundSignal same signal received");
-                return; 
-            }
-                
-            isBackgroundShow = backgroundSignalValue; // static 변수도 같이 갱신
-            
-            
-            Debug.Log("OnTopBackgroundSignal : " + backgroundSignalValue);
-            
-            imageBackground.DOKill();
-            
-            if(backgroundSignalValue) {
-                imageBackground.DOFade(1, 0.4f);
-            }
-            else {
-                Debug.Log("top background out");
-                imageBackground.DOFade(0, 0.4f);
-            }
-        }
+
         
         
         /// <summary>

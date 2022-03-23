@@ -16,6 +16,8 @@ namespace PIERStory {
         
         [SerializeField] bool isFirstToggle = false; // 관심작품용도 
         
+        public GameObject cover; // 커버 
+        
         /// <summary>
         /// 장르 정보 설정 
         /// </summary>
@@ -36,8 +38,11 @@ namespace PIERStory {
             if (LobbyManager.main == null)
                 return;
 
-            buttonImage.sprite = LobbyManager.main.spriteGenreOff;
-            textGenre.color = LobbyManager.main.colorGenreOff;   
+            // buttonImage.sprite = LobbyManager.main.spriteGenreOff;
+            // textGenre.color = LobbyManager.main.colorGenreOff;   
+            if(cover != null) {
+                cover.SetActive(false);
+            }
         }
         
         public void SetOn() {
@@ -45,14 +50,18 @@ namespace PIERStory {
             if (LobbyManager.main == null)
                 return;
 
-            buttonImage.sprite = LobbyManager.main.spriteGenreOn;
-            textGenre.color = LobbyManager.main.colorGenreOn;   
+            // buttonImage.sprite = LobbyManager.main.spriteGenreOn;
+            // textGenre.color = LobbyManager.main.colorGenreOn;   
+            
+            if(cover != null) {
+                cover.SetActive(true);
+            }
             
             OnClickGenre();
         }
         
         public void OnClickGenre() {
-            ViewMain.OnCategoryList?.Invoke(localizedName);
+            IFYouLobby.OnCategoryList?.Invoke(localizedName);
         }
            
     }

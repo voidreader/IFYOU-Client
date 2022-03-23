@@ -477,8 +477,6 @@ namespace PIERStory
             // 구매해야하는 선택지가 있다면
             if(hasPurchaseSelection)
             {
-                ViewCommonTop.isBackgroundShow = true;
-
                 Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
                 Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
                 Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);

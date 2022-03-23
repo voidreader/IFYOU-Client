@@ -40,7 +40,7 @@ namespace PIERStory
         [SerializeField] StoryContentsButton buttonContentsSelection;
 
         [SerializeField] GameObject premiumPassArea;            // 프리미엄 패스 구역
-        [SerializeField] PassBanner passBanner;                 // 프리미엄 패스 배너 
+        // [SerializeField] PassBanner passBanner;                 // 프리미엄 패스 배너 
 
         public TextMeshProUGUI sortText;
 
@@ -92,10 +92,8 @@ namespace PIERStory
             if (StoryManager.enterGameScene)
                 StoryManager.enterGameScene = false;
 
-
-            AppsFlyerSDK.AppsFlyer.sendEvent("story_enter", new Dictionary<string, string>() {
-                { "project_id", StoryManager.main.CurrentProjectID }
-            });
+           
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("StoryEnter", new Firebase.Analytics.Parameter("project_id", StoryManager.main.CurrentProjectID));
         }
 
         public override void OnStartView()
@@ -402,33 +400,33 @@ namespace PIERStory
         /// </summary>
         void SetFreepassInfo()
         {
-            // 없을때에 대한 처리 
-            if (StoryManager.main.GetProjectFreepassNode() == null)
-            {
-                Debug.Log("!!!!! Project freepass node is null");
-                return;
-            }
+            // // 없을때에 대한 처리 
+            // if (StoryManager.main.GetProjectFreepassNode() == null)
+            // {
+            //     Debug.Log("!!!!! Project freepass node is null");
+            //     return;
+            // }
 
-            Debug.Log(">> Check Project freepass : " + UserManager.main.HasProjectFreepass());
+            // Debug.Log(">> Check Project freepass : " + UserManager.main.HasProjectFreepass());
 
-            // 유저가 프리패스 대상 프로젝트의 프리패스 보유중 
-            if (UserManager.main.HasProjectFreepass())
-            {
-                Debug.Log("!!! freepass user in this project");
-                premiumPassArea.SetActive(false);
+            // // 유저가 프리패스 대상 프로젝트의 프리패스 보유중 
+            // if (UserManager.main.HasProjectFreepass())
+            // {
+            //     Debug.Log("!!! freepass user in this project");
+            //     premiumPassArea.SetActive(false);
                 
-                // 뱃지 정보 추가 
-                premiumpassBadge.gameObject.SetActive(true);
-                premiumpassBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey);
-                // premiumpassBadge.setdown
+            //     // 뱃지 정보 추가 
+            //     premiumpassBadge.gameObject.SetActive(true);
+            //     premiumpassBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey);
+            //     // premiumpassBadge.setdown
                 
-                return;
-            }
+            //     return;
+            // }
 
-            premiumPassArea.SetActive(true);
-            passBanner.SetPremiumPass(true);
+            // premiumPassArea.SetActive(true);
+            // passBanner.SetPremiumPass(true);
             
-            premiumpassBadge.gameObject.SetActive(false);
+            // premiumpassBadge.gameObject.SetActive(false);
 
         }
 

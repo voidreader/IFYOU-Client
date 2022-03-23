@@ -36,6 +36,7 @@ namespace Doozy.Runtime.UIManager
         {
             EpisodeStart,
             Mail,
+            StarShop,
             Top
         }
 
@@ -50,6 +51,7 @@ namespace Doozy.Runtime.UIManager
 
         public enum IFYOU
         {
+            Ability,
             AddMenu,
             Beginning,
             Category,
@@ -70,15 +72,15 @@ namespace Doozy.Runtime.UIManager
             Navigation,
             Notice,
             NoticeDetail,
-            OneTimeHistory,
             Profile,
-            ProfileAdornment,
             Search,
             Shop,
             Snippet,
             SoundDetail,
+            SpecialEpisode,
             StoryDetail,
             StoryLoading,
+            StoryLobby,
             Title,
             UserPlayHistory
         }    

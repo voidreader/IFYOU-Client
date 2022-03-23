@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using Doozy.Runtime.Common.Attributes;
 using Doozy.Runtime.Common.Utils;
+using UnityEditor;
 using UnityEngine;
 
 namespace Doozy.Editor.Common.Utils
@@ -20,6 +21,9 @@ namespace Doozy.Editor.Common.Utils
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void OnRuntimeLoad()
         {
+            if(!EditorSettings.enterPlayModeOptionsEnabled)
+                return;
+            
             // ReSharper disable NotAccessedVariable
             int clearedValues = 0;
             int executedMethods = 0;

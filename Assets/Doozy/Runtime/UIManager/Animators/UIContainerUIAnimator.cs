@@ -2,6 +2,7 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.UIManager.Containers;
@@ -219,6 +220,38 @@ namespace Doozy.Runtime.UIManager.Animators
         {
             ShowAnimation?.Stop();
             HideAnimation?.Stop();
+        }
+
+        /// <summary> Set a new start position value (RectTransform.anchoredPosition3D) for all animations </summary>
+        /// <param name="value"> New start position </param>
+        public void SetStartPosition(Vector3 value)
+        {
+            showAnimation.startPosition = value;
+            hideAnimation.startPosition = value;
+        }
+
+        /// <summary> Set a new start rotation value (RectTransform.localEulerAngles) for both show and hide animations </summary>
+        /// <param name="value"> New start rotation </param>
+        public void SetStartRotation(Vector3 value)
+        {
+            showAnimation.startRotation = value;
+            hideAnimation.startRotation = value;
+        }
+
+        /// <summary> Set a new start scale value (RectTransform.localScale) for both show and hide animations </summary>
+        /// <param name="value"> New start scale </param>
+        public void SetStartScale(Vector3 value)
+        {
+            showAnimation.startScale = value;
+            hideAnimation.startScale = value;
+        }
+
+        /// <summary> Set a new start alpha value (CanvasGroup.alpha) for both show and hide animations </summary>
+        /// <param name="value"> New start scale </param>
+        public void SetStartAlpha(float value)
+        {
+            showAnimation.startAlpha = value;
+            hideAnimation.startAlpha = value;
         }
 
         private static void ResetAnimation(UIAnimation target)

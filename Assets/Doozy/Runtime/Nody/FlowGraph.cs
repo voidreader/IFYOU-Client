@@ -16,11 +16,15 @@ using UnityEngine;
 
 namespace Doozy.Runtime.Nody
 {
+    /// <summary> Scriptable object class used a container for nodes </summary>
     [CreateAssetMenu(menuName = "Doozy/Flow Graph", fileName = "Flow Graph", order = -10)]
     public class FlowGraph : ScriptableObject
     {
+        /// <summary> Pointer to the <see cref="UIManagerInputSettings"/> instance </summary>
         public static UIManagerInputSettings inputSettings => UIManagerInputSettings.instance;
+        /// <summary> True is Multiplayer Mode is enabled </summary>
         public static bool multiplayerMode => inputSettings.multiplayerMode;
+        /// <summary> Default player index value (used for global user) </summary>
         public static int defaultPlayerIndex => inputSettings.defaultPlayerIndex;
 
         [SerializeField] private string Id;
@@ -32,7 +36,7 @@ namespace Doozy.Runtime.Nody
         }
 
         [SerializeField] private string GraphName;
-        /// <summary> Name of this graph </summary>
+        /// <summary> Name of the graph </summary>
         public string graphName
         {
             get => GraphName;
@@ -40,7 +44,7 @@ namespace Doozy.Runtime.Nody
         }
 
         [SerializeField] private string GraphDescription;
-        /// <summary> Description for this graph </summary>
+        /// <summary> Description for the graph </summary>
         public string graphDescription
         {
             get => GraphDescription;
@@ -48,6 +52,7 @@ namespace Doozy.Runtime.Nody
         }
 
         [SerializeField] private bool IsSubGraph;
+        /// <summary> Flag used to mark the graph as a sub-graph </summary>
         public bool isSubGraph
         {
             get => IsSubGraph;
@@ -55,19 +60,22 @@ namespace Doozy.Runtime.Nody
         }
 
         [SerializeField] private List<FlowNode> Nodes;
-        /// <summary> All the nodes this graph has </summary>
+        /// <summary> All the nodes in the graph </summary>
         public List<FlowNode> nodes
         {
             get => Nodes;
             private set => Nodes = value;
         }
 
-        /// <summary> All the global nodes this graph has </summary>
+        /// <summary> All the global nodes in the graph </summary>
         public IEnumerable<FlowNode> globalNodes =>
             Nodes.Where(node => node.nodeType == NodeType.Global);
 
         [SerializeField] private FlowNode RootNode;
-        /// <summary> Start node. The first node that becomes active/ </summary>
+        /// <summary>
+        /// The first node that becomes active.
+        /// <para/> If this is a graph it will be a Start Node
+        /// <para/> Id this is a sub-graph it will be an Enter Node </summary>
         public FlowNode rootNode
         {
             get => RootNode;
@@ -88,13 +96,13 @@ namespace Doozy.Runtime.Nody
         /// <summary> The port that lead to the previously active node </summary>
         public FlowPort previousActivePort { get; private set; }
 
-        /// <summary> The subgraph that is currently active (can be null) </summary>
+        /// <summary> The sub-graph that is currently active (can be null) </summary>
         public FlowGraph activeSubGraph { get; private set; }
 
-        /// <summary> The parent graph that contains this graph (if this is a subgraph) (can be null) </summary>
+        /// <summary> The parent graph that contains this graph (if this is a sub-graph) (can be null) </summary>
         public FlowGraph parentGraph { get; private set; }
 
-        /// <summary> All the input ports in this graph </summary>
+        /// <summary> All the input ports in the graph </summary>
         public List<FlowPort> inputPorts
         {
             get
@@ -106,7 +114,7 @@ namespace Doozy.Runtime.Nody
             }
         }
 
-        /// <summary> All the output ports in this graph </summary>
+        /// <summary> All the output ports in the graph </summary>
         public List<FlowPort> outputPorts
         {
             get
@@ -118,7 +126,7 @@ namespace Doozy.Runtime.Nody
             }
         }
 
-        /// <summary> All the ports in this graph (input and output) </summary>
+        /// <summary> All the ports in the graph (input and output) </summary>
         public List<FlowPort> ports
         {
             get
@@ -133,9 +141,10 @@ namespace Doozy.Runtime.Nody
             }
         }
 
-        /// <summary> Current controller for this graph </summary>
+        /// <summary> Current controller for the graph </summary>
         public FlowController controller { get; internal set; }
 
+        /// <summary> Construct a new FlowGraph </summary>
         public FlowGraph()
         {
             Id = Guid.NewGuid().ToString();
@@ -143,6 +152,7 @@ namespace Doozy.Runtime.Nody
             Nodes = new List<FlowNode>();
         }
 
+        /// <summary> Reset the graph </summary>
         public void ResetGraph()
         {
             ClearHistory();
@@ -285,6 +295,7 @@ namespace Doozy.Runtime.Nody
             SetActiveNode(RootNode);
         }
 
+        /// <summary> Resume the graph </summary>
         public void Resume()
         {
             //ToDo: Resume graph
@@ -296,7 +307,7 @@ namespace Doozy.Runtime.Nody
             StopGlobalNodes();
         }
 
-        /// <summary> Start all the global nodes inside this graph </summary>
+        /// <summary> Start all the global nodes inside the graph </summary>
         public void StartGlobalNodes()
         {
             foreach (FlowNode node in globalNodes)
@@ -306,7 +317,7 @@ namespace Doozy.Runtime.Nody
                 activeSubGraph.StartGlobalNodes();
         }
 
-        /// <summary> Stop all the global nodes inside this graph </summary>
+        /// <summary> Stop all the global nodes inside the graph </summary>
         public void StopGlobalNodes()
         {
             foreach (FlowNode node in globalNodes)
@@ -365,7 +376,9 @@ namespace Doozy.Runtime.Nody
             foreach (FlowNode node in Nodes)
                 node.SetFlowGraph(this);
         }
-
+        
+        /// <summary> Create a clone of this graph </summary>
+        /// <returns> The cloned graph </returns>
         public FlowGraph Clone()
         {
             FlowGraph flowClone = Instantiate(this);

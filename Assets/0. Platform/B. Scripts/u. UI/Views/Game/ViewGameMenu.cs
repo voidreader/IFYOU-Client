@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 
 using TMPro;
+using LitJson;
 using Doozy.Runtime.Reactor.Animators;
 using Doozy.Runtime.UIManager.Containers;
 
@@ -10,8 +11,10 @@ namespace PIERStory
 {
     public class ViewGameMenu : CommonView
     {
+        
         [SerializeField] RectTransform footer;
         [SerializeField] UIView viewGameMenu; // 게임메뉴. 
+        public GameObject replayButton;
 
         [Header("Skip")]
         public Image skipButtonIcon;
@@ -28,23 +31,17 @@ namespace PIERStory
         public Sprite spriteToggleOn;
         public Sprite spriteToggleOff;
 
-        [Header("Division Free")]
-        public GameObject retryButton;
-        public GameObject blockRetryButton;
-        public GameObject skipButton;
-        public GameObject blockSkipButton;
 
         [Space(10)]
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
-        
-        void Start() {
-            
-            // 배너 등장시에만 처리. 
-            if(AdManager.main.isIronSourceBannerLoad) {
-                // rect.
-                footer.anchoredPosition = new Vector2(0, footer.anchoredPosition.y + 120);
+
+
+        void Update() {
+            if(Input.GetKeyDown(KeyCode.S)) {
+                SkipScene();
             }
         }
+        
         
         public override void OnStartView()
         {
@@ -52,22 +49,6 @@ namespace PIERStory
             
             // 타이틀 처리 타입, 순번, 타이틀 조합
             textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
-
-            // 무료(광고) 플레이인 경우 보여주는 버튼을 아예 변경해준다
-            if(GameManager.main.currentEpisodeData.purchaseState == PurchaseState.AD)
-            {
-                retryButton.SetActive(false);
-                blockRetryButton.SetActive(true);
-                skipButton.SetActive(false);
-                blockSkipButton.SetActive(true);
-            }
-            else
-            {
-                retryButton.SetActive(true);
-                blockRetryButton.SetActive(false);
-                skipButton.SetActive(true);
-                blockSkipButton.SetActive(false);
-            }
         }
 
         /// <summary>
@@ -104,7 +85,9 @@ namespace PIERStory
             if(GameManager.main.isSelectionInputWait) {
                 SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6102"), true);
                 return;    
+                
             }
+            Debug.Log("## SkipScene ##");
             
             // Doozy.Runtime.UIManager.Input.BackButton.Fire(); // 백버튼 발동처리
             
@@ -123,17 +106,6 @@ namespace PIERStory
             GameManager.main.isWaitingScreenTouch = false;
         }
         
-
-        public void OnClickBlockSkip()
-        {
-            
-            if(UserManager.main.CheckAdminUser()) {
-                SkipScene();
-                return;
-            }
-            
-            SystemManager.ShowSimpleAlertLocalize("6171");
-        }
 
         /// <summary>
         /// 로그 오픈 
@@ -174,13 +146,22 @@ namespace PIERStory
         /// </summary>
         public void OnClickReplay()
         {
-            SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("6039"), GameManager.main.RetryPlay, null);
+            SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("6039"), ProceedStartOver, null);
         }
-
-        public void OnClickBlockReplay()
-        {
-            SystemManager.ShowSimpleAlertLocalize("6172");
+        
+        
+        /// <summary>
+        /// 처음으로 돌아가기 할때 서버통신으로 통해 현재 회차의 진행도 제거. 
+        /// </summary>
+        void ProceedStartOver() {
+            JsonData sendingData = new JsonData();
+            sendingData["func"] = "resetPlayingEpisode";
+            sendingData["project_id"] = StoryManager.main.CurrentProjectID;
+            sendingData["episode_id"] = StoryManager.main.CurrentEpisodeID;
+            
+            NetworkLoader.main.SendPost(UserManager.main.CallbackStartOverEpisode, sendingData, true);
         }
+        
         
         public void OnClickBack() {
             

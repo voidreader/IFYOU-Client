@@ -17,7 +17,7 @@ namespace Doozy.Editor.Signals.Layouts
     {
         public override Color accentColor => EditorColors.Signals.Signal;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Signals.Signal;
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.EditorUI.Icons.Settings;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.EditorUI.Icons.Settings;
 
         public SignalsSettingsWindowLayout()
         {

@@ -40,7 +40,7 @@ namespace Doozy.Editor.EditorUI.Components
 
         public static Color defaultAccentColor => EditorColors.Default.Placeholder;
         public static Font defaultFont => EditorFonts.Ubuntu.Light;
-        public static IEnumerable<Texture2D> defaultTextures => EditorMicroAnimations.EditorUI.Placeholders.Empty;
+        public static IEnumerable<Texture2D> defaultTextures => EditorSpriteSheets.EditorUI.Placeholders.Empty;
 
         public Color accentColor { get; private set; }
 
@@ -91,8 +91,11 @@ namespace Doozy.Editor.EditorUI.Components
             ResetAccentColor();
             ResetIcon();
 
-            // RegisterCallback<PointerEnterEvent>(evt => Play());
-            this.AddManipulator(new Clickable(() => Play()));
+            //using a Clickable manipulator blocks subsequent added Clickable manipulators
+            //only the first registered Clickable manipulator will work (thanks Unity... fml)
+            // this.AddManipulator(new Clickable(() => Play())); 
+            
+            RegisterCallback<PointerUpEvent>(evt => Play());
 
             Hide();
         }

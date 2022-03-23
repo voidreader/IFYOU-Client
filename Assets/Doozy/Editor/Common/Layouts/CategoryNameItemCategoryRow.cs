@@ -91,7 +91,7 @@ namespace Doozy.Editor.Common.Layouts
         private static FluidButton NewButtonRemoveCategory() =>
             FluidButton.Get()
                 .SetElementSize(ElementSize.Small)
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Minus)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Minus)
                 .SetAccentColor(EditorSelectableColors.Default.Remove)
                 .SetTooltip("Remove Category");
     }

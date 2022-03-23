@@ -25,20 +25,20 @@ namespace PIERStory
                 return;
             }
 
+            scriptRow.script_data = scriptRow.script_data.Replace("\\", "\n");
+
             PopupBase p = PopupManager.main.GetPopup(GameConst.TEMPLATE_GAME_MESSAGE);
             p.Data.SetLabelsTexts(scriptRow.script_data);
-
-            Color c = Color.white;
+            p.Data.SetImagesSprites(GameManager.main.spriteGameMessageNormal);
 
             if(!string.IsNullOrEmpty(scriptRow.control))
             {
                 if (scriptRow.controlAlternativeName == "긍정")
-                    c = HexCodeChanger.HexToColor("EAB0B0B3");
+                    p.Data.SetImagesSprites(GameManager.main.spriteGameMessagePositive);
                 else if (scriptRow.controlAlternativeName == "부정")
-                    c = HexCodeChanger.HexToColor("A3A4D1B3");
+                    p.Data.SetImagesSprites(GameManager.main.spriteGameMessageNegative);
             }
 
-            p.Data.Images[0].color = c;
             p.autoDestroyTime = 2f;
             PopupManager.main.ShowPopup(p, false, false);
             __actionCallback();

@@ -54,26 +54,50 @@ namespace PIERStory
 
             template = __type;
 
-            imageName = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_NAME);
-            imageUrl = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_URL);
-            imageKey = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_KEY);
-
-            // 이모티콘의 경우 speaker 정보 필요함
-            if (template != GameConst.TEMPLATE_BACKGROUND
-                && template != GameConst.TEMPLATE_ILLUST
-                && template != GameConst.TEMPLATE_IMAGE
-                && resourceData.ContainsKey(COL_EMOTICON_OWNER))
+            if(GameManager.main !=null)
             {
-                speaker = SystemManager.GetJsonNodeString(resourceData, COL_EMOTICON_OWNER);
-            }
+                imageName = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_NAME);
+                imageUrl = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_URL);
+                imageKey = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_KEY);
 
-            // 추가 정보
-            if(resourceData.ContainsKey(CommonConst.COL_GAME_SCALE))
-                gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_GAME_SCALE));
-            if (resourceData.ContainsKey(CommonConst.COL_OFFSET_X))
-                offsetX = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_OFFSET_X));
-            if (resourceData.ContainsKey(CommonConst.COL_OFFSET_Y))
-                offsetY = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_OFFSET_Y));
+                // 이모티콘의 경우 speaker 정보 필요함
+                if (template != GameConst.TEMPLATE_BACKGROUND
+                    && template != GameConst.TEMPLATE_ILLUST
+                    && template != GameConst.TEMPLATE_IMAGE
+                    && resourceData.ContainsKey(COL_EMOTICON_OWNER))
+                {
+                    speaker = SystemManager.GetJsonNodeString(resourceData, COL_EMOTICON_OWNER);
+                }
+
+                // 추가 정보
+                if (resourceData.ContainsKey(CommonConst.COL_GAME_SCALE))
+                    gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_GAME_SCALE));
+                if (resourceData.ContainsKey(CommonConst.COL_OFFSET_X))
+                    offsetX = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_OFFSET_X));
+                if (resourceData.ContainsKey(CommonConst.COL_OFFSET_Y))
+                    offsetY = float.Parse(SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_OFFSET_Y));
+            }
+            else
+            {
+                imageName = SystemManager.GetJsonNodeString(resourceData, "origin_name");
+                imageUrl = SystemManager.GetJsonNodeString(resourceData, LobbyConst.NODE_CURRENCY_URL);
+                imageKey = SystemManager.GetJsonNodeString(resourceData, LobbyConst.NODE_CURRENCY_KEY);
+
+                JsonData backgroundData = UserManager.main.currentStoryJson["backgrounds"];
+
+                for (int i = 0; i < backgroundData.Count; i++)
+                {
+                    if (SystemManager.GetJsonNodeString(backgroundData[i], CommonConst.COL_IMAGE_NAME) == imageName)
+                    {
+                        gameScale = SystemManager.GetJsonNodeFloat(backgroundData[i], CommonConst.COL_GAME_SCALE);
+                        break;
+                    }
+                }
+
+                offsetX = SystemManager.GetJsonNodeFloat(resourceData, LobbyConst.NODE_POS_X);
+                offsetY = SystemManager.GetJsonNodeFloat(resourceData, LobbyConst.NODE_POS_Y);
+            }
+            
 
 
             switch (template)
@@ -83,7 +107,8 @@ namespace PIERStory
                     // isResized 컬럼을 통해 미니컷 이미지의 크기를 0.65 스케일로 줄일지, 그냥 원본 크기를 사용할지를 처리합니다. 
                     if (SystemManager.GetJsonNodeString(resourceData, COL_RESIZE).Equals("1"))
                         isResized = true;
-                    DownloadImage(); // ! 미니컷은 다운로드만 처리해보자 2021.07.23
+                        
+                    SetMinicutImage();
                     return;
 
                 case GameConst.TEMPLATE_BACKGROUND:
@@ -97,15 +122,14 @@ namespace PIERStory
                     if(!string.IsNullOrEmpty(speaker)) {
                         SetEmoticonImage();
                     }
-                return;
-                    
-                
-                
+
+                    return;
             }
 
-            // 실제 이미지 불러오기 처리 (일러스트)
+            // 일러스트만 예외 처리 
             LoadImage();
         }
+
         
         /// <summary>
         /// 어드레서블 에셋 키 설정하고 GET하기 
@@ -122,6 +146,10 @@ namespace PIERStory
                 middleKey = "/bg/";
                 break;
                 
+                case GameConst.TEMPLATE_IMAGE:
+                middleKey = "/image/";
+                break;
+                
                 case "emoticon":
                 middleKey = "/emoticon/";
                 break;
@@ -135,8 +163,8 @@ namespace PIERStory
             key = StoryManager.main.CurrentProjectID + middleKey + imageName;
             
             
-            // 배경은 spriteatlas 사용 
-            if(__template == GameConst.TEMPLATE_BACKGROUND) {
+            // 배경과 미니컷(image)은 spriteatlas 사용 
+            if(__template == GameConst.TEMPLATE_BACKGROUND || __template == GameConst.TEMPLATE_IMAGE) {
                 key += ".spriteatlas";
             }
             else {
@@ -155,6 +183,7 @@ namespace PIERStory
             
             
         }
+        
         
         
         /// <summary>
@@ -196,6 +225,44 @@ namespace PIERStory
             }; // ? end of LoadResourceLocationsAsync
             
         } // ? end of background 
+        
+        
+        /// <summary>
+        /// 미니컷 이미지 처리 
+        /// </summary>
+        void SetMinicutImage() {
+            addressableKey = GetAddressableKey(template);
+            Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
+                
+                // 에셋번들 있음 
+               if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0)  {
+                   
+                   // 미니컷도 POT (2의 지수) 이슈로 인해서 SpriteAtals로 불러오도록 처리 
+                   Addressables.LoadAssetAsync<SpriteAtlas>(addressableKey).Completed += (handle) => {
+                       if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공!
+                            
+                            isAddressable = true; // 어드레서블을 사용합니다. 
+                            mountedAtalsAddressable = handle; // 메모리 해제를 위한 변수.
+                            sprite = mountedAtalsAddressable.Result.GetSprite(imageName); // 이미지 이름으로 스프라이트 할당 
+                            
+                            
+                            SendSuccessMessage(); // 성공처리 
+                       }
+                       else {
+                           
+                           Debug.Log(">> Failed LoadAssetAsync " + imageName + " / " + handle.OperationException.Message);
+                           DownloadImage();
+                       }
+                   }; // end of LoadAssetAsync
+               }
+               else {
+                   // 없음
+                   DownloadImage();
+               }
+            }; // ? end of LoadResourceLocationsAsync            
+               
+        }
+        
         
         /// <summary>
         /// 이모티콘 이미지 세팅 
@@ -336,10 +403,8 @@ namespace PIERStory
             try
             {
                 
-                // 어드레서블은 asyncOperationHandle에서 가져온다.
-                if(isAddressable && template == GameConst.TEMPLATE_BACKGROUND)  {
-                    // sprite를 LoadAssetAsync 시점에 하는것으로 처리한다 .
-                    //sprite = mountedAtalsAddressable.Result.GetSprite(addressableKey);
+                // 어드레서블은 asyncOperationHandle에서 가져오고 sprite도 생성해놓는다.
+                if(isAddressable && ( template == GameConst.TEMPLATE_BACKGROUND || template == GameConst.TEMPLATE_IMAGE))  {
                     return true;
                 }
                 

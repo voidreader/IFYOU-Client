@@ -22,7 +22,7 @@ namespace Doozy.Editor.UIManager.Layouts.Settings
     public sealed class InputSettingsWindowLayout : FluidWindowLayout, IUIManagerSettingsWindowLayout
     {
         public override string layoutName => "Input Settings";
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.UIManager.Icons.KeyMapper;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.UIManager.Icons.KeyMapper;
         public override Color accentColor => EditorColors.UIManager.Settings;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.Settings;
 
@@ -35,7 +35,7 @@ namespace Doozy.Editor.UIManager.Layouts.Settings
         private FluidToggleSwitch multiplayerModeSwitch { get; set; }
         private FloatField backButtonCooldownFloatField { get; set; }
 
-        private static IEnumerable<Texture2D> resetTextures => EditorMicroAnimations.EditorUI.Icons.Reset;
+        private static IEnumerable<Texture2D> resetTextures => EditorSpriteSheets.EditorUI.Icons.Reset;
         private FluidButton resetPlayerIndexButton { get; set; }
         private FluidButton resetMultiplayerModeButton { get; set; }
         private FluidButton resetBackButtonCooldownButton { get; set; }
@@ -175,7 +175,7 @@ namespace Doozy.Editor.UIManager.Layouts.Settings
                     .SetButtonStyle(ButtonStyle.Contained)
                     .SetElementSize(ElementSize.Small)
                     .SetLabelText("Save")
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Save)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Save)
                     .SetOnClick(() =>
                     {
                         EditorUtility.SetDirty(UIManagerInputSettings.instance);

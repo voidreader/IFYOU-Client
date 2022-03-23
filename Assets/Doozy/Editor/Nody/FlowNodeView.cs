@@ -52,7 +52,7 @@ namespace Doozy.Editor.Nody
 
         public virtual Type nodeType => null;
         public virtual Texture2D nodeIconTexture => EditorTextures.Nody.Icons.Infinity;
-        public virtual IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.Nody;
+        public virtual IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.Nody;
         public virtual Color nodeAccentColor => EditorColors.Nody.Color;
         public virtual EditorSelectableColorInfo nodeSelectableAccentColor => EditorSelectableColors.Nody.Color;
 
@@ -353,7 +353,7 @@ namespace Doozy.Editor.Nody
                     deleteLockIcon
                         .GetTexture2DReaction()
                         .SetEditorHeartbeat()
-                        .SetTextures(EditorMicroAnimations.EditorUI.Icons.Locked);
+                        .SetTextures(EditorSpriteSheets.EditorUI.Icons.Locked);
 
                 deleteLockIcon.RegisterCallback<PointerEnterEvent>(evy => deleteLockIconReaction?.Play());
 
@@ -376,7 +376,7 @@ namespace Doozy.Editor.Nody
             runningStateIconIndicatorReaction =
                 runningStateIconIndicator.GetTexture2DReaction().SetEditorHeartbeat()
                     .SetLoops(-1).SetDuration(1f)
-                    .SetTextures(EditorMicroAnimations.Nody.Effects.NodeStateRunning);
+                    .SetTextures(EditorSpriteSheets.Nody.Effects.NodeStateRunning);
 
             nodeIcon.AddChild(runningStateIconIndicator);
 
@@ -392,7 +392,7 @@ namespace Doozy.Editor.Nody
                 activeStateLineIndicator.GetTexture2DReaction().SetEditorHeartbeat()
                     .SetLoops(-1)
                     .SetDuration(1f)
-                    .SetTextures(EditorMicroAnimations.Nody.Effects.NodeStateActive);
+                    .SetTextures(EditorSpriteSheets.Nody.Effects.NodeStateActive);
 
             nodeContent.Insert(0, activeStateLineIndicator);
 
@@ -432,7 +432,7 @@ namespace Doozy.Editor.Nody
             addOutputButton?.Recycle();
 
             addOutputButton =
-                DesignUtils.SystemButton(EditorMicroAnimations.EditorUI.Icons.Plus)
+                DesignUtils.SystemButton(EditorSpriteSheets.EditorUI.Icons.Plus)
                     .SetName(nameof(addOutputButton))
                     .SetStyleAlignSelf(Align.FlexEnd)
                     .SetOnClick(() =>

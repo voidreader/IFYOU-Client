@@ -27,7 +27,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 378561076659191895}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -69,12 +70,13 @@ MonoBehaviour:
   spriteFreepassIcon: {fileID: 0}
   spriteInappOriginIcon: {fileID: 21300000, guid: 2a247d77ccda2a344ad74c71cc797b2d, type: 3}
   textureNoneFrame: {fileID: 2800000, guid: 8c6685a543b4935488e073350604bbb0, type: 3}
-  spriteOpenVoice: {fileID: 21300000, guid: 3984872bff68eda4e8321b11a0add002, type: 3}
-  spriteLockVoice: {fileID: 21300000, guid: 74834495157e4cd429af59c517450f87, type: 3}
-  spriteWhiteBorder: {fileID: 21300000, guid: bb546c0c777389749b8269e5e54314df, type: 3}
-  spriteWhiteButton: {fileID: 21300000, guid: 162a15e06ceeea245bdd8616f7366260, type: 3}
-  spriteGradientBorder: {fileID: 21300000, guid: d1b63276a2d7a9448a5968070bd85890, type: 3}
-  spriteGradientButton: {fileID: 21300000, guid: 33ac804c3876f174c824809e0b965699, type: 3}
+  lobbyBackground: {fileID: 3047898336558141125}
+  spriteOpenVoice: {fileID: 21300000, guid: 665391d67de581846a03d3d4d955a750, type: 3}
+  spriteLockVoice: {fileID: 21300000, guid: 16cf54274f48295489462e61c8d7d37e, type: 3}
+  toggleSelected: {fileID: 21300000, guid: fa393c7be92e6b64fa9bd20d23744416, type: 3}
+  toggleUnselected: {fileID: 21300000, guid: 7d8d01722accc9a4dad261cd093a2250, type: 3}
+  spriteGetReward: {fileID: 21300000, guid: 2cf245c6f2341444b9ca2d89b427cbfc, type: 3}
+  spriteGotReward: {fileID: 21300000, guid: cb81a48ed8791b74f8fb671afc8f5657, type: 3}
   spriteEpisodePrevCover: {fileID: 21300000, guid: 75431345ae8f685469dc139f7c67ff17, type: 3}
   spriteEpisodeNextCover: {fileID: 21300000, guid: 6263ed36abfdcc444962ba1c0d0beb63, type: 3}
   spriteEpisodeCurrentCover: {fileID: 21300000, guid: 72e7e0ef859d0ed48907cfcc817e6cd8, type: 3}
@@ -83,6 +85,8 @@ MonoBehaviour:
   spritePlateStarPlay: {fileID: 21300000, guid: 5f6b52177958c0c43994629f5073fa87, type: 3}
   spritePlateFree: {fileID: 21300000, guid: 7181a58b98a4b3b4e82a497a161b5b40, type: 3}
   spritePlatePremium: {fileID: 21300000, guid: 8692790e2f09fac4681b6ea03ece5682, type: 3}
+  spriteEpisodeOpen: {fileID: 21300000, guid: 3d817a99066d9964a961c43a7e1aaf21, type: 3}
+  spriteEpisodeLock: {fileID: 21300000, guid: 6cef183b781060c46990ddee3fa18fac, type: 3}
   spriteNavLobbyOn: {fileID: 21300000, guid: 7623891312b4590479ede74a6b7081e4, type: 3}
   spriteNavLobbyOff: {fileID: 21300000, guid: 403042a6e3234444d845e695be4d340b, type: 3}
   spriteNavCategoryOn: {fileID: 21300000, guid: 76d55af9ae97808409d1a45048da6a23, type: 3}
@@ -109,3 +113,85 @@ MonoBehaviour:
   colorEndingPastCover: {r: 0, g: 0, b: 0, a: 0.4}
   termView: 0
   lobbyNetworkLoadingScreen: {fileID: 0}
+--- !u!1 &5348199049728029038
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 378561076659191895}
+  - component: {fileID: 3047898336558141125}
+  m_Layer: 0
+  m_Name: StoryLobbyBG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &378561076659191895
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5348199049728029038}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3912782711662323685}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &3047898336558141125
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5348199049728029038}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 0
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0

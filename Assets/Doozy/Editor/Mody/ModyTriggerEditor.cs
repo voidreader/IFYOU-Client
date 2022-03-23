@@ -23,7 +23,7 @@ namespace Doozy.Editor.Mody
     {
         public override Color accentColor => EditorColors.Mody.Trigger;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Mody.Trigger;
-        public sealed override List<Texture2D> iconTextures => EditorMicroAnimations.Mody.Icons.ModyTrigger;
+        public sealed override List<Texture2D> iconTextures => EditorSpriteSheets.Mody.Icons.ModyTrigger;
 
         private ModyProviderStateIndicator m_StateIndicator;
         
@@ -72,7 +72,7 @@ namespace Doozy.Editor.Mody
                 ModyProviderStateIndicator.cooldownColor,
                 "Cooldown",
                 "Cooldown\n\nCooldown time after a signal was sent. During this time, no Signal will be sent",
-                EditorMicroAnimations.EditorUI.Icons.Cooldown
+                EditorSpriteSheets.EditorUI.Icons.Cooldown
             );
         
         protected static FluidField GetTimescaleFluidField(SerializedObject serializedObject)
@@ -95,7 +95,7 @@ namespace Doozy.Editor.Mody
                         "\n\nTimescale.Dependent - (Application Time)\nAffected by the application's timescale value"
                     )
                     .SetElementSize(ElementSize.Small)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.TimeScale)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.TimeScale)
                     .SetStyleMaxWidth(160)
                     .AddFieldContent(enumField);
             return field;

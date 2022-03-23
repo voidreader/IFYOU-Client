@@ -4,11 +4,13 @@
 
 using System;
 using Doozy.Runtime.Common.Utils;
+using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Local
 
 namespace Doozy.Runtime.Common
 {
+	/// <summary> Customized debug logger class containing methods to ease debugging </summary>
 	public static class Debugger
 	{
 		private static ILogger loggingSolution => new UnityDebug();
@@ -56,18 +58,27 @@ namespace Doozy.Runtime.Common
 			return $"<color={colorCode}><b>DOOZY ››› </b></color>";
 		}
 
+		/// <summary> Log a message to the console </summary>
+		/// <param name="message"> String or object to be converted to string representation for display </param>
+		/// <param name="context"> Object to which the message applies </param>
 		public static void Log(object message, UnityEngine.Object context = null)
 		{
 			message = DoozyPrefix(LogType.Log) + message;
 			logger.Log(message, context);
 		}
 
+		/// <summary> Log a warning message to the console </summary>
+		/// <param name="message"> String or object to be converted to string representation for display </param>
+		/// <param name="context"> Object to which the message applies </param>
 		public static void LogWarning(object message, UnityEngine.Object context = null)
 		{
 			message = DoozyPrefix(LogType.Warning) + message;
 			logger.LogWarning(message, context);
 		}
 
+		/// <summary> Log an error message to the console </summary>
+		/// <param name="message"> String or object to be converted to string representation for display </param>
+		/// <param name="context"> Object to which the message applies </param>
 		public static void LogError(object message, UnityEngine.Object context = null)
 		{
 			message = DoozyPrefix(LogType.Error) + message;

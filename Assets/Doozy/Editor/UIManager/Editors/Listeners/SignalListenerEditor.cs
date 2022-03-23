@@ -20,7 +20,7 @@ namespace Doozy.Editor.UIManager.Editors.Listeners
     [CustomEditor(typeof(SignalListener), true)]
     public class SignalListenerEditor : UnityEditor.Editor
     {
-        private static IEnumerable<Texture2D> componentIconTextures => EditorMicroAnimations.UIManager.Icons.SignalListener;
+        private static IEnumerable<Texture2D> componentIconTextures => EditorSpriteSheets.UIManager.Icons.SignalListener;
 
         private static Color accentColor => EditorColors.UIManager.ListenerComponent;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.ListenerComponent;
@@ -29,7 +29,6 @@ namespace Doozy.Editor.UIManager.Editors.Listeners
         private IEnumerable<SignalListener> castedTargets => targets.Cast<SignalListener>();
 
         private VisualElement root { get; set; }
-
         private FluidComponentHeader componentHeader { get; set; }
 
         private PropertyField streamIdPropertyField { get; set; }
@@ -106,7 +105,5 @@ namespace Doozy.Editor.UIManager.Editors.Listeners
                 .AddChild(callbackField)
                 ;
         }
-
-
     }
 }

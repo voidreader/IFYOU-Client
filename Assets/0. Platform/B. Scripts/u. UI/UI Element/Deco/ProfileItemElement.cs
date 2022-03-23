@@ -13,8 +13,8 @@ namespace PIERStory
 
         JsonData currencyData;
         public string currencyName = string.Empty;
-        int totalCount = 1;
-        public int currentCount = 0;
+        public string modelName = string.Empty;
+        public int totalCount = 1, currentCount = 0;
         
 
         public void InitCurrencyListElement(JsonData __j)
@@ -23,6 +23,7 @@ namespace PIERStory
 
             icon.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_KEY));
             currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
+            modelName = SystemManager.GetJsonNodeString(__j, GameConst.COL_MODEL_NAME);
             totalCount = int.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_TOTAL_COUNT));
             currentCount = int.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENT_COUNT));
 
@@ -40,17 +41,9 @@ namespace PIERStory
 
         public void OnClickSelectBackground()
         {
-            ViewProfileDeco.OnBackgroundSetting?.Invoke(currencyData, this);
+            ViewStoryLobby.OnSelectBackground?.Invoke(currencyData);
         }
 
-        public void OnClickSelectBadge()
-        {
-            if (totalCount <= currentCount)
-                return;
-
-            currentCount++;
-            ViewProfileDeco.OnBadgeSetting?.Invoke(currencyData, this);
-        }
 
         /// <summary>
         /// 스티커 선택시 list에서 차감
@@ -62,29 +55,13 @@ namespace PIERStory
 
             currentCount++;
             SetCountText();
-            ViewProfileDeco.OnStickerSetting?.Invoke(currencyData, this);
+            //ViewProfileDeco.OnStickerSetting?.Invoke(currencyData, this);
+            ViewStoryLobby.OnStickerSetting?.Invoke(currencyData, this);
         }
 
         public void OnClickSelectStanding()
         {
-            if (totalCount <= currentCount)
-                return;
-
-            currentCount++;
-            ViewProfileDeco.OnStandingSetting?.Invoke(currencyData, this);
-        }
-
-        public void OnClickSelectFrame()
-        {
-            ViewProfileDeco.OnProfileFrameSetting?.Invoke(SystemManager.GetJsonNodeString(currencyData, LobbyConst.NODE_ICON_URL), SystemManager.GetJsonNodeString(currencyData, LobbyConst.NODE_ICON_KEY), SystemManager.GetJsonNodeString(currencyData, LobbyConst.NODE_CURRENCY));
-            useCheckIcon.SetActive(true);
-        }
-
-
-        public void OnClickSelectPortrait()
-        {
-            ViewProfileDeco.OnProfilePortraitSetting?.Invoke(SystemManager.GetJsonNodeString(currencyData, LobbyConst.NODE_ICON_URL), SystemManager.GetJsonNodeString(currencyData, LobbyConst.NODE_ICON_KEY), SystemManager.GetJsonNodeString(currencyData, LobbyConst.NODE_CURRENCY));
-            useCheckIcon.SetActive(true);
+            ViewStoryLobby.OnSelectStanding?.Invoke(currencyData, this);
         }
 
 

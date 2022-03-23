@@ -20,8 +20,16 @@ namespace PIERStory
 
         #region 게임씬 플레이 관련
 
+        // 팝업
         public const string MISSION_POPUP = "missionPopUp";
         public const string ILLUST_POPUP = "illustPopUp";
+
+        public const string POPUP_ACHIEVEMENT_ILLUST = "AchivementIllust";
+        public const string POPUP_EPISODE_FIRST_REWARD = "EpisodeFirstReward";
+        public const string POPUP_ENDING_ALERT = "EndingAlert";
+        public const string POPUP_SIDE_ALERT = "SideAlert";
+        public const string POPUP_GAME_ABILITY = "GameAbility";
+
 
         public const string VOICE_VOLUME = "voiceVolume";
         public const string BGM_VOLUME = "BGMVolume";
@@ -33,13 +41,14 @@ namespace PIERStory
         public const float normalDelay = 3f;
         public const float slowDelay = 5f;
 
-        public const string POPUP_ENDING_ALERT = "EndingAlert";
-        public const string POPUP_SIDE_ALERT = "SideAlert";
+        
 
         public const string SIGNAL_EPISODE_END = "episodeEnd";
         public const string SIGNAL_NEXT_DATA = "nextData";
         public const string SIGNAL_UPDATE_EPISODE = "updateCurrentData";
         public const string SIGNAL_NEXT_EPISODE = "nextEpisode";
+
+        public const string SIGNAL_GAME_PLAY = "GamePlay";
 
         #region 게임 스크립트 관련
 
@@ -113,6 +122,7 @@ namespace PIERStory
         public const string ROW_CONTROL_MOUTH = "입";                 // 립싱크 제어용도 
         public const string ROW_CONTROL_PHONE = "전화";               // 전화 템플릿 관련 제어
         public const string ROW_CONTROL_STATE = "상태";
+        public const string ROW_CONTROL_STAR = "스타";                // 과금선택지 재화 제어
 
 
         // 스크립트 템플릿
@@ -125,6 +135,7 @@ namespace PIERStory
         public const string TEMPLATE_SPEECH = "speech";             // 중요대사
 
         public const string TEMPLATE_SELECTION = "selection";
+        public const string TEMPLATE_SELECTION_INFO = "selection_info";     // 선택지안내
         public const string TEMPLATE_PHONECALL = "phonecall";               //전화
         public const string TEMPLATE_PHONE_SELF = "phone_self";             //전화본인
         public const string TEMPLATE_PHONE_PARTNER = "phone_partner";       //전화상대
@@ -150,7 +161,7 @@ namespace PIERStory
         public const string TEMPLATE_FLOWTIME = "flow_time";        //시간 흐름
         public const string TEMPLATE_BGM = "bgm";                   //배경음
         public const string TEMPLATE_BGM_REMOVE = "bgm_remove";     //배경음 제거
-        public const string TEMPLATE_FAVOR = "favor";               //호감도
+        public const string TEMPLATE_ABILITY = "ability";           //능력치
         public const string TEMPLATE_MISSION = "mission";           //미션
         public const string TEMPLATE_ANGLE_MOVE = "angle_move";     //앵글 이동
         public const string TEMPLATE_CLEAR_SCREEN = "clear_screen"; //화면 정리
@@ -266,6 +277,7 @@ namespace PIERStory
         public const float IMAGE_SCALE_SMALL = 0.67F; // 미니컷 이미지 게임에 맞게 고정 값
 
         #endregion
+
 
         #endregion
     }

@@ -21,7 +21,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
     [CustomEditor(typeof(UnityEventProgressTarget), true)]
     public class UnityEventProgressTargetEditor: ProgressTargetEditor
     {
-        public override IEnumerable<Texture2D> targetIconTextures => EditorMicroAnimations.Reactor.Icons.UnityEventProgressTarget;
+        public override IEnumerable<Texture2D> targetIconTextures => EditorSpriteSheets.Reactor.Icons.UnityEventProgressTarget;
 
         private FluidToggleSwitch wholeNumbersSwitch { get; set; }
         private SerializedProperty propertyWholeNumbers { get; set; }

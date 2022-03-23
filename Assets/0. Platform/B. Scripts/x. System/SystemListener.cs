@@ -30,8 +30,6 @@ namespace PIERStory {
         #endregion
         
         #region 에피소드 시작 
-        SignalReceiver signalReceiverEpisodeStart;
-        SignalStream signalStreamEpisodeStart;
         public EpisodeData startEpisode; // 에피소드 시작화면 에피소드 데이터 
         #endregion
         
@@ -57,8 +55,6 @@ namespace PIERStory {
             streamReceiveReset = SignalStream.Get(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_EPISODE_RESET);
             receiverResetTarget = new SignalReceiver().SetOnSignalCallback(OnResetSignal);
             
-            signalStreamEpisodeStart = SignalStream.Get(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START);
-            signalReceiverEpisodeStart = new SignalReceiver().SetOnSignalCallback(OnEpisodeStartSignal);
             
             // * 다음 플레이 에피소드 데이터 수신 
             signalStreamNextData = SignalStream.Get(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_DATA);
@@ -82,7 +78,6 @@ namespace PIERStory {
         void Start()
         {
             streamReceiveReset.ConnectReceiver(receiverResetTarget);
-            signalStreamEpisodeStart.ConnectReceiver(signalReceiverEpisodeStart);
             
             signalStreamNextData.ConnectReceiver(signalReceiverNextData);
             signalStreamEpisodeEnd.ConnectReceiver(signalReceiverEpisodeEnd);
@@ -92,7 +87,6 @@ namespace PIERStory {
         
         void OnDisable() {
             streamReceiveReset.DisconnectReceiver(receiverResetTarget);
-            signalStreamEpisodeStart.DisconnectReceiver(signalReceiverEpisodeStart);
             
             signalStreamNextData.DisconnectReceiver(signalReceiverNextData);
             signalStreamEpisodeEnd.DisconnectReceiver(signalReceiverEpisodeEnd);
@@ -114,24 +108,9 @@ namespace PIERStory {
             resetTargetEpisode = signal.GetValueUnsafe<EpisodeData>();
         }
         
-        private void OnEpisodeStartSignal(Signal signal)
-        {
-            if(!signal.hasValue) {
-                Debug.LogError("No Signal in OnEpisodeStart");
-                return;
-            }
-            
-            // Type valueType = signal.valueType; //get the payload value type
-            Debug.Log("ViewEpisodeStart OnSingal");
-            startEpisode = signal.GetValueUnsafe<EpisodeData>();
-        }
-        
-        
         
         void OnEpisodeEndNextSignal(Signal s)
         {
-            
-            
             // 버튼 세팅(다시하기(엔딩, 사이드), 다음 에피소드 결정)
             if (s.hasValue)
             {
@@ -142,17 +121,13 @@ namespace PIERStory {
 
         void OnEpisodeEndCurrentSignal(Signal signal)
         {
-            
-            
             if(signal.hasValue)
             {
                 Debug.Log("ViewGameEnd SIGNAL_EPISODE_END received");
                 episodeEndCurrentData = signal.GetValueUnsafe<EpisodeData>();
                 // SetCurrent... 
                 
-                
                 Signal.Send(LobbyConst.STREAM_GAME, "showEpisodeEnd", string.Empty);
-
             }
         }
         
@@ -170,7 +145,6 @@ namespace PIERStory {
             }
             
             introduceStory = signal.GetValueUnsafe<StoryData>();
-            
         }
     }
 }

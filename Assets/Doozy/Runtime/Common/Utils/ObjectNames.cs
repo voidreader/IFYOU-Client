@@ -7,6 +7,7 @@ using Doozy.Runtime.Common.Extensions;
 
 namespace Doozy.Runtime.Common.Utils
 {
+    /// <summary> Helper class that contains methods that make names human readable </summary>
     public static class ObjectNames
     {
         /// <summary> Make a displayable name for a variable </summary>

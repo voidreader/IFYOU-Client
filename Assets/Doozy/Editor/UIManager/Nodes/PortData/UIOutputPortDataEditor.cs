@@ -76,7 +76,7 @@ namespace Doozy.Editor.UIManager.Nodes.PortData
         {
             connectionIndicator =
                 EnabledIndicator.Get()
-                    .SetIcon(EditorMicroAnimations.Nody.Icons.One)
+                    .SetIcon(EditorSpriteSheets.Nody.Icons.One)
                     .SetEnabledColor(EditorColors.Nody.Output)
                     .SetSize(20)
                     .Toggle(port.isConnected, false);
@@ -309,7 +309,7 @@ namespace Doozy.Editor.UIManager.Nodes.PortData
                     },
                     () => StreamIdDatabase.instance.database.GetCategories(),
                     targetCategory => StreamIdDatabase.instance.database.GetNames(targetCategory),
-                    EditorMicroAnimations.Signals.Icons.StreamDatabase,
+                    EditorSpriteSheets.Signals.Icons.StreamDatabase,
                     StreamsDatabaseWindow.Open,
                     "Open Streams Database Window",
                     StreamIdDatabase.instance,
@@ -483,7 +483,7 @@ namespace Doozy.Editor.UIManager.Nodes.PortData
                     },
                     () => UIButtonIdDatabase.instance.database.GetCategories(),
                     targetCategory => UIButtonIdDatabase.instance.database.GetNames(targetCategory),
-                    EditorMicroAnimations.UIManager.Icons.ButtonsDatabase,
+                    EditorSpriteSheets.UIManager.Icons.UIButtonDatabase,
                     ButtonsDatabaseWindow.Open,
                     "Open Buttons Database Window",
                     UIButtonIdDatabase.instance,
@@ -519,7 +519,7 @@ namespace Doozy.Editor.UIManager.Nodes.PortData
                     },
                     () => UIToggleIdDatabase.instance.database.GetCategories(),
                     targetCategory => UIToggleIdDatabase.instance.database.GetNames(targetCategory),
-                    EditorMicroAnimations.UIManager.Icons.TogglesDatabase,
+                    EditorSpriteSheets.UIManager.Icons.UIToggleDatabase,
                     TogglesDatabaseWindow.Open,
                     "Open Toggles Database Window",
                     UIToggleIdDatabase.instance,
@@ -555,7 +555,7 @@ namespace Doozy.Editor.UIManager.Nodes.PortData
                     },
                     () => UIViewIdDatabase.instance.database.GetCategories(),
                     targetCategory => UIViewIdDatabase.instance.database.GetNames(targetCategory),
-                    EditorMicroAnimations.UIManager.Icons.ViewsDatabase,
+                    EditorSpriteSheets.UIManager.Icons.UIViewDatabase,
                     ViewsDatabaseWindow.Open,
                     "Open Views Database Window",
                     UIViewIdDatabase.instance,
@@ -569,15 +569,15 @@ namespace Doozy.Editor.UIManager.Nodes.PortData
             switch (trigger)
             {
                 case UIOutputPortData.TriggerCondition.TimeDelay:
-                    return EditorMicroAnimations.EditorUI.Icons.Hourglass;
+                    return EditorSpriteSheets.EditorUI.Icons.Hourglass;
                 case UIOutputPortData.TriggerCondition.Signal:
-                    return EditorMicroAnimations.Signals.Icons.SignalStream;
+                    return EditorSpriteSheets.Signals.Icons.SignalStream;
                 case UIOutputPortData.TriggerCondition.UIButton:
-                    return EditorMicroAnimations.UIManager.Icons.Buttons;
+                    return EditorSpriteSheets.UIManager.Icons.UIButton;
                 case UIOutputPortData.TriggerCondition.UIToggle:
-                    return EditorMicroAnimations.UIManager.Icons.UIToggleCheckbox;
+                    return EditorSpriteSheets.UIManager.Icons.UIToggle;
                 case UIOutputPortData.TriggerCondition.UIView:
-                    return EditorMicroAnimations.UIManager.Icons.Views;
+                    return EditorSpriteSheets.UIManager.Icons.UIView;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(trigger), trigger, null);
             }

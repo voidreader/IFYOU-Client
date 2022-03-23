@@ -5,15 +5,7 @@ using LitJson;
 
 namespace PIERStory {
     
-    /// <summary>
-    /// 스토리 컨텐츠 타입
-    /// </summary>
-    public enum StoryContentsType {
-        Gallery,
-        Ending,
-        Selection,
-        Mission
-    }
+
     
     /// <summary>
     /// 갤러리, 엔딩, 선택지, 미션 컨텐츠 버튼

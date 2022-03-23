@@ -22,7 +22,7 @@ namespace Doozy.Editor.UIManager.Editors.Listeners
     [CustomEditor(typeof(UIToggleListener), true)]
     public class UIToggleListenerEditor : UnityEditor.Editor
     {
-        private static IEnumerable<Texture2D> componentIconTextures => EditorMicroAnimations.UIManager.Icons.UIToggleListener;
+        private static IEnumerable<Texture2D> componentIconTextures => EditorSpriteSheets.UIManager.Icons.UIToggleListener;
 
         private static Color accentColor => EditorColors.UIManager.ListenerComponent;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.ListenerComponent;

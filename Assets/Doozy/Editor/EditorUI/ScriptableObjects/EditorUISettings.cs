@@ -25,7 +25,7 @@ namespace Doozy.Editor.EditorUI.ScriptableObjects
     [CustomEditor(typeof(EditorUISettings))]
     public class EditorUISettingsEditor : UnityEditor.Editor
     {
-        private static IEnumerable<Texture2D> iconTextures => EditorMicroAnimations.EditorUI.Icons.EditorSettings;
+        private static IEnumerable<Texture2D> iconTextures => EditorSpriteSheets.EditorUI.Icons.EditorSettings;
         private static Color accentColor => EditorColors.EditorUI.Amber;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.EditorUI.Amber;
 
@@ -77,7 +77,7 @@ namespace Doozy.Editor.EditorUI.ScriptableObjects
             saveButton =
                 FluidButton.Get()
                     .SetLabelText("Save")
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Save)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Save)
                     .SetButtonStyle(ButtonStyle.Contained)
                     .SetElementSize(ElementSize.Small)
                     .SetOnClick(() =>

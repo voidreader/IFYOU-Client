@@ -15,7 +15,6 @@ namespace PIERStory
         public GameObject liveTag;
         public GameObject lockOverlay;
         public TextMeshProUGUI episodeHintText;
-        public TextMeshProUGUI illustPublicName;
 
         JsonData elementData = null;
 
@@ -23,6 +22,7 @@ namespace PIERStory
         bool isLive = false;
         bool isMinicut = false;
         string illustName = string.Empty;
+        string illustPublicName = string.Empty;
         string summary = string.Empty;
         string appearEpisodeId = string.Empty;
         string appearEpisodeType = string.Empty;
@@ -43,7 +43,7 @@ namespace PIERStory
             illustType = SystemManager.GetJsonNodeString(__j, "illust_type");
             
             // set native 되지 않게 변경함. 2022.01.17 
-            illustThumbnail.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.THUMBNAIL_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.THUMBNAIL_KEY));
+            illustThumbnail.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.THUMBNAIL_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.THUMBNAIL_KEY), true);
             isLive = SystemManager.GetJsonNodeString(__j, CommonConst.ILLUST_TYPE).Contains("live");
             isMinicut = illustType == "live_object" || illustType == "minicut" ? true : false;
             liveTag.SetActive(isLive);
@@ -88,7 +88,7 @@ namespace PIERStory
 
             #endregion
 
-            illustPublicName.text = SystemManager.GetJsonNodeString(__j, CommonConst.COL_PUBLIC_NAME);
+            illustPublicName = SystemManager.GetJsonNodeString(__j, CommonConst.COL_PUBLIC_NAME);
 
             #region Init elementData
 
@@ -116,14 +116,14 @@ namespace PIERStory
         {
             ViewGallery.OnDelayIllustOpen?.Invoke(false);
             SystemManager.ShowNetworkLoading();
-            ViewIllustDetail.SetData(elementData, isLive, isMinicut, illustPublicName.text, summary);
+            ViewIllustDetail.SetData(elementData, isLive, isMinicut, illustPublicName, summary);
 
             if (isLive)
             {
                 int scaleOffset = 0;
 
                 if (elementData[0].ContainsKey("scale_offset"))
-                    int.TryParse(SystemManager.GetJsonNodeString(elementData[0], "scale_offset"), out scaleOffset);
+                    scaleOffset = SystemManager.GetJsonNodeInt(elementData[0], "scale_offset");
 
                 LobbyManager.main.SetGalleryLiveIllust(illustName, scaleOffset, isMinicut);
             }

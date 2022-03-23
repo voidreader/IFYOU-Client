@@ -76,6 +76,15 @@ namespace Doozy.Runtime.Reactor.Animators
             SetTarget(colorTarget);
             if (animation.isPlaying) UpdateValues();
         }
+        
+        public override float GetStartDelay() =>
+            animation.animation.isActive ? animation.animation.startDelay : animation.animation.settings.GetStartDelay();
+
+        public override float GetDuration() =>
+            animation.animation.isActive ? animation.animation.duration : animation.animation.settings.GetDuration();
+
+        public override float GetTotalDuration() =>
+            GetStartDelay() + GetDuration();
 
         public override void UpdateValues() =>
             animation.UpdateValues();

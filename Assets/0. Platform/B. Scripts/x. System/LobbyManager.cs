@@ -41,17 +41,20 @@ namespace PIERStory {
         [Header("프로필")]
         public Texture2D textureNoneFrame;
 
+        [Header("작품 로비")]
+        public SpriteRenderer lobbyBackground;
+
 
         
         [Header("갤러리 - 사운드 BGMSprite")]
         public Sprite spriteOpenVoice;
         public Sprite spriteLockVoice;
+        public Sprite toggleSelected;
+        public Sprite toggleUnselected;
 
         [Header("미션View Sprite")]
-        public Sprite spriteWhiteBorder;        // 흰색 바탕 코인박스 하단 border
-        public Sprite spriteWhiteButton;        // 흰색 바탕 보상받기 버튼
-        public Sprite spriteGradientBorder;     // 그라데이션 들어간 코인박스 하단 border
-        public Sprite spriteGradientButton;     // 그라데이션 들어간 보상받기 버튼
+        public Sprite spriteGetReward;          // 얻을 수 있는 보상 버튼
+        public Sprite spriteGotReward;          // 얻은 보상 버튼
         
         [Header("에피소드 관련 Sprite")]
         public Sprite spriteEpisodePrevCover; // 과거 커버
@@ -64,6 +67,9 @@ namespace PIERStory {
         public Sprite spritePlateStarPlay; // 스타플레이 플레이트
         public Sprite spritePlateFree; // 프리 플레이트
         public Sprite spritePlatePremium; // 패스 플레이트
+
+        public Sprite spriteEpisodeOpen;    // 열린 스페셜, 엔딩 에피소드
+        public Sprite spriteEpisodeLock;    // 잠긴 스페셜, 엔딩 에피소드
         
                 
         
@@ -92,7 +98,6 @@ namespace PIERStory {
         public Sprite spriteAttendanceStars;
         
         [Header("== 컬러 ==")]
-        
         public Color colorFreeBox = Color.white;
         
         public Color colorNavOn = Color.white;
@@ -128,6 +133,8 @@ namespace PIERStory {
             yield return null;
             yield return new WaitForSeconds(0.1f);
             
+            ViewCommonTop.OnBackAction = null;
+            
             // 어드레서블 카탈로그 로드 
             InitAddressableCatalog();
             
@@ -145,7 +152,7 @@ namespace PIERStory {
             Debug.Log("#### InitAddressableCatalog ###");
             string catalogURL = string.Empty;
             
-            //Addressables.CleanBundleCache();
+            // Addressables.CleanBundleCache();
             
             
             #if UNITY_IOS
@@ -162,9 +169,9 @@ namespace PIERStory {
             
             Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
             
-            // Addressables.CheckForCatalogUpdates();
+
             
-        };
+            };
         }
         
         
@@ -223,7 +230,7 @@ namespace PIERStory {
 
 
 
-        public void SetIllustParent(Transform __model)
+        public void SetLiveParent(Transform __model)
         {
             __model.SetParent(transform);
         }

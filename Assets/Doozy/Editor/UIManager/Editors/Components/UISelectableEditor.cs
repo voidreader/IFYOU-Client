@@ -21,7 +21,7 @@ namespace Doozy.Editor.UIManager.Editors.Components
         public override Color accentColor => EditorColors.UIManager.UIComponent;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.UIComponent;
         
-        public static IEnumerable<Texture2D> selectableIconTextures => EditorMicroAnimations.UIManager.Icons.UISelectable;
+        public static IEnumerable<Texture2D> selectableIconTextures => EditorSpriteSheets.UIManager.Icons.UISelectable;
         
         public UISelectable castedTarget => (UISelectable)target;
         public IEnumerable<UISelectable> castedTargets => targets.Cast<UISelectable>();

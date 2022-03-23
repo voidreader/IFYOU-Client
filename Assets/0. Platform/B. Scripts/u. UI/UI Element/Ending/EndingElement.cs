@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using TMPro;
 using LitJson;
@@ -16,6 +17,13 @@ namespace PIERStory
         public TextMeshProUGUI endingType;
         public TextMeshProUGUI endingTitle;
 
+        public UnityEngine.UI.Image buttonBox;
+        public GameObject newSign;
+        public GameObject showChoiceButton;
+
+        readonly Vector2 openEndingSize = new Vector2(660, 500);
+        readonly Vector2 lockEndingSize = new Vector2(660, 435);
+
         EpisodeData endingData;
 
         public void InitEndingInfo(EpisodeData epiData)
@@ -28,7 +36,28 @@ namespace PIERStory
             else
                 endingType.text = SystemManager.GetLocalizedText("5088");
 
-            endingTitle.text = epiData.episodeTitle;
+
+            if (endingData.endingOpen)
+            {
+                endingTitle.text = epiData.episodeTitle;
+                GetComponent<RectTransform>().sizeDelta = openEndingSize;
+                buttonBox.sprite = LobbyManager.main.spriteEpisodeOpen;
+
+                newSign.SetActive(!UserManager.main.IsCompleteEpisode(epiData.episodeID));
+                showChoiceButton.SetActive(true);
+            }
+            else
+            {
+                EpisodeData dependEpisodeData = StoryManager.GetRegularEpisodeByID(epiData.dependEpisode);
+
+                endingTitle.text = string.Format(SystemManager.GetLocalizedText("5165"), dependEpisodeData.episodeNO);
+                GetComponent<RectTransform>().sizeDelta = lockEndingSize;
+                buttonBox.sprite = LobbyManager.main.spriteEpisodeLock;
+
+                newSign.SetActive(false);
+                showChoiceButton.SetActive(false);
+            }
+
 
             gameObject.SetActive(true);
         }
@@ -41,8 +70,26 @@ namespace PIERStory
         /// </summary>
         public void OnClickStartEnding()
         {
-            UserManager.main.useRecord = false; // 엔딩 플레이는 useRecord를 false 처리한다. 
-            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, endingData, string.Empty);
+            // 아직 열지 못했다면 플레이 놉!
+            if (!endingData.endingOpen)
+                return;
+
+            UserManager.main.useRecord = false;         // 엔딩 플레이는 useRecord를 false 처리한다. 
+
+            SystemManager.main.givenEpisodeData = endingData;
+            SystemManager.ShowNetworkLoading();
+
+            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN, string.Empty);
+            IntermissionManager.isMovingLobby = false;  // 게임으로 진입하도록 요청
+
+            if (GameManager.main != null)
+                SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            else
+                SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
+
+            GameManager.SetNewGame();
+            // 통신 
+            NetworkLoader.main.UpdateUserProjectCurrent(endingData.episodeID, null, 0);
         }
 
         /// <summary>

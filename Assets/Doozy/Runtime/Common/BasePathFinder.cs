@@ -10,6 +10,8 @@ using UnityEngine.Assertions;
 
 namespace Doozy.Runtime.Common
 {
+	/// <summary> Base class used to find the filepath inside the project of the given derived class </summary>
+	/// <typeparam name="T"></typeparam>
 	[SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
 	[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 	public class BasePathFinder<T> : ScriptableObject where T : ScriptableObject
@@ -17,7 +19,7 @@ namespace Doozy.Runtime.Common
 		private static bool debugMode => false;
 		private static string s_foundPath = string.Empty;
 
-		// ReSharper disable once MemberCanBeProtected.Global
+		/// <summary> Get the filepath for the class </summary>
 		public static string path
 		{
 			get

@@ -24,7 +24,7 @@ namespace Doozy.Editor.UIManager.Nodes
     {
         public override Type nodeType => typeof(PortalNode);
         public override Texture2D nodeIconTexture => EditorTextures.Nody.Icons.PortalNode;
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.PortalNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.PortalNode;
 
         private SerializedProperty propertyTrigger { get; }
 
@@ -83,13 +83,13 @@ namespace Doozy.Editor.UIManager.Nodes
             switch (trigger)
             {
                 case PortalNode.TriggerCondition.Signal:
-                    return EditorMicroAnimations.Signals.Icons.SignalStream;
+                    return EditorSpriteSheets.Signals.Icons.SignalStream;
                 case PortalNode.TriggerCondition.UIButton:
-                    return EditorMicroAnimations.UIManager.Icons.Buttons;
+                    return EditorSpriteSheets.UIManager.Icons.UIButton;
                 case PortalNode.TriggerCondition.UIToggle:
-                    return EditorMicroAnimations.UIManager.Icons.UIToggleCheckbox;
+                    return EditorSpriteSheets.UIManager.Icons.UIToggle;
                 case PortalNode.TriggerCondition.UIView:
-                    return EditorMicroAnimations.UIManager.Icons.Views;
+                    return EditorSpriteSheets.UIManager.Icons.UIView;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(trigger), trigger, null);
             }

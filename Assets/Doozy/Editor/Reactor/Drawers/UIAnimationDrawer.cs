@@ -47,14 +47,14 @@ namespace Doozy.Editor.Reactor.Drawers
         private static EditorSelectableColorInfo scaleSColor => EditorSelectableColors.Reactor.Scale;
         private static EditorSelectableColorInfo fadeSColor => EditorSelectableColors.Reactor.Fade;
 
-        private static IEnumerable<Texture2D> uiAnimationIconTextures => EditorMicroAnimations.Reactor.Icons.UIAnimation;
-        private static IEnumerable<Texture2D> uiAnimationPresetIconTextures => EditorMicroAnimations.Reactor.Icons.UIAnimationPreset;
-        private static IEnumerable<Texture2D> moveIconTextures => EditorMicroAnimations.Reactor.Icons.Move;
-        private static IEnumerable<Texture2D> rotateIconTextures => EditorMicroAnimations.Reactor.Icons.Rotate;
-        private static IEnumerable<Texture2D> scaleIconTextures => EditorMicroAnimations.Reactor.Icons.Scale;
-        private static IEnumerable<Texture2D> fadeIconTextures => EditorMicroAnimations.Reactor.Icons.Fade;
-        private static IEnumerable<Texture2D> unityEventIconTextures => EditorMicroAnimations.EditorUI.Icons.UnityEvent;
-        private static IEnumerable<Texture2D> resetIconTextures => EditorMicroAnimations.EditorUI.Icons.Reset;
+        private static IEnumerable<Texture2D> uiAnimationIconTextures => EditorSpriteSheets.Reactor.Icons.UIAnimation;
+        private static IEnumerable<Texture2D> uiAnimationPresetIconTextures => EditorSpriteSheets.Reactor.Icons.UIAnimationPreset;
+        private static IEnumerable<Texture2D> moveIconTextures => EditorSpriteSheets.Reactor.Icons.Move;
+        private static IEnumerable<Texture2D> rotateIconTextures => EditorSpriteSheets.Reactor.Icons.Rotate;
+        private static IEnumerable<Texture2D> scaleIconTextures => EditorSpriteSheets.Reactor.Icons.Scale;
+        private static IEnumerable<Texture2D> fadeIconTextures => EditorSpriteSheets.Reactor.Icons.Fade;
+        private static IEnumerable<Texture2D> unityEventIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
+        private static IEnumerable<Texture2D> resetIconTextures => EditorSpriteSheets.EditorUI.Icons.Reset;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {}
 
@@ -424,22 +424,22 @@ namespace Doozy.Editor.Reactor.Drawers
                 DesignUtils.GetNewTinyButton(text, textures, selectableColor, tooltip);
 
             FluidToggleButtonTab buttonNewPreset =
-                FluidToggleButtonTab.Get("New Preset", EditorMicroAnimations.EditorUI.Icons.Plus, selectableAccentColor, "Create a new preset")
+                FluidToggleButtonTab.Get("New Preset", EditorSpriteSheets.EditorUI.Icons.Plus, selectableAccentColor, "Create a new preset")
                     .SetTabPosition(TabPosition.FloatingTab).SetElementSize(ElementSize.Tiny);
 
             FluidToggleButtonTab buttonSavePresetAtCustomLocation =
-                FluidToggleButtonTab.Get("Custom Save Location", EditorMicroAnimations.EditorUI.Icons.Binoculars, selectableAccentColor, "Save the new preset at a custom location in your project")
+                FluidToggleButtonTab.Get("Custom Save Location", EditorSpriteSheets.EditorUI.Icons.Binoculars, selectableAccentColor, "Save the new preset at a custom location in your project")
                     .SetTabPosition(TabPosition.FloatingTab).SetElementSize(ElementSize.Tiny).SetStyleDisplay(DisplayStyle.None);
 
-            FluidButton buttonLoadPreset = GetNewPresetButton("Load Preset", EditorMicroAnimations.EditorUI.Arrows.ArrowDown, selectableAccentColor, "Load selected preset");
-            FluidButton buttonDeletePreset = GetNewPresetButton("", EditorMicroAnimations.EditorUI.Icons.Minus, selectableAccentColor, "Delete selected preset");
-            FluidButton buttonSavePreset = GetNewPresetButton("Save Preset", EditorMicroAnimations.EditorUI.Icons.Save, selectableAccentColor, "Save current settings as a new preset").SetStyleDisplay(DisplayStyle.None);
-            FluidButton buttonOpenReactor = GetNewPresetButton("Reactor", EditorMicroAnimations.Reactor.Icons.Reactor, selectableAccentColor, "Open the Reactor Window").SetOnClick(ReactorWindow.Open);
-            FluidButton buttonRefresh = GetNewPresetButton("", EditorMicroAnimations.EditorUI.Icons.Refresh, selectableAccentColor, "Refresh Presets Database").SetOnClick(() => UIAnimationPresetDatabase.instance.RefreshDatabase());
-            FluidButton buttonFindPreset = GetNewPresetButton("Find Preset Location", EditorMicroAnimations.EditorUI.Icons.Location, EditorSelectableColors.Default.ButtonIcon, "Ping the selected preset in the Project view");
+            FluidButton buttonLoadPreset = GetNewPresetButton("Load Preset", EditorSpriteSheets.EditorUI.Arrows.ArrowDown, selectableAccentColor, "Load selected preset");
+            FluidButton buttonDeletePreset = GetNewPresetButton("", EditorSpriteSheets.EditorUI.Icons.Minus, selectableAccentColor, "Delete selected preset");
+            FluidButton buttonSavePreset = GetNewPresetButton("Save Preset", EditorSpriteSheets.EditorUI.Icons.Save, selectableAccentColor, "Save current settings as a new preset").SetStyleDisplay(DisplayStyle.None);
+            FluidButton buttonOpenReactor = GetNewPresetButton("Reactor", EditorSpriteSheets.Reactor.Icons.ReactorIcon, selectableAccentColor, "Open the Reactor Window").SetOnClick(ReactorWindow.Open);
+            FluidButton buttonRefresh = GetNewPresetButton("", EditorSpriteSheets.EditorUI.Icons.Refresh, selectableAccentColor, "Refresh Presets Database").SetOnClick(() => UIAnimationPresetDatabase.instance.RefreshDatabase());
+            FluidButton buttonFindPreset = GetNewPresetButton("Find Preset Location", EditorSpriteSheets.EditorUI.Icons.Location, EditorSelectableColors.Default.ButtonIcon, "Ping the selected preset in the Project view");
 
             FluidToggleButtonTab buttonNewCategoryName =
-                FluidToggleButtonTab.Get("", EditorMicroAnimations.EditorUI.Icons.Edit, selectableAccentColor, "Create a new preset category")
+                FluidToggleButtonTab.Get("", EditorSpriteSheets.EditorUI.Icons.Edit, selectableAccentColor, "Create a new preset category")
                     .SetTabPosition(TabPosition.FloatingTab).SetElementSize(ElementSize.Tiny).SetStyleDisplay(DisplayStyle.None);
 
 

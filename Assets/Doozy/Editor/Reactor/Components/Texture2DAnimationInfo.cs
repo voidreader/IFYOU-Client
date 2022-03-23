@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using Doozy.Editor.Common.Extensions;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Utils;
@@ -47,6 +48,12 @@ namespace Doozy.Editor.Reactor.Components
 
         public SerializedProperty arrayProperty { get; }
 
+        public Texture2D spriteSheet
+        {
+            get;
+            set;
+        }
+
         public int frameCount => arrayProperty?.arraySize ?? 0;
         public Texture2D firstTexture
         {
@@ -64,8 +71,8 @@ namespace Doozy.Editor.Reactor.Components
         private const float PLAYER_SPACING = DesignUtils.k_Spacing * 0.5f;
 
         public UnityAction<Texture2D> textureSetter { get; set; }
-        
-          public void Dispose()
+
+        public void Dispose()
         {
             reaction?.Recycle();
             playForwardButton?.Recycle();
@@ -73,9 +80,10 @@ namespace Doozy.Editor.Reactor.Components
             setTextureButton?.Recycle();
         }
 
-        public Texture2DAnimationInfo(SerializedProperty arrayProperty)
+        public Texture2DAnimationInfo(SerializedProperty arrayProperty, Texture2D spriteSheet)
         {
             this.arrayProperty = arrayProperty;
+            this.spriteSheet = spriteSheet;
 
             Add(templateContainer = EditorLayouts.Reactor.AnimationInfo.CloneTree());
             templateContainer
@@ -170,7 +178,7 @@ namespace Doozy.Editor.Reactor.Components
 
             playForwardButton =
                 FluidButton.Get()
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.PlayForward)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.PlayForward)
                     .SetAccentColor(EditorSelectableColors.EditorUI.LightGreen)
                     .SetTooltip("Play Forward")
                     .SetElementSize(ElementSize.Small)
@@ -179,7 +187,7 @@ namespace Doozy.Editor.Reactor.Components
 
             playReversedButton =
                 FluidButton.Get()
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.PlayReverse)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.PlayReverse)
                     .SetAccentColor(EditorSelectableColors.EditorUI.LightGreen)
                     .SetTooltip("Play Reversed")
                     .SetElementSize(ElementSize.Small)
@@ -188,7 +196,7 @@ namespace Doozy.Editor.Reactor.Components
 
             setTextureButton =
                 FluidButton.Get()
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Texture)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Texture)
                     .SetAccentColor(EditorSelectableColors.EditorUI.LightGreen)
                     .SetTooltip("Set Texture")
                     .SetLabelText("Set Texture")
@@ -213,7 +221,9 @@ namespace Doozy.Editor.Reactor.Components
 
         public void Update()
         {
-            Texture2D texture = firstTexture;
+            var textures = new List<Texture2D>();
+            if (spriteSheet != null) textures = spriteSheet.GetTextures();
+            Texture2D texture = spriteSheet != null ? textures[0] : firstTexture;
             int numberOfFramesCount = frameCount;
 
             bool hasReference = texture != null;
@@ -234,24 +244,34 @@ namespace Doozy.Editor.Reactor.Components
             textureSize.SetText($"W: {texture.width}px\nH: {texture.height}px");
 
             string assetPath = AssetDatabase.GetAssetPath(texture);
-            string[] splitPath = assetPath.Split('/');
-            assetPath = string.Empty;
-            for (int i = 0; i < splitPath.Length - 1; i++)
+            if (spriteSheet == null)
             {
-                bool lastItem = i == splitPath.Length - 2;
-                assetPath += $"{splitPath[i]}/";
-            }
-            assetPath = assetPath.RemoveLastCharacter();
+                string[] splitPath = assetPath.Split('/');
+                assetPath = string.Empty;
+                for (int i = 0; i < splitPath.Length - 1; i++)
+                {
+                    bool lastItem = i == splitPath.Length - 2;
+                    assetPath += $"{splitPath[i]}/";
+                }
+                assetPath = assetPath.RemoveLastCharacter();
 
-            animationName.SetText($"{splitPath[splitPath.Length - 2]}");
+                animationName.SetText($"{splitPath[splitPath.Length - 2]}");
+            }
+            else
+            {
+                animationName.SetText($"{spriteSheet.name}");
+            }
             pathLabel.SetText($"{assetPath}");
 
-            var textures = new List<Texture2D>();
-            for (int i = 0; i < arrayProperty.arraySize; i++)
+            if (spriteSheet == null)
             {
-                Object objectReferenceValue = arrayProperty.GetArrayElementAtIndex(i).objectReferenceValue;
-                if (objectReferenceValue == null) continue;
-                textures.Add((Texture2D)objectReferenceValue);
+                textures.Clear();
+                for (int i = 0; i < arrayProperty.arraySize; i++)
+                {
+                    Object objectReferenceValue = arrayProperty.GetArrayElementAtIndex(i).objectReferenceValue;
+                    if (objectReferenceValue == null) continue;
+                    textures.Add((Texture2D)objectReferenceValue);
+                }
             }
 
             reaction?.Recycle();
@@ -283,7 +303,7 @@ namespace Doozy.Editor.Reactor.Components
             setTextureButton?.SetStyleDisplay(hide ? DisplayStyle.None : DisplayStyle.Flex);
             return this;
         }
-        
+
         private void UpdateFramesLabel()
         {
             numberOfFrames.text =

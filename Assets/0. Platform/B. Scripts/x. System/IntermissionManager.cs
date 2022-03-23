@@ -17,7 +17,7 @@ namespace PIERStory
         IEnumerator Start()
         {
             
-            AdManager.main.HideBanner();
+            // AdManager.main.HideBanner();
             
             // * 메모리 누수를 알아보기 위해 FindObject 검사 실행. 
             audioClips = FindObjectsOfType<AudioClip>(true); // 정리되지 않음
@@ -56,13 +56,13 @@ namespace PIERStory
                 {
                     // 로비씬으로 이동
                     Debug.Log("From Intermission to Lobby");
-                    SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Single).allowSceneActivation = true;
+                    SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
                 }
                 else
                 {
                     // 게임 씬으로 이동처리 
                     Debug.Log("From Intermission to Game");
-                    SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single).allowSceneActivation = true;
+                    SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
                 }
             }
             else

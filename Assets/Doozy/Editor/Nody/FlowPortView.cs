@@ -256,9 +256,9 @@ namespace Doozy.Editor.Nody
                 switch (flowPort.capacity)
                 {
                     case PortCapacity.Single:
-                        return EditorMicroAnimations.Nody.Icons.One;
+                        return EditorSpriteSheets.Nody.Icons.One;
                     case PortCapacity.Multi:
-                        return EditorMicroAnimations.Nody.Icons.Infinity;
+                        return EditorSpriteSheets.Nody.Icons.Infinity;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }

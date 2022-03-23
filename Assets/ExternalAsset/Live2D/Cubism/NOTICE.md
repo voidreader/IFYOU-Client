@@ -20,8 +20,6 @@ macOS Catalina 以降で `.bundle` と `.dylib` を利用する際、公証の�
 詳しくは、Apple社 公式ドキュメントをご確認ください。
 
 * [Apple社 公式ドキュメント](https://developer.apple.com/documentation/security/notarizing_your_app_before_distribution)
-
-
 ---
 
 ©Live2D

@@ -24,7 +24,7 @@ namespace Doozy.Editor.UIManager.Drawers
                 property,
                 () => UIToggleIdDatabase.instance.database.GetCategories(),
                 targetCategory => UIToggleIdDatabase.instance.database.GetNames(targetCategory),
-                EditorMicroAnimations.UIManager.Icons.TogglesDatabase,
+                EditorSpriteSheets.UIManager.Icons.UIToggleDatabase,
                 TogglesDatabaseWindow.Open,
                 "Open Toggles Database Window",
                 UIToggleIdDatabase.instance,

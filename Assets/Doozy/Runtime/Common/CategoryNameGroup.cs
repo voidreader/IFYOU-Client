@@ -10,33 +10,49 @@ using UnityEngine;
 
 namespace Doozy.Runtime.Common
 {
+    /// <summary>
+    /// Base class for Category Name databases
+    /// </summary>
+    /// <typeparam name="T"> Type of <see cref="CategoryNameItem"/> </typeparam>
     [Serializable]
     public class CategoryNameGroup<T> where T : CategoryNameItem, new()
     {
+        /// <summary> Default string value for Category </summary>
         public static string defaultCategory => CategoryNameItem.k_DefaultCategory;
+        /// <summary> Default string value for Name </summary>
         public static string defaultName => CategoryNameItem.k_DefaultName;
 
         [SerializeField] private List<T> Items;
+        /// <summary> List of all the items (entries) in the database </summary>
         public List<T> items => Items ??= new List<T> { new T() };
+
+        /// <summary>
+        /// Check if the database is empty.
+        /// <para/> This also add an entry with the default category and name values (if it's missing)
+        /// </summary>
         public bool isEmpty
         {
             get
             {
-                if (!ContainsCategory(defaultCategory))
-                {
-                    items.Add((T)new CategoryNameItem(defaultCategory, defaultName));
-                    CleanDatabase();
-                }
-
+                if (ContainsCategory(defaultCategory))
+                    return items.Count < 2;
+                items.Add((T)new CategoryNameItem(defaultCategory, defaultName));
+                CleanDatabase();
                 return items.Count < 2;
             }
         }
 
         #region Category
 
+        /// <summary> Check if the database contains an entry for the given category value </summary>
+        /// <param name="category"> Category value </param>
+        /// <returns> True if there is an item with the given category in the database, otherwise it returns false </returns>
         public bool ContainsCategory(string category) =>
             items.Any(data => data.category.Equals(CleanString(category)));
 
+        /// <summary> Check if the given category value can be added as an entry in the database </summary>
+        /// <param name="category"> Category value </param>
+        /// <returns> Operation result (True or False) and a success or failure reason message </returns>
         public (bool, string) CanAddCategory(string category)
         {
             category = CleanString(category);
@@ -49,6 +65,9 @@ namespace Doozy.Runtime.Common
 
         }
 
+        /// <summary> Add a new item to the database with the given category value and the default name value </summary>
+        /// <param name="category"> Category value </param>
+        /// <returns> True if the operation was successful and false otherwise </returns>
         public bool AddCategory(string category)
         {
             bool canAddCategory;
@@ -59,6 +78,9 @@ namespace Doozy.Runtime.Common
             return true;
         }
 
+        /// <summary> Check if the given category value can be removed from the database </summary>
+        /// <param name="category"> Category value </param>
+        /// <returns> Operation result (True or False) and a success or failure reason message </returns>
         public (bool, string) CanRemoveCategory(string category) =>
             category.Equals(defaultCategory)
                 ? (false, $"Cannot remove the '{category}' category")
@@ -66,6 +88,9 @@ namespace Doozy.Runtime.Common
                     ? (false, $"The '{category}' category does not exist")
                     : (true, $"Can remove the '{category}' category");
 
+        /// <summary> Remove all the items from the database with the given category value </summary>
+        /// <param name="category"> Category value </param>
+        /// <returns> True if the operation was successful and false otherwise </returns>
         public bool RemoveCategory(string category)
         {
             bool canRemoveCategory;
@@ -94,9 +119,19 @@ namespace Doozy.Runtime.Common
 
         #region Name
 
+        /// <summary> Check if the database contains an entry for the given category and name values </summary>
+        /// <param name="category"> Category value </param>
+        /// <param name="name"> Name value </param>
+        /// <returns> True if an entry was found and false otherwise </returns>
         public bool ContainsName(string category, string name) =>
             items.Any(data => data.category.Equals(CleanString(category)) & data.name.Equals(CleanString(name)));
 
+        /// <summary>
+        /// Check if an entry with the given category and name values can be added as an entry in the database
+        /// </summary>
+        /// <param name="category"> Category value </param>
+        /// <param name="name"> Name value </param>
+        /// <returns> Operation result (True or False) and a success or failure reason message </returns>
         public (bool, string) CanAddName(string category, string name)
         {
             category = CleanString(category);
@@ -114,6 +149,10 @@ namespace Doozy.Runtime.Common
 
         }
 
+        /// <summary> Add a new item to the database with the given category and name values </summary>
+        /// <param name="category"> Category value </param>
+        /// <param name="name"> Name value </param>
+        /// <returns> True if the operation was successful and false otherwise </returns>
         public bool AddName(string category, string name)
         {
             bool canAddName;
@@ -124,6 +163,10 @@ namespace Doozy.Runtime.Common
             return true;
         }
 
+        /// <summary> Check if the entry with the given category and name values can be removed from the database </summary>
+        /// <param name="category"> Category value </param>
+        /// <param name="name"> Name value </param>
+        /// <returns> Operation result (True or False) and a success or failure reason message </returns>
         public (bool, string) CanRemoveName(string category, string name) =>
             category.Equals(defaultCategory)
                 ? (false, $"Cannot remove anything from the '{category}' category")
@@ -133,6 +176,10 @@ namespace Doozy.Runtime.Common
                         ? (false, $"The name '{name}' was not found in the '{category}' category")
                         : (true, $"Can remove the '{name}' from the '{category}' category");
 
+        /// <summary> Remove the database entry with the given category and name value </summary>
+        /// <param name="category"> Category value </param>
+        /// <param name="name"> Name value </param>
+        /// <returns> True if the operation was successful and false otherwise </returns>
         public bool RemoveName(string category, string name)
         {
             bool canRemoveName;
@@ -156,6 +203,7 @@ namespace Doozy.Runtime.Common
         /// <summary> Get data for the given category and name. Returns null if not found </summary>
         /// <param name="category"> Target category </param>
         /// <param name="name"> Target name </param>
+        /// <returns> The entry if found, null otherwise </returns>
         public T Get(string category, string name) =>
             items.Where(data => data.category.Equals(category)).FirstOrDefault(data => data.name.Equals(name));
 
@@ -173,6 +221,7 @@ namespace Doozy.Runtime.Common
 
         #endregion
 
+        /// <summary> Clears the database and adds an entry with the default values </summary>
         public void ClearDatabase()
         {
             items.Clear();
@@ -206,6 +255,7 @@ namespace Doozy.Runtime.Common
         /// <param name="value"> Target value </param>
         /// <param name="removeWhitespaces"> Remove all whitespaces from the target string </param>
         /// <param name="removeSpecialCharacters"> Remove all special characters from the target string </param>
+        /// <returns> The cleaned string </returns>
         public static string CleanString(string value, bool removeWhitespaces = true, bool removeSpecialCharacters = true) =>
             CategoryNameItem.CleanString(value, removeWhitespaces, removeSpecialCharacters);
     }

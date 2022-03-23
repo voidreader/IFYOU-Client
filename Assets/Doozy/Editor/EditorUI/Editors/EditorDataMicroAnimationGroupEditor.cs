@@ -89,14 +89,14 @@ namespace Doozy.Editor.EditorUI.Editors
             root = new VisualElement();
 
             loadAnimationsFromFoldersButton = FluidButton.Get()
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Search)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Search)
                 .SetLabelText("Load all .png files from the all the sub-folders")
                 .SetAccentColor(EditorSelectableColors.EditorUI.Amber)
                 .SetButtonStyle(ButtonStyle.Contained)
                 .SetElementSize(ElementSize.Small)
                 .SetOnClick(LoadAnimationsFromFolders);
 
-            categoryComponentField = FluidField.Get("Micro-Animation Category Name").SetIcon(EditorMicroAnimations.EditorUI.Components.EditorMicroAnimationGroup);
+            categoryComponentField = FluidField.Get("Micro-Animation Category Name").SetIcon(EditorSpriteSheets.EditorUI.Components.EditorMicroAnimationGroup);
             TextField categoryTextField = DesignUtils.NewTextField("GroupCategory", true).SetStyleFlexGrow(1);
             categoryTextField.RegisterValueChangedCallback(evt =>
             {

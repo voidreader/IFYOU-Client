@@ -79,8 +79,10 @@ namespace PIERStory
         public int maxAdCharge = 0;             // 일일 최대 무료 충전 횟수
         
         public string coinShopURL = string.Empty; // 코인샵 URL
-        int firsetResetPrice = 0; // 최초 리셋 가격
+        public int firsetResetPrice = 0; // 최초 리셋 가격
         int resetIncrementRate = 0; //리셋 증가비율 
+        public int episodeOpenPricePer = 0; // 에피소드 시간단축오픈 10분당 코인 가격 
+        public int waitingReduceTimeAD = 0; // 광고보고 차감되는 에피소드 열림시간. (분)
         
         
         // 개인정보 보호 정책 및 이용약관 URL
@@ -105,8 +107,8 @@ namespace PIERStory
         public JsonData noticeData = null;          // 공지사항 데이터 
 
 
-        string messageRequireUpdate = string.Empty;
-        string messageTestVersion = string.Empty;
+        
+        
         const string KEY_ENCRYPTION = "imageEncrypt_2"; // 암호화 여부 
         
         #region 내장폰트
@@ -118,8 +120,12 @@ namespace PIERStory
 
         #endregion
         
-        //[SerializeField] UniWebView defaultWebview = null;
-        [SerializeField] GameObject prefabWebview;
+        #region 공용 스프라이트
+        [Space][Header("공용 스프라이트")]
+        public Sprite spriteCoin;       // 150~200 사이 사이즈 코인
+        public Sprite spriteStar;       // 150~200 사이 사이즈 스타
+        #endregion
+        
 
         // * 비암호화 저장 세팅 (디폴트는 암호화)        
         public static ES3Settings noEncryptionSetting;
@@ -172,6 +178,12 @@ namespace PIERStory
             if (!PlayerPrefs.HasKey(GameConst.AUTO_PLAY))
                 PlayerPrefs.SetFloat(GameConst.AUTO_PLAY, GameConst.normalDelay);
 
+            if (!PlayerPrefs.HasKey(GameConst.MISSION_POPUP))
+                PlayerPrefs.SetInt(GameConst.MISSION_POPUP, 1);
+
+            if (!PlayerPrefs.HasKey(GameConst.ILLUST_POPUP))
+                PlayerPrefs.SetInt(GameConst.ILLUST_POPUP, 1);
+
             // * 화면 어두워지지 않도록 설정 
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
@@ -184,13 +196,13 @@ namespace PIERStory
                 // 코원 프로젝트 
                 gamebaseAPP_ID = "qtV3HLW5";
                 gamebaseLogger_ID = "7eGOB7zE5dQx4yTC";
-                //AppsFlyerSDK.AppsFlyer.useAppsFlyer = true;
+                
             }
             else { 
                 // 피어 프로젝트 
                 gamebaseAPP_ID = "6swpd3Jp";
                 gamebaseLogger_ID = "6WMxzJjo6i5Z5iXm";
-                // AppsFlyerSDK.AppsFlyer.useAppsFlyer = false;
+                
             }
             
             
@@ -231,6 +243,12 @@ namespace PIERStory
             noEncryptionSetting = new ES3Settings(ES3.EncryptionType.None, "password");
         }
         
+        void Update() {
+            if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.S)) {
+                UserManager.main.SetAdminUser();
+            }
+        }
+        
         /// <summary>
         /// iOS 퀄리티 런타임으로 변경하기
         /// </summary>
@@ -242,10 +260,21 @@ namespace PIERStory
             // iOS만 실행하도록 전처리 
             // iOS는 가장 낮은 퀄리티가 기본으로 세팅 되어있다. 
             // 21.11.09 세상에는 아직도 사양이 낮은 폰을 사용하는 사람이 있기 떄문에 AOS, IOS 할 것 없이 사양 다운을 해준다...
+            
+            int minRam = 3000;
+            
+            
+            #if UNITY_ANDROID
+            
+                minRam = 4200; // Android 에서는 4200으로 기준선 높인다 . 
+            
+            #endif
+            
             Debug.Log(">>> System RAM Check :: " + SystemInfo.systemMemorySize);
+            Debug.Log(">>> Limit RAM Check :: " + minRam);
             
             // 
-            if(SystemInfo.systemMemorySize >= 3000) {
+            if(SystemInfo.systemMemorySize >= minRam) {
                 Debug.Log(">> Quality Up");
                 
                 // 퀄리티 설정 0이 가장 낮은 퀄리티 half res
@@ -284,8 +313,12 @@ namespace PIERStory
             {
                 if (launchingJSON["header"]["isSuccessful"].IsBoolean && bool.Parse(launchingJSON["header"]["isSuccessful"].ToString()) == true)
                 {
-                    messageRequireUpdate = launchingJSON["launching"]["maintenance"]["message"]["requestUpdate"].ToString();
-                    messageTestVersion = launchingJSON["launching"]["maintenance"]["message"]["tester"].ToString();
+                    // 테스트 서버의 경우 코인샵 변경 
+                    if(isTestServerAccess) {
+                        coinShopURL =launchingJSON["launching"]["server"]["test_coinshop_url"].ToString();    
+                    }
+                    
+                    
                 }
                 else
                 {
@@ -295,7 +328,7 @@ namespace PIERStory
             catch (Exception e)
             {
                 Debug.Log(e.StackTrace);
-                launchingJSON = true;
+                launchingJSON = null;
             }
         } // ? CallbackGamebaseLaunching
 
@@ -356,7 +389,8 @@ namespace PIERStory
         void OnGamebaseInitialize(GamebaseResponse.Launching.LaunchingInfo launchingInfo, GamebaseError error) {
             
             
-            AppsFlyerSDK.AppsFlyer.sendEvent("app_open", null);
+            
+            Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventAppOpen);
             
             // 초기화 실패했을 경우에 대한 처리. 
             if (!Gamebase.IsSuccess(error))
@@ -409,18 +443,13 @@ namespace PIERStory
             // * 폰트 에셋 번들도 이 시점에서 받아야 한다. 
             RequestGameServerInfo();
             RequestAppCommonResources();
+            
+            isTestServerAccess = false; 
         
             // 통신 완료까지 대기 
             while(!isServerInfoReceived || !isAppCommonResourcesReceived)
                 yield return null;      
                 
-            #region Gamebase Launching 
-            isLaunchingCalled = false; 
-            NetworkLoader.main.RequestGamebaseLaunching(CallbackGamebaseLaunching);
-            while (!isLaunchingCalled) // 응답 받을때까지 기다리기. 
-                yield return null;
-            #endregion
-            
             
             // * 상태에 따른 추가 처리 용도 
             switch (clientStatus)
@@ -432,9 +461,7 @@ namespace PIERStory
                     break;
 
                 case GamebaseLaunchingStatus.IN_TEST: // 테스트 버전
-                    // 테스트 버전이라는 팝업 알림 처리  
-                    // 21.09.02 밴을 걸었을 때, 런칭 상태를 먼저 확인하기 떄문에 밴에 관한 팝업이 뜨지를 않는다
-                    //ShowSimpleMessagePopUp(messageTestVersion);
+                    isTestServerAccess = true; // 테스트 버전.
                     break;
 
                 case GamebaseLaunchingStatus.IN_REVIEW: // iOS & Android 심사
@@ -443,7 +470,9 @@ namespace PIERStory
 
                 case GamebaseLaunchingStatus.REQUIRE_UPDATE: // 업그레이드 필수
                     // 각 스토어 페이지를 열어주고 앱은 종료 처리 
-                    ShowLobbyPopup(messageRequireUpdate, Application.Quit, null, false);
+
+                    ShowLobbyPopup(GetLocalizedText("3"), ForwardToStore, ForwardToStore, false);
+                    
                     isServerValid = false;
                     break;
 
@@ -460,6 +489,15 @@ namespace PIERStory
                     isServerValid = false;
                     break;
             } // ? end of switch
+            
+            
+            #region Gamebase Launching 
+            isLaunchingCalled = false; 
+            NetworkLoader.main.RequestGamebaseLaunching(CallbackGamebaseLaunching);
+            while (!isLaunchingCalled) // 응답 받을때까지 기다리기. 
+                yield return null;
+            #endregion
+            
             
             // 게임베이스 이용약관 Query.
             QueryGamebaseTerms(); 
@@ -578,6 +616,10 @@ namespace PIERStory
             coinShopURL = GetJsonNodeString(masterInfo, "coinshop_url"); // 코인샵 URL
             firsetResetPrice = GetJsonNodeInt(masterInfo, "first_reset_price"); // 최초 리셋 비용 
             resetIncrementRate = GetJsonNodeInt(masterInfo, "reset_increment_rate"); // 리셋 비용 증가비율 
+            
+            episodeOpenPricePer = GetJsonNodeInt(masterInfo, "open_price_per"); // 에피소드 시간단축 오픈 10분당 코인 가격
+            waitingReduceTimeAD = GetJsonNodeInt(masterInfo, "reduce_waiting_time_ad"); // 광고보고 단축되는 시간 .
+            
             
             privacyURL = GetJsonNodeString(masterInfo, "privacy_url");
             termsOfUseURL = GetJsonNodeString(masterInfo, "terms_url"); 
@@ -775,6 +817,18 @@ namespace PIERStory
             // LoginForLastLoggedInProvider 호출 , OnCallbackLogin으로 가기!
             Gamebase.LoginForLastLoggedInProvider(OnCallbackLogin);
         }
+        
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__providerName"></param>
+        public void LoginByExpireToken(string __providerName) {
+            
+            Debug.Log("### LoginByExpireToken : " + __providerName);
+            Gamebase.Login(__providerName, OnCallbackLogin);
+            
+        }
 
         /// <summary>
         /// 로그인 콜백!
@@ -806,6 +860,19 @@ namespace PIERStory
                     }
                 }
                 else {
+                    
+                    // Token 관련 메세지는 토큰만료 로그인 팝업을 띄워준다.
+                    // 2주 미접속시 토큰이 만료되어 이전 로그인 방식으로 로그인 할 수 없음 
+                    if(error.code == GamebaseErrorCode.AUTH_TOKEN_LOGIN_FAILED 
+                        || error.code == GamebaseErrorCode.AUTH_TOKEN_LOGIN_INVALID_LAST_LOGGED_IN_IDP 
+                        || error.code == GamebaseErrorCode.AUTH_TOKEN_LOGIN_INVALID_TOKEN_INFO
+                        || error.code == GamebaseErrorCode.AUTH_IDP_LOGIN_FAILED) {
+                            ShowAuthExpireTokenPopup();
+                            return;
+                        }
+                        
+                    
+                    
                     // ShowSimpleMessagePopUp("로그인 서버가 응답하지 않습니다. 다시 로그인을 시도합니다.");
                     LoginPlatform(true); // 강제로 게스트 로그인 시도.
                 }
@@ -864,7 +931,9 @@ namespace PIERStory
         /// 푸시 토큰 정보 불러오기 
         /// </summary>
         public void QueryPushTokenInfo() {
-                
+
+            if (Application.isEditor)
+                return;
                     
             Gamebase.Push.QueryTokenInfo((data, error) =>
             {
@@ -1086,13 +1155,7 @@ namespace PIERStory
                 {
                     Debug.Log("RegisterPush succeeded.");
 
-                    /*
-                    if(adPush)
-                        AppsFlyerSDK.AppsFlyer.sendEvent("APP_ADINFORM", null);
 
-                    if(nightAdPush)
-                        AppsFlyerSDK.AppsFlyer.sendEvent("APP_NIGHTADINFORM", null);
-                    */
                     QueryPushTokenInfo();
 
                 }
@@ -1327,7 +1390,6 @@ namespace PIERStory
             MainToggleNavigation.OnToggleAccountBonus?.Invoke();
             PopupAccount.OnRefresh?.Invoke();
             MainMore.OnRefreshMore?.Invoke();
-            ViewMain.OnProfileSetting?.Invoke();
         }      
         
         
@@ -1569,6 +1631,55 @@ namespace PIERStory
 
 
         #region 시스템(앱) 팝업
+        
+        
+        /// <summary>
+        /// 리셋 팝업 호출 
+        /// </summary>
+        /// <param name="__targetEpisode"></param>
+        public static void ShowFlowResetPopup(EpisodeData __targetEpisode) {
+            
+            Debug.Log("## ShowFlowResetPopup : " + __targetEpisode.episodeTitle);
+            
+            // Signal 보내고 팝업 호출 
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_EPISODE_RESET, __targetEpisode, string.Empty);
+            
+            PopupBase p = PopupManager.main.GetPopup("Reset"); 
+            if(p == null) {
+                Debug.LogError(">> No Reset Popup");
+                return; 
+            }
+            
+            // * StoryReset과 FlowReset은 같은 스크립트 파일을 공유해서, 이렇게 구분한다.
+            p.Data.isPositive = false;
+            
+            // 팝업 호출!
+            PopupManager.main.ShowPopup(p, false);
+        }
+        
+        
+        /// <summary>
+        /// 스토리 리셋 팝업 호출 
+        /// </summary>
+        /// <param name="__targetEpisode"></param>
+        public static void ShowStoryResetPopup(EpisodeData __targetEpisode) {
+            Debug.Log("## ShowStoryResetPopup : " + __targetEpisode.episodeTitle);
+            
+            // Signal 보내고 팝업 호출 
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_EPISODE_RESET, __targetEpisode, string.Empty);
+            
+            PopupBase p = PopupManager.main.GetPopup("StoryReset"); 
+            if(p == null) {
+                Debug.LogError(">> No Reset Popup");
+                return; 
+            }
+            
+            // * StoryReset과 FlowReset은 같은 스크립트 파일을 공유해서, 이렇게 구분한다.
+            p.Data.isPositive = true; 
+            
+            // 팝업 호출!
+            PopupManager.main.ShowPopup(p, false);
+        }
         
         
         /// <summary>
@@ -1905,7 +2016,7 @@ namespace PIERStory
         
         public static void LoadLobbyScene() {
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin");
-            SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Single).allowSceneActivation = true;
+            SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
         }
 
         private void OnApplicationQuit()
@@ -1927,15 +2038,6 @@ namespace PIERStory
         }
         
         
-        /// <summary>
-        /// 스페셜 에피소드 해금 메세지 팝업 처리 
-        /// </summary>
-        /// <param name="__j">해금된 에피소드 array</param>
-        public void ShowUnlockSidePopUp(JsonData __j)
-        {
-
-        }
-         
          /// <summary>
         /// 확인받고, 게임베이스 탈퇴처리 진행.
         /// </summary>
@@ -2047,8 +2149,6 @@ namespace PIERStory
             }
             
             
-            
-            
             string uidParam = string.Format("?uid={0}", UserManager.main.GetUserPinCode());
             string langParam = string.Format("&lang={0}", SystemManager.main.currentAppLanguageCode);
             
@@ -2072,10 +2172,12 @@ namespace PIERStory
                 NetworkLoader.main.RequestUserBaseProperty();
             }, null, null);            
             
-            
-
-
         }
+        
+        void ForwardToStore() {
+            Application.OpenURL("http://onelink.to/g9ja38");
+        }
+        
         
         /// <summary>
         /// 기본 재화의 아이콘 URL 
@@ -2086,7 +2188,7 @@ namespace PIERStory
             if(baseCurrencyData == null || !baseCurrencyData.ContainsKey(__currency))
                 return string.Empty;
                 
-            return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], "image_url");
+            return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], CommonConst.COL_IMAGE_URL);
         }
         
         
@@ -2099,10 +2201,30 @@ namespace PIERStory
             if(baseCurrencyData == null || !baseCurrencyData.ContainsKey(__currency))
                 return string.Empty;
                 
-            return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], "image_key");
+            return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], CommonConst.COL_IMAGE_KEY);
         }
         
+        /// <summary>
+        /// 상점으로 보내는 팝업 호출
+        /// </summary>
+        public static void ShowConnectingShopPopup(Sprite __currencyIcon, int __insufficientAmount)
+        {
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_CONNECTING_SHOP);
 
+            p.Data.SetLabelsTexts(__insufficientAmount.ToString());
+            p.Data.SetImagesSprites(__currencyIcon);
+
+            PopupManager.main.ShowPopup(p, false);
+        }
+        
+        /// <summary>
+        /// 로그인 인증 토큰 만료 안내 팝업 
+        /// </summary>
+        public static void ShowAuthExpireTokenPopup()
+        {
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_EXPIRE_TOKEN);
+            PopupManager.main.ShowPopup(p, false);
+        }
          
     }
 }

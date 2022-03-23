@@ -21,7 +21,7 @@ namespace Doozy.Editor.UIManager.Nodes
     {
         public override Type nodeType => typeof(BackButtonNode);
         public override Texture2D nodeIconTexture => EditorTextures.Nody.Icons.BackButtonNode;
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.BackButtonNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.BackButtonNode;
 
         private SerializedProperty propertyNodeCommand { get; }
         private Label actionNameLabel { get; }

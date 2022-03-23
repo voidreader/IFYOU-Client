@@ -33,6 +33,7 @@ namespace PIERStory
         public const string FUNC_UPDATE_EPISODE_COMPLETE_RECORD = "updateUserEpisodePlayRecord"; // 에피소드 플레이 완료 기록 
         public const string FUNC_UPDATE_EPISODE_START_RECORD = "insertUserEpisodeStartRecord"; // 에피소드 플레이 시작 기록 
         public const string FUNC_RESET_EPISODE_PROGRESS = "resetUserEpisodeProgress"; // 에피소드 진행도 리셋 
+        public const string FUNC_RESET_EPISODE_PROGRESS_TYPE2 = "resetUserEpisodeProgressType2"; // 에피소드 진행도 리셋 신규 15버전 2022.02.28 
 
         public const string FUNC_UPDATE_USER_VOICE_HISTORY = "updateUserVoiceHistory";      // 보이스 해금 갱신
         public const string FUNC_UPDATE_USER_ILLUST_HISTORY = "updateUserIllustHistory";    // 일러스트 해금 갱신
@@ -61,7 +62,7 @@ namespace PIERStory
 
 
         // 게임베이스 Launching 정보 조회 
-        const string FUNC_GAMEBASE_LAUNCHING = "https://api-lnc.cloud.toast.com/launching/v3.0/appkeys/csYXV5DuW8h22Xxo/configurations";
+        const string FUNC_GAMEBASE_LAUNCHING = "https://api-lnc.cloud.toast.com/launching/v3.0/appkeys/tcKCFua98jaMTiae/configurations";
         #endregion
         
         // * 기본 파라매터 
@@ -104,11 +105,6 @@ namespace PIERStory
         // Start is called before the first frame update
         void Start()
         {
-            if (SystemManager.main.isTestServerAccess)
-                _url = CommonConst.TEST_SERVER_URL;
-            else
-                _url = CommonConst.LIVE_SERVER_URL;
-
         }
         
         public void SetURL(string __url) {
@@ -365,22 +361,7 @@ namespace PIERStory
             request.Send();
         }
 
-        /// <summary>
-        /// 유저 호감도 업데이트 
-        /// </summary>
-        /// <param name="__favorName">호감도 이름</param>
-        /// <param name="__score">점수</param>
-        /// <param name="__cb">콜백</param>
-        public void UpdateUserFavor(string __favorName, int __score, OnRequestFinishedDelegate __cb)
-        {
-            JsonData sending = new JsonData();
-            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 
-            sending["favor_name"] = __favorName; // 호감도 이름
-            sending["score"] = __score; // 스코어 
-            sending["func"] = FUNC_UPDATE_USER_FAVOR_HISTORY; // func 지정 
-
-            SendPost(__cb, sending);
-        }
+        
 
 
         /// <summary>
@@ -556,8 +537,6 @@ namespace PIERStory
             if(UserManager.main.tutorialFirstProjectID > 0 && UserManager.main.tutorialStep == 1)
                 UserManager.main.UpdateTutorialStep(2);
 
-            if (!UserManager.main.useRecord)
-                return;
 
             // Progress와 History 둘 다 저장이 된다. (progress는 is_clear가 업데이트)
             JsonData sending = new JsonData();
@@ -569,6 +548,7 @@ namespace PIERStory
 
             sending["func"] = FUNC_UPDATE_EPISODE_COMPLETE_RECORD;
             sending["ver"] = 10; // 버전 2022.01.24
+            sending["useRecord"] = UserManager.main.useRecord;
 
             // 에피소드 완료 기록을 하면서 현재 선택지 기록을 갱신한다
             UserManager.main.SetCurrentStorySelectionList(StoryManager.main.CurrentProjectID);
@@ -580,14 +560,15 @@ namespace PIERStory
         /// 에피소드 진행도 리셋 
         /// </summary>
         /// <param name="resetEpisodeID">타겟 에피소드</param>
-        public void ResetEpisodeProgress(string __resetEpisodeID, bool __isFree)
+        public void ResetEpisodeProgress(string __resetEpisodeID, int __price, bool __isFree)
         {
             // 에피소드 리셋은 반드시 통신이 완료되고 다음이 진행되어야 합니다. 
             JsonData sending = new JsonData();
             sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
             sending["episodeID"] = __resetEpisodeID; // 타겟 에피소드 
+            sending["price"] = __price; // 리셋 가격
             sending["isFree"] = __isFree; // 무료 유료 처리 
-            sending[CommonConst.FUNC] = FUNC_RESET_EPISODE_PROGRESS;
+            sending[CommonConst.FUNC] = FUNC_RESET_EPISODE_PROGRESS_TYPE2;
 
 
             // 통신 시작!
@@ -990,6 +971,9 @@ namespace PIERStory
                         
                         Debug.LogError(string.Format("!!! Download response fail [{0}]", exceptionMessage));
                         
+                        // 서버로 리포트 
+                        main.ReportRequestError(request.Uri.ToString(), string.Format("Request is finished, but response failed [{0}]", response.StatusCode));
+                        
                     }
                     break; // ? end of Finished 
                 
@@ -997,6 +981,9 @@ namespace PIERStory
                 default:
                     exceptionMessage = request.State.ToString();
                     Debug.LogError(string.Format("!!! Download request fail [{0}]", exceptionMessage));
+                    
+                    // 서버로 리포트 
+                    main.ReportRequestError(request.Uri.ToString(), string.Format("Request failed. [{0}]", request.State.ToString()));
                 break;
             }
 

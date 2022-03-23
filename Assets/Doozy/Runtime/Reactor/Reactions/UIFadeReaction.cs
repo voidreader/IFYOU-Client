@@ -25,7 +25,11 @@ namespace Doozy.Runtime.Reactor.Reactions
         public float startAlpha
         {
             get => StartAlpha;
-            set => StartAlpha = value;
+            set
+            {
+                StartAlpha = value;
+                if (isActive) UpdateValues();
+            }
         }
 
         [SerializeField] private ReferenceValue FromReferenceValue = ReferenceValue.StartValue;

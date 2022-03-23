@@ -4,7 +4,7 @@
 
 namespace Doozy.Runtime.Nody
 {
-    /// <summary> Describes node types </summary>
+    /// <summary> Describes types of node </summary>
     public enum NodeType
     {
         /// <summary> Simple node is a normal node (most nodes are simple nodes) </summary>

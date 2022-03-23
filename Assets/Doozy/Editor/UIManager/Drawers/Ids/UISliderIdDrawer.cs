@@ -24,7 +24,7 @@ namespace Doozy.Editor.UIManager.Drawers
                 property,
                 () => UISliderIdDatabase.instance.database.GetCategories(),
                 targetCategory => UISliderIdDatabase.instance.database.GetNames(targetCategory),
-                EditorMicroAnimations.UIManager.Icons.SlidersDatabase,
+                EditorSpriteSheets.UIManager.Icons.UISliderDatabase,
                 SlidersDatabaseWindow.Open,
                 "Open Sliders Database Window",
                 UISliderIdDatabase.instance,

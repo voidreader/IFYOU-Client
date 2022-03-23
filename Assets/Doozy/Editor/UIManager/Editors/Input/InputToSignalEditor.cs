@@ -31,10 +31,10 @@ namespace Doozy.Editor.UIManager.Editors.Input
         private static Color accentColor => EditorColors.UIManager.InputComponent;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.InputComponent;
 
-        private static IEnumerable<Texture2D> inputToSignalIconTextures => EditorMicroAnimations.UIManager.Icons.InputToSignal;
+        private static IEnumerable<Texture2D> inputToSignalIconTextures => EditorSpriteSheets.UIManager.Icons.InputToSignal;
 
         //ToDo: maybe -> add a connected state indicator
-        private static IEnumerable<Texture2D> disconnectedConnectedTextures => EditorMicroAnimations.EditorUI.Icons.DisconnectedConnected;
+        private static IEnumerable<Texture2D> disconnectedConnectedTextures => EditorSpriteSheets.EditorUI.Icons.DisconnectedConnected;
 
         private VisualElement root { get; set; }
         private FluidComponentHeader componentHeader { get; set; }

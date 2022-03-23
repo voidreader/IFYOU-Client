@@ -26,7 +26,7 @@ namespace Doozy.Editor.UIManager.Editors.Audio
         private static Color accentColor => EditorColors.UIManager.AudioComponent;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.AudioComponent;
 
-        private static IEnumerable<Texture2D> componentIconTextures => EditorMicroAnimations.UIManager.Icons.SignalToAudioSource;
+        private static IEnumerable<Texture2D> componentIconTextures => EditorSpriteSheets.UIManager.Icons.SignalToAudioSource;
 
         private VisualElement root { get; set; }
         private FluidComponentHeader componentHeader { get; set; }
@@ -80,7 +80,7 @@ namespace Doozy.Editor.UIManager.Editors.Audio
             streamIdFluidField = FluidField.Get().AddFieldContent(streamIdPropertyField);
 
             audioSourceObjectField = DesignUtils.NewObjectField(propertyAudioSource, typeof(AudioSource)).SetStyleFlexGrow(1).SetTooltip("Target AudioSource");
-            audioSourceFluidField = FluidField.Get().SetLabelText("Audio Source").SetIcon(EditorMicroAnimations.EditorUI.Icons.Sound).AddFieldContent(audioSourceObjectField);
+            audioSourceFluidField = FluidField.Get().SetLabelText("Audio Source").SetIcon(EditorSpriteSheets.EditorUI.Icons.Sound).AddFieldContent(audioSourceObjectField);
         }
 
         private void Compose()

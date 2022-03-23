@@ -389,14 +389,18 @@ MonoBehaviour:
   currentEpisodeData:
     episodeID: 
     episodeNO: 
+    episodeNumber: 0
     episodeTypeString: 
     episodeType: 0
     episodeTitle: 
     episodeSummary: 
     combinedEpisodeTitle: 
+    storyLobbyTitle: 
+    flowPrefix: 
     endingType: 
     dependEpisode: 
     endingOpen: 0
+    nextOpenMin: 0
     totalSceneCount: 0
     playedSceneCount: 0
     sceneProgressorValue: 0
@@ -423,6 +427,7 @@ MonoBehaviour:
   isWaitingScreenTouch: 0
   useSkip: 0
   skipable: 0
+  isAutoPlay: 0
   isJustSkipStop: 0
   inGameMenu: {fileID: 0}
   currentSceneId: 
@@ -442,6 +447,8 @@ MonoBehaviour:
     offsetX: 0
     offsetY: 0
     isResized: 0
+    isAddressable: 0
+    addressableKey: 
   indexPoolBG: 0
   PoolSpriteBG:
   - {fileID: 4073639716051730705}
@@ -485,6 +492,8 @@ MonoBehaviour:
     offsetX: 0
     offsetY: 0
     isResized: 0
+    isAddressable: 0
+    addressableKey: 
   currentMinicut: {fileID: 0}
   defaultImage: {fileID: 0}
   illustPillar: {fileID: 1138654295600481145}
@@ -500,6 +509,12 @@ MonoBehaviour:
     unloadAssetCount: 0
     modelCharacter: {fileID: 0}
     modelController: {fileID: 0}
+    gameScale: 0
+    offset_x: 0
+    offset_y: 0
+    direction: 
+    isAddressable: 0
+    addressableKey: 
   characterModels:
   - {fileID: 0}
   - {fileID: 0}
@@ -526,12 +541,17 @@ MonoBehaviour:
   ListLoadingModel: []
   indexPoolIllust: 0
   gameNetworkLoadingScreen: {fileID: 0}
-  spriteSelectionNormalBase: {fileID: 21300000, guid: 5a1eed4ff374776418f127f03389eff1, type: 3}
-  spriteSelectionLockedBase: {fileID: 21300000, guid: 376d9512c8539a14d8b698f69cf9e47d, type: 3}
-  spriteSelectionUnlockedBase: {fileID: 21300000, guid: a909de6a2e738aa4ca5db94af6dc5af6, type: 3}
-  spriteSelectionLockIcon: {fileID: 21300000, guid: f777c6b780914ac4caa4958e52ebabfb, type: 3}
-  spriteSelectionUnlockIcon: {fileID: 21300000, guid: 0ac6a25c2cb46684a8dfa655c881a8d4, type: 3}
-  spriteIllustPopup: {fileID: 21300000, guid: 7e68e731568179c47b9905bbb4e8afb4, type: 3}
+  spriteSelectionNormalBase: {fileID: 21300000, guid: 7f13984de6d47a6488d54372bb114d1f, type: 3}
+  spriteSelectionLockedBase: {fileID: 21300000, guid: 8658c365b2f70c041b7cb3adaed878a8, type: 3}
+  spriteSelectionUnlockedBase: {fileID: 21300000, guid: 415c442ea4040aa46acd6a536a530dbc, type: 3}
+  spriteSelectionLockIcon: {fileID: 21300000, guid: 6e1f7f636c4123e47b3c93836acd5520, type: 3}
+  spriteSelectionUnlockIcon: {fileID: 21300000, guid: 4f54f9e8dd56e5a4ebf00fd535bf1e56, type: 3}
+  spriteInappOriginIcon: {fileID: 21300000, guid: 2a247d77ccda2a344ad74c71cc797b2d, type: 3}
+  spriteGameMessageNormal: {fileID: 21300000, guid: d358e4e1812a1454dad2a8a7209f204e, type: 3}
+  spriteGameMessagePositive: {fileID: 21300000, guid: c719408b4fee048439ff844f79ef56cd, type: 3}
+  spriteGameMessageNegative: {fileID: 21300000, guid: 85a7997d3c28d9e47a8f683c8c08b039, type: 3}
+  spriteIllustPopup: {fileID: 21300000, guid: 54e2ce0f80c3b154f904f1c7a8c5084e, type: 3}
+  flowTime: 0
 --- !u!1 &1138654296053884051
 GameObject:
   m_ObjectHideFlags: 0
@@ -1201,6 +1221,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeightHitbox (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1344926653029165780, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_Size.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1344926653029165781, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e3be088536c02bc429dd28e67d9baf77, type: 3}
+    - target: {fileID: 1344926653029165781, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1344926653029165782, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -1421,6 +1453,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeightHitbox (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1344926653029165780, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_Size.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1344926653029165781, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e3be088536c02bc429dd28e67d9baf77, type: 3}
+    - target: {fileID: 1344926653029165781, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1344926653029165782, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1486,6 +1530,18 @@ PrefabInstance:
     - target: {fileID: 1344926653029165777, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
       propertyPath: m_Name
       value: HeightHitbox (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1344926653029165780, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_Size.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1344926653029165781, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e3be088536c02bc429dd28e67d9baf77, type: 3}
+    - target: {fileID: 1344926653029165781, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1344926653029165782, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
       propertyPath: m_RootOrder
@@ -1783,6 +1839,18 @@ PrefabInstance:
     - target: {fileID: 1344926653029165777, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
       propertyPath: m_Name
       value: HeightHitbox (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1344926653029165780, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_Size.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1344926653029165781, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e3be088536c02bc429dd28e67d9baf77, type: 3}
+    - target: {fileID: 1344926653029165781, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1344926653029165782, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
       propertyPath: m_RootOrder
@@ -2234,6 +2302,10 @@ PrefabInstance:
     - target: {fileID: 1344926653029165777, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
       propertyPath: m_Name
       value: HeightHitbox
+      objectReference: {fileID: 0}
+    - target: {fileID: 1344926653029165780, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
+      propertyPath: m_Size.z
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1344926653029165782, guid: c77f19cb1d5361840a14fc85d7d64856, type: 3}
       propertyPath: m_RootOrder

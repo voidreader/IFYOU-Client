@@ -134,8 +134,18 @@ namespace Doozy.Runtime.UIManager.Animators
             updateStartPositionInLateUpdate = true;
         }
 
+        private Vector3 prevScale = Vector3.zero;
         private void LateUpdate()
         {
+            if (name.Contains("(Clone)"))
+            {
+                if (rectTransform.localScale != prevScale)
+                {
+                    Debug.Log($"{name} {rectTransform.localScale}");
+                    prevScale = rectTransform.localScale;
+                }
+            }
+            
             if (!animatorInitialized) return;
 
             if (playStateAnimationFromLateUpdate)
@@ -213,6 +223,50 @@ namespace Doozy.Runtime.UIManager.Animators
                 return;
             }
             GetAnimation(state)?.Play();
+        }
+
+        /// <summary> Set a new start position value (RectTransform.anchoredPosition3D) for all state animations </summary>
+        /// <param name="value"> New start position </param>
+        public void SetStartPosition(Vector3 value)
+        {
+            normalAnimation.startPosition = value;
+            highlightedAnimation.startPosition = value;
+            pressedAnimation.startPosition = value;
+            selectedAnimation.startPosition = value;
+            disabledAnimation.startPosition = value;
+        }
+
+        /// <summary> Set a new start rotation value (RectTransform.localEulerAngles) for all state animations </summary>
+        /// <param name="value"> New start rotation </param>
+        public void SetStartRotation(Vector3 value)
+        {
+            normalAnimation.startRotation = value;
+            highlightedAnimation.startRotation = value;
+            pressedAnimation.startRotation = value;
+            selectedAnimation.startRotation = value;
+            disabledAnimation.startRotation = value;
+        }
+
+        /// <summary> Set a new start scale value (RectTransform.localScale) for all state animations </summary>
+        /// <param name="value"> New start scale </param>
+        public void SetStartScale(Vector3 value)
+        {
+            normalAnimation.startScale = value;
+            highlightedAnimation.startScale = value;
+            pressedAnimation.startScale = value;
+            selectedAnimation.startScale = value;
+            disabledAnimation.startScale = value;
+        }
+
+        /// <summary> Set a new start alpha value (CanvasGroup.alpha) for all state animations </summary>
+        /// <param name="value"> New start scale </param>
+        public void SetStartAlpha(float value)
+        {
+            normalAnimation.startAlpha = value;
+            highlightedAnimation.startAlpha = value;
+            pressedAnimation.startAlpha = value;
+            selectedAnimation.startAlpha = value;
+            disabledAnimation.startAlpha = value;
         }
 
         private static void ResetAnimation(UIAnimation target)

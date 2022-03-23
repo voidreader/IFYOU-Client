@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Cursor = UnityEngine.UIElements.Cursor;
 
 namespace Doozy.Runtime.UIElements.Extensions
 {
@@ -1780,6 +1781,59 @@ namespace Doozy.Runtime.UIElements.Extensions
 
         #endregion
 
+        #region Style - Cursor
+
+        /// <summary> Mouse cursor to display when the mouse pointer is over an element </summary>
+        /// <param name="target"> Target VisualElement </param>
+        /// <param name="texture"> The texture to use for the cursor style. To use a texture as a cursor, import the texture with "Read/Write enabled" in the texture importer (or using the "Cursor" defaults) </param>
+        /// <param name="hotspot"> The offset from the top left of the texture to use as the target point (must be within the bounds of the cursor) </param>
+        /// <typeparam name="T"> VisualElement </typeparam>
+        public static T SetStyleCursor<T>(this T target, Texture2D texture, Vector2 hotspot) where T : VisualElement
+        {
+            target.style.cursor = new Cursor()
+            {
+                texture = texture,
+                hotspot = hotspot
+            };
+            return target;
+        }
+
+        /// <summary> Mouse cursor to display when the mouse pointer is over an element (hotspot offset is calculated automatically) </summary>
+        /// <param name="target"> Target VisualElement </param>
+        /// <param name="texture"> The texture to use for the cursor style. To use a texture as a cursor, import the texture with "Read/Write enabled" in the texture importer (or using the "Cursor" defaults) </param>
+        /// <typeparam name="T"> VisualElement </typeparam>
+        public static T SetStyleCursor<T>(this T target, Texture2D texture) where T : VisualElement
+        {
+            target.style.cursor = new Cursor()
+            {
+                texture = texture,
+                hotspot = new Vector2(texture.width / 2f, texture.height / 2f)
+            };
+            return target;
+        }
+
+        /// <summary> Mouse cursor to display when the mouse pointer is over an element </summary>
+        /// <param name="target"> Target VisualElement </param>
+        /// <param name="cursor"> Cursor </param>
+        /// <typeparam name="T"> VisualElement </typeparam>
+        public static T SetStyleCursor<T>(this T target, Cursor cursor) where T : VisualElement
+        {
+            target.style.cursor = new StyleCursor(cursor);
+            return target;
+        }
+
+        /// <summary> Mouse cursor to display when the mouse pointer is over an element </summary>
+        /// <param name="target"> Target VisualElement </param>
+        /// <param name="keyword"> Style Keyword </param>
+        /// <typeparam name="T"> VisualElement </typeparam>
+        public static T SetStyleCursor<T>(this T target, StyleKeyword keyword) where T : VisualElement
+        {
+            target.style.cursor = new StyleCursor(keyword);
+            return target;
+        }
+
+        #endregion
+
         #region Style - Margins
 
         /// <summary> Set all margins to 0 (zero) </summary>
@@ -2405,7 +2459,7 @@ namespace Doozy.Runtime.UIElements.Extensions
 
         /// <summary>
         /// Returns TRUE if the VisualElement is enabled locally and if is also enabled in its own hierarchy
-        /// <para/> enabledSelf && enabledInHierarchy
+        /// <para/> enabledSelf and enabledInHierarchy
         /// </summary>
         /// <param name="target"> Target VisualElement </param>
         public static bool IsEnabled<T>(this T target) where T : VisualElement =>

@@ -11,23 +11,29 @@ namespace PIERStory
 {
     public class MissionElement : MonoBehaviour
     {
+        [Header("미션 이미지 관련")]
         public ImageRequireDownload missionThumbnail;
         public GameObject hiddenHighlight;
 
         public TextMeshProUGUI missionText;
+        public GameObject hiddenMissionTexts;   // 히든 미션 표기 관련 object
+        public TextMeshProUGUI hiddenText;      // 히든 미션 관련 텍스트
         
-        
-        public GameObject rewardInfo;
-        public GameObject getRewardButton;          // 미션 보상받기
-        public GameObject completeMark;             // 미션 완료 도장
-        
-        public CanvasGroup rewardCanvasGroup; // 리워드 미션 캔버스 그룹 
 
+        [Space][Header("미션 진행도 관련")]
+        public GameObject missionProgress;
+        public TextMeshProUGUI missionProgressText;
+        public TextMeshProUGUI missionPercent;
+        public Image missionGauge;
+
+        [Space(20)][Header("미션 보상 관련")]
+        public GameObject rewardInfo;
+        
         public ImageRequireDownload currencyIcon;
-        public TextMeshProUGUI expText;
         public TextMeshProUGUI currencyAmount;
-        public Image border;
-        public Image button;
+        public TextMeshProUGUI expText;
+
+        public Image rewardButton;
         public TextMeshProUGUI getRewardText;
 
         Color pinkColor = new Color32(255, 163, 212, 255);
@@ -43,121 +49,92 @@ namespace PIERStory
 
         public void InitMission(MissionData __missionData)
         {
-            gameObject.SetActive(true);
-            
-            rewardCanvasGroup.alpha = 1;
-            
-            
             missionData = __missionData;
             missionThumbnail.gameObject.SetActive(true);
             hiddenHighlight.SetActive(false);
-            
+            hiddenMissionTexts.SetActive(false);
+            missionText.gameObject.SetActive(true);
 
             missionThumbnail.SetDownloadURL(missionData.imageURL, missionData.imageKey);
             
-            missionText.text = string.Format("<size=24><b>{0}</b></size>\n{1}", missionData.missionName, missionData.missionHint);
-            
-            // missionTitle.text = missionData.missionName;
-            // missionHint.text = missionData.missionHint;
+            missionText.text = missionData.missionName;
 
-            expText.text = string.Format("EXP {0}", missionData.rewardExp);
+            expText.text = string.Format("EXP\n{0}", missionData.rewardExp);
 
             SetCurrencyIcon(missionData.rewardQuantity);
             SetMissionState(missionData.missionState);
-            MissionGradeColor();
+            //MissionGradeColor();
 
             // 버튼 비활성화 표기
+            /*
             if (missionData.missionState == MissionState.locked)
             {
                 getRewardText.color = HexCodeChanger.HexToColor("C4C4C4");
-                button.sprite = LobbyManager.main.spriteWhiteButton;
+                button.sprite = LobbyManager.main.spriteGetReward;
                 button.color = disableGreyColor;
             }
+            */
+
+            gameObject.SetActive(true);
         }
 
+        /// <summary>
+        /// 히든 미션 표기
+        /// </summary>
+        /// <param name="lockCount"></param>
         public void HighlightHidden(int lockCount)
         {
             gameObject.SetActive(true);
 
             missionThumbnail.gameObject.SetActive(false);
             hiddenHighlight.SetActive(true);
+            hiddenMissionTexts.SetActive(true);
+            missionText.gameObject.SetActive(false);
             rewardInfo.SetActive(false);
-            completeMark.SetActive(false);
+            missionProgress.SetActive(false);
+            rewardButton.gameObject.SetActive(false);
 
-            missionText.text = string.Format("<size=24><b>"+SystemManager.GetLocalizedText("6056")+"</b></size>\n"+SystemManager.GetLocalizedText("6057"), lockCount);
+            hiddenText.text = string.Format(SystemManager.GetLocalizedText("6056"), lockCount);
         }
 
+        /// <summary>
+        /// 보상 재화 설정
+        /// </summary>
+        /// <param name="__amount"></param>
         void SetCurrencyIcon(int __amount)
         {
             currencyIcon.SetDownloadURL(missionData.currency_icon_url, missionData.currency_icon_key);
             currencyAmount.text = string.Format("{0}", __amount);
         }
 
+
         void SetMissionState(MissionState __state)
         {
             rewardInfo.SetActive(true);
-            completeMark.SetActive(false);
+            missionProgress.SetActive(false);
+            rewardButton.gameObject.SetActive(false);
             
             state = __state;
 
             switch (__state)
             {
                 case MissionState.unlocked:
-                    getRewardButton.GetComponent<UIButton>().interactable = true;
+                    rewardButton.sprite = LobbyManager.main.spriteGetReward;
+                    getRewardText.color = HexCodeChanger.HexToColor("333333");
+                    rewardButton.gameObject.SetActive(true);
                     break;
                 case MissionState.finish:
-                    rewardInfo.SetActive(false);
-                    completeMark.SetActive(true);
+                    rewardButton.sprite = LobbyManager.main.spriteGetReward;
+                    getRewardText.color = HexCodeChanger.HexToColor("C4C4C4");
+                    rewardButton.gameObject.SetActive(true);
                     break;
 
                 default:
-                    getRewardButton.GetComponent<UIButton>().interactable = false;
+                    missionProgressText.text = string.Format(SystemManager.GetLocalizedText("5042") + "(0/1)");
+                    missionPercent.text = "0%";
+                    missionGauge.fillAmount = 0f;
+                    missionProgress.SetActive(true);
                     break;
-            }
-        }
-
-
-        /// <summary>
-        /// 미션 등급화
-        /// </summary>
-        void MissionGradeColor()
-        {
-            getRewardText.color = HexCodeChanger.HexToColor("404040");
-
-            // 미션 등급화
-            if (missionData.rewardExp >= 100)
-            {
-                border.color = Color.white;
-                button.color = Color.white;
-
-                border.sprite = LobbyManager.main.spriteGradientBorder;
-                button.sprite = LobbyManager.main.spriteGradientButton;
-                return;
-            }
-
-
-            border.sprite = LobbyManager.main.spriteWhiteBorder;
-            button.sprite = LobbyManager.main.spriteWhiteButton;
-
-            if (missionData.rewardExp >= 20)
-            {
-                border.color = violetColor;
-                button.color = new Color(violetColor.r, violetColor.g, violetColor.b, violetColor.a * 0.7f);
-                return;
-            }
-
-            if (missionData.rewardExp >= 7)
-            {
-                border.color = orangeColor;
-                button.color = new Color(orangeColor.r, orangeColor.g, orangeColor.b, orangeColor.a * 0.7f);
-                return;
-            }
-
-
-            if (missionData.rewardExp >= 1)
-            {
-                border.color = pinkColor;
-                button.color = new Color(pinkColor.r, pinkColor.g, pinkColor.b, pinkColor.a * 0.7f);
             }
         }
 
@@ -181,7 +158,7 @@ namespace PIERStory
             }
 
             Debug.Log("> CallbackGetMissionReward : " + res.DataAsText);
-            getRewardButton.GetComponent<UIButton>().interactable = false;
+            rewardButton.GetComponent<UIButton>().interactable = false;
             
             JsonData resposeData = JsonMapper.ToObject(res.DataAsText);
             
@@ -211,17 +188,17 @@ namespace PIERStory
             
             // 경험치 처리 
             NetworkLoader.main.UpdateUserExp(missionData.rewardExp, "mission", missionData.missionID);
-            
-            rewardCanvasGroup.DOFade(0, 0.2f).OnComplete(CompleteStep2);
+            RefreshViewMission();
+            //rewardCanvasGroup.DOFade(0, 0.2f).OnComplete(CompleteStep2);
             // RewardMask.DOFade(1, 0.2f).OnComplete(CompleteStep2);
-            
-            completeMark.transform.localScale = Vector3.one * 1.5f;
+
+            //completeMark.transform.localScale = Vector3.one * 1.5f;
 
         }
         
         void CompleteStep2() {
-            completeMark.gameObject.SetActive(true);
-            completeMark.transform.DOScale(Vector3.one, 0.4f).SetEase(Ease.InQuad).OnComplete(RefreshViewMission);
+            //completeMark.gameObject.SetActive(true);
+            //completeMark.transform.DOScale(Vector3.one, 0.4f).SetEase(Ease.InQuad).OnComplete(RefreshViewMission);
             
             // ViewMission.OnCompleteReward?.Invoke();
         }
@@ -229,6 +206,7 @@ namespace PIERStory
         void RefreshViewMission() {
             // ViewMission.OnCompleteReward?.Invoke();
             ViewMission.OnRefreshProgressor?.Invoke();
+            rewardButton.GetComponent<UIButton>().interactable = true;
         }
     }
     

@@ -20,7 +20,7 @@ namespace Doozy.Editor.UIManager.Layouts.Databases
     public sealed class ViewsDatabaseWindowLayout : CategoryNameGroupWindowLayout, IUIManagerDatabaseWindowLayout
     {
         public override string layoutName => "Views";
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.UIManager.Icons.ViewsDatabase;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.UIManager.Icons.UIViewDatabase;
         public override Color accentColor => EditorColors.UIManager.UIComponent;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.UIComponent;
         

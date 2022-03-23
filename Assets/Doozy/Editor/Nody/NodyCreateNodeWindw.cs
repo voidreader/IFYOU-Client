@@ -13,6 +13,7 @@ using Doozy.Editor.Nody.Automation.Generators;
 using Doozy.Editor.Reactor.Internal;
 using Doozy.Runtime;
 using Doozy.Runtime.Common.Extensions;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Nody;
 using Doozy.Runtime.Reactor.Extensions;
 using Doozy.Runtime.Reactor.Reactions;
@@ -129,7 +130,7 @@ namespace Doozy.Editor.Nody
 
             nodyIconReaction =
                 nodyIcon
-                    .GetTexture2DReaction(EditorMicroAnimations.Nody.Icons.Nody)
+                    .GetTexture2DReaction(EditorSpriteSheets.Nody.Icons.Nody)
                     .SetEditorHeartbeat();
 
             nodyIconReaction.Play();
@@ -174,19 +175,32 @@ namespace Doozy.Editor.Nody
                     .SetStyleBackgroundColor(EditorColors.Default.FieldBackground)
                     .SetStyleBorderRadius(4);
 
-            nodeNameTextField =
-                new TextField()
-                    .SetName(nameof(nodeNameTextField))
-                    .ResetLayout()
-                    .SetStyleFlexShrink(0)
-                    .SetStyleFlexGrow(1);
-
             canBeDeletedSwitch =
                 FluidToggleSwitch.Get("Node can be deleted")
                     .SetTooltip("[Editor] Used to prevent special nodes from being deleted in the editor")
                     .SetToggleAccentColor(selectableAccentColor)
                     .SetIsOn(canBeDeleted)
                     .SetOnValueChanged(evt => canBeDeleted = evt.newValue);
+
+            TextField GetTextField() => new TextField().ResetLayout().SetStyleFlexShrink(0).SetStyleFlexGrow(1);
+
+            nodeNameTextField = GetTextField().SetName(nameof(nodeNameTextField));
+            runtimePathTextField = GetTextField().SetName(nameof(runtimePathTextField));
+            editorPathTextField = GetTextField().SetName(nameof(editorPathTextField));
+
+            FluidButton GetButton(string openFolderPanelTitle, TextField textField) =>
+                FluidButton.Get()
+                    .SetElementSize(ElementSize.Small)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Load)
+                    .SetOnClick(() =>
+                    {
+                        string rawPath = EditorUtility.OpenFolderPanel(openFolderPanelTitle, textField.value, "");
+                        if (rawPath == textField.value || rawPath.IsNullOrEmpty()) return;
+                        textField.value = PathUtils.ToRelativePath(rawPath);
+                    });
+
+            runtimePathButton = GetButton("Runtime Path", runtimePathTextField);
+            editorPathButton = GetButton("Editor Path", editorPathTextField);
 
             nodeNameField =
                 FluidField.Get()
@@ -200,23 +214,6 @@ namespace Doozy.Editor.Nody
                             .AddChild(canBeDeletedSwitch)
                     );
 
-            runtimePathTextField =
-                new TextField()
-                    .SetName(nameof(runtimePathTextField))
-                    .ResetLayout()
-                    .SetStyleFlexShrink(0)
-                    .SetStyleFlexGrow(1);
-
-            runtimePathButton =
-                FluidButton.Get()
-                    .SetElementSize(ElementSize.Small)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Load)
-                    .SetOnClick(() =>
-                    {
-                        string rawPath = EditorUtility.OpenFolderPanel("Runtime Path", runtimePathTextField.value, "");
-                        runtimePathTextField.value = FileGenerator.CleanPath(rawPath);
-                    });
-
             runtimePathField =
                 FluidField.Get()
                     .SetLabelText("Runtime Path (where the node is saved)")
@@ -228,23 +225,6 @@ namespace Doozy.Editor.Nody
                             .AddChild(DesignUtils.spaceBlock3X)
                             .AddChild(runtimePathButton)
                     );
-
-            editorPathTextField =
-                new TextField()
-                    .SetName(nameof(editorPathTextField))
-                    .ResetLayout()
-                    .SetStyleFlexShrink(0)
-                    .SetStyleFlexGrow(1);
-
-            editorPathButton =
-                FluidButton.Get()
-                    .SetElementSize(ElementSize.Small)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Load)
-                    .SetOnClick(() =>
-                    {
-                        string rawPath = EditorUtility.OpenFolderPanel("Editor Path", editorPathTextField.value, "");
-                        editorPathTextField.value = FileGenerator.CleanPath(rawPath);
-                    });
 
             editorPathField =
                 FluidField.Get()
@@ -261,7 +241,7 @@ namespace Doozy.Editor.Nody
             createNodeButton =
                 FluidButton.Get()
                     .SetLabelText("Create")
-                    .SetIcon(EditorMicroAnimations.Nody.Icons.Nody)
+                    .SetIcon(EditorSpriteSheets.Nody.Icons.Nody)
                     .SetElementSize(ElementSize.Large)
                     .SetButtonStyle(ButtonStyle.Contained)
                     .SetAccentColor(selectableAccentColor)
@@ -354,21 +334,18 @@ namespace Doozy.Editor.Nody
                 ;
         }
 
-        
-    
-
-        internal void SelectNodeType(NodeType nodeType)
+        internal void SelectNodeType(NodeType typeOfNode)
         {
             root.schedule.Execute(() =>
             {
-                this.nodeType = nodeType;
-                simpleNodeTabSelector?.SetIsOn(nodeType == NodeType.Simple);
-                globalNodeTabSelector?.SetIsOn(nodeType == NodeType.Global);
+                nodeType = typeOfNode;
+                simpleNodeTabSelector?.SetIsOn(typeOfNode == NodeType.Simple);
+                globalNodeTabSelector?.SetIsOn(typeOfNode == NodeType.Global);
             });
         }
 
 
-        private FluidToggleButtonTab GetSelectorTab(string labelText) =>
+        private static FluidToggleButtonTab GetSelectorTab(string labelText) =>
             FluidToggleButtonTab.Get()
                 .SetLabelText(labelText)
                 .SetContainerColorOff(DesignUtils.tabButtonColorOff)

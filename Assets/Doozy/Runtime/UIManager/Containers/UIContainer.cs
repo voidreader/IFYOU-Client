@@ -6,7 +6,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Doozy.Runtime.Common.Extensions;
+using Doozy.Runtime.Global;
 using Doozy.Runtime.Mody;
+using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Internal;
 using Doozy.Runtime.Reactor.Reactions;
 using Doozy.Runtime.UIManager.Events;
@@ -33,48 +36,61 @@ namespace Doozy.Runtime.UIManager.Containers
     [SelectionBase]
     public class UIContainer : MonoBehaviour, ICanvasElement, IUseMultiplayerInfo
     {
+        /// <summary> Stream category name </summary>
         public const string k_StreamCategory = nameof(UIContainer);
+        /// <summary> Default animation duration </summary>
         public const float k_DefaultAnimationDuration = 0.3f;
 
         #region MultiplayerInfo
 
         [SerializeField] private MultiplayerInfo MultiplayerInfo;
+        /// <summary> Reference to the MultiPlayerInfo component </summary>
         public MultiplayerInfo multiplayerInfo => MultiplayerInfo;
+
+        /// <summary> Check if a MultiplayerInfo has been referenced </summary>
         public bool hasMultiplayerInfo => multiplayerInfo != null;
+
+        /// <summary> Player index for this component </summary>
         public int playerIndex => multiplayerMode & hasMultiplayerInfo ? multiplayerInfo.playerIndex : inputSettings.defaultPlayerIndex;
-        public void SetMultiplayerInfo(MultiplayerInfo info) => MultiplayerInfo = info;
+
+        /// <summary> Set the a reference to a MultiplayerInfo </summary>
+        /// <param name="reference"> MultiplayerInfo reference </param>
+        public void SetMultiplayerInfo(MultiplayerInfo reference) =>
+            MultiplayerInfo = reference;
 
         #endregion
 
         /// <summary> Reference to the UIManager Input Settings </summary>
         public static UIManagerInputSettings inputSettings => UIManagerInputSettings.instance;
 
-        /// <summary> True Multiplayer Mode is enabled </summary>
+        /// <summary> Check if Multiplayer Mode is enabled </summary>
         public static bool multiplayerMode => inputSettings.multiplayerMode;
 
         private Canvas m_Canvas;
-        /// <summary> Reference to the Canvas component </summary>
+        /// <summary> Reference to the Canvas component attached to this GameObject </summary>
         public Canvas canvas => m_Canvas ? m_Canvas : m_Canvas = GetComponent<Canvas>();
 
         private CanvasGroup m_CanvasGroup;
-        /// <summary> Reference to the CanvasGroup component </summary>
+        /// <summary> Reference to the CanvasGroup component attached to this GameObject  </summary>
         public CanvasGroup canvasGroup => m_CanvasGroup ? m_CanvasGroup : m_CanvasGroup = GetComponent<CanvasGroup>();
 
-        /// <summary> TRUE if a CanvasGroup component is attached </summary>
+        /// <summary> Check if a CanvasGroup component is attached to this GameObject  </summary>
         public bool hasCanvasGroup { get; private set; }
 
         private GraphicRaycaster m_GraphicRaycaster;
-        /// <summary> Reference to the GraphicRaycaster component </summary>
+        /// <summary> Reference to the GraphicRaycaster component attached to this GameObject  </summary>
         public GraphicRaycaster graphicRaycaster => m_GraphicRaycaster ? m_GraphicRaycaster : m_GraphicRaycaster = GetComponent<GraphicRaycaster>();
 
         private RectTransform m_RectTransform;
-        /// <summary> Reference to the RectTransform component </summary>
+        /// <summary> Reference to the RectTransform component attached to this GameObject  </summary>
         public RectTransform rectTransform => m_RectTransform ? m_RectTransform : m_RectTransform = GetComponent<RectTransform>();
 
-        /// <summary> Container behaviour on Start </summary>
+        /// <summary> Behaviour on Start </summary>
         public ContainerBehaviour OnStartBehaviour = ContainerBehaviour.Disabled;
 
         #region Visibility
+
+        private int m_LastFrameVisibilityStateChanged;
 
         /// <summary> Current visibility state </summary>
         private VisibilityState m_VisibilityState = VisibilityState.Visible;
@@ -83,28 +99,7 @@ namespace Doozy.Runtime.UIManager.Containers
         public VisibilityState visibilityState
         {
             get => m_VisibilityState;
-            private set
-            {
-                m_VisibilityState = value;
-                OnVisibilityChangedCallback?.Invoke(m_VisibilityState);
-                switch (value)
-                {
-                    case VisibilityState.Visible:
-                        ExecuteOnVisible();
-                        break;
-                    case VisibilityState.Hidden:
-                        ExecuteOnHidden();
-                        break;
-                    case VisibilityState.IsShowing:
-                        ExecuteOnShow();
-                        break;
-                    case VisibilityState.IsHiding:
-                        ExecuteOnHide();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(value), value, null);
-                }
-            }
+            private set => SetVisibility(value, true);
         }
 
         /// <summary> Visibility state is Visible </summary>
@@ -137,10 +132,25 @@ namespace Doozy.Runtime.UIManager.Containers
         /// <summary> Visibility changed - callback invoked when visibility state changed </summary>
         public VisibilityStateEvent OnVisibilityChangedCallback;
 
+        [SerializeField] private List<Progressor> ShowProgressors;
+        /// <summary> Progressors triggered on Show. Plays forward. </summary>
+        public List<Progressor> showProgressors => ShowProgressors ?? (ShowProgressors = new List<Progressor>());
+
+        [SerializeField] private List<Progressor> HideProgressors;
+        /// <summary> Progressors triggered on Hide. Plays forward. </summary>
+        public List<Progressor> hideProgressors => HideProgressors ?? (HideProgressors = new List<Progressor>());
+
+        [SerializeField] private List<Progressor> ShowHideProgressors;
+        /// <summary> Progressors triggered on both Show and Hide. Plays forward on Show and in reverse on Hide. </summary>
+        public List<Progressor> showHideProgressors => ShowHideProgressors ?? (ShowHideProgressors = new List<Progressor>());
+
         /// <summary> Action invoked every time before the container needs to change its state </summary>
         public UnityAction<ShowHideExecute> showHideExecute { get; set; }
 
+        /// <summary> Flag to keep track if the first show/hide command has been issued </summary>
         public bool executedFirstCommand { get; protected set; }
+
+        /// <summary> Keeps track of the previously executed show/hide command </summary>
         public ShowHideExecute previouslyExecutedCommand { get; protected set; }
 
         #endregion
@@ -178,20 +188,73 @@ namespace Doozy.Runtime.UIManager.Containers
         /// <summary> Reference to the GameObject that should be selected after this container has been shown. Works only if AutoSelectAfterShow is TRUE </summary>
         public GameObject AutoSelectTarget;
 
+        /// <summary> Check if any Show animation is active (running) </summary>
+        public bool anyShowAnimationIsActive => showReactions.Any(show => show.isActive);
+
+        /// <summary> Check if any Hide animation is active (running) </summary>
+        public bool anyHideAnimationIsActive => hideReactions.Any(hide => hide.isActive);
+
+        /// <summary> Check if any Show or Hide animation is active (running) </summary>
+        public bool anyAnimationIsActive => anyShowAnimationIsActive | anyHideAnimationIsActive;
+
+        /// <summary> Check if there are any referenced Show progressors </summary>
+        public bool hasShowProgressors => showProgressors.Any(p => p != null);
+
+        /// <summary> Check if there are any referenced Hide progressors </summary>
+        public bool hasHideProgressors => hideProgressors.Any(p => p != null);
+
+        /// <summary> Check if there are any referenced ShowHide progressors </summary>
+        public bool hasShowHideProgressors => showHideProgressors.Any(p => p != null);
+
+        /// <summary> Check if there are any referenced progressors </summary>
+        public bool hasProgressors => hasShowProgressors || hasHideProgressors || hasShowHideProgressors;
+
+        /// <summary> Check if any referenced Show progressor is active (running) </summary>
+        public bool anyShowProgressorIsActive => showProgressors.Where(p => p != null).Any(p => p.reaction.isActive);
+
+        /// <summary> Check if any referenced Hide progressor is active (running) </summary>
+        public bool anyHideProgressorIsActive => hideProgressors.Where(p => p != null).Any(p => p.reaction.isActive);
+
+        /// <summary> Check if any referenced ShowHide progressor is active (running) </summary>
+        public bool anyShowHideProgressorIsActive => showHideProgressors.Where(p => p != null).Any(p => p.reaction.isActive);
+
+        /// <summary> Check if any referenced progressor is active (running) </summary>
+        public bool anyProgressorIsActive => anyShowProgressorIsActive | anyHideProgressorIsActive | anyShowHideProgressorIsActive;
+
         private HashSet<Reaction> m_ShowReactions;
+        /// <summary>
+        /// Collection of reactions triggered by Show.
+        /// <para/> This collection is dynamically generated at runtime.
+        /// It is populated by all the animators controlled by this UIContainer.
+        /// The animators automatically add/remove their reactions to/from this collection. 
+        /// </summary>
         internal HashSet<Reaction> showReactions => m_ShowReactions ??= new HashSet<Reaction>();
+        /// <summary>
+        /// Get the maximum duration for the Show animations Max(startDelay) + Max(duration).
+        /// <para> At start this value can be calculated only after 2 frames have passed (the time it takes for the reactions to register) </para>
+        /// <para> For reactions that use random intervals for startDelay and/or duration, the maximum interval values are taken into account </para>
+        /// </summary>
+        public float totalDurationForShow => CalculateTotalShowDuration();
 
         private HashSet<Reaction> m_HideReactions;
+        /// <summary>
+        /// Collection of reactions triggered by Hide.
+        /// <para/> This collection is dynamically generated at runtime.
+        /// It is populated by all the animators controlled by this UIContainer.
+        /// The animators automatically add/remove their reactions to/from this collection. 
+        /// </summary>
         internal HashSet<Reaction> hideReactions => m_HideReactions ??= new HashSet<Reaction>();
+        /// <summary>
+        /// Get the maximum duration for the Hide animations Max(startDelay) + Max(duration).
+        /// <para> At start this value can be calculated only after 2 frames have passed (the time it takes for the reactions to register) </para>
+        /// <para> For reactions that use random intervals for startDelay and/or duration, the maximum interval values are taken into account </para>
+        /// </summary>
+        public float totalDurationForHide => CalculateTotalHideDuration();
 
         private Coroutine m_AutoHideCoroutine;
         private Coroutine m_CoroutineIsShowing;
         private Coroutine m_CoroutineIsHiding;
         private Coroutine m_DisableGameObjectWithDelayCoroutine;
-
-        protected bool showAnimationIsActive => showReactions.Any(show => show.isActive);
-        protected bool hideAnimationIsActive => hideReactions.Any(hide => hide.isActive);
-        protected bool anyAnimationIsActive => showAnimationIsActive | hideAnimationIsActive;
 
         public UIContainer()
         {
@@ -247,6 +310,7 @@ namespace Doozy.Runtime.UIManager.Containers
         {
             if (!Application.isPlaying) return;
             hasCanvasGroup = canvasGroup != null;
+            // visibilityState = visibilityState;
         }
 
         protected virtual void Start()
@@ -295,11 +359,67 @@ namespace Doozy.Runtime.UIManager.Containers
             showHideExecute?.Invoke(command);
             executedFirstCommand = true;
             previouslyExecutedCommand = command;
+
+            if (!hasProgressors) return;
+
+            showProgressors.RemoveNulls();
+            hideProgressors.RemoveNulls();
+            showHideProgressors.RemoveNulls();
+
+            // ReSharper disable Unity.NoNullPropagation
+            switch (command)
+            {
+                case ShowHideExecute.Show:
+                    hideProgressors.ForEach(p => p.Stop());
+                    showProgressors.ForEach(p => p.Play(PlayDirection.Forward));
+                    showHideProgressors.ForEach(p => p.Play(PlayDirection.Forward));
+                    break;
+                case ShowHideExecute.Hide:
+                    showProgressors.ForEach(p => p.Stop());
+                    hideProgressors.ForEach(p => p.Play(PlayDirection.Forward));
+                    showHideProgressors.ForEach(p => p.Play(PlayDirection.Reverse));
+                    break;
+                case ShowHideExecute.InstantShow:
+                    hideProgressors.ForEach(p => p.Stop());
+                    showProgressors.ForEach(p => p.SetProgressAtOne());
+                    showHideProgressors.ForEach(p => p.SetProgressAtOne());
+                    break;
+                case ShowHideExecute.InstantHide:
+                    showProgressors.ForEach(p => p.Stop());
+                    hideProgressors.ForEach(p => p.SetProgressAtOne());
+                    showHideProgressors.ForEach(p => p.SetProgressAtZero());
+                    break;
+                case ShowHideExecute.ReverseShow:
+                    hideProgressors.ForEach(p => p.Stop());
+                    showProgressors.ForEach(p => p.Reverse());
+                    showHideProgressors.ForEach(p => p.Reverse());
+                    break;
+                case ShowHideExecute.ReverseHide:
+                    showProgressors.ForEach(p => p.Stop());
+                    hideProgressors.ForEach(p => p.Reverse());
+                    showHideProgressors.ForEach(p => p.Reverse());
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(command), command, null);
+            }
+            // ReSharper restore Unity.NoNullPropagation
         }
 
         #region Instant Show/Hide/Toggle
 
-        public void InstantShow()
+        /// <summary>
+        /// Show in the current frame without animations.
+        /// <para/> Triggers visibility states IsShowing and then Visible.
+        /// </summary>
+        public void InstantShow() =>
+            InstantShow(true);
+        
+        /// <summary>
+        /// Show in the current frame without animations.
+        /// <para/> Triggers visibility states IsShowing and then Visible.
+        /// </summary>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        public void InstantShow(bool triggerCallbacks)
         {
             if (isVisible) return;
 
@@ -323,11 +443,23 @@ namespace Doozy.Runtime.UIManager.Containers
                 EventSystem.current.SetSelectedGameObject(AutoSelectTarget); //select the referenced target
             }
 
-            visibilityState = VisibilityState.IsShowing;
-            visibilityState = VisibilityState.Visible;
+            SetVisibility(VisibilityState.IsShowing, triggerCallbacks);
+            SetVisibility(VisibilityState.Visible, triggerCallbacks);
         }
-
-        public void InstantHide()
+        
+        /// <summary>
+        /// Hide in the current frame without animations.
+        /// <para/> Triggers visibility states IsHiding and then Hidden.
+        /// </summary>
+        public void InstantHide() =>
+            InstantHide(true);
+        
+        /// <summary>
+        /// Hide in the current frame without animations.
+        /// <para/> Triggers visibility states IsHiding and then Hidden.
+        /// </summary>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        public void InstantHide(bool triggerCallbacks)
         {
             if (isHidden) return;
 
@@ -341,8 +473,8 @@ namespace Doozy.Runtime.UIManager.Containers
                 EventSystem.current.SetSelectedGameObject(null); //clear any selected
             }
 
-            visibilityState = VisibilityState.IsHiding;
-            visibilityState = VisibilityState.Hidden;
+            SetVisibility(VisibilityState.IsHiding, triggerCallbacks);
+            SetVisibility(VisibilityState.Hidden, triggerCallbacks);
         }
 
         /// <summary>
@@ -350,7 +482,16 @@ namespace Doozy.Runtime.UIManager.Containers
         /// If Visible or IsShowing calls InstantHide.
         /// If Hidden or IsHiding calls InstantShow.
         /// </summary>
-        public void InstantToggle()
+        public void InstantToggle() =>
+            InstantToggle(true);
+        
+        /// <summary>
+        /// Toggles the visibility state.
+        /// If Visible or IsShowing calls InstantHide.
+        /// If Hidden or IsHiding calls InstantShow.
+        /// </summary>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        public void InstantToggle(bool triggerCallbacks)
         {
             switch (visibilityState)
             {
@@ -371,18 +512,35 @@ namespace Doozy.Runtime.UIManager.Containers
 
         #region Animated Show/Hide/Toggle
 
-        public void Show()
+        /// <summary>
+        /// Show with animations.
+        /// <para/> Triggers visibility states IsShowing when Show starts and then Visible when Show finished.
+        /// </summary>
+        public void Show() =>
+            Show(true);
+
+        /// <summary>
+        /// Show with animations.
+        /// <para/> Triggers visibility states IsShowing when Show starts and then Visible when Show finished.
+        /// </summary>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        public void Show(bool triggerCallbacks)
         {
-            // if (!isActiveAndEnabled) return;
             if (isShowing || isVisible) return;
+
+            gameObject.SetActive(true); //set the active state to true (in case it has been disabled when hidden)
+
+            if (m_LastFrameVisibilityStateChanged == Time.frameCount)
+            {
+                Coroutiner.ExecuteLater(() => Show(triggerCallbacks), 2);
+                return;
+            }
 
             if (isHiding)
             {
                 StopIsHidingCoroutine();
-
                 ExecutedCommand(ShowHideExecute.ReverseHide);
-
-                m_CoroutineIsShowing = StartCoroutine(IsShowing());
+                m_CoroutineIsShowing = StartCoroutine(IsShowing(triggerCallbacks));
                 return;
             }
 
@@ -392,7 +550,6 @@ namespace Doozy.Runtime.UIManager.Containers
                 graphicRaycaster.enabled = true; //enable the graphic raycaster
                 if (hasCanvasGroup) canvasGroup.blocksRaycasts = graphicRaycaster.enabled;
             }
-            gameObject.SetActive(true); //set the active state to true (in case it has been disabled when hidden)
 
             ExecutedCommand(ShowHideExecute.Show);
 
@@ -406,7 +563,7 @@ namespace Doozy.Runtime.UIManager.Containers
                 EventSystem.current.SetSelectedGameObject(AutoSelectTarget); //select the referenced target
             }
 
-            m_CoroutineIsShowing = StartCoroutine(IsShowing());
+            m_CoroutineIsShowing = StartCoroutine(IsShowing(triggerCallbacks));
         }
 
         private void StopIsShowingCoroutine()
@@ -416,29 +573,56 @@ namespace Doozy.Runtime.UIManager.Containers
             m_CoroutineIsShowing = null;
         }
 
-        private IEnumerator IsShowing()
+        /// <summary>
+        /// Internal functionality used by the Show process.
+        /// <para/> Triggered by Show
+        /// </summary>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        private IEnumerator IsShowing(bool triggerCallbacks)
         {
             StopIsHidingCoroutine();
-            visibilityState = VisibilityState.IsShowing;
+            SetVisibility(VisibilityState.IsShowing, triggerCallbacks);
             yield return new WaitForEndOfFrame();
+
             while (anyAnimationIsActive)
-            {
                 yield return null;
-            }
-            visibilityState = VisibilityState.Visible;
+
+            if (hasProgressors)
+                while (anyProgressorIsActive)
+                    yield return null;
+
+            SetVisibility(VisibilityState.Visible, triggerCallbacks);
             m_CoroutineIsShowing = null;
         }
 
-        public void Hide()
+        /// <summary>
+        /// Hide with animations.
+        /// <para/> Triggers visibility states IsHiding when Hide starts and then Hidden when Hide finished.
+        /// </summary>
+        public void Hide() =>
+            Hide(true);
+
+        /// <summary>
+        /// Hide with animations.
+        /// <para/> Triggers visibility states IsHiding when Hide starts and then Hidden when Hide finished.
+        /// </summary>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        public void Hide(bool triggerCallbacks)
         {
             if (!isActiveAndEnabled) return;
             if (isHiding || isHidden) return;
+
+            if (m_LastFrameVisibilityStateChanged == Time.frameCount)
+            {
+                Coroutiner.ExecuteLater(() => Hide(triggerCallbacks), 2);
+                return;
+            }
 
             if (isShowing)
             {
                 StopIsShowingCoroutine();
                 ExecutedCommand(ShowHideExecute.ReverseShow);
-                m_CoroutineIsHiding = StartCoroutine(IsHiding());
+                m_CoroutineIsHiding = StartCoroutine(IsHiding(triggerCallbacks));
                 return;
             }
 
@@ -449,7 +633,7 @@ namespace Doozy.Runtime.UIManager.Containers
                 EventSystem.current.SetSelectedGameObject(null); //clear any selected
             }
 
-            m_CoroutineIsHiding = StartCoroutine(IsHiding());
+            m_CoroutineIsHiding = StartCoroutine(IsHiding(triggerCallbacks));
         }
 
         private void StopIsHidingCoroutine()
@@ -460,36 +644,54 @@ namespace Doozy.Runtime.UIManager.Containers
             m_CoroutineIsHiding = null;
         }
 
-        private IEnumerator IsHiding()
+        /// <summary>
+        /// Internal functionality used by the Hide process.
+        /// <para/> Triggered by Hide
+        /// </summary>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        private IEnumerator IsHiding(bool triggerCallbacks)
         {
             StopDisableGameObject();
             StopIsShowingCoroutine();
-            visibilityState = VisibilityState.IsHiding;
+            SetVisibility(VisibilityState.IsHiding, triggerCallbacks);
             yield return new WaitForEndOfFrame();
+
             while (anyAnimationIsActive)
-            {
                 yield return null;
-            }
-            visibilityState = VisibilityState.Hidden;
+
+            if (hasProgressors)
+                while (anyProgressorIsActive)
+                    yield return null;
+
+            SetVisibility(VisibilityState.Hidden, triggerCallbacks);
             m_CoroutineIsHiding = null;
         }
 
         /// <summary>
-        /// Toggles the visibility state.
+        /// Toggle the visibility state.
         /// If Visible or IsShowing calls Hide.
         /// If Hidden or IsHiding calls Show.
         /// </summary>
-        public void Toggle()
+        public void Toggle() =>
+            Toggle(true);
+        
+        /// <summary>
+        /// Toggle the visibility state.
+        /// If Visible or IsShowing calls Hide.
+        /// If Hidden or IsHiding calls Show.
+        /// </summary>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        public void Toggle(bool triggerCallbacks)
         {
             switch (visibilityState)
             {
                 case VisibilityState.Visible:
                 case VisibilityState.IsShowing:
-                    Hide();
+                    Hide(triggerCallbacks);
                     break;
                 case VisibilityState.Hidden:
                 case VisibilityState.IsHiding:
-                    Show();
+                    Show(triggerCallbacks);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -498,26 +700,89 @@ namespace Doozy.Runtime.UIManager.Containers
 
         #endregion
 
-        private void ExecuteOnShow()
+        /// <summary> Set the container visibility </summary>
+        /// <param name="state"> New visibility state </param>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        internal void SetVisibility(VisibilityState state, bool triggerCallbacks)
         {
-            OnShowCallback.Execute();
+            m_LastFrameVisibilityStateChanged = Time.frameCount;
+            m_VisibilityState = state;
+            if (triggerCallbacks) OnVisibilityChangedCallback?.Invoke(m_VisibilityState);
+            switch (state)
+            {
+                case VisibilityState.Visible:
+                    ExecuteOnVisible(triggerCallbacks);
+                    break;
+                case VisibilityState.Hidden:
+                    ExecuteOnHidden(triggerCallbacks);
+                    break;
+                case VisibilityState.IsShowing:
+                    ExecuteOnShow(triggerCallbacks);
+                    break;
+                case VisibilityState.IsHiding:
+                    ExecuteOnHide(triggerCallbacks);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
+            }
         }
 
-        private void ExecuteOnHide()
+        /// <summary>
+        /// Execute internal operations when the Show animation
+        /// is in the process (transition) of becoming visible.
+        /// <para/> Triggered at the start of the Show animation.
+        /// </summary>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        private void ExecuteOnShow(bool triggerCallbacks)
         {
-            OnHideCallback.Execute();
+            if (triggerCallbacks)
+            {
+                OnShowCallback.Execute();
+            }
+        }
+
+        /// <summary>
+        /// Execute internal operations when the Hide animation
+        /// is in the process (transition) of becoming hidden.
+        /// <para/> Triggered at the start of the Hide animation.
+        /// </summary>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        private void ExecuteOnHide(bool triggerCallbacks)
+        {
+            if (triggerCallbacks)
+            {
+                OnHideCallback.Execute();
+            }
             StopAutoHide();
         }
 
-        private void ExecuteOnVisible()
+        /// <summary>
+        /// Execute internal operations when the Show animation
+        /// finished and the container Is Visible.
+        /// <para/> Triggered at the end of the Show animation.
+        /// </summary>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        private void ExecuteOnVisible(bool triggerCallbacks)
         {
-            OnVisibleCallback.Execute();
+            if (triggerCallbacks)
+            {
+                OnVisibleCallback.Execute();
+            }
             StartAutoHide();
         }
 
-        private void ExecuteOnHidden()
+        /// <summary>
+        /// Execute internal operations when the Hide animation
+        /// finished and the container Is Hidden.
+        /// <para/> Triggered at the end of the Hide animation.
+        /// </summary>
+        /// <param name="triggerCallbacks"> Should callbacks be triggered or not </param>
+        private void ExecuteOnHidden(bool triggerCallbacks)
         {
-            OnHiddenCallback.Execute();
+            if (triggerCallbacks)
+            {
+                OnHiddenCallback.Execute();
+            }
             canvas.enabled = !DisableCanvasWhenHidden;                     //disable the canvas, if the option is enabled
             graphicRaycaster.enabled = !DisableGraphicRaycasterWhenHidden; //disable the graphic raycaster, if the option is enabled
             if (hasCanvasGroup) canvasGroup.blocksRaycasts = graphicRaycaster.enabled;
@@ -542,10 +807,9 @@ namespace Doozy.Runtime.UIManager.Containers
         {
             //we need to wait for 3 frames to make sure all the connected animators have had enough time to initialize (it takes 2 frames for a position animator to get its start position from a layout group (THANKS UNITY!!!) FML)
             yield return null; //wait 1 frame (1 for the money)
-            // yield return null; //wait 1 frame (2 for the show)
-            // yield return null; //wait 1 frame (3 to get ready)
+            yield return null; //wait 1 frame (2 for the show)
+            yield return null; //wait 1 frame (3 to get ready)
             // ...and 4 to f@#king go!
-            // yield return new WaitForEndOfFrame();
             gameObject.SetActive(!DisableGameObjectWhenHidden); //set the active state to false, if the option is enabled
         }
 
@@ -594,12 +858,84 @@ namespace Doozy.Runtime.UIManager.Containers
                     return;
 
                 case ContainerBehaviour.Show:
-                    m_VisibilityState = VisibilityState.Hidden;
-                    Show();
+                    InstantHide(false);
+                    Coroutiner.ExecuteLater(Show, 2);
                     return;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(behaviour), behaviour, null);
             }
+        }
+
+        private float CalculateTotalShowDuration()
+        {
+            float duration = CalculateTotalDurationForReactions(showReactions);
+            float maxDelay = 0;
+            float maxDuration = 0;
+
+            showProgressors.RemoveNulls();
+            foreach (FloatReaction r in showProgressors.Select(p => p.reaction))
+            {
+                maxDelay = Mathf.Max(maxDelay, r.settings.useRandomStartDelay ? r.settings.randomStartDelay.max : r.settings.startDelay);
+                maxDuration = Mathf.Max(maxDuration, r.settings.useRandomDuration ? r.settings.randomDuration.max : r.settings.duration);
+            }
+
+            showHideProgressors.RemoveNulls();
+            foreach (FloatReaction r in showHideProgressors.Select(p => p.reaction))
+            {
+                maxDelay = Mathf.Max(maxDelay, r.settings.useRandomStartDelay ? r.settings.randomStartDelay.max : r.settings.startDelay);
+                maxDuration = Mathf.Max(maxDuration, r.settings.useRandomDuration ? r.settings.randomDuration.max : r.settings.duration);
+            }
+
+            return Mathf.Max(duration, maxDelay + maxDuration);
+        }
+
+        private float CalculateTotalHideDuration()
+        {
+            float duration = CalculateTotalDurationForReactions(hideReactions);
+            float maxDelay = 0;
+            float maxDuration = 0;
+
+            hideProgressors.RemoveNulls();
+            foreach (FloatReaction r in hideProgressors.Select(p => p.reaction))
+            {
+                maxDelay = Mathf.Max(maxDelay, r.settings.useRandomStartDelay ? r.settings.randomStartDelay.max : r.settings.startDelay);
+                maxDuration = Mathf.Max(maxDuration, r.settings.useRandomDuration ? r.settings.randomDuration.max : r.settings.duration);
+            }
+
+            showHideProgressors.RemoveNulls();
+            foreach (FloatReaction r in showHideProgressors.Select(p => p.reaction))
+            {
+                //don't calculate start delay as this progressor plays in reverse on hide
+                // maxDelay = Mathf.Max(maxDelay, r.settings.useRandomStartDelay ? r.settings.randomStartDelay.max : r.settings.startDelay);
+                maxDuration = Mathf.Max(maxDuration, r.settings.useRandomDuration ? r.settings.randomDuration.max : r.settings.duration);
+            }
+
+            return Mathf.Max(duration, maxDelay + maxDuration);
+        }
+
+        private static float CalculateTotalDurationForReactions(IEnumerable<Reaction> reactions, params Reaction[] others)
+        {
+            if (reactions == null) return 0f;
+            float maxDelay = 0;
+            float maxDuration = 0;
+            foreach (Reaction r in reactions)
+            {
+                if (r == null) continue;
+                maxDelay = Mathf.Max(maxDelay, r.settings.useRandomStartDelay ? r.settings.randomStartDelay.max : r.settings.startDelay);
+                maxDuration = Mathf.Max(maxDuration, r.settings.useRandomDuration ? r.settings.randomDuration.max : r.settings.duration);
+            }
+
+            if (others == null)
+                return maxDelay + maxDuration;
+
+            foreach (Reaction r in others)
+            {
+                if (r == null) continue;
+                maxDelay = Mathf.Max(maxDelay, r.settings.useRandomStartDelay ? r.settings.randomStartDelay.max : r.settings.startDelay);
+                maxDuration = Mathf.Max(maxDuration, r.settings.useRandomDuration ? r.settings.randomDuration.max : r.settings.duration);
+            }
+
+            return maxDelay + maxDuration;
         }
     }
 }

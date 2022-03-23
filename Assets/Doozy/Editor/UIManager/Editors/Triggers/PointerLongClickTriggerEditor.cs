@@ -15,7 +15,7 @@ namespace Doozy.Editor.UIManager.Editors.Triggers
     [CustomEditor(typeof(PointerLongClickTrigger))]
     public class PointerLongClickTriggerEditor : ModyTriggerEditor<PointerLongClickTrigger>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorMicroAnimations.EditorUI.Icons.ButtonLongClick;
+        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.EditorUI.Icons.ButtonLongClick;
 
         public override VisualElement CreateInspectorGUI()
         {

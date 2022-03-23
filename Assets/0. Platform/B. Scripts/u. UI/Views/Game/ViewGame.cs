@@ -41,12 +41,14 @@ namespace PIERStory
 
         
         [Space][Space][Header("**선택지**")]
-        public Image selectionTutorialText;     // 선택지 튜토리얼 안내문구
-        public Image selectionBackground; // 선택지 나올때 음영처리를 위한 백그라운드 이미지
+        public CanvasGroup selectionInfo;
+        public TextMeshProUGUI selectionInfoText;       // 선택지 안내 텍스트
+        public Image selectionTutorialText;             // 선택지 튜토리얼 안내문구
+        public Image selectionBackground;               // 선택지 나올때 음영처리를 위한 백그라운드 이미지
         public List<ScriptRow> ListSelectionRows = new List<ScriptRow>(); // 현재보여지는 선택지 정보의 스크립트 데이터 
         public List<IFYouGameSelectionCtrl> ListGameSelection = new List<IFYouGameSelectionCtrl>(); // UI에 저장된 선택지들 
         public List<IFYouGameSelectionCtrl> ListAppearSelection = new List<IFYouGameSelectionCtrl>(); // 활성화된 선택지 
-        
+        public UIView commonTop;
         
         
         public GameObject screenInputBlocker = null;            // 연출중 입력막고싶다..!
@@ -134,6 +136,7 @@ namespace PIERStory
         private void Awake()
         {
             main = this;
+            selectionInfoText.text = string.Empty;
         }
 
         void Update()
@@ -426,15 +429,20 @@ namespace PIERStory
             selectionBackground.color = CommonConst.COLOR_BLACK_TRANSPARENT;
             selectionBackground.gameObject.SetActive(true);
             selectionBackground.DOFade(0.7f, 1);
+
+            // 선택지 안내 표출
+            if (!string.IsNullOrEmpty(selectionInfoText.text))
+                selectionInfo.DOFade(1f, 1f);
             
             if(!UserManager.main.isSelectionTutorialClear) {
                 selectionTutorialText.color = CommonConst.COLOR_BLACK_TRANSPARENT;
                 selectionTutorialText.gameObject.SetActive(true);
                 selectionTutorialText.DOFade(1, 1);    
             }
-            
-            
 
+
+            // 선택지 셋팅
+            /*
             for (int i = 0; i < ListSelectionRows.Count; i++)
             {
                 if(i >= ListGameSelection.Count) {
@@ -445,7 +453,40 @@ namespace PIERStory
                 ListGameSelection[i].SetSelection(ListSelectionRows[i], i);
                 ListAppearSelection.Add(ListGameSelection[i]); // appear에 추가. 
             }
+            */
 
+            // 마지막 선택지부터 stack처럼 쌓기
+            for (int i = ListSelectionRows.Count - 1; i >= 0; i--)
+            {
+                ListGameSelection[i].isPurchaseSelection = false;
+                ListGameSelection[i].SetSelection(ListSelectionRows[i], ListSelectionRows.Count - 1 - i);
+                ListAppearSelection.Add(ListGameSelection[i]); // appear에 추가. 
+            }
+
+            bool hasPurchaseSelection = false;
+
+            for (int i = 0; i < ListAppearSelection.Count; i++)
+            {
+                if (ListAppearSelection[i].isPurchaseSelection)
+                {
+                    hasPurchaseSelection = true;
+                    break;
+                }
+            }
+
+            // 구매해야하는 선택지가 있다면
+            if(hasPurchaseSelection)
+            {
+                ViewCommonTop.isBackgroundShow = true;
+
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
+
+                commonTop.Show();
+            }
         }
 
 
@@ -468,7 +509,6 @@ namespace PIERStory
         /// <param name="__selectionIndex">선택지 버튼 인덱스</param>
         public void ChooseSelection(string __targetSceneID, int __selectionIndex)
         {
-            
             SetBlockScreenActiveFlag(true); // 입력 막기.(안전빵 )
             
             // 백그라운드 제거 
@@ -479,10 +519,8 @@ namespace PIERStory
                 selectionTutorialText.DOFade(0, 0.5f).OnComplete(()=>{ selectionTutorialText.gameObject.SetActive(false);});
             }
             
-            
             // 사건 ID 미리할당. 
             GameManager.main.targetSelectionSceneID = __targetSceneID;
-           
         }
         
         /// <summary>
@@ -491,18 +529,17 @@ namespace PIERStory
         /// <param name="__selection"></param>
         public void RemoveListAppearSelection(IFYouGameSelectionCtrl __selection)
         {
-            
             // IFYouGameSelectionCtrl에서 상태가 None으로 변경되면서 호출된다. 
             ListAppearSelection.Remove(__selection);
             
             Debug.Log(">> RemoveListAppearSelection, count : " + ListAppearSelection.Count);
 
             // * 모든 선택지가 퇴장했다. 
-            if (ListAppearSelection.Count == 0) {
-                SetBlockScreenActiveFlag(false); // 입력막기 풀기. 
+            if (ListAppearSelection.Count == 0)
+            {
+                SetBlockScreenActiveFlag(false); // 입력막기 풀기.
                 HideSelection(); // Selection 처리 완료
             }
-            
         }
 
         /// <summary>
@@ -510,7 +547,6 @@ namespace PIERStory
         /// </summary>
         public void HideSelection()
         {
-            
             Debug.Log(">> HideSelection");
         
             GameManager.main.isSelectionInputWait = false;
@@ -523,12 +559,22 @@ namespace PIERStory
             // 메신저 중이었다면 비활성화
             if (messenger.activeSelf)
                 messenger.SetActive(false);
-
             
             // * 광고처리 추가 
             AdManager.main.PlaySelectionAD();
-
         }
+
+        /// <summary>
+        /// 선택지 안내 문구 세팅
+        /// </summary>
+        /// <param name="text"></param>
+        public void SetSelectionInfoText(string __info)
+        {
+            selectionInfoText.text = __info;
+            selectionInfo.alpha = 0f;
+        }
+
+
 
 
         #endregion
@@ -718,6 +764,7 @@ namespace PIERStory
         public void AnswerPhoneButton()
         {
             timeEnd = true;
+            phoneImage.GetComponent<RectTransform>().DOAnchorPosY(-1350f, 0.5f);
 
             // fade 전 투명도 0
             callBG.alpha = 0f;
@@ -725,7 +772,7 @@ namespace PIERStory
             const float animTime = 0.7f;
 
             callBackground.gameObject.SetActive(true);
-            callBG.DOFade(1f, animTime).OnComplete(() =>
+            callBG.DOFade(1f, animTime).SetDelay(0.5f).OnComplete(() =>
             {
                 GameManager.main.isThreadHold = false;
                 GameManager.main.isWaitingScreenTouch = false;

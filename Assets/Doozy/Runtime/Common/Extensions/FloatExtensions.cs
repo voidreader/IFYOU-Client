@@ -7,11 +7,13 @@ using UnityEngine;
 
 namespace Doozy.Runtime.Common.Extensions
 {
+    /// <summary> Extension methods for the float (single) struct </summary>
     public static class FloatExtensions
     {
         /// <summary> Round number with the given number of decimals </summary>
         /// <param name="target"> Target number </param>
         /// <param name="decimals"> Number of decimals </param>
+        /// <returns> Rounded float </returns>
         public static float Round(this float target, int decimals = 1) =>
             (float)Math.Round(target, decimals);
 
@@ -19,18 +21,20 @@ namespace Doozy.Runtime.Common.Extensions
         /// <param name="target"> Target float </param>
         /// <param name="min"> The minimum floating point value to compare against </param>
         /// <param name="max"> The maximum floating point value to compare against </param>
+        /// <returns> Clamped float </returns>
         public static float Clamp(this float target, float min, float max) =>
             Mathf.Clamp(target, min, max);
 
         /// <summary> Clamp value between 0 and 1 </summary>
         /// <param name="target"> Target float </param>
+        /// <returns> Clamped float </returns>
         public static float Clamp01(this float target) =>
             Mathf.Clamp01(target);
-
 
         /// <summary> Compare two floating point values and returns true if they are similar </summary>
         /// <param name="target"> Target floating point </param>
         /// <param name="other"> Other floating point to compare against </param>
+        /// <returns> TRUE if the values are similar and FALSE otherwise </returns>
         public static bool Approximately(this float target, float other) =>
             Mathf.Approximately(target, other);
     }

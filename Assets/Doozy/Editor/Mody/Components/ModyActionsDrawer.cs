@@ -33,9 +33,9 @@ namespace Doozy.Editor.Mody.Components
         public bool drawerIsEmpty { get; private set; }
 
         private static EditorSelectableColorInfo modyActionColor => EditorSelectableColors.Mody.Action;
-        private static IEnumerable<Texture2D> arrowLeftTextures => EditorMicroAnimations.EditorUI.Arrows.ArrowLeft;
-        private static IEnumerable<Texture2D> arrowDownTextures => EditorMicroAnimations.EditorUI.Arrows.ArrowDown;
-        private static IEnumerable<Texture2D> emptyPlaceholderTextures => EditorMicroAnimations.EditorUI.Placeholders.Empty;
+        private static IEnumerable<Texture2D> arrowLeftTextures => EditorSpriteSheets.EditorUI.Arrows.ArrowLeft;
+        private static IEnumerable<Texture2D> arrowDownTextures => EditorSpriteSheets.EditorUI.Arrows.ArrowDown;
+        private static IEnumerable<Texture2D> emptyPlaceholderTextures => EditorSpriteSheets.EditorUI.Placeholders.Empty;
         
         private static string drawerTitle => "Available Actions";
 
@@ -73,7 +73,7 @@ namespace Doozy.Editor.Mody.Components
 
             availableActionsField =
                 FluidField.Get("Available Actions").SetStyleFlexGrow(0)
-                    .SetIcon(EditorMicroAnimations.Mody.Icons.ModyAction)
+                    .SetIcon(EditorSpriteSheets.Mody.Icons.ModyAction)
                     .AddFieldContent(popup)
                     .AddInfoElement(DesignUtils.flexibleSpace)
                     .AddInfoElement(enableButton);

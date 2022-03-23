@@ -104,7 +104,7 @@ namespace Doozy.Editor.Reactor.Components
 
             reactorIconReaction = Reaction.Get<Texture2DReaction>()
                 .SetEditorHeartbeat().SetDuration(0.5f).SetEase(Ease.Linear)
-                .SetTextures(EditorMicroAnimations.Reactor.Icons.Reactor)
+                .SetTextures(EditorSpriteSheets.Reactor.Icons.ReactorIcon)
                 .SetSetter(t => reactorIconImage.SetStyleBackgroundImage(t));
             reactorIconReaction.SetFirstFrame();
 
@@ -230,10 +230,10 @@ namespace Doozy.Editor.Reactor.Components
             switch (type)
             {
                 case TickerType.Editor:
-                    heartIconTextures = EditorMicroAnimations.Reactor.Icons.EditorHeartbeat;
+                    heartIconTextures = EditorSpriteSheets.Reactor.Icons.EditorHeartbeat;
                     break;
                 case TickerType.Runtime:
-                    heartIconTextures = EditorMicroAnimations.Reactor.Icons.Heartbeat;
+                    heartIconTextures = EditorSpriteSheets.Reactor.Icons.Heartbeat;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);

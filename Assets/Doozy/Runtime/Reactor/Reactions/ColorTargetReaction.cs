@@ -19,6 +19,7 @@ namespace Doozy.Runtime.Reactor.Reactions
         #region Enabled
 
         [SerializeField] private bool Enabled;
+        /// <summary> Is the animation enabled </summary>
         public bool enabled
         {
             get => Enabled;

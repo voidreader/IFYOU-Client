@@ -23,7 +23,7 @@ namespace Doozy.Editor.UIManager.Drawers
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {}
 
-        private static IEnumerable<Texture2D> emptyPlaceholderTextures => EditorMicroAnimations.EditorUI.Placeholders.Empty;
+        private static IEnumerable<Texture2D> emptyPlaceholderTextures => EditorSpriteSheets.EditorUI.Placeholders.Empty;
         private static string drawerTitle => "Available Behaviours";
         
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
@@ -32,7 +32,7 @@ namespace Doozy.Editor.UIManager.Drawers
             var drawer = new VisualElement();
 
             FluidButton addBehaviourButton = FluidButton.Get()
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Plus)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Plus)
                 .SetAccentColor(EditorSelectableColors.Default.Add)
                 .SetLabelText("Add Behaviour")
                 .SetButtonStyle(ButtonStyle.Contained)
@@ -170,7 +170,7 @@ namespace Doozy.Editor.UIManager.Drawers
 
         private static FluidButton GetMinusButton() =>
             FluidButton.Get()
-                .SetIcon(EditorMicroAnimations.EditorUI.Icons.Minus)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Minus)
                 .SetAccentColor(EditorSelectableColors.Default.Remove)
                 .SetElementSize(ElementSize.Small);
     }

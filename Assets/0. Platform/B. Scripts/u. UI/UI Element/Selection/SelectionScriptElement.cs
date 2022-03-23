@@ -21,6 +21,8 @@ namespace PIERStory
             selectionBox.sprite = s;
             selectionScript.text = script;
             selectionScript.color = textColor;
+
+            selectionBox.SetNativeSize();
         }
     }
 }

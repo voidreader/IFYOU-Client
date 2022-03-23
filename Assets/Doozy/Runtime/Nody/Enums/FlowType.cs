@@ -4,13 +4,19 @@
 
 namespace Doozy.Runtime.Nody
 {
-    /// <summary> Describes flow types </summary>
+    /// <summary> Describes the way a <see cref="FlowController"/> uses a flow </summary>
     public enum FlowType
     {
-        /// <summary> Flow is a scriptable object </summary>
+        /// <summary>
+        /// Use the flow graph as direct reference scriptable object
+        /// <para/> Global graph (use the original flow graph)
+        /// </summary>
         Global,
         
-        /// <summary> Flow clone of a scriptable object </summary>
+        /// <summary>
+        /// Create a clone of the flow graph a scriptable object and use that
+        /// <para/> Local graph (use a clone of the original flow graph)
+        /// </summary>
         Local
     }
 }

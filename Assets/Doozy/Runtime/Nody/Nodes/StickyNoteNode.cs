@@ -9,7 +9,8 @@ using Doozy.Runtime.Nody.Nodes.Internal;
 namespace Doozy.Runtime.Nody.Nodes
 {
     /// <summary>
-    /// Sticky note visible in the graph only in the Unity Editor
+    /// Sticky note is a special node that cannot be connected to any other node having the role of a post-it not.
+    /// It's visible in the graph only in the Unity Editor
     /// </summary>
     [Serializable]
     [NodyMenuPath("Utils", "Sticky Note")]

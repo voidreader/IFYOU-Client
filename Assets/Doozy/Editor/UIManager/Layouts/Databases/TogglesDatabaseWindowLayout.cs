@@ -20,7 +20,7 @@ namespace Doozy.Editor.UIManager.Layouts.Databases
     public sealed class TogglesDatabaseWindowLayout : CategoryNameGroupWindowLayout, IUIManagerDatabaseWindowLayout
     {
         public override string layoutName => "Toggles";
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.UIManager.Icons.TogglesDatabase;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.UIManager.Icons.UIToggleDatabase;
         public override Color accentColor => EditorColors.UIManager.UIComponent;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.UIComponent;
         

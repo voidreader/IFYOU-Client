@@ -12,20 +12,18 @@ using UnityEngine;
 
 namespace Doozy.Runtime.Common.Utils
 {
+    /// <summary> Utility class with optimized methods for reflection inside the Doozy assembly </summary>
     public static class ReflectionUtils
     {
         private static Assembly[] s_domainAssemblies;
 
-        public static IEnumerable<Assembly> domainAssemblies
-        {
-            get
-            {
-                // Debug.Log($"{nameof(ReflectionUtils)} > {nameof(domainAssemblies)}");
-                return s_domainAssemblies ??= AppDomain.CurrentDomain.GetAssemblies();
-            }
-        }
+        /// <summary> Current Domain assemblies (cached on first call) </summary>
+        public static IEnumerable<Assembly> domainAssemblies => 
+            s_domainAssemblies ??= AppDomain.CurrentDomain.GetAssemblies();
 
         private static Assembly s_doozyEditorAssembly;
+        
+        /// <summary> Doozy.Editor assembly (only for editor use) (cached on first call) </summary>
         public static Assembly doozyEditorAssembly
         {
             get
@@ -43,10 +41,14 @@ namespace Doozy.Runtime.Common.Utils
         }
 
         private static Assembly s_doozyRuntimeAssembly;
+        
+        /// <summary> Doozy.Runtime assembly (for runtime use) (cached on first call) </summary>
         public static Assembly doozyRuntimeAssembly => 
             s_doozyRuntimeAssembly ??= Assembly.GetAssembly(typeof(ReflectionUtils));
 
         private static IEnumerable<Type> s_doozyRuntimeTypes;
+        
+        /// <summary> Enumeration of all the runtime types inside the Doozy.Runtime assembly (cached on first call) </summary>
         public static IEnumerable<Type> doozyRuntimeTypes => 
             s_doozyRuntimeTypes ??= doozyRuntimeAssembly.GetTypes();
 
@@ -155,7 +157,7 @@ namespace Doozy.Runtime.Common.Utils
         public static bool HasAttribute<T>(IEnumerable<object> attributes) where T : Attribute =>
             attributes.Any(t => t.GetType() == typeof(T));
 
-        /// <summary> Returns true if this can be casted to <see cref="Type" /></summary>
+        /// <summary> Returns true if this can be casted to the given type </summary>
         public static bool IsCastableTo(this Type from, Type to)
         {
             if (to.IsAssignableFrom(from)) return true;
@@ -168,7 +170,7 @@ namespace Doozy.Runtime.Common.Utils
             return methods.Any();
         }
 
-        /// <summary> Return a pretty field type name. </summary>
+        /// <summary> Return a pretty field type name </summary>
         public static string PrettyName(this Type type)
         {
             if (type == null) return "null";

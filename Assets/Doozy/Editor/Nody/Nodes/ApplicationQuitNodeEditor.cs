@@ -14,7 +14,7 @@ namespace Doozy.Editor.Nody.Nodes
     [CustomEditor(typeof(ApplicationQuitNode))]
     public class ApplicationQuitNodeEditor : FlowNodeEditor
     {
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.ApplicationQuitNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.ApplicationQuitNode;
 
         protected override void InitializeEditor()
         {

@@ -7,7 +7,6 @@ using System.Linq;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Components.Internal;
-using Doozy.Editor.EditorUI.Events;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.Reactor.Components;
@@ -22,6 +21,7 @@ using UnityEngine.UIElements;
 namespace Doozy.Editor.Reactor.Editors
 {
     [CustomEditor(typeof(Progressor), true)]
+    [CanEditMultipleObjects]
     public class ProgressorEditor : UnityEditor.Editor
     {
         public Progressor castedTarget => (Progressor)target;
@@ -30,10 +30,9 @@ namespace Doozy.Editor.Reactor.Editors
         public static Color accentColor => EditorColors.Reactor.Red;
         public static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Reactor.Red;
 
-        private static IEnumerable<Texture2D> unityIconTextures => EditorMicroAnimations.EditorUI.Icons.UnityEvent;
-        private static IEnumerable<Texture2D> behaviourIconTextures => EditorMicroAnimations.EditorUI.Icons.UIBehaviour;
-        private static IEnumerable<Texture2D> settingsIconTextures => EditorMicroAnimations.EditorUI.Icons.Settings;
-        private static IEnumerable<Texture2D> progressorIconTextures => EditorMicroAnimations.Reactor.Icons.Progressor;
+        private static IEnumerable<Texture2D> unityIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
+        private static IEnumerable<Texture2D> settingsIconTextures => EditorSpriteSheets.EditorUI.Icons.Settings;
+        private static IEnumerable<Texture2D> progressorIconTextures => EditorSpriteSheets.Reactor.Icons.Progressor;
 
         private bool hasOnValueChangedCallback => castedTarget != null && castedTarget.OnValueChanged?.GetPersistentEventCount() > 0;
         private bool hasOnProgressChangedCallback => castedTarget != null && castedTarget.OnProgressChanged?.GetPersistentEventCount() > 0;
@@ -44,20 +43,27 @@ namespace Doozy.Editor.Reactor.Editors
         private ReactionControls controls { get; set; }
 
         private FluidToggleGroup tabsGroup { get; set; }
+
         private FluidToggleButtonTab settingsTabButton { get; set; }
         private FluidToggleButtonTab callbacksTabButton { get; set; }
+        private FluidToggleButtonTab progressTargetsTabButton { get; set; }
+        private FluidToggleButtonTab progressorTargetsTabButton { get; set; }
 
         private VisualElement callbacksTab { get; set; }
+        private VisualElement progressTargetsTab { get; set; }
+        private VisualElement progressorTargetsTab { get; set; }
+
         private EnabledIndicator callbacksTabIndicator { get; set; }
+        private EnabledIndicator progressTargetsTabIndicator { get; set; }
+        private EnabledIndicator progressorTargetsTabIndicator { get; set; }
 
         private FluidAnimatedContainer settingsAnimatedContainer { get; set; }
         private FluidAnimatedContainer callbacksAnimatedContainer { get; set; }
-
-        public FluidListView progressTargetsFluidListView { get; private set; }
-        private SerializedProperty progressTargetsArrayProperty { get; set; }
-        private List<SerializedProperty> progressTargetsItemsSource { get; set; }
+        private FluidAnimatedContainer targetsContainer { get; set; }
+        private FluidAnimatedContainer progressorTargetsContainer { get; set; }
 
         private SerializedProperty propertyProgressTargets { get; set; }
+        private SerializedProperty propertyProgressorTargets { get; set; }
         private SerializedProperty propertyFromValue { get; set; }
         private SerializedProperty propertyToValue { get; set; }
         private SerializedProperty propertyCustomResetValue { get; set; }
@@ -78,11 +84,29 @@ namespace Doozy.Editor.Reactor.Editors
         {
             componentHeader?.Recycle();
 
+            controls?.Dispose();
+
+            tabsGroup?.Recycle();
+
+            settingsTabButton?.Recycle();
+            callbacksTabButton?.Recycle();
+            progressTargetsTabButton?.Recycle();
+            progressorTargetsTabButton?.Recycle();
+
+            callbacksTabIndicator?.Recycle();
+            progressTargetsTabIndicator?.Recycle();
+            progressorTargetsTabIndicator?.Recycle();
+
+            settingsAnimatedContainer?.Dispose();
+            callbacksAnimatedContainer?.Dispose();
+            targetsContainer?.Dispose();
+            progressorTargetsContainer?.Dispose();
         }
 
         private void FindProperties()
         {
             propertyProgressTargets = serializedObject.FindProperty("ProgressTargets");
+            propertyProgressorTargets = serializedObject.FindProperty("ProgressorTargets");
             propertyFromValue = serializedObject.FindProperty("FromValue");
             propertyToValue = serializedObject.FindProperty("ToValue");
             propertyCustomResetValue = serializedObject.FindProperty("CustomResetValue");
@@ -107,11 +131,205 @@ namespace Doozy.Editor.Reactor.Editors
                 .AddManualButton()
                 .AddYouTubeButton();
 
-            #region Controls
+            settingsAnimatedContainer = new FluidAnimatedContainer("Settings", false).Show(false);
+            callbacksAnimatedContainer = new FluidAnimatedContainer("Callbacks", true).Hide(false);
+            targetsContainer = new FluidAnimatedContainer("Progress Targets", true).Hide(false);
+            progressorTargetsContainer = new FluidAnimatedContainer("Progressor Targets", true).Hide(false);
+
+            tabsGroup = FluidToggleGroup.Get().SetControlMode(FluidToggleGroup.ControlMode.OneToggleOnEnforced);
+
+            InitializeSettings();
+            InitializeCallbacks();
+            InitializeProgressTargets();
+            InitializeProgressorTargets();
+        }
+
+        private void InitializeSettings()
+        {
+            settingsTabButton =
+                DesignUtils.GetTabButtonForComponentSection(settingsIconTextures, selectableAccentColor)
+                    .SetLabelText("Settings")
+                    .SetIsOn(true, false)
+                    .SetOnValueChanged(evt => settingsAnimatedContainer.Toggle(evt.newValue));
+
+            settingsTabButton.AddToToggleGroup(tabsGroup);
+
+            FluidField fromValueFluidField = FluidField.Get<FloatField>("FromValue", "From Value");
+            FluidField toValueFluidField = FluidField.Get<FloatField>("ToValue", "To Value");
+            EnumField resetValueOnEnableEnumField = DesignUtils.NewEnumField(propertyResetValueOnEnable).SetStyleWidth(120);
+            FluidField resetValueOnEnableFluidField = FluidField.Get("OnEnable reset value to").AddFieldContent(resetValueOnEnableEnumField).SetStyleFlexGrow(0);
+            FluidField customResetValueFluidField = FluidField.Get<FloatField>("CustomResetValue", "Custom Reset Value");
+            FluidField reactionFluidField = FluidField.Get<PropertyField>("Reaction.Settings");
+            resetValueOnEnableEnumField.RegisterValueChangedCallback(evt =>
+            {
+                if (evt?.newValue == null) return;
+                customResetValueFluidField.SetEnabled((ResetValue)evt.newValue == ResetValue.CustomValue);
+            });
+            root.schedule.Execute(() =>
+            {
+                if (customResetValueFluidField == null) return;
+                if (resetValueOnEnableEnumField?.value == null) return;
+                customResetValueFluidField.SetEnabled((ResetValue)resetValueOnEnableEnumField.value == ResetValue.CustomValue);
+            });
+
+            settingsAnimatedContainer
+                .fluidContainer
+                .AddChild
+                (
+                    DesignUtils.row
+                        .AddChild(fromValueFluidField)
+                        .AddChild(DesignUtils.spaceBlock)
+                        .AddChild(toValueFluidField)
+                )
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(reactionFluidField)
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild
+                (
+                    DesignUtils.row
+                        .AddChild(resetValueOnEnableFluidField)
+                        .AddChild(DesignUtils.spaceBlock)
+                        .AddChild(customResetValueFluidField)
+                )
+                ;
+        }
+
+        private void InitializeCallbacks()
+        {
+            (callbacksTabButton, callbacksTabIndicator, callbacksTab) =
+                DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator
+                (
+                    unityIconTextures,
+                    DesignUtils.callbackSelectableColor,
+                    DesignUtils.callbacksColor
+                );
+
+            callbacksAnimatedContainer.SetOnShowCallback(() =>
+            {
+                callbacksAnimatedContainer
+                    .AddContent
+                    (
+                        FluidField.Get()
+                            .SetElementSize(ElementSize.Large)
+                            .SetIcon(EditorSpriteSheets.EditorUI.Icons.UnityEvent)
+                            .SetLabelText("Value Changed - [From, To]")
+                            .AddFieldContent(DesignUtils.NewPropertyField(propertyOnValueChanged))
+                    )
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent
+                    (
+                        FluidField.Get()
+                            .SetElementSize(ElementSize.Large)
+                            .SetIcon(EditorSpriteSheets.EditorUI.Icons.UnityEvent)
+                            .SetLabelText("Progress Changed - [0, 1]")
+                            .AddFieldContent(DesignUtils.NewPropertyField(propertyOnProgressChanged))
+                    );
+
+                callbacksAnimatedContainer.Bind(serializedObject);
+            });
+
+
+            root.schedule
+                .Execute
+                (
+                    () => callbacksTabIndicator.Toggle(hasCallbacks, true)
+                )
+                .Every(250);
+
+            callbacksTabIndicator.Toggle(hasCallbacks, false);
+
+            callbacksTabButton
+                .SetLabelText("Callbacks")
+                .SetOnValueChanged(evt => callbacksAnimatedContainer.Toggle(evt.newValue))
+                .AddToToggleGroup(tabsGroup);
+        }
+
+        private void InitializeProgressTargets()
+        {
+            (progressTargetsTabButton, progressTargetsTabIndicator, progressTargetsTab) =
+                DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator
+                (
+                    EditorSpriteSheets.Reactor.Icons.ProgressTarget,
+                    EditorSelectableColors.Reactor.Red,
+                    EditorColors.Reactor.Red
+                );
+
+            targetsContainer.SetOnShowCallback(() =>
+            {
+                targetsContainer
+                    .AddContent
+                    (
+                        DesignUtils.GetObjectListView
+                        (
+                            propertyProgressTargets,
+                            "Progress Targets",
+                            "Progress targets that get updated by this Progressor when activated",
+                            typeof(ProgressTarget)
+                        )
+                    );
+                targetsContainer.Bind(serializedObject);
+            });
+
+            root.schedule
+                .Execute
+                (
+                    () => progressTargetsTabIndicator.Toggle(propertyProgressTargets.arraySize > 0, true)
+                )
+                .Every(250);
+
+            progressTargetsTabButton
+                .SetLabelText("Targets")
+                .SetOnValueChanged(evt => targetsContainer.Toggle(evt.newValue))
+                .AddToToggleGroup(tabsGroup);
+        }
+
+        private void InitializeProgressorTargets()
+        {
+            (progressorTargetsTabButton, progressorTargetsTabIndicator, progressorTargetsTab) =
+                DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator
+                (
+                    EditorSpriteSheets.Reactor.Icons.Progressor,
+                    EditorSelectableColors.Reactor.Red,
+                    EditorColors.Reactor.Red
+                );
+
+            progressorTargetsContainer.SetOnShowCallback(() =>
+            {
+                progressorTargetsContainer
+                    .AddContent
+                    (
+                        DesignUtils.GetObjectListView
+                        (
+                            propertyProgressorTargets,
+                            "Progressor Targets",
+                            "Other Progressors that get updated by this Progressor when activated",
+                            typeof(Progressor)
+                        )
+                    );
+                progressorTargetsContainer.Bind(serializedObject);
+            });
+
+            root.schedule
+                .Execute
+                (
+                    () => progressorTargetsTabIndicator.Toggle(propertyProgressorTargets.arraySize > 0, true)
+                )
+                .Every(250);
+
+            progressorTargetsTabButton
+                .SetLabelText("Progressors")
+                .SetOnValueChanged(evt => progressorTargetsContainer.Toggle(evt.newValue))
+                .AddToToggleGroup(tabsGroup);
+        }
+
+        protected VisualElement GetRuntimeControls()
+        {
+            if (!EditorApplication.isPlayingOrWillChangePlaymode)
+                return new VisualElement().SetStyleDisplay(DisplayStyle.None);
 
             controls =
                 new ReactionControls()
-                    .SetStyleDisplay(EditorApplication.isPlaying ? DisplayStyle.Flex : DisplayStyle.None)
+                    .SetStyleMarginBottom(DesignUtils.k_Spacing)
                     .SetFirstFrameButtonCallback(() =>
                     {
                         if (serializedObject.isEditingMultipleObjects)
@@ -173,199 +391,7 @@ namespace Doozy.Editor.Reactor.Editors
                         castedTarget.SetProgressAtOne();
                     });
 
-            #endregion
-
-            settingsAnimatedContainer = new FluidAnimatedContainer().SetName("Settings").SetClearOnHide(false).Show(false);
-            callbacksAnimatedContainer = new FluidAnimatedContainer().SetName("Callbacks").SetClearOnHide(false).Hide(false);
-
-            tabsGroup = FluidToggleGroup.Get().SetControlMode(FluidToggleGroup.ControlMode.OneToggleOnEnforced);
-
-            settingsTabButton =
-                DesignUtils.GetTabButtonForComponentSection(settingsIconTextures)
-                    .SetLabelText("Settings")
-                    .SetIsOn(true, false)
-                    .SetOnValueChanged(evt => settingsAnimatedContainer.Toggle(evt.newValue));
-
-            settingsTabButton.AddToToggleGroup(tabsGroup);
-
-            InitializeSettings();
-            InitializeCallbacks();
-            InitializeProgressTargetsListView();
-        }
-
-        private void InitializeSettings()
-        {
-            FluidField fromValueFluidField = FluidField.Get<FloatField>("FromValue", "From Value");
-            FluidField toValueFluidField = FluidField.Get<FloatField>("ToValue", "To Value");
-            EnumField resetValueOnEnableEnumField = DesignUtils.NewEnumField(propertyResetValueOnEnable).SetStyleWidth(120);
-            FluidField resetValueOnEnableFluidField = FluidField.Get("OnEnable reset value to").AddFieldContent(resetValueOnEnableEnumField).SetStyleFlexGrow(0);
-            FluidField customResetValueFluidField = FluidField.Get<FloatField>("CustomResetValue", "Custom Reset Value");
-            FluidField reactionFluidField = FluidField.Get<PropertyField>("Reaction.Settings");
-            resetValueOnEnableEnumField.RegisterValueChangedCallback(evt =>
-            {
-                if (evt?.newValue == null) return;
-                customResetValueFluidField.SetEnabled((ResetValue)evt.newValue == ResetValue.CustomValue);
-            });
-            root.schedule.Execute(() =>
-            {
-                if (customResetValueFluidField == null) return;
-                if (resetValueOnEnableEnumField?.value == null) return;
-                customResetValueFluidField.SetEnabled((ResetValue)resetValueOnEnableEnumField.value == ResetValue.CustomValue);
-            });
-
-
-            settingsAnimatedContainer
-                .fluidContainer
-                .AddChild
-                (
-                    DesignUtils.row
-                        .AddChild(fromValueFluidField)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(toValueFluidField)
-                )
-                .AddChild(DesignUtils.spaceBlock)
-                .AddChild(reactionFluidField)
-                .AddChild(DesignUtils.spaceBlock2X)
-                .AddChild
-                (
-                    DesignUtils.row
-                        .AddChild(resetValueOnEnableFluidField)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(customResetValueFluidField)
-                )
-                .AddChild(DesignUtils.spaceBlock)
-                .AddChild(DesignUtils.endOfLineBlock)
-                ;
-        }
-
-        private void InitializeCallbacks()
-        {
-            (callbacksTabButton, callbacksTabIndicator, callbacksTab) =
-                DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(unityIconTextures, DesignUtils.callbackSelectableColor, DesignUtils.callbacksColor);
-
-            callbacksAnimatedContainer
-                .fluidContainer
-                .AddChild
-                (
-                    FluidField.Get()
-                        .SetElementSize(ElementSize.Large)
-                        .SetIcon(EditorMicroAnimations.EditorUI.Icons.UnityEvent)
-                        .SetLabelText("Value Changed - [From, To]")
-                        .AddFieldContent(DesignUtils.NewPropertyField(propertyOnValueChanged))
-                )
-                .AddChild(DesignUtils.spaceBlock)
-                .AddChild
-                (
-                    FluidField.Get()
-                        .SetElementSize(ElementSize.Large)
-                        .SetIcon(EditorMicroAnimations.EditorUI.Icons.UnityEvent)
-                        .SetLabelText("Progress Changed - [0, 1]")
-                        .AddFieldContent(DesignUtils.NewPropertyField(propertyOnProgressChanged))
-                )
-                .AddChild(DesignUtils.endOfLineBlock);
-
-            callbacksTabIndicator.Toggle(hasCallbacks, false);
-
-            bool previousHasCallbacks = !hasCallbacks;
-            IVisualElementScheduledItem callbacksScheduler =
-                callbacksTabButton.schedule.Execute(() =>
-                {
-                    if (previousHasCallbacks == hasCallbacks) return;
-                    callbacksTabIndicator.Toggle(hasCallbacks, true);
-                    previousHasCallbacks = hasCallbacks;
-                }).Every(250);
-
-            callbacksScheduler.Pause();
-
-            callbacksTabButton
-                .SetLabelText("Callbacks")
-                .SetOnValueChanged(evt =>
-                {
-                    callbacksAnimatedContainer.Toggle(evt.newValue);
-                    callbacksTabIndicator.Toggle(hasCallbacks, true);
-                    if (evt.newValue)
-                        callbacksScheduler.Resume();
-                    else
-                        callbacksScheduler.Pause();
-                })
-                .AddToToggleGroup(tabsGroup);
-        }
-
-        private void InitializeProgressTargetsListView()
-        {
-            progressTargetsArrayProperty = serializedObject.FindProperty("ProgressTargets");
-            progressTargetsFluidListView = new FluidListView();
-            progressTargetsFluidListView.SetListTitle("Progress Targets");
-            progressTargetsFluidListView.SetListDescription("Targets controlled by this Progressor");
-            progressTargetsFluidListView.listView.selectionType = SelectionType.None;
-            progressTargetsItemsSource = new List<SerializedProperty>();
-
-            progressTargetsFluidListView.listView.itemsSource = progressTargetsItemsSource;
-            progressTargetsFluidListView.listView.makeItem = () => new ObjectFluidListViewItem(progressTargetsFluidListView, typeof(ProgressTarget));
-
-            progressTargetsFluidListView.listView.bindItem = (element, i) =>
-            {
-                var item = (ObjectFluidListViewItem)element;
-                item.Update(i, progressTargetsItemsSource[i]);
-                item.OnRemoveButtonClick += itemProperty =>
-                {
-                    int propertyIndex = 0;
-                    for (int j = 0; j < progressTargetsArrayProperty.arraySize; j++)
-                    {
-                        if (itemProperty.propertyPath != progressTargetsArrayProperty.GetArrayElementAtIndex(j).propertyPath)
-                            continue;
-                        propertyIndex = j;
-                        break;
-                    }
-                    progressTargetsArrayProperty.DeleteArrayElementAtIndex(propertyIndex);
-                    progressTargetsArrayProperty.serializedObject.ApplyModifiedProperties();
-
-                    UpdateItemsSource();
-                };
-                // item.schedule.Execute(() => item.propertyField.Children().First().SetStyleDisplay(DisplayStyle.None));
-            };
-            #if UNITY_2021_2_OR_NEWER
-            progressTargetsFluidListView.listView.fixedItemHeight = 30;
-            progressTargetsFluidListView.SetPreferredListHeight((int)progressTargetsFluidListView.listView.fixedItemHeight * 6);
-            #else
-            progressTargetsFluidListView.listView.itemHeight = 30;
-            progressTargetsFluidListView.SetPreferredListHeight(progressTargetsFluidListView.listView.itemHeight * 6);
-            #endif
-            progressTargetsFluidListView.SetDynamicListHeight(false);
-            progressTargetsFluidListView.HideFooterWhenEmpty(true);
-            progressTargetsFluidListView.UseSmallEmptyListPlaceholder(true);
-            progressTargetsFluidListView.emptyListPlaceholder.SetIcon(EditorMicroAnimations.EditorUI.Placeholders.EmptyListViewSmall);
-
-            //ADD ITEM BUTTON (plus button)
-            progressTargetsFluidListView.AddNewItemButtonCallback += () =>
-            {
-                progressTargetsArrayProperty.InsertArrayElementAtIndex(0);
-                progressTargetsArrayProperty.GetArrayElementAtIndex(0).objectReferenceValue = null;
-                progressTargetsArrayProperty.serializedObject.ApplyModifiedProperties();
-                UpdateItemsSource();
-            };
-
-            UpdateItemsSource();
-
-            int arraySize = progressTargetsArrayProperty.arraySize;
-            progressTargetsFluidListView.schedule.Execute(() =>
-            {
-                if (progressTargetsArrayProperty == null) return;
-                if (progressTargetsArrayProperty.arraySize == arraySize) return;
-                arraySize = progressTargetsArrayProperty.arraySize;
-                UpdateItemsSource();
-
-            }).Every(100);
-
-        }
-
-        private void UpdateItemsSource()
-        {
-            progressTargetsItemsSource.Clear();
-            for (int i = 0; i < progressTargetsArrayProperty.arraySize; i++)
-                progressTargetsItemsSource.Add(progressTargetsArrayProperty.GetArrayElementAtIndex(i));
-
-            progressTargetsFluidListView?.Update();
+            return controls;
         }
 
         private void Compose()
@@ -378,16 +404,19 @@ namespace Doozy.Editor.Reactor.Editors
                         .AddChild(settingsTabButton)
                         .AddChild(DesignUtils.spaceBlock2X)
                         .AddChild(callbacksTab)
+                        .AddChild(DesignUtils.spaceBlock4X)
+                        .AddChild(progressTargetsTab)
                         .AddChild(DesignUtils.spaceBlock2X)
+                        .AddChild(progressorTargetsTab)
                         .AddChild(DesignUtils.flexibleSpace)
                         .AddChild(DesignUtils.spaceBlock2X)
                 )
                 .AddChild(DesignUtils.spaceBlock)
-                .AddChild(controls)
-                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(GetRuntimeControls())
                 .AddChild(settingsAnimatedContainer)
                 .AddChild(callbacksAnimatedContainer)
-                .AddChild(progressTargetsFluidListView)
+                .AddChild(targetsContainer)
+                .AddChild(progressorTargetsContainer)
                 .AddChild(DesignUtils.endOfLineBlock)
                 ;
         }

@@ -7,6 +7,7 @@ using Doozy.Runtime.Nody.Nodes.Internal;
 
 namespace Doozy.Runtime.Nody.Nodes.System
 {
+    /// <summary> System node used as the exit node out a sub-graph </summary>
     [Serializable]
     public sealed class ExitNode : SystemNode
     {

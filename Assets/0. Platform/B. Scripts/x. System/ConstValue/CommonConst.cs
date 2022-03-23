@@ -76,7 +76,10 @@ namespace PIERStory
 
         public const string POPUP_TUTORIAL_SLIDE = "TutorialSlide";
         public const string POPUP_TUTORIAL_TUTORIAL_COMPLETE = "TutorialComplete";
-        
+
+        public const string POPUP_CONNECTING_SHOP = "ConnectingShop";
+        public const string POPUP_SPECIAL_EPISODE_BUY = "SpecialEpisodeBuy";
+        public const string POPUP_EXPIRE_TOKEN = "ExpireToken";
         
         // JSON COLUMN
         public const string JSON_EPISODE_SCENE_HISTORY = "sceneProgress";
@@ -89,5 +92,11 @@ namespace PIERStory
         public static Color COLOR_IMAGE_TRANSPARENT = new Color(1, 1, 1, 0);
         public static Color COLOR_BLACK_TRANSPARENT = new Color(0, 0, 0, 0);
         public static Color COLOR_GRAY_TRANSPARENT = new Color(0.26275f, 0.26275f, 0.26275f, 0);
+
+
+        // Scene name
+        public const string SCENE_LOBBY = "Lobby";
+        public const string SCENE_GAME = "Game";
+        public const string SCENE_INTERMISSION = "Intermission";
     }
 }

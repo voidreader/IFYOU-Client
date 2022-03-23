@@ -12,7 +12,7 @@ using UnityEngine;
 namespace Doozy.Runtime.Mody
 {
     /// <summary>
-    /// Base Module class for the Mody System.
+    /// Base class for modules in the Mody System.
     /// <para/> Any module that interacts with the system needs to derive from this.
     /// <para/> It can perform various tasks and uses Actions to trigger them.
     /// </summary>
@@ -78,9 +78,7 @@ namespace Doozy.Runtime.Mody
 
         #endregion
 
-        /// <summary>
-        /// Returns TRUE if this Module has been initialized
-        /// </summary>
+        /// <summary> Initialized flag </summary>
         public bool initialized { get; protected set; }
 
         protected ModyModule(string moduleName)
@@ -90,9 +88,7 @@ namespace Doozy.Runtime.Mody
             SetupActions();
         }
 
-        /// <summary>
-        /// Initialize the Module
-        /// </summary>
+        /// <summary> Initialize the Module </summary>
         public virtual void Initialize()
         {
             if (initialized)
@@ -102,9 +98,7 @@ namespace Doozy.Runtime.Mody
             initialized = true;
         }
 
-        /// <summary>
-        /// Update the current state of the Module
-        /// </summary>
+        /// <summary> Update the current state of the Module </summary>
         public void UpdateState()
         {
             state = ModuleState.Disabled;
@@ -287,15 +281,11 @@ namespace Doozy.Runtime.Mody
 
         #region Database
 
-        /// <summary>
-        /// Database that contains all the Modules that are available at runtime at any given point in time.
-        /// </summary>
+        /// <summary> Database that contains all the Modules that are available at runtime at any given point in time. </summary>
         [ClearOnReload(newInstance: true)]
         private static readonly ListDatabase<GameObject, ModyModule> Database = new ListDatabase<GameObject, ModyModule>();
 
-        /// <summary>
-        /// Returns a list of all the Modules available on a target GameObject
-        /// </summary>
+        /// <summary> Returns a list of all the Modules available on a target GameObject </summary>
         /// <param name="target"> Target GameObject </param>
         public static List<ModyModule> GetModules(GameObject target) =>
             Database.GetValues(target);
@@ -317,11 +307,10 @@ namespace Doozy.Runtime.Mody
         #endregion
     }
 
+    /// <summary> Extension methods for <see cref="ModyModule"/> </summary>
     public static class ModyModuleExtensions
     {
-        /// <summary>
-        /// Set Module Name
-        /// </summary>
+        /// <summary> Set Module Name </summary>
         /// <param name="target"> Target Module </param>
         /// <param name="value"> Name of the Module </param>
         public static T SetName<T>(this T target, string value) where T : ModyModule
@@ -330,9 +319,7 @@ namespace Doozy.Runtime.Mody
             return target;
         }
 
-        /// <summary>
-        /// Add the given Action to this Module
-        /// </summary>
+        /// <summary> Add the given ModyAction to this Module </summary>
         /// <param name="target"> Target Module </param>
         /// <param name="action"> Action </param>
         public static T AddAction<T>(this T target, ModyAction action) where T : ModyModule
@@ -341,9 +328,7 @@ namespace Doozy.Runtime.Mody
             return target;
         }
 
-        /// <summary>
-        /// Remove the given Action from this Module
-        /// </summary>
+        /// <summary> Remove the given ModyAction from this Module </summary>
         /// <param name="target"> Target Module </param>
         /// <param name="action"> Action </param>
         public static T RemoveAction<T>(this T target, ModyAction action) where T : ModyModule
@@ -352,9 +337,7 @@ namespace Doozy.Runtime.Mody
             return target;
         }
 
-        /// <summary>
-        /// Remove all the Actions, with the given action name, from the Module
-        /// </summary>
+        /// <summary> Remove all the ModyAction, with the given action name, from the Module </summary>
         /// <param name="target"> Target Module </param>
         /// <param name="actionName"> Name of the Action </param>
         public static T RemoveAction<T>(this T target, string actionName) where T : ModyModule

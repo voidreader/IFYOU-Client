@@ -18,7 +18,7 @@ namespace Doozy.Editor.UIManager.Editors.Modules
     [CustomEditor(typeof(UnityEventModule), true)]
     public sealed class UnityEventModuleEditor : ModyModuleEditor<UnityEventModule>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorMicroAnimations.EditorUI.Icons.UnityEvent;
+        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
 
         public override VisualElement CreateInspectorGUI()
         {

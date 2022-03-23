@@ -18,7 +18,7 @@ namespace Doozy.Editor.EditorUI.WindowLayouts
     {
         public override string layoutName => "Fonts";
         public override Texture2D staticIconTexture => EditorTextures.EditorUI.Icons.EditorFontFamily;
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.EditorUI.Components.EditorFontFamily;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.EditorUI.Components.EditorFontFamily;
 
         protected override int maximumNumberOfItemsVisibleAtOnce => 6;
 

@@ -6,12 +6,14 @@ using UnityEngine;
 
 namespace Doozy.Runtime.Common.Extensions
 {
+    /// <summary> Extension methods for the int (Int32) struct </summary>
     public static class IntExtensions
     {
         /// <summary> Clamp the value between the given minimum integer and maximum integer values </summary>
         /// <param name="target"> Target integer </param>
         /// <param name="min"> The minimum integer point value to compare against </param>
         /// <param name="max"> The maximum integer point value to compare against </param>
+        /// <returns> Clamped int </returns>
         public static int Clamp(this int target, int min, int max) =>
             Mathf.Clamp(target, min, max);
     }

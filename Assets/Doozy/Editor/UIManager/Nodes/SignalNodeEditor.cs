@@ -16,7 +16,7 @@ namespace Doozy.Editor.UIManager.Nodes
     [CustomEditor(typeof(SignalNode))]
     public class SignalNodeEditor : FlowNodeEditor
     {
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.SignalNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.SignalNode;
 
         private SerializedProperty propertyPayload { get; set; }
 

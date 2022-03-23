@@ -29,7 +29,7 @@ namespace Doozy.Editor.Reactor.Editors.Animators.Internal
         public static Color accentColor => EditorColors.Reactor.Red;
         public static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Reactor.Red;
 
-        public static IEnumerable<Texture2D> reactorIconTextures => EditorMicroAnimations.Reactor.Icons.Reactor;
+        public static IEnumerable<Texture2D> reactorIconTextures => EditorSpriteSheets.Reactor.Icons.ReactorIcon;
 
         protected VisualElement root { get; set; }
         protected FluidComponentHeader componentHeader { get; set; }
@@ -113,7 +113,7 @@ namespace Doozy.Editor.Reactor.Editors.Animators.Internal
                     .SetOnValueChanged(evt => animationAnimatedContainer.Toggle(evt.newValue));
 
             settingsTab =
-                DesignUtils.GetTabButtonForComponentSection(EditorMicroAnimations.EditorUI.Icons.Settings)
+                DesignUtils.GetTabButtonForComponentSection(EditorSpriteSheets.EditorUI.Icons.Settings)
                     .SetLabelText("Behaviour")
                     .SetOnValueChanged(evt => behaviourAnimatedContainer.Toggle(evt.newValue));
 
@@ -135,7 +135,7 @@ namespace Doozy.Editor.Reactor.Editors.Animators.Internal
                     .SetLabelText("Animator Name")
                     .SetTooltip("Name of the Animator")
                     .AddFieldContent(animatorNameTextField)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Label)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Label)
                     .SetStyleMarginTop(DesignUtils.k_Spacing);
 
             void UpdateComponentTypeText(string nameOfTheAnimator)

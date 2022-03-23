@@ -20,6 +20,7 @@ namespace Doozy.Editor.EditorUI.Components
             base.Reset();
             
             SetLabelText(string.Empty);
+            iconReaction.SetTextures(EditorSpriteSheets.EditorUI.Components.RadioCircle);
         }
 
         #region LabelType
@@ -81,7 +82,7 @@ namespace Doozy.Editor.EditorUI.Components
             layoutContainer.SetStyleDisplay(DisplayStyle.None);
 
             iconReaction
-                .SetTextures(EditorMicroAnimations.EditorUI.Components.RadioCircle)
+                .SetTextures(EditorSpriteSheets.EditorUI.Components.RadioCircle)
                 .SetDuration(0.15f);
             
             selectionState = SelectionState.Normal;

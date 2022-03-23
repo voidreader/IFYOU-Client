@@ -63,6 +63,7 @@ namespace PIERStory {
         public const string FUNC_GET_PROFILE_CURRENCY_OWN_LIST = "getProfileCurrencyOwnList";       // 소유한 프로필 재화 리스트
         public const string FUNC_GET_PROFILE_CURRENCY_CURRENT = "getProfileCurrencyCurrent";        // 현재 저장된 프로필 재화 정보
         public const string FUNC_USER_PROFILE_SAVE = "userProfileSaveVer2";
+        public const string FUNC_SAVE_USER_STORY_PROFILE = "saveUserStoryProfile";
         public const string NODE_PORTRAIT = "portrait";
         public const string NODE_FRAME = "frame";
         public const string NODE_WALLPAPER = "wallpaper";
@@ -126,8 +127,9 @@ namespace PIERStory {
         public const string SIGNAL_CONNECT_SERVER = "connectingDone";
         public const string SIGNAL_MOVE_DECO_MODE = "moveDecoMode";
         public const string SIGNAL_SAVE_PROFILE_DECO = "saveProfileDeco";
-        
-        public const string SIGNAL_EPISODE_START = "EpisodeStart";
+
+        public const string SIGNAL_GAME_BEGIN = "GameBegin";
+
         public const string SIGNAL_EPISODE_RESET = "EpisodeReset";
         
         public const string SIGNAL_LANGUAGE = "language";
@@ -161,6 +163,14 @@ namespace PIERStory {
         public const string SIGNAL_INTRODUCE = "introduceStory";
 
         #endregion
+
+        #region 팝업 이름
+
+        
+
+
+        #endregion
+
 
         public static Color colorBlueBlue = new Color(0.384f,0.5176f,1,1);
 

@@ -7,6 +7,8 @@ using DG.Tweening;
 
 using Live2D.Cubism.Core;
 using Live2D.Cubism.Rendering;
+using Live2D.Cubism.Framework.Motion;
+using Live2D.Cubism.Framework.Raycasting;
 
 namespace PIERStory
 {
@@ -15,10 +17,14 @@ namespace PIERStory
         CubismRenderController cubismRender = null;
         public string modelType = "live2d";
         public CubismModel model = null;
+        public CubismMotionController motionController = null;
         [HideInInspector] public Animation modelAnim;
         [HideInInspector] public Dictionary<string, AnimationClip> DictMotion;
         [HideInInspector] public RawImage currRenderTexture;        // 현재 그려지고 있는 곳
-        
+
+        [HideInInspector] public List<string> motionLists = new List<string>();
+        [HideInInspector] public string currencyName = string.Empty;    // 로비 꾸미기에서만 사용될 값
+
         [SerializeField] bool isModelActivated = false; // 모델이 한번이라도 Activate 되었었지에 대한 변수
         [SerializeField] string motionName = string.Empty; // 플레이할 모션 이름 
 
@@ -65,6 +71,9 @@ namespace PIERStory
             // height는 width를 구하기 위해 필요한 변수이다
             // 실질적으로 사용되는 곳은 SlideIn/out의 연출이 일어날 때인데, 화면 바깥에서 들어오게 하기 위함임
             // generalCam은 일러스트, 라이브오브제, 모델 등 실질적 화면에 렌더해주는 Camera이며, 이 카메라를 기점으로 height, width를 구하고 있음
+            if (GameManager.main == null)
+                return;
+
             height = 2 * ScreenEffectManager.main.generalCam.orthographicSize;
             width = height * ScreenEffectManager.main.generalCam.aspect;
         }
@@ -73,13 +82,25 @@ namespace PIERStory
         /// 모델 세팅
         /// </summary>
         /// <param name="dir">해당 캐릭터 시선 방향</param>
-        public void SetModel(CubismModel __model, string dir)
+        public void SetModel(CubismModel __model, string dir, bool __isAssetBundle = false)
         {
             model = __model;
             modelType = CommonConst.MODEL_TYPE_LIVE2D;
             direction = dir;
             // 처음 그려지는 곳은 무조건 중앙이다.
+
+            if (GameManager.main == null)
+                return;
+
             currRenderTexture = ViewGame.main.modelRenders[1];
+        }
+        
+        /// <summary>
+        /// 키 어드민에서 지정하기 
+        /// </summary>
+        /// <param name="__tallGrade"></param>
+        public void SetTallGradeByAdmin(int __tallGrade) {
+            tallGrade= __tallGrade;
         }
 
         /// <summary>
@@ -280,9 +301,31 @@ namespace PIERStory
                 motionName = motionName + "_M"; // 립싱크 모션으로 변경 
             }
             
-
-            // 클립 재생 
-            modelAnim.CrossFade(motionName, 0.3f);
+            // * 에셋번들과 다운로드로 생성한 모델에서 플레이 방식이 다르다. 
+            if(motionController != null) {
+                motionController.PlayAnimation(DictMotion[motionName], 0, CubismMotionPriority.PriorityForce);
+            }
+            else {
+                // 클립 재생 - 생 다운로드, 혹은 fade Motion 없음 
+                modelAnim.CrossFade(motionName, 0.3f);    
+            }
+           
+        }
+        
+        /// <summary>
+        /// 로비에서 모션 재생하기 
+        /// </summary>
+        /// <param name="__clip"></param>
+        public void PlayLobbyAnimation(string __motionName) {
+            // * 에셋번들과 다운로드로 생성한 모델에서 플레이 방식이 다르다. 
+            if(motionController != null) {
+                motionController.PlayAnimation(DictMotion[__motionName], 0, CubismMotionPriority.PriorityForce);
+            }
+            else {
+                // 클립 재생 - 생 다운로드, 혹은 fade Motion 없음 
+                modelAnim.CrossFade(__motionName, 0.3f);    
+                
+            }
         }
         
         /// <summary>
@@ -300,6 +343,27 @@ namespace PIERStory
                 return true;
                 
             return false;
+        }
+        
+        
+        /// <summary>
+        /// 캐릭터가 비활성화 될때는 립싱크를 멈추게 한다. 
+        /// </summary>
+        void OffLipSync() {
+            if(!motionName.Contains("_M")) 
+                return;
+                
+            motionName = motionName.Replace("_M", ""); // _M 을 제거
+            
+            // 립싱크 아닌 모션을 재생처리 
+            if(motionController != null) {
+                motionController.PlayAnimation(DictMotion[motionName], 0, CubismMotionPriority.PriorityForce);
+            }
+            else {
+                // 클립 재생 - 생 다운로드, 혹은 fade Motion 없음 
+                modelAnim.CrossFade(motionName, 0.3f);    
+            }            
+            
         }
         
 
@@ -503,6 +567,8 @@ namespace PIERStory
                 ViewGame.main.modelRenders[1].color = new Color(1, 1, 1, 1);
 
             OnMoveCompleted();
+            
+            OffLipSync(); // 립싱크 OFF 추가 
         }
 
         /// <summary>
@@ -637,6 +703,9 @@ namespace PIERStory
                 if (box != null)
                     box.enabled = false;
             }
+            
+            if(tallGrade < 0)
+                tallGrade = 3;
         }
         
         
@@ -655,6 +724,7 @@ namespace PIERStory
                 model.Drawables[i].gameObject.AddComponent<BoxCollider>();
                 
             // ! 컬라이더 붙이고 없애는데 프레임 딜레이 필요하다.
+            
         }
         
         IEnumerator DelayRemoveColliders() {

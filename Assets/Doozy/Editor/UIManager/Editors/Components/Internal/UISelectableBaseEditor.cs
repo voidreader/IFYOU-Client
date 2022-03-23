@@ -28,11 +28,11 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
         protected const string k_ShowNavigationKey = "SelectableEditor.ShowNavigation";
         protected static bool showNavigation { get; set; }
 
-        protected static IEnumerable<Texture2D> navigationIconTextures => EditorMicroAnimations.EditorUI.Icons.Navigation;
-        protected static IEnumerable<Texture2D> statesIconTextures => EditorMicroAnimations.EditorUI.Icons.SelectableStates;
-        protected static IEnumerable<Texture2D> hideIconTextures => EditorMicroAnimations.EditorUI.Icons.Hide;
-        protected static IEnumerable<Texture2D> showIconTextures => EditorMicroAnimations.EditorUI.Icons.Show;
-        protected static IEnumerable<Texture2D> settingsIconTextures => EditorMicroAnimations.EditorUI.Icons.Settings;
+        protected static IEnumerable<Texture2D> navigationIconTextures => EditorSpriteSheets.EditorUI.Icons.Navigation;
+        protected static IEnumerable<Texture2D> statesIconTextures => EditorSpriteSheets.EditorUI.Icons.SelectableStates;
+        protected static IEnumerable<Texture2D> hideIconTextures => EditorSpriteSheets.EditorUI.Icons.Hide;
+        protected static IEnumerable<Texture2D> showIconTextures => EditorSpriteSheets.EditorUI.Icons.Show;
+        protected static IEnumerable<Texture2D> settingsIconTextures => EditorSpriteSheets.EditorUI.Icons.Settings;
 
         public virtual Color accentColor => EditorColors.UIManager.UIComponent;
         public virtual EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.UIComponent;
@@ -397,13 +397,13 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
                     .SetOnShowCallback(() =>
                     {
                         explicitNavigationAnimatedContainer.AddContent(DesignUtils.spaceBlock);
-                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Up", EditorMicroAnimations.EditorUI.Arrows.ArrowUp, propertyNavigationSelectOnUp));
+                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Up", EditorSpriteSheets.EditorUI.Arrows.ArrowUp, propertyNavigationSelectOnUp));
                         explicitNavigationAnimatedContainer.AddContent(DesignUtils.spaceBlock);
-                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Down", EditorMicroAnimations.EditorUI.Arrows.ArrowDown, propertyNavigationSelectOnDown));
+                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Down", EditorSpriteSheets.EditorUI.Arrows.ArrowDown, propertyNavigationSelectOnDown));
                         explicitNavigationAnimatedContainer.AddContent(DesignUtils.spaceBlock);
-                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Left", EditorMicroAnimations.EditorUI.Arrows.ArrowLeft, propertyNavigationSelectOnLeft));
+                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Left", EditorSpriteSheets.EditorUI.Arrows.ArrowLeft, propertyNavigationSelectOnLeft));
                         explicitNavigationAnimatedContainer.AddContent(DesignUtils.spaceBlock);
-                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Right", EditorMicroAnimations.EditorUI.Arrows.ArrowRight, propertyNavigationSelectOnRight));
+                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Right", EditorSpriteSheets.EditorUI.Arrows.ArrowRight, propertyNavigationSelectOnRight));
                         explicitNavigationAnimatedContainer.Bind(serializedObject);
                     })
                     .Toggle((Navigation.Mode)propertyNavigationMode.enumValueIndex == Navigation.Mode.Explicit, false);

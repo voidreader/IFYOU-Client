@@ -20,6 +20,7 @@ namespace PIERStory
         public static string lastPlaySceneId = string.Empty;
         public static long lastPlayScriptNo = 0;
         public static bool hasLastPlayScriptNo = false;     // 이어하기 타겟 script_no가 대본상에 존재하는지 체크
+        JsonData resumePlaySelectionJSON = null; // 이어하기 선택지 지나친 경로 정보 
 
         public EpisodeData currentEpisodeData = null;    // 선택한 에피소드 정보(JSON => Serializable Class)
         public float updatedEpisodeSceneProgressValue = 0; // 플레이 후에 업데이트된 사건 달성률 2021.12.14
@@ -119,16 +120,25 @@ namespace PIERStory
         // 인덱스들 
         public int indexPoolIllust = 0;
 
-        [Space]
+        [Space(20)]
         public NetworkLoadingScreen gameNetworkLoadingScreen;
 
-        [Space]
-        [Header("Sprite resources")]
+        [Space][Header("Sprite resources")]
         public Sprite spriteSelectionNormalBase = null;     // 일반 선택지 
         public Sprite spriteSelectionLockedBase = null;     // 선택지 잠금 상태
-        public Sprite spriteSelectionUnlockedBase = null;   // 선택지 활성 상태 스프라이트 
-        public Sprite spriteSelectionLockIcon = null;
-        public Sprite spriteSelectionUnlockIcon = null;
+        public Sprite spriteSelectionUnlockedBase = null;   // 선택지 활성 상태 스프라이트
+        public Sprite spriteSelectionLockIcon = null;       // 선택지 잠김 아이콘
+        public Sprite spriteSelectionUnlockIcon = null;     // 선택지 잠김 풀림 아이콘
+
+        [Space]
+        public Sprite spriteInappOriginIcon = null;         // 메일함에서 사용하는 아이콘
+
+        [Space]
+        public Sprite spriteGameMessageNormal = null;       // 게임 메시지 일반
+        public Sprite spriteGameMessagePositive = null;     // 게임 메시지 긍정
+        public Sprite spriteGameMessageNegative = null;     // 게임 메시지 부정
+
+        [Space]
         public Sprite spriteIllustPopup = null;             // 일러스트 획득 팝업 아이콘
 
 
@@ -150,7 +160,20 @@ namespace PIERStory
 
         public ScriptRow nextRow
         {
-            get { return currentPage.GetNextRowWithoutIncrement(); }
+            get {
+
+                // 만약 현재에 사건 이동이 걸려있다면 다음행을 검색한다
+                if(!string.IsNullOrEmpty(currentRow.target_scene_id))
+                {
+                    for (int i = 0; i < currentPage.ListRows.Count; i++)
+                    {
+                        if (currentPage.ListRows[i].scene_id == currentRow.target_scene_id)
+                            return currentPage.ListRows[i];
+                    }
+                }
+
+                return currentPage.GetNextRowWithoutIncrement(); 
+            }
         }
 
 
@@ -200,7 +223,7 @@ namespace PIERStory
             
             yield return null;
             
-            Signal.Send(LobbyConst.STREAM_COMMON, "GamePlay"); // 게임씬 시작을 알린다. 
+            Signal.Send(LobbyConst.STREAM_COMMON, GameConst.SIGNAL_GAME_PLAY); // 게임씬 시작을 알린다. 
 
             GarbageCollect();
 
@@ -351,8 +374,8 @@ namespace PIERStory
                     {
                         for (int j = i; j > 0; j--)
                         {
-                            // 선택지가 아닌행을 찾아서 첫 선택지 도입의 위치를 찾아서 lastPlayScriptNO를 갱신해준다
-                            if (!currentPage.ListRows[j].template.Equals(GameConst.TEMPLATE_SELECTION))
+                            // 선택지에 관련되지 않은 행을 찾아서 첫 선택지 도입의 위치를 찾아서 lastPlayScriptNO를 갱신해준다
+                            if (!currentPage.ListRows[j].template.Contains(GameConst.TEMPLATE_SELECTION))
                             {
                                 lastPlayScriptNo = currentPage.ListRows[j + 1].script_no;
                                 break;
@@ -376,11 +399,19 @@ namespace PIERStory
         /// </summary>
         void InitGameResourceObjects()
         {
-            for (int i = 0; i < PoolSpriteBG.Count; i++)
+            for (int i = 0; i < PoolSpriteBG.Count; i++) {
+                if(PoolSpriteBG[i] == null)
+                    continue;
+                    
                 PoolSpriteBG[i].gameObject.SetActive(false);
+            }
 
-            for (int i = 0; i < PoolIllust.Count; i++)
+            for (int i = 0; i < PoolIllust.Count; i++) {
+                if(PoolIllust[i] == null)
+                    continue;
+                
                 PoolIllust[i].gameObject.SetActive(false);
+            }
 
             indexPoolIllust = 0;
             indexPoolBG = 0;
@@ -564,16 +595,15 @@ namespace PIERStory
             // lastScriptNO는 스크립트를 편집하면 일치하는 행이 없을 수도 있다. 실행전에 미리 유효성 검사를 하고 진행한다.
 
             // ! 이어하기 유효성 검사 
+            InitSelectionProgressRoute();
             CheckResumePlayValidation();
 
             // ! 띠배너 광고 
-            AdManager.main.LoadBanner();
+            // AdManager.main.LoadBanner();
             
-            // 
-            AppsFlyerSDK.AppsFlyer.sendEvent("episode_loading_done", new Dictionary<string, string>() {
-                { "project_id", StoryManager.main.CurrentProjectID },
-                { "episode_id", StoryManager.main.CurrentEpisodeID }
-            });
+
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("EpisodeLoadingDone", new Firebase.Analytics.Parameter("project_id", StoryManager.main.CurrentProjectID)
+            , new Firebase.Analytics.Parameter("episode_id", StoryManager.main.CurrentEpisodeID));
 
 
             // 모든 라인을, 혹은 종료 명령어를 만날때까지 계속해! 
@@ -581,8 +611,6 @@ namespace PIERStory
             {
                 
                 // * 이어하기 추가 처리
-                // * 조심스럽게 바꿔본다. 2021.12.08
-                // * 망했다. 다시 바꾼다. 2021.12.15
                 if (isResumePlay)
                 { // true일때만 호출해야한다.
                     // 정지 포인트에서 useSkip을 false로 바꿔야 한다. 
@@ -695,7 +723,7 @@ namespace PIERStory
             GarbageCollect();
 
             // 띠배너 보여주고 있었다면 감추기.
-            AdManager.main.HideBanner();
+            // AdManager.main.HideBanner();
 
             if (isPlaying)
             {
@@ -1130,6 +1158,51 @@ namespace PIERStory
         }
 
         /// <summary>
+        /// 이동된 이후 행에 갤러리 공개용 일러스트(이미지, 일러스트)가 있는지 체크
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckNextSceneHasIllust(string __sceneID)
+        {
+            targetRow = -1;
+
+            for (int i = 0; i < currentPage.ListRows.Count; i++)
+            {
+                // 상황 ID를 찾는다
+                if (currentPage.ListRows[i].scene_id == __sceneID)
+                    targetRow = i;
+            }
+
+            if (targetRow < 0)
+            {
+                ShowMissingComponent("이동하려는 상황ID 없음", __sceneID);
+                return false;
+            }
+
+            for (int i = targetRow; i < currentPage.ListRows.Count; i++)
+            {
+                // 행을 진행하다가 다음 사건ID를 만나게 된다면 일러스트가 존재하지 않으므로 return false를 해준다
+                if (!string.IsNullOrEmpty(currentPage.ListRows[i].scene_id) && currentPage.ListRows[i].scene_id != __sceneID)
+                    return false;
+
+                switch (currentPage.ListRows[i].template)
+                {
+                    case GameConst.TEMPLATE_ILLUST:
+                    case GameConst.TEMPLATE_IMAGE:
+                    case GameConst.TEMPLATE_LIVE_ILLUST:
+                    case GameConst.TEMPLATE_LIVE_OBJECT:
+
+                        // 공개용 일러스트인지 체크
+                        if (UserManager.main.RevealedGalleryImage(currentPage.ListRows[i].script_data))
+                            return true;
+                        else
+                            return false;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// 마지막 화자와 파라매터의 화자가 동일한지 체크한다. 
         /// </summary>
         /// <param name="nextSpeaker">이번에 말할 화자</param>
@@ -1214,7 +1287,8 @@ namespace PIERStory
                 // 최초 등록시에는 key와 value 를 같게 등록한다. 
                 DictModelByDress.Add(currentPage.ListRows[i].speaker, currentPage.ListRows[i].speaker);
             }
-
+            
+            /*
             dressProgress = UserManager.main.GetNodeDressProgress();
 
             // DictModelByDress 를 수집하고 유저 데이터 기반해서 재설정
@@ -1223,6 +1297,7 @@ namespace PIERStory
                 if (DictModelByDress.ContainsKey(SystemManager.GetJsonNodeString(dressProgress[i], GameConst.COL_SPEAKER)))
                     DictModelByDress[SystemManager.GetJsonNodeString(dressProgress[i], GameConst.COL_SPEAKER)] = SystemManager.GetJsonNodeString(dressProgress[i], GameConst.COL_MODEL_NAME);
             }
+            */
 
         }
 
@@ -1311,7 +1386,6 @@ namespace PIERStory
         /// </summary>
         public void EndGame()
         {
-
             Debug.Log("EndGame");
             isPlaying = false;
             
@@ -1321,7 +1395,7 @@ namespace PIERStory
             // 네트워크 창을 띄우고. 로비 씬으로 돌아가야한다.
             SystemManager.ShowNetworkLoading();
             IntermissionManager.isMovingLobby = true;
-            SceneManager.LoadSceneAsync("Intermission", LoadSceneMode.Single).allowSceneActivation = true;
+            SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
         }
 
         /// <summary>
@@ -1347,11 +1421,11 @@ namespace PIERStory
             Debug.Log("RetryPlay");
             isPlaying = false;
             
-            Signal.Send(LobbyConst.STREAM_COMMON, "GameBegin"); // 노드 제어
+            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN); // 노드 제어
 
             // 씬 로드 
             IntermissionManager.isMovingLobby = false;
-            SceneManager.LoadSceneAsync("Intermission", LoadSceneMode.Single).allowSceneActivation = true;
+            SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
         }
 
 
@@ -1842,7 +1916,7 @@ namespace PIERStory
 
             Debug.Log("ShowAchieveIllust : " + illustName);
 
-            PopupBase popup = PopupManager.main.GetPopup(SystemConst.POPUP_ILLUST_ACHIEVEMENT);
+            PopupBase popup = PopupManager.main.GetPopup(GameConst.POPUP_ACHIEVEMENT_ILLUST);
             if (popup == null)
             {
                 Debug.LogError("No Popup");
@@ -1863,7 +1937,7 @@ namespace PIERStory
         {
             Debug.Log("ShowGameEnd :: " + __nextEpisodeID);
 
-            AdManager.main.HideBanner();
+            // AdManager.main.HideBanner();
 
             useSkip = false;
             isPlaying = false; // 게임 플레이 정지.
@@ -1880,11 +1954,9 @@ namespace PIERStory
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
             
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("EpisodeEnd", new Firebase.Analytics.Parameter("project_id", StoryManager.main.CurrentProjectID)
+            , new Firebase.Analytics.Parameter("episode_id", StoryManager.main.CurrentEpisodeID));
             
-            AppsFlyerSDK.AppsFlyer.sendEvent("episode_end", new Dictionary<string, string>() {
-                { "project_id", StoryManager.main.CurrentProjectID },
-                { "episode_id", StoryManager.main.CurrentEpisodeID }
-            });
 
 
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터
@@ -1967,9 +2039,9 @@ namespace PIERStory
                     {
                         if (StoryManager.main.SideEpisodeList[j].episodeID == unlockSideID)
                         {
-                            sidePopup.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("6185"), StoryManager.main.SideEpisodeList[j].episodeTitle));
-                            sidePopup.Data.imageURL = StoryManager.main.SideEpisodeList[j].squareImageURL;
-                            sidePopup.Data.imageKey = StoryManager.main.SideEpisodeList[j].squareImageKey;
+                            sidePopup.Data.SetLabelsTexts(SystemManager.GetLocalizedText("6234"), StoryManager.main.SideEpisodeList[j].episodeTitle);
+                            sidePopup.Data.imageURL = StoryManager.main.SideEpisodeList[j].popupImageURL;
+                            sidePopup.Data.imageKey = StoryManager.main.SideEpisodeList[j].popupImageKey;
                             PopupManager.main.ShowPopup(sidePopup, true, false);
                             break;
                         }
@@ -1985,11 +2057,12 @@ namespace PIERStory
             
             // * 2. 열린 엔딩 체크 
             #region 엔딩
+            // * 2022.03.17 엔딩은 에피소드 종료화면에서 처리하기로 변경 
             
-            
-            Debug.Log("### 엔딩 오픈 체크 시작 ###");
+            // Debug.Log("### 엔딩 오픈 체크 시작 ###");
 
             // 다음 에피소드가 엔딩인 경우
+            /*
             if (nextEpisodeData != null && nextEpisodeData.episodeType == EpisodeType.Ending)
             {
 
@@ -2016,7 +2089,7 @@ namespace PIERStory
             }            
             
             Debug.Log("### 엔딩 오픈 체크 종료 ###");
-            
+            */
             #endregion
             
 
@@ -2030,7 +2103,7 @@ namespace PIERStory
                 // 최초 보상 있으면 팝업 호출
                 Debug.Log(">> First Reward exists : " + JsonMapper.ToStringUnicode(firstReward[0]));
                 
-                PopupBase p = PopupManager.main.GetPopup("EpisodeFirstReward");
+                PopupBase p = PopupManager.main.GetPopup(GameConst.POPUP_EPISODE_FIRST_REWARD);
                 if(p == null) {
                     Debug.LogError("First reward popup is null");
                 }
@@ -2053,6 +2126,50 @@ namespace PIERStory
         }
 
         #endregion
+        
+        #region 이어하기 플레이, 선택지 루트 관련 메소드 추가 
+        
+        /// <summary>
+        /// 에피소드 시작전 selection progress 노드 초기화 
+        /// </summary>
+        /// <param name="__episodeID"></param>
+        public void InitSelectionProgressRoute() {
+            
+            // * 재귀 선택지 관련 처리 때문에 이 메소드 추가함. 
+            // * 이어하기에서 지나친 선택지를 여기에서 저장해준다. 
+            resumePlaySelectionJSON = JsonMapper.ToObject("[]"); // 배열로 만들어놓고 시작한다. 
+        }
+        
+        /// <summary>
+        /// 이어하기에서 선택지 지나쳤는지 체크하기 
+        /// </summary>
+        /// <param name="__targetData">선택지 정보</param>
+        /// <returns></returns>
+        public bool CheckResumeSelectionPassed(JsonData __targetData) {
+            
+            // 동일한 경로 있었으면 return true.
+            for(int i=0; i<resumePlaySelectionJSON.Count;i++) {
+                if(SystemManager.GetJsonNodeString(__targetData, "target_scene_id") == SystemManager.GetJsonNodeString(resumePlaySelectionJSON[i], "target_scene_id")) {
+                  return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        /// <summary>
+        /// 경로 추가 
+        /// </summary>
+        /// <param name="__j"></param>
+        public void AddResumeSelectionRoute(JsonData __j) {
+            resumePlaySelectionJSON.Add(__j);
+            
+            Debug.Log("### AddResumeSelectionRoute : " + JsonMapper.ToJson(resumePlaySelectionJSON));
+        }
+        
+        #endregion
+        
+        
     }
 
 }

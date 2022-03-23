@@ -5,16 +5,16 @@
 using System;
 namespace Doozy.Runtime.Nody.Nodes.Internal
 {
+    /// <summary>
+    /// Base class for global nodes.
+    /// <para/> A global node is a node that is always active.
+    /// </summary>
     [Serializable]
     public abstract class GlobalNode : FlowNode
     {
-        protected GlobalNode() : base(NodeType.Global)
-        {
-        }
+        protected GlobalNode() : base(NodeType.Global) {}
 
-        public override void OnExit()
-        {
+        public override void OnExit() =>
             NodeState = NodeState.Running;
-        }
     }
 }

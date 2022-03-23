@@ -35,6 +35,11 @@ namespace PIERStory {
         public string circleImageURL = string.Empty;
         public string circleImageKey = string.Empty;
         
+        public string episodeFinishImageURL = string.Empty;
+        public string episodeFinishImageKey = string.Empty;
+        public string premiumPassURL = string.Empty;
+        public string premiumPassKey = string.Empty;
+        
         
         public bool isLock = false; // 잠금
         public string colorCode = "000000"; // 메인 칼라 코드 
@@ -85,6 +90,16 @@ namespace PIERStory {
             // 원형 이미지
             circleImageURL = SystemManager.GetJsonNodeString(originData, LobbyConst.IFYOU_PROJECT_CIRCLE_URL);
             circleImageKey = SystemManager.GetJsonNodeString(originData, LobbyConst.IFYOU_PROJECT_CIRCLE_KEY);
+            
+            
+            // 에피소드 종료 이미지 
+            episodeFinishImageURL = SystemManager.GetJsonNodeString(originData, "episode_finish_url");
+            episodeFinishImageKey = SystemManager.GetJsonNodeString(originData, "episode_finish_key");
+            
+            // 프리미엄 패스 이미지
+            premiumPassURL = SystemManager.GetJsonNodeString(originData, "premium_pass_url");
+            premiumPassKey = SystemManager.GetJsonNodeString(originData, "premium_pass_key");
+            
             
             // 프로젝트 진행율 
             projectProgress = SystemManager.GetJsonNodeFloat(originData, LobbyConst.STORY_PROJECT_PROGRESS)   ;

@@ -24,7 +24,7 @@ namespace Doozy.Editor.UIManager.Drawers
                 property,
                 () => UIButtonIdDatabase.instance.database.GetCategories(),
                 targetCategory => UIButtonIdDatabase.instance.database.GetNames(targetCategory),
-                EditorMicroAnimations.UIManager.Icons.ButtonsDatabase,
+                EditorSpriteSheets.UIManager.Icons.UIButtonDatabase,
                 ButtonsDatabaseWindow.Open,
                 "Open Buttons Database Window",
                 UIButtonIdDatabase.instance,

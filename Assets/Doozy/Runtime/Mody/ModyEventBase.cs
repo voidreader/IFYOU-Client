@@ -9,9 +9,11 @@ using Doozy.Runtime.Signals;
 
 namespace Doozy.Runtime.Mody
 {
+    /// <summary> Base class for ModyEvents designed to trigger one or more <see cref="ModyActionRunner"/>s </summary>
     [Serializable]
     public abstract class ModyEventBase
     {
+        /// <summary> Default event name </summary>
         public const string k_DefaultEventName = "Unnamed";
 
         /// <summary> Enabled state for the event. If FALSE it will not Execute </summary>
@@ -43,21 +45,38 @@ namespace Doozy.Runtime.Mody
                 runner?.Execute();
         }
 
+        /// <summary> Run the action with the given action name on the target <see cref="ModyModule"/> </summary>
+        /// <param name="module"> Target ModyModule </param>
+        /// <param name="actionName"> Name of the action </param>
+        /// <returns> True if the operation was successful and false otherwise </returns>
         public bool RunsAction(ModyModule module, string actionName) =>
             Runners.Where(runner => runner.Module == module).Any(runner => runner.ActionName.Equals(actionName));
 
+        /// <summary> Runs the actions on the given target <see cref="ModyModule"/> </summary>
+        /// <param name="module"> Target ModyModule </param>
+        /// <returns> True if the operation was successful and false otherwise </returns>
         public bool RunsModule(ModyModule module) =>
             Runners.Any(runner => runner.Module == module);
     }
 
+    /// <summary> Extension methods for <see cref="ModyEventBase"/> </summary>
     public static class ModyEventBaseExtensions
     {
+        
+        /// <summary> Set enabled state for the target <see cref="ModyEventBase"/> </summary>
+        /// <param name="target"> Target ModyEventBase </param>
+        /// <param name="enabled"> Enabled state </param>
+        /// <typeparam name="T"> Type of ModyEventBase </typeparam>
         public static T SetEnabled<T>(this T target, bool enabled) where T : ModyEventBase
         {
             target.Enabled = enabled;
             return target;
         }
 
+        /// <summary> Set the event name for the target <see cref="ModyEventBase"/> </summary>
+        /// <param name="target"> Target ModyEventBase </param>
+        /// <param name="eventName"> Event name </param>
+        /// <typeparam name="T"> Type of ModyEventBase </typeparam>
         public static T SetEventName<T>(this T target, string eventName) where T : ModyEventBase
         {
             target.EventName = eventName;

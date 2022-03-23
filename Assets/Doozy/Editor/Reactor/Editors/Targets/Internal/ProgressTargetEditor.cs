@@ -17,7 +17,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
 {
     public abstract class ProgressTargetEditor : BaseReactorTargetEditor
     {
-        public override IEnumerable<Texture2D> targetIconTextures => EditorMicroAnimations.Reactor.Icons.ProgressTarget;
+        public override IEnumerable<Texture2D> targetIconTextures => EditorSpriteSheets.Reactor.Icons.ProgressTarget;
         
         protected EnumField targetModeEnumField { get; set; }
         protected FluidField targetModeFluidField { get; set; }

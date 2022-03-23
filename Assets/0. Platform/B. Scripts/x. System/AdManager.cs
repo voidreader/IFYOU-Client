@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Services.Mediation;
 using Unity.Services.Core;
-using UnityEngine.Analytics;
+
 
 using LitJson;
+using Firebase;
+using Facebook.Unity;
 
 #if UNITY_IOS
 using UnityEngine.iOS;
@@ -26,6 +28,11 @@ namespace PIERStory {
         
         public static Action<bool> OnCompleteRewardAD = null; // 동영상 광고 보고 콜백
         
+        // * Firebase
+        FirebaseApp app;
+        
+        public bool isPaidSelection = false; // 유료 선택지 선택됨. 
+        
         // * 광고 도중 터치 막기 위한 변수.
         public bool isAdShowing = false; // 현재 광고가 보여지고 있다.
         
@@ -35,12 +42,7 @@ namespace PIERStory {
         [SerializeField] int gamePlayRowCount = 0;
         [SerializeField] bool isRewarded = false; // 영상광고 끝까지 재생되었는지. 
         
-        [Space]
-        [Header("IronSource")] 
-        [SerializeField] string ironSource_android = string.Empty;
-        [SerializeField] string ironSource_ios = string.Empty;
-        [SerializeField] string ironSourceKey = string.Empty;
-        public bool isIronSourceBannerLoad = false;
+        
         
         JsonData serverData = null;
         
@@ -88,8 +90,31 @@ namespace PIERStory {
 
             InitUnityMediation();
             
-            InitIronSource();
+            InitFirebase();
+            
+            InitFacebook();
         }
+        
+        void InitFirebase() {
+            /*
+            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
+                var dependencyStatus = task.Result;
+                if (dependencyStatus == Firebase.DependencyStatus.Available) {
+                // Create and hold a reference to your FirebaseApp,
+                // where app is a Firebase.FirebaseApp property of your application class.
+                    app = Firebase.FirebaseApp.DefaultInstance;
+                    Debug.Log("### Firebase Init done");
+
+                // Set a flag here to indicate whether Firebase is ready to use by your app.
+                } else {
+                UnityEngine.Debug.LogError(System.String.Format(
+                    "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+                // Firebase Unity SDK is not safe to use here.
+                }                
+            });
+            */
+        }
+        
         
         /// <summary>
         /// 추적 권한 요청 
@@ -154,86 +179,7 @@ namespace PIERStory {
         }
         
         
-        #region ironSource
-        /// <summary>
-        /// 아이언 소스 
-        /// </summary>
-        void InitIronSource() {
-            
-            
-            
-            #if UNITY_ANDROID
-            ironSourceKey = ironSource_android;
-            #else
-            ironSourceKey = ironSource_ios;
-            #endif
-            
-            IronSource.Agent.init(ironSourceKey);
-            IronSource.Agent.validateIntegration();
-            
-            InitBanner();
-        }
-        
-        /// <summary>
-        /// 배너 초기화
-        /// </summary>
-        void InitBanner() {
-            IronSourceEvents.onBannerAdLoadedEvent += BannerAdLoadedEvent;
-            IronSourceEvents.onBannerAdLoadFailedEvent += BannerAdLoadFailedEvent;        
-            IronSourceEvents.onBannerAdClickedEvent += BannerAdClickedEvent; 
-        }
-        
-        /// <summary>
-        /// 띠배너 불러오기
-        /// </summary>
-        public void LoadBanner() {
-            
-            if(!useBannerAD) {
-                Debug.Log("Off Banner AD");
-                return;
-            }
-
-
-            // 무료 유저가 아니면 광고 재생 되지 않음
-            if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState != PurchaseState.AD)
-                return;            
-            
-            isIronSourceBannerLoad = false;
-            
-            IronSource.Agent.loadBanner(IronSourceBannerSize.BANNER, IronSourceBannerPosition.BOTTOM);
-            
-            
-            
-        }
-        
-        /// <summary>
-        /// 띠배너 감추기
-        /// </summary>
-        public void HideBanner() {
-            
-            if(!isIronSourceBannerLoad)
-                return;
-                
-            if(!useBannerAD)
-                return;
-                
-            IronSource.Agent.hideBanner();
-        }
-        
-        void BannerAdLoadedEvent() {
-            Debug.Log("#### ironSourceBanner Loaded");
-            isIronSourceBannerLoad = true;
-        }
-        
-        void BannerAdLoadFailedEvent(IronSourceError error) {
-            Debug.Log("#### ironSource bannder fail : " + error.getDescription());
-        }
-        
-        void BannerAdClickedEvent() {
-            
-        }
-        
-        #endregion
+       
         
         
         /// <summary>
@@ -336,6 +282,14 @@ namespace PIERStory {
         /// 선택지 선택 후 광고
         /// </summary>
         public void PlaySelectionAD() {
+            
+            // 유료선택지에서 광고를 안뜨게 하려고. 
+            if(isPaidSelection) {
+                isPaidSelection = false;
+                return;
+            }
+            
+            
             if(!useSelectionAD) 
                 return;
                 
@@ -627,9 +581,7 @@ namespace PIERStory {
         /// <param name="_packageName"></param>
         public void AnalyticsPackageButtonClick(string _packageName) {
             
-            AppsFlyerSDK.AppsFlyer.sendEvent("package_button",new Dictionary<string, string> {
-                {"openPosition", _packageName}
-            });            
+           Firebase.Analytics.FirebaseAnalytics.LogEvent("PackageButton", new Firebase.Analytics.Parameter("package", _packageName));
             
         }
         
@@ -639,18 +591,50 @@ namespace PIERStory {
         /// <param name="__openPosition"></param>
         public void AnalyticsCoinShopOpen(string __openPosition) {
             
-            AppsFlyerSDK.AppsFlyer.sendEvent("open_coin_hop",new Dictionary<string, string> {
-                {"openPosition", __openPosition}
-            });
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("OpenCoinShop", new Firebase.Analytics.Parameter("position", __openPosition));
+
             
         }
         
 
         
         public void AnalyticsEnter(string position) {
-            AppsFlyerSDK.AppsFlyer.sendEvent(position, null);
+            
+            Firebase.Analytics.FirebaseAnalytics.LogEvent(position);
+            
         }
         
+        
+        #endregion
+
+        #region 페이스북
+        
+        void InitFacebook() {
+            if (!FB.IsInitialized) {
+                // Initialize the Facebook SDK
+                FB.Init(InitCallback, OnHideUnity);
+            } else {
+                // Already initialized, signal an app activation App Event
+                FB.ActivateApp();
+            }
+        }
+        
+        private void InitCallback ()
+        {
+            if (FB.IsInitialized) {
+                // Signal an app activation App Event
+                FB.ActivateApp();
+                // Continue with Facebook SDK
+                // ...
+            } else {
+                Debug.Log("Failed to Initialize the Facebook SDK");
+            }
+        }
+
+        private void OnHideUnity (bool isGameShown)
+        {
+            
+        }
         
         #endregion
 

@@ -20,7 +20,7 @@ namespace Doozy.Editor.UIManager.Layouts.Databases
     public sealed class SlidersDatabaseWindowLayout  : CategoryNameGroupWindowLayout, IUIManagerDatabaseWindowLayout
     {
         public override string layoutName => "Sliders";
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.UIManager.Icons.SlidersDatabase;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.UIManager.Icons.UISliderDatabase;
         public override Color accentColor => EditorColors.UIManager.UIComponent;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.UIComponent;
 

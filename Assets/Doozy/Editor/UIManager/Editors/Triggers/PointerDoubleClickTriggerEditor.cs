@@ -15,7 +15,7 @@ namespace Doozy.Editor.UIManager.Editors.Triggers
     [CustomEditor(typeof(PointerDoubleClickTrigger))]
     public class PointerDoubleClickTriggerEditor : ModyTriggerEditor<PointerDoubleClickTrigger>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorMicroAnimations.EditorUI.Icons.ButtonDoubleClick;
+        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.EditorUI.Icons.ButtonDoubleClick;
         
         public override VisualElement CreateInspectorGUI()
         {

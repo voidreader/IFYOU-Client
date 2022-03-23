@@ -22,7 +22,7 @@ namespace Doozy.Editor.UIManager.Editors.Listeners
     [CustomEditor(typeof(UIButtonListener), true)]
     public class UIButtonListenerEditor : UnityEditor.Editor
     {
-        private static IEnumerable<Texture2D> componentIconTextures => EditorMicroAnimations.UIManager.Icons.UIButtonListener;
+        private static IEnumerable<Texture2D> componentIconTextures => EditorSpriteSheets.UIManager.Icons.UIButtonListener;
 
         private static Color accentColor => EditorColors.UIManager.ListenerComponent;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.ListenerComponent;

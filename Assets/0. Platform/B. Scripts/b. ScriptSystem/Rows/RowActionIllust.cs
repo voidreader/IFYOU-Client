@@ -27,6 +27,10 @@ namespace PIERStory
             string illustType = string.Empty;
             string id = string.Empty;
             
+            
+            Debug.Log(string.Format("## RowActionIllust : [{0}]/[{1}]", template, scriptRow.script_data ));
+            
+            
             // 라이브 일러스트와 일러스트로 구분해야된다. (스크립트 불러올때 유료, 무료에 따라 템플릿을 변경시켜준다.)
             // * 기존 로직 때문에 일러스트의 경우는 이미지를 검색 후 없으면 Live2D까지 체크한다.
             if(template == "illust") {

@@ -8,10 +8,15 @@ using System;
 
 namespace Doozy.Runtime.Common.Attributes
 {
+    /// <summary>
+    /// Attribute used by the <see cref="Doozy.Editor.Common.Utils.DomainReloadHandler"/> to clear an event, a field or a property on reload
+    /// </summary>
     [AttributeUsage(AttributeTargets.Event | AttributeTargets.Field | AttributeTargets.Property)]
     public class ClearOnReloadAttribute : Attribute
     {
+        /// <summary> Value set to the target field or property on reload </summary>
         public readonly object ValueOnReload;
+        /// <summary> Flag used to create or not a new instance of the target field or property (does not work on events) </summary>
         public readonly bool CreateNewInstance;
 
         /// <summary> On reload, clear event, field or property </summary>

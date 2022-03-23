@@ -39,7 +39,11 @@ namespace Doozy.Runtime.Reactor.Reactions
         public Vector3 startPosition
         {
             get => StartPosition;
-            set => StartPosition = value;
+            set
+            {
+                StartPosition = value;
+                if(isActive) UpdateValues();
+            }
         }
 
         [SerializeField] private ReferenceValue FromReferenceValue = ReferenceValue.StartValue;

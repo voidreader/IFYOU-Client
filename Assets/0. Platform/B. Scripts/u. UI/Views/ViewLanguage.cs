@@ -82,7 +82,7 @@ namespace PIERStory
 
             // 타이틀로 보내버리기
             // 이후 타이틀에서 언어 정보에 따른 폰트 다운 뭐 그런거도 해줄 거임
-            SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Single).allowSceneActivation = true;
+            SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
             SystemManager.main.givenStoryData = null; // 목록으로 가는것을 막기 위해 작성
         }
     }

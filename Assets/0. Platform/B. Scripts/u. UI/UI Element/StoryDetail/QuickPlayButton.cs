@@ -103,10 +103,8 @@ namespace PIERStory {
         /// 퀵 버튼 클릭
         /// </summary>        
         public void OnClickQuickButton() {
-            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, quickEpisode, string.Empty);
             
             iconParent.DOLocalMoveY(-10, 0.2f).SetLoops(1, LoopType.Yoyo);
-            
         }
         
         /// <summary>

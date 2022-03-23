@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 namespace Doozy.Runtime.Nody.Nodes
 {
     /// <summary>
-    /// The Random Node picks a weighted random connection in a memory-efficient way.
+    /// Random Node picks a weighted random output connection in a memory-efficient way.
     /// It does that by picking a random number between 1 and the sum of all the weights (similar to a raffle).
     /// The result is that the higher weighted connections are selected more often than lower weighted ones.
     /// </summary>

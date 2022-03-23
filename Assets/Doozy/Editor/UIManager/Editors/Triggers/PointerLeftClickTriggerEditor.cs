@@ -15,7 +15,7 @@ namespace Doozy.Editor.UIManager.Editors.Triggers
     [CustomEditor(typeof(PointerLeftClickTrigger))]
     public class PointerLeftClickTriggerEditor : ModyTriggerEditor<PointerLeftClickTrigger>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorMicroAnimations.EditorUI.Icons.ButtonLeftClick;
+        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.EditorUI.Icons.ButtonLeftClick;
 
         public override VisualElement CreateInspectorGUI()
         {

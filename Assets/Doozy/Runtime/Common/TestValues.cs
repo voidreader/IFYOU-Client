@@ -6,6 +6,7 @@
 
 namespace Doozy.Runtime.Common
 {
+    /// <summary> Special class used to perform tests that need a list of valid string entries </summary>
     public static class TestValues
     {
         public static string[] Cheeses =

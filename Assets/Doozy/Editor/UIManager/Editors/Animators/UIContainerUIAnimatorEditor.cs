@@ -24,7 +24,7 @@ namespace Doozy.Editor.UIManager.Editors.Animators
     [CustomEditor(typeof(UIContainerUIAnimator), true)]
     public class UIContainerUIAnimatorEditor : BaseUIContainerAnimatorEditor
     {
-        public static IEnumerable<Texture2D> uiAnimatorIconTextures => EditorMicroAnimations.Reactor.Icons.UIAnimator;
+        public static IEnumerable<Texture2D> uiAnimatorIconTextures => EditorSpriteSheets.Reactor.Icons.UIAnimator;
 
         public UIContainerUIAnimator castedTarget => (UIContainerUIAnimator)target;
         public IEnumerable<UIContainerUIAnimator> castedTargets => targets.Cast<UIContainerUIAnimator>();

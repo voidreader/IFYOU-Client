@@ -24,7 +24,7 @@ namespace Doozy.Editor.Signals.Drawers
                 property,
                 () => StreamIdDatabase.instance.database.GetCategories(),
                 targetCategory => StreamIdDatabase.instance.database.GetNames(targetCategory),
-                EditorMicroAnimations.Signals.Icons.StreamDatabase,
+                EditorSpriteSheets.Signals.Icons.StreamDatabase,
                 StreamsDatabaseWindow.Open,
                 "Open Streams Database Window",
                 StreamIdDatabase.instance,

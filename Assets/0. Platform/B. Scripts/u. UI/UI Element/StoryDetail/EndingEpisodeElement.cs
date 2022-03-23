@@ -123,7 +123,6 @@ namespace PIERStory {
         public void OnClickEnding() {
             Debug.Log(">> OnClick EndingElement");
             
-            Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_EPISODE_START, endingData, string.Empty);
         }
         
         /// <summary>

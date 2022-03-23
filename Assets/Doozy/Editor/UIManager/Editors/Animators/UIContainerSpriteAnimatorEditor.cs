@@ -28,9 +28,9 @@ namespace Doozy.Editor.UIManager.Editors.Animators
         public UIContainerSpriteAnimator castedTarget => (UIContainerSpriteAnimator)target;
         public IEnumerable<UIContainerSpriteAnimator> castedTargets => targets.Cast<UIContainerSpriteAnimator>();
 
-        public static IEnumerable<Texture2D> spriteAnimatorIconTextures => EditorMicroAnimations.Reactor.Icons.SpriteAnimator;
-        public static IEnumerable<Texture2D> spriteAnimationIconTextures => EditorMicroAnimations.Reactor.Icons.SpriteAnimation;
-        public static IEnumerable<Texture2D> spriteTargetIconTextures => EditorMicroAnimations.Reactor.Icons.SpriteTarget;
+        public static IEnumerable<Texture2D> spriteAnimatorIconTextures => EditorSpriteSheets.Reactor.Icons.SpriteAnimator;
+        public static IEnumerable<Texture2D> spriteAnimationIconTextures => EditorSpriteSheets.Reactor.Icons.SpriteAnimation;
+        public static IEnumerable<Texture2D> spriteTargetIconTextures => EditorSpriteSheets.Reactor.Icons.SpriteTarget;
 
         private ObjectField spriteTargetObjectField { get; set; }
         private FluidField spriteTargetFluidField { get; set; }

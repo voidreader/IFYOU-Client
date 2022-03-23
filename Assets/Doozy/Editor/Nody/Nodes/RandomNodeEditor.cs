@@ -17,7 +17,7 @@ namespace Doozy.Editor.Nody.Nodes
     [CustomEditor(typeof(RandomNode))]
     public class RandomNodeEditor : FlowNodeEditor
     {
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.RandomNode;
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.RandomNode;
 
         protected override void InitializeEditor()
         {

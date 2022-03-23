@@ -25,7 +25,7 @@ namespace Doozy.Editor.Mody
     {
         public override Color accentColor => EditorColors.Mody.Module;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Mody.Module;
-        public sealed override List<Texture2D> iconTextures => EditorMicroAnimations.Mody.Icons.ModyModule;
+        public sealed override List<Texture2D> iconTextures => EditorSpriteSheets.Mody.Icons.ModyModule;
 
         private ModyModuleStateIndicator m_StateIndicator;
 
@@ -65,7 +65,7 @@ namespace Doozy.Editor.Mody
                     .SetLabelText("Module Name")
                     .SetTooltip("Name of the Module")
                     .AddFieldContent(moduleNameTextField)
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Label)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Label)
                     .SetStyleMarginTop(DesignUtils.k_Spacing)
                     .SetStyleMarginBottom(DesignUtils.k_EndOfLineSpacing);
 

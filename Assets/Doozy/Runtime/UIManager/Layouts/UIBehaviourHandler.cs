@@ -11,16 +11,20 @@ using UnityEngine.UI;
 
 namespace Doozy.Runtime.UIManager.Layouts
 {
+    /// <summary> Specialized helper class for layout groups. It helps triggering layout calculations just in time </summary>
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
     public class UIBehaviourHandler : UnityEngine.EventSystems.UIBehaviour
     {
         private RectTransform m_RectTransform;
+        /// <summary> The RectTransform attached to the GameObject </summary>
         public RectTransform rectTransform => m_RectTransform ? m_RectTransform : m_RectTransform = GetComponent<RectTransform>();
 
         private LayoutGroup m_LayoutGroup;
+        /// <summary> The LayoutGroup attached to the GameObject </summary>
         public LayoutGroup layoutGroup => m_LayoutGroup ? m_LayoutGroup : m_LayoutGroup = GetComponent<LayoutGroup>();
 
+        /// <summary> UnityAction triggered when the dimensions of this RectTransform changed </summary>
         public UnityAction onRectTransformDimensionsChanged { get; set; }
 
         private int lastDirty { get; set; } = -1;         // makes sure that SetDirty can run only once per frame and no more
@@ -34,8 +38,7 @@ namespace Doozy.Runtime.UIManager.Layouts
 
         protected override void OnValidate()
         {
-            // SetDirty();
-            ForceRebuildLayoutImmediate();
+            SetDirty();
         }
 
         #endif
@@ -87,6 +90,7 @@ namespace Doozy.Runtime.UIManager.Layouts
             ForceRebuildLayoutImmediate();
         }
 
+        /// <summary> Calculate and then set both the horizontal and the vertical layouts </summary>
         public void RefreshLayout()
         {
             if (Application.isPlaying)
@@ -103,14 +107,16 @@ namespace Doozy.Runtime.UIManager.Layouts
             layoutGroup.SetLayoutVertical();
         }
 
+        /// <summary> Call LayoutRebuilder.ForceRebuildLayoutImmediate for this RectTransform </summary>
         public void ForceRebuildLayoutImmediate() =>
             LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
 
+        /// <summary> Call LayoutRebuilder.MarkLayoutForRebuild for this RectTransform </summary>
         public void MarkLayoutForRebuild() =>
             LayoutRebuilder.MarkLayoutForRebuild(rectTransform);
 
 
-        /// <summary> Mark as dirty </summary>
+        /// <summary> Mark as dirty to refresh the layout and then rebuild it </summary>
         public void SetDirty()
         {
             if (Application.isPlaying)

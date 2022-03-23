@@ -36,12 +36,12 @@ namespace PIERStory {
             
             textTitle.text = string.Empty;
             textInfo.text = string.Empty;
-            textPercentage.text = string.Empty;
+            textPercentage.text = "0%";
             loadingBar.fillAmount = 0;
             
             
             if (StoryManager.main.loadingJson.Count > 0) {
-                loadingImage.SetDownloadURL(SystemManager.GetJsonNodeString(StoryManager.main.loadingJson[0], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(StoryManager.main.loadingJson[0], CommonConst.COL_IMAGE_KEY));
+                loadingImage.SetDownloadURL(SystemManager.GetJsonNodeString(StoryManager.main.loadingJson[0], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(StoryManager.main.loadingJson[0], CommonConst.COL_IMAGE_KEY), true);
             }
             else {
                 loadingImage.SetDownloadURL(string.Empty, string.Empty);
@@ -52,8 +52,6 @@ namespace PIERStory {
                 loadingTextIndex = 0;
                 textInfo.text = SystemManager.GetJsonNodeString(StoryManager.main.loadingDetailJson[loadingTextIndex], "loading_text");
             }
-            
-            
             
         }
         
@@ -67,13 +65,22 @@ namespace PIERStory {
             StartCoroutine(CheckingBundleExists(StoryManager.main.CurrentProjectID));
         }
         
+        void Update() {
+            textPercentage.text = GetFillAmountPercentage();    
+        }
+        
         void FillProgressorOnly() {
             
             Debug.Log("### FillProgressorOnly ###");
             
             loadingBar.DOFillAmount(1, 3).OnComplete(()=> {
-                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
+                //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", "Testing");
             });
+        }
+        
+        string GetFillAmountPercentage() {
+            return Mathf.RoundToInt(loadingBar.fillAmount * 100).ToString() + "%";
         }
         
         
@@ -107,6 +114,10 @@ namespace PIERStory {
             Debug.Log("### LoadResourceLocationsAsync END, hasBundle : " + hasBundle);
             
             if(!hasBundle) {
+                ViewStoryLobby.OnDecorateSet?.Invoke();
+                
+                yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
+
                 FillProgressorOnly();
                 yield break;
             }
@@ -121,6 +132,10 @@ namespace PIERStory {
             
             // 다운로드 할 데이터 없음 
             if(getDownloadSizeHandle.Result <= 0) {
+                ViewStoryLobby.OnDecorateSet?.Invoke();
+                
+                yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
+
                 FillProgressorOnly();
                 yield break;
             }
@@ -130,18 +145,23 @@ namespace PIERStory {
             // 다운로드 해야한다. 
             AsyncOperationHandle downloadHandle =  Addressables.DownloadDependenciesAsync(__projectID);
             downloadHandle.Completed += (op) => {
-                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
+                //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
+
             };
             
             while(!downloadHandle.IsDone) {
                 loadingBar.fillAmount = downloadHandle.PercentComplete;
                 yield return null;
             }
+
+            ViewStoryLobby.OnDecorateSet?.Invoke();
+            yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
             
+            yield return new WaitForSeconds(0.1f);
             
-            
+            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", "Testing");
+
             Debug.Log("#### This project bundle download doen! ####");
-            
         }
             
 

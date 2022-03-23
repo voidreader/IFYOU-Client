@@ -139,7 +139,6 @@ namespace Doozy.Editor.EditorUI.Components
             rotatedIcon.SetStyleBackgroundImageTintColor(componentNameTextColor.WithAlpha(0.075f));
             componentTypeLabel.SetStyleColor(componentTypeTextColor);
 
-
             componentNameLabel.SetStyleUnityFont(componentNameFont);
             componentTypeLabel.SetStyleUnityFont(componentTypeFont);
 
@@ -206,22 +205,29 @@ namespace Doozy.Editor.EditorUI.Components
         private FluidButton GetNewButton(IEnumerable<Texture2D> textures, string buttonTooltip) =>
             GetNewButton(buttonTooltip).SetIcon(textures);
 
-        public FluidComponentHeader AddManualButton(string url = "http://bit.ly/DoozyKnowledgeBase4")
+        public FluidComponentHeader AddApiButton(string url = "https://api.doozyui.com/api/index.html")
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode) return this; //do not add Manual button in play mode
-            return AddElement(GetNewButton(EditorMicroAnimations.EditorUI.Icons.BookOpen, "Manual")
+            return AddElement(GetNewButton(EditorSpriteSheets.EditorUI.Icons.API, "API")
+                .SetOnClick(() => Application.OpenURL(url)));
+        }
+        
+        public FluidComponentHeader AddManualButton(string url = "https://bit.ly/DoozyKnowledgeBase4")
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) return this; //do not add Manual button in play mode
+            return AddElement(GetNewButton(EditorSpriteSheets.EditorUI.Icons.BookOpen, "Manual")
                 .SetOnClick(() => Application.OpenURL(url)));
         }
 
         public FluidComponentHeader AddYouTubeButton(string url = "www.youtube.com/c/DoozyEntertainment")
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode) return this; //do not add YouTube button in play mode
-            return AddElement(GetNewButton(EditorMicroAnimations.EditorUI.Icons.Youtube, "YouTube")
+            return AddElement(GetNewButton(EditorSpriteSheets.EditorUI.Icons.Youtube, "YouTube")
                 .SetOnClick(() => Application.OpenURL(url)));
         }
 
         public FluidComponentHeader AddSettingsButton(UnityAction callback) =>
-            AddElement(GetNewButton(EditorMicroAnimations.EditorUI.Icons.Settings, "Settings")
+            AddElement(GetNewButton(EditorSpriteSheets.EditorUI.Icons.Settings, "Settings")
                 .SetOnClick(callback));
 
         public FluidComponentHeader AddButton(List<Texture2D> animatedIcon, string buttonTooltip, UnityAction callback) =>

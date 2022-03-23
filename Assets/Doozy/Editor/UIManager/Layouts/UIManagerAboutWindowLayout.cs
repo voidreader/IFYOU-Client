@@ -23,7 +23,7 @@ namespace Doozy.Editor.UIManager.Layouts
         public int order => 1000;
 
         public override string layoutName => "About";
-        public override List<Texture2D> animatedIconTextures => EditorMicroAnimations.EditorUI.Icons.Info;
+        public override List<Texture2D> animatedIconTextures => EditorSpriteSheets.EditorUI.Icons.Info;
 
         public override Color accentColor => EditorColors.Default.UnityThemeInversed;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Default.UnityThemeInversed;
@@ -56,7 +56,7 @@ namespace Doozy.Editor.UIManager.Layouts
             doozyUiIconReaction =
                 doozyUiIconImage.GetTexture2DReaction().SetEditorHeartbeat()
                     .SetDuration(0.6f)
-                    .SetTextures(EditorMicroAnimations.UIManager.Icons.DoozyUI);
+                    .SetTextures(EditorSpriteSheets.UIManager.Icons.UIManagerIcon);
 
             doozyUiVersionLabel =
                 DesignUtils.fieldLabel

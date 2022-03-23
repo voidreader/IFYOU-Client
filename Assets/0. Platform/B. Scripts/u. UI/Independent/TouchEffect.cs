@@ -13,13 +13,17 @@ namespace PIERStory
 
         public void OnTouchScreen(InputAction.CallbackContext context)
         {
-            if(context.action.phase == InputActionPhase.Canceled)
-            {
-                touchOutPos = Camera.main.ScreenToWorldPoint(touchInPos);
-                touchOutPos = new Vector3(touchOutPos.x, touchOutPos.y, 0f);
+            try {
+                if(context.action.phase == InputActionPhase.Canceled)
+                {
+                    touchOutPos = Camera.main.ScreenToWorldPoint(touchInPos);
+                    touchOutPos = new Vector3(touchOutPos.x, touchOutPos.y, 0f);
 
-                effect = Instantiate(touchEffect, touchOutPos, Quaternion.identity);
-                Destroy(effect, 1f);
+                    effect = Instantiate(touchEffect, touchOutPos, Quaternion.identity);
+                    Destroy(effect, 1f);
+                }
+            } catch(System.Exception e) {
+                
             }
         }
 

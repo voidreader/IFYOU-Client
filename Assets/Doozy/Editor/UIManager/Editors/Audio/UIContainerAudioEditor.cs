@@ -26,8 +26,8 @@ namespace Doozy.Editor.UIManager.Editors.Audio
         protected override Color accentColor => EditorColors.UIManager.AudioComponent;
         protected override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.AudioComponent;
 
-        private static IEnumerable<Texture2D> uiContainerIconTextures => EditorMicroAnimations.UIManager.Icons.UIContainer;
-        private static IEnumerable<Texture2D> soundIconTextures => EditorMicroAnimations.EditorUI.Icons.Sound;
+        private static IEnumerable<Texture2D> uiContainerIconTextures => EditorSpriteSheets.UIManager.Icons.UIContainer;
+        private static IEnumerable<Texture2D> soundIconTextures => EditorSpriteSheets.EditorUI.Icons.Sound;
 
         private SerializedProperty propertyAudioSource { get; set; }
         private SerializedProperty propertyShowAudioClip { get; set; }
@@ -72,7 +72,7 @@ namespace Doozy.Editor.UIManager.Editors.Audio
 
 
             audioSourceObjectField = DesignUtils.NewObjectField(propertyAudioSource, typeof(AudioSource)).SetStyleFlexGrow(1).SetTooltip("Target AudioSource");
-            audioSourceFluidField = FluidField.Get().SetLabelText("Audio Source").SetIcon(EditorMicroAnimations.EditorUI.Icons.Sound).AddFieldContent(audioSourceObjectField);
+            audioSourceFluidField = FluidField.Get().SetLabelText("Audio Source").SetIcon(EditorSpriteSheets.EditorUI.Icons.Sound).AddFieldContent(audioSourceObjectField);
 
             showAudioClipObjectField = DesignUtils.NewObjectField(propertyShowAudioClip, typeof(AudioClip), false).SetStyleFlexGrow(1).SetTooltip("AudioClip played on Show");
             showAudioClipFluidField = FluidField.Get().SetLabelText(" Show").SetElementSize(ElementSize.Tiny).AddFieldContent(showAudioClipObjectField);

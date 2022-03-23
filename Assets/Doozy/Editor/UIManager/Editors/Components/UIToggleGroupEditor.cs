@@ -32,14 +32,14 @@ namespace Doozy.Editor.UIManager.Editors.Components
         public UIToggle castedTarget => (UIToggle)target;
         public IEnumerable<UIToggle> castedTargets => targets.Cast<UIToggle>();
 
-        public static IEnumerable<Texture2D> toggleIconTextures => EditorMicroAnimations.UIManager.Icons.UIToggleCheckbox;
-        public static IEnumerable<Texture2D> toggleGroupIconTextures => EditorMicroAnimations.UIManager.Icons.UIToggleGroup;
-        public static IEnumerable<Texture2D> unityEventIconTextures => EditorMicroAnimations.EditorUI.Icons.UnityEvent;
-        public static IEnumerable<Texture2D> buttonClickIconTextures => EditorMicroAnimations.EditorUI.Icons.ButtonClick;
-        public static IEnumerable<Texture2D> sortIconTextures => EditorMicroAnimations.EditorUI.Icons.SortAz;
-        public static IEnumerable<Texture2D> toggleOnIconTextures => EditorMicroAnimations.EditorUI.Icons.ToggleON;
-        public static IEnumerable<Texture2D> toggleOffIconTextures => EditorMicroAnimations.EditorUI.Icons.ToggleOFF;
-        public static IEnumerable<Texture2D> toggleMixedIconTextures => EditorMicroAnimations.EditorUI.Icons.ToggleMixed;
+        public static IEnumerable<Texture2D> toggleIconTextures => EditorSpriteSheets.UIManager.Icons.UIToggle;
+        public static IEnumerable<Texture2D> toggleGroupIconTextures => EditorSpriteSheets.UIManager.Icons.UIToggleGroup;
+        public static IEnumerable<Texture2D> unityEventIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
+        public static IEnumerable<Texture2D> buttonClickIconTextures => EditorSpriteSheets.EditorUI.Icons.ButtonClick;
+        public static IEnumerable<Texture2D> sortIconTextures => EditorSpriteSheets.EditorUI.Icons.SortAz;
+        public static IEnumerable<Texture2D> toggleOnIconTextures => EditorSpriteSheets.EditorUI.Icons.ToggleON;
+        public static IEnumerable<Texture2D> toggleOffIconTextures => EditorSpriteSheets.EditorUI.Icons.ToggleOFF;
+        public static IEnumerable<Texture2D> toggleMixedIconTextures => EditorSpriteSheets.EditorUI.Icons.ToggleMixed;
 
         private VisualElement callbacksTab { get; set; }
         private EnabledIndicator callbacksTabIndicator { get; set; }

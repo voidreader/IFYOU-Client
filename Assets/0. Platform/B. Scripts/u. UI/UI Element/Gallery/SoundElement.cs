@@ -21,7 +21,7 @@ namespace PIERStory
         public TextMeshProUGUI soundPlaytime;
 
         [Header("Voice require")]
-        public Image voiceButtonImage;
+        public Image voiceButtonBoarderImage;
         public TextMeshProUGUI voiceScriptData;
         public GameObject lockIcon;
         public GameObject playingIcon;
@@ -31,7 +31,7 @@ namespace PIERStory
 
         Color titleColor = new Color32(51, 51, 51, 255);
         Color timeColor = new Color32(153, 153, 153, 255);
-        Color playColor = new Color32(243, 140, 161, 255);
+        Color playColor = new Color32(255, 0, 128, 255);
 
         public void SetBGMElement(int index, JsonData __j)
         {
@@ -107,13 +107,13 @@ namespace PIERStory
             {
                 if(isOpen)
                 {
-                    voiceButtonImage.sprite = LobbyManager.main.spriteOpenVoice;
+                    voiceButtonBoarderImage.sprite = LobbyManager.main.spriteOpenVoice;
                     voiceScriptData.gameObject.SetActive(true);
                     lockIcon.SetActive(false);
                 }
                 else
                 {
-                    voiceButtonImage.sprite = LobbyManager.main.spriteLockVoice;
+                    voiceButtonBoarderImage.sprite = LobbyManager.main.spriteLockVoice;
                     voiceScriptData.gameObject.SetActive(false);
                     lockIcon.SetActive(true);
                 }

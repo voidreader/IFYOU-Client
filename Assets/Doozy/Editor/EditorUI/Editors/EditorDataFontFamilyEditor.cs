@@ -85,7 +85,7 @@ namespace Doozy.Editor.EditorUI.Editors
 
             loadFilesFromFolderButton =
                 FluidButton.Get()
-                    .SetIcon(EditorMicroAnimations.EditorUI.Icons.Search)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Search)
                     .SetLabelText("Load all .ttf files from the current folder")
                     .SetAccentColor(EditorSelectableColors.EditorUI.Amber)
                     .SetTooltip
@@ -96,7 +96,7 @@ namespace Doozy.Editor.EditorUI.Editors
                     .SetElementSize(ElementSize.Small)
                     .SetOnClick(LoadFontsFromFolder);
 
-            nameComponentField = FluidField.Get("Font Name").SetIcon(EditorMicroAnimations.EditorUI.Components.EditorFontFamily);
+            nameComponentField = FluidField.Get("Font Name").SetIcon(EditorSpriteSheets.EditorUI.Components.EditorFontFamily);
             TextField nameTextField = DesignUtils.NewTextField("FontName", true).SetStyleFlexGrow(1).DisableElement();
             nameTextField.RegisterValueChangedCallback(evt =>
             {

@@ -28,7 +28,7 @@ namespace Doozy.Editor.UIManager.Editors.Components
         public UIButton castedTarget => (UIButton)target;
         public IEnumerable<UIButton> castedTargets => targets.Cast<UIButton>();
 
-        public static IEnumerable<Texture2D> buttonIconTextures => EditorMicroAnimations.UIManager.Icons.Buttons;
+        public static IEnumerable<Texture2D> buttonIconTextures => EditorSpriteSheets.UIManager.Icons.UIButton;
 
         private FluidField idField { get; set; }
 

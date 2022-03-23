@@ -43,7 +43,7 @@ namespace Doozy.Editor.Reactor.Layouts
             iconReaction =
                 icon.GetTexture2DReaction().SetEditorHeartbeat()
                     .SetDuration(0.5f)
-                    .SetTextures(EditorMicroAnimations.Reactor.Icons.Heartbeat);
+                    .SetTextures(EditorSpriteSheets.Reactor.Icons.Heartbeat);
 
 
             titleLabel = new Label()

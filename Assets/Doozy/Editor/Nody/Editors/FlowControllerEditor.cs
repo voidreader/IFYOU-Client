@@ -25,9 +25,9 @@ namespace Doozy.Editor.Nody.Editors
     [CustomEditor(typeof(FlowController), true)]
     public class FlowControllerEditor : UnityEditor.Editor
     {
-        private static IEnumerable<Texture2D> graphControllerIconTextures => EditorMicroAnimations.Nody.Icons.GraphController;
-        private static IEnumerable<Texture2D> settingsIconTextures => EditorMicroAnimations.EditorUI.Icons.Settings;
-        private static IEnumerable<Texture2D> unityIconTextures => EditorMicroAnimations.EditorUI.Icons.UnityEvent;
+        private static IEnumerable<Texture2D> graphControllerIconTextures => EditorSpriteSheets.Nody.Icons.GraphController;
+        private static IEnumerable<Texture2D> settingsIconTextures => EditorSpriteSheets.EditorUI.Icons.Settings;
+        private static IEnumerable<Texture2D> unityIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
 
         private static Color accentColor => EditorColors.Nody.Color;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Nody.Color;
@@ -200,7 +200,7 @@ namespace Doozy.Editor.Nody.Editors
                     (
                         FluidField.Get()
                             .SetElementSize(ElementSize.Large)
-                            .SetIcon(EditorMicroAnimations.EditorUI.Icons.UnityEvent)
+                            .SetIcon(EditorSpriteSheets.EditorUI.Icons.UnityEvent)
                             .SetLabelText("Controller started controlling a flow graph")
                             .AddFieldContent(DesignUtils.NewPropertyField(propertyOnStart))
                     )
@@ -209,7 +209,7 @@ namespace Doozy.Editor.Nody.Editors
                     (
                         FluidField.Get()
                             .SetElementSize(ElementSize.Large)
-                            .SetIcon(EditorMicroAnimations.EditorUI.Icons.UnityEvent)
+                            .SetIcon(EditorSpriteSheets.EditorUI.Icons.UnityEvent)
                             .SetLabelText("Controller stopped controlling a flow graph")
                             .AddFieldContent(DesignUtils.NewPropertyField(propertyOnStop))
                     )

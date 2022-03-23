@@ -43,88 +43,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aac9185366b352a4d9fa38a49ed88b51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: userJson
-      Entry: 6
-      Data: 
-    - Name: bankJson
-      Entry: 6
-      Data: 
-    - Name: notReceivedMailJson
-      Entry: 6
-      Data: 
-    - Name: userProfile
-      Entry: 6
-      Data: 
-    - Name: userProfileCurrency
-      Entry: 6
-      Data: 
-    - Name: OpenSideStories
-      Entry: 7
-      Data: 0|System.Collections.Generic.Queue`1[[LitJson.JsonData, Assembly-CSharp]],
-        System
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: CompleteMissions
-      Entry: 7
-      Data: 1|System.Collections.Generic.Queue`1[[LitJson.JsonData, Assembly-CSharp]],
-        System
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: currentStoryJson
-      Entry: 6
-      Data: 
-    - Name: currentStorySelectionHistoryJson
-      Entry: 6
-      Data: 
-    - Name: DictStoryMission
-      Entry: 6
-      Data: 
+  isAdminUser: 0
   debugBankString: 
   ListCoinIndicators: []
   ListGemIndicators: []
-  ticketIndicators: {fileID: 0}
+  ListNicknameIndicators: []
   DebugProjectIllusts: []
   DebugUserIllusts: []
   DebugProjectChallenges: []
-  DebugUserChallenges: []
   DebugProjectFavors: []
-  DebugUserFavors: []
   completeReadUserData: 0
   prevIllustProgress: -1
   useRecord: 1
   userKey: 
   gamebaseID: 
   tutorialStep: 0
+  isSelectionTutorialClear: 0
+  isHowToPlayClear: 0
+  tutorialFirstProjectID: 0
+  gameComplete: 0
   adCharge: 0
   level: 0
   exp: 0
+  nickname: 
+  accountLink: 
   gem: 0
   coin: 0
   unreadMailCount: 0
-  spriteMissionPopup: {fileID: 21300000, guid: 7e8118db7311db04fa3502ca1d0cfa71, type: 3}
+  spriteMissionPopup: {fileID: 21300000, guid: c64ab9bc03e9dae48afd50b093894731, type: 3}
 --- !u!1 &5260074688592084233
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,6 +138,7 @@ MonoBehaviour:
     title: 
     writer: 
     summary: 
+    original: 
     sortKey: 0
     bubbleSetID: 
     isCredit: 0
@@ -201,6 +148,10 @@ MonoBehaviour:
     thumbnailKey: 
     circleImageURL: 
     circleImageKey: 
+    episodeFinishImageURL: 
+    episodeFinishImageKey: 
+    premiumPassURL: 
+    premiumPassKey: 
     isLock: 0
     colorCode: 000000
     projectProgress: 0
@@ -214,9 +165,12 @@ MonoBehaviour:
     episodeTitle: 
     episodeSummary: 
     combinedEpisodeTitle: 
+    storyLobbyTitle: 
+    flowPrefix: 
     endingType: 
     dependEpisode: 
     endingOpen: 0
+    nextOpenMin: 0
     totalSceneCount: 0
     playedSceneCount: 0
     sceneProgressorValue: 0
@@ -242,9 +196,14 @@ MonoBehaviour:
   allowMissingResource: 1
   maxAdCharge: 0
   coinShopURL: 
+  firsetResetPrice: 0
+  episodeOpenPricePer: 0
+  waitingReduceTimeAD: 0
+  contentsURL: 
   innerFontKO: {fileID: 11400000, guid: 77d07c9fbd292e446bd5e19884c495b5, type: 2}
   innerFontEN: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   innerFontJA: {fileID: 11400000, guid: 1b3c9c736e0267342913d069e2af7872, type: 2}
   innerFontSC: {fileID: 11400000, guid: 4870303eae8a8c144abc82c97a1b5f2f, type: 2}
   innerFontTC: {fileID: 11400000, guid: 2463dd1ab54194646bc15b00552036db, type: 2}
-  prefabWebview: {fileID: 1900085666445226, guid: 7e3f16a6f6303419cbd9837f6c746de4, type: 3}
+  spriteCoin: {fileID: 21300000, guid: 2a768f18fb42d8e468c6535a97be1ebc, type: 3}
+  spriteStar: {fileID: 21300000, guid: ffab1a9beacbccd4aaee36656286b7d6, type: 3}

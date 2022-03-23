@@ -9,6 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace Doozy.Runtime.Mody.Actions
 {
+    /// <summary> <see cref="MetaModyAction{T}"/> with a Object value </summary>
     [Serializable]
     public class GenericModyAction : MetaModyAction<Object>
     {

@@ -107,6 +107,12 @@ namespace PIERStory {
             premiumPassURL = SystemManager.GetJsonNodeString(originData, "premium_pass_url");
             premiumPassKey = SystemManager.GetJsonNodeString(originData, "premium_pass_key");
             
+            // 카테고리 이미지
+            categoryImageURL = SystemManager.GetJsonNodeString(originData, "category_thumbnail_url");
+            categoryImageKey = SystemManager.GetJsonNodeString(originData, "category_thumbnail_key");
+            
+            
+            
             
             // 프로젝트 진행율 
             projectProgress = SystemManager.GetJsonNodeFloat(originData, LobbyConst.STORY_PROJECT_PROGRESS)   ;

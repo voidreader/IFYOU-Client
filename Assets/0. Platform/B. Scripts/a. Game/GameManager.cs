@@ -160,7 +160,20 @@ namespace PIERStory
 
         public ScriptRow nextRow
         {
-            get { return currentPage.GetNextRowWithoutIncrement(); }
+            get {
+
+                // 만약 현재에 사건 이동이 걸려있다면 다음행을 검색한다
+                if(!string.IsNullOrEmpty(currentRow.target_scene_id))
+                {
+                    for (int i = 0; i < currentPage.ListRows.Count; i++)
+                    {
+                        if (currentPage.ListRows[i].scene_id == currentRow.target_scene_id)
+                            return currentPage.ListRows[i];
+                    }
+                }
+
+                return currentPage.GetNextRowWithoutIncrement(); 
+            }
         }
 
 

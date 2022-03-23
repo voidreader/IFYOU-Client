@@ -640,10 +640,14 @@ namespace Doozy.Editor.UIManager.UIMenu
             void UpdateItemsSource()
             {
                 itemsSource.Clear();
-
+                if (propertyIcon == null) return;
+                if (propertyIcon.arraySize == 0) return;
                 for (int i = 0; i < propertyIcon.arraySize; i++)
-                    itemsSource.Add(propertyIcon.GetArrayElementAtIndex(i));
-
+                {
+                    SerializedProperty arrayElementAtIndex = propertyIcon.GetArrayElementAtIndex(i);
+                    if (arrayElementAtIndex == null) continue;
+                    itemsSource.Add(arrayElementAtIndex);
+                }
                 iconTextures2DFluidListView?.Update();
             }
 

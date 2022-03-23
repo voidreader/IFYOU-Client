@@ -869,7 +869,11 @@ namespace Doozy.Editor.EditorUI
 
                 public enum SpriteSheetName
                 {
+                    AnimatedIcons,
+                    AnimatedTitles,
+                    Animations,
                     Button,
+                    ButtonsPack,
                     Checkbox,
                     Components,
                     Containers,
@@ -880,6 +884,7 @@ namespace Doozy.Editor.EditorUI
                     HorizontalLayout,
                     InputField,
                     Layouts,
+                    Menus,
                     RadialLayout,
                     RadioButton,
                     Scollbar,
@@ -903,11 +908,16 @@ namespace Doozy.Editor.EditorUI
                     TabButtonTopRight,
                     UIMenuHeader,
                     UIMenuItem,
+                    UIPack,
                     VerticalLayout
                 }
                 
 
+                public static List<Texture2D> AnimatedIcons => GetTextures(SpriteSheetName.AnimatedIcons);
+                public static List<Texture2D> AnimatedTitles => GetTextures(SpriteSheetName.AnimatedTitles);
+                public static List<Texture2D> Animations => GetTextures(SpriteSheetName.Animations);
                 public static List<Texture2D> Button => GetTextures(SpriteSheetName.Button);
+                public static List<Texture2D> ButtonsPack => GetTextures(SpriteSheetName.ButtonsPack);
                 public static List<Texture2D> Checkbox => GetTextures(SpriteSheetName.Checkbox);
                 public static List<Texture2D> Components => GetTextures(SpriteSheetName.Components);
                 public static List<Texture2D> Containers => GetTextures(SpriteSheetName.Containers);
@@ -918,6 +928,7 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> HorizontalLayout => GetTextures(SpriteSheetName.HorizontalLayout);
                 public static List<Texture2D> InputField => GetTextures(SpriteSheetName.InputField);
                 public static List<Texture2D> Layouts => GetTextures(SpriteSheetName.Layouts);
+                public static List<Texture2D> Menus => GetTextures(SpriteSheetName.Menus);
                 public static List<Texture2D> RadialLayout => GetTextures(SpriteSheetName.RadialLayout);
                 public static List<Texture2D> RadioButton => GetTextures(SpriteSheetName.RadioButton);
                 public static List<Texture2D> Scollbar => GetTextures(SpriteSheetName.Scollbar);
@@ -941,6 +952,7 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> TabButtonTopRight => GetTextures(SpriteSheetName.TabButtonTopRight);
                 public static List<Texture2D> UIMenuHeader => GetTextures(SpriteSheetName.UIMenuHeader);
                 public static List<Texture2D> UIMenuItem => GetTextures(SpriteSheetName.UIMenuItem);
+                public static List<Texture2D> UIPack => GetTextures(SpriteSheetName.UIPack);
                 public static List<Texture2D> VerticalLayout => GetTextures(SpriteSheetName.VerticalLayout);
                 
             }

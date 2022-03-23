@@ -9,7 +9,6 @@ using UnityEngine.UI;
 
 namespace Doozy.Runtime.UIManager.Triggers
 {
-    [RequireComponent(typeof(GraphicRaycaster))]
     [AddComponentMenu("Doozy/UI/Triggers/Pointer/Pointer Left Click")]
     public class PointerLeftClickTrigger : SignalProvider, IPointerClickHandler
     {

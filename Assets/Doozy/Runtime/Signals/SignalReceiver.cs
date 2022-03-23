@@ -8,21 +8,32 @@ using UnityEngine.Events;
 
 namespace Doozy.Runtime.Signals
 {
+    /// <summary> Specialized class that connects to a signal stream to receive signals </summary>
     [Serializable]
     public class SignalReceiver : ISignalReceiver
     {
+        /// <summary> Stream connection mode </summary>
         [SerializeField] private StreamConnection ConnectionMode;
+        /// <summary> Signal provider id </summary>
         [SerializeField] private ProviderId SignalProviderId;
+        /// <summary> Signal provider reference </summary>
         [SerializeField] private SignalProvider ProviderReference;
+        /// <summary> Stream id </summary>
         [SerializeField] private StreamId StreamId;
 
+        /// <summary> UnityAction triggered whenever a signal is sent though the stream this receiver is connected to </summary>
         public UnityAction<Signal> onSignal { get; set; }
       
+        /// <summary> Stream connection mode </summary>
         public StreamConnection streamConnection { get => ConnectionMode; protected internal set => ConnectionMode = value; }
+        /// <summary> Signal provider id </summary>
         public ProviderId providerId { get => SignalProviderId; protected internal set => SignalProviderId = value; }
+        /// <summary> Signal provider reference </summary>
         public SignalProvider providerReference { get => ProviderReference; protected internal set => ProviderReference = value; }
+        /// <summary> Stream id </summary>
         public StreamId streamId { get => StreamId; protected internal set => StreamId = value; }
         
+        /// <summary> Stream id </summary>
         public GameObject signalSource { get; protected internal set; }
         
         public SignalStream stream { get; private set; }

@@ -305,6 +305,9 @@ namespace Doozy.Runtime.Nody
         public void Stop()
         {
             StopGlobalNodes();
+            if (activeNode != null)
+                activeNode.OnExit();
+            activeNode = null;
         }
 
         /// <summary> Start all the global nodes inside the graph </summary>

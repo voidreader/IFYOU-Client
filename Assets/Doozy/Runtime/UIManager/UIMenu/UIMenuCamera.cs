@@ -22,6 +22,7 @@ using Color = UnityEngine.Color;
 using UnityEngine.InputSystem;
 #endif
 
+// ReSharper disable UnusedMethodReturnValue.Local
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberCanBeMadeStatic.Local
 
@@ -85,6 +86,8 @@ namespace Doozy.Runtime.UIManager.UIMenu
 
         public UnityAction<State> OnStateChanged;
         public bool AutoGenerateSnapshots = true;
+        public bool AutoOverrideSettings = true;
+
         /// <summary>
         /// Invoked after a snapshot session
         /// <para/> fileName, targetPath, snapshotData
@@ -99,8 +102,6 @@ namespace Doozy.Runtime.UIManager.UIMenu
         private Rect target { get; set; }
         private Canvas rootCanvas { get; set; }
         private CanvasScaler canvasScaler { get; set; }
-        private CanvasScaler.ScaleMode uiScaleMode { get; set; }
-        private float scaleFactor { get; set; }
 
         private bool m_MultiShotStarted;
         private int m_Width, m_Height;
@@ -204,6 +205,7 @@ namespace Doozy.Runtime.UIManager.UIMenu
         public void StartMultiShot()
         {
             if (m_MultiShotStarted) return;
+            if (AutoOverrideSettings) OverrideSettings();
             ResetTime();
             snapshotData.Clear();
             m_MultiShotStarted = true;
@@ -213,6 +215,7 @@ namespace Doozy.Runtime.UIManager.UIMenu
         public void StopMultiShot()
         {
             if (!m_MultiShotStarted) return;
+            if (AutoOverrideSettings) RestoreSettings();
             m_MultiShotStarted = false;
             OnSnapshot?.Invoke(SnapshotTarget.name, TargetPath, snapshotData);
             if (AutoGenerateSnapshots)
@@ -252,19 +255,15 @@ namespace Doozy.Runtime.UIManager.UIMenu
         private IEnumerator MultiShotUIContainer()
         {
             TargetUIContainer.InstantShow();
-            yield return null;
             StartMultiShot();
             yield return new WaitForSecondsRealtime(tickInterval);
-            yield return null;
             TargetUIContainer.Hide();
             yield return new WaitForSecondsRealtime(TargetUIContainer.totalDurationForHide);
             yield return new WaitForSecondsRealtime(UIContainerShowDelay);
             yield return new WaitForSecondsRealtime(tickInterval);
-            yield return null;
             TargetUIContainer.Show();
             yield return new WaitForSecondsRealtime(TargetUIContainer.totalDurationForShow);
             yield return new WaitForSecondsRealtime(tickInterval);
-            yield return null;
             StopMultiShot();
         }
 
@@ -386,30 +385,100 @@ namespace Doozy.Runtime.UIManager.UIMenu
             return false;
         }
 
+        #region Snapshot Camera Settings
+
+        private CameraClearFlags snapshotCameraClearFlags { get; set; }
+        private Color snapshotCameraBackgroundColor { get; set; }
+
+        private UIMenuCamera OverrideSnapshotCameraSettings()
+        {
+            snapshotCameraClearFlags = SnapshotCamera.clearFlags;
+            snapshotCameraBackgroundColor = SnapshotCamera.backgroundColor;
+            SnapshotCamera.clearFlags = CameraClearFlags.SolidColor;
+            SnapshotCamera.backgroundColor = Color.clear;
+            return this;
+        }
+
+        private UIMenuCamera RestoreSnapshotCameraSettings()
+        {
+            SnapshotCamera.clearFlags = snapshotCameraClearFlags;
+            SnapshotCamera.backgroundColor = snapshotCameraBackgroundColor;
+            return this;
+        }
+
+        #endregion
+
+        #region Root Canvas Settings
+
+        private RenderMode rootCanvasRenderMode { get; set; }
+        private Camera rootCanvasWorldCamera { get; set; }
+
+        private UIMenuCamera OverrideRootCanvasSettings()
+        {
+            rootCanvasRenderMode = rootCanvas.renderMode;
+            rootCanvasWorldCamera = rootCanvas.worldCamera;
+            rootCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            rootCanvas.worldCamera = SnapshotCamera;
+            return this;
+        }
+
+        private UIMenuCamera RestoreRootCanvasSettings()
+        {
+            rootCanvas.renderMode = rootCanvasRenderMode;
+            rootCanvas.worldCamera = rootCanvasWorldCamera;
+            return this;
+        }
+
+        #endregion
+
+        #region Canvas Scaler Settings
+
+        private CanvasScaler.ScaleMode canvasScalerUiScaleMode { get; set; }
+        private float canvasScalerScaleFactor { get; set; }
+
+        private UIMenuCamera OverrideCanvasScalerSettings()
+        {
+            if (canvasScaler == null)
+                return this;
+            ;
+            canvasScalerUiScaleMode = canvasScaler.uiScaleMode;
+            canvasScalerScaleFactor = canvasScaler.scaleFactor;
+            canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
+            canvasScaler.scaleFactor = 1f;
+            return this;
+        }
+
+        private UIMenuCamera RestoreCanvasScalerSettings()
+        {
+            if (canvasScaler == null)
+                return this;
+            ;
+            canvasScaler.uiScaleMode = canvasScalerUiScaleMode;
+            canvasScaler.scaleFactor = canvasScalerScaleFactor;
+            return this;
+        }
+
+        #endregion
+
+        public void OverrideSettings()
+        {
+            OverrideSnapshotCameraSettings();
+            OverrideRootCanvasSettings();
+            OverrideCanvasScalerSettings();
+        }
+
+        public void RestoreSettings()
+        {
+            RestoreSnapshotCameraSettings();
+            RestoreRootCanvasSettings();
+            RestoreCanvasScalerSettings();
+        }
+
         private void Run(bool singleShot = true)
         {
             target = SnapshotTarget.rect;
 
-            //override camera settings
-            CameraClearFlags clearFlags = SnapshotCamera.clearFlags;
-            Color backgroundColor = SnapshotCamera.backgroundColor;
-            SnapshotCamera.clearFlags = CameraClearFlags.SolidColor;
-            SnapshotCamera.backgroundColor = Color.clear;
-
-            //override root canvas
-            RenderMode renderMode = rootCanvas.renderMode;
-            Camera worldCamera = rootCanvas.worldCamera;
-            rootCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-            rootCanvas.worldCamera = SnapshotCamera;
-
-            //override canvas scaler settings
-            if (canvasScaler != null)
-            {
-                uiScaleMode = canvasScaler.uiScaleMode;
-                scaleFactor = canvasScaler.scaleFactor;
-                canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
-                canvasScaler.scaleFactor = 1f;
-            }
+            if (singleShot) OverrideSettings();
 
             //size and offsets
             m_Width = Convert.ToInt32(target.width);                                               //calculate the width of the object to capture
@@ -424,20 +493,7 @@ namespace Doozy.Runtime.UIManager.UIMenu
             screenshotTexture.ReadPixels(new Rect(0, 0, m_Width, m_Height), 0, 0);                 //read data
             screenshotTexture.Apply();                                                             //apply
 
-            //restore camera settings
-            SnapshotCamera.clearFlags = clearFlags;
-            SnapshotCamera.backgroundColor = backgroundColor;
-
-            //restore root canvas
-            rootCanvas.renderMode = renderMode;
-            rootCanvas.worldCamera = worldCamera;
-
-            //restore canvas scaler settings
-            if (canvasScaler != null)
-            {
-                canvasScaler.uiScaleMode = uiScaleMode;
-                canvasScaler.scaleFactor = scaleFactor;
-            }
+            if (singleShot) RestoreSettings();
 
             //create fileName
             string fileName = SnapshotTarget.name;

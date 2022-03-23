@@ -241,10 +241,9 @@ namespace Doozy.Runtime.UIManager.Input
         /// </summary>
         public static void Fire(InputSignalData data)
         {
-            if(blockBackInput) {
-                Debug.Log("### blockBackInput ###");
+            
+            if(blockBackInput)
                 return;
-            }
             
             if (applicationIsQuitting) return;
             if (!instance.canFire) return;
@@ -258,10 +257,9 @@ namespace Doozy.Runtime.UIManager.Input
         /// </summary>
         public static void Fire()
         {
-            if(blockBackInput) {
-                Debug.Log("### blockBackInput ###");
+            if(blockBackInput)
                 return;
-            }
+            
             
             if (applicationIsQuitting) return;
             if (!instance.canFire) return;

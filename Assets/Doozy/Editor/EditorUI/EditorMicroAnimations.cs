@@ -210,8 +210,8 @@ namespace Doozy.Editor.EditorUI
                     Navigation,
                     News,
                     OffOn,
-                    OnOff,
                     OneShot,
+                    OnOff,
                     Orientation,
                     Paste,
                     PingPong,
@@ -421,10 +421,10 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> News => s_News = s_News ?? GetTextures(AnimationName.News);
                 private static List<Texture2D> s_OffOn;
                 public static List<Texture2D> OffOn => s_OffOn = s_OffOn ?? GetTextures(AnimationName.OffOn);
-                private static List<Texture2D> s_OnOff;
-                public static List<Texture2D> OnOff => s_OnOff = s_OnOff ?? GetTextures(AnimationName.OnOff);
                 private static List<Texture2D> s_OneShot;
                 public static List<Texture2D> OneShot => s_OneShot = s_OneShot ?? GetTextures(AnimationName.OneShot);
+                private static List<Texture2D> s_OnOff;
+                public static List<Texture2D> OnOff => s_OnOff = s_OnOff ?? GetTextures(AnimationName.OnOff);
                 private static List<Texture2D> s_Orientation;
                 public static List<Texture2D> Orientation => s_Orientation = s_Orientation ?? GetTextures(AnimationName.Orientation);
                 private static List<Texture2D> s_Paste;
@@ -901,14 +901,14 @@ namespace Doozy.Editor.EditorUI
                     Move,
                     MoveOnOff,
                     MoveToDot,
+                    Progressor,
+                    ProgressorGroup,
                     ProgressTarget,
                     ProgressTargetAction,
                     ProgressTargetAnimator,
                     ProgressTargetImage,
                     ProgressTargetText,
                     ProgressTargetTextMeshPro,
-                    Progressor,
-                    ProgressorGroup,
                     Reactor,
                     ReactorIconToFull,
                     Rotate,
@@ -962,6 +962,10 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> MoveOnOff => s_MoveOnOff = s_MoveOnOff ?? GetTextures(AnimationName.MoveOnOff);
                 private static List<Texture2D> s_MoveToDot;
                 public static List<Texture2D> MoveToDot => s_MoveToDot = s_MoveToDot ?? GetTextures(AnimationName.MoveToDot);
+                private static List<Texture2D> s_Progressor;
+                public static List<Texture2D> Progressor => s_Progressor = s_Progressor ?? GetTextures(AnimationName.Progressor);
+                private static List<Texture2D> s_ProgressorGroup;
+                public static List<Texture2D> ProgressorGroup => s_ProgressorGroup = s_ProgressorGroup ?? GetTextures(AnimationName.ProgressorGroup);
                 private static List<Texture2D> s_ProgressTarget;
                 public static List<Texture2D> ProgressTarget => s_ProgressTarget = s_ProgressTarget ?? GetTextures(AnimationName.ProgressTarget);
                 private static List<Texture2D> s_ProgressTargetAction;
@@ -974,10 +978,6 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> ProgressTargetText => s_ProgressTargetText = s_ProgressTargetText ?? GetTextures(AnimationName.ProgressTargetText);
                 private static List<Texture2D> s_ProgressTargetTextMeshPro;
                 public static List<Texture2D> ProgressTargetTextMeshPro => s_ProgressTargetTextMeshPro = s_ProgressTargetTextMeshPro ?? GetTextures(AnimationName.ProgressTargetTextMeshPro);
-                private static List<Texture2D> s_Progressor;
-                public static List<Texture2D> Progressor => s_Progressor = s_Progressor ?? GetTextures(AnimationName.Progressor);
-                private static List<Texture2D> s_ProgressorGroup;
-                public static List<Texture2D> ProgressorGroup => s_ProgressorGroup = s_ProgressorGroup ?? GetTextures(AnimationName.ProgressorGroup);
                 private static List<Texture2D> s_Reactor;
                 public static List<Texture2D> Reactor => s_Reactor = s_Reactor ?? GetTextures(AnimationName.Reactor);
                 private static List<Texture2D> s_ReactorIconToFull;

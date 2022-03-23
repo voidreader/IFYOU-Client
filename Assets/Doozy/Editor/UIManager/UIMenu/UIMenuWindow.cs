@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Doozy.Editor.Common.Utils;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Components.Internal;
@@ -76,7 +77,7 @@ namespace Doozy.Editor.UIManager.UIMenu
         private FluidResizer categorySideMenuResizer { get; set; }
 
         private FluidPlaceholder emptyPlaceholder { get; set; }
-        
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -405,6 +406,7 @@ namespace Doozy.Editor.UIManager.UIMenu
                     if (!sheetName.ToString().Equals(cleanPrefabTypeName))
                         continue;
                     typeButton.SetIcon(EditorSpriteSheets.UIManager.UIMenu.GetTextures(sheetName));
+                    typeButton.iconReaction.SetDuration(0.8f);
                     knownType = true;
                 }
                 if (!knownType)

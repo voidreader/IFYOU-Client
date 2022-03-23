@@ -310,7 +310,6 @@ namespace Doozy.Runtime.UIManager.Containers
         {
             if (!Application.isPlaying) return;
             hasCanvasGroup = canvasGroup != null;
-            // visibilityState = visibilityState;
         }
 
         protected virtual void Start()
@@ -332,6 +331,8 @@ namespace Doozy.Runtime.UIManager.Containers
             hideReactions.Remove(null);
             foreach (Reaction reaction in hideReactions)
                 reaction.Stop();
+            
+            StopAllCoroutines();
         }
 
         protected virtual void OnDestroy() {}
@@ -371,13 +372,29 @@ namespace Doozy.Runtime.UIManager.Containers
             {
                 case ShowHideExecute.Show:
                     hideProgressors.ForEach(p => p.Stop());
-                    showProgressors.ForEach(p => p.Play(PlayDirection.Forward));
-                    showHideProgressors.ForEach(p => p.Play(PlayDirection.Forward));
+                    showProgressors.ForEach(p =>
+                    {
+                        p.SetProgressAtZero();
+                        p.Play(PlayDirection.Forward);
+                    });
+                    showHideProgressors.ForEach(p =>
+                    {
+                        p.SetProgressAtZero();
+                        p.Play(PlayDirection.Forward);
+                    });
                     break;
                 case ShowHideExecute.Hide:
                     showProgressors.ForEach(p => p.Stop());
-                    hideProgressors.ForEach(p => p.Play(PlayDirection.Forward));
-                    showHideProgressors.ForEach(p => p.Play(PlayDirection.Reverse));
+                    hideProgressors.ForEach(p =>
+                    {
+                        p.SetProgressAtZero();
+                        p.Play(PlayDirection.Forward);
+                    });
+                    showHideProgressors.ForEach(p =>
+                    {
+                        p.SetProgressAtOne();
+                        p.Play(PlayDirection.Reverse);
+                    });
                     break;
                 case ShowHideExecute.InstantShow:
                     hideProgressors.ForEach(p => p.Stop());
@@ -391,13 +408,53 @@ namespace Doozy.Runtime.UIManager.Containers
                     break;
                 case ShowHideExecute.ReverseShow:
                     hideProgressors.ForEach(p => p.Stop());
-                    showProgressors.ForEach(p => p.Reverse());
-                    showHideProgressors.ForEach(p => p.Reverse());
+                    showProgressors.ForEach(p =>
+                    {
+                        if (p.reaction.isActive)
+                        {
+                            p.Reverse();
+                        }
+                        else
+                        {
+                            p.Play(PlayDirection.Reverse);
+                        }
+                    });
+                    showHideProgressors.ForEach(p =>
+                    {
+                        if (p.reaction.isActive && p.reaction.direction == PlayDirection.Forward)
+                        {
+                            p.Reverse();
+                        }
+                        else
+                        {
+                            p.Play(PlayDirection.Reverse);
+                        }
+                    });
                     break;
                 case ShowHideExecute.ReverseHide:
                     showProgressors.ForEach(p => p.Stop());
-                    hideProgressors.ForEach(p => p.Reverse());
-                    showHideProgressors.ForEach(p => p.Reverse());
+                    hideProgressors.ForEach(p =>
+                    {
+                        if (p.reaction.isActive)
+                        {
+                            p.Reverse();
+                        }
+                        else
+                        {
+                            p.Play(PlayDirection.Reverse);
+                        }
+                    });
+                    showHideProgressors.ForEach(p =>
+                    {
+                        if (p.reaction.isActive && p.reaction.direction == PlayDirection.Reverse)
+                        {
+                            p.Reverse();
+                        }
+                        else
+                        {
+                            p.Play(PlayDirection.Forward);
+                        }
+                    });
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(command), command, null);
@@ -532,7 +589,7 @@ namespace Doozy.Runtime.UIManager.Containers
 
             if (m_LastFrameVisibilityStateChanged == Time.frameCount)
             {
-                Coroutiner.ExecuteLater(() => Show(triggerCallbacks), 2);
+                StartCoroutine(Coroutiner.DelayExecution(() => Show(triggerCallbacks), 2));
                 return;
             }
 
@@ -614,7 +671,7 @@ namespace Doozy.Runtime.UIManager.Containers
 
             if (m_LastFrameVisibilityStateChanged == Time.frameCount)
             {
-                Coroutiner.ExecuteLater(() => Hide(triggerCallbacks), 2);
+                StartCoroutine(Coroutiner.DelayExecution(() => Hide(triggerCallbacks), 2));
                 return;
             }
 
@@ -859,7 +916,7 @@ namespace Doozy.Runtime.UIManager.Containers
 
                 case ContainerBehaviour.Show:
                     InstantHide(false);
-                    Coroutiner.ExecuteLater(Show, 2);
+                    StartCoroutine(Coroutiner.DelayExecution(Show, 2));
                     return;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(behaviour), behaviour, null);

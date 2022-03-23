@@ -15,33 +15,32 @@ namespace Doozy.Editor.Common.Utils
     /// <summary> Executes a delayed call in the Editor </summary>
     public class DelayedCall
     {
-        private readonly float m_delay;
-        private readonly Action m_callback;
-        private readonly float m_startupTime;
+        private readonly float m_Delay;
+        private readonly Action m_Callback;
+        private readonly float m_StartupTime;
 
         public DelayedCall(float delay, Action callback)
         {
-            m_delay = delay;
-            m_callback = callback;
-            m_startupTime = Time.realtimeSinceStartup;
+            m_Delay = delay;
+            m_Callback = callback;
+            m_StartupTime = Time.realtimeSinceStartup;
             EditorApplication.update += Update;
         }
 
         private void Update()
         {
-            if (Time.realtimeSinceStartup - (double) m_startupTime < m_delay) return;
+            if (EditorApplication.timeSinceStartup - (double) m_StartupTime < m_Delay) return;
             if (EditorApplication.update != null) EditorApplication.update -= Update;
-            if (m_callback != null) m_callback();
+            m_Callback?.Invoke();
         }
 
         public void Cancel()
         {
-            if (EditorApplication.update != null) EditorApplication.update -= Update;
+            if (EditorApplication.update != null)
+                EditorApplication.update -= Update;
         }
         
-        public static DelayedCall Run(float delay, Action callback)
-        {
-            return new DelayedCall(delay, callback);
-        }
+        public static DelayedCall Run(float delay, Action callback) =>
+            new DelayedCall(delay, callback);
     }
 }

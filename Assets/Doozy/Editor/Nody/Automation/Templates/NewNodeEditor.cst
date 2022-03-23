@@ -13,7 +13,7 @@ namespace Doozy.Editor.Nody.Nodes
     [CustomEditor(typeof(//NodeName//))]
     public class //NodeEditorName// : FlowNodeEditor
     {
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.CustomNode; //custom animated icon
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.CustomNode; //custom animated icon
 
         protected override void InitializeEditor()
         {

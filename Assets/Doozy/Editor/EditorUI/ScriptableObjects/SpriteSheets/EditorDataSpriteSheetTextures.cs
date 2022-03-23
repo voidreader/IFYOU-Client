@@ -4,8 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
 namespace Doozy.Editor.EditorUI.ScriptableObjects.SpriteSheets
 {
     public class EditorDataSpriteSheetTextures : ScriptableObject
@@ -79,8 +85,8 @@ namespace Doozy.Editor.EditorUI.ScriptableObjects.SpriteSheets
 
             public Texture2D GetTexture()
             {
-                var texture = new Texture2D(Width, Height);
-                texture.LoadImage(Data);
+                var texture = new Texture2D(Width, Height, TextureFormat.ARGB32, false);
+                texture.LoadImage(Data, true);
                 texture.name = Name;
                 return texture;
             }

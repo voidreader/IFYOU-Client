@@ -40,7 +40,7 @@ namespace Doozy.Runtime.UIManager
 
         public void Connect()
         {
-            if (!Enabled) 
+            if (!Enabled)
                 return;
             
             if (receiver.isConnected) 
@@ -92,7 +92,7 @@ namespace Doozy.Runtime.UIManager
     {
         public static T SetSignalSource<T>(this T target, GameObject signalSource) where T : UIBehaviour
         {
-            target.receiver.SetSignalSource(signalSource);
+            target.receiver.signalSource = signalSource;
             return target;
         }
 

@@ -10,7 +10,6 @@ using UnityEngine.UI;
 
 namespace Doozy.Runtime.UIManager.Triggers
 {
-    [RequireComponent(typeof(GraphicRaycaster))]
     [AddComponentMenu("Doozy/UI/Triggers/Pointer/Pointer Long Click")]
     public class PointerLongClickTrigger : SignalProvider, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
     {

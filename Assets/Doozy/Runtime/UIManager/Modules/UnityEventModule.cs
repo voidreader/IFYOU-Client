@@ -11,24 +11,33 @@ using UnityEngine.Events;
 
 namespace Doozy.Runtime.UIManager.Modules
 {
+    /// <summary> Mody module used to trigger a UnityEvent </summary>
     [AddComponentMenu("Doozy/UI/Modules/UnityEvent Module")]
     public class UnityEventModule : ModyModule
     {
+        /// <summary> Default module name </summary>
         public const string k_DefaultModuleName = "UnityEvent";
 
-        public UnityEvent Event;
+        /// <summary> Target UnityEvent </summary>
+        public UnityEvent Event = new UnityEvent();
 
+        /// <summary> Simple action that triggers the UnityEvent </summary>
         public SimpleModyAction InvokeEvent;
 
+        /// <summary> Construct a UnityEvent Module with the default name </summary>
         public UnityEventModule() : this(k_DefaultModuleName) {}
 
+        /// <summary> Construct a UnityEvent Module with the given name </summary>
+        /// <param name="moduleName"> Module name </param>
         public UnityEventModule(string moduleName) : base(moduleName.IsNullOrEmpty() ? k_DefaultModuleName : moduleName) {}
 
+        /// <summary> Initialize the actions </summary>
         protected override void SetupActions()
         {
             this.AddAction(InvokeEvent ??= new SimpleModyAction(this, nameof(InvokeEvent), ExecuteInvokeEvent));
         }
 
+        /// <summary> Execute Invoke on the UnityEvent </summary>
         public void ExecuteInvokeEvent()
         {
             Event?.Invoke();

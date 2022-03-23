@@ -14,7 +14,7 @@ namespace Doozy.Editor.Nody.Nodes
     {
         public override Type nodeType => typeof(//NodeName//);
         public override Texture2D nodeIconTexture => EditorTextures.Nody.Icons.CustomNode; // custom static icon
-        public override IEnumerable<Texture2D> nodeIconTextures => EditorMicroAnimations.Nody.Icons.CustomNode; // custom animated icon
+        public override IEnumerable<Texture2D> nodeIconTextures => EditorSpriteSheets.Nody.Icons.CustomNode; // custom animated icon
 
         public //NodeViewName//(FlowGraphView graphView, FlowNode node) : base(graphView, node)
         {

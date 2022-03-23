@@ -20,6 +20,8 @@ namespace Doozy.Editor.EditorUI.Components
 {
     public class FluidToggleButtonTab : FluidToggle<FluidToggleButtonTab>
     {
+        public const float k_IconReactionDuration = 0.6f;
+        
        public override void Reset()
         {
             base.Reset();
@@ -233,9 +235,10 @@ namespace Doozy.Editor.EditorUI.Components
 
             selectionState = SelectionState.Normal;
 
-            iconReaction.SetDuration(0.6f);
+            iconReaction.SetDuration(k_IconReactionDuration);
         }
 
+        
         public FluidToggleButtonTab AddToInfoContainer(VisualElement element)
         {
             infoContainer.SetStyleDisplay(DisplayStyle.Flex);

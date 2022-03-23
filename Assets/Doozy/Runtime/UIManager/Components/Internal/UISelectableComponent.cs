@@ -21,14 +21,17 @@ namespace Doozy.Runtime.UIManager.Components.Internal
         {
             database = new HashSet<T>();
         }
-        
+
+        /// <summary> Component reference </summary>
         public T component { get; private set; }
 
         [SerializeField] private UIBehaviours Behaviours;
+        /// <summary> Manages UIBehaviour components </summary>
         public UIBehaviours behaviours => Behaviours;
 
+        /// <summary> TRUE is this selectable is selected by EventSystem.current, FALSE otherwise </summary>
         public bool isSelected => EventSystem.current.currentSelectedGameObject == gameObject;
-        
+
         protected UISelectableComponent()
         {
             Behaviours =
@@ -47,12 +50,22 @@ namespace Doozy.Runtime.UIManager.Components.Internal
 
         protected override void OnEnable()
         {
-            if(!Application.isPlaying)
+            if (!Application.isPlaying)
                 return;
-            
+
             CleanDatabase();
             base.OnEnable();
             StartCoroutine(ConnectBehaviours());
+        }
+
+        protected override void OnDisable()
+        {
+            if (!Application.isPlaying)
+                return;
+            
+            CleanDatabase();
+            base.OnDisable();
+            behaviours.Disconnect();
         }
 
         protected override void OnDestroy()
@@ -62,9 +75,10 @@ namespace Doozy.Runtime.UIManager.Components.Internal
             base.OnDestroy();
         }
 
+        /// <summary> Remove all null references from the database </summary>
         protected static void CleanDatabase() =>
             database.Remove(null);
-        
+
         private IEnumerator ConnectBehaviours()
         {
             yield return null;
@@ -73,5 +87,31 @@ namespace Doozy.Runtime.UIManager.Components.Internal
                 .SetSignalSource(gameObject)
                 .Connect();
         }
+
+        /// <summary>
+        /// Add the given behaviour and get a reference to it (automatically connects)
+        /// If the behaviour already exists, the reference to it will get automatically returned. 
+        /// </summary>
+        /// <param name="behaviourName"> UIBehaviour.Name </param>
+        public UIBehaviour AddBehaviour(UIBehaviour.Name behaviourName) =>
+            behaviours.AddBehaviour(behaviourName);
+
+        /// <summary> Remove the given behaviour (automatically disconnects) </summary>
+        /// <param name="behaviourName"> UIBehaviour.Name </param>
+        public void RemoveBehaviour(UIBehaviour.Name behaviourName) =>
+            behaviours.RemoveBehaviour(behaviourName);
+
+        /// <summary> Check if the given behaviour has been added (exists) </summary>
+        /// <param name="behaviourName"> UIBehaviour.Name </param>
+        public bool HasBehaviour(UIBehaviour.Name behaviourName) =>
+            behaviours.HasBehaviour(behaviourName);
+
+        /// <summary>
+        /// Get the behaviour with the given name.
+        /// Returns null if the behaviour has not been added (does not exist)
+        /// </summary>
+        /// <param name="behaviourName"> UIBehaviour.Name </param>
+        public UIBehaviour GetBehaviour(UIBehaviour.Name behaviourName) =>
+            behaviours.GetBehaviour(behaviourName);
     }
 }

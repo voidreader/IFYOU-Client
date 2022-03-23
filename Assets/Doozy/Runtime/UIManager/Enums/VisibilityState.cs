@@ -20,3 +20,4 @@ namespace Doozy.Runtime.UIManager
         IsHiding
     }
 }
+

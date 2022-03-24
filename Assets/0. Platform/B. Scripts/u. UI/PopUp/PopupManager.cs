@@ -39,9 +39,11 @@ namespace PIERStory {
         [SerializeField] GameObject popupPremiumPass;
         [SerializeField] GameObject popupSideAlert;
         [SerializeField] GameObject popupSimpleAlert;
-        
-        [SerializeField] GameObject popupTutorialComplete;
-        public GameObject popupTutorialSlide;
+
+        // 튜토리얼 팝업 모음
+        public GameObject popupTutorial1;
+        public GameObject popupTutorial2;
+        public GameObject popupTutorial3;
         
         [SerializeField] GameObject popupNickname;       
         
@@ -327,18 +329,25 @@ namespace PIERStory {
                 DictPopup[CommonConst.POPUP_SIMPLE_ALERT] = popupSimpleAlert;
             else 
                 DictPopup.Add(CommonConst.POPUP_SIMPLE_ALERT, popupSimpleAlert);
-            
-            if(DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_TUTORIAL_COMPLETE)) 
-                DictPopup[CommonConst.POPUP_TUTORIAL_TUTORIAL_COMPLETE] = popupTutorialComplete;
-            else 
-                DictPopup.Add(CommonConst.POPUP_TUTORIAL_TUTORIAL_COMPLETE, popupTutorialComplete);
-                
-            if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_SLIDE))
-                DictPopup[CommonConst.POPUP_TUTORIAL_SLIDE] = popupTutorialSlide;
-            else
-                DictPopup.Add(CommonConst.POPUP_TUTORIAL_SLIDE, popupTutorialSlide);
 
-            if(DictPopup.ContainsKey("Nickname")) 
+            // Tutorial
+            if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_MISSION_1))
+                DictPopup[CommonConst.POPUP_TUTORIAL_MISSION_1] = popupTutorial1;
+            else
+                DictPopup.Add(CommonConst.POPUP_TUTORIAL_MISSION_1, popupTutorial1);
+
+            if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_MISSION_2))
+                DictPopup[CommonConst.POPUP_TUTORIAL_MISSION_2] = popupTutorial2;
+            else
+                DictPopup.Add(CommonConst.POPUP_TUTORIAL_MISSION_2, popupTutorial2);
+
+            if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_MISSION_3))
+                DictPopup[CommonConst.POPUP_TUTORIAL_MISSION_3] = popupTutorial3;
+            else
+                DictPopup.Add(CommonConst.POPUP_TUTORIAL_MISSION_3, popupTutorial3);
+
+
+            if (DictPopup.ContainsKey("Nickname")) 
                 DictPopup["Nickname"] = popupNickname;
             else 
                 DictPopup.Add("Nickname", popupNickname);

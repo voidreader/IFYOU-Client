@@ -1403,9 +1403,6 @@ namespace PIERStory
         /// </summary>
         public void QuitGame()
         {
-            // * 중간 종료되는 경우에는 tutorial 관련 처리 초기화 시킨다. 
-            UserManager.main.tutorialFirstProjectID = 0; // 0으로 초기화 시켜버린다.
-                     
             // 게임씬을 빠져나가기 전에 현재 상황을 저장하자!
             SaveCurrentPlay();
 

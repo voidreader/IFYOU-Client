@@ -19,6 +19,10 @@ namespace PIERStory
 
         public void OnClickPlayButton()
         {
+            //  튜토리얼 단계 업데이트 후 플레이
+            pointerIcon.DOKill();
+
+            StoryLobbyMain.OnEpisodePlay?.Invoke();
 
         }
     }

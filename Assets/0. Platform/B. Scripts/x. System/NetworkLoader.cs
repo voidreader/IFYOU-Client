@@ -533,11 +533,6 @@ namespace PIERStory
         /// <param name="nextEpisodeID">다음 에피소드 ID</param>
         public void UpdateEpisodeCompleteRecord(EpisodeData nextEpisode)
         {
-            // * 튜토리얼 프로젝트 값이 있고, 튜토리얼 스텝이 1이면 2로 업데이트 해준다. 
-            if(UserManager.main.tutorialFirstProjectID > 0 && UserManager.main.tutorialStep == 1)
-                UserManager.main.UpdateTutorialStep(2);
-
-
             // Progress와 History 둘 다 저장이 된다. (progress는 is_clear가 업데이트)
             JsonData sending = new JsonData();
             sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 

@@ -74,8 +74,11 @@ namespace PIERStory
         public const string POPUP_MESSAGE_ALERT = "MessageAlert";
         public const string POPUP_SIMPLE_ALERT = "SimpleAlert";
 
-        public const string POPUP_TUTORIAL_SLIDE = "TutorialSlide";
-        public const string POPUP_TUTORIAL_TUTORIAL_COMPLETE = "TutorialComplete";
+
+        public const string POPUP_TUTORIAL_MISSION_1 = "TutorialMission1";
+        public const string POPUP_TUTORIAL_MISSION_2 = "TutorialMission2";
+        public const string POPUP_TUTORIAL_MISSION_3 = "TutorialMission3";
+
 
         public const string POPUP_CONNECTING_SHOP = "ConnectingShop";
         public const string POPUP_SPECIAL_EPISODE_BUY = "SpecialEpisodeBuy";

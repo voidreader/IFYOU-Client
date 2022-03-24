@@ -116,6 +116,12 @@ namespace PIERStory
         {
             base.OnView();
 
+            if(UserManager.main.tutorialStep == 1)
+            {
+                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MISSION_1);
+                PopupManager.main.ShowPopup(p, false);
+            }
+
             if(UserManager.main.gameComplete)
             {
                 RateGame.Instance.CanShowRate();

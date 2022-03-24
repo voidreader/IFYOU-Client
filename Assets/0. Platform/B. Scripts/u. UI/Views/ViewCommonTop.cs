@@ -11,23 +11,27 @@ using Doozy.Runtime.Signals;
 namespace PIERStory {
     public class ViewCommonTop : CommonView
     {
-        public static bool isBackgroundShow = true; // 배경 보여지고 있는지 
-        public static string staticCurrentTopOwner = string.Empty; // static owner.
+        public static bool isBackgroundShow = true;                 // 배경 보여지고 있는지 
+        public static string staticCurrentTopOwner = string.Empty;  // static owner.
         
         public static Action OnRefreshSuperUser = null; // 슈퍼유저 표기용도 
-        public static Action OnBackAction = null; // 백 버튼 터치 추가 액션 필요시 사용
+        public static Action OnBackAction = null;       // 백 버튼 터치 추가 액션 필요시 사용
+
+        public static Action<int> OnForShowCoin = null; // 보여주기용 코인
 
 
-        [SerializeField] GameObject backButton; // 뒤로가기 버튼 
-        [SerializeField] TextMeshProUGUI textViewName; // 뷰 이름 
-        [SerializeField] Image imageBackground; // 뒤의 흰 배경
-        [SerializeField] GameObject groupProperty; // 프로퍼티 그룹 (재화, 메일, 등등)
+        [SerializeField] GameObject backButton;         // 뒤로가기 버튼 
+        [SerializeField] TextMeshProUGUI textViewName;  // 뷰 이름 
+        [SerializeField] Image imageBackground;         // 뒤의 흰 배경
+        [SerializeField] GameObject groupProperty;      // 프로퍼티 그룹 (재화, 메일, 등등)
         [SerializeField] HorizontalLayoutGroup propertyHorizontalLayout;
         public GameObject mailButton;           // 프로퍼티 그룹의 메일 버튼
         [SerializeField] GameObject mailNotify; // 메일 알림 표시 
 
         public GameObject attendanceButton;     // 출석 이벤트 버튼
-        public GameObject howToPlayButton; // How to play 버튼 
+        public GameObject howToPlayButton; // How to play 버튼
+
+        public CoinIndicator topCoin;           // 상단바에 존재하는 코인
 
         
         [SerializeField] GameObject logo; // 로고
@@ -133,6 +137,7 @@ namespace PIERStory {
             signalStreamSaveState.ConnectReceiver(signalReceiverSaveState);
             
             OnRefreshSuperUser = SetSuperUser;
+            OnForShowCoin = RefreshCoin;
 
             signalStreamAttendace.ConnectReceiver(signalReceiverAttendance);
         }
@@ -174,6 +179,15 @@ namespace PIERStory {
             Debug.Log("### SetSuperUser ###");
             superUserSign.SetActive(UserManager.main.CheckAdminUser());
         }
+
+
+        void RefreshCoin(int __newValue)
+        {
+            topCoin.RefreshCoin(__newValue);
+        }
+
+
+
         
         public void OnSignalControlBackButton(bool __flag) {
             backButton.SetActive(__flag);
@@ -467,5 +481,7 @@ namespace PIERStory {
         public void OnClickBack() {
             OnBackAction?.Invoke();
         }
+
+
     }
 }

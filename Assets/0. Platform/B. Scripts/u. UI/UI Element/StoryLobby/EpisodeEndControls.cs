@@ -1,7 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 using TMPro;
 
 namespace PIERStory {
@@ -24,6 +22,7 @@ namespace PIERStory {
             Debug.Log("## EpisodeEndControls.InitStoryLobbyControls ");
             CallbackReduceWaitingTimeSuccess = RefreshAfterReduceWaitingTime; 
             CallbackReduceWaitingTimeFail = FailReduceWaitingTime;
+            OnEpisodePlay = OnClickPlay;
                         
             this.InitBaseInfo(); // 기본정보
             

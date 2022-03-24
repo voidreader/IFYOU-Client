@@ -138,14 +138,6 @@ namespace PIERStory {
 
             InitAddMore();
 
-            if (UserManager.main.tutorialStep < 2)
-            {
-                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_SLIDE);
-                PopupManager.main.ShowPopup(p, false);
-                SystemManager.appFirstExecute = false;
-            }
-
-
             // (프로필) 닉네임, 레벨, 경험치
             levelText.text = string.Format("Lv. {0}", UserManager.main.level);
 

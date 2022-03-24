@@ -8,6 +8,8 @@ using LitJson;
 namespace PIERStory {
     public class GenreToggle : MonoBehaviour
     {
+        public string locatedPlace = string.Empty;
+        
         [SerializeField] Image buttonImage;
         [SerializeField] TextMeshProUGUI textGenre;
         
@@ -61,7 +63,11 @@ namespace PIERStory {
         }
         
         public void OnClickGenre() {
-            IFYouLobby.OnCategoryList?.Invoke(localizedName);
+            
+            if(locatedPlace == "Lobby")
+                IFYouLobby.OnCategoryList?.Invoke(localizedName);
+            else if(locatedPlace == "Library") 
+                MainLibrary.OnCategoryList?.Invoke(localizedName);
         }
            
     }

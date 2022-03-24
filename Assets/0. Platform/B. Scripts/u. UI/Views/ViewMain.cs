@@ -27,24 +27,11 @@ namespace PIERStory {
 
         public UIToggle shopToggle;
         
+        [Header("내서재")]
+        public MainLibrary library;        
 
         
-            
-
-        [Header("프로필")]
-        public ImageRequireDownload background;
-        public Transform decoObjectParent;
-        public GameObject decoObjectPrefab;
-        public GameObject standingObjectPrefab;
-        public Transform textObjectParent;
-        public GameObject textObjectPrefab;
-        public ImageRequireDownload profilePortrait;
-        public ImageRequireDownload profileFrame;
-        public TextMeshProUGUI nickname;
-        public TextMeshProUGUI levelText;
-        public TextMeshProUGUI expText;
-        public Image expGauge;
-        List<GameObject> createObject = new List<GameObject>();
+     
 
         [Space(20)]
         public GameObject editButton;
@@ -108,8 +95,9 @@ namespace PIERStory {
 
             InitLobby();
 
+            library.InitLibrary();
             
-            InitAddMore();
+            
 
             // (프로필) 닉네임, 레벨, 경험치
             /*
@@ -154,9 +142,9 @@ namespace PIERStory {
                     OnLobbyTab();
                 break;
                 
-                case 1:  // 카테고리
+                case 1:  // 내서재 (라이브러리)
                     navigationBottom.enabled = true;
-                    OnCategoryTab();
+                    OnLibraryTab();
                 break;
                 
                 case 2: // 상점
@@ -216,13 +204,15 @@ namespace PIERStory {
         /// <summary>
         /// 카테고리 탭 활성화 
         /// </summary>
-        public void OnCategoryTab() {
+        public void OnLibraryTab() {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
+            
+
         }
         
 
@@ -322,13 +312,6 @@ namespace PIERStory {
         }
 
 
-        /// <summary>
-        /// 더보기 페이지 설정
-        /// </summary>
-        void InitAddMore()
-        {
-            //userPincode.text = string.Format("UID : {0}", UserManager.main.GetUserPinCode());
-        }
 
 
         /// <summary>

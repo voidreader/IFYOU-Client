@@ -100,7 +100,7 @@ namespace PIERStory
 
         
         #region 장르
-        JsonData storyGenreData = null; // 공개된 작품 장르
+        public JsonData storyGenreData = null; // 공개된 작품 장르
         #endregion
 
         public JsonData promotionData = null;       // 프로모션 데이터
@@ -122,8 +122,13 @@ namespace PIERStory
         
         #region 공용 스프라이트
         [Space][Header("공용 스프라이트")]
-        public Sprite spriteCoin;       // 150~200 사이 사이즈 코인
-        public Sprite spriteStar;       // 150~200 사이 사이즈 스타
+        public Sprite spriteCoin;       // 60 사이즈 코인
+        public Sprite spriteStar;       // 60 사이 사이즈 스타
+        public Sprite spriteFreepassIcon; // 프리패스 아이콘
+        public Sprite spriteInappOriginIcon; // 인앱 구매확정 메일 아이콘        
+
+        
+        
         #endregion
         
 
@@ -1865,38 +1870,27 @@ namespace PIERStory
 
         #endregion
 
-        /// <summary>
-        /// 공지사항 리스트 요청 콜백
-        /// </summary>
-        public void CallbackNoticeList(HTTPRequest req, HTTPResponse res)
-        {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("Failed CallbackNoticeList");
-                return;
-            }
-
-            noticeData = JsonMapper.ToObject(res.DataAsText);
-        }
 
 
         #region 프로모션, 장르, 카테고리 관련
 
-        /// <summary>
-        /// 프로모션 리스트 요청 콜백
-        /// </summary>
-        public void CallbackPromotionList(HTTPRequest req, HTTPResponse res)
+        public void CallbackPlatformServiceEvent(HTTPRequest req, HTTPResponse res)
         {
             if(!NetworkLoader.CheckResponseValidation(req, res))
             {
-                Debug.LogError("Failed CallbackPromotionList");
+                Debug.LogError("Failed CallbackPlatformServiceEvent");
                 return;
             }
             
-            Debug.Log("CallbackPromotionList :: " + res.DataAsText);
+            Debug.Log("CallbackPlatformServiceEvent :: " + res.DataAsText);
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            
+            promotionData = result["promotion"];
+            noticeData = result["notice"];
+            storyGenreData = result["genre"];
 
-            promotionData = JsonMapper.ToObject(res.DataAsText);
         }
+
 
 
 

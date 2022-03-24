@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 using TMPro;
 using LitJson;
@@ -13,10 +14,16 @@ namespace PIERStory
         public TextMeshProUGUI mailContent;
         public TextMeshProUGUI remainTime;
         
+        public Image imageBaseCurrencyIcon; // 기본 재화 아이콘 
+        public TextMeshProUGUI textBaseCurrencyQuantity; // 기본 재화 개수 
+        
         [SerializeField] string currencyName = string.Empty;
         [SerializeField] string currencyURL = string.Empty;
         [SerializeField] string currencyKey = string.Empty;
         [SerializeField] string projectTitle = string.Empty; // 연결 프로젝트 타이틀
+        
+        
+        
 
         string mailType = string.Empty;
         string mailNo = string.Empty;
@@ -44,18 +51,31 @@ namespace PIERStory
             min = int.Parse(SystemManager.GetJsonNodeString(__j, REMAIN_MINS));
             
             
-            // 재화 아이콘 처리 
+            // 재화 아이콘 처리 (기본재화, 다운로드 아이콘 재화 구분 )
             if(currency == "gem" || currency == "coin") {
-                currencyURL = SystemManager.main.GetCurrencyImageURL(currency);
-                currencyKey = SystemManager.main.GetCurrencyImageKey(currency);
+                
+                // * 여기는 일반 재화 (젬, 코인)
+                currencyIcon.gameObject.SetActive(false);
+                imageBaseCurrencyIcon.gameObject.SetActive(true);
+                
+                if(currency == "gem")
+                    imageBaseCurrencyIcon.sprite = SystemManager.main.spriteStar;
+                else if(currency == "coin")
+                    imageBaseCurrencyIcon.sprite = SystemManager.main.spriteCoin;
+                    
+                imageBaseCurrencyIcon.SetNativeSize();
+                textBaseCurrencyQuantity.text = quantity.ToString(); // 개수 
+                
             }
             else {
+                // * 기본재화 아닌 경우 
                 currencyURL = SystemManager.GetJsonNodeString(__j, "icon_image_url");
                 currencyKey = SystemManager.GetJsonNodeString(__j, "icon_image_key");
+                
+                currencyIcon.gameObject.SetActive(true);
+                imageBaseCurrencyIcon.gameObject.SetActive(false);
+                currencyIcon.SetDownloadURL(currencyURL, currencyKey);
             }
-            
-            
-            currencyIcon.SetDownloadURL(currencyURL, currencyKey);
             
             // 재화 이름 
             currencyName = SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, "local_code"));
@@ -63,17 +83,13 @@ namespace PIERStory
             projectTitle = SystemManager.GetJsonNodeString(__j, "connected_project_title");
 
             
-            // mailContent.text = currency == "gem" ? string.Format("스타 {0}개 획득", quantity) : string.Format("코인 {0}개 획득", quantity);
             mailContent.text = string.Format(SystemManager.GetLocalizedText("6104"), quantity, currencyName);
             
             // 예외적으로 mail_type inapp_origin은 아이콘 고정 처리 
             if(mailType == "inapp_origin") {
                 
-                if(LobbyManager.main != null)                
-                    currencyIcon.SetTexture2D(LobbyManager.main.spriteInappOriginIcon.texture);
-                else 
-                    currencyIcon.SetTexture2D(GameManager.main.spriteInappOriginIcon.texture);
-                    
+                currencyIcon.SetTexture2D(SystemManager.main.spriteInappOriginIcon.texture);
+                
                     
                 mailContent.text = SystemManager.GetLocalizedText("80083");
             }

@@ -7,7 +7,7 @@ namespace PIERStory {
     
     public enum MainNavigationType {
         Lobby,
-        Category,
+        Library,
         Shop,
         IFYou,
         Profile,
@@ -23,6 +23,10 @@ namespace PIERStory {
         
         [SerializeField] MainNavigationType mainNavigationType;
         [SerializeField] GameObject accountBonus;
+        
+        public Color colorActive;
+        public Color colorInactive;
+        
         
         void Start() {
             if(mainNavigationType != MainNavigationType.More)
@@ -58,35 +62,9 @@ namespace PIERStory {
             if(LobbyManager.main == null)
                 return;
             
-            textName.color = LobbyManager.main.colorNavOff;
+            // textName.color = LobbyManager.main.colorNavOff;
             
-            switch(mainNavigationType) {
-                case MainNavigationType.Lobby:
-                icon.sprite = LobbyManager.main.spriteNavLobbyOff;
-                break;
-                
-                case MainNavigationType.Category:
-                icon.sprite = LobbyManager.main.spriteNavCategoryOff;
-                break;
-                
-                case MainNavigationType.Shop:
-                icon.sprite = LobbyManager.main.spriteNavShopOff;
-                break;
-                
-                case MainNavigationType.IFYou:
-                icon.sprite = LobbyManager.main.spriteNavIfYouOff;
-                break;
-                
-                case MainNavigationType.Profile:
-                icon.sprite = LobbyManager.main.spriteNavProfileOff;
-                break;
-                
-                case MainNavigationType.More:
-                icon.sprite = LobbyManager.main.spriteNavMoreOff;
-                break;
-            }
-            
-            icon.SetNativeSize();
+            icon.color = colorInactive;
         }
         
         /// <summary>
@@ -97,35 +75,9 @@ namespace PIERStory {
             if (LobbyManager.main == null)
                 return;
 
-            textName.color = LobbyManager.main.colorNavOn;
+            // textName.color = LobbyManager.main.colorNavOn;
             
-            switch(mainNavigationType) {
-                case MainNavigationType.Lobby:
-                icon.sprite = LobbyManager.main.spriteNavLobbyOn;
-                break;
-                
-                case MainNavigationType.Category:
-                icon.sprite = LobbyManager.main.spriteNavCategoryOn;
-                break;
-                
-                case MainNavigationType.Shop:
-                icon.sprite = LobbyManager.main.spriteNavShopOn;
-                break;
-                
-                case MainNavigationType.IFYou:
-                icon.sprite = LobbyManager.main.spriteNavIfYouOn;
-                break;
-                
-                case MainNavigationType.Profile:
-                icon.sprite = LobbyManager.main.spriteNavProfileOn;
-                break;
-                
-                case MainNavigationType.More:
-                icon.sprite = LobbyManager.main.spriteNavMoreOn;
-                break;
-            }
-            
-            icon.SetNativeSize();
+            icon.color = colorActive;
         }
         
         

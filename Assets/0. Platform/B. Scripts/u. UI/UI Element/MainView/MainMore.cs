@@ -265,7 +265,7 @@ namespace PIERStory {
         IEnumerator RoutineOpenNotice()
         {
             SystemManager.ShowNetworkLoading();
-            NetworkLoader.main.RequestNoticeList();
+            //NetworkLoader.main.RequestNoticeList();
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             yield return null;
             SystemManager.HideNetworkLoading();

@@ -19,7 +19,12 @@ public enum StoryElementType {
 public class LobbyStoryElement : MonoBehaviour
 {
     public ImageRequireDownload bannerImage; // 배너 이미지 
+    public GameObject groupLikeStat; // 좋아요 카운팅 통계 
+    public TextMeshProUGUI textLikeCount; // 좋아요 카운트 텍스트 
+    
     public StoryData storyData = null; // 작품 정보
+    
+    
   
     public StoryElementType elementType = StoryElementType.general;
     
@@ -34,6 +39,10 @@ public class LobbyStoryElement : MonoBehaviour
         bannerImage.SetDownloadURL(storyData.categoryImageURL, storyData.categoryImageKey);
         
         this.gameObject.SetActive(true);
+        
+        if(__type == StoryElementType.general && groupLikeStat != null) {
+            groupLikeStat.gameObject.SetActive(false);
+        }
     }
     
     public void OnClickElement() {

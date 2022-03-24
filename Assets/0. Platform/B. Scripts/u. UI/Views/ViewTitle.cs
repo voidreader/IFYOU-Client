@@ -124,9 +124,9 @@ namespace PIERStory {
         IEnumerator RoutinePrepareMainPage() {
 
             SystemManager.main.QueryPushTokenInfo();
-            NetworkLoader.main.RequestNoticeList();     // 공지사항 리스트 요청
-            NetworkLoader.main.RequestPromotionList();  // 프로모션 리스트 요청
-            NetworkLoader.main.RequestComingSoonList(); // 커밍순 리스트 요청
+            NetworkLoader.main.RequestPlatformServiceEvents(); // 공지사항, 프로모션, 장르 조회 
+            
+            // NetworkLoader.main.RequestComingSoonList(); // 커밍순 리스트 요청
             NetworkLoader.main.RequestAttendanceList(); // 출석 보상 리스트 요청
 
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());

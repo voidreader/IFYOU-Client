@@ -660,16 +660,7 @@ namespace PIERStory
         #endregion
 
 
-        /// <summary>
-        /// 공지사항 리스트 요청
-        /// </summary>
-        public void RequestNoticeList()
-        {
-            JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "getClientNoticeList";
 
-            SendPost(SystemManager.main.CallbackNoticeList, sending);
-        }
 
 
         /// <summary>
@@ -696,21 +687,22 @@ namespace PIERStory
 
             SendPost(UserManager.main.CallbackGetAttendacneList, sending);
         }
-
-
-
-
-        #region 메인 프로모션
-
-        public void RequestPromotionList()
-        {
+        
+        
+        /// <summary>
+        /// 서비스 중인 프로모션, 공지사항, 장르 통합 조회
+        /// </summary>
+        public void RequestPlatformServiceEvents() {
             JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "requestPromotionList";
+            sending[CommonConst.FUNC] = "getPlatformEvents";
 
-            SendPost(SystemManager.main.CallbackPromotionList, sending);
+            SendPost(SystemManager.main.CallbackPlatformServiceEvent, sending);
         }
 
-        #endregion
+
+
+
+
 
         #region 카테고리
 

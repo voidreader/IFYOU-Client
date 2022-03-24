@@ -20,6 +20,7 @@ namespace PIERStory {
         public static Action CallbackReduceWaitingTimeFail = null; // 시간감소 콜백(실패)
         public static Action<EpisodeData> SuperUserFlowEpisodeStart = null; // 플로우맵 슈퍼유저 에피소드 시작하기 
         public static Action OnInitializeContentGroup = null;
+        public static Action OnEpisodePlay = null;
         
         
         public StoryData currentStoryData;
@@ -100,6 +101,7 @@ namespace PIERStory {
             CallbackReduceWaitingTimeSuccess = RefreshAfterReduceWaitingTime; 
             CallbackReduceWaitingTimeFail = FailReduceWaitingTime;
             OnInitializeContentGroup = InitContentsGroup;
+            OnEpisodePlay = OnClickPlay;
 
             // 슈퍼유저 관련 처리 
             SuperUserFlowEpisodeStart = SuperUserEpisodeStart;

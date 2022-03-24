@@ -20,7 +20,7 @@ namespace PIERStory
                     touchOutPos = new Vector3(touchOutPos.x, touchOutPos.y, 0f);
 
                     effect = Instantiate(touchEffect, touchOutPos, Quaternion.identity);
-                    Destroy(effect, 1f);
+                    Destroy(effect, 0.7f);
                 }
             } catch(System.Exception e) {
                 

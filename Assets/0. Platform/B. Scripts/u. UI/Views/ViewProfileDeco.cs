@@ -881,7 +881,7 @@ namespace PIERStory
             for (int i = 0; i < profileCurrencyList[key].Count; i++)
             {
                 listElement = Instantiate(listObject, parent).GetComponent<ProfileItemElement>();
-                listElement.InitCurrencyListElement(profileCurrencyList[key][i]);
+                //listElement.InitCurrencyListElement(profileCurrencyList[key][i]);
 
                 createObject.Add(listElement.gameObject);
             }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 using TMPro;
 using DG.Tweening;
@@ -13,6 +14,8 @@ namespace PIERStory
         public UIContainer premiumContainer;        // 프리미엄 패스 눌렀을 때 container
         public UIContainer helpContainer;           // 프리미엄 패스 세일 도움말 container
         public UIContainer freeContainer;           // freeplay 눌렀을 때 container
+
+        public TextMeshProUGUI tutorialMissionText;
 
         [Header("프리미엄 패스 구매 Container에서 사용됨")]
         public ImageRequireDownload projectPassImage;
@@ -30,6 +33,9 @@ namespace PIERStory
         public override void Show()
         {
             base.Show();
+
+            tutorialMissionText.text = string.Format(SystemManager.GetLocalizedText("5167"), 2);
+
             originalPrice = StoryManager.main.GetProjectPremiumPassOriginPrice();
             salePrice = (int)(originalPrice * 0.25f);
 
@@ -63,11 +69,7 @@ namespace PIERStory
         /// </summary>
         public void OnClickFreePlay()
         {
-            // 여기서는 튜토리얼 미션 단계를 올려주고 보상 화면으로 넘어가야될 것 같다...
-
-
-            mainContainer.Hide();
-            freeContainer.Show();
+            UserManager.main.UpdateTutorialStep(2, CallbackUpdateTutorialFreePlay);
         }
 
         /// <summary>
@@ -93,8 +95,34 @@ namespace PIERStory
         /// </summary>
         void UpdateTutorialStep()
         {
+            UserManager.main.UpdateTutorialStep(2, CallbackUpdateTutorialPurchasePass);
+        }
+
+        void CallbackUpdateTutorialPurchasePass(BestHTTP.HTTPRequest req, BestHTTP.HTTPResponse res)
+        {
+            if(!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackUpdateTutorial, Tutorial Mission2");
+                return;
+            }
+
             Hide();
         }
+
+
+        void CallbackUpdateTutorialFreePlay(BestHTTP.HTTPRequest req, BestHTTP.HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackUpdateTutorial, Tutorial Mission2");
+                return;
+            }
+
+            mainContainer.Hide();
+            freeContainer.Show();
+        }
+
+
 
         /// <summary>
         /// 할인 팝업 닫기버튼 클릭
@@ -122,11 +150,15 @@ namespace PIERStory
         public void ShowFreePlayReward()
         {
             noAdsGroup.GetComponent<RectTransform>().DOAnchorPosY(300, 1.2f);
-            noAdsGroup.DOFade(1f, 1.2f).OnComplete(() =>
-            {
-                UpdateTutorialStep();
-            });
+            noAdsGroup.DOFade(1f, 1.2f);
 
+            StartCoroutine(WaitHidePopup());
+        }
+
+        IEnumerator WaitHidePopup()
+        {
+            yield return new WaitForSeconds(2.3f);
+            Hide();
         }
     }
 }

@@ -75,22 +75,18 @@ namespace PIERStory {
         {
             base.OnView();
 
-            // 튜토리얼 끝났고
-            if (UserManager.main.tutorialStep > 2)
+            // 출석보상 안 먹었으면 무조건 또 띄워!
+            if (!UserManager.main.TodayAttendanceCheck())
             {
-                // 출석보상 안 먹었으면 무조건 또 띄워!
-                if(!UserManager.main.TodayAttendanceCheck())
-                {
-                    PopupBase p = PopupManager.main.GetPopup("Attendance");
-                    PopupManager.main.ShowPopup(p, true);
-                }
-                
-                // 앱 첫실행 시에만 출석보상 체크하고 띄워!
-                if (SystemManager.appFirstExecute && !StoryManager.enterGameScene && !PlayerPrefs.HasKey("noticeOneday") && SystemManager.main.noticeData.Count > 0)
-                {
-                    PopupBase p = PopupManager.main.GetPopup("Notice");
-                    PopupManager.main.ShowPopup(p, true);
-                }
+                PopupBase p = PopupManager.main.GetPopup("Attendance");
+                PopupManager.main.ShowPopup(p, true);
+            }
+
+            // 앱 첫실행 시에만 출석보상 체크하고 띄워!
+            if (SystemManager.appFirstExecute && !StoryManager.enterGameScene && !PlayerPrefs.HasKey("noticeOneday") && SystemManager.main.noticeData.Count > 0)
+            {
+                PopupBase p = PopupManager.main.GetPopup("Notice");
+                PopupManager.main.ShowPopup(p, true);
             }
 
             LobbyManager.main.RequestPlatformLoadingImages(); // 플랫폼 로딩 이미지 다운로드 처리 

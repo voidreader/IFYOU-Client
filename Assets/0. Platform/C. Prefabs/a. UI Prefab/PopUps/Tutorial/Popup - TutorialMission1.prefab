@@ -179,12 +179,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1592186736178902444}
-  m_RootOrder: 4
+  m_Father: {fileID: 7201550333856564754}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 145, y: -482}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -19.5, y: -1}
   m_SizeDelta: {x: 39, y: 38}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1455898086693766025
@@ -236,9 +236,8 @@ GameObject:
   - component: {fileID: 1455898086700593378}
   - component: {fileID: 1455898086700593377}
   - component: {fileID: 1455898086700593376}
-  - component: {fileID: 1455898086700593379}
   m_Layer: 5
-  m_Name: Tutorial (2)
+  m_Name: RewardInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -255,13 +254,13 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1592186736178902444}
-  m_RootOrder: 2
+  m_Father: {fileID: 7201550333856564754}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -480}
-  m_SizeDelta: {x: 340, y: 60}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 340, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1455898086700593377
 CanvasRenderer:
@@ -360,20 +359,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &1455898086700593379
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1455898086700593381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _textID: 6142
-  _text: {fileID: 1455898086700593376}
 --- !u!1 &1455898087157990648
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,7 +465,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1592186736178902444}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -596,7 +581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 6142
+  _textID: 6244
   _text: {fileID: 1455898087188251959}
 --- !u!1 &1455898087583336158
 GameObject:
@@ -627,12 +612,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1592186736178902444}
-  m_RootOrder: 3
+  m_Father: {fileID: 7201550333856564754}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -145, y: -482}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 19.5, y: -1}
   m_SizeDelta: {x: 39, y: 38}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1455898087583336157
@@ -774,6 +759,8 @@ MonoBehaviour:
   mainCanvasGroup: {fileID: 0}
   isShow: 0
   isOnShow: 0
+  tutorialMissionText: {fileID: 1592186737638615770}
+  rewardText: {fileID: 1455898086700593376}
   pointerIcon: {fileID: 947737463947582879}
 --- !u!1 &1592186736178902435
 GameObject:
@@ -811,9 +798,7 @@ RectTransform:
   m_Children:
   - {fileID: 1592186736639726343}
   - {fileID: 1592186737532110342}
-  - {fileID: 1455898086700593378}
-  - {fileID: 1455898087583336159}
-  - {fileID: 1455898086693766027}
+  - {fileID: 7201550333856564754}
   - {fileID: 1455898087188251961}
   - {fileID: 1592186737382744051}
   - {fileID: 947737463947582879}
@@ -1048,33 +1033,42 @@ MonoBehaviour:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 9
         Curve:
           serializedVersion: 2
           m_Curve:
           - serializedVersion: 3
             time: 0
             value: 0
-            inSlope: 0
-            outSlope: 1
+            inSlope: -0.5398274
+            outSlope: -0.5398274
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
-            outWeight: 0
+            outWeight: 0.024151811
+          - serializedVersion: 3
+            time: 0.5360872
+            value: 0.4861448
+            inSlope: -2.2521195
+            outSlope: -2.2521195
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.020654876
+            outWeight: 0.33333334
           - serializedVersion: 3
             time: 1
             value: 1
-            inSlope: 1
-            outSlope: 0
+            inSlope: 0.04207796
+            outSlope: 0.04207796
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0
+            inWeight: 0.5248393
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.4
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -1100,48 +1094,48 @@ MonoBehaviour:
       FromValue: {x: -720.00006, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 1
+      Enabled: 0
       AnimationType: 0
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
-      ToReferenceValue: 2
-      FromCustomValue: {x: 0, y: -30, z: 0}
+      ToReferenceValue: 0
+      FromCustomValue: {x: 0, y: 0, z: 0}
       ToCustomValue: {x: 0, y: 0, z: 0}
       FromOffset: {x: 0, y: 0, z: 0}
       ToOffset: {x: 0, y: 0, z: 0}
-      FromDirection: 13
+      FromDirection: 1
       ToDirection: 13
     Rotate:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 15
         Curve:
           serializedVersion: 2
           m_Curve:
           - serializedVersion: 3
             time: 0
             value: 0
-            inSlope: 0
-            outSlope: 1
+            inSlope: -1.5918956
+            outSlope: -1.5918956
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
-            outWeight: 0
+            outWeight: 0.027026983
           - serializedVersion: 3
             time: 1
             value: 1
-            inSlope: 1
-            outSlope: 0
+            inSlope: -2.2672713
+            outSlope: -2.2672713
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0
+            inWeight: 0.04600376
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.5
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -1173,13 +1167,13 @@ MonoBehaviour:
       ToReferenceValue: 0
       FromCustomValue: {x: 0, y: 0, z: 0}
       ToCustomValue: {x: 0, y: 0, z: 0}
-      FromOffset: {x: 0, y: 0, z: 0}
+      FromOffset: {x: 0, y: 0, z: 240}
       ToOffset: {x: 0, y: 0, z: 0}
     Scale:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 27
         Curve:
           serializedVersion: 2
           m_Curve:
@@ -1187,7 +1181,7 @@ MonoBehaviour:
             time: 0
             value: 0
             inSlope: 0
-            outSlope: 1
+            outSlope: 0
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
@@ -1195,17 +1189,17 @@ MonoBehaviour:
           - serializedVersion: 3
             time: 1
             value: 1
-            inSlope: 1
-            outSlope: 0
+            inSlope: 5.9879365
+            outSlope: 5.9879365
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0
+            inWeight: 0.022426665
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.4
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -1233,11 +1227,11 @@ MonoBehaviour:
       CurrentValue: {x: 0, y: 0, z: 0}
       Enabled: 0
       StartScale: {x: 1, y: 1, z: 1}
-      FromReferenceValue: 0
+      FromReferenceValue: 2
       ToReferenceValue: 0
-      FromCustomValue: {x: 1, y: 1, z: 1}
-      ToCustomValue: {x: 1, y: 1, z: 1}
-      FromOffset: {x: 0, y: 0, z: 0}
+      FromCustomValue: {x: 0, y: 0, z: 0}
+      ToCustomValue: {x: 1, y: 1, z: 0}
+      FromOffset: {x: 0.1, y: 0.1, z: 0}
       ToOffset: {x: 0, y: 0, z: 0}
     Fade:
       Settings:
@@ -1295,14 +1289,14 @@ MonoBehaviour:
       FromValue: 1
       ToValue: 1
       CurrentValue: 0
-      Enabled: 0
+      Enabled: 1
       StartAlpha: 1
-      FromReferenceValue: 0
+      FromReferenceValue: 2
       ToReferenceValue: 0
-      FromCustomValue: 1
+      FromCustomValue: 0
       ToCustomValue: 1
       FromOffset: 0
-      ToOffset: 0
+      ToOffset: 1
   HideAnimation:
     OnPlayCallback:
       m_PersistentCalls:
@@ -1685,7 +1679,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -30, y: 5}
+  m_AnchoredPosition: {x: -13, y: 5}
   m_SizeDelta: {x: 225.24, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1592186737142805710
@@ -1716,7 +1710,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD50C\uB808\uC774\uD558\uAE30"
+  m_text: PLAY
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
@@ -1743,7 +1737,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 51.6
+  m_fontSize: 60
   m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1797,7 +1791,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 5006
+  _textID: 5169
   _text: {fileID: 1592186737142805709}
 --- !u!1 &1592186737382744050
 GameObject:
@@ -1812,7 +1806,7 @@ GameObject:
   - component: {fileID: 1592186737382744060}
   - component: {fileID: 1592186737382744062}
   m_Layer: 5
-  m_Name: OKButton
+  m_Name: PlayButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1833,7 +1827,7 @@ RectTransform:
   - {fileID: 1455898087157990649}
   - {fileID: 1592186737142805699}
   m_Father: {fileID: 1592186736178902444}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2715,7 +2709,7 @@ GameObject:
   - component: {fileID: 1592186737532110336}
   - component: {fileID: 8061221113585005386}
   m_Layer: 5
-  m_Name: Tutorial (1)
+  m_Name: Tutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2737,8 +2731,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -411}
-  m_SizeDelta: {x: 460, y: 80}
+  m_AnchoredPosition: {x: 0, y: -380}
+  m_SizeDelta: {x: 660, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1592186737532110337
 CanvasRenderer:
@@ -2849,7 +2843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 6142
+  _textID: 6243
   _text: {fileID: 1592186737532110336}
 --- !u!1 &1592186737638615775
 GameObject:
@@ -2862,7 +2856,6 @@ GameObject:
   - component: {fileID: 1592186737638615768}
   - component: {fileID: 1592186737638615771}
   - component: {fileID: 1592186737638615770}
-  - component: {fileID: 18248963515077725}
   m_Layer: 5
   m_Name: Tutorial
   m_TagString: Untagged
@@ -2986,20 +2979,44 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &18248963515077725
-MonoBehaviour:
+--- !u!1 &2842477741778956803
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1592186737638615775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _textID: 6141
-  _text: {fileID: 1592186737638615770}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7201550333856564754}
+  m_Layer: 5
+  m_Name: RewardInfoBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7201550333856564754
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2842477741778956803}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1455898086700593378}
+  - {fileID: 1455898087583336159}
+  - {fileID: 1455898086693766027}
+  m_Father: {fileID: 1592186736178902444}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -445}
+  m_SizeDelta: {x: 340, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3580477129178594373
 GameObject:
   m_ObjectHideFlags: 0
@@ -3030,7 +3047,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1592186736178902444}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

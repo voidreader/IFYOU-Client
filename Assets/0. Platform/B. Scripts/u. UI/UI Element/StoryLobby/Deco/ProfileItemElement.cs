@@ -11,15 +11,23 @@ namespace PIERStory
         public TextMeshProUGUI countText;
         public GameObject useCheckIcon;
 
-        JsonData currencyData;
+        public GameObject[] abilities;
+        public ImageRequireDownload[] abilityIcons;
+        public TextMeshProUGUI[] abilityValueTexts;
+
+        JsonData currencyJson;
+
         public string currencyName = string.Empty;
         public string modelName = string.Empty;
         public int totalCount = 1, currentCount = 0;
-        
+
 
         public void InitCurrencyListElement(JsonData __j)
         {
-            currencyData = __j;
+            currencyJson = __j;
+
+            foreach (GameObject g in abilities)
+                g.SetActive(false);
 
             icon.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_KEY));
             currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
@@ -37,11 +45,23 @@ namespace PIERStory
                 else
                     useCheckIcon.SetActive(false);
             }
+
+            if (!__j.ContainsKey(GameConst.TEMPLATE_ABILITY))
+                return;
+
+            JsonData abilityData = SystemManager.GetJsonNode(__j, GameConst.TEMPLATE_ABILITY);
+
+            for (int i = 0; i < abilityData.Count; i++)
+            {
+                abilityIcons[0].SetDownloadURL(SystemManager.GetJsonNodeString(abilityData[i], "ability_icon_image_url"), SystemManager.GetJsonNodeString(abilityData[i], "ability_icon_image_key"));
+                abilityValueTexts[0].text = string.Format("+ {0}", SystemManager.GetJsonNodeInt(abilityData[i], "add_value"));
+                abilities[0].SetActive(true);
+            }
         }
 
         public void OnClickSelectBackground()
         {
-            ViewStoryLobby.OnSelectBackground?.Invoke(currencyData);
+            ViewStoryLobby.OnSelectBackground?.Invoke(currencyJson);
         }
 
 
@@ -55,13 +75,12 @@ namespace PIERStory
 
             currentCount++;
             SetCountText();
-            //ViewProfileDeco.OnStickerSetting?.Invoke(currencyData, this);
-            ViewStoryLobby.OnStickerSetting?.Invoke(currencyData, this);
+            ViewStoryLobby.OnStickerSetting?.Invoke(currencyJson, this);
         }
 
         public void OnClickSelectStanding()
         {
-            ViewStoryLobby.OnSelectStanding?.Invoke(currencyData, this);
+            ViewStoryLobby.OnSelectStanding?.Invoke(currencyJson, this);
         }
 
 

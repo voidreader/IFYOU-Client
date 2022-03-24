@@ -93,7 +93,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7975060268814218133
 RectTransform:
   m_ObjectHideFlags: 0
@@ -308,9 +308,9 @@ RectTransform:
   m_Children:
   - {fileID: 5514228706782543991}
   - {fileID: 843525022348223900}
-  - {fileID: 5668500540284158792}
   - {fileID: 5405235839181262144}
   - {fileID: 5514228706638354818}
+  - {fileID: 5668500540284158792}
   m_Father: {fileID: 2958310356624996655}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -697,7 +697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 5006
+  _textID: 5176
   _text: {fileID: 854389119814620212}
 --- !u!1 &2070250049823489659
 GameObject:
@@ -847,7 +847,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 6142
+  _textID: 6251
   _text: {fileID: 7939480290357295919}
 --- !u!1 &2249781315069951868
 GameObject:
@@ -867,7 +867,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7806182238834476304
 RectTransform:
   m_ObjectHideFlags: 0
@@ -908,7 +908,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -964,7 +964,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2917887803076045365
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1232,7 +1232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 
+  _textID: 6249
   _text: {fileID: 1760842480685911515}
 --- !u!1 &3136725421830196524
 GameObject:
@@ -1325,7 +1325,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2958310356624996655
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1494,7 +1494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 6142
+  _textID: 6251
   _text: {fileID: 5664847402649671443}
 --- !u!1 &4765445907605012354
 GameObject:
@@ -2806,7 +2806,7 @@ RectTransform:
   - {fileID: 5514228707482776242}
   - {fileID: 2077776150653503570}
   m_Father: {fileID: 843525022722785651}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -3054,7 +3054,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 
+  _textID: 6249
   _text: {fileID: 5514228706782543985}
 --- !u!1 &5514228706910940334
 GameObject:
@@ -3352,7 +3352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 5006
+  _textID: 5176
   _text: {fileID: 5514228707482776252}
 --- !u!1 &5514228707919025527
 GameObject:
@@ -3532,6 +3532,7 @@ MonoBehaviour:
   mainCanvasGroup: {fileID: 0}
   isShow: 0
   isOnShow: 0
+  tutorialMissionText: {fileID: 5514228706910940331}
   noneFreepass: {fileID: 3580673540102352344}
   mainContainer: {fileID: 2562934014373817012}
   text1: {fileID: 5514228706782543988}
@@ -3541,7 +3542,6 @@ MonoBehaviour:
   reduceWaitingTimeContainer: {fileID: 912735881848075196}
   rewardText2: {fileID: 6053526544644370429}
   hasFreepass: {fileID: 5149353171735537759}
-  passMainContainer: {fileID: 0}
   text2: {fileID: 2879724044518321951}
   passRewardInfo: {fileID: 7878559600460546322}
   rewardText3: {fileID: 5367170771093779090}
@@ -4446,7 +4446,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 843525022722785651}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -4567,7 +4567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 6142
+  _textID: 6250
   _text: {fileID: 5668500540284158790}
 --- !u!1 &5668500540743597800
 GameObject:
@@ -4731,7 +4731,7 @@ GameObject:
   - component: {fileID: 5668500540847044240}
   - component: {fileID: 5668500540847044241}
   m_Layer: 5
-  m_Name: Tutorial (2)
+  m_Name: Reward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4947,7 +4947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 1
+  OnStartBehaviour: 2
   OnShowCallback:
     Enabled: 0
     EventName: OnShowCallback
@@ -5571,7 +5571,6 @@ GameObject:
   - component: {fileID: 5164224471016391864}
   - component: {fileID: 6678898170067351627}
   - component: {fileID: 5367170771093779090}
-  - component: {fileID: 7402150181871224931}
   m_Layer: 5
   m_Name: Tutorial
   m_TagString: Untagged
@@ -5695,20 +5694,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &7402150181871224931
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7608628580372132368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _textID: 6142
-  _text: {fileID: 5367170771093779090}
 --- !u!1 &7815577776760881873
 GameObject:
   m_ObjectHideFlags: 0
@@ -5741,7 +5726,7 @@ RectTransform:
   m_Children:
   - {fileID: 9010349490596974782}
   m_Father: {fileID: 843525022722785651}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

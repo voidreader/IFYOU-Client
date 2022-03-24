@@ -45,7 +45,6 @@ namespace PIERStory {
         
         [Space]
         [Header("카테고리")]
-        JsonData genreData = null;
         public List<GenreToggle> ListCategoryToggle; // 토글들
         public List<LobbyStoryElement> ListCategoryStory; // 카테고리에 생성된 스토리 개체 
         public GameObject prefabCategoryStoryElement; // 프리팹 
@@ -88,34 +87,18 @@ namespace PIERStory {
                 ListCategoryToggle[i].gameObject.SetActive(false);
             }
             
-            JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "getDistinctProjectGenre";
-            NetworkLoader.main.SendPost(OnCallbackGenre, sending, false);
-        }
-        
-        void OnCallbackGenre(HTTPRequest request, HTTPResponse response) {
-            if(!NetworkLoader.CheckResponseValidation(request, response)) {
-                return;
-            }
-            
-            Debug.Log("OnCallbackGenre");
-            
-            genreData = JsonMapper.ToObject(response.DataAsText);
-            
-            // 
-            for(int i=0; i<genreData.Count;i++) {
+            for(int i=0; i<SystemManager.main.storyGenreData.Count;i++) {
                 
                 if(ListCategoryToggle.Count <= i)  {
                     Debug.LogError("Too many genre data");
                     break;
                 }
                 
-                ListCategoryToggle[i].SetGenre(genreData[i]);
-            }
+                ListCategoryToggle[i].SetGenre(SystemManager.main.storyGenreData[i]);
+            }            
             
-            
-            
-        }        
+        }
+
         
         
         /// <summary>

@@ -35,10 +35,17 @@ namespace PIERStory {
         public string circleImageURL = string.Empty;
         public string circleImageKey = string.Empty;
         
-        public string episodeFinishImageURL = string.Empty;
+        // * 에피소드 종료 이미지 
+        public string episodeFinishImageURL = string.Empty; 
         public string episodeFinishImageKey = string.Empty;
+        
+        //* 프리미엄 패스 및 소개 이미지 
         public string premiumPassURL = string.Empty;
         public string premiumPassKey = string.Empty;
+        
+        //* 작은 카테고리 이미지
+        public string categoryImageURL = string.Empty;
+        public string categoryImageKey = string.Empty;
         
         
         public bool isLock = false; // 잠금
@@ -99,6 +106,12 @@ namespace PIERStory {
             // 프리미엄 패스 이미지
             premiumPassURL = SystemManager.GetJsonNodeString(originData, "premium_pass_url");
             premiumPassKey = SystemManager.GetJsonNodeString(originData, "premium_pass_key");
+            
+            // 카테고리 이미지
+            categoryImageURL = SystemManager.GetJsonNodeString(originData, "category_thumbnail_url");
+            categoryImageKey = SystemManager.GetJsonNodeString(originData, "category_thumbnail_key");
+            
+            
             
             
             // 프로젝트 진행율 

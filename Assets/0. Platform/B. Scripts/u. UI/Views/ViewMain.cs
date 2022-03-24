@@ -17,41 +17,19 @@ namespace PIERStory {
     public class ViewMain : CommonView
     {
         public static Action OnMoveStarShop = null;
-        public static Action<string> OnCategoryList;
         
         
         [Header("로비")]
-        [SerializeField] ScrollRect mainScrollRect;
+        public IFYouLobby lobby;
+        
         [SerializeField] UIToggle mainToggle;
         public UIContainer lobbyContainer;
 
-        // 프로모션 배너
-        public SimpleScrollSnap promotionScroll;
-        public Transform promotionContent;
-        public GameObject promotionProjectPrefab;
-        public GameObject promotionGoodsPrefab;
-        public Transform promotionPagenation;
-        public GameObject pageTogglePrefab;
         public UIToggle shopToggle;
         
-        // 진행중인 이야기 타이틀과 ScrollRect
-        [SerializeField] GameObject playingAreaTitle;
-        [SerializeField] GameObject playingAreaScrollRect;
+
         
-        [SerializeField] List<PlayingStoryElement> ListPlayingStoryElements; // 진행중 이야기 
-        [SerializeField] List<MainStoryRow> ListRecommendStoryRow; // 추천 스토리의 2열짜리 행 
-        [SerializeField] List<NewStoryElement> ListNewStoryElement; // 새로운 이야기 개별 개체 
-        public List<ComingSoonElement> comingSoonStories;           // 커밍순 이야기
-        
-        [Header("카테고리")] 
-        JsonData genreData = null;
-        [SerializeField] List<GenreToggle> ListCategoryToggle; // 토글들
-        [SerializeField] List<NewStoryElement> ListCategoryStory = new List<NewStoryElement>(); // 카테고리에 생성된 스토리 개체들 
-        [SerializeField] GameObject prefabStoryElement; // 프리팹
-        [SerializeField] GameObject NoInterestStory; // 관심작품 없음
-        [SerializeField] Transform categoryParent;
-        [SerializeField] UIToggle likeToggle; // 카테고리 좋아요 토글 
-        
+            
 
         [Header("프로필")]
         public ImageRequireDownload background;
@@ -77,19 +55,20 @@ namespace PIERStory {
         public Sprite spriteVisable;
         public Sprite spriteInvisable;
 
+/*
         [Header("더보기")]
         public TextMeshProUGUI userPincode;
-        public TextMeshProUGUI mNickname;       // 더보기 페이지 닉네임
         public TextMeshProUGUI mLevelText;      // 더보기 페이지 레벨
         public TextMeshProUGUI mExpText;        // 더보기 페이지 경험치
         public Image mExpGauge;                 // 더보기 페이지 경험치바
+*/
         
 
         
         float mainScrollRectY = 0;
         
         void Start() {
-            OnCategoryList = CallCategoryList;
+            // OnCategoryList = CallCategoryList;
         }
         
         public override void OnView()
@@ -133,12 +112,11 @@ namespace PIERStory {
 
             InitLobby();
 
-            // 카테고리 
-            InitCategory();
-
+            
             InitAddMore();
 
             // (프로필) 닉네임, 레벨, 경험치
+            /*
             levelText.text = string.Format("Lv. {0}", UserManager.main.level);
 
             int totalExp = SystemManager.main.GetLevelMaxExp((UserManager.main.level + 1).ToString());
@@ -149,6 +127,7 @@ namespace PIERStory {
             mLevelText.text = levelText.text;
             mExpGauge.fillAmount = expGauge.fillAmount;
             mExpText.text = expText.text;
+            */
         }
 
         /// <summary>
@@ -157,12 +136,8 @@ namespace PIERStory {
         void InitLobby()
         {
             Signal.Send(LobbyConst.STREAM_IFYOU, "initNavigation", string.Empty);
+            lobby.InitLobby();
 
-            InitPromotionList();
-            InitPlayingStoryElements(); // 진행중인 이야기 Area 초기화 
-            InitRecommendStory(); // 추천스토리 Area 초기화
-            InitNewStoryElements(); // 새로운 이야기 Area 초기화
-            InitComingSoonStory();  // 커밍순 스토리 초기화
         }
         
         public void OnLobbyTab() {
@@ -212,42 +187,6 @@ namespace PIERStory {
         
         
         #region 메인 로비 
-        
-        /// <summary>
-        /// 프로모션 리스트 세팅
-        /// </summary>
-        void InitPromotionList()
-        {
-            JsonData promotionList = SystemManager.main.promotionData;
-
-            /*
-            for (int i = 0; i < promotionContent.childCount; i++)
-            {
-                Destroy(promotionContent.GetChild(i).gameObject);
-                Destroy(promotionPagenation.GetChild(i).gameObject);
-            }
-            */
-
-            for (int i = 0; i < promotionList.Count; i++)
-            {
-                // 프로모션 타입을 체크
-                if(SystemManager.GetJsonNodeString(promotionList[i], LobbyConst.NODE_PROMOTION_TYPE) == LobbyConst.COL_PROJECT)
-                {
-                    PromotionProject promotionProject = Instantiate(promotionProjectPrefab, promotionContent).GetComponent<PromotionProject>();
-                    promotionProject.SetPromotionProject(SystemManager.GetJsonNodeString(promotionList[i], "location"), promotionList[i]["detail"]);
-                    Instantiate(pageTogglePrefab, promotionPagenation);
-                }
-                else
-                {
-                    PromotionGoods promotionGoods = Instantiate(promotionGoodsPrefab, promotionContent).GetComponent<PromotionGoods>();
-                    promotionGoods.SetPromotionGoods(SystemManager.GetJsonNodeString(promotionList[i], "location"), promotionList[i]["detail"]);
-                    Instantiate(pageTogglePrefab, promotionPagenation);
-                }
-            }
-
-            promotionScroll.Setup();
-            OnMoveStarShop = MoveToStarShop;
-        }
 
 
 
@@ -258,136 +197,7 @@ namespace PIERStory {
             shopToggle.OnToggleOnCallback.Execute();
         }
 
-        /// <summary>
-        /// 진행중인 이야기 초기화
-        /// </summary>
-        void InitPlayingStoryElements() {
-            ResetPlayingStoryElements();
-            
-            int elementIndex = 0;
-            
-            for(int i=0;i<StoryManager.main.listTotalStory.Count;i++) {
-                
-                if(!StoryManager.main.listTotalStory[i].isPlaying)
-                    continue;
-                
-                
-                // 진행기록이 있는 작품만 가져온다.                 
-                ListPlayingStoryElements[elementIndex++].InitElement(StoryManager.main.listTotalStory[i]);
-                
-                if(elementIndex == 1)  {
-                    playingAreaTitle.SetActive(true);
-                    playingAreaScrollRect.SetActive(true);
-                }
-            }
-                
-        }
-        
-        /// <summary>
-        /// 진행중인 이야기 Reset
-        /// </summary>
-        void ResetPlayingStoryElements() {
-            
-            for(int i=0; i<ListPlayingStoryElements.Count;i++) {
-                ListPlayingStoryElements[i].gameObject.SetActive(false);
-            }
-            
-            playingAreaTitle.SetActive(false);
-            playingAreaScrollRect.SetActive(false);
-        }
-        
-        /// <summary>
-        /// 새로운 이야기 Area 초기화 
-        /// </summary>
-        void InitRecommendStory() {
-            ResetRecommendStory();
-            
-            // 작품개수를 2로 나눈다. 
-            int dividedIntoTwo = Mathf.FloorToInt((float)StoryManager.main.listRecommendStory.Count / 2f );
-            
-            // 2배수로 나눈 수만큼 초기화 시작.
-            for(int i=0; i<dividedIntoTwo; i++) {
-                ListRecommendStoryRow[i].InitRow(i);
-            }
-            
-        }
-        
-        /// <summary>
-        /// 신규 스토리 세팅 
-        /// </summary>
-        void InitNewStoryElements() {
-            ResetNewStory();
-            
-            // ! 오류 체크 
-            for(int i=0; i<StoryManager.main.listTotalStory.Count;i++) {
-                ListNewStoryElement[i].InitStoryElement(StoryManager.main.listTotalStory[i]);
-            }   
-        }
-        
-        
-        void ResetRecommendStory() {
-            for(int i=0; i<ListRecommendStoryRow.Count; i++) {
-                ListRecommendStoryRow[i].gameObject.SetActive(false);
-            }
-        }
-        
-        void ResetNewStory() {
-            for(int i=0; i<ListNewStoryElement.Count; i++) {
-                ListNewStoryElement[i].gameObject.SetActive(false);
-            }
-        }
 
-        /// <summary>
-        /// 커밍순 작품 초기화
-        /// </summary>
-        void InitComingSoonStory()
-        {
-            // 전부 비활성화
-            foreach (ComingSoonElement cse in comingSoonStories)
-                cse.gameObject.SetActive(false);
-
-
-            JsonData comingData = StoryManager.main.comingSoonJson;
-
-            if (comingData == null || comingData.Count < 1)
-                return;
-
-            string url = string.Empty, key = string.Empty, title = string.Empty;
-
-            for (int i = 0; i < comingData.Count; i++)
-            {
-                url = SystemManager.GetJsonNodeString(comingData[i], CommonConst.COL_IMAGE_URL);
-                key = SystemManager.GetJsonNodeString(comingData[i], CommonConst.COL_IMAGE_KEY);
-                title = SystemManager.GetJsonNodeString(comingData[i], CommonConst.COL_TITLE);
-
-                comingSoonStories[i].InitComingStoryData(url, key, title);
-            }
-        }
-
-        /// <summary>
-        /// 메인ScrollRect 상하 변경시.. 상단 제어 
-        /// </summary>
-        /// <param name="vec"></param>
-        public void OnValueChangedMainScroll(Vector2 vec)
-        {
-            if (mainScrollRectY == vec.y)
-                return;
-
-            mainScrollRectY = vec.y;
-
-            if (mainScrollRectY < 0.95f && !ViewCommonTop.isBackgroundShow)
-            {
-                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
-                return;
-            }
-
-
-            if (mainScrollRectY >= 0.95f && ViewCommonTop.isBackgroundShow)
-            {
-                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
-                return;
-            }
-        }
 
         IEnumerator RemoveTopBackground()
         {
@@ -419,111 +229,8 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        void InitCategory() {
-            
-            //
-            for(int i=0; i<ListCategoryToggle.Count;i++) {
-                ListCategoryToggle[i].gameObject.SetActive(false);
-            }
-            
-            JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "getDistinctProjectGenre";
-            NetworkLoader.main.SendPost(OnCallbackGenre, sending, false);
-        }
-        
-        void OnCallbackGenre(HTTPRequest request, HTTPResponse response) {
-            if(!NetworkLoader.CheckResponseValidation(request, response)) {
-                return;
-            }
-            
-            Debug.Log("OnCallbackGenre");
-            
-            genreData = JsonMapper.ToObject(response.DataAsText);
-            
-            // 
-            for(int i=0; i<genreData.Count;i++) {
+
                 
-                if(ListCategoryToggle.Count <= i)  {
-                    Debug.LogError("Too many genre data");
-                    break;
-                }
-                
-                ListCategoryToggle[i].SetGenre(genreData[i]);
-            }
-            
-            NoInterestStory.SetActive(true);
-            
-        }
-        
-        void CallCategoryList(string __genre)  {
-            
-            Debug.Log("CallCategoryList : " + __genre);
-            
-            if(NoInterestStory == null)
-                return;
-            
-            NoInterestStory.SetActive(false);
-            
-            
-            // 기존에 생성된 게임오브젝트 제거 후 클리어             
-            for(int i=0; i<ListCategoryStory.Count;i++) {
-                Destroy(ListCategoryStory[i].gameObject);
-            }
-            ListCategoryStory.Clear();
-            
-            // 조건에 맞는 작품 검색 
-            List<StoryData> filteredList = null;
-            
-            if(__genre == "전체") {
-                filteredList = StoryManager.main.listTotalStory;
-            }
-            else if(__genre.Contains("관심작품")) {
-                filteredList = GetLikeStoryList();
-                if(filteredList.Count == 0) {
-                    NoInterestStory.SetActive(true);
-                }
-            }
-            else {
-                filteredList = GetGenreFilteredStoryList(__genre);
-            }
-            
-            if(filteredList != null)
-                Debug.Log("CallCategory Filter Count: " + filteredList.Count);
-            
-            
-            for(int i=0; i<filteredList.Count; i++) {
-                NewStoryElement ns = Instantiate(prefabStoryElement, Vector3.zero, Quaternion.identity).GetComponent<NewStoryElement>();
-                ns.transform.SetParent(categoryParent);
-                ns.transform.localScale = Vector3.one;
-                
-                ns.InitStoryElement(filteredList[i]);
-                ListCategoryStory.Add(ns); // 리스트에 추가 
-               
-            }
-            
-        }
-        
-        public void OnShowCategory() {
-            likeToggle.SetIsOn(true);
-        }
-        
-        /// <summary>
-        /// 장르로 필터 걸어서 리스트 가져오기 
-        /// </summary>
-        /// <param name="__genre"></param>
-        /// <returns></returns>
-        List<StoryData> GetGenreFilteredStoryList(string __genre) {
-            return StoryManager.main.listTotalStory.Where( item => item.genre.Contains(__genre)).ToList<StoryData>();
-        }
-        
-        List<StoryData> GetLikeStoryList() {
-            
-            return StoryManager.main.listTotalStory.Where( item => StoryManager.main.CheckProjectLike(item.projectID)).ToList<StoryData>();
-        }
-        
         #endregion
 
         #region 상점
@@ -624,7 +331,7 @@ namespace PIERStory {
         /// </summary>
         void InitAddMore()
         {
-            userPincode.text = string.Format("UID : {0}", UserManager.main.GetUserPinCode());
+            //userPincode.text = string.Format("UID : {0}", UserManager.main.GetUserPinCode());
         }
 
 
@@ -633,8 +340,8 @@ namespace PIERStory {
         /// </summary>
         public void OnClickCopyUID()
         {
-            UniClipboard.SetText(userPincode.text);
-            SystemManager.ShowSimpleAlertLocalize("6017");
+            // UniClipboard.SetText(userPincode.text);
+            // SystemManager.ShowSimpleAlertLocalize("6017");
         }
 
         

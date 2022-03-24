@@ -51,14 +51,6 @@ namespace PIERStory {
             RefreshScreen();
         }
 
-        public void ShowMainMore()
-        {
-
-        }
-
-        public void HideMainMore()
-        {
-        }
 
         void RefreshScreen()
         {

@@ -493,23 +493,23 @@ namespace PIERStory
         public void OnValueChangedMainScroll(Vector2 vec)
         {
 
-            if (mainScrollRectY == vec.y)
-                return;
+            // if (mainScrollRectY == vec.y)
+            //     return;
 
-            mainScrollRectY = vec.y;
+            // mainScrollRectY = vec.y;
 
-            if (mainScrollRectY < 0.95f && !ViewCommonTop.isBackgroundShow)
-            {
-                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
-                return;
-            }
+            // if (mainScrollRectY < 0.95f && !ViewCommonTop.isBackgroundShow)
+            // {
+            //     Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
+            //     return;
+            // }
 
 
-            if (mainScrollRectY >= 0.95f && ViewCommonTop.isBackgroundShow)
-            {
-                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
-                return;
-            }
+            // if (mainScrollRectY >= 0.95f && ViewCommonTop.isBackgroundShow)
+            // {
+            //     Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            //     return;
+            // }
         }
 
         /// <summary>

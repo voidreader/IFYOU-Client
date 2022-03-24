@@ -122,8 +122,13 @@ namespace PIERStory
         
         #region 공용 스프라이트
         [Space][Header("공용 스프라이트")]
-        public Sprite spriteCoin;       // 150~200 사이 사이즈 코인
-        public Sprite spriteStar;       // 150~200 사이 사이즈 스타
+        public Sprite spriteCoin;       // 60 사이즈 코인
+        public Sprite spriteStar;       // 60 사이 사이즈 스타
+        public Sprite spriteFreepassIcon; // 프리패스 아이콘
+        public Sprite spriteInappOriginIcon; // 인앱 구매확정 메일 아이콘        
+
+        
+        
         #endregion
         
 

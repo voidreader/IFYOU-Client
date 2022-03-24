@@ -28,15 +28,7 @@ namespace PIERStory {
         int scaleOffset = 0;
         string illustName = string.Empty;
 
-       
-        [Space]
-        [Space]
-        [Header("로비 씬 공통 스프라이트")]
-        public Sprite spriteGemIcon; // 보석
-        public Sprite spriteCoinIcon; // 코인(응모권)
-        public Sprite spriteOneTimeIcon; // 1회권
-        public Sprite spriteFreepassIcon; // 프리패스 아이콘
-        public Sprite spriteInappOriginIcon; // 인앱 구매확정 메일 아이콘
+
 
         [Header("프로필")]
         public Texture2D textureNoneFrame;
@@ -71,25 +63,7 @@ namespace PIERStory {
         public Sprite spriteEpisodeOpen;    // 열린 스페셜, 엔딩 에피소드
         public Sprite spriteEpisodeLock;    // 잠긴 스페셜, 엔딩 에피소드
         
-                
-        
-        [Header("네비게이션 Sprite")]
-        public Sprite spriteNavLobbyOn;
-        public Sprite spriteNavLobbyOff;
-        public Sprite spriteNavCategoryOn;
-        public Sprite spriteNavCategoryOff;
-        public Sprite spriteNavShopOn;
-        public Sprite spriteNavShopOff;
-        public Sprite spriteNavIfYouOn;
-        public Sprite spriteNavIfYouOff;
-        public Sprite spriteNavProfileOn;
-        public Sprite spriteNavProfileOff;
-        public Sprite spriteNavMoreOn;
-        public Sprite spriteNavMoreOff;
-        
-        [Space][Header("카테고리")]         
-        public Sprite spriteGenreOn;
-        public Sprite spriteGenreOff;
+
         
         
         [Space][Header("출석 보상 재화")]

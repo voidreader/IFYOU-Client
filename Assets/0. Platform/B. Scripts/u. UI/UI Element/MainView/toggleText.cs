@@ -22,8 +22,12 @@ namespace PIERStory {
         
         public void SetOn() {
 
+            Debug.Log("toggleText SetON #1 : " + textTarget.text);
+            
             if (LobbyManager.main == null)
                 return;
+                
+            Debug.Log("toggleText SetON #2 : " + textTarget.text);
 
             textTarget.color = colorActive;
             

@@ -96,7 +96,10 @@ namespace PIERStory
 
         public string userKey = string.Empty;
         public string gamebaseID = string.Empty;
-        public int tutorialStep = 0;
+
+        public int tutorialStep = 1;
+        public bool tutorialClear = false;
+
         public bool isSelectionTutorialClear = false; // 선택지 튜토리얼 초기화 여부 
         public bool isHowToPlayClear = false; // How to play 튜토리얼 초기화 여부 
         public bool gameComplete = false;
@@ -137,6 +140,7 @@ namespace PIERStory
         public const string UN_UNREAD_MAIL_LIST = "mailList"; // 미수신 메일 리스트
 
         const string NODE_TUTORIAL_STEP = "tutorial_step";
+        const string NODE_TUTORIAL_CLEAR = "tutorial_clear";
         const string NODE_TUTORIAL_CURRENT = "tutorial_current";
 
         const string NODE_DRESS_CODE = "dressCode"; // dressCode (프로젝트 기준정보)
@@ -326,10 +330,11 @@ namespace PIERStory
             userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
 
 
-            if (__accountInfo["tutorial"].Count < 1)
-                tutorialStep = 1;
-            else
+            if (__accountInfo["tutorial"].Count > 0)
+            {
                 tutorialStep = SystemManager.GetJsonNodeInt(__accountInfo["tutorial"][0], NODE_TUTORIAL_STEP);
+                tutorialClear = SystemManager.GetJsonNodeBool(__accountInfo["tutorial"][0], NODE_TUTORIAL_CLEAR);
+            }
 
             isSelectionTutorialClear = SystemManager.GetJsonNodeBool(userJson, "tutorial_selection"); // 선택지 튜토리얼 
             isHowToPlayClear = SystemManager.GetJsonNodeBool(userJson, "how_to_play"); // 하우 투 플레이 튜토리얼 
@@ -663,14 +668,20 @@ namespace PIERStory
 
         #region 튜토리얼 Update 통신
         
-        public void UpdateTutorialStep()
+        /// <summary>
+        /// 튜토리얼 단계 업데이트 함수
+        /// </summary>
+        /// <param name="__cb">튜토리얼 업데이트 이후 추가로 callback할 함수</param>
+        public void UpdateTutorialStep(int __step, OnRequestFinishedDelegate __cb)
         {
             JsonData sendingData = new JsonData();
             sendingData[CommonConst.FUNC] = "requestUserTutorialProgress";
             sendingData[CommonConst.COL_USERKEY] = userKey;
-            sendingData["step"] = tutorialStep;
+            sendingData["step"] = __step;
 
-            NetworkLoader.main.SendPost(CallbackTutorialUpdate, sendingData);
+            OnRequestFinishedDelegate callback = CallbackTutorialUpdate + __cb;
+
+            NetworkLoader.main.SendPost(callback, sendingData);
         }
         
 
@@ -683,11 +694,17 @@ namespace PIERStory
             }
 
             JsonData result = JsonMapper.ToObject(res.DataAsText);
-            tutorialStep = SystemManager.GetJsonNodeInt(result[NODE_TUTORIAL_CURRENT], NODE_TUTORIAL_STEP);
+            tutorialStep = SystemManager.GetJsonNodeInt(result[NODE_TUTORIAL_CURRENT][0], NODE_TUTORIAL_STEP);
+            tutorialClear = SystemManager.GetJsonNodeBool(result[NODE_TUTORIAL_CURRENT][0], NODE_TUTORIAL_CLEAR);
+
+            Debug.Log(JsonMapper.ToStringUnicode(result));
 
             // 튜토리얼 완료라면 보상 갱신
-            if(SystemManager.GetJsonNodeBool(result[NODE_TUTORIAL_CURRENT], "tutorial_clear"))
-                SetBankInfo(result);
+            if(SystemManager.GetJsonNodeBool(result[NODE_TUTORIAL_CURRENT][0], "tutorial_clear"))
+            {
+                if (tutorialStep != 2)
+                    SetBankInfo(result);
+            }
         }
         
         

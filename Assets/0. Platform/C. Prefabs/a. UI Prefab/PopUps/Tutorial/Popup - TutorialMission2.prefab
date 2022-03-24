@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 1198155713646347892}
   - component: {fileID: 1198155713646347891}
   m_Layer: 5
-  m_Name: Tutorial (4)
+  m_Name: Tutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 
+  _textID: 6248
   _text: {fileID: 1198155713646347892}
 --- !u!1 &1198155713726188805
 GameObject:
@@ -702,9 +702,9 @@ RectTransform:
   m_Father: {fileID: 1198155713979476852}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -440}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 290}
   m_SizeDelta: {x: 380, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1198155713979476851
@@ -996,7 +996,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 5006
+  _textID: 5172
   _text: {fileID: 1198155714087887093}
 --- !u!1 &1198155714265038627
 GameObject:
@@ -1370,7 +1370,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 
+  _textID: 6247
   _text: {fileID: 1198155714462220473}
 --- !u!1 &1198155714601451350
 GameObject:
@@ -1390,7 +1390,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1198155714601451351
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1619,9 +1619,9 @@ RectTransform:
   m_Father: {fileID: 1198155713979476852}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 162}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -536}
   m_SizeDelta: {x: 413, y: 126}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1198155714918630210
@@ -1820,7 +1820,7 @@ GameObject:
   - component: {fileID: 1198155715410658085}
   - component: {fileID: 1198155715410658084}
   m_Layer: 5
-  m_Name: Tutorial (4)
+  m_Name: passBenefit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1956,7 +1956,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 6142
+  _textID: 6228
   _text: {fileID: 1198155715410658085}
 --- !u!1 &1198155715541813359
 GameObject:
@@ -2107,7 +2107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 
+  _textID: 5174
   _text: {fileID: 1198155715541813346}
 --- !u!1 &1198155715726446840
 GameObject:
@@ -2127,7 +2127,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1198155715726446841
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2240,7 +2240,19 @@ MonoBehaviour:
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 6310106047742705706}
+          m_TargetAssemblyTypeName: PIERStory.PopupBase, Assembly-CSharp
+          m_MethodName: Hide
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -2250,7 +2262,7 @@ MonoBehaviour:
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
-  AutoHideAfterShowDelay: 0
+  AutoHideAfterShowDelay: 2.3
   DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
@@ -2295,7 +2307,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -70}
+  m_AnchoredPosition: {x: 0, y: -50}
   m_SizeDelta: {x: 540, y: 282}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1198155715761972207
@@ -2488,7 +2500,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5084038085381463870
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4461,7 +4473,7 @@ GameObject:
   - component: {fileID: 6178647294911339670}
   - component: {fileID: 6178647294911339669}
   m_Layer: 5
-  m_Name: Tutorial (2)
+  m_Name: Reward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4595,7 +4607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 6142
+  _textID: 5170
   _text: {fileID: 6178647294911339670}
 --- !u!1 &6178647294916063228
 GameObject:
@@ -4760,7 +4772,7 @@ GameObject:
   - component: {fileID: 6178647295478540609}
   - component: {fileID: 6178647295478540608}
   m_Layer: 5
-  m_Name: Tutorial (3)
+  m_Name: PromotionalPhase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4782,7 +4794,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -240}
+  m_AnchoredPosition: {x: 0, y: -220}
   m_SizeDelta: {x: 550, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6178647295478540610
@@ -4894,7 +4906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 6142
+  _textID: 6246
   _text: {fileID: 6178647295478540609}
 --- !u!1 &6178647296041331368
 GameObject:
@@ -5870,6 +5882,7 @@ MonoBehaviour:
   premiumContainer: {fileID: 5515945638161377757}
   helpContainer: {fileID: 2047276444095999805}
   freeContainer: {fileID: 9115289646129554804}
+  tutorialMissionText: {fileID: 6310106049280100012}
   projectPassImage: {fileID: 4806761188312163806}
   originalPriceText: {fileID: 4806761188312168475}
   salePriceText: {fileID: 4806761188312169350}
@@ -5908,9 +5921,9 @@ RectTransform:
   m_Father: {fileID: 1198155713979476852}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -230}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 490}
   m_SizeDelta: {x: 645, y: 177}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6310106048268353399
@@ -6098,7 +6111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 5006
+  _textID: 5171
   _text: {fileID: 6310106048704796859}
 --- !u!1 &6310106048868608627
 GameObject:
@@ -6113,7 +6126,7 @@ GameObject:
   - component: {fileID: 6310106048868608630}
   - component: {fileID: 3338751198440660796}
   m_Layer: 5
-  m_Name: Tutorial (1)
+  m_Name: Tutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6133,9 +6146,9 @@ RectTransform:
   m_Father: {fileID: 1198155713979476852}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -380}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 350}
   m_SizeDelta: {x: 650, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6310106048868608631
@@ -6247,7 +6260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 
+  _textID: 6245
   _text: {fileID: 6310106048868608630}
 --- !u!1 &6310106049015886724
 GameObject:
@@ -6283,9 +6296,9 @@ RectTransform:
   m_Father: {fileID: 1198155713979476852}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 328}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -370}
   m_SizeDelta: {x: 535, y: 235}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6310106049015886731
@@ -7161,7 +7174,6 @@ GameObject:
   - component: {fileID: 6310106049280100014}
   - component: {fileID: 6310106049280100013}
   - component: {fileID: 6310106049280100012}
-  - component: {fileID: 4740672166498809899}
   m_Layer: 5
   m_Name: Tutorial
   m_TagString: Untagged
@@ -7285,20 +7297,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &4740672166498809899
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6310106049280100009}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _textID: 6141
-  _text: {fileID: 6310106049280100012}
 --- !u!1 &7734814741640704255
 GameObject:
   m_ObjectHideFlags: 0

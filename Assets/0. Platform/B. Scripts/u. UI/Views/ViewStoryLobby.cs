@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
@@ -32,6 +32,7 @@ namespace PIERStory
         public Sprite spriteIconEyeClose;
 
 
+        [Space(15)][Header("꾸미기 편집 관련")]
         ScriptImageMount bg;
         string bgCurrency = string.Empty;
         public Transform characterParent;
@@ -116,11 +117,9 @@ namespace PIERStory
         {
             base.OnView();
 
-            if(UserManager.main.tutorialStep == 1)
-            {
-                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MISSION_1);
-                PopupManager.main.ShowPopup(p, false);
-            }
+            if (UserManager.main.tutorialStep == 1 && !UserManager.main.tutorialClear)
+                UserManager.main.UpdateTutorialStep(1, CallbackStartTutorial);
+
 
             if(UserManager.main.gameComplete)
             {
@@ -265,6 +264,18 @@ namespace PIERStory
                 showDetailIcon.sprite = spriteIconEyeOpen;
                 mainContainer.Show();
             }
+        }
+
+        void CallbackStartTutorial(HTTPRequest req, HTTPResponse res)
+        {
+            if(!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackStartTutorial");
+                return;
+            }
+
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MISSION_1);
+            PopupManager.main.ShowPopup(p, false);
         }
 
 

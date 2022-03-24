@@ -36,6 +36,14 @@ namespace PIERStory {
         /// </summary>
         void InitStoryLobbyTop()
         {
+            // 만약 튜토리얼 2단계까지 마치지 않으면 프리미엄 패스를 구매할 수 없도록 모두 비활성화
+            if(UserManager.main.tutorialStep <= 2)
+            {
+                passBadge.gameObject.SetActive(false);
+                passButton.gameObject.SetActive(false);
+                return;
+            }
+
             passBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey, true);
             passBadge.gameObject.SetActive(UserManager.main.HasProjectFreepass());
             passButton.gameObject.SetActive(!UserManager.main.HasProjectFreepass());

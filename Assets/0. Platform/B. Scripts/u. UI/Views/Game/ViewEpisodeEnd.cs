@@ -1,9 +1,4 @@
-﻿using UnityEngine;
-
-using TMPro;
-using LitJson;
-using Doozy.Runtime.Signals;
-using DanielLochner.Assets.SimpleScrollSnap;
+﻿using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
@@ -38,8 +33,8 @@ namespace PIERStory
             episodeEndControls.InitStoryLobbyControls();
             
             ViewCommonTop.OnBackAction = OnClickReturnLobby;
-
         }
+
 
         public override void OnHideView()
         {

@@ -1,15 +1,21 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
 using LitJson;
 using Doozy.Runtime.Signals;
 
+using VoxelBusters.CoreLibrary;
+using VoxelBusters.EssentialKit;
+using BestHTTP;
+
 namespace PIERStory
 {
     public class ViewIllustDetail : CommonView
     {
         static JsonData illustData;     // 일러스트 상세 데이터
+        static JsonData userGalleryData = null; // 유저 갤러리 데이터 
 
         static string title = string.Empty;
         static string summary = string.Empty;
@@ -17,9 +23,6 @@ namespace PIERStory
         static bool isMinicut = false;
 
         public RectTransform viewRect;
-        public Image buttonIcon;        // 일러스트 상세 내용 보이기/숨기기 버튼 아이콘
-        public Sprite spriteEyeOpen;
-        public Sprite spriteEyeClose;
         
         public ImageRequireDownload illustImage;
         public RawImage liveRenderTexture;
@@ -27,10 +30,17 @@ namespace PIERStory
         public GameObject illustContents;
         public TextMeshProUGUI illustTitle;
         public TextMeshProUGUI illustSummary;
+        
+        public GameObject shareBonus; // 대상 일러스트에 공유 보너스 있음!
+        public GameObject shareBox; // 공유 확인 팝업 
+        public bool isShareBonusGet = false; // 공유 보너스 맞았었는지 
+        public GameObject buttonShare;
+        
 
-        public static void SetData(JsonData __j, bool __live, bool __minicut, string __title, string __summary)
+        public static void SetData(JsonData __j, bool __live, bool __minicut, string __title, string __summary, JsonData __userGalleryData)
         {
             illustData = __j;
+            userGalleryData = __userGalleryData;
 
             isLive = __live;
             isMinicut = __minicut;
@@ -85,11 +95,16 @@ namespace PIERStory
                     LobbyManager.main.currentLiveIllust.PlayCubismAnimation();
                 }
             }
+            
+            isShareBonusGet = SystemManager.GetJsonNodeBool(userGalleryData, "share_bonus");
 
             illustTitle.text = title;
             illustSummary.text = summary;
-            buttonIcon.sprite = spriteEyeOpen;
+            // buttonIcon.sprite = spriteEyeOpen;
             illustContents.SetActive(true);
+            
+            shareBonus.SetActive(!isShareBonusGet);
+            HideShareBox();
         }
 
         public override void OnHideView()
@@ -117,6 +132,15 @@ namespace PIERStory
                     gl.DestroySelf();
             }
         }
+        
+        void Update() {
+            if(Input.GetKeyDown(KeyCode.C)) {
+                HideUpperUI();
+            }
+            else if(Input.GetKeyDown(KeyCode.X)) {
+                ShowUpperUI();
+            }
+        }
 
         void IllustSetNativeSize()
         {
@@ -141,6 +165,7 @@ namespace PIERStory
 
         public void OnClickAcitveIllustContents()
         {
+            /*
             if(illustContents.activeSelf)
             {
                 illustContents.SetActive(false);
@@ -151,6 +176,155 @@ namespace PIERStory
                 illustContents.SetActive(true);
                 buttonIcon.sprite = spriteEyeOpen;
             }
+            */
         }
+        
+        
+        /// <summary>
+        /// 공유 팝업 보여주고 닫기 
+        /// </summary>
+        public void ShowShareBox() {
+            shareBox.SetActive(true);
+        }
+        
+        public void HideShareBox() {
+            shareBox.SetActive(false);
+        }
+        
+        
+        /// <summary>
+        /// 공유할때 위 UI 보였다가 안보였다 하기 
+        /// </summary>
+        public void HideUpperUI() {
+            buttonShare.SetActive(false);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_PARENT, false, string.Empty);
+        }
+        
+        public void ShowUpperUI() {
+            buttonShare.SetActive(true);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_PARENT, true, string.Empty);
+        }
+        
+        
+        /// <summary>
+        /// 페이스북 공유
+        /// </summary>
+        public void OnClickFacebookShare() {
+            StartCoroutine(RoutinePost("Facebook"));      
+            
+        }
+        
+        /// <summary>
+        /// 트위터 공유
+        /// </summary>
+        public void OnClickTwitterShare() {
+            StartCoroutine(RoutinePost("Twitter"));
+            
+        }
+        
+        IEnumerator RoutinePost(string __type) {
+            bool isAvailable = false;
+            SocialShareComposerType shareType = SocialShareComposerType.WhatsApp;
+            
+            if(__type == "Facebook") {
+                shareType = SocialShareComposerType.Facebook;
+                isAvailable = SocialShareComposer.IsComposerAvailable(shareType);
+            }
+            else if(__type == "Twitter") {
+                shareType = SocialShareComposerType.Twitter;
+                isAvailable = SocialShareComposer.IsComposerAvailable(shareType);
+            }
+            else {
+                isAvailable = true;
+            }
+                
+                
+            if(!isAvailable) { // 트위터 인스톨 되어있지 않음 
+                SystemManager.ShowMessageAlert( string.Format(SystemManager.GetLocalizedText("6253"), __type), false);
+                yield break;
+            }
+            
+            HideUpperUI();
+            HideShareBox();
+            
+            // 위에서 시그널 처리가 있어서 프레임 3회 대기 
+            yield return null;
+            yield return null;
+            yield return null;
+            
+            // * 페이스북, 트위터 
+            if(shareType != SocialShareComposerType.WhatsApp) {
+                SocialShareComposer composer = SocialShareComposer.CreateInstance(shareType);
+                
+                // 텍스트랑 스크린샷 같이 가능한건 트위터만 가능 
+                if(shareType == SocialShareComposerType.Twitter)                
+                    composer.SetText("#IFyou #Episode #StoryGame\nDownload right now! : http://onelink.to/g9ja38");
+                
+                composer.AddScreenshot();
+                composer.SetCompletionCallback((result, error) => {
+                    Debug.Log("Social Share Composer was closed. Result code: " + result.ResultCode);
+                    
+                    ShowUpperUI(); // 상단 다시 복귀 
+                    
+                    // 통신 시작 
+                    // 보상을 받은적이 없는 경우만 처리 
+                    if(!isShareBonusGet) {
+                        RequestShareBonus();   
+                    }
+                    
+                    
+                });
+                
+                // Show 
+                composer.Show();                    
+            }
+            else {
+                // * 여기는 기타 공유    
+            }
+         
+        } // ? end of routine
+        
+        
+        public void RequestShareBonus() {
+            JsonData sending = new JsonData();
+            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            sending["illust_type"] = SystemManager.GetJsonNodeString(userGalleryData, "illust_type");
+            sending["illust_id"] = SystemManager.GetJsonNodeInt(userGalleryData, "illust_id");
+            
+            NetworkLoader.main.SendPost(null, sending, true);
+        }
+        
+        void CallbackRequestShareBonus(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackRequestShareBonus");
+                return;
+            }
+
+            // Debug.Log(string.Format("CallbackConnectServer: {0}", res.DataAsText));
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            
+            // bank
+            // galleryImages
+            // currency
+            // quantity 
+            
+            UserManager.main.SetBankInfo(result); // 뱅크 
+            UserManager.main.SetNodeUserGalleryImages(result["galleryImages"]); // 갤러리 이미지 
+            
+            int quantity = SystemManager.GetJsonNodeInt(result, "quantity");
+            
+            // 획득팝업 띄우기             
+            SystemManager.ShowResourcePopup(string.Format(SystemManager.GetLocalizedText("6256"), quantity), result["currency"].ToString(), quantity);
+            
+            isShareBonusGet = true;
+            shareBonus.SetActive(false);
+            
+            // 갤러리 리프레시..!
+            ViewGallery.ActionRefreshGallery?.Invoke();
+        }        
+        
+        
     }
 }

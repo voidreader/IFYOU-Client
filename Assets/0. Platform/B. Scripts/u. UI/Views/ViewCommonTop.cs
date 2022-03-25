@@ -52,7 +52,7 @@ namespace PIERStory {
         bool previousHowToPlayButtonShop = false; // 
         
         
-        
+        public GameObject objParent; // 최상위 개체 
         [SerializeField] GameObject superUserSign; // 슈퍼유저 표시 
         
         
@@ -67,8 +67,8 @@ namespace PIERStory {
         SignalStream signalStreamTopBackButton;
         SignalStream signalStreamRecover;
         SignalStream signalStreamSaveState;
-
         SignalStream signalStreamAttendace;
+        SignalStream signalStreamParent;
         
         
         
@@ -82,6 +82,7 @@ namespace PIERStory {
         SignalReceiver signalReceiverSaveState;
 
         SignalReceiver signalReceiverAttendance;
+        SignalReceiver signalReceiverParent;
         
         private void Awake() {
             
@@ -114,6 +115,10 @@ namespace PIERStory {
 
             signalStreamAttendace = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE);
             signalReceiverAttendance = new SignalReceiver().SetOnSignalCallback(OnShowAttendance);
+            
+            signalStreamParent = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_PARENT);
+            signalReceiverParent = new SignalReceiver().SetOnSignalCallback(OnShowParent);
+            
         }
         
         private void Start() {
@@ -134,6 +139,7 @@ namespace PIERStory {
             OnForShowCoin = RefreshCoin;
 
             signalStreamAttendace.ConnectReceiver(signalReceiverAttendance);
+            signalStreamParent.ConnectReceiver(signalReceiverParent);
         }
         
         void OnDisable() {
@@ -147,6 +153,7 @@ namespace PIERStory {
             signalStreamSaveState.DisconnectReceiver(signalReceiverSaveState);
 
             signalStreamAttendace.DisconnectReceiver(signalReceiverAttendance);
+            signalStreamParent.DisconnectReceiver(signalReceiverParent);
         }
         
         public override void OnView()
@@ -339,6 +346,16 @@ namespace PIERStory {
                 bool isShow = s.GetValueUnsafe<bool>();
                 mailButton.SetActive(isShow);
             }
+        }
+        
+        void OnShowParent(Signal s) {
+            if(!s.hasValue) {
+                return;
+            }
+            
+            bool isShow = s.GetValueUnsafe<bool>();
+            objParent.SetActive(isShow);
+            
         }
 
 

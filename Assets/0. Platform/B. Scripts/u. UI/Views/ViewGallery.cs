@@ -11,6 +11,8 @@ namespace PIERStory
     public class ViewGallery : CommonView
     {
         public static Action<bool> OnDelayIllustOpen = null;
+        public static Action ActionRefreshGallery = null;
+        
         [Header("Top tab")]
         public Image illustToggleBG;
         public Image soundToggleBG;
@@ -32,6 +34,31 @@ namespace PIERStory
         public GameObject soundScroll;
         public SoundListElement[] soundListElements;
         
+        void Start() {
+            ActionRefreshGallery = RefreshGallery;
+        }
+        
+        /// <summary>
+        /// 갤러리 리프레시
+        /// </summary>
+        void RefreshGallery() {
+            illustData = UserManager.main.GetUserGalleryImage();
+            int elementIndex = 0;
+            
+            for(int i=0;i<illustData.Count;i++)
+            {
+                if(!SystemManager.GetJsonNodeBool(illustData[i], "valid"))
+                    continue;
+                
+                if (SystemManager.GetJsonNodeBool(illustData[i], CommonConst.ILLUST_OPEN))
+                    openIllust++;
+                    
+                totalIllust++;
+
+                illustElements[elementIndex++].SetIllustData(illustData[i]);
+            }            
+            
+        }
 
         public override void OnStartView()
         {

@@ -154,6 +154,7 @@ namespace PIERStory {
         public const string TOP_SIGNAL_SAVE_STATE = "topSignalSaveState"; // 상단 상태 저장 
 
         public const string TOP_SIGNAL_ATTENDANCE = "topSignalAttendance";
+        public const string TOP_SIGNAL_PARENT = "topParent";
 
         public const string SIGNAL_SHOW_ILLUSTDETAIL = "showIllustDetail";
         public const string SIGNAL_SHOW_ENDINGDETAIL = "showEndingDetail";

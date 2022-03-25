@@ -80,6 +80,21 @@ namespace PIERStory {
             CreatePopupDict();
         }
         
+        
+        void Update() {
+            
+            // 팝업에서 안드로이드 Back 버튼 동작관련 처리 추가 
+            
+            if(Input.GetKeyDown(KeyCode.Escape))  {
+                if(GetFrontActivePopup() == null)
+                    return;
+                else {
+                    GetFrontActivePopup().Hide(); // Hide
+                }    
+                
+            }
+        }
+        
 
         
         /// <summary>
@@ -189,6 +204,17 @@ namespace PIERStory {
             }
         }
         
+        
+        /// <summary>
+        /// 가장 전면에 활성화된 팝업창 가져오기 
+        /// </summary>
+        /// <returns></returns>
+        public PopupBase GetFrontActivePopup() {
+            if(ListShowingPopup.Count == 0)
+                return null;
+                
+            return ListShowingPopup[ListShowingPopup.Count-1]; 
+        }
         
         /// <summary>
         /// 모든 활성화 팝업 감추기

@@ -23,6 +23,7 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textViewName; // 뷰 이름  
         [SerializeField] GameObject groupProperty; // 프로퍼티 그룹 (재화, 메일, 등등)
         public GameObject mailButton;           // 프로퍼티 그룹의 메일 버튼
+        public GameObject settingButton; // 세팅 버튼 
         [SerializeField] GameObject mailNotify; // 메일 알림 표시 
         [SerializeField] GameObject moreNotify; // 설정 알림 표시 
 
@@ -33,6 +34,7 @@ namespace PIERStory {
 
         
         [SerializeField] GameObject logo; // 로고
+        [SerializeField] GameObject bottomLine; // 아래 라인 
         
         
         
@@ -235,14 +237,18 @@ namespace PIERStory {
         /// 팝업이나 일부 뷰가 닫힐때 다시 실행한다. 
         /// </summary>
         void RecoverState() {
-            backButton.SetActive(previousBackButtonShow);
+            
             groupProperty.SetActive(previousGroupPropertyShow);
             textViewName.gameObject.SetActive(previousTextViewNameShow);
             textViewName.text = previousViewName;
             
             
             mailButton.SetActive(previousMailShow);
+            
+            // 백버튼과 로고&세팅버튼은 서로 같이 활성화 할 수 없음. 
+            backButton.SetActive(previousBackButtonShow);
             logo.SetActive(!previousBackButtonShow);
+            settingButton.SetActive(!previousBackButtonShow);
             
             
             // 출석버튼, 하우투플레이 버튼             
@@ -274,7 +280,11 @@ namespace PIERStory {
             
             bool isShow = signal.GetValueUnsafe<bool>();
             backButton.SetActive(isShow);
+            
+            // * 로고랑 세팅버튼은 묶음이다. 
             logo.SetActive(!isShow);
+            settingButton.SetActive(!isShow);
+            
             
         }
         

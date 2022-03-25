@@ -127,11 +127,12 @@ namespace PIERStory
                 createObject.Add(emptyBox);
             }
 
-            // 엔딩 세팅
-            string endingType = SystemManager.GetJsonNodeString(endingData[0], LobbyConst.ENDING_TYPE);
 
-            if (string.IsNullOrEmpty(endingType))
+            // 엔딩 세팅
+            if (endingData.Count < 1)
                 return;
+
+            string endingType = SystemManager.GetJsonNodeString(endingData[0], LobbyConst.ENDING_TYPE);
 
             if (endingType == LobbyConst.COL_HIDDEN)
                 endingType = SystemManager.GetLocalizedText("5087");

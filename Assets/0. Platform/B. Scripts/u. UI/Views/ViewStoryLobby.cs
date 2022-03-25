@@ -70,18 +70,21 @@ namespace PIERStory
         public GameObject standingListScroll;
         public GameObject standingController;
         public GameObject usageStandingControl;
+        public GameObject noneStandingCurrency;
 
         [Space][Header("배경 관련")]
         public GameObject bgListPrefab;
         public Transform bgListContent;
         public GameObject bgListScroll;
         public GameObject bgScrolling;
+        public GameObject noneBackgroundCurrency;
 
         
         [Space][Header("스티커 관련")]
         public GameObject stickerListPrefab;
         public Transform stickerListContent;
-        
+        public GameObject stickerScroll;
+        public GameObject noneStickerCurrency;
 
         int totalDecoLoad = 0;
 
@@ -157,6 +160,7 @@ namespace PIERStory
             // 스탠딩 캐릭터 기본 모션 세팅
             foreach (GameModelCtrl gm in liveModels)
             {
+                yield return new WaitUntil(() => gm.motionLists.Count == gm.DictMotion.Count && gm.motionLists.Count > 0);
                 // 임시로 랜덤하게 재생한다. 
                 gm.PlayLobbyAnimation(gm.motionLists[UnityEngine.Random.Range(0, gm.motionLists.Count)]);
 
@@ -228,6 +232,18 @@ namespace PIERStory
                     }
                 }
             }
+
+            // 배경
+            bgListScroll.SetActive(bgListContent.childCount > 0);
+            noneBackgroundCurrency.SetActive(bgListContent.childCount < 1);
+
+            // 스탠딩
+            standingListScroll.SetActive(standingListContent.childCount > 0);
+            noneStandingCurrency.SetActive(standingListContent.childCount < 1);
+
+            // 스티커
+            stickerScroll.SetActive(stickerListContent.childCount > 0);
+            noneStickerCurrency.SetActive(stickerListContent.childCount < 1);
 
 
             // 상단의 프리미엄 패스, 버튼 두개 비활성화
@@ -327,13 +343,6 @@ namespace PIERStory
 
                         break;
                     case LobbyConst.NODE_STANDING:      // 스탠딩 캐릭터
-
-                        // live2D는 LobbyManager를 부모로해서 만들고, 그냥 이미지는 StandingElement를 생성하자
-                        if (SystemManager.GetJsonNodeInt(storyProfile[i], "model_id") < 0)
-                        {
-
-                            break;
-                        }
 
                         ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(storyProfile[i], GameConst.COL_MODEL_NAME), CharacterLoadComplete, LobbyManager.main);
                         character.SetModelDataFromStoryManager();

@@ -2572,7 +2572,7 @@ namespace PIERStory
         /// <returns>true = 존재, false = 비공개용</returns>
         public bool RevealedGalleryImage(string __illustName)
         {
-            for(int i=0;i<GetUserGalleryImage().Count;i++)
+            for (int i = 0; i < GetUserGalleryImage().Count; i++)
             {
                 if (SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_name") == __illustName)
                     return true;

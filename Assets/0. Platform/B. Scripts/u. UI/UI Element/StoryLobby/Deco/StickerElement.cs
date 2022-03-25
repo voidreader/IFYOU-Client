@@ -13,9 +13,12 @@ namespace PIERStory
 
         RectTransform elementRect;
         public ProfileItemElement currencyElement;
+
         public string currencyName = string.Empty;
         float posX = 0f, posY = 0f;
         float width = 300f, height = 300f, angle = 0f;
+
+        Vector2 originPos = Vector2.zero, startPos = Vector2.zero, dragPos = Vector2.zero;
 
         /// <summary>
         /// 스티커 생성시 호출
@@ -86,12 +89,16 @@ namespace PIERStory
 
             foreach (GameObject g in controlButtons)
                 g.SetActive(false);
+
+            startPos = eventData.position;
+            originPos = elementRect.anchoredPosition;
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            transform.position = Camera.main.ScreenToWorldPoint(eventData.position);
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0f);
+            dragPos = eventData.position;
+
+            elementRect.anchoredPosition = new Vector2(CalcMovePos(originPos.x, dragPos.x, startPos.x), CalcMovePos(originPos.y, dragPos.y, startPos.y));
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -123,6 +130,11 @@ namespace PIERStory
             data[LobbyConst.NODE_ANGLE] = elementRect.eulerAngles.z;
 
             return data;
+        }
+
+        float CalcMovePos(float origin, float drag, float start)
+        {
+            return origin + ((drag - start) * 1.8f);
         }
     }
 }

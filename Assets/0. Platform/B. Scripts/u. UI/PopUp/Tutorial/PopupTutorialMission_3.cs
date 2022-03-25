@@ -51,7 +51,6 @@ namespace PIERStory
             rewardText2.text = string.Format(SystemManager.GetLocalizedText("5168"), 100);
             rewardText3.text = string.Format(SystemManager.GetLocalizedText("5168"), 100);
 
-
             noneFreepass.SetActive(!UserManager.main.HasProjectFreepass());
             hasFreepass.SetActive(UserManager.main.HasProjectFreepass());
 
@@ -98,6 +97,9 @@ namespace PIERStory
             NetworkLoader.main.SendPost(callback, j, true);
         }
 
+        /// <summary>
+        /// 튜토리얼로 기다무 해금
+        /// </summary>
         void CallbackTutroialRewardFreeReduce(HTTPRequest req, HTTPResponse res)
         {
             if (!NetworkLoader.CheckResponseValidation(req, res))
@@ -106,9 +108,12 @@ namespace PIERStory
                 return;
             }
 
-            UserManager.main.UpdateTutorialStep(3, CallbackTutorialUpdate);
+            UserManager.main.UpdateTutorialStep(3, 1, CallbackTutorialUpdate);
         }
 
+        /// <summary>
+        /// 기다무 해금 후 튜토리얼 업데이트 콜백
+        /// </summary>
         void CallbackTutorialUpdate(HTTPRequest req, HTTPResponse res)
         {
             if (!NetworkLoader.CheckResponseValidation(req, res))
@@ -146,7 +151,7 @@ namespace PIERStory
         /// </summary>
         public void OnClickPassVersionOpen()
         {
-            UserManager.main.UpdateTutorialStep(3, CallbackTutorialUpdate);
+            UserManager.main.UpdateTutorialStep(3, 1, CallbackTutorialUpdate);
         }
 
     }

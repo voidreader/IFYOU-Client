@@ -26,7 +26,7 @@ namespace PIERStory
 
         public void OnClickPlayButton()
         {
-            UserManager.main.UpdateTutorialStep(1, CallbackUpdateTutorial);
+            UserManager.main.UpdateTutorialStep(1, 1, CallbackUpdateTutorial);
         }
 
         void CallbackUpdateTutorial(BestHTTP.HTTPRequest req, BestHTTP.HTTPResponse res)

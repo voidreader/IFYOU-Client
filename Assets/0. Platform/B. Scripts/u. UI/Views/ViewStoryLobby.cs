@@ -25,6 +25,7 @@ namespace PIERStory
         [Header("메인 관련 제어")]
         public GameObject backButton;               // 뒤로가기 버튼
         public GameObject premiumpassButton;        // 프리미엄 패스 버튼
+        public GameObject premiumpassBadge;         // 프리미엄 패스 뱃지
         public GameObject showDetailButton;         // 꾸미기 자세히 보기 버튼
 
         public Image showDetailIcon;
@@ -118,7 +119,7 @@ namespace PIERStory
             base.OnView();
 
             if (UserManager.main.tutorialStep == 1 && !UserManager.main.tutorialClear)
-                UserManager.main.UpdateTutorialStep(1, CallbackStartTutorial);
+                UserManager.main.UpdateTutorialStep(1, 0, CallbackStartTutorial);
 
 
             if(UserManager.main.gameComplete)
@@ -229,9 +230,9 @@ namespace PIERStory
             }
 
 
-
             // 상단의 프리미엄 패스, 버튼 두개 비활성화
             premiumpassButton.SetActive(false);
+            premiumpassBadge.SetActive(false);
             showDetailButton.SetActive(false);
 
             ActiveInteractable(true);
@@ -250,17 +251,19 @@ namespace PIERStory
         /// </summary>
         public void ShowLobbyDetail()
         {
-            if(mainContainer.isActiveAndEnabled)
+            if(mainContainer.isVisible)
             {
                 backButton.SetActive(false);
                 premiumpassButton.SetActive(false);
+                premiumpassBadge.SetActive(false);
                 showDetailIcon.sprite = spriteIconEyeClose;
                 mainContainer.Hide();
             }
             else
             {
                 backButton.SetActive(true);
-                premiumpassButton.SetActive(true);
+                premiumpassButton.SetActive(!UserManager.main.HasProjectFreepass());
+                premiumpassBadge.SetActive(UserManager.main.HasProjectFreepass());
                 showDetailIcon.sprite = spriteIconEyeOpen;
                 mainContainer.Show();
             }
@@ -447,7 +450,8 @@ namespace PIERStory
 
             currencyElements.Clear();
 
-            premiumpassButton.SetActive(true);
+            premiumpassButton.SetActive(!UserManager.main.HasProjectFreepass());
+            premiumpassBadge.SetActive(UserManager.main.HasProjectFreepass());
             showDetailButton.SetActive(true);
 
             foreach(GameModelCtrl models in liveModels)

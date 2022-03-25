@@ -69,7 +69,7 @@ namespace PIERStory
         /// </summary>
         public void OnClickFreePlay()
         {
-            UserManager.main.UpdateTutorialStep(2, CallbackUpdateTutorialFreePlay);
+            UserManager.main.UpdateTutorialStep(2, 1, CallbackUpdateTutorialFreePlay);
         }
 
         /// <summary>
@@ -95,9 +95,12 @@ namespace PIERStory
         /// </summary>
         void UpdateTutorialStep()
         {
-            UserManager.main.UpdateTutorialStep(2, CallbackUpdateTutorialPurchasePass);
+            UserManager.main.UpdateTutorialStep(2, 1, CallbackUpdateTutorialPurchasePass);
         }
 
+        /// <summary>
+        /// 프리패스 구매한 경우의 콜백
+        /// </summary>
         void CallbackUpdateTutorialPurchasePass(BestHTTP.HTTPRequest req, BestHTTP.HTTPResponse res)
         {
             if(!NetworkLoader.CheckResponseValidation(req, res))
@@ -109,7 +112,9 @@ namespace PIERStory
             Hide();
         }
 
-
+        /// <summary>
+        /// 무료 플레이 클릭한 경우의 콜백
+        /// </summary>
         void CallbackUpdateTutorialFreePlay(BestHTTP.HTTPRequest req, BestHTTP.HTTPResponse res)
         {
             if (!NetworkLoader.CheckResponseValidation(req, res))
@@ -155,6 +160,9 @@ namespace PIERStory
             StartCoroutine(WaitHidePopup());
         }
 
+        /// <summary>
+        /// 연출 끝나고 화면 잠시 딜레이
+        /// </summary>
         IEnumerator WaitHidePopup()
         {
             yield return new WaitForSeconds(2.3f);

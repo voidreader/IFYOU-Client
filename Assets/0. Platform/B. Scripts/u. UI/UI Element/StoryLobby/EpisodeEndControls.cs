@@ -30,7 +30,7 @@ namespace PIERStory {
             SetPlayState(); // 플레이 및 타이머 설정 
 
             if (UserManager.main.tutorialStep == 2 && UserManager.main.tutorialClear)
-                UserManager.main.UpdateTutorialStep(3, CallbackStartTutorial);
+                UserManager.main.UpdateTutorialStep(3, 0, CallbackStartTutorial);
 
 
             // 엔딩에 도달한 경우 추가 로직 (엔딩을 플레이 하지는 않았음)

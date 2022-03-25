@@ -672,12 +672,13 @@ namespace PIERStory
         /// 튜토리얼 단계 업데이트 함수
         /// </summary>
         /// <param name="__cb">튜토리얼 업데이트 이후 추가로 callback할 함수</param>
-        public void UpdateTutorialStep(int __step, OnRequestFinishedDelegate __cb)
+        public void UpdateTutorialStep(int __step, int __isClear, OnRequestFinishedDelegate __cb)
         {
             JsonData sendingData = new JsonData();
             sendingData[CommonConst.FUNC] = "requestUserTutorialProgress";
             sendingData[CommonConst.COL_USERKEY] = userKey;
             sendingData["step"] = __step;
+            sendingData["is_clear"] = __isClear;
 
             OnRequestFinishedDelegate callback = CallbackTutorialUpdate + __cb;
 

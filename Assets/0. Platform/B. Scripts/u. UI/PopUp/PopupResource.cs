@@ -23,8 +23,14 @@ namespace PIERStory {
             
             base.Show();
             
-            // 아이콘 처리
-            icon.SetDownloadURL(Data.imageURL, Data.imageKey);
+            
+            // 아이콘을 다운로드 해야하는 경우 
+            if(!string.IsNullOrEmpty(Data.imageURL)) {
+                
+                icon.GetComponent<RectTransform>().sizeDelta = new Vector2(100,100);
+                // 아이콘 처리
+                icon.SetDownloadURL(Data.imageURL, Data.imageKey);
+            }
             
             // 수량과 메세지는 앞단에서 처리됨 
             

@@ -16,6 +16,7 @@ namespace PIERStory
         public GameObject lockOverlay;
         public TextMeshProUGUI episodeHintText;
 
+        JsonData userGalleryData = null; // galleryImages 노드의 데이터 
         JsonData elementData = null;
 
         public bool illustOpen = false;
@@ -32,10 +33,21 @@ namespace PIERStory
         const string APPEAR_EPISODE_ID = "appear_episode";
         const string APPEAR_EPISODE_TYPE = "appear_episode_type";
         
+        
+        
+        /// <summary>
+        /// 데이터만 갱신한다.
+        /// </summary>
+        /// <param name="__newData"></param>
+        public void SetIllustData(JsonData __newData) {
+            userGalleryData = __newData;
+        }
 
         public void InitElementInfo(JsonData __j)
         {
             this.gameObject.SetActive(true);
+            
+            userGalleryData = __j;
             
             elementData = null;
             illustName = SystemManager.GetJsonNodeString(__j, LobbyConst.ILLUST_NAME);
@@ -116,7 +128,7 @@ namespace PIERStory
         {
             ViewGallery.OnDelayIllustOpen?.Invoke(false);
             SystemManager.ShowNetworkLoading();
-            ViewIllustDetail.SetData(elementData, isLive, isMinicut, illustPublicName, summary);
+            ViewIllustDetail.SetData(elementData, isLive, isMinicut, illustPublicName, summary, userGalleryData);
 
             if (isLive)
             {

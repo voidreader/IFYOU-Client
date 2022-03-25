@@ -28,6 +28,7 @@ dependencies {
     def GAMEBASE_SDK_VERSION = '2.21.1'
     
 // Android Resolver Dependencies Start
+    implementation 'androidx.core:core:1.3.2+' // Assets/Plugins/VoxelBusters/EssentialKit/Editor/CrossPlatformEssentialKitDependencies.xml:9
     implementation 'com.android.support:appcompat-v7:25.3.1' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
     implementation 'com.android.support:cardview-v7:25.3.1' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
     implementation 'com.android.support:customtabs:25.3.1' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
@@ -38,6 +39,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-login:[11.0, 12)' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:7
     implementation 'com.facebook.android:facebook-share:[11.0, 12)' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:8
     implementation 'com.google.android.gms:play-services-base:17.6.0' // Assets/Firebase/Editor/AppDependencies.xml:17
+    implementation 'com.google.android.play:core:1.9.0' // Assets/Plugins/VoxelBusters/EssentialKit/Editor/CrossPlatformEssentialKitDependencies.xml:6
     implementation 'com.google.firebase:firebase-analytics:20.0.0' // Assets/Firebase/Editor/AppDependencies.xml:15
     implementation 'com.google.firebase:firebase-analytics-unity:8.8.0' // Assets/Firebase/Editor/AnalyticsDependencies.xml:18
     implementation 'com.google.firebase:firebase-app-unity:8.8.0' // Assets/Firebase/Editor/AppDependencies.xml:22

@@ -1688,7 +1688,7 @@ namespace PIERStory
         
         
         /// <summary>
-        /// 리소스 획득 팝업 (OK)
+        /// 리소스 획득 팝업 (OK), 다운로드 리소스 아이콘 
         /// </summary>
         /// <param name="__message"></param>
         /// <param name="__url"></param>
@@ -1709,6 +1709,38 @@ namespace PIERStory
             
             PopupManager.main.ShowPopup(p, false);
         }
+        
+        /// <summary>
+        /// 기본 재화, 스타코인에 대한 OK 팝업 
+        /// </summary>
+        /// <param name="__message"></param>
+        /// <param name="__currency"></param>
+        /// <param name="__quantity"></param>
+        public static void ShowResourcePopup(string __message, string __currency, int __quantity) {
+            PopupBase p = PopupManager.main.GetPopup("Resource");
+            
+            if (p == null)
+            {
+                Debug.LogError(">> No Resource Popup");
+                return;
+            }
+            
+            p.Data.isConfirm = false;
+            p.Data.imageURL = string.Empty;
+            p.Data.imageKey = string.Empty;
+            
+            if(__currency == "gem") {
+                p.Data.SetImagesSprites(SystemManager.main.spriteStar);
+            }
+            else if(__currency == "coin") {
+                p.Data.SetImagesSprites(SystemManager.main.spriteCoin);
+            }
+            
+            p.Data.SetLabelsTexts(__message, __quantity.ToString()); // 메세지, 개수 
+            
+            PopupManager.main.ShowPopup(p, false);
+        }
+        
         
         /// <summary>
         /// 리소스 사용 컨펌 팝업 

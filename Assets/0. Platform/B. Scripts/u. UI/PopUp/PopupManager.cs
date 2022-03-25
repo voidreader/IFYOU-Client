@@ -28,7 +28,6 @@ namespace PIERStory {
         public GameObject popupAttendance;
         public GameObject popupConnectingShop;
         [SerializeField] GameObject popupCoupon;
-        [SerializeField] GameObject popupEndingAlert;
         [SerializeField] GameObject popupEpisodeClearReward;
         [SerializeField] GameObject popupExp;
         public GameObject popupGameMessage;
@@ -300,10 +299,6 @@ namespace PIERStory {
             else
                 DictPopup.Add(CommonConst.POPUP_CONNECTING_SHOP, popupConnectingShop);
 
-            if(DictPopup.ContainsKey(GameConst.POPUP_ENDING_ALERT)) 
-                DictPopup[GameConst.POPUP_ENDING_ALERT] = popupEndingAlert;
-            else 
-                DictPopup.Add(GameConst.POPUP_ENDING_ALERT, popupEndingAlert);
                 
             if(DictPopup.ContainsKey(GameConst.POPUP_EPISODE_FIRST_REWARD)) 
                 DictPopup[GameConst.POPUP_EPISODE_FIRST_REWARD] = popupEpisodeClearReward;

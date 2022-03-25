@@ -26,7 +26,7 @@ namespace PIERStory
 
         public const string POPUP_ACHIEVEMENT_ILLUST = "AchivementIllust";
         public const string POPUP_EPISODE_FIRST_REWARD = "EpisodeFirstReward";
-        public const string POPUP_ENDING_ALERT = "EndingAlert";
+        
         public const string POPUP_SIDE_ALERT = "SideAlert";
         public const string POPUP_GAME_ABILITY = "GameAbility";
 

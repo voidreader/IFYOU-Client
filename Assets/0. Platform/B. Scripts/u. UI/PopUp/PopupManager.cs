@@ -103,6 +103,8 @@ namespace PIERStory {
         public void InitPopupManager() {
             // StopCoroutine(PopupQueueRoutine());
             
+            ListShowingPopup.Clear();
+            
             // 팝업 큐 루틴 시작 
             StartCoroutine(PopupQueueRoutine());
         }
@@ -231,7 +233,10 @@ namespace PIERStory {
         /// </summary>
         /// <param name="__p"></param>
         public void AddActivePopup(PopupBase __p) {
-            ListShowingPopup.Add(__p);
+            
+            if(!ListShowingPopup.Contains(__p))
+                ListShowingPopup.Add(__p);
+            
         }
         
         public void RemoveActivePopup(PopupBase __p) {

@@ -285,8 +285,12 @@ namespace PIERStory
         } // ? end of routine
         
         
+        /// <summary>
+        /// 공유하고 보상 요청하기 
+        /// </summary>
         public void RequestShareBonus() {
             JsonData sending = new JsonData();
+            sending["func"] = "requestGalleryShareBonus";
             sending["project_id"] = StoryManager.main.CurrentProjectID;
             sending["illust_type"] = SystemManager.GetJsonNodeString(userGalleryData, "illust_type");
             sending["illust_id"] = SystemManager.GetJsonNodeInt(userGalleryData, "illust_id");

@@ -19,6 +19,7 @@ namespace PIERStory
 
         public string currencyName = string.Empty;
         public string modelName = string.Empty;
+        string currencyType = string.Empty;
         public int totalCount = 1, currentCount = 0;
 
 
@@ -29,7 +30,10 @@ namespace PIERStory
             foreach (GameObject g in abilities)
                 g.SetActive(false);
 
-            icon.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_KEY));
+            currencyType = SystemManager.GetJsonNodeString(currencyJson, LobbyConst.NODE_CURRENCY_TYPE);
+
+            icon.OnDownloadImage = BackgroundResize;
+            icon.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_KEY), currencyType == LobbyConst.NODE_WALLPAPER);
             currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
             modelName = SystemManager.GetJsonNodeString(__j, GameConst.COL_MODEL_NAME);
             totalCount = int.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_TOTAL_COUNT));
@@ -50,14 +54,18 @@ namespace PIERStory
                 return;
 
             JsonData abilityData = SystemManager.GetJsonNode(__j, GameConst.TEMPLATE_ABILITY);
+            int abilityIndex = 0;
 
             for (int i = 0; i < abilityData.Count; i++)
             {
-                abilityIcons[0].SetDownloadURL(SystemManager.GetJsonNodeString(abilityData[i], "ability_icon_image_url"), SystemManager.GetJsonNodeString(abilityData[i], "ability_icon_image_key"));
-                abilityValueTexts[0].text = string.Format("+ {0}", SystemManager.GetJsonNodeInt(abilityData[i], "add_value"));
-                abilities[0].SetActive(true);
+                abilityIcons[abilityIndex].SetDownloadURL(SystemManager.GetJsonNodeString(abilityData[i], "ability_icon_image_url"), SystemManager.GetJsonNodeString(abilityData[i], "ability_icon_image_key"));
+                abilityValueTexts[abilityIndex].text = string.Format("+ {0}", SystemManager.GetJsonNodeInt(abilityData[i], "add_value"));
+                abilities[abilityIndex].SetActive(true);
+                abilityIndex++;
             }
         }
+
+        #region OnClick event
 
         public void OnClickSelectBackground()
         {
@@ -83,10 +91,24 @@ namespace PIERStory
             ViewStoryLobby.OnSelectStanding?.Invoke(currencyJson, this);
         }
 
+        #endregion
 
         public void SetCountText()
         {
             countText.text = string.Format("({0}/{1})", (totalCount - currentCount), totalCount);
+        }
+
+        void BackgroundResize()
+        {
+            // 재화 타입이 배경이 아니면 되돌아 가고
+            if (currencyType != LobbyConst.NODE_WALLPAPER)
+                return;
+
+            // y축 사이즈가 1200 미만인 경우는 scale을 0.2로, 이상인 경우는 0.1로 설정
+            if (icon.GetComponent<RectTransform>().sizeDelta.y < 1200f)
+                icon.transform.localScale = Vector3.one * 0.2f;
+            else
+                icon.transform.localScale = Vector3.one * 0.1f;
         }
     }
 }

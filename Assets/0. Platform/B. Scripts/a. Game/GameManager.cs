@@ -640,7 +640,8 @@ namespace PIERStory
                 }
 
                 // 튜토리얼 1단계를 완료 했으며, 이제 곧 실행될 것이 선택지 관련인 경우 튜토리얼 실행
-                if(UserManager.main.tutorialStep == 1 && UserManager.main.tutorialClear && currentRow.template.Contains(GameConst.TEMPLATE_SELECTION))
+                if((UserManager.main.tutorialStep == 1 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 2 && !UserManager.main.tutorialClear) &&
+                    currentRow.template.Contains(GameConst.TEMPLATE_SELECTION))
                 {
                     UserManager.main.UpdateTutorialStep(2, 0, CallbackStartTutorial);
 
@@ -1204,8 +1205,8 @@ namespace PIERStory
                     case GameConst.TEMPLATE_LIVE_ILLUST:
                     case GameConst.TEMPLATE_LIVE_OBJECT:
 
-                        // 공개용 일러스트인지 체크
-                        if (UserManager.main.RevealedGalleryImage(currentPage.ListRows[i].script_data))
+                        // 공개용 일러스트이며, 해당 에피소드에 연결된 등장 일러스트가 맞는지 확인
+                        if (UserManager.main.RevealedGalleryImage(currentPage.ListRows[i].script_data) && IsEpisodeContainIllust(currentPage.ListRows[i].script_data))
                             return true;
                         else
                             return false;
@@ -1214,6 +1215,23 @@ namespace PIERStory
 
             return false;
         }
+
+        /// <summary>
+        /// 해당 에피소드에서 첫등장 하는 일러스트인가요?
+        /// </summary>
+        bool IsEpisodeContainIllust(string __illustName)
+        {
+            for(int i=0;i<UserManager.main.GetUserGalleryImage().Count;i++)
+            {
+                // 찾는 일러스트가 등장 에피소드가 현재 에피소드와 동일하면 return true
+                if (SystemManager.GetJsonNodeString(UserManager.main.GetUserGalleryImage()[i], LobbyConst.ILLUST_NAME) == __illustName && StoryManager.main.CurrentEpisodeID == SystemManager.GetJsonNodeString(UserManager.main.GetUserGalleryImage()[i], "appear_episode"))
+                    return true;
+
+            }
+
+            return false;
+        }
+
 
         /// <summary>
         /// 마지막 화자와 파라매터의 화자가 동일한지 체크한다. 

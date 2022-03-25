@@ -28,6 +28,7 @@ namespace PIERStory
         [Space]
         public UIContainer reduceWaitingTimeContainer;
         public TextMeshProUGUI rewardText2;
+        public TextMeshProUGUI needCoiinAmount;
 
 
         [Space(15)][Header("프리패스 구매 유저 Container")]
@@ -48,7 +49,9 @@ namespace PIERStory
             tutorialMissionText.text = string.Format(SystemManager.GetLocalizedText("5167"), 3);
             rewardText1.text = string.Format(SystemManager.GetLocalizedText("5168"), 40);
 
+            needCoiinAmount.text = string.Format("{0}", Data.contentValue);
             rewardText2.text = string.Format(SystemManager.GetLocalizedText("5168"), 100);
+
             rewardText3.text = string.Format(SystemManager.GetLocalizedText("5168"), 100);
 
             noneFreepass.SetActive(!UserManager.main.HasProjectFreepass());

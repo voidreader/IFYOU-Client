@@ -29,7 +29,7 @@ namespace PIERStory {
             // 일반 설정 시작 
             SetPlayState(); // 플레이 및 타이머 설정 
 
-            if (UserManager.main.tutorialStep == 2 && UserManager.main.tutorialClear)
+            if ((UserManager.main.tutorialStep == 2 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 3 && !UserManager.main.tutorialClear))
                 UserManager.main.UpdateTutorialStep(3, 0, CallbackStartTutorial);
 
 
@@ -100,7 +100,7 @@ namespace PIERStory {
 
             PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MISSION_3);
             p.Data.contentValue = GetEpisodeTimeOpenPrice();
-            PopupManager.main.ShowPopup(p, false);
+            PopupManager.main.ShowPopup(p, true);
         }
     }
 }

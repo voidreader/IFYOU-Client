@@ -101,12 +101,15 @@ namespace PIERStory {
         /// 각 씬의 담당 매니저에서 따로 호출해줘야한다. (LobbyManager, GameManager)
         /// </summary>
         public void InitPopupManager() {
-            // StopCoroutine(PopupQueueRoutine());
             
-            ListShowingPopup.Clear();
+            ClearShowingPopup();
             
             // 팝업 큐 루틴 시작 
             StartCoroutine(PopupQueueRoutine());
+        }
+        
+        public void ClearShowingPopup() {
+            ListShowingPopup.Clear();
         }
         
         
@@ -233,6 +236,13 @@ namespace PIERStory {
         /// </summary>
         /// <param name="__p"></param>
         public void AddActivePopup(PopupBase __p) {
+            
+            // null 에서 정리되지 않을때가 있어서 정리하고 입력 처리
+            for(int i=ListShowingPopup.Count-1; i>=0; i--) {
+                if(ListShowingPopup[i] == null) {
+                    ListShowingPopup.RemoveAt(i);
+                }
+            }
             
             if(!ListShowingPopup.Contains(__p))
                 ListShowingPopup.Add(__p);

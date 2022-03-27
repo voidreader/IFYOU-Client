@@ -403,7 +403,9 @@ namespace PIERStory
                     yield return new WaitForSeconds(0.1f);
                     
                     ListLiveObjectMount[i].InstantiateCubismModel();
-                    yield return new WaitForSeconds(2);
+                    yield return new WaitForSeconds(1);
+                    
+                    // Hide
                     if(ListLiveObjectMount[i].liveImageController != null)
                         ListLiveObjectMount[i].liveImageController.HideModel();
                 }
@@ -411,8 +413,16 @@ namespace PIERStory
             
             for(int i=0; i<ListLiveIllustMount.Count;i++) {
                 if(ListLiveIllustMount[i].isLoaded) {
+                    
+                    yield return new WaitForSeconds(0.1f);
+                    
                     ListLiveIllustMount[i].InstantiateCubismModel();
-                    yield return new WaitForSeconds(2);
+                    yield return new WaitForSeconds(1);
+                    
+                    
+                    // Hide
+                    if(ListLiveObjectMount[i].liveImageController != null)
+                        ListLiveObjectMount[i].liveImageController.HideModel();
                 }
             }
             

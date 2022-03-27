@@ -46,7 +46,10 @@ namespace PIERStory
 
         public string originModelName = string.Empty;   // 원래 모델명(의상시스템 관련)
         public string speaker = string.Empty;           // 화자
-        public bool isMounted = false;
+        
+        // * isLoaded => isMounted의 순서로 완료 
+        public bool isMounted = false; // 최종 완료. 인스턴스까지 완료했음. 
+        public bool isLoaded = false; // 다운로드 혹은 에셋번들 로드 완료 
 
         public int totalAssetCount = 0;     // 소속된 모든 파일 개수 
         public int unloadAssetCount = 0;    // 아직 로딩이 되지 않은 파일 개수 
@@ -76,6 +79,8 @@ namespace PIERStory
         public bool isAddressable = false;
         public string addressableKey = string.Empty; // 어드레서블 키 
         public AsyncOperationHandle<GameObject> mountedModelAddressable; 
+        
+        public bool isImmediateInstance = false;
 
         /// <summary>
         /// ScriptRow 기반으로 모델을 가져온다.
@@ -130,12 +135,13 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 모델 데이터 처리 (StoryManager 에서 받아오기!)
-        /// 모델 데이터는 프로젝트 상세 화면 진입시에 미리 받아놓는다.
+        /// 모델 데이터 준비하기
         /// </summary>
-        public void SetModelDataFromStoryManager()
+        /// <param name="isImmediateInstance">로딩 후 즉시 생성여부</param>
+        public void SetModelDataFromStoryManager(bool __isImmediateInstance = false)
         {
             Debug.Log("SetModelDataFromStoryManager : " + originModelName);
+            isImmediateInstance = __isImmediateInstance;
             resourceData = StoryManager.main.GetModelJsonByModelName(originModelName);
 
             // 새로운 GameObject 생성
@@ -209,9 +215,13 @@ namespace PIERStory
 
             if (unloadAssetCount == 0)
             {
-                pageParent.StartCoroutine(CheckFileSavedAndStartInitModel());
+                // pageParent.StartCoroutine(CheckFileSavedAndStartInitModel());
                 Debug.Log(string.Format(" <color=lime>{0} Model files are downloaded</color>", originModelName));
-
+                isLoaded = true; // 다운로드 완료 
+                
+                if(isImmediateInstance) {
+                    InstantiateCubismModel();
+                }
             }
         }
         
@@ -227,27 +237,17 @@ namespace PIERStory
             Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
                 if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0) {
                     
-                    // ! Instantiate 됩니다!!
-                    Addressables.InstantiateAsync(addressableKey, Vector3.zero, Quaternion.identity).Completed += (handle) => {
-                        
-                        if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공 
-                            
-                           
-                            // 불러오고 추가 세팅 시작 
-                            SetAddressableCubismModel(handle);
-                            
-                        }
-                        else { // * 실패 
-                            Debug.Log(">> Failed LoadAssetAsync " + originModelName + " / " + handle.OperationException.Message);
-                            InitCubismModel();
-                        }
-                        
-                    }; // ? end of InstantiateAsync
+                    isAddressable = true; // 에셋번들 있음
+                    isLoaded = true; // 로딩 완료 
+                    
+                    if(isImmediateInstance) {
+                        InstantiateCubismModel();
+                    }
                     
                     
                 }
                 else {  // 에셋번들에 없는 캐릭터. 
-                    
+                    Debug.Log(string.Format("<color=yellow>[{0} ]Not in AssetBundle</color>", originModelName));
                     InitCubismModel(); // 기존 캐릭터 로드 로직 호출 
                 }
             }; // ? end of LoadResourceLocationsAsync
@@ -391,6 +391,8 @@ namespace PIERStory
         /// </summary>
         void InitCubismModel()
         {
+            isAddressable = false;
+            
             string file_key = string.Empty;
             string file_url = string.Empty;
 
@@ -490,18 +492,49 @@ namespace PIERStory
             
             isResourceDownloadComplete = true; // 리소스 다운로드 완료 
             
-
+            /*
             // 로드와 동시에 Instantitae.
             InstantiateCubismModel();
             
             // ! 여기서 성공 메세지 
             SendSuccessMessage();
+            */
         }
+        
+        /// <summary>
+        /// 모델 인스턴스화 하기 
+        /// </summary>
+        public void InstantiateCubismModel() {
+            if(isAddressable) { // 어드레서블 에셋 번들 
+                // ! Instantiate
+                Addressables.InstantiateAsync(addressableKey, Vector3.zero, Quaternion.identity).Completed += (handle) => {
+                    
+                    if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공 
+                        
+                        // 불러오고 추가 세팅 시작 
+                        SetAddressableCubismModel(handle);
+                        
+                    }
+                    else { // * 실패 
+                        Debug.LogError(">> Failed InstantiateAsync " + originModelName + " / " + handle.OperationException.Message);
+                        
+                        // 실패하면 개별 다운로드로 돌아간다. 
+                        // InitCubismModel();
+                        SendFailMessage();
+                    }
+                    
+                }; // ? end of InstantiateAsync
+            }
+            else {
+                InstantiateDownloadedCubismModel();
+            }
+        }        
+        
 
         /// <summary>
         /// 모든 파일을 불러왔으면 이제 시작한다. 
         /// </summary>
-        public void InstantiateCubismModel()
+        public void InstantiateDownloadedCubismModel()
         {
             string file_key = string.Empty;
 
@@ -535,6 +568,8 @@ namespace PIERStory
             }
             */
             
+            // 완료 
+            SendSuccessMessage();
         }
 
         /// <summary>
@@ -650,6 +685,8 @@ namespace PIERStory
             Debug.Log("SendFailMessage : " + originModelName);
             // Fail 메세지를 보낼때는 isMounted = true로 주고, default 값을 사용하는 것으로 한다 
             isMounted = true;
+            isLoaded = true; // 실패했어도 로드는 완료라고 처리 
+            
             OnMountCompleted();
 
             // 실패했을 경우에는 더미 캐릭터를 생성해준다.

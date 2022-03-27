@@ -129,8 +129,13 @@ namespace PIERStory
             Debug.Log("RoutineLoadingResource Start");
 
             // 동시진행
+            BeginDownloadLiveModels(); // 캐릭터 파일 다운로드 
+            BeginDownloadLiveIllusts(); // 라이브 일러스트 파일 다운로드 
+            BeginDownloadLiveObjects(); // 라이브 오브젝트 파일 다운로드
+
             
-            // StartCoroutine(RoutineLoadingModels());                                         // 캐릭터 모델 
+            // yield return new WaitForSeconds(0.5f);
+            
             StartCoroutine(RoutineLoadingImage(GameConst.TEMPLATE_BACKGROUND));             // 배경 
             StartCoroutine(RoutineLoadingImage(GameConst.TEMPLATE_ILLUST));                 // 일러스트 
 
@@ -143,26 +148,15 @@ namespace PIERStory
             StartCoroutine(RoutineLoadingSound(GameConst.COL_VOICE));                       // 음성 
             StartCoroutine(RoutineLoadingSound(COL_SOUND_EFFECT));                          // SE
             
-            BeginDownloadLiveIllusts(); // 라이브 일러스트 파일 다운로드 
-            BeginDownloadLiveObjects(); // 라이브 오브젝트 파일 다운로드 
-            
-            
-            // yield return StartCoroutine(RoutineLoadingLiveObjects()); // 라이브 오브제
-            // Debug.Log("##Done Live Objects");
-            
-            
-            // yield return StartCoroutine(RoutineLoadingLiveIllusts()); // 라이브 일러스트
-            // Debug.Log("##Done Live Illusts");
-            
-            yield return StartCoroutine(RoutineLoadingModels()); // 여기로 이동... 
-            
-            Debug.Log("### RoutineLoadingModels End");
-            yield return new WaitForSeconds(1);
-            
             yield return StartCoroutine(RoutineInstantiateLiveIllustsAndObjects()); 
+            // yield return StartCoroutine(RoutineInstantiateLiveCharacters()); 
+            
+            yield return new WaitForSeconds(0.5f);
+            
+            yield return StartCoroutine(RoutineInstantiateLiveCharacters()); 
+            // yield return StartCoroutine(RoutineInstantiateLiveIllustsAndObjects());             
             
             yield return new WaitUntil(() => GetCurrentLoadingCount() <= 0);
-            yield return new WaitForSeconds(0.5f);
 
             Debug.Log("RoutineLoadingResource End");
             StartCoroutine(RoutineLoadingPostProcess());
@@ -344,6 +338,12 @@ namespace PIERStory
             }
         }
         
+        void BeginDownloadLiveModels() {
+            for(int i=0; i<ListModelMount.Count;i++) {
+                ListModelMount[i].SetModelDataFromStoryManager();
+            }
+        }
+        
         /// <summary>
         /// 라이브 오브젝트 파일들 준비시키기 
         /// </summary>
@@ -357,6 +357,21 @@ namespace PIERStory
             for (int i = 0; i < ListLiveIllustMount.Count; i++) {
                 ListLiveIllustMount[i].SetModelDataFromStoryManager();
             }
+        }
+        
+        
+        /// <summary>
+        /// 라이브 캐릭터 다운로딩 완료되었는지 체크 
+        /// </summary>
+        /// <returns></returns>
+        bool CheckLiveModelLoading() {
+            for(int i=0; i<ListModelMount.Count;i++) {
+                if(!ListModelMount[i].isLoaded) {
+                    return false;
+                }
+            }
+            
+            return true;
         }
         
         
@@ -383,8 +398,11 @@ namespace PIERStory
             return true;
         }
         
+        
+        
+        
         /// <summary>
-        /// 라이브 
+        /// 라이브 오브젝트 일러스트 순차 인스턴시에이트
         /// </summary>
         /// <returns></returns>
         IEnumerator RoutineInstantiateLiveIllustsAndObjects() {
@@ -421,14 +439,49 @@ namespace PIERStory
                     
                     
                     // Hide
-                    if(ListLiveObjectMount[i].liveImageController != null)
-                        ListLiveObjectMount[i].liveImageController.HideModel();
+                    if(ListLiveIllustMount[i].liveImageController != null)
+                        ListLiveIllustMount[i].liveImageController.HideModel();
                 }
             }
             
             Debug.Log("#### RoutineInstantiateLiveIllustsAndObjects END");
             
+
         }
+        
+        /// <summary>
+        /// 라이브 캐릭터 순차 인스턴시에이트
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator RoutineInstantiateLiveCharacters() {
+            Debug.Log("#### RoutineInstantiateLiveCharacters #1");
+            
+            while(!CheckLiveModelLoading()) {
+                yield return new WaitForSeconds(0.1f);
+            }
+            
+            Debug.Log("#### RoutineInstantiateLiveCharacters #2");
+            yield return new WaitForSeconds(1);
+            
+            for(int i=0; i<ListModelMount.Count;i++) {
+                if(ListModelMount[i].isLoaded) {
+                    
+                    yield return new WaitForSeconds(0.1f);
+                    
+                    ListModelMount[i].InstantiateCubismModel();
+                    yield return new WaitForSeconds(1);
+                    
+                    // Hide
+                    if(ListModelMount[i].modelController != null)
+                        ListModelMount[i].HideModel();
+                }
+            }
+            
+
+            Debug.Log("#### RoutineInstantiateLiveCharacters END");
+            
+        }        
+        
 
         /// <summary>
         /// 라이브 일러스트 로딩

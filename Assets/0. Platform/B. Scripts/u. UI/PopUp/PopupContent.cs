@@ -25,7 +25,7 @@ namespace PIERStory {
         public List<TextMeshProUGUI> Labels = new List<TextMeshProUGUI>();
         
         public JsonData contentJson = null;
-        public EpisodeData contentEpisode = null;
+        public EpisodeData contentEpisode = null; // 팝업용 에피소드 데이터
         
         
         public Action positiveButtonCallback = null; // 긍정 버튼 콜백 

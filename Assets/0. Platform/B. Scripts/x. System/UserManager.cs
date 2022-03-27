@@ -127,7 +127,8 @@ namespace PIERStory
         public Sprite spriteMissionPopup;       // 미션 팝업에서 사용되는 아이콘
 
         JsonData currentStoryAbilityJson = null;    // 현재 선택한 작품의 능력치 Json
-        public Dictionary<string, List<AbilityData>> DictStoryAbility;
+        public Dictionary<string, List<AbilityData>> DictStoryAbility; // 받아온 능력치 화자별로 딕셔너리 처리 
+        public Dictionary<string, List<AbilityData>> DictOldStoryAbility; // 코인샵에서 구매전의 능력치 정보 저장용도 
 
         #region static const 
 
@@ -418,26 +419,11 @@ namespace PIERStory
 
             #endregion
 
-            #region 능력치
 
-            currentStoryAbilityJson = currentStoryJson["ability"];
-            DictStoryAbility = new Dictionary<string, List<AbilityData>>();
-
-            foreach(string key in currentStoryAbilityJson.Keys)
-            {
-                List<AbilityData> abilityDatas = new List<AbilityData>();
-
-                for (int i = 0; i < currentStoryAbilityJson[key].Count; i++)
-                {
-                    AbilityData abilityData = new AbilityData(currentStoryAbilityJson[key][i]);
-                    abilityDatas.Add(abilityData);
-                }
-
-                DictStoryAbility.Add(key, abilityDatas);
-            }
-
+            // 능력치            
+            SetStoryAbilityDictionary(currentStoryJson["ability"]);
             
-            #endregion
+
 
             /// 데이터 확인용도 
             if (!Application.isEditor)
@@ -451,6 +437,86 @@ namespace PIERStory
             for (int i = 0; i < GetNodeProjectMissions().Count; i++)
                 DebugProjectChallenges.Add(JsonMapper.ToStringUnicode(GetNodeProjectMissions()[i]));
         }
+        
+        #region 작품 능력치 
+        
+        /// <summary>
+        /// 스토리 능력치 Dictionary
+        /// </summary>
+        /// <param name="__abilityData"></param>
+        public void SetStoryAbilityDictionary(JsonData __abilityData) {
+            currentStoryAbilityJson = __abilityData;
+            DictStoryAbility = new Dictionary<string, List<AbilityData>>();
+
+            foreach(string key in currentStoryAbilityJson.Keys)
+            {
+                List<AbilityData> abilityDatas = new List<AbilityData>();
+
+                for (int i = 0; i < currentStoryAbilityJson[key].Count; i++)
+                {
+                    AbilityData abilityData = new AbilityData(currentStoryAbilityJson[key][i]);
+                    abilityDatas.Add(abilityData);
+                }
+
+                DictStoryAbility.Add(key, abilityDatas);
+            }            
+        }
+        
+        /// <summary>
+        /// 코인샵 진입전에 호출해주기 
+        /// </summary>
+        public void SaveCurrentAbilityDictionary() {
+            // 똑같은 딕셔너리 생성 
+            DictOldStoryAbility = new Dictionary<string, List<AbilityData>>();
+            foreach(string key in currentStoryAbilityJson.Keys)
+            {
+                List<AbilityData> abilityDatas = new List<AbilityData>();
+
+                for (int i = 0; i < currentStoryAbilityJson[key].Count; i++)
+                {
+                    AbilityData abilityData = new AbilityData(currentStoryAbilityJson[key][i]);
+                    abilityDatas.Add(abilityData);
+                }
+
+                DictOldStoryAbility.Add(key, abilityDatas);
+            }  
+        }
+        
+        /// <summary>
+        /// 이전과 비교해서 달라진 능력치 메세지 띄워주기 
+        /// </summary>
+        public void NotifyUpdatedAbility() {
+            
+             float gap = 0; 
+            
+            // old와 비교해야한다. 
+            // key : 화자
+            foreach(string key in DictStoryAbility.Keys) {
+                
+                Debug.Log(string.Format("[{0}] : old[{1}] / current[{2}]", key, DictOldStoryAbility[key].Count, DictStoryAbility[key].Count));
+                
+                for(int i=0; i<DictStoryAbility[key].Count;i++) { // 화자별로 능력치 훑는다. 
+                    
+                    // 값이 똑같으면, 일없다. 
+                    if(DictOldStoryAbility[key][i].currentValue == DictStoryAbility[key][i].currentValue)
+                        continue;
+                        
+                    // 갭은 현재 능력치 - 이전 능력치다. 
+                    gap = DictStoryAbility[key][i].currentValue - DictOldStoryAbility[key][i].currentValue;
+                    
+                    Debug.Log(string.Format("[{0}]/[{1}]/[{2}]",key, DictStoryAbility[key][i].originAbilityName, gap ));
+                    
+                    // 능력치 팝업 호출하자. 
+                    SystemManager.ShowAbilityPopup(key, DictStoryAbility[key][i].originAbilityName, Mathf.RoundToInt(gap));
+                    
+                }
+                
+            }
+            
+        }
+        
+        #endregion
+        
 
 
         #region 선택지 관련

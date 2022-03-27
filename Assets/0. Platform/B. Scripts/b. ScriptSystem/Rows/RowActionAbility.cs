@@ -104,17 +104,8 @@ namespace PIERStory
             UserManager.main.UpdateUserAbility(result[UserManager.NODE_USER_ABILITY]);
             UserManager.main.UpdateRawStoryAbility(result[UserManager.NODE_RAW_STORY_ABILITY]);
             
-            // 팝업 띄워주기 
-            PopupBase p = PopupManager.main.GetPopup(GameConst.POPUP_GAME_ABILITY);
-            p.Data.contentJson = UserManager.main.GetSpeakerAbilityJSON(speaker, abilityName);
-            p.Data.contentValue = addValue;
-            
-            if(p.Data.contentJson == null) {
-                SystemManager.main.ShowMissingFunction(string.Format("[{0}]/[{1}] 능력 정보 없음", speaker, abilityName));
-                return;
-            }
-            
-            PopupManager.main.ShowPopup(p, true, false);
+            // 팝업 띄워주기             
+            SystemManager.ShowAbilityPopup(speaker, abilityName, addValue);
             
             callback?.Invoke();
            

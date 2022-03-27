@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
+using Toast.Gamebase;
+
 using LitJson;
 using BestHTTP;
 using Doozy.Runtime.Signals;
@@ -38,8 +40,8 @@ namespace PIERStory
         string bgCurrency = string.Empty;
         public Transform characterParent;
         public Transform stickerParent;
-        List<GameObject> decoObjects = new List<GameObject>();          // 화면에 꾸며놓은 Object들
-        List<GameObject> currencyElements = new List<GameObject>();     // 꾸미기 각 element들
+        public List<GameObject> decoObjects = new List<GameObject>();          // 화면에 꾸며놓은 Object들
+        public List<GameObject> currencyElements = new List<GameObject>();     // 꾸미기 각 element들
 
         public GameObject stickerObjectPrefab;
         public List<UIToggle> typeToggles;
@@ -60,7 +62,7 @@ namespace PIERStory
         public UIContainer mainContainer;
         public UIContainer decoContainer;
         JsonData storyProfile;              // 작품별 꾸미기 정보
-        JsonData currencyLIst;              // 작품별 꾸미기 재화 리스트
+        JsonData currencyList;              // 작품별 꾸미기 재화 리스트
 
 
         [Space(20)][Header("스탠딩 캐릭터 관련")]
@@ -203,9 +205,19 @@ namespace PIERStory
                 return;
             }
 
-            // 작품에 포함된 재화정보를 넣어준다
-            currencyLIst = JsonMapper.ToObject(res.DataAsText);
+            // 데이터 불러오고 데코 모드 준비하기
+            SetDecoMode(JsonMapper.ToObject(res.DataAsText));
 
+
+        }
+        
+        /// <summary>
+        /// 데코 모드 준비하기 
+        /// </summary>
+        /// <param name="__decoCurrencyList"></param>
+        void SetDecoMode(JsonData __decoCurrencyList) {
+            currencyList = __decoCurrencyList;
+            
             // 리스트 재화 항목 생성
             CreateListObject(LobbyConst.NODE_WALLPAPER, bgListPrefab, bgListContent);
             CreateListObject(LobbyConst.NODE_STANDING, standingListPrefab, standingListContent);
@@ -214,6 +226,16 @@ namespace PIERStory
             SortingList(bgListContent);
             SortingList(stickerListContent);
             StandingListSort();
+            
+            // 진행전에 decoObjects 정리 
+            // Destroy된 개체들이 정리되지 않음 
+            for(int i=decoObjects.Count-1; i>=0; i--) {
+                if(decoObjects[i] == null) {
+                    decoObjects.RemoveAt(i);
+                }
+            }
+            
+            
 
             // 화면에 생성된 object와 재화 listElement 연결
             for (int i = 0; i < decoObjects.Count; i++)
@@ -259,8 +281,9 @@ namespace PIERStory
             foreach (UIToggle toggle in typeToggles)
                 toggle.GetComponentInChildren<CanvasGroup>().alpha = 1f;
 
-            Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobbyDeco", string.Empty);
+            Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobbyDeco", string.Empty);            
         }
+        
 
         /// <summary>
         /// 로비 꾸며놓은거 자세히 보기
@@ -302,6 +325,7 @@ namespace PIERStory
 
 
         #region 작품 꾸미기 모드 
+        
 
         /// <summary>
         /// 작품 꾸미기 한거 세팅하기
@@ -345,7 +369,7 @@ namespace PIERStory
                     case LobbyConst.NODE_STANDING:      // 스탠딩 캐릭터
 
                         ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(storyProfile[i], GameConst.COL_MODEL_NAME), CharacterLoadComplete, LobbyManager.main);
-                        character.SetModelDataFromStoryManager();
+                        character.SetModelDataFromStoryManager(true);
 
                         if (SystemManager.main.hasSafeArea)
                             character.modelController.transform.localPosition = new Vector3(SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_POS_X), GameConst.MODEL_PARENT_SAFEAREA_POS_Y, 0);
@@ -375,15 +399,15 @@ namespace PIERStory
         void CreateListObject(string key, GameObject listObject, Transform parent)
         {
             // 만약 해당 key값을 포함하지 않으면 실행하지 않음
-            if (!currencyLIst.ContainsKey(key))
+            if (!currencyList.ContainsKey(key))
                 return;
 
             ProfileItemElement listElement = null;
 
-            for (int i = 0; i < currencyLIst[key].Count; i++)
+            for (int i = 0; i < currencyList[key].Count; i++)
             {
                 listElement = Instantiate(listObject, parent).GetComponent<ProfileItemElement>();
-                listElement.InitCurrencyListElement(currencyLIst[key][i]);
+                listElement.InitCurrencyListElement(currencyList[key][i]);
 
                 currencyElements.Add(listElement.gameObject);
             }
@@ -412,15 +436,7 @@ namespace PIERStory
                 stickerParent.GetChild(i).GetComponent<StickerElement>().DisableControlBox();
         }
 
-        /// <summary>
-        /// 작품 코인샵 열기
-        /// </summary>
-        public void OnClickOpenCoinShop()
-        {
 
-
-
-        }
 
 
         /// <summary>
@@ -747,7 +763,7 @@ namespace PIERStory
 
                 // 캐릭터 생성
                 ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(__j, GameConst.COL_MODEL_NAME), CharacterInstantComplete, LobbyManager.main);
-                character.SetModelDataFromStoryManager();
+                character.SetModelDataFromStoryManager(true);
 
                 if (SystemManager.main.hasSafeArea)
                     character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_SAFEAREA_POS_Y + 1, 0);
@@ -950,5 +966,92 @@ namespace PIERStory
         }
 
         #endregion
+    
+    
+        /// <summary>
+        /// 프로젝트 코인샵 터치 
+        /// </summary>
+        public void OnClickProjectCoinShop() {
+            if(string.IsNullOrEmpty(SystemManager.main.coinShopURL)) {
+                Debug.LogError("No Coinshop url");
+                return;
+            }
+            
+            UserManager.main.SaveCurrentAbilityDictionary(); // 코인샵 열기전에 현재 능력치 정보 저장해놓고 시작 
+            
+            if(Application.isEditor) {
+                RefreshAfterProjectCoinShop();
+                return;
+            }
+            
+            
+            string uidParam = string.Format("?uid={0}", UserManager.main.GetUserPinCode());
+            string langParam = string.Format("&lang={0}", SystemManager.main.currentAppLanguageCode);
+            string projectParam = string.Format("&project_id={0}", StoryManager.main.CurrentProjectID);
+            
+            string finalURL = SystemManager.main.coinShopURL + uidParam + langParam+projectParam;
+            Debug.Log("Coinshop : " + finalURL);
+            
+            GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
+            configuration.title = SystemManager.GetLocalizedText("6186");
+            configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
+            configuration.colorR = 0;
+            configuration.colorG = 0;
+            configuration.colorB = 0;
+            configuration.colorA = 255;
+            configuration.barHeight = 30;
+            configuration.isBackButtonVisible = false;
+            configuration.contentMode = GamebaseWebViewContentMode.MOBILE;
+
+            
+            Gamebase.Webview.ShowWebView(finalURL, configuration, (error) =>{ 
+                Debug.Log("Webview Closed");
+                
+                // 능력치 및 프로필 재화, 상단 갱신                
+                RefreshAfterProjectCoinShop();
+                
+            }, null, null);                   
+        }
+        
+        /// <summary>
+        /// 코인샵 웹뷰 다녀와서 리프레시
+        /// </summary>
+        void RefreshAfterProjectCoinShop() {
+           
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "getUserStoryProfileAndAbility"; // 통신에서 다 받아오기. 
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
+
+            NetworkLoader.main.SendPost(RefreshAfterProjectCoinShop, sending, true);            
+        }
+        
+        /// <summary>
+        /// RefreshAfterProjectCoinShop 콜백
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        void RefreshAfterProjectCoinShop(HTTPRequest request, HTTPResponse response) {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
+            {
+                Debug.LogError("Failed RefreshAfterProjectCoinShop");
+                return;
+            }
+            
+            // 노드별로 처리
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            
+
+            SetDecoMode(result["profileCurrency"]); // 데코 모드 갱신
+            
+            UserManager.main.SetStoryAbilityDictionary(result["ability"]); // 능력치 갱신
+            UserManager.main.SetBankInfo(result); // 상단 정보 갱신
+            
+            // * 갱신 다했으면 능력치 차이를 구해서 메세지 띄운다.
+            UserManager.main.NotifyUpdatedAbility(); 
+            
+  
+        }
+        
     }
 }

@@ -2262,6 +2262,27 @@ namespace PIERStory
         }
         
         /// <summary>
+        /// 능력치 팝업 띄우기.. 
+        /// </summary>
+        /// <param name="__speaker"></param>
+        /// <param name="__abilityName"></param>
+        /// <param name="__addValue"></param>
+        public static void ShowAbilityPopup(string __speaker, string __abilityName, int __addValue) {
+            // 팝업 띄워주기 
+            PopupBase p = PopupManager.main.GetPopup(GameConst.POPUP_GAME_ABILITY);
+            p.Data.contentJson = UserManager.main.GetSpeakerAbilityJSON(__speaker, __abilityName);
+            p.Data.contentValue = __addValue;
+            
+            if(p.Data.contentJson == null) {
+                SystemManager.main.ShowMissingFunction(string.Format("[{0}]/[{1}] 능력 정보 없음", __speaker, __abilityName));
+                return;
+            }
+            
+            PopupManager.main.ShowPopup(p, true, false);
+        }
+        
+        
+        /// <summary>
         /// 어드레서블 Live2D 모델의 유효성 체크 
         /// </summary>
         public static bool CheckAddressableCubismValidation(CubismModel __model) {

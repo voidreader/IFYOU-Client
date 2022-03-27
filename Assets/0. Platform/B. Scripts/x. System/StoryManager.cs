@@ -717,10 +717,6 @@ namespace PIERStory
             freepassBadgeKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, "freepassBadge"), SystemConst.IMAGE_KEY);
             
 
-            /*
-
-            SystemManager.RequestDownloadImage(freepassBannerURL, freepassBannerKey, null);
-            */
             
         }
 

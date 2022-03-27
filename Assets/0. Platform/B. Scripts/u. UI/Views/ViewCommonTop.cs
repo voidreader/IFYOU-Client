@@ -395,10 +395,15 @@ namespace PIERStory {
         public void OnClickCoin() {
             
             Debug.Log("### OnClickCoin ###");
+            Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);
             
-            SystemManager.main.OpenCoinShopWebview();
+            // SystemManager.main.OpenCoinShopWebview();
             
-            AdManager.main.AnalyticsCoinShopOpen("top");
+            // AdManager.main.AnalyticsCoinShopOpen("top");
+        }
+        
+        public void OnClickShop() {
+            Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);
         }
 
 

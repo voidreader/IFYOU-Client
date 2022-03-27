@@ -5,7 +5,11 @@ using UnityEngine.UI;
 using TMPro;
 
 namespace PIERStory {
-
+    
+    
+    /// <summary>
+    /// 능력치 획득 알림. 
+    /// </summary>
     public class PopupGameAbility : PopupBase
     {
         public ImageRequireDownload emoticon;

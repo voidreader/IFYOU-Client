@@ -46,7 +46,7 @@ public class LobbyStoryElement : MonoBehaviour
     }
     
     public void OnClickElement() {
-        if(elementType == StoryElementType.general || elementType == StoryElementType.general) {
+        if(elementType == StoryElementType.general || elementType == StoryElementType.category) {
             Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, storyData);
         }
         

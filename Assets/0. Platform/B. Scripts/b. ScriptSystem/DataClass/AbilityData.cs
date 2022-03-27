@@ -11,7 +11,8 @@ namespace PIERStory
 
         public int abilityId = 0;
         public string speaker = string.Empty;               // 화자
-        public string abilityName = string.Empty;           // 능력치 명칭
+        public string abilityName = string.Empty;           // 능력치 명칭(localized)
+        public string originAbilityName = string.Empty; // 능력치 원 이름(한글)
         
         public bool isMain = false;
         public float maxValue = 1000f;
@@ -38,7 +39,12 @@ namespace PIERStory
 
             abilityId = SystemManager.GetJsonNodeInt(__j, "ability_id");
             speaker = SystemManager.GetJsonNodeString(__j, GameConst.COL_SPEAKER);
+            
+            
             abilityName = SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, "local_id"));
+            originAbilityName = SystemManager.GetJsonNodeString(__j, "ability_name"); 
+            
+            
             isMain = SystemManager.GetJsonNodeBool(__j, "is_main");
             maxValue = SystemManager.GetJsonNodeFloat(__j, "max_value");
             

@@ -999,10 +999,12 @@ namespace PIERStory
             standingSpeaker = GetConnectedModelMount(speaker);
 
             // * 모델 생성전이면 생성하고 처리 
+            /*
             if (!standingSpeaker.isModelCreated)
             {
-                standingSpeaker.InstantiateCubismModel();
+                standingSpeaker.InstantiateDownloadedCubismModel();
             }
+            */
 
             // 모델 컨트롤러 할당
             characterModels[index] = standingSpeaker.modelController;

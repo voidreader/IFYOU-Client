@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-
+using BestHTTP;
 using Doozy.Runtime.Signals;
 
 
@@ -72,15 +72,37 @@ namespace PIERStory {
         }
         
         public void OnClickMail() {
-            Signal.Send(LobbyConst.STREAM_COMMON, "Mail", string.Empty);
+            // Signal.Send(LobbyConst.STREAM_COMMON, "Mail", string.Empty);
+            NetworkLoader.main.RequestUnreadMailList(CallbackOpenMail);
         }
+        void CallbackOpenMail(HTTPRequest req, HTTPResponse res)
+        {
+            if(!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackOpenMail");
+                return;
+            }
+
+            PopupBase p = PopupManager.main.GetPopup("Mail");
+
+            if(p == null)
+            {
+                Debug.LogError("No Popup");
+                return;
+            }
+
+            PopupManager.main.ShowPopup(p, false);
+        }
+        
+        
         
         public void OnClickShop() {
             Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);
         }
         
         public void OnClickCoin() {
-            SystemManager.main.OpenCoinShopWebview();
+            // SystemManager.main.OpenCoinShopWebview();
+            Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);
         }
     }
 }

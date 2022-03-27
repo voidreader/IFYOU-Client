@@ -11,6 +11,15 @@ using LitJson;
 using BestHTTP;
 using Toast.Gamebase;
 
+
+// Live2D
+using Live2D.Cubism.Core;
+using Live2D.Cubism.Viewer;
+using Live2D.Cubism.Rendering;
+using Live2D.Cubism.Framework.Json;
+using Live2D.Cubism.Framework.Motion;
+using Live2D.Cubism.Framework.MotionFade;
+
 namespace PIERStory
 {
 
@@ -2250,6 +2259,41 @@ namespace PIERStory
         {
             PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_EXPIRE_TOKEN);
             PopupManager.main.ShowPopup(p, false);
+        }
+        
+        /// <summary>
+        /// 어드레서블 Live2D 모델의 유효성 체크 
+        /// </summary>
+        public static bool CheckAddressableCubismValidation(CubismModel __model) {
+            ModelClips clips = __model.gameObject.GetComponent<ModelClips>();  // 에셋번들에서 받아온 AnimationClips. 
+            
+            // * 페이드 모션 체크. 리스트에 저장된 페이드오브젝트와 클립 개수가 안맞으면 사용하지 않는다
+            CubismFadeController cubismFadeController = __model.gameObject.GetComponent<CubismFadeController>();
+            CubismMotionController cubismMotionController = __model.gameObject.GetComponent<CubismMotionController>();
+            
+           if(cubismFadeController == null ||
+                cubismMotionController == null ||
+                cubismFadeController.CubismFadeMotionList == null || 
+                cubismFadeController.CubismFadeMotionList.CubismFadeMotionObjects.Length != clips.ListClips.Count) {
+                    
+                return false; // 유효하지 않음
+                    
+            }
+            
+            return true; // 유효하다.!
+        }
+        
+        /// <summary>
+        /// 어드레서블 사용시 Live2D Shader 처리 
+        /// </summary>
+        public static void SetAddressableCubismShader(CubismModel __model) {
+            // * 어드레서블 에셋을 통한 생성인 경우는 Shader 처리 추가 필요. 
+            Shader cubismShader = Shader.Find("Live2D Cubism/Unlit");
+            CubismRenderer render;
+            for(int i=0;i <__model.Drawables.Length;i++) {
+                render = __model.Drawables[i].gameObject.GetComponent<CubismRenderer>();
+                render.Material.shader = cubismShader;
+            }   
         }
          
     }

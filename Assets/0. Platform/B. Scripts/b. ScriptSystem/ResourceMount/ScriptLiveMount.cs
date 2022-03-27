@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 
@@ -10,6 +11,10 @@ using Live2D.Cubism.Core;
 using Live2D.Cubism.Viewer;
 using Live2D.Cubism.Rendering;
 using Live2D.Cubism.Framework.Json;
+using Live2D.Cubism.Framework.Motion;
+
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace PIERStory
 {
@@ -46,7 +51,21 @@ namespace PIERStory
 
         public int useCount = 0;    // 하나의 에피소드에서 몇번 사용하는지 체크
         bool isMinicut = false;     // 라이브 오브제인가?
+        
+        // * Addressable 관련 추가
+        public bool isAddressable = false;
+        public string addressableKey = string.Empty; // 어드레서블 키 
+        public AsyncOperationHandle<GameObject> mountedModelAddressable;
+        Dictionary<string, AnimationClip> DictMotion; 
+        public CubismMotionController motionController = null;
 
+        /// <summary>
+        /// 게임 플레이에서 호출
+        /// </summary>
+        /// <param name="__j"></param>
+        /// <param name="__cb"></param>
+        /// <param name="__parent"></param>
+        /// <param name="__liveObj"></param>
         public ScriptLiveMount(JsonData __j, Action __cb, MonoBehaviour __parent, bool __liveObj)
         {
             liveName = SystemManager.GetJsonNodeString(__j, GameConst.COL_SCRIPT_DATA);
@@ -55,6 +74,14 @@ namespace PIERStory
             LoadVersion(liveName);
         }
 
+
+        /// <summary>
+        /// 갤러리에서 호출 
+        /// </summary>
+        /// <param name="__live"></param>
+        /// <param name="__cb"></param>
+        /// <param name="__parent"></param>
+        /// <param name="__liveObj"></param>
         public ScriptLiveMount(string __live, Action __cb, MonoBehaviour __parent, bool __liveObj)
         {
             liveName = __live;
@@ -63,12 +90,19 @@ namespace PIERStory
             LoadVersion(liveName);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__cb"></param>
+        /// <param name="__parent"></param>
+        /// <param name="__liveObj">라이브 오브젝트일때 true</param>
         void Initialize(Action __cb, MonoBehaviour __parent, bool __liveObj)
         {
             pageParent = __parent;
             OnMountCompleted = __cb;
             isMinicut = __liveObj;
+            
+            DictMotion = new Dictionary<string, AnimationClip>();
         }
 
         /// <summary>
@@ -88,9 +122,16 @@ namespace PIERStory
                 SendFailMessage();
                 return;
             }
+            
+            // scale 및 offset 지정 
+            gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_GAME_SCALE));
+            offsetX = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_X));
+            offsetY = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_Y));
+
 
             // 데이터 가져왔으면, 모델 초기화 시작한다. 
-            InitCubismModel();
+            //InitCubismModel();
+            InitAddressableCubismModel();
         }
 
         void LoadVersion(string __liveName)
@@ -125,6 +166,138 @@ namespace PIERStory
                 string.Format(" <color=lime>{0} Model files are downloaded</color>", liveName);
             }
         }
+        
+        
+        /// <summary>
+        /// 어드레서블 키 가져오기 
+        /// </summary>
+        /// <returns></returns>
+        string GetAddressableKey() {
+            string key = string.Empty;
+            
+            // 라이브 오브젝트와 일러스트 분리 
+            if(isMinicut) 
+                key = StoryManager.main.CurrentProjectID + "/live_object/" + liveName + ".prefab";
+            else 
+                key = StoryManager.main.CurrentProjectID + "/live_illust/" + liveName + ".prefab";
+            
+
+            return key;
+        }        
+        
+        /// <summary>
+        /// 에셋번들로 등록된 모델 로드
+        /// </summary>
+        void InitAddressableCubismModel() {
+            addressableKey = GetAddressableKey();
+            Debug.Log("## Check Live asset key :: " + addressableKey);
+            
+            // 에셋번들 있는지 체크 
+            Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
+                if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0) {
+                    
+                    // ! Instantiate 됩니다!!
+                    Addressables.InstantiateAsync(addressableKey, Vector3.zero, Quaternion.identity).Completed += (handle) => {
+                        
+                        if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공 
+                            
+                           
+                            // 불러오고 추가 세팅 시작 
+                            SetAddressableCubismModel(handle);
+                            
+                        }
+                        else { // * 실패 
+                            Debug.Log(">> Failed LoadAssetAsync " + liveName + " / " + handle.OperationException.Message);
+                            InitCubismModel();
+                        }
+                        
+                    }; // ? end of InstantiateAsync
+                    
+                    
+                }
+                else {  // 에셋번들에 없는 캐릭터. 
+                    
+                    InitCubismModel(); // 기존 캐릭터 로드 로직 호출 
+                }
+            }; // ? end of LoadResourceLocationsAsync            
+        }
+        
+        /// <summary>
+        /// 어드레서블 불불러오기 성공 후 처리 
+        /// </summary>
+        /// <param name="__result"></param>
+        void SetAddressableCubismModel(AsyncOperationHandle<GameObject> __result) {
+            // * 에셋번들로 불러왔지만, FadeMotion 과 실제 모션 개수가 일치하지 않는 경우는 다시 파괴하고
+            // * 기존 로딩 로직을 시작해야한다. 
+            mountedModelAddressable = __result;
+            liveImage = mountedModelAddressable.Result.GetComponent<CubismModel>(); 
+            
+            // CubismModel이 없다..!? 
+            if(liveImage == null) {
+                Debug.LogError("Error in creating Live2D Model in addressable : " + liveName);
+                NetworkLoader.main.ReportRequestError(liveName, "It's failed to create CubismModel in addressable");
+                SendFailMessage();
+                return;
+            }
+            
+            // * 모션 유효성 체크 
+            if(!SystemManager.CheckAddressableCubismValidation(liveImage)) {
+                Debug.LogError("#### Not match fade and motion Clips :: " + liveName);
+                // ! 생성한 에셋을 release 시키고, 다시 기존 로직을 호출한다. 
+                Addressables.ReleaseInstance(mountedModelAddressable);
+                InitCubismModel();
+                return;
+            }
+            
+                     
+            
+            
+            ModelClips clips = liveImage.gameObject.GetComponent<ModelClips>();  // 에셋번들에서 받아온 AnimationClips. 
+            CubismMotionController cubismMotionController = liveImage.gameObject.GetComponent<CubismMotionController>(); //
+            
+            isAddressable = true;
+            SetGameModelController();  // 크기 및 레이어 처리 
+            
+            // 모션 처리
+            string file_key = string.Empty;
+            string motion_name = string.Empty;
+            string debugMotionName = string.Empty;
+            
+            // 생으로 다운받는것과 방식이 다르다. 
+            for(int i=0; i<clips.ListClips.Count;i++) {
+                
+                file_key = string.Empty;
+                motion_name = string.Empty;
+                
+                for(int j=0; j<resourceData.Count;j++) {
+                    file_key = SystemManager.GetJsonNodeString(resourceData[j], CommonConst.COL_FILE_KEY);
+                    motion_name = SystemManager.GetJsonNodeString(resourceData[j], CommonConst.MOTION_NAME);
+                    
+                    if (!file_key.Contains(GameConst.MOTION3_JSON) || string.IsNullOrEmpty(motion_name))
+                        continue;
+                        
+                    // file_key에 이름+ motion3.json 있으면 dict에 넣는다. 
+                    if(file_key.Contains("/" + clips.ListClips[i].name + GameConst.MOTION3_JSON)) {
+                        
+                        // Dict에 추가하기. 
+                        if(!DictMotion.ContainsKey(motion_name)) {
+                            DictMotion.Add(motion_name, clips.ListClips[i]); // ADD    
+                            debugMotionName += motion_name +", ";
+                        }
+                    }
+                    
+                } // ? end of j for
+                
+            } // ? end of i for
+            // ? motion 처리 완료 
+            Debug.Log(liveName + " motions : " + debugMotionName);
+            this.motionController = cubismMotionController; // Addressable 에서는 Live2D 고유 모션 컨트롤러 연결 
+            anim = null; 
+            
+            // 로딩 완료
+            SendSuccessMessage();
+            
+        }
 
         /// <summary>
         /// 모델 본격 로드!
@@ -137,9 +310,7 @@ namespace PIERStory
             totalAssetCount = resourceData.Count; // 파일이 몇개인지 체크한다. 
             unloadAssetCount = totalAssetCount;
 
-            gameScale = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_GAME_SCALE));
-            offsetX = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_X));
-            offsetY = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_Y));
+
 
             // 다운로드 모델 버전 
             downloadModelVersion = isMinicut? int.Parse(SystemManager.GetJsonNodeString(resourceData[0], LIVEOBJ_VER)) : int.Parse(SystemManager.GetJsonNodeString(resourceData[0], ILLUST_VER));
@@ -263,29 +434,20 @@ namespace PIERStory
             if(GameManager.main !=null && !isMinicut)
                 SendSuccessMessage();
         }
-
-        void CreateCubismModel(string __path)
-        {
-            CubismModel3Json model3Json = CubismModel3Json.LoadAtPath(GetCubismAbsolutePath(__path), CubismViewerIo.LoadAsset);
-
-            liveImage = model3Json.ToModel();
-
-            if (liveImage == null)
-            {
-                Debug.LogError("Error in creating Live2D Model : " + liveName);
-                
-                NetworkLoader.main.ReportRequestError(liveName, "It's failed to create CubismModel");
-                
-                SendFailMessage();
-                return;
-            }
-
+        
+        /// <summary>
+        /// 게임플레이용 컨트롤러 세팅 
+        /// </summary>
+        void SetGameModelController() {
+            
             // GameLiveImageCtrl attach
             liveImageController = liveImage.gameObject.AddComponent<GameLiveImageCtrl>();
             liveImageController.originScale = gameScale;
-            liveImageController.modelType = CommonConst.MODEL_TYPE_LIVE2D;
+            liveImageController.modelType = CommonConst.MODEL_TYPE_LIVE2D;               
+            
             liveImageController.SetModel(liveImage); // 모델 할당.
 
+            // 부모 transform 설정 
             if (GameManager.main != null)
                 GameManager.main.SetIllustParent(liveImage.transform);
             else
@@ -310,6 +472,37 @@ namespace PIERStory
 
             liveImage.GetComponent<CubismRenderController>().SortingMode = CubismSortingMode.BackToFrontOrder;
             ChangeLayerRecursively(liveImage.transform);
+            
+            if(isAddressable) {
+                // * 어드레서블 에셋을 통한 생성인 경우는 Shader 처리 추가 필요. 
+                SystemManager.SetAddressableCubismShader(liveImage);
+            }
+            
+            
+        }
+
+
+        /// <summary>
+        /// Live2D 모델 Instanitate 하기 (일반)
+        /// </summary>
+        /// <param name="__path"></param>
+        void CreateCubismModel(string __path)
+        {
+            CubismModel3Json model3Json = CubismModel3Json.LoadAtPath(GetCubismAbsolutePath(__path), CubismViewerIo.LoadAsset);
+
+            liveImage = model3Json.ToModel();
+
+            if (liveImage == null)
+            {
+                Debug.LogError("Error in creating Live2D Model : " + liveName);
+                
+                NetworkLoader.main.ReportRequestError(liveName, "It's failed to create CubismModel");
+                
+                SendFailMessage();
+                return;
+            }
+
+            SetGameModelController();
         }
 
         void ChangeLayerRecursively(Transform trans)
@@ -369,21 +562,46 @@ namespace PIERStory
             }
         }
 
+        /// <summary>
+        /// 애니메이션 재생
+        /// </summary>
         public void PlayCubismAnimation()
         {
             // 모델이 비활성 상태일때 활성화가 되면 페이드인 처리를 한다. 
             if (!liveImage.gameObject.activeSelf)
                 liveImageController.ActivateModel();
-
-            // 클립 재생 
-            if(isMinicut)
-                anim.PlayQueued("루프");
-            else
-            {
-                anim.CrossFade("시작", 0.3f);
-                anim.PlayQueued("루프", QueueMode.CompleteOthers);
+                
+            // 일반 다운로드 버전 
+            if(anim != null) {
+                // 클립 재생 
+                if(isMinicut) 
+                    anim.PlayQueued("루프");
+                else
+                {
+                    anim.CrossFade("시작", 0.3f);
+                    anim.PlayQueued("루프", QueueMode.CompleteOthers);
+                }
+            }
+            else { // 어드레서블 버전 
+                if(isMinicut) 
+                    motionController.PlayAnimation(DictMotion["루프"], 0, CubismMotionPriority.PriorityForce);
+                else {
+                    
+                    Debug.Log(liveName + " : Addressable Play ###");
+                    
+                    motionController.PlayAnimation(DictMotion["시작"], 0, CubismMotionPriority.PriorityForce, false);
+                    motionController.AnimationEndHandler = OnStartAnimationComplete;
+                    // motionController.(DictMotion["시작"], 0, CubismMotionPriority.PriorityForce);
+                }
             }
         }
+        
+        void OnStartAnimationComplete(float __f) {
+            Debug.Log(liveName + " : Start Animation End ###");
+            motionController.AnimationEndHandler = null;
+            motionController.PlayAnimation(DictMotion["루프"], 0, CubismMotionPriority.PriorityForce);
+        }
+        
 
         void SendFailMessage()
         {

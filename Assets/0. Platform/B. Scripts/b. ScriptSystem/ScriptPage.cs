@@ -129,11 +129,10 @@ namespace PIERStory
             Debug.Log("RoutineLoadingResource Start");
 
             // 동시진행
-            StartCoroutine(RoutineLoadingLiveObjects());                                    // 라이브 오브제
+            
             // StartCoroutine(RoutineLoadingModels());                                         // 캐릭터 모델 
             StartCoroutine(RoutineLoadingImage(GameConst.TEMPLATE_BACKGROUND));             // 배경 
             StartCoroutine(RoutineLoadingImage(GameConst.TEMPLATE_ILLUST));                 // 일러스트 
-            StartCoroutine(RoutineLoadingLiveIllusts());                                    // 라이브 일러스트
 
             StartCoroutine(RoutineLoadingBubble());                                         // 말풍선 
             StartCoroutine(RoutineLoadingImage(GameConst.TEMPLATE_IMAGE));                  // 이미지
@@ -143,6 +142,15 @@ namespace PIERStory
             StartCoroutine(RoutineLoadingSound(GameConst.TEMPLATE_BGM));                    // 배경음
             StartCoroutine(RoutineLoadingSound(GameConst.COL_VOICE));                       // 음성 
             StartCoroutine(RoutineLoadingSound(COL_SOUND_EFFECT));                          // SE
+            
+            
+            yield return StartCoroutine(RoutineLoadingLiveObjects()); // 라이브 오브제
+            Debug.Log("##Done Live Objects");
+            
+            
+            yield return StartCoroutine(RoutineLoadingLiveIllusts()); // 라이브 일러스트
+            
+            Debug.Log("##Done Live Illusts");
             
             yield return StartCoroutine(RoutineLoadingModels()); // 여기로 이동... 
             

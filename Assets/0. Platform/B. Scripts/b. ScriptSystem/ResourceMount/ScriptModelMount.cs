@@ -310,7 +310,7 @@ namespace PIERStory
             }  // ? 모션 체크 종료                 
             
             
-            isAddressable = true; // 트루!                                      
+            isAddressable = true; // 트루!
             
             // * CreateCubismModel
             modelController.SetModel(model, direction, isAddressable);
@@ -327,12 +327,7 @@ namespace PIERStory
             
 
             // * 어드레서블 에셋을 통한 생성인 경우는 Shader 처리 추가 필요. 
-            Shader cubismShader = Shader.Find("Live2D Cubism/Unlit");
-            CubismRenderer render;
-            for(int i=0;i <model.Drawables.Length;i++) {
-                render = model.Drawables[i].gameObject.GetComponent<CubismRenderer>();
-                render.Material.shader = cubismShader;
-            }                            
+            SystemManager.SetAddressableCubismShader(model);  
             
             
             string file_key = string.Empty;

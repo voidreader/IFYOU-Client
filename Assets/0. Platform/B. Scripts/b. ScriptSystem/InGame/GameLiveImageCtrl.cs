@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 
 using Live2D.Cubism.Core;
 using Live2D.Cubism.Rendering;
+
 
 namespace PIERStory
 {
@@ -17,6 +20,7 @@ namespace PIERStory
 
         public float originScale = 0f;
         int frameCount = 0;
+        
 
         // Start is called before the first frame update
         void Start()

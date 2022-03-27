@@ -143,20 +143,24 @@ namespace PIERStory
             StartCoroutine(RoutineLoadingSound(GameConst.COL_VOICE));                       // 음성 
             StartCoroutine(RoutineLoadingSound(COL_SOUND_EFFECT));                          // SE
             
+            BeginDownloadLiveIllusts(); // 라이브 일러스트 파일 다운로드 
+            BeginDownloadLiveObjects(); // 라이브 오브젝트 파일 다운로드 
             
-            yield return StartCoroutine(RoutineLoadingLiveObjects()); // 라이브 오브제
-            Debug.Log("##Done Live Objects");
+            
+            // yield return StartCoroutine(RoutineLoadingLiveObjects()); // 라이브 오브제
+            // Debug.Log("##Done Live Objects");
             
             
-            yield return StartCoroutine(RoutineLoadingLiveIllusts()); // 라이브 일러스트
-            
-            Debug.Log("##Done Live Illusts");
+            // yield return StartCoroutine(RoutineLoadingLiveIllusts()); // 라이브 일러스트
+            // Debug.Log("##Done Live Illusts");
             
             yield return StartCoroutine(RoutineLoadingModels()); // 여기로 이동... 
             
             Debug.Log("### RoutineLoadingModels End");
+            yield return new WaitForSeconds(1);
             
-
+            yield return StartCoroutine(RoutineInstantiateLiveIllustsAndObjects()); 
+            
             yield return new WaitUntil(() => GetCurrentLoadingCount() <= 0);
             yield return new WaitForSeconds(0.5f);
 
@@ -237,6 +241,10 @@ namespace PIERStory
                 // 게임매니저한테 정상적으로 불러온거 전달해준다. 
                 GameManager.main.AddLiveObject(ListLiveObjectMount[i]);
                 ListLiveObjectMount[i].SetLiveImageUseCount(GetLiveObjUseCount(ListLiveObjectMount[i].liveName));
+                
+                if(ListLiveObjectMount[i].liveImageController != null) {
+                    ListLiveObjectMount[i].liveImageController.HideModel();
+                }
             }
             // Live2D 오브제 처리 끝
 
@@ -249,6 +257,10 @@ namespace PIERStory
                 // 게임매니저에게 전달
                 GameManager.main.AddLiveIllust(ListLiveIllustMount[i]);
                 ListLiveIllustMount[i].SetLiveImageUseCount(GetLiveIllustUseCount(ListLiveIllustMount[i].liveName));
+                
+                if(ListLiveIllustMount[i].liveImageController != null) {
+                    ListLiveIllustMount[i].liveImageController.HideModel();
+                }
             }
             
             yield return new WaitForSeconds(0.1f);
@@ -319,7 +331,7 @@ namespace PIERStory
             for (int i = 0; i < ListLiveObjectMount.Count; i++)
             {
                 checker = pageLiveObjectCount;
-                ListLiveObjectMount[i].SetModelDataFromStoryManager();
+                ListLiveObjectMount[i].SetModelDataFromStoryManager(); // 인스턴스는 시키지 않는다. 
 
                 yield return new WaitUntil(() => checker > pageLiveObjectCount);
 
@@ -330,6 +342,82 @@ namespace PIERStory
                 if (ListLiveObjectMount[i].isMounted && ListLiveObjectMount[i].liveImageController != null)
                     ListLiveObjectMount[i].liveImageController.HideModel();
             }
+        }
+        
+        /// <summary>
+        /// 라이브 오브젝트 파일들 준비시키기 
+        /// </summary>
+        void BeginDownloadLiveObjects() {
+            for(int i=0; i<ListLiveObjectMount.Count;i++) {
+                ListLiveObjectMount[i].SetModelDataFromStoryManager();
+            }
+        }
+        
+        void BeginDownloadLiveIllusts() {
+            for (int i = 0; i < ListLiveIllustMount.Count; i++) {
+                ListLiveIllustMount[i].SetModelDataFromStoryManager();
+            }
+        }
+        
+        
+        /// <summary>
+        /// 라이브 일러스트 오브젝트 다운로딩 완료되었는지 체크 
+        /// </summary>
+        /// <returns></returns>
+        bool CheckLiveObjectAndIllustLoading() {
+            
+            // 다 리소스 로드가 되
+            for(int i=0; i<ListLiveObjectMount.Count;i++) {
+                if(!ListLiveObjectMount[i].isLoaded) {
+                    return false;
+                }
+            }
+            
+            for(int i=0; i<ListLiveIllustMount.Count;i++) {
+                if(!ListLiveIllustMount[i].isLoaded) {
+                    return false;
+                }
+            }
+            
+            
+            return true;
+        }
+        
+        /// <summary>
+        /// 라이브 
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator RoutineInstantiateLiveIllustsAndObjects() {
+            Debug.Log("#### RoutineInstantiateLiveIllustsAndObjects #1");
+            
+            while(!CheckLiveObjectAndIllustLoading()) {
+                yield return new WaitForSeconds(0.1f);
+            }
+            
+            Debug.Log("#### RoutineInstantiateLiveIllustsAndObjects #2");
+            yield return new WaitForSeconds(1);
+            
+            for(int i=0; i<ListLiveObjectMount.Count;i++) {
+                if(ListLiveObjectMount[i].isLoaded) {
+                    
+                    yield return new WaitForSeconds(0.1f);
+                    
+                    ListLiveObjectMount[i].InstantiateCubismModel();
+                    yield return new WaitForSeconds(2);
+                    if(ListLiveObjectMount[i].liveImageController != null)
+                        ListLiveObjectMount[i].liveImageController.HideModel();
+                }
+            }
+            
+            for(int i=0; i<ListLiveIllustMount.Count;i++) {
+                if(ListLiveIllustMount[i].isLoaded) {
+                    ListLiveIllustMount[i].InstantiateCubismModel();
+                    yield return new WaitForSeconds(2);
+                }
+            }
+            
+            Debug.Log("#### RoutineInstantiateLiveIllustsAndObjects END");
+            
         }
 
         /// <summary>
@@ -431,7 +519,7 @@ namespace PIERStory
                 yield return new WaitUntil(() => checker > pageImageResourceCount);
             }
 
-            Debug.Log(string.Format("Image [{0}] loading done.", __col));
+            // Debug.Log(string.Format("Image [{0}] loading done.", __col));
         }
 
         /// <summary>
@@ -456,7 +544,7 @@ namespace PIERStory
                 yield return new WaitUntil(() => checker > pageSoundResourceCount);
             }
 
-            Debug.Log(string.Format("Sound [{0}] loading done.", __col));
+            // Debug.Log(string.Format("Sound [{0}] loading done.", __col));
         }
 
         /// <summary>
@@ -464,7 +552,7 @@ namespace PIERStory
         /// </summary>
         IEnumerator RoutineLoadingBubble()
         {
-            Debug.Log("<color=yellow>Collecting Bubble Resources</color>");
+            // Debug.Log("<color=yellow>Collecting Bubble Resources</color>");
             string currentURL = string.Empty;
             string currentKEY = string.Empty;
 
@@ -478,7 +566,7 @@ namespace PIERStory
 
             yield return new WaitUntil(() => pageBubbleResourceCount <= 0);
 
-            Debug.Log("Bubble loading done");
+            // Debug.Log("Bubble loading done");
         }
 
         #region Collect functions
@@ -760,7 +848,7 @@ namespace PIERStory
         void OnModelMountInitialized()
         {
             pageModelCount--;
-            Debug.Log("OnModelMountInitialized : " + pageModelCount);
+            // Debug.Log("OnModelMountInitialized : " + pageModelCount);
         }
 
         void OnLiveIllustMountInitialized()

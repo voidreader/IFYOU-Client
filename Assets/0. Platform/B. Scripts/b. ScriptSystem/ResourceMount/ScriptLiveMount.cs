@@ -32,7 +32,10 @@ namespace PIERStory
         JsonData resourceData = null;
 
         public string liveName = string.Empty;
-        public bool isMounted = false;
+        
+        // * isLoaded => isMounted의 순서로 완료 
+        public bool isMounted = false; // 최종 완료 인스턴스화까지 완료했음
+        public bool isLoaded = false; // 다운로드 혹은 에셋번들 로드 완료 
 
         public int totalAssetCount = 0;
         public int unloadAssetCount = 0;
@@ -53,7 +56,7 @@ namespace PIERStory
         bool isMinicut = false;     // 라이브 오브제인가?
         
         // * Addressable 관련 추가
-        public bool isAddressable = false;
+        public bool isAddressable = false; // 에셋번들이니 아니니 
         public string addressableKey = string.Empty; // 어드레서블 키 
         public AsyncOperationHandle<GameObject> mountedModelAddressable;
         Dictionary<string, AnimationClip> DictMotion; 
@@ -158,12 +161,16 @@ namespace PIERStory
         void SetMinusAssetCount()
         {
             unloadAssetCount--;
-
+            
+            // 모든 파일 다운로드가 받았으면 다음 단계 진행 
             if (unloadAssetCount == 0)
             {
                 // Serializable은 코루틴을 쓰지 못하니, 엄마한테 부탁한다.
-                pageParent.StartCoroutine(CheckFileSavedAndStartInitModel());
+                // pageParent.StartCoroutine(CheckFileSavedAndStartInitModel());
                 string.Format(" <color=lime>{0} Model files are downloaded</color>", liveName);
+                
+                isLoaded = true; // 다운로드 완료 
+                
             }
         }
         
@@ -196,27 +203,12 @@ namespace PIERStory
             Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
                 if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0) {
                     
-                    // ! Instantiate 됩니다!!
-                    Addressables.InstantiateAsync(addressableKey, Vector3.zero, Quaternion.identity).Completed += (handle) => {
-                        
-                        if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공 
-                            
-                           
-                            // 불러오고 추가 세팅 시작 
-                            SetAddressableCubismModel(handle);
-                            
-                        }
-                        else { // * 실패 
-                            Debug.Log(">> Failed LoadAssetAsync " + liveName + " / " + handle.OperationException.Message);
-                            InitCubismModel();
-                        }
-                        
-                    }; // ? end of InstantiateAsync
-                    
-                    
+                    isAddressable = true; // 에셋번들 있음
+                    isLoaded = true; // 로딩 완료 
+                    // 인스턴스는 아직 시키지 않는다.
                 }
                 else {  // 에셋번들에 없는 캐릭터. 
-                    
+                    Debug.Log(string.Format("<color=yellow>[{0} ]Not in AssetBundle</color>", liveName));
                     InitCubismModel(); // 기존 캐릭터 로드 로직 호출 
                 }
             }; // ? end of LoadResourceLocationsAsync            
@@ -304,6 +296,8 @@ namespace PIERStory
         /// </summary>
         void InitCubismModel()
         {
+            isAddressable = false; // 에셋번들 아니다!
+            
             string file_key = string.Empty;
             string file_url = string.Empty;
 
@@ -365,6 +359,8 @@ namespace PIERStory
         /// </summary>
         IEnumerator CheckFileSavedAndStartInitModel()
         {
+            // * 얘 필요없을 것 같은데... 일단 호출부분 제거 
+            
             string file_key = string.Empty;
             bool isFilesExist = false;
 
@@ -388,6 +384,7 @@ namespace PIERStory
                     yield return new WaitForSeconds(0.2f);
             }
 
+            /*
             if(GameManager.main != null)
             {
                 if(isMinicut)
@@ -397,13 +394,47 @@ namespace PIERStory
             }
             else
                 InstantiateCubismModel();
+            */
         }
+        
+        
+        /// <summary>
+        /// 모델 인스턴스화 하기 
+        /// </summary>
+        public void InstantiateCubismModel() {
+            if(isAddressable) { // 어드레서블 에셋 번들 
+                // ! Instantiate
+                Addressables.InstantiateAsync(addressableKey, Vector3.zero, Quaternion.identity).Completed += (handle) => {
+                    
+                    if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공 
+                        
+                        // 불러오고 추가 세팅 시작 
+                        SetAddressableCubismModel(handle);
+                        
+                    }
+                    else { // * 실패 
+                        Debug.LogError(">> Failed InstantiateAsync " + liveName + " / " + handle.OperationException.Message);
+                        
+                        // 실패하면 개별 다운로드로 돌아간다. 
+                        InitCubismModel();
+                    }
+                    
+                }; // ? end of InstantiateAsync
+            }
+            else {
+                InstantiateDownloadedCubismModel();
+            }
+        }
+        
+        
 
         /// <summary>
-        /// 모든 파일을 불러왔으면 이제 시작한다. 
+        /// 개별 다운로드로 내려받은 Live2D 모델 인스턴스 생성하기 
         /// </summary>
-        public void InstantiateCubismModel()
+        public void InstantiateDownloadedCubismModel()
         {
+            Debug.Log(">> ## InstantiateDownloadedCubismModel : " + liveName);
+            
             string file_key = string.Empty;
 
             for (int i = 0; i < resourceData.Count; i++)
@@ -427,12 +458,9 @@ namespace PIERStory
 
             // 세팅된 모션 준비하기
             PrepareCubismMotions();
-
-            if (LobbyManager.main != null)
-                SendSuccessMessage();
-
-            if(GameManager.main !=null && !isMinicut)
-                SendSuccessMessage();
+            
+            // 완료 
+            SendSuccessMessage();
         }
         
         /// <summary>
@@ -606,6 +634,8 @@ namespace PIERStory
         void SendFailMessage()
         {
             isMounted = false;
+            isLoaded = true; // 실패여도 로드는 완료했다고 처리한다. 
+            
             OnMountCompleted();
         }
 

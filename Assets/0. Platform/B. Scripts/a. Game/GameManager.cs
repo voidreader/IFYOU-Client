@@ -1632,8 +1632,11 @@ namespace PIERStory
             currentLiveObj = DictLiveObjs[__objName];
 
             // 만들어진적이 없으면 생성한다
+            // * 로딩때 생성으로 변경 
+            /*
             if (currentLiveObj.liveImageController == null)
                 currentLiveObj.InstantiateCubismModel();
+            */
 
             currentLiveObj.DecreaseUseCount();
 

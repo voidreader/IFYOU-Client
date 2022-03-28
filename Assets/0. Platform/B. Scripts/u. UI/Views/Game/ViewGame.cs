@@ -1216,7 +1216,7 @@ namespace PIERStory
             foreach (string s in selections)
             {
                 if (s.Equals(selected))
-                    logData.Append("<b><color=#FF73A5>[" + s + "]</color></b>");
+                    logData.Append("<b><color=#FF0080>[" + s + "]</color></b>");
                 else
                     logData.Append("[" + s + "]");
             }

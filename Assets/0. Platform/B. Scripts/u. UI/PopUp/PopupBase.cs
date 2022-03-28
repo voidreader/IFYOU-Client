@@ -28,6 +28,8 @@ namespace PIERStory {
         public bool isShow = false; // Show 중복 호출 방지
         public bool isOnShow = false; // OnShow 중복 호출 방지.. 
         
+        public bool isBlockBackButton = false; // 백버튼 조작 방지 (닫히지 않음 )
+        
         void Awake() {
             if(mainCanvasGroup != null)
                 mainCanvasGroup.alpha = 0;
@@ -40,9 +42,6 @@ namespace PIERStory {
         
         public void SetAutoDestroy() {
             
-            // overlay 사용시에만 백버튼 막기
-            if(isOverlayUse)
-                BackButton.blockBackInput = true; // block 
             
             if(PopupManager.main != null)
                 PopupManager.main.AddActivePopup(this); // 팝업매니저에 등록하기
@@ -115,7 +114,7 @@ namespace PIERStory {
         /// </summary>
         public virtual void Hide() {
 
-            BackButton.blockBackInput = false; // block 해제
+            
             
             // 중복 호출을 막음. 
             if(content.inTransition)
@@ -142,7 +141,7 @@ namespace PIERStory {
         
         public void InstanteHide() {
             
-            BackButton.blockBackInput = false; // block 해제
+            
             
             if(isOverlayUse)
                 overlay.InstantHide();
@@ -157,7 +156,7 @@ namespace PIERStory {
         /// </summary>
         public void SelfDestroy() {
             
-            BackButton.blockBackInput = false; // block 해제
+            
             
             if(PopupManager.main != null)
                 PopupManager.main.RemoveActivePopup(this); // remove

@@ -14,9 +14,14 @@ namespace PIERStory
 
         const string START_DATE = "start_date";
         const string SHOW_NOTICE_DETAIL = "showNoticeDetail";
+        
+        bool isFromView = false;
 
-        public void InitNoticeBanner(JsonData __j)
+        public void InitNoticeBanner(JsonData __j, bool __fromView = false)
         {
+            
+            isFromView = __fromView;
+            
             detailNotice = null;
             gameObject.SetActive(true);
 
@@ -44,6 +49,7 @@ namespace PIERStory
 
         public void OnClickNoticeBanner()
         {
+            ViewNoticeDetail.isDependent = isFromView;
             ViewNoticeDetail.SetNoticeDetail(detailNotice, startDate);
             Signal.Send(LobbyConst.STREAM_IFYOU, SHOW_NOTICE_DETAIL, string.Empty);
         }

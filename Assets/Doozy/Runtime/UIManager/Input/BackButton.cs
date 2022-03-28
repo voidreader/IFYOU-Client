@@ -16,6 +16,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 #endif
 
+
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Runtime.UIManager.Input
@@ -244,6 +246,8 @@ namespace Doozy.Runtime.UIManager.Input
             
             if(blockBackInput)
                 return;
+                
+            Debug.Log("BackButton Fire #1");
             
             if (applicationIsQuitting) return;
             if (!instance.canFire) return;
@@ -260,6 +264,7 @@ namespace Doozy.Runtime.UIManager.Input
             if(blockBackInput)
                 return;
             
+            Debug.Log("BackButton Fire #2");
             
             if (applicationIsQuitting) return;
             if (!instance.canFire) return;

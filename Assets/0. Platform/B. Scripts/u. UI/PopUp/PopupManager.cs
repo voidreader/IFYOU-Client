@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
+using Doozy.Runtime.UIManager.Input;
+using Doozy.Runtime.UIManager.Containers;
+
 namespace PIERStory {
     public class PopupManager : SerializedMonoBehaviour
     {
@@ -85,10 +88,22 @@ namespace PIERStory {
             // 팝업에서 안드로이드 Back 버튼 동작관련 처리 추가 
             
             if(Input.GetKeyDown(KeyCode.Escape))  {
-                if(GetFrontActivePopup() == null)
+                if(GetFrontActivePopup() == null) {
+                    Debug.Log("((( PopupManager : No active popup");
                     return;
+                }
                 else {
-                    GetFrontActivePopup().Hide(); // Hide
+                    
+                    Debug.Log("((( PopupManager : Hide current popup");
+                    
+                    if(GetFrontActivePopup().isBlockBackButton) {
+                        // 닫히지 않음.
+                    }
+                    else {
+                        GetFrontActivePopup().Hide(); // Hide    
+                    }
+                    
+                    
                 }    
                 
             }
@@ -115,10 +130,14 @@ namespace PIERStory {
         
         IEnumerator PopupQueueRoutine() {
             
+            
+            
+            BackButton.blockBackInput = false; 
+            
             PopupQueue.Clear();
             CurrentQueuePopup = null;
             
-            Debug.Log(">> PopupQueueRoutine START");
+            Debug.Log("<color=yellow> PopupQueueRoutine START </color>");
             
             while(true) {
                 
@@ -214,8 +233,13 @@ namespace PIERStory {
         /// </summary>
         /// <returns></returns>
         public PopupBase GetFrontActivePopup() {
+
+            // null 에서 정리되지 않을때가 있어서 정리하고 입력 처리
+            CheckShowingPopupListValidation();
+            
             if(ListShowingPopup.Count == 0)
                 return null;
+               
                 
             return ListShowingPopup[ListShowingPopup.Count-1]; 
         }
@@ -238,19 +262,37 @@ namespace PIERStory {
         public void AddActivePopup(PopupBase __p) {
             
             // null 에서 정리되지 않을때가 있어서 정리하고 입력 처리
-            for(int i=ListShowingPopup.Count-1; i>=0; i--) {
-                if(ListShowingPopup[i] == null) {
-                    ListShowingPopup.RemoveAt(i);
-                }
-            }
+            CheckShowingPopupListValidation();
             
             if(!ListShowingPopup.Contains(__p))
                 ListShowingPopup.Add(__p);
+            
+            BackButton.blockBackInput = true;
             
         }
         
         public void RemoveActivePopup(PopupBase __p) {
             ListShowingPopup.Remove(__p);
+        
+            CheckShowingPopupListValidation();            
+            
+            // 종료 시점에 살아있는 팝업이 있으면 backbutton true 처리 
+            if(ListShowingPopup.Count > 0)
+                BackButton.blockBackInput = true;
+            else 
+                BackButton.blockBackInput = false;
+            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>        
+        void CheckShowingPopupListValidation() {
+            for(int i=ListShowingPopup.Count-1; i>=0; i--) {
+                if(ListShowingPopup[i] == null) {
+                    ListShowingPopup.RemoveAt(i);
+                }
+            }            
         }
         
         

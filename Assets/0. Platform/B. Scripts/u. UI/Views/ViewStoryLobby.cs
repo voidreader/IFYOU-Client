@@ -18,6 +18,7 @@ namespace PIERStory
     {
         public static Action OnDecorateSet = null;
         public static Action OnDisableAllOptionals = null;
+        public static Action<bool> OnInActiveInteractable = null;
         public static Action<JsonData> OnSelectBackground = null;
         public static Action<JsonData, ProfileItemElement> OnSelectStanding = null;
         public static Action<JsonData, ProfileItemElement> OnStickerSetting = null;
@@ -96,6 +97,7 @@ namespace PIERStory
             OnSelectBackground = SelectBackground;
             OnSelectStanding = SelectLiveCharacter;
             OnStickerSetting = CreateStickerElement;
+            OnInActiveInteractable = ActiveInteractable;
         }
 
         private void Start()
@@ -573,6 +575,7 @@ namespace PIERStory
 
                 // 서버에 저장되어 있는 기반으로 다시 만들어!
                 DecorateSetting();
+                ActiveInteractable(false);
 
                 mainContainer.Show();
             }
@@ -798,6 +801,8 @@ namespace PIERStory
             standingController.SetActive(true);
 
             moveCharacter = true;
+
+            ActiveInteractable(false);
         }
 
 
@@ -852,6 +857,7 @@ namespace PIERStory
             moveCharacter = false;
 
             StandingListSort();
+            ActiveInteractable(true);
 
             usageStandingControl.SetActive(false);
             standingListScroll.SetActive(true);

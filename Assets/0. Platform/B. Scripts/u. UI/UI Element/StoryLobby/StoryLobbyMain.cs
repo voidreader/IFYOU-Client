@@ -166,6 +166,9 @@ namespace PIERStory {
             
             // 게임형로비 상단 초기화
             StoryLobbyTop.OnInitializeStoryLobbyTop?.Invoke();
+
+            // 꾸미기 모드에서 돌아왔을 때 interactable false 만들기
+            ViewStoryLobby.OnInActiveInteractable?.Invoke(false);
         }
 
 

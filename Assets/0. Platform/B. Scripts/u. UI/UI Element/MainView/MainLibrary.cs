@@ -46,6 +46,9 @@ namespace PIERStory {
                 ListCategoryToggle[i].gameObject.SetActive(false);
             }
             
+            if(SystemManager.main.storyGenreData == null)
+                return;
+            
             for(int i=0; i<SystemManager.main.storyGenreData.Count;i++) {
                 
                 if(ListCategoryToggle.Count <= i)  {

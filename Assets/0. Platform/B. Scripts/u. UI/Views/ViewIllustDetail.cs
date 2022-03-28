@@ -223,6 +223,12 @@ namespace PIERStory
         }
         
         IEnumerator RoutinePost(string __type) {
+            
+            if(Application.isEditor) {
+                RequestShareBonus();
+                yield break;
+            }
+            
             bool isAvailable = false;
             SocialShareComposerType shareType = SocialShareComposerType.WhatsApp;
             
@@ -295,7 +301,7 @@ namespace PIERStory
             sending["illust_type"] = SystemManager.GetJsonNodeString(userGalleryData, "illust_type");
             sending["illust_id"] = SystemManager.GetJsonNodeInt(userGalleryData, "illust_id");
             
-            NetworkLoader.main.SendPost(null, sending, true);
+            NetworkLoader.main.SendPost(CallbackRequestShareBonus, sending, true);
         }
         
         void CallbackRequestShareBonus(HTTPRequest req, HTTPResponse res)
@@ -308,6 +314,8 @@ namespace PIERStory
 
             // Debug.Log(string.Format("CallbackConnectServer: {0}", res.DataAsText));
             JsonData result = JsonMapper.ToObject(res.DataAsText);
+            
+            Debug.Log("### CallbackRequestShareBonus : " + res.DataAsText);
             
             // bank
             // galleryImages

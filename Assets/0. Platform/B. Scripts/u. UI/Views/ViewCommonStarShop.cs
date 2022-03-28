@@ -8,11 +8,17 @@ namespace PIERStory {
 
     public class ViewCommonStarShop : CommonView
     {
+        public static bool isCommonShopOpen = false;
+        
         public override void OnStartView() {
             base.OnStartView();
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
+            
+            if(GameManager.main == null)
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
             
             StartCoroutine(DelaySendingSignal());
+            
+            isCommonShopOpen = true;
             
         }
         
@@ -23,7 +29,11 @@ namespace PIERStory {
         
         public override void OnHideView() {
             base.OnHideView();
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
+            
+            if(GameManager.main == null)
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
+            
+            isCommonShopOpen = false;
         }
         
         IEnumerator DelaySendingSignal() {

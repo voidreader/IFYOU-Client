@@ -395,6 +395,10 @@ namespace PIERStory {
         public void OnClickCoin() {
             
             Debug.Log("### OnClickCoin ###");
+            
+            if(ViewCommonStarShop.isCommonShopOpen)
+                return;
+            
             Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);
             
             // SystemManager.main.OpenCoinShopWebview();
@@ -403,6 +407,10 @@ namespace PIERStory {
         }
         
         public void OnClickShop() {
+            
+            if(ViewCommonStarShop.isCommonShopOpen)
+                return;            
+            
             Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);
         }
 

@@ -234,6 +234,14 @@ namespace PIERStory
             SortingList(stickerListContent);
             StandingListSort();
 
+            // 진행전에 decoObjects 정리 
+            // Destroy된 개체들이 정리되지 않음 
+            for (int i = decoObjects.Count - 1; i >= 0; i--)
+            {
+                if (decoObjects[i] == null)
+                    decoObjects.RemoveAt(i);
+            }
+
 
             // 화면에 생성된 object와 재화 listElement 연결
             for (int i = 0; i < decoObjects.Count; i++)
@@ -830,6 +838,10 @@ namespace PIERStory
             // 리스트에서 해당 오브젝트 삭제
             decoObjects.Remove(controlModel.gameObject);
             liveModels.Remove(controlModel);
+
+            // 화면에 남은 모델의 SortingOrder를 0으로 만들어준다
+            foreach(GameModelCtrl model in liveModels)
+                model.model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder = 0;
 
             // 파괴
             Destroy(controlModel.gameObject);

@@ -134,7 +134,7 @@ namespace PIERStory
 
         float CalcMovePos(float origin, float drag, float start)
         {
-            return origin + ((drag - start) * 1.8f);
+            return origin + ((drag - start) * 1.8f * Time.deltaTime);
         }
     }
 }

@@ -121,6 +121,25 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5133"), string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
+
+
+            // 게임씬에서 진입했는데 그게 튜토리얼 중에 진입한거라면
+            if(GameManager.main != null && (UserManager.main.tutorialStep == 1 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 2 && !UserManager.main.tutorialClear))
+            {
+                // 모든 팝업을 hide해준다
+                foreach (PopupBase pb in PopupManager.main.ListShowingPopup)
+                    pb.Hide();
+            }
+        }
+
+        public void HideShop()
+        {
+            // 게임 튜토리얼 도중에 나온거니까 다시 팝업 On
+            if (GameManager.main != null && GameManager.main.isPlaying && ((UserManager.main.tutorialStep == 1 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 2 && !UserManager.main.tutorialClear)))
+            {
+                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MISSION_2);
+                PopupManager.main.ShowPopup(p, false);
+            }
         }
 
 

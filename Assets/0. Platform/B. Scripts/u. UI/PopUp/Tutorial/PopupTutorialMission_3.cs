@@ -47,7 +47,7 @@ namespace PIERStory
             base.Show();
 
             tutorialMissionText.text = string.Format(SystemManager.GetLocalizedText("5167"), 3);
-            rewardText1.text = string.Format(SystemManager.GetLocalizedText("5168"), 40);
+            rewardText1.text = string.Format(SystemManager.GetLocalizedText("5168"), Data.contentValue);
 
             needCoiinAmount.text = string.Format("{0}", Data.contentValue);
             rewardText2.text = string.Format(SystemManager.GetLocalizedText("5168"), 100);

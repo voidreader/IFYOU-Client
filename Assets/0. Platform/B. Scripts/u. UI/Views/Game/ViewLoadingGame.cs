@@ -75,7 +75,7 @@ namespace PIERStory
             loadingImage.OnDownloadImage = CallbackDownloadLoadingImage; // 로딩 이미지 다운로드 콜백. 
 
             if (GameManager.main.loadingJson.Count > 0) {
-                loadingImage.SetDownloadURL(SystemManager.GetJsonNodeString(GameManager.main.loadingJson[0], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(GameManager.main.loadingJson[0], CommonConst.COL_IMAGE_KEY));
+                loadingImage.SetDownloadURL(SystemManager.GetJsonNodeString(GameManager.main.loadingJson[0], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(GameManager.main.loadingJson[0], CommonConst.COL_IMAGE_KEY), true);
             }
             else {
                 loadingImage.SetDownloadURL(string.Empty, string.Empty);

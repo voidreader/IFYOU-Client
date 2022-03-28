@@ -640,7 +640,7 @@ namespace PIERStory
                 }
 
                 // 튜토리얼 1단계를 완료 했으며, 이제 곧 실행될 것이 선택지 관련인 경우 튜토리얼 실행
-                if((UserManager.main.tutorialStep == 1 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 2 && !UserManager.main.tutorialClear) &&
+                if(((UserManager.main.tutorialStep == 1 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 2 && !UserManager.main.tutorialClear)) &&
                     currentRow.template.Contains(GameConst.TEMPLATE_SELECTION))
                 {
                     UserManager.main.UpdateTutorialStep(2, 0, CallbackStartTutorial);
@@ -650,7 +650,7 @@ namespace PIERStory
                     ViewGame.main.commonTop.Show();
 
                     // 팝업이 없어질때까지 기다린다
-                    yield return new WaitUntil(() => PopupManager.main.ListShowingPopup.Count < 1);
+                    yield return new WaitUntil(() => PopupManager.main.ListShowingPopup.Count < 1 && (UserManager.main.tutorialStep == 2 && UserManager.main.tutorialClear));
                     ViewGame.main.commonTop.Hide();
                 }
 
@@ -2219,7 +2219,6 @@ namespace PIERStory
 
             PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MISSION_2);
             PopupManager.main.ShowPopup(p, false);
-         
         }
     }
 }

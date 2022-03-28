@@ -209,8 +209,7 @@ namespace PIERStory
 
             // 데이터 불러오고 데코 모드 준비하기
             SetDecoMode(JsonMapper.ToObject(res.DataAsText));
-
-
+            coinShopButton.SetActive(true);
         }
         
         /// <summary>
@@ -219,7 +218,13 @@ namespace PIERStory
         /// <param name="__decoCurrencyList"></param>
         void SetDecoMode(JsonData __decoCurrencyList) {
             currencyList = __decoCurrencyList;
-            
+
+            // 생성 전 리스트 초기화
+            foreach (GameObject g in currencyElements)
+                Destroy(g);
+
+            currencyElements.Clear();
+
             // 리스트 재화 항목 생성
             CreateListObject(LobbyConst.NODE_WALLPAPER, bgListPrefab, bgListContent);
             CreateListObject(LobbyConst.NODE_STANDING, standingListPrefab, standingListContent);
@@ -228,16 +233,7 @@ namespace PIERStory
             SortingList(bgListContent);
             SortingList(stickerListContent);
             StandingListSort();
-            
-            // 진행전에 decoObjects 정리 
-            // Destroy된 개체들이 정리되지 않음 
-            for(int i=decoObjects.Count-1; i>=0; i--) {
-                if(decoObjects[i] == null) {
-                    decoObjects.RemoveAt(i);
-                }
-            }
-            
-            
+
 
             // 화면에 생성된 object와 재화 listElement 연결
             for (int i = 0; i < decoObjects.Count; i++)
@@ -1051,7 +1047,6 @@ namespace PIERStory
             
             // 노드별로 처리
             JsonData result = JsonMapper.ToObject(response.DataAsText);
-            
 
             SetDecoMode(result["profileCurrency"]); // 데코 모드 갱신
             
@@ -1060,9 +1055,6 @@ namespace PIERStory
             
             // * 갱신 다했으면 능력치 차이를 구해서 메세지 띄운다.
             UserManager.main.NotifyUpdatedAbility(); 
-            
-  
         }
-        
     }
 }

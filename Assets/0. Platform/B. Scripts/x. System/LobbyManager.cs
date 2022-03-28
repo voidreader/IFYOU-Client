@@ -254,12 +254,12 @@ namespace PIERStory {
             
             if(!liveObj) {
                 currentLiveIllust = new ScriptLiveMount(illustName, OnGalleryLiveIllustMount, this, false);
-                currentLiveIllust.SetModelDataFromStoryManager();
+                currentLiveIllust.SetModelDataFromStoryManager(true);
 
             }
             else { // 라이브 오브제 추가 
                 currentLiveObject = new ScriptLiveMount(illustName, OnGalleryLiveObjectMount, this, true);
-                currentLiveObject.SetModelDataFromStoryManager();
+                currentLiveObject.SetModelDataFromStoryManager(true);
             }
         }
         

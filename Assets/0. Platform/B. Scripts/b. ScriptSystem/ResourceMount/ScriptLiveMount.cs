@@ -61,6 +61,8 @@ namespace PIERStory
         public AsyncOperationHandle<GameObject> mountedModelAddressable;
         Dictionary<string, AnimationClip> DictMotion; 
         public CubismMotionController motionController = null;
+        
+        public bool isImmediateInstance = false;
 
         /// <summary>
         /// 게임 플레이에서 호출
@@ -112,8 +114,11 @@ namespace PIERStory
         /// 관련 데이터를 StoryManager에서 이미 들고있으니까. 받아서 처리하기.
         /// </summary>
         /// <param name="__modelName"></param>
-        public void SetModelDataFromStoryManager()
+        public void SetModelDataFromStoryManager(bool __isImmediateInstance = false)
         {
+            
+            isImmediateInstance = __isImmediateInstance;
+            
             if(isMinicut)
                 resourceData = StoryManager.main.GetLiveObjectJsonByName(liveName);
             else
@@ -170,7 +175,9 @@ namespace PIERStory
                 string.Format(" <color=lime>{0} Model files are downloaded</color>", liveName);
                 
                 isLoaded = true; // 다운로드 완료 
-                
+                if(isImmediateInstance) {
+                    InstantiateCubismModel();
+                }
             }
         }
         
@@ -205,7 +212,10 @@ namespace PIERStory
                     
                     isAddressable = true; // 에셋번들 있음
                     isLoaded = true; // 로딩 완료 
-                    // 인스턴스는 아직 시키지 않는다.
+                    
+                    if(isImmediateInstance) {
+                        InstantiateCubismModel();
+                    }
                 }
                 else {  // 에셋번들에 없는 캐릭터. 
                     Debug.Log(string.Format("<color=yellow>[{0} ]Not in AssetBundle</color>", liveName));

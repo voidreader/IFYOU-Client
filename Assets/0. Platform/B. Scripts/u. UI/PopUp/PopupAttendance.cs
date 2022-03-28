@@ -1,13 +1,22 @@
 ﻿using LitJson;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
 
 namespace PIERStory
 {
     public class PopupAttendance : PopupBase
     {
         JsonData attendanceList = null;
+
         string attendanceId = string.Empty;
 
+        public TextMeshProUGUI textCurrentDay; // 현재 일자 표시 
+        public GameObject tipAttendance; // 팁 
+
         public AttendanceElement[] attendanceElements;
+        public int currentDay = 0;
 
 
         public override void Show()
@@ -30,6 +39,9 @@ namespace PIERStory
 
                 for (int j = 0; j < attendanceList[attendanceId].Count; j++)
                 {
+                    if(SystemManager.GetJsonNodeBool(attendanceList[attendanceId][j], "current"))
+                        currentDay = j + 1;
+                    
                     if (SystemManager.GetJsonNodeBool(attendanceList[attendanceId][j], "current") && SystemManager.GetJsonNodeBool(attendanceList[attendanceId][j], "click_check"))
                     {
                         allReceive = false;
@@ -51,6 +63,9 @@ namespace PIERStory
 
             for (int i = 0; i < attendanceList[attendanceId].Count; i++)
                 attendanceElements[i].InitAttendanceReward(attendanceList[attendanceId][i]);
+            
+            // 현재 일차 처리 
+            textCurrentDay.text = string.Format(SystemManager.GetLocalizedText("6259"), currentDay.ToString());
 
         }
     }

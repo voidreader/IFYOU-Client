@@ -104,7 +104,7 @@ namespace PIERStory {
             textMainStar.text = mainGemQuantity.ToString(); 
             
             if(subGemQuantity > 0) {
-                textMainStar.text += "+" + subGemQuantity.ToString(); // 더하기 붙인다. 
+                textMainStar.text += "<color=#F6C261>+" + subGemQuantity.ToString() +"</color>"; // 더하기 붙인다. 
             }
             
         }
@@ -205,7 +205,8 @@ namespace PIERStory {
             
             firstPurchaseBonusGem = getFirstPurchaseStar();
             
-            textFirstPurchaseBonus.text = SystemManager.GetLocalizedText("5018") + string.Format(" <color=#FF59C2>+ {0}</color>", firstPurchaseBonusGem);
+            // textFirstPurchaseBonus.text = SystemManager.GetLocalizedText("5018") + string.Format(" <color=#FF59C2>+ {0}</color>", firstPurchaseBonusGem);
+            textFirstPurchaseBonus.text = "+" + firstPurchaseBonusGem.ToString();
         }
         
         /// <summary>

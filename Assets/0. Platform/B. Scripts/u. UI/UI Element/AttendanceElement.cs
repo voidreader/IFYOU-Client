@@ -12,13 +12,13 @@ namespace PIERStory
     public class AttendanceElement : MonoBehaviour
     {
         public Image dayHighlight;
-        public GameObject rewardToday;
+        // public GameObject rewardToday;
 
         public ImageRequireDownload currencyIcon;
         public TextMeshProUGUI amountText;
 
         public Image coverOverlay;
-        public Image checkIcon;
+        // public Image checkIcon;
 
         string attendanceId = string.Empty;
         int daySeq = 0;
@@ -48,13 +48,10 @@ namespace PIERStory
             amountText.text = SystemManager.GetJsonNodeString(__j, "quantity");
 
             if(currency == "coin")
-                currencyIcon.GetComponent<Image>().sprite = LobbyManager.main.spriteAttendanceCoin;
+                currencyIcon.GetComponent<Image>().sprite = SystemManager.main.spriteCoin;
             else if(currency =="gem")
             {
-                if(daySeq == 7)
-                    currencyIcon.GetComponent<Image>().sprite = LobbyManager.main.spriteAttendanceStars;
-                else
-                    currencyIcon.GetComponent<Image>().sprite = LobbyManager.main.spriteAttendanceStar;
+                currencyIcon.GetComponent<Image>().sprite = SystemManager.main.spriteStar;
             }
             else
                 currencyIcon.SetDownloadURL(imageUrl, imageKey);
@@ -70,8 +67,10 @@ namespace PIERStory
             if (current && clickCheck)
             {
                 dayHighlight.gameObject.SetActive(true);
-                rewardToday.SetActive(true);
-                StartCoroutine(SpriteShiny());
+                dayHighlight.color = new Color(1,1,1, 0);
+                dayHighlight.DOFade(1, 1).SetLoops(-1, LoopType.Yoyo);
+                //rewardToday.SetActive(true);
+                // StartCoroutine(SpriteShiny());
             }
         }
 
@@ -79,6 +78,7 @@ namespace PIERStory
 
         IEnumerator SpriteShiny()
         {
+            /*
             Sequence seq = DOTween.Sequence();
             seq.Append(dayHighlight.DOFade(0.3f, 1.5f).SetDelay(0.5f));
             seq.Append(dayHighlight.DOFade(1f, 1.5f));
@@ -95,6 +95,9 @@ namespace PIERStory
                 yield return new WaitForSeconds(animTime * 2);
                 todayFrame.SetFloat("_ShineLocation", 0f);
             }
+            */
+            
+            yield return null;
         }
 
         #endregion
@@ -132,13 +135,13 @@ namespace PIERStory
             UserManager.main.SetNotificationInfo(JsonMapper.ToObject(res.DataAsText));
 
             dayHighlight.gameObject.SetActive(false);
-            rewardToday.SetActive(false);
+            // rewardToday.SetActive(false);
             coverOverlay.color = new Color(1, 1, 1, 0);
-            checkIcon.color = new Color(1, 1, 1, 0);
+            // checkIcon.color = new Color(1, 1, 1, 0);
             coverOverlay.gameObject.SetActive(true);
             coverOverlay.DOFade(1f, 0.4f);
-            checkIcon.DOFade(1f, 0.2f).SetDelay(0.2f);
-            checkIcon.transform.DOPunchScale(Vector3.one * 1.5f, 0.4f).SetDelay(0.3f);
+            // checkIcon.DOFade(1f, 0.2f).SetDelay(0.2f);
+            // checkIcon.transform.DOPunchScale(Vector3.one * 1.5f, 0.4f).SetDelay(0.3f);
 
             SystemManager.ShowSimpleAlertLocalize("6177", false);
         }

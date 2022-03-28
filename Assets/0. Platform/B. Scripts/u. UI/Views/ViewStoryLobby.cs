@@ -178,7 +178,7 @@ namespace PIERStory
             }
 
             if (liveModels.Count > 1)
-                liveModels[1].model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 800;
+                liveModels[1].model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 1200;
         }
         
 
@@ -739,7 +739,7 @@ namespace PIERStory
 
             // 화면에 이미 스탠딩이 있다면 SortingOrder 값을 증가시켜준다.
             if (liveModels.Count > 1)
-                controlModel.model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 800;
+                controlModel.model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 1200;
 
             controlModel.ChangeLayerRecursively(controlModel.transform, GameConst.LAYER_MODEL_L);
         }

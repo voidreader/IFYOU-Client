@@ -437,8 +437,6 @@ namespace PIERStory
         }
 
 
-
-
         /// <summary>
         /// 하단의 버튼을 통해 스크롤 영역 보이게 하기
         /// </summary>
@@ -757,7 +755,10 @@ namespace PIERStory
             {
                 // 화면에는 최대 2명의 캐릭터만 세울 수 있다
                 if (liveModels.Count >= 2)
+                {
+                    SystemManager.ShowMessageWithLocalize("6257", true);
                     return;
+                }
 
                 standingElement.currentCount++;
 
@@ -837,11 +838,15 @@ namespace PIERStory
 
         public void OnClickFixPosition()
         {
-            controlModel.ChangeLayerRecursively(controlModel.transform, GameConst.LAYER_MODEL_C);
+            if (controlModel != null)
+                controlModel.ChangeLayerRecursively(controlModel.transform, GameConst.LAYER_MODEL_C);
 
             ReturnCharacterList();
         }
 
+        /// <summary>
+        /// 스탠딩 선택으로 돌아오기
+        /// </summary>
         void ReturnCharacterList()
         {
             moveCharacter = false;

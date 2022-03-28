@@ -58,17 +58,19 @@ namespace PIERStory {
             clickLevelCount = 0;
             clickVersionCount = 0;
             
-            accountBonus.SetActive(false);
+            // accountBonus.SetActive(false);
 
             if (UserManager.main == null || string.IsNullOrEmpty(UserManager.main.userKey))
                 return;
                 
             Debug.Log("#### RefreshScreen");
 
+            /*
             if (UserManager.main.accountLink == "-")
                 accountBonus.SetActive(true);
             else 
                 accountBonus.SetActive(false);
+            */
             
 
             textVersion.text = SystemManager.GetLocalizedText("5053") + " " + Application.version;      // 버전
@@ -341,7 +343,8 @@ namespace PIERStory {
             PopupManager.main.ShowPopup(p, true);
             
             
-            if(clickVersionCount >= 7 && clickLevelCount >= 3) {
+            // 7번 누르면 어드민 설정 가능 
+            if(clickVersionCount >= 7) {
                 
                 UserManager.main.SetAdminUser();
             }
@@ -356,5 +359,8 @@ namespace PIERStory {
         public void OnClickLevel() {
             clickLevelCount++;
         }
+        
+        
+
     }
 }

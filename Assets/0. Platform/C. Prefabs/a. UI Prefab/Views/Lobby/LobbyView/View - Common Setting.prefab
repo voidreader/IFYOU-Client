@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1011341468270740620
 RectTransform:
   m_ObjectHideFlags: 0
@@ -198,6 +198,7 @@ GameObject:
   - component: {fileID: 2360034233362285265}
   - component: {fileID: 2360034233362285264}
   - component: {fileID: 2360034233362285279}
+  - component: {fileID: 4267471369225344592}
   m_Layer: 5
   m_Name: View - Common Setting
   m_TagString: Untagged
@@ -291,19 +292,43 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   OnStartBehaviour: 1
   OnShowCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnShowCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 4267471369225344592}
+          m_TargetAssemblyTypeName: PIERStory.ViewCommonSetting, Assembly-CSharp
+          m_MethodName: OnStartView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnVisibleCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnVisibleCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 4267471369225344592}
+          m_TargetAssemblyTypeName: PIERStory.ViewCommonSetting, Assembly-CSharp
+          m_MethodName: OnView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnHideCallback:
     Enabled: 0
     EventName: OnHideCallback
@@ -312,12 +337,24 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnHiddenCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnHiddenCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 4267471369225344592}
+          m_TargetAssemblyTypeName: PIERStory.ViewCommonSetting, Assembly-CSharp
+          m_MethodName: OnHideView
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -892,6 +929,18 @@ MonoBehaviour:
       ToCustomValue: 1
       FromOffset: 0
       ToOffset: 0
+--- !u!114 &4267471369225344592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2360034233362285277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d158b273dde5f5d4896e2e615d048d69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2360034234481483166
 GameObject:
   m_ObjectHideFlags: 0
@@ -903,6 +952,7 @@ GameObject:
   - component: {fileID: 2360034234481483167}
   - component: {fileID: 2360034234481483153}
   - component: {fileID: 2360034234481483152}
+  - component: {fileID: 5413675880682081987}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -927,8 +977,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -60}
+  m_SizeDelta: {x: 0, y: -120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2360034234481483153
 CanvasRenderer:
@@ -968,6 +1018,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5413675880682081987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2360034234481483166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c97afc556caea1c44969477eb7ddec74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Panel: {fileID: 2360034234481483167}
+  m_HorizontalConstraintType: 0
+  m_HorizontalConstraint: 2
+  m_VerticalConstraintType: 1
+  m_VerticalConstraint: 0
+  m_DefaultAnchorMin: {x: 0, y: 0}
+  m_DefaultAnchorMax: {x: 1, y: 1}
 --- !u!1 &8528388380735072326
 GameObject:
   m_ObjectHideFlags: 0
@@ -1083,8 +1152,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2172831297553186475, guid: e11d552edde5d4245b5a2a0c09911adb, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 71
+      propertyPath: m_AnchoredPosition.y
+      value: -39
       objectReference: {fileID: 0}
     - target: {fileID: 2172831297561718266, guid: e11d552edde5d4245b5a2a0c09911adb, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1261,6 +1330,10 @@ PrefabInstance:
     - target: {fileID: 2172831298339306798, guid: e11d552edde5d4245b5a2a0c09911adb, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2172831298378202904, guid: e11d552edde5d4245b5a2a0c09911adb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -114.90001
       objectReference: {fileID: 0}
     - target: {fileID: 2172831298378960285, guid: e11d552edde5d4245b5a2a0c09911adb, type: 3}
       propertyPath: m_AnchorMax.y

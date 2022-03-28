@@ -33,10 +33,10 @@ RectTransform:
   m_Father: {fileID: 6828925314296134993}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 40}
+  m_SizeDelta: {x: 260, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6828925312749007882
 CanvasRenderer:
@@ -66,8 +66,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3984872bff68eda4e8321b11a0add002, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 536b62f92d0042c4382aeff696747ac5, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -112,8 +112,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -55.00006}
-  m_SizeDelta: {x: 0, y: -110}
+  m_AnchoredPosition: {x: 0, y: -60}
+  m_SizeDelta: {x: 0, y: -120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6828925312843360427
 MonoBehaviour:
@@ -131,7 +131,7 @@ MonoBehaviour:
   m_HorizontalConstraintType: 0
   m_HorizontalConstraint: 2
   m_VerticalConstraintType: 1
-  m_VerticalConstraint: 2
+  m_VerticalConstraint: 0
   m_DefaultAnchorMin: {x: 0, y: 0}
   m_DefaultAnchorMax: {x: 1, y: 1}
 --- !u!1 &6828925312925893200
@@ -320,9 +320,9 @@ RectTransform:
   m_Father: {fileID: 6828925314104194821}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 360, y: -151.5}
   m_SizeDelta: {x: 720, y: 101}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6828925312962395622
@@ -369,6 +369,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -431,14 +432,6 @@ MonoBehaviour:
     Category: None
     Name: None
     Custom: 0
-  ToggleGroup: {fileID: 6828925314104194816}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
   OnToggleOnCallback:
     Enabled: 1
     EventName: OnToggleOnCallback
@@ -470,6 +463,13 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+  OnInstantToggleOnCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOnCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnToggleOffCallback:
     Enabled: 1
     EventName: OnToggleOffCallback
@@ -501,9 +501,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  OnInstantToggleOffCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 6828925314104194816}
 --- !u!114 &6828925312962395623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -605,6 +613,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -667,14 +676,6 @@ MonoBehaviour:
     Category: None
     Name: None
     Custom: 0
-  ToggleGroup: {fileID: 6828925314104194816}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
   OnToggleOnCallback:
     Enabled: 1
     EventName: OnToggleOnCallback
@@ -706,6 +707,13 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+  OnInstantToggleOnCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOnCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnToggleOffCallback:
     Enabled: 1
     EventName: OnToggleOffCallback
@@ -737,9 +745,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  OnInstantToggleOffCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 6828925314104194816}
 --- !u!114 &6828925312964412732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1657,6 +1673,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
@@ -1664,14 +1683,14 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
   Id:
     Category: IFYOU
     Name: Language
     Custom: 0
-  ClearSelectedOnHide: 0
-  ClearSelectedOnShow: 0
-  AutoSelectAfterShow: 0
-  AutoSelectTarget: {fileID: 0}
 --- !u!114 &6828925313535730191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2491,7 +2510,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -45, y: 0}
-  m_SizeDelta: {x: 40, y: 40}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &6828925313635035549
 CanvasRenderer:
@@ -2514,14 +2533,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9529412, g: 0.54901963, b: 0.6313726, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ef2d4bbfdd561b646a5ba442145a37f2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 073af970f19b28644b2e026266b06ecd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2825,6 +2844,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -2887,14 +2907,6 @@ MonoBehaviour:
     Category: None
     Name: None
     Custom: 0
-  ToggleGroup: {fileID: 6828925314104194816}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
   OnToggleOnCallback:
     Enabled: 1
     EventName: OnToggleOnCallback
@@ -2926,6 +2938,13 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+  OnInstantToggleOnCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOnCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnToggleOffCallback:
     Enabled: 1
     EventName: OnToggleOffCallback
@@ -2957,9 +2976,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  OnInstantToggleOffCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 6828925314104194816}
 --- !u!114 &6828925313715969241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3011,7 +3038,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -45, y: 0}
-  m_SizeDelta: {x: 40, y: 40}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &6828925313739452769
 CanvasRenderer:
@@ -3034,14 +3061,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9529412, g: 0.54901963, b: 0.6313726, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ef2d4bbfdd561b646a5ba442145a37f2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 073af970f19b28644b2e026266b06ecd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3086,7 +3113,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -45, y: 0}
-  m_SizeDelta: {x: 40, y: 40}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &6828925313861092345
 CanvasRenderer:
@@ -3109,14 +3136,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9529412, g: 0.54901963, b: 0.6313726, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ef2d4bbfdd561b646a5ba442145a37f2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 073af970f19b28644b2e026266b06ecd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3211,6 +3238,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -3273,14 +3301,6 @@ MonoBehaviour:
     Category: None
     Name: None
     Custom: 0
-  ToggleGroup: {fileID: 6828925314104194816}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
   OnToggleOnCallback:
     Enabled: 1
     EventName: OnToggleOnCallback
@@ -3312,6 +3332,13 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+  OnInstantToggleOnCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOnCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnToggleOffCallback:
     Enabled: 1
     EventName: OnToggleOffCallback
@@ -3343,9 +3370,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  OnInstantToggleOffCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 6828925314104194816}
 --- !u!114 &6828925313895484218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3623,6 +3658,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 1
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -3685,17 +3721,16 @@ MonoBehaviour:
     Category: None
     Name: None
     Custom: 0
-  ToggleGroup: {fileID: 0}
-  OnClickCallback:
+  OnToggleOnCallback:
     Enabled: 0
-    EventName: OnClickCallback
+    EventName: OnToggleOnCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
-  OnToggleOnCallback:
+  OnInstantToggleOnCallback:
     Enabled: 0
-    EventName: OnToggleOnCallback
+    EventName: OnInstantToggleOnCallback
     Runners: []
     Event:
       m_PersistentCalls:
@@ -3707,9 +3742,18 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls: []
+  OnInstantToggleOffCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 0}
+  OverrideInteractabilityForToggles: 0
   ToggleGroupValue: 2
   Mode: 2
   HasMixedValues: 1
@@ -3899,7 +3943,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -45, y: 0}
-  m_SizeDelta: {x: 40, y: 40}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &6828925314232973484
 CanvasRenderer:
@@ -3922,14 +3966,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9529412, g: 0.54901963, b: 0.6313726, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ef2d4bbfdd561b646a5ba442145a37f2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 073af970f19b28644b2e026266b06ecd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4157,6 +4201,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -4730,9 +4775,9 @@ RectTransform:
   m_Father: {fileID: 6828925314104194821}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 360, y: -50.5}
   m_SizeDelta: {x: 720, y: 101}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6828925314729562467
@@ -4779,6 +4824,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 1
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -4841,14 +4887,6 @@ MonoBehaviour:
     Category: None
     Name: None
     Custom: 0
-  ToggleGroup: {fileID: 6828925314104194816}
-  OnClickCallback:
-    Enabled: 0
-    EventName: OnClickCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
   OnToggleOnCallback:
     Enabled: 1
     EventName: OnToggleOnCallback
@@ -4880,6 +4918,13 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+  OnInstantToggleOnCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOnCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnToggleOffCallback:
     Enabled: 1
     EventName: OnToggleOffCallback
@@ -4911,9 +4956,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  OnInstantToggleOffCallback:
+    Enabled: 0
+    EventName: OnInstantToggleOffCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
   OnValueChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ToggleGroup: {fileID: 6828925314104194816}
 --- !u!114 &6828925314729562464
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -647,9 +647,11 @@ namespace PIERStory
 
                     // 통신 완료까지 기다리고
                     yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+                    ViewGame.main.commonTop.Show();
 
                     // 팝업이 없어질때까지 기다린다
                     yield return new WaitUntil(() => PopupManager.main.ListShowingPopup.Count < 1);
+                    ViewGame.main.commonTop.Hide();
                 }
 
 

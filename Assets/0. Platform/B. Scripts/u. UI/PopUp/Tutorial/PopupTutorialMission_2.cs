@@ -26,6 +26,8 @@ namespace PIERStory
         int originalPrice = 0;
         int salePrice = 0;
 
+        const float tutorialDiscountRate = 0.25f;
+
         [Header("FreePlay Container에서 사용됨")]
         public CanvasGroup noAdsGroup;
 
@@ -37,7 +39,7 @@ namespace PIERStory
             tutorialMissionText.text = string.Format(SystemManager.GetLocalizedText("5167"), 2);
 
             originalPrice = StoryManager.main.GetProjectPremiumPassOriginPrice();
-            salePrice = (int)(originalPrice * 0.25f);
+            salePrice = (int)(originalPrice * (1f - tutorialDiscountRate));
 
             // 프리미엄 패스 이미지 세팅
             StoryData storyData = StoryManager.main.CurrentProject;

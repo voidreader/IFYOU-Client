@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using LitJson;
 
 namespace PIERStory {
 
@@ -21,7 +22,7 @@ namespace PIERStory {
         
         public bool hasNewContents = false; // 확인하지 않은 신규 컨텐츠 존재
         public GameObject newSign; // 신규 컨텐츠 존재시 표시 사인 
-        
+        JsonData galleryData = null;
         
         /// <summary>
         /// 초기화
@@ -103,8 +104,29 @@ namespace PIERStory {
 
         }
         
+        /// <summary>
+        /// 갤러리 ! 
+        /// </summary>
         void CheckNewGalleryData() {
+            galleryData = UserManager.main.GetUserGalleryImage();
             
+            if(galleryData == null) {
+                SetNotification(false);
+                return;
+            }
+            
+            // valid, gallery_open 체크 
+            // valid true 이면서 gallery_open false인 경우 새로운 일러스트 있다고 판단.
+            for(int i=0; i<galleryData.Count;i++) {
+                if(SystemManager.GetJsonNodeBool(galleryData[i], "valid") 
+                    && !SystemManager.GetJsonNodeBool(galleryData[i], "gallery_open")) {
+                    
+                    SetNotification(true);
+                    return;
+                }
+            }
+            
+            SetNotification(false);
         }
         
     }

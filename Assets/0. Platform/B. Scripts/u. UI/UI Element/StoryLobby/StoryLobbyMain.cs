@@ -144,7 +144,9 @@ namespace PIERStory {
         public virtual void InitStoryLobbyControls() {
             
             
-            Debug.Log("## InitStoryLobbyControls");
+            if(UserManager.main == null || !UserManager.main.completeReadUserData)
+                return;
+            
             
             // 기본정보 
             InitBaseInfo();
@@ -251,6 +253,9 @@ namespace PIERStory {
         /// 컨텐츠 그룹 초기화 
         /// </summary>
         void InitContentsGroup() {
+
+            if(UserManager.main == null || !UserManager.main.completeReadUserData)
+                return;
 
             if (rectContentsGroup == null)
                 return;

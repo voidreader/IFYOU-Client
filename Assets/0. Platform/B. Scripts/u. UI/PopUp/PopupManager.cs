@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
+using Sirenix.OdinInspector;
 using Doozy.Runtime.UIManager.Input;
-using Doozy.Runtime.UIManager.Containers;
 
 namespace PIERStory {
     public class PopupManager : SerializedMonoBehaviour
@@ -35,9 +34,8 @@ namespace PIERStory {
         [SerializeField] GameObject popupExp;
         public GameObject popupGameMessage;
         [SerializeField] GameObject popupLevelUp;
+        [SerializeField] GameObject popupConfirm;
         [SerializeField] GameObject popupMessageAlert;
-        [SerializeField] GameObject popupType1;
-        [SerializeField] GameObject popupType2;
         [SerializeField] GameObject popupPremiumPass;
         [SerializeField] GameObject popupSideAlert;
         [SerializeField] GameObject popupSimpleAlert;
@@ -74,11 +72,9 @@ namespace PIERStory {
             HideConfetti();
             
             DontDestroyOnLoad(this);
-                
         }
         
         void Start() {
-
             CreatePopupDict();
         }
         
@@ -102,10 +98,7 @@ namespace PIERStory {
                     else {
                         GetFrontActivePopup().Hide(); // Hide    
                     }
-                    
-                    
                 }    
-                
             }
         }
         
@@ -322,7 +315,6 @@ namespace PIERStory {
         }
         
         
-        
         #region CreatePopupDict
         
         void CreatePopupDict() {
@@ -377,21 +369,16 @@ namespace PIERStory {
                 DictPopup["LevelUp"] = popupLevelUp;
             else 
                 DictPopup.Add("LevelUp", popupLevelUp);
+
+            if (DictPopup.ContainsKey(CommonConst.POPUP_CONFIRM))
+                DictPopup[CommonConst.POPUP_CONFIRM] = popupConfirm;
+            else
+                DictPopup.Add(CommonConst.POPUP_CONFIRM, popupConfirm);
                 
             if(DictPopup.ContainsKey(CommonConst.POPUP_MESSAGE_ALERT)) 
                 DictPopup[CommonConst.POPUP_MESSAGE_ALERT] = popupMessageAlert;
             else 
                 DictPopup.Add(CommonConst.POPUP_MESSAGE_ALERT, popupMessageAlert);
-                
-            if(DictPopup.ContainsKey(CommonConst.POPUP_TYPE_1)) 
-                DictPopup[CommonConst.POPUP_TYPE_1] = popupType1;
-            else 
-                DictPopup.Add(CommonConst.POPUP_TYPE_1, popupType1);
-                
-            if(DictPopup.ContainsKey(CommonConst.POPUP_TYPE_2)) 
-                DictPopup[CommonConst.POPUP_TYPE_2] = popupType2;
-            else 
-                DictPopup.Add(CommonConst.POPUP_TYPE_2, popupType2);
                 
             if(DictPopup.ContainsKey("PremiumPass")) 
                 DictPopup["PremiumPass"] = popupPremiumPass;

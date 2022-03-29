@@ -332,13 +332,13 @@ namespace PIERStory {
             // 재화 체크 코인, 스타
             if (episodeData.currencyStarPlay == "coin" && !UserManager.main.CheckCoinProperty(episodeData.priceStarPlaySale))
             {
-                SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80013"));
+                SystemManager.ShowSystemPopupLocalize("80013", null, null, false, false);
                 return;
             }
 
             if (episodeData.currencyStarPlay == "gem" && !UserManager.main.CheckGemProperty(episodeData.priceStarPlaySale))
             {
-                SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80014"));
+                SystemManager.ShowSystemPopupLocalize("80014", null, null, false, false);
                 return;
             }
             
@@ -437,7 +437,7 @@ namespace PIERStory {
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
                 SystemManager.HideNetworkLoading();
-                SystemManager.ShowMessageWithLocalize("80074", false);
+                SystemManager.ShowMessageWithLocalize("80074");
                 return;
             }
 
@@ -453,9 +453,10 @@ namespace PIERStory {
                 if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
                     StartGame();
                 // wifi 아닌경우. 
-                else if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork) {
+                else if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork)
+                {
                     SystemManager.HideNetworkLoading();
-                    SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("80075"), ChangeNetworkSetting, OnRejectPlayWihoutWifi);
+                    SystemManager.ShowSystemPopupLocalize("80075", ChangeNetworkSetting, OnRejectPlayWihoutWifi);
                 }
             }
 

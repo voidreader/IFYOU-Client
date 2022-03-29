@@ -763,7 +763,7 @@ namespace PIERStory
                 // 화면에는 최대 2명의 캐릭터만 세울 수 있다
                 if (liveModels.Count >= 2)
                 {
-                    SystemManager.ShowMessageWithLocalize("6257", true);
+                    SystemManager.ShowMessageWithLocalize("6257");
                     return;
                 }
 

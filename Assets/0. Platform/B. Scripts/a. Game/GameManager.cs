@@ -526,7 +526,7 @@ namespace PIERStory
             // 불완전한 선택지가 있으면 안된다.
             if (currentPage.CheckIncompleteSelection())
             {
-                SystemManager.ShowMessageAlert("불완전한 선택지가 존재하여 이어하기를 진행할 수 없습니다.", false);
+                SystemManager.ShowMessageAlert("불완전한 선택지가 존재하여 이어하기를 진행할 수 없습니다.");
                 isResumePlay = false;
                 return;
             }
@@ -746,7 +746,7 @@ namespace PIERStory
                 if (UserManager.main.useRecord)
                     ShowGameEnd(null);
                 else
-                    SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("6203"), RetryPlay, EndGame);
+                    SystemManager.ShowSystemPopupLocalize("6203", RetryPlay, EndGame);
             }
 
             isPlaying = false;
@@ -1937,7 +1937,7 @@ namespace PIERStory
                 return;
 
             if(UserManager.main.CheckAdminUser())
-                SystemManager.ShowMessageAlert(string.Format("{0} : {1}", __template, __data), false);
+                SystemManager.ShowMessageAlert(string.Format("{0} : {1}", __template, __data));
         }
 
         /// <summary>

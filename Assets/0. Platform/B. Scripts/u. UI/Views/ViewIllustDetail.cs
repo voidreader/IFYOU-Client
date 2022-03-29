@@ -246,7 +246,7 @@ namespace PIERStory
                 
                 
             if(!isAvailable) { // 트위터 인스톨 되어있지 않음 
-                SystemManager.ShowMessageAlert( string.Format(SystemManager.GetLocalizedText("6253"), __type), false);
+                SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("6253"), __type));
                 yield break;
             }
             

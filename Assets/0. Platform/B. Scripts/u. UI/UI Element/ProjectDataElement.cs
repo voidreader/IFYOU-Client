@@ -25,7 +25,7 @@ namespace PIERStory
 
         public void OnClickDeleteProjectData()
         {
-            SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("6021"), DeleteProjectData, null);
+            SystemManager.ShowSystemPopupLocalize("6021", DeleteProjectData, null);
         }
 
         void DeleteProjectData()

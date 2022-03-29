@@ -180,7 +180,7 @@ namespace PIERStory {
             // targetScene 설정 
             // ! 없으면 안됨. 
             if (string.IsNullOrEmpty(targetSceneID))
-                SystemManager.ShowMessageAlert("이동해야 하는 사건ID 정보 없음", false);
+                SystemManager.ShowMessageAlert("이동해야 하는 사건ID 정보 없음");
 
             // 위치 잡기
             InitPosition();

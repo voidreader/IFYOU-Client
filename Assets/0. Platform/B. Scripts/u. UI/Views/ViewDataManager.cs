@@ -112,7 +112,7 @@ namespace PIERStory
             if (totalDataSize < 1)
                 return;
 
-            SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("6021"), DeleteAllProjectData, null);
+            SystemManager.ShowSystemPopupLocalize("6021", DeleteAllProjectData, null);
         }
 
         void DeleteAllProjectData()

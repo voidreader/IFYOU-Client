@@ -721,7 +721,7 @@ namespace PIERStory {
                 
                 // 데이터 이상할때..
                 if(firstEpisode == null || !firstEpisode.isValidData) {
-                    SystemManager.ShowMessageAlert("Episode data is not valid", false);
+                    SystemManager.ShowMessageAlert("Episode data is not valid");
                     return;
                 }
                 

@@ -379,7 +379,7 @@ namespace PIERStory {
         /// </summary>
         public void OnClickFlow() {
             if(UserManager.main.CheckAdminUser()) {
-                SystemManager.ShowLobbyPopup("슈퍼 유저입니다. 선택한 에피소드를 플레이 하겠습니까?", SuperUserEpisodeStart, null, true);
+                SystemManager.ShowSystemPopup("슈퍼 유저입니다. 선택한 에피소드를 플레이 하겠습니까?", SuperUserEpisodeStart, null);
             }
         }
         

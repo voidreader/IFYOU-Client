@@ -1,11 +1,9 @@
 using System.Collections;
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 using TMPro;
 using BestHTTP;
-using DG.Tweening;
 using Doozy.Runtime.Signals;
 
 namespace PIERStory {
@@ -28,7 +26,6 @@ namespace PIERStory {
         [SerializeField] GameObject moreNotify; // 설정 알림 표시 
 
         public GameObject attendanceButton;     // 출석 이벤트 버튼
-        public GameObject howToPlayButton; // How to play 버튼
 
         public CoinIndicator topCoin;           // 상단바에 존재하는 코인
 
@@ -49,7 +46,6 @@ namespace PIERStory {
         bool previousLogoShow = false; // 로고 보여주기 
         
         bool previousAttendanceButtonShow = false; 
-        bool previousHowToPlayButtonShop = false; // 
         
         
         public GameObject objParent; // 최상위 개체 
@@ -236,7 +232,6 @@ namespace PIERStory {
             
             // 플로팅 버튼 친구들
             previousAttendanceButtonShow = attendanceButton.activeSelf;
-            previousHowToPlayButtonShop = howToPlayButton.activeSelf;
         }
         
         /// <summary>
@@ -260,9 +255,6 @@ namespace PIERStory {
             
             // 출석버튼, 하우투플레이 버튼             
             attendanceButton.SetActive(previousAttendanceButtonShow);
-            howToPlayButton.SetActive(previousHowToPlayButtonShop);
-           
-            
         }
 
         void OnTopSaveState(Signal signal) {

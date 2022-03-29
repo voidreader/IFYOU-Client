@@ -312,7 +312,7 @@ namespace PIERStory
                 // 여기 오면... 안되는데 ㅠㅠ
                 // Force 하기전에 미리 체크해야 되나?
                 Debug.LogError("LogError in CallbackChangeAccount");
-                SystemManager.ShowLobbySubmitPopup("새로 로그인한 IDP 로그인 정보가 서버에 없습니다.");
+                SystemManager.ShowSystemPopup("새로 로그인한 IDP 로그인 정보가 서버에 없습니다.", null, null, false, false);
                 return;
             }
 
@@ -383,7 +383,7 @@ namespace PIERStory
             // 사용자 UI 정보를 갱신하는 Event 필요함!
 
             // 다했다고 안내
-            SystemManager.ShowLobbySubmitPopup("계정 정보를 불러왔습니다.");
+            SystemManager.ShowSystemPopupLocalize("6112", null, null, true, false);
         }
 
         public void SetRefreshInfo(JsonData __j)
@@ -1842,7 +1842,7 @@ namespace PIERStory
             // View 종료를 위해 Event 처리 
             // Doozy.Engine.GameEventMessage.SendEvent("PurchaseFreepass"); 
             // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_PURCHASE_FREEPASS, string.Empty);
-            SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle), true);
+            SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle));
         }
         
         /// <summary>
@@ -2017,10 +2017,10 @@ namespace PIERStory
             
             UpdateUserAbility(resultEpisodeReset[NODE_USER_ABILITY]); // 능력치 
             UpdateRawStoryAbility(resultEpisodeReset[NODE_RAW_STORY_ABILITY]);
-            
-            
+
+
             // 알림 팝업 후 목록화면 갱신처리 
-            SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("6167"));
+            SystemManager.ShowSystemPopupLocalize("6167", null, null, true, false);
 
             // * Doozy Nody StoryDetail로 돌아가기 위한 이벤트 생성 
             // * ViewStoryDetail 에서 이 시그널을 Listener를 통해서 받는다. (Inspector)
@@ -2078,9 +2078,9 @@ namespace PIERStory
             
             JsonData result = JsonMapper.ToObject(response.DataAsText);
             Debug.Log(JsonMapper.ToStringUnicode(result));
-            
+
             // 메세지 띄우고,  projectCurrent, bank 업데이트 
-            SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6220"), true);
+            SystemManager.ShowMessageWithLocalize("6220");
             SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);  // projectCurrent
             SetBankInfo(result); // 뱅크 정보 업데이트             
             
@@ -2114,9 +2114,9 @@ namespace PIERStory
             // * 아래에서 PurchaseHistory를 다시 받아온다. 
             JsonData result = JsonMapper.ToObject(response.DataAsText);
             Debug.Log(JsonMapper.ToStringUnicode(result));
-            
+
             // 메세지 띄우고,  projectCurrent, bank 업데이트 
-            SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6220"), true);
+            SystemManager.ShowMessageWithLocalize("6220");
             SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);  // projectCurrent
             SetBankInfo(result); // 뱅크 정보 업데이트             
             

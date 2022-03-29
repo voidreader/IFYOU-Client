@@ -19,6 +19,7 @@ namespace PIERStory
         float width = 300f, height = 300f, angle = 0f;
 
         Vector2 originPos = Vector2.zero, startPos = Vector2.zero, dragPos = Vector2.zero;
+        const float moveSpeed = 90f;
 
         /// <summary>
         /// 스티커 생성시 호출
@@ -134,7 +135,7 @@ namespace PIERStory
 
         float CalcMovePos(float origin, float drag, float start)
         {
-            return origin + ((drag - start) * 1.8f * Time.deltaTime);
+            return origin + ((drag - start) * moveSpeed * Time.deltaTime);
         }
     }
 }

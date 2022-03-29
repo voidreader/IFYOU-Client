@@ -83,7 +83,7 @@ namespace PIERStory
             
             // 선택지 도중에서는 스킵할 수 없음.
             if(GameManager.main.isSelectionInputWait) {
-                SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6102"), true);
+                SystemManager.ShowMessageWithLocalize("6102");
                 return;    
                 
             }
@@ -114,8 +114,6 @@ namespace PIERStory
         {
             viewGameMenu.Hide();
             ViewGame.main.ShowLog();
-            
-            // Doozy.Runtime.UIManager.Input.BackButton.Fire();
         }
 
         /// <summary>
@@ -124,7 +122,7 @@ namespace PIERStory
         public void ExitGameByMenu()
         {
             // QuitGame은 강제종료고 EndGame은 정상종료다.
-            SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("6037"), GameManager.main.QuitGame, null);
+            SystemManager.ShowSystemPopupLocalize("6037", GameManager.main.QuitGame, null, false);
         }
 
         public void OnClickAutoPlay()
@@ -146,7 +144,7 @@ namespace PIERStory
         /// </summary>
         public void OnClickReplay()
         {
-            SystemManager.ShowGamePopup(SystemManager.GetLocalizedText("6039"), ProceedStartOver, null);
+            SystemManager.ShowSystemPopupLocalize("6039", ProceedStartOver, null);
         }
         
         

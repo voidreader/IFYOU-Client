@@ -64,7 +64,7 @@ namespace PIERStory
                 // 공개중인 BGM list가 없으면 무한로딩에 빠지므로 팝업 띄워주고 빠져나가게 하자
                 if(UserManager.main.currentStoryJson["bgms"] == null || UserManager.main.currentStoryJson["bgms"].Count == 0)
                 {
-                    SystemManager.ShowMessageWithLocalize("80111", true);
+                    SystemManager.ShowMessageWithLocalize("80111");
                     return;
                 }
 

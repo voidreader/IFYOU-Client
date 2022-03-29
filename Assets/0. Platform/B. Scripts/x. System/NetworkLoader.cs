@@ -846,14 +846,13 @@ namespace PIERStory
                         // 실패로 날아오는 경우는 message와 code가 날아온다. (서버에서)
                         // 서버에서 status 400 으로 전달받는다. 
                         message = GetServerErrorMessage(response);
-                        
+
 
                         // status가 error로 날아오는 경우에 대한 메세지 처리 (2021.11.02)
                         if (!string.IsNullOrEmpty(message))
-                            SystemManager.ShowLobbySubmitPopup(message);    // 메세지 띄워주고.
+                            SystemManager.ShowSystemPopup(message, null, null, false, true);        // 메세지 띄워주고.
                         
                         SystemManager.HideNetworkLoading(); // 여기서는 무조건 제거 
-                        
                         return false; 
                     }
                     
@@ -894,7 +893,7 @@ namespace PIERStory
                     SystemManager.HideNetworkLoading();
                     // ! 오류 메세지. 
                     // 게임 밖으로 내보낸다. 
-                    SystemManager.ShowLobbyPopup(message, OnFailedServer, OnFailedServer, false);
+                    SystemManager.ShowSystemPopup(message, OnFailedServer, OnFailedServer, false, false);
                     return false; // 이제 그만 보내. 
                 }
                 
@@ -985,10 +984,10 @@ namespace PIERStory
                 
                 if(!main.isDownloadFailMessageShow && main.downloadFailCount >= 10) {
                     SystemManager.HideNetworkLoading();
-                    
+
                     // ! 오류 메세지. 
                     // 게임 밖으로 내보낸다. 
-                    SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("80084"), OnResourceDownloadFail, OnResourceDownloadFail, false);
+                    SystemManager.ShowSystemPopupLocalize("80084", OnResourceDownloadFail, OnResourceDownloadFail, false, false);
                     main.isDownloadFailMessageShow = true; // 메세지 중복 호출 막는다. 
                     return false; // 이제 그만 보내. 
                 }

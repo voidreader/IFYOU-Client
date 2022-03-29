@@ -722,7 +722,7 @@ namespace PIERStory
             // 닉네임이 공백인가?
             if(string.IsNullOrEmpty(nicknameText.text))
             {
-                SystemManager.ShowMessageWithLocalize("6199", false);
+                SystemManager.ShowMessageWithLocalize("6199");
                 return;
             }
 

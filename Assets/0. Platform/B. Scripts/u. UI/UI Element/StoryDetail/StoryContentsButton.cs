@@ -102,7 +102,7 @@ namespace PIERStory {
 
         public void OnClickLockGallery()
         {
-            SystemManager.ShowMessageWithLocalize("6198", true);
+            SystemManager.ShowMessageWithLocalize("6198");
         }
     }
 }

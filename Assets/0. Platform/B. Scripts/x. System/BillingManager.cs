@@ -223,14 +223,11 @@ namespace PIERStory {
             MainShop.OnRefreshNormalShop?.Invoke();
             MainShop.OnRefreshPackageShop?.Invoke();
             MainShop.OnRefreshTopShop?.Invoke();
-            
+
             // 모든 활성 팝업 제거
             // PopupManager.main.HideActivePopup();
-            
-            SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("6113"));
-            //SystemManager.ShowMessageWithLocalize("6113", true);
-            
-            
+
+            SystemManager.ShowSystemPopupLocalize("6113", null, null, true, false);
         }
         
         
@@ -406,7 +403,7 @@ namespace PIERStory {
             MainShop.OnRefreshNormalShop?.Invoke();
             
             // 코인을 몇개 받았습니다.
-            SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("6121"), result["gotCoin"].ToString()), true);
+            SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("6121"), result["gotCoin"].ToString()));
         }
         
     } // ? end of class

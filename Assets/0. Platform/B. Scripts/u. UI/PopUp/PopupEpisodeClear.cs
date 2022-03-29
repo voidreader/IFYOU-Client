@@ -137,7 +137,7 @@ namespace PIERStory {
             // 팝업 끝.
             base.InstanteHide();
             
-            SystemManager.ShowMessageWithLocalize("6190", true);
+            SystemManager.ShowMessageWithLocalize("6190");
         }
         
     }

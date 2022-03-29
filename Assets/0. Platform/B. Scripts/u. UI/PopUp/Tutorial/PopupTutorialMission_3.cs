@@ -41,6 +41,7 @@ namespace PIERStory
         public ImageRequireDownload passBadge;
 
         public GameObject text3;
+        public Button openButton;
 
         public override void Show()
         {
@@ -122,6 +123,7 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackTutorialUpdate, Tutorial Mission3");
+                openButton.interactable = true;
                 return;
             }
 
@@ -132,11 +134,16 @@ namespace PIERStory
                 text3.SetActive(false);
 
                 passBadge.gameObject.SetActive(true);
-                passBadge.GetComponent<Image>().DOFade(0f, 1f);
+
+                Sequence endTween = DOTween.Sequence();
+                endTween.Append(passBadge.GetComponent<Image>().DOFade(0f, 1f).SetDelay(0.8f));
+
                 RectTransform passRect = passBadge.GetComponent<RectTransform>();
 
-                passRect.DOAnchorPos(new Vector2(141, 281), 1f);
-                passRect.DOSizeDelta(new Vector2(passRect.sizeDelta.x * 0.3f, passRect.sizeDelta.y * 0.3f), 1f).OnComplete(() => Hide());
+                endTween.Join(passRect.DOAnchorPos(new Vector2(141, 281), 1f));
+                endTween.Join(passRect.DOSizeDelta(new Vector2(passRect.sizeDelta.x * 0.3f, passRect.sizeDelta.y * 0.3f), 1f)
+                );
+                endTween.onComplete = Hide;
             }
             else
             {
@@ -154,6 +161,7 @@ namespace PIERStory
         /// </summary>
         public void OnClickPassVersionOpen()
         {
+            openButton.interactable = false;
             UserManager.main.UpdateTutorialStep(3, 1, CallbackTutorialUpdate);
         }
 

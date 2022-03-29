@@ -42,7 +42,7 @@ namespace PIERStory
                     data = StoryManager.main.GetLiveIllustJsonByName(scriptRow.script_data);
                     
                     if(data == null) {
-                        SystemManager.ShowMessageAlert(string.Format("일러스트 {0}가 없습니다", scriptRow.script_data), false);
+                        SystemManager.ShowMessageAlert(string.Format("일러스트 {0}가 없습니다", scriptRow.script_data));
                         __actionCallback();
                         return;
                     }

@@ -61,7 +61,7 @@ namespace PIERStory
 
         public void OnClickChangeAppLanguage()
         {
-            SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("6126"), ChangeAppLanguage, null);
+            SystemManager.ShowSystemPopupLocalize("6126", ChangeAppLanguage, null);
         }
 
         void ChangeAppLanguage()

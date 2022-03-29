@@ -69,8 +69,7 @@ namespace PIERStory
 
 
         // Popup name
-        public const string POPUP_TYPE_1 = "Popup1";
-        public const string POPUP_TYPE_2 = "Popup2";
+        public const string POPUP_CONFIRM = "Confirm";
         public const string POPUP_MESSAGE_ALERT = "MessageAlert";
         public const string POPUP_SIMPLE_ALERT = "SimpleAlert";
 

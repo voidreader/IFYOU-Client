@@ -52,8 +52,6 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 1017000940313171276, guid: 0d3afacf85bcf55439f012ca002c53aa, type: 3}
-    - {fileID: 3650553387037731644, guid: 41f2be84d42914832a56141e84c9bda6, type: 3}
-    - {fileID: 1002557788825338103, guid: 71f7e185516793e47982877777c4220f, type: 3}
     - {fileID: 1647900737598032450, guid: e1af646a0abbc0445bd3e00665583a31, type: 3}
     - {fileID: 778640315938865503, guid: 1920de847ae63f347b883c35a13386ba, type: 3}
     - {fileID: 7365328696199000708, guid: 04e85ebe6ac3fc340bf87e921f4d74e1, type: 3}
@@ -71,6 +69,7 @@ MonoBehaviour:
     - {fileID: 8913293027133996775, guid: a8f6778d716f1124483df789b6957dce, type: 3}
     - {fileID: 4677849043790023842, guid: 9fd50362fd604cf4a8da4a06fcd31230, type: 3}
     - {fileID: 5514228708450101807, guid: dad0f0dc31f8a5040906bb0528c4fb03, type: 3}
+    - {fileID: 3650553387037731644, guid: 41f2be84d42914832a56141e84c9bda6, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -89,7 +88,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 22
+      Data: 21
     - Name: 
       Entry: 7
       Data: 
@@ -107,7 +106,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Popup2
+      Data: PremiumPass
     - Name: $v
       Entry: 10
       Data: 1
@@ -119,7 +118,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Popup1
+      Data: AdvertisementShow
     - Name: $v
       Entry: 10
       Data: 2
@@ -131,7 +130,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: PremiumPass
+      Data: EXP
     - Name: $v
       Entry: 10
       Data: 3
@@ -143,7 +142,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: AdvertisementShow
+      Data: EpisodeFirstReward
     - Name: $v
       Entry: 10
       Data: 4
@@ -155,7 +154,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: EXP
+      Data: LevelUp
     - Name: $v
       Entry: 10
       Data: 5
@@ -167,7 +166,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: EpisodeFirstReward
+      Data: Coupon
     - Name: $v
       Entry: 10
       Data: 6
@@ -179,7 +178,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: LevelUp
+      Data: Account
     - Name: $v
       Entry: 10
       Data: 7
@@ -191,7 +190,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Coupon
+      Data: MessageAlert
     - Name: $v
       Entry: 10
       Data: 8
@@ -203,7 +202,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Account
+      Data: SimpleAlert
     - Name: $v
       Entry: 10
       Data: 9
@@ -215,34 +214,10 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: MessageAlert
-    - Name: $v
-      Entry: 10
-      Data: 10
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: SimpleAlert
-    - Name: $v
-      Entry: 10
-      Data: 11
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
       Data: TutorialMission2
     - Name: $v
       Entry: 10
-      Data: 12
+      Data: 10
     - Name: 
       Entry: 8
       Data: 
@@ -278,7 +253,7 @@ MonoBehaviour:
       Data: Notice
     - Name: $v
       Entry: 10
-      Data: 13
+      Data: 11
     - Name: 
       Entry: 8
       Data: 
@@ -290,7 +265,7 @@ MonoBehaviour:
       Data: Mail
     - Name: $v
       Entry: 10
-      Data: 14
+      Data: 12
     - Name: 
       Entry: 8
       Data: 
@@ -302,7 +277,7 @@ MonoBehaviour:
       Data: Attendance
     - Name: $v
       Entry: 10
-      Data: 15
+      Data: 13
     - Name: 
       Entry: 8
       Data: 
@@ -314,7 +289,7 @@ MonoBehaviour:
       Data: TutorialMission1
     - Name: $v
       Entry: 10
-      Data: 16
+      Data: 14
     - Name: 
       Entry: 8
       Data: 
@@ -326,7 +301,7 @@ MonoBehaviour:
       Data: game_message
     - Name: $v
       Entry: 10
-      Data: 17
+      Data: 15
     - Name: 
       Entry: 8
       Data: 
@@ -338,7 +313,7 @@ MonoBehaviour:
       Data: ConnectingShop
     - Name: $v
       Entry: 10
-      Data: 18
+      Data: 16
     - Name: 
       Entry: 8
       Data: 
@@ -350,7 +325,19 @@ MonoBehaviour:
       Data: TutorialMission3
     - Name: $v
       Entry: 10
-      Data: 19
+      Data: 17
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Confirm
+    - Name: $v
+      Entry: 10
+      Data: 18
     - Name: 
       Entry: 8
       Data: 
@@ -387,14 +374,12 @@ MonoBehaviour:
   popupAttendance: {fileID: 5283812022377823881, guid: 4a9ac48cfc54f5c4cbb14b90eff7daa9, type: 3}
   popupConnectingShop: {fileID: 4677849043790023842, guid: 9fd50362fd604cf4a8da4a06fcd31230, type: 3}
   popupCoupon: {fileID: 310151797296022530, guid: 168153806c046ca40b9d8bce4093c578, type: 3}
-  popupEndingAlert: {fileID: 7106599811848501031, guid: cfbaf196828375c459c4498c9a79e264, type: 3}
   popupEpisodeClearReward: {fileID: 335719138154917145, guid: 0145f2e993eef2c4181fcb1102e2a65d, type: 3}
   popupExp: {fileID: 7365328696199000708, guid: 04e85ebe6ac3fc340bf87e921f4d74e1, type: 3}
   popupGameMessage: {fileID: 8913293027133996775, guid: a8f6778d716f1124483df789b6957dce, type: 3}
   popupLevelUp: {fileID: 7222715303000001565, guid: e5cafd607e90a0a429ac5d43ab04348d, type: 3}
+  popupConfirm: {fileID: 3650553387037731644, guid: 41f2be84d42914832a56141e84c9bda6, type: 3}
   popupMessageAlert: {fileID: 8246421121416389177, guid: 0e9a969cf144a164494c2012e463122b, type: 3}
-  popupType1: {fileID: 1002557788825338103, guid: 71f7e185516793e47982877777c4220f, type: 3}
-  popupType2: {fileID: 3650553387037731644, guid: 41f2be84d42914832a56141e84c9bda6, type: 3}
   popupPremiumPass: {fileID: 1647900737598032450, guid: e1af646a0abbc0445bd3e00665583a31, type: 3}
   popupSideAlert: {fileID: 7219009871429771918, guid: ceb14ac7b9f99544a957d1782ded9f6b, type: 3}
   popupSimpleAlert: {fileID: 5494531187766226600, guid: c465a5cf51f68d14c9cf071629a35bcb, type: 3}

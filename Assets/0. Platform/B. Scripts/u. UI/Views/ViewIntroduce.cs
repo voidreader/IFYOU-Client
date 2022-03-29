@@ -62,7 +62,7 @@ namespace PIERStory {
         
         public void OnClickStart() {
             if(introduceStory.isLock) {
-                SystemManager.ShowMessageWithLocalize("6061", true);
+                SystemManager.ShowMessageWithLocalize("6061");
                 return;
             }
             

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3233658430784789227}
   - component: {fileID: 608293829580199914}
   - component: {fileID: 8171674674814130839}
+  - component: {fileID: 4694007177505501883}
   m_Layer: 5
   m_Name: Frame
   m_TagString: Untagged
@@ -80,6 +81,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4694007177505501883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222961879743852655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70e25a38a3fbfa3468ec83113ab069b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 8171674674814130839}
+  isNativeSize: 0
+  spriteEnglish: {fileID: 21300000, guid: 90d4d4c53ab3b414b87a5d1cc4651aa2, type: 3}
+  spriteKorean: {fileID: 21300000, guid: 23af479c21d32c246a6d7c4ea44758ad, type: 3}
+  spriteJapanese: {fileID: 21300000, guid: e4fef2d012ea87d4c9c60d30c2b3d807, type: 3}
 --- !u!1 &376424296415077693
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,6 +467,7 @@ GameObject:
   - component: {fileID: 8140798180682807475}
   - component: {fileID: 9056638019874069166}
   - component: {fileID: 4486985104874911093}
+  - component: {fileID: 3959599281712774324}
   m_Layer: 5
   m_Name: TimedelTitle
   m_TagString: Untagged
@@ -514,6 +533,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3959599281712774324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042050275831031494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70e25a38a3fbfa3468ec83113ab069b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 4486985104874911093}
+  isNativeSize: 1
+  spriteEnglish: {fileID: 21300000, guid: a3be8d43d93d0f243882c70ad8ca39b2, type: 3}
+  spriteKorean: {fileID: 21300000, guid: b4b1b6acd89fb4c49901bc0e01243125, type: 3}
+  spriteJapanese: {fileID: 21300000, guid: 723b64893cb65384ab512be6e963983c, type: 3}
 --- !u!1 &1107406138641681406
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,6 +714,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
@@ -1635,6 +1674,38 @@ MonoBehaviour:
     Buttons: []
     Images: []
     Labels: []
+    contentEpisode:
+      episodeID: 
+      episodeNO: 
+      episodeNumber: 0
+      episodeTypeString: 
+      episodeType: 0
+      episodeTitle: 
+      episodeSummary: 
+      combinedEpisodeTitle: 
+      storyLobbyTitle: 
+      flowPrefix: 
+      endingType: 
+      dependEpisode: 
+      endingOpen: 0
+      nextOpenMin: 0
+      totalSceneCount: 0
+      playedSceneCount: 0
+      sceneProgressorValue: 0
+      episodeGalleryImageProgressValue: 0
+      squareImageURL: 
+      squareImageKey: 
+      popupImageURL: 
+      popupImageKey: 
+      episodeState: 0
+      purchaseState: 0
+      OneTimePlayable: 0
+      priceStarPlaySale: 0
+      priceStarPlay: 0
+      currencyOneTime: 
+      currencyStarPlay: 
+      priceOneTime: 0
+      isUnlock: 0
     imageURL: 
     imageKey: 
     isConfirm: 1
@@ -1648,6 +1719,7 @@ MonoBehaviour:
   mainCanvasGroup: {fileID: -6261489868366409965}
   isShow: 0
   isOnShow: 0
+  isBlockBackButton: 0
   imagePass: {fileID: 2958765747955590294}
   normnalTitle: {fileID: 4418886953227094356}
   timedealTitle: {fileID: 1042050275831031494}
@@ -1671,6 +1743,8 @@ MonoBehaviour:
     episodeFinishImageKey: 
     premiumPassURL: 
     premiumPassKey: 
+    categoryImageURL: 
+    categoryImageKey: 
     isLock: 0
     colorCode: 000000
     projectProgress: 0
@@ -2199,6 +2273,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
@@ -3777,6 +3854,7 @@ GameObject:
   - component: {fileID: 1423179173972018486}
   - component: {fileID: 4139412630448960648}
   - component: {fileID: 743486514205470402}
+  - component: {fileID: 758753142103425330}
   m_Layer: 5
   m_Name: NormalTitle
   m_TagString: Untagged
@@ -3800,7 +3878,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 343}
+  m_AnchoredPosition: {x: 0, y: 360}
   m_SizeDelta: {x: 490, y: 119}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4139412630448960648
@@ -3841,6 +3919,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &758753142103425330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4418886953227094356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70e25a38a3fbfa3468ec83113ab069b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 743486514205470402}
+  isNativeSize: 1
+  spriteEnglish: {fileID: 21300000, guid: cdf8ba13fdc95ee4085403845861eca2, type: 3}
+  spriteKorean: {fileID: 21300000, guid: 3ae7529cba72c5d4b86293be6fbe4e4f, type: 3}
+  spriteJapanese: {fileID: 21300000, guid: 064761d282f2c2a4587bd6c7d5c858f2, type: 3}
 --- !u!1 &4966242368169698223
 GameObject:
   m_ObjectHideFlags: 0
@@ -4835,6 +4930,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0

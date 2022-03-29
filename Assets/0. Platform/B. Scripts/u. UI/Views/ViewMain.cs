@@ -58,6 +58,14 @@ namespace PIERStory {
             // OnCategoryList = CallCategoryList;
         }
         
+        void Update() {
+            
+            // ViewMain에서 종료 띄우기.
+            if(Input.GetKeyDown(KeyCode.Escape) && PopupManager.main.GetFrontActivePopup() == null)  {
+                SystemManager.ShowSystemPopup(SystemManager.GetLocalizedText("6064"), Application.Quit, null, true);
+            }
+        }
+        
         public override void OnView()
         {
             base.OnView();

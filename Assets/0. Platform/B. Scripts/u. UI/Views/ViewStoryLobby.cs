@@ -912,57 +912,7 @@ namespace PIERStory
         /// </summary>
         public void OnClickSaveDeco()
         {
-            JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = LobbyConst.FUNC_SAVE_USER_STORY_PROFILE;
-            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
-            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
-            sending[LobbyConst.NODE_CURRENCY_LIST] = JsonMapper.ToObject("[]");
-
-            int sortingOrder = 0;
-
-            // 배경 추가
-            JsonData bgData = new JsonData();
-            bgData[LobbyConst.NODE_CURRENCY] = bgCurrency;
-            bgData[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
-            bgData[LobbyConst.NODE_POS_X] = LobbyManager.main.lobbyBackground.transform.localPosition.x;
-            bgData[LobbyConst.NODE_POS_Y] = 0f;
-            bgData[LobbyConst.NODE_WIDTH] = LobbyManager.main.lobbyBackground.transform.localScale.x;
-            bgData[LobbyConst.NODE_HEIGHT] = LobbyManager.main.lobbyBackground.transform.localScale.x;
-            bgData[LobbyConst.NODE_ANGLE] = 0f;
-
-            sending[LobbyConst.NODE_CURRENCY_LIST].Add(bgData);
-
-            sortingOrder++;
-
-            // 캐릭터 추가
-            foreach(GameModelCtrl character in liveModels)
-            {
-                JsonData modelData = new JsonData();
-                modelData[LobbyConst.NODE_CURRENCY] = character.currencyName;
-                modelData[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
-                modelData[LobbyConst.NODE_POS_X] = character.transform.localPosition.x;
-                modelData[LobbyConst.NODE_POS_Y] = 0f;
-                modelData[LobbyConst.NODE_WIDTH] = 0f;
-                modelData[LobbyConst.NODE_HEIGHT] = 0f;
-
-                if (character.transform.localScale.x < 0)
-                    modelData[LobbyConst.NODE_ANGLE] = 180f;
-                else
-                    modelData[LobbyConst.NODE_ANGLE] = 0f;
-
-                sending[LobbyConst.NODE_CURRENCY_LIST].Add(modelData);
-
-                sortingOrder++;
-            }
-
-            // 22.03.08 스티커만 추가
-            for (int i = 0; i < stickerParent.childCount; i++)
-            {
-                sending[LobbyConst.NODE_CURRENCY_LIST].Add(stickerParent.GetChild(i).GetComponent<StickerElement>().StickerJsonData(sortingOrder));
-                sortingOrder++;
-            }
-
-            NetworkLoader.main.SendPost(CallbackSaveDeco, sending, true);
+            NetworkLoader.main.SendPost(CallbackSaveDeco, SaveCurrentDeco(), true);
         }
 
         void CallbackSaveDeco(HTTPRequest req, HTTPResponse res)
@@ -985,32 +935,54 @@ namespace PIERStory
         }
 
         #endregion
-    
-    
+
+
         /// <summary>
         /// 프로젝트 코인샵 터치 
         /// </summary>
-        public void OnClickProjectCoinShop() {
-            if(string.IsNullOrEmpty(SystemManager.main.coinShopURL)) {
+        public void OnClickProjectCoinShop()
+        {
+            SystemManager.ShowSystemPopupLocalize("6260", OpenStoryCoinShop, null);
+        }
+
+        /// <summary>
+        /// 해당 작품 코인샵 오픈
+        /// </summary>
+        void OpenStoryCoinShop()
+        {
+            NetworkLoader.main.SendPost(CallbackOpenCoinShop, SaveCurrentDeco());
+        }
+
+        void CallbackOpenCoinShop(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackOpenCoinShop");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(SystemManager.main.coinShopURL))
+            {
                 Debug.LogError("No Coinshop url");
                 return;
             }
-            
+
             UserManager.main.SaveCurrentAbilityDictionary(); // 코인샵 열기전에 현재 능력치 정보 저장해놓고 시작 
-            
-            if(Application.isEditor) {
+
+            if (Application.isEditor)
+            {
                 RefreshAfterProjectCoinShop();
                 return;
             }
-            
-            
+
+
             string uidParam = string.Format("?uid={0}", UserManager.main.GetUserPinCode());
             string langParam = string.Format("&lang={0}", SystemManager.main.currentAppLanguageCode);
             string projectParam = string.Format("&project_id={0}", StoryManager.main.CurrentProjectID);
-            
-            string finalURL = SystemManager.main.coinShopURL + uidParam + langParam+projectParam;
+
+            string finalURL = SystemManager.main.coinShopURL + uidParam + langParam + projectParam;
             Debug.Log("Coinshop : " + finalURL);
-            
+
             GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
             configuration.title = SystemManager.GetLocalizedText("6186");
             configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
@@ -1022,15 +994,16 @@ namespace PIERStory
             configuration.isBackButtonVisible = false;
             configuration.contentMode = GamebaseWebViewContentMode.MOBILE;
 
-            
-            Gamebase.Webview.ShowWebView(finalURL, configuration, (error) =>{ 
+
+            Gamebase.Webview.ShowWebView(finalURL, configuration, (error) => {
                 Debug.Log("Webview Closed");
-                
+
                 // 능력치 및 프로필 재화, 상단 갱신                
                 RefreshAfterProjectCoinShop();
-                
-            }, null, null);                   
+
+            }, null, null);
         }
+
         
         /// <summary>
         /// 코인샵 웹뷰 다녀와서 리프레시
@@ -1067,6 +1040,61 @@ namespace PIERStory
             
             // * 갱신 다했으면 능력치 차이를 구해서 메세지 띄운다.
             UserManager.main.NotifyUpdatedAbility(); 
+        }
+
+        JsonData SaveCurrentDeco()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = LobbyConst.FUNC_SAVE_USER_STORY_PROFILE;
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
+            sending[LobbyConst.NODE_CURRENCY_LIST] = JsonMapper.ToObject("[]");
+
+            int sortingOrder = 0;
+
+            // 배경 추가
+            JsonData bgData = new JsonData();
+            bgData[LobbyConst.NODE_CURRENCY] = bgCurrency;
+            bgData[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
+            bgData[LobbyConst.NODE_POS_X] = LobbyManager.main.lobbyBackground.transform.localPosition.x;
+            bgData[LobbyConst.NODE_POS_Y] = 0f;
+            bgData[LobbyConst.NODE_WIDTH] = LobbyManager.main.lobbyBackground.transform.localScale.x;
+            bgData[LobbyConst.NODE_HEIGHT] = LobbyManager.main.lobbyBackground.transform.localScale.x;
+            bgData[LobbyConst.NODE_ANGLE] = 0f;
+
+            sending[LobbyConst.NODE_CURRENCY_LIST].Add(bgData);
+
+            sortingOrder++;
+
+            // 캐릭터 추가
+            foreach (GameModelCtrl character in liveModels)
+            {
+                JsonData modelData = new JsonData();
+                modelData[LobbyConst.NODE_CURRENCY] = character.currencyName;
+                modelData[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
+                modelData[LobbyConst.NODE_POS_X] = character.transform.localPosition.x;
+                modelData[LobbyConst.NODE_POS_Y] = 0f;
+                modelData[LobbyConst.NODE_WIDTH] = 0f;
+                modelData[LobbyConst.NODE_HEIGHT] = 0f;
+
+                if (character.transform.localScale.x < 0)
+                    modelData[LobbyConst.NODE_ANGLE] = 180f;
+                else
+                    modelData[LobbyConst.NODE_ANGLE] = 0f;
+
+                sending[LobbyConst.NODE_CURRENCY_LIST].Add(modelData);
+
+                sortingOrder++;
+            }
+
+            // 22.03.08 스티커만 추가
+            for (int i = 0; i < stickerParent.childCount; i++)
+            {
+                sending[LobbyConst.NODE_CURRENCY_LIST].Add(stickerParent.GetChild(i).GetComponent<StickerElement>().StickerJsonData(sortingOrder));
+                sortingOrder++;
+            }
+
+            return sending;
         }
     }
 }

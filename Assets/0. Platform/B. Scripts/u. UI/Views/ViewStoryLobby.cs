@@ -830,7 +830,7 @@ namespace PIERStory
             {
                 if (standingListContent.GetChild(i).GetComponent<ProfileItemElement>().modelName == controlModel.originModelName)
                 {
-                    standingListContent.GetChild(i).GetComponent<ProfileItemElement>().currentCount--;
+                    standingListContent.GetChild(i).GetComponent<ProfileItemElement>().currentCount = 0;
                     break;
                 }
             }

@@ -287,7 +287,7 @@ namespace PIERStory
             foreach (UIToggle toggle in typeToggles)
                 toggle.GetComponentInChildren<CanvasGroup>().alpha = 1f;
 
-            Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobbyDeco", string.Empty);            
+            Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobbyDeco", string.Empty);
         }
         
 
@@ -932,6 +932,8 @@ namespace PIERStory
 
             decoContainer.Hide();
             mainContainer.Show();
+
+            Signal.Send(LobbyConst.STREAM_IFYOU, "decoSaveComplete", string.Empty);
         }
 
         #endregion

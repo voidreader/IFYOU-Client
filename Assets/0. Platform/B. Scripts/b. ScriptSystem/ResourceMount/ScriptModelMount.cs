@@ -168,6 +168,10 @@ namespace PIERStory
                 offset_y = float.Parse(SystemManager.GetJsonNodeString(resourceData[0], CommonConst.COL_OFFSET_Y));
                 direction = SystemManager.GetJsonNodeString(resourceData[0], GameConst.COL_DIRECTION);
                 tallGrade = SystemManager.GetJsonNodeInt(resourceData[0], "tall_grade");
+                
+                if(tallGrade > 0) {
+                    Debug.Log(originModelName + " tall_grade : " + tallGrade);
+                }
             }
 
             // 데이터 가져왔으면, 모델 초기화 시작한다. 

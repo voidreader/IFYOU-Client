@@ -33,7 +33,7 @@ namespace PIERStory
         public static SystemManager main = null;
         public static bool IsGamebaseInit = false; // 게임베이스 초기화 여부 
         public bool isServerValid = false; // 업데이트 필수, 점검 
-        public static bool appFirstExecute = true;      // 앱 최초 실행?
+        
         
         
         public static float screenRatio = 0;

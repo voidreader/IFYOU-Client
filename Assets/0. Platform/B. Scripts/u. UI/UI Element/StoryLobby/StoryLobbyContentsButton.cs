@@ -116,9 +116,10 @@ namespace PIERStory {
             }
             
             // valid, gallery_open 체크 
-            // valid true 이면서 gallery_open false인 경우 새로운 일러스트 있다고 판단.
+            // 오픈했으면서, valid true 이면서 gallery_open false인 경우 새로운 일러스트 있다고 판단.
             for(int i=0; i<galleryData.Count;i++) {
-                if(SystemManager.GetJsonNodeBool(galleryData[i], "valid") 
+                if(SystemManager.GetJsonNodeBool(galleryData[i], "illust_open") 
+                    && SystemManager.GetJsonNodeBool(galleryData[i], "valid") 
                     && !SystemManager.GetJsonNodeBool(galleryData[i], "gallery_open")) {
                     
                     SetNotification(true);

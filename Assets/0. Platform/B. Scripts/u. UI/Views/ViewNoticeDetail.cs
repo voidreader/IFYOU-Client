@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 using TMPro;
 using LitJson;
@@ -38,22 +39,9 @@ namespace PIERStory
         {
             base.OnStartView();
 
-            if (SystemManager.appFirstExecute)
-            {
-                
-                // 공지 팝업창에서만 띄울때를 위한 처리. 
-                if(!isDependent) {
-                
-                    Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
-                    
-                    Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
-                    Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
-                    Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
-                    Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
-                    Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5001"), string.Empty);
-                
-                }
-            }
+            // 상단 처리
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
+            StartCoroutine(DelayTopSignal());
 
             noticeTitle.text = SystemManager.GetJsonNodeString(detailData, LobbyConst.STORY_TITLE);
             noticeDate.text = startDate;
@@ -73,18 +61,42 @@ namespace PIERStory
             }
         }
 
+        /// <summary>
+        /// 상단 정보 저장 때문에 딜레이시킨다. 
+        /// </summary>
+        /// <returns></returns>        
+        IEnumerator DelayTopSignal() {
+            yield return null;
+            yield return null;
+            yield return null;
+            
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5001"), string.Empty);            
+        }
+        
+
         public override void OnHideView()
         {
+            if(UserManager.main == null || !UserManager.main.completeReadUserData)
+                return;
+            
             base.OnHideView();
-
-            if(SystemManager.appFirstExecute && !PlayerPrefs.HasKey("noticeOneday") && SystemManager.main.noticeData != null)
-            {
-                if(!isDependent) {
-                     Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
-                }
-
+            
+            // 상단 원복 
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
+            
+            if(!isDependent) {
                 PopupBase p = PopupManager.main.GetPopup("Notice");
                 PopupManager.main.ShowPopup(p, false);
+            }
+            
+
+            if(!PlayerPrefs.HasKey("noticeOneday") && SystemManager.main.noticeData != null)
+            {
+
             }
         }
     }

@@ -17,6 +17,11 @@ namespace PIERStory
         
         bool isFromView = false;
 
+        /// <summary>
+        /// 프로모션에서 독립적으로 띄워질때는 fromView가 true로 온다. 
+        /// </summary>
+        /// <param name="__j"></param>
+        /// <param name="__fromView"></param>
         public void InitNoticeBanner(JsonData __j, bool __fromView = false)
         {
             

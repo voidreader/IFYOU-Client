@@ -338,5 +338,36 @@ namespace PIERStory
         }        
         
         
+        /// <summary>
+        /// 갤러리에서 오픈시 오픈했다고 기록을 남긴다. 
+        /// </summary>
+        void RequestLobbyOpen() {
+            
+            if(SystemManager.GetJsonNodeBool(userGalleryData, "gallery_open"))
+                return;
+            
+            JsonData sending = new JsonData();
+            sending["func"] = "requestGalleryLobbyOpen";
+            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            sending["illust_type"] = SystemManager.GetJsonNodeString(userGalleryData, "illust_type");
+            sending["illust_id"] = SystemManager.GetJsonNodeInt(userGalleryData, "illust_id");            
+            
+            NetworkLoader.main.SendPost(CallbackRequestLobbyOpen, sending, true);
+        }
+        
+        void CallbackRequestLobbyOpen(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackRequestLobbyOpen");
+                return;
+            }
+            
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            UserManager.main.SetNodeUserGalleryImages(result["galleryImages"]); // 갤러리 정보 갱신
+            
+            ViewGallery.ActionRefreshGallery?.Invoke(); // 갤러리 뷰 리프레시 
+        }
+        
     }
 }

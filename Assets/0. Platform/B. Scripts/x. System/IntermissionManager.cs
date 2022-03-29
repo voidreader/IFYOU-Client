@@ -46,6 +46,7 @@ namespace PIERStory
             yield return new WaitForSeconds(0.2f);
             
             PopupManager.main.ClearShowingPopup(); // 인터미션에서 정리하고 넘어가도록 추가 
+            CommonView.ClearActiveViews();
 
 
             // * 인터미션 씬은 오직 게임씬에서만 진입 가능하고, 에피소드 데이터가 있다.             

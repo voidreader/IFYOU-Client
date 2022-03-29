@@ -255,13 +255,10 @@ namespace PIERStory
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.X))
+            if (Input.GetKeyDown(KeyCode.Z))
             {
-                ScriptRow lastRow = currentPage.FindLastSceneRow();
-                if (lastRow != null)
-                {
-                    HandleScriptJump(lastRow);
-                }
+                Debug.Log("Z");
+                AdManager.main.ShowSelectionAD();
             }
 
         }

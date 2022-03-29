@@ -23,13 +23,12 @@ namespace PIERStory
             JsonData noticeList = SystemManager.main.noticeData;
 
             for (int i = 0; i < noticeList.Count; i++)
-                noticeElements[i].InitNoticeBanner(noticeList[i]);
+                noticeElements[i].InitNoticeBanner(noticeList[i], false);
         }
 
 
         public void OnClilckClose()
         {
-            SystemManager.appFirstExecute = false;
             Hide();
         }
 
@@ -39,7 +38,6 @@ namespace PIERStory
         public void OnClickDonotOpen()
         {
             PlayerPrefs.SetString("noticeOneday", DateTime.Today.ToString());
-            SystemManager.appFirstExecute = false;
             Hide();
         }
     }

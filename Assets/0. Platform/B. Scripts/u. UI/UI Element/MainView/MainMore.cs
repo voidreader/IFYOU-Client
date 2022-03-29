@@ -266,6 +266,7 @@ namespace PIERStory {
 
         IEnumerator RoutineOpenNotice()
         {
+            /*
             SystemManager.ShowNetworkLoading();
             //NetworkLoader.main.RequestNoticeList();
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
@@ -273,6 +274,11 @@ namespace PIERStory {
             SystemManager.HideNetworkLoading();
 
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_NOTICE, string.Empty);
+            */
+            yield return null;
+            
+            PopupBase p = PopupManager.main.GetPopup("Notice");
+            PopupManager.main.ShowPopup(p, true);
         }
 
         public void OnClickInquiry()

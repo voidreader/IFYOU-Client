@@ -181,7 +181,7 @@ namespace PIERStory {
                 
                 // 생성 
                 IFYouPromotionElement promotion = Instantiate(promotionPrefab, promotionContent).GetComponent<IFYouPromotionElement>();
-                promotion.SetPromotion(promotionList[i]["detail"]); // 초기화 
+                promotion.SetPromotion(promotionList[i], promotionList[i]["detail"]); // 초기화 
                 
                 Instantiate(pageTogglePrefab, promotionPagenation); // 페이지네이션 관련 처리 
             }

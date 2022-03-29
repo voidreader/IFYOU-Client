@@ -61,13 +61,18 @@ namespace PIERStory {
         void Update() {
             
             // ViewMain에서 종료 띄우기.
-            if(Input.GetKeyDown(KeyCode.Escape) && PopupManager.main.GetFrontActivePopup() == null)  {
+            if(Input.GetKeyDown(KeyCode.Escape) 
+                && PopupManager.main.GetFrontActivePopup() == null 
+                && ((CommonView.ListActiveViews.Count == 1 && CommonView.ListActiveViews.Contains(this)) || CommonView.ListActiveViews.Count < 1))  {
                 SystemManager.ShowSystemPopup(SystemManager.GetLocalizedText("6064"), Application.Quit, null, true);
             }
         }
         
         public override void OnView()
         {
+            if(UserManager.main == null || !UserManager.main.completeReadUserData)
+                return;            
+            
             base.OnView();
 
             // 출석보상 안 먹었으면 무조건 또 띄워!
@@ -78,7 +83,7 @@ namespace PIERStory {
             }
 
             // 앱 첫실행 시에만 출석보상 체크하고 띄워!
-            if (SystemManager.appFirstExecute && !StoryManager.enterGameScene && !PlayerPrefs.HasKey("noticeOneday") && SystemManager.main.noticeData.Count > 0)
+            if (!StoryManager.enterGameScene && !PlayerPrefs.HasKey("noticeOneday") && SystemManager.main.noticeData.Count > 0)
             {
                 PopupBase p = PopupManager.main.GetPopup("Notice");
                 PopupManager.main.ShowPopup(p, true);

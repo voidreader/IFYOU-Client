@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -54.9, y: 6}
-  m_SizeDelta: {x: 51, y: 50}
+  m_SizeDelta: {x: 55, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7391777454832798569
 CanvasRenderer:
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ae0c16ff9da7004469784392d3eb8162, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 591d4e35bb9ad13489906320bf92e7bf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -226,6 +226,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 0
   AutoHideAfterShow: 0
@@ -965,6 +968,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
@@ -1675,10 +1681,43 @@ MonoBehaviour:
     Buttons: []
     Images: []
     Labels: []
+    contentEpisode:
+      episodeID: 
+      episodeNO: 
+      episodeNumber: 0
+      episodeTypeString: 
+      episodeType: 0
+      episodeTitle: 
+      episodeSummary: 
+      combinedEpisodeTitle: 
+      storyLobbyTitle: 
+      flowPrefix: 
+      endingType: 
+      dependEpisode: 
+      endingOpen: 0
+      nextOpenMin: 0
+      totalSceneCount: 0
+      playedSceneCount: 0
+      sceneProgressorValue: 0
+      episodeGalleryImageProgressValue: 0
+      squareImageURL: 
+      squareImageKey: 
+      popupImageURL: 
+      popupImageKey: 
+      episodeState: 0
+      purchaseState: 0
+      OneTimePlayable: 0
+      priceStarPlaySale: 0
+      priceStarPlay: 0
+      currencyOneTime: 
+      currencyStarPlay: 
+      priceOneTime: 0
+      isUnlock: 0
     imageURL: 
     imageKey: 
     isConfirm: 1
     isPositive: 1
+    contentValue: 0
   overlay: {fileID: 778640314241410305}
   content: {fileID: 778640314223155234}
   autoDestroyTime: 0
@@ -1687,6 +1726,7 @@ MonoBehaviour:
   mainCanvasGroup: {fileID: 7525144267905152335}
   isShow: 0
   isOnShow: 0
+  isBlockBackButton: 0
   groupTimer: {fileID: 5756404171391605376}
   textTimer: {fileID: 6757694265194273989}
   progressBar: {fileID: 9061373141882924533}
@@ -3242,6 +3282,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Simple Button With Icon
       objectReference: {fileID: 0}
+    - target: {fileID: 6690093688856485677, guid: 90532f85fbf13d843b09c54d8d7e9acd, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 591d4e35bb9ad13489906320bf92e7bf, type: 3}
     - target: {fileID: 7974348034460383562, guid: 90532f85fbf13d843b09c54d8d7e9acd, type: 3}
       propertyPath: m_characterSpacing
       value: -4

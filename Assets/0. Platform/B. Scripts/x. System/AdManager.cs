@@ -305,7 +305,7 @@ namespace PIERStory {
         /// <summary>
         /// 선택지 선택 후 광고 보여주기 
         /// </summary>
-        void ShowSelectionAD() {
+        public void ShowSelectionAD() {
             if(UnityEngine.Random.Range(0, 100) < shareSelectionInterstitial)
                 ShowAdvertisementReady(false);
             else 

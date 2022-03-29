@@ -63,13 +63,8 @@ namespace PIERStory {
         public Sprite spriteEpisodeOpen;    // 열린 스페셜, 엔딩 에피소드
         public Sprite spriteEpisodeLock;    // 잠긴 스페셜, 엔딩 에피소드
         
+       
 
-        
-        
-        [Space][Header("출석 보상 재화")]
-        public Sprite spriteAttendanceCoin;
-        public Sprite spriteAttendanceStar;
-        public Sprite spriteAttendanceStars;
         
         [Header("== 컬러 ==")]
         public Color colorFreeBox = Color.white;

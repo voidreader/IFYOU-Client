@@ -399,10 +399,15 @@ namespace PIERStory {
                 scrollNextButton.SetActive(false);
 
             // 능력치가 한명뿐이면 무한 스크롤을 false처리 한다
-            if(UserManager.main.DictOldStoryAbility.Count > 1)
+            if(UserManager.main.DictStoryAbility.Count > 1) {
                 abilityBriefScroll.infinitelyScroll = true;
-            else
+                abilityBriefScroll.gameObject.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
+            }
+            else {
                 abilityBriefScroll.infinitelyScroll = false;
+                abilityBriefScroll.gameObject.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Clamped;
+                
+            }
 
 
             foreach (string key in UserManager.main.DictStoryAbility.Keys)

@@ -398,6 +398,13 @@ namespace PIERStory {
             if (UserManager.main.DictStoryAbility.Count == 1)
                 scrollNextButton.SetActive(false);
 
+            // 능력치가 한명뿐이면 무한 스크롤을 false처리 한다
+            if(UserManager.main.DictOldStoryAbility.Count > 1)
+                abilityBriefScroll.infinitelyScroll = true;
+            else
+                abilityBriefScroll.infinitelyScroll = false;
+
+
             foreach (string key in UserManager.main.DictStoryAbility.Keys)
             {
                 for (int i = 0; i < UserManager.main.DictStoryAbility[key].Count; i++)

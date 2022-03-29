@@ -60,6 +60,9 @@ namespace PIERStory
 
             ViewGallery.OnDelayIllustOpen?.Invoke(true);
             SystemManager.HideNetworkLoading();
+            
+            
+            RequestLobbyOpen();
         }
         
         public override void OnStartView()

@@ -15,11 +15,14 @@ namespace PIERStory
         public GameObject liveTag;
         public GameObject lockOverlay;
         public TextMeshProUGUI episodeHintText;
+        
+        public GameObject notify; // 신규 표시
 
         JsonData userGalleryData = null; // galleryImages 노드의 데이터 
         JsonData elementData = null;
 
         public bool illustOpen = false;
+        public bool isLobbyOpen = false; // 로비의 갤러리에서 한번이라도 열어본적이 있는지 
         bool isLive = false;
         bool isMinicut = false;
         string illustName = string.Empty;
@@ -41,6 +44,7 @@ namespace PIERStory
         /// <param name="__newData"></param>
         public void SetIllustData(JsonData __newData) {
             userGalleryData = __newData;
+            CheckNotify();
         }
 
         public void InitElementInfo(JsonData __j)
@@ -63,6 +67,7 @@ namespace PIERStory
             #region 일러스트 획득 관련 세팅
 
             illustOpen = SystemManager.GetJsonNodeBool(__j, CommonConst.ILLUST_OPEN);
+            isLobbyOpen = SystemManager.GetJsonNodeBool(__j, "gallery_open");
             appearEpisodeId = SystemManager.GetJsonNodeString(__j, APPEAR_EPISODE_ID);
             appearEpisodeType = SystemManager.GetJsonNodeString(__j, APPEAR_EPISODE_TYPE);
             lockOverlay.SetActive(!illustOpen);
@@ -120,8 +125,23 @@ namespace PIERStory
             }
 
             #endregion
+            
+            CheckNotify();
+
 
             gameObject.SetActive(true);
+        }
+        
+        void CheckNotify() {
+            
+            isLobbyOpen = SystemManager.GetJsonNodeBool(userGalleryData, "gallery_open");
+            
+            if(illustOpen && !isLobbyOpen) {
+                notify.gameObject.SetActive(true);
+            }
+            else {
+                notify.gameObject.SetActive(false);
+            }            
         }
 
         public void OnClickIllustDetail()

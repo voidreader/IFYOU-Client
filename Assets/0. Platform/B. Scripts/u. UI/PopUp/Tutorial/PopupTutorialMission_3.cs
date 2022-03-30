@@ -112,6 +112,7 @@ namespace PIERStory
                 return;
             }
 
+            ViewCommonTop.OnForShowCoin?.Invoke(UserManager.main.coin);
             UserManager.main.UpdateTutorialStep(3, 1, CallbackTutorialUpdate);
         }
 
@@ -127,6 +128,7 @@ namespace PIERStory
                 return;
             }
 
+            // 프리패스가 있는 경우
             if(UserManager.main.HasProjectFreepass())
             {
                 text2.SetActive(false);
@@ -147,7 +149,6 @@ namespace PIERStory
             }
             else
             {
-                ViewCommonTop.OnForShowCoin?.Invoke(UserManager.main.coin);
                 Hide();
             }
         }

@@ -15,16 +15,11 @@ namespace PIERStory
         [Header("재화")]
         public Image starButton;
         public Image coinButton;
-        public TextMeshProUGUI starText;
-        public TextMeshProUGUI coinText;
 
         public UIToggle starToggle;
         public UIToggle coinToggle;
 
         [Space(20)][Header("날짜")]
-        public Image _7dayButton;
-        public Image _30dayButton;
-        public Image _90dayButton;
         public TextMeshProUGUI _7dayText;
         public TextMeshProUGUI _30dayText;
         public TextMeshProUGUI _90dayText;
@@ -37,17 +32,11 @@ namespace PIERStory
         public Transform historyContent;
         public ScrollRect scroll;
 
-        public GameObject noneAlertText;            // 내역이 존재하지 않을 때 띄워줄 object
+        public GameObject noneAlert;            // 내역이 존재하지 않을 때 띄워줄 object
         CoinStarHistoryElement historyElement;
         List<CoinStarHistoryElement> historyElements = new List<CoinStarHistoryElement>();
 
-        [Space(20)][Header("Sprite resource")]
-        public Sprite toggleOnSprite;
-        public Sprite toggleOffSprite;
-        public Sprite dayToggleOnSprite;
-        public Sprite dayToggleOffSprite;
-
-        Color toggleOnColor = new Color32(64, 64, 64, 255);
+        Color toggleOnColor = new Color32(255, 0, 128, 255);
         Color toggleOffColor = new Color32(153, 153, 153, 255);
 
         const string FUNC_GET_USER_PROPERTY_HISTORY = "getUserPropertyHistory";
@@ -70,9 +59,8 @@ namespace PIERStory
             base.OnView();
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5047"), string.Empty);
 
@@ -102,10 +90,9 @@ namespace PIERStory
         /// </summary>
         public void EnableStarHistory()
         {
-            starButton.sprite = toggleOnSprite;
-            coinButton.sprite = toggleOffSprite;
-            starText.color = toggleOnColor;
-            coinText.color = toggleOffColor;
+            starButton.sprite = LobbyManager.main.toggleSelected;
+            coinButton.sprite = LobbyManager.main.toggleUnselected;
+            
             _7dayToggle.isOn = true;
             _30dayToggle.isOn = false;
             _90dayToggle.isOn = false;
@@ -118,10 +105,9 @@ namespace PIERStory
         /// </summary>
         public void EnableCoinHistory()
         {
-            starButton.sprite = toggleOffSprite;
-            coinButton.sprite = toggleOnSprite;
-            starText.color = toggleOffColor;
-            coinText.color = toggleOnColor;
+            starButton.sprite = LobbyManager.main.toggleUnselected;
+            coinButton.sprite = LobbyManager.main.toggleSelected;
+
             _7dayToggle.isOn = true;
             _30dayToggle.isOn = false;
             _90dayToggle.isOn = false;
@@ -137,12 +123,7 @@ namespace PIERStory
             if (!viewShow)
                 return;
 
-            _7dayButton.sprite = dayToggleOnSprite;
-            _7dayText.color = toggleOnColor;
-            _30dayButton.sprite = dayToggleOffSprite;
-            _30dayText.color = toggleOffColor;
-            _90dayButton.sprite = dayToggleOffSprite;
-            _90dayText.color = toggleOffColor;
+            SelectedDayFontSetting(_7dayText, _30dayText, _90dayText);
 
             if (starToggle.isOn)
                 InquireUserHistory(PROPERTY_GEM, 7, CallbackGemHistory);
@@ -157,12 +138,7 @@ namespace PIERStory
         /// </summary>
         public void Enable30DayHistory()
         {
-            _7dayButton.sprite = dayToggleOffSprite;
-            _7dayText.color = toggleOffColor;
-            _30dayButton.sprite = dayToggleOnSprite;
-            _30dayText.color = toggleOnColor;
-            _90dayButton.sprite = dayToggleOffSprite;
-            _90dayText.color = toggleOffColor;
+            SelectedDayFontSetting(_30dayText, _7dayText, _90dayText);
 
             if (starToggle.isOn)
                 InquireUserHistory(PROPERTY_GEM, 30, CallbackGemHistory);
@@ -176,12 +152,7 @@ namespace PIERStory
         /// </summary>
         public void Enable90DayHistory()
         {
-            _7dayButton.sprite = dayToggleOffSprite;
-            _7dayText.color = toggleOffColor;
-            _30dayButton.sprite = dayToggleOffSprite;
-            _30dayText.color = toggleOffColor;
-            _90dayButton.sprite = dayToggleOnSprite;
-            _90dayText.color = toggleOnColor;
+            SelectedDayFontSetting(_90dayText, _30dayText, _7dayText);
 
             if (starToggle.isOn)
                 InquireUserHistory(PROPERTY_GEM, 90, CallbackGemHistory);
@@ -241,13 +212,13 @@ namespace PIERStory
 
             if (__j.Count < 1)
             {
-                noneAlertText.SetActive(true);
+                noneAlert.SetActive(true);
                 return;
             }
 
-            noneAlertText.SetActive(false);
+            noneAlert.SetActive(false);
 
-            for (int i=0;i<__j.Count;i++)
+            for (int i = 0; i < __j.Count; i++)
             {
                 historyElement = Instantiate(historyElementPrefab, historyContent).GetComponent<CoinStarHistoryElement>();
                 historyElement.InitHistoryInfo(__j[i]);
@@ -257,5 +228,22 @@ namespace PIERStory
             scroll.verticalNormalizedPosition = 0f;
         }
 
+
+        void SelectedDayFontSetting(TextMeshProUGUI selected, TextMeshProUGUI unselected1, TextMeshProUGUI unselected2)
+        {
+            selected.color = toggleOnColor;
+            selected.fontStyle = FontStyles.Bold;
+            selected.characterSpacing = -4f;
+
+            UnSelectedDayFontSetting(unselected1);
+            UnSelectedDayFontSetting(unselected2);
+        }
+
+        void UnSelectedDayFontSetting(TextMeshProUGUI unselected)
+        {
+            unselected.color = toggleOffColor;
+            unselected.fontStyle = FontStyles.Normal;
+            unselected.characterSpacing = 0f;
+        }
     }
 }

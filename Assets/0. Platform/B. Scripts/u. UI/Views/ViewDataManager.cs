@@ -5,7 +5,6 @@ using UnityEngine;
 
 using TMPro;
 using Doozy.Runtime.Signals;
-using Doozy.Runtime.UIManager.Components;
 
 namespace PIERStory
 {
@@ -14,7 +13,6 @@ namespace PIERStory
         public static Action OnRequestCalcAllProejctDataSize = null;
 
         public TextMeshProUGUI totalDataSizeText;
-        public UIButton deleteAllButton;
         public GameObject projectDataSizePrefab;
         public Transform elementParent;             // 프리팹이 생성될 위치
         

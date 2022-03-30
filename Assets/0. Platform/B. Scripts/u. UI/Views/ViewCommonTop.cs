@@ -445,6 +445,9 @@ namespace PIERStory {
         /// 백버튼 터치 추가 액션 
         /// </summary>
         public void OnClickBack() {
+            
+            Debug.Log("### TOP OnClickBack");
+            
             OnBackAction?.Invoke();
         }
 

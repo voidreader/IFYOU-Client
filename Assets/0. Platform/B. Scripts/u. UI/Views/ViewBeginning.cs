@@ -24,6 +24,7 @@ namespace PIERStory {
             }
             else {
                 Debug.Log("Go Detail From Begining");
+                
                 StoryManager.main.RequestStoryInfo(SystemManager.main.givenStoryData);
                 
                 ViewCommonTop.OnRefreshSuperUser?.Invoke(); // 게임플레이 후 다시 돌아왔을때 슈퍼 유저 마크 계속 유지되도록 처리

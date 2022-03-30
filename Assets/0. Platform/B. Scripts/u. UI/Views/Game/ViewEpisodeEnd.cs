@@ -1,4 +1,5 @@
-﻿using Doozy.Runtime.Signals;
+﻿using UnityEngine;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
@@ -32,7 +33,8 @@ namespace PIERStory
             // 관련 컨트롤 초기화
             episodeEndControls.InitStoryLobbyControls();
             
-            // ViewCommonTop.OnBackAction = OnClickReturnLobby;
+            Debug.Log("## ViewEpisodeEnd BakcAction Setting");
+            ViewCommonTop.OnBackAction = OnClickReturnLobby;
         }
 
 
@@ -62,6 +64,8 @@ namespace PIERStory
         /// </summary>
         public void OnClickReturnLobby()
         {
+            Debug.Log("OnClickReturnLobby !!!!!!");
+            
             try {
             
                 // ViewEpisodeEnd 활성화 되어있지 않으면 동작하지 않음 .

@@ -47,6 +47,7 @@ namespace PIERStory
             
             // 씬 전환하면서 정리하기 2022.03.30
             ViewCommonTop.OnBackAction = null;
+            ViewNoticeDetail.isDependent = true;
             PopupManager.main.ClearShowingPopup(); // 인터미션에서 정리하고 넘어가도록 추가 
             CommonView.ClearActiveViews();
 

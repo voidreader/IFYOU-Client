@@ -21,8 +21,14 @@ namespace PIERStory {
             else {
                 // 게임씬에서 불렀음. 
                 if(ViewCommonTop.OnBackAction != null) {
+                    
+                    Debug.Log("ViewCommonStarShop :: BackACtion Save");
+                    
                     storedAction = ViewCommonTop.OnBackAction; // 저장해놓는다. 
                     ViewCommonTop.OnBackAction = null; // 널로 변경해놓는다.
+                }
+                else {
+                    Debug.Log("ViewCommonStarShop :: BackACtion IS NULL");
                 }
             }
             
@@ -45,8 +51,11 @@ namespace PIERStory {
             else {
                 // 게임씬에서 돌아갈때. 
                 if(storedAction != null) {
+                    
+                    Debug.Log("ViewCommonStarShop :: BackACtion Restore");
+                    
                     ViewCommonTop.OnBackAction = storedAction; // 콜백 돌려준다.
-                    storedAction = null;
+                    // storedAction = null;
                 }
             }
             

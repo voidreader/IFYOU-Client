@@ -220,6 +220,8 @@ namespace PIERStory
             // 데이터 불러오고 데코 모드 준비하기
             SetDecoMode(JsonMapper.ToObject(res.DataAsText));
             coinShopButton.SetActive(true);
+
+            ViewCommonTop.OnBackAction = EscapeDecoMode;
         }
         
         /// <summary>
@@ -499,6 +501,8 @@ namespace PIERStory
             moveBg = false;
             moveCharacter = false;
             loadComplete = false;
+
+            ViewCommonTop.OnBackAction = null;
         }
 
 
@@ -562,11 +566,6 @@ namespace PIERStory
         }
 
         public void OnEscapeDeocoMode(InputAction.CallbackContext context)
-        {
-            EscapeDecoMode();
-        }
-
-        public void OnClickBackDecoMode()
         {
             EscapeDecoMode();
         }

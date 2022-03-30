@@ -260,6 +260,8 @@ namespace PIERStory
                 Debug.Log("Z");
                 AdManager.main.ShowSelectionAD();
             }
+            
+
 
         }
 

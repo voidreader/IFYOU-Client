@@ -370,6 +370,7 @@ namespace PIERStory
             UserManager.main.SetNodeUserGalleryImages(result["galleryImages"]); // 갤러리 정보 갱신
             
             ViewGallery.ActionRefreshGallery?.Invoke(); // 갤러리 뷰 리프레시 
+            StoryLobbyMain.OnInitializeContentGroup?.Invoke(); // 스토리 로비 메인 컨텐츠 그룹 갱신 
         }
         
     }

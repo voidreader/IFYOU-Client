@@ -11,6 +11,14 @@ namespace PIERStory {
             ListActiveViews.Clear();
         }
         
+        public static void DeleteDumpViews() {
+            for(int i = ListActiveViews.Count-1; i>=0; i--) {
+                if(ListActiveViews[i] == null) {
+                    ListActiveViews.RemoveAt(i);
+                }
+            }
+        }
+        
         public virtual void OnStartView() {
             // Debug.Log(string.Format("[{0}] OnStart <<", this.gameObject.name));
             // Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_CHANGE_OWNER, this.gameObject.name);

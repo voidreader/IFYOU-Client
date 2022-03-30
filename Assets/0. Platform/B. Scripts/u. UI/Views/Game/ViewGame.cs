@@ -143,6 +143,25 @@ namespace PIERStory
         {
             if (!GameManager.main.SoundGroup[1].GetIsPlaying)
                 InactiveMicrophoneIcon();
+                
+            if(Input.GetKeyDown(KeyCode.Escape)) {
+                CommonView.DeleteDumpViews(); // null 인 리스트 정리
+                
+                // 백버튼 눌렀을때, 팝업창 없고, 살아있는 뷰가 Gameview 하나고, 로그 패널 없을때.
+                if(PopupManager.main.GetFrontActivePopup() == null 
+                    && CommonView.ListActiveViews.Count == 1 
+                    && CommonView.ListActiveViews.Contains(this)
+                    && !logPanel.activeSelf) {
+                        
+                    // 
+                    SystemManager.ShowSystemPopupLocalize("6037", GameManager.main.QuitGame, null, false);
+                        
+                }
+                    
+                
+            }
+
+            
         }
 
         public override void OnStartView()

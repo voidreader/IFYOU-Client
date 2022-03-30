@@ -152,7 +152,8 @@ namespace PIERStory {
             InitBaseInfo();
 
             SetPlayState(); // 플레이 및 타이머 설정 
-                        
+            
+            ResetContentsGroupPos();                    
     
             // 컨텐츠 그룹 초기화 
             InitContentsGroup();
@@ -246,6 +247,19 @@ namespace PIERStory {
         
         #region 컨텐츠 그룹 제어 (앨범, 스페셜 에피소드, 엔딩, 미션)
         
+        void ResetContentsGroupPos() {
+            if (rectContentsGroup == null)
+                return;
+
+            rectContentsGroup.DOKill();
+            rectContentsGroup.anchoredPosition = posGroupContentsOrigin; // 기본 위치로 지정 
+            canvasGroupContents.alpha = 0.8f; 
+            
+            arrowGroupContetns.localScale = Vector3.one;
+            
+            groupStoryContentsBlock.SetActive(true);
+        }
+        
         /// <summary>
         /// 컨텐츠 그룹 초기화 
         /// </summary>
@@ -254,19 +268,10 @@ namespace PIERStory {
             if(UserManager.main == null || !UserManager.main.completeReadUserData)
                 return;
 
-            if (rectContentsGroup == null)
-                return;
-
-            rectContentsGroup.DOKill();
-            rectContentsGroup.anchoredPosition = posGroupContentsOrigin; // 기본 위치로 지정 
-            canvasGroupContents.alpha = 0.8f; 
             
             for(int i=0; i< ListContentsButton.Count;i++) {
                 ListContentsButton[i].InitContentsButton();
             }
-            
-            groupStoryContentsBlock.SetActive(true);
-            
         }
         
         /// <summary>

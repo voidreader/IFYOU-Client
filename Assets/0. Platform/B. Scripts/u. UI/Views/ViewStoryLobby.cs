@@ -673,6 +673,7 @@ namespace PIERStory
                 bg.LoadImage();
             
             LobbyManager.main.lobbyBackground.sprite = bg.sprite;
+            LobbyManager.main.lobbyBackground.transform.localScale = new Vector3(bg.gameScale, bg.gameScale, 1f);
 
             movableWidth = Mathf.Abs(LobbyManager.main.lobbyBackground.size.x * LobbyManager.main.lobbyBackground.transform.localScale.x - camWidth) * 0.5f;
             CheckLoadComplete();

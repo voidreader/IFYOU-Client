@@ -145,6 +145,14 @@ namespace PIERStory
 
             decoObjects.Clear();
 
+            foreach (GameObject g in currencyElements)
+                Destroy(g);
+
+            currencyElements.Clear();
+
+            liveModels.Clear();
+            listModelMounts.Clear();
+
             usageStandingControl.SetActive(false);
 
             LobbyManager.main.lobbyBackground.sprite = null;
@@ -164,8 +172,7 @@ namespace PIERStory
             // 스탠딩 캐릭터 기본 모션 세팅
             foreach (GameModelCtrl gm in liveModels)
             {
-                
-                 yield return new WaitUntil(() => gm.DictMotion != null);
+                yield return new WaitUntil(() => gm.DictMotion != null);
                 
                 yield return new WaitUntil(() => gm.motionLists.Count == gm.DictMotion.Count && gm.motionLists.Count > 0);
                 // 임시로 랜덤하게 재생한다. 
@@ -391,8 +398,8 @@ namespace PIERStory
                             character.modelController.transform.localScale = new Vector3(-1, 1, 1);
 
                         liveModels.Add(character.modelController);
-                        decoObjects.Add(character.modelController.gameObject);
                         listModelMounts.Add(character);
+                        decoObjects.Add(character.modelController.gameObject);
 
                         break;
                 }

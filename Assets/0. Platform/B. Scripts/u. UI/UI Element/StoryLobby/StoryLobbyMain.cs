@@ -163,9 +163,6 @@ namespace PIERStory {
 
             InitAbilityBreif();
 
-            // 슈퍼유저 
-            StoryLobbyTop.OnRefreshSuperUser?.Invoke();
-            
             // 게임형로비 상단 초기화
             StoryLobbyTop.OnInitializeStoryLobbyTop?.Invoke();
 

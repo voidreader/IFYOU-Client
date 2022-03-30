@@ -2020,6 +2020,7 @@ namespace PIERStory
             
             UpdateUserAbility(resultEpisodeReset[NODE_USER_ABILITY]); // 능력치 
             UpdateRawStoryAbility(resultEpisodeReset[NODE_RAW_STORY_ABILITY]);
+            UserManager.main.SetStoryAbilityDictionary(resultEpisodeReset[NODE_USER_ABILITY]);
 
 
             // 알림 팝업 후 목록화면 갱신처리 

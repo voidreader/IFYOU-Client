@@ -15,7 +15,7 @@ namespace PIERStory
         public string originAbilityName = string.Empty; // 능력치 원 이름(한글)
         
         public bool isMain = false;
-        public float maxValue = 1000f;
+        public int maxValue = 1000;
         
         public string iconDesignUrl = string.Empty;         // 능력치 아이콘 url
         public string iconDesignKey = string.Empty;
@@ -26,7 +26,7 @@ namespace PIERStory
         public string backgroundUrl = string.Empty;         // 능력치 View에서 사용되는 이미지 Url
         public string backgroundKey = string.Empty;
 
-        public float currentValue = 0f;     // 현재 능력치양
+        public int currentValue = 0;     // 현재 능력치양
 
         public float abilityPercent = 0f;   // currentValue / maxValue
 
@@ -46,7 +46,7 @@ namespace PIERStory
             
             
             isMain = SystemManager.GetJsonNodeBool(__j, "is_main");
-            maxValue = SystemManager.GetJsonNodeFloat(__j, "max_value");
+            maxValue = SystemManager.GetJsonNodeInt(__j, "max_value");
             
             iconDesignUrl = SystemManager.GetJsonNodeString(__j, "icon_design_url");
             iconDesignKey = SystemManager.GetJsonNodeString(__j, "icon_design_key");
@@ -57,13 +57,13 @@ namespace PIERStory
             backgroundUrl = SystemManager.GetJsonNodeString(__j, "background_url");
             backgroundKey = SystemManager.GetJsonNodeString(__j, "background_key");
 
-            currentValue = SystemManager.GetJsonNodeFloat(__j, "current_value");
+            currentValue = SystemManager.GetJsonNodeInt(__j, "current_value");
 
             // 현재 값이 최대값 이상인 경우 maxValue를 넣어준다
             if (currentValue >= maxValue)
                 currentValue = maxValue;
 
-            abilityPercent = currentValue / maxValue;
+            abilityPercent = (float)((float)currentValue / (float)maxValue);
         }
     }
 }

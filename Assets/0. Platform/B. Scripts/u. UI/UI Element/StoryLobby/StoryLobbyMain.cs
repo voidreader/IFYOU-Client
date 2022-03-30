@@ -174,8 +174,22 @@ namespace PIERStory {
 
         public void MainContainerHide()
         {
+            /*
+            int abilityCount = characterStatusContent.childCount;
+            
+            for(int i=abilityCount -1; i>=0; i--) {
+                GameObject obj = characterStatusContent.GetChild(i).gameObject;    
+                abilityBriefScroll.Remove(i);
+                Destroy(obj);
+            }
+            */
+            
+            
             for (int i = 0; i < characterStatusContent.childCount; i++)
                 Destroy(characterStatusContent.GetChild(i).gameObject);
+                
+            abilityBriefScroll.Setup();
+            
         }
 
         
@@ -187,6 +201,10 @@ namespace PIERStory {
             InitBaseInfo();
             SetPlayState();
             InitFlowMap();
+            
+            
+            MainContainerHide();
+            InitAbilityBreif();
 
         }
         

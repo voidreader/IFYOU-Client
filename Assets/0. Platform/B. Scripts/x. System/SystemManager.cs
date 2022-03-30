@@ -738,7 +738,7 @@ namespace PIERStory
         /// <summary>
         /// 언어정보 세팅하기.
         /// </summary>
-        void SetCurrentLanguageCode() {
+        public void SetCurrentLanguageCode() {
             
             // 저장된 언어정보가 없을때. 
             if(!ES3.KeyExists(SystemConst.KEY_LANG)) {
@@ -2151,7 +2151,7 @@ namespace PIERStory
             string uidParam = string.Format("?uid={0}", UserManager.main.GetUserPinCode());
             string langParam = string.Format("&lang={0}", SystemManager.main.currentAppLanguageCode);
             
-            string finalURL = SystemManager.main.coinShopURL + uidParam + langParam;
+            string finalURL = SystemManager.main.coinShopURL + "/total" + uidParam + langParam;
             Debug.Log("Coinshop : " + finalURL);
             
             GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();

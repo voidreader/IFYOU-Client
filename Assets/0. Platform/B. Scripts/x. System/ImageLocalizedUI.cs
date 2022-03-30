@@ -28,9 +28,15 @@ namespace PIERStory {
             
             if(SystemManager.main == null)
                 return;
+                
+            if(targetImage == null)
+                return;
             
             if(ES3.KeyExists(SystemConst.KEY_LANG))
                 SystemManager.main.currentAppLanguageCode = ES3.Load<string>(SystemConst.KEY_LANG);        
+            else {
+                
+            }
                 
             if(SystemManager.main.currentAppLanguageCode == "EN") {
                 targetImage.sprite = spriteEnglish;
@@ -45,7 +51,7 @@ namespace PIERStory {
                 targetImage.sprite = spriteEnglish;
             }
             
-            if(isNativeSize) {
+            if(isNativeSize && targetImage != null && targetImage.sprite != null) {
                 targetImage.SetNativeSize();
             }
         }

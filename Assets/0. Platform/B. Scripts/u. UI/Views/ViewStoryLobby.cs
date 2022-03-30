@@ -287,7 +287,7 @@ namespace PIERStory
             // 상단의 프리미엄 패스, 버튼 두개 비활성화
             premiumpassButton.SetActive(false);
             premiumpassBadge.SetActive(false);
-            showDetailButton.SetActive(false);
+            //showDetailButton.SetActive(false);
 
             ActiveInteractable(true);
 
@@ -489,7 +489,7 @@ namespace PIERStory
 
             premiumpassButton.SetActive(!UserManager.main.HasProjectFreepass());
             premiumpassBadge.SetActive(UserManager.main.HasProjectFreepass());
-            showDetailButton.SetActive(true);
+            //showDetailButton.SetActive(true);
 
             foreach(GameModelCtrl models in liveModels)
                 models.ChangeLayerRecursively(models.transform, GameConst.LAYER_MODEL_C);

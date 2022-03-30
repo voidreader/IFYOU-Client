@@ -8,6 +8,7 @@ namespace PIERStory {
         
         [SerializeField] string _textID = string.Empty; // 사용할 텍스트ID 
         [SerializeField] TextMeshProUGUI _text = null;
+        [SerializeField] string _localizedText = string.Empty;
         
         void Awake() {
             // 없으면 GetComponent해주지만, Inspector에서 설정해주는게 제일 좋다. 
@@ -30,7 +31,11 @@ namespace PIERStory {
                 return;
                 
             // 언어별 텍스트 불러와서 할당해주기
-            _text.text = SystemManager.GetLocalizedText(_textID);
+            _localizedText = SystemManager.GetLocalizedText(_textID);
+            if(!string.IsNullOrEmpty(_localizedText)) {
+                _text.text = _localizedText;
+            }
+            
         }
         
         void OnEnable() {

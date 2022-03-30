@@ -24,6 +24,8 @@ namespace PIERStory
 
             for (int i = 0; i < noticeList.Count; i++)
                 noticeElements[i].InitNoticeBanner(noticeList[i], false);
+                
+            SystemManager.noticePopupExcuted = true;
         }
 
 

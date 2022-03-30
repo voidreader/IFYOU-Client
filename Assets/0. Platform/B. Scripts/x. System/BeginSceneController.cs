@@ -16,11 +16,13 @@ namespace PIERStory {
             yield return null;
             SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-            
+        
+        void OnApplicationPause(bool pauseStatus) {
+            // 이상태에서 백그라운드로 돌릴때. 
+            if(pauseStatus) {
+                Debug.Log("OnApplicationPause in BeginScene");
+                Application.Quit();
+            }
         }
     }
 }

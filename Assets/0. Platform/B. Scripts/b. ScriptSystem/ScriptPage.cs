@@ -150,9 +150,7 @@ namespace PIERStory
             
             yield return StartCoroutine(RoutineInstantiateLiveIllustsAndObjects()); 
             // yield return StartCoroutine(RoutineInstantiateLiveCharacters()); 
-            
-            yield return new WaitForSeconds(0.5f);
-            
+            // yield return new WaitForSeconds(0.5f);
             yield return StartCoroutine(RoutineInstantiateLiveCharacters()); 
             // yield return StartCoroutine(RoutineInstantiateLiveIllustsAndObjects());             
             
@@ -413,7 +411,7 @@ namespace PIERStory
             }
             
             Debug.Log("#### RoutineInstantiateLiveIllustsAndObjects #2");
-            yield return new WaitForSeconds(1);
+            // yield return new WaitForSeconds(1);
             
             for(int i=0; i<ListLiveObjectMount.Count;i++) {
                 if(ListLiveObjectMount[i].isLoaded) {
@@ -421,7 +419,7 @@ namespace PIERStory
                     yield return new WaitForSeconds(0.1f);
                     
                     ListLiveObjectMount[i].InstantiateCubismModel();
-                    yield return new WaitForSeconds(1);
+                    yield return new WaitForSeconds(0.5f);
                     
                     // Hide
                     if(ListLiveObjectMount[i].liveImageController != null)
@@ -435,7 +433,7 @@ namespace PIERStory
                     yield return new WaitForSeconds(0.1f);
                     
                     ListLiveIllustMount[i].InstantiateCubismModel();
-                    yield return new WaitForSeconds(1);
+                    yield return new WaitForSeconds(0.5f);
                     
                     
                     // Hide
@@ -461,7 +459,7 @@ namespace PIERStory
             }
             
             Debug.Log("#### RoutineInstantiateLiveCharacters #2");
-            yield return new WaitForSeconds(1);
+            // yield return new WaitForSeconds(1);
             
             for(int i=0; i<ListModelMount.Count;i++) {
                 if(ListModelMount[i].isLoaded) {
@@ -469,11 +467,20 @@ namespace PIERStory
                     yield return new WaitForSeconds(0.1f);
                     
                     ListModelMount[i].InstantiateCubismModel();
-                    yield return new WaitForSeconds(1);
+                    yield return new WaitForSeconds(0.5f);
                     
                     // Hide
-                    if(ListModelMount[i].modelController != null)
+                    if(ListModelMount[i].modelController != null) {
+                        
+                        // 어드민에서 tall 지정되지 않았으면 SetBoxColliders 설정
+                        if(ListModelMount[i].modelController.tallGrade <= 0) {
+                            Debug.Log(ListModelMount[i].originModelName + "tall is not set");
+                            ListModelMount[i].modelController.SetBoxColliders();
+                            yield return new WaitForSeconds(0.5f);
+                        }
+                        
                         ListModelMount[i].HideModel();
+                    }
                 }
             }
             
@@ -523,6 +530,7 @@ namespace PIERStory
 
                 // yield return new WaitUntil(() => checker > pageModelCount); // 모델 하나씩.. 
             }
+            
             
             yield return new WaitUntil(()=> pageModelCount > 0);
             

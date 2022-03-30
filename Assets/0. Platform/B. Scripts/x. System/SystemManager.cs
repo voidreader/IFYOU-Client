@@ -32,6 +32,7 @@ namespace PIERStory
 
         public static SystemManager main = null;
         public static bool IsGamebaseInit = false; // 게임베이스 초기화 여부 
+        public static bool noticePopupExcuted = false; // 한번이라도 공지 팝업이 실행되면 true로 변경됨
         public bool isServerValid = false; // 업데이트 필수, 점검 
         
         
@@ -2279,6 +2280,8 @@ namespace PIERStory
                 render.Material.shader = cubismShader;
             }   
         }
+        
+        
          
     }
 }

@@ -715,7 +715,7 @@ namespace PIERStory
         public void SetBoxColliders()
         {
             if (model == null) {
-                Debug.Log(this.originModelName + " is not created");
+                Debug.LogError(this.originModelName + " is not created");
                 return;
             }
 

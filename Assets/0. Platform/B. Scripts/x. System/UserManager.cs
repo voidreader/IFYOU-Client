@@ -1382,6 +1382,9 @@ namespace PIERStory
         /// </summary>
         /// <returns></returns>
         public JsonData GetUserGalleryImage() {
+            if(currentStoryJson == null || !currentStoryJson.ContainsKey(NODE_USER_GALLERY_IMAGES))
+                return null;
+            
             return currentStoryJson[NODE_USER_GALLERY_IMAGES];
         }
         

@@ -164,6 +164,9 @@ namespace PIERStory
             // 스탠딩 캐릭터 기본 모션 세팅
             foreach (GameModelCtrl gm in liveModels)
             {
+                
+                 yield return new WaitUntil(() => gm.DictMotion != null);
+                
                 yield return new WaitUntil(() => gm.motionLists.Count == gm.DictMotion.Count && gm.motionLists.Count > 0);
                 // 임시로 랜덤하게 재생한다. 
                 gm.PlayLobbyAnimation(gm.motionLists[UnityEngine.Random.Range(0, gm.motionLists.Count)]);

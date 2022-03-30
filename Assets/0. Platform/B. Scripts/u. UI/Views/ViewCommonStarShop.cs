@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,11 +11,20 @@ namespace PIERStory {
     {
         public static bool isCommonShopOpen = false;
         
+        public static Action storedAction = null;
+        
         public override void OnStartView() {
             base.OnStartView();
             
             if(GameManager.main == null)
                 Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
+            else {
+                // 게임씬에서 불렀음. 
+                if(ViewCommonTop.OnBackAction != null) {
+                    storedAction = ViewCommonTop.OnBackAction; // 저장해놓는다. 
+                    ViewCommonTop.OnBackAction = null; // 널로 변경해놓는다.
+                }
+            }
             
             StartCoroutine(DelaySendingSignal());
             
@@ -32,6 +42,13 @@ namespace PIERStory {
             
             if(GameManager.main == null)
                 Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
+            else {
+                // 게임씬에서 돌아갈때. 
+                if(storedAction != null) {
+                    ViewCommonTop.OnBackAction = storedAction; // 콜백 돌려준다.
+                    storedAction = null;
+                }
+            }
             
             isCommonShopOpen = false;
         }

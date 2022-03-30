@@ -84,9 +84,16 @@ namespace PIERStory {
 
             // 앱 첫실행 시에만 출석보상 체크하고 띄워!
             if (!StoryManager.enterGameScene && !PlayerPrefs.HasKey("noticeOneday") && SystemManager.main.noticeData.Count > 0)
-            {
-                PopupBase p = PopupManager.main.GetPopup("Notice");
-                PopupManager.main.ShowPopup(p, true);
+            {   
+                Debug.Log("<color=yellow> Notice Call </color>");
+                
+                // 실행당 한번만 오픈                 
+                if(!SystemManager.noticePopupExcuted) {
+                    PopupBase p = PopupManager.main.GetPopup("Notice");
+                    PopupManager.main.ShowPopup(p, true);
+                    SystemManager.noticePopupExcuted = true; // true 로 설정. 이번 실행헤서는 또 뜨지 않게. 
+                }
+                
             }
 
             LobbyManager.main.RequestPlatformLoadingImages(); // 플랫폼 로딩 이미지 다운로드 처리 

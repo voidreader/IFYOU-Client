@@ -87,8 +87,11 @@ namespace PIERStory
             
             // 예외적으로 mail_type inapp_origin은 아이콘 고정 처리 
             if(mailType == "inapp_origin") {
-                
-                currencyIcon.SetTexture2D(SystemManager.main.spriteInappOriginIcon.texture);
+                currencyIcon.gameObject.SetActive(false);
+                imageBaseCurrencyIcon.gameObject.SetActive(true);
+                imageBaseCurrencyIcon.sprite = SystemManager.main.spriteInappOriginIcon;
+                imageBaseCurrencyIcon.SetNativeSize();
+                // currencyIcon.SetTexture2D(SystemManager.main.spriteInappOriginIcon.texture);
                 
                     
                 mailContent.text = SystemManager.GetLocalizedText("80083");

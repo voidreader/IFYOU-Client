@@ -18,6 +18,10 @@ namespace PIERStory {
         }
         
         void OnApplicationPause(bool pauseStatus) {
+            
+            if(Application.isEditor)
+                return;
+            
             // 이상태에서 백그라운드로 돌릴때. 
             if(pauseStatus) {
                 Debug.Log("OnApplicationPause in BeginScene");

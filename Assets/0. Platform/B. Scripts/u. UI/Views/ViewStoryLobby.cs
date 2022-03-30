@@ -26,7 +26,6 @@ namespace PIERStory
         public static bool loadComplete = false;
 
         [Header("메인 관련 제어")]
-        public GameObject backButton;               // 뒤로가기 버튼
         public GameObject premiumpassButton;        // 프리미엄 패스 버튼
         public GameObject premiumpassBadge;         // 프리미엄 패스 뱃지
         public GameObject showDetailButton;         // 꾸미기 자세히 보기 버튼
@@ -113,9 +112,10 @@ namespace PIERStory
             OnDisableAllOptionals = DisableAllStickerOptionals;
             
             // 진입시에 백버튼 시그널 추가 
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
+
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
             
         }
@@ -308,7 +308,6 @@ namespace PIERStory
         {
             if(mainContainer.isVisible)
             {
-                backButton.SetActive(false);
                 premiumpassButton.SetActive(false);
                 premiumpassBadge.SetActive(false);
                 showDetailIcon.sprite = spriteIconEyeClose;
@@ -316,7 +315,6 @@ namespace PIERStory
             }
             else
             {
-                backButton.SetActive(true);
                 premiumpassButton.SetActive(!UserManager.main.HasProjectFreepass());
                 premiumpassBadge.SetActive(UserManager.main.HasProjectFreepass());
                 showDetailIcon.sprite = spriteIconEyeOpen;

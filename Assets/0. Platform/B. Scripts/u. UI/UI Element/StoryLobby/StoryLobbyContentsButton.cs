@@ -29,26 +29,32 @@ namespace PIERStory {
         /// </summary>
         public void InitContentsButton() {
             
-            newSign.SetActive(false); 
-            
-            
-            // 컨텐츠 타입에 따라 처리가 다르다. 
-            switch(contentsType) {
-                case StoryContentsType.Gallery:
-                CheckNewGalleryData();
-                break;
+            try {
                 
-                case StoryContentsType.Ending:
-                CheckNewEndingData();
-                break;
                 
-                case StoryContentsType.Special:
-                CheckNewSpecialEpisodes();
-                break;
+                newSign.SetActive(false); 
                 
-                case StoryContentsType.Mission:
-                CheckUnlockMission(); 
-                break;
+                
+                // 컨텐츠 타입에 따라 처리가 다르다. 
+                switch(contentsType) {
+                    case StoryContentsType.Gallery:
+                    CheckNewGalleryData();
+                    break;
+                    
+                    case StoryContentsType.Ending:
+                    CheckNewEndingData();
+                    break;
+                    
+                    case StoryContentsType.Special:
+                    CheckNewSpecialEpisodes();
+                    break;
+                    
+                    case StoryContentsType.Mission:
+                    CheckUnlockMission(); 
+                    break;
+                    
+                }
+            } catch(System.Exception e) {
                 
             }
             

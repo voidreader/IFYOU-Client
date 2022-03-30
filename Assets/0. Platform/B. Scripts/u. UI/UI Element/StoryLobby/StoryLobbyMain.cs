@@ -52,6 +52,10 @@ namespace PIERStory {
         public Transform characterStatusContent;
         public DanielLochner.Assets.SimpleScrollSnap.SimpleScrollSnap abilityBriefScroll;
         public GameObject scrollNextButton;
+        
+        // 생성된 좌측 하단 캐릭터 세트 
+        public List<CharacterAbilityBriefElement> ListBriefElements = new List<CharacterAbilityBriefElement>();
+        
 
         public RectTransform rectContentsGroup; // 컨텐츠 그룹 
         public CanvasGroup canvasGroupContents; // 컨텐츠 그룹 canvas group
@@ -171,7 +175,7 @@ namespace PIERStory {
             ViewStoryLobby.OnInActiveInteractable?.Invoke(false);
         }
 
-
+        
         public void MainContainerHide()
         {
             /*
@@ -188,7 +192,7 @@ namespace PIERStory {
             for (int i = 0; i < characterStatusContent.childCount; i++)
                 Destroy(characterStatusContent.GetChild(i).gameObject);
                 
-            abilityBriefScroll.Setup();
+            
             
         }
 
@@ -203,8 +207,22 @@ namespace PIERStory {
             InitFlowMap();
             
             
-            MainContainerHide();
-            InitAbilityBreif();
+
+            int briefIndex = 0;
+            
+            foreach (string key in UserManager.main.DictStoryAbility.Keys)
+            {
+                for (int i = 0; i < UserManager.main.DictStoryAbility[key].Count; i++)
+                {
+                    // 메인 능력치만 뽑아서 넣어준다
+                    if (UserManager.main.DictStoryAbility[key][i].isMain)
+                    {
+                        ListBriefElements[briefIndex++].mainAbilityGauge.fillAmount = UserManager.main.DictStoryAbility[key][i].abilityPercent;
+                        break;
+                    }
+                }
+            }            
+            
 
         }
         
@@ -433,6 +451,8 @@ namespace PIERStory {
                 abilityBriefScroll.gameObject.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Clamped;
                 
             }
+            
+            ListBriefElements.Clear();
 
 
             foreach (string key in UserManager.main.DictStoryAbility.Keys)
@@ -444,6 +464,9 @@ namespace PIERStory {
                     {
                         abilityBrief = Instantiate(abilityBriefPrefab, characterStatusContent).GetComponent<CharacterAbilityBriefElement>();
                         abilityBrief.InitAbilityBrief(UserManager.main.DictStoryAbility[key][i]);
+                        
+                        ListBriefElements.Add(abilityBrief);
+                        
                         break;
                     }
                 }
@@ -453,6 +476,9 @@ namespace PIERStory {
             // 생성 후 panel 수 갱신
             abilityBriefScroll.Setup();
         }
+        
+        
+        
 
 
         

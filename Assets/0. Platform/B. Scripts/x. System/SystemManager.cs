@@ -34,6 +34,9 @@ namespace PIERStory
         public static bool IsGamebaseInit = false; // 게임베이스 초기화 여부 
         public static bool noticePopupExcuted = false; // 한번이라도 공지 팝업이 실행되면 true로 변경됨
         public bool isServerValid = false; // 업데이트 필수, 점검 
+        public bool isAddressableCatalogUpdated = false; // 어드레서블 카탈로그 업데이트 여부 
+        
+        
         
         
         
@@ -270,7 +273,7 @@ namespace PIERStory
         void ChangeQuality() {
             
             
-            Debug.Log(string.Format("Current QualityLevel is [{0}]", QualitySettings.GetQualityLevel()));
+            // Debug.Log(string.Format("Current QualityLevel is [{0}]", QualitySettings.GetQualityLevel()));
             
             // iOS만 실행하도록 전처리 
             // iOS는 가장 낮은 퀄리티가 기본으로 세팅 되어있다. 
@@ -422,7 +425,8 @@ namespace PIERStory
             
             // * 여기서 부터 초기화 이후 로직.
             Debug.Log("Gamebase Initialization succeeded.");
-            ViewTitle.OnUpdateLoadingText?.Invoke(2);
+            // ViewTitle.OnUpdateLoadingText?.Invoke(2);
+            // ViewTitle.ActionTitleLoading("gamebase");
             
             IsGamebaseInit = true; // 초기화 완료 
             Gamebase.AddEventHandler(GamebaseObserverHandler);
@@ -605,10 +609,10 @@ namespace PIERStory
             // 버전 비교를 시작한다.
             JsonData result = JsonMapper.ToObject(response.DataAsText);
                     
-            Debug.Log(JsonMapper.ToStringUnicode(result["master"]));
+            // Debug.Log(JsonMapper.ToStringUnicode(result["master"]));
             JsonData masterInfo = result["master"]; // 마스터 정보 
             
-            Debug.Log(JsonMapper.ToStringUnicode(result["ad"]));
+            // Debug.Log(JsonMapper.ToStringUnicode(result["ad"]));
             JsonData adInfo = result["ad"]; // 광고 기준정보 
             int serverlocalVer = int.Parse(masterInfo["local_ver"].ToString()); // 서버 로컬라이징 텍스트 버전
             
@@ -643,7 +647,7 @@ namespace PIERStory
             localVer = GetDeviceLocalVer();
             localizedTextJSON = GetDeviceLocalData();
             
-            Debug.Log(string.Format("device local ver : [{0}] / server local ver : [{1}]", localVer, serverlocalVer));
+            // Debug.Log(string.Format("device local ver : [{0}] / server local ver : [{1}]", localVer, serverlocalVer));
             
             // 비교해서 다르면 서버한테 텍스트 정보를 요청한다.
             // 버전 똑같고, 데이터도 잘 있으면 아무것도 안함.
@@ -811,7 +815,8 @@ namespace PIERStory
         public void LoginPlatform(bool isForceGuest = false)
         {
             
-            ViewTitle.OnUpdateLoadingText?.Invoke(3);
+            // ViewTitle.OnUpdateLoadingText?.Invoke(3);
+            
             
             // 마지막에 진행한 로그인 방법을 가져와서 실행합니다.(GUEST, Google, Apple)
             string lastLoggedInProvider = Gamebase.GetLastLoggedInProvider();

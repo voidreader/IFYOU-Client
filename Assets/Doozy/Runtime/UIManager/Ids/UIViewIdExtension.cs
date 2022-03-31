@@ -45,9 +45,7 @@ namespace Doozy.Runtime.UIManager
         {
             EpisodeEnd,
             InGame,
-            InGameLoading,
-            InGameMenu,
-            InGameOption
+            InGameLoading
         }
 
         public enum IFYOU
@@ -58,7 +56,6 @@ namespace Doozy.Runtime.UIManager
             Category,
             CoinStarHistory,
             DataManager,
-            DecoMode,
             Ending,
             EndingSelection,
             Gallery,
@@ -73,17 +70,14 @@ namespace Doozy.Runtime.UIManager
             Navigation,
             Notice,
             NoticeDetail,
-            Profile,
             Search,
             Shop,
-            Snippet,
             SoundDetail,
             SpecialEpisode,
             StoryDetail,
             StoryLoading,
             StoryLobby,
-            Title,
-            UserPlayHistory
+            Title
         }    
     }
 }

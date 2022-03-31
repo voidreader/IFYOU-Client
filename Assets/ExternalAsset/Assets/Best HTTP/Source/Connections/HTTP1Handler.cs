@@ -175,7 +175,7 @@ namespace BestHTTP.Connections
                         //  request events are processed before connection events (just switching the EnqueueRequestEvent and EnqueueConnectionEvent wouldn't work
                         //  see order of ProcessQueues in HTTPManager.OnUpdate!) and it would pick this very same closing/closed connection!
 
-                        if (proposedConnectionState == HTTPConnectionStates.Closed)
+                        if (proposedConnectionState == HTTPConnectionStates.Closed || proposedConnectionState == HTTPConnectionStates.ClosedResendRequest)
                             ConnectionEventHelper.EnqueueConnectionEvent(new ConnectionEventInfo(this.conn, this.conn.CurrentRequest));
                         else
                             RequestEventHelper.EnqueueRequestEvent(new RequestEventInfo(this.conn.CurrentRequest, RequestEvents.Resend));
@@ -219,7 +219,7 @@ namespace BestHTTP.Connections
 
         private bool Receive(HTTPRequest request)
         {
-            SupportedProtocols protocol = request.ProtocolHandler == SupportedProtocols.Unknown ? HTTPProtocolFactory.GetProtocolFromUri(request.CurrentUri) : request.ProtocolHandler;
+            SupportedProtocols protocol = HTTPProtocolFactory.GetProtocolFromUri(request.CurrentUri);
 
             if (HTTPManager.Logger.Level == Logger.Loglevels.All)
                 HTTPManager.Logger.Verbose("HTTPConnection", string.Format("[{0}] - Receive - protocol: {1}", this.ToString(), protocol.ToString()), this.Context, request.Context);

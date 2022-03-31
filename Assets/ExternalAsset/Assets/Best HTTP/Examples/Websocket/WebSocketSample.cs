@@ -15,7 +15,7 @@ namespace BestHTTP.Examples.Websockets
 
         [SerializeField]
         [Tooltip("The WebSocket address to connect")]
-        private string address = "wss://echo.websocket.org";
+        private string address = "wss://besthttpwebgldemo.azurewebsites.net/ws";
 
         [SerializeField]
         private InputField _input;

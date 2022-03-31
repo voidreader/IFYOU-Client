@@ -30,16 +30,21 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Cms
 
 			this.originatorInfo = originatorInfo;
 
-			// TODO
 			// "There MUST be at least one element in the collection."
 			this.recipientInfos = recipientInfos;
+			if (this.recipientInfos.Count < 1)
+				throw new ArgumentException("AuthEnvelopedData requires at least 1 RecipientInfo");
 
 			this.authEncryptedContentInfo = authEncryptedContentInfo;
 
-			// TODO
 			// "The authAttrs MUST be present if the content type carried in
 			// EncryptedContentInfo is not id-data."
 			this.authAttrs = authAttrs;
+			if (!authEncryptedContentInfo.ContentType.Equals(CmsObjectIdentifiers.Data))
+			{
+				if (authAttrs == null || authAttrs.Count < 1)
+					throw new ArgumentException("authAttrs must be present with non-data content");
+			}
 
 			this.mac = mac;
 
@@ -51,10 +56,11 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Cms
 		{
 			int index = 0;
 
-			// TODO
 			// "It MUST be set to 0."
 			Asn1Object tmp = seq[index++].ToAsn1Object();
-			version = (DerInteger)tmp;
+			version = DerInteger.GetInstance(tmp);
+			if (!version.HasValue(0))
+				throw new ArgumentException("AuthEnvelopedData version number must be 0");
 
 			tmp = seq[index++].ToAsn1Object();
 			if (tmp is Asn1TaggedObject)
@@ -63,9 +69,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Cms
 				tmp = seq[index++].ToAsn1Object();
 			}
 
-			// TODO
 			// "There MUST be at least one element in the collection."
 			recipientInfos = Asn1Set.GetInstance(tmp);
+			if (recipientInfos.Count < 1)
+				throw new ArgumentException("AuthEnvelopedData requires at least 1 RecipientInfo");
 
 			tmp = seq[index++].ToAsn1Object();
 			authEncryptedContentInfo = EncryptedContentInfo.GetInstance(tmp);
@@ -78,9 +85,13 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Cms
 			}
 			else
 			{
-				// TODO
 				// "The authAttrs MUST be present if the content type carried in
 				// EncryptedContentInfo is not id-data."
+				if (!authEncryptedContentInfo.ContentType.Equals(CmsObjectIdentifiers.Data))
+				{
+					if (authAttrs == null || authAttrs.Count < 1)
+						throw new ArgumentException("authAttrs must be present with non-data content");
+				}
 			}
 
 			mac = Asn1OctetString.GetInstance(tmp);

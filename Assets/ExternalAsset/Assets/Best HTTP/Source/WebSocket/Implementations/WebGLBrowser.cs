@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+using BestHTTP.PlatformSupport.Memory;
+
 namespace BestHTTP.WebSocket
 {
     delegate void OnWebGLWebSocketOpenDelegate(uint id);
@@ -46,7 +48,14 @@ namespace BestHTTP.WebSocket
 
         public override void Send(string message)
         {
-            WS_Send_String(this.ImplementationId, message);
+            var count = System.Text.Encoding.UTF8.GetByteCount(message);
+            var buffer = BufferPool.Get(count, true);
+
+            System.Text.Encoding.UTF8.GetBytes(message, 0, message.Length, buffer, 0);
+
+            WS_Send_String(this.ImplementationId, buffer, 0, count);
+
+            BufferPool.Release(buffer);
         }
 
         public override void Send(byte[] buffer)
@@ -69,7 +78,7 @@ namespace BestHTTP.WebSocket
         static extern int WS_GetBufferedAmount(uint id);
 
         [DllImport("__Internal")]
-        static extern int WS_Send_String(uint id, string strData);
+        static extern int WS_Send_String(uint id, byte[] strData, int pos, int length);
 
         [DllImport("__Internal")]
         static extern int WS_Send_Binary(uint id, byte[] buffer, int pos, int length);

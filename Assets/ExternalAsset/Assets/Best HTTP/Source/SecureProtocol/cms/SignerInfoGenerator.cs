@@ -60,6 +60,16 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
         {
             this.certificate = certificate;
         }
+
+        public SignerInfoGeneratorBuilder NewBuilder()
+        {
+            SignerInfoGeneratorBuilder builder = new SignerInfoGeneratorBuilder();
+            builder.WithSignedAttributeGenerator(signedGen);
+            builder.WithUnsignedAttributeGenerator(unsignedGen);
+            builder.SetDirectSignature(isDirectSignature);
+            return builder;
+        }
+
     }
 
     public class SignerInfoGeneratorBuilder
@@ -71,6 +81,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
         public SignerInfoGeneratorBuilder()
         {
         }
+    
 
         /**
          * If the passed in flag is true, the signer signature will be based on the data, not

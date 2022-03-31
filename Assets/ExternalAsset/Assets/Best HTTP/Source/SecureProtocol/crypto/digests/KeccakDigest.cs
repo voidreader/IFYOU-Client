@@ -30,7 +30,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Digests
         protected byte[] dataQueue = new byte[192];
         protected int rate;
         protected int bitsInQueue;
-        protected int fixedOutputLength;
+        protected internal int fixedOutputLength;
         protected bool squeezing;
 
         public KeccakDigest()
@@ -174,7 +174,8 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Digests
             int bytesInQueue = bitsInQueue >> 3;
             int rateBytes = rate >> 3;
 
-            if (len < (rateBytes - bytesInQueue))
+            int available = rateBytes - bytesInQueue;
+            if (len < available)
             {
                 Array.Copy(data, off, dataQueue, bytesInQueue, len);
                 this.bitsInQueue += len << 3;
@@ -184,7 +185,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Digests
             int count = 0;
             if (bytesInQueue > 0)
             {
-                int available = rateBytes - bytesInQueue;
                 Array.Copy(data, off, dataQueue, bytesInQueue, available);
                 count += available;
                 KeccakAbsorb(dataQueue, 0);

@@ -8,6 +8,7 @@ using BestHTTP.SecureProtocol.Org.BouncyCastle.Math;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Multiplier;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Security;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Signers
 {
@@ -125,7 +126,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Signers
                 }
                 while (r.SignValue == 0);
 
-                s = k.ModInverse(n).Multiply(e.Add(d.Multiply(r))).Mod(n);
+                s = BigIntegers.ModOddInverse(n, k).Multiply(e.Add(d.Multiply(r))).Mod(n);
             }
             while (s.SignValue == 0);
 
@@ -150,7 +151,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Signers
             }
 
             BigInteger e = CalculateE(n, message);
-            BigInteger c = s.ModInverse(n);
+            BigInteger c = BigIntegers.ModOddInverseVar(n, s);
 
             BigInteger u1 = e.Multiply(c).Mod(n);
             BigInteger u2 = r.Multiply(c).Mod(n);

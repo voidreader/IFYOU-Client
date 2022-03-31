@@ -177,8 +177,29 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
             return HaveSameContents(a, b);
         }
 
-        [CLSCompliantAttribute(false)]
         public static bool AreEqual(uint[] a, uint[] b)
+        {
+            if (a == b)
+                return true;
+
+            if (a == null || b == null)
+                return false;
+
+            return HaveSameContents(a, b);
+        }
+
+        public static bool AreEqual(long[] a, long[] b)
+        {
+            if (a == b)
+                return true;
+
+            if (a == null || b == null)
+                return false;
+
+            return HaveSameContents(a, b);
+        }
+
+        public static bool AreEqual(ulong[] a, ulong[] b)
         {
             if (a == b)
                 return true;
@@ -267,6 +288,34 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
             return true;
         }
 
+        private static bool HaveSameContents(long[] a, long[] b)
+        {
+            int i = a.Length;
+            if (i != b.Length)
+                return false;
+            while (i != 0)
+            {
+                --i;
+                if (a[i] != b[i])
+                    return false;
+            }
+            return true;
+        }
+
+        private static bool HaveSameContents(ulong[] a, ulong[] b)
+        {
+            int i = a.Length;
+            if (i != b.Length)
+                return false;
+            while (i != 0)
+            {
+                --i;
+                if (a[i] != b[i])
+                    return false;
+            }
+            return true;
+        }
+
         public static string ToString(
             object[] a)
         {
@@ -338,6 +387,23 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
             return hc;
         }
 
+        public static int GetHashCode(ushort[] data)
+        {
+            if (data == null)
+                return 0;
+
+            int i = data.Length;
+            int hc = i + 1;
+
+            while (--i >= 0)
+            {
+                hc *= 257;
+                hc ^= data[i];
+            }
+
+            return hc;
+        }
+
         public static int GetHashCode(int[] data, int off, int len)
         {
             if (data == null)
@@ -355,7 +421,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
             return hc;
         }
 
-        [CLSCompliantAttribute(false)]
         public static int GetHashCode(uint[] data)
         {
             if (data == null)
@@ -373,7 +438,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
             return hc;
         }
 
-        [CLSCompliantAttribute(false)]
         public static int GetHashCode(uint[] data, int off, int len)
         {
             if (data == null)
@@ -391,7 +455,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
             return hc;
         }
 
-        [CLSCompliantAttribute(false)]
         public static int GetHashCode(ulong[] data)
         {
             if (data == null)
@@ -412,7 +475,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
             return hc;
         }
 
-        [CLSCompliantAttribute(false)]
         public static int GetHashCode(ulong[] data, int off, int len)
         {
             if (data == null)
@@ -443,12 +505,21 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
             return data == null ? null : (byte[])data.Clone();
         }
 
+        public static short[] Clone(short[] data)
+        {
+            return data == null ? null : (short[])data.Clone();
+        }
+
+        public static ushort[] Clone(ushort[] data)
+        {
+            return data == null ? null : (ushort[])data.Clone();
+        }
+
         public static int[] Clone(int[] data)
         {
             return data == null ? null : (int[])data.Clone();
         }
 
-        [CLSCompliantAttribute(false)]
         public static uint[] Clone(uint[] data)
         {
             return data == null ? null : (uint[])data.Clone();
@@ -459,7 +530,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
             return data == null ? null : (long[])data.Clone();
         }
 
-        [CLSCompliantAttribute(false)]
         public static ulong[] Clone(ulong[] data)
         {
             return data == null ? null : (ulong[])data.Clone();
@@ -475,7 +545,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
             return existing;
         }
 
-        [CLSCompliantAttribute(false)]
         public static ulong[] Clone(ulong[] data, ulong[] existing)
         {
             if (data == null)
@@ -670,6 +739,19 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
             return rv;
         }
 
+        public static ushort[] Concatenate(ushort[] a, ushort[] b)
+        {
+            if (a == null)
+                return Clone(b);
+            if (b == null)
+                return Clone(a);
+
+            ushort[] rv = new ushort[a.Length + b.Length];
+            Array.Copy(a, 0, rv, 0, a.Length);
+            Array.Copy(b, 0, rv, a.Length, b.Length);
+            return rv;
+        }
+
         public static byte[] ConcatenateAll(params byte[][] vs)
         {
             byte[][] nonNull = new byte[vs.Length][];
@@ -780,6 +862,38 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
             return result;
         }
 
+        public static byte[] ReverseInPlace(byte[] a)
+        {
+            if (null == a)
+                return null;
+
+            int p1 = 0, p2 = a.Length - 1;
+            while (p1 < p2)
+            {
+                byte t1 = a[p1], t2 = a[p2];
+                a[p1++] = t2;
+                a[p2--] = t1;
+            }
+
+            return a;
+        }
+
+        public static int[] ReverseInPlace(int[] a)
+        {
+            if (null == a)
+                return null;
+
+            int p1 = 0, p2 = a.Length - 1;
+            while (p1 < p2)
+            {
+                int t1 = a[p1], t2 = a[p2];
+                a[p1++] = t2;
+                a[p2--] = t1;
+            }
+
+            return a;
+        }
+
         public static void Clear(byte[] data)
         {
             if (null != data)
@@ -808,6 +922,16 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities
                     return true;
             }
             return false;
+        }
+
+        public static bool IsNullOrEmpty(byte[] array)
+        {
+            return null == array || array.Length < 1;
+        }
+
+        public static bool IsNullOrEmpty(object[] array)
+        {
+            return null == array || array.Length < 1;
         }
     }
 }

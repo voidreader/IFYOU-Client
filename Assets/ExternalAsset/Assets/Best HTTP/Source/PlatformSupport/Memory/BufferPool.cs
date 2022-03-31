@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
+using BestHTTP.PlatformSupport.Threading;
+
 #if NET_STANDARD_2_0 || NETFX_CORE
 using System.Runtime.CompilerServices;
 #endif
@@ -391,8 +393,7 @@ namespace BestHTTP.PlatformSupport.Memory
             if (size == 0 || size > MaxBufferSize)
                 return;
 
-            rwLock.EnterWriteLock();
-            try
+            using (new WriteLock(rwLock))
             {
                 if (PoolSize + size > MaxPoolSize)
                     return;
@@ -401,10 +402,6 @@ namespace BestHTTP.PlatformSupport.Memory
                 ReleaseBuffers++;
 
                 AddFreeBuffer(buffer);
-            }
-            finally
-            {
-                rwLock.ExitWriteLock();
             }
         }
 
@@ -438,8 +435,7 @@ namespace BestHTTP.PlatformSupport.Memory
         /// </summary>
         public static string GetStatistics(bool showEmptyBuffers = true)
         {
-            rwLock.EnterReadLock();
-            try
+            using (new ReadLock(rwLock))
             {
                 statiscticsBuilder.Length = 0;
                 statiscticsBuilder.AppendFormat("Pooled array reused count: {0:N0}\n", GetBuffers);
@@ -491,10 +487,6 @@ namespace BestHTTP.PlatformSupport.Memory
 
                 return statiscticsBuilder.ToString();
             }
-            finally
-            {
-                rwLock.ExitReadLock();
-            }
         }
 
         /// <summary>
@@ -502,15 +494,10 @@ namespace BestHTTP.PlatformSupport.Memory
         /// </summary>
         public static void Clear()
         {
-            rwLock.EnterWriteLock();
-            try
+            using (new WriteLock(rwLock))
             {
                 FreeBuffers.Clear();
                 PoolSize = 0;
-            }
-            finally
-            {
-                rwLock.ExitWriteLock();
             }
         }
 
@@ -528,8 +515,7 @@ namespace BestHTTP.PlatformSupport.Memory
             //    HTTPManager.Logger.Information("BufferPool", "Before Maintain: " + GetStatistics());
 
             DateTime olderThan = now - RemoveOlderThan;
-            rwLock.EnterWriteLock();
-            try
+            using (new WriteLock(rwLock))
             {
                 for (int i = 0; i < FreeBuffers.Count; ++i)
                 {
@@ -555,10 +541,6 @@ namespace BestHTTP.PlatformSupport.Memory
                     if (RemoveEmptyLists && buffers.Count == 0)
                         FreeBuffers.RemoveAt(i--);
                 }
-            }
-            finally
-            {
-                rwLock.ExitWriteLock();
             }
 
             //if (HTTPManager.Logger.Level == Logger.Loglevels.All)
@@ -603,8 +585,7 @@ namespace BestHTTP.PlatformSupport.Memory
             //
             // An interesting read can be found here: https://stackoverflow.com/questions/21411018/readerwriterlockslim-enterupgradeablereadlock-always-a-deadlock
 
-            rwLock.EnterWriteLock();
-            try
+            using (new WriteLock(rwLock))
             {
                 for (int i = 0; i < FreeBuffers.Count; ++i)
                 {
@@ -622,10 +603,6 @@ namespace BestHTTP.PlatformSupport.Memory
                         return lastFree;
                     }
                 }
-            }
-            finally
-            {
-                rwLock.ExitWriteLock();
             }
 
             return BufferDesc.Empty;

@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 namespace BestHTTP.SocketIO3.Events
 {
+    [PlatformSupport.IL2CPP.Preserve]
     public sealed class ConnectResponse
     {
-        public string sid;
+        [PlatformSupport.IL2CPP.Preserve] public string sid;
     }
 
     public struct CallbackDescriptor
@@ -91,11 +92,11 @@ namespace BestHTTP.SocketIO3.Events
 
                     try
                     {
-                        callbackDesc.Callback.Invoke(args);
+                        callbackDesc.Callback.Invoke(args);                        
                     }
                     catch (Exception ex)
                     {
-                        HTTPManager.Logger.Exception("TypedEventTable", "Call - Callback.Invoke", ex, this.Socket.Context);
+                        HTTPManager.Logger.Exception("TypedEventTable", String.Format("Call('{0}', {1}) - Callback.Invoke", eventName, args != null ? args.Length : 0), ex, this.Socket.Context);
                     }
 
                     if (callbackDesc.Once)

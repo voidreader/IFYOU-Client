@@ -25,12 +25,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Pkcs
         private readonly ContentInfo contentInfo;
         private readonly MacData macData;
 
-
-		public Pfx(
-            Asn1Sequence seq)
+		private Pfx(Asn1Sequence seq)
         {
             DerInteger version = DerInteger.GetInstance(seq[0]);
-            if (version.IntValueExact != 3)
+            if (!version.HasValue(3))
                 throw new ArgumentException("wrong version for PFX PDU");
 
             this.contentInfo = ContentInfo.GetInstance(seq[1]);

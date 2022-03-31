@@ -134,7 +134,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Engines
                     BigInteger blindedInput = r.ModPow(e, m).Multiply(input).Mod(m);
                     BigInteger blindedResult = core.ProcessBlock(blindedInput);
 
-                    BigInteger rInv = r.ModInverse(m);
+                    BigInteger rInv = BigIntegers.ModOddInverse(m, r);
                     result = blindedResult.Multiply(rInv).Mod(m);
 
                     // defence against Arjen Lenstra�s CRT attack

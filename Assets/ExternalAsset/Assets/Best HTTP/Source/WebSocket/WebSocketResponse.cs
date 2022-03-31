@@ -11,6 +11,7 @@ using BestHTTP.Extensions;
 using BestHTTP.WebSocket.Frames;
 using BestHTTP.Core;
 using BestHTTP.PlatformSupport.Memory;
+using BestHTTP.Logger;
 
 namespace BestHTTP.WebSocket
 {
@@ -57,6 +58,11 @@ namespace BestHTTP.WebSocket
         /// Indicates whether the connection to the server is closed or not.
         /// </summary>
         public bool IsClosed { get { return closed; } }
+
+        /// <summary>
+        /// IProtocol.LoggingContext implementation.
+        /// </summary>
+        LoggingContext IProtocol.LoggingContext { get => this.Context; }
 
         /// <summary>
         /// On what frequency we have to send a ping to the server.
@@ -679,6 +685,8 @@ namespace BestHTTP.WebSocket
                 ProtocolEventHelper.EnqueueProtocolEvent(new ProtocolEventInfo(this));
                 (newFrameSignal as IDisposable).Dispose();
                 newFrameSignal = null;
+
+                CloseStream();
             }
         }
 

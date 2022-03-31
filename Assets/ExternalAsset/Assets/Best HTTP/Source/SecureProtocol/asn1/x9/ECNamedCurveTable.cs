@@ -9,7 +9,6 @@ using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.GM;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Nist;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Sec;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.TeleTrust;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Collections;
 
@@ -48,7 +47,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X9
             }
             if (ecP == null)
             {
-                ecP = FromDomainParameters(ECGost3410NamedCurves.GetByName(name));
+                ecP = ECGost3410NamedCurves.GetByNameX9(name);
             }
             if (ecP == null)
             {
@@ -150,7 +149,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X9
             }
             if (ecP == null)
             {
-                ecP = FromDomainParameters(ECGost3410NamedCurves.GetByOid(oid));
+                ecP = ECGost3410NamedCurves.GetByOidX9(oid);
             }
             if (ecP == null)
             {
@@ -178,11 +177,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X9
                 CollectionUtilities.AddRange(v, GMNamedCurves.Names);
                 return v;
             }
-        }
-
-        private static X9ECParameters FromDomainParameters(ECDomainParameters dp)
-        {
-            return dp == null ? null : new X9ECParameters(dp.Curve, dp.G, dp.N, dp.H, dp.GetSeed());
         }
     }
 }

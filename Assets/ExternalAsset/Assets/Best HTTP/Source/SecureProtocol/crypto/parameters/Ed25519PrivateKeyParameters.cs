@@ -26,6 +26,11 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters
             Ed25519.GeneratePrivateKey(random, data);
         }
 
+        public Ed25519PrivateKeyParameters(byte[] buf)
+            : this(Validate(buf), 0)
+        {
+        }
+
         public Ed25519PrivateKeyParameters(byte[] buf, int off)
             : base(true)
         {
@@ -107,6 +112,14 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters
                 throw new ArgumentException("algorithm");
             }
             }
+        }
+
+        private static byte[] Validate(byte[] buf)
+        {
+            if (buf.Length != KeySize)
+                throw new ArgumentException("must have length " + KeySize, "buf");
+
+            return buf;
         }
     }
 }

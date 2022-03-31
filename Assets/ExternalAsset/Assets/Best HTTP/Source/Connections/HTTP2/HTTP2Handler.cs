@@ -33,7 +33,9 @@ namespace BestHTTP.Connections.HTTP2
         public LoggingContext Context { get; private set; }
 
         private DateTime lastPingSent = DateTime.MinValue;
-        private TimeSpan pingFrequency = TimeSpan.FromMinutes(5);
+        private TimeSpan pingFrequency = TimeSpan.MaxValue; // going to be overridden in RunHandler
+        private int waitingForPingAck = 0;
+
         public static int RTTBufferCapacity = 5;
         private CircularBuffer<double> rtts = new CircularBuffer<double>(RTTBufferCapacity);
 
@@ -168,14 +170,17 @@ namespace BestHTTP.Connections.HTTP2
                             bufferedStream.Flush();
 
                             // Wait until we have to send the next ping, OR a new frame is received on the read thread.
-                            //       Sent             Now      Sent+frequency
-                            //----|-----|---------------|--------|-------------------|
-                            // lastInteraction                                  lastInteraction + MaxIdleTime
+                            //                lastPingSent             Now           lastPingSent+frequency       lastPingSent+Ping timeout
+                            //----|---------------------|---------------|----------------------|----------------------|------------|
+                            // lastInteraction                                                                                    lastInteraction + MaxIdleTime
 
                             var sendPingAt = this.lastPingSent + this.pingFrequency;
-                            var disconnectByIdleAt = this.lastInteraction + HTTPManager.HTTP2Settings.MaxIdleTime;
-                            var nextDueClientInteractionAt = sendPingAt < disconnectByIdleAt ? sendPingAt : disconnectByIdleAt;
+                            var timeoutAt = this.lastPingSent + HTTPManager.HTTP2Settings.Timeout;
+                            var nextPingInteraction = sendPingAt < timeoutAt ? sendPingAt : timeoutAt;
 
+                            var disconnectByIdleAt = this.lastInteraction + HTTPManager.HTTP2Settings.MaxIdleTime;
+
+                            var nextDueClientInteractionAt = nextPingInteraction < disconnectByIdleAt ? nextPingInteraction : disconnectByIdleAt;
                             int wait = (int)(nextDueClientInteractionAt - now).TotalMilliseconds;
 
                             wait = (int)Math.Min(wait, this.MaxGoAwayWaitTime.TotalMilliseconds);
@@ -190,7 +195,8 @@ namespace BestHTTP.Connections.HTTP2
                             }
                         }
 
-                        if (now - this.lastPingSent >= this.pingFrequency)
+                        //  Don't send a new ping until a pong isn't received for the last one
+                        if (now - this.lastPingSent >= this.pingFrequency && Interlocked.CompareExchange(ref this.waitingForPingAck, 1, 0) == 0)
                         {
                             this.lastPingSent = now;
 
@@ -199,6 +205,10 @@ namespace BestHTTP.Connections.HTTP2
 
                             this.outgoingFrames.Add(frame);
                         }
+
+                        //  If no pong received in a (configurable) reasonable time, treat the connection broken
+                        if (this.waitingForPingAck != 0 && now - this.lastPingSent >= HTTPManager.HTTP2Settings.Timeout)
+                            throw new TimeoutException("Ping ACK isn't received in time!");
 
                         // Process received frames
                         HTTP2FrameHeaderAndPayload header;
@@ -236,6 +246,7 @@ namespace BestHTTP.Connections.HTTP2
                                     case HTTP2FrameTypes.PING:
                                         var pingFrame = HTTP2FrameHelper.ReadPingFrame(header);
 
+                                        // https://httpwg.org/specs/rfc7540.html#PING
                                         // if it wasn't an ack for our ping, we have to send one
                                         if ((pingFrame.Flags & HTTP2PingFlags.ACK) == 0)
                                         {
@@ -479,10 +490,6 @@ namespace BestHTTP.Connections.HTTP2
 
                 while (this.isRunning)
                 {
-                    // TODO: 
-                    //  1. Set the local window to a reasonable size
-                    //  2. stop reading when the local window is about to be 0.
-                    //  3. 
                     HTTP2FrameHeaderAndPayload header = HTTP2FrameHelper.ReadHeader(this.conn.connector.Stream);
 
                     if (HTTPManager.Logger.Level <= Logger.Loglevels.Information && header.Type != HTTP2FrameTypes.DATA /*&& header.Type != HTTP2FrameTypes.PING*/)
@@ -503,6 +510,9 @@ namespace BestHTTP.Connections.HTTP2
 
                             if ((pingFrame.Flags & HTTP2PingFlags.ACK) != 0)
                             {
+                                if (Interlocked.CompareExchange(ref this.waitingForPingAck, 0, 1) == 0)
+                                    break; // waitingForPingAck was 0 == aren't expecting a ping ack!
+
                                 // it was an ack, payload must contain what we sent
 
                                 var ticks = BufferHelper.ReadLong(pingFrame.OpaqueData, 0);

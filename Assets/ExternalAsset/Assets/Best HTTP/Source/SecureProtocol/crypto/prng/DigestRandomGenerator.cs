@@ -2,8 +2,8 @@
 #pragma warning disable
 using System;
 
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Digests;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Utilities;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Prng
 {
@@ -42,8 +42,11 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Prng
 		{
 			lock (this)
 			{
-				DigestUpdate(inSeed);
-				DigestUpdate(seed);
+                if (!Arrays.IsNullOrEmpty(inSeed))
+                {
+                    DigestUpdate(inSeed);
+                }
+                DigestUpdate(seed);
 				DigestDoFinal(seed);
 			}
 		}

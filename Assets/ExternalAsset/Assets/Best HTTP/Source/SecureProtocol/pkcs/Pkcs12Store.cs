@@ -23,16 +23,16 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
     {
         public const string IgnoreUselessPasswordProperty = "BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs12.IgnoreUselessPassword";
 
-        private readonly IgnoresCaseHashtable	keys = new IgnoresCaseHashtable();
+        private readonly IgnoresCaseHashtable   keys = new IgnoresCaseHashtable();
         private readonly IDictionary            localIds = BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Platform.CreateHashtable();
-        private readonly IgnoresCaseHashtable	certs = new IgnoresCaseHashtable();
+        private readonly IgnoresCaseHashtable   certs = new IgnoresCaseHashtable();
         private readonly IDictionary            chainCerts = BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Platform.CreateHashtable();
         private readonly IDictionary            keyCerts = BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Platform.CreateHashtable();
-        private readonly DerObjectIdentifier	keyAlgorithm;
+        private readonly DerObjectIdentifier    keyAlgorithm;
         private readonly DerObjectIdentifier    keyPrfAlgorithm;
-        private readonly DerObjectIdentifier	certAlgorithm;
+        private readonly DerObjectIdentifier    certAlgorithm;
         private readonly DerObjectIdentifier    certPrfAlgorithm;
-        private readonly bool					useDerEncoding;
+        private readonly bool                   useDerEncoding;
 
         private AsymmetricKeyEntry unmarkedKeyEntry = null;
 
@@ -88,9 +88,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
         }
 
         internal Pkcs12Store(
-            DerObjectIdentifier	keyAlgorithm,
-            DerObjectIdentifier	certAlgorithm,
-            bool				useDerEncoding)
+            DerObjectIdentifier keyAlgorithm,
+            DerObjectIdentifier certAlgorithm,
+            bool                useDerEncoding)
         {
             this.keyAlgorithm = keyAlgorithm;
             this.keyPrfAlgorithm = null;
@@ -124,8 +124,8 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
         // TODO Consider making obsolete
 
         public Pkcs12Store(
-            Stream	input,
-            char[]	password)
+            Stream  input,
+            char[]  password)
             : this()
         {
             Load(input, password);
@@ -214,8 +214,8 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
         }
 
         public void Load(
-            Stream	input,
-            char[]	password)
+            Stream  input,
+            char[]  password)
         {
             if (input == null)
                 throw new ArgumentNullException("input");
@@ -306,7 +306,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
 
                         foreach (Asn1Sequence subSeq in seq)
                         {
-                            SafeBag b = new SafeBag(subSeq);
+                            SafeBag b = SafeBag.GetInstance(subSeq);
 
                             if (b.BagID.Equals(PkcsObjectIdentifiers.CertBag))
                             {
@@ -336,7 +336,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
 
             foreach (SafeBag b in certBags)
             {
-                CertBag certBag = new CertBag((Asn1Sequence)b.BagValue);
+                CertBag certBag = CertBag.GetInstance(b.BagValue);
                 byte[] octets = ((Asn1OctetString)certBag.CertValue).GetOctets();
                 X509Certificate cert = new X509CertificateParser().ReadCertificate(octets);
 
@@ -363,6 +363,16 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
                             // the same OID - currently, differing values give an error
                             if (attributes.Contains(aOid.Id))
                             {
+                                // we've found more than one - one might be incorrect
+                                if (aOid.Equals(PkcsObjectIdentifiers.Pkcs9AtLocalKeyID))
+                                {
+                                    String id = Hex.ToHexString(Asn1OctetString.GetInstance(attr).GetOctets());
+                                    if (!(keys[id] != null || localIds[id] != null))
+                                    {
+                                        continue; // ignore this one - it's not valid
+                                    }
+                                }
+
                                 // OK, but the value has to be the same
                                 if (!attributes[aOid.Id].Equals(attr))
                                 {
@@ -630,8 +640,8 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
         }
 
         public void SetCertificateEntry(
-            string					alias,
-            X509CertificateEntry	certEntry)
+            string                  alias,
+            X509CertificateEntry    certEntry)
         {
             if (alias == null)
                 throw new ArgumentNullException("alias");
@@ -645,9 +655,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
         }
 
         public void SetKeyEntry(
-            string					alias,
-            AsymmetricKeyEntry		keyEntry,
-            X509CertificateEntry[]	chain)
+            string                  alias,
+            AsymmetricKeyEntry      keyEntry,
+            X509CertificateEntry[]  chain)
         {
             if (alias == null)
                 throw new ArgumentNullException("alias");
@@ -712,8 +722,8 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
         }
 
         public bool IsEntryOfType(
-            string	alias,
-            Type	entryType)
+            string  alias,
+            Type    entryType)
         {
             if (entryType == typeof(X509CertificateEntry))
                 return IsCertificateEntry(alias);
@@ -737,9 +747,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
         }
 
         public void Save(
-            Stream			stream,
-            char[]			password,
-            SecureRandom	random)
+            Stream          stream,
+            char[]          password,
+            SecureRandom    random)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -836,10 +846,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
 
             random.NextBytes(cSalt);
 
-            Asn1EncodableVector	certBags = new Asn1EncodableVector();
-            Pkcs12PbeParams		cParams = new Pkcs12PbeParams(cSalt, MinIterations);
-            AlgorithmIdentifier	cAlgId = new AlgorithmIdentifier(certAlgorithm, cParams.ToAsn1Object());
-            ISet				doneCerts = new HashSet();
+            Asn1EncodableVector certBags = new Asn1EncodableVector();
+            Pkcs12PbeParams     cParams = new Pkcs12PbeParams(cSalt, MinIterations);
+            AlgorithmIdentifier cAlgId = new AlgorithmIdentifier(certAlgorithm, cParams.ToAsn1Object());
+            ISet                doneCerts = new HashSet();
 
             foreach (string name in keys.Keys)
             {
@@ -1022,26 +1032,16 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
             //
             Pfx pfx = new Pfx(mainInfo, macData);
 
-            DerOutputStream derOut;
-            if (useDerEncoding)
-            {
-                derOut = new DerOutputStream(stream);
-            }
-            else
-            {
-                derOut = new BerOutputStream(stream);
-            }
-
-            derOut.WriteObject(pfx);
+            pfx.EncodeTo(stream, useDerEncoding ? Asn1Encodable.Der : Asn1Encodable.Ber);
         }
 
         internal static byte[] CalculatePbeMac(
-            DerObjectIdentifier	oid,
-            byte[]				salt,
-            int					itCount,
-            char[]				password,
-            bool				wrongPkcs12Zero,
-            byte[]				data)
+            DerObjectIdentifier oid,
+            byte[]              salt,
+            int                 itCount,
+            char[]              password,
+            bool                wrongPkcs12Zero,
+            byte[]              data)
         {
             Asn1Encodable asn1Params = PbeUtilities.GenerateAlgorithmParameters(
                 oid, salt, itCount);
@@ -1054,22 +1054,33 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
         }
 
         private static byte[] CryptPbeData(
-            bool				forEncryption,
-            AlgorithmIdentifier	algId,
-            char[]				password,
-            bool				wrongPkcs12Zero,
-            byte[]				data)
+            bool                forEncryption,
+            AlgorithmIdentifier algId,
+            char[]              password,
+            bool                wrongPkcs12Zero,
+            byte[]              data)
         {
-            IBufferedCipher cipher = PbeUtilities.CreateEngine(algId.Algorithm) as IBufferedCipher;
+            IBufferedCipher cipher = PbeUtilities.CreateEngine(algId) as IBufferedCipher;
 
             if (cipher == null)
                 throw new Exception("Unknown encryption algorithm: " + algId.Algorithm);
 
-            Pkcs12PbeParams pbeParameters = Pkcs12PbeParams.GetInstance(algId.Parameters);
-            ICipherParameters cipherParams = PbeUtilities.GenerateCipherParameters(
-                algId.Algorithm, password, wrongPkcs12Zero, pbeParameters);
-            cipher.Init(forEncryption, cipherParams);
-            return cipher.DoFinal(data);
+            if (algId.Algorithm.Equals(PkcsObjectIdentifiers.IdPbeS2))
+            {
+                PbeS2Parameters pbeParameters = PbeS2Parameters.GetInstance(algId.Parameters);
+                ICipherParameters cipherParams = PbeUtilities.GenerateCipherParameters(
+                    algId.Algorithm, password, pbeParameters);
+                cipher.Init(forEncryption, cipherParams);
+                return cipher.DoFinal(data);
+            }
+            else
+            {
+                Pkcs12PbeParams pbeParameters = Pkcs12PbeParams.GetInstance(algId.Parameters);
+                ICipherParameters cipherParams = PbeUtilities.GenerateCipherParameters(
+                    algId.Algorithm, password, wrongPkcs12Zero, pbeParameters);
+                cipher.Init(forEncryption, cipherParams);
+                return cipher.DoFinal(data);
+            }
         }
 
         private class IgnoresCaseHashtable

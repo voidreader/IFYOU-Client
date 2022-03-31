@@ -96,7 +96,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.Sec
         {
             //return Multiply(b.Invert());
             uint[] z = Nat192.Create();
-            Mod.Invert(SecP192R1Field.P, ((SecP192R1FieldElement)b).x, z);
+            SecP192R1Field.Inv(((SecP192R1FieldElement)b).x, z);
             SecP192R1Field.Multiply(z, x, z);
             return new SecP192R1FieldElement(z);
         }
@@ -119,7 +119,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.Sec
         {
             //return new SecP192R1FieldElement(ToBigInteger().ModInverse(Q));
             uint[] z = Nat192.Create();
-            Mod.Invert(SecP192R1Field.P, x, z);
+            SecP192R1Field.Inv(x, z);
             return new SecP192R1FieldElement(z);
         }
 

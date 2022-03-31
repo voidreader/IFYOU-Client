@@ -3,6 +3,7 @@
 using System;
 
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.Raw;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Security;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Encoders;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.Djb
@@ -93,6 +94,20 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.Djb
             }
 
             return new Curve25519LookupTable(this, table, len);
+        }
+
+        public override ECFieldElement RandomFieldElement(SecureRandom r)
+        {
+            uint[] x = Nat256.Create();
+            Curve25519Field.Random(r, x);
+            return new Curve25519FieldElement(x);
+        }
+
+        public override ECFieldElement RandomFieldElementMult(SecureRandom r)
+        {
+            uint[] x = Nat256.Create();
+            Curve25519Field.RandomMult(r, x);
+            return new Curve25519FieldElement(x);
         }
 
         private class Curve25519LookupTable

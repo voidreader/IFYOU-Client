@@ -105,7 +105,7 @@ namespace BestHTTP.WebSocket
             }
         }
 
-        private void OnHeadersReceived(HTTPRequest req, HTTPResponse resp)
+        private void OnHeadersReceived(HTTPRequest req, HTTPResponse resp, Dictionary<string, List<string>> newHeaders)
         {
             if (resp != null && resp.StatusCode == 200)
             {

@@ -24,6 +24,11 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters
             X25519.GeneratePrivateKey(random, data);
         }
 
+        public X25519PrivateKeyParameters(byte[] buf)
+            : this(Validate(buf), 0)
+        {
+        }
+
         public X25519PrivateKeyParameters(byte[] buf, int off)
             : base(true)
         {
@@ -60,6 +65,14 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters
             publicKey.Encode(encoded, 0);
             if (!X25519.CalculateAgreement(data, 0, encoded, 0, buf, off))
                 throw new InvalidOperationException("X25519 agreement failed");
+        }
+
+        private static byte[] Validate(byte[] buf)
+        {
+            if (buf.Length != KeySize)
+                throw new ArgumentException("must have length " + KeySize, "buf");
+
+            return buf;
         }
     }
 }

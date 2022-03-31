@@ -54,11 +54,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Pkcs
 			if (seq.Count != 2)
 				throw new ArgumentException("Wrong number of elements in sequence", "seq");
 
-            int version = ((DerInteger)seq[0]).IntValueExact;
-			if (version != 0)
-            {
+            DerInteger version = (DerInteger)seq[0];
+			if (!version.HasValue(0))
                 throw new ArgumentException("sequence not version 0");
-            }
 
 			this.data = (Asn1Sequence) seq[1];
         }

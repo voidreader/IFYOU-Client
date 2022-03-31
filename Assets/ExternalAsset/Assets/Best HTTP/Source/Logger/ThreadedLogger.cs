@@ -23,19 +23,20 @@ namespace BestHTTP.Logger
         }
         private ILogOutput _output;
 
-        private StringBuilder sb = new StringBuilder(40);
+        public int InitialStringBufferCapacity = 256;
 
 #if !UNITY_WEBGL || UNITY_EDITOR
-
         public TimeSpan ExitThreadAfterInactivity = TimeSpan.FromMinutes(1);
 
         private ConcurrentQueue<LogJob> jobs = new ConcurrentQueue<LogJob>();
         private System.Threading.AutoResetEvent newJobEvent = new System.Threading.AutoResetEvent(false);
 
-        private int threadCreated;
+        private volatile int threadCreated;
 
-        private bool isDisposed;
+        private volatile bool isDisposed;
 #endif
+
+        private StringBuilder sb = new StringBuilder(0);
 
         public ThreadedLogger()
         {
@@ -68,6 +69,8 @@ namespace BestHTTP.Logger
             if (this.Level > level)
                 return;
 
+            sb.EnsureCapacity(InitialStringBufferCapacity);
+
 #if !UNITY_WEBGL || UNITY_EDITOR
             if (this.isDisposed)
                 return;
@@ -88,6 +91,10 @@ namespace BestHTTP.Logger
             };
 
 #if !UNITY_WEBGL || UNITY_EDITOR
+            // Start the consumer thread before enqueuing to get up and running sooner
+            if (System.Threading.Interlocked.CompareExchange(ref this.threadCreated, 1, 0) == 0)
+                BestHTTP.PlatformSupport.Threading.ThreadedRunner.RunLongLiving(ThreadFunc);
+
             this.jobs.Enqueue(job);
             try
             {
@@ -104,6 +111,8 @@ namespace BestHTTP.Logger
                 return;
             }
 
+            // newJobEvent might timed out between the previous threadCreated check and newJobEvent.Set() calls closing the thread.
+            // So, here we check threadCreated again and create a new thread if needed.
             if (System.Threading.Interlocked.CompareExchange(ref this.threadCreated, 1, 0) == 0)
                 BestHTTP.PlatformSupport.Threading.ThreadedRunner.RunLongLiving(ThreadFunc);
 #else
@@ -119,8 +128,15 @@ namespace BestHTTP.Logger
             {
                 do
                 {
+                    // Waiting for a new log-job timed out
                     if (!this.newJobEvent.WaitOne(this.ExitThreadAfterInactivity))
+                    {
+                        // clear StringBuilder's inner cache and exit the thread
+                        sb.Length = 0;
+                        sb.Capacity = 0;
+                        System.Threading.Interlocked.Exchange(ref this.threadCreated, 0);
                         return;
+                    }
 
                     LogJob job;
                     while (this.jobs.TryDequeue(out job))
@@ -134,6 +150,7 @@ namespace BestHTTP.Logger
                     }
 
                 } while (!HTTPManager.IsQuitting);
+                System.Threading.Interlocked.Exchange(ref this.threadCreated, 0);
 
                 // When HTTPManager.IsQuitting is true, there is still logging that will create a new thread after the last one quit
                 //  and always writing a new entry about the exiting thread would be too much overhead.
@@ -150,8 +167,7 @@ namespace BestHTTP.Logger
                 //
                 //this.Output.WriteVerbose(lastLog.ToJson(sb));
             }
-            catch { }
-            finally
+            catch
             {
                 System.Threading.Interlocked.Exchange(ref this.threadCreated, 0);
             }
@@ -198,7 +214,7 @@ namespace BestHTTP.Logger
         public LoggingContext context2;
         public LoggingContext context3;
 
-        private string WrapInColor(string str, string color)
+        private static string WrapInColor(string str, string color)
         {
 #if UNITY_EDITOR
             return string.Format("<b><color={1}>{0}</color></b>", str, color);

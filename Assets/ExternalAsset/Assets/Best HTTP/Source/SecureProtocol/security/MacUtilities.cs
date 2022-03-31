@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Globalization;
+using System.Security.Cryptography;
 
 using BestHTTP.PlatformSupport.Memory;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1;
@@ -245,6 +246,14 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Security
             DerObjectIdentifier oid)
         {
             return (string) algorithms[oid.Id];
+        }
+
+        public static byte[] CalculateMac(string algorithm, ICipherParameters cp, byte[] input)
+        {
+            IMac mac = GetMac(algorithm);
+            mac.Init(cp);
+            mac.BlockUpdate(input, 0, input.Length);
+            return DoFinal(mac);
         }
 
         public static byte[] DoFinal(IMac mac)

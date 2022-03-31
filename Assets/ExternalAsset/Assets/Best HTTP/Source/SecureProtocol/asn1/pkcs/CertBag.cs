@@ -19,9 +19,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Pkcs
         private readonly DerObjectIdentifier certID;
         private readonly Asn1Object certValue;
 
-
-		public CertBag(
-            Asn1Sequence seq)
+		private CertBag(Asn1Sequence seq)
         {
 			if (seq.Count != 2)
 				throw new ArgumentException("Wrong number of elements in sequence", "seq");

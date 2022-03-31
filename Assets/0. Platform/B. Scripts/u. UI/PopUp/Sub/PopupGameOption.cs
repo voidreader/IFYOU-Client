@@ -5,17 +5,17 @@ using Doozy.Runtime.Reactor.Animators;
 
 namespace PIERStory
 {
-    public class ViewGameOption : CommonView
+    public class PopupGameOption : PopupBase
     {
-        [Header("Alert Toggles")]
+        [Space(15)][Header("Alert Toggles")]
         public UIAnimator missionAnimator;
         public UIAnimator illustAnimator;
 
         public Image missionToggle;
         public Image illustToggle;
 
-        public RectTransform missionToggleHandle;
-        public RectTransform illustToggleHandle;
+        RectTransform missionToggleHandle;
+        RectTransform illustToggleHandle;
 
         public Sprite spriteToggleOn;
         public Sprite spriteToggleOff;
@@ -39,9 +39,12 @@ namespace PIERStory
 
         bool startHide = true;
 
-        public override void OnStartView()
+        public override void Show()
         {
-            base.OnStartView();
+            base.Show();
+
+            missionToggleHandle = missionAnimator.GetComponent<RectTransform>();
+            illustToggleHandle = illustAnimator.GetComponent<RectTransform>();
 
             AlertSetting();
 
@@ -52,15 +55,10 @@ namespace PIERStory
             AutoPlayerToggleInit();
         }
 
-        public override void OnHideView()
-        {
-            base.OnHideView();
 
-            if(startHide)
-            {
-                startHide = false;
-                return;
-            }
+        public override void Hide()
+        {
+            base.Hide();
 
             PlayerPrefs.SetFloat(GameConst.VOICE_VOLUME, voiceSlider.value);
             PlayerPrefs.SetFloat(GameConst.BGM_VOLUME, bgmSlider.value);

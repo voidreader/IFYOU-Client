@@ -1,19 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 using TMPro;
 using LitJson;
 using Doozy.Runtime.Reactor.Animators;
 using Doozy.Runtime.UIManager.Containers;
 
-
 namespace PIERStory
 {
-    public class ViewGameMenu : CommonView
+    public class GameMenu : CommonView
     {
         
         [SerializeField] RectTransform footer;
-        [SerializeField] UIView viewGameMenu; // 게임메뉴. 
+        UIContainer menuContainer;
+        public PopupBase gameOptionPopup;
         public GameObject replayButton;
 
         [Header("Skip")]
@@ -35,6 +36,10 @@ namespace PIERStory
         [Space(10)]
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
 
+        private void Start()
+        {
+            menuContainer = GetComponent<UIContainer>();
+        }
 
         void Update() {
             if(Input.GetKeyDown(KeyCode.S)) {
@@ -67,6 +72,14 @@ namespace PIERStory
 
         #region OnClick Event
 
+        /// <summary>
+        /// 게임 옵션 열기
+        /// </summary>
+        public void OnClickOpenGameOption()
+        {
+            PopupManager.main.ShowPopup(gameOptionPopup, false);
+        }
+
 
         /// <summary>
         /// 스킵 처리 
@@ -88,10 +101,8 @@ namespace PIERStory
                 
             }
             Debug.Log("## SkipScene ##");
-            
-            // Doozy.Runtime.UIManager.Input.BackButton.Fire(); // 백버튼 발동처리
-            
-            viewGameMenu.Hide();
+
+            menuContainer.Hide();
             
 
             // 시간 흐름중 스킵하면 시간흐름용 fadeImage를 비활성화 해버린다
@@ -112,7 +123,7 @@ namespace PIERStory
         /// </summary>
         public void OpenLog()
         {
-            viewGameMenu.Hide();
+            menuContainer.Hide();
             ViewGame.main.ShowLog();
         }
 
@@ -160,14 +171,6 @@ namespace PIERStory
             NetworkLoader.main.SendPost(UserManager.main.CallbackStartOverEpisode, sendingData, true);
         }
         
-        
-        public void OnClickBack() {
-            
-            if(viewGameMenu.inTransition)
-                return;
-            
-            viewGameMenu.Hide();
-        }
 
         public void StopAutoPlay()
         {
@@ -179,5 +182,13 @@ namespace PIERStory
         }
 
         #endregion
+
+        public void OnInputEscape(InputAction.CallbackContext context)
+        {
+            if (menuContainer.isHidden || menuContainer.isHiding)
+                return;
+
+            menuContainer.Hide();
+        }
     }
 }

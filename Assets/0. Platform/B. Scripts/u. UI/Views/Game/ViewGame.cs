@@ -16,8 +16,6 @@ namespace PIERStory
     {
         public static ViewGame main = null;     // UI singleton
         
-        [SerializeField] UIView viewGameMenu; // 게임메뉴. 
-        
 
         [Header("말풍선")]
         public RectTransform bubbleParent;          // 말풍선 부모
@@ -1325,21 +1323,6 @@ namespace PIERStory
         }
 
         #endregion
-        
-        
-        /// <summary>
-        /// 상단 터치할때. 
-        /// </summary>
-        public void OnClickCallGameMenu() {
-            
-            // * Nody로 연결하지 않음
-            // * 종종 Flow가 매끄럽지 않은 경우가 있다.
-            
-            if(viewGameMenu.inTransition)
-                return;
-            
-            viewGameMenu.Show();
-        }
         
         #region 음성 재생 중 아이콘 연출
 

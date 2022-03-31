@@ -30,6 +30,8 @@ namespace PIERStory
         public const string POPUP_SIDE_ALERT = "SideAlert";
         public const string POPUP_GAME_ABILITY = "GameAbility";
 
+        public const string POPUP_GAME_OPTION = "GameOption";
+
 
         public const string VOICE_VOLUME = "voiceVolume";
         public const string BGM_VOLUME = "BGMVolume";

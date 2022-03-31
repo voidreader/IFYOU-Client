@@ -46,7 +46,7 @@ namespace PIERStory
 
         public bool isJustSkipStop = false; // * 막 스킵이 끝났는지 체크 변수 
 
-        public ViewGameMenu inGameMenu;
+        public GameMenu inGameMenu;
         public string currentSceneId = string.Empty;    // 현재 sceneId(사건ID)
 
         public int episodeDownloadableResourceCount = 0;

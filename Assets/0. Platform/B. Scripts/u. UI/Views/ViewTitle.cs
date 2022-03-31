@@ -24,6 +24,7 @@ namespace PIERStory {
         
         [SerializeField] TextMeshProUGUI textLoading;
         [SerializeField] int totalDownloadingImageCount = 0;
+        public string currentStep = string.Empty;
         
         public GameObject downloadProgressParent;
         [SerializeField] Image downloadProgressBar; // 에셋번들 다운로드 게이지 
@@ -73,6 +74,11 @@ namespace PIERStory {
             Debug.Log("<color=cyan>ViewTitle OnView</color>");
             AdManager.main.AnalyticsEnter("titleEnter");
             
+            // 언어변경등으로 강제로 씬로딩이 진행될때. 
+            if(SystemManager.IsGamebaseInit && UserManager.main.completeReadUserData && string.IsNullOrEmpty(currentStep)) {
+                UpdateTitleLoading("login");
+            }
+            
         }
         
         
@@ -116,7 +122,7 @@ namespace PIERStory {
             
             Debug.Log("<color=cyan>## CheckingAssetBundle START</color>");
             
-            UpdateLoadingText(3);
+            UpdateLoadingText(4);
             
             while(!SystemManager.main.isAddressableCatalogUpdated)
                 yield return null;
@@ -161,6 +167,11 @@ namespace PIERStory {
             Debug.Log("### GetDownloadSizeAsync END, size : " + getDownloadSizeHandle.Result);
             // 다운로드 할 데이터 없음 
             if(getDownloadSizeHandle.Result <= 0) {
+                
+                // 폰트 부른다. 
+                SystemManager.main.LoadAddressableFont();
+                
+                
                 FillProgressorOnly();
                 yield break;
             }
@@ -178,6 +189,10 @@ namespace PIERStory {
             
             // 다운로드 완료됨 
             Debug.Log("<color=cyan>font bundle downloading is done!!!</color>");
+            
+            // 폰트 부른다. 
+            SystemManager.main.LoadAddressableFont();
+            
             StartCoroutine(MovingNextScene());
         }
         
@@ -189,7 +204,8 @@ namespace PIERStory {
         IEnumerator MovingNextScene() {
             Debug.Log("<color=cyan>MoveingNextScene START</color>");
             
-            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork()); // 서버 통신 종료되길 기다린다. 
+            yield return new WaitUntil(() =>SystemManager.main.mainAssetFont != null); // 폰트 불러오길 기다린다. 
             
             Debug.Log("<color=cyan>MoveingNextScene END</color>");
             
@@ -210,6 +226,9 @@ namespace PIERStory {
                     StartCoroutine(MovingNextScene());
                 });
         }
+        
+        
+        
                 
         
         

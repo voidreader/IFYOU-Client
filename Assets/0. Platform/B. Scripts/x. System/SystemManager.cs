@@ -10,7 +10,8 @@ using TMPro;
 using LitJson;
 using BestHTTP;
 using Toast.Gamebase;
-
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 // Live2D
 using Live2D.Cubism.Core;
@@ -19,6 +20,8 @@ using Live2D.Cubism.Rendering;
 using Live2D.Cubism.Framework.Json;
 using Live2D.Cubism.Framework.Motion;
 using Live2D.Cubism.Framework.MotionFade;
+
+
 
 namespace PIERStory
 {
@@ -124,12 +127,18 @@ namespace PIERStory
         
         const string KEY_ENCRYPTION = "imageEncrypt_2"; // 암호화 여부 
         
-        #region 내장폰트
+        #region 내장폰트, 에셋번들 폰트
         [SerializeField] TMP_FontAsset innerFontKO = null;
         [SerializeField] TMP_FontAsset innerFontEN = null;
         [SerializeField] TMP_FontAsset innerFontJA = null;
         [SerializeField] TMP_FontAsset innerFontSC = null;
         [SerializeField] TMP_FontAsset innerFontTC = null;
+        
+        // * 에셋번들로 받은 폰트
+        // * 한글 영어는 같이 씀.         
+        public TMP_FontAsset mainAssetFont = null; // 한글
+        public AsyncOperationHandle<TMP_FontAsset> mountedAssetFont; 
+        Shader assetFontShader;
 
         #endregion
         
@@ -1922,6 +1931,86 @@ namespace PIERStory
         #endregion
 
         #region 파일 체크, 파일 다운로드 공용
+        
+        /// <summary>
+        /// 에셋번들로 폰트 불러오기 
+        /// </summary>
+        public void LoadAddressableFont()  {
+            
+            // * 기본폰트는 AppleGothic. 
+            // * 모든 UI의 폰트는 AppleGothic으로 설정한다. 
+            // * 언어에 따라서 변경. 
+            
+            string addressableKey = string.Empty;
+            
+            // 언어변경 등으로 인해 이미 불러온 정보가 있었다면. 파괴하고 새로 불러온다. 
+            if(mainAssetFont != null) {
+                Addressables.ReleaseInstance(mountedAssetFont);
+            }
+            
+            
+            switch(currentAppLanguageCode) {
+                case "KO":    // 한글 영어는 같이 씀 
+                case "EN":
+                addressableKey = "Font/" + "KoPubWorld Dotum Medium SDF.asset"; 
+                break;
+                
+                case "JA":
+                // mplus-1p-regular SDF
+                addressableKey = "Font/" + "mplus-1p-regular SDF.asset"; 
+                break;
+                
+                default:
+                break;
+            }
+            
+            Debug.Log(string.Format("<color=cyan>font addressable key : [{0}] </color>", addressableKey));
+            assetFontShader = Shader.Find("TextMeshPro/Mobile/Distance Field");
+            
+            // LoadAssetAsync. 
+            Addressables.LoadAssetAsync<TMP_FontAsset>(addressableKey).Completed += (handle) => {
+                if(handle.Status == AsyncOperationStatus.Succeeded) { 
+                    // * 성공
+                    mountedAssetFont = handle;
+                    mainAssetFont = handle.Result;
+                    
+                    
+                    
+                    // 다른 프로젝트에서 가져오는거라서 Shader처리 해준다.
+                    mainAssetFont.material.shader = assetFontShader;
+                    
+                    Debug.Log("<color=cyan>Font loaded OK!!!!!</color>");
+                }
+                else {
+                    mainAssetFont = innerFontKO; 
+                    Debug.Log("<color=cyan>Font loaded FAIL....</color>");
+                }
+            };
+        }
+        
+        
+        /// <summary>
+        /// 언어에 해당하는 에셋 폰트 가져오기 
+        /// </summary>
+        /// <param name="__isException"></param>
+        /// <returns></returns>
+        public TMP_FontAsset getCurrentLangFont(bool __isException) {
+            
+            switch (currentAppLanguageCode) {
+                case "JA": // 일본어 예외없이 무조건 메인폰트 리턴 
+                return mainAssetFont; 
+                
+                default:
+                if(__isException)  // appleGothic 유지 
+                    return innerFontEN; 
+                else 
+                    return mainAssetFont; // 유지하지 않음 
+                
+                
+            }
+        }
+        
+        
         
         /// <summary>
         /// 파일 로컬 저장 되어있는지 체크 

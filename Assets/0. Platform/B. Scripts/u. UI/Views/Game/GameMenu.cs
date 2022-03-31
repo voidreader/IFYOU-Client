@@ -14,7 +14,7 @@ namespace PIERStory
         
         [SerializeField] RectTransform footer;
         UIContainer menuContainer;
-        public PopupBase gameOptionPopup;
+        PopupBase gameOptionPopup;
         public GameObject replayButton;
 
         [Header("Skip")]
@@ -77,6 +77,14 @@ namespace PIERStory
         /// </summary>
         public void OnClickOpenGameOption()
         {
+            gameOptionPopup = PopupManager.main.GetPopup(GameConst.POPUP_GAME_OPTION);
+
+            if(gameOptionPopup == null)
+            {
+                Debug.LogError("게임 옵션 팝업 존재 안함!!!");
+                return;
+            }
+
             PopupManager.main.ShowPopup(gameOptionPopup, false);
         }
 
@@ -185,6 +193,9 @@ namespace PIERStory
 
         public void OnInputEscape(InputAction.CallbackContext context)
         {
+            if (gameOptionPopup != null && gameOptionPopup.isShow)
+                return;
+
             if (menuContainer.isHidden || menuContainer.isHiding)
                 return;
 

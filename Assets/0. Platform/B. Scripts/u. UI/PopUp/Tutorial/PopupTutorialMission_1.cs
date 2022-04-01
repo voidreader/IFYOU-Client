@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 using TMPro;
 using DG.Tweening;
@@ -12,6 +13,7 @@ namespace PIERStory
         public TextMeshProUGUI rewardText;
 
         public RectTransform pointerIcon;
+        public ParticleSystem coinFirecracker;
 
         public override void Show()
         {
@@ -37,10 +39,25 @@ namespace PIERStory
                 return;
             }
 
-            // 튜토리얼 단계 업데이트 후 플레이
+            coinFirecracker.Play(true);
+
             pointerIcon.DOKill();
-            StoryLobbyMain.OnEpisodePlay?.Invoke();
+            pointerIcon.gameObject.SetActive(false);
+
+            StartCoroutine(WaitParticleEnd());
+        }
+
+        /// <summary>
+        /// 파티클 연출 종료 후 게임 시작
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator WaitParticleEnd()
+        {
+            yield return new WaitUntil(() => coinFirecracker.isStopped);
+            
+            // 튜토리얼 단계 업데이트 후 플레이
             SystemManager.ShowNetworkLoading();
+            StoryLobbyMain.OnEpisodePlay?.Invoke();
         }
     }
 }

@@ -43,6 +43,9 @@ namespace PIERStory
         public GameObject text3;
         public Button openButton;
 
+        [Space(15)]
+        public ParticleSystem coinFirecracker;
+
         public override void Show()
         {
             base.Show();
@@ -128,6 +131,8 @@ namespace PIERStory
                 return;
             }
 
+            coinFirecracker.Play(true);
+
             // 프리패스가 있는 경우
             if(UserManager.main.HasProjectFreepass())
             {
@@ -138,18 +143,18 @@ namespace PIERStory
                 passBadge.gameObject.SetActive(true);
 
                 Sequence endTween = DOTween.Sequence();
-                endTween.Append(passBadge.GetComponent<Image>().DOFade(0f, 1f).SetDelay(0.8f));
+                const float animTime = 1.5f;
+                endTween.Append(passBadge.GetComponent<Image>().DOFade(0f, animTime).SetDelay(0.8f));
 
                 RectTransform passRect = passBadge.GetComponent<RectTransform>();
 
-                endTween.Join(passRect.DOAnchorPos(new Vector2(141, 281), 1f));
-                endTween.Join(passRect.DOSizeDelta(new Vector2(passRect.sizeDelta.x * 0.3f, passRect.sizeDelta.y * 0.3f), 1f)
-                );
+                endTween.Join(passRect.DOAnchorPos(new Vector2(141, 281), animTime));
+                endTween.Join(passRect.DOSizeDelta(new Vector2(passRect.sizeDelta.x * 0.3f, passRect.sizeDelta.y * 0.3f), animTime));
                 endTween.onComplete = Hide;
             }
             else
             {
-                Hide();
+                StartCoroutine(WaitParticleStop());
             }
         }
 
@@ -166,5 +171,10 @@ namespace PIERStory
             UserManager.main.UpdateTutorialStep(3, 1, CallbackTutorialUpdate);
         }
 
+        IEnumerator WaitParticleStop()
+        {
+            yield return new WaitUntil(() => coinFirecracker.isStopped);
+            Hide();
+        }
     }
 }

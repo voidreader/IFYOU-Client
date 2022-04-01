@@ -10,7 +10,8 @@ using TMPro;
 using LitJson;
 using BestHTTP;
 using Toast.Gamebase;
-
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 // Live2D
 using Live2D.Cubism.Core;
@@ -19,6 +20,8 @@ using Live2D.Cubism.Rendering;
 using Live2D.Cubism.Framework.Json;
 using Live2D.Cubism.Framework.Motion;
 using Live2D.Cubism.Framework.MotionFade;
+
+
 
 namespace PIERStory
 {
@@ -34,6 +37,9 @@ namespace PIERStory
         public static bool IsGamebaseInit = false; // 게임베이스 초기화 여부 
         public static bool noticePopupExcuted = false; // 한번이라도 공지 팝업이 실행되면 true로 변경됨
         public bool isServerValid = false; // 업데이트 필수, 점검 
+        public bool isAddressableCatalogUpdated = false; // 어드레서블 카탈로그 업데이트 여부 
+        
+        
         
         
         
@@ -121,12 +127,18 @@ namespace PIERStory
         
         const string KEY_ENCRYPTION = "imageEncrypt_2"; // 암호화 여부 
         
-        #region 내장폰트
+        #region 내장폰트, 에셋번들 폰트
         [SerializeField] TMP_FontAsset innerFontKO = null;
         [SerializeField] TMP_FontAsset innerFontEN = null;
         [SerializeField] TMP_FontAsset innerFontJA = null;
         [SerializeField] TMP_FontAsset innerFontSC = null;
         [SerializeField] TMP_FontAsset innerFontTC = null;
+        
+        // * 에셋번들로 받은 폰트
+        // * 한글 영어는 같이 씀.         
+        public TMP_FontAsset mainAssetFont = null; // 한글
+        public AsyncOperationHandle<TMP_FontAsset> mountedAssetFont; 
+        Shader assetFontShader;
 
         #endregion
         
@@ -270,7 +282,7 @@ namespace PIERStory
         void ChangeQuality() {
             
             
-            Debug.Log(string.Format("Current QualityLevel is [{0}]", QualitySettings.GetQualityLevel()));
+            // Debug.Log(string.Format("Current QualityLevel is [{0}]", QualitySettings.GetQualityLevel()));
             
             // iOS만 실행하도록 전처리 
             // iOS는 가장 낮은 퀄리티가 기본으로 세팅 되어있다. 
@@ -422,7 +434,8 @@ namespace PIERStory
             
             // * 여기서 부터 초기화 이후 로직.
             Debug.Log("Gamebase Initialization succeeded.");
-            ViewTitle.OnUpdateLoadingText?.Invoke(2);
+            // ViewTitle.OnUpdateLoadingText?.Invoke(2);
+            // ViewTitle.ActionTitleLoading("gamebase");
             
             IsGamebaseInit = true; // 초기화 완료 
             Gamebase.AddEventHandler(GamebaseObserverHandler);
@@ -605,10 +618,10 @@ namespace PIERStory
             // 버전 비교를 시작한다.
             JsonData result = JsonMapper.ToObject(response.DataAsText);
                     
-            Debug.Log(JsonMapper.ToStringUnicode(result["master"]));
+            // Debug.Log(JsonMapper.ToStringUnicode(result["master"]));
             JsonData masterInfo = result["master"]; // 마스터 정보 
             
-            Debug.Log(JsonMapper.ToStringUnicode(result["ad"]));
+            // Debug.Log(JsonMapper.ToStringUnicode(result["ad"]));
             JsonData adInfo = result["ad"]; // 광고 기준정보 
             int serverlocalVer = int.Parse(masterInfo["local_ver"].ToString()); // 서버 로컬라이징 텍스트 버전
             
@@ -643,7 +656,7 @@ namespace PIERStory
             localVer = GetDeviceLocalVer();
             localizedTextJSON = GetDeviceLocalData();
             
-            Debug.Log(string.Format("device local ver : [{0}] / server local ver : [{1}]", localVer, serverlocalVer));
+            // Debug.Log(string.Format("device local ver : [{0}] / server local ver : [{1}]", localVer, serverlocalVer));
             
             // 비교해서 다르면 서버한테 텍스트 정보를 요청한다.
             // 버전 똑같고, 데이터도 잘 있으면 아무것도 안함.
@@ -811,7 +824,8 @@ namespace PIERStory
         public void LoginPlatform(bool isForceGuest = false)
         {
             
-            ViewTitle.OnUpdateLoadingText?.Invoke(3);
+            // ViewTitle.OnUpdateLoadingText?.Invoke(3);
+            
             
             // 마지막에 진행한 로그인 방법을 가져와서 실행합니다.(GUEST, Google, Apple)
             string lastLoggedInProvider = Gamebase.GetLastLoggedInProvider();
@@ -1917,6 +1931,86 @@ namespace PIERStory
         #endregion
 
         #region 파일 체크, 파일 다운로드 공용
+        
+        /// <summary>
+        /// 에셋번들로 폰트 불러오기 
+        /// </summary>
+        public void LoadAddressableFont()  {
+            
+            // * 기본폰트는 AppleGothic. 
+            // * 모든 UI의 폰트는 AppleGothic으로 설정한다. 
+            // * 언어에 따라서 변경. 
+            
+            string addressableKey = string.Empty;
+            
+            // 언어변경 등으로 인해 이미 불러온 정보가 있었다면. 파괴하고 새로 불러온다. 
+            if(mainAssetFont != null) {
+                Addressables.ReleaseInstance(mountedAssetFont);
+            }
+            
+            
+            switch(currentAppLanguageCode) {
+                case "KO":    // 한글 영어는 같이 씀 
+                case "EN":
+                addressableKey = "Font/" + "KoPubWorld Dotum Medium SDF.asset"; 
+                break;
+                
+                case "JA":
+                // mplus-1p-regular SDF
+                addressableKey = "Font/" + "NotoSansJP-Medium SDF.asset"; 
+                break;
+                
+                default:
+                break;
+            }
+            
+            Debug.Log(string.Format("<color=cyan>font addressable key : [{0}] </color>", addressableKey));
+            assetFontShader = Shader.Find("TextMeshPro/Mobile/Distance Field");
+            
+            // LoadAssetAsync. 
+            Addressables.LoadAssetAsync<TMP_FontAsset>(addressableKey).Completed += (handle) => {
+                if(handle.Status == AsyncOperationStatus.Succeeded) { 
+                    // * 성공
+                    mountedAssetFont = handle;
+                    mainAssetFont = handle.Result;
+                    
+                    
+                    
+                    // 다른 프로젝트에서 가져오는거라서 Shader처리 해준다.
+                    mainAssetFont.material.shader = assetFontShader;
+                    
+                    Debug.Log("<color=cyan>Font loaded OK!!!!!</color>");
+                }
+                else {
+                    mainAssetFont = innerFontKO; 
+                    Debug.Log("<color=cyan>Font loaded FAIL....</color>");
+                }
+            };
+        }
+        
+        
+        /// <summary>
+        /// 언어에 해당하는 에셋 폰트 가져오기 
+        /// </summary>
+        /// <param name="__isException"></param>
+        /// <returns></returns>
+        public TMP_FontAsset getCurrentLangFont(bool __isException) {
+            
+            switch (currentAppLanguageCode) {
+                case "JA": // 일본어 예외없이 무조건 메인폰트 리턴 
+                return mainAssetFont; 
+                
+                default:
+                if(__isException)  // appleGothic 유지 
+                    return innerFontEN; 
+                else 
+                    return mainAssetFont; // 유지하지 않음 
+                
+                
+            }
+        }
+        
+        
         
         /// <summary>
         /// 파일 로컬 저장 되어있는지 체크 

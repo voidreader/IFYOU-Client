@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,25 +10,46 @@ using Doozy.Runtime.Signals;
 using TMPro;
 using DG.Tweening;
 
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
+
 namespace PIERStory {
     public class ViewTitle : CommonView
     {
         
-        public static Action<int> OnUpdateLoadingText = null;
+        public static Action<string> ActionTitleLoading = null;
         
         public RawImage mainImage; // 다운로드받아서 보여주는 플랫폼 로딩 화면 
         
         [SerializeField] TextMeshProUGUI textLoading;
         [SerializeField] int totalDownloadingImageCount = 0;
-        [SerializeField] Image progressBar; 
+        public string currentStep = string.Empty;
+        
+        public GameObject downloadProgressParent;
+        [SerializeField] Image downloadProgressBar; // 에셋번들 다운로드 게이지 
+        
+        public Doozy.Runtime.Reactor.Progressor progressor; //  접속 로딩 게이지 
+        public bool isCheckingAssetBundle = false; 
+        
         
         [SerializeField] GameObject baseScreen; // 기본 스크린 
+        const string fontAssetBundle = "Font";
         
         private void Awake() {
-            OnUpdateLoadingText = UpdateLoadingText;
             textLoading.text = string.Empty;
             
-            progressBar.fillAmount = 0;
+            isCheckingAssetBundle = false;
+            
+            // 다운로드 프로그레서는 비활성화 해놓고 시작한다.
+            downloadProgressParent.SetActive(false);
+            downloadProgressBar.fillAmount = 0;
+            
+            // 접속 프로그레서 활성화 
+            progressor.gameObject.SetActive(true);
+            
+            ActionTitleLoading = UpdateTitleLoading;
+            
             
             mainImage.gameObject.SetActive(false);
             baseScreen.SetActive(true);
@@ -42,24 +64,175 @@ namespace PIERStory {
             
             // 타이틀 이미지 설정             
             SetTitleTexture();
+            
+            UpdateLoadingText(1); // 텍스트 설정
         }
         
         public override void OnView() {
             base.OnView();
             
-
-            // UserManager에서 원래 connectingDone Signal을 기다린다. 
-            // 언어변경에서 넘어오는 경우는 바로 진행 
-            if(UserManager.main.completeReadUserData) {
-                RequestStoryList();
-            }
-            
-            
-            ViewTitle.OnUpdateLoadingText?.Invoke(1);
-            
+            Debug.Log("<color=cyan>ViewTitle OnView</color>");
             AdManager.main.AnalyticsEnter("titleEnter");
             
+            // 언어변경등으로 강제로 씬로딩이 진행될때. 
+            if(SystemManager.IsGamebaseInit && UserManager.main.completeReadUserData && string.IsNullOrEmpty(currentStep)) {
+                UpdateTitleLoading("login");
+            }
+            
         }
+        
+        
+        /// <summary>
+        /// 타이틀 로딩 처리 
+        /// </summary>
+        /// <param name="__step"></param>        
+        void UpdateTitleLoading(string __step) {
+            
+            Debug.Log(string.Format("<color=cyan>## UpdateTitleLoading [{0}] </color>", __step));
+            
+            switch(__step) {
+                case "gamebase": 
+                // progressor.SetProgressAt(0.5f);
+                progressor.PlayToProgress(0.5f);
+                break;
+                
+                case "login": // 게임 서버 로그인 완료 
+                UpdateLoadingText(2);
+                // progressor.SetProgressAt(1f);
+                progressor.PlayToProgress(1);
+                break;
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__v"></param>
+        public void OnProgressChanged(float __v) {
+            if(__v >= 1 && !isCheckingAssetBundle) {
+                StartCoroutine(CheckingAssetBundle());
+                isCheckingAssetBundle = true; // 혹시 여러번 돌릴까봐...
+                
+                downloadProgressParent.SetActive(true);
+                progressor.gameObject.SetActive(false); 
+            }
+        }
+        
+        IEnumerator CheckingAssetBundle() {
+            
+            Debug.Log("<color=cyan>## CheckingAssetBundle START</color>");
+            
+            UpdateLoadingText(4);
+            
+            while(!SystemManager.main.isAddressableCatalogUpdated)
+                yield return null;
+                
+            Debug.Log("<color=cyan>## CheckingAssetBundle #1 </color>");
+            
+            bool hasDownloadableBundle = false;
+            
+            AsyncOperationHandle<IList<IResourceLocation>> bundleCheckHandle = Addressables.LoadResourceLocationsAsync(fontAssetBundle);
+            yield return bundleCheckHandle;
+            
+            if( bundleCheckHandle.Status != AsyncOperationStatus.Succeeded) { // 실패
+                    Debug.Log("<color=cyan>## No Font bundle </color>");
+            
+                    hasDownloadableBundle = false;
+            }
+            else { // 성공이지만 
+                if(bundleCheckHandle.Result.Count > 0) {
+                    // 번들 있음
+                    hasDownloadableBundle  = true;
+                   Debug.Log("<color=cyan>## Font bundle is downloading </color>");
+                }
+                else {
+                    
+                    Debug.Log("<color=cyan> all font bundle is downloaded </color>");
+                    
+                    // 번들 없음 
+                    hasDownloadableBundle = false;
+                }
+            }
+            
+            // 다운로드 할 거 없음 
+            if(!hasDownloadableBundle) {
+                
+                FillProgressorOnly();
+            
+            }
+            
+            // * 번들 체크 완료 후 있으면 다운로드 시작 
+            AsyncOperationHandle<long> getDownloadSizeHandle = Addressables.GetDownloadSizeAsync(fontAssetBundle);
+            yield return getDownloadSizeHandle;
+            Debug.Log("### GetDownloadSizeAsync END, size : " + getDownloadSizeHandle.Result);
+            // 다운로드 할 데이터 없음 
+            if(getDownloadSizeHandle.Result <= 0) {
+                
+                // 폰트 부른다. 
+                SystemManager.main.LoadAddressableFont();
+                
+                
+                FillProgressorOnly();
+                yield break;
+            }
+            
+            Debug.Log("### Asset bundle download start ###");
+            AsyncOperationHandle downloadHandle =  Addressables.DownloadDependenciesAsync(fontAssetBundle);
+            downloadHandle.Completed += (op) => {
+            };            
+            
+            // 게이지 채우기 
+            while(!downloadHandle.IsDone) {
+                downloadProgressBar.fillAmount = downloadHandle.PercentComplete;
+                yield return null;
+            }            
+            
+            // 다운로드 완료됨 
+            Debug.Log("<color=cyan>font bundle downloading is done!!!</color>");
+            
+            // 폰트 부른다. 
+            SystemManager.main.LoadAddressableFont();
+            
+            StartCoroutine(MovingNextScene());
+        }
+        
+        
+        /// <summary>
+        /// 진입에 필요한 과정이 모드 완료되면 호출 
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator MovingNextScene() {
+            Debug.Log("<color=cyan>MoveingNextScene START</color>");
+            
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork()); // 서버 통신 종료되길 기다린다. 
+            yield return new WaitUntil(() =>SystemManager.main.mainAssetFont != null); // 폰트 불러오길 기다린다. 
+            
+            Debug.Log("<color=cyan>MoveingNextScene END</color>");
+            
+            Signal.Send(LobbyConst.STREAM_IFYOU, "moveMain", "open!"); // ViewMain으로 이동한다.
+        }
+        
+        
+        
+    
+        /// <summary>
+        /// 에셋번들 다운로드 게이지 채우기만 하고 넘기기 
+        /// </summary>
+        void FillProgressorOnly() {
+                
+                Debug.Log("### FillProgressorOnly ###");
+                
+                downloadProgressBar.DOFillAmount(1, 3).OnComplete(()=> {
+                    StartCoroutine(MovingNextScene());
+                });
+        }
+        
+        
+        
+                
+        
+        
+        
         
         /// <summary>
         /// 로딩 텍스트 변환 
@@ -67,59 +240,11 @@ namespace PIERStory {
         /// <param name="step"></param>
         void UpdateLoadingText(int step) {
             textLoading.text = GetPlatformLoadingText(step);
-            
-            Debug.Log(" >> UpdateLoadingText :: " + step);
-            
-            progressBar.DOKill();
-            
-            // 이미지 fillAmount 추가
-            switch(step) {
-                case 1:
-                //progressBar.DOFillAmount(0.3f, 0.1f);
-                progressBar.fillAmount = 0.3f;
-                break;
-                case 2:
-                // progressBar.DOFillAmount(0.7f, 0.1f);
-                progressBar.fillAmount = 0.7f;
-                break;
-                case 3:
-                // progressBar.DOFillAmount(1f, 0.1f);
-                progressBar.fillAmount = 1;
-                break;
-            
-            }
         }
         
         
-        /// <summary>
-        /// 
-        /// </summary>
-        public void RequestStoryList() {
-            
-            Debug.Log("View Title RequestStoryList");
-            
-            // * 메인화면 작품 리스트 요청 
-            StoryManager.main.RequestStoryList(OnRequestStoryList);
-        }
-        
-        
-        /// <summary>
-        /// callback 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="response"></param>
-        void OnRequestStoryList(HTTPRequest request, HTTPResponse response) {
-            if(!NetworkLoader.CheckResponseValidation(request, response)) {
-                return;
-            }
-            
-            Debug.Log(">> OnRequestStoryList : " + response.DataAsText);
-            
-            // 작품 리스트 받아와서 스토리 매니저에게 전달. 
-            StoryManager.main.SetStoryList(JsonMapper.ToObject(response.DataAsText));
-            
-            StartCoroutine(RoutinePrepareMainPage());
-        }
+
+  
         
         IEnumerator RoutinePrepareMainPage() {
 
@@ -128,9 +253,11 @@ namespace PIERStory {
             
             // NetworkLoader.main.RequestComingSoonList(); // 커밍순 리스트 요청
             NetworkLoader.main.RequestAttendanceList(); // 출석 보상 리스트 요청
+            DownloadStoryMainImages(); // 여기 추가 
 
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
 
+            /*
             DownloadStoryMainImages(); // 다운로드 요청 
             
             // 다운로드 완료될때까지 기다린다.
@@ -141,6 +268,7 @@ namespace PIERStory {
          
             // 준비 끝났으면 signal 전송 
             Signal.Send(LobbyConst.STREAM_IFYOU, "moveMain", "open!");
+            */
         }
         
         
@@ -157,8 +285,8 @@ namespace PIERStory {
                 
                 currentData = StoryManager.main.listTotalStory[i];
                    
-                imageURL = currentData.bannerURL;
-                imageKey = currentData.bannerKey;
+                imageURL = currentData.categoryImageURL;
+                imageKey = currentData.categoryImageKey;
                 
                 if(string.IsNullOrEmpty(imageURL) || string.IsNullOrEmpty(imageKey))
                     continue;
@@ -167,7 +295,7 @@ namespace PIERStory {
                 if(ES3.FileExists(imageKey))
                     continue;
                 
-                Debug.Log(imageURL +" / " + imageKey);
+                // Debug.Log(imageURL +" / " + imageKey);
                 
                 // 다운로드 요청 
                 totalDownloadingImageCount++; // 유효한 URL당 
@@ -262,6 +390,10 @@ namespace PIERStory {
                     currentAppLang = "KO";
                     break;
                     
+                    case SystemLanguage.Japanese:
+                    currentAppLang = "JA";
+                    break;
+                    
                     default:
                     currentAppLang = "EN";
                     break;
@@ -275,14 +407,35 @@ namespace PIERStory {
             }
             
             switch(step) {
-                case 1: 
-                return currentAppLang == "KO"?"서버에 접속합니다.":"Connecting to server";
                 
-                case 2:
-                return currentAppLang == "KO"?"플랫폼 정보를 불러오고 있습니다.":"Requesting platform information.";
+                case 1: // 디폴트
+                if(currentAppLang == "KO") 
+                    return "서버에 접속합니다.";
+                else if(currentAppLang == "JA") 
+                    return "サーバーに接続します。";
+                else
+                    return "Connecting to server.";
+                
+                case 2: // 게임베이스, 플랫폼 로그인 
+                if(currentAppLang == "KO") 
+                    return "플랫폼 정보를 불러오고 있습니다.";
+                else if(currentAppLang == "JA") 
+                    return "プラットフォーム情報の要求。";
+                else
+                    return "Requesting platform information.";
                 
                 case 3:
                 return currentAppLang == "KO"?"계정 정보를 불러오고 있습니다.":"Loading account Information.";
+                
+                case 4:  // 에셋번들 다운로드 
+                
+                if(currentAppLang == "KO") 
+                    return "게임에 필요한 데이터를 다운받고 있습니다.";
+                else if(currentAppLang == "JA") 
+                    return "ゲームに必要なデータをダウンロードしています。";
+                else
+                    return "Downloading necessary game data.";
+                
                 
             }
             

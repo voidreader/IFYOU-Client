@@ -1957,7 +1957,7 @@ namespace PIERStory
                 
                 case "JA":
                 // mplus-1p-regular SDF
-                addressableKey = "Font/" + "mplus-1p-regular SDF.asset"; 
+                addressableKey = "Font/" + "NotoSansJP-Medium SDF.asset"; 
                 break;
                 
                 default:

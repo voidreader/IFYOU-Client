@@ -269,7 +269,43 @@ namespace PIERStory
             
             
             Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventLogin);
+            
+            ViewTitle.ActionTitleLoading("login");
+            
+            // 서비스 중인 스토리 리스트 조회 
+            RequestServiceStoryList();
         }
+        
+        /// <summary>
+        /// 서비스 중인 작품 리스트 조회하기 
+        /// </summary>
+        public void RequestServiceStoryList() {
+            StoryManager.main.RequestStoryList(OnRequestServiceStoryList);
+        }
+        
+        /// <summary>
+        /// callback 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        void OnRequestServiceStoryList(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                return;
+            }
+            
+            Debug.Log(">> OnRequestServiceStoryList : " + response.DataAsText);
+            
+            // 작품 리스트 받아와서 스토리 매니저에게 전달. 
+            StoryManager.main.SetStoryList(JsonMapper.ToObject(response.DataAsText));
+            
+            // 푸시 토큰 및 이벤트, 출석 체크 조회 
+            SystemManager.main.QueryPushTokenInfo();
+            NetworkLoader.main.RequestPlatformServiceEvents(); // 공지사항, 프로모션, 장르 조회 
+            NetworkLoader.main.RequestAttendanceList(); // 출석 보상 리스트 요청
+        }        
+        
+        
+        
 
         /// <summary>
         /// 이전 연동된 계정 교체 처리 

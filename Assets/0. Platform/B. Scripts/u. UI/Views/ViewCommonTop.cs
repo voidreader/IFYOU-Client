@@ -263,7 +263,7 @@ namespace PIERStory {
         
         void OnTopRecoverSignal(Signal signal) {
             
-            Debug.Log("Top Recover Signal Received");
+            // Debug.Log("Top Recover Signal Received");
             RecoverState();
         }
         

@@ -137,9 +137,7 @@ namespace PIERStory {
             Addressables.LoadContentCatalogAsync(catalogURL).Completed += (op) => {
             
             Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
-            
-
-            
+            SystemManager.main.isAddressableCatalogUpdated = true;
             };
         }
         
@@ -309,10 +307,12 @@ namespace PIERStory {
                 
             
             data = JsonMapper.ToObject(ES3.Load<string>(SystemConst.KEY_PLATFORM_LOADING));
-            Debug.Log("GetRandomPlatformLoadingTexture : " + JsonMapper.ToStringUnicode(data));
+            // Debug.Log("GetRandomPlatformLoadingTexture : " + JsonMapper.ToStringUnicode(data));
             
-            if(data == null || data.Count == 0)
+            if(data == null || data.Count == 0) {
+                Debug.Log("<color=orange>No PlatformLoading Texture </color>");
                 return null;
+            }
             
             imageIndex = Random.Range(0, data.Count);
             imageKey = data[imageIndex][SystemConst.IMAGE_KEY].ToString();

@@ -61,7 +61,7 @@ namespace PIERStory {
             
            
            // 종료 후 광고 노출. 
-           Hide();
+           this.Hide();
             
         }
         

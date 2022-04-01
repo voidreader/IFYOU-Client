@@ -170,7 +170,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -100, y: -2}
-  m_SizeDelta: {x: 88, y: 95}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3403939225047454447
 CanvasRenderer:
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: baaf601c9149b5947bb686358e59b983, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fecc9413d07148d41ad038a8aa5ee740, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1750,6 +1750,9 @@ MonoBehaviour:
     projectProgress: 0
     isPlaying: 0
     genre: 
+    serialDay: 
+    isSerial: 0
+    listSerialDays: []
   textOriginPrice: {fileID: 8978306263474774313}
   textSalePrice: {fileID: 7981967738401865625}
   originFreepassPrice: 0
@@ -1918,6 +1921,7 @@ GameObject:
   - component: {fileID: 5572153828100307411}
   - component: {fileID: 681780257723878137}
   - component: {fileID: 6024037699726428958}
+  - component: {fileID: 4519218973606315962}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -2041,6 +2045,23 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4519218973606315962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105496948207487549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _textID: 5185
+  _text: {fileID: 6024037699726428958}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &2380659507102250660
 GameObject:
   m_ObjectHideFlags: 0
@@ -4220,6 +4241,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 6228
   _text: {fileID: 8991783209941617070}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &6616086118337459282
 GameObject:
   m_ObjectHideFlags: 0
@@ -4673,6 +4697,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 5039
   _text: {fileID: 1811260192965247055}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &7748094687410819659
 GameObject:
   m_ObjectHideFlags: 0

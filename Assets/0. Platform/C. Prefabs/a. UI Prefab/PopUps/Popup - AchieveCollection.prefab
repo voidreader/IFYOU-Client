@@ -57,10 +57,43 @@ MonoBehaviour:
     - {fileID: 1017000941213670713}
     Labels:
     - {fileID: 1017000940605295391}
+    contentEpisode:
+      episodeID: 
+      episodeNO: 
+      episodeNumber: 0
+      episodeTypeString: 
+      episodeType: 0
+      episodeTitle: 
+      episodeSummary: 
+      combinedEpisodeTitle: 
+      storyLobbyTitle: 
+      flowPrefix: 
+      endingType: 
+      dependEpisode: 
+      endingOpen: 0
+      nextOpenMin: 0
+      totalSceneCount: 0
+      playedSceneCount: 0
+      sceneProgressorValue: 0
+      episodeGalleryImageProgressValue: 0
+      squareImageURL: 
+      squareImageKey: 
+      popupImageURL: 
+      popupImageKey: 
+      episodeState: 0
+      purchaseState: 0
+      OneTimePlayable: 0
+      priceStarPlaySale: 0
+      priceStarPlay: 0
+      currencyOneTime: 
+      currencyStarPlay: 
+      priceOneTime: 0
+      isUnlock: 0
     imageURL: 
     imageKey: 
     isConfirm: 1
     isPositive: 1
+    contentValue: 0
   overlay: {fileID: 0}
   content: {fileID: 1017000941827558449}
   autoDestroyTime: 3
@@ -69,6 +102,7 @@ MonoBehaviour:
   mainCanvasGroup: {fileID: 7994882894748013370}
   isShow: 0
   isOnShow: 0
+  isBlockBackButton: 0
   icon: {fileID: 1017000941213670713}
   halo: {fileID: 8965352764570164635}
 --- !u!225 &7994882894748013370
@@ -94,6 +128,7 @@ GameObject:
   - component: {fileID: 1017000940605295390}
   - component: {fileID: 1017000940605295388}
   - component: {fileID: 1017000940605295391}
+  - component: {fileID: 5889385228699676854}
   m_Layer: 5
   m_Name: textTitle
   m_TagString: Untagged
@@ -217,6 +252,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5889385228699676854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017000940605295385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 1017000940605295391}
+  isException: 0
+  isFontSet: 0
 --- !u!1 &1017000941213670715
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,6 +492,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 0
   AutoHideAfterShow: 0

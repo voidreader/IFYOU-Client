@@ -25,6 +25,9 @@ namespace PIERStory {
         [SerializeField] Sprite spriteLikeOff; // 좋아요 버튼 OFF 스프라이트
         [SerializeField] Sprite spriteLikeOn; // 좋아요 버튼 ON 스프라이트        
         
+        public GameObject serialGroup; // 연재 관련 오브젝트 
+        public TextMeshProUGUI textSerialDay; // 연재 정보 
+        
         public StoryData introduceStory;
         
         public override void OnView() {
@@ -55,6 +58,10 @@ namespace PIERStory {
             textProducer.text = SystemManager.GetLocalizedText("6180") + " / " + introduceStory.writer;
             textSummary.text = introduceStory.summary; // 요약 
             textGenre.text = SystemManager.GetLocalizedText("6181") + " / " + introduceStory.genre;
+            
+            serialGroup.SetActive(introduceStory.isSerial);
+            textSerialDay.text = string.Format(SystemManager.GetLocalizedText("5184"), introduceStory.GetSeiralDay()); // 연재일 설정..
+            
             
             SetLikeButtonState();
         }

@@ -136,6 +136,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
@@ -780,16 +783,52 @@ MonoBehaviour:
     Images: []
     Labels:
     - {fileID: 5494531189468286469}
+    contentEpisode:
+      episodeID: 
+      episodeNO: 
+      episodeNumber: 0
+      episodeTypeString: 
+      episodeType: 0
+      episodeTitle: 
+      episodeSummary: 
+      combinedEpisodeTitle: 
+      storyLobbyTitle: 
+      flowPrefix: 
+      endingType: 
+      dependEpisode: 
+      endingOpen: 0
+      nextOpenMin: 0
+      totalSceneCount: 0
+      playedSceneCount: 0
+      sceneProgressorValue: 0
+      episodeGalleryImageProgressValue: 0
+      squareImageURL: 
+      squareImageKey: 
+      popupImageURL: 
+      popupImageKey: 
+      episodeState: 0
+      purchaseState: 0
+      OneTimePlayable: 0
+      priceStarPlaySale: 0
+      priceStarPlay: 0
+      currencyOneTime: 
+      currencyStarPlay: 
+      priceOneTime: 0
+      isUnlock: 0
     imageURL: 
     imageKey: 
     isConfirm: 1
     isPositive: 1
+    contentValue: 0
   overlay: {fileID: 0}
   content: {fileID: 5815933799324160824}
   autoDestroyTime: 2
   isOverlayUse: 0
   addQueue: 0
   mainCanvasGroup: {fileID: 5494531187766226646}
+  isShow: 0
+  isOnShow: 0
+  isBlockBackButton: 0
 --- !u!1 &5494531188862771235
 GameObject:
   m_ObjectHideFlags: 0
@@ -877,6 +916,7 @@ GameObject:
   - component: {fileID: 5494531189468286490}
   - component: {fileID: 5494531189468286468}
   - component: {fileID: 5494531189468286469}
+  - component: {fileID: 2592821255437577758}
   m_Layer: 5
   m_Name: PopupContent
   m_TagString: Untagged
@@ -1001,3 +1041,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2592821255437577758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5494531189468286491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 5494531189468286469}
+  isException: 1
+  isFontSet: 0

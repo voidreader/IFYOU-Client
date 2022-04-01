@@ -284,6 +284,7 @@ MonoBehaviour:
   targetEpisode:
     episodeID: 
     episodeNO: 
+    episodeNumber: 0
     episodeTypeString: 
     episodeType: 0
     episodeTitle: 
@@ -325,6 +326,7 @@ GameObject:
   - component: {fileID: 8670328953675197183}
   - component: {fileID: 8670328953675197177}
   - component: {fileID: 8670328953675197182}
+  - component: {fileID: 1443784831718797680}
   m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
@@ -448,6 +450,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1443784831718797680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8670328953675197180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 8670328953675197182}
+  isException: 1
+  isFontSet: 0
 --- !u!1001 &6364592480545181978
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -550,3 +567,34 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1837110814393887318, guid: 5f8eb330ccce884419e54e6e6ea5e322, type: 3}
   m_PrefabInstance: {fileID: 6364592480545181978}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7713980685211058787 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3701400014388351865, guid: 5f8eb330ccce884419e54e6e6ea5e322, type: 3}
+  m_PrefabInstance: {fileID: 6364592480545181978}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3631121108154600351 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7653804117650758277, guid: 5f8eb330ccce884419e54e6e6ea5e322, type: 3}
+  m_PrefabInstance: {fileID: 6364592480545181978}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7713980685211058787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7930800137385766394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7713980685211058787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 3631121108154600351}
+  isException: 1
+  isFontSet: 0

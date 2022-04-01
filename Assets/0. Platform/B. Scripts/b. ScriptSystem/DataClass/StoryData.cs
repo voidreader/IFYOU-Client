@@ -55,6 +55,10 @@ namespace PIERStory {
         public bool isPlaying = false; // 플레이중? 
         
         public string genre = string.Empty; // 장르
+        public string serialDay = string.Empty; // 연재일 추가 
+        
+        public bool isSerial = false; // 연재작 체크 
+        public List<string> listSerialDays = new List<string>();
         
         public StoryData() {
             
@@ -132,6 +136,66 @@ namespace PIERStory {
                     genre += ",";
             }
             
+            
+            // 연재일 
+            serialDay = SystemManager.GetJsonNodeString(originData, "serial_day");
+            if(string.IsNullOrEmpty(serialDay) || serialDay == "-1") {
+                isSerial = false;
+            }
+            else {
+                isSerial = true;
+                listSerialDays.Clear();
+                
+                // 요일 처리 
+                string[] arrSerial = serialDay.Split(',');
+                
+                // 요일 로컬라이징 
+                for(int i=0; i<arrSerial.Length;i++) {
+                    switch(arrSerial[i]) {
+                        case "0": // 일
+                        listSerialDays.Add(SystemManager.GetLocalizedText("5183"));
+                        break;
+                        case "1": // 월
+                        listSerialDays.Add(SystemManager.GetLocalizedText("5177"));
+                        break;
+                        case "2": // 화
+                        listSerialDays.Add(SystemManager.GetLocalizedText("5178"));
+                        break;
+                        case "3": // 수
+                        listSerialDays.Add(SystemManager.GetLocalizedText("5179"));
+                        break;
+                        case "4": // 목
+                        listSerialDays.Add(SystemManager.GetLocalizedText("5180"));
+                        break;
+                        case "5": // 금
+                        listSerialDays.Add(SystemManager.GetLocalizedText("5181"));
+                        break;
+                        case "6": // 토
+                        listSerialDays.Add(SystemManager.GetLocalizedText("5182"));
+                        break;
+                        
+                    }
+                }
+            }
+   
+        } // ? END
+        
+        
+        
+        /// <summary>
+        /// 연재일 정보 가져오기 
+        /// </summary>
+        /// <returns></returns>
+        public string GetSeiralDay() {
+            if(!isSerial)
+                return string.Empty;
+                
+            string allSerailDay = string.Empty;
+            for(int i=0; i<listSerialDays.Count;i++) {
+                allSerailDay += listSerialDays[i] + " ";
+            }
+            
+            return allSerailDay;
         }
     }
 }

@@ -464,6 +464,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 6100
   _text: {fileID: 1001696448309130178}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &2606184975543950497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1513,6 +1516,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 6101
   _text: {fileID: 1200935959979134642}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &4768866543014926553
 GameObject:
   m_ObjectHideFlags: 0
@@ -2330,6 +2336,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
@@ -3149,6 +3158,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
@@ -3781,10 +3793,43 @@ MonoBehaviour:
     Buttons: []
     Images: []
     Labels: []
+    contentEpisode:
+      episodeID: 
+      episodeNO: 
+      episodeNumber: 0
+      episodeTypeString: 
+      episodeType: 0
+      episodeTitle: 
+      episodeSummary: 
+      combinedEpisodeTitle: 
+      storyLobbyTitle: 
+      flowPrefix: 
+      endingType: 
+      dependEpisode: 
+      endingOpen: 0
+      nextOpenMin: 0
+      totalSceneCount: 0
+      playedSceneCount: 0
+      sceneProgressorValue: 0
+      episodeGalleryImageProgressValue: 0
+      squareImageURL: 
+      squareImageKey: 
+      popupImageURL: 
+      popupImageKey: 
+      episodeState: 0
+      purchaseState: 0
+      OneTimePlayable: 0
+      priceStarPlaySale: 0
+      priceStarPlay: 0
+      currencyOneTime: 
+      currencyStarPlay: 
+      priceOneTime: 0
+      isUnlock: 0
     imageURL: 
     imageKey: 
     isConfirm: 1
     isPositive: 1
+    contentValue: 0
   overlay: {fileID: 7222715301200829290}
   content: {fileID: 7222715301518514258}
   autoDestroyTime: 0
@@ -3793,6 +3838,7 @@ MonoBehaviour:
   mainCanvasGroup: {fileID: 3968772441037691629}
   isShow: 0
   isOnShow: 0
+  isBlockBackButton: 0
   textLevel: {fileID: 4081401163473009299}
   textSpecialGiftName: {fileID: 8152378686986840971}
   textNormalGiftQuantity: {fileID: 4725336517661737203}
@@ -3970,6 +4016,7 @@ GameObject:
   - component: {fileID: 2348625261141756802}
   - component: {fileID: 8910363538375029819}
   - component: {fileID: 2819136588963394430}
+  - component: {fileID: 3517168778247164476}
   m_Layer: 5
   m_Name: textEventBonus
   m_TagString: Untagged
@@ -4107,6 +4154,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c12afab522062f4f96f1ea47451f97c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3517168778247164476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8087602823093640048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _textID: 6149
+  _text: {fileID: 8910363538375029819}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &8653723532000630452
 GameObject:
   m_ObjectHideFlags: 0

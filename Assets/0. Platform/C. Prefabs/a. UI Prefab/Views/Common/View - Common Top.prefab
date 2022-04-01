@@ -3752,7 +3752,6 @@ MonoBehaviour:
   mailNotify: {fileID: 248796725232652305}
   moreNotify: {fileID: 3045737890283926059}
   attendanceButton: {fileID: 7587702321865588307}
-  howToPlayButton: {fileID: 4604335650363217410}
   topCoin: {fileID: 7951249870829770510}
   logo: {fileID: 4614698477351428854}
   bottomLine: {fileID: 3270373084998908286}
@@ -4827,6 +4826,7 @@ GameObject:
   - component: {fileID: 840893160023885821}
   - component: {fileID: 2109564860678053301}
   - component: {fileID: 520492357193055871}
+  - component: {fileID: 1751964247329720527}
   m_Layer: 5
   m_Name: ViewName
   m_TagString: Untagged
@@ -4892,7 +4892,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4281545523
   m_fontColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-  m_enableVertexGradient: 1
+  m_enableVertexGradient: 0
   m_colorMode: 0
   m_fontColorGradient:
     topLeft: {r: 1, g: 0.6392157, b: 0.83137256, a: 1}
@@ -4950,6 +4950,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1751964247329720527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8177317390730074365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 520492357193055871}
+  isException: 1
+  isFontSet: 0
 --- !u!1 &8319081896108540591
 GameObject:
   m_ObjectHideFlags: 0

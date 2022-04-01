@@ -53,8 +53,8 @@ namespace PIERStory
         public int selectionPrice = -1;
 
 
-        public string selection_group = string.Empty;
-        public string selection_no = string.Empty;
+        public int selection_group = 0;
+        public int selection_no = 0;
 
 
         // 액션 인터페이스 
@@ -244,8 +244,8 @@ namespace PIERStory
             autoplay_row = ParseCol<int>(GameConst.COL_AUTOPLAY_ROW);
 
             control = ParseCol<string>(GameConst.COL_CONTROL);
-            selection_group = ParseCol<string>(GameConst.COL_SELECTION_GROUP);
-            selection_no = ParseCol<string>(GameConst.COL_SELECTION_NO);
+            selection_group = ParseCol<int>(GameConst.COL_SELECTION_GROUP);
+            selection_no = ParseCol<int>(GameConst.COL_SELECTION_NO);
 
             SetControlParams();
 

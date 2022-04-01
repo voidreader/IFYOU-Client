@@ -311,7 +311,7 @@ namespace PIERStory
         /// <param name="__targetSceneID">이동하게 되는 사건ID</param>
         /// <param name="__selectionGroup">선택지 그룹 번호</param>
         /// <param name="__selectionNo">선택지 내 번호</param>
-        public void UpdateUserSelectionCurrent(string __targetSceneID, string __selectionGroup, string __selectionNo)
+        public void UpdateUserSelectionCurrent(string __targetSceneID, int __selectionGroup, int __selectionNo)
         {
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "updateUserSelectionCurrent";

@@ -550,7 +550,7 @@ namespace PIERStory
         /// <summary>
         /// 선택지 구매
         /// </summary>
-        public void PurchaseSelection(string __selectionGroup, string __selectionNo, int __price, OnRequestFinishedDelegate __cb)
+        public void PurchaseSelection(int __selectionGroup, int __selectionNo, int __price, OnRequestFinishedDelegate __cb)
         {
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "purchaseSelection";
@@ -580,7 +580,7 @@ namespace PIERStory
         /// </summary>
         /// <param name="__episodeID"></param>
         /// <returns></returns>
-        public bool IsPurchaseSelection(string __episodeID, string __selectionGroup, string __selectionNo)
+        public bool IsPurchaseSelection(string __episodeID, int __selectionGroup, int __selectionNo)
         {
             // key값이 없으면 구매한 적이 없는 에피소드
             if (!currentStoryJson[NODE_SELECTION_PURCHASE].ContainsKey(__episodeID))
@@ -591,11 +591,11 @@ namespace PIERStory
             for (int i = 0; i < selectionPurchaseData.Count; i++)
             {
                 // 선택지 그룹이 같은게 아니면 넘겨넘겨
-                if (SystemManager.GetJsonNodeString(selectionPurchaseData[i], GameConst.COL_SELECTION_GROUP) != __selectionGroup)
+                if (SystemManager.GetJsonNodeInt(selectionPurchaseData[i], GameConst.COL_SELECTION_GROUP) != __selectionGroup)
                     continue;
 
                 // 같은 선택지 그룹 내에서 같은 번호면 구매한적이 있으니 true 반환
-                if (SystemManager.GetJsonNodeString(selectionPurchaseData[i], GameConst.COL_SELECTION_NO) == __selectionNo)
+                if (SystemManager.GetJsonNodeInt(selectionPurchaseData[i], GameConst.COL_SELECTION_NO) == __selectionNo)
                     return true;
             }
 

@@ -248,14 +248,14 @@ MonoBehaviour:
   m_fontSize: 22
   m_fontSizeBase: 22
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 20
+  m_fontSizeMax: 22
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: -2
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -301,6 +301,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 5099
   _text: {fileID: 8387549259675527823}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &1883397416180414296
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,6 +409,7 @@ GameObject:
   - component: {fileID: 5131414700642056429}
   - component: {fileID: 8136234935861185263}
   - component: {fileID: 9038728964032753801}
+  - component: {fileID: 3001592791283977187}
   m_Layer: 5
   m_Name: RemainTime
   m_TagString: Untagged
@@ -529,6 +533,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3001592791283977187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2713958365816030048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 9038728964032753801}
+  isException: 1
+  isFontSet: 0
 --- !u!1 &3264807428880504871
 GameObject:
   m_ObjectHideFlags: 0
@@ -750,6 +769,7 @@ GameObject:
   - component: {fileID: 3261280070447484483}
   - component: {fileID: 9001115456896778854}
   - component: {fileID: 5820839468440681893}
+  - component: {fileID: 8168414562627652000}
   m_Layer: 5
   m_Name: MailDetail
   m_TagString: Untagged
@@ -873,6 +893,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8168414562627652000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5096185066803647473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 5820839468440681893}
+  isException: 1
+  isFontSet: 0
 --- !u!1 &6738771693328807604
 GameObject:
   m_ObjectHideFlags: 0
@@ -1009,6 +1044,7 @@ GameObject:
   - component: {fileID: 8566195683942952629}
   - component: {fileID: 2522121298851497529}
   - component: {fileID: 2093903818900594111}
+  - component: {fileID: 4433062742501462584}
   m_Layer: 5
   m_Name: MailTitle
   m_TagString: Untagged
@@ -1132,6 +1168,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4433062742501462584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6874652819919898957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 2093903818900594111}
+  isException: 1
+  isFontSet: 0
 --- !u!1 &8199306571045199667
 GameObject:
   m_ObjectHideFlags: 0

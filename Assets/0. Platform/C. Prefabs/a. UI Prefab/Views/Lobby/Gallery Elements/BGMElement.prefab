@@ -130,7 +130,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 40, y: 0}
+  m_AnchoredPosition: {x: 40, y: -1}
   m_SizeDelta: {x: 80, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6525136628457535866
@@ -163,8 +163,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
-  m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7b1086ab66244434486c5116cd0b312b, type: 2}
+  m_sharedMaterial: {fileID: -1606745826830924138, guid: 7b1086ab66244434486c5116cd0b312b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -241,6 +241,7 @@ GameObject:
   - component: {fileID: 6525136628919080461}
   - component: {fileID: 6525136628919080451}
   - component: {fileID: 6525136628919080450}
+  - component: {fileID: 1734716910314963177}
   m_Layer: 5
   m_Name: PlayTime
   m_TagString: Untagged
@@ -364,6 +365,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1734716910314963177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6525136628919080460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 6525136628919080450}
+  isException: 1
+  isFontSet: 0
 --- !u!1 &6525136629262813257
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,6 +487,7 @@ GameObject:
   - component: {fileID: 6525136629553526070}
   - component: {fileID: 6525136629553526068}
   - component: {fileID: 6525136629553526071}
+  - component: {fileID: 1605413701371035501}
   m_Layer: 5
   m_Name: SoundTitle
   m_TagString: Untagged
@@ -594,6 +611,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1605413701371035501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6525136629553526065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 6525136629553526071}
+  isException: 1
+  isFontSet: 0
 --- !u!1 &6525136629725784414
 GameObject:
   m_ObjectHideFlags: 0
@@ -704,6 +736,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -814,7 +847,7 @@ MonoBehaviour:
   soundNumText: {fileID: 6525136628457535749}
   bgmTitle: {fileID: 6525136629553526071}
   soundPlaytime: {fileID: 6525136628919080450}
-  voiceButtonImage: {fileID: 0}
+  voiceButtonBoarderImage: {fileID: 0}
   voiceScriptData: {fileID: 0}
   lockIcon: {fileID: 0}
   playingIcon: {fileID: 0}

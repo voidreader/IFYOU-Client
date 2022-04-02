@@ -222,7 +222,19 @@ MonoBehaviour:
       Runners: []
       Event:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: PIERStory.ViewStoryLobby, Assembly-CSharp
+            m_MethodName: OnClickProjectCoinShop
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
       BehaviourName: 4
       Receiver:
         ConnectionMode: 1
@@ -1480,7 +1492,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.000024729108, y: 0}
   m_SizeDelta: {x: 0, y: 280}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &5779213867382965148
@@ -1708,7 +1720,7 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls:
           - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: PIERStory.ViewProfileDeco, Assembly-CSharp
+            m_TargetAssemblyTypeName: PIERStory.ViewStoryLobby, Assembly-CSharp
             m_MethodName: OnClickDeleteStanding
             m_Mode: 1
             m_Arguments:
@@ -1924,8 +1936,8 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls:
           - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: PIERStory.ViewProfileDeco, Assembly-CSharp
-            m_MethodName: OnClickStandingFix
+            m_TargetAssemblyTypeName: PIERStory.ViewStoryLobby, Assembly-CSharp
+            m_MethodName: OnClickFixPosition
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
@@ -2153,7 +2165,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.000024729108, y: 0}
   m_SizeDelta: {x: 0, y: 280}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &5779213867561598213
@@ -2537,6 +2549,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 5067
   _text: {fileID: 5779213867674029567}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &5779213867701077352
 GameObject:
   m_ObjectHideFlags: 0
@@ -2722,8 +2737,8 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls:
           - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: PIERStory.ViewProfileDeco, Assembly-CSharp
-            m_MethodName: OnClickPositionFlip
+            m_TargetAssemblyTypeName: PIERStory.ViewStoryLobby, Assembly-CSharp
+            m_MethodName: OnClickFlipStanding
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
@@ -2904,6 +2919,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 6154
   _text: {fileID: 5779213867790813735}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &5779213867797006925
 GameObject:
   m_ObjectHideFlags: 0
@@ -4034,8 +4052,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -70, y: 15}
-  m_SizeDelta: {x: 120, y: 65}
+  m_AnchoredPosition: {x: -90, y: 15}
+  m_SizeDelta: {x: 167, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5779213867844243261
 CanvasRenderer:
@@ -4065,7 +4083,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bf7ea4bc66eaae549bda759dcada87a1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e0e407aee28b6a04994df8c10f7f6859, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4280,6 +4298,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 6150
   _text: {fileID: 5779213867874253877}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &5779213867938222334
 GameObject:
   m_ObjectHideFlags: 0
@@ -4429,6 +4450,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 6151
   _text: {fileID: 5779213867938222323}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &5779213867944111344
 GameObject:
   m_ObjectHideFlags: 0
@@ -5165,6 +5189,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: PIERStory.ViewStoryLobby, Assembly-CSharp
+          m_MethodName: OnClickFixPosition
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnInstantToggleOffCallback:
     Enabled: 0
     EventName: OnInstantToggleOffCallback
@@ -5210,7 +5246,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.000024729108, y: 0}
   m_SizeDelta: {x: 0, y: 280}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &5779213868116391202
@@ -5377,7 +5413,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.000024729108, y: 0}
   m_SizeDelta: {x: 0, y: 280}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &5779213868156480066
@@ -5728,6 +5764,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 6154
   _text: {fileID: 5779213868224701080}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &5779213868240709203
 GameObject:
   m_ObjectHideFlags: 0
@@ -5952,6 +5991,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 6159
   _text: {fileID: 5779213868266381304}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &5779213868303689342
 GameObject:
   m_ObjectHideFlags: 0
@@ -8014,6 +8056,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 5067
   _text: {fileID: 5779213868503557372}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &5779213868593176448
 GameObject:
   m_ObjectHideFlags: 0
@@ -8163,6 +8208,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 6152
   _text: {fileID: 5779213868593176453}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &5779213868729345945
 GameObject:
   m_ObjectHideFlags: 0
@@ -8268,7 +8316,7 @@ GameObject:
   - component: {fileID: 5779213868747801764}
   - component: {fileID: 5779213868747801765}
   m_Layer: 5
-  m_Name: Script
+  m_Name: Bubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9343,6 +9391,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: PIERStory.ViewStoryLobby, Assembly-CSharp
+          m_MethodName: OnClickFixBackground
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnInstantToggleOffCallback:
     Enabled: 0
     EventName: OnInstantToggleOffCallback
@@ -9426,8 +9486,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 4.8748}
+  m_SizeDelta: {x: -20, y: -9.7496}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5779213868927165769
 CanvasRenderer:
@@ -9487,9 +9547,9 @@ MonoBehaviour:
   m_fontSize: 30
   m_fontSizeBase: 30
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 24
+  m_fontSizeMax: 30
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -9540,6 +9600,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 6097
   _text: {fileID: 5779213868927165750}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &5779213869029134333
 GameObject:
   m_ObjectHideFlags: 0
@@ -9551,12 +9614,12 @@ GameObject:
   - component: {fileID: 5779213869029134335}
   - component: {fileID: 5779213869029134332}
   m_Layer: 5
-  m_Name: Toggle - Script
+  m_Name: Toggle - Bubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5779213869029134335
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9573,9 +9636,9 @@ RectTransform:
   m_Father: {fileID: 5779213868018634162}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 615, y: -80}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 110, y: 110}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5779213869029134332
@@ -9788,6 +9851,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 8000410473622318282}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
   OnInstantToggleOnCallback:
     Enabled: 0
     EventName: OnInstantToggleOnCallback
@@ -9824,6 +9899,18 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0.3
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8000410473622318282}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
@@ -9996,6 +10083,18 @@ MonoBehaviour:
             DoozyRuntime
           m_MethodName: set_isOn
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: PIERStory.ViewStoryLobby, Assembly-CSharp
+          m_MethodName: HideDecoContainer
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -10384,6 +10483,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textID: 5133
   _text: {fileID: 3513892770853768200}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &6431341152541114568
 GameObject:
   m_ObjectHideFlags: 0

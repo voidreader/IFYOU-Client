@@ -16,12 +16,16 @@ namespace PIERStory
 {
     public class ViewStoryLobby : CommonView
     {
-        public static Action OnDecorateSet = null;
+        public static Action OnDecorateSet = null;  // 꾸미기 프로필 세팅 
         public static Action OnDisableAllOptionals = null;
         public static Action<bool> OnInActiveInteractable = null;
         public static Action<JsonData> OnSelectBackground = null;
-        public static Action<JsonData, ProfileItemElement> OnSelectStanding = null;
-        public static Action<JsonData, ProfileItemElement> OnStickerSetting = null;
+        
+        
+        // * 리스트에서 프로필 아이템 클릭해서 화면에 띄워주기 
+        public static Action<JsonData, ProfileItemElement> OnSelectStanding = null; // 스탠딩 
+        public static Action<JsonData, ProfileItemElement> OnStickerSetting = null; // 스티커 화면에 띄우기 
+        public static Action<JsonData, ProfileItemElement> OnBubbleSetting = null;  // 말풍선 
 
         public static bool loadComplete = false;
 
@@ -38,12 +42,17 @@ namespace PIERStory
         [Space(15)][Header("꾸미기 편집 관련")]
         ScriptImageMount bg;
         string bgCurrency = string.Empty;
-        public Transform characterParent;
-        public Transform stickerParent;
+        public Transform characterParent; // 생성된 캐릭터 스탠딩 부모 transform
+        public Transform stickerParent; // 생성된 스티커 부모 transform
+        public Transform bubbleParent; // 생성된 말풍선 부모 transform
         public List<GameObject> decoObjects = new List<GameObject>();          // 화면에 꾸며놓은 Object들
         public List<GameObject> currencyElements = new List<GameObject>();     // 꾸미기 각 element들
 
-        public GameObject stickerObjectPrefab;
+        [Space]
+        public GameObject stickerObjectPrefab; // 생성시킬 스티커 prefab
+        public GameObject bubbleObjectPrefab; // 생성시킬 말풍선 prefab
+         
+        
         public List<UIToggle> typeToggles;
         public UIContainer decoListContainer;
         public GameObject coinShopButton;
@@ -87,6 +96,13 @@ namespace PIERStory
         public Transform stickerListContent;
         public GameObject stickerScroll;
         public GameObject noneStickerCurrency;
+        
+        [Space][Header("말풍선 대사 관련")]
+        public GameObject bubbleListPrefab;
+        public Transform bubbleListContent;
+        public GameObject bubbleScroll;
+        public GameObject noneBubbleCurrency;        
+        
 
         int totalDecoLoad = 0;
 
@@ -96,6 +112,8 @@ namespace PIERStory
             OnSelectBackground = SelectBackground;
             OnSelectStanding = SelectLiveCharacter;
             OnStickerSetting = CreateStickerElement;
+            OnBubbleSetting = CreateBubbleElement;
+            
             OnInActiveInteractable = ActiveInteractable;
         }
 
@@ -238,12 +256,16 @@ namespace PIERStory
             currencyElements.Clear();
 
             // 리스트 재화 항목 생성
-            CreateListObject(LobbyConst.NODE_WALLPAPER, bgListPrefab, bgListContent);
-            CreateListObject(LobbyConst.NODE_STANDING, standingListPrefab, standingListContent);
-            CreateListObject(LobbyConst.NODE_STICKER, stickerListPrefab, stickerListContent);
+            CreateListObject(LobbyConst.NODE_WALLPAPER, bgListPrefab, bgListContent); // 배경 
+            CreateListObject(LobbyConst.NODE_STANDING, standingListPrefab, standingListContent); // 스탠딩 
+            CreateListObject(LobbyConst.NODE_STICKER, stickerListPrefab, stickerListContent); // 스티커
+            CreateListObject(LobbyConst.NODE_BUBBLE, bubbleListPrefab, bubbleListContent); // 말풍선 
 
+            
+            // 배치 배열 재정리
             SortingList(bgListContent);
             SortingList(stickerListContent);
+            SortingList(bubbleListContent); 
             StandingListSort();
 
             // 진행전에 decoObjects 정리 
@@ -273,6 +295,8 @@ namespace PIERStory
                 }
             }
 
+
+            // * 아이템 보유 개수에 따라서 리스트 및 안내 멘트 활성&비활성
             // 배경
             bgListScroll.SetActive(bgListContent.childCount > 0);
             noneBackgroundCurrency.SetActive(bgListContent.childCount < 1);
@@ -284,6 +308,10 @@ namespace PIERStory
             // 스티커
             stickerScroll.SetActive(stickerListContent.childCount > 0);
             noneStickerCurrency.SetActive(stickerListContent.childCount < 1);
+            
+            // 말풍선
+            bubbleScroll.SetActive(bubbleListContent.childCount > 0);
+            noneBubbleCurrency.SetActive(bubbleListContent.childCount < 1);
 
 
             // 상단의 프리미엄 패스, 버튼 두개 비활성화
@@ -345,6 +373,7 @@ namespace PIERStory
 
         /// <summary>
         /// 작품 꾸미기 한거 세팅하기
+        /// ViewStoryLoading에서 호출. (에셋번들 다운로드 이후)
         /// </summary>
         void DecorateSetting()
         {
@@ -371,8 +400,8 @@ namespace PIERStory
                         LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_POS_X), 0, 0);
                         break;
 
-                    case GameConst.NODE_SCRIPT:         // 대사
-
+                    case LobbyConst.NODE_BUBBLE:         // 대사
+    
 
                         break;
                     case LobbyConst.NODE_STICKER:       // 스티커
@@ -578,8 +607,12 @@ namespace PIERStory
                 decoContainer.Hide();
 
                 // 수정한게 있든 없든 일단 다 뿌셔!
-                foreach (GameObject g in decoObjects)
+                foreach (GameObject g in decoObjects) {
+                    
+                    
+                    
                     Destroy(g);
+                }
 
                 decoObjects.Clear();
                 LobbyManager.main.lobbyBackground.sprite = null;
@@ -885,7 +918,26 @@ namespace PIERStory
 
         #endregion
 
-        #region 스티커 관련
+        #region 스티커, 말풍선 관련
+        
+        /// <summary>
+        /// 말풍선 만들기 
+        /// </summary>
+        /// <param name="__j"></param>
+        /// <param name="bubbleListElement"></param>
+        void CreateBubbleElement(JsonData __j, ProfileItemElement bubbleListElement) {
+            
+            BubbleManager.main.SetLobbyFakeBubbles(SystemManager.GetJsonNodeString(__j, "bubble_text"));
+            
+            /*
+            BubbleElement bubble = Instantiate(bubbleObjectPrefab, bubbleParent).GetComponent<BubbleElement>();
+            bubble.CreateBubble(__j, bubbleListElement);
+            decoObjects.Add(bubble.gameObject);
+            */
+            
+            
+        }
+        
 
         void StickerLoadComplete()
         {
@@ -903,13 +955,18 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 스티커가 움직일 수 있게 raycaster 활성화/비활성화
+        /// 스티커, 말풍선 움직일 수 있게 raycaster 활성화/비활성화
         /// </summary>
         /// <param name="__interactable"></param>
         void ActiveInteractable(bool __interactable)
         {
+            Debug.Log("##### ActiveInteractable :: " + __interactable );
+            
             for (int i = 0; i < stickerParent.childCount; i++)
                 stickerParent.GetChild(i).GetComponent<Image>().raycastTarget = __interactable;
+                
+            for (int i = 0; i < bubbleParent.childCount; i++)
+                bubbleParent.GetChild(i).GetComponent<Image>().raycastTarget = __interactable;
         }
 
 

@@ -21,11 +21,14 @@ namespace PIERStory
         public string modelName = string.Empty;
         string currencyType = string.Empty;
         public int totalCount = 1, currentCount = 0;
+        
+        public string debugJson = string.Empty;
 
 
         public void InitCurrencyListElement(JsonData __j)
         {
             currencyJson = __j;
+            debugJson = JsonMapper.ToStringUnicode(currencyJson);
 
             foreach (GameObject g in abilities)
                 g.SetActive(false);
@@ -67,6 +70,17 @@ namespace PIERStory
 
         #region OnClick event
 
+        /// <summary>
+        /// 말풍선 아이템!
+        /// </summary>
+        public void OnClickSelectBubble() {
+            ViewStoryLobby.OnBubbleSetting?.Invoke(currencyJson, this);
+        }
+
+
+        /// <summary>
+        /// 배경!
+        /// </summary>
         public void OnClickSelectBackground()
         {
             ViewStoryLobby.OnSelectBackground?.Invoke(currencyJson);

@@ -78,6 +78,20 @@ namespace PIERStory
                 FakeBubbles[i].SetFakeBubble(__row, i + 1);
             }
         }
+        
+        /// <summary>
+        /// 꾸미기 말풍선 사이즈 체크를 위한 가짜 말풍선 설정하기 
+        /// </summary>
+        /// <param name="__text"></param>
+        public void SetLobbyFakeBubbles(string __text) {
+            
+            Debug.Log(string.Format("SetLobbyFakeBubbles [{0}]", __text));
+            
+            for(int i=0; i<FakeBubbles.Count;i++) {
+                FakeBubbles[i].SetLobbyFakeBubble(__text, i+1);
+            }
+        }
+        
 
         /// <summary>
         /// 현재 가짜 말풍선 중에서 적절한 크기 받아오기 

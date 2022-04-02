@@ -13,8 +13,11 @@ namespace PIERStory {
         
         // Start is called before the first frame update
         void Awake() {
+            
+            isFontSet = false;
+            
             // 없으면 GetComponent해주지만, Inspector에서 설정해주는게 제일 좋다. 
-            if(_text) 
+            if(_text == null) 
                 _text = this.GetComponent<TextMeshProUGUI>();
         }
         

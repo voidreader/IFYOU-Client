@@ -378,6 +378,8 @@ namespace PIERStory {
         /// <returns></returns>
         public static string GetPlatformLoadingText(int step) {
             
+            Debug.Log("> GetPlatformLoadingText : " + step);
+            
             string currentAppLang = string.Empty;
             
             // 로컬라이징 정보가 최초 실행시에는 없다.
@@ -435,6 +437,7 @@ namespace PIERStory {
                     return "ゲームに必要なデータをダウンロードしています。";
                 else
                     return "Downloading necessary game data.";
+                
                 
                 
             }

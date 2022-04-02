@@ -1945,7 +1945,7 @@ namespace PIERStory
             
             // 언어변경 등으로 인해 이미 불러온 정보가 있었다면. 파괴하고 새로 불러온다. 
             if(mainAssetFont != null) {
-                Addressables.ReleaseInstance(mountedAssetFont);
+                // Addressables.ReleaseInstance(mountedAssetFont);
             }
             
             

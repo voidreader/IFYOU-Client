@@ -86,6 +86,10 @@ namespace PIERStory
  
         public Dictionary<string, string> bubbleID_Dictionary; // 말풍선 id-url 집합 
         public Dictionary<string, string> bubbleURL_Dictionary; // 말풍선 url-key 집합 
+        public Dictionary<string, string> bubbleID_DictionaryForLobby; // 말풍선 id-url 집합 (로비-꾸미기)
+        public Dictionary<string, string> bubbleURL_DictionaryForLobby; // 말풍선 url-key 집합 (로비-꾸미기)
+        public List<ScriptBubbleMount> ListProfileBubbleMount = new List<ScriptBubbleMount>(); // 프로필 말풍선 스프라이트 버블마운트
+        public int LoadingBubbleCount = 0; // 버블마운트 생성 체크용도의 정수 
 
         //네임태그 dict!
         Dictionary<string, JsonData> DictNametag = new Dictionary<string, JsonData>();
@@ -418,7 +422,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        ///  콜백, 스토리에 관련된 정보를 모두 불러왔습니다.
+        ///  콜백, 스토리에 관련된 정보를 모두 불러왔습니다.(스토리 로비진입 완료)
         /// </summary>
         /// <param name="req"></param>
         /// <param name="res"></param>
@@ -475,6 +479,7 @@ namespace PIERStory
                 // 말풍선 정보 없는 경우는 로컬에서 로드하여 노드에 할당 
                 ProjectDetailJson[UserManager.NODE_BUBBLE_SET] = currentBubbleSetJson;
             }
+            
             #endregion
 
 
@@ -482,6 +487,12 @@ namespace PIERStory
         
             // 말풍선 정보 세팅
             SetBubbles();
+            
+            yield return null; 
+            
+            LoadProfileBubbleSprite(); // 프로필용 말풍선 스프라이트 미리 불러놓기 
+            
+            yield return null; 
 
             // 프로젝트 네임태그 
             SetProjectNametag();
@@ -493,6 +504,7 @@ namespace PIERStory
             
             yield return null;
             
+                 
 
             // 프로젝트 기준정보 설정 
             SetProjectStandard();
@@ -826,6 +838,44 @@ namespace PIERStory
             CollectBubbleImages();
         }
         
+        void LoadProfileBubbleSprite() {
+            ListProfileBubbleMount.Clear();
+            LoadingBubbleCount = 0;
+            
+            string currentURL = string.Empty;
+            string currentKEY = string.Empty;
+
+            // 불러올 기본 말풍선(대화 템플릿)            
+            LoadingBubbleCount = StoryManager.main.bubbleID_DictionaryForLobby.Count;
+
+            foreach (string id in StoryManager.main.bubbleID_DictionaryForLobby.Keys)
+            {
+                currentURL = StoryManager.main.bubbleID_DictionaryForLobby[id];
+                currentKEY = StoryManager.main.bubbleURL_DictionaryForLobby[currentURL];
+
+                ListProfileBubbleMount.Add(new ScriptBubbleMount(id, currentURL, currentKEY, OnCompleteProfileBubbleMountLoad));
+            }                  
+        }
+        
+        void OnCompleteProfileBubbleMountLoad() {
+            // 차감시킨다. ViewStoryLoading 에서 대상 변수 체크한다.
+            LoadingBubbleCount--;
+        }
+        
+        public void SetLobbyBubbleMaster() {
+            for (int i = 0; i < ListProfileBubbleMount.Count; i++)
+            {
+                if (!ListProfileBubbleMount[i].isMounted)
+                    continue;
+
+
+                // 버블매니저에 추가해주기.
+                BubbleManager.main.AddBubbleSprite(ListProfileBubbleMount[i].spriteId, ListProfileBubbleMount[i].sprite);
+            }            
+        }
+        
+        
+        
         
         #region 작품 리소스 관리 일러스트, 미니컷, 라이브 일러스트, 라이브 오브제, 캐릭터 모델
         
@@ -995,9 +1045,15 @@ namespace PIERStory
         {
             bubbleID_Dictionary = new Dictionary<string, string>();
             bubbleURL_Dictionary = new Dictionary<string, string>();
+            
+            // * 꾸미기 용도의 Dict 추가 2022.04.
+            bubbleID_DictionaryForLobby = new Dictionary<string, string>();
+            bubbleURL_DictionaryForLobby = new Dictionary<string, string>();
+            
+            
 
             // 각 말풍선 그룹별로 처리 한다.
-            CollectGroupImageInfo(GetJsonData(talkBubbleJson, BUBBLE_VARIATION_NORMAL));
+            CollectGroupImageInfo(GetJsonData(talkBubbleJson, BUBBLE_VARIATION_NORMAL), true); // 대화 템플릿만 미리 다운로드 필요
             CollectGroupImageInfo(GetJsonData(talkBubbleJson, BUBBLE_VARIATION_EMOTICON));
             CollectGroupImageInfo(GetJsonData(talkBubbleJson, BUBBLE_VARIATION_REVERSE_EMOTICON));
             CollectGroupImageInfo(GetJsonData(talkBubbleJson, BUBBLE_VARIATION_DOUBLE));
@@ -1031,7 +1087,13 @@ namespace PIERStory
 
         }
 
-        void CollectGroupImageInfo(JsonData __j) {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__j"></param>
+        /// <param name="__preDownload">인게임 진입전 미리 다운로드 필요</param>
+        void CollectGroupImageInfo(JsonData __j, bool __preDownload = false) {
 
             // 없는 경우에 return 처리 추가 
             if (__j == null)
@@ -1054,7 +1116,7 @@ namespace PIERStory
                 if(currentID != "-1") {
                     currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_SPRITE_URL);
                     currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_SPRITE_KEY);
-                    AddBubbleDictionary(currentID, currentURL, currentKEY);
+                    AddBubbleDictionary(currentID, currentURL, currentKEY, __preDownload);
                 }
 
                 // 말풍선 외곽선 스프라이트 
@@ -1062,7 +1124,7 @@ namespace PIERStory
                 if(currentID != "-1") {
                     currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_OUTLINE_URL);
                     currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_OUTLINE_KEY);
-                    AddBubbleDictionary(currentID, currentURL, currentKEY);
+                    AddBubbleDictionary(currentID, currentURL, currentKEY, __preDownload);
                 }
 
                 // 말꼬리 스프라이트
@@ -1070,7 +1132,7 @@ namespace PIERStory
                 if(currentID != "-1") {
                     currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAIL_URL);
                     currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAIL_KEY);
-                    AddBubbleDictionary(currentID, currentURL, currentKEY);
+                    AddBubbleDictionary(currentID, currentURL, currentKEY, __preDownload);
                 }
 
                 // 말꼬리 외곽선 
@@ -1079,7 +1141,7 @@ namespace PIERStory
                 {
                     currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAIL_OUTLINE_URL);
                     currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAIL_OUTLINE_KEY);
-                    AddBubbleDictionary(currentID, currentURL, currentKEY);
+                    AddBubbleDictionary(currentID, currentURL, currentKEY, __preDownload);
                 }
 
 
@@ -1089,7 +1151,7 @@ namespace PIERStory
                 if(currentID != "-1") {
                     currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_R_TAIL_URL);
                     currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_R_TAIL_KEY);
-                    AddBubbleDictionary(currentID, currentURL, currentKEY);
+                    AddBubbleDictionary(currentID, currentURL, currentKEY, __preDownload);
                 }
 
                 // 반전 말꼬리 외곽선 
@@ -1098,7 +1160,7 @@ namespace PIERStory
                 {
                     currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_R_TAIL_OUTLINE_URL);
                     currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_R_TAIL_OUTLINE_KEY);
-                    AddBubbleDictionary(currentID, currentURL, currentKEY);
+                    AddBubbleDictionary(currentID, currentURL, currentKEY, __preDownload);
                 }
 
                 // 네임태그
@@ -1107,7 +1169,7 @@ namespace PIERStory
                 {
                     currentURL = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAG_URL);
                     currentKEY = GetNodeValue(__j[i], GameConst.COL_BUBBLE_TAG_KEY);
-                    AddBubbleDictionary(currentID, currentURL, currentKEY);
+                    AddBubbleDictionary(currentID, currentURL, currentKEY, __preDownload);
                 }
             }
         }
@@ -1119,7 +1181,7 @@ namespace PIERStory
         /// <param name="__id"></param>
         /// <param name="__url"></param>
         /// <param name="__key"></param>
-        void AddBubbleDictionary(string __id, string __url, string __key)
+        void AddBubbleDictionary(string __id, string __url, string __key, bool __preDownload = false)
         {
             // _id가 음수이거나 url이나 key 값이 없으면 뺀다.
             try
@@ -1139,6 +1201,13 @@ namespace PIERStory
 
             bubbleID_Dictionary[__id] = __url;
             bubbleURL_Dictionary[__url] = __key;
+            
+            // 미리 다운로드 필요시 진행 => 프로필 아이템에서 사용하는 경우 true
+            // bubbleMount 생성용도
+            if(__preDownload && !bubbleID_DictionaryForLobby.ContainsKey(__id)) {
+                bubbleID_DictionaryForLobby[__id] = __url;
+                bubbleURL_DictionaryForLobby[__url] = __key;
+            }
         }
 
 

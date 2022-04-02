@@ -302,6 +302,50 @@ namespace PIERStory
             // force update
             textContents.ForceMeshUpdate(true, true);
         }
+        
+        /// <summary>
+        /// 스토리 로비에서 사용되는 가짜 말풍선
+        /// </summary>
+        /// <param name="__message"></param>
+        public void SetLobbyFakeBubble(string __message, int __size) {
+            
+            isFakeBubble = true;
+            
+            message = __message;
+            needDelayShow = false;
+            message = message.Replace(@"\", "\n");
+            
+            template = "talk"; // 대화로 고정
+            holdingCount = 0;
+            
+            bubbleSize = __size; // fake는 지정한 size로 수동 변경 
+            
+            
+            bubblePos = 1; // 1로 임의 지정
+            
+            bubbleReverse = 0;
+            emoticon_expression = string.Empty;
+            
+            
+            in_effect = "none";
+            out_effect = "none";
+            
+            speaker = string.Empty;
+            alternativeName = string.Empty;
+            textContents.SetText(message);
+            
+            
+            SetBubbleGroup(); // 말풍선 기준정보 받아오고 맞추기
+            SetBubbleSync();
+            
+            // 폰트 스타일 
+            SetTextFontStyle();
+            SetTail();
+            
+            textContents.ForceMeshUpdate(true, true);
+            
+            
+        }
 
         #endregion
 
@@ -405,8 +449,9 @@ namespace PIERStory
 
         /// <summary>
         /// 서버 기준정보 따라서 말풍선 설정 
+        /// 로비에서 호출되는 경우 추가 
         /// </summary>
-        void SetBubbleSync()
+        void SetBubbleSync(bool __fromLobby = false)
         {
 
             #region TEXTAREA 처리 
@@ -430,7 +475,7 @@ namespace PIERStory
 
             imageBubble.type = Image.Type.Sliced;
             imageOutline.type = Image.Type.Sliced;
-
+            
             imageBubble.sprite = BubbleManager.main.GetBubbleSprite(SystemManager.GetJsonNodeString(targetBubbleJson, COL_BUBBLE_SPRITE_ID)); 
             imageOutline.sprite = BubbleManager.main.GetBubbleSprite(SystemManager.GetJsonNodeString(targetBubbleJson, COL_OUTLINE_SPRITE_ID));
 
@@ -641,7 +686,7 @@ namespace PIERStory
         {
 
             // speaker 입력안됐을까봐..
-            if (string.IsNullOrEmpty(row.speaker))
+            if (row == null || string.IsNullOrEmpty(row.speaker))
             {
                 Debug.LogWarning("speaker is empty");
                 return StoryManager.BUBBLE_VARIATION_NORMAL;

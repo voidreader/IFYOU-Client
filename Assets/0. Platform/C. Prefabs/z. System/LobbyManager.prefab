@@ -29,6 +29,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 378561076659191895}
+  - {fileID: 573313287061911333}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -49,26 +50,31 @@ MonoBehaviour:
     anim: {fileID: 0}
     liveName: 
     isMounted: 0
+    isLoaded: 0
     totalAssetCount: 0
     unloadAssetCount: 0
     liveImageController: {fileID: 0}
     gameScale: 0
     useCount: 0
+    isAddressable: 0
+    addressableKey: 
+    motionController: {fileID: 0}
+    isImmediateInstance: 0
   currentLiveObject:
     liveImage: {fileID: 0}
     anim: {fileID: 0}
     liveName: 
     isMounted: 0
+    isLoaded: 0
     totalAssetCount: 0
     unloadAssetCount: 0
     liveImageController: {fileID: 0}
     gameScale: 0
     useCount: 0
-  spriteGemIcon: {fileID: 21300000, guid: 2c89d90772445cc41a55906196a94077, type: 3}
-  spriteCoinIcon: {fileID: 21300000, guid: 4362719dde577cb40838ea384d8975dc, type: 3}
-  spriteOneTimeIcon: {fileID: 21300000, guid: 0912bd61aba780b40ad0bb0afc73cd68, type: 3}
-  spriteFreepassIcon: {fileID: 0}
-  spriteInappOriginIcon: {fileID: 21300000, guid: 2a247d77ccda2a344ad74c71cc797b2d, type: 3}
+    isAddressable: 0
+    addressableKey: 
+    motionController: {fileID: 0}
+    isImmediateInstance: 0
   textureNoneFrame: {fileID: 2800000, guid: 8c6685a543b4935488e073350604bbb0, type: 3}
   lobbyBackground: {fileID: 3047898336558141125}
   spriteOpenVoice: {fileID: 21300000, guid: 665391d67de581846a03d3d4d955a750, type: 3}
@@ -87,23 +93,6 @@ MonoBehaviour:
   spritePlatePremium: {fileID: 21300000, guid: 8692790e2f09fac4681b6ea03ece5682, type: 3}
   spriteEpisodeOpen: {fileID: 21300000, guid: 3d817a99066d9964a961c43a7e1aaf21, type: 3}
   spriteEpisodeLock: {fileID: 21300000, guid: 6cef183b781060c46990ddee3fa18fac, type: 3}
-  spriteNavLobbyOn: {fileID: 21300000, guid: 7623891312b4590479ede74a6b7081e4, type: 3}
-  spriteNavLobbyOff: {fileID: 21300000, guid: 403042a6e3234444d845e695be4d340b, type: 3}
-  spriteNavCategoryOn: {fileID: 21300000, guid: 76d55af9ae97808409d1a45048da6a23, type: 3}
-  spriteNavCategoryOff: {fileID: 21300000, guid: 7f3a058fdf7ac6d42a743fcf09ceda03, type: 3}
-  spriteNavShopOn: {fileID: 21300000, guid: 1dd5d2d698375d5469987a1ef05041ae, type: 3}
-  spriteNavShopOff: {fileID: 21300000, guid: e96d533cadd5cb648a5c20ae541c5b74, type: 3}
-  spriteNavIfYouOn: {fileID: 21300000, guid: ee3ac1168586e0b4ca6c04a69591753b, type: 3}
-  spriteNavIfYouOff: {fileID: 21300000, guid: c510a0a658570224dab60c23754654d5, type: 3}
-  spriteNavProfileOn: {fileID: 21300000, guid: 13b71cfbe8e3e8148be9ac898fbe0aca, type: 3}
-  spriteNavProfileOff: {fileID: 21300000, guid: e626b0d9820636a4b91ccc64f31c0ee6, type: 3}
-  spriteNavMoreOn: {fileID: 21300000, guid: 9af3c61a4f2433d4094e499d5079a07a, type: 3}
-  spriteNavMoreOff: {fileID: 21300000, guid: 8b3db6d6869b77f4481668c116540295, type: 3}
-  spriteGenreOn: {fileID: 21300000, guid: d36c3c7586912b643a5d65736e2d5ce7, type: 3}
-  spriteGenreOff: {fileID: 21300000, guid: 295604cd1c6e02540919db0927138e44, type: 3}
-  spriteAttendanceCoin: {fileID: 21300000, guid: fb1026e9c8b4b024baa15cc08ed21509, type: 3}
-  spriteAttendanceStar: {fileID: 21300000, guid: 25608dbae4af69a48a3eb099fdb97088, type: 3}
-  spriteAttendanceStars: {fileID: 21300000, guid: 4c1c325041f56c442baedd48a9ec286d, type: 3}
   colorFreeBox: {r: 0.9529412, g: 0.54901963, b: 0.6313726, a: 1}
   colorNavOn: {r: 0.9529412, g: 0.54901963, b: 0.6313726, a: 1}
   colorNavOff: {r: 0.6, g: 0.6, b: 0.6, a: 1}
@@ -195,3 +184,69 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &5235339034977645394
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 3912782711662323685}
+    m_Modifications:
+    - target: {fileID: 5716044812726174836, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: partnerBubbleSprites.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716044812726174838, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: m_Name
+      value: BubbleManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716044812726174839, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716044812726174839, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716044812726174839, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716044812726174839, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716044812726174839, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716044812726174839, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716044812726174839, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716044812726174839, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716044812726174839, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716044812726174839, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716044812726174839, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+--- !u!4 &573313287061911333 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5716044812726174839, guid: 495eb7b5f4545e44e980ada35d6d0d14, type: 3}
+  m_PrefabInstance: {fileID: 5235339034977645394}
+  m_PrefabAsset: {fileID: 0}

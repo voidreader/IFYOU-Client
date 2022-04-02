@@ -14,6 +14,9 @@ namespace PIERStory {
         public bool isTextSet = false; // 텍스트 설정되었는지 처리 
         
         void Awake() {
+            
+            isTextSet = false;
+            
             // 없으면 GetComponent해주지만, Inspector에서 설정해주는게 제일 좋다. 
             if(_text) 
                 _text = this.GetComponent<TextMeshProUGUI>();

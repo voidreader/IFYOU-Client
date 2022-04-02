@@ -131,13 +131,13 @@ namespace PIERStory
         void SendFailMessage()
         {
             isMounted = false;
-            OnMountCompleted();
+            OnMountCompleted?.Invoke();
         }
 
         void SendSuccessMessage()
         {
             isMounted = true;
-            OnMountCompleted();
+            OnMountCompleted?.Invoke();
         }
 
         static JsonData GetSpriteOrigin(string __id)

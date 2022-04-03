@@ -176,10 +176,17 @@ namespace PIERStory {
             
             if(promotionList == null)
                 return;
+            
+            // 이미 생성된거 있으면 다시 생성.. 
+            if(promotionScroll.NumberOfPanels > 0) {
+                for(int i=0; i<promotionScroll.NumberOfPanels; i++) {
+                    promotionScroll.RemoveFromBack();
+                }
                 
-            // 이미 프로모션 생성했으면 다시 하지 않음 
-            // if(promotionScroll.Panels.Length > 0)
-            //     return;
+                promotionScroll.Setup();
+            }
+            
+            
             
             for(int i=0; i<promotionList.Count;i++) {
                 

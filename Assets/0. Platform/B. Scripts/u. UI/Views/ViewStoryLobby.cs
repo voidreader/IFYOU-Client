@@ -12,6 +12,9 @@ using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Containers;
 using Doozy.Runtime.UIManager.Components;
 
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
 namespace PIERStory
 {
     public class ViewStoryLobby : CommonView
@@ -158,10 +161,7 @@ namespace PIERStory
         {
             base.OnHideView();
 
-            foreach (GameObject g in decoObjects)
-                Destroy(g);
-
-            decoObjects.Clear();
+            DestroyDecoObjects(); 
 
             foreach (GameObject g in currencyElements)
                 Destroy(g);
@@ -175,6 +175,24 @@ namespace PIERStory
 
             LobbyManager.main.lobbyBackground.sprite = null;
             loadComplete = false;
+        }
+        
+        
+        /// <summary>
+        /// 화면에 생성된 데코 오브젝트 없애기 
+        /// </summary>
+        void DestroyDecoObjects() {
+            foreach (GameObject g in decoObjects) {
+                
+                // 에셋번들로 생성된 캐릭터 모델은 ReleaseInstance. 
+                if(g.GetComponent<GameModelCtrl>() != null && g.GetComponent<GameModelCtrl>().isAddressable) {  
+                    Addressables.ReleaseInstance(g);
+                }
+                
+                Destroy(g);
+            }
+            
+            decoObjects.Clear();
         }
         
         
@@ -607,14 +625,8 @@ namespace PIERStory
                 decoContainer.Hide();
 
                 // 수정한게 있든 없든 일단 다 뿌셔!
-                foreach (GameObject g in decoObjects) {
-                    
-                    
-                    
-                    Destroy(g);
-                }
-
-                decoObjects.Clear();
+                DestroyDecoObjects();
+                
                 LobbyManager.main.lobbyBackground.sprite = null;
 
                 // 서버에 저장되어 있는 기반으로 다시 만들어!

@@ -122,7 +122,7 @@ namespace PIERStory {
             
             Debug.Log("<color=cyan>## CheckingAssetBundle START</color>");
             
-            UpdateLoadingText(4);
+            UpdateLoadingText(3);
             
             while(!SystemManager.main.isAddressableCatalogUpdated)
                 yield return null;
@@ -239,7 +239,10 @@ namespace PIERStory {
         /// </summary>
         /// <param name="step"></param>
         void UpdateLoadingText(int step) {
-            textLoading.text = GetPlatformLoadingText(step);
+            string loadingText = GetPlatformLoadingText(step);
+            Debug.Log(loadingText);
+            
+            textLoading.text = loadingText;
         }
         
         
@@ -426,19 +429,14 @@ namespace PIERStory {
                 else
                     return "Requesting platform information.";
                 
-                case 3:
-                return currentAppLang == "KO"?"계정 정보를 불러오고 있습니다.":"Loading account Information.";
-                
-                case 4:  // 에셋번들 다운로드 
-                
+                case 3: // 에셋번들 다운로드
+                Debug.Log("33333333333333333");
                 if(currentAppLang == "KO") 
                     return "게임에 필요한 데이터를 다운받고 있습니다.";
                 else if(currentAppLang == "JA") 
                     return "ゲームに必要なデータをダウンロードしています。";
                 else
                     return "Downloading necessary game data.";
-                
-                
                 
             }
             

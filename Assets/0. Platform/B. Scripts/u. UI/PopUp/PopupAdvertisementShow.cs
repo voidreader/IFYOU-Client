@@ -86,6 +86,7 @@ namespace PIERStory {
                 
                 // SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80013"));
                 SystemManager.ShowSimpleAlertLocalize("80013");
+                isPurchasePressed = false;
                 return;
             }
             

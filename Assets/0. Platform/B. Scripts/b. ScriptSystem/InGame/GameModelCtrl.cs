@@ -17,6 +17,8 @@ namespace PIERStory
         CubismRenderController cubismRender = null;
         public string modelType = "live2d";
         public CubismModel model = null;
+        
+        public bool isAddressable = false; // 어드레서블로 생성 여부 
         public CubismMotionController motionController = null;
         [HideInInspector] public Animation modelAnim;
         [HideInInspector] public Dictionary<string, AnimationClip> DictMotion;

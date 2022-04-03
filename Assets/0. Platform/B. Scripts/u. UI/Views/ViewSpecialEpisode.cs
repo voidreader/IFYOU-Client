@@ -46,6 +46,15 @@ namespace PIERStory {
             textProgress.text = string.Format(SystemManager.GetLocalizedText("6138"), openSpecialEpisodeCount, totalSpecialEpisodeCount);
         }
         
+        public override void OnHideView() {
+            base.OnHideView();
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);            
+        }
+        
+        
         void InitSpecialEpisode() {
             for(int i=0; i<ListSpecialEpisodes.Count;i++ ) {
                 ListSpecialEpisodes[i].gameObject.SetActive(false);

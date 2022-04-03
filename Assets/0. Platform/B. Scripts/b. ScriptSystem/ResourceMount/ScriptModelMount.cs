@@ -373,6 +373,7 @@ namespace PIERStory
             modelController.motionController = cubismMotionController; // Live2D 고유 모델 컨트롤러 
             modelController.modelAnim = null;
             modelController.DictMotion = DictMotion; 
+            modelController.isAddressable = true;
             
             
             // 마무리 
@@ -671,6 +672,7 @@ namespace PIERStory
             // modelController에 추가된 animation 이식
             modelController.modelAnim = anim;
             modelController.DictMotion = DictMotion;
+            modelController.isAddressable = false;
         }
 
         /// <summary>

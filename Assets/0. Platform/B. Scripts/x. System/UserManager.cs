@@ -300,6 +300,13 @@ namespace PIERStory
             
             // 푸시 토큰 및 이벤트, 출석 체크 조회 
             SystemManager.main.QueryPushTokenInfo();
+            RequestServiceEvents();
+        }
+        
+        /// <summary>
+        /// 진행중인 이벤트 정보 조회 
+        /// </summary>
+        public void RequestServiceEvents() {
             NetworkLoader.main.RequestPlatformServiceEvents(); // 공지사항, 프로모션, 장르 조회 
             NetworkLoader.main.RequestAttendanceList(); // 출석 보상 리스트 요청
         }        

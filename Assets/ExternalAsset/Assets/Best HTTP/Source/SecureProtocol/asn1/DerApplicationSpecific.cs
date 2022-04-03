@@ -165,20 +165,16 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 			return FromByteArray(tmp);
 		}
 
-        internal override int EncodedLength(bool withID)
+		internal override void Encode(
+			DerOutputStream derOut)
         {
-            return Asn1OutputStream.GetLengthOfEncodingDL(withID, tag, octets.Length);
-        }
-
-        internal override void Encode(Asn1OutputStream asn1Out, bool withID)
-        {
-			int flags = Asn1Tags.Application;
+			int classBits = Asn1Tags.Application;
 			if (isConstructed)
 			{
-                flags |= Asn1Tags.Constructed; 
+				classBits |= Asn1Tags.Constructed; 
 			}
 
-            asn1Out.WriteEncodingDL(withID, flags, tag, octets);
+			derOut.WriteEncoded(classBits, tag, octets);
 		}
 
 		protected override bool Asn1Equals(

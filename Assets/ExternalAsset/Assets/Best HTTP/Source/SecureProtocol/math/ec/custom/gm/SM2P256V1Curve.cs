@@ -3,7 +3,6 @@
 using System;
 
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.Raw;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Security;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Encoders;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.GM
@@ -93,20 +92,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.GM
             }
 
             return new SM2P256V1LookupTable(this, table, len);
-        }
-
-        public override ECFieldElement RandomFieldElement(SecureRandom r)
-        {
-            uint[] x = Nat256.Create();
-            SM2P256V1Field.Random(r, x);
-            return new SM2P256V1FieldElement(x);
-        }
-
-        public override ECFieldElement RandomFieldElementMult(SecureRandom r)
-        {
-            uint[] x = Nat256.Create();
-            SM2P256V1Field.RandomMult(r, x);
-            return new SM2P256V1FieldElement(x);
         }
 
         private class SM2P256V1LookupTable

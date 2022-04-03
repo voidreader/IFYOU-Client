@@ -1,7 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-
-using BestHTTP.PlatformSupport.Threading;
 
 namespace BestHTTP.Authentication
 {
@@ -21,13 +19,17 @@ namespace BestHTTP.Authentication
 
         public static Digest Get(Uri uri)
         {
-            using (new ReadLock(rwLock))
-            {
+            rwLock.EnterReadLock();
+            try{
                 Digest digest = null;
                 if (Digests.TryGetValue(uri.Host, out digest))
                     if (!digest.IsUriProtected(uri))
                         return null;
                 return digest;
+            }
+            finally
+            {
+                rwLock.ExitReadLock();
             }
         }
 
@@ -38,19 +40,40 @@ namespace BestHTTP.Authentication
         /// <returns></returns>
         public static Digest GetOrCreate(Uri uri)
         {
-            using (new WriteLock(rwLock))
-            {
+            rwLock.EnterUpgradeableReadLock();
+            try{
                 Digest digest = null;
                 if (!Digests.TryGetValue(uri.Host, out digest))
-                    Digests.Add(uri.Host, digest = new Digest(uri));                    
+                {
+                    rwLock.EnterWriteLock();
+                    try
+                    {
+                        Digests.Add(uri.Host, digest = new Digest(uri));
+                    }
+                    finally
+                    {
+                        rwLock.ExitWriteLock();
+                    }
+                }
                 return digest;
+            }
+            finally
+            {
+                rwLock.ExitUpgradeableReadLock();
             }
         }
 
         public static void Remove(Uri uri)
         {
-            using (new WriteLock(rwLock))
+            rwLock.EnterWriteLock();
+            try
+            {
                 Digests.Remove(uri.Host);
+            }
+            finally
+            {
+                rwLock.ExitWriteLock();
+            }
         }
 
         public static string FindBest(List<string> authHeaders)

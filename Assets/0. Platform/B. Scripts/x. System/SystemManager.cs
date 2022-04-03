@@ -270,7 +270,7 @@ namespace PIERStory
             noEncryptionSetting = new ES3Settings(ES3.EncryptionType.None, "password");
             
             
-            BestHTTP.PlatformSupport.Memory.BufferPool.IsEnabled = false;
+            // BestHTTP.PlatformSupport.Memory.BufferPool.IsEnabled = false;
         }
         
         void Update() {

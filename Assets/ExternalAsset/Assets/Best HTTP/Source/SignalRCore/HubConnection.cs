@@ -1,7 +1,7 @@
 #if !BESTHTTP_DISABLE_SIGNALR_CORE
 
-using System.Threading;
 #if CSHARP_7_OR_LATER
+using System.Threading;
 using System.Threading.Tasks;
 #endif
 
@@ -11,8 +11,6 @@ using BestHTTP.SignalRCore.Messages;
 using System;
 using System.Collections.Generic;
 using BestHTTP.Logger;
-using System.Collections.Concurrent;
-using BestHTTP.PlatformSupport.Threading;
 
 namespace BestHTTP.SignalRCore
 {
@@ -28,13 +26,7 @@ namespace BestHTTP.SignalRCore
         /// <summary>
         /// Current state of this connection.
         /// </summary>
-        public ConnectionStates State {
-            get { return (ConnectionStates)this._state; }
-            private set {
-                Interlocked.Exchange(ref this._state, (int)value);
-            }
-        }
-        private volatile int _state;
+        public ConnectionStates State { get; private set; }
 
         /// <summary>
         /// Current, active ITransport instance.
@@ -130,12 +122,12 @@ namespace BestHTTP.SignalRCore
         ///  Store the callback for all sent message that expect a return value from the server. All sent message has
         ///  a unique invocationId that will be sent back from the server.
         /// </summary>
-        private ConcurrentDictionary<long, InvocationDefinition> invocations = new ConcurrentDictionary<long, InvocationDefinition>();
+        private Dictionary<long, InvocationDefinition> invocations = new Dictionary<long, InvocationDefinition>();
 
         /// <summary>
         /// This is where we store the methodname => callback mapping.
         /// </summary>
-        private ConcurrentDictionary<string, Subscription> subscriptions = new ConcurrentDictionary<string, Subscription>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, Subscription> subscriptions = new Dictionary<string, Subscription>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// When we sent out the last message to the server.
@@ -150,8 +142,6 @@ namespace BestHTTP.SignalRCore
         private DateTime reconnectAt;
 
         private List<TransportTypes> triedoutTransports = new List<TransportTypes>();
-
-        private ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
         public HubConnection(Uri hubUri, IProtocol protocol)
             : this(hubUri, protocol, new HubOptions())
@@ -495,11 +485,6 @@ namespace BestHTTP.SignalRCore
                     SetState(ConnectionStates.Closed);
                     break;
 
-                case ConnectionStates.CloseInitiated:
-                case ConnectionStates.Closed:
-                    // Already initiated/closed
-                    break;
-
                 default:
                     SetState(ConnectionStates.CloseInitiated);
 
@@ -695,8 +680,7 @@ namespace BestHTTP.SignalRCore
             SendMessage(message);
 
             if (!blockingInvocation)
-                if (!this.invocations.TryAdd(invocationId, new InvocationDefinition { callback = callback, returnType = itemType }))
-                    HTTPManager.Logger.Warning("HubConnection", "InvokeImp - invocations already contains id: " + invocationId);
+                this.invocations.Add(invocationId, new InvocationDefinition { callback = callback, returnType = itemType });
 
             return invocationId;
         }
@@ -708,14 +692,11 @@ namespace BestHTTP.SignalRCore
 
             try
             {
-                using (new WriteLock(this.rwLock))
+                var encoded = this.Protocol.EncodeMessage(message);
+                if (encoded.Data != null)
                 {
-                    var encoded = this.Protocol.EncodeMessage(message);
-                    if (encoded.Data != null)
-                    {
-                        this.lastMessageSentAt = DateTime.Now;
-                        this.Transport.Send(encoded);
-                    }
+                    this.lastMessageSentAt = DateTime.Now;
+                    this.Transport.Send(encoded);
                 }
             }
             catch (Exception ex)
@@ -783,8 +764,7 @@ namespace BestHTTP.SignalRCore
             SendMessage(message);
 
             if (callback != null)
-                if (!this.invocations.TryAdd(invocationId, new InvocationDefinition { callback = callback, returnType = typeof(TDown) }))
-                    HTTPManager.Logger.Warning("HubConnection", "GetDownStreamController - invocations already contains id: " + invocationId);
+                this.invocations.Add(invocationId, new InvocationDefinition { callback = callback, returnType = typeof(TDown) });
 
             return controller;
         }
@@ -854,8 +834,7 @@ namespace BestHTTP.SignalRCore
 
             SendMessage(messageToSend);
 
-            if (!this.invocations.TryAdd(invocationId, new InvocationDefinition { callback = callback, returnType = typeof(TResult) }))
-                HTTPManager.Logger.Warning("HubConnection", "GetUpStreamController - invocations already contains id: " + invocationId);
+            this.invocations.Add(invocationId, new InvocationDefinition { callback = callback, returnType = typeof(TResult) });
 
             return controller;
         }
@@ -893,11 +872,11 @@ namespace BestHTTP.SignalRCore
 
         private void On(string methodName, Type[] paramTypes, Action<object[]> callback)
         {
-            if (this.State >= ConnectionStates.CloseInitiated)
-                throw new Exception("Hub connection already closing or closed!");
+            Subscription subscription = null;
+            if (!this.subscriptions.TryGetValue(methodName, out subscription))
+                this.subscriptions.Add(methodName, subscription = new Subscription());
 
-            this.subscriptions.GetOrAdd(methodName, _ => new Subscription())
-                .Add(paramTypes, callback);
+            subscription.Add(paramTypes, callback);
         }
 
         /// <summary>
@@ -905,11 +884,7 @@ namespace BestHTTP.SignalRCore
         /// </summary>
         public void Remove(string methodName)
         {
-            if (this.State >= ConnectionStates.CloseInitiated)
-                throw new Exception("Hub connection already closing or closed!");
-
-            Subscription _;
-            this.subscriptions.TryRemove(methodName, out _);
+            this.subscriptions.Remove(methodName);
         }
 
         internal Subscription GetSubscription(string methodName)
@@ -1008,7 +983,7 @@ namespace BestHTTP.SignalRCore
                             if (long.TryParse(message.invocationId, out invocationId))
                             {
                                 InvocationDefinition def;
-                                if (this.invocations.TryRemove(invocationId, out def) && def.callback != null)
+                                if (this.invocations.TryGetValue(invocationId, out def) && def.callback != null)
                                 {
                                     try
                                     {
@@ -1019,6 +994,7 @@ namespace BestHTTP.SignalRCore
                                         HTTPManager.Logger.Exception("HubConnection", "OnMessages - Completion - callback", ex, this.Context);
                                     }
                                 }
+                                this.invocations.Remove(invocationId);
                             }
                             break;
                         }
@@ -1299,8 +1275,6 @@ namespace BestHTTP.SignalRCore
                     }
 
                     HTTPManager.Heartbeats.Unsubscribe(this);
-                    this.rwLock.Dispose();
-                    this.rwLock = null;
                     break;
             }
         }
@@ -1360,7 +1334,6 @@ namespace BestHTTP.SignalRCore
                     {
                         this.connectionStartedAt = DateTime.Now;
                         this.reconnectAt = DateTime.MinValue;
-                        this.triedoutTransports.Clear();
                         this.StartConnect();
                     }
                     break;

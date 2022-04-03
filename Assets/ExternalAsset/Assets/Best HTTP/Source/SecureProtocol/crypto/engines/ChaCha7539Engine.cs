@@ -62,10 +62,29 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Engines
             Pack.LE_To_UInt32(ivBytes, 0, engineState, 13, 3);
         }
 
-        protected override void GenerateKeyStream(byte[] output)
+        protected unsafe override void GenerateKeyStream(byte[] output)
         {
             ChaChaEngine.ChachaCore(rounds, engineState, x);
-            Pack.UInt32_To_LE(x, output, 0);
+            //Pack.UInt32_To_LE(x, output, 0);
+
+            fixed (uint* ns = x)
+            fixed (byte* bs = output)
+            {
+                int off = 0;
+                for (int i = 0; i < x.Length; ++i)
+                {
+                    //UInt32_To_LE(ns[i], bs, off);
+                    //UInt32_To_LE(uint n, byte[] bs, int off)
+                    {
+                        uint n = ns[i];
+
+                        bs[off++] = (byte)(n);
+                        bs[off++] = (byte)(n >> 8);
+                        bs[off++] = (byte)(n >> 16);
+                        bs[off++] = (byte)(n >> 24);
+                    }
+                }
+            }
         }
     }
 }

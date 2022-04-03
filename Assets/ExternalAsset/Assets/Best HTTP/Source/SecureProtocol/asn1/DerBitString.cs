@@ -15,12 +15,16 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 		private static readonly char[] table
 			= { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
+		protected readonly byte[]   mData;
+		protected readonly int      mPadBits;
+
         /**
 		 * return a Bit string from the passed in object
 		 *
 		 * @exception ArgumentException if the object cannot be converted.
 		 */
-		public static DerBitString GetInstance(object obj)
+		public static DerBitString GetInstance(
+			object obj)
 		{
 			if (obj == null || obj is DerBitString)
 			{
@@ -50,7 +54,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 		 * @exception ArgumentException if the tagged object cannot
 		 *               be converted.
 		 */
-		public static DerBitString GetInstance(Asn1TaggedObject obj, bool isExplicit)
+		public static DerBitString GetInstance(
+			Asn1TaggedObject	obj,
+			bool				isExplicit)
 		{
 			Asn1Object o = obj.GetObject();
 
@@ -59,30 +65,16 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 				return GetInstance(o);
 			}
 
-            // Not copied because assumed to be a tagged implicit primitive from the parser
-			return CreatePrimitive(((Asn1OctetString)o).GetOctets());
+			return FromAsn1Octets(((Asn1OctetString)o).GetOctets());
 		}
-
-        internal readonly byte[] contents;
-
-        public DerBitString(byte data, int padBits)
-        {
-            if (padBits > 7 || padBits < 0)
-                throw new ArgumentException("pad bits cannot be greater than 7 or less than 0", "padBits");
-
-            this.contents = new byte[] { (byte)padBits, data };
-        }
-
-        public DerBitString(byte[] data)
-            : this(data, 0)
-        {
-        }
 
         /**
 		 * @param data the octets making up the bit string.
 		 * @param padBits the number of extra bits at the end of the string.
 		 */
-        public DerBitString(byte[] data, int padBits)
+		public DerBitString(
+			byte[]	data,
+			int		padBits)
 		{
             if (data == null)
                 throw new ArgumentNullException("data");
@@ -91,30 +83,42 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
             if (data.Length == 0 && padBits != 0)
                 throw new ArgumentException("if 'data' is empty, 'padBits' must be 0");
 
-            this.contents = Arrays.Prepend(data, (byte)padBits);
-        }
+            this.mData = Arrays.Clone(data);
+			this.mPadBits = padBits;
+		}
 
-        public DerBitString(int namedBits)
+		public DerBitString(
+			byte[] data)
+            : this(data, 0)
+		{
+		}
+
+        public DerBitString(
+            int namedBits)
         {
             if (namedBits == 0)
             {
-                this.contents = new byte[]{ 0 };
+                this.mData = new byte[0];
+                this.mPadBits = 0;
                 return;
             }
 
             int bits = BigInteger.BitLen(namedBits);
             int bytes = (bits + 7) / 8;
+
             Debug.Assert(0 < bytes && bytes <= 4);
 
-            byte[] data = new byte[1 + bytes];
+            byte[] data = new byte[bytes];
+            --bytes;
 
-            for (int i = 1; i < bytes; i++)
+            for (int i = 0; i < bytes; i++)
             {
                 data[i] = (byte)namedBits;
                 namedBits >>= 8;
             }
 
             Debug.Assert((namedBits & 0xFF) != 0);
+
             data[bytes] = (byte)namedBits;
 
             int padBits = 0;
@@ -124,37 +128,16 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
             }
 
             Debug.Assert(padBits < 8);
-            data[0] = (byte)padBits;
 
-            this.contents = data;
+            this.mData = data;
+            this.mPadBits = padBits;
         }
 
-        public DerBitString(Asn1Encodable obj)
+        public DerBitString(
+			Asn1Encodable obj)
             : this(obj.GetDerEncoded())
 		{
 		}
-
-        internal DerBitString(byte[] contents, bool check)
-        {
-            if (check)
-            {
-                if (null == contents)
-                    throw new ArgumentNullException("contents");
-                if (contents.Length < 1)
-                    throw new ArgumentException("cannot be empty", "contents");
-
-                int padBits = contents[0];
-                if (padBits > 0)
-                {
-                    if (contents.Length < 2)
-                        throw new ArgumentException("zero length data with non-zero pad bits", "contents");
-                    if (padBits > 7)
-                        throw new ArgumentException("pad bits cannot be greater than 7 or less than 0", "contents");
-                }
-            }
-
-            this.contents = contents;
-        }
 
         /**
          * Return the octets contained in this BIT STRING, checking that this BIT STRING really
@@ -165,27 +148,28 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
          */
         public virtual byte[] GetOctets()
         {
-            if (contents[0] != 0)
+            if (mPadBits != 0)
                 throw new InvalidOperationException("attempt to get non-octet aligned data from BIT STRING");
 
-            return Arrays.CopyOfRange(contents, 1, contents.Length);
+            return Arrays.Clone(mData);
         }
 
         public virtual byte[] GetBytes()
 		{
-            if (contents.Length == 1)
-                return Asn1OctetString.EmptyOctets;
+            byte[] data = Arrays.Clone(mData);
 
-            int padBits = contents[0];
-            byte[] rv = Arrays.CopyOfRange(contents, 1, contents.Length);
             // DER requires pad bits be zero
-            rv[rv.Length - 1] &= (byte)(0xFF << padBits);
-            return rv;
-        }
+            if (mPadBits > 0)
+            {
+                data[data.Length - 1] &= (byte)(0xFF << mPadBits);
+            }
+
+            return data;
+		}
 
         public virtual int PadBits
 		{
-			get { return contents[0]; }
+			get { return mPadBits; }
 		}
 
 		/**
@@ -195,90 +179,64 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 		{
 			get
 			{
-                int value = 0, end = System.Math.Min(5, contents.Length - 1);
-                for (int i = 1; i < end; ++i)
+                int value = 0, length = System.Math.Min(4, mData.Length);
+                for (int i = 0; i < length; ++i)
                 {
-                    value |= (int)contents[i] << (8 * (i - 1));
+                    value |= (int)mData[i] << (8 * i);
                 }
-                if (1 <= end && end < 5)
+                if (mPadBits > 0 && length == mData.Length)
                 {
-                    int padBits = contents[0];
-                    byte der = (byte)(contents[end] & (0xFF << padBits));
-                    value |= (int)der << (8 * (end - 1));
+                    int mask = (1 << mPadBits) - 1;
+                    value &= ~(mask << (8 * (length - 1)));
                 }
                 return value;
-            }
+			}
 		}
 
-        internal override int EncodedLength(bool withID)
-        {
-            return Asn1OutputStream.GetLengthOfEncodingDL(withID, contents.Length);
-        }
-
-        internal override void Encode(Asn1OutputStream asn1Out, bool withID)
+        internal override void Encode(
+			DerOutputStream derOut)
 		{
-            int padBits = contents[0];
-            int length = contents.Length;
-            int last = length - 1;
-
-            byte lastOctet = contents[last];
-            byte lastOctetDer = (byte)(contents[last] & (0xFF << padBits));
-
-            if (lastOctet == lastOctetDer)
+            if (mPadBits > 0)
             {
-                asn1Out.WriteEncodingDL(withID, Asn1Tags.BitString, contents);
+                int last = mData[mData.Length - 1];
+                int mask = (1 << mPadBits) - 1;
+                int unusedBits = last & mask;
+
+                if (unusedBits != 0)
+                {
+                    byte[] contents = Arrays.Prepend(mData, (byte)mPadBits);
+
+                    /*
+                     * X.690-0207 11.2.1: Each unused bit in the final octet of the encoding of a bit string value shall be set to zero.
+                     */
+                    contents[contents.Length - 1] = (byte)(last ^ unusedBits);
+
+                    derOut.WriteEncoded(Asn1Tags.BitString, contents);
+                    return;
+                }
             }
-            else
-            {
-                asn1Out.WriteEncodingDL(withID, Asn1Tags.BitString, contents, 0, last, lastOctetDer);
-            }
+
+            derOut.WriteEncoded(Asn1Tags.BitString, (byte)mPadBits, mData);
 		}
 
         protected override int Asn1GetHashCode()
 		{
-            if (contents.Length < 2)
-                return 1;
+			return mPadBits.GetHashCode() ^ Arrays.GetHashCode(mData);
+		}
 
-            int padBits = contents[0];
-            int last = contents.Length - 1;
-
-            byte lastOctetDer = (byte)(contents[last] & (0xFF << padBits));
-
-            int hc = Arrays.GetHashCode(contents, 0, last);
-            hc *= 257;
-            hc ^= lastOctetDer;
-            return hc;
-        }
-
-        protected override bool Asn1Equals(Asn1Object asn1Object)
+		protected override bool Asn1Equals(
+			Asn1Object asn1Object)
 		{
-            DerBitString that = asn1Object as DerBitString;
-            if (null == that)
-                return false;
+			DerBitString other = asn1Object as DerBitString;
 
-            byte[] thisContents = this.contents, thatContents = that.contents;
+			if (other == null)
+				return false;
 
-            int length = thisContents.Length;
-            if (thatContents.Length != length)
-                return false;
-            if (length == 1)
-                return true;
+			return this.mPadBits == other.mPadBits
+				&& Arrays.AreEqual(this.mData, other.mData);
+		}
 
-            int last = length - 1;
-            for (int i = 0; i < last; ++i)
-            {
-                if (thisContents[i] != thatContents[i])
-                    return false;
-            }
-
-            int padBits = thisContents[0];
-            byte thisLastOctetDer = (byte)(thisContents[last] & (0xFF << padBits));
-            byte thatLastOctetDer = (byte)(thatContents[last] & (0xFF << padBits));
-
-            return thisLastOctetDer == thatLastOctetDer;
-        }
-
-        public override string GetString()
+		public override string GetString()
 		{
 			StringBuilder buffer = new StringBuilder("#");
 
@@ -294,43 +252,29 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 			return buffer.ToString();
 		}
 
-        internal static int EncodedLength(bool withID, int contentsLength)
-        {
-            return Asn1OutputStream.GetLengthOfEncodingDL(withID, contentsLength);
-        }
-
-        internal static void Encode(Asn1OutputStream asn1Out, bool withID, byte[] buf, int off, int len)
-        {
-            asn1Out.WriteEncodingDL(withID, Asn1Tags.BitString, buf, off, len);
-        }
-
-        internal static void Encode(Asn1OutputStream asn1Out, bool withID, byte pad, byte[] buf, int off, int len)
-        {
-            asn1Out.WriteEncodingDL(withID, Asn1Tags.BitString, pad, buf, off, len);
-        }
-
-		internal static DerBitString CreatePrimitive(byte[] contents)
+		internal static DerBitString FromAsn1Octets(byte[] octets)
 		{
-            int length = contents.Length;
-            if (length < 1)
-                throw new ArgumentException("truncated BIT STRING detected", "contents");
+	        if (octets.Length < 1)
+	            throw new ArgumentException("truncated BIT STRING detected", "octets");
 
-            int padBits = contents[0];
-            if (padBits > 0)
+            int padBits = octets[0];
+            byte[] data = Arrays.CopyOfRange(octets, 1, octets.Length);
+
+            if (padBits > 0 && padBits < 8 && data.Length > 0)
             {
-                if (padBits > 7 || length < 2)
-                    throw new ArgumentException("invalid pad bits detected", "contents");
+                int last = data[data.Length - 1];
+                int mask = (1 << padBits) - 1;
 
-                byte finalOctet = contents[length - 1];
-                if (finalOctet != (byte)(finalOctet & (0xFF << padBits)))
+                if ((last & mask) != 0)
                 {
-                    return new BerBitString(contents, false);
+                    return new BerBitString(data, padBits);
                 }
             }
 
-            return new DerBitString(contents, false);
+            return new DerBitString(data, padBits);
 		}
 	}
 }
+
 #pragma warning restore
 #endif

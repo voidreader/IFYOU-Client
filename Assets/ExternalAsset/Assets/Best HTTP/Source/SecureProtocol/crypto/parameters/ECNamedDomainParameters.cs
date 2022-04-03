@@ -3,7 +3,6 @@
 using System;
 
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X9;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC;
 
@@ -22,12 +21,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters
         public ECNamedDomainParameters(DerObjectIdentifier name, ECDomainParameters dp)
             : this(name, dp.Curve, dp.G, dp.N, dp.H, dp.GetSeed())
         {
-        }
-
-        public ECNamedDomainParameters(DerObjectIdentifier name, X9ECParameters x9)
-            : base(x9)
-        {
-            this.name = name;
         }
 
         public ECNamedDomainParameters(DerObjectIdentifier name, ECCurve curve, ECPoint g, BigInteger n)

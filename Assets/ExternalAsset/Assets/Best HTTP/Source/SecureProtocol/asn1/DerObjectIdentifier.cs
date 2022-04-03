@@ -13,13 +13,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
     public class DerObjectIdentifier
         : Asn1Object
     {
-        public static DerObjectIdentifier FromContents(byte[] contents)
-        {
-            return CreatePrimitive(contents, true);
-        }
-
         private readonly string identifier;
-        private byte[] contents;
+
+        private byte[] body = null;
 
         /**
          * return an Oid from the passed in object
@@ -40,7 +36,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
             }
 
             if (obj is byte[])
-                return (DerObjectIdentifier)FromByteArray((byte[])obj);
+                return FromOctetString((byte[])obj);
 
             throw new ArgumentException("illegal object in GetInstance: " + BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Platform.GetTypeName(obj), "obj");
         }
@@ -65,7 +61,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
                 return GetInstance(o);
             }
 
-            return FromContents(Asn1OctetString.GetInstance(o).GetOctets());
+            return FromOctetString(Asn1OctetString.GetInstance(o).GetOctets());
         }
 
         public DerObjectIdentifier(
@@ -109,10 +105,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
             return id.Length > stemId.Length && id[stemId.Length] == '.' && BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Platform.StartsWith(id, stemId);
         }
 
-        internal DerObjectIdentifier(byte[] contents, bool clone)
+        internal DerObjectIdentifier(byte[] bytes)
         {
-            this.identifier = MakeOidStringFromBytes(contents);
-            this.contents = clone ? Arrays.Clone(contents) : contents;
+            this.identifier = MakeOidStringFromBytes(bytes);
+            this.body = Arrays.Clone(bytes);
         }
 
         private void WriteField(
@@ -184,29 +180,25 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
             }
         }
 
-        private byte[] GetContents()
+        internal byte[] GetBody()
         {
             lock (this)
             {
-                if (contents == null)
+                if (body == null)
                 {
                     MemoryStream bOut = new MemoryStream();
                     DoOutput(bOut);
-                    contents = bOut.ToArray();
+                    body = bOut.ToArray();
                 }
-
-                return contents;
             }
+
+            return body;
         }
 
-        internal override int EncodedLength(bool withID)
+        internal override void Encode(
+            DerOutputStream derOut)
         {
-            return Asn1OutputStream.GetLengthOfEncodingDL(withID, GetContents().Length);
-        }
-
-        internal override void Encode(Asn1OutputStream asn1Out, bool withID)
-        {
-            asn1Out.WriteEncodingDL(withID, Asn1Tags.ObjectIdentifier, GetContents());
+            derOut.WriteEncoded(Asn1Tags.ObjectIdentifier, GetBody());
         }
 
         protected override int Asn1GetHashCode()
@@ -354,20 +346,20 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 
         private static readonly DerObjectIdentifier[] cache = new DerObjectIdentifier[1024];
 
-        internal static DerObjectIdentifier CreatePrimitive(byte[] contents, bool clone)
+        internal static DerObjectIdentifier FromOctetString(byte[] enc)
         {
-            int hashCode = Arrays.GetHashCode(contents);
+            int hashCode = Arrays.GetHashCode(enc);
             int first = hashCode & 1023;
 
             lock (cache)
             {
                 DerObjectIdentifier entry = cache[first];
-                if (entry != null && Arrays.AreEqual(contents, entry.GetContents()))
+                if (entry != null && Arrays.AreEqual(enc, entry.GetBody()))
                 {
                     return entry;
                 }
 
-                return cache[first] = new DerObjectIdentifier(contents, clone);
+                return cache[first] = new DerObjectIdentifier(enc);
             }
         }
     }

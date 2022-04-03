@@ -153,11 +153,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Pkcs
             }
         }
 
-        public virtual DerInteger Version
-        {
-            get { return version; }
-        }
-
         public virtual Asn1Set Attributes
         {
             get { return attributes; }

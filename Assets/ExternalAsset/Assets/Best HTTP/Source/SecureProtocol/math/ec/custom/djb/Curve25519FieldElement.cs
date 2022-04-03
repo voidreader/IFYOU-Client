@@ -98,7 +98,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.Djb
         {
             //return Multiply(b.Invert());
             uint[] z = Nat256.Create();
-            Curve25519Field.Inv(((Curve25519FieldElement)b).x, z);
+            Mod.Invert(Curve25519Field.P, ((Curve25519FieldElement)b).x, z);
             Curve25519Field.Multiply(z, x, z);
             return new Curve25519FieldElement(z);
         }
@@ -121,7 +121,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.Djb
         {
             //return new Curve25519FieldElement(ToBigInteger().ModInverse(Q));
             uint[] z = Nat256.Create();
-            Curve25519Field.Inv(x, z);
+            Mod.Invert(Curve25519Field.P, x, z);
             return new Curve25519FieldElement(z);
         }
 

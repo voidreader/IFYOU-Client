@@ -88,14 +88,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
             return (byte[]) str.Clone();
         }
 
-        internal override int EncodedLength(bool withID)
+		internal override void Encode(
+            DerOutputStream derOut)
         {
-            return Asn1OutputStream.GetLengthOfEncodingDL(withID, this.str.Length);
-        }
-
-        internal override void Encode(Asn1OutputStream asn1Out, bool withID)
-        {
-            asn1Out.WriteEncodingDL(withID, Asn1Tags.UniversalString, this.str);
+            derOut.WriteEncoded(Asn1Tags.UniversalString, this.str);
         }
 
 		protected override bool Asn1Equals(

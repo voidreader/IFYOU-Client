@@ -8,7 +8,7 @@ namespace BestHTTP.Examples.Helpers.SelectorUI
 {
     public class SampleSelectorUI : MonoBehaviour
     {
-#pragma warning disable 0649, 0169
+#pragma warning disable 0649
 
         [SerializeField]
         private Category _categoryListItemPrefab;
@@ -25,11 +25,11 @@ namespace BestHTTP.Examples.Helpers.SelectorUI
         [SerializeField]
         private RectTransform _dyncamicContentRoot;
 
+#pragma warning restore
+
         private SampleRoot sampleSelector;
         private ExampleListItem selectedSample;
         private GameObject dynamicContent;
-
-#pragma warning restore
 
         private void Start()
         {

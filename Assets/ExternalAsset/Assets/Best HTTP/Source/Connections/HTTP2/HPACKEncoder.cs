@@ -54,8 +54,7 @@ namespace BestHTTP.Connections.HTTP2
                     if (header.Equals("connection", StringComparison.OrdinalIgnoreCase) ||
                         header.Equals("te", StringComparison.OrdinalIgnoreCase) ||
                         header.Equals("host", StringComparison.OrdinalIgnoreCase) ||
-                        header.Equals("keep-alive", StringComparison.OrdinalIgnoreCase) ||
-                        header.StartsWith("proxy-", StringComparison.OrdinalIgnoreCase))
+                        header.Equals("keep-alive", StringComparison.OrdinalIgnoreCase))
                         return;
 
                     //if (!hasBody)
@@ -285,9 +284,6 @@ namespace BestHTTP.Connections.HTTP2
             byte start = (byte)stream.ReadByte();
             bool rawString = BufferHelper.ReadBit(start, 0) == 0;
             UInt32 stringLength = DecodeInteger(7, start, stream);
-
-            if (stringLength == 0)
-                return string.Empty;
 
             if (rawString)
             {

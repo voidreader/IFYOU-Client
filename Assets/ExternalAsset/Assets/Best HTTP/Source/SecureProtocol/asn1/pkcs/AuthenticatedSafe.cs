@@ -26,7 +26,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Pkcs
         private readonly ContentInfo[] info;
         private readonly bool isBer;
 
-		private AuthenticatedSafe(Asn1Sequence seq)
+
+		public AuthenticatedSafe(
+            Asn1Sequence seq)
         {
             info = new ContentInfo[seq.Count];
 

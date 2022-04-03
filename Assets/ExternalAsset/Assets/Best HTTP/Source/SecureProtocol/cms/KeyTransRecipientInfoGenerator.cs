@@ -17,30 +17,60 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
     {
         private static readonly CmsEnvelopedHelper Helper = CmsEnvelopedHelper.Instance;
 
+        private TbsCertificateStructure recipientTbsCert;
+        private AsymmetricKeyParameter recipientPublicKey;
         private Asn1OctetString subjectKeyIdentifier;
-        private IKeyWrapper keyWrapper;
 
         // Derived fields
         private SubjectPublicKeyInfo info;
         private IssuerAndSerialNumber issuerAndSerialNumber;
         private SecureRandom random;
-       
 
-        public KeyTransRecipientInfoGenerator(X509Certificate recipCert, IKeyWrapper keyWrapper)
-            : this(new Asn1.Cms.IssuerAndSerialNumber(recipCert.IssuerDN, new DerInteger(recipCert.SerialNumber)), keyWrapper)
+        internal KeyTransRecipientInfoGenerator()
         {
         }
 
-        public KeyTransRecipientInfoGenerator(IssuerAndSerialNumber issuerAndSerial, IKeyWrapper keyWrapper)
+        protected KeyTransRecipientInfoGenerator(IssuerAndSerialNumber issuerAndSerialNumber)
         {
-            this.issuerAndSerialNumber = issuerAndSerial;
-            this.keyWrapper = keyWrapper;
+            this.issuerAndSerialNumber = issuerAndSerialNumber;
         }
 
-        public KeyTransRecipientInfoGenerator(byte[] subjectKeyID, IKeyWrapper keyWrapper)
+        protected KeyTransRecipientInfoGenerator(byte[] subjectKeyIdentifier)
         {
             this.subjectKeyIdentifier = new DerOctetString(subjectKeyIdentifier);
-            this.keyWrapper = keyWrapper;
+        }
+
+        internal X509Certificate RecipientCert
+        {
+            set
+            {
+                this.recipientTbsCert = CmsUtilities.GetTbsCertificateStructure(value);
+                this.recipientPublicKey = value.GetPublicKey();
+                this.info = recipientTbsCert.SubjectPublicKeyInfo;
+            }
+        }
+
+        internal AsymmetricKeyParameter RecipientPublicKey
+        {
+            set
+            {
+                this.recipientPublicKey = value;
+
+                try
+                {
+                    info = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(
+                        recipientPublicKey);
+                }
+                catch (IOException)
+                {
+                    throw new ArgumentException("can't extract key algorithm from this key");
+                }
+            }
+        }
+
+        internal Asn1OctetString SubjectKeyIdentifier
+        {
+            set { this.subjectKeyIdentifier = value; }
         }
 
         public RecipientInfo Generate(KeyParameter contentEncryptionKey, SecureRandom random)
@@ -52,9 +82,11 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
             byte[] encryptedKeyBytes = GenerateWrappedKey(contentEncryptionKey);
 
             RecipientIdentifier recipId;
-            if (issuerAndSerialNumber != null)
+            if (recipientTbsCert != null)
             {
-                recipId = new RecipientIdentifier(issuerAndSerialNumber);
+                IssuerAndSerialNumber issuerAndSerial = new IssuerAndSerialNumber(
+                    recipientTbsCert.Issuer, recipientTbsCert.SerialNumber.Value);
+                recipId = new RecipientIdentifier(issuerAndSerial);
             }
             else
             {
@@ -69,17 +101,18 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
         {
             get
             {
-                if (this.keyWrapper != null)
-                {
-                    return (AlgorithmIdentifier)keyWrapper.AlgorithmDetails;
-                }
                 return info.AlgorithmID;
             }
         }
 
         protected virtual byte[] GenerateWrappedKey(KeyParameter contentEncryptionKey)
         {
-            return keyWrapper.Wrap(contentEncryptionKey.GetKey()).Collect();
+            byte[] keyBytes = contentEncryptionKey.GetKey();
+            AlgorithmIdentifier keyEncryptionAlgorithm = info.AlgorithmID;
+
+            IWrapper keyWrapper = Helper.CreateWrapper(keyEncryptionAlgorithm.Algorithm.Id);
+            keyWrapper.Init(true, new ParametersWithRandom(recipientPublicKey, random));
+            return keyWrapper.Wrap(keyBytes, 0, keyBytes.Length);
         }
     }
 }

@@ -2,6 +2,7 @@
 #pragma warning disable
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.IO;
 
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1;
@@ -25,23 +26,21 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 		private static readonly CmsSignedHelper Helper = CmsSignedHelper.Instance;
 
 		private SignerID			sid;
-
+		private SignerInfo			info;
+		private AlgorithmIdentifier	digestAlgorithm;
+		private AlgorithmIdentifier	encryptionAlgorithm;
+		private readonly Asn1Set	signedAttributeSet;
+		private readonly Asn1Set	unsignedAttributeSet;
 		private CmsProcessable		content;
 		private byte[]				signature;
 		private DerObjectIdentifier	contentType;
-		private byte[]	calculatedDigest;
-		private byte[]	resultDigest;
+		private IDigestCalculator	digestCalculator;
+		private byte[]				resultDigest;
 
 		// Derived
 		private Asn1.Cms.AttributeTable	signedAttributeTable;
 		private Asn1.Cms.AttributeTable	unsignedAttributeTable;
 		private readonly bool isCounterSignature;
-
-		protected SignerInfo info;
-		protected AlgorithmIdentifier digestAlgorithm;
-		protected AlgorithmIdentifier encryptionAlgorithm;
-		protected readonly Asn1Set signedAttributeSet;
-		protected readonly Asn1Set unsignedAttributeSet;
 
 		internal SignerInformation(
 			SignerInfo			info,
@@ -82,33 +81,32 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 			this.signedAttributeSet = info.AuthenticatedAttributes;
 			this.unsignedAttributeSet = info.UnauthenticatedAttributes;
 			this.encryptionAlgorithm = info.DigestEncryptionAlgorithm;
-			this.signature = (byte[])info.EncryptedDigest.GetOctets().Clone();
+			this.signature = info.EncryptedDigest.GetOctets();
 
 			this.content = content;
-			this.calculatedDigest = (digestCalculator != null) ? digestCalculator.GetDigest() : null;
+			this.digestCalculator = digestCalculator;
 		}
 
         /**
          * Protected constructor. In some cases clients have their own idea about how to encode
          * the signed attributes and calculate the signature. This constructor is to allow developers
-         * to deal with that by extending off the class and overriding e.g. SignedAttributes property.
+         * to deal with that by extending off the class and overridng methods like getSignedAttributes().
          *
          * @param baseInfo the SignerInformation to base this one on.
          */
         protected SignerInformation(SignerInformation baseInfo)
         {
             this.info = baseInfo.info;
-			this.content = baseInfo.content;
-			this.contentType = baseInfo.contentType;
+            this.contentType = baseInfo.contentType;
             this.isCounterSignature = baseInfo.IsCounterSignature;
-			this.sid = baseInfo.sid;
-			this.digestAlgorithm = info.DigestAlgorithm;
+            this.sid = baseInfo.SignerID;
+            this.digestAlgorithm = info.DigestAlgorithm;
             this.signedAttributeSet = info.AuthenticatedAttributes;
             this.unsignedAttributeSet = info.UnauthenticatedAttributes;
             this.encryptionAlgorithm = info.DigestEncryptionAlgorithm;
-			this.signature = (byte[])info.EncryptedDigest.GetOctets().Clone();
-			
-			this.calculatedDigest = baseInfo.calculatedDigest;
+            this.signature = info.EncryptedDigest.GetOctets();
+            this.content = baseInfo.content;
+            this.resultDigest = baseInfo.resultDigest;
             this.signedAttributeTable = baseInfo.signedAttributeTable;
             this.unsignedAttributeTable = baseInfo.unsignedAttributeTable;
         }
@@ -314,7 +312,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 		* return the DER encoding of the signed attributes.
 		* @throws IOException if an encoding error occurs.
 		*/
-		public virtual byte[] GetEncodedSignedAttributes()
+		public byte[] GetEncodedSignedAttributes()
 		{
 			return signedAttributeSet == null
 				?	null
@@ -324,16 +322,11 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 		private bool DoVerify(
 			AsymmetricKeyParameter	key)
 		{
-			DerObjectIdentifier sigAlgOid = this.encryptionAlgorithm.Algorithm;
-			Asn1Encodable sigParams = this.encryptionAlgorithm.Parameters;
-			string digestName = Helper.GetDigestAlgName(this.EncryptionAlgOid);
-
-			if (digestName.Equals(sigAlgOid.Id))
-			{
-				digestName = Helper.GetDigestAlgName(this.DigestAlgOid);
-			}
-			
+			string digestName = Helper.GetDigestAlgName(this.DigestAlgOid);
 			IDigest digest = Helper.GetDigestInstance(digestName);
+
+            DerObjectIdentifier sigAlgOid = this.encryptionAlgorithm.Algorithm;
+			Asn1Encodable sigParams = this.encryptionAlgorithm.Parameters;
 			ISigner sig;
 
 			if (sigAlgOid.Equals(Asn1.Pkcs.PkcsObjectIdentifiers.IdRsassaPss))
@@ -359,22 +352,14 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 
                     IDigest pssDigest = DigestUtilities.GetDigest(pss.HashAlgorithm.Algorithm);
                     int saltLength = pss.SaltLength.IntValueExact;
+                    byte trailerField = (byte)pss.TrailerField.IntValueExact;
 
-                    // RFC 4055 3.1
-                    // The value MUST be 1, which represents the trailer field with hexadecimal value 0xBC
-                    if (!Asn1.Pkcs.RsassaPssParameters.DefaultTrailerField.Equals(pss.TrailerField))
+					// RFC 4055 3.1
+					// The value MUST be 1, which represents the trailer field with hexadecimal value 0xBC
+					if (trailerField != 1)
 						throw new CmsException("RSASSA-PSS signature parameters must have trailerField of 1");
 
-					IAsymmetricBlockCipher rsa = new RsaBlindedEngine();
-
-					if (signedAttributeSet == null && calculatedDigest != null)
-					{
-                        sig = PssSigner.CreateRawSigner(rsa, pssDigest, pssDigest, saltLength, PssSigner.TrailerImplicit);
-                    }
-                    else
-					{
-						sig = new PssSigner(rsa, pssDigest, saltLength);
-					}
+					sig = new PssSigner(new RsaBlindedEngine(), pssDigest, saltLength);
 				}
 				catch (Exception e)
 				{
@@ -384,10 +369,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 			else
 			{
 				// TODO Probably too strong a check at the moment
-				//				if (sigParams != null)
-				//					throw new CmsException("unrecognised signature parameters provided");
+//				if (sigParams != null)
+//					throw new CmsException("unrecognised signature parameters provided");
 
-				string signatureName = digestName + "with" + Helper.GetEncryptionAlgName(this.EncryptionAlgOid);
+                string signatureName = digestName + "with" + Helper.GetEncryptionAlgName(this.EncryptionAlgOid);
 
                 sig = Helper.GetSignatureInstance(signatureName);
 
@@ -397,9 +382,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 
 			try
 			{
-				if (calculatedDigest != null)
+				if (digestCalculator != null)
 				{
-					resultDigest = calculatedDigest;
+					resultDigest = digestCalculator.GetDigest();
 				}
 				else
 				{
@@ -496,17 +481,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 
 				if (signedAttributeSet == null)
 				{
-					if (calculatedDigest != null)
+					if (digestCalculator != null)
 					{
-						if (sig is PssSigner)
-						{
-							sig.BlockUpdate(resultDigest, 0, resultDigest.Length);
-						}
-						else
-						{
-							// need to decrypt signature and check message bytes
-							return VerifyDigest(resultDigest, key, this.GetSignature());
-						}
+						// need to decrypt signature and check message bytes
+						return VerifyDigest(resultDigest, key, this.GetSignature());
 					}
 					else if (content != null)
 					{

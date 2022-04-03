@@ -156,7 +156,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Cms
             {
                 RecipientInfo ri = RecipientInfo.GetInstance(o);
 
-                if (!ri.Version.HasValue(0))
+                if (ri.Version.IntValueExact != 0)
                 {
                     return 2;
                 }

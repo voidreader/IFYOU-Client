@@ -66,8 +66,8 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Cmp
 		{
             return SetRecipKID(kid == null ? null : new DerOctetString(kid));
 		}
-
-		public virtual PkiHeaderBuilder SetRecipKID(Asn1OctetString kid)
+		
+		public virtual PkiHeaderBuilder SetRecipKID(DerOctetString kid)
 		{
 			recipKID = kid;
 			return this;

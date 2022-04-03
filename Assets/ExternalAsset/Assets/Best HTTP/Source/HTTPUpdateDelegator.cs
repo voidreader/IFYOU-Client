@@ -10,7 +10,6 @@ namespace BestHTTP
     /// Will route some U3D calls to the HTTPManager.
     /// </summary>
     [ExecuteInEditMode]
-    [BestHTTP.PlatformSupport.IL2CPP.Il2CppEagerStaticClassConstructionAttribute]
     public sealed class HTTPUpdateDelegator : MonoBehaviour
     {
         #region Public Properties
@@ -52,7 +51,6 @@ namespace BestHTTP
 
         private static bool IsSetupCalled;
 
-#if UNITY_EDITOR
         /// <summary>
         /// Called after scene loaded to support Configurable Enter Play Mode (https://docs.unity3d.com/2019.3/Documentation/Manual/ConfigurableEnterPlayMode.html)
         /// </summary>
@@ -64,7 +62,6 @@ namespace BestHTTP
             IsSetupCalled = false;
             HTTPManager.Logger.Information("HTTPUpdateDelegator", "Reset called!");
         }
-#endif
 
         static HTTPUpdateDelegator()
         {

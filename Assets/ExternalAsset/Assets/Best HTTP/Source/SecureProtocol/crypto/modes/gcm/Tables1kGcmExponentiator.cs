@@ -16,8 +16,8 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Modes.Gcm
 
         public void Init(byte[] x)
         {
-            ulong[] y = GcmUtilities.AsUlongs(x);
-            if (lookupPowX2 != null && Arrays.AreEqual(y, (ulong[])lookupPowX2[0]))
+            uint[] y = GcmUtilities.AsUints(x);
+            if (lookupPowX2 != null && Arrays.AreEqual(y, (uint[])lookupPowX2[0]))
                 return;
 
             lookupPowX2 = BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Platform.CreateArrayList(8);
@@ -26,14 +26,14 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Modes.Gcm
 
         public void ExponentiateX(long pow, byte[] output)
         {
-            ulong[] y = GcmUtilities.OneAsUlongs();
+            uint[] y = GcmUtilities.OneAsUints();
             int bit = 0;
             while (pow > 0)
             {
                 if ((pow & 1L) != 0)
                 {
                     EnsureAvailable(bit);
-                    GcmUtilities.Multiply(y, (ulong[])lookupPowX2[bit]);
+                    GcmUtilities.Multiply(y, (uint[])lookupPowX2[bit]);
                 }
                 ++bit;
                 pow >>= 1;
@@ -47,11 +47,11 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Modes.Gcm
             int count = lookupPowX2.Count;
             if (count <= bit)
             {
-                ulong[] tmp = (ulong[])lookupPowX2[count - 1];
+                uint[] tmp = (uint[])lookupPowX2[count - 1];
                 do
                 {
                     tmp = Arrays.Clone(tmp);
-                    GcmUtilities.Square(tmp, tmp);
+                    GcmUtilities.Multiply(tmp, tmp);
                     lookupPowX2.Add(tmp);
                 }
                 while (++count <= bit);

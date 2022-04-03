@@ -8,7 +8,6 @@ using BestHTTP.SecureProtocol.Org.BouncyCastle.Math;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Multiplier;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Security;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Encoders;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Signers
@@ -167,7 +166,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Signers
                 while (r.SignValue == 0 || r.Add(k).Equals(n));
 
                 // A6
-                BigInteger dPlus1ModN = BigIntegers.ModOddInverse(n, d.Add(BigIntegers.One));
+                BigInteger dPlus1ModN = d.Add(BigInteger.One).ModInverse(n);
 
                 s = k.Subtract(r.Multiply(d)).Mod(n);
                 s = dPlus1ModN.Multiply(s).Mod(n);

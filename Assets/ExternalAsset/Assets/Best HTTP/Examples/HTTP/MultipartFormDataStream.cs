@@ -62,19 +62,13 @@ namespace BestHTTP
 
         public void AddField(string fieldName, string value, System.Text.Encoding encoding)
         {
-            var enc = encoding ?? System.Text.Encoding.UTF8;
-            var byteCount = enc.GetByteCount(value);
+            var byteCount = encoding.GetByteCount(value);
             var buffer = BufferPool.Get(byteCount, true);
-            var stream = new BufferPoolMemoryStream();
+            var stream = new BufferPoolMemoryStream(buffer, 0, byteCount);
 
-            enc.GetBytes(value, 0, value.Length, buffer, 0);
+            encoding.GetBytes(value, 0, value.Length, buffer, 0);
 
-            stream.Write(buffer, 0, byteCount);
-
-            stream.Position = 0;
-
-            string mime = encoding != null ? "text/plain; charset=" + encoding.WebName : null;
-            AddStreamField(stream, fieldName, null, mime);
+            AddStreamField(stream, fieldName, null, "text/plain; charset=" + encoding.WebName);
         }
 
         public void AddStreamField(System.IO.Stream stream, string fieldName)
@@ -95,7 +89,7 @@ namespace BestHTTP
             // Set up Content-Type head for the form.
             if (!string.IsNullOrEmpty(mimeType))
                 header.WriteLine("Content-Type: " + mimeType);
-            //header.WriteLine("Content-Length: " + stream.Length.ToString());
+            header.WriteLine("Content-Length: " + stream.Length.ToString());
             header.WriteLine();
             header.Position = 0;
 

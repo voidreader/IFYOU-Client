@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Rosstandart;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X9;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC;
@@ -231,16 +230,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.CryptoPro
         *
         * @param oid an object identifier representing a named parameters, if present.
         */
-
-        public static ECDomainParameters GetByOid(DerObjectIdentifier oid)
+        public static ECDomainParameters GetByOid(
+            DerObjectIdentifier oid)
         {
             return (ECDomainParameters)parameters[oid];
-        }
-
-        public static X9ECParameters GetByOidX9(DerObjectIdentifier oid)
-        {
-            ECDomainParameters ec = (ECDomainParameters)parameters[oid];
-            return ec == null ? null : new X9ECParameters(ec.Curve, new X9ECPoint(ec.G, false), ec.N, ec.H, ec.GetSeed());
         }
 
         /**
@@ -252,17 +245,17 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.CryptoPro
             get { return new EnumerableProxy(names.Values); }
         }
 
-
-        public static ECDomainParameters GetByName(string name)
+        public static ECDomainParameters GetByName(
+            string name)
         {
             DerObjectIdentifier oid = (DerObjectIdentifier)objIds[name];
-            return oid == null ? null : (ECDomainParameters)parameters[oid];
-        }
 
-        public static X9ECParameters GetByNameX9(string name)
-        {
-            DerObjectIdentifier oid = (DerObjectIdentifier)objIds[name];
-            return oid == null ? null : GetByOidX9(oid);
+            if (oid != null)
+            {
+                return (ECDomainParameters)parameters[oid];
+            }
+
+            return null;
         }
 
         /**

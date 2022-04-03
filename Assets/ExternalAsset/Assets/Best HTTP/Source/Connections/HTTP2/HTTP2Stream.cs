@@ -231,7 +231,8 @@ namespace BestHTTP.Connections.HTTP2
                 RequestEventHelper.EnqueueRequestEvent(new RequestEventInfo(this.AssignedRequest, RequestEvents.Resend));
             }
 
-            this.Removed();
+            // After receiving a RST_STREAM on a stream, the receiver MUST NOT send additional frames for that stream, with the exception of PRIORITY.
+            this.outgoing.Clear();
         }
 
         private void ProcessIncomingFrames(List<HTTP2FrameHeaderAndPayload> outgoingFrames)
@@ -476,7 +477,7 @@ namespace BestHTTP.Connections.HTTP2
                     // remote Window can be negative! See https://httpwg.org/specs/rfc7540.html#InitialWindowSize
                     if (this.remoteWindow <= 0)
                     {
-                        HTTPManager.Logger.Information("HTTP2Stream", string.Format("[{0}] Skipping data sending as remote Window is {1}!", this.Id, this.remoteWindow), this.Context, this.AssignedRequest.Context, this.parent.Context);
+                        HTTPManager.Logger.Warning("HTTP2Stream", string.Format("[{0}] Skipping data sending as remote Window is {1}!", this.Id, this.remoteWindow), this.Context, this.AssignedRequest.Context, this.parent.Context);
                         return;
                     }
 
@@ -620,12 +621,7 @@ namespace BestHTTP.Connections.HTTP2
                 this.uploadStreamInfo = new HTTPRequest.UploadStreamInfo();
             }
 
-            // After receiving a RST_STREAM on a stream, the receiver MUST NOT send additional frames for that stream, with the exception of PRIORITY.
             this.outgoing.Clear();
-
-            // https://github.com/Benedicht/BestHTTP-Issues/issues/77
-            // Unsubscribe from OnSettingChangedEvent to remove reference to this instance.
-            this.settings.RemoteSettings.OnSettingChangedEvent -= OnRemoteSettingChanged;
 
             HTTPManager.Logger.Information("HTTP2Stream", "Stream removed: " + this.Id.ToString(), this.Context, this.AssignedRequest.Context, this.parent.Context);
         }

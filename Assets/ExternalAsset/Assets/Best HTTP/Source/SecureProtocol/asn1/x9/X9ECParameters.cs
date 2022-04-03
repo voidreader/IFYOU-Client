@@ -37,7 +37,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X9
             Asn1Sequence seq)
         {
             if (!(seq[0] is DerInteger)
-                || !((DerInteger)seq[0]).HasValue(1))
+                || !((DerInteger)seq[0]).Value.Equals(BigInteger.One))
             {
                 throw new ArgumentException("bad version in X9ECParameters");
             }

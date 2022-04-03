@@ -38,8 +38,8 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 
         public virtual void Write(Stream zOut)
 		{
-			Stream inStr = _file.OpenRead();
-            Streams.PipeAll(inStr, zOut, _bufSize);
+			Stream inStr = GetInputStream();
+			Streams.PipeAll(inStr, zOut);
             BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Platform.Dispose(inStr);
 		}
 

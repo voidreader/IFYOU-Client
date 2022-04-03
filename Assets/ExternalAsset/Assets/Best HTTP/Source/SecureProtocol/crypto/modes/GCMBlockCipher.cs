@@ -52,21 +52,11 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Modes
         private ulong       atLength;
         private ulong       atLengthPre;
 
-        public GcmBlockCipher(
-            IBlockCipher c)
-            : this(c, null)
-        {
-        }
-
-        public GcmBlockCipher(
-            IBlockCipher	c,
-            IGcmMultiplier	m)
+        public GcmBlockCipher(IBlockCipher	c)
         {
             if (c.GetBlockSize() != BlockSize)
                 throw new ArgumentException("cipher required with a block size of " + BlockSize + ".");
 
-			if (m != null)
-				throw new NotImplementedException("IGcmMultiplier");
             this.cipher = c;
         }
 

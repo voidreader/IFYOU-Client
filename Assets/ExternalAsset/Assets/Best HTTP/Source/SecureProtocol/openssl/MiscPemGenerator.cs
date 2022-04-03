@@ -99,7 +99,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.OpenSsl
                 AsymmetricKeyParameter akp = (AsymmetricKeyParameter) obj;
                 if (akp.IsPrivate)
                 {
-                    encoding = EncodePrivateKey(akp, out type);
+                    string keyType;
+                    encoding = EncodePrivateKey(akp, out keyType);
+
+                    type = keyType + " PRIVATE KEY";
                 }
                 else
                 {
@@ -173,7 +176,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.OpenSsl
                 AsymmetricKeyParameter akp = (AsymmetricKeyParameter) obj;
                 if (akp.IsPrivate)
                 {
-                    keyData = EncodePrivateKey(akp, out type);
+                    string keyType;
+                    keyData = EncodePrivateKey(akp, out keyType);
+
+                    type = keyType + " PRIVATE KEY";
                 }
             }
 
@@ -217,7 +223,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.OpenSsl
 
             if (oid.Equals(X9ObjectIdentifiers.IdDsa))
             {
-                keyType = "DSA PRIVATE KEY";
+                keyType = "DSA";
 
                 DsaParameter p = DsaParameter.GetInstance(algID.Parameters);
 
@@ -236,23 +242,19 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.OpenSsl
 
             if (oid.Equals(PkcsObjectIdentifiers.RsaEncryption))
             {
-                keyType = "RSA PRIVATE KEY";
-
-                return info.ParsePrivateKey().GetEncoded();
+                keyType = "RSA";
             }
             else if (oid.Equals(CryptoProObjectIdentifiers.GostR3410x2001)
                 || oid.Equals(X9ObjectIdentifiers.IdECPublicKey))
             {
-                keyType = "EC PRIVATE KEY";
-
-                return info.ParsePrivateKey().GetEncoded();
+                keyType = "EC";
             }
             else
             {
-                keyType = "PRIVATE KEY";
-
-                return info.GetEncoded();
+                throw new ArgumentException("Cannot handle private key of type: " + BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Platform.GetTypeName(akp), "akp");
             }
+
+            return info.ParsePrivateKey().GetEncoded();
         }
 
         public PemObject Generate()

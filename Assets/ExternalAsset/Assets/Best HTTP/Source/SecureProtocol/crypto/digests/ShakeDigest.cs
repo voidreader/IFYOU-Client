@@ -48,11 +48,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Digests
             get { return "SHAKE" + fixedOutputLength; }
         }
 
-        public override int GetDigestSize()
-        {
-            return fixedOutputLength >> 2;
-        }
-
         public override int DoFinal(byte[] output, int outOff)
         {
             return DoFinal(output, outOff, GetDigestSize());
@@ -60,11 +55,11 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Digests
 
         public virtual int DoFinal(byte[] output, int outOff, int outLen)
         {
-            int length = DoOutput(output, outOff, outLen);
+            DoOutput(output, outOff, outLen);
 
             Reset();
 
-            return length;
+            return outLen;
         }
 
         public virtual int DoOutput(byte[] output, int outOff, int outLen)

@@ -27,6 +27,9 @@ namespace BestHTTP
     using BestHTTP.Logger;
     using BestHTTP.Timings;
 
+    /// <summary>
+    ///
+    /// </summary>
     public class HTTPResponse : IDisposable
     {
         internal const byte CR = 13;
@@ -160,9 +163,6 @@ namespace BestHTTP
         /// </summary>
         public bool IsClosedManually { get; protected set; }
 
-        /// <summary>
-        /// IProtocol.LoggingContext implementation.
-        /// </summary>
         public LoggingContext Context { get; private set; }
 
         /// <summary>
@@ -384,8 +384,6 @@ namespace BestHTTP
 
         protected void ReadHeaders(Stream stream)
         {
-            var newHeaders = this.baseRequest.OnHeadersReceived != null ? new Dictionary<string, List<string>>() : null;
-
             string headerName = ReadTo(stream, (byte)':', LF)/*.Trim()*/;
             while (headerName != string.Empty)
             {
@@ -396,20 +394,11 @@ namespace BestHTTP
 
                 AddHeader(headerName, value);
 
-                if (newHeaders != null)
-                {
-                    List<string> values;
-                    if (!newHeaders.TryGetValue(headerName, out values))
-                        newHeaders.Add(headerName, values = new List<string>(1));
-
-                    values.Add(value);
-                }
-
                 headerName = ReadTo(stream, (byte)':', LF);
             }
 
             if (this.baseRequest.OnHeadersReceived != null)
-                RequestEventHelper.EnqueueRequestEvent(new RequestEventInfo(this.baseRequest, newHeaders));
+                RequestEventHelper.EnqueueRequestEvent(new RequestEventInfo(this.baseRequest, RequestEvents.Headers));
         }
 
         public void AddHeader(string name, string value)
@@ -1164,7 +1153,7 @@ namespace BestHTTP
             if (!IsCacheOnly)
 #endif
             {
-                if (this.baseRequest.UseStreaming && buffer != null && bufferLength > 0)
+                if (this.baseRequest.OnStreamingData != null && buffer != null && bufferLength > 0)
                 {
                     RequestEventHelper.EnqueueRequestEvent(new RequestEventInfo(this.baseRequest, buffer, bufferLength));
                     Interlocked.Increment(ref this.UnprocessedFragments);

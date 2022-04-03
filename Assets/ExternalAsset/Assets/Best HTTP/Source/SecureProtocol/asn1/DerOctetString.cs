@@ -20,30 +20,25 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
         }
 
         public DerOctetString(Asn1Encodable obj)
-            : base(obj.GetEncoded(Der))
+            : base(obj.GetEncoded(Asn1Encodable.Der))
         {
         }
 
-        internal override int EncodedLength(bool withID)
+        internal override void Encode(
+            DerOutputStream derOut)
         {
-            return Asn1OutputStream.GetLengthOfEncodingDL(withID, str.Length);
+            derOut.WriteEncoded(Asn1Tags.OctetString, str);
         }
 
-        internal override void Encode(Asn1OutputStream asn1Out, bool withID)
-        {
-            asn1Out.WriteEncodingDL(withID, Asn1Tags.OctetString, str);
-        }
-
-		internal static void Encode(Asn1OutputStream asn1Out, bool withID, byte[] buf, int off, int len)
+		internal static void Encode(
+			DerOutputStream	derOut,
+			byte[]			bytes,
+			int				offset,
+			int				length)
 		{
-			asn1Out.WriteEncodingDL(withID, Asn1Tags.OctetString, buf, off, len);
+			derOut.WriteEncoded(Asn1Tags.OctetString, bytes, offset, length);
 		}
-
-        internal static int EncodedLength(bool withID, int contentsLength)
-        {
-            return Asn1OutputStream.GetLengthOfEncodingDL(withID, contentsLength);
-        }
-    }
+	}
 }
 #pragma warning restore
 #endif

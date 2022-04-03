@@ -2,10 +2,8 @@ using System;
 using System.Collections.Concurrent;
 
 using BestHTTP.Connections;
-using BestHTTP.Logger;
-
-// Required for ConcurrentQueue.Clear extension.
 using BestHTTP.Extensions;
+using BestHTTP.Logger;
 
 namespace BestHTTP.Core
 {
@@ -98,9 +96,6 @@ namespace BestHTTP.Core
 
         public static void EnqueueConnectionEvent(ConnectionEventInfo @event)
         {
-            if (HTTPManager.Logger.Level == Loglevels.All)
-                HTTPManager.Logger.Information("ConnectionEventHelper", "Enqueue connection event: " + @event.ToString(), @event.Source.Context);
-
             connectionEventQueue.Enqueue(@event);
         }
 
@@ -167,7 +162,6 @@ namespace BestHTTP.Core
                 case HTTPConnectionStates.Closed:
                 case HTTPConnectionStates.ClosedResendRequest:
                     // in case of ClosedResendRequest
-                    try {
                     if (@event.Request != null)
                         RequestEventHelper.EnqueueRequestEvent(new RequestEventInfo(@event.Request, RequestEvents.Resend));
 
@@ -175,10 +169,6 @@ namespace BestHTTP.Core
                         .GetHostDefinition(connection.ServerAddress)
                         .RemoveConnection(connection, @event.State)
                         .TryToSendQueuedRequests();
-                    }
-                    catch(System.Exception e) {
-                        UnityEngine.Debug.LogError(e.StackTrace);
-                    }
                     break;
             }
         }

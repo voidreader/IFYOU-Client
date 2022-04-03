@@ -73,11 +73,11 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
         {
             if (_tagged)
             {
-                int tagNum = _tagNo | Asn1Tags.ContextSpecific;
+                int tagNum = _tagNo | Asn1Tags.Tagged;
 
                 if (_isExplicit)
                 {
-                    int newTag = _tagNo | Asn1Tags.Constructed | Asn1Tags.ContextSpecific;
+                    int newTag = _tagNo | Asn1Tags.Constructed | Asn1Tags.Tagged;
 					MemoryStream bOut = new MemoryStream();
                     WriteDerEncoded(bOut, tag, bytes);
                     WriteDerEncoded(Out, newTag, bOut.ToArray());

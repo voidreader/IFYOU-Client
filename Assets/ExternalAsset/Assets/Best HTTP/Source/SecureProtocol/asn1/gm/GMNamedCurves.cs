@@ -6,6 +6,7 @@ using System.Collections;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X9;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Endo;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Multiplier;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Collections;

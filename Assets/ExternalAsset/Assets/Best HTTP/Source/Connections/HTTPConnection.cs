@@ -2,10 +2,6 @@
 
 using System;
 
-#if !BESTHTTP_DISABLE_ALTERNATE_SSL
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Tls;
-#endif
-
 using BestHTTP.Core;
 using BestHTTP.Timings;
 
@@ -56,42 +52,6 @@ namespace BestHTTP.Connections
         internal HTTPConnection(string serverAddress)
             :base(serverAddress)
         {}
-
-        public override bool TestConnection()
-        {
-#if !NETFX_CORE
-            try
-            {
-#if !BESTHTTP_DISABLE_ALTERNATE_SSL
-                if (this.connector.Client.Available > 0)
-                {
-                    TlsStream stream = (this.connector.Stream as TlsStream);
-                    if (stream != null)
-                    {
-                        try
-                        {
-                            var available = stream.Protocol.TestApplicationData();
-                            return !stream.Protocol.IsClosed;
-                        }
-                        catch {
-                            return false;
-                        }
-                    }
-                }
-#endif
-
-                bool connected = this.connector.Client.Connected;
-
-                return connected;
-            }
-            catch
-            {
-                return false;
-            }
-#else
-            return base.TestConnection();
-#endif
-        }
 
         internal override void Process(HTTPRequest request)
         {

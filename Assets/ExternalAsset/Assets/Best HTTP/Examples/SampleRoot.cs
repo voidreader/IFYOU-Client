@@ -10,9 +10,9 @@ namespace BestHTTP.Examples
 {
     public class SampleRoot : MonoBehaviour
     {
-#pragma warning disable 0649, 0169
+#pragma warning disable 0649
         [Header("Common Properties")]
-        public string BaseURL = "https://besthttpwebgldemo.azurewebsites.net";
+        public string BaseURL = "https://besthttpdemosite.azurewebsites.net";
 
         [Header("References")]
 

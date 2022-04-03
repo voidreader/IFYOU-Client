@@ -9,7 +9,7 @@ namespace BestHTTP.Examples.Helpers.Components
 {
     public class Cookies : MonoBehaviour
     {
-#pragma warning disable 0649, 0169
+#pragma warning disable 0649
         [SerializeField]
         private Text _count;
 

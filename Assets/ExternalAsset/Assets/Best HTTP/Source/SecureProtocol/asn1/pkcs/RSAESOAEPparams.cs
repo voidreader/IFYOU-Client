@@ -38,15 +38,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Pkcs
 		 * The default version
 		 */
 		public RsaesOaepParameters()
-		    : this(DefaultHashAlgorithm, DefaultMaskGenFunction, DefaultPSourceAlgorithm)
-		{ 
-		}
-
-		public RsaesOaepParameters(
-			AlgorithmIdentifier hashAlgorithm,
-			AlgorithmIdentifier maskGenAlgorithm)
-		    : this(hashAlgorithm, maskGenAlgorithm, DefaultPSourceAlgorithm)
 		{
+			hashAlgorithm = DefaultHashAlgorithm;
+			maskGenAlgorithm = DefaultMaskGenFunction;
+			pSourceAlgorithm = DefaultPSourceAlgorithm;
 		}
 
 		public RsaesOaepParameters(

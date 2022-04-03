@@ -152,16 +152,11 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 			get { return signedData.Version.IntValueExact; }
 		}
 
-        internal IX509Store GetCertificates()
-        {
-            return Helper.GetCertificates(signedData.Certificates);
-		}
-
-        /**
+		/**
 		* return the collection of signers that are associated with the
 		* signatures for the message.
 		*/
-        public SignerInformationStore GetSignerInfos()
+		public SignerInformationStore GetSignerInfos()
 		{
 			if (signerInfoStore == null)
 			{
@@ -224,7 +219,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 			string type)
 		{
 			if (certificateStore == null)
-			{				
+			{
 				certificateStore = Helper.CreateCertificateStore(type, signedData.Certificates);
 			}
 

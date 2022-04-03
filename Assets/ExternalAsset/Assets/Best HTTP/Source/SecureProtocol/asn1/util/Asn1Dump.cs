@@ -1,6 +1,7 @@
 #if !BESTHTTP_DISABLE_ALTERNATE_SSL && (!UNITY_WEBGL || UNITY_EDITOR)
 #pragma warning disable
 using System;
+using System.Collections;
 using System.IO;
 using System.Text;
 
@@ -31,14 +32,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Utilities
             Asn1Object		obj,
             StringBuilder	buf)
         {
-            if (obj is Asn1Null)
+            if (obj is Asn1Sequence)
             {
-                buf.Append(indent);
-                buf.Append("NULL");
-                buf.Append(NewLine);
-            }
-            else if (obj is Asn1Sequence)
-            {
+                string tab = indent + Tab;
                 buf.Append(indent);
                 if (obj is BerSequence)
                 {
@@ -46,45 +42,27 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Utilities
                 }
                 else if (obj is DerSequence)
                 {
-                    buf.Append("DER Sequence");
+                    buf.Append("DER Sequence" + (obj as DerSequence).ToString());
                 }
                 else
                 {
                     buf.Append("Sequence");
                 }
+
                 buf.Append(NewLine);
 
-                Asn1Sequence sequence = (Asn1Sequence)obj;
-                string elementsIndent = indent + Tab;
-
-                for (int i = 0, count = sequence.Count; i < count; ++i)
+                foreach (Asn1Encodable o in ((Asn1Sequence)obj))
                 {
-                    AsString(elementsIndent, verbose, sequence[i].ToAsn1Object(), buf);
-                }
-            }
-            else if (obj is Asn1Set)
-            {
-                buf.Append(indent);
-                if (obj is BerSet)
-                {
-                    buf.Append("BER Set");
-                }
-                else if (obj is DerSet)
+                    if (o == null || o is Asn1Null)
                     {
-                    buf.Append("DER Set");
+                        buf.Append(tab);
+                        buf.Append("NULL");
+                        buf.Append(NewLine);
                     }
                     else
                     {
-                    buf.Append("Set");
+                        AsString(tab, verbose, o.ToAsn1Object(), buf);
                     }
-                buf.Append(NewLine);
-
-                Asn1Set set = (Asn1Set)obj;
-                string elementsIndent = indent + Tab;
-
-                for (int i = 0, count = set.Count; i < count; ++i)
-                {
-                    AsString(elementsIndent, verbose, set[i].ToAsn1Object(), buf);
                 }
             }
             else if (obj is Asn1TaggedObject)
@@ -102,7 +80,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Utilities
 
                 Asn1TaggedObject o = (Asn1TaggedObject)obj;
 
-                buf.Append(o.TagNo.ToString());
+                buf.Append(((int)o.TagNo).ToString());
                 buf.Append(']');
 
                 if (!o.IsExplicit())
@@ -121,6 +99,50 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Utilities
                 else
                 {
                     AsString(tab, verbose, o.GetObject(), buf);
+                }
+            }
+            else if (obj is BerSet)
+            {
+                string tab = indent + Tab;
+
+                buf.Append(indent);
+                buf.Append("BER Set");
+                buf.Append(NewLine);
+
+                foreach (Asn1Encodable o in ((Asn1Set)obj))
+                {
+                    if (o == null)
+                    {
+                        buf.Append(tab);
+                        buf.Append("NULL");
+                        buf.Append(NewLine);
+                    }
+                    else
+                    {
+                        AsString(tab, verbose, o.ToAsn1Object(), buf);
+                    }
+                }
+            }
+            else if (obj is DerSet)
+            {
+                string tab = indent + Tab;
+
+                buf.Append(indent);
+                buf.Append("DER Set");
+                buf.Append(NewLine);
+
+                foreach (Asn1Encodable o in ((Asn1Set)obj))
+                {
+                    if (o == null)
+                    {
+                        buf.Append(tab);
+                        buf.Append("NULL");
+                        buf.Append(NewLine);
+                    }
+                    else
+                    {
+                        AsString(tab, verbose, o.ToAsn1Object(), buf);
+                    }
                 }
             }
             else if (obj is DerObjectIdentifier)
@@ -262,6 +284,20 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Utilities
 
             return indent + type + " ApplicationSpecific[" + app.ApplicationTag + "] ("
                 + Hex.ToHexString(app.GetContents()) + ")" + NewLine;
+        }
+
+
+        public static string DumpAsString(
+            object   obj)
+        {
+            if (obj is Asn1Encodable)
+            {
+                StringBuilder buf = new StringBuilder();
+                AsString("", false, ((Asn1Encodable)obj).ToAsn1Object(), buf);
+                return buf.ToString();
+            }
+
+            return "unknown object type " + obj.ToString();
         }
 
         /**

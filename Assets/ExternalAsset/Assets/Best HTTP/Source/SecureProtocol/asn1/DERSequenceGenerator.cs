@@ -23,17 +23,13 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 		{
 		}
 
-		public override void AddObject(Asn1Encodable obj)
+		public override void AddObject(
+			Asn1Encodable obj)
 		{
-            obj.EncodeTo(_bOut, Asn1Encodable.Der);
+			new DerOutputStream(_bOut).WriteObject(obj);
 		}
 
-        public override void AddObject(Asn1Object obj)
-        {
-            obj.EncodeTo(_bOut, Asn1Encodable.Der);
-        }
-
-        public override Stream GetRawOutputStream()
+		public override Stream GetRawOutputStream()
 		{
 			return _bOut;
 		}

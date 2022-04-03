@@ -113,12 +113,8 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 			return this.str.Equals(other.str);
         }
 
-        internal override int EncodedLength(bool withID)
-        {
-            return Asn1OutputStream.GetLengthOfEncodingDL(withID, str.Length * 2);
-        }
-
-		internal override void Encode(Asn1OutputStream asn1Out, bool withID)
+		internal override void Encode(
+            DerOutputStream derOut)
         {
             char[] c = str.ToCharArray();
             byte[] b = new byte[c.Length * 2];
@@ -129,7 +125,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
                 b[2 * i + 1] = (byte)c[i];
             }
 
-            asn1Out.WriteEncodingDL(withID, Asn1Tags.BmpString, b);
+            derOut.WriteEncoded(Asn1Tags.BmpString, b);
         }
     }
 }

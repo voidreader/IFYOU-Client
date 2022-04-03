@@ -147,7 +147,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Signers
                 return false;
             }
 
-            BigInteger v = BigIntegers.ModOddInverseVar(n, e);
+            BigInteger v = e.ModInverse(n);
 
             BigInteger z1 = s.Multiply(v).Mod(n);
             BigInteger z2 = (n.Subtract(r)).Multiply(v).Mod(n);

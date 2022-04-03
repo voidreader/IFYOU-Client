@@ -297,14 +297,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
             return Strings.ToAsciiByteArray(time);
         }
 
-        internal override int EncodedLength(bool withID)
+        internal override void Encode(
+            DerOutputStream derOut)
         {
-            return Asn1OutputStream.GetLengthOfEncodingDL(withID, time.Length);
-        }
-
-        internal override void Encode(Asn1OutputStream asn1Out, bool withID)
-        {
-            asn1Out.WriteEncodingDL(withID, Asn1Tags.GeneralizedTime, GetOctets());
+            derOut.WriteEncoded(Asn1Tags.GeneralizedTime, GetOctets());
         }
 
         protected override bool Asn1Equals(

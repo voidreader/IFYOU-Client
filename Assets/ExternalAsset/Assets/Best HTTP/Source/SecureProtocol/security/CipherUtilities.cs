@@ -7,7 +7,6 @@ using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.CryptoPro;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Kisa;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Nist;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Nsri;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Ntt;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Oiw;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Pkcs;
@@ -32,7 +31,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Security
         private enum CipherAlgorithm {
             AES,
             ARC4,
-            ARIA,
             BLOWFISH,
             CAMELLIA,
             CAST5,
@@ -93,10 +91,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Security
             OAEPWITHSHA_224ANDMGF1PADDING,
             OAEPWITHSHA256ANDMGF1PADDING,
             OAEPWITHSHA_256ANDMGF1PADDING,
-            OAEPWITHSHA256ANDMGF1WITHSHA256PADDING,
-            OAEPWITHSHA_256ANDMGF1WITHSHA_256PADDING,
-            OAEPWITHSHA256ANDMGF1WITHSHA1PADDING,
-            OAEPWITHSHA_256ANDMGF1WITHSHA_1PADDING,
             OAEPWITHSHA384ANDMGF1PADDING,
             OAEPWITHSHA_384ANDMGF1PADDING,
             OAEPWITHSHA512ANDMGF1PADDING,
@@ -125,18 +119,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Security
 
             // TODO Flesh out the list of aliases
 
-            algorithms[NistObjectIdentifiers.IdAes128Cbc.Id] = "AES/CBC/PKCS7PADDING";
-            algorithms[NistObjectIdentifiers.IdAes192Cbc.Id] = "AES/CBC/PKCS7PADDING";
-            algorithms[NistObjectIdentifiers.IdAes256Cbc.Id] = "AES/CBC/PKCS7PADDING";
-
-            algorithms[NistObjectIdentifiers.IdAes128Ccm.Id] = "AES/CCM/NOPADDING";
-            algorithms[NistObjectIdentifiers.IdAes192Ccm.Id] = "AES/CCM/NOPADDING";
-            algorithms[NistObjectIdentifiers.IdAes256Ccm.Id] = "AES/CCM/NOPADDING";
-
-            algorithms[NistObjectIdentifiers.IdAes128Cfb.Id] = "AES/CFB/NOPADDING";
-            algorithms[NistObjectIdentifiers.IdAes192Cfb.Id] = "AES/CFB/NOPADDING";
-            algorithms[NistObjectIdentifiers.IdAes256Cfb.Id] = "AES/CFB/NOPADDING";
-
             algorithms[NistObjectIdentifiers.IdAes128Ecb.Id] = "AES/ECB/PKCS7PADDING";
             algorithms[NistObjectIdentifiers.IdAes192Ecb.Id] = "AES/ECB/PKCS7PADDING";
             algorithms[NistObjectIdentifiers.IdAes256Ecb.Id] = "AES/ECB/PKCS7PADDING";
@@ -145,45 +127,17 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Security
             algorithms["AES//PKCS5"] = "AES/ECB/PKCS7PADDING";
             algorithms["AES//PKCS5PADDING"] = "AES/ECB/PKCS7PADDING";
 
-            algorithms[NistObjectIdentifiers.IdAes128Gcm.Id] = "AES/GCM/NOPADDING";
-            algorithms[NistObjectIdentifiers.IdAes192Gcm.Id] = "AES/GCM/NOPADDING";
-            algorithms[NistObjectIdentifiers.IdAes256Gcm.Id] = "AES/GCM/NOPADDING";
+            algorithms[NistObjectIdentifiers.IdAes128Cbc.Id] = "AES/CBC/PKCS7PADDING";
+            algorithms[NistObjectIdentifiers.IdAes192Cbc.Id] = "AES/CBC/PKCS7PADDING";
+            algorithms[NistObjectIdentifiers.IdAes256Cbc.Id] = "AES/CBC/PKCS7PADDING";
 
             algorithms[NistObjectIdentifiers.IdAes128Ofb.Id] = "AES/OFB/NOPADDING";
             algorithms[NistObjectIdentifiers.IdAes192Ofb.Id] = "AES/OFB/NOPADDING";
             algorithms[NistObjectIdentifiers.IdAes256Ofb.Id] = "AES/OFB/NOPADDING";
 
-            algorithms[NsriObjectIdentifiers.id_aria128_cbc.Id] = "ARIA/CBC/PKCS7PADDING";
-            algorithms[NsriObjectIdentifiers.id_aria192_cbc.Id] = "ARIA/CBC/PKCS7PADDING";
-            algorithms[NsriObjectIdentifiers.id_aria256_cbc.Id] = "ARIA/CBC/PKCS7PADDING";
-
-            algorithms[NsriObjectIdentifiers.id_aria128_ccm.Id] = "ARIA/CCM/NOPADDING";
-            algorithms[NsriObjectIdentifiers.id_aria192_ccm.Id] = "ARIA/CCM/NOPADDING";
-            algorithms[NsriObjectIdentifiers.id_aria256_ccm.Id] = "ARIA/CCM/NOPADDING";
-
-            algorithms[NsriObjectIdentifiers.id_aria128_cfb.Id] = "ARIA/CFB/NOPADDING";
-            algorithms[NsriObjectIdentifiers.id_aria192_cfb.Id] = "ARIA/CFB/NOPADDING";
-            algorithms[NsriObjectIdentifiers.id_aria256_cfb.Id] = "ARIA/CFB/NOPADDING";
-
-            algorithms[NsriObjectIdentifiers.id_aria128_ctr.Id] = "ARIA/CTR/NOPADDING";
-            algorithms[NsriObjectIdentifiers.id_aria192_ctr.Id] = "ARIA/CTR/NOPADDING";
-            algorithms[NsriObjectIdentifiers.id_aria256_ctr.Id] = "ARIA/CTR/NOPADDING";
-
-            algorithms[NsriObjectIdentifiers.id_aria128_ecb.Id] = "ARIA/ECB/PKCS7PADDING";
-            algorithms[NsriObjectIdentifiers.id_aria192_ecb.Id] = "ARIA/ECB/PKCS7PADDING";
-            algorithms[NsriObjectIdentifiers.id_aria256_ecb.Id] = "ARIA/ECB/PKCS7PADDING";
-            algorithms["ARIA//PKCS7"] = "ARIA/ECB/PKCS7PADDING";
-            algorithms["ARIA//PKCS7PADDING"] = "ARIA/ECB/PKCS7PADDING";
-            algorithms["ARIA//PKCS5"] = "ARIA/ECB/PKCS7PADDING";
-            algorithms["ARIA//PKCS5PADDING"] = "ARIA/ECB/PKCS7PADDING";
-
-            algorithms[NsriObjectIdentifiers.id_aria128_gcm.Id] = "ARIA/GCM/NOPADDING";
-            algorithms[NsriObjectIdentifiers.id_aria192_gcm.Id] = "ARIA/GCM/NOPADDING";
-            algorithms[NsriObjectIdentifiers.id_aria256_gcm.Id] = "ARIA/GCM/NOPADDING";
-
-            algorithms[NsriObjectIdentifiers.id_aria128_ofb.Id] = "ARIA/OFB/NOPADDING";
-            algorithms[NsriObjectIdentifiers.id_aria192_ofb.Id] = "ARIA/OFB/NOPADDING";
-            algorithms[NsriObjectIdentifiers.id_aria256_ofb.Id] = "ARIA/OFB/NOPADDING";
+            algorithms[NistObjectIdentifiers.IdAes128Cfb.Id] = "AES/CFB/NOPADDING";
+            algorithms[NistObjectIdentifiers.IdAes192Cfb.Id] = "AES/CFB/NOPADDING";
+            algorithms[NistObjectIdentifiers.IdAes256Cfb.Id] = "AES/CFB/NOPADDING";
 
             algorithms["RSA/ECB/PKCS1"] = "RSA//PKCS1PADDING";
             algorithms["RSA/ECB/PKCS1PADDING"] = "RSA//PKCS1PADDING";
@@ -419,9 +373,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Security
                 case CipherAlgorithm.ARC4:
                     streamCipher = new RC4Engine();
                     break;
-                case CipherAlgorithm.ARIA:
-                    blockCipher = new AriaEngine();
-                    break;
                 case CipherAlgorithm.BLOWFISH:
                     blockCipher = new BlowfishEngine();
                     break;
@@ -622,13 +573,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Security
                         break;
                     case CipherPadding.OAEPWITHSHA256ANDMGF1PADDING:
                     case CipherPadding.OAEPWITHSHA_256ANDMGF1PADDING:
-                    case CipherPadding.OAEPWITHSHA256ANDMGF1WITHSHA256PADDING:
-                    case CipherPadding.OAEPWITHSHA_256ANDMGF1WITHSHA_256PADDING:
                         asymBlockCipher = new OaepEncoding(asymBlockCipher, new Sha256Digest());
-                        break;
-                    case CipherPadding.OAEPWITHSHA256ANDMGF1WITHSHA1PADDING:
-                    case CipherPadding.OAEPWITHSHA_256ANDMGF1WITHSHA_1PADDING:
-                        asymBlockCipher = new OaepEncoding(asymBlockCipher, new Sha256Digest(), new Sha1Digest(), null);
                         break;
                     case CipherPadding.OAEPWITHSHA384ANDMGF1PADDING:
                     case CipherPadding.OAEPWITHSHA_384ANDMGF1PADDING:
@@ -808,7 +753,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Security
             switch (cipherAlgorithm)
             {
                 case CipherAlgorithm.AES: return new AesEngine();
-                case CipherAlgorithm.ARIA: return new AriaEngine();
                 case CipherAlgorithm.BLOWFISH: return new BlowfishEngine();
                 case CipherAlgorithm.CAMELLIA: return new CamelliaEngine();
                 case CipherAlgorithm.CAST5: return new Cast5Engine();

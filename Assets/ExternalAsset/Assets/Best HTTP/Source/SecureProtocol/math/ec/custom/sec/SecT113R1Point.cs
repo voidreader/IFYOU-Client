@@ -184,7 +184,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.Sec
             ECFieldElement X1 = this.RawXCoord;
             if (X1.IsZero) 
             {
-                // A point with X == 0 is its own additive inverse
+                // A point with X == 0 is it's own Additive inverse
                 return curve.Infinity;
             }
 
@@ -222,7 +222,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.Sec
             ECFieldElement X1 = this.RawXCoord;
             if (X1.IsZero) 
             {
-                // A point with X == 0 is its own additive inverse
+                // A point with X == 0 is it's own Additive inverse
                 return b;
             }
 

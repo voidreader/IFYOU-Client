@@ -49,21 +49,13 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 		{
 		}
 
-        internal override int EncodedLength(bool withID)
-        {
-            throw BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Platform.CreateNotImplementedException("BerTaggedObject.EncodedLength");
-        }
-
-        internal override void Encode(Asn1OutputStream asn1Out, bool withID)
+		internal override void Encode(
+			DerOutputStream derOut)
 		{
-			if (asn1Out.IsBer)
+			if (derOut is Asn1OutputStream || derOut is BerOutputStream)
 			{
-                if (withID)
-                {
-                    asn1Out.WriteIdentifier(true, Asn1Tags.Constructed | Asn1Tags.ContextSpecific, tagNo);
-                }
-
-                asn1Out.WriteByte(0x80);
+				derOut.WriteTag((byte)(Asn1Tags.Constructed | Asn1Tags.Tagged), tagNo);
+				derOut.WriteByte(0x80);
 
 				if (!IsEmpty())
 				{
@@ -97,21 +89,21 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 
 						foreach (Asn1Encodable o in eObj)
 						{
-							asn1Out.WritePrimitive(o.ToAsn1Object(), true);
+							derOut.WriteObject(o);
 						}
 					}
 					else
 					{
-						asn1Out.WritePrimitive(obj.ToAsn1Object(), true);
+						derOut.WriteObject(obj);
 					}
 				}
 
-				asn1Out.WriteByte(0x00);
-				asn1Out.WriteByte(0x00);
+				derOut.WriteByte(0x00);
+				derOut.WriteByte(0x00);
 			}
 			else
 			{
-				base.Encode(asn1Out, withID);
+				base.Encode(derOut);
 			}
 		}
 	}

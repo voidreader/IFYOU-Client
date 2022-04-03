@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X509;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math;
 
@@ -63,7 +64,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Icao
 			e.MoveNext();
 			Asn1Sequence datagroupHashSeq = Asn1Sequence.GetInstance(e.Current);
 
-			if (version.HasValue(1))
+			if (version.Value.Equals(BigInteger.One))
 			{
 				e.MoveNext();
 				versionInfo = LdsVersionInfo.GetInstance(e.Current);

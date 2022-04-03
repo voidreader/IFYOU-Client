@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Text;
 using BestHTTP.Core;
 using BestHTTP.Extensions;
-using BestHTTP.Logger;
 using BestHTTP.PlatformSupport.Memory;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -104,7 +103,6 @@ namespace BestHTTP.ServerSentEvents
         public HostConnectionKey ConnectionKey { get; private set; }
 
         public bool IsClosed { get { return this.State == States.Closed; } }
-        public LoggingContext LoggingContext { get; private set; }
 
 #if !UNITY_WEBGL || UNITY_EDITOR
         /// <summary>
@@ -208,8 +206,6 @@ namespace BestHTTP.ServerSentEvents
         public EventSource(Uri uri, int readBufferSizeOverride = 0)
         {
             this.Uri = uri;
-            this.LoggingContext = new LoggingContext(this);
-
             this.ReconnectionTime = TimeSpan.FromMilliseconds(2000);
 
             this.ConnectionKey = new HostConnectionKey(this.Uri.Host, HostDefinition.GetKeyFor(this.Uri
@@ -232,8 +228,6 @@ namespace BestHTTP.ServerSentEvents
 
             // Disable internal retry
             this.InternalRequest.MaxRetries = 0;
-
-            this.InternalRequest.Context.Add("EventSource", this.LoggingContext);
 #else
             if (!ES_IsSupported())
               throw new NotSupportedException("This browser isn't support the EventSource protocol!");
@@ -332,7 +326,7 @@ namespace BestHTTP.ServerSentEvents
                 }
                 catch (Exception ex)
                 {
-                    HTTPManager.Logger.Exception("EventSource", msg + " - OnError", ex, this.LoggingContext);
+                    HTTPManager.Logger.Exception("EventSource", msg + " - OnError", ex);
                 }
             }
         }
@@ -348,7 +342,7 @@ namespace BestHTTP.ServerSentEvents
                 }
                 catch(Exception ex)
                 {
-                    HTTPManager.Logger.Exception("EventSource", "CallOnRetry", ex, this.LoggingContext);
+                    HTTPManager.Logger.Exception("EventSource", "CallOnRetry", ex);
                 }
             }
 
@@ -368,7 +362,7 @@ namespace BestHTTP.ServerSentEvents
                 }
                 catch (Exception ex)
                 {
-                    HTTPManager.Logger.Exception("EventSource", msg + " - OnClosed", ex, this.LoggingContext);
+                    HTTPManager.Logger.Exception("EventSource", msg + " - OnClosed", ex);
                 }
             }
         }
@@ -720,7 +714,7 @@ namespace BestHTTP.ServerSentEvents
                 }
                 catch (Exception ex)
                 {
-                    HTTPManager.Logger.Exception("EventSource", "OnMessageReceived - OnMessage", ex, this.LoggingContext);
+                    HTTPManager.Logger.Exception("EventSource", "OnMessageReceived - OnMessage", ex);
                 }
             }
 #if !UNITY_WEBGL || UNITY_EDITOR
@@ -732,7 +726,7 @@ namespace BestHTTP.ServerSentEvents
                 }
                 catch (Exception ex)
                 {
-                    HTTPManager.Logger.Exception("EventSource", "OnMessageReceived - OnComment", ex, this.LoggingContext);
+                    HTTPManager.Logger.Exception("EventSource", "OnMessageReceived - OnComment", ex);
                 }
             }
 #endif
@@ -750,7 +744,7 @@ namespace BestHTTP.ServerSentEvents
                         }
                         catch(Exception ex)
                         {
-                            HTTPManager.Logger.Exception("EventSource", "OnMessageReceived - action", ex, this.LoggingContext);
+                            HTTPManager.Logger.Exception("EventSource", "OnMessageReceived - action", ex);
                         }
                     }
                 }
@@ -809,9 +803,9 @@ namespace BestHTTP.ServerSentEvents
             }
         }
 #endif
-        #endregion
+#endregion
 
-        #region WebGL Static Callbacks
+#region WebGL Static Callbacks
 #if UNITY_WEBGL && !UNITY_EDITOR
 
         [AOT.MonoPInvokeCallback(typeof(OnWebGLEventSourceOpenDelegate))]
@@ -828,7 +822,7 @@ namespace BestHTTP.ServerSentEvents
                     }
                     catch(Exception ex)
                     {
-                        HTTPManager.Logger.Exception("EventSource", "OnOpen", ex, es.LoggingContext);
+                        HTTPManager.Logger.Exception("EventSource", "OnOpen", ex);
                     }
                 }
 
@@ -877,9 +871,9 @@ namespace BestHTTP.ServerSentEvents
         }
 
 #endif
-        #endregion
+#endregion
 
-        #region WebGL Interface
+#region WebGL Interface
 #if UNITY_WEBGL && !UNITY_EDITOR
 
         [DllImport("__Internal")]
@@ -898,7 +892,7 @@ namespace BestHTTP.ServerSentEvents
         static extern void ES_Release(uint id);
 
 #endif
-        #endregion
+#endregion
 
     }
 }

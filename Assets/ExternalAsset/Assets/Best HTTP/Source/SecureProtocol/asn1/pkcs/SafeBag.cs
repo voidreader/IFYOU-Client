@@ -41,7 +41,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Pkcs
             this.bagAttributes = bagAttributes;
         }
 
-		private SafeBag(Asn1Sequence seq)
+
+		public SafeBag(
+            Asn1Sequence seq)
         {
             this.bagID = (DerObjectIdentifier)seq[0];
             this.bagValue = ((DerTaggedObject)seq[1]).GetObject();

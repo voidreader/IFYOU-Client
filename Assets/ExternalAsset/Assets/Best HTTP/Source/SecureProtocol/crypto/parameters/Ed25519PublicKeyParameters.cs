@@ -16,11 +16,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters
 
         private readonly byte[] data = new byte[KeySize];
 
-        public Ed25519PublicKeyParameters(byte[] buf)
-            : this(Validate(buf), 0)
-        {
-        }
-
         public Ed25519PublicKeyParameters(byte[] buf, int off)
             : base(false)
         {
@@ -42,14 +37,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters
         public byte[] GetEncoded()
         {
             return Arrays.Clone(data);
-        }
-
-        private static byte[] Validate(byte[] buf)
-        {
-            if (buf.Length != KeySize)
-                throw new ArgumentException("must have length " + KeySize, "buf");
-
-            return buf;
         }
     }
 }

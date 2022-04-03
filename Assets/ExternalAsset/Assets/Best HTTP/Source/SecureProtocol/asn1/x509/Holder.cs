@@ -29,9 +29,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X509
 	 * 
 	 * <pre>
 	 *         subject CHOICE {
-	 *          baseCertificateID [0] EXPLICIT IssuerSerial,
+	 *          baseCertificateID [0] IssuerSerial,
 	 *          -- associated with a Public Key Certificate
-	 *          subjectName [1] EXPLICIT GeneralNames },
+	 *          subjectName [1] GeneralNames },
 	 *          -- associated with a name
 	 * </pre>
 	 * </p>
@@ -76,10 +76,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X509
 			switch (tagObj.TagNo)
 			{
 				case 0:
-					baseCertificateID = IssuerSerial.GetInstance(tagObj, true);
+					baseCertificateID = IssuerSerial.GetInstance(tagObj, false);
 					break;
 				case 1:
-					entityName = GeneralNames.GetInstance(tagObj, true);
+					entityName = GeneralNames.GetInstance(tagObj, false);
 					break;
 				default:
 					throw new ArgumentException("unknown tag in Holder");
@@ -230,7 +230,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X509
         {
             if (version == 1)
             {
-                Asn1EncodableVector v = new Asn1EncodableVector(3);
+                Asn1EncodableVector v = new Asn1EncodableVector();
                 v.AddOptionalTagged(false, 0, baseCertificateID);
                 v.AddOptionalTagged(false, 1, entityName);
                 v.AddOptionalTagged(false, 2, objectDigestInfo);
@@ -239,10 +239,10 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X509
 
             if (entityName != null)
             {
-                return new DerTaggedObject(true, 1, entityName);
+                return new DerTaggedObject(false, 1, entityName);
             }
 
-            return new DerTaggedObject(true, 0, baseCertificateID);
+            return new DerTaggedObject(false, 0, baseCertificateID);
         }
 	}
 }

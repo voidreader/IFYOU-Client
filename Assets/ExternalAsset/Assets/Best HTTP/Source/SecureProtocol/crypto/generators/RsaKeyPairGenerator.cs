@@ -129,7 +129,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Generators
                 //
                 BigInteger dP = d.Remainder(pSub1);
                 BigInteger dQ = d.Remainder(qSub1);
-                BigInteger qInv = BigIntegers.ModOddInverse(p, q);
+                BigInteger qInv = q.ModInverse(p);
 
                 return new AsymmetricCipherKeyPair(
                     new RsaKeyParameters(false, n, e),

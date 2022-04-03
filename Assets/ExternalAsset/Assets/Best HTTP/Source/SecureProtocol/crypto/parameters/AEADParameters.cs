@@ -4,7 +4,7 @@ using System;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters
 {
-	public class AeadParameters
+	public sealed class AeadParameters
 		: ICipherParameters
 	{
 		private readonly byte[] associatedText;
@@ -44,22 +44,22 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters
 			this.associatedText = associatedText;
 		}
 
-		public virtual KeyParameter Key
+		public /*virtual */KeyParameter Key
 		{
 			get { return key; }
 		}
 
-		public virtual int MacSize
+		public /*virtual */int MacSize
 		{
 			get { return macSize; }
 		}
 
-		public virtual byte[] GetAssociatedText()
+		public /*virtual */byte[] GetAssociatedText()
 		{
 			return associatedText;
 		}
 
-		public virtual byte[] GetNonce()
+		public /*virtual */byte[] GetNonce()
 		{
 			return nonce;
 		}

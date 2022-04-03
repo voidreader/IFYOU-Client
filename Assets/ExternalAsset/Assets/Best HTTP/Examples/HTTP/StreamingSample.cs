@@ -150,7 +150,7 @@ namespace BestHTTP.Examples.HTTP
             ResetProcessedValues();
         }
 
-        private void OnHeadersReceived(HTTPRequest req, HTTPResponse resp, Dictionary<string, List<string>> newHeaders)
+        private void OnHeadersReceived(HTTPRequest req, HTTPResponse resp)
         {
             var range = resp.GetRange();
             if (range != null)

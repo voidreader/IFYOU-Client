@@ -5,24 +5,34 @@ using System.IO;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 {
-
+	// TODO Make Obsolete in favour of Asn1OutputStream?
     public class BerOutputStream
         : DerOutputStream
     {
-
-        public BerOutputStream(Stream os)
-            : base(os)
+        public BerOutputStream(Stream os) : base(os)
         {
         }
 
-        public override void WriteObject(Asn1Encodable encodable)
-        {
-            Asn1OutputStream.Create(s).WriteObject(encodable);
-        }
 
-        public override void WriteObject(Asn1Object primitive)
+        public override void WriteObject(
+            object    obj)
         {
-            Asn1OutputStream.Create(s).WriteObject(primitive);
+            if (obj == null)
+            {
+                WriteNull();
+            }
+            else if (obj is Asn1Object)
+            {
+                ((Asn1Object)obj).Encode(this);
+            }
+            else if (obj is Asn1Encodable)
+            {
+                ((Asn1Encodable)obj).ToAsn1Object().Encode(this);
+            }
+            else
+            {
+                throw new IOException("object not BerEncodable");
+            }
         }
     }
 }

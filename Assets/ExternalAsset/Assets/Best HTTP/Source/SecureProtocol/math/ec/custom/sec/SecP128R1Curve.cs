@@ -3,7 +3,6 @@
 using System;
 
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.Raw;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Security;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Encoders;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.Sec
@@ -94,20 +93,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.Sec
             }
 
             return new SecP128R1LookupTable(this, table, len);
-        }
-
-        public override ECFieldElement RandomFieldElement(SecureRandom r)
-        {
-            uint[] x = Nat128.Create();
-            SecP128R1Field.Random(r, x);
-            return new SecP128R1FieldElement(x);
-        }
-
-        public override ECFieldElement RandomFieldElementMult(SecureRandom r)
-        {
-            uint[] x = Nat128.Create();
-            SecP128R1Field.RandomMult(r, x);
-            return new SecP128R1FieldElement(x);
         }
 
         private class SecP128R1LookupTable

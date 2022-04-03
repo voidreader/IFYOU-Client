@@ -4,7 +4,6 @@ using System;
 
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Digests;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Utilities;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Security;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
 
@@ -172,7 +171,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Encodings
             //
             // mask the message block.
             //
-            byte[] mask = MaskGeneratorFunction(seed, 0, seed.Length, block.Length - defHash.Length);
+            byte[] mask = maskGeneratorFunction1(seed, 0, seed.Length, block.Length - defHash.Length);
 
             for (int i = defHash.Length; i != block.Length; i++)
             {
@@ -187,7 +186,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Encodings
             //
             // mask the seed.
             //
-            mask = MaskGeneratorFunction(
+            mask = maskGeneratorFunction1(
                 block, defHash.Length, block.Length - defHash.Length, defHash.Length);
 
             for (int i = 0; i != defHash.Length; i++)
@@ -230,7 +229,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Encodings
             //
             // unmask the seed.
             //
-            byte[] mask = MaskGeneratorFunction(
+            byte[] mask = maskGeneratorFunction1(
                 block, defHash.Length, block.Length - defHash.Length, defHash.Length);
 
             for (int i = 0; i != defHash.Length; i++)
@@ -241,7 +240,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Encodings
             //
             // unmask the message block.
             //
-            mask = MaskGeneratorFunction(block, 0, defHash.Length, block.Length - defHash.Length);
+            mask = maskGeneratorFunction1(block, 0, defHash.Length, block.Length - defHash.Length);
 
             for (int i = defHash.Length; i != block.Length; i++)
             {
@@ -291,35 +290,27 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Encodings
             byte[] output = new byte[block.Length - start];
 
             Array.Copy(block, start, output, 0, output.Length);
-            Array.Clear(block, 0, block.Length);
 
             return output;
         }
 
-        private byte[] MaskGeneratorFunction(
-            byte[] Z,
-            int zOff,
-            int zLen,
-            int length)
+        /**
+        * int to octet string.
+        */
+        private void ItoOSP(
+            int		i,
+            byte[]	sp)
         {
-            if (mgf1Hash is IXof)
-            {
-                byte[] mask = new byte[length];
-                mgf1Hash.BlockUpdate(Z, zOff, zLen);
-                ((IXof)mgf1Hash).DoFinal(mask, 0, mask.Length);
-
-                return mask;
-            }
-            else
-            {
-                return MaskGeneratorFunction1(Z, zOff, zLen, length);
-            }
+            sp[0] = (byte)((uint)i >> 24);
+            sp[1] = (byte)((uint)i >> 16);
+            sp[2] = (byte)((uint)i >> 8);
+            sp[3] = (byte)((uint)i >> 0);
         }
 
         /**
         * mask generator function, as described in PKCS1v2.
         */
-        private byte[] MaskGeneratorFunction1(
+        private byte[] maskGeneratorFunction1(
             byte[]	Z,
             int		zOff,
             int		zLen,
@@ -334,7 +325,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Encodings
 
             while (counter < (length / hashBuf.Length))
             {
-                Pack.UInt32_To_BE((uint)counter, C);
+                ItoOSP(counter, C);
 
                 mgf1Hash.BlockUpdate(Z, zOff, zLen);
                 mgf1Hash.BlockUpdate(C, 0, C.Length);
@@ -347,7 +338,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Encodings
 
             if ((counter * hashBuf.Length) < length)
             {
-                Pack.UInt32_To_BE((uint)counter, C);
+                ItoOSP(counter, C);
 
                 mgf1Hash.BlockUpdate(Z, zOff, zLen);
                 mgf1Hash.BlockUpdate(C, 0, C.Length);

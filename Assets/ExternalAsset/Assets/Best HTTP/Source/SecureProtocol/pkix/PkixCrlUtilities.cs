@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Collections;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Date;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.X509;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.X509.Store;
 
@@ -38,16 +37,21 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkix
 			// based on RFC 5280 6.3.3
 			foreach (X509Crl crl in initialSet)
 			{
-                DateTimeObject nextUpdate = crl.NextUpdate;
-
-                if (null == nextUpdate || nextUpdate.Value.CompareTo(validityDate) > 0)
+				if (crl.NextUpdate.Value.CompareTo(validityDate) > 0)
 				{
 					X509Certificate cert = crlselect.CertificateChecking;
 
-                    if (null == cert || crl.ThisUpdate.CompareTo(cert.NotAfter) < 0)
-                    {
-                        finalSet.Add(crl);
-                    }
+					if (cert != null)
+					{
+						if (crl.ThisUpdate.CompareTo(cert.NotAfter) < 0)
+						{
+							finalSet.Add(crl);
+						}
+					}
+					else
+					{
+						finalSet.Add(crl);
+					}
 				}
 			}
 

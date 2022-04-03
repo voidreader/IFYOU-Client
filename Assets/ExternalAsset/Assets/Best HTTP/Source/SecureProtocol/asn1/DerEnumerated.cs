@@ -95,12 +95,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
             get { return new BigInteger(bytes); }
         }
 
-        public bool HasValue(int x)
-        {
-            return (bytes.Length - start) <= 4
-                && DerInteger.IntValue(bytes, start, DerInteger.SignExtSigned) == x;
-        }
-
         public bool HasValue(BigInteger x)
         {
             return null != x
@@ -121,14 +115,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
             }
         }
 
-        internal override int EncodedLength(bool withID)
+        internal override void Encode(DerOutputStream derOut)
         {
-            return Asn1OutputStream.GetLengthOfEncodingDL(withID, bytes.Length);
-        }
-
-        internal override void Encode(Asn1OutputStream asn1Out, bool withID)
-        {
-            asn1Out.WriteEncodingDL(withID, Asn1Tags.Enumerated, bytes);
+            derOut.WriteEncoded(Asn1Tags.Enumerated, bytes);
         }
 
         protected override bool Asn1Equals(Asn1Object asn1Object)
@@ -164,6 +153,11 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
                 cache[value] = possibleMatch = new DerEnumerated(enc);
             }
             return possibleMatch;
+        }
+
+        public override string ToString()
+        {
+            return this.Value.ToString();
         }
     }
 }

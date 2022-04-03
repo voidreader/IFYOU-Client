@@ -4,7 +4,6 @@ using System;
 
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Engines
 {
@@ -142,7 +141,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Engines
 		{
 			BigInteger m = key.Modulus;
 			BigInteger msg = blindedMsg;
-			BigInteger blindFactorInverse = BigIntegers.ModOddInverse(m, blindingFactor);
+			BigInteger blindFactorInverse = blindingFactor.ModInverse(m);
 			msg = msg.Multiply(blindFactorInverse);
 			msg = msg.Mod(m);
 

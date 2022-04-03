@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BestHTTP.Core
 {
-    public static class HostManager
+    internal static class HostManager
     {
         private const int Version = 1;
         private static string LibraryPath = string.Empty;
@@ -20,14 +20,6 @@ namespace BestHTTP.Core
                 hosts.Add(hostStr, host = new HostDefinition(hostStr));
 
             return host;
-        }
-
-        public static void RemoveAllIdleConnections()
-        {
-            HTTPManager.Logger.Information("HostManager", "RemoveAllIdleConnections");
-            foreach (var host_kvp in hosts)
-                foreach (var variant_kvp in host_kvp.Value.hostConnectionVariant)
-                    variant_kvp.Value.RemoveAllIdleConnections();
         }
 
         public static void TryToSendQueuedRequests()

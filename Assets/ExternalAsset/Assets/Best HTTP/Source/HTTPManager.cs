@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 #if !BESTHTTP_DISABLE_CACHING
@@ -14,8 +15,6 @@ using BestHTTP.PlatformSupport.Memory;
 using BestHTTP.Cookies;
 #endif
 
-using BestHTTP.Connections;
-
 namespace BestHTTP
 {
     public enum ShutdownTypes
@@ -26,10 +25,8 @@ namespace BestHTTP
     }
 
 #if !BESTHTTP_DISABLE_ALTERNATE_SSL && (!UNITY_WEBGL || UNITY_EDITOR)
-    public delegate Connections.TLS.AbstractTls13Client TlsClientFactoryDelegate(HTTPRequest request, List<SecureProtocol.Org.BouncyCastle.Tls.ProtocolName> protocols);
+    public delegate SecureProtocol.Org.BouncyCastle.Crypto.Tls.AbstractTlsClient TlsClientFactoryDelegate(HTTPRequest request, List<string> protocols);
 #endif
-
-    public delegate System.Security.Cryptography.X509Certificates.X509Certificate ClientCertificateSelector(HTTPRequest request, string targetHost, System.Security.Cryptography.X509Certificates.X509CertificateCollection localCertificates, System.Security.Cryptography.X509Certificates.X509Certificate remoteCertificate, string[] acceptableIssuers);
 
     /// <summary>
     ///
@@ -65,6 +62,7 @@ namespace BestHTTP
             logger = new BestHTTP.Logger.ThreadedLogger();
 
 #if !BESTHTTP_DISABLE_ALTERNATE_SSL && (!UNITY_WEBGL || UNITY_EDITOR)
+            DefaultCertificateVerifyer = null;
             UseAlternateSSLDefaultValue = true;
 #endif
 
@@ -204,24 +202,38 @@ namespace BestHTTP
 
         public static TlsClientFactoryDelegate TlsClientFactory;
 
-        public static Connections.TLS.AbstractTls13Client DefaultTlsClientFactory(HTTPRequest request, List<SecureProtocol.Org.BouncyCastle.Tls.ProtocolName> protocols)
+        public static SecureProtocol.Org.BouncyCastle.Crypto.Tls.AbstractTlsClient DefaultTlsClientFactory(HTTPRequest request, List<string> protocols)
         {
             // http://tools.ietf.org/html/rfc3546#section-3.1
             // -It is RECOMMENDED that clients include an extension of type "server_name" in the client hello whenever they locate a server by a supported name type.
             // -Literal IPv4 and IPv6 addresses are not permitted in "HostName".
 
             // User-defined list has a higher priority
-            List<SecureProtocol.Org.BouncyCastle.Tls.ServerName> hostNames = null;
+            List<string> hostNames = request.CustomTLSServerNameList;
 
             // If there's no user defined one and the host isn't an IP address, add the default one
-            if (!request.CurrentUri.IsHostIsAnIPAddress())
+            if ((hostNames == null || hostNames.Count == 0) && !request.CurrentUri.IsHostIsAnIPAddress())
             {
-                hostNames = new List<SecureProtocol.Org.BouncyCastle.Tls.ServerName>(1);
-                hostNames.Add(new SecureProtocol.Org.BouncyCastle.Tls.ServerName(0, System.Text.Encoding.UTF8.GetBytes(request.CurrentUri.Host)));
+                hostNames = new List<string>(1);
+                hostNames.Add(request.CurrentUri.Host);
             }
 
-            return new Connections.TLS.DefaultTls13Client(request, hostNames, protocols);
+            return new SecureProtocol.Org.BouncyCastle.Crypto.Tls.LegacyTlsClient(request.CurrentUri,
+                         request.CustomCertificateVerifyer == null ? new SecureProtocol.Org.BouncyCastle.Crypto.Tls.AlwaysValidVerifyer() : request.CustomCertificateVerifyer,
+                         request.CustomClientCredentialsProvider,
+                         hostNames,
+                         protocols);
         }
+
+        /// <summary>
+        /// The default ICertificateVerifyer implementation that the plugin will use when the request's UseAlternateSSL property is set to true.
+        /// </summary>
+        public static SecureProtocol.Org.BouncyCastle.Crypto.Tls.ICertificateVerifyer DefaultCertificateVerifyer { get; set; }
+
+        /// <summary>
+        /// The default IClientCredentialsProvider implementation that the plugin will use when the request's UseAlternateSSL property is set to true.
+        /// </summary>
+        public static SecureProtocol.Org.BouncyCastle.Crypto.Tls.IClientCredentialsProvider DefaultClientCredentialsProvider { get; set; }
 
         /// <summary>
         /// The default value for the HTTPRequest's UseAlternateSSL property.
@@ -230,8 +242,7 @@ namespace BestHTTP
 #endif
 
 #if !NETFX_CORE
-        public static Func<HTTPRequest, System.Security.Cryptography.X509Certificates.X509Certificate, System.Security.Cryptography.X509Certificates.X509Chain, System.Net.Security.SslPolicyErrors, bool> DefaultCertificationValidator;
-        public static ClientCertificateSelector ClientCertificationProvider;
+        public static Func<HTTPRequest, System.Security.Cryptography.X509Certificates.X509Certificate, System.Security.Cryptography.X509Certificates.X509Chain, bool> DefaultCertificationValidator { get; set; }
 #endif
 
         /// <summary>
@@ -258,13 +269,12 @@ namespace BestHTTP
         /// <summary>
         /// User-agent string that will be sent with each requests.
         /// </summary>
-        public static string UserAgent = "BestHTTP/2 v2.6.0";
+        public static string UserAgent = "BestHTTP/2 v2.5.3";
 
         /// <summary>
         /// It's true if the application is quitting and the plugin is shutting down itself.
         /// </summary>
-        public static bool IsQuitting { get { return _isQuitting; } private set { _isQuitting = value; } }
-        private static volatile bool _isQuitting;
+        public static bool IsQuitting { get; private set; }
 #endregion
 
 #region Manager variables
@@ -383,17 +393,14 @@ namespace BestHTTP
 #endif
         }
 
-#if UNITY_EDITOR
 #if UNITY_2019_3_OR_NEWER
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
 #endif
         public static void ResetSetup()
         {
             IsSetupCalled = false;
-            BufferedReadNetworkStream.ResetNetworkStats();
             HTTPManager.Logger.Information("HTTPManager", "Reset called!");
         }
-#endif
 
 #endregion
 

@@ -1,9 +1,5 @@
 #if !BESTHTTP_DISABLE_ALTERNATE_SSL && (!UNITY_WEBGL || UNITY_EDITOR)
 #pragma warning disable
-using System;
-
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
-
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 {
 	/**
@@ -48,12 +44,8 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 		{
 		}
 
-        internal override int EncodedLength(bool withID)
-        {
-            throw BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Platform.CreateNotImplementedException("DerTaggedObject.EncodedLength");
-        }
-
-        internal override void Encode(Asn1OutputStream asn1Out, bool withID)
+		internal override void Encode(
+			DerOutputStream derOut)
 		{
 			if (!IsEmpty())
 			{
@@ -61,26 +53,21 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 
 				if (explicitly)
 				{
-					asn1Out.WriteEncodingDL(withID, Asn1Tags.Constructed | Asn1Tags.ContextSpecific, tagNo, bytes);
+					derOut.WriteEncoded(Asn1Tags.Constructed | Asn1Tags.Tagged, tagNo, bytes);
 				}
 				else
 				{
 					//
 					// need to mark constructed types... (preserve Constructed tag)
 					//
-                    if (withID)
-                    {
-                        int flags = (bytes[0] & Asn1Tags.Constructed) | Asn1Tags.ContextSpecific;
-                        asn1Out.WriteIdentifier(true, flags, tagNo);
-                    }
-
-                    asn1Out.Write(bytes, 1, bytes.Length - 1);
+					int flags = (bytes[0] & Asn1Tags.Constructed) | Asn1Tags.Tagged;
+					derOut.WriteTag(flags, tagNo);
+					derOut.Write(bytes, 1, bytes.Length - 1);
 				}
 			}
 			else
 			{
-				asn1Out.WriteEncodingDL(withID, Asn1Tags.Constructed | Asn1Tags.ContextSpecific, tagNo,
-                    Asn1OctetString.EmptyOctets);
+				derOut.WriteEncoded(Asn1Tags.Constructed | Asn1Tags.Tagged, tagNo, new byte[0]);
 			}
 		}
 	}

@@ -423,11 +423,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Engines
 
         private void SetKey(byte[] key)
         {
-			if (key.Length < 4 || key.Length > 56)
-			{
-				throw new ArgumentException("key length must be in range 32 to 448 bits");
-			}
-
             /*
             * - comments are from _Applied Crypto_, Schneier, p338
             * please be careful comparing the two, AC numbers the

@@ -2,6 +2,7 @@
 #pragma warning disable
 using System;
 using System.IO;
+using System.Text;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Encoders
 {

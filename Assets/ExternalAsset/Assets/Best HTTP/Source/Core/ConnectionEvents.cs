@@ -177,7 +177,7 @@ namespace BestHTTP.Core
                         .TryToSendQueuedRequests();
                     }
                     catch(System.Exception e) {
-                        
+                        UnityEngine.Debug.LogError(e.StackTrace);
                     }
                     break;
             }

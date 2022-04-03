@@ -33,8 +33,8 @@ namespace PIERStory {
                 return;
             
             // 한번 설정했으면 두번 호출할 필요없다. 
-            if(isTextSet)
-                return; 
+            // if(isTextSet)
+            //     return; 
                 
             // 언어별 텍스트 불러와서 할당해주기
             _localizedText = SystemManager.GetLocalizedText(_textID);

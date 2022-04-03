@@ -16,6 +16,7 @@ namespace PIERStory
     {
         public static ViewGame main = null;     // UI singleton
         
+        public CommonView gameMenu;
 
         [Header("말풍선")]
         public RectTransform bubbleParent;          // 말풍선 부모
@@ -147,9 +148,11 @@ namespace PIERStory
                 
                 // 백버튼 눌렀을때, 팝업창 없고, 살아있는 뷰가 Gameview 하나고, 로그 패널 없을때.
                 if(PopupManager.main.GetFrontActivePopup() == null 
-                    && CommonView.ListActiveViews.Count == 1 
-                    && CommonView.ListActiveViews.Contains(this)
-                    && !logPanel.activeSelf) {
+                    && !logPanel.activeSelf
+                    
+                    && ( (CommonView.ListActiveViews.Count == 1 && CommonView.ListActiveViews.Contains(this))  // 1개 활성화, 본인
+                        || (CommonView.ListActiveViews.Count == 2 && CommonView.ListActiveViews.Contains(this) && CommonView.ListActiveViews.Contains(gameMenu) )) // 2개 활성화 본인과 메뉴 
+                    ) {
                         
                     // 
                     SystemManager.ShowSystemPopupLocalize("6037", GameManager.main.QuitGame, null, false);

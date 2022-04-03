@@ -303,6 +303,33 @@ namespace PIERStory
             textContents.ForceMeshUpdate(true, true);
         }
         
+        
+        /// <summary>
+        /// 프로필 꾸미기에서 사용되는 말풍선 
+        /// </summary>
+        /// <param name="__message"></param>
+        public void SetProfileBubble(string __message) {
+            InitTransform();
+            SetOutGameParams(__message);
+            
+            bubbleSize = BubbleManager.main.GetCurrentAdjustmentSize(); // 사이즈 받아오기 
+            
+            SetBubbleGroup(); // 그룹 세팅 - Normal - 대화 템플릿
+            SetBubbleSync();
+            SetTextFontStyle();
+            SetProfileTail(); 
+            SetBubbleEmoticon();
+            
+            rtransform.anchoredPosition = new Vector2(0, 0); // 위치 0으로 고정 
+            
+            // 프로필에서는 네임태그 안쓴다.
+            if(nametag.gameObject.activeSelf)
+                nametag.gameObject.SetActive(false);
+                
+            ActiveInEffect(); // 등장 처리
+        }
+        
+        
         /// <summary>
         /// 스토리 로비에서 사용되는 가짜 말풍선
         /// </summary>
@@ -310,16 +337,32 @@ namespace PIERStory
         public void SetLobbyFakeBubble(string __message, int __size) {
             
             isFakeBubble = true;
+            bubbleSize = __size; // fake는 지정한 size로 수동 변경 
             
+            SetOutGameParams(__message);
+            
+            
+            SetBubbleGroup(); // 말풍선 기준정보 받아오고 맞추기
+            SetBubbleSync();
+            
+            // 폰트 스타일 
+            SetTextFontStyle();
+            // SetTail();
+            SetBubbleEmoticon();
+            
+            textContents.ForceMeshUpdate(true, true);
+        }
+        
+        /// <summary>
+        /// 게임 외부에서 사용시 파라매터 초기화 
+        /// </summary>
+        void SetOutGameParams(string __message) {
             message = __message;
             needDelayShow = false;
             message = message.Replace(@"\", "\n");
             
             template = "talk"; // 대화로 고정
             holdingCount = 0;
-            
-            bubbleSize = __size; // fake는 지정한 size로 수동 변경 
-            
             
             bubblePos = 1; // 1로 임의 지정
             
@@ -333,18 +376,6 @@ namespace PIERStory
             speaker = string.Empty;
             alternativeName = string.Empty;
             textContents.SetText(message);
-            
-            
-            SetBubbleGroup(); // 말풍선 기준정보 받아오고 맞추기
-            SetBubbleSync();
-            
-            // 폰트 스타일 
-            SetTextFontStyle();
-            SetTail();
-            
-            textContents.ForceMeshUpdate(true, true);
-            
-            
         }
 
         #endregion
@@ -369,6 +400,10 @@ namespace PIERStory
                 imageTail.rectTransform.localScale = Vector3.zero;
                 return;
             }
+        }
+        
+        void SetProfileTail() {
+            
         }
 
         /// <summary>
@@ -443,7 +478,6 @@ namespace PIERStory
                 bubbleSize = BubbleManager.main.GetCurrentAdjustmentSize();
 
             #endregion
-
         }
 
 

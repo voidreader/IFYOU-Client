@@ -119,7 +119,7 @@ namespace PIERStory {
             // 조건에 맞는 작품 검색 
             List<StoryData> filteredList = null;
             
-            if(__genre == "Main") {
+            if(__genre == "Main" || __genre == SystemManager.GetLocalizedText("5131")) {
                 // filteredList = StoryManager.main.listTotalStory;
                 // 메인 탭으로 이동 
                 categoryTab.SetActive(false);
@@ -179,11 +179,17 @@ namespace PIERStory {
             
             // 이미 생성된거 있으면 다시 생성.. 
             if(promotionScroll.NumberOfPanels > 0) {
+                /*
+                Toggle[] toggles = promotionScroll.pagination.GetComponentsInChildren<Toggle>();
+                
                 for(int i=0; i<promotionScroll.NumberOfPanels; i++) {
+                    Destroy(toggles[i]);
                     promotionScroll.RemoveFromBack();
                 }
                 
                 promotionScroll.Setup();
+                */
+                return;
             }
             
             

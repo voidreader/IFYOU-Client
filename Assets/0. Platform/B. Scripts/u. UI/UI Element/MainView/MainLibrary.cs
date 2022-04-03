@@ -100,7 +100,7 @@ namespace PIERStory {
             // 조건에 맞는 작품 검색 
             List<StoryData> filteredList = null;
             
-            if(__genre == "All") {
+            if(__genre == "All" || __genre == SystemManager.GetLocalizedText("5137")) {
                 filteredList = StoryManager.main.listTotalStory;
             }
             else {

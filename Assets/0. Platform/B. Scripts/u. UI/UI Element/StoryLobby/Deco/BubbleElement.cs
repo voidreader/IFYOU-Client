@@ -38,7 +38,11 @@ namespace PIERStory {
             currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
             
             elementRect = GetComponent<RectTransform>();
+            elementRect.anchoredPosition = new Vector2(0, 200);
             currencyElement = connectedElement;
+            
+            bubbleCtrl.SetProfileBubble(SystemManager.GetJsonNodeString(currencyData, "bubble_text"));
+            elementRect.sizeDelta = new Vector2(bubbleCtrl.rtransform.sizeDelta.x + 80, bubbleCtrl.rtransform.sizeDelta.y + 80);
         }
         
         /// <summary>
@@ -48,19 +52,25 @@ namespace PIERStory {
         /// <param name="endCallback"></param>
         public void SetBubbleElement(JsonData __j, System.Action endCallback) {
             currencyData = __j;
+            currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
 
             posX = SystemManager.GetJsonNodeFloat(__j, LobbyConst.NODE_POS_X);
             posY = SystemManager.GetJsonNodeFloat(__j, LobbyConst.NODE_POS_Y);
 
-            width = SystemManager.GetJsonNodeFloat(__j, LobbyConst.NODE_WIDTH);
-            height = SystemManager.GetJsonNodeFloat(__j, LobbyConst.NODE_HEIGHT);
+            // * 저장된 width, height 쓰지 않음 
+            // width = SystemManager.GetJsonNodeFloat(__j, LobbyConst.NODE_WIDTH);
+            // height = SystemManager.GetJsonNodeFloat(__j, LobbyConst.NODE_HEIGHT);
 
             angle = SystemManager.GetJsonNodeFloat(__j, LobbyConst.NODE_ANGLE);
 
             elementRect = GetComponent<RectTransform>();
             elementRect.anchoredPosition = new Vector2(posX, posY);
             // elementRect.sizeDelta = new Vector2(width, height);
-            elementRect.eulerAngles = new Vector3(0, 0, angle);            
+            elementRect.eulerAngles = new Vector3(0, 0, angle);   
+            
+            // 말풍선 세팅 
+            bubbleCtrl.SetProfileBubble(SystemManager.GetJsonNodeString(currencyData, "bubble_text"));
+            elementRect.sizeDelta = new Vector2(bubbleCtrl.rtransform.sizeDelta.x + 80, bubbleCtrl.rtransform.sizeDelta.y + 80);
             
         }
         

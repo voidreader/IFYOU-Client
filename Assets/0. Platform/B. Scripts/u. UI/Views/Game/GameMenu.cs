@@ -55,6 +55,11 @@ namespace PIERStory
             // 타이틀 처리 타입, 순번, 타이틀 조합
             textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
         }
+        
+        public override void OnHideView() {
+            base.OnHideView();
+        }
+        
 
         /// <summary>
         /// 스킵버튼의 icon을 변경해준다

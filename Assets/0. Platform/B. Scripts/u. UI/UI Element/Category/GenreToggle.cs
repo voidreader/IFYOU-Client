@@ -69,6 +69,25 @@ namespace PIERStory {
             else if(locatedPlace == "Library") 
                 MainLibrary.OnCategoryList?.Invoke(localizedName);
         }
+        
+        void OnEnable() {
+            
+            if(SystemManager.main == null)
+                return;
+            
+            if(!isFirstToggle)
+                return;
+           
+            if(originName == "Main") {
+                localizedName = SystemManager.GetLocalizedText("5131");
+                
+            }
+            else if(originName == "All"){
+                localizedName = SystemManager.GetLocalizedText("5137");
+            }
+            
+            textGenre.text = localizedName;
+        }
            
     }
 }

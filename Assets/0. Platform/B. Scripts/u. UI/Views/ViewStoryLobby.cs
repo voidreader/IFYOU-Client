@@ -206,7 +206,7 @@ namespace PIERStory
             
             // 어드레서블에 대한 처리
             if(bg.isAddressable) {
-                Addressables.ReleaseInstance(bg.mountedSpriteAddressable);
+                Addressables.ReleaseInstance(bg.mountedAtalsAddressable);
             }
             
             bg = null;
@@ -442,7 +442,7 @@ namespace PIERStory
                         break;
 
                     case LobbyConst.NODE_BUBBLE:         // 대사
-    
+                
 
                         break;
                     case LobbyConst.NODE_STICKER:       // 스티커
@@ -973,13 +973,12 @@ namespace PIERStory
             
             BubbleManager.main.SetLobbyFakeBubbles(SystemManager.GetJsonNodeString(__j, "bubble_text"));
             
-            /*
+            
             BubbleElement bubble = Instantiate(bubbleObjectPrefab, bubbleParent).GetComponent<BubbleElement>();
             bubble.CreateBubble(__j, bubbleListElement);
             decoObjects.Add(bubble.gameObject);
-            */
             
-            
+
         }
         
 

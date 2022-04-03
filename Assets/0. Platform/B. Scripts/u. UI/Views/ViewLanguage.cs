@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -15,7 +16,8 @@ namespace PIERStory
 
         public GameObject changeButton;
         public TextMeshProUGUI buttonLabel;
-
+        AsyncOperation asyncOperation;
+        public bool isChangingScene = false;
 
         void OnEnable() {
             // 상태 저장 
@@ -38,6 +40,8 @@ namespace PIERStory
 
             foreach (LanguageElement le in langElements)
                 le.InitElement();
+                
+            isChangingScene = false;
         }
         
         public override void OnHideView() {
@@ -66,6 +70,10 @@ namespace PIERStory
 
         void ChangeAppLanguage()
         {
+            // 두번 실행되는 것 같아..
+            if(isChangingScene)
+                return;
+            
             // 현재 toggle이 isOn == true인 element를 찾아서
             foreach (LanguageElement le in langElements)
             {
@@ -73,18 +81,39 @@ namespace PIERStory
                 {
                     // 유저의 사용 언어 코드를 변경해주고
                     ES3.Save<string>(SystemConst.KEY_LANG, le.elementLang);
+                    SystemManager.main.currentAppLanguageCode = le.elementLang;
                     Debug.Log(">> OnClickChangeAppLanguage : " + le.elementLang);
                     break;
                 }
             }
             
-            Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin");
-
-            // 타이틀로 보내버리기
-            // 이후 타이틀에서 언어 정보에 따른 폰트 다운 뭐 그런거도 해줄 거임
-            SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
-            SystemManager.main.givenStoryData = null; // 목록으로 가는것을 막기 위해 작성
-            ViewNoticeDetail.isDependent = true;
+            UserManager.main.RequestServiceStoryList(); // 언어변경하고, 서버에서 받는 정보 refresh
+            StartCoroutine(OnCompleteRefreshServerInfo()); // 코루틴 콜 
+            
+            isChangingScene = true;
         }
+        
+        
+        IEnumerator OnCompleteRefreshServerInfo() {
+            
+            Debug.Log(">> OnCompleteRefreshServerInfo #1");
+            
+            // 통신 완료되길 기다린다. 
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            
+            Debug.Log(">> OnCompleteRefreshServerInfo #2");
+            // 타이틀로 보내버리기
+            SystemManager.main.givenStoryData = null; // 목록으로 가는것을 막기 위해 작성
+            ViewNoticeDetail.isDependent = true;           
+            
+            
+            Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin");
+            IntermissionManager.isMovingLobby = true;
+            SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            // SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
+
+        }
+        
+        
     }
 }

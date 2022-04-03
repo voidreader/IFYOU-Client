@@ -25,6 +25,8 @@ namespace PIERStory
         private void Awake()
         {
             main = this;
+            
+            
         }
 
 
@@ -68,7 +70,17 @@ namespace PIERStory
         {
             DictBubbleSprites.Clear();
         }
-
+        
+        
+        
+        /// <summary>
+        /// 언어별 폰트 변경때문에 로비에서는 시작시점에 감춰준다. 
+        /// </summary>
+        public void ShowFakeBubbles(bool __flag) {
+            for(int i=0; i<FakeBubbles.Count;i++) {
+                FakeBubbles[i].gameObject.SetActive(__flag);
+            }
+        }
 
         public void SetFakeBubbles(ScriptRow __row)
         {

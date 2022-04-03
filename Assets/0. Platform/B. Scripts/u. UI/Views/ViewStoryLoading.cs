@@ -61,6 +61,12 @@ namespace PIERStory {
             
             Debug.Log("### Current Loading Story :: " + StoryManager.main.CurrentProject.title);
             
+            // 가짜 말풍선 활성화 처리 
+            if(BubbleManager.main != null) {
+                BubbleManager.main.ShowFakeBubbles(true); 
+            }
+            
+            
             
             StartCoroutine(CheckingBundleExists(StoryManager.main.CurrentProjectID));
         }

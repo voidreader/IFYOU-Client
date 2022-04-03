@@ -102,6 +102,10 @@ namespace PIERStory {
             yield return null;
             yield return new WaitForSeconds(0.1f);
             
+            if(BubbleManager.main != null) {
+                BubbleManager.main.ShowFakeBubbles(false);
+            }
+            
             ViewCommonTop.OnBackAction = null;
             
             // 어드레서블 카탈로그 로드 

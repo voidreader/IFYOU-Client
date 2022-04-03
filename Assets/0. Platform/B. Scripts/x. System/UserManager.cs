@@ -272,8 +272,11 @@ namespace PIERStory
             
             ViewTitle.ActionTitleLoading("login");
             
-            // 서비스 중인 스토리 리스트 조회 
+            // 서비스 중인 스토리 리스트 조회
             RequestServiceStoryList();
+            
+            // 푸시 토큰
+            SystemManager.main.QueryPushTokenInfo();
         }
         
         /// <summary>
@@ -298,8 +301,7 @@ namespace PIERStory
             // 작품 리스트 받아와서 스토리 매니저에게 전달. 
             StoryManager.main.SetStoryList(JsonMapper.ToObject(response.DataAsText));
             
-            // 푸시 토큰 및 이벤트, 출석 체크 조회 
-            SystemManager.main.QueryPushTokenInfo();
+            // 프로모션, 공지사항, 출석 체크 조회 
             RequestServiceEvents();
         }
         

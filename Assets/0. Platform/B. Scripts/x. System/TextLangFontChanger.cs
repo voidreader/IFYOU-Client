@@ -29,8 +29,8 @@ namespace PIERStory {
                 return;
             
             // 한번 설정했으면 두번 호출할 필요없다. 
-            if(isFontSet)
-                return; 
+            // if(isFontSet)
+            //     return; 
                 
             _text.font = SystemManager.main.getCurrentLangFont(isException); // 폰트 가져오기 
     

@@ -167,6 +167,7 @@ namespace BestHTTP.Core
                 case HTTPConnectionStates.Closed:
                 case HTTPConnectionStates.ClosedResendRequest:
                     // in case of ClosedResendRequest
+                    try {
                     if (@event.Request != null)
                         RequestEventHelper.EnqueueRequestEvent(new RequestEventInfo(@event.Request, RequestEvents.Resend));
 
@@ -174,6 +175,10 @@ namespace BestHTTP.Core
                         .GetHostDefinition(connection.ServerAddress)
                         .RemoveConnection(connection, @event.State)
                         .TryToSendQueuedRequests();
+                    }
+                    catch(System.Exception e) {
+                        
+                    }
                     break;
             }
         }

@@ -43,7 +43,7 @@ namespace PIERStory
 
 
         [Space(15)][Header("꾸미기 편집 관련")]
-        ScriptImageMount bg;
+        ScriptImageMount bg = null;
         string bgCurrency = string.Empty;
         public Transform characterParent; // 생성된 캐릭터 스탠딩 부모 transform
         public Transform stickerParent; // 생성된 스티커 부모 transform
@@ -179,7 +179,7 @@ namespace PIERStory
         
         
         /// <summary>
-        /// 화면에 생성된 데코 오브젝트 없애기 
+        /// 화면에 생성된 데코 오브젝트 없애기 (배경 빼고)
         /// </summary>
         void DestroyDecoObjects() {
             foreach (GameObject g in decoObjects) {
@@ -194,6 +194,26 @@ namespace PIERStory
             
             decoObjects.Clear();
         }
+        
+        
+        /// <summary>
+        /// 이전에 생성된 배경 개체 파괴 
+        /// </summary>
+        void DestroyPreviousBackground() {
+            
+            if(bg == null)
+                return;
+            
+            // 어드레서블에 대한 처리
+            if(bg.isAddressable) {
+                Addressables.ReleaseInstance(bg.mountedSpriteAddressable);
+            }
+            
+            bg = null;
+            LobbyManager.main.lobbyBackground.sprite = null;
+        }
+        
+        
         
         
         /// <summary>
@@ -413,6 +433,9 @@ namespace PIERStory
                 switch (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE))
                 {
                     case LobbyConst.NODE_WALLPAPER:     // 배경
+                    
+                        DestroyPreviousBackground();
+                    
                         bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, storyProfile[i], BGLoadComplete);
                         bgCurrency = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);
                         LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_POS_X), 0, 0);
@@ -712,7 +735,9 @@ namespace PIERStory
 
         #region 배경 관련
 
-
+        /// <summary>
+        /// 배경 화면 생성 콜백 
+        /// </summary>
         void BGLoadComplete()
         {
             if (totalDecoLoad > 0)
@@ -731,8 +756,15 @@ namespace PIERStory
             CheckLoadComplete();
         }
 
+
+        /// <summary>
+        /// 배경 아이템 터치해서 화면에 생성하기 
+        /// </summary>
+        /// <param name="bgData"></param>
         void SelectBackground(JsonData bgData)
         {
+            DestroyPreviousBackground(); // 이전 배경 개체 정리하고 진행 
+            
             bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, bgData, BGLoadComplete);
             bgCurrency = SystemManager.GetJsonNodeString(bgData, LobbyConst.NODE_CURRENCY);
             LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(0f, 0f, 0f);

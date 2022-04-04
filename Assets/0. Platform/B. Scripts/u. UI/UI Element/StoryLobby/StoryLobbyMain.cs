@@ -47,6 +47,17 @@ namespace PIERStory {
         public TextMeshProUGUI textEpisodeTitle; // 에피소드 타이틀 
         public GameObject groupOpenTimer; // 오픈 타이머
         public TextMeshProUGUI textOpenTimer; // 오픈 타이머 
+        
+        
+        
+        
+        // 연재 정보 관련 추가 
+         public GameObject serialGroup;
+         public TextMeshProUGUI textSerialDayInfo ; // 연재 주기 정보
+         public TextMeshProUGUI textCommingSoon; // 공개 예정일 정보
+         public TextMeshProUGUI textSerialTimer; // 연재일 타이머 (당일 오픈인 경우 ) 
+         
+        
 
         public GameObject abilityBriefPrefab;           // 캐릭터 능력치 간소화 prefab
         public Transform characterStatusContent;
@@ -127,6 +138,7 @@ namespace PIERStory {
             // 타이머 처리 
             if(Time.frameCount % 5 == 0) {
                 textOpenTimer.text = GetOpenRemainTime();
+                textSerialTimer.text = textOpenTimer.text;
             }
         }
         
@@ -258,6 +270,8 @@ namespace PIERStory {
             
             isEpisodeContinuePlay = false;
             
+            storyPlayButton.gameObject.SetActive(true);
+            
             // 에피소드 타이틀 초기화
             SetEpisodeTitleText(string.Empty);
             
@@ -276,7 +290,6 @@ namespace PIERStory {
             if(LobbyManager.main != null && CheckResumePossible()) {
                 isEpisodeContinuePlay = true;
             }
-            
             
         }
         
@@ -372,36 +385,57 @@ namespace PIERStory {
             // 프리미엄 패스 유저는 타이머를 돌리지 않음 
             if(hasPremium)
                 return; 
+                
+            // 연재작과, 아닌 경우 차이를 둔다 
+            if(!currentStoryData.isSerial) { // * 비연재작
             
-            // 다시 돌리면서 타이머 설정 추가 
-            for(int i=0; i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++) {
-                if(i >= ListFlowElements.Count)
-                    break;
+                // 다시 돌리면서 타이머 설정 추가 
+                for(int i=0; i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++) {
+                    if(i >= ListFlowElements.Count)
+                        break;
+                        
+                    if(ListFlowElements[i].currentEpisode.episodeID == currentEpisodeID) {
+                        isMatchEpisode = true;   
+                        ListFlowElements[i].SetOpenTime(openDateTick); // tick 전달한다. 
+                        continue; 
+                    }
                     
-                if(ListFlowElements[i].currentEpisode.episodeID == currentEpisodeID) {
-                    isMatchEpisode = true;   
-                    ListFlowElements[i].SetOpenTime(openDateTick); // tick 전달한다. 
-                    continue; 
+                    // 연달아 오픈을 위한 추가 처리
+                    if(isMatchEpisode 
+                        && ListFlowElements[i].currentEpisode.episodeType == EpisodeType.Chapter
+                        && ListFlowElements[i].currentEpisode.nextOpenMin == 0) {
+                            
+                            // for문 매칭 이후 next_open_min이 0인 경우에는 동일한 대기시간으로 처리한다.
+                            ListFlowElements[i].SetOpenTime(openDateTick);
+                            
+                    }
+                    
+                    if(isMatchEpisode && ListFlowElements[i].currentEpisode.episodeType == EpisodeType.Chapter
+                        && ListFlowElements[i].currentEpisode.nextOpenMin > 0) {
+                        
+                        // 연달아 오픈이 종료되었다고 판단하고 break
+                        break;        
+                    }
+                } // ? end of initFlow
+                                
+            }
+            else { // * 연재작 
+            
+                int fIndex  = 0;
+                
+                for(int i=0; i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++) {
+                    if(flowIndex>=ListFlowElements.Count)
+                        break;
+                        
+                    // 스페셜 에피소드는 제외. 
+                    if(StoryManager.main.ListCurrentProjectEpisodes[i].episodeType == EpisodeType.Side)
+                        continue;
+                    
+                    ListFlowElements[fIndex++].SetPublishDate(StoryManager.main.ListCurrentProjectEpisodes[i].publishDate);
                 }
                 
-                // 연달아 오픈을 위한 추가 처리
-                if(isMatchEpisode 
-                    && ListFlowElements[i].currentEpisode.episodeType == EpisodeType.Chapter
-                    && ListFlowElements[i].currentEpisode.nextOpenMin == 0) {
-                        
-                        // for문 매칭 이후 next_open_min이 0인 경우에는 동일한 대기시간으로 처리한다.
-                        ListFlowElements[i].SetOpenTime(openDateTick);
-                        
-                }
-                
-                if(isMatchEpisode && ListFlowElements[i].currentEpisode.episodeType == EpisodeType.Chapter
-                    && ListFlowElements[i].currentEpisode.nextOpenMin > 0) {
-                    
-                    // 연달아 오픈이 종료되었다고 판단하고 break
-                    break;        
-                }
-            } // ? end of initFlow
-            
+            }
+
         }
         
         public void OnClickFlowOpen() {
@@ -503,6 +537,9 @@ namespace PIERStory {
                 return;
             }
             
+            // * 연재와 비연재로 나누어야 한다. 
+            // * 연재는 프리미엄 패스에 영향을 받지 않는다. 무조건 대기해야한다. 
+            // * 비연재는 프리미엄 패스에 영향을 받는다. 
             
             
             // 에피소드 오픈 시간 처리
@@ -515,18 +552,41 @@ namespace PIERStory {
             timeDiff = openDate - DateTime.UtcNow; // 시간차 체크 
             Debug.Log("## timeDiff : " + timeDiff.Ticks);
             
-            isOpenTimeCountable = false;
+            isOpenTimeCountable = false; // false로 초기화해놓고 시작한다. 
             
             
+            if(timeDiff.Ticks > 0) {
+                
+                // 연재의 경우. 
+                if(currentStoryData.isSerial && currentEpisodeData.isSerial) {
+                    
+                    Debug.Log("<color=cyan>Serial Episode, Future </color>");
+                    
+                    isOpenTimeCountable = true; 
+                    currentPlayState = StatePlayButton.Serial; // ! 연재 대기 중 상태다. 
+                    
+                }
+                else {
+                    
+                    Debug.Log("<color=cyan>NOT Serial Episode, Future </color>");
+                    
+                    if(!hasPremium) { // 비연재, 프리미엄 패스 아님 
+                         
+                        isOpenTimeCountable = true; 
+                        currentPlayState = StatePlayButton.inactive;        
+                    }
+                    else { // 비연재, 프리미엄 패스 
+                        
+                        // 상태 처리 
+                        currentPlayState = hasPremium ? StatePlayButton.premium : StatePlayButton.active;        
+                    }
+                }
+            } 
+            else { // 대기시간 없음 
             
-            // 프리미엄 패스 유저는 tick 이 0보다 커도 기다무를 하지 않도록 처리 
-            if(timeDiff.Ticks > 0 && !hasPremium) {
-                isOpenTimeCountable = true; // 시간 돌아간다. 
-                currentPlayState = StatePlayButton.inactive;
-            }
-            else {
-                // 프리미엄 유저인지 아닌지에 따라서 상태 처리 
+                // 상태 처리 
                 currentPlayState = hasPremium ? StatePlayButton.premium : StatePlayButton.active;
+                
             }
             
             
@@ -540,6 +600,7 @@ namespace PIERStory {
             
             
             // 파이널인지 아닌지에 따라 다르게 처리한다.
+            // * 엔딩에는 연재물 적용이 되지 않아서 걱정할 필요 없다.
             if(isFinal) {
                 // 플레이 버튼을 리셋플레이로 변경한다.    
                 storyPlayButton.SetPlayButton(StatePlayButton.End, 0, false);
@@ -593,13 +654,49 @@ namespace PIERStory {
         /// </summary>
         protected void InitEpisodeTitleColor() {
             
+            
+            Debug.Log("<color=cyan>InitEpisodeTitleColor :: " + currentPlayState.ToString() + "</color>");
+            
+            imageEpisodeTitle.gameObject.SetActive(false);
+            serialGroup.SetActive(false);
+            
+            // * 연재중인 작품이고, 정규 에피소드인 경우에 연재 정보 표시로 변환한다.
+            if(currentPlayState == StatePlayButton.Serial ) {
+                serialGroup.SetActive(true);
+                textSerialDayInfo.text =  string.Format(SystemManager.GetLocalizedText("5184"), currentStoryData.GetSeiralDay());
+                
+                int remainDay = GetOpenRemainTimeDay();
+                
+                if(remainDay <= 0) {
+                    textSerialTimer.gameObject.SetActive(true); // 당일 오픈은 타이머 등장시킨다. 
+                    textCommingSoon.text = string.Empty;
+                }
+                else {
+                    textSerialTimer.gameObject.SetActive(false); 
+                    textCommingSoon.text = string.Format(SystemManager.GetLocalizedText("5188"), (int)timeDiff.Days);
+                }
+                
+                
+                if(GameManager.main != null) { // 에피소드 종료 화면에서 띄워진 경우. 
+                    storyPlayButton.SetPlayButton(StatePlayButton.End, 0, false); // 로비 버튼을 띄운다.
+                }
+                else 
+                    storyPlayButton.gameObject.SetActive(false); // 버튼을 비활성화한다.
+                
+                return; // 끝..!
+            }
+            
+            
+            
+            imageEpisodeTitle.gameObject.SetActive(true); // 비연재 
+            
             if(currentEpisodeData.episodeType == EpisodeType.Side) {
                 imageEpisodeTitle.sprite = spriteActiveEpisodeTitleBG;    
                 textEpisodeTitle.color = Color.black;
                 SetEpisodeTitleText(currentEpisodeData.storyLobbyTitle);
             }
             
-            
+             
             // * 여기도 파이널 여부 추가 체크 
             if(isFinal) {
                 imageEpisodeTitle.sprite = spriteActiveEpisodeTitleBG;    
@@ -662,6 +759,20 @@ namespace PIERStory {
             
             return string.Format ("{0:D2}:{1:D2}:{2:D2}",timeDiff.Hours ,timeDiff.Minutes, timeDiff.Seconds);
         }
+        
+        
+        /// <summary>
+        /// 남은 시간의 일자 구하기 
+        /// </summary>
+        /// <returns></returns>
+        protected int GetOpenRemainTimeDay() {
+            timeDiff = openDate - DateTime.UtcNow;
+            if(timeDiff.Ticks < 0)
+                return -1;
+                
+            return (int)timeDiff.Days;
+        }
+        
         
         /// <summary>
         /// 이어하기 가능한지 체크 여부 
@@ -735,6 +846,16 @@ namespace PIERStory {
         
         
         public void OnClickPlay() {
+            
+            // * 연재 대기 상태에서는 로비로 보낸다. 
+            // 
+            if(currentPlayState == StatePlayButton.Serial) {
+                if(GameManager.main != null) {
+                    UserManager.main.gameComplete = true;
+                    GameManager.main.EndGame();
+                    return;
+                }
+            }
             
             // 카운팅 돌아가는 도중에는 플레이가 아니고, 코인으로 감소하기 
             if(isOpenTimeCountable) {

@@ -61,6 +61,8 @@ namespace PIERStory {
         public int priceOneTime = 0; // 1회 플레이 가격
         
         public bool isUnlock = true; // 언락 여부 
+        public bool isSerial = false; // 연재 여부 
+        public DateTime publishDate;
         
         /// <summary>
         /// 유효한 데이터인지? 
@@ -101,6 +103,11 @@ namespace PIERStory {
             dependEpisode = SystemManager.GetJsonNodeString(episodeJSON, "depend_episode");
             
             nextOpenMin = SystemManager.GetJsonNodeInt(episodeJSON, "next_open_min");
+            isSerial = SystemManager.GetJsonNodeBool(episodeJSON, "is_serial"); // 연재, 아직 연재게시일에 도달하지 않은 경우 true.
+            
+            // 공개 예정일 
+            DateTime.TryParse(SystemManager.GetJsonNodeString(episodeJSON, "publish_date"), out publishDate);
+            
             
             // 에피소드에 등장한는 갤러리 이미지
             

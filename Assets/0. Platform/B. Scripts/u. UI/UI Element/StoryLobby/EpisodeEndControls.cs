@@ -56,6 +56,7 @@ namespace PIERStory {
             currentStoryData =  StoryManager.main.CurrentProject; // 현재 작품 
             projectCurrentJSON = UserManager.main.GetUserProjectRegularEpisodeCurrent(); // 작품상에서 현재 위치 
             
+            storyPlayButton.gameObject.SetActive(true);
             
             // 에피소드 타이틀 초기화
             SetEpisodeTitleText(string.Empty);

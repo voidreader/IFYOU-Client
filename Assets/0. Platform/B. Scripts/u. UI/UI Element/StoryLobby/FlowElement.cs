@@ -23,6 +23,8 @@ namespace PIERStory {
         
         public TextMeshProUGUI textEpisodeNumber;
         public TextMeshProUGUI textEpisodeTitle;
+        public TextMeshProUGUI textCommingSoon; // 커밍순 안내 
+        public TextMeshProUGUI textPublishDate; // 연재일 안내 
         
         public GameObject groupOpenLock; // 기다리면 무료 그룹 
         public TextMeshProUGUI textsOpenTime;
@@ -112,6 +114,11 @@ namespace PIERStory {
             
             this.gameObject.SetActive(true);
             rectCover.gameObject.SetActive(false);
+            
+            textEpisodeTitle.text = string.Empty;
+            textCommingSoon.text = string.Empty;
+            textPublishDate.text = string.Empty;
+            
             
             isOpenTimeCountable = false;
             
@@ -258,6 +265,44 @@ namespace PIERStory {
         }
         
         
+        /// <summary>
+        /// 공개 예정일 
+        /// </summary>
+        /// <param name="__publishDate"></param>
+        public void SetPublishDate(DateTime __publishDate) {
+            
+            // 엔딩 제외
+            if(currentEpisode.episodeType == EpisodeType.Ending)
+                return;
+            
+            openDate = __publishDate;
+            timeDiff = openDate - DateTime.UtcNow.AddHours(9);
+            
+            groupOpenLock.SetActive(false);
+            imageIcon.gameObject.SetActive(true);
+            imageIcon.sprite = spriteCommingSoon;
+            
+            textEpisodeTitle.text = string.Empty; // 타이틀 없애고 . 
+            imageIcon.sprite = spriteCommingSoon;
+            
+            textCommingSoon.text = SystemManager.GetLocalizedText("5187");
+            textEpisodeNumber.color = colorInactiveTextColor; // 에피소드 번호 색상 회색으로 변경 
+            
+            
+            // 미래 시점에 열린다고 날짜 적힌것만 처리 
+            if(timeDiff.Ticks > 0) {
+                // 미래에 열린다.  totalDays는 0.n 으로 찍히네. 
+                // Debug.Log(textEpisodeNumber.text + " : " + timeDiff.TotalDays +"/" + timeDiff.Days);
+                if(timeDiff.Days <=0 ) {
+                    textPublishDate.text = SystemManager.GetLocalizedText("5189");
+                }
+                else {
+                    textPublishDate.text = string.Format(SystemManager.GetLocalizedText("5188"), (int)timeDiff.Days);
+                }
+                
+            }
+            
+        }
         
         /// <summary>
         /// 오픈 시간에 대한 설정 

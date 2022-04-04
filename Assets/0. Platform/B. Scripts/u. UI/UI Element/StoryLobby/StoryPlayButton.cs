@@ -15,7 +15,8 @@ namespace PIERStory {
         active,
         premium,
         
-        End
+        End,
+        Serial
     }
     
     public class StoryPlayButton : MonoBehaviour

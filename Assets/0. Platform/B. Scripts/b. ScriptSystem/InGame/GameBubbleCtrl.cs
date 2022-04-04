@@ -308,7 +308,7 @@ namespace PIERStory
         /// 프로필 꾸미기에서 사용되는 말풍선 
         /// </summary>
         /// <param name="__message"></param>
-        public void SetProfileBubble(string __message) {
+        public void SetProfileBubble(string __message, Action __endCallback = null) {
             InitTransform();
             SetOutGameParams(__message);
             
@@ -327,6 +327,7 @@ namespace PIERStory
                 nametag.gameObject.SetActive(false);
                 
             ActiveInEffect(); // 등장 처리
+            __endCallback?.Invoke();
         }
         
         

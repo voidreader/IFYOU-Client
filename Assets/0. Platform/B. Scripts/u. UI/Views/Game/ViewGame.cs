@@ -575,8 +575,9 @@ namespace PIERStory
             GameManager.main.currentPage.SetCurrentRowBySceneID(GameManager.main.targetSelectionSceneID);
 
             // 메신저 중이었다면 비활성화
-            if (messenger.activeSelf)
-                messenger.SetActive(false);
+            // 22.04.04 이유는 기억이 나지 않지만 메신저를 비활성화 해주고 있다. 왜지...?
+            //if (messenger.activeSelf)
+            //messenger.SetActive(false);
             
             // * 광고처리 추가 
             AdManager.main.PlaySelectionAD();

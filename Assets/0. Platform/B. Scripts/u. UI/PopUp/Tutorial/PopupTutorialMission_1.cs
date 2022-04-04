@@ -12,6 +12,7 @@ namespace PIERStory
         public TextMeshProUGUI tutorialMissionText;
         public TextMeshProUGUI rewardText;
 
+        public UnityEngine.UI.Button playButton;
         public RectTransform pointerIcon;
         public ParticleSystem coinFirecracker;
 
@@ -29,6 +30,7 @@ namespace PIERStory
         public void OnClickPlayButton()
         {
             UserManager.main.UpdateTutorialStep(1, 1, CallbackUpdateTutorial);
+            playButton.interactable = false;
         }
 
         void CallbackUpdateTutorial(BestHTTP.HTTPRequest req, BestHTTP.HTTPResponse res)
@@ -36,6 +38,7 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackTutorialUpdate, Tutorial Mission1");
+                playButton.interactable = true;
                 return;
             }
 

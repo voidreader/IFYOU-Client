@@ -36,7 +36,7 @@ namespace PIERStory
             currencyType = SystemManager.GetJsonNodeString(currencyJson, LobbyConst.NODE_CURRENCY_TYPE);
 
             icon.OnDownloadImage = BackgroundResize;
-            icon.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_KEY), currencyType == LobbyConst.NODE_WALLPAPER);
+            icon.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_KEY), currencyType == LobbyConst.NODE_WALLPAPER || currencyType == LobbyConst.NODE_BUBBLE);
             currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
             modelName = SystemManager.GetJsonNodeString(__j, GameConst.COL_MODEL_NAME);
             totalCount = int.Parse(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_TOTAL_COUNT));
@@ -73,7 +73,12 @@ namespace PIERStory
         /// <summary>
         /// 말풍선 아이템!
         /// </summary>
-        public void OnClickSelectBubble() {
+        public void OnClickSelectBubble()
+        {
+            if (totalCount <= currentCount)
+                return;
+
+            currentCount++;
             ViewStoryLobby.OnBubbleSetting?.Invoke(currencyJson, this);
         }
 

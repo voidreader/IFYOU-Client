@@ -53,10 +53,6 @@ namespace PIERStory
 
         public void EndAction()
         {
-            // 다음 템플릿이 선택지 템플릿이 아니면 일단 무조건 숨기기
-            if (!GameManager.main.IsSameTemplate(GameManager.main.nextRow, GameConst.TEMPLATE_SELECTION))
-                ViewGame.main.messenger.SetActive(false);
-
             // 다음 템플릿이 종료이면 내용 삭제 및 비활성화
             if (GameManager.main.IsSameTemplate(GameManager.main.nextRow, GameConst.TEMPLATE_EXIT))
                 ViewGame.main.DestoryAllContents();

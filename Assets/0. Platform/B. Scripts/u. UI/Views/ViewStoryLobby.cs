@@ -45,9 +45,8 @@ namespace PIERStory
         [Space(15)][Header("꾸미기 편집 관련")]
         ScriptImageMount bg = null;
         string bgCurrency = string.Empty;
-        public Transform characterParent; // 생성된 캐릭터 스탠딩 부모 transform
-        public Transform stickerParent; // 생성된 스티커 부모 transform
-        public Transform bubbleParent; // 생성된 말풍선 부모 transform
+        public Transform characterParent;       // 생성된 캐릭터 스탠딩 부모 transform
+        public Transform bubbleStickerParent;   // 생성된 스티커, 대사 부모 transform
         public List<GameObject> decoObjects = new List<GameObject>();          // 화면에 꾸며놓은 Object들
         public List<GameObject> currencyElements = new List<GameObject>();     // 꾸미기 각 element들
 
@@ -318,19 +317,38 @@ namespace PIERStory
             // 화면에 생성된 object와 재화 listElement 연결
             for (int i = 0; i < decoObjects.Count; i++)
             {
-                // 스티커가 아니면 건너뛰기
-                if (decoObjects[i].GetComponent<StickerElement>() == null)
+                // 스티커도 대사도 아니면 건너뛰기
+                if (decoObjects[i].GetComponent<StickerElement>() == null && decoObjects[i].GetComponent<BubbleElement>() == null)
                     continue;
 
-                for (int j = 0; j < currencyElements.Count; j++)
+                // 스티커 연결
+                if(decoObjects[i].GetComponent<StickerElement>() != null)
                 {
-                    // 재화명이 같은 것을 찾아서 연결
-                    if(decoObjects[i].GetComponent<StickerElement>().currencyName == currencyElements[j].GetComponent<ProfileItemElement>().currencyName)
+                    for (int j = 0; j < currencyElements.Count; j++)
                     {
-                        decoObjects[i].GetComponent<StickerElement>().currencyElement = currencyElements[j].GetComponent<ProfileItemElement>();
-                        break;
+                        // 재화명이 같은 것을 찾아서 연결
+                        if (decoObjects[i].GetComponent<StickerElement>().currencyName == currencyElements[j].GetComponent<ProfileItemElement>().currencyName)
+                        {
+                            decoObjects[i].GetComponent<StickerElement>().currencyElement = currencyElements[j].GetComponent<ProfileItemElement>();
+                            break;
+                        }
                     }
                 }
+
+                // 대사 연결
+                if(decoObjects[i].GetComponent<BubbleElement>() != null)
+                {
+                    for (int j = 0; j < currencyElements.Count; j++)
+                    {
+                        // 재화명이 같은 것을 찾아서 연결
+                        if (decoObjects[i].GetComponent<BubbleElement>().currencyName == currencyElements[j].GetComponent<ProfileItemElement>().currencyName)
+                        {
+                            decoObjects[i].GetComponent<BubbleElement>().currencyElement = currencyElements[j].GetComponent<ProfileItemElement>();
+                            break;
+                        }
+                    }
+                }
+                
             }
 
 
@@ -442,16 +460,18 @@ namespace PIERStory
                         break;
 
                     case LobbyConst.NODE_BUBBLE:         // 대사
-                
-
+                        BubbleElement bubble = Instantiate(bubbleObjectPrefab, bubbleStickerParent).GetComponent<BubbleElement>();
+                        bubble.SetBubbleElement(storyProfile[i], BubbleLoadComplete);
+                        decoObjects.Add(bubble.gameObject);
                         break;
+
                     case LobbyConst.NODE_STICKER:       // 스티커
 
-                        StickerElement sticker = Instantiate(stickerObjectPrefab, stickerParent).GetComponent<StickerElement>();
+                        StickerElement sticker = Instantiate(stickerObjectPrefab, bubbleStickerParent).GetComponent<StickerElement>();
                         sticker.SetStickerElement(storyProfile[i], StickerLoadComplete);
                         decoObjects.Add(sticker.gameObject);
-
                         break;
+
                     case LobbyConst.NODE_STANDING:      // 스탠딩 캐릭터
 
                         ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(storyProfile[i], GameConst.COL_MODEL_NAME), CharacterLoadComplete, LobbyManager.main);
@@ -470,7 +490,6 @@ namespace PIERStory
                         liveModels.Add(character.modelController);
                         listModelMounts.Add(character);
                         decoObjects.Add(character.modelController.gameObject);
-
                         break;
                 }
             }
@@ -514,12 +533,18 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 모든 스티커,뱃지 옵셔널 박스 비활성화
+        /// 모든 스티커,말풍선 옵셔널 박스 비활성화
         /// </summary>
         public void DisableAllStickerOptionals()
         {
-            for (int i = 0; i < stickerParent.childCount; i++)
-                stickerParent.GetChild(i).GetComponent<StickerElement>().DisableControlBox();
+            for (int i = 0; i < bubbleStickerParent.childCount; i++)
+            {
+                if (bubbleStickerParent.GetChild(i).GetComponent<StickerElement>() != null)
+                    bubbleStickerParent.GetChild(i).GetComponent<StickerElement>().DisableControlBox();
+
+                if (bubbleStickerParent.GetChild(i).GetComponent<BubbleElement>() != null)
+                    bubbleStickerParent.GetChild(i).GetComponent<BubbleElement>().DisableControlBox();
+            }
         }
 
 
@@ -963,22 +988,27 @@ namespace PIERStory
         #endregion
 
         #region 스티커, 말풍선 관련
-        
+
+        void BubbleLoadComplete()
+        {
+            if (totalDecoLoad > 0)
+                totalDecoLoad--;
+
+            CheckLoadComplete();
+        }
+
         /// <summary>
         /// 말풍선 만들기 
         /// </summary>
         /// <param name="__j"></param>
         /// <param name="bubbleListElement"></param>
-        void CreateBubbleElement(JsonData __j, ProfileItemElement bubbleListElement) {
-            
+        void CreateBubbleElement(JsonData __j, ProfileItemElement bubbleListElement)
+        {
             BubbleManager.main.SetLobbyFakeBubbles(SystemManager.GetJsonNodeString(__j, "bubble_text"));
-            
-            
-            BubbleElement bubble = Instantiate(bubbleObjectPrefab, bubbleParent).GetComponent<BubbleElement>();
+
+            BubbleElement bubble = Instantiate(bubbleObjectPrefab, bubbleStickerParent).GetComponent<BubbleElement>();
             bubble.CreateBubble(__j, bubbleListElement);
             decoObjects.Add(bubble.gameObject);
-            
-
         }
         
 
@@ -992,7 +1022,7 @@ namespace PIERStory
 
         void CreateStickerElement(JsonData __j, ProfileItemElement stickerListElement)
         {
-            StickerElement sticker = Instantiate(stickerObjectPrefab, stickerParent).GetComponent<StickerElement>();
+            StickerElement sticker = Instantiate(stickerObjectPrefab, bubbleStickerParent).GetComponent<StickerElement>();
             sticker.CreateSticker(__j, stickerListElement);
             decoObjects.Add(sticker.gameObject);
         }
@@ -1005,11 +1035,8 @@ namespace PIERStory
         {
             Debug.Log("##### ActiveInteractable :: " + __interactable );
             
-            for (int i = 0; i < stickerParent.childCount; i++)
-                stickerParent.GetChild(i).GetComponent<Image>().raycastTarget = __interactable;
-                
-            for (int i = 0; i < bubbleParent.childCount; i++)
-                bubbleParent.GetChild(i).GetComponent<Image>().raycastTarget = __interactable;
+            for (int i = 0; i < bubbleStickerParent.childCount; i++)
+                bubbleStickerParent.GetChild(i).GetComponent<Image>().raycastTarget = __interactable;
         }
 
 
@@ -1198,11 +1225,19 @@ namespace PIERStory
             }
 
             // 22.03.08 스티커만 추가
-            for (int i = 0; i < stickerParent.childCount; i++)
+            // 22.04.04 대사 추가
+            for (int i = 0; i < bubbleStickerParent.childCount; i++)
             {
-                sending[LobbyConst.NODE_CURRENCY_LIST].Add(stickerParent.GetChild(i).GetComponent<StickerElement>().StickerJsonData(sortingOrder));
+                if (bubbleStickerParent.GetChild(i).GetComponent<StickerElement>() != null)
+                    sending[LobbyConst.NODE_CURRENCY_LIST].Add(bubbleStickerParent.GetChild(i).GetComponent<StickerElement>().StickerJsonData(sortingOrder));
+
+                if (bubbleStickerParent.GetChild(i).GetComponent<BubbleElement>() != null)
+                    sending[LobbyConst.NODE_CURRENCY_LIST].Add(bubbleStickerParent.GetChild(i).GetComponent<BubbleElement>().BubbleJsonData(sortingOrder));
+
                 sortingOrder++;
             }
+
+
 
             return sending;
         }

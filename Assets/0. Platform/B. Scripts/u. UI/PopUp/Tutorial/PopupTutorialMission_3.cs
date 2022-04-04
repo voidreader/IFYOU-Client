@@ -29,7 +29,7 @@ namespace PIERStory
         public UIContainer reduceWaitingTimeContainer;
         public TextMeshProUGUI rewardText2;
         public TextMeshProUGUI needCoiinAmount;
-
+        public Button coinOpenButton;
 
         [Space(15)][Header("프리패스 구매 유저 Container")]
         public GameObject hasFreepass;
@@ -102,6 +102,7 @@ namespace PIERStory
             callback += CallbackTutroialRewardFreeReduce;
 
             NetworkLoader.main.SendPost(callback, j, true);
+            coinOpenButton.interactable = false;
         }
 
         /// <summary>
@@ -112,6 +113,7 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackTutroialRewardFreeReduce");
+                coinOpenButton.interactable = true;
                 return;
             }
 
@@ -128,6 +130,7 @@ namespace PIERStory
             {
                 Debug.LogError("Failed CallbackTutorialUpdate, Tutorial Mission3");
                 openButton.interactable = true;
+                coinOpenButton.interactable = true;
                 return;
             }
 

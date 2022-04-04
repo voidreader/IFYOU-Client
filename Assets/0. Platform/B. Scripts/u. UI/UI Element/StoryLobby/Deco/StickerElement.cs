@@ -18,8 +18,7 @@ namespace PIERStory
         float posX = 0f, posY = 0f;
         float width = 300f, height = 300f, angle = 0f;
 
-        Vector2 originPos = Vector2.zero, startPos = Vector2.zero, dragPos = Vector2.zero;
-        const float moveSpeed = 90f;
+        Vector2 startPos = Vector2.zero, dragPos = Vector2.zero;
 
         /// <summary>
         /// 스티커 생성시 호출
@@ -86,20 +85,30 @@ namespace PIERStory
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            OnClickObect();
+            OnClickObject();
 
             foreach (GameObject g in controlButtons)
                 g.SetActive(false);
 
             startPos = eventData.position;
-            originPos = elementRect.anchoredPosition;
         }
 
         public void OnDrag(PointerEventData eventData)
         {
             dragPos = eventData.position;
+            Vector2 calcVector = dragPos - startPos;
 
-            elementRect.anchoredPosition = new Vector2(CalcMovePos(originPos.x, dragPos.x, startPos.x), CalcMovePos(originPos.y, dragPos.y, startPos.y));
+            Vector2 newPos = elementRect.anchoredPosition + calcVector;
+            Vector2 oldPos = elementRect.anchoredPosition;
+
+            elementRect.anchoredPosition = newPos;
+
+            if (!IsRectInsideSceen())
+                elementRect.anchoredPosition = oldPos;
+
+            startPos = dragPos;
+
+            //elementRect.anchoredPosition = new Vector2(CalcMovePos(originPos.x, dragPos.x, startPos.x), CalcMovePos(originPos.y, dragPos.y, startPos.y));
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -111,7 +120,7 @@ namespace PIERStory
         #endregion
 
 
-        public void OnClickObect()
+        public void OnClickObject()
         {
             ViewStoryLobby.OnDisableAllOptionals?.Invoke();
             controlBox.SetActive(true);
@@ -136,6 +145,31 @@ namespace PIERStory
         float CalcMovePos(float origin, float drag, float start)
         {
             return origin + ((drag - start));
+        }
+
+        bool IsRectInsideSceen()
+        {
+            bool isInside = false;
+
+            Vector3[] corners = new Vector3[4];
+            elementRect.GetWorldCorners(corners);
+
+            int visableCornders = 0;
+            Rect rect = new Rect(0, 0, Screen.width, Screen.height);
+
+            for(int i=0;i<corners.Length;i++)
+                corners[i] = RectTransformUtility.WorldToScreenPoint(Camera.main, corners[i]);
+
+            foreach (Vector3 corner in corners)
+            {
+                if (rect.Contains(corner))
+                    visableCornders++;
+            }
+
+            if (visableCornders == 4)
+                isInside = true;
+
+            return isInside;
         }
     }
 }

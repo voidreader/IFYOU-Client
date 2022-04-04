@@ -89,7 +89,7 @@ namespace PIERStory
         public Dictionary<string, string> bubbleID_DictionaryForLobby; // 말풍선 id-url 집합 (로비-꾸미기)
         public Dictionary<string, string> bubbleURL_DictionaryForLobby; // 말풍선 url-key 집합 (로비-꾸미기)
         public List<ScriptBubbleMount> ListProfileBubbleMount = new List<ScriptBubbleMount>(); // 프로필 말풍선 스프라이트 버블마운트
-        public int LoadingBubbleCount = 0; // 버블마운트 생성 체크용도의 정수 
+        public int LoadingBubbleCount = 1; // 버블마운트 생성 체크용도의 정수 
 
         //네임태그 dict!
         Dictionary<string, JsonData> DictNametag = new Dictionary<string, JsonData>();
@@ -840,7 +840,7 @@ namespace PIERStory
         
         void LoadProfileBubbleSprite() {
             ListProfileBubbleMount.Clear();
-            LoadingBubbleCount = 0;
+            LoadingBubbleCount = 1;
             
             string currentURL = string.Empty;
             string currentKEY = string.Empty;
@@ -866,7 +866,10 @@ namespace PIERStory
             for (int i = 0; i < ListProfileBubbleMount.Count; i++)
             {
                 if (!ListProfileBubbleMount[i].isMounted)
+                {
+                    Debug.LogError(string.Format("[{0}] bubble mount failed", ListProfileBubbleMount[i].imageUrl));
                     continue;
+                }
 
 
                 // 버블매니저에 추가해주기.

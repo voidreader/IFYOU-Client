@@ -2248,7 +2248,7 @@ namespace PIERStory
             string uidParam = string.Format("?uid={0}", UserManager.main.GetUserPinCode());
             string langParam = string.Format("&lang={0}", SystemManager.main.currentAppLanguageCode);
             
-            string finalURL = SystemManager.main.coinShopURL + "/total" + uidParam + langParam;
+            string finalURL = SystemManager.main.coinShopURL + uidParam + langParam;
             Debug.Log("Coinshop : " + finalURL);
             
             GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();

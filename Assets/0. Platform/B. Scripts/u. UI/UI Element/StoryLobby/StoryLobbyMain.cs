@@ -47,6 +47,12 @@ namespace PIERStory {
         public TextMeshProUGUI textEpisodeTitle; // 에피소드 타이틀 
         public GameObject groupOpenTimer; // 오픈 타이머
         public TextMeshProUGUI textOpenTimer; // 오픈 타이머 
+        
+        
+        // 연재 정보 관련 추가 
+         public GameObject serialGroup;
+         public TextMeshProUGUI textSerialInfo ;
+        
 
         public GameObject abilityBriefPrefab;           // 캐릭터 능력치 간소화 prefab
         public Transform characterStatusContent;
@@ -275,6 +281,13 @@ namespace PIERStory {
             
             if(LobbyManager.main != null && CheckResumePossible()) {
                 isEpisodeContinuePlay = true;
+            }
+            
+            // 연재정보 추가 (스토리와 에피소드 둘다 체크해야한다. )
+            serialGroup.SetActive(false);
+            if(currentStoryData.isSerial && currentEpisodeData.isSerial) {
+                serialGroup.SetActive(true);
+                textSerialInfo.text =  string.Format(SystemManager.GetLocalizedText("5184"), currentStoryData.GetSeiralDay());
             }
             
             
@@ -599,6 +612,15 @@ namespace PIERStory {
                 SetEpisodeTitleText(currentEpisodeData.storyLobbyTitle);
             }
             
+            // * 연재 작품, 연재 예정일이 미래라면 타이틀 변경처리 
+            if(currentStoryData.isSerial && currentEpisodeData.isSerial) {
+                imageEpisodeTitle.color = colorEpisodeTitleHidden;
+                textEpisodeTitle.color = Color.white;
+                SetEpisodeTitleText("");
+                
+                return;
+            }
+            
             
             // * 여기도 파이널 여부 추가 체크 
             if(isFinal) {
@@ -662,6 +684,20 @@ namespace PIERStory {
             
             return string.Format ("{0:D2}:{1:D2}:{2:D2}",timeDiff.Hours ,timeDiff.Minutes, timeDiff.Seconds);
         }
+        
+        
+        /// <summary>
+        /// 남은 시간의 일자 구하기 
+        /// </summary>
+        /// <returns></returns>
+        protected int GetOpenRemainTimeDay() {
+            timeDiff = openDate - DateTime.UtcNow;
+            if(timeDiff.Ticks < 0)
+                return -1;
+                
+            return (int)timeDiff.TotalDays;
+        }
+        
         
         /// <summary>
         /// 이어하기 가능한지 체크 여부 

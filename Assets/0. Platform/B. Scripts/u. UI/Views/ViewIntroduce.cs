@@ -59,8 +59,13 @@ namespace PIERStory {
             textSummary.text = introduceStory.summary; // 요약 
             textGenre.text = SystemManager.GetLocalizedText("6181") + " / " + introduceStory.genre;
             
-            serialGroup.SetActive(introduceStory.isSerial);
-            textSerialDay.text = string.Format(SystemManager.GetLocalizedText("5184"), introduceStory.GetSeiralDay()); // 연재일 설정..
+            // serialGroup.SetActive(introduceStory.isSerial);
+            serialGroup.SetActive(true);
+            
+            if(introduceStory.isSerial)
+                textSerialDay.text = string.Format(SystemManager.GetLocalizedText("5184"), introduceStory.GetSeiralDay()); // 연재일 설정..
+            else 
+                textSerialDay.text = SystemManager.GetLocalizedText("5186"); // 완결 
             
             
             SetLikeButtonState();

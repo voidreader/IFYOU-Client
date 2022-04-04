@@ -58,13 +58,14 @@ namespace PIERStory {
             elementRect = GetComponent<RectTransform>();
             elementRect.anchoredPosition = new Vector2(posX, posY);
 
-            bubbleCtrl.rtransform.Rotate(new Vector3(0, angle, 0));
-            bubbleCtrl.textContents.transform.Rotate(new Vector3(0, angle, 0));
             BubbleManager.main.SetLobbyFakeBubbles(SystemManager.GetJsonNodeString(__j, "origin_name"));
 
             // 말풍선 세팅 
             bubbleCtrl.SetProfileBubble(SystemManager.GetJsonNodeString(currencyData, "origin_name"), endCallback);
             elementRect.sizeDelta = new Vector2(bubbleCtrl.rtransform.sizeDelta.x + 80, bubbleCtrl.rtransform.sizeDelta.y + 80);
+
+            bubbleCtrl.rtransform.Rotate(new Vector3(0, angle, 0));
+            bubbleCtrl.textContents.transform.Rotate(new Vector3(0, angle, 0));
         }
   
 

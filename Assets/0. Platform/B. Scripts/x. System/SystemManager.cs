@@ -21,7 +21,8 @@ using Live2D.Cubism.Framework.Json;
 using Live2D.Cubism.Framework.Motion;
 using Live2D.Cubism.Framework.MotionFade;
 
-
+using VoxelBusters.CoreLibrary;
+using VoxelBusters.EssentialKit;
 
 namespace PIERStory
 {
@@ -2207,7 +2208,7 @@ namespace PIERStory
         /// </summary>
         /// <param name="__url"></param>
         public void ShowDefaultWebview(string __url, string __title) {
-            
+                /*            
             GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
             configuration.title = __title;
             configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
@@ -2224,6 +2225,17 @@ namespace PIERStory
                 Debug.Log("Webview Closed");
                 NetworkLoader.main.RequestUserBaseProperty();
             }, null, null);            
+            */
+            
+            WebView webView = WebView.CreateInstance();
+            WebView.OnHide += OnHideWebview;
+            
+            Debug.Log(">> OnHideWebview LoadURL");
+            webView.ClearCache();
+            webView.SetFullScreen(); // 풀스크린 
+            webView.ScalesPageToFit = true;
+            webView.LoadURL(URLString.URLWithPath(__url));
+            webView.Show();            
         }
         
         public void OpenPrivacyURL() {
@@ -2251,6 +2263,7 @@ namespace PIERStory
             string finalURL = SystemManager.main.coinShopURL + uidParam + langParam;
             Debug.Log("Coinshop : " + finalURL);
             
+            /*
             GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
             configuration.title = SystemManager.GetLocalizedText("6186");
             configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
@@ -2267,7 +2280,25 @@ namespace PIERStory
                 Debug.Log("Webview Closed");
                 NetworkLoader.main.RequestUserBaseProperty();
             }, null, null);            
+            */
             
+            WebView webView = WebView.CreateInstance();
+            WebView.OnHide += OnHideWebview;
+            
+            
+            Debug.Log(">> OnHideWebview LoadURL");
+            webView.ClearCache();
+            webView.SetFullScreen(); // 풀스크린 
+            webView.ScalesPageToFit = true;
+            webView.LoadURL(URLString.URLWithPath(finalURL));
+            webView.Show();
+        }
+        
+        void OnHideWebview(WebView __view) {
+            
+            Debug.Log(">> OnHideWebview");
+            WebView.OnHide -= OnHideWebview;
+            Destroy(__view);
         }
         
         void ForwardToStore() {

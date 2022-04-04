@@ -15,6 +15,10 @@ using Doozy.Runtime.UIManager.Components;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
+using VoxelBusters.CoreLibrary;
+using VoxelBusters.EssentialKit;
+
+
 namespace PIERStory
 {
     public class ViewStoryLobby : CommonView
@@ -1092,7 +1096,8 @@ namespace PIERStory
 
             string finalURL = SystemManager.main.coinShopURL + uidParam + langParam + projectParam;
             Debug.Log("Coinshop : " + finalURL);
-
+                
+            /*
             GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
             configuration.title = SystemManager.GetLocalizedText("6186");
             configuration.orientation = GamebaseScreenOrientation.PORTRAIT;
@@ -1112,7 +1117,27 @@ namespace PIERStory
                 RefreshAfterProjectCoinShop();
 
             }, null, null);
+            */
+            WebView webView = WebView.CreateInstance();
+            WebView.OnHide += OnHideWebview;
+            
+            
+            Debug.Log(">> OnHideWebview LoadURL");
+            webView.ClearCache();
+            webView.SetFullScreen(); // 풀스크린 
+            webView.ScalesPageToFit = true;
+            webView.LoadURL(URLString.URLWithPath(finalURL));
+            webView.Show();            
         }
+        
+        void OnHideWebview(WebView __view) {
+                
+                Debug.Log(">> OnHideWebview");
+                WebView.OnHide -= OnHideWebview;
+                Destroy(__view);
+                
+                RefreshAfterProjectCoinShop();
+        }        
 
         
         /// <summary>

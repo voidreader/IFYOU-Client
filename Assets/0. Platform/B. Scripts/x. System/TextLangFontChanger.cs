@@ -22,7 +22,7 @@ namespace PIERStory {
         }
         
         void SetFont() {
-            if(_text == null)
+            if(_text == null) 
                 return;
                 
             if(SystemManager.main == null)

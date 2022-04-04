@@ -2161,6 +2161,7 @@ GameObject:
   - component: {fileID: 6237467935426170736}
   - component: {fileID: 8729441939062735512}
   - component: {fileID: 4620095177141758889}
+  - component: {fileID: 6243844425750399372}
   m_Layer: 5
   m_Name: EpisodeSummary
   m_TagString: Untagged
@@ -2215,22 +2216,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB098\uBCF4\uAE30\uAC00 \uC5ED\uACA8\uC6CC \uAC00\uC2E4 \uB54C\uC5D0\uB294
-    \uB9D0\uC5C6\uC774 \uACE0\uC774 \uBCF4\uB0B4\uB4DC\uB9AC\uC624\uB9AC\uB2E4\n\uB098\uBCF4\uAE30\uAC00
-    \uC5ED\uACA8\uC6CC \uAC00\uC2E4 \uB54C\uC5D0\uB294 \uC8FD\uC5B4\uB3C4 \uC544\uB2C8
-    \uB208\uBB3C \uD758\uB9AC\uC624\uB9AC\uB2E4\n\n\uB0A0 \uB5A0\uB098 \uD589\uBCF5\uD55C\uC9C0\n\uC774\uC820
-    \uADF8\uB300\uC544\uB2CC\uC9C0\n\uADF8\uB308 \uBC14\uB77C\uBCF4\uBA70 \uC0B4\uC544\uC628
-    \uB0B4\uAC00\n\uADF8\uB140 \uB4A4\uC5D0 \uAC00\uB838\uB294\uC9C0\n\n\uC0AC\uB791
-    \uADF8 \uC544\uD514\uC774 \uB108\uBB34 \uCEE4\n\uC228\uC744 \uC274 \uC218\uAC00
-    \uC5C6\uC5B4\n\uADF8\uB300 \uD589\uBCF5\uD558\uAC8C \uBE4C\uC5B4\uC904\uAC8C\uC694\n\uB0B4
-    \uC601\uD63C\uC73C\uB85C \uBE4C\uC5B4\uC904\uAC8C\uC694\n\n\uB098\uBCF4\uAE30\uAC00
-    \uC5ED\uACA8\uC6CC \uAC00\uC2E4 \uB54C\uC5D0\uB294 \uB9D0 \uC5C6\uC774 \uACE0\uC774
-    \uBCF4\uB0B4\uB4DC\uB9AC\uC624\uB9AC\uB2E4\n\uC601\uBCC0\uC758 \uC57D\uC0B0 \uC9C4\uB2EC\uB798\uAF43
-    \uC544\uB984 \uB530\uB2E4 \uAC00\uC2E4 \uAE38\uC5D0 \uBFCC\uB9AC\uC624\uB9AC\uB2E4\n\uAC00\uC2DC\uB294
-    \uAC78\uC74C \uB193\uC778 \uADF8 \uAF43\uC744 \uC0AC\uBFD0\uD788 \uC988\uB824
-    \uBC1F\uACE0 \uAC00\uC2DC\uC635\uC18C\uC11C\n\uB098\uBCF4\uAE30\uAC00 \uC5ED\uACA8\uC6CC
-    \uAC00\uC2E4 \uB54C\uC5D0\uB294 \uC8FD\uC5B4\uB3C4 \uC544\uB2C8 \uB208\uBB3C
-    \uD758\uB9AC\uC624\uB9AC\uB2E4"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
@@ -2299,6 +2285,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6243844425750399372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7171630734086090491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 4620095177141758889}
+  isException: 1
+  isFontSet: 0
 --- !u!1 &7969306447642685820
 GameObject:
   m_ObjectHideFlags: 0
@@ -2883,6 +2884,7 @@ GameObject:
   - component: {fileID: 8746291238254625466}
   - component: {fileID: 5449874625591436300}
   - component: {fileID: 1861769910974715596}
+  - component: {fileID: 2659830475564534713}
   m_Layer: 5
   m_Name: textAdOpen
   m_TagString: Untagged
@@ -2907,7 +2909,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -47}
-  m_SizeDelta: {x: 206.99, y: 84.86}
+  m_SizeDelta: {x: 240, y: 84.86}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5449874625591436300
 CanvasRenderer:
@@ -3006,6 +3008,23 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2659830475564534713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8567390040284730781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _textID: 5161
+  _text: {fileID: 1861769910974715596}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
 --- !u!1 &8612771627877596140
 GameObject:
   m_ObjectHideFlags: 0

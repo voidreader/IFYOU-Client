@@ -133,7 +133,7 @@ namespace PIERStory {
                 }
                 else {
                     groupPlay.SetActive(true);
-                    textPlay.text = "Lobby";
+                    textPlay.text = SystemManager.GetLocalizedText("5190");
                 }
                 
                 

@@ -1062,16 +1062,19 @@ namespace PIERStory
             // 메신저 말풍선이 한 줄에 16자 이상이 들어가면 자동으로 잘라서 엔터를 해준다.
             // 22.01.15
             // 영어는 단어가 길어서 단어별로 판별해서 잘라서 엔터를 해줘야 한다
-            string enterAcess = row.script_data.Replace("\\", " ");
+            string enterAcess = row.script_data.Replace("\\", "\n");
             string[] lineStr = enterAcess.Split(' ');
-            string tmp = string.Empty;
             int lineStringLength = 0;
 
             messengerText.text = string.Empty;
 
             foreach (string s in lineStr)
             {
-                if (lineStringLength + s.Length > 24)
+                // 엔터를 만나면 0으로 초기화
+                if (s == "\n")
+                    lineStringLength = 0;
+
+                if (lineStringLength + s.Length > 20)
                 {
                     messengerText.text += "\n";
                     lineStringLength = 0;

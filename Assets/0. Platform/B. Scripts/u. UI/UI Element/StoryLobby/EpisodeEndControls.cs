@@ -28,16 +28,33 @@ namespace PIERStory {
             
             // 일반 설정 시작 
             SetPlayState(); // 플레이 및 타이머 설정 
-
-            if ((UserManager.main.tutorialStep == 2 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 3 && !UserManager.main.tutorialClear))
-                UserManager.main.UpdateTutorialStep(3, 0, CallbackStartTutorial);
-
+           
 
             // 엔딩에 도달한 경우 추가 로직 (엔딩을 플레이 하지는 않았음)
             if (currentEpisodeData.episodeType == EpisodeType.Ending && !UserManager.main.CheckReachFinal()) {
                 SetEndingNotification();
                 return;
             }
+            
+            // * 튜토리얼 3번 호출 
+            // 다음 에피소드가 무조건 대기 상태여야한다. 
+            if(UserManager.main.CheckReachFinal())
+                return;
+                
+            // 이번에 볼 작품이 대기 중이니..? 
+            // 연재작은 매우 뒤에 오픈될 수도 있어서. 
+            if(!isOpenTimeCountable || currentEpisodeData.isSerial) {
+                return;
+            }
+            
+            // 2분 후 오픈이면 하지 띄우지 않음. 
+            if(timeDiff.Minutes < 2) 
+                return;
+            
+            // 튜토리얼 3 호출
+            if ((UserManager.main.tutorialStep == 2 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 3 && !UserManager.main.tutorialClear))
+                UserManager.main.UpdateTutorialStep(3, 0, CallbackStartTutorial);            
+            
         }
         
         

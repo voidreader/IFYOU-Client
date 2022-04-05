@@ -69,7 +69,11 @@ namespace PIERStory {
         /// <param name="__progressorValue"></param>
         /// <param name="__resumePlay"></param>
         public void SetPlayButton(StatePlayButton __state, float __progressorValue, bool __resumePlay) {
-                    
+            
+            if(__state != StatePlayButton.Serial) {
+                this.gameObject.SetActive(true);
+            }
+            
             stateButton = __state;
             isResumePlay = __resumePlay;
             

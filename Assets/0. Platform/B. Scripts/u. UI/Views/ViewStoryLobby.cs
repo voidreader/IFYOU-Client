@@ -206,14 +206,16 @@ namespace PIERStory
             
             if(bg == null)
                 return;
+                
+            LobbyManager.main.lobbyBackground.sprite = null;
             
             // 어드레서블에 대한 처리
             if(bg.isAddressable) {
-                Addressables.ReleaseInstance(bg.mountedAtalsAddressable);
+                Addressables.Release(bg.mountedAtalsAddressable);
             }
             
             bg = null;
-            LobbyManager.main.lobbyBackground.sprite = null;
+            // LobbyManager.main.lobbyBackground.sprite = null;
         }
         
         

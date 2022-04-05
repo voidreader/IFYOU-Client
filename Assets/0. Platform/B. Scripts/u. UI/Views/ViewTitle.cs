@@ -124,6 +124,7 @@ namespace PIERStory {
             
             UpdateLoadingText(3);
             
+            // 카탈로그 업데이트까지 대기한다. 
             while(!SystemManager.main.isAddressableCatalogUpdated)
                 yield return null;
                 
@@ -136,8 +137,12 @@ namespace PIERStory {
             
             if( bundleCheckHandle.Status != AsyncOperationStatus.Succeeded) { // 실패
                     Debug.Log("<color=cyan>## No Font bundle </color>");
-            
                     hasDownloadableBundle = false;
+                    
+                    // Font 에셋번들 다운받지 받지 못하면 게임에 접속 할 수 없음
+                    SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
+                    NetworkLoader.main.ReportRequestError(bundleCheckHandle.OperationException.ToString(), "Font LoadResourceLocationsAsync");
+                    yield break;
             }
             else { // 성공이지만 
                 if(bundleCheckHandle.Result.Count > 0) {
@@ -170,8 +175,6 @@ namespace PIERStory {
                 
                 // 폰트 부른다. 
                 SystemManager.main.LoadAddressableFont();
-                
-                
                 FillProgressorOnly();
                 yield break;
             }
@@ -179,16 +182,27 @@ namespace PIERStory {
             Debug.Log("### Asset bundle download start ###");
             AsyncOperationHandle downloadHandle =  Addressables.DownloadDependenciesAsync(fontAssetBundle);
             downloadHandle.Completed += (op) => {
+                
+                if(op.Status != AsyncOperationStatus.Succeeded) {
+                    // 다운로드 실패!?
+                    SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
+                    NetworkLoader.main.ReportRequestError(bundleCheckHandle.OperationException.ToString(), "Font DownloadDependenciesAsync");
+                }
             };            
+            
+            DownloadStatus downloadStatus;
             
             // 게이지 채우기 
             while(!downloadHandle.IsDone) {
-                downloadProgressBar.fillAmount = downloadHandle.PercentComplete;
+                downloadStatus = downloadHandle.GetDownloadStatus();
+                downloadProgressBar.fillAmount = downloadStatus.Percent;
                 yield return null;
             }            
             
             // 다운로드 완료됨 
             Debug.Log("<color=cyan>font bundle downloading is done!!!</color>");
+            
+            yield return null;
             
             // 폰트 부른다. 
             SystemManager.main.LoadAddressableFont();

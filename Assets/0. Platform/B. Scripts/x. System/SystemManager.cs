@@ -2235,7 +2235,7 @@ namespace PIERStory
             webView.ClearCache();
             webView.SetFullScreen(); // 풀스크린 
             webView.ScalesPageToFit = true;
-            webView.Style = WebViewStyle.Popup; // 팝업 스타일 테스트
+            // webView.Style = WebViewStyle.Popup; // 팝업 스타일 테스트
             webView.LoadURL(URLString.URLWithPath(__url));
             webView.Show();            
         }
@@ -2292,7 +2292,7 @@ namespace PIERStory
             webView.ClearCache();
             webView.SetFullScreen(); // 풀스크린 
             webView.ScalesPageToFit = true;
-            webView.Style = WebViewStyle.Browser; // 브라우저 스타일 
+            // webView.Style = WebViewStyle.Browser; // 브라우저 스타일 
             webView.LoadURL(URLString.URLWithPath(finalURL));
             webView.Show();
         }

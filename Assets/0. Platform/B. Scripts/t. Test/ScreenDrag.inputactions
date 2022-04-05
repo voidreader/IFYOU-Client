@@ -168,11 +168,16 @@
     ],
     "controlSchemes": [
         {
-            "name": "Control scheme",
-            "bindingGroup": "Control scheme",
+            "name": "DragController",
+            "bindingGroup": "DragController",
             "devices": [
                 {
                     "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Pointer>",
                     "isOptional": true,
                     "isOR": false
                 },

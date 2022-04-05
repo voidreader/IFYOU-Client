@@ -1978,16 +1978,17 @@ namespace PIERStory
                     mountedAssetFont = handle;
                     mainAssetFont = handle.Result;
                     
-                    
-                    
                     // 다른 프로젝트에서 가져오는거라서 Shader처리 해준다.
                     mainAssetFont.material.shader = assetFontShader;
-                    
                     Debug.Log("<color=cyan>Font loaded OK!!!!!</color>");
                 }
                 else {
-                    mainAssetFont = innerFontKO; 
+                    mainAssetFont = innerFontEN; 
                     Debug.Log("<color=cyan>Font loaded FAIL....</color>");
+                    
+                    NetworkLoader.main.ReportRequestError(handle.OperationException.ToString(), "Font LoadAssetAsync");
+                    SystemManager.main.isAddressableCatalogUpdated = false;
+                    
                 }
             };
         }
@@ -2234,6 +2235,7 @@ namespace PIERStory
             webView.ClearCache();
             webView.SetFullScreen(); // 풀스크린 
             webView.ScalesPageToFit = true;
+            webView.Style = WebViewStyle.Popup; // 팝업 스타일 테스트
             webView.LoadURL(URLString.URLWithPath(__url));
             webView.Show();            
         }
@@ -2290,6 +2292,7 @@ namespace PIERStory
             webView.ClearCache();
             webView.SetFullScreen(); // 풀스크린 
             webView.ScalesPageToFit = true;
+            webView.Style = WebViewStyle.Browser; // 브라우저 스타일 
             webView.LoadURL(URLString.URLWithPath(finalURL));
             webView.Show();
         }
@@ -2407,6 +2410,23 @@ namespace PIERStory
                 render = __model.Drawables[i].gameObject.GetComponent<CubismRenderer>();
                 render.Material.shader = cubismShader;
             }   
+        }
+        
+        /// <summary>
+        /// 기본 서버  접속 실패 메세지 
+        /// </summary>
+        /// <returns></returns>
+        public static string GetDefaultServerErrorMessage() {
+            switch(main.currentAppLanguageCode) {
+                case "KO":
+                return "서버에 접속하지 못했습니다.";
+                
+                case "JA":
+                return "サーバーとの接続に失敗しました。";
+                
+                default:
+                return "Failed to connect to server.";
+            }
         }
         
         

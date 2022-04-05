@@ -274,6 +274,16 @@ namespace PIERStory {
             // 엔딩 제외
             if(currentEpisode.episodeType == EpisodeType.Ending)
                 return;
+                
+            // 과거는 변경하지 않음 
+            if(currentEpisode.episodeState == EpisodeState.Prev)
+                return; 
+            
+            // 현재이고 이미 오픈된 상태는 return
+            if(currentEpisode.episodeState == EpisodeState.Current && timeDiff.Ticks <= 0 ) {
+                return;
+                
+            }
             
             openDate = __publishDate;
             timeDiff = openDate - DateTime.UtcNow.AddHours(9);

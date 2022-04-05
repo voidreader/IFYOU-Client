@@ -125,7 +125,8 @@ namespace PIERStory {
             Debug.Log("#### InitAddressableCatalog ###");
             string catalogURL = string.Empty;
             
-            // Addressables.CleanBundleCache();
+            // 테스트용
+            Addressables.ClearDependencyCacheAsync("Font");
             
             
             #if UNITY_IOS
@@ -140,8 +141,23 @@ namespace PIERStory {
             
             Addressables.LoadContentCatalogAsync(catalogURL).Completed += (op) => {
             
-            Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
-            SystemManager.main.isAddressableCatalogUpdated = true;
+                if(op.Status == AsyncOperationStatus.Succeeded) {
+                    Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
+                    SystemManager.main.isAddressableCatalogUpdated = true;
+                }
+                else {
+                    NetworkLoader.main.ReportRequestError(op.OperationException.ToString(), "LoadContentCatalogAsync");
+                    SystemManager.main.isAddressableCatalogUpdated = false;
+                    
+                    // Addressables.CleanBundleCache
+                    
+                    //  카탈로그 실패시 접속 할 수 없음. 
+                    SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
+                    return;
+                    
+                    
+                }
+                
             };
         }
         

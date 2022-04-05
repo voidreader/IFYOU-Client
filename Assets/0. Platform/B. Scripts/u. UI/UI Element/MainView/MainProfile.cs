@@ -9,8 +9,9 @@ namespace PIERStory
     public class MainProfile : MonoBehaviour
     {
         public Image gradeBackground;
-        public Image gradeBadge;
         public Image badgebackAura;
+        public Image gradeBadge;
+        public GameObject badgeGlitter;
 
         public Sprite spriteDefaultAura;
         public Sprite spriteBestAura;
@@ -20,6 +21,8 @@ namespace PIERStory
         public Image expGauge;
         public TextMeshProUGUI expText;
 
+        public Image downgradeBadge;
+        public TextMeshProUGUI downgradeTitle;
         public Image nextGradeBadge;
         public TextMeshProUGUI nextGradeTitle;
 

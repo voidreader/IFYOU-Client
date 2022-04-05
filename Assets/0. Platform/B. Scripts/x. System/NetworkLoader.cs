@@ -909,7 +909,7 @@ namespace PIERStory
         /// <summary>
         /// 서버 연결 오류 
         /// </summary>
-        static void OnFailedServer() {
+        public static void OnFailedServer() {
             Application.Quit();
         }
         

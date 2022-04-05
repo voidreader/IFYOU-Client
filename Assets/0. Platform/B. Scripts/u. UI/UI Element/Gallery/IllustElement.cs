@@ -78,7 +78,7 @@ namespace PIERStory
             {
                 // 사이드 에피소드인 경우
                 if (appearEpisodeType.Equals(CommonConst.COL_SIDE))
-                    episodeHintText.text = "Side Episode";
+                    episodeHintText.text = SystemManager.GetLocalizedText("5028");
                 else
                 {
                     EpisodeData appearEpisodeData = StoryManager.GetNextFollowingEpisodeData(appearEpisodeId);
@@ -91,14 +91,14 @@ namespace PIERStory
                     {
                         // 히든 엔딩 표기
                         if(appearEpisodeData.endingType == LobbyConst.COL_HIDDEN) 
-                            episodeHintText.text = "Hidden Ending";
+                            episodeHintText.text = SystemManager.GetLocalizedText("5087");
                         else 
-                            episodeHintText.text = "Final Ending";
+                            episodeHintText.text = SystemManager.GetLocalizedText("5088");
                     }
                     else
                     {
                         // 정규 에피소드인 경우
-                        episodeHintText.text = string.Format("Episode {0}", appearEpisodeData.episodeNO);
+                        episodeHintText.text = string.Format(SystemManager.GetLocalizedText("5027") + " {0}", appearEpisodeData.episodeNO);
                     }
                 }
             }

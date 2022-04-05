@@ -958,7 +958,11 @@ namespace PIERStory
                 model.model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder = 0;
 
             // 파괴
-            Destroy(controlModel.gameObject);
+            if (controlModel.isAddressable)
+                Addressables.ReleaseInstance(controlModel.gameObject);
+            else
+                Destroy(controlModel.gameObject);
+
             ReturnCharacterList();
         }
 

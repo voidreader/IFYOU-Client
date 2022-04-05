@@ -28,9 +28,11 @@ namespace PIERStory {
         public UIToggle shopToggle;
         
         [Header("내서재")]
-        public MainLibrary library;        
+        public MainLibrary library;
 
-        
+
+        [Header("프로필(등급)")]
+        public GameObject empty;
      
 
         [Space(20)]
@@ -50,14 +52,6 @@ namespace PIERStory {
         public Image mExpGauge;                 // 더보기 페이지 경험치바
 */
         
-
-        
-        float mainScrollRectY = 0;
-        
-        void Start() {
-            // OnCategoryList = CallCategoryList;
-        }
-        
         void Update() {
             
             // ViewMain에서 종료 띄우기.
@@ -69,10 +63,7 @@ namespace PIERStory {
                 && ((CommonView.ListActiveViews.Count == 1 && CommonView.ListActiveViews.Contains(this)) || CommonView.ListActiveViews.Count < 1)) {
                     SystemManager.ShowSystemPopup(SystemManager.GetLocalizedText("6064"), Application.Quit, null, true);    
                 }
-                
             }
-            
-
         }
         
         public override void OnView()
@@ -276,51 +267,7 @@ namespace PIERStory {
         }
 
 
-       
-        public void OnClickDecoMode()
-        {
-            JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = LobbyConst.FUNC_GET_PROFILE_CURRENCY_OWN_LIST;
-            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
 
-            NetworkLoader.main.SendPost(CallbackGetProfileCurrencyList, sending, true);
-        }
-
-        void CallbackGetProfileCurrencyList(HTTPRequest req, HTTPResponse res)
-        {
-            if(!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("Failed CallbackGetProfileCurrencyList");
-                return;
-            }
-
-            // 통신이 완료된 후, 사용자가 소지하고 있는 프로필 재화 정보를 받은 뒤, 페이지를 넘긴다.
-            UserManager.main.userProfileCurrency = JsonMapper.ToObject(res.DataAsText);
-
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_DECO_MODE, string.Empty);
-        }
-
-        /// <summary>
-        /// 프로필 자세히 보기
-        /// </summary>
-        public void OnClickShowProfileDetail()
-        {
-            if(showButtonImage.sprite == spriteVisable)
-            {
-                editButton.SetActive(false);
-                profileBrief.SetActive(false);
-                showButtonImage.sprite = spriteInvisable;
-                navigationBottom.gameObject.SetActive(false);
-                
-            }
-            else
-            {
-                editButton.SetActive(true);
-                profileBrief.SetActive(true);
-                showButtonImage.sprite = spriteVisable;
-                navigationBottom.gameObject.SetActive(true);
-            }
-        }
 
         #endregion
 

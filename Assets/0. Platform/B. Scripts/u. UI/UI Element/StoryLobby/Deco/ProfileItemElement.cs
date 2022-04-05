@@ -107,6 +107,10 @@ namespace PIERStory
 
         public void OnClickSelectStanding()
         {
+            if (totalCount <= currentCount)
+                return;
+
+            currentCount++;
             ViewStoryLobby.OnSelectStanding?.Invoke(currencyJson, this);
         }
 

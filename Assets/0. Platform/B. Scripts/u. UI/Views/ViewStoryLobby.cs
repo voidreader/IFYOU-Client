@@ -881,8 +881,6 @@ namespace PIERStory
                     return;
                 }
 
-                standingElement.currentCount++;
-
                 // 캐릭터 생성
                 ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(__j, GameConst.COL_MODEL_NAME), CharacterInstantComplete, LobbyManager.main);
                 character.SetModelDataFromStoryManager(true);

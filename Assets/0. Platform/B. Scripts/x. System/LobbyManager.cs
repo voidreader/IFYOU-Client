@@ -126,7 +126,7 @@ namespace PIERStory {
             string catalogURL = string.Empty;
             
             // 테스트용
-            Addressables.ClearDependencyCacheAsync("Font");
+            // Addressables.ClearDependencyCacheAsync("Font");
             
             
             #if UNITY_IOS

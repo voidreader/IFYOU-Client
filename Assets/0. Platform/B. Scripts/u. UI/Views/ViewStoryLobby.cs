@@ -187,17 +187,34 @@ namespace PIERStory
         /// 화면에 생성된 데코 오브젝트 없애기 (배경 빼고)
         /// </summary>
         void DestroyDecoObjects() {
+            
+            GameModelCtrl modelCtrl;
             foreach (GameObject g in decoObjects) {
                 
-                // 에셋번들로 생성된 캐릭터 모델은 ReleaseInstance. 
-                if(g.GetComponent<GameModelCtrl>() != null && g.GetComponent<GameModelCtrl>().isAddressable) {  
-                    Addressables.ReleaseInstance(g);
+                // 캐릭터 모델에 대한 추가 처리 
+                modelCtrl = g.GetComponent<GameModelCtrl>();
+                if(modelCtrl != null) {
+                    liveModels.Remove(modelCtrl);
+                    
+                    if(modelCtrl.isAddressable) {
+                        ScriptModelMount mount = FindModelMount(modelCtrl);
+                        Destroy(modelCtrl.gameObject);
+                        
+                        
+                        if(mount != null) {
+                            listModelMounts.Remove(mount);
+                            mount.DestroyAddressableModel();
+                        }
+                    }
+                } // ? 캐릭터 모델 처리 끝 
+                else {                
+                    Destroy(g);
                 }
-                
-                Destroy(g);
             }
             
             decoObjects.Clear();
+            
+            System.GC.Collect();
         }
         
         
@@ -897,10 +914,13 @@ namespace PIERStory
                     character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_ORIGIN_POS_Y + 1, 0);
 
                 character.modelController.currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
+                
                 liveModels.Add(character.modelController);
                 decoObjects.Add(character.modelController.gameObject);
-
+                listModelMounts.Add(character); 
+                
                 controlModel = character.modelController;
+                
             }
             else
             {
@@ -956,14 +976,24 @@ namespace PIERStory
             // 리스트에서 해당 오브젝트 삭제
             decoObjects.Remove(controlModel.gameObject);
             liveModels.Remove(controlModel);
+            
+            
 
             // 화면에 남은 모델의 SortingOrder를 0으로 만들어준다
             foreach(GameModelCtrl model in liveModels)
                 model.model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder = 0;
 
             // 파괴
-            if (controlModel.isAddressable)
-                Addressables.ReleaseInstance(controlModel.gameObject);
+            if (controlModel.isAddressable) {
+                ScriptModelMount mount = FindModelMount(controlModel);
+                Destroy(controlModel.gameObject); 
+                if(mount != null) {
+                    
+                    listModelMounts.Remove(mount);
+                    mount.DestroyAddressableModel();
+                }
+
+            }
             else
                 Destroy(controlModel.gameObject);
 
@@ -994,6 +1024,16 @@ namespace PIERStory
             standingController.SetActive(false);
 
             controlModel = null;
+        }
+        
+        public ScriptModelMount FindModelMount(GameModelCtrl __model) {
+            for(int i=0; i<listModelMounts.Count;i++) {
+                if(listModelMounts[i].modelController == __model) {
+                    return listModelMounts[i];
+                }
+            }
+            
+            return null;
         }
 
 

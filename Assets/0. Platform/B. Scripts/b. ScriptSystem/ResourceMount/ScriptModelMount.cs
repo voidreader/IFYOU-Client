@@ -389,6 +389,21 @@ namespace PIERStory
             // 로딩 완료!
             SendSuccessMessage();            
         } // ? 어드레서블 모델 생성 완료 
+        
+        
+        /// <summary>
+        /// 어드레서블인 경우 파괴 
+        /// </summary>
+        public void DestroyAddressableModel() {
+            
+            if(!isAddressable && !isMounted)
+                return;
+            
+            modelController = null;
+            bool result = Addressables.ReleaseInstance(mountedModelAddressable);
+            Debug.Log("DestroyAddressableModel :: " + originModelName + " / " + result);
+            
+        }
 
 
         /// <summary>

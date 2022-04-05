@@ -164,6 +164,8 @@ namespace PIERStory
         {
             base.OnHideView();
 
+
+            DestroyPreviousBackground(); // 배경 제거하고.
             DestroyDecoObjects(); 
 
             foreach (GameObject g in currencyElements)

@@ -1071,7 +1071,7 @@ namespace PIERStory
             foreach (string s in lineStr)
             {
                 // 엔터를 만나면 0으로 초기화
-                if (s == "\n")
+                if (s.Contains("\n"))
                     lineStringLength = 0;
 
                 if (lineStringLength + s.Length > 20)

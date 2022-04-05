@@ -197,6 +197,7 @@ namespace PIERStory
                     liveModels.Remove(modelCtrl);
                     
                     if(modelCtrl.isAddressable) {
+                        // 캐릭터 모델인데 에셋번들
                         ScriptModelMount mount = FindModelMount(modelCtrl);
                         Destroy(modelCtrl.gameObject);
                         
@@ -206,8 +207,14 @@ namespace PIERStory
                             mount.DestroyAddressableModel();
                         }
                     }
+                    else {
+                        
+                        // 캐릭터 모델인데 에셋번들 아님
+                        Destroy(g);    
+                    }
                 } // ? 캐릭터 모델 처리 끝 
                 else {                
+                    // 모델이 아닌 친구들
                     Destroy(g);
                 }
             }

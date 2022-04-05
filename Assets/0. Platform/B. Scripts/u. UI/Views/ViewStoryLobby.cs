@@ -188,40 +188,51 @@ namespace PIERStory
         /// </summary>
         void DestroyDecoObjects() {
             
-            GameModelCtrl modelCtrl;
-            foreach (GameObject g in decoObjects) {
-                
-                // 캐릭터 모델에 대한 추가 처리 
-                modelCtrl = g.GetComponent<GameModelCtrl>();
-                if(modelCtrl != null) {
-                    liveModels.Remove(modelCtrl);
+            try {
+                GameModelCtrl modelCtrl;
+                foreach (GameObject g in decoObjects) {
                     
-                    if(modelCtrl.isAddressable) {
-                        // 캐릭터 모델인데 에셋번들
-                        ScriptModelMount mount = FindModelMount(modelCtrl);
-                        Destroy(modelCtrl.gameObject);
+                    if(g == null)
+                        continue;
+                    
+                    // 캐릭터 모델에 대한 추가 처리 
+                    modelCtrl = g.GetComponent<GameModelCtrl>();
+                    if(modelCtrl != null) {
+                        liveModels.Remove(modelCtrl);
                         
-                        
-                        if(mount != null) {
-                            listModelMounts.Remove(mount);
-                            mount.DestroyAddressableModel();
+                        if(modelCtrl.isAddressable) {
+                            // 캐릭터 모델인데 에셋번들
+                            ScriptModelMount mount = FindModelMount(modelCtrl);
+                            
+                            if(mount != null) {
+                                listModelMounts.Remove(mount);
+                                mount.DestroyAddressableModel();
+                                
+                            }
+                            
+                            Destroy(modelCtrl.gameObject);
                         }
+                        else {
+                            // 캐릭터 모델인데 에셋번들 아님
+                            Destroy(g);    
+                        }
+                    } // ? 캐릭터 모델 처리 끝 
+                    else {                
+                        // 모델이 아닌 친구들
+                        Destroy(g);
                     }
-                    else {
-                        
-                        // 캐릭터 모델인데 에셋번들 아님
-                        Destroy(g);    
-                    }
-                } // ? 캐릭터 모델 처리 끝 
-                else {                
-                    // 모델이 아닌 친구들
-                    Destroy(g);
                 }
+                
+                
+            } catch(System.Exception e) {
+                Debug.LogError(e.StackTrace);
+            }
+            finally {
+                decoObjects.Clear();
+                System.GC.Collect();
             }
             
-            decoObjects.Clear();
-            
-            System.GC.Collect();
+
         }
         
         
@@ -651,6 +662,8 @@ namespace PIERStory
 
         public void OnDragScreen(InputAction.CallbackContext context)
         {
+            
+            // Debug.Log("OnDragScreen :: " + moveCharacter);
             cursor = context.ReadValue<Vector2>();
 
             // 배경 드래그
@@ -675,19 +688,29 @@ namespace PIERStory
             // 스탠딩 캐릭터 드래그
             if(moveCharacter)
             {
+                // Debug.Log("moveCharacter is true");
+                
                 if (context.started)
                 {
+                    // Debug.Log("moveCharacter started");
                     startX = cursor.x;
                     originX = controlModel.transform.localPosition.x;
                 }
                 else if (context.performed)
                 {
+                    
+                    
                     dragX = cursor.x;
                     moveX = originX + ((dragX - startX) * (Time.deltaTime * 1f));
 
                     // 선택된 캐릭터 이동되게 해야됨
-                    if (moveX > (-camWidth * 0.25f) && moveX < (camWidth * 0.25f))
+                    if (moveX > (-camWidth * 0.25f) && moveX < (camWidth * 0.25f)) {
+                        // Debug.Log("moveCharacter performed #1");
                         controlModel.transform.localPosition = new Vector3(moveX, controlModel.transform.localPosition.y, 0f);
+                    }
+                    else {
+                        // Debug.Log("moveCharacter performed #2");
+                    }
                 }
             }
         }
@@ -993,13 +1016,14 @@ namespace PIERStory
             // 파괴
             if (controlModel.isAddressable) {
                 ScriptModelMount mount = FindModelMount(controlModel);
-                Destroy(controlModel.gameObject); 
+                
                 if(mount != null) {
                     
                     listModelMounts.Remove(mount);
                     mount.DestroyAddressableModel();
                 }
-
+                
+                Destroy(controlModel.gameObject);
             }
             else
                 Destroy(controlModel.gameObject);

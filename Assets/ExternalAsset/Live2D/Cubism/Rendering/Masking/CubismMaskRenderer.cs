@@ -123,7 +123,9 @@ namespace Live2D.Cubism.Rendering.Masking
             var mainTexture = MainRenderer.MainTexture;
             var mesh = MainRenderer.Mesh;
 
-
+            try {
+                
+            
             MaskProperties.SetTexture(CubismShaderVariables.MainTexture, mainTexture);
 
 
@@ -133,6 +135,10 @@ namespace Live2D.Cubism.Rendering.Masking
                     ? MaskCullingMaterial
                     : MaskMaterial,
                 0, 0, MaskProperties);
+            }
+            catch(System.Exception e) {
+                Debug.LogError(e.StackTrace);
+            }
         }
 
         #endregion

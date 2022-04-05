@@ -167,9 +167,9 @@ namespace PIERStory {
             Debug.Log("### Asset bundle download start ###");
             // 다운로드 해야한다. 
             AsyncOperationHandle downloadHandle =  Addressables.DownloadDependenciesAsync(__projectID);
+            
             downloadHandle.Completed += (op) => {
                 //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
-
             };
             
             while(!downloadHandle.IsDone) {
@@ -187,6 +187,7 @@ namespace PIERStory {
             yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
             Debug.Log("어드레서블 번들 다운 완료하고 꾸미기형 로비 세팅 끝!");
 
+            Addressables.Release(downloadHandle);
 
             yield return new WaitForSeconds(0.1f);
             

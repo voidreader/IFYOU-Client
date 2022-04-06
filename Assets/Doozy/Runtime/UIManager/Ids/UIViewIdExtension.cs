@@ -62,6 +62,7 @@ namespace Doozy.Runtime.UIManager
             IfyouPlay,
             IfyouSelection,
             IllustDetail,
+            Intro,
             Introduce,
             Language,
             Lobby,

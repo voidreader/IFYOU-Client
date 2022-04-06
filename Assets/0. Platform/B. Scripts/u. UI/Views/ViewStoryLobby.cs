@@ -273,9 +273,12 @@ namespace PIERStory
                 yield return new WaitUntil(() => gm.DictMotion != null);
                 
                 yield return new WaitUntil(() => gm.motionLists.Count == gm.DictMotion.Count && gm.motionLists.Count > 0);
-                // 임시로 랜덤하게 재생한다. 
-                gm.PlayLobbyAnimation(gm.motionLists[UnityEngine.Random.Range(0, gm.motionLists.Count)]);
-
+                
+                // 캐릭터 모델 정보의 '첫번째' 모션을 플레이한다.
+                // sortkey 로 정렬된 순서가 날아온다. 
+                gm.PlayLobbyAnimation(gm.motionLists[0]);
+                
+                /*
                 for (int i = 0; i < gm.motionLists.Count; i++)
                 {
                     if (gm.motionLists[i].Contains("기본") && !gm.motionLists[i].Contains("M"))
@@ -285,8 +288,10 @@ namespace PIERStory
                         break;
                     }
                 }
+                */
             }
 
+            // 캐릭터가 2개인 경우 두번째 캐릭의 sorting Order를 변경 
             if (liveModels.Count > 1)
                 liveModels[1].model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 1200;
         }
@@ -896,8 +901,10 @@ namespace PIERStory
         {
             if(controlModel != null)
             {
+                // 기본 모션의 정의가 없기 때문에 순서상 첫번째 모션을 불러온다. 
                 controlModel.PlayLobbyAnimation(controlModel.motionLists[0]);
 
+                /*
                 for (int i = 0; i < controlModel.motionLists.Count; i++)
                 {
                     // 생성되고 난 후, 기본 모션을 세팅한다
@@ -907,6 +914,7 @@ namespace PIERStory
                         break;
                     }
                 }
+                */
             }
 
             // 화면에 이미 스탠딩이 있다면 SortingOrder 값을 증가시켜준다.

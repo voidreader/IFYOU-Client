@@ -69,6 +69,7 @@ namespace PIERStory
         const string COL_BUILD = "build";
         
         const string COL_COUNTRY = "country";
+        const string COL_OS = "os";
 
 
         [SerializeField] int failCount = 0; // 통신 실패 카운트 
@@ -728,6 +729,11 @@ namespace PIERStory
             __j[COL_BUILD] = Application.identifier;
             __j[COL_COUNTRY] = Gamebase.GetCountryCodeOfDevice();
             __j[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
+            __j[COL_OS] = 0;
+            
+            #if UNITY_IOS
+            __j[COL_OS] = 1; // 아이폰
+            #endif
         }
 
         /// <summary>

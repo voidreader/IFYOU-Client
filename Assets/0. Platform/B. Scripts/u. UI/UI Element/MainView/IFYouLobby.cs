@@ -130,29 +130,38 @@ namespace PIERStory {
                 return;
                 
             }
-            else {
-                filteredList = GetGenreFilteredStoryList(__genre);
+            else if(__genre == "All" || __genre == SystemManager.GetLocalizedText("5137")) {
                 
+                // 전체 
+                filteredList = StoryManager.main.listTotalStory;
+                // 메인 탭으로 이동 
                 categoryTab.SetActive(true);
                 mainTab.SetActive(false);
                 
-                if(filteredList == null) {
-                    return;
-                }
+            }
+            else {
+                filteredList = GetGenreFilteredStoryList(__genre); // 장르로 필터하기 
                 
-                Debug.Log("CallCategory Filter Count: " + filteredList.Count);
-                for(int i=0; i<filteredList.Count; i++) {
-                    LobbyStoryElement ns = Instantiate(prefabCategoryStoryElement, Vector3.zero, Quaternion.identity).GetComponent<LobbyStoryElement>();
-                    ns.transform.SetParent(categoryParent);
-                    ns.transform.localScale = Vector3.one;
-            
-                    
-                    ns.Init(filteredList[i], StoryElementType.category);
-                    ListCategoryStory.Add(ns); // 리스트에 추가 
-                
-                }                     
+                categoryTab.SetActive(true);
+                mainTab.SetActive(false);
+   
             }
             
+            if(filteredList == null) {
+                return;
+            }
+            
+            Debug.Log("CallCategory Filter Count: " + filteredList.Count);
+            for(int i=0; i<filteredList.Count; i++) {
+                LobbyStoryElement ns = Instantiate(prefabCategoryStoryElement, Vector3.zero, Quaternion.identity).GetComponent<LobbyStoryElement>();
+                ns.transform.SetParent(categoryParent);
+                ns.transform.localScale = Vector3.one;
+        
+                
+                ns.Init(filteredList[i], StoryElementType.category);
+                ListCategoryStory.Add(ns); // 리스트에 추가 
+            
+            }                
        
         }
         

@@ -34,6 +34,9 @@ namespace PIERStory {
         public List<LobbyStoryElement> ListMainSmallStory; // 레디 등장하기 전의 모든 스토리 
         public List<LobbyStoryElement> ListReadyTwoSmallStory; // 레디에 등장하는 2개의 작은 스토리 
         
+        public StoryData latestPlayStory = null; // 마지막 플레이한 스토리 
+        public ImageRequireDownload latestStoryBanner;
+        
         
     
         [Header("프로모션")]    
@@ -71,14 +74,14 @@ namespace PIERStory {
             InitPromotionList();
             InitMainSmallStory();
             
-            InitCategory();
+            InitCategory(); // 상단 장르 카테고리 설정 
             
         }
         
         #region 카테고리 
         
         /// <summary>
-        /// 
+        /// 상단 카테고리 설정 
         /// </summary>
         void InitCategory() {
             
@@ -211,16 +214,41 @@ namespace PIERStory {
         /// </summary>
         public void InitMainSmallStory() {
             ResetMainSmallStory();
+
             
-            int  index = 0;
             
-            for(int i=0;i<StoryManager.main.listTotalStory.Count;i++) {
+            // 최근에 플레이한 작품 있음 
+            if(StoryManager.main.latestPlayProjectID > 0) {
+                readyArea.SetActive(true);
+               
+               // readyArea에 대한 처리 
+               // 최근 프로젝트 설정 
+               latestPlayStory = StoryManager.main.FindProject(StoryManager.main.latestPlayProjectID.ToString()); 
+               latestStoryBanner.SetDownloadURL(latestPlayStory.premiumPassURL, latestPlayStory.premiumPassKey);
+              
+                for(int i=0; i<2; i++) {
+                    if(i >= StoryManager.main.ListRecommendStoryID.Count)
+                        break;
+                        
+                    ListReadyTwoSmallStory[i].Init(StoryManager.main.FindProject(StoryManager.main.ListRecommendStoryID[i]), StoryElementType.general);
+                }
+            }
+            else { // 최근에 플레이한 작품 없음 
+            
+                // 모든 작품이 보이게 처리 
+                allArea.SetActive(true);
                 
-                if(index >= ListMainSmallStory.Count)
-                    return;
+            
+                int  index = 0;
                 
-                ListMainSmallStory[index].Init(StoryManager.main.listTotalStory[i], StoryElementType.general);
-                index++;
+                for(int i=0;i<StoryManager.main.listTotalStory.Count;i++) {
+                    
+                    if(index >= ListMainSmallStory.Count)
+                        return;
+                    
+                    ListMainSmallStory[index].Init(StoryManager.main.listTotalStory[i], StoryElementType.general);
+                    index++;
+                }                
             }
             
         }
@@ -230,10 +258,17 @@ namespace PIERStory {
         /// 메인의 스몰 작품 리스트 리셋 
         /// </summary>
         void ResetMainSmallStory() {
+            
+            readyArea.SetActive(false);
+            allArea.SetActive(false);   
+            
+            // All 영역에 있는 모든 작품들. 
             for(int i=0; i<ListMainSmallStory.Count; i++) {
                 ListMainSmallStory[i].gameObject.SetActive(false);
             }
             
+            
+            // Ready 영역에 있는 오른쪽의 작은 2개 
             for(int i=0; i<ListReadyTwoSmallStory.Count; i++) {
                 ListReadyTwoSmallStory[i].gameObject.SetActive(false);
             }

@@ -57,12 +57,16 @@ namespace PIERStory
         
 
         JsonData totalStoryListJson = null; // 조회로 가져온 모든 작품 리스트(all)
-        JsonData recommendStoryIdJSON = null; // 추천 작품 ID JSON
         JsonData likeStoryIdJSON = null; // 좋아요 작품 ID JSON
+        JsonData latestPlayStoryJSON = null; // 가장 최근에 플레이한 작품 정보
+        public int latestPlayProjectID = -1; 
+        public List<string> ListRecommendStoryID = new List<string>(); // 추천 작품 리스트 
+        
+        
+        
         [HideInInspector] public JsonData comingSoonJson = null;        // 커밍순 작품
         
         public List<StoryData> listTotalStory = new List<StoryData>(); // 작품 리스트 
-        public List<StoryData> listRecommendStory = new List<StoryData>(); // 추천 작품 리스트 
 
         #region 말풍선 세트와 관련된 JSON , 변수
 
@@ -281,8 +285,12 @@ namespace PIERStory
         /// <param name="__listJSON"></param>
         public void SetStoryList(JsonData __listJSON) {
             totalStoryListJson = __listJSON["all"];
-            recommendStoryIdJSON = __listJSON["recommend"];
-            likeStoryIdJSON = __listJSON["like"];
+            likeStoryIdJSON = __listJSON["like"]; //  좋아요 클릭한 프로젝트  [52,72,79 ... ]
+            latestPlayStoryJSON = __listJSON["latest"]; // [ { "project_id":72 }, {}, {}].. 
+            
+            latestPlayProjectID = -1;
+            ListRecommendStoryID.Clear(); 
+            
             
             listTotalStory.Clear();
             for(int i=0; i<totalStoryListJson.Count;i++) {
@@ -290,19 +298,70 @@ namespace PIERStory
                 listTotalStory.Add(storyData);
             }
             
+            // 최근 프로젝트 처리 
             
-            // 추천 작품 처리 
-            listRecommendStory.Clear();
-            for(int i=0;i<listTotalStory.Count;i++) {
-                // if(listTotalStory[i].projectID)
-                for(int j=0;j<recommendStoryIdJSON.Count;j++) {
-                    if(listTotalStory[i].projectID == recommendStoryIdJSON[j].ToString()) {
-                        listRecommendStory.Add(listTotalStory[i]);
-                    }
-                }
+            if(latestPlayStoryJSON.Count > 0) {
+                latestPlayProjectID = SystemManager.GetJsonNodeInt(latestPlayStoryJSON[0], "project_id");
+            }
+            
+            if(latestPlayProjectID > 0) { // 최근 프로젝트가 있는 경우 동일 장르를 찾아서 추천작으로 처리한다.
+                
+                
+                
             }
                
         }
+        
+        
+        /// <summary>
+        /// 추천작 모으기
+        /// </summary>
+        /// <param name="__targetProjectID"></param>
+        void CollectRecommendStory(int __targetProjectID) {
+            
+            StoryData storyData = FindProject(__targetProjectID.ToString());
+            string[] targetGenre;
+            
+            if(storyData == null)
+                return;
+                
+            targetGenre = storyData.genre.Split(','); // 장르 가져온다. 
+            
+            for(int i=0; i<listTotalStory.Count;i++) {
+                if(listTotalStory[i].projectID == __targetProjectID.ToString())
+                    continue;
+                    
+                    
+                for(int j=0; j < targetGenre.Length; j++) {
+                    if(string.IsNullOrEmpty(listTotalStory[i].genre) && listTotalStory[i].genre.Contains(targetGenre[j])) {
+                        ListRecommendStoryID.Add(listTotalStory[i].projectID);
+                        continue;
+                    }
+                }
+            }
+            
+            // 다 수집하고
+            ListRecommendStoryID = GetShuffleList(ListRecommendStoryID);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__list"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public List<T> GetShuffleList<T> (List<T> __list) {
+            for (int i=__list.Count-1; i>0; i--) {
+                int rand = UnityEngine.Random.Range(0,i);
+                
+                T temp = __list[i];
+                __list[i] = __list[rand];
+                __list[rand] = temp;
+            }
+            
+            return __list;
+        }
+        
         
         /// <summary>
         /// 작품 좋아요 여부 

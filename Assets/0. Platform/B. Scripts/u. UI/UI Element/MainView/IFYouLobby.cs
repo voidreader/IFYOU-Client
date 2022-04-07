@@ -214,8 +214,7 @@ namespace PIERStory {
         /// </summary>
         public void InitMainSmallStory() {
             ResetMainSmallStory();
-
-            
+           
             
             // 최근에 플레이한 작품 있음 
             if(StoryManager.main.latestPlayProjectID > 0) {
@@ -224,7 +223,7 @@ namespace PIERStory {
                // readyArea에 대한 처리 
                // 최근 프로젝트 설정 
                latestPlayStory = StoryManager.main.FindProject(StoryManager.main.latestPlayProjectID.ToString()); 
-               latestStoryBanner.SetDownloadURL(latestPlayStory.premiumPassURL, latestPlayStory.premiumPassKey);
+               latestStoryBanner.SetDownloadURL(latestPlayStory.thumbnailURL, latestPlayStory.thumbnailKey);
               
                 for(int i=0; i<2; i++) {
                     if(i >= StoryManager.main.ListRecommendStoryID.Count)
@@ -272,7 +271,17 @@ namespace PIERStory {
             for(int i=0; i<ListReadyTwoSmallStory.Count; i++) {
                 ListReadyTwoSmallStory[i].gameObject.SetActive(false);
             }
-        }           
+        }
+        
+        
+        /// <summary>
+        /// 가장 최근에 플레이 작품 Ready 버튼 클릭 
+        /// </summary>
+        public void OnClickReady() {
+            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, latestPlayStory);
+        }
+        
+        
         
     }
 }

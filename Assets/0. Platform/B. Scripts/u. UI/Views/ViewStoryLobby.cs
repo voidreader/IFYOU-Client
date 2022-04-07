@@ -501,6 +501,8 @@ namespace PIERStory
                     case LobbyConst.NODE_WALLPAPER:     // 배경
                     
                         DestroyPreviousBackground();
+                        
+                        Debug.Log("## DecorateSetting");
                     
                         bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, storyProfile[i], BGLoadComplete);
                         bgCurrency = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);

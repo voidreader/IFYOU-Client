@@ -305,7 +305,7 @@ namespace PIERStory
             }
             
             if(latestPlayProjectID > 0) { // 최근 프로젝트가 있는 경우 동일 장르를 찾아서 추천작으로 처리한다.
-                
+                CollectRecommendStory(latestPlayProjectID);
                 
                 
             }
@@ -327,13 +327,14 @@ namespace PIERStory
                 
             targetGenre = storyData.genre.Split(','); // 장르 가져온다. 
             
+            
             for(int i=0; i<listTotalStory.Count;i++) {
                 if(listTotalStory[i].projectID == __targetProjectID.ToString())
                     continue;
                     
                     
                 for(int j=0; j < targetGenre.Length; j++) {
-                    if(string.IsNullOrEmpty(listTotalStory[i].genre) && listTotalStory[i].genre.Contains(targetGenre[j])) {
+                    if(!string.IsNullOrEmpty(listTotalStory[i].genre) && listTotalStory[i].genre.Contains(targetGenre[j])) {
                         ListRecommendStoryID.Add(listTotalStory[i].projectID);
                         continue;
                     }

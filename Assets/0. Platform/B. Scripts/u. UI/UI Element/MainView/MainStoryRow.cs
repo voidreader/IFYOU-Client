@@ -27,6 +27,7 @@ namespace PIERStory {
             maxStoryIndex = minStoryIndex + 1;
             
             // 3개씩 활성화 
+            /*
             for(int i=minStoryIndex; i<= maxStoryIndex; i++) {
                 
                 // 작품 개수 오버하면 끝..!
@@ -36,6 +37,7 @@ namespace PIERStory {
                 ListRows[currentRowIndex].InitStoryElement(StoryManager.main.listRecommendStory[i]);
                 currentRowIndex++;
             }
+            */
            
         }
         

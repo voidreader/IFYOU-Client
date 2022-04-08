@@ -20,6 +20,7 @@ namespace PIERStory
         public static UserManager main = null;
         
         [SerializeField] bool isAdminUser = false; // 슈퍼유저
+        public bool isIntroDone = false; // 인트로 수행 여부 
 
         [HideInInspector] public JsonData userJson = null; // 계정정보 (table_account) 
         [HideInInspector] public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)

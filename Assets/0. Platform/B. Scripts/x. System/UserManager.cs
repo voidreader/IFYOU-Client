@@ -97,6 +97,7 @@ namespace PIERStory
         public string userKey = string.Empty;
         public string gamebaseID = string.Empty;
 
+        // 튜토리얼 관련 정보
         public int tutorialStep = 1;
         public bool tutorialClear = false;
 
@@ -111,10 +112,29 @@ namespace PIERStory
         public string nickname = string.Empty;      // 유저 닉네임
         public string accountLink = string.Empty; // 유저 계정 연동 정보 (table_account)
         
-
         public int gem = 0;
         public int coin = 0;
         public int unreadMailCount = 0; // 미수신 메일 카운트
+
+        // 유저 등급
+        public int grade = 1;
+        public string gradeName = string.Empty;
+
+        public int downGrade = 0;
+        public string downgradeName = string.Empty;
+
+        public int nextGrade = 0;
+        public string nextGradeName = string.Empty;
+
+        public int gradeExperience = 0;
+        public int keepPoint = 0;
+        public int upgradeGoalPoint = 0;
+        public int remainDay = 0;
+        public int additionalStarDegree = 0;
+        public int additionalStarLimitCount = 0;
+        public int waitingSaleDegree = 0;
+        public bool canPreview = false;
+
 
         JsonData resultProjectCurrent = null; // 플레이 위치 
 
@@ -128,7 +148,9 @@ namespace PIERStory
 
         JsonData currentStoryAbilityJson = null;    // 현재 선택한 작품의 능력치 Json
         public Dictionary<string, List<AbilityData>> DictStoryAbility; // 받아온 능력치 화자별로 딕셔너리 처리 
-        public Dictionary<string, List<AbilityData>> DictOldStoryAbility; // 코인샵에서 구매전의 능력치 정보 저장용도 
+        public Dictionary<string, List<AbilityData>> DictOldStoryAbility; // 코인샵에서 구매전의 능력치 정보 저장용도
+
+        public List<AchievementData> listAchievement;
 
         #region static const 
 
@@ -252,6 +274,8 @@ namespace PIERStory
             Debug.Log(string.Format("CallbackConnectServer: {0}", res.DataAsText));
 
             userJson = JsonMapper.ToObject(res.DataAsText);
+
+            SystemManager.main.ShowAgreementTermsPopUp();
 
             // 소모성 재화 정보 update
             SetBankInfo(userJson);
@@ -399,7 +423,6 @@ namespace PIERStory
             
             // 슈퍼유저 처리 
             isAdminUser = SystemManager.GetJsonNodeBool(userJson, "admin");
-            
         }
         
         public void SetNewNickname(string __newNickname) {
@@ -466,7 +489,7 @@ namespace PIERStory
 
 
             // 능력치            
-            SetStoryAbilityDictionary(currentStoryJson["ability"]);
+            SetStoryAbilityDictionary(currentStoryJson[NODE_USER_ABILITY]);
             
 
 
@@ -605,6 +628,7 @@ namespace PIERStory
             sending[GameConst.COL_SELECTION_GROUP] = __selectionGroup;
             sending[GameConst.COL_SELECTION_NO] = __selectionNo;
             sending["price"] = __price;
+
 
             NetworkLoader.main.SendPost(__cb, sending, true);
         }
@@ -1347,10 +1371,24 @@ namespace PIERStory
              
                 
                 popUp.Data.SetImagesSprites(spriteMissionPopup);
-                popUp.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("5086"), currentMissionData["mission_name"].ToString()));
+                popUp.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("5086"), SystemManager.GetJsonNodeString(currentMissionData, LobbyConst.MISSION_NAME)));
                 PopupManager.main.ShowPopup(popUp, __useQueue, false);
-                Debug.Log("Show Mission Popup");   
+                Debug.Log("Show Mission Popup");
+
+                foreach (int key in DictStoryMission.Keys)
+                {
+                    // 해금된 미션을 unlock상태로 만들어주고
+                    if (DictStoryMission[key].missionID == SystemManager.GetJsonNodeInt(currentMissionData, "mission_id"))
+                    {
+                        DictStoryMission[key].missionState = MissionState.unlocked;
+                        break;
+                    }
+                }
             }
+
+            // 프로젝트 클리어 했는지 체크를 한다
+            if (ProjectAllClear())
+                NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
             
         }
 
@@ -1886,6 +1924,9 @@ namespace PIERStory
             OnFreepassPurchase?.Invoke();
             // 에피소드 시작화면 갱신
             //ViewEpisodeStart.OnRefreshPremiumPass?.Invoke();
+
+            // 이프유업적 프리패스 구매
+            NetworkLoader.main.RequestIFYOUAchievement(15, int.Parse(StoryManager.main.CurrentProjectID));
             
             // View 종료를 위해 Event 처리 
             // Doozy.Engine.GameEventMessage.SendEvent("PurchaseFreepass"); 
@@ -1911,6 +1952,9 @@ namespace PIERStory
 
             // 갱신
             currentStoryJson[NODE_SELECTION_PROGRESS] = result;
+
+            // 업적용 선택지 고른 횟수 체크
+            NetworkLoader.main.RequestIFYOUAchievement(13);
         }
 
         public void CallbackUpdateSelectionCurrent(HTTPRequest req, HTTPResponse res)
@@ -2008,11 +2052,14 @@ namespace PIERStory
                 // * EpisodeData는 StoryManager로부터 시작해서 모두 참조가 같으므로 따로 변수를 만들어서 처리한다. 
                 GameManager.main.updatedEpisodeSceneProgressValue = SystemManager.GetJsonNodeFloat(resultEpisodeRecord, "playedSceneCount");
             }
-            
-            
+
+            // 현재 플레이한 에피소드가 정규 에피소드인 경우 이프유 업적 통신하기
+            if (GameManager.main != null && GameManager.main.currentEpisodeData.episodeType == EpisodeType.Chapter)
+                NetworkLoader.main.RequestIFYOUAchievement(12, -1, int.Parse(StoryManager.main.CurrentEpisodeID));
+
             // 뱅크 설정 (리프레시 없이)
             // SetBankInfo(resultEpisodeRecord, false);
-            
+
         }
 
         /// <summary>
@@ -2067,6 +2114,11 @@ namespace PIERStory
             UpdateRawStoryAbility(resultEpisodeReset[NODE_RAW_STORY_ABILITY]);
             UserManager.main.SetStoryAbilityDictionary(resultEpisodeReset[NODE_USER_ABILITY]);
 
+            // 첫화로 에피소드 리셋하는 경우 호출하는 이프유 업적
+            if (NetworkLoader.main.isFirstEpisode)
+                NetworkLoader.main.RequestIFYOUAchievement(16, -1, NetworkLoader.main.resetTargetEpisodeId);
+
+            NetworkLoader.main.RequestIFYOUAchievement(17, - 1, NetworkLoader.main.resetTargetEpisodeId);
 
             // 알림 팝업 후 목록화면 갱신처리 
             SystemManager.ShowSystemPopupLocalize("6167", null, null, true, false);
@@ -2172,9 +2224,13 @@ namespace PIERStory
             //에피소드 구매 기록 
             if (result.ContainsKey(NODE_PURCHASE_HIST))
                 SetNodeEpisodePurchaseHistory(result[NODE_PURCHASE_HIST]);
-            
-            
-            
+
+
+            // 22.04.06 기다무 시간 단축 초심자 클리어 했는지 체크도 해야함
+            NetworkLoader.main.RequestIFYOUAchievement(6);
+
+            NetworkLoader.main.RequestIFYOUAchievement(14);
+
             // StoryLobbyMain 리프레시 요청 
             // 게임씬과 로비씬에서 담당 스크립트가 다르다 .
             if(GameManager.main != null) {
@@ -2242,9 +2298,11 @@ namespace PIERStory
             JsonData responseData = JsonMapper.ToObject(res.DataAsText);
 
             // 노드 갱신하자.
-            
-            
             SetNodeUserGalleryImages(responseData[NODE_USER_GALLERY_IMAGES]);
+
+            // 이프유 업적(8.완벽주의자) 통신하기
+            if (ProjectAllClear())
+                NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
         }
 
         /// <summary>
@@ -2263,8 +2321,12 @@ namespace PIERStory
 
             // Node 갱신
             SetNodeUserGalleryImages(responseData[NODE_USER_GALLERY_IMAGES]);
-            
+
+            if (ProjectAllClear())
+                NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
         }
+
+        
 
 
         #endregion
@@ -2305,10 +2367,10 @@ namespace PIERStory
         {
             JsonData j = new JsonData();
 
-            j["project_id"] = StoryManager.main.CurrentProjectID;
-            j["speaker"] = __speaker;
+            j[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
+            j[GameConst.COL_SPEAKER] = __speaker;
             j["dress_id"] = __dress_id;
-            j["func"] = NetworkLoader.FUNC_INSERT_DRESS_PROGRESS;
+            j[CommonConst.FUNC] = NetworkLoader.FUNC_INSERT_DRESS_PROGRESS;
 
 
             NetworkLoader.main.SendPost(OnUpdateDressProgress, j);
@@ -2891,9 +2953,9 @@ namespace PIERStory
                 return false;
                 
             for(int i=0; i<GetRawStoryAbility().Count;i++) {
-                if(SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], "episode_id") == __episode_id
-                    && SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], "scene_id") == __scene_id
-                    && SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], "speaker") == __speaker
+                if(SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], CommonConst.COL_EPISODE_ID) == __episode_id
+                    && SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], GameConst.COL_SCENE_ID) == __scene_id
+                    && SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], GameConst.COL_SPEAKER) == __speaker
                     && SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], "ability_name") == __abilityName
                     && SystemManager.GetJsonNodeInt(GetRawStoryAbility()[i], "add_value") == __value) 
                     return true; // 데이터 있음 
@@ -2903,10 +2965,161 @@ namespace PIERStory
             
             return false;
         }
-        
-        
-        
-        #endregion 
 
+
+
+        #endregion
+
+
+        #region IFYOU 업적 관련
+
+
+        /// <summary>
+        /// 이프유 업적 콜백
+        /// </summary>
+        public void CallbackRequestAchievement(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackRequestAchievement");
+                return;
+            }
+
+            Debug.Log(JsonMapper.ToStringUnicode(JsonMapper.ToObject(res.DataAsText)));
+        }
+
+        /// <summary>
+        /// 유저 업적 리스트 요청
+        /// </summary>
+        public void RequestUserGradeInfo()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestUserGradeInfo";
+            sending[CommonConst.COL_USERKEY] = userKey;
+            sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
+
+            NetworkLoader.main.SendPost(CallbackUserGreadeInfo, sending);
+        }
+
+
+        void CallbackUserGreadeInfo(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackUserGreadeInfo");
+                return;
+            }
+
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            Debug.Log(string.Format("유저 업적 리스트 요청 결과 = {0}", JsonMapper.ToStringUnicode(result)));
+            SetUserAchievementData(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__j"></param>
+        public void SetUserAchievementData(JsonData __j)
+        {
+            AchievementData achievement;
+            listAchievement = new List<AchievementData>();
+
+            foreach (string key in __j.Keys)
+            {
+                if (key == "grade")
+                {
+                    grade = SystemManager.GetJsonNodeInt(__j[key][0], "grade");
+                    gradeName = SystemManager.GetJsonNodeString(__j[key][0], "name");
+
+                    downGrade = grade - 1;
+                    downgradeName = SystemManager.GetJsonNodeString(__j[key][0], "before_grade_name");
+
+                    nextGrade = SystemManager.GetJsonNodeInt(__j[key][0], "next_grade");
+                    nextGradeName = SystemManager.GetJsonNodeString(__j[key][0], "next_grade_name");
+
+                    gradeExperience = SystemManager.GetJsonNodeInt(__j[key][0], "grade_experience");
+                    keepPoint = SystemManager.GetJsonNodeInt(__j[key][0], "keep_point");
+                    upgradeGoalPoint = SystemManager.GetJsonNodeInt(__j[key][0], "upgrade_point");
+                    remainDay = SystemManager.GetJsonNodeInt(__j[key][0], "remain_day");
+                    additionalStarDegree = SystemManager.GetJsonNodeInt(__j[key][0], "add_star");
+                    additionalStarLimitCount = SystemManager.GetJsonNodeInt(__j[key][0], "add_star_limit");
+                    waitingSaleDegree = SystemManager.GetJsonNodeInt(__j[key][0], "waiting_sale");
+                    canPreview = SystemManager.GetJsonNodeBool(__j[key][0], "preview");
+                    continue;
+                }
+
+                for (int i = 0; i < __j[key].Count; i++)
+                {
+                    achievement = new AchievementData(__j[key][i]);
+                    listAchievement.Add(achievement);
+                }
+            }
+
+            MainProfile.OnRefreshIFYOUAchievement?.Invoke();
+        }    
+
+
+
+        /// <summary>
+        /// 작품의 갤러리, 미션, 스페셜, 엔딩 모두 오픈했는지 체크
+        /// </summary>
+        /// <returns></returns>
+        public bool ProjectAllClear()
+        {
+            // 갤러리 모두 획득했는지 체크
+            for (int i = 0; i < currentStoryJson[NODE_USER_GALLERY_IMAGES].Count; i++)
+            {
+                // 공개용 갤러리만 체크한다
+                if (!SystemManager.GetJsonNodeBool(currentStoryJson[NODE_USER_GALLERY_IMAGES], "is_public"))
+                    continue;
+
+                // 아직 오픈하지 못한 것이 있다면 false 처리
+                if (!SystemManager.GetJsonNodeBool(currentStoryJson[NODE_USER_GALLERY_IMAGES], CommonConst.ILLUST_OPEN))
+                    return false;
+            }
+
+            // 사운드(보이스) 해금 체크!
+            for (int i = 0; i < GetNodeUserRawVoiceHistory().Count; i++)
+            {
+                // 보이스 열리지 않은게 있으면 완벽주의자가 아니야~~~
+                if (!SystemManager.GetJsonNodeBool(GetNodeUserRawVoiceHistory()[i], CommonConst.IS_OPEN))
+                    return false;
+            }
+
+
+            // 미션 모두 클리어 한건지 체크
+            foreach(int key in DictStoryMission.Keys)
+            {
+                // 미션이 잠긴게 있다면 false 처리
+                if (DictStoryMission[key].missionState == MissionState.locked)
+                    return false;
+            }
+
+
+            // 엔딩을 모두 해금했는지 체크
+            for (int i = 0; i < StoryManager.main.RegularEpisodeList.Count; i++)
+            {
+                // 엔딩만 체크
+                if (StoryManager.main.RegularEpisodeList[i].episodeType != EpisodeType.Ending)
+                    continue;
+
+                // 엔딩이 해금되지 않은게 있다면 false
+                if (!StoryManager.main.RegularEpisodeList[i].endingOpen)
+                    return false;
+            }
+
+
+            // 사이드 해금 체크
+            for (int i = 0; i < StoryManager.main.SideEpisodeList.Count; i++)
+            {
+                // 사이드 해금되지 않은게 있다면 false
+                if (!StoryManager.main.SideEpisodeList[i].isUnlock)
+                    return false;
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }

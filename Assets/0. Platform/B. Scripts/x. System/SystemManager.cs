@@ -996,23 +996,12 @@ namespace PIERStory
                 return;
         
             
-            // 이용약관, 개인정보처리방침을 수락했다면 key값이 존재하고, getInt 값도 1이다.
-            if (PlayerPrefs.HasKey("useTerms") && PlayerPrefs.HasKey("privacy") && PlayerPrefs.GetInt("useTerms") > 0 || PlayerPrefs.GetInt("privacy") > 0)
-                return;
-
-            LobbyManager.main.termView = true;
-            
-            // 사실 뷰.  
-            // Doozy.Engine.GameEventMessage.SendEvent("EventAgreementTerms");
-            
             // * 2021.10.13 게임베이스 호출로 변경.
             Gamebase.Terms.ShowTermsView((data, error) => 
             {
                 if (Gamebase.IsSuccess(error) == true)
                 {
                     Debug.Log("ShowTermsView succeeded : " + data.ToString());
-                    // AppsFlyerSDK.AppsFlyer.sendEvent("APP_TERMSOFUSE", null);
-                    // AppsFlyerSDK.AppsFlyer.sendEvent("APP_PERSONALINFORMATION", null);
 
                     // If the 'PushConfiguration' is not null,
                     // save the 'PushConfiguration' and use it for Gamebase.Push.RegisterPush() after Gamebase.Login().
@@ -1046,21 +1035,19 @@ namespace PIERStory
             {
                 if (Gamebase.IsSuccess(error) == true)
                 {
-                    
                     gamebaseTermsSeq = data.termsSeq; 
                     gamebaseTermsVersion = data.termsVersion;
                     
                     Debug.Log(string.Format("QueryTerms succeeded. [{0}]/[{1}]", gamebaseTermsSeq, gamebaseTermsVersion));
                     
                     listGamebaseTerms = data.contents;
-                    
-                    for(int i=0 ;i<listGamebaseTerms.Count;i++) {
+
+                    for (int i = 0; i < listGamebaseTerms.Count; i++)
                         Debug.Log(string.Format("[{0}] : [{1}]", listGamebaseTerms[i].termsContentSeq, listGamebaseTerms[i].name));
-                    }
                 }
                 else
                 {
-                    Debug.Log(string.Format("QueryTerms failed. error:{0}", error));
+                    Debug.LogError(string.Format("QueryTerms failed. error:{0}", error));
                     listGamebaseTerms = null;
                     gamebaseTermsSeq = -1;
                     gamebaseTermsVersion = string.Empty;
@@ -1285,7 +1272,10 @@ namespace PIERStory
                  
                  //  ! 이 통신에서 유저에게 연동보상을 지급한다. 
                  NetworkLoader.main.SendPost(OnRequest__updateAccountWithGamebaseID, reqData, true);
-                 
+
+
+                // 22.04.06 첫 계정 연동을 했으므로 초심자 업적 업데이트 호출도 해준다
+                NetworkLoader.main.RequestIFYOUAchievement(1);
             }
             else {
                 // ! 이전에 연결된 계정이 있다. 
@@ -2302,6 +2292,9 @@ namespace PIERStory
             Debug.Log(">> OnHideWebview");
             WebView.OnHide -= OnHideWebview;
             Destroy(__view);
+
+            if (LobbyManager.main != null)
+                UserManager.main.RequestUserGradeInfo();
         }
         
         void ForwardToStore() {
@@ -2428,8 +2421,6 @@ namespace PIERStory
                 return "Failed to connect to server.";
             }
         }
-        
-        
          
     }
 }

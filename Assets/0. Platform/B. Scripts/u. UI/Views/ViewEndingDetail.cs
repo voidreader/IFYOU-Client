@@ -88,6 +88,8 @@ namespace PIERStory
 
             endingTitle.text = endingData.episodeTitle;
 
+            endingType.gameObject.SetActive(false);
+            endingTitle.gameObject.SetActive(false);
             //  newSign.SetActive(!UserManager.main.IsCompleteEpisode(endingData.episodeID));
 
             int episodeIndex = 0;
@@ -118,6 +120,9 @@ namespace PIERStory
             SelectionEndingTitleElement endingTitleElement = Instantiate(endingTitlePrefab, scrollContent).GetComponent<SelectionEndingTitleElement>();
             endingTitleElement.SetEndingTitle(string.Format("{0}. {1}", endingType.text, endingTitle.text));
             createObject.Add(endingTitleElement.gameObject);
+
+            endingType.gameObject.SetActive(true);
+            endingTitle.gameObject.SetActive(true);
         }
 
         public override void OnHideView()

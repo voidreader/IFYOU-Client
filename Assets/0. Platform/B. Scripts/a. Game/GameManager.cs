@@ -2041,8 +2041,6 @@ namespace PIERStory
                 sc.MuteAudioClip();
             }            
             
-            
-            
             // * 여기까지 통신 완료하고 후 처리 진행...!!! 2022.01.27 팝업 순서를 변경한다. 
             // * 사이드 => 엔딩 => 미션 => 첫클리어 보상의 순서. 
             
@@ -2076,11 +2074,15 @@ namespace PIERStory
                             sidePopup.Data.SetLabelsTexts(SystemManager.GetLocalizedText("6234"), StoryManager.main.SideEpisodeList[j].episodeTitle);
                             sidePopup.Data.imageURL = StoryManager.main.SideEpisodeList[j].popupImageURL;
                             sidePopup.Data.imageKey = StoryManager.main.SideEpisodeList[j].popupImageKey;
+                            StoryManager.main.SideEpisodeList[j].isUnlock = true;
                             PopupManager.main.ShowPopup(sidePopup, true, false);
                             break;
                         }
                     }
                 }
+
+                if (UserManager.main.ProjectAllClear())
+                    NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
                 
                 yield return new WaitForSeconds(0.1f);
             }

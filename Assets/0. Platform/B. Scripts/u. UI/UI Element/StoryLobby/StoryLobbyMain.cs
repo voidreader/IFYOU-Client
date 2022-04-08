@@ -835,9 +835,9 @@ namespace PIERStory {
             
             JsonData j = new JsonData();
             
-            j["project_id"] = StoryManager.main.CurrentProjectID;
-            j["price"] = GetEpisodeTimeOpenPrice();
-            j["func"] = "requestWaitingEpisodeWithCoin";
+            j[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
+            j[LobbyConst.EPISODE_PRICE] = GetEpisodeTimeOpenPrice();
+            j[CommonConst.FUNC] = "requestWaitingEpisodeWithCoin";
 
             // ! 코인으로 여는거랑, 광고로 여는거랑 콜백이 달라요!
             // * 코인으로 열면, 해당 에피소드는 Permanent로 구매처리가 같이 진행된다. 

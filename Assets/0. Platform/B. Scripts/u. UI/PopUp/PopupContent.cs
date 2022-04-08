@@ -43,7 +43,6 @@ namespace PIERStory {
         
         public int contentValue = 0;
 
-        
         /// <summary>
         /// 버튼 텍스트 처리 
         /// </summary>

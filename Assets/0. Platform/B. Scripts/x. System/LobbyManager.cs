@@ -33,6 +33,18 @@ namespace PIERStory {
         [Header("프로필")]
         public Texture2D textureNoneFrame;
 
+        public Sprite spriteBronzeBadge;
+        public Sprite spriteSilverBadge;
+        public Sprite spriteGoldBadge;
+        public Sprite spritePlatinumBadge;
+        public Sprite spriteIFYOUBadge;
+
+        [Space]
+        public Sprite spriteLevelTag1;
+        public Sprite spriteLevelTag2;
+        public Sprite spriteLevelTag3;
+        public Sprite spriteLevelTag4;
+
         [Header("작품 로비")]
         public SpriteRenderer lobbyBackground;
 
@@ -79,8 +91,6 @@ namespace PIERStory {
         public Color colorEndingPastCover;  // 엔딩 과거 커버 
         
 
-        public bool termView = false;
-       
 
         [Space]
         [SerializeField] NetworkLoadingScreen lobbyNetworkLoadingScreen; 

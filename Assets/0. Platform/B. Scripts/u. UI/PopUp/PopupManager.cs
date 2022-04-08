@@ -21,46 +21,47 @@ namespace PIERStory {
         [SerializeField] List<ParticleSystem> confittiParticles;
         
         
-        [Space]
-        [Space]
-        [Header("Prefab")]
+        [Space(20)][Header("Prefab")]
         [SerializeField] GameObject popupAccount;
         [SerializeField] GameObject popupAchivement;
         [SerializeField] GameObject popupAdvertisementShow;
         public GameObject popupAttendance;
+
+        [SerializeField] GameObject popupConfirm;
         public GameObject popupConnectingShop;
         [SerializeField] GameObject popupCoupon;
+
         [SerializeField] GameObject popupEpisodeClearReward;
-        [SerializeField] GameObject popupExp;
-        [SerializeField] GameObject popupLevelUp;
-        [SerializeField] GameObject popupConfirm;
+        [SerializeField] GameObject popupExpireToken; // 로그인 토큰 만료 팝업 
+        [SerializeField] GameObject popupFlowReset; // 리셋.        
+        
+        [SerializeField] GameObject popupGameAbility; // 게임 능력치 증감 안내 메세지 
+        public GameObject popupGameMessage;
+        public GameObject popupGameOption;
+        public GameObject popupGradeBenefitInfo;
+        [SerializeField] GameObject popupGradeExp;
+        [SerializeField] GameObject popupGradeUp;
+        [SerializeField] GameObject popupHowToPlay; // How to play 팝업
+
+        [SerializeField] GameObject popupMail;
         [SerializeField] GameObject popupMessageAlert;
+        [SerializeField] GameObject popupNotice;
+        [SerializeField] GameObject popupNickname;       
+        
+        [SerializeField] GameObject popupPackDetail;
         [SerializeField] GameObject popupPremiumPass;
+        [SerializeField] GameObject popupResource; // 리소스 표현  팝업 
         [SerializeField] GameObject popupSideAlert;
         [SerializeField] GameObject popupSimpleAlert;
+        [SerializeField] GameObject popupSpecialEpisodeBuy; // 스페셜 에피소드 구매 
+        [SerializeField] GameObject popupStoryReset; // 스토리 전체 리셋 1화로.. 
 
         // 튜토리얼 팝업 모음
         public GameObject popupTutorial1;
         public GameObject popupTutorial2;
         public GameObject popupTutorial3;
         
-        [SerializeField] GameObject popupNickname;       
         
-        [SerializeField] GameObject popupPackDetail;
-        [SerializeField] GameObject popupNotice;
-        [SerializeField] GameObject popupMail;
-        [SerializeField] GameObject popupResource; // 리소스 표현  팝업 
-        [SerializeField] GameObject popupHowToPlay; // How to play 팝업
-        
-        [SerializeField] GameObject popupFlowReset; // 리셋.        
-        [SerializeField] GameObject popupStoryReset; // 스토리 전체 리셋 1화로.. 
-        [SerializeField] GameObject popupGameAbility; // 게임 능력치 증감 안내 메세지 
-        public GameObject popupGameMessage;
-        public GameObject popupGameOption;
-        [SerializeField] GameObject popupSpecialEpisodeBuy; // 스페셜 에피소드 구매 
-        
-        [SerializeField] GameObject popupExpireToken; // 로그인 토큰 만료 팝업 
-         
         private void Awake() {
             if(main != null) {
                 Destroy(this.gameObject);
@@ -311,7 +312,7 @@ namespace PIERStory {
                 confittiParticles[i].gameObject.SetActive(true);
                 confittiParticles[i].Play();
                 
-                yield return new WaitForSeconds(UnityEngine.Random.Range(0.2f,0.5f));
+                yield return new WaitForSeconds(Random.Range(0.2f,0.5f));
             }
         }
         
@@ -334,47 +335,52 @@ namespace PIERStory {
             else 
                 DictPopup.Add("AdvertisementShow", popupAdvertisementShow);
 
-            if (DictPopup.ContainsKey("Attendance"))
-                DictPopup["Attendance"] = popupAttendance;
+            if (DictPopup.ContainsKey(LobbyConst.POPUP_ATTENDANCE))
+                DictPopup[LobbyConst.POPUP_ATTENDANCE] = popupAttendance;
             else
-                DictPopup.Add("Attendance", popupAttendance);
+                DictPopup.Add(LobbyConst.POPUP_ATTENDANCE, popupAttendance);
                 
-            if(DictPopup.ContainsKey("Coupon")) 
-                DictPopup["Coupon"] = popupCoupon;
+            if(DictPopup.ContainsKey(LobbyConst.POPUP_COUPON)) 
+                DictPopup[LobbyConst.POPUP_COUPON] = popupCoupon;
             else 
-                DictPopup.Add("Coupon", popupCoupon);
+                DictPopup.Add(LobbyConst.POPUP_COUPON, popupCoupon);
 
             if (DictPopup.ContainsKey(CommonConst.POPUP_CONNECTING_SHOP))
                 DictPopup[CommonConst.POPUP_CONNECTING_SHOP] = popupConnectingShop;
             else
                 DictPopup.Add(CommonConst.POPUP_CONNECTING_SHOP, popupConnectingShop);
 
-                
-            if(DictPopup.ContainsKey(GameConst.POPUP_EPISODE_FIRST_REWARD)) 
+            if (DictPopup.ContainsKey(CommonConst.POPUP_CONFIRM))
+                DictPopup[CommonConst.POPUP_CONFIRM] = popupConfirm;
+            else
+                DictPopup.Add(CommonConst.POPUP_CONFIRM, popupConfirm);
+
+
+            if (DictPopup.ContainsKey(GameConst.POPUP_EPISODE_FIRST_REWARD)) 
                 DictPopup[GameConst.POPUP_EPISODE_FIRST_REWARD] = popupEpisodeClearReward;
             else 
                 DictPopup.Add(GameConst.POPUP_EPISODE_FIRST_REWARD, popupEpisodeClearReward);
-                
-            if(DictPopup.ContainsKey("EXP")) 
-                DictPopup["EXP"] = popupExp;
+
+            if (DictPopup.ContainsKey(LobbyConst.POPUP_GRADE_BENEFIT_INFO))
+                DictPopup[LobbyConst.POPUP_GRADE_BENEFIT_INFO] = popupGradeBenefitInfo;
+            else
+                DictPopup.Add(LobbyConst.POPUP_GRADE_BENEFIT_INFO, popupGradeBenefitInfo);
+
+            if(DictPopup.ContainsKey(LobbyConst.POPUP_GRADE_EXP)) 
+                DictPopup[LobbyConst.POPUP_GRADE_EXP] = popupGradeExp;
             else 
-                DictPopup.Add("EXP", popupExp);
+                DictPopup.Add(LobbyConst.POPUP_GRADE_EXP, popupGradeExp);
+
+            if (DictPopup.ContainsKey(LobbyConst.POPUP_GRADE_UP))
+                DictPopup[LobbyConst.POPUP_GRADE_UP] = popupGradeUp;
+            else
+                DictPopup.Add(LobbyConst.POPUP_GRADE_UP, popupGradeUp);
 
 
             if (DictPopup.ContainsKey(GameConst.TEMPLATE_GAME_MESSAGE))
                 DictPopup[GameConst.TEMPLATE_GAME_MESSAGE] = popupGameMessage;
             else
                 DictPopup.Add(GameConst.TEMPLATE_GAME_MESSAGE, popupGameMessage);
-                
-            if(DictPopup.ContainsKey("LevelUp")) 
-                DictPopup["LevelUp"] = popupLevelUp;
-            else 
-                DictPopup.Add("LevelUp", popupLevelUp);
-
-            if (DictPopup.ContainsKey(CommonConst.POPUP_CONFIRM))
-                DictPopup[CommonConst.POPUP_CONFIRM] = popupConfirm;
-            else
-                DictPopup.Add(CommonConst.POPUP_CONFIRM, popupConfirm);
                 
             if(DictPopup.ContainsKey(CommonConst.POPUP_MESSAGE_ALERT)) 
                 DictPopup[CommonConst.POPUP_MESSAGE_ALERT] = popupMessageAlert;

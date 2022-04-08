@@ -167,7 +167,11 @@ namespace PIERStory {
 
         #region 팝업 이름
 
-        
+        public const string POPUP_ATTENDANCE = "Attendance";
+        public const string POPUP_COUPON = "Coupon";
+        public const string POPUP_GRADE_BENEFIT_INFO = "GradeBenefitInfo";
+        public const string POPUP_GRADE_EXP = "GradeExp";
+        public const string POPUP_GRADE_UP = "GradeUp";
 
 
         #endregion

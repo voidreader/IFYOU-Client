@@ -98,10 +98,7 @@ namespace PIERStory
             j["price"] = 0;
             j[CommonConst.FUNC] = "requestWaitingEpisodeWithCoin";
 
-            OnRequestFinishedDelegate callback = UserManager.main.CallbackReduceWaitingTimeWithCoin;
-            callback += CallbackTutroialRewardFreeReduce;
-
-            NetworkLoader.main.SendPost(callback, j, true);
+            NetworkLoader.main.SendPost(CallbackTutroialRewardFreeReduce, j, true);
             coinOpenButton.interactable = false;
         }
 
@@ -113,9 +110,22 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackTutroialRewardFreeReduce");
+                StoryLobbyMain.CallbackReduceWaitingTimeFail?.Invoke();
                 coinOpenButton.interactable = true;
                 return;
             }
+
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            
+            SystemManager.ShowMessageWithLocalize("6220");
+            UserManager.main.SetNodeUserProjectCurrent(result["projectCurrent"]);
+            UserManager.main.SetBankInfo(result);   
+
+            //에피소드 구매 기록 
+            if (result.ContainsKey("episodePurchase"))
+                UserManager.main.SetNodeEpisodePurchaseHistory(result[CommonConst.JSON_EPISODE_PURCHASE_HISTORY]);
+
+            EpisodeEndControls.CallbackReduceWaitingTimeSuccess?.Invoke();
 
             ViewCommonTop.OnForShowCoin?.Invoke(UserManager.main.coin);
             UserManager.main.UpdateTutorialStep(3, 1, CallbackTutorialUpdate);

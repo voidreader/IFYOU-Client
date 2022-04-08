@@ -705,14 +705,12 @@ namespace PIERStory
 
             // speaker 컬럼별로 분류!
             string speaker = string.Empty;
-            for(int i =0; i<storyNametagJSON.Count;i++)
+            for (int i = 0; i < storyNametagJSON.Count; i++)
             {
-                speaker = storyNametagJSON[i]["speaker"].ToString();
+                speaker = SystemManager.GetJsonNodeString(storyNametagJSON[i], GameConst.COL_SPEAKER);
 
-                if(!DictNametag.ContainsKey(speaker))
-                {
+                if (!DictNametag.ContainsKey(speaker))
                     DictNametag.Add(speaker, storyNametagJSON[i]);
-                }
             }
         }
 

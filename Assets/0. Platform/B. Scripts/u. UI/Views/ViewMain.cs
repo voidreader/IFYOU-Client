@@ -1,17 +1,11 @@
 using System;
-using System.Linq;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-using TMPro;
-using LitJson;
-using BestHTTP;
+
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
 using Doozy.Runtime.UIManager.Containers;
-using DanielLochner.Assets.SimpleScrollSnap;
 
 namespace PIERStory {
     public class ViewMain : CommonView
@@ -32,17 +26,8 @@ namespace PIERStory {
 
 
         [Header("프로필(등급)")]
-        public GameObject empty;
-     
-
-        [Space(20)]
-        public GameObject editButton;
-        public GameObject profileBrief;
-        public Image showButtonImage;
-        public UIToggleGroup navigationBottom;
-
-        public Sprite spriteVisable;
-        public Sprite spriteInvisable;
+        public MainProfile ifyouProfile;
+        public GameObject achievementNewSign;
 
 /*
         [Header("더보기")]
@@ -114,17 +99,10 @@ namespace PIERStory {
             InitLobby();
 
             library.InitLibrary();
-            
-            
 
             // (프로필) 닉네임, 레벨, 경험치
             /*
-            levelText.text = string.Format("Lv. {0}", UserManager.main.level);
-
-            int totalExp = SystemManager.main.GetLevelMaxExp((UserManager.main.level + 1).ToString());
-            expGauge.fillAmount = (float)UserManager.main.exp / (float)totalExp;
-            expText.text = string.Format("{0}/{1}", UserManager.main.exp, totalExp);
-
+            
             // (더보기) 닉네임, 레벨, 경험치
             mLevelText.text = levelText.text;
             mExpGauge.fillAmount = expGauge.fillAmount;
@@ -158,17 +136,14 @@ namespace PIERStory {
         public void OnClickTabNavigation(int index) {
             switch(index) {
                 case 0:  // 로비
-                    navigationBottom.enabled = true;
                     OnLobbyTab();
                 break;
                 
                 case 1:  // 내서재 (라이브러리)
-                    navigationBottom.enabled = true;
                     OnLibraryTab();
                 break;
                 
                 case 2: // 상점
-                    navigationBottom.enabled = true;
                     OnShopTab();
                 break;
 
@@ -176,11 +151,9 @@ namespace PIERStory {
                     break;
 
                 case 4:     // 프로필
-                    navigationBottom.enabled = false;
                     OnProfile();
                     break;
                 case 5:     // 더보기
-                    navigationBottom.enabled = true;
                     OnAddMore();
                     break;
             }
@@ -264,8 +237,7 @@ namespace PIERStory {
         void OnProfile()
         {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);

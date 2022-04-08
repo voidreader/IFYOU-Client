@@ -180,6 +180,9 @@ namespace PIERStory
 
             LobbyManager.main.lobbyBackground.sprite = null;
             loadComplete = false;
+
+            if (UserManager.main != null && UserManager.main.listAchievement.Count > 0)
+                UserManager.main.RequestUserGradeInfo();
         }
         
         
@@ -224,12 +227,12 @@ namespace PIERStory
                 }
                 
                 
-            } catch(System.Exception e) {
+            } catch(Exception e) {
                 Debug.LogError(e.StackTrace);
             }
             finally {
                 decoObjects.Clear();
-                System.GC.Collect();
+                GC.Collect();
             }
             
 
@@ -695,18 +698,13 @@ namespace PIERStory
             // 스탠딩 캐릭터 드래그
             if(moveCharacter)
             {
-                // Debug.Log("moveCharacter is true");
-                
                 if (context.started)
                 {
-                    // Debug.Log("moveCharacter started");
                     startX = cursor.x;
                     originX = controlModel.transform.localPosition.x;
                 }
                 else if (context.performed)
                 {
-                    
-                    
                     dragX = cursor.x;
                     moveX = originX + ((dragX - startX) * (Time.deltaTime * 1f));
 

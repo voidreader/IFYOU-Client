@@ -87,6 +87,8 @@ namespace PIERStory
         public List<string> ListNetwork = new List<string>(); 
         static string _requestRawData = string.Empty;
 
+        public bool isFirstEpisode = false;
+        public int resetTargetEpisodeId = -1;
 
         private void Awake()
         {
@@ -393,7 +395,7 @@ namespace PIERStory
             sending[CommonConst.FUNC] = FUNC_UPDATE_USER_SCRIPT_MISSION;
             sending["userkey"] = UserManager.main.userKey;
             sending["project_id"] = StoryManager.main.CurrentProjectID;
-            sending["mission_id"] =missionData.missionID;
+            sending["mission_id"] = missionData.missionID;
 
             SendPost(CallbackUpdateScriptMission, sending, false);
         }
@@ -508,6 +510,9 @@ namespace PIERStory
             // 성공시 응답으로 sound_name을 그대로 받는다. 
             // UserManager에 갱신해준다. 
             UserManager.main.SetVoiceOpen(response.DataAsText);
+
+            if (UserManager.main.ProjectAllClear())
+                RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
         }
 
 
@@ -567,6 +572,7 @@ namespace PIERStory
             sending["isFree"] = __isFree; // 무료 유료 처리 
             sending[CommonConst.FUNC] = FUNC_RESET_EPISODE_PROGRESS_TYPE2;
 
+            resetTargetEpisodeId = int.Parse(__resetEpisodeID);
 
             // 통신 시작!
             SendPost(UserManager.main.CallbackResetEpisodeProgress, sending, true);
@@ -702,6 +708,21 @@ namespace PIERStory
         }
 
 
+        /// <summary>
+        /// 이프유 업적 통신
+        /// </summary>
+        /// <param name="__achievementType"></param>
+        public void RequestIFYOUAchievement(int __achievementType, int __projectId = -1, int __episodeId = -1)
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestAchievementMain";
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+            sending["achievement_id"] = __achievementType;
+            sending[CommonConst.COL_PROJECT_ID] = __projectId;
+            sending[CommonConst.COL_EPISODE_ID] = __episodeId;
+
+            SendPost(UserManager.main.CallbackRequestAchievement, sending);
+        }
 
 
 
@@ -857,7 +878,7 @@ namespace PIERStory
 
                         // status가 error로 날아오는 경우에 대한 메세지 처리 (2021.11.02)
                         if (!string.IsNullOrEmpty(message))
-                            SystemManager.ShowSystemPopup(message, null, null, false, true);        // 메세지 띄워주고.
+                            SystemManager.ShowSystemPopup(message, null, null, false, false);        // 메세지 띄워주고.
                         
                         SystemManager.HideNetworkLoading(); // 여기서는 무조건 제거 
                         return false; 

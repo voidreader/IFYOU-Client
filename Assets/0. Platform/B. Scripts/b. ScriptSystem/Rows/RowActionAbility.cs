@@ -74,14 +74,14 @@ namespace PIERStory
             
             // 통신용 변수 
             JsonData sendingData = new JsonData();
-            sendingData["func"] = "addUserAbility";
-            sendingData["speaker"] = speaker;
-            sendingData["ability"] = abilityName;
+            sendingData[CommonConst.FUNC] = "addUserAbility";
+            sendingData[GameConst.COL_SPEAKER] = speaker;
+            sendingData[GameConst.TEMPLATE_ABILITY] = abilityName;
             sendingData["add_value"] = addValue;
             
-            sendingData["project_id"] = StoryManager.main.CurrentProjectID;
-            sendingData["episode_id"] = StoryManager.main.CurrentEpisodeID;
-            sendingData["scene_id"] = GameManager.main.currentSceneId;
+            sendingData[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
+            sendingData[CommonConst.COL_EPISODE_ID] = StoryManager.main.CurrentEpisodeID;
+            sendingData[GameConst.COL_SCENE_ID] = GameManager.main.currentSceneId;
             
             NetworkLoader.main.SendPost(CallbackAddAbility, sendingData, true);
             

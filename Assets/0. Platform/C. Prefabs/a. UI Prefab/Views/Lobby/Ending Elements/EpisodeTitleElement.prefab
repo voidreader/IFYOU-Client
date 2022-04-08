@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 6845932993250365338}
   - component: {fileID: 6845932993250365336}
   - component: {fileID: 6845932993250365337}
+  - component: {fileID: 3909268174454802692}
   m_Layer: 5
   m_Name: EpisodeTitle
   m_TagString: Untagged
@@ -282,9 +283,9 @@ MonoBehaviour:
   m_fontSize: 26
   m_fontSizeBase: 26
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 22
+  m_fontSizeMax: 26
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -321,6 +322,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3909268174454802692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845932993250365339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 6845932993250365337}
+  isException: 1
+  isFontSet: 0
 --- !u!1 &6845932993910352591
 GameObject:
   m_ObjectHideFlags: 0

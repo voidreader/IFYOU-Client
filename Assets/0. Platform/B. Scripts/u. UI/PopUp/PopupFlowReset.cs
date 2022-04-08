@@ -35,6 +35,10 @@ namespace PIERStory {
             // 엔딩, 엔딩 플레이 완에 도달하면 반값으로 처리 
             if(UserManager.main.CheckReachEnding()) {
                 resetPrice = Mathf.RoundToInt(resetPrice * 0.5f);
+
+                // 엔딩에서 1화로 돌아가는거면 true로 변환해주고
+                if (targetEpisode.episodeNumber == 1)
+                    NetworkLoader.main.isFirstEpisode = true;
             }
             
             // 가격
@@ -48,11 +52,20 @@ namespace PIERStory {
             // FlowReset에서만 사용 
             textResetEpisode.text = string.Format(SystemManager.GetLocalizedText("6219"), targetEpisode.episodeNO);
             
-   
-            
         }
-        
-        
+
+        public override void Hide()
+        {
+            base.Hide();
+        }
+
+
+        public void OnClickClosePopup()
+        {
+            NetworkLoader.main.isFirstEpisode = false;
+        }
+
+
         /// <summary>
         /// 코인주고 리셋 
         /// </summary>
@@ -79,8 +92,6 @@ namespace PIERStory {
         /// 프리미엄 패스 화면 오픈 
         /// </summary>
         public void OnClickPremiumPass() {
-            
-            
             
             // 프리미엄 팝업 오픈 
             PopupBase p = PopupManager.main.GetPopup("PremiumPass");

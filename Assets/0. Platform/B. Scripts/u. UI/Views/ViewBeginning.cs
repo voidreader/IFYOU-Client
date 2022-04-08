@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Doozy.Runtime.Signals;
-using BestHTTP;
+
 using LitJson;
+using BestHTTP;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory {
     public class ViewBeginning : CommonView
@@ -31,7 +30,6 @@ namespace PIERStory {
                 
                 // 다녀오면 리프레시 되도록 처리한다.
                 StoryManager.main.RequestStoryList(OnRequestStoryList);
-                
             }
         }
         

@@ -14,6 +14,7 @@ namespace PIERStory {
         public Doozy.Runtime.UIManager.Containers.UIContainer container;
         
         [SerializeField] ImageRequireDownload mainThumbnail;    // 썸네일 
+        [SerializeField] TextMeshProUGUI textRecommend; // 추천 작 안내 
         
         [SerializeField] TextMeshProUGUI textTitle;             // 타이틀
         [SerializeField] TextMeshProUGUI textAuthor;            // 원작자
@@ -36,7 +37,9 @@ namespace PIERStory {
         
         public override void OnStartView() {
             base.OnStartView();
-            
+        
+        
+            textRecommend.gameObject.SetActive(false);    
             SetInfo();            
             
         }
@@ -69,6 +72,15 @@ namespace PIERStory {
             
             
             SetLikeButtonState();
+            
+            
+            // 인트로에서 넘어온 경우에 대한 처리 추가 
+            if(SystemListener.main.isIntroduceRecommended) {
+                
+                textRecommend.text = SystemManager.GetLocalizedText("6289");
+                textRecommend.gameObject.SetActive(true);
+                SystemListener.main.isIntroduceRecommended = false;
+            }
         }
         
         

@@ -401,6 +401,9 @@ namespace PIERStory
             // 슈퍼유저 처리 
             isAdminUser = SystemManager.GetJsonNodeBool(userJson, "admin");
             
+            // 인트로 완료 여부
+            isIntroDone = SystemManager.GetJsonNodeBool(userJson, "intro_done");
+            
         }
         
         public void SetNewNickname(string __newNickname) {
@@ -2903,6 +2906,20 @@ namespace PIERStory
             
             
             return false;
+        }
+        
+        
+        /// <summary>
+        /// 유저 인트로 수행 여부 처리 
+        /// </summary>        
+        public void UpdateIntroComplete() {
+            JsonData sending = new JsonData();
+            sending["func"] = "updateUserIntroDone";
+            NetworkLoader.main.SendPost(OnUpdateIntroComplete, sending, false);
+        }
+        
+        void OnUpdateIntroComplete (HTTPRequest request, HTTPResponse response) {
+            isIntroDone = true; // 그냥 true 처리 
         }
         
         

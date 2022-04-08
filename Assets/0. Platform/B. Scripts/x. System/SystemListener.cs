@@ -15,6 +15,7 @@ namespace PIERStory {
         
         #region 소개 페이지
         public StoryData introduceStory; //  소개 페이지의 작품 
+        public bool isIntroduceRecommended = false; // 소개페이지에서 추천받음 
         
         SignalReceiver signalReceiverIntroduceStory;
         SignalStream signalStreamIntroduceStory;
@@ -145,6 +146,12 @@ namespace PIERStory {
             }
             
             introduceStory = signal.GetValueUnsafe<StoryData>();
+            isIntroduceRecommended = false;   
+            
+            if(!string.IsNullOrEmpty(signal.message)) {
+                isIntroduceRecommended = true; 
+            }
+            
         }
     }
 }

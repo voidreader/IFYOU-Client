@@ -101,9 +101,13 @@ namespace PIERStory {
                 {
                     Debug.Log("Get list succeeded, " + purchasableReceiptList.Count);
                     
-
                     // Should Deal With This non-consumed Items.
                     // Send this item list to the game(item) server for consuming item.
+                    
+                    for(int i=0; i<purchasableReceiptList.Count; i++) {
+                        RequestPurchaseReward(purchasableReceiptList[i]); // 완료처리 되지 않은 결제 상품에 대한 처리 시작 
+                    }                    
+                    
                 }
                 else
                 {

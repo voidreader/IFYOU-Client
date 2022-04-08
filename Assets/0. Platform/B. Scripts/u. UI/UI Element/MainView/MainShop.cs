@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using LitJson;
 
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
@@ -9,17 +10,31 @@ namespace PIERStory {
 
     public class MainShop : MonoBehaviour
     {
+        public static bool isMainNavigationShop = false; // 메인에서 샵을 사용중인 경우 . 
         // refresh 용도의 action
         public static System.Action OnRefreshNormalShop = null; // 노멀 탭 리프레시
         public static System.Action OnRefreshPackageShop = null; // 패키지 탭 리프레시
         public static System.Action OnRefreshTopShop = null; // 상점 탑 리프레이 
         
+        public GameObject eventPackText;
+        public bool isNormalContainerSet = false;
+        
         public List<BaseStarProduct> listBaseStarProducts; // 일반 스타 상품 
+        
+        
+        // 용도 나누자 
+        [Header("노멀탭 패키지")]
+        public List<GeneralPackProduct> listNormalTabPackages; // 노멀탭의 패키지 상품 (상단 노출)
+        
+        
+        [Header("패키지탭 패키지")]
+        public List<GeneralPackProduct> listEventPackProducts; // 이벤트 패키지 상품 
         public List<GeneralPackProduct> listGeneralPackProducts; // 일반 패키지 상품 
         
+        [Space]
         public List<BaseCoinExchangeProduct> listCoinExchangeProducts; // 코인 환전 상품
         
-        public GeneralPackProduct topSpecialProduct; // 상단 패키지 상품 나중에 롤링으로 변경하자..
+        
         
         [SerializeField] UIToggle packageToggle;
         [SerializeField] UIToggle normalToggle;
@@ -98,8 +113,7 @@ namespace PIERStory {
         /// </summary>
         void EnterFromMain()
         {
-            topSpecialProduct.InitPackage("starter_pack");
-
+            
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
@@ -113,7 +127,7 @@ namespace PIERStory {
         /// </summary>
         void EnterFromSignal()
         {
-            topSpecialProduct.InitPackage("starter_pack");
+
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
@@ -148,15 +162,46 @@ namespace PIERStory {
         /// </summary>
         public void InitNormalContainer()
         {
+            Debug.Log(">> InitNormalContainer");
+            
+            for(int i=0; i<listNormalTabPackages.Count;i++) {
+                 listNormalTabPackages[i].gameObject.SetActive(false);
+             }
+             
+            JsonData masterData;
+            int packIndex = 0;
+            for(int i=0; i<BillingManager.main.productMasterJSON.Count;i++) {
+                
+                masterData = BillingManager.main.productMasterJSON[i];
+                
+                // 이벤트 상품 
+                if(SystemManager.GetJsonNodeString(masterData, "product_id").Contains("general_pack")) {            
+                    
+                    if(packIndex >= listNormalTabPackages.Count)
+                        break;
+   
+                    
+                    listNormalTabPackages[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"));
+   
+                }
+                
+            } // ? end of for                     
+             
+             /*
+             if(isNormalContainerSet)
+                return;
+            */
+            
             // * container 콜백에서 실행된다. 
             // 기본 스타 상품
             for (int i = 0; i < listBaseStarProducts.Count; i++)
                 listBaseStarProducts[i].InitProduct();
 
-
             // 코인 환전
             for (int i = 0; i < listCoinExchangeProducts.Count; i++)
                 listCoinExchangeProducts[i].InitExchangeProduct();
+            
+            isNormalContainerSet = true;
         }
         
         /// <summary>
@@ -166,6 +211,15 @@ namespace PIERStory {
              
              Debug.Log("## InitPackContainer");
              
+             
+             
+             
+             // 이벤트 팩
+             for(int i=0; i<listEventPackProducts.Count;i++) {
+                 listEventPackProducts[i].gameObject.SetActive(false);
+             }
+             
+             // 일반 팩 
              for (int i=0; i<listGeneralPackProducts.Count;i++) {
                  listGeneralPackProducts[i].gameObject.SetActive(false);
              }
@@ -177,20 +231,43 @@ namespace PIERStory {
             }
              
             int packIndex = 0;
-             
+            int eventPackIndex = 0;
+            JsonData masterData;
+            bool hasEventPack = false;
+            
+            Debug.Log("## InitPackContainer ###2");
+            
+            // 패키지 초기화 
             for(int i=0; i<BillingManager.main.productMasterJSON.Count;i++) {
                 
-                // general_pack 만 해당한다. 
-                if(SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_id").Contains("general_pack")) {
+                masterData = BillingManager.main.productMasterJSON[i];
+                
+                Debug.Log(SystemManager.GetJsonNodeString(masterData, "product_id"));
+                
+                // 이벤트 상품. 이름을 꼭 조건으로 걸어야한다. 
+                if(SystemManager.GetJsonNodeString(masterData, "product_id").Contains("story_pack") 
+                    && SystemManager.GetJsonNodeBool(masterData, "is_event")) {
+                        
+                    if(eventPackIndex >= listEventPackProducts.Count)
+                        break;
+                        
                     
-                    // index 체크
-                    if(packIndex >= listGeneralPackProducts.Count)    
-                        return;
-                    
-                    listGeneralPackProducts[packIndex++].InitPackage(SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_id"));
-                    
+                    listEventPackProducts[eventPackIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"));
+                    hasEventPack = true;
+   
                 }
-            }
+                else if(SystemManager.GetJsonNodeString(masterData, "product_id").Contains("pack") 
+                        && !SystemManager.GetJsonNodeBool(masterData, "is_event")) {
+                    
+                    if(packIndex >= listGeneralPackProducts.Count)
+                        break; 
+                    
+                    listGeneralPackProducts[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"));
+                }
+            } // ? end of for 
+            
+            eventPackText.SetActive(hasEventPack);
+            
          }
         
         

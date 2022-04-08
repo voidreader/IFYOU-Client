@@ -36,8 +36,10 @@ namespace PIERStory {
         /// <param name="__projectID"></param>
         public void ChooseIntroStory(int __projectID) {
             StoryData story = StoryManager.main.FindProject(__projectID.ToString());
-            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, story);
+            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, story, "recommend");
             
+            
+            UserManager.main.UpdateIntroComplete();
         }
     }
 }

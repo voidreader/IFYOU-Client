@@ -88,6 +88,8 @@ namespace PIERStory
             }
             
             UserManager.main.RequestServiceStoryList(); // 언어변경하고, 서버에서 받는 정보 refresh
+            NetworkLoader.main.RequestGameProductList(); // 상품정보 갱신 언어정보가 달라졌으니까.
+            
             StartCoroutine(OnCompleteRefreshServerInfo()); // 코루틴 콜 
             
             isChangingScene = true;

@@ -2228,6 +2228,9 @@ namespace PIERStory
             }, null, null);            
             */
             
+            // 언어 설정 
+            string langParam = string.Format("?lang={0}", SystemManager.main.currentAppLanguageCode);
+            
             WebView webView = WebView.CreateInstance();
             WebView.OnHide += OnHideWebview;
             

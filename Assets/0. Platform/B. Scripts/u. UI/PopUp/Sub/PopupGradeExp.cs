@@ -11,28 +11,45 @@ namespace PIERStory
         public RectTransform expBackAura;
 
         public UnityEngine.UI.Image expGauge;
-        Progressor expProgressor;
+        public Progressor expProgressor;
+        
+        public bool isShowUpgradePopup = false;
 
         public override void Show()
         {
+            if(isShow)
+                return;
+            
             base.Show();
 
             expBackAura.DORotate(new Vector3(0, 0, 360f), 2f, RotateMode.FastBeyond360).SetLoops(-1, LoopType.Incremental).SetEase(Ease.Linear);
+            
+            Debug.Log(string.Format("PopupGradeExp [{0}]/[{1}]", UserManager.main.gradeExperience, UserManager.main.upgradeGoalPoint));
 
-            expProgressor = expGauge.GetComponent<Progressor>();
-            expProgressor.fromValue = UserManager.main.gradeExperience / UserManager.main.upgradeGoalPoint;
-            expProgressor.toValue = (Data.contentValue + UserManager.main.gradeExperience) / UserManager.main.upgradeGoalPoint;
+            // expProgressor = expGauge.GetComponent<Progressor>();
+            expProgressor.fromValue = (float)UserManager.main.gradeExperience / (float)UserManager.main.upgradeGoalPoint;
+            expProgressor.toValue = (float)(Data.contentValue + UserManager.main.gradeExperience) / (float)UserManager.main.upgradeGoalPoint;
+            
+            Debug.Log(string.Format("expProgressor [{0}]/[{1}]", expProgressor.fromValue, expProgressor.toValue));
+        }
+        
+        public void OnProgressChanged(int __p) {
+            
         }
 
         public void ShowComplete()
         {
+            Debug.Log("### ShowComplete");
+            
             expProgressor.Play();
         }
 
         public void OpenGradeUpPopup()
         {
-            if (expProgressor.toValue >= 1f && expProgressor.currentValue == expProgressor.toValue)
-            {
+            if(expProgressor.currentValue >= 1f && !isShowUpgradePopup)  {
+                
+                isShowUpgradePopup = true;
+                
                 PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_GRADE_UP);
                 if (p == null)
                 {
@@ -46,6 +63,8 @@ namespace PIERStory
                 PopupManager.main.ShowPopup(p, false);
                 Hide();
             }
+            
+
         }
     }
 }

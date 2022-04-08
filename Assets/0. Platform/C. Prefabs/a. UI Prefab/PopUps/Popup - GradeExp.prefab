@@ -578,6 +578,7 @@ MonoBehaviour:
   isBlockBackButton: 0
   expBackAura: {fileID: 4677913467709702842}
   expGauge: {fileID: 4677913468478707904}
+  expProgressor: {fileID: 4677913468478707909}
 --- !u!1 &4677913467981430253
 GameObject:
   m_ObjectHideFlags: 0
@@ -1549,6 +1550,9 @@ MonoBehaviour:
   ResetValueOnEnable: 1
   OnValueChanged:
     m_PersistentCalls:
+      m_Calls: []
+  OnProgressChanged:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4677913467938549454}
         m_TargetAssemblyTypeName: PIERStory.PopupGradeExp, Assembly-CSharp
@@ -1562,9 +1566,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  OnProgressChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &4677913468478707906
 MonoBehaviour:
   m_ObjectHideFlags: 0

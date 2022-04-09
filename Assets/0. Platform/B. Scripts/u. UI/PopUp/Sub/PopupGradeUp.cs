@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
@@ -14,6 +15,9 @@ namespace PIERStory
 
         public TextMeshProUGUI seasonEndText;
 
+        public Button overlayClose;
+        public GameObject closeButton;
+
         public override void Show()
         {
             base.Show();
@@ -22,6 +26,14 @@ namespace PIERStory
             badgeAura.rectTransform.DORotate(new Vector3(0, 0, 360f), 2f, RotateMode.FastBeyond360).SetLoops(-1, LoopType.Incremental).SetEase(Ease.Linear);
 
             seasonEndText.text = string.Format(SystemManager.GetLocalizedText("6295"), UserManager.main.remainDay);
+            StartCoroutine(WaitParticleEffect());
+        }
+
+        IEnumerator WaitParticleEffect()
+        {
+            yield return new WaitForSeconds(2.5f);
+            overlayClose.interactable = true;
+            closeButton.SetActive(true);
         }
     }
 }

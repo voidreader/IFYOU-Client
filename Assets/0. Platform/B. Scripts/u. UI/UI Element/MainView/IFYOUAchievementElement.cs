@@ -139,6 +139,7 @@ namespace PIERStory
             p.Data.contentValue = achievementData.experience;
             PopupManager.main.ShowPopup(p, false);
 
+            MainProfile.OnSaveVerticalNormalize?.Invoke();
             UserManager.main.SetUserAchievementData(result["list"]);
         }
     }

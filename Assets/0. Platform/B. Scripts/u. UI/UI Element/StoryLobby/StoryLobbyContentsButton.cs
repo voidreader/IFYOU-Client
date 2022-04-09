@@ -99,15 +99,12 @@ namespace PIERStory {
             
             SetNotification(false);
         }
-        
-        
-        void CheckNewEndingData() {
-            
-            if(UserManager.main.GetInCompleteEndingCount() > 0)
-                SetNotification(true);
-            else
-                SetNotification(false);
 
+
+        void CheckNewEndingData()
+        {
+            SetNotification(UserManager.main.GetInCompleteEndingCount() > 0);
+            Debug.Log("미열람 엔딩 갯수 = " + UserManager.main.GetInCompleteEndingCount());
         }
         
         /// <summary>

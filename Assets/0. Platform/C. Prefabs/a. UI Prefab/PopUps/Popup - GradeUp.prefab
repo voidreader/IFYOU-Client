@@ -122,6 +122,8 @@ MonoBehaviour:
   gradeBadgeContents: {fileID: 2576653252878264720}
   badgeAura: {fileID: 2576653252439873362}
   seasonEndText: {fileID: 2576653253435726467}
+  overlayClose: {fileID: 432608070610064418}
+  closeButton: {fileID: 6165809717371354744}
 --- !u!1 &432608070610060367
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,7 +942,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 432608070610064001}
   m_OnClick:
     m_PersistentCalls:
@@ -2846,10 +2848,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: CloseButton
       objectReference: {fileID: 0}
+    - target: {fileID: 8526236852388594178, guid: 9b0ed3b3737c7a6428cfb08bc12e391d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b0ed3b3737c7a6428cfb08bc12e391d, type: 3}
 --- !u!224 &6165809717371354747 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8526236852388594177, guid: 9b0ed3b3737c7a6428cfb08bc12e391d, type: 3}
+  m_PrefabInstance: {fileID: 2576653253259672698}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6165809717371354744 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8526236852388594178, guid: 9b0ed3b3737c7a6428cfb08bc12e391d, type: 3}
   m_PrefabInstance: {fileID: 2576653253259672698}
   m_PrefabAsset: {fileID: 0}

@@ -32,7 +32,6 @@ namespace PIERStory
             expProgressor.fromValue = (float)UserManager.main.gradeExperience / (float)UserManager.main.upgradeGoalPoint;
             expProgressor.toValue = (float)(Data.contentValue + UserManager.main.gradeExperience) / (float)UserManager.main.upgradeGoalPoint;
 
-            MainProfile.accessActionCallback = true;
 
             Debug.Log(string.Format("expProgressor [{0}]/[{1}]", expProgressor.fromValue, expProgressor.toValue));
         }

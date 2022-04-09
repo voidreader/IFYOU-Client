@@ -59,7 +59,6 @@ namespace PIERStory
             yield return new WaitUntil(() => coinFirecracker.isStopped);
             
             // 튜토리얼 단계 업데이트 후 플레이
-            SystemManager.ShowNetworkLoading();
             StoryLobbyMain.OnEpisodePlay?.Invoke();
         }
     }

@@ -957,14 +957,18 @@ namespace PIERStory
         }
 
 
+
+        #region 약관 및 푸쉬
+
         /// <summary>
         /// 푸시 토큰 정보 불러오기 
         /// </summary>
-        public void QueryPushTokenInfo() {
+        public void QueryPushTokenInfo()
+        {
 
             if (Application.isEditor)
                 return;
-                    
+
             Gamebase.Push.QueryTokenInfo((data, error) =>
             {
                 if (Gamebase.IsSuccess(error))
@@ -977,11 +981,11 @@ namespace PIERStory
                     Debug.LogError(string.Format("### QueryToken response failed. Error : {0}", error));
                     PushRegister(true, true);
                 }
-                    
-                    
+
+
                 // MainMore.OnRefreshMore?.Invoke();
             });
-            
+
         }
 
         /// <summary>
@@ -990,14 +994,14 @@ namespace PIERStory
         public void ShowAgreementTermsPopUp()
         {
             Debug.Log("ShowAgreementTermsPopUp");
-            
+
             // 에디터에서는 지원하지 않음.
-            if(Application.isEditor)
+            if (Application.isEditor)
                 return;
-        
-            
+
+
             // * 2021.10.13 게임베이스 호출로 변경.
-            Gamebase.Terms.ShowTermsView((data, error) => 
+            Gamebase.Terms.ShowTermsView((data, error) =>
             {
                 if (Gamebase.IsSuccess(error) == true)
                 {
@@ -1006,8 +1010,10 @@ namespace PIERStory
                     // If the 'PushConfiguration' is not null,
                     // save the 'PushConfiguration' and use it for Gamebase.Push.RegisterPush() after Gamebase.Login().
                     GamebaseResponse.Push.PushConfiguration pushConfiguration = GamebaseResponse.Push.PushConfiguration.From(data);
-                    
-                    if(pushConfiguration != null) {
+
+                    if(pushConfiguration != null)
+                    {
+                        Debug.Log("이용약관 success 후 pushConfiguration = " + pushConfiguration);
                         // Register 처리 .
                         PushRegister(pushConfiguration.adAgreement, pushConfiguration.adAgreementNight);
                     }
@@ -1017,31 +1023,32 @@ namespace PIERStory
                     Debug.Log(string.Format("ShowTermsView failed. error:{0}", error));
                 }
             });
-            
+
         }
-        
+
         int gamebaseTermsSeq = -1;
         string gamebaseTermsVersion = string.Empty;
         List<GamebaseResponse.Terms.ContentDetail> listGamebaseTerms;
-        
+
         /// <summary>
         /// 게임베이스에서 이용약관 조회하기.
         /// </summary>
-        public void QueryGamebaseTerms() {
-            
-            if(Application.isEditor)
+        public void QueryGamebaseTerms()
+        {
+
+            if (Application.isEditor)
                 return;
-            
-            
-            Gamebase.Terms.QueryTerms((data, error) => 
+
+
+            Gamebase.Terms.QueryTerms((data, error) =>
             {
                 if (Gamebase.IsSuccess(error) == true)
                 {
-                    gamebaseTermsSeq = data.termsSeq; 
+                    gamebaseTermsSeq = data.termsSeq;
                     gamebaseTermsVersion = data.termsVersion;
-                    
+
                     Debug.Log(string.Format("QueryTerms succeeded. [{0}]/[{1}]", gamebaseTermsSeq, gamebaseTermsVersion));
-                    
+
                     listGamebaseTerms = data.contents;
 
                     for (int i = 0; i < listGamebaseTerms.Count; i++)
@@ -1057,95 +1064,6 @@ namespace PIERStory
             });
         }
 
-
-        #region 약관 및 푸쉬
-
-        /// <summary>
-        /// 약관 및 푸시 내용 update
-        /// </summary>
-        /// <param name="adPush">(광고) 푸시 알림</param>
-        /// <param name="nightAdPush">야간 푸시 알림</param>
-        /// <param name="allEssential">모든 필수 약관</param>
-        /// <param name="userTerms">이용약관</param>
-        /// <param name="privacyTerms">개인정보처리 방침</param>
-        public void SubmitQuery(bool adPush, bool nightAdPush, bool allEssential = true, bool userTerms = true, bool privacyTerms = true)
-        {
-
-            // 에디터에서는 푸시나 약관 정보에 대해서 update하지 않는다.
-            if (Application.isEditor)
-                return;
-                
-            if(gamebaseTermsSeq < 0) {
-                Debug.Log("Failed to get gamebase terms info");
-                return;
-            }
-            
-            if(listGamebaseTerms.Count == 5) {
-                
-            }
-            
-            for(int i=0; i<listGamebaseTerms.Count;i++) {
-                
-            }
-            
-            
-            List<GamebaseRequest.Terms.Content> contentList = new List<GamebaseRequest.Terms.Content>();
-
-            contentList.Add(new GamebaseRequest.Terms.Content()
-            {
-                termsContentSeq = 255,
-                agreed = allEssential
-            });
-
-            contentList.Add(new GamebaseRequest.Terms.Content()
-            {
-                termsContentSeq = 256,
-                agreed = userTerms
-            });
-
-            contentList.Add(new GamebaseRequest.Terms.Content()
-            {
-                termsContentSeq = 257,
-                agreed = privacyTerms
-            });
-
-            contentList.Add(new GamebaseRequest.Terms.Content()
-            {
-                termsContentSeq = 258,
-                agreed = adPush
-            });
-
-            contentList.Add(new GamebaseRequest.Terms.Content()
-            {
-                termsContentSeq = 259,
-                agreed = nightAdPush
-            });
-            
-            
-
-            Gamebase.Terms.UpdateTerms(new GamebaseRequest.Terms.UpdateTermsConfiguration()
-            {
-                termsSeq = gamebaseTermsSeq,
-                termsVersion = gamebaseTermsVersion,
-                contents = contentList
-            }, (error) =>
-            {
-                if (Gamebase.IsSuccess(error))
-                {
-                    Debug.Log("Success");
-                    PlayerPrefs.SetInt("useTerms", 1);
-                    PlayerPrefs.SetInt("privacy", 1);
-
-                    // AppsFlyerSDK.AppsFlyer.sendEvent("APP_TERMSOFUSE", null);
-                    // AppsFlyerSDK.AppsFlyer.sendEvent("APP_PERSONALINFORMATION", null);
-
-                    // 푸쉬 알림에 대한 설정
-                    PushRegister(adPush, nightAdPush);
-                }
-                else
-                    Debug.LogError(string.Format("UpdateTerms fail. error : {0}", error));
-            });
-        }
 
         /// <summary>
         /// 푸시 설정

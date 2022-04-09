@@ -11,6 +11,7 @@ namespace PIERStory
     public class MainProfile : MonoBehaviour
     {
         public static Action OnRefreshIFYOUAchievement = null;
+        public static Action OnSaveVerticalNormalize = null;
 
         public ScrollRect scroll;
 
@@ -67,11 +68,12 @@ namespace PIERStory
         public Transform IFYOUAchievementContents;
 
         List<GameObject> achievementElements = new List<GameObject>();
-        public static bool accessActionCallback = false;
+        public static float postVerticalNormalize = -1f;
 
         private void Awake()
         {
             OnRefreshIFYOUAchievement = RefreshAchievementList;
+            OnSaveVerticalNormalize = SetVerticalNormalize;
         }
 
         /// <summary>
@@ -128,40 +130,35 @@ namespace PIERStory
 
             seasonEndText.text = string.Format(SystemManager.GetLocalizedText("6293"), UserManager.main.remainDay);
 
-            newbieAchievements.gameObject.SetActive(newbieAchievementContents.childCount > 0);
-            IFYOUAchievements.gameObject.SetActive(newbieAchievementContents.childCount > 0);
-
-            newbieAchievements.sizeDelta = new Vector2(newbieAchievements.sizeDelta.x,
-                newbieAchievements.GetChild(0).GetComponent<RectTransform>().sizeDelta.y + newbieAchievementContents.GetComponent<RectTransform>().sizeDelta.y);
-            IFYOUAchievements.sizeDelta = new Vector2(IFYOUAchievements.sizeDelta.x,
-                IFYOUAchievements.GetChild(0).GetComponent<RectTransform>().sizeDelta.y + IFYOUAchievementContents.GetComponent<RectTransform>().sizeDelta.y);
-
             if (gameObject.activeSelf)
                 StartCoroutine(LayoutRebuild());
         }
 
         IEnumerator LayoutRebuild()
         {
+            yield return null;
+
+            newbieAchievements.sizeDelta = new Vector2(newbieAchievements.sizeDelta.x,
+                newbieAchievements.GetChild(0).GetComponent<RectTransform>().sizeDelta.y + newbieAchievementContents.GetComponent<RectTransform>().sizeDelta.y);
+            IFYOUAchievements.sizeDelta = new Vector2(IFYOUAchievements.sizeDelta.x,
+                IFYOUAchievements.GetChild(0).GetComponent<RectTransform>().sizeDelta.y + IFYOUAchievementContents.GetComponent<RectTransform>().sizeDelta.y);
+
             newbieAchievements.gameObject.SetActive(false);
             IFYOUAchievements.gameObject.SetActive(false);
             yield return null;
             newbieAchievements.gameObject.SetActive(newbieAchievementContents.childCount > 0);
             IFYOUAchievements.gameObject.SetActive(newbieAchievementContents.childCount > 0);
 
-            if (!accessActionCallback)
+            yield return null;
+
+            if (postVerticalNormalize < 0f)
                 scroll.verticalNormalizedPosition = 1f;
             else
-                accessActionCallback = false;
+            {
+                scroll.verticalNormalizedPosition = postVerticalNormalize;
+                postVerticalNormalize = -1f;
+            }
         }
-
-
-        /// <summary>
-        /// 프로필 화면 나갈 때 실행
-        /// </summary>
-        public void ExitProfile()
-        {
-
-        }    
 
 
         public void OnClickOpenGradeBenefit()
@@ -203,6 +200,8 @@ namespace PIERStory
                 }
             }
 
+            ViewMain.OnRefreshProfileNewSign?.Invoke();
+
             EnterProfile();
         }
 
@@ -231,6 +230,11 @@ namespace PIERStory
                     __text.text = SystemManager.GetLocalizedText("5195");
                     break;
             }
+        }
+
+        void SetVerticalNormalize()
+        {
+            postVerticalNormalize = scroll.verticalNormalizedPosition;
         }
     }
 }

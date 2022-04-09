@@ -404,6 +404,9 @@ namespace PIERStory {
         public void OnClickShop() {
             
             if(ViewCommonStarShop.isCommonShopOpen)
+                return;
+                
+            if(MainShop.isMainNavigationShop)
                 return;            
             
             Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);

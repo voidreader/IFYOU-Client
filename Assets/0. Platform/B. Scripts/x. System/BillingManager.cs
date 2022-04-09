@@ -229,9 +229,31 @@ namespace PIERStory {
             MainShop.OnRefreshTopShop?.Invoke();
 
             // 모든 활성 팝업 제거
-            // PopupManager.main.HideActivePopup();
+            PopupManager.main.HideActivePopup();
+            
+            
+            // 구매한 상품 ID
+            string purchasedProductID = SystemManager.GetJsonNodeString(result, "product_id");
 
-            SystemManager.ShowSystemPopupLocalize("6113", null, null, true, false);
+            StartCoroutine(DelayShowBillingCompletePopup(purchasedProductID));
+        }
+        
+        IEnumerator DelayShowBillingCompletePopup(string __productID) {
+            
+            yield return null;
+            yield return null;
+            yield return null;
+            
+            yield return new WaitForSeconds(0.1f);
+            
+            if(__productID == "pre_reward_pack") {
+                SystemManager.ShowSystemPopupLocalize("6300", null, null, true, false); // 사전예약보상
+            }
+            else {
+                SystemManager.ShowSystemPopupLocalize("6113", null, null, true, false);  // 일반구매 
+            }
+            
+            
         }
         
         

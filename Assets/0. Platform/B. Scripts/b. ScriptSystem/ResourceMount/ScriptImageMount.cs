@@ -459,6 +459,7 @@ namespace PIERStory
             // 21.09.15 이모티콘 할당도 풀어주기로 했다. 그래서 대화 관련된거 나왔을 때 다 풀어줘야 함
             
             // 다 썼다고 판단되면 놔주자.. 
+            /*
             if (useCount <= 0)
             {
                 Debug.Log(string.Format("><>< Bye [{0}]", imageName));
@@ -505,7 +506,9 @@ namespace PIERStory
 
                 sprite = null;
                 texture = null;
+                
             }
+            */
         }
     }
 }

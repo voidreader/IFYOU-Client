@@ -1,7 +1,7 @@
 ﻿using System;
 using LitJson;
 using BestHTTP;
-
+using UnityEngine;
 
 namespace PIERStory
 {
@@ -26,6 +26,8 @@ namespace PIERStory
             
             // 화자, 데이터 컬럼 필수 
             if(string.IsNullOrEmpty(speaker) || string.IsNullOrEmpty(fullText) || !fullText.Contains(":")) {
+                
+                Debug.LogError("RowActionAbility Fail #1");
                 SetFailAbility();
                 return;
             }
@@ -35,6 +37,8 @@ namespace PIERStory
             
             // 분리한 텍스트가 모자라면 
             if(splitText.Length < 2) {
+                
+                Debug.LogError("RowActionAbility Fail #2");
                 SetFailAbility();
                 return; 
             }
@@ -62,12 +66,15 @@ namespace PIERStory
             // TOOD 통신처리 
             if(string.IsNullOrEmpty(speaker) || string.IsNullOrEmpty(abilityName)) {
                 // MissingComponent 띄워주기 
+                Debug.LogError("RowActionAbility Fail #3");
                 callback?.Invoke();
                 return;
             }
             
             // 기록 조회해서 같은 씬 안에서 저장된 능력치 증감이 있으면 안함 
             if(UserManager.main.CheckSceneAbilityHistory(StoryManager.main.CurrentEpisodeID, GameManager.main.currentSceneId, speaker, abilityName, addValue)) {
+                
+                Debug.LogError("RowActionAbility already done #4");
                 callback?.Invoke();
                 return;
             }

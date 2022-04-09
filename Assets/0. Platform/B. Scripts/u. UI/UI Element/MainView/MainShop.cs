@@ -176,9 +176,15 @@ namespace PIERStory {
              
             JsonData masterData;
             int packIndex = 0;
+            string productID = string.Empty;
+            int maxCount = 0;
+            
+            
             for(int i=0; i<BillingManager.main.productMasterJSON.Count;i++) {
                 
                 masterData = BillingManager.main.productMasterJSON[i];
+                productID =SystemManager.GetJsonNodeString(masterData, "product_id");  // ID 
+                maxCount = SystemManager.GetJsonNodeInt(masterData, "max_count"); // 구매 제한 횟수 
                 
                 // 이벤트 상품 
                 if(SystemManager.GetJsonNodeString(masterData, "product_id").Contains("general_pack")) {            
@@ -186,6 +192,10 @@ namespace PIERStory {
                     if(packIndex >= listNormalTabPackages.Count)
                         break;
    
+                    // 구매된 상품은 제거한다.
+                    if(maxCount > 0 && BillingManager.main.GetProductPurchaseCount(productID) >= maxCount) {
+                        continue;
+                    }
                     
                     listNormalTabPackages[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"));
    

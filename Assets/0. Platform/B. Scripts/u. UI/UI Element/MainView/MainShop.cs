@@ -284,6 +284,9 @@ namespace PIERStory {
                 else if(SystemManager.GetJsonNodeString(masterData, "product_id").Contains("pack") 
                         && !SystemManager.GetJsonNodeBool(masterData, "is_event")) {
                     
+                    if(productID.Contains("pre_reward_pack"))
+                        continue;
+                    
                     if(packIndex >= listGeneralPackProducts.Count)
                         break; 
                         

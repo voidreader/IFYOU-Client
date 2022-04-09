@@ -547,6 +547,8 @@ namespace PIERStory {
             // 22.04.06 과금 선택지 5회 업적 클리어에 대한 조건문 추가하기
             NetworkLoader.main.RequestIFYOUAchievement(5);
 
+            NetworkLoader.main.RequestIFYOUAchievement(20);
+
             // 선택지 선택완료 처리
             SelectionSelected();
         }

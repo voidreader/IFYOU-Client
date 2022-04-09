@@ -11,7 +11,7 @@ namespace PIERStory {
     public class ViewMain : CommonView
     {
         public static Action OnMoveStarShop = null;
-        
+        public static Action OnRefreshProfileNewSign = null;
         
         [Header("로비")]
         public IFYouLobby lobby;
@@ -29,14 +29,19 @@ namespace PIERStory {
         public MainProfile ifyouProfile;
         public GameObject achievementNewSign;
 
-/*
-        [Header("더보기")]
-        public TextMeshProUGUI userPincode;
-        public TextMeshProUGUI mLevelText;      // 더보기 페이지 레벨
-        public TextMeshProUGUI mExpText;        // 더보기 페이지 경험치
-        public Image mExpGauge;                 // 더보기 페이지 경험치바
-*/
-        
+        /*
+                [Header("더보기")]
+                public TextMeshProUGUI userPincode;
+                public TextMeshProUGUI mLevelText;      // 더보기 페이지 레벨
+                public TextMeshProUGUI mExpText;        // 더보기 페이지 경험치
+                public Image mExpGauge;                 // 더보기 페이지 경험치바
+        */
+
+        private void Awake()
+        {
+            OnRefreshProfileNewSign = EnableNewAchievementSign;
+        }
+
         void Update() {
             
             // ViewMain에서 종료 띄우기.
@@ -99,6 +104,8 @@ namespace PIERStory {
             InitLobby();
 
             library.InitLibrary();
+
+            EnableNewAchievementSign();
 
             // (프로필) 닉네임, 레벨, 경험치
             /*
@@ -243,6 +250,10 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
         }
 
+        void EnableNewAchievementSign()
+        {
+            achievementNewSign.SetActive(UserManager.main.CountClearAchievement() > 0);
+        }
 
 
 

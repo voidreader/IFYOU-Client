@@ -181,7 +181,7 @@ namespace PIERStory
             LobbyManager.main.lobbyBackground.sprite = null;
             loadComplete = false;
 
-            if (UserManager.main != null && UserManager.main.listAchievement.Count > 0)
+            if (LobbyManager.main != null && UserManager.main != null && UserManager.main.listAchievement.Count > 0)
                 UserManager.main.RequestUserGradeInfo();
         }
         
@@ -672,8 +672,7 @@ namespace PIERStory
 
         public void OnDragScreen(InputAction.CallbackContext context)
         {
-            
-            // Debug.Log("OnDragScreen :: " + moveCharacter);
+
             cursor = context.ReadValue<Vector2>();
 
             // 배경 드래그
@@ -696,7 +695,7 @@ namespace PIERStory
             }
 
             // 스탠딩 캐릭터 드래그
-            if(moveCharacter)
+            if (moveCharacter)
             {
                 if (context.started)
                 {
@@ -709,13 +708,8 @@ namespace PIERStory
                     moveX = originX + ((dragX - startX) * (Time.deltaTime * 1f));
 
                     // 선택된 캐릭터 이동되게 해야됨
-                    if (moveX > (-camWidth * 0.25f) && moveX < (camWidth * 0.25f)) {
-                        // Debug.Log("moveCharacter performed #1");
+                    if (moveX > (-camWidth * 0.25f) && moveX < (camWidth * 0.25f))
                         controlModel.transform.localPosition = new Vector3(moveX, controlModel.transform.localPosition.y, 0f);
-                    }
-                    else {
-                        // Debug.Log("moveCharacter performed #2");
-                    }
                 }
             }
         }

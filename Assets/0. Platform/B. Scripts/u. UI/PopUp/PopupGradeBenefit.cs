@@ -24,15 +24,15 @@ namespace PIERStory
                     break;
                 case 2:
                     // 플래티넘 등급
-                    benefitDetail.text = string.Format(SystemManager.GetLocalizedText("6269") + "\n" + string.Format("6270"), 10, 5, 5, 30);
+                    benefitDetail.text = string.Format(SystemManager.GetLocalizedText("6299"), 10, 5, 30) + "\n" + string.Format(SystemManager.GetLocalizedText("6270"));
                     break;
                 case 3:
                     // 골드 등급
-                    benefitDetail.text = string.Format(SystemManager.GetLocalizedText("6269") + "\n" + string.Format("6270"), 7, 5, 5, 20);
+                    benefitDetail.text = string.Format(SystemManager.GetLocalizedText("6299"), 7, 5, 20);
                     break;
                 case 4:
                     // 실버 등급
-                    benefitDetail.text = string.Format(SystemManager.GetLocalizedText("6269") + "\n" + string.Format("6270"), 5, 5, 5, 10);
+                    benefitDetail.text = string.Format(SystemManager.GetLocalizedText("6299"), 5, 5, 10);
                     break;
                 case 5:
                     // 브론즈 등급

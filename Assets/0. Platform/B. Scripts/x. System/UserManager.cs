@@ -769,22 +769,13 @@ namespace PIERStory
         {
             int incompleteCount = 0;
 
-            foreach(EpisodeData endingData in StoryManager.main.ListCurrentProjectEpisodes)
+            foreach (EpisodeData endingData in StoryManager.main.ListCurrentProjectEpisodes)
             {
-                // 엔딩인 경우
-                if(endingData.episodeType == EpisodeType.Ending && endingData.endingOpen)
-                {
-                    for (int i = 0; i < GetNodeUserEpisodeHistory().Count; i++)
-                    {
-                        if (!IsCompleteEpisode(endingData.episodeID))
-                        {
-                            incompleteCount++;
-                            break;
-                        }
-                    }
-                }
+                // 엔딩이고, 열렸는데 플레이 안한경우
+                if (endingData.episodeType == EpisodeType.Ending && endingData.endingOpen && !IsCompleteEpisode(endingData.episodeID))
+                    incompleteCount++;
             }
-            
+
             return incompleteCount;
         }
 
@@ -3039,7 +3030,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 
+        /// 업적 데이터 세팅
         /// </summary>
         /// <param name="__j"></param>
         public void SetUserAchievementData(JsonData __j)
@@ -3080,6 +3071,23 @@ namespace PIERStory
 
             MainProfile.OnRefreshIFYOUAchievement?.Invoke();
         }    
+
+        /// <summary>
+        /// 업적 보상을 받을 수 있는 총 수 count
+        /// </summary>
+        /// <returns></returns>
+        public int CountClearAchievement()
+        {
+            int count = 0;
+
+            for(int i=0;i<listAchievement.Count;i++)
+            {
+                if (listAchievement[i].achievementDegree >= 1f)
+                    count++;
+            }
+
+            return count;
+        }
 
 
 

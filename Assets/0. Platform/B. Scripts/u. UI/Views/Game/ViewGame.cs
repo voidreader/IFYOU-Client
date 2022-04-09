@@ -1074,7 +1074,7 @@ namespace PIERStory
                 if (s.Contains("\n"))
                     lineStringLength = 0;
 
-                if (lineStringLength + s.Length > 20)
+                if (lineStringLength + s.Length > 18)
                 {
                     messengerText.text += "\n";
                     lineStringLength = 0;

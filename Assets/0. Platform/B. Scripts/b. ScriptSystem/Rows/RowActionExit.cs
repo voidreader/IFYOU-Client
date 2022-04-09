@@ -19,7 +19,10 @@ namespace PIERStory
             if (UserManager.main.useRecord)
                 GameManager.main.ShowGameEnd(null);
             else
+            {
+                NetworkLoader.main.UpdateEpisodeCompleteRecord(null);
                 SystemManager.ShowSystemPopupLocalize("6203", GameManager.main.RetryPlay, GameManager.main.EndGame);
+            }
         }
 
         public void EndAction() { }

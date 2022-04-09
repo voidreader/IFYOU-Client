@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 
 namespace PIERStory
 {
@@ -36,6 +37,15 @@ namespace PIERStory
             ViewGame.main.FlowTimeAnim(scriptRow.script_data, scriptRow.voice, reversal, isAboutBG);
         }
 
-        public void EndAction() { }
+        public void EndAction() 
+        { 
+            // 시간 연출 중에 스킵 누르면 연출 멈추고 비활성화
+            if(GameManager.main.useSkip && ViewGame.main.fadeImage.color.a > 0f)
+            {
+                ViewGame.main.fadeImage.DOKill();
+                ViewGame.main.fadeImage.gameObject.SetActive(false);
+            }
+        
+        }
     }
 }

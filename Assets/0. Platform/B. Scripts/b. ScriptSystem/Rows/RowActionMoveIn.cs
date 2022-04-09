@@ -25,6 +25,8 @@ namespace PIERStory
         float destPosX = 0;                 // 도착 X좌표 
         float tweenTime = 0;
         GameSpriteCtrl currentBG = null;    // 현재 배경개체
+        Sequence moveIn;                    // Dotween 시퀀스
+
 
         /// <summary>
         /// 생성자 입니다
@@ -144,7 +146,7 @@ namespace PIERStory
             #endregion
 
 
-            Sequence moveIn = DOTween.Sequence();
+            moveIn = DOTween.Sequence();
 
             currentBG.gameObject.SetActive(true);
             // 배경의 시작 position 설정 
@@ -173,6 +175,11 @@ namespace PIERStory
             callback?.Invoke();
         }
 
-        public void EndAction() { }
+        public void EndAction()
+        {
+            // 장소 진입중 스킵을 누르면 Dotween을 멈춘다
+            if (GameManager.main.useSkip && moveIn != null && moveIn.IsPlaying())
+                moveIn.Kill();
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace PIERStory
         float moveDistance = 0f;
         float tweenTime = 0f;
         GameSpriteCtrl currentBG = null; // 현재 배경개체 
+        bool tweenComplete = false;
 
         /// <summary>
         /// 생성자
@@ -93,6 +94,7 @@ namespace PIERStory
                 GameManager.main.currentBackgroundMount.EndImage();
                 // 페이드 아웃이 완료되면 화면 연출도 지워준다.
                 ScreenEffectManager.main.RemoveAllScreenEffect();
+                tweenComplete = true;
                 // 완료되면 callback 처리 
                 callback?.Invoke();
 
@@ -103,6 +105,9 @@ namespace PIERStory
         public void EndAction()
         {
             // 색상은 원래 최초에 암전부터 시작하기때문에 복원시켜줄 필요가 없다.
+            // 장소 이탈중 스킵을 누르면 Dotween을 멈춘다
+            if (GameManager.main.useSkip && !tweenComplete)
+                currentBG.DOKill();
         }
     }
 }

@@ -670,9 +670,12 @@ namespace PIERStory
             }
         }
 
+        /// <summary>
+        /// 화면 드래그 Action
+        /// </summary>
+        /// <param name="context"></param>
         public void OnDragScreen(InputAction.CallbackContext context)
         {
-
             cursor = context.ReadValue<Vector2>();
 
             // 배경 드래그
@@ -686,6 +689,9 @@ namespace PIERStory
                 else if (context.performed)
                 {
                     dragX = cursor.x;
+
+                    if (dragX == 0)
+                        return;
 
                     moveX = originX + ((dragX - startX) * (Time.deltaTime * 1f));
 
@@ -705,6 +711,10 @@ namespace PIERStory
                 else if (context.performed)
                 {
                     dragX = cursor.x;
+
+                    if (dragX == 0)
+                        return;
+
                     moveX = originX + ((dragX - startX) * (Time.deltaTime * 1f));
 
                     // 선택된 캐릭터 이동되게 해야됨

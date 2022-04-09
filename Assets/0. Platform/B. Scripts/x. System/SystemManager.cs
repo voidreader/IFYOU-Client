@@ -1178,11 +1178,13 @@ namespace PIERStory
                 return;
             }
             
-            
             // 여기서는 연동한 구글, 애플과 연결된 계정정보를 불러오고 처리를 진행한다. 
             JsonData result = JsonMapper.ToObject(response.DataAsText);
-            
-            if(result == null || result.Count == 0) { 
+
+            // 22.04.06 첫 계정 연동을 했으므로 초심자 업적 업데이트 호출도 해준다
+            NetworkLoader.main.RequestIFYOUAchievement(1);
+
+            if (result == null || result.Count == 0) { 
                 // ! 계정이 없다. => call updateAccountWithGamebaseID => OnRequest__updateAccountWithGamebaseID
                  Debug.Log("### No connected Gamebase account");
                  // TODO 현재 유저의 table_account에 현재의 gamebaseID를 덮어씌운다. 
@@ -1192,10 +1194,6 @@ namespace PIERStory
                  
                  //  ! 이 통신에서 유저에게 연동보상을 지급한다. 
                  NetworkLoader.main.SendPost(OnRequest__updateAccountWithGamebaseID, reqData, true);
-
-
-                // 22.04.06 첫 계정 연동을 했으므로 초심자 업적 업데이트 호출도 해준다
-                NetworkLoader.main.RequestIFYOUAchievement(1);
             }
             else {
                 // ! 이전에 연결된 계정이 있다. 

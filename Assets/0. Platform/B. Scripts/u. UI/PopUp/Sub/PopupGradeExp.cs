@@ -22,6 +22,8 @@ namespace PIERStory
             
             base.Show();
 
+            Vector2 imageSize = Data.Images[0].rectTransform.sizeDelta;
+            Data.Images[0].rectTransform.sizeDelta = new Vector2(imageSize.x, imageSize.y) * 0.15f;
             expBackAura.DORotate(new Vector3(0, 0, 360f), 2f, RotateMode.FastBeyond360).SetLoops(-1, LoopType.Incremental).SetEase(Ease.Linear);
             
             Debug.Log(string.Format("PopupGradeExp [{0}]/[{1}]", UserManager.main.gradeExperience, UserManager.main.upgradeGoalPoint));
@@ -29,12 +31,10 @@ namespace PIERStory
             // expProgressor = expGauge.GetComponent<Progressor>();
             expProgressor.fromValue = (float)UserManager.main.gradeExperience / (float)UserManager.main.upgradeGoalPoint;
             expProgressor.toValue = (float)(Data.contentValue + UserManager.main.gradeExperience) / (float)UserManager.main.upgradeGoalPoint;
-            
+
+            MainProfile.accessActionCallback = true;
+
             Debug.Log(string.Format("expProgressor [{0}]/[{1}]", expProgressor.fromValue, expProgressor.toValue));
-        }
-        
-        public void OnProgressChanged(int __p) {
-            
         }
 
         public void ShowComplete()
@@ -57,14 +57,35 @@ namespace PIERStory
                     return;
                 }
 
-                p.Data.SetImagesSprites(null);
-                p.Data.SetLabelsTexts(string.Empty);
+                string nextGrade = string.Empty;
+                Sprite nextBadge = null;
+
+                switch (UserManager.main.nextGrade)
+                {
+                    case 2:
+                        nextGrade = SystemManager.GetLocalizedText("5192");
+                        nextBadge = LobbyManager.main.spriteSilverBadge;
+                        break;
+                    case 3:
+                        nextGrade = SystemManager.GetLocalizedText("5193");
+                        nextBadge = LobbyManager.main.spriteGoldBadge;
+                        break;
+                    case 4:
+                        nextGrade = SystemManager.GetLocalizedText("5194");
+                        nextBadge = LobbyManager.main.spritePlatinumBadge;
+                        break;
+                    case 5:
+                        nextGrade = SystemManager.GetLocalizedText("5195");
+                        nextBadge = LobbyManager.main.spriteIFYOUBadge;
+                        break;
+                }
+
+                p.Data.SetImagesSprites(nextBadge);
+                p.Data.SetLabelsTexts(nextGrade);
 
                 PopupManager.main.ShowPopup(p, false);
                 Hide();
             }
-            
-
         }
     }
 }

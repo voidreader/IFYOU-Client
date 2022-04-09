@@ -112,7 +112,28 @@ namespace PIERStory
                 return;
             }
 
-            //p.Data.SetImagesSprites(null);
+            Sprite s = null;
+
+            switch(UserManager.main.nextGrade + 1)
+            {
+                case 1:
+                    s = LobbyManager.main.spriteBronzeBadge;
+                    break;
+                case 2:
+                    s = LobbyManager.main.spriteSilverBadge;
+                    break;
+                case 3:
+                    s = LobbyManager.main.spriteGoldBadge;
+                    break;
+                case 4:
+                    s = LobbyManager.main.spritePlatinumBadge;
+                    break;
+                case 5:
+                    s = LobbyManager.main.spriteIFYOUBadge;
+                    break;
+            }
+
+            p.Data.SetImagesSprites(s);
             //p.Data.SetLabelsTexts(string.Format("{0}/{1}", UserManager.main.currentAchievement, UserManager.main.upgradeGoalPoint), string.Format("+{0}", achievementData.experience));
             p.Data.SetLabelsTexts(string.Format("+{0}", achievementData.experience));
             p.Data.contentValue = achievementData.experience;

@@ -124,7 +124,7 @@ namespace PIERStory
         public int downGrade = 0;
         public string downgradeName = string.Empty;
 
-        public int nextGrade = 0;
+        public int nextGrade = 0;           // 예상 다음 시즌 등급
         public string nextGradeName = string.Empty;
 
         public int gradeExperience = 0;

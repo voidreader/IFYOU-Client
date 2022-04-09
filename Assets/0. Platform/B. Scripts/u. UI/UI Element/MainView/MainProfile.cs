@@ -67,6 +67,7 @@ namespace PIERStory
         public Transform IFYOUAchievementContents;
 
         List<GameObject> achievementElements = new List<GameObject>();
+        public static bool accessActionCallback = false;
 
         private void Awake()
         {
@@ -82,35 +83,31 @@ namespace PIERStory
             {
                 case 1:
                     gradeBackground.sprite = spriteBronzeBackground;
-                    gradeBadge.sprite = LobbyManager.main.spriteBronzeBadge;
                     gradeTitle.color = bronzeText;
                     break;
                 case 2:
                     gradeBackground.sprite = spriteSilverBackground;
-                    gradeBadge.sprite = LobbyManager.main.spriteSilverBadge;
                     gradeTitle.color = silverText;
                     break;
                 case 3:
                     gradeBackground.sprite = spriteGoldBackground;
-                    gradeBadge.sprite = LobbyManager.main.spriteGoldBadge;
                     gradeTitle.color = goldText;
                     break;
                 case 4:
                     gradeBackground.sprite = spritePlatinumBackground;
-                    gradeBadge.sprite = LobbyManager.main.spritePlatinumBadge;
                     gradeTitle.color = platinumText;
                     break;
             }
+
+            SetBadgeSprite(gradeBadge, gradeTitle, UserManager.main.grade);
+            SetBadgeSprite(downgradeBadge, downgradeTitle, UserManager.main.grade - 1);
+            SetBadgeSprite(nextGradeBadge, nextGradeTitle, UserManager.main.nextGrade + 1);
 
             badgeGlitter.SetActive(UserManager.main.grade > 3);
             downgradeBadge.gameObject.SetActive(UserManager.main.gradeExperience < UserManager.main.keepPoint);
             downgradeTitle.gameObject.SetActive(UserManager.main.gradeExperience < UserManager.main.keepPoint);
             expMinimumBar.gameObject.SetActive(UserManager.main.gradeExperience < UserManager.main.keepPoint);
 
-            downgradeTitle.text = UserManager.main.downgradeName;
-            nextGradeTitle.text = UserManager.main.nextGradeName;
-
-            gradeTitle.text = UserManager.main.gradeName;
 
             if(UserManager.main.grade == 1)
                 benefitDetailText.text = string.Format(SystemManager.GetLocalizedText("6296"));
@@ -122,12 +119,14 @@ namespace PIERStory
                     benefitDetailText.text += "\n" + SystemManager.GetLocalizedText("6270");
             }
 
-
-            seasonEndText.text = string.Format(SystemManager.GetLocalizedText("6293"), UserManager.main.remainDay);
+            // 등급 방어 포인트 바 표기
+            float posX = ((float)UserManager.main.keepPoint / (float)UserManager.main.upgradeGoalPoint) * expGauge.rectTransform.sizeDelta.x;
+            expMinimumBar.anchoredPosition = new Vector2(posX, expMinimumBar.anchoredPosition.y);
 
             expGauge.fillAmount = (float)UserManager.main.gradeExperience / (float)UserManager.main.upgradeGoalPoint;
             expText.text = string.Format("({0}/{1})", UserManager.main.gradeExperience, UserManager.main.upgradeGoalPoint);
 
+            seasonEndText.text = string.Format(SystemManager.GetLocalizedText("6293"), UserManager.main.remainDay);
 
             newbieAchievements.gameObject.SetActive(newbieAchievementContents.childCount > 0);
             IFYOUAchievements.gameObject.SetActive(newbieAchievementContents.childCount > 0);
@@ -149,7 +148,10 @@ namespace PIERStory
             newbieAchievements.gameObject.SetActive(newbieAchievementContents.childCount > 0);
             IFYOUAchievements.gameObject.SetActive(newbieAchievementContents.childCount > 0);
 
-            scroll.verticalNormalizedPosition = 1f;
+            if (!accessActionCallback)
+                scroll.verticalNormalizedPosition = 1f;
+            else
+                accessActionCallback = false;
         }
 
 
@@ -202,6 +204,33 @@ namespace PIERStory
             }
 
             EnterProfile();
+        }
+
+        void SetBadgeSprite(Image __img, TextMeshProUGUI __text, int __grade)
+        {
+            switch (__grade)
+            {
+                case 1:
+                    __img.sprite = LobbyManager.main.spriteBronzeBadge;
+                    __text.text = SystemManager.GetLocalizedText("5191");
+                    break;
+                case 2:
+                    __img.sprite = LobbyManager.main.spriteSilverBadge;
+                    __text.text = SystemManager.GetLocalizedText("5192");
+                    break;
+                case 3:
+                    __img.sprite = LobbyManager.main.spriteGoldBadge;
+                    __text.text = SystemManager.GetLocalizedText("5193");
+                    break;
+                case 4:
+                    __img.sprite = LobbyManager.main.spritePlatinumBadge;
+                    __text.text = SystemManager.GetLocalizedText("5194");
+                    break;
+                case 5:
+                    __img.sprite = LobbyManager.main.spriteIFYOUBadge;
+                    __text.text = SystemManager.GetLocalizedText("5195");
+                    break;
+            }
         }
     }
 }

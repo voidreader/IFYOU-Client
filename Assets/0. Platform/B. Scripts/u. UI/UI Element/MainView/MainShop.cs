@@ -235,14 +235,18 @@ namespace PIERStory {
             JsonData masterData;
             bool hasEventPack = false;
             
+            string productID = string.Empty;
+            int maxCount = 0;
+            
             Debug.Log("## InitPackContainer ###2");
             
             // 패키지 초기화 
             for(int i=0; i<BillingManager.main.productMasterJSON.Count;i++) {
                 
                 masterData = BillingManager.main.productMasterJSON[i];
-                
-                Debug.Log(SystemManager.GetJsonNodeString(masterData, "product_id"));
+                productID =SystemManager.GetJsonNodeString(masterData, "product_id");  // ID 
+                maxCount = SystemManager.GetJsonNodeInt(masterData, "max_count"); // 구매 제한 횟수 
+                // Debug.Log(SystemManager.GetJsonNodeString(masterData, "product_id"));
                 
                 // 이벤트 상품. 이름을 꼭 조건으로 걸어야한다. 
                 if(SystemManager.GetJsonNodeString(masterData, "product_id").Contains("story_pack") 
@@ -250,6 +254,11 @@ namespace PIERStory {
                         
                     if(eventPackIndex >= listEventPackProducts.Count)
                         break;
+                        
+                    // 구매된 상품은 제거한다.
+                    if(maxCount > 0 && BillingManager.main.GetProductPurchaseCount(productID) >= maxCount) {
+                        continue;
+                    }
                         
                     
                     listEventPackProducts[eventPackIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"));
@@ -261,6 +270,11 @@ namespace PIERStory {
                     
                     if(packIndex >= listGeneralPackProducts.Count)
                         break; 
+                        
+                    // 구매된 상품은 제거한다.
+                    if(maxCount > 0 && BillingManager.main.GetProductPurchaseCount(productID) >= maxCount) {
+                        continue;
+                    }
                     
                     listGeneralPackProducts[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"));
                 }

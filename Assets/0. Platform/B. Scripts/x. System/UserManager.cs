@@ -3093,11 +3093,11 @@ namespace PIERStory
             for (int i = 0; i < currentStoryJson[NODE_USER_GALLERY_IMAGES].Count; i++)
             {
                 // 공개용 갤러리만 체크한다
-                if (!SystemManager.GetJsonNodeBool(currentStoryJson[NODE_USER_GALLERY_IMAGES], "is_public"))
+                if (!SystemManager.GetJsonNodeBool(currentStoryJson[NODE_USER_GALLERY_IMAGES][i], "is_public"))
                     continue;
 
                 // 아직 오픈하지 못한 것이 있다면 false 처리
-                if (!SystemManager.GetJsonNodeBool(currentStoryJson[NODE_USER_GALLERY_IMAGES], CommonConst.ILLUST_OPEN))
+                if (!SystemManager.GetJsonNodeBool(currentStoryJson[NODE_USER_GALLERY_IMAGES][i], CommonConst.ILLUST_OPEN))
                     return false;
             }
 

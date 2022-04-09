@@ -1007,8 +1007,10 @@ namespace PIERStory
                     // save the 'PushConfiguration' and use it for Gamebase.Push.RegisterPush() after Gamebase.Login().
                     GamebaseResponse.Push.PushConfiguration pushConfiguration = GamebaseResponse.Push.PushConfiguration.From(data);
                     
-                    // Register 처리 .
-                    PushRegister(pushConfiguration.adAgreement, pushConfiguration.adAgreementNight);
+                    if(pushConfiguration != null) {
+                        // Register 처리 .
+                        PushRegister(pushConfiguration.adAgreement, pushConfiguration.adAgreementNight);
+                    }
                 }
                 else
                 {

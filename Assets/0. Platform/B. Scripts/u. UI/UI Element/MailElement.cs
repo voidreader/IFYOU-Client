@@ -92,7 +92,7 @@ namespace PIERStory
                 imageBaseCurrencyIcon.sprite = SystemManager.main.spriteInappOriginIcon;
                 imageBaseCurrencyIcon.SetNativeSize();
                 // currencyIcon.SetTexture2D(SystemManager.main.spriteInappOriginIcon.texture);
-                
+                textBaseCurrencyQuantity.text = string.Empty; 
                     
                 mailContent.text = SystemManager.GetLocalizedText("80083");
             }

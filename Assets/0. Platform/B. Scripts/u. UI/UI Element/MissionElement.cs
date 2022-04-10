@@ -187,7 +187,7 @@ namespace PIERStory
         void SetMissionComplete() {
             
             // 경험치 처리 
-            NetworkLoader.main.UpdateUserExp(missionData.rewardExp, "mission", missionData.missionID);
+            // NetworkLoader.main.UpdateUserExp(missionData.rewardExp, "mission", missionData.missionID);
             RefreshViewMission();
             //rewardCanvasGroup.DOFade(0, 0.2f).OnComplete(CompleteStep2);
             // RewardMask.DOFade(1, 0.2f).OnComplete(CompleteStep2);

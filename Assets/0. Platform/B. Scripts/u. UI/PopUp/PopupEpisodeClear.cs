@@ -65,7 +65,7 @@ namespace PIERStory {
             Debug.Log(">>>>> Update EXP <<<<<<");
             
             // * 최초 클리어 경험치 연계하기  
-            NetworkLoader.main.UpdateUserExp(clearExp, "episode_clear", -1); 
+            // NetworkLoader.main.UpdateUserExp(clearExp, "episode_clear", -1); 
             
         }
         

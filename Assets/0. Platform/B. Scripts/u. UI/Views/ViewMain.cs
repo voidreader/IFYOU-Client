@@ -89,7 +89,7 @@ namespace PIERStory {
             UserManager.main.SetNewNickname(UserManager.main.nickname);
             
             
-            mainToggle.SetIsOn(true);
+            mainToggle.SetIsOn(true); // '메인' 네이게이션이 언제나 선택된 상태 
             
             
             Firebase.Analytics.FirebaseAnalytics.LogEvent("MainEnter");
@@ -103,18 +103,12 @@ namespace PIERStory {
 
             InitLobby();
 
+            // 라이브러리 컨테이너 초기화 
             library.InitLibrary();
-
+            
+            // 신규 업적이 있을때 표시
             EnableNewAchievementSign();
 
-            // (프로필) 닉네임, 레벨, 경험치
-            /*
-            
-            // (더보기) 닉네임, 레벨, 경험치
-            mLevelText.text = levelText.text;
-            mExpGauge.fillAmount = expGauge.fillAmount;
-            mExpText.text = expText.text;
-            */
         }
 
         /// <summary>

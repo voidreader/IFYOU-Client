@@ -59,7 +59,7 @@ namespace PIERStory
             
             missionText.text = missionData.missionName;
 
-            expText.text = string.Format("EXP\n{0}", missionData.rewardExp);
+            expText.text = missionData.rewardExp.ToString();
 
             SetCurrencyIcon(missionData.rewardQuantity);
             SetMissionState(missionData.missionState);

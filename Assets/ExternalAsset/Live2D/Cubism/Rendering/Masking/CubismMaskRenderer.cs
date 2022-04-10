@@ -137,7 +137,7 @@ namespace Live2D.Cubism.Rendering.Masking
                 0, 0, MaskProperties);
             }
             catch(System.Exception e) {
-                Debug.LogError(e.StackTrace);
+                // Debug.LogError(e.StackTrace);
             }
         }
 

@@ -158,6 +158,20 @@ namespace PIERStory
                 RateGame.Instance.CanShowRate();
                 UserManager.main.gameComplete = false;
             }
+            
+            // Parse 때문에 불안해서 try catch.
+            try {
+                
+                // ViewStoryLobby에 진입이 완료되었을때, 마지막 플레이 작품을 현재 작품으로 변경한다.
+                StoryManager.main.latestPlayProjectID = int.Parse(StoryManager.main.CurrentProjectID);
+                
+                // 마지막 작품이 변경되었으면, 추천 작품도 변경시켜놓는다.
+                StoryManager.main.CollectRecommendStory(StoryManager.main.latestPlayProjectID);
+            }
+            catch {
+                
+            }
+        
         }
 
         public override void OnHideView()

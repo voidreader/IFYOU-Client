@@ -317,7 +317,7 @@ namespace PIERStory
         /// 추천작 모으기
         /// </summary>
         /// <param name="__targetProjectID"></param>
-        void CollectRecommendStory(int __targetProjectID) {
+        public void CollectRecommendStory(int __targetProjectID) {
             
             StoryData storyData = FindProject(__targetProjectID.ToString());
             string[] targetGenre;

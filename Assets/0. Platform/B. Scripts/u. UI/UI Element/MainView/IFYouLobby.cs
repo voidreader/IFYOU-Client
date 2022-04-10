@@ -21,6 +21,8 @@ namespace PIERStory {
         JsonData promotionList = null;
         
         public GameObject mainTab; // 메인 탭 
+        public UIToggle mainTabToggle; // 메인탭의 첫번째 토글 
+        
         public GameObject categoryTab; // 카테고리 탭
         
         
@@ -59,11 +61,16 @@ namespace PIERStory {
         }
         
         /// <summary>
-        /// 초기화..
+        /// 로비 탭 컨테이너 초기화..
         /// </summary>
         public void InitLobby() {
             
             Debug.Log("IFYouLobby ### InitLobby");
+            
+            // 뒷변수를 false로 주면 instant callback(없음)이 실행되서 괜찮다.
+            // 항상 첫번째 토글이 시작하도록 처리 
+            mainTabToggle.SetIsOn(true, false); 
+            // mainTabToggle.GetComponent<GenreToggle>().cover.SetActive(true);
             
             mainTab.SetActive(true);
             categoryTab.SetActive(false);
@@ -219,7 +226,7 @@ namespace PIERStory {
         }
         
         /// <summary>
-        /// 메인 화면의 작은 스토리 네모들 초기화 하기 
+        /// 메인 화면의 작은 스토리 네모들, 레디 작품 초기화 하기 
         /// </summary>
         public void InitMainSmallStory() {
             ResetMainSmallStory();

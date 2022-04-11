@@ -523,7 +523,6 @@ namespace PIERStory
                     
                         bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, storyProfile[i], BGLoadComplete);
                         bgCurrency = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);
-                        LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_POS_X), 0, 0);
                         break;
 
                     case LobbyConst.NODE_BUBBLE:         // 대사
@@ -851,9 +850,19 @@ namespace PIERStory
             // 어드레서블에 없는 경우 이전 방식을 사용해서 다운만 받기 떄문에 LoadImage를 해서 생성도 해줘야함
             if (bg.sprite == null)
                 bg.LoadImage();
-            
+
             LobbyManager.main.lobbyBackground.sprite = bg.sprite;
             LobbyManager.main.lobbyBackground.transform.localScale = new Vector3(bg.gameScale, bg.gameScale, 1f);
+
+            // 위치 조절
+            for (int i = 0; i < storyProfile.Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE) == LobbyConst.NODE_WALLPAPER)
+                {
+                    LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_POS_X), 0, 0);
+                    break;
+                }
+            }
 
             movableWidth = Mathf.Abs(LobbyManager.main.lobbyBackground.size.x * LobbyManager.main.lobbyBackground.transform.localScale.x - camWidth) * 0.5f;
             CheckLoadComplete();

@@ -113,6 +113,7 @@ namespace PIERStory
         ScrollRect sr;
         string msgPrevSpeaker = string.Empty;       // 메신저에서 전에 말했던 사람
         string msgCurrSpeaker = string.Empty;       // 메신저에서 현재 말하고 있는 사람
+        const int splitWord = 18;
 
         [Header("게임로그")]
         public GameObject logPanel;
@@ -158,11 +159,7 @@ namespace PIERStory
                     SystemManager.ShowSystemPopupLocalize("6037", GameManager.main.QuitGame, null, false);
                         
                 }
-                    
-                
             }
-
-            
         }
 
         public override void OnStartView()
@@ -1065,24 +1062,29 @@ namespace PIERStory
             string enterAcess = row.script_data.Replace("\\", "\n");
             string[] lineStr = enterAcess.Split(' ');
             int lineStringLength = 0;
-
+            
             messengerText.text = string.Empty;
 
             foreach (string s in lineStr)
             {
-                // 엔터를 만나면 0으로 초기화
+                // 엔터를 만나면 엔터로 split하여 마지막 남은 단어로 글자수를 넣어줌
                 if (s.Contains("\n"))
-                    lineStringLength = 0;
+                {
+                    string[] enterSplit = s.Split('\n');
+                    lineStringLength = enterSplit[enterSplit.Length - 1].Length;
+                }
 
+                lineStringLength += s.Length + 1;
+                messengerText.text += s + " ";
+
+                // 해당 라인이 18자가 넘으면 엔터넣어주기
                 if (lineStringLength + s.Length > 18)
                 {
                     messengerText.text += "\n";
                     lineStringLength = 0;
                 }
 
-                lineStringLength += s.Length + 1;
-                messengerText.text += s + " ";
-
+                
                 /*
                 if (s.Length > 16)
                 {

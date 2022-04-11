@@ -1187,7 +1187,9 @@ namespace PIERStory
             if (result == null || result.Count == 0) { 
                 // ! 계정이 없다. => call updateAccountWithGamebaseID => OnRequest__updateAccountWithGamebaseID
                  Debug.Log("### No connected Gamebase account");
-                 // TODO 현재 유저의 table_account에 현재의 gamebaseID를 덮어씌운다. 
+                 
+                 // 현재 유저의 table_account에 현재의 gamebaseID를 덮어씌운다. 
+                 // userkey는 변동없이 유지된다. 
                  JsonData reqData = new JsonData();
                  reqData[CommonConst.FUNC] = "updateAccountWithGamebaseID";
                  reqData["gamebaseID"] = Gamebase.GetUserID();
@@ -1207,8 +1209,8 @@ namespace PIERStory
                     ShowSystemPopupLocalize("6111", ConfirmPreviousAccountLoad, CancleAccountConnect);
                 }
                 else { // 같은 계정으로 연결되었다. => 토큰 만료? 
-
-
+                    Debug.Log("### Connected same account #####");
+                    
                     // 연동이 완료되었음을 안내. 
                     ShowSystemPopupLocalize("6112", null, null, true, false);
                     UserManager.main.accountLink = "link"; // 링크 처리 
@@ -1301,13 +1303,19 @@ namespace PIERStory
             UserManager.main.InitUser(Gamebase.GetUserID());
             
             
-            // 통신이 완료될때까지 기다려야한다.
+            // 여기 여러 통신이 체인처럼 연쇄적으로 하기때문에 여러개 넣었다.
             yield return  null; 
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
-            yield return  null; 
+            yield return new WaitForSeconds(0.1f); 
             
-            Debug.Log("#### RoutineLoadingConnectedAccount Load user done");
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            
+            yield return new WaitForSeconds(0.1f);
+            
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            
+            Debug.Log(string.Format("#### RoutineLoadingConnectedAccount Load user done [{0}]", UserManager.main.userKey));
 
             // 연동이 완료되었습니다.
             ShowSystemPopupLocalize("6112", null, null, true, false);
@@ -1327,6 +1335,9 @@ namespace PIERStory
             MainToggleNavigation.OnToggleAccountBonus?.Invoke();
             PopupAccount.OnRefresh?.Invoke();
             MainMore.OnRefreshMore?.Invoke();
+            
+            ViewMain.OnRefreshViewMain?.Invoke();
+            
         }      
         
         

@@ -324,7 +324,8 @@ namespace PIERStory
             
             if(storyData == null)
                 return;
-                
+            
+            ListRecommendStoryID.Clear();    
             targetGenre = storyData.genre.Split(','); // 장르 가져온다. 
             
             

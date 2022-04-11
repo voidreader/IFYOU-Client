@@ -12,6 +12,7 @@ namespace PIERStory {
     {
         public static Action OnMoveStarShop = null;
         public static Action OnRefreshProfileNewSign = null;
+        public static Action OnRefreshViewMain = null;
         
         [Header("로비")]
         public IFYouLobby lobby;
@@ -40,6 +41,7 @@ namespace PIERStory {
         private void Awake()
         {
             OnRefreshProfileNewSign = EnableNewAchievementSign;
+            OnRefreshViewMain = RefreshMainView;
         }
 
         void Update() {
@@ -62,6 +64,7 @@ namespace PIERStory {
                 return;            
             
             base.OnView();
+            
 
             // 출석보상 안 먹었으면 무조건 또 띄워!
             if (!UserManager.main.TodayAttendanceCheck())
@@ -110,8 +113,25 @@ namespace PIERStory {
             EnableNewAchievementSign();
 
         }
-
+        
+        
         /// <summary>
+        /// 계정연동 등의 상황에서 메인 뷰 리프레시 
+        /// </summary>
+        void RefreshMainView() {
+            UserManager.main.SetNewNickname(UserManager.main.nickname);
+            
+            InitLobby();
+
+            // 라이브러리 컨테이너 초기화 
+            library.InitLibrary();
+            
+            // 신규 업적이 있을때 표시
+            EnableNewAchievementSign();
+        }
+        
+
+        /// <summary> 
         /// 로비 컨테이너 초기화 
         /// </summary>
         void InitLobby()

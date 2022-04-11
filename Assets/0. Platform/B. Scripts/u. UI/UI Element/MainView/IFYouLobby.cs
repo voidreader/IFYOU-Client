@@ -36,6 +36,8 @@ namespace PIERStory {
         public List<LobbyStoryElement> ListMainSmallStory; // 레디 등장하기 전의 모든 스토리 
         public List<LobbyStoryElement> ListReadyTwoSmallStory; // 레디에 등장하는 2개의 작은 스토리 
         
+        public List<UIToggle> ListMainGenreToggle; // 토글들
+        
         public StoryData latestPlayStory = null; // 마지막 플레이한 스토리 
         public ImageRequireDownload latestStoryBanner;
         
@@ -70,6 +72,12 @@ namespace PIERStory {
             // 뒷변수를 false로 주면 instant callback(없음)이 실행되서 괜찮다.
             // 항상 첫번째 토글이 시작하도록 처리 
             mainTabToggle.SetIsOn(true, false); 
+            
+            // 다른 토글들도 Instant Off 시켜준다. 
+            for(int i=0;i<ListMainGenreToggle.Count;i++) {
+                ListMainGenreToggle[i].SetIsOn(false, false);
+            }
+            
             // mainTabToggle.GetComponent<GenreToggle>().cover.SetActive(true);
             
             mainTab.SetActive(true);
@@ -240,13 +248,29 @@ namespace PIERStory {
                // 최근 프로젝트 설정 
                latestPlayStory = StoryManager.main.FindProject(StoryManager.main.latestPlayProjectID.ToString()); 
                latestStoryBanner.SetDownloadURL(latestPlayStory.thumbnailURL, latestPlayStory.thumbnailKey);
-              
-                for(int i=0; i<2; i++) {
-                    if(i >= StoryManager.main.ListRecommendStoryID.Count)
+               
+               string firstRecommendProjectID = string.Empty;
+               int recommendIndex = 0;
+               
+               for(int i=0; i<StoryManager.main.ListRecommendStoryID.Count; i++) {
+                   if(recommendIndex > 1)
                         break;
+                    
+                    // 첫번째 추천작품 
+                    if(i == 0) 
+                        firstRecommendProjectID = StoryManager.main.ListRecommendStoryID[i];
+                    else {
                         
-                    ListReadyTwoSmallStory[i].Init(StoryManager.main.FindProject(StoryManager.main.ListRecommendStoryID[i]), StoryElementType.general);
-                }
+                        // 혹시 동일작품 추천하지 않도록 처리 
+                        if(firstRecommendProjectID == StoryManager.main.ListRecommendStoryID[i])
+                            continue;
+                    } 
+                        
+                   
+                    // 설정                         
+                    ListReadyTwoSmallStory[recommendIndex++].Init(StoryManager.main.FindProject(StoryManager.main.ListRecommendStoryID[i]), StoryElementType.general);
+               }
+               
             }
             else { // 최근에 플레이한 작품 없음 
             

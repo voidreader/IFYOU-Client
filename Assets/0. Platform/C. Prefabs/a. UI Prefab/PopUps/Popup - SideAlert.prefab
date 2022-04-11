@@ -3118,9 +3118,9 @@ MonoBehaviour:
   m_fontSize: 24
   m_fontSizeBase: 24
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 20
+  m_fontSizeMax: 24
   m_fontStyle: 3
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -3994,6 +3994,7 @@ MonoBehaviour:
       currencyStarPlay: 
       priceOneTime: 0
       isUnlock: 0
+      isSerial: 0
     imageURL: 
     imageKey: 
     isConfirm: 1
@@ -4129,8 +4130,20 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7653804117650758277, guid: 5f8eb330ccce884419e54e6e6ea5e322, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 7653804117650758277, guid: 5f8eb330ccce884419e54e6e6ea5e322, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7653804117650758277, guid: 5f8eb330ccce884419e54e6e6ea5e322, type: 3}
       propertyPath: m_characterSpacing
       value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7653804117650758277, guid: 5f8eb330ccce884419e54e6e6ea5e322, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f8eb330ccce884419e54e6e6ea5e322, type: 3}

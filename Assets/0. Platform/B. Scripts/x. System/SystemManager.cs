@@ -1338,6 +1338,12 @@ namespace PIERStory
             
             ViewMain.OnRefreshViewMain?.Invoke();
             
+            
+            // 유저의 구매 내역 받아오기
+            NetworkLoader.main.RequestUserPurchaseHistory();
+            
+            // 코인 환전 상품 정보 가져오기
+            NetworkLoader.main.RequestCoinExchangeProductList();
         }      
         
         

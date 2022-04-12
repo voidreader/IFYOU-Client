@@ -272,29 +272,30 @@ namespace PIERStory
             
             // 0.1초 간격준다. 
             yield return new WaitForSeconds(0.1f);
-            
-            // 스탠딩 캐릭터 기본 모션 세팅
-            foreach (GameModelCtrl gm in liveModels)
+
+            for (int i = 0; i < storyProfile.Count; i++)
             {
-                yield return new WaitUntil(() => gm.DictMotion != null);
-                
-                yield return new WaitUntil(() => gm.motionLists.Count == gm.DictMotion.Count && gm.motionLists.Count > 0);
-                
-                // 캐릭터 모델 정보의 '첫번째' 모션을 플레이한다.
-                // sortkey 로 정렬된 순서가 날아온다. 
-                gm.PlayLobbyAnimation(gm.motionLists[0]);
-                
-                /*
-                for (int i = 0; i < gm.motionLists.Count; i++)
+                if (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE) != LobbyConst.NODE_STANDING)
+                    continue;
+
+                foreach (GameModelCtrl gm in liveModels)
                 {
-                    if (gm.motionLists[i].Contains("기본") && !gm.motionLists[i].Contains("M"))
-                    {
-                        // 번들용과 다운로드에서 애니메이션 재생 구분처리 해주어야한다. 
-                        gm.PlayLobbyAnimation(gm.motionLists[i]);
-                        break;
-                    }
+                    yield return new WaitUntil(() => gm.DictMotion != null);
+
+                    yield return new WaitUntil(() => gm.motionLists.Count == gm.DictMotion.Count && gm.motionLists.Count > 0);
+
+                    if (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY) != gm.currencyName)
+                        continue;
+
+                    if (SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_SORTING_ORDER) == 1)
+                        gm.model.GetComponent<CubismRenderController>().SortingOrder = 0;
+                    else if (SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_SORTING_ORDER) == 2)
+                        gm.model.GetComponent<CubismRenderController>().SortingOrder = 1200;
+
+                    // 캐릭터 모델 정보의 '첫번째' 모션을 플레이한다.
+                    // sortkey 로 정렬된 순서가 날아온다. 
+                    gm.PlayLobbyAnimation(gm.motionLists[0]);
                 }
-                */
             }
         }
         
@@ -503,8 +504,6 @@ namespace PIERStory
                     case LobbyConst.NODE_WALLPAPER:     // 배경
                     
                         DestroyPreviousBackground();
-                        
-                        Debug.Log("## DecorateSetting");
                     
                         bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, storyProfile[i], BGLoadComplete);
                         bgCurrency = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);
@@ -733,12 +732,10 @@ namespace PIERStory
             {
                 decoContainer.Hide();
 
-                LobbyManager.main.lobbyBackground.sprite = null;
-
                 // 스탠딩을 제외하고 일단 다 부수기
                 foreach (GameObject g in decoObjects)
                 {
-                    if (g.GetComponent<GameModelCtrl>() == null)
+                    if (g != null && g.GetComponent<GameModelCtrl>() == null)
                         Destroy(g);
                 }
 
@@ -754,11 +751,11 @@ namespace PIERStory
                 {
                     foreach(GameModelCtrl model in liveModels)
                     {
-                        if (SystemManager.GetJsonNodeString(standingList, LobbyConst.NODE_CURRENCY) != model.currencyName)
+                        if (SystemManager.GetJsonNodeString(standingList[i], LobbyConst.NODE_CURRENCY) != model.currencyName)
                             continue;
                         
                         // 화면에 있는 스탠딩이고 재화 상태(currentCount)와 동일하면 파괴할 필요없다
-                        if(SystemManager.GetJsonNodeInt(standingList, LobbyConst.NODE_CURRENT_COUNT) > 0)
+                        if(SystemManager.GetJsonNodeInt(standingList[i], LobbyConst.NODE_CURRENT_COUNT) > 0)
                         {
                             for (int j = 0; j < storyProfile.Count; j++)
                             {
@@ -888,11 +885,6 @@ namespace PIERStory
 
                             if (SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_ANGLE) > 0)
                                 character.modelController.transform.localScale = new Vector3(-1, 1, 1);
-
-                            if (SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_SORTING_ORDER) == 1)
-                                character.model.GetComponent<CubismRenderController>().SortingOrder = 0;
-                            else if (SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_SORTING_ORDER) == 2)
-                                character.model.GetComponent<CubismRenderController>().SortingOrder = 1200;
 
                             liveModels.Add(character.modelController);
                             listModelMounts.Add(character);

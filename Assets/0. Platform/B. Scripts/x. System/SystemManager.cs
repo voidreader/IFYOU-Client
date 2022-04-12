@@ -1181,9 +1181,6 @@ namespace PIERStory
             // 여기서는 연동한 구글, 애플과 연결된 계정정보를 불러오고 처리를 진행한다. 
             JsonData result = JsonMapper.ToObject(response.DataAsText);
 
-            // 22.04.06 첫 계정 연동을 했으므로 초심자 업적 업데이트 호출도 해준다
-            NetworkLoader.main.RequestIFYOUAchievement(1);
-
             if (result == null || result.Count == 0) { 
                 // ! 계정이 없다. => call updateAccountWithGamebaseID => OnRequest__updateAccountWithGamebaseID
                  Debug.Log("### No connected Gamebase account");
@@ -1243,11 +1240,16 @@ namespace PIERStory
             // 연동이 완료되었습니다. 메세지 처리 
             ShowSystemPopupLocalize("6110", null, null, true, false);
             UserManager.main.accountLink = "link";
-            
+
+            // 22.04.06 첫 계정 연동을 했으므로 초심자 업적 업데이트 호출도 해준다
+            NetworkLoader.main.RequestIFYOUAchievement(1);
+
             // Refresh 처리 
             PopupAccount.OnRefresh?.Invoke();
             MainToggleNavigation.OnToggleAccountBonus?.Invoke();
             MainMore.OnRefreshMore?.Invoke();
+
+            UserManager.main.RequestUserGradeInfo();
         }
                 
         
@@ -1316,6 +1318,7 @@ namespace PIERStory
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
             Debug.Log(string.Format("#### RoutineLoadingConnectedAccount Load user done [{0}]", UserManager.main.userKey));
+            NetworkLoader.main.RequestIFYOUAchievement(1);
 
             // 연동이 완료되었습니다.
             ShowSystemPopupLocalize("6112", null, null, true, false);
@@ -1344,6 +1347,9 @@ namespace PIERStory
             
             // 코인 환전 상품 정보 가져오기
             NetworkLoader.main.RequestCoinExchangeProductList();
+
+            // 업적 리스트 갱신
+            UserManager.main.RequestUserGradeInfo();
         }      
         
         

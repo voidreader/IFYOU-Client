@@ -19,7 +19,7 @@ namespace PIERStory
 
         public string currencyName = string.Empty;
         public string modelName = string.Empty;
-        string currencyType = string.Empty;
+        public string currencyType = string.Empty;
         public int totalCount = 1, currentCount = 0;
         
         public string debugJson = string.Empty;

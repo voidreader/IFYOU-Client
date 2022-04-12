@@ -3,17 +3,14 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-
-using Toast.Gamebase;
+using UnityEngine.AddressableAssets;
 
 using LitJson;
 using BestHTTP;
+using Live2D.Cubism.Rendering;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Containers;
 using Doozy.Runtime.UIManager.Components;
-
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 using VoxelBusters.CoreLibrary;
 using VoxelBusters.EssentialKit;
@@ -139,9 +136,7 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
-
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
-            
         }
 
 
@@ -180,7 +175,57 @@ namespace PIERStory
 
 
             DestroyPreviousBackground(); // 배경 제거하고.
-            DestroyDecoObjects(); 
+
+            // 만든 모든 오브젝트들 파괴
+            try
+            {
+                GameModelCtrl modelCtrl;
+                foreach (GameObject g in decoObjects)
+                {
+                    if (g == null)
+                        continue;
+
+                    // 캐릭터 모델에 대한 추가 처리 
+                    modelCtrl = g.GetComponent<GameModelCtrl>();
+                    if (modelCtrl != null)
+                    {
+                        liveModels.Remove(modelCtrl);
+
+                        if (modelCtrl.isAddressable)
+                        {
+                            // 캐릭터 모델인데 에셋번들
+                            ScriptModelMount mount = FindModelMount(modelCtrl);
+
+                            if (mount != null)
+                            {
+                                listModelMounts.Remove(mount);
+                                mount.DestroyAddressableModel();
+                            }
+
+                            Destroy(modelCtrl.gameObject);
+                        }
+                        else
+                        {
+                            // 캐릭터 모델인데 에셋번들 아님
+                            Destroy(g);
+                        }
+                    } // ? 캐릭터 모델 처리 끝 
+                    else
+                    {
+                        // 모델이 아닌 친구들
+                        Destroy(g);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.StackTrace);
+            }
+            finally
+            {
+                decoObjects.Clear();
+                GC.Collect();
+            }
 
             foreach (GameObject g in currencyElements)
                 Destroy(g);
@@ -198,60 +243,6 @@ namespace PIERStory
             if (LobbyManager.main != null && UserManager.main != null && UserManager.main.listAchievement.Count > 0)
                 UserManager.main.RequestUserGradeInfo();
         }
-        
-        
-        /// <summary>
-        /// 화면에 생성된 데코 오브젝트 없애기 (배경 빼고)
-        /// </summary>
-        void DestroyDecoObjects() {
-            
-            try {
-                GameModelCtrl modelCtrl;
-                foreach (GameObject g in decoObjects) {
-                    
-                    if(g == null)
-                        continue;
-                    
-                    // 캐릭터 모델에 대한 추가 처리 
-                    modelCtrl = g.GetComponent<GameModelCtrl>();
-                    if(modelCtrl != null) {
-                        liveModels.Remove(modelCtrl);
-                        
-                        if(modelCtrl.isAddressable) {
-                            // 캐릭터 모델인데 에셋번들
-                            ScriptModelMount mount = FindModelMount(modelCtrl);
-                            
-                            if(mount != null) {
-                                listModelMounts.Remove(mount);
-                                mount.DestroyAddressableModel();
-                                
-                            }
-                            
-                            Destroy(modelCtrl.gameObject);
-                        }
-                        else {
-                            // 캐릭터 모델인데 에셋번들 아님
-                            Destroy(g);    
-                        }
-                    } // ? 캐릭터 모델 처리 끝 
-                    else {                
-                        // 모델이 아닌 친구들
-                        Destroy(g);
-                    }
-                }
-                
-                
-            } catch(Exception e) {
-                Debug.LogError(e.StackTrace);
-            }
-            finally {
-                decoObjects.Clear();
-                GC.Collect();
-            }
-            
-
-        }
-        
         
         /// <summary>
         /// 이전에 생성된 배경 개체 파괴 
@@ -271,8 +262,6 @@ namespace PIERStory
             bg = null;
             // LobbyManager.main.lobbyBackground.sprite = null;
         }
-        
-        
         
         
         /// <summary>
@@ -307,10 +296,6 @@ namespace PIERStory
                 }
                 */
             }
-
-            // 캐릭터가 2개인 경우 두번째 캐릭의 sorting Order를 변경 
-            if (liveModels.Count > 1)
-                liveModels[1].model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 1200;
         }
         
 
@@ -358,10 +343,10 @@ namespace PIERStory
             currencyElements.Clear();
 
             // 리스트 재화 항목 생성
-            CreateListObject(LobbyConst.NODE_WALLPAPER, bgListPrefab, bgListContent); // 배경 
-            CreateListObject(LobbyConst.NODE_STANDING, standingListPrefab, standingListContent); // 스탠딩 
-            CreateListObject(LobbyConst.NODE_STICKER, stickerListPrefab, stickerListContent); // 스티커
-            CreateListObject(LobbyConst.NODE_BUBBLE, bubbleListPrefab, bubbleListContent); // 말풍선 
+            CreateListObject(LobbyConst.NODE_BUBBLE, bubbleListPrefab, bubbleListContent);          // 말풍선 
+            CreateListObject(LobbyConst.NODE_STANDING, standingListPrefab, standingListContent);    // 스탠딩 
+            CreateListObject(LobbyConst.NODE_STICKER, stickerListPrefab, stickerListContent);       // 스티커
+            CreateListObject(LobbyConst.NODE_WALLPAPER, bgListPrefab, bgListContent);               // 배경 
 
             
             // 배치 배열 재정리
@@ -667,7 +652,6 @@ namespace PIERStory
         }
 
 
-
         /// <summary>
         /// 불러오기 완료
         /// </summary>
@@ -749,15 +733,175 @@ namespace PIERStory
             {
                 decoContainer.Hide();
 
-                // 수정한게 있든 없든 일단 다 뿌셔!
-                DestroyDecoObjects();
-                
                 LobbyManager.main.lobbyBackground.sprite = null;
 
-                // 서버에 저장되어 있는 기반으로 다시 만들어!
-                DecorateSetting();
-                ActiveInteractable(false);
+                // 스탠딩을 제외하고 일단 다 부수기
+                foreach (GameObject g in decoObjects)
+                {
+                    if (g.GetComponent<GameModelCtrl>() == null)
+                        Destroy(g);
+                }
 
+                // 정리
+                decoObjects.Clear();
+
+                #region 스탠딩 정리
+
+                JsonData standingList = currencyList[LobbyConst.NODE_STANDING];
+                bool breakPoint = false;
+
+                for (int i = 0; i < standingList.Count; i++)
+                {
+                    foreach(GameModelCtrl model in liveModels)
+                    {
+                        if (SystemManager.GetJsonNodeString(standingList, LobbyConst.NODE_CURRENCY) != model.currencyName)
+                            continue;
+                        
+                        // 화면에 있는 스탠딩이고 재화 상태(currentCount)와 동일하면 파괴할 필요없다
+                        if(SystemManager.GetJsonNodeInt(standingList, LobbyConst.NODE_CURRENT_COUNT) > 0)
+                        {
+                            for (int j = 0; j < storyProfile.Count; j++)
+                            {
+                                if (SystemManager.GetJsonNodeString(storyProfile[j], LobbyConst.NODE_CURRENCY_TYPE) != LobbyConst.NODE_STANDING)
+                                    continue;
+
+                                // 서버에 저장해뒀던 대로 원상복귀시키기
+                                if (SystemManager.GetJsonNodeString(storyProfile[j], LobbyConst.NODE_CURRENCY) == model.currencyName)
+                                {
+                                    if (SystemManager.main.hasSafeArea)
+                                        model.transform.localPosition = new Vector3(SystemManager.GetJsonNodeFloat(storyProfile[j], LobbyConst.NODE_POS_X), GameConst.MODEL_PARENT_SAFEAREA_POS_Y, 0);
+                                    else
+                                        model.transform.localPosition = new Vector3(SystemManager.GetJsonNodeFloat(storyProfile[j], LobbyConst.NODE_POS_X), GameConst.MODEL_PARENT_ORIGIN_POS_Y, 0);
+
+                                    if (SystemManager.GetJsonNodeFloat(storyProfile[j], LobbyConst.NODE_ANGLE) > 0)
+                                        model.transform.localScale = new Vector3(-1, 1, 1);
+
+                                    if (SystemManager.GetJsonNodeInt(storyProfile[j], LobbyConst.NODE_SORTING_ORDER) == 1)
+                                        model.model.GetComponent<CubismRenderController>().SortingOrder = 0;
+                                    else if (SystemManager.GetJsonNodeInt(storyProfile[j], LobbyConst.NODE_SORTING_ORDER) == 2)
+                                        model.model.GetComponent<CubismRenderController>().SortingOrder = 1200;
+
+
+                                    decoObjects.Add(model.gameObject);
+                                    breakPoint = true;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                // 서버에 저장해둔 스탠딩이 아닌데 화면에 있다...부순다...
+                                liveModels.Remove(model);
+
+                                if (model.isAddressable)
+                                {
+                                    ScriptModelMount modelMount = FindModelMount(model);
+
+                                    if (modelMount != null)
+                                    {
+                                        listModelMounts.Remove(modelMount);
+                                        modelMount.DestroyAddressableModel();
+                                    }
+                                }
+
+                                Destroy(model.gameObject);
+                                breakPoint = true;
+                            }
+                            catch(Exception e)
+                            {
+                                Debug.LogError(e.StackTrace);
+                            }
+                        }
+
+                        // 서버와 동일한 모델일 원복해줬으니 모델쪽 반복문을 빠져나간다 
+                        if (breakPoint)
+                        {
+                            breakPoint = false;
+                            break;
+                        }
+                    }
+                }
+
+                #endregion
+
+
+                totalDecoLoad = storyProfile.Count;
+
+                if (totalDecoLoad == 0)
+                {
+                    loadComplete = true;
+                    return;
+                }
+
+                // 서버에 저장되어 있는 기반으로 다시 만들어!
+                for (int i = 0; i < storyProfile.Count; i++)
+                {
+                    switch (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE))
+                    {
+                        case LobbyConst.NODE_WALLPAPER:     // 배경
+                            DestroyPreviousBackground();
+                            bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, storyProfile[i], BGLoadComplete);
+                            bgCurrency = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);
+                            break;
+
+                        case LobbyConst.NODE_BUBBLE:         // 대사
+                            BubbleElement bubble = Instantiate(bubbleObjectPrefab, bubbleStickerParent).GetComponent<BubbleElement>();
+                            bubble.SetBubbleElement(storyProfile[i], BubbleLoadComplete);
+                            decoObjects.Add(bubble.gameObject);
+                            break;
+
+                        case LobbyConst.NODE_STICKER:       // 스티커
+                            StickerElement sticker = Instantiate(stickerObjectPrefab, bubbleStickerParent).GetComponent<StickerElement>();
+                            sticker.SetStickerElement(storyProfile[i], StickerLoadComplete);
+                            decoObjects.Add(sticker.gameObject);
+                            break;
+
+                        case LobbyConst.NODE_STANDING:      // 스탠딩 캐릭터
+
+                            foreach (GameModelCtrl liveModel in liveModels)
+                            {
+                                if (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY) == liveModel.currencyName)
+                                {
+                                    totalDecoLoad--;
+                                    CheckLoadComplete();
+                                    breakPoint = true;
+                                }
+                            }
+
+                            if (breakPoint)
+                            {
+                                breakPoint = false;
+                                break;
+                            }
+
+                            ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(storyProfile[i], GameConst.COL_MODEL_NAME), CharacterLoadComplete, LobbyManager.main);
+                            character.SetModelDataFromStoryManager(true);
+
+                            if (SystemManager.main.hasSafeArea)
+                                character.modelController.transform.localPosition = new Vector3(SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_POS_X), GameConst.MODEL_PARENT_SAFEAREA_POS_Y, 0);
+                            else
+                                character.modelController.transform.localPosition = new Vector3(SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_POS_X), GameConst.MODEL_PARENT_ORIGIN_POS_Y, 0);
+
+                            character.modelController.currencyName = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);
+
+                            if (SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_ANGLE) > 0)
+                                character.modelController.transform.localScale = new Vector3(-1, 1, 1);
+
+                            if (SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_SORTING_ORDER) == 1)
+                                character.model.GetComponent<CubismRenderController>().SortingOrder = 0;
+                            else if (SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_SORTING_ORDER) == 2)
+                                character.model.GetComponent<CubismRenderController>().SortingOrder = 1200;
+
+                            liveModels.Add(character.modelController);
+                            listModelMounts.Add(character);
+                            decoObjects.Add(character.modelController.gameObject);
+                            break;
+                    }
+                }
+
+                ActiveInteractable(false);
                 mainContainer.Show();
             }
         }
@@ -859,7 +1003,7 @@ namespace PIERStory
             {
                 if (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE) == LobbyConst.NODE_WALLPAPER)
                 {
-                    LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_POS_X), 0, 0);
+                    LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_POS_X), 0, 0);
                     break;
                 }
             }
@@ -926,27 +1070,13 @@ namespace PIERStory
         /// </summary>
         void CharacterInstantComplete()
         {
+            // 기본 모션의 정의가 없기 때문에 순서상 첫번째 모션을 불러온다. 
             if(controlModel != null)
-            {
-                // 기본 모션의 정의가 없기 때문에 순서상 첫번째 모션을 불러온다. 
                 controlModel.PlayLobbyAnimation(controlModel.motionLists[0]);
-
-                /*
-                for (int i = 0; i < controlModel.motionLists.Count; i++)
-                {
-                    // 생성되고 난 후, 기본 모션을 세팅한다
-                    if (controlModel.motionLists[i].Contains("기본") && !controlModel.motionLists[i].Contains("M"))
-                    {
-                        controlModel.PlayLobbyAnimation(controlModel.motionLists[i]);
-                        break;
-                    }
-                }
-                */
-            }
 
             // 화면에 이미 스탠딩이 있다면 SortingOrder 값을 증가시켜준다.
             if (liveModels.Count > 1)
-                controlModel.model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder += 1200;
+                controlModel.model.GetComponent<CubismRenderController>().SortingOrder = 1200;
 
             controlModel.ChangeLayerRecursively(controlModel.transform, GameConst.LAYER_MODEL_L);
         }
@@ -1043,10 +1173,9 @@ namespace PIERStory
             liveModels.Remove(controlModel);
             
             
-
             // 화면에 남은 모델의 SortingOrder를 0으로 만들어준다
             foreach(GameModelCtrl model in liveModels)
-                model.model.GetComponent<Live2D.Cubism.Rendering.CubismRenderController>().SortingOrder = 0;
+                model.model.GetComponent<CubismRenderController>().SortingOrder = 0;
 
             // 파괴
             if (controlModel.isAddressable) {
@@ -1197,13 +1326,17 @@ namespace PIERStory
         /// </summary>
         public void OnClickProjectCoinShop()
         {
-            SystemManager.ShowSystemPopupLocalize("6260", OpenStoryCoinShop, null);
+            // 화면에 올라와 있는 갯수와 서버에 저장중인 갯수가 달라서 발생하는 문제이므로 화면에 올라온 갯수들을 체크한다
+            if (!CompareCurrencyList(LobbyConst.NODE_BUBBLE) && !CompareCurrencyList(LobbyConst.NODE_STICKER) && !CompareCurrencyList(LobbyConst.NODE_STANDING))
+                OpenStoryCoinShop();
+            else
+                SystemManager.ShowSystemPopupLocalize("6260", SaveBeforeOpenCoinShop, null);
         }
 
         /// <summary>
-        /// 해당 작품 코인샵 오픈
+        /// 해당 작품 코인샵 오픈하기 전에 저장하기
         /// </summary>
-        void OpenStoryCoinShop()
+        void SaveBeforeOpenCoinShop()
         {
             NetworkLoader.main.SendPost(CallbackOpenCoinShop, SaveCurrentDeco());
         }
@@ -1222,6 +1355,14 @@ namespace PIERStory
                 return;
             }
 
+            OpenStoryCoinShop();
+        }
+
+        /// <summary>
+        /// 해당 작품 코인샵 오픈
+        /// </summary>
+        void OpenStoryCoinShop()
+        {
             UserManager.main.SaveCurrentAbilityDictionary(); // 코인샵 열기전에 현재 능력치 정보 저장해놓고 시작 
 
             if (Application.isEditor)
@@ -1237,7 +1378,7 @@ namespace PIERStory
 
             string finalURL = SystemManager.main.coinShopURL + uidParam + langParam + projectParam;
             Debug.Log("Coinshop : " + finalURL);
-                
+
             /*
             GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
             configuration.title = SystemManager.GetLocalizedText("6186");
@@ -1261,14 +1402,14 @@ namespace PIERStory
             */
             WebView webView = WebView.CreateInstance();
             WebView.OnHide += OnHideWebview;
-            
-            
+
+
             Debug.Log(">> OnHideWebview LoadURL");
             webView.ClearCache();
             webView.SetFullScreen(); // 풀스크린 
             webView.ScalesPageToFit = true;
             webView.LoadURL(URLString.URLWithPath(finalURL));
-            webView.Show();            
+            webView.Show();
         }
         
         void OnHideWebview(WebView __view) {
@@ -1376,9 +1517,31 @@ namespace PIERStory
                 sortingOrder++;
             }
 
-
-
             return sending;
+        }
+
+        /// <summary>
+        /// 현재 화면의 재화와 서버에 저장된 재화의 갯수 비교
+        /// </summary>
+        /// <param name="__key"></param>
+        /// <returns>true = 변경된거 있음, false = 변경된거 없음</returns>
+        bool CompareCurrencyList(string __key)
+        {
+            ProfileItemElement profileItem = null;
+
+            for (int i = 0; i < currencyList[__key].Count; i++)
+            {
+                for(int j=0;j<currencyElements.Count;j++)
+                {
+                    profileItem = currencyElements[j].GetComponent<ProfileItemElement>();
+
+                    // 해당 재화의 현재 카운트가 json 저장된 값과 다르면 return false
+                    if (profileItem.currencyType == __key && SystemManager.GetJsonNodeInt(currencyList[__key][i], LobbyConst.NODE_CURRENT_COUNT) != profileItem.currentCount)
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }

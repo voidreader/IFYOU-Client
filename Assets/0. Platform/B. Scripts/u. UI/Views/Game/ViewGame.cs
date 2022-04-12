@@ -437,7 +437,7 @@ namespace PIERStory
         {
             GameManager.main.isSelectionInputWait = true; // 선택지 입력을 기다려야 한다. 
             IFYouGameSelectionCtrl.isChooseCompleted = false; // 선택지 입력 초기화 
-            
+
             // Appear 리스트 클리어 
             ListAppearSelection.Clear();
             IFYouGameSelectionCtrl.ListStacks.Clear();
@@ -450,11 +450,12 @@ namespace PIERStory
             // 선택지 안내 표출
             if (!string.IsNullOrEmpty(selectionInfoText.text))
                 selectionInfo.DOFade(1f, 1f);
-            
-            if(!UserManager.main.isSelectionTutorialClear) {
+
+            if (!UserManager.main.isSelectionTutorialClear)
+            {
                 selectionTutorialText.color = CommonConst.COLOR_BLACK_TRANSPARENT;
                 selectionTutorialText.gameObject.SetActive(true);
-                selectionTutorialText.DOFade(1, 1);    
+                selectionTutorialText.DOFade(1, 1);
             }
 
 
@@ -472,6 +473,7 @@ namespace PIERStory
             }
             */
 
+
             // 마지막 선택지부터 stack처럼 쌓기
             for (int i = ListSelectionRows.Count - 1; i >= 0; i--)
             {
@@ -479,6 +481,24 @@ namespace PIERStory
                 ListGameSelection[i].SetSelection(ListSelectionRows[i], ListSelectionRows.Count - 1 - i);
                 ListAppearSelection.Add(ListGameSelection[i]); // appear에 추가. 
             }
+
+            // 선택지 리스트 중 힌트 포함하고 있는지 체크
+            /*
+            bool hasSelectionHint = false;
+            for (int i=0;i<ListAppearSelection.Count;i++)
+            {
+                if (ListAppearSelection[i].hasSelectionHint)
+                {
+                    hasSelectionHint = true;
+                    break;
+                }
+            }
+
+            if(hasSelectionHint)
+            {
+
+            }
+            */
 
             bool hasPurchaseSelection = false;
 
@@ -492,7 +512,7 @@ namespace PIERStory
             }
 
             // 구매해야하는 선택지가 있다면
-            if(hasPurchaseSelection)
+            if (hasPurchaseSelection)
             {
                 Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
                 Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
@@ -503,8 +523,6 @@ namespace PIERStory
                 commonTop.Show();
             }
         }
-
-
 
 
         /// <summary>

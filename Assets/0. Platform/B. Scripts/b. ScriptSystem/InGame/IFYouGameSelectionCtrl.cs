@@ -31,7 +31,7 @@ namespace PIERStory {
         static bool isOneOfSelectionPointerDown = false; // 선택지 중 하나라도 누르고 있는 경우 true로 변환 
         public static bool isChooseCompleted = false; // 선택 완료 (다른거 누를 수 없도록 막는다)
         public bool isPurchaseSelection = false;     // 구매해야 하는 선택지인가요?
-
+        public bool hasSelectionHint = false;           // 선택지 힌트가 연결되어 있나요?
 
         #region const & readonly
         static readonly Vector2 originSizeDelta = new Vector2(550, 90); // 기본 크기 
@@ -69,6 +69,11 @@ namespace PIERStory {
 
         int targetPosY = 0; // 최종적으로 도달할 위치 (Y)
         int appearPosY = 0; // 등장 위치 
+
+        [Space][Header("선택지 힌트")]
+        public GameObject selectionHint;
+        public GameObject coinBox;
+        public TextMeshProUGUI hintPrice;
 
         #region static methods
 

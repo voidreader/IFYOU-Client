@@ -7,6 +7,7 @@ using UnityEngine.AddressableAssets;
 
 using LitJson;
 using BestHTTP;
+using DG.Tweening;
 using Live2D.Cubism.Rendering;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Containers;
@@ -106,8 +107,11 @@ namespace PIERStory
         public GameObject bubbleScroll;
         public GameObject noneBubbleCurrency;        
         
-
         int totalDecoLoad = 0;
+
+        [Space(30)][Header("꾸미기 로딩 Fade")]
+        public CanvasGroup loadingFade;
+        public Image loadingIcon;
 
         private void Awake()
         {
@@ -296,6 +300,17 @@ namespace PIERStory
                     // sortkey 로 정렬된 순서가 날아온다. 
                     gm.PlayLobbyAnimation(gm.motionLists[0]);
                 }
+            }
+
+            if(mainContainer.isShowing || mainContainer.isVisible)
+            {
+                loadingFade.DOKill();
+                loadingFade.DOFade(0f, 0.3f).OnComplete(() =>
+                {
+                    loadingIcon.DOKill();
+                    loadingFade.gameObject.SetActive(false);
+                });
+                
             }
         }
         
@@ -497,6 +512,8 @@ namespace PIERStory
                 return;
             }
 
+            #region 생성
+
             for (int i = 0; i < storyProfile.Count; i++)
             {
                 switch (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE))
@@ -543,6 +560,8 @@ namespace PIERStory
                         break;
                 }
             }
+
+            #endregion
         }
 
         /// <summary>
@@ -732,6 +751,10 @@ namespace PIERStory
             {
                 decoContainer.Hide();
 
+                loadingFade.gameObject.SetActive(true);
+                loadingFade.DOFade(1f, 0.3f);
+                loadingIcon.transform.DOScale(1.1f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+
                 // 스탠딩을 제외하고 일단 다 부수기
                 foreach (GameObject g in decoObjects)
                 {
@@ -832,6 +855,8 @@ namespace PIERStory
                     return;
                 }
 
+                #region 재생성
+
                 // 서버에 저장되어 있는 기반으로 다시 만들어!
                 for (int i = 0; i < storyProfile.Count; i++)
                 {
@@ -892,6 +917,8 @@ namespace PIERStory
                             break;
                     }
                 }
+
+                #endregion
 
                 ActiveInteractable(false);
                 mainContainer.Show();
@@ -981,8 +1008,6 @@ namespace PIERStory
             if (totalDecoLoad > 0)
                 totalDecoLoad--;
 
-            LobbyManager.main.lobbyBackground.sprite = null;
-
             // 어드레서블에 없는 경우 이전 방식을 사용해서 다운만 받기 떄문에 LoadImage를 해서 생성도 해줘야함
             if (bg.sprite == null)
                 bg.LoadImage();
@@ -1001,6 +1026,10 @@ namespace PIERStory
             }
 
             movableWidth = Mathf.Abs(LobbyManager.main.lobbyBackground.size.x * LobbyManager.main.lobbyBackground.transform.localScale.x - camWidth) * 0.5f;
+
+            if (decoContainer.isVisible)
+                SystemManager.HideNetworkLoading();
+
             CheckLoadComplete();
         }
 
@@ -1012,6 +1041,8 @@ namespace PIERStory
         void SelectBackground(JsonData bgData)
         {
             DestroyPreviousBackground(); // 이전 배경 개체 정리하고 진행 
+
+            SystemManager.ShowNetworkLoading();
             
             bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, bgData, BGLoadComplete);
             bgCurrency = SystemManager.GetJsonNodeString(bgData, LobbyConst.NODE_CURRENCY);

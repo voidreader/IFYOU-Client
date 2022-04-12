@@ -19,7 +19,7 @@ namespace PIERStory {
         /// <summary>
         /// 네트워크 기다림!
         /// </summary>
-        public void ShowNetworkLoading()
+        public void ShowNetworkLoading(bool _isInstant = false)
         {
             // 이미 보여지고 있으면 또 하지 않음. 
             if(this.gameObject.activeSelf)

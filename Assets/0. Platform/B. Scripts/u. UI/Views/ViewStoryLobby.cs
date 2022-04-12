@@ -147,10 +147,11 @@ namespace PIERStory
             if (UserManager.main.tutorialStep == 1 && !UserManager.main.tutorialClear)
                 UserManager.main.UpdateTutorialStep(1, 0, CallbackStartTutorial);
 
-
+            
+            // 리뷰 팝업 위치 
             if(UserManager.main.gameComplete)
             {
-                RateGame.Instance.CanShowRate();
+                // RateGame.Instance.CanShowRate();
                 UserManager.main.gameComplete = false;
             }
             

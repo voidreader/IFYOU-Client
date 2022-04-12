@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 using BestHTTP;
 using DG.Tweening;
-using Coffee.UIExtensions;
+
 
 
 namespace PIERStory {
@@ -60,7 +60,7 @@ namespace PIERStory {
         [SerializeField] bool isButtonSelected = false; // 버튼 선택됨!
         [SerializeField] bool isLock = false; // 잠금 여부 
         [SerializeField] bool isFilling = false; // 채워짐 
-        [SerializeField] UIParticle particleSelect; // 선택지 선택시 발생 파티클 
+        
 
         string selectionText = string.Empty; // 선택지 문구 
         [SerializeField] string requisite = string.Empty; // 조건 
@@ -238,8 +238,7 @@ namespace PIERStory {
             canvasGroup.alpha = 0; // 알파값 초기화 
             imageBar.fillAmount = fillAmount;
 
-            // 파티클
-            particleSelect.gameObject.SetActive(false);
+            
 
             ListStacks.Add(this);
         }

@@ -20,7 +20,7 @@ namespace PIERStory {
 
         public static LobbyManager main = null;
 
-        JsonData platformImageJson = null; // 플랫폼 이미지 JSON
+        
 
         public ScriptLiveMount currentLiveIllust = null; // Live Illust for Gallery 
         public ScriptLiveMount currentLiveObject = null; // Live Object for Gallery
@@ -79,13 +79,6 @@ namespace PIERStory {
 
         
         [Header("== 컬러 ==")]
-        public Color colorFreeBox = Color.white;
-        
-        public Color colorNavOn = Color.white;
-        public Color colorNavOff = Color.white;
-        
-        public Color colorGenreOn = Color.white;
-        public Color colorGenreOff = Color.white;
         
         public Color colorEndingFutureCover; // 엔딩 미래 커버
         public Color colorEndingPastCover;  // 엔딩 과거 커버 
@@ -208,22 +201,6 @@ namespace PIERStory {
                 
                 Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showIntro", string.Empty);
                 
-            }
-        }
-
-        public void InitLobbyScene()
-        {
-            Debug.Log("<color=cyan>LobbyManager Start</color>");
-
-            // 게임씬에서 넘어왔다면 곧바로 StoryDetail로 넘겨줘야 한다. 
-            if (SystemManager.main.givenStoryData != null)
-            {
-                //StoryManager.main.RequestStoryInfo(StoryManager.main.CurrentProjectID, SystemManager.main.givenStoryData);
-            }
-            else
-            {
-                // 첫 시작시, 타이틀로 이동을 요청합니다. 
-                //GameEventMessage.SendEvent(SystemManager.EVENT_GO_TITLE);
             }
         }
 

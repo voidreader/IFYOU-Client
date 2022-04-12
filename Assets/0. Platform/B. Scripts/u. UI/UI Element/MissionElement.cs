@@ -169,7 +169,7 @@ namespace PIERStory
             missionData.missionState = MissionState.finish; 
             UserManager.main.SetMissionData(missionData.missionID, missionData);
             
-            StoryContentsButton.onStoryContentsButtonMission?.Invoke();
+            // StoryContentsButton.onStoryContentsButtonMission?.Invoke();
             
             
             // * 성공 했다. => 미션이 해금도 되었고, 보상도 받은 상태가 되는거다. 

@@ -1,18 +1,17 @@
-﻿using System;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
 using LitJson;
-using BestHTTP;
 
 namespace PIERStory
 {
     public class SoundElement : MonoBehaviour
     {
         AudioClip audioClip;
-        string soundUrl = string.Empty;
-        string soundKey = string.Empty;
+        JsonData soundData;
+        public ScriptSoundMount soundMount;
 
         [Header("BGM require")]
         public GameObject playIcon;
@@ -28,6 +27,7 @@ namespace PIERStory
         public bool isOpen = false;
 
         int soundNumber = -1;
+        bool isBgm = false;
 
         Color titleColor = new Color32(51, 51, 51, 255);
         Color timeColor = new Color32(153, 153, 153, 255);
@@ -35,11 +35,11 @@ namespace PIERStory
 
         public void SetBGMElement(int index, JsonData __j)
         {
+            soundData = __j;
             soundNumber = index;
             soundNumText.text = (index + 1).ToString();
             bgmTitle.text = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_NAME);
-            soundUrl = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_URL);
-            soundKey = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_KEY);
+            isBgm = true;
 
             BGMStopMode();
             ClipSetting();
@@ -48,50 +48,46 @@ namespace PIERStory
 
         public void SetVoiceElement(int index, JsonData __j)
         {
+            soundData = __j;
             soundNumber = index;
             voiceScriptData.text = SystemManager.GetJsonNodeString(__j, GameConst.COL_SCRIPT_DATA);
             voiceScriptData.text = voiceScriptData.text.Replace('\\', ' ');
-            soundUrl = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_URL);
-            soundKey = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_KEY);
             isOpen = SystemManager.GetJsonNodeBool(__j, CommonConst.IS_OPEN);
+            isBgm = false;
 
-            
             VoiceStopMode();
             ClipSetting();
         }
 
         void ClipSetting()
         {
-            if (ES3.FileExists(soundKey))
-                SuccessLoad();
+            soundMount = null;
+
+            if (isBgm)
+                soundMount = new ScriptSoundMount(GameConst.TEMPLATE_BGM, soundData, SuccessLoad);
             else
-            {
-                var req = new HTTPRequest(new Uri(soundUrl), OnSoundDownloaded);
-                req.Send();
-            }
-        }
+                soundMount = new ScriptSoundMount(GameConst.COL_VOICE, soundData, SuccessLoad);
 
-        void OnSoundDownloaded(HTTPRequest req, HTTPResponse res)
-        {
-            if (req.State != HTTPRequestStates.Finished)
-            {
-                Debug.LogError("Download failed : " + soundUrl);
-                ViewSoundDetail.OnSoundLoadCheck?.Invoke();
-                return;
-            }
-
-            ES3.SaveRaw(res.Data, soundKey, SystemManager.noEncryptionSetting);
-            SuccessLoad();
+            gameObject.SetActive(true);
         }
 
         void SuccessLoad()
         {
-            if (soundKey.Contains("mp3"))
-                audioClip = ES3.LoadAudio(soundKey, AudioType.MPEG);
-            else if (soundKey.Contains("wav"))
-                audioClip = ES3.LoadAudio(soundKey, AudioType.WAV);
+            Debug.Log("Sound load complete. sound name = " + SystemManager.GetJsonNodeString(soundData, CommonConst.SOUND_NAME));
+            ViewSoundDetail.OnSoundLoadCheck?.Invoke();
+        }
 
-            if(voiceScriptData == null)
+        public void SetAudioClip()
+        {
+            if (!soundMount.isMounted)
+            {
+                Debug.LogError("Sound mount failed. sound name = " + SystemManager.GetJsonNodeString(soundData, CommonConst.SOUND_NAME));
+                return;
+            }
+
+            audioClip = soundMount.audioClip;
+
+            if (voiceScriptData == null)
             {
                 int clipLength = (int)audioClip.length;
                 string second = string.Empty;
@@ -105,7 +101,7 @@ namespace PIERStory
             }
             else
             {
-                if(isOpen)
+                if (isOpen)
                 {
                     voiceButtonBoarderImage.sprite = LobbyManager.main.spriteOpenVoice;
                     voiceScriptData.gameObject.SetActive(true);
@@ -118,9 +114,6 @@ namespace PIERStory
                     lockIcon.SetActive(true);
                 }
             }
-
-            ViewSoundDetail.OnSoundLoadCheck?.Invoke();
-            gameObject.SetActive(true);
         }
 
         public void PlaySound()

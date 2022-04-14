@@ -49,10 +49,10 @@ namespace PIERStory
 
         [Header("음성 재생목록 관련")]
         public GameObject voiceList;
+        public GameObject voiceElementPrefab;
         public Transform voiceContents;
         public Transform storage;
         public TextMeshProUGUI[] episodeInfo;
-        public SoundElement[] voiceElements;
         List<SoundElement> currentVoiceList = new List<SoundElement>();
 
         [Space(30)]
@@ -116,6 +116,17 @@ namespace PIERStory
             shuffleToggle.isOn = false;
             playtimeBar.fillAmount = 0f;
             playButton.sprite = spritePlay;
+
+            if (playBGM)
+            {
+                for (int i = 0; i < soundData.Count; i++)
+                    BGMElements[i].SetAudioClip();
+            }
+            else
+            {
+                foreach (SoundElement voice in currentVoiceList)
+                    voice.SetAudioClip();
+            }
         }
 
         public override void OnView()
@@ -150,7 +161,12 @@ namespace PIERStory
                     info.transform.SetParent(storage);
 
                 foreach (SoundElement voice in currentVoiceList)
-                    voice.transform.SetParent(storage);
+                {
+                    if(voice.soundMount.isAddressable)
+                        UnityEngine.AddressableAssets.Addressables.ReleaseInstance(voice.soundMount.mountedAddressable);
+
+                    Destroy(voice.gameObject);
+                }
 
                 currentVoiceList.Clear();
             }
@@ -181,6 +197,7 @@ namespace PIERStory
             else
             {
                 int textIndex = 0, voiceIndex = 0;
+                SoundElement voiceElement;
 
                 // 보이스 세팅
                 foreach (string key in soundData.Keys)
@@ -201,9 +218,9 @@ namespace PIERStory
                     // 보이스 세팅
                     for (int i = 0; i < soundData[key].Count; i++)
                     {
-                        voiceElements[voiceIndex].SetVoiceElement(voiceIndex, soundData[key][i]);
-                        voiceElements[voiceIndex].transform.SetParent(voiceContents);
-                        currentVoiceList.Add(voiceElements[voiceIndex]);
+                        voiceElement = Instantiate(voiceElementPrefab, voiceContents).GetComponent<SoundElement>();
+                        voiceElement.SetVoiceElement(voiceIndex, soundData[key][i]);
+                        currentVoiceList.Add(voiceElement);
                         voiceIndex++;
                     }
                 }

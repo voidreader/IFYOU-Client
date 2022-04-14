@@ -98,6 +98,12 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("CallbackUpdateUserAchievement");
+
+                JsonData errordata = JsonMapper.ToObject(res.DataAsText);
+
+                if (SystemManager.GetJsonNodeInt(errordata, "code") == 80117)
+                    ViewMain.OnReturnLobby?.Invoke();
+
                 return;
             }
 
@@ -140,7 +146,10 @@ namespace PIERStory
             PopupManager.main.ShowPopup(p, false);
 
             MainProfile.OnSaveVerticalNormalize?.Invoke();
-            UserManager.main.SetUserAchievementData(result["list"]);
+
+            UserManager.main.SetSeasonCheck(result["list"]);
+            UserManager.main.SetUserGradeInfo(result["list"]);
+            UserManager.main.SetAchievementList(result["list"]);
         }
     }
 }

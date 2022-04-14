@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,7 +16,6 @@ using Doozy.Runtime.UIManager.Components;
 
 using VoxelBusters.CoreLibrary;
 using VoxelBusters.EssentialKit;
-
 
 namespace PIERStory
 {
@@ -141,6 +141,8 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
+
+            StartCoroutine(RoutineBackgroundDetailSetting());
         }
 
 
@@ -245,8 +247,7 @@ namespace PIERStory
             LobbyManager.main.lobbyBackground.sprite = null;
             loadComplete = false;
 
-            if (LobbyManager.main != null && UserManager.main != null && UserManager.main.listAchievement.Count > 0)
-                UserManager.main.RequestUserGradeInfo();
+            UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackNewCompleteAchievement);
         }
         
         /// <summary>
@@ -265,7 +266,6 @@ namespace PIERStory
             }
             
             bg = null;
-            // LobbyManager.main.lobbyBackground.sprite = null;
         }
         
         
@@ -273,7 +273,7 @@ namespace PIERStory
         /// 모델 생성 후 일정의 시간차가 필요하다. (특히 에셋번들로 생성된 경우)
         /// </summary>
         /// <returns></returns>
-        System.Collections.IEnumerator DelayLiveModelAnimation() {
+        IEnumerator DelayLiveModelAnimation() {
             
             // 0.1초 간격준다. 
             yield return new WaitForSeconds(0.1f);
@@ -520,9 +520,7 @@ namespace PIERStory
                 switch (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE))
                 {
                     case LobbyConst.NODE_WALLPAPER:     // 배경
-                    
                         DestroyPreviousBackground();
-                    
                         bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, storyProfile[i], BGLoadComplete);
                         bgCurrency = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);
                         break;
@@ -1009,6 +1007,13 @@ namespace PIERStory
             if (totalDecoLoad > 0)
                 totalDecoLoad--;
 
+            CheckLoadComplete();
+        }
+
+        IEnumerator RoutineBackgroundDetailSetting()
+        {
+            yield return new WaitUntil(() => bg != null);
+
             // 어드레서블에 없는 경우 이전 방식을 사용해서 다운만 받기 떄문에 LoadImage를 해서 생성도 해줘야함
             if (bg.sprite == null)
                 bg.LoadImage();
@@ -1030,8 +1035,6 @@ namespace PIERStory
 
             if (decoContainer.isVisible)
                 SystemManager.HideNetworkLoading();
-
-            CheckLoadComplete();
         }
 
 
@@ -1552,6 +1555,9 @@ namespace PIERStory
         bool CompareCurrencyList(string __key)
         {
             ProfileItemElement profileItem = null;
+
+            if (!currencyList.ContainsKey(__key))
+                return false;
 
             for (int i = 0; i < currencyList[__key].Count; i++)
             {

@@ -115,7 +115,7 @@ namespace PIERStory
                 benefitDetailText.text = string.Format(SystemManager.GetLocalizedText("6296"));
             else
             {
-                benefitDetailText.text = string.Format(SystemManager.GetLocalizedText("6269"), UserManager.main.additionalStarDegree, 1, UserManager.main.additionalStarLimitCount, UserManager.main.waitingSaleDegree);
+                benefitDetailText.text = string.Format(SystemManager.GetLocalizedText("6269"), UserManager.main.additionalStarDegree, UserManager.main.additionalStarUse, UserManager.main.additionalStarLimitCount, UserManager.main.waitingSaleDegree);
 
                 if (UserManager.main.canPreview)
                     benefitDetailText.text += "\n" + SystemManager.GetLocalizedText("6270");
@@ -147,7 +147,7 @@ namespace PIERStory
             IFYOUAchievements.gameObject.SetActive(false);
             yield return null;
             newbieAchievements.gameObject.SetActive(newbieAchievementContents.childCount > 0);
-            IFYOUAchievements.gameObject.SetActive(newbieAchievementContents.childCount > 0);
+            IFYOUAchievements.gameObject.SetActive(IFYOUAchievementContents.childCount > 0);
 
             yield return null;
 

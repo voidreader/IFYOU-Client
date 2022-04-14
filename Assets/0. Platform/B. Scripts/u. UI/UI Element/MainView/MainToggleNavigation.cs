@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +17,7 @@ namespace PIERStory {
     
     public class MainToggleNavigation : MonoBehaviour
     {
-        public static System.Action OnToggleAccountBonus = null;
+        public static Action OnToggleAccountBonus = null;
         
         [SerializeField] TextMeshProUGUI textName;
         [SerializeField] Image icon;

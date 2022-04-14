@@ -90,6 +90,8 @@ namespace PIERStory
         public bool isFirstEpisode = false;
         public int resetTargetEpisodeId = -1;
 
+        public bool seasonCalculating = false;      // true = 시즌 정산중, false = 시즌 진행중
+
         private void Awake()
         {
             // 다른 씬에서 넘어온 객체가 있을경우. 
@@ -104,11 +106,6 @@ namespace PIERStory
             DontDestroyOnLoad(this);
         }
 
-
-        // Start is called before the first frame update
-        void Start()
-        {
-        }
         
         public void SetURL(string __url) {
             _url = __url;

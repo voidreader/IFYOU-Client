@@ -121,11 +121,7 @@ namespace PIERStory
         public int grade = 1;
         public string gradeName = string.Empty;
 
-        public int downGrade = 0;
-        public string downgradeName = string.Empty;
-
         public int nextGrade = 0;           // 예상 다음 시즌 등급
-        public string nextGradeName = string.Empty;
 
         public int gradeExperience = 0;
         public int keepPoint = 0;
@@ -133,6 +129,7 @@ namespace PIERStory
         public int remainDay = 0;
         public int additionalStarDegree = 0;
         public int additionalStarLimitCount = 0;
+        public int additionalStarUse = 0;
         public int waitingSaleDegree = 0;
         public bool canPreview = false;
 
@@ -1212,18 +1209,6 @@ namespace PIERStory
             return isAdminUser;
         }
 
-        /// <summary>
-        /// 작품의 1회 플레이권 갯수를 반환하세요!
-        /// </summary>
-        /// <param name="projectId">알고 싶은 작품의 proejctId값</param>
-        /// <returns>-1인 경우 아예 해당 작품 1회권이 존재하지 않는 것임</returns>
-        public int GetOneTimeProjectTicket(string projectId)
-        {
-            if (bankJson.ContainsKey("onetime_" + projectId))
-                return int.Parse(SystemManager.GetJsonNodeString(bankJson, "onetime_" + projectId));
-            else
-                return -1;
-        }
 
         /// <summary>
         /// 프로젝트 자유이용권 소유자인가요?
@@ -1244,26 +1229,6 @@ namespace PIERStory
         public void SetNodeProjectUserProperty(JsonData __j)
         {
             currentStoryJson[NODE_PROJECT_USER_PROPERTY] = __j;
-        }
-
-        /// <summary>
-        /// 갤러리를 사용할 수 있는 상태인가요?
-        /// </summary>
-        /// <returns></returns>
-        public bool GalleryUsable()
-        {
-            int countPermanet = 0;
-
-            foreach(EpisodeData data in StoryManager.main.RegularEpisodeList)
-            {
-                if (data.purchaseState == PurchaseState.Permanent)
-                    countPermanet++;
-
-                if (countPermanet >= 3)
-                    return true;
-            }
-
-            return false;
         }
 
 
@@ -1567,43 +1532,6 @@ namespace PIERStory
                 return null;
 
             return currentStoryJson[NODE_COLLECTION_PROGRESS];
-        }
-        
-        
-        /// <summary>
-        /// 미션 진행율
-        /// </summary>
-        /// <returns></returns>
-        public float GetCollectionMissionProgress() {
-            if(GetNodeUserCollectionProgress().ContainsKey("mission"))  {
-                return float.Parse(GetNodeUserCollectionProgress()["mission"].ToString());
-            }
-            
-            return 0;
-        }
-        
-        /// <summary>
-        /// 엔딩 진행율 
-        /// </summary>
-        /// <returns></returns>
-        public float GetCollectioEndingnProgress() {
-            if(GetNodeUserCollectionProgress().ContainsKey("ending"))  {
-                return float.Parse(GetNodeUserCollectionProgress()["ending"].ToString());
-            }
-            
-            return 0;
-        }
-        
-        /// <summary>
-        /// 갤러리 진행율 
-        /// </summary>
-        /// <returns></returns>
-        public float GetCollectionGalleryProgress() {
-            if(GetNodeUserCollectionProgress().ContainsKey("gallery"))  {
-                return float.Parse(GetNodeUserCollectionProgress()["gallery"].ToString());
-            }
-            
-            return 0;
         }
         
         
@@ -2989,7 +2917,7 @@ namespace PIERStory
 
 
         /// <summary>
-        /// 이프유 업적 콜백
+        /// 이프유 업적 누적 콜백
         /// </summary>
         public void CallbackRequestAchievement(HTTPRequest req, HTTPResponse res)
         {
@@ -3005,72 +2933,55 @@ namespace PIERStory
         /// <summary>
         /// 유저 업적 리스트 요청
         /// </summary>
-        public void RequestUserGradeInfo()
+        public void RequestUserGradeInfo(OnRequestFinishedDelegate __cb)
         {
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "requestUserGradeInfo";
             sending[CommonConst.COL_USERKEY] = userKey;
             sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
 
-            NetworkLoader.main.SendPost(CallbackUserGreadeInfo, sending);
+            NetworkLoader.main.SendPost(__cb, sending);
         }
 
-
-        void CallbackUserGreadeInfo(HTTPRequest req, HTTPResponse res)
+        
+        /// <summary>
+        /// 통상적 업적 리스트 콜백
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackUserGreadeInfo(HTTPRequest req, HTTPResponse res)
         {
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
-                Debug.LogError("CallbackUserGreadeInfo");
+                Debug.LogError("Failed CallbackUserGreadeInfo");
                 return;
             }
 
             JsonData result = JsonMapper.ToObject(res.DataAsText);
-            Debug.Log(string.Format("유저 업적 리스트 요청 결과 = {0}", JsonMapper.ToStringUnicode(result)));
-            SetUserAchievementData(result);
+            //Debug.Log(string.Format("유저 업적 리스트 요청 결과 = {0}", JsonMapper.ToStringUnicode(result)));
+
+            // 시즌 정산중인지 체크
+            SetSeasonCheck(result);
+
+            // grade key값에 대한 정보 세팅
+            SetUserGradeInfo(result);
+
+            // 업적 리스트 세팅
+            SetAchievementList(result);
         }
 
-        /// <summary>
-        /// 업적 데이터 세팅
-        /// </summary>
-        /// <param name="__j"></param>
-        public void SetUserAchievementData(JsonData __j)
+        public void CallbackNewCompleteAchievement(HTTPRequest req, HTTPResponse res)
         {
-            AchievementData achievement;
-            listAchievement = new List<AchievementData>();
-
-            foreach (string key in __j.Keys)
+            if (!NetworkLoader.CheckResponseValidation(req, res))
             {
-                if (key == "grade")
-                {
-                    grade = SystemManager.GetJsonNodeInt(__j[key][0], "grade");
-                    gradeName = SystemManager.GetJsonNodeString(__j[key][0], "name");
-
-                    downGrade = grade - 1;
-                    downgradeName = SystemManager.GetJsonNodeString(__j[key][0], "before_grade_name");
-
-                    nextGrade = SystemManager.GetJsonNodeInt(__j[key][0], "next_grade");
-                    nextGradeName = SystemManager.GetJsonNodeString(__j[key][0], "next_grade_name");
-
-                    gradeExperience = SystemManager.GetJsonNodeInt(__j[key][0], "grade_experience");
-                    keepPoint = SystemManager.GetJsonNodeInt(__j[key][0], "keep_point");
-                    upgradeGoalPoint = SystemManager.GetJsonNodeInt(__j[key][0], "upgrade_point");
-                    remainDay = SystemManager.GetJsonNodeInt(__j[key][0], "remain_day");
-                    additionalStarDegree = SystemManager.GetJsonNodeInt(__j[key][0], "add_star");
-                    additionalStarLimitCount = SystemManager.GetJsonNodeInt(__j[key][0], "add_star_limit");
-                    waitingSaleDegree = SystemManager.GetJsonNodeInt(__j[key][0], "waiting_sale");
-                    canPreview = SystemManager.GetJsonNodeBool(__j[key][0], "preview");
-                    continue;
-                }
-
-                for (int i = 0; i < __j[key].Count; i++)
-                {
-                    achievement = new AchievementData(__j[key][i]);
-                    listAchievement.Add(achievement);
-                }
+                Debug.LogError("Failed CallbackNewCompleteAchievement");
+                return;
             }
 
-            MainProfile.OnRefreshIFYOUAchievement?.Invoke();
-        }    
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            SetSeasonCheck(result);
+            SetAchievementList(result);
+        }
 
         /// <summary>
         /// 업적 보상을 받을 수 있는 총 수 count
@@ -3078,6 +2989,9 @@ namespace PIERStory
         /// <returns></returns>
         public int CountClearAchievement()
         {
+            if (NetworkLoader.main.seasonCalculating)
+                return 0;
+
             int count = 0;
 
             for(int i=0;i<listAchievement.Count;i++)
@@ -3089,6 +3003,55 @@ namespace PIERStory
             return count;
         }
 
+        /// <summary>
+        /// 시즌 정산중인지 체크 세팅
+        /// </summary>
+        public void SetSeasonCheck(JsonData __j)
+        {
+            NetworkLoader.main.seasonCalculating = SystemManager.GetJsonNodeBool(__j["season_check"][0], "calculate_check");
+        }
+
+        /// <summary>
+        /// 사용자의 등급 정보 세팅
+        /// </summary>
+        /// <param name="__j"></param>
+        public void SetUserGradeInfo(JsonData __j)
+        {
+            grade = SystemManager.GetJsonNodeInt(__j["grade"][0], "grade");
+            gradeName = SystemManager.GetJsonNodeString(__j["grade"][0], "name");
+
+            nextGrade = SystemManager.GetJsonNodeInt(__j["grade"][0], "next_grade");
+
+            gradeExperience = SystemManager.GetJsonNodeInt(__j["grade"][0], "grade_experience");
+            keepPoint = SystemManager.GetJsonNodeInt(__j["grade"][0], "keep_point");
+            upgradeGoalPoint = SystemManager.GetJsonNodeInt(__j["grade"][0], "upgrade_point");
+            remainDay = SystemManager.GetJsonNodeInt(__j["grade"][0], "remain_day");
+            additionalStarDegree = SystemManager.GetJsonNodeInt(__j["grade"][0], "add_star");
+            additionalStarLimitCount = SystemManager.GetJsonNodeInt(__j["grade"][0], "add_star_limit");
+            additionalStarUse = SystemManager.GetJsonNodeInt(__j["grade"][0], "add_star_use");
+            waitingSaleDegree = SystemManager.GetJsonNodeInt(__j["grade"][0], "waiting_sale");
+            canPreview = SystemManager.GetJsonNodeBool(__j["grade"][0], "preview");
+        }
+
+        public void SetAchievementList(JsonData __j)
+        {
+            AchievementData achievement;
+            listAchievement = new List<AchievementData>();
+
+            foreach (string key in __j.Keys)
+            {
+                if (key == "season_check" || key == "grade")
+                    continue;
+
+                for (int i = 0; i < __j[key].Count; i++)
+                {
+                    achievement = new AchievementData(__j[key][i]);
+                    listAchievement.Add(achievement);
+                }
+            }
+
+            MainProfile.OnRefreshIFYOUAchievement?.Invoke();
+        }
 
 
         /// <summary>

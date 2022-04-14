@@ -59,6 +59,8 @@ namespace PIERStory
 
         public void ShowDetailSoundList()
         {
+            SystemManager.ShowNetworkLoading();
+
             if (voiceData == null)
             {
                 // 공개중인 BGM list가 없으면 무한로딩에 빠지므로 팝업 띄워주고 빠져나가게 하자
@@ -73,7 +75,6 @@ namespace PIERStory
             else
                 ViewSoundDetail.SetSoundDetail(false, voiceData, soundThumbnail.downloadedSprite, string.Format(SystemManager.GetLocalizedText("6058"), StoryManager.main.GetNametagName(voiceMaster)));
 
-            SystemManager.ShowNetworkLoading();
             StartCoroutine(MoveToSoundDetail());
         }
 

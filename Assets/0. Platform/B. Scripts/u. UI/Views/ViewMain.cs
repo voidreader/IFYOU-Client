@@ -2,7 +2,8 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-
+using LitJson;
+using BestHTTP;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
 using Doozy.Runtime.UIManager.Containers;
@@ -11,8 +12,9 @@ namespace PIERStory {
     public class ViewMain : CommonView
     {
         public static Action OnMoveStarShop = null;
-        public static Action OnRefreshProfileNewSign = null;
         public static Action OnRefreshViewMain = null;
+        public static Action OnRefreshProfileNewSign = null;
+        public static Action OnReturnLobby = null;
         
         [Header("로비")]
         public IFYouLobby lobby;
@@ -29,6 +31,9 @@ namespace PIERStory {
         [Header("프로필(등급)")]
         public MainProfile ifyouProfile;
         public GameObject achievementNewSign;
+        public UIContainer profileContainer;
+        public UIToggle profileToggle;
+        public MainToggleNavigation profileNavigation;
 
         /*
                 [Header("더보기")]
@@ -42,6 +47,7 @@ namespace PIERStory {
         {
             OnRefreshProfileNewSign = EnableNewAchievementSign;
             OnRefreshViewMain = RefreshMainView;
+            OnReturnLobby = ReturnLobby;
         }
 
         void Update() {
@@ -172,7 +178,6 @@ namespace PIERStory {
                     break;
 
                 case 4:     // 프로필
-                    OnProfile();
                     break;
                 case 5:     // 더보기
                     OnAddMore();
@@ -262,6 +267,9 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
+
+            profileNavigation.OnToggle();
+            profileContainer.Show();
         }
 
         void EnableNewAchievementSign()
@@ -269,7 +277,51 @@ namespace PIERStory {
             achievementNewSign.SetActive(UserManager.main.CountClearAchievement() > 0);
         }
 
+        public void OnClickProfileTab()
+        {
+            UserManager.main.RequestUserGradeInfo(CallbackUserGreadeInfo);
+        }
 
+        /// <summary>
+        /// 통상적 업적 리스트 콜백
+        /// </summary>
+        public void CallbackUserGreadeInfo(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackUserGreadeInfo");
+                return;
+            }
+
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+
+            // 시즌 정산중인지 체크
+            UserManager.main.SetSeasonCheck(result);
+
+            // 정산중인 경우 팝업 띄워주고, 프로필의 접근을 막는다
+            if(NetworkLoader.main.seasonCalculating)
+            {
+                SystemManager.ShowMessageWithLocalize("80118");
+                ReturnLobby();
+                return;
+            }
+
+            // grade key값에 대한 정보 세팅
+            UserManager.main.SetUserGradeInfo(result);
+
+            // 업적 리스트 세팅
+            UserManager.main.SetAchievementList(result);
+            OnProfile();
+
+        }
+
+        void ReturnLobby()
+        {
+            profileToggle.isOn = false;
+            profileNavigation.OffToggle();
+            mainToggle.isOn = true;
+            mainToggle.OnToggleOnCallback.Execute();
+        }
 
         #endregion
 

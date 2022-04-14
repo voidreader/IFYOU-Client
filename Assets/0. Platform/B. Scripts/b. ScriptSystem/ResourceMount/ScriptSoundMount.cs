@@ -58,7 +58,7 @@ namespace PIERStory
             sound_url = SystemManager.GetJsonNodeString(resourceData, CommonConst.SOUND_URL);
             sound_key = SystemManager.GetJsonNodeString(resourceData, CommonConst.SOUND_KEY);
 
-            volume = float.Parse(SystemManager.GetJsonNodeString(resourceData, GAME_VOLUME));
+            volume = SystemManager.GetJsonNodeFloat(resourceData, GAME_VOLUME);
             type = SystemManager.GetJsonNodeString(resourceData, SOUND_TYPE);
 
 
@@ -152,8 +152,6 @@ namespace PIERStory
         {
             try
             {
-                
-                
                 if (ES3.FileExists(sound_key))
                 {
                     if (sound_key.Contains("mp3") || sound_key.Contains("MP3"))
@@ -167,7 +165,7 @@ namespace PIERStory
             }
             catch (Exception e)
             {
-                Debug.Log(e.StackTrace);
+                Debug.LogError(e.StackTrace);
                 SendFailMessage();
             }
 

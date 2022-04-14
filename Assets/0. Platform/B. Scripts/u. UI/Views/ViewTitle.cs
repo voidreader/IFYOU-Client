@@ -218,7 +218,6 @@ namespace PIERStory {
         IEnumerator MovingNextScene() {
             Debug.Log("<color=cyan>MoveingNextScene START</color>");
 
-            UserManager.main.RequestUserGradeInfo();
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork()); // 서버 통신 종료되길 기다린다. 
             yield return new WaitUntil(() =>SystemManager.main.mainAssetFont != null); // 폰트 불러오길 기다린다. 
             

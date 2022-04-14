@@ -68,12 +68,5 @@ namespace PIERStory
             textCurrentDay.text = string.Format(SystemManager.GetLocalizedText("6259"), currentDay.ToString());
 
         }
-
-        public override void Hide()
-        {
-            base.Hide();
-
-            UserManager.main.RequestUserGradeInfo();
-        }
     }
 }

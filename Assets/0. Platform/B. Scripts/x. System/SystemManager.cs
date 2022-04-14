@@ -1249,7 +1249,7 @@ namespace PIERStory
             MainToggleNavigation.OnToggleAccountBonus?.Invoke();
             MainMore.OnRefreshMore?.Invoke();
 
-            UserManager.main.RequestUserGradeInfo();
+            UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
         }
                 
         
@@ -1349,7 +1349,7 @@ namespace PIERStory
             NetworkLoader.main.RequestCoinExchangeProductList();
 
             // 업적 리스트 갱신
-            UserManager.main.RequestUserGradeInfo();
+            UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
         }      
         
         
@@ -2238,7 +2238,7 @@ namespace PIERStory
             Destroy(__view);
 
             if (LobbyManager.main != null)
-                UserManager.main.RequestUserGradeInfo();
+                UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
         }
         
         void ForwardToStore() {

@@ -33,6 +33,9 @@ namespace PIERStory
         public static Action<JsonData, ProfileItemElement> OnBubbleSetting = null;  // 말풍선 
 
         public static bool loadComplete = false;
+        
+        
+        
 
         [Header("메인 관련 제어")]
         public GameObject premiumpassButton;        // 프리미엄 패스 버튼
@@ -178,6 +181,11 @@ namespace PIERStory
 
         public override void OnHideView()
         {
+            
+            if(LobbyManager.main == null || !LobbyManager.main.isLobbyManagerInit)
+                return;
+            
+            
             base.OnHideView();
 
 
@@ -1428,19 +1436,26 @@ namespace PIERStory
 
             }, null, null);
             */
-            WebView webView = WebView.CreateInstance();
+            
+            // 시스템 매니저의 웹뷰를 사용하도록 변경 
+            SystemManager.main.webView = WebView.CreateInstance();
             WebView.OnHide += OnHideWebview;
 
 
             Debug.Log(">> OnHideWebview LoadURL");
-            webView.ClearCache();
-            webView.SetFullScreen(); // 풀스크린 
-            webView.ScalesPageToFit = true;
-            webView.LoadURL(URLString.URLWithPath(finalURL));
-            webView.Show();
+            SystemManager.main.webView.ClearCache();
+            SystemManager.main.webView.SetFullScreen(); // 풀스크린 
+            SystemManager.main.webView.ScalesPageToFit = true;
+            SystemManager.main.webView.LoadURL(URLString.URLWithPath(finalURL));
+            SystemManager.main.webView.Show();
+            
+            SystemManager.main.isWebViewOpened = true; // 오픈할때 true로 변경 
+            
         }
         
         void OnHideWebview(WebView __view) {
+                
+                SystemManager.main.isWebViewOpened = false;  // 닫힐때 false로 변경 
                 
                 Debug.Log(">> OnHideWebview");
                 WebView.OnHide -= OnHideWebview;

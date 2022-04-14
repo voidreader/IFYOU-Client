@@ -11,6 +11,25 @@ namespace PIERStory
         public EpisodeEndControls episodeEndControls;
 
 
+        void Update() {
+            
+            // 로비로 나가는거 확인창 띄우기 백스페이스 
+            if(Input.GetKeyDown(KeyCode.Escape)) {
+                CommonView.DeleteDumpViews(); 
+                
+                if(PopupManager.main.GetFrontActivePopup() != null) {
+                    return;
+                }
+                
+                if(CommonView.ListActiveViews.Count == 1 && CommonView.ListActiveViews.Contains(this)  // 1개 활성화, 본인
+                    || CommonView.ListActiveViews.Count == 2 && CommonView.ListActiveViews.Contains(this)) {
+                    
+                    SystemManager.ShowSystemPopupLocalize("6302", OnClickReturnLobby, null, true);
+                }
+                
+            }
+        }
+
         public override void OnStartView()
         {
             base.OnStartView();

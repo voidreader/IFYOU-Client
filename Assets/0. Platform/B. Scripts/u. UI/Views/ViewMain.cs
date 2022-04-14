@@ -54,13 +54,7 @@ namespace PIERStory {
             
             // ViewMain에서 종료 띄우기.
             if(Input.GetKeyDown(KeyCode.Escape)) {
-                
-                CommonView.DeleteDumpViews();
-                
-                if(PopupManager.main.GetFrontActivePopup() == null 
-                && ((CommonView.ListActiveViews.Count == 1 && CommonView.ListActiveViews.Contains(this)) || CommonView.ListActiveViews.Count < 1)) {
-                    SystemManager.ShowSystemPopup(SystemManager.GetLocalizedText("6064"), Application.Quit, null, true);    
-                }
+                SystemManager.CheckExitPopupShowInLobby(this);
             }
         }
         

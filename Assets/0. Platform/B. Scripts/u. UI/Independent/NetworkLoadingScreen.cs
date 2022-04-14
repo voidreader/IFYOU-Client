@@ -45,7 +45,11 @@ namespace PIERStory {
             
             
             this.gameObject.SetActive(true);
-            _overlay.DOFade(0.7f, 1f).SetDelay(0.5f).OnComplete(OnStartShow); // 딜레이 1초 
+            
+            if(_isInstant) 
+                _overlay.DOFade(0.7f, 1f).OnComplete(OnStartShow);
+            else
+                _overlay.DOFade(0.7f, 1f).SetDelay(0.5f).OnComplete(OnStartShow); // 딜레이
         }
 
         /// <summary>

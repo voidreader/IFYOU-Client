@@ -23,6 +23,10 @@ namespace PIERStory {
         public string currentGenre = "All"; // 현재 선택된 장르
         public bool isPlayingSelected = true; //
         
+        // 아무것도 없을때 표시되는 친구들 
+        public GameObject NoLikeIcon;
+        public GameObject NoPlayingIcon;
+        
         void Start() {
             OnCategoryList = RequestFilteredStory;
         }
@@ -119,9 +123,14 @@ namespace PIERStory {
             if(firstLeftToggle.isOn) {
                 // return StoryManager.main.listTotalStory.Where( item => item.genre.Contains(__genre)).ToList<StoryData>();
                 filteredList = filteredList.Where(item => item.projectProgress > 0).ToList<StoryData>(); // 진행중인 작품만 필터링 
+                
+                NoPlayingIcon.SetActive(filteredList.Count == 0);
+                
             }
             else {
                 filteredList = filteredList.Where(item => StoryManager.main.CheckProjectLike(item.projectID)).ToList<StoryData>(); // 관심작품만. 
+                
+                NoLikeIcon.SetActive(filteredList.Count == 0);
             }
             
             

@@ -906,7 +906,7 @@ namespace PIERStory {
             
             // 에피소드 진입 처리 
             SystemManager.main.givenEpisodeData = currentEpisodeData;
-            SystemManager.ShowNetworkLoading(); 
+            SystemManager.ShowNetworkLoading(true); 
             
             PurchaseState episodePurchaseState = currentEpisodeData.purchaseState;
             

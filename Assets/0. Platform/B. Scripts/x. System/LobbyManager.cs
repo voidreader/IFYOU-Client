@@ -20,7 +20,7 @@ namespace PIERStory {
 
         public static LobbyManager main = null;
 
-        
+        public bool isLobbyManagerInit = false;        
 
         public ScriptLiveMount currentLiveIllust = null; // Live Illust for Gallery 
         public ScriptLiveMount currentLiveObject = null; // Live Object for Gallery
@@ -116,6 +116,8 @@ namespace PIERStory {
             
             // * 로비씬 시작을 알린다. 
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyPlay"); 
+            
+            isLobbyManagerInit = true;
         }
         
         
@@ -316,7 +318,7 @@ namespace PIERStory {
                 
             
             data = JsonMapper.ToObject(ES3.Load<string>(SystemConst.KEY_PLATFORM_LOADING));
-            // Debug.Log("GetRandomPlatformLoadingTexture : " + JsonMapper.ToStringUnicode(data));
+            Debug.Log("GetRandomPlatformLoadingTexture : " + JsonMapper.ToStringUnicode(data));
             
             if(data == null || data.Count == 0) {
                 Debug.Log("<color=orange>No PlatformLoading Texture </color>");

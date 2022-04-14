@@ -156,7 +156,7 @@ namespace PIERStory
                     ) {
                         
                     // 
-                    SystemManager.ShowSystemPopupLocalize("6037", GameManager.main.QuitGame, null, false);
+                    SystemManager.ShowSystemPopupLocalize("6037", GameManager.main.QuitGame, null, true);
                         
                 }
             }

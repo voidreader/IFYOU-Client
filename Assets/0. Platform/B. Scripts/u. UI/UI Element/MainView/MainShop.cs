@@ -42,13 +42,14 @@ namespace PIERStory {
 
         void Start()
         {
-            OnRefreshNormalShop = InitNormalContainer;
-            OnRefreshPackageShop = InitPackContainer;
+            
         }
 
         public void DelayEnterFromMain()
         {
             StartCoroutine(RoutineEnterFromMain());
+            OnRefreshNormalShop = InitNormalContainer;
+            OnRefreshPackageShop = InitPackContainer;
             OnRefreshTopShop = EnterFromMain;
         }
 
@@ -63,6 +64,8 @@ namespace PIERStory {
         public void DelayEnterFromSignal()
         {
             StartCoroutine(RoutineEnterFromSignal());
+            OnRefreshNormalShop = InitNormalContainer;
+            OnRefreshPackageShop = InitPackContainer;
             OnRefreshTopShop = EnterFromSignal;
         }
 

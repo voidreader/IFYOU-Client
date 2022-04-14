@@ -19,6 +19,7 @@ namespace PIERStory {
             if(GameManager.main == null)
                 Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
             else {
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
                 // 게임씬에서 불렀음. 
                 if(ViewCommonTop.OnBackAction != null) {
                     
@@ -50,6 +51,7 @@ namespace PIERStory {
                 Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
             else {
                 // 게임씬에서 돌아갈때. 
+                Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
                 if(storedAction != null) {
                     
                     Debug.Log("ViewCommonStarShop :: BackACtion Restore");

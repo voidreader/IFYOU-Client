@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using LitJson;
+using Doozy.Runtime.Signals;
 
 namespace PIERStory {
 
@@ -109,6 +110,11 @@ namespace PIERStory {
                 else {
                     Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, storyData);
                     
+                }
+            }
+            else if(promotionType == "page") {
+                if(targetID == "star") {
+                    Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);
                 }
             }
         }

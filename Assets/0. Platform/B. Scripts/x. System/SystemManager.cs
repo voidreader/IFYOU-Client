@@ -41,8 +41,8 @@ namespace PIERStory
         public bool isAddressableCatalogUpdated = false; // 어드레서블 카탈로그 업데이트 여부 
         
         
-        
-        
+        public WebView webView = null; // 웹뷰. 
+        public bool isWebViewOpened = false; // 웹뷰가 현재 보여지고 있는지 체크 
         
         public static float screenRatio = 0;
         public bool isTestServerAccess = false; // 테스트 서버로 연결 여부 
@@ -1554,7 +1554,7 @@ namespace PIERStory
         /// <summary>
         /// 네트워크 로딩 팝업 오픈 
         /// </summary>
-        public static void ShowNetworkLoading()
+        public static void ShowNetworkLoading(bool __isInstant = false)
         {
             if (LobbyManager.main != null)
                 main.networkLoadingScreen = LobbyManager.main.GetLobbyNetworkLoadingScreen();
@@ -2162,7 +2162,7 @@ namespace PIERStory
             // 언어 설정 
             string langParam = string.Format("?lang={0}", SystemManager.main.currentAppLanguageCode);
             
-            WebView webView = WebView.CreateInstance();
+            webView = WebView.CreateInstance();
             WebView.OnHide += OnHideWebview;
             
             Debug.Log(">> OnHideWebview LoadURL");
@@ -2172,6 +2172,8 @@ namespace PIERStory
             // webView.Style = WebViewStyle.Popup; // 팝업 스타일 테스트
             webView.LoadURL(URLString.URLWithPath(__url));
             webView.Show();            
+            
+            SystemManager.main.isWebViewOpened = true; // 오픈할때 true로 변경 
         }
         
         public void OpenPrivacyURL() {
@@ -2218,7 +2220,7 @@ namespace PIERStory
             }, null, null);            
             */
             
-            WebView webView = WebView.CreateInstance();
+            webView = WebView.CreateInstance();
             WebView.OnHide += OnHideWebview;
             
             
@@ -2229,10 +2231,12 @@ namespace PIERStory
             // webView.Style = WebViewStyle.Browser; // 브라우저 스타일 
             webView.LoadURL(URLString.URLWithPath(finalURL));
             webView.Show();
+            
+            SystemManager.main.isWebViewOpened = true; // 오픈할때 true로 변경 
         }
         
         void OnHideWebview(WebView __view) {
-            
+            SystemManager.main.isWebViewOpened = false;  // 닫힐때 false로 변경 
             Debug.Log(">> OnHideWebview");
             WebView.OnHide -= OnHideWebview;
             Destroy(__view);
@@ -2244,7 +2248,18 @@ namespace PIERStory
         void ForwardToStore() {
             Application.OpenURL("http://onelink.to/g9ja38");
         }
+
+        // 웹뷰 강제로 닫기.         
+        public void HideWebviewForce() {
+            if(webView == null) {
+                return;
+            }
+            
+            webView.Hide();            
+            
+        }
         
+
         
         /// <summary>
         /// 기본 재화의 아이콘 URL 
@@ -2363,6 +2378,26 @@ namespace PIERStory
                 
                 default:
                 return "Failed to connect to server.";
+            }
+        }
+        
+        
+        /// <summary>
+        /// 로비에서 게임 종료 팝업 호출 
+        /// </summary>
+        /// <param name="__currentView"></param>
+        public static void CheckExitPopupShowInLobby(CommonView __currentView) {
+            CommonView.DeleteDumpViews();
+            
+            // 웹뷰 활성화중에는 웹뷰를 닫는다. 
+            if(main != null && main.isWebViewOpened) {
+                main.HideWebviewForce();
+                return;
+            }
+            
+            if(PopupManager.main.GetFrontActivePopup() == null 
+            && ((CommonView.ListActiveViews.Count == 1 && CommonView.ListActiveViews.Contains(__currentView)) || CommonView.ListActiveViews.Count < 1)) {
+                SystemManager.ShowSystemPopup(SystemManager.GetLocalizedText("6064"), Application.Quit, null, true);    
             }
         }
          

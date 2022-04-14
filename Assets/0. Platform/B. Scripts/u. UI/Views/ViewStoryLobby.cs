@@ -246,6 +246,8 @@ namespace PIERStory
 
             LobbyManager.main.lobbyBackground.sprite = null;
             loadComplete = false;
+
+            UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackNewCompleteAchievement);
         }
         
         /// <summary>

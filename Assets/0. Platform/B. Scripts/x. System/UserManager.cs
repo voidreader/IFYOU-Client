@@ -2970,6 +2970,18 @@ namespace PIERStory
             SetAchievementList(result);
         }
 
+        public void CallbackNewCompleteAchievement(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackNewCompleteAchievement");
+                return;
+            }
+
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            SetAchievementList(result);
+        }
+
         /// <summary>
         /// 업적 보상을 받을 수 있는 총 수 count
         /// </summary>

@@ -1051,6 +1051,7 @@ namespace PIERStory
             bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, bgData, BGLoadComplete);
             bgCurrency = SystemManager.GetJsonNodeString(bgData, LobbyConst.NODE_CURRENCY);
             LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(0f, 0f, 0f);
+            StartCoroutine(RoutineBackgroundDetailSetting());
 
             for (int i = 0; i < bgListContent.childCount; i++)
                 bgListContent.GetChild(i).GetComponent<ProfileItemElement>().currentCount = 0;

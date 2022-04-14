@@ -2979,6 +2979,7 @@ namespace PIERStory
             }
 
             JsonData result = JsonMapper.ToObject(res.DataAsText);
+            SetSeasonCheck(result);
             SetAchievementList(result);
         }
 
@@ -2988,6 +2989,9 @@ namespace PIERStory
         /// <returns></returns>
         public int CountClearAchievement()
         {
+            if (NetworkLoader.main.seasonCalculating)
+                return 0;
+
             int count = 0;
 
             for(int i=0;i<listAchievement.Count;i++)

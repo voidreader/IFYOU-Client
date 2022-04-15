@@ -86,7 +86,7 @@ namespace PIERStory
             else
                 endingType.text = SystemManager.GetLocalizedText("5088");
 
-            endingTitle.text = endingData.episodeTitle;
+            endingTitle.text = string.Format("{0}\n<size=22>{1}</size>", endingData.episodeTitle, endingData.episodeSummary);
 
             endingType.gameObject.SetActive(false);
             endingTitle.gameObject.SetActive(false);

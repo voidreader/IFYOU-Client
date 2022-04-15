@@ -273,7 +273,7 @@ namespace PIERStory {
 
         public void OnClickProfileTab()
         {
-            UserManager.main.RequestUserGradeInfo(CallbackUserGreadeInfo);
+            UserManager.main.RequestUserGradeInfo(CallbackUserGreadeInfo, true);
         }
 
         /// <summary>

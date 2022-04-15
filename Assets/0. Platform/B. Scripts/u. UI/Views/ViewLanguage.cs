@@ -71,8 +71,12 @@ namespace PIERStory
         void ChangeAppLanguage()
         {
             // 두번 실행되는 것 같아..
-            if(isChangingScene)
+            if(isChangingScene) {
+                Debug.LogError("Already changing.. ");
                 return;
+                
+            }
+                
             
             // 현재 toggle이 isOn == true인 element를 찾아서
             foreach (LanguageElement le in langElements)
@@ -87,30 +91,39 @@ namespace PIERStory
                 }
             }
             
+            isChangingScene = true;
+            
             UserManager.main.RequestServiceStoryList(); // 언어변경하고, 서버에서 받는 정보 refresh
             NetworkLoader.main.RequestGameProductList(); // 상품정보 갱신 언어정보가 달라졌으니까.
             
             StartCoroutine(OnCompleteRefreshServerInfo()); // 코루틴 콜 
-            
-            isChangingScene = true;
         }
         
         
         IEnumerator OnCompleteRefreshServerInfo() {
             
             Debug.Log(">> OnCompleteRefreshServerInfo #1");
+            yield return null;
             
             // 통신 완료되길 기다린다. 
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
             Debug.Log(">> OnCompleteRefreshServerInfo #2");
+            
+            
+            // 플랫폼 로딩 이미지 삭제 해놓는다. (타이틀에서 이전 언어의 플랫폼 로딩 이미지를 부르는 것 방지)
+            ES3.DeleteKey(SystemConst.KEY_PLATFORM_LOADING);
+            
+            
             // 타이틀로 보내버리기
             SystemManager.main.givenStoryData = null; // 목록으로 가는것을 막기 위해 작성
             ViewNoticeDetail.isDependent = true;           
             
             
-            Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin");
+            Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin"); // 시그널 보내서 Nody를 이동시킨다. 
             IntermissionManager.isMovingLobby = true;
+            
+            // 인터미션 씬으로 이동 
             SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
             // SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
 

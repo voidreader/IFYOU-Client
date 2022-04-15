@@ -118,6 +118,8 @@ namespace PIERStory {
             }
             
             Debug.Log("Library #1 Filter Count: " + filteredList.Count);
+            NoPlayingIcon.SetActive(false);
+            NoLikeIcon.SetActive(false);
             
             
             if(firstLeftToggle.isOn) {

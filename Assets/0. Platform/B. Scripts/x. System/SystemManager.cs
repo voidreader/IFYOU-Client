@@ -786,8 +786,11 @@ namespace PIERStory
                     break;
                 } // ? end of switch
                 
-                // 영어랑 한글만 지원. 
-                if(currentGamebaseLanguageCode != GamebaseDisplayLanguageCode.Korean && currentGamebaseLanguageCode != GamebaseDisplayLanguageCode.English) {
+                // 영어랑 한글, 일본어 지원. 
+                if(currentGamebaseLanguageCode != GamebaseDisplayLanguageCode.Korean 
+                    && currentGamebaseLanguageCode != GamebaseDisplayLanguageCode.English
+                    && currentGamebaseLanguageCode != GamebaseDisplayLanguageCode.Japanese) {
+                        
                     currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.English;
                 }
                 
@@ -1556,11 +1559,15 @@ namespace PIERStory
         /// </summary>
         public static void ShowNetworkLoading(bool __isInstant = false)
         {
+            // 각 씬마다 보유하고 있음.
             if (LobbyManager.main != null)
                 main.networkLoadingScreen = LobbyManager.main.GetLobbyNetworkLoadingScreen();
-
-            if (GameManager.main != null)
+            else if (GameManager.main != null)
                 main.networkLoadingScreen = GameManager.main.GetGameNetworkLoadingScreen();
+            else if (IntermissionManager.main != null) {
+                main.networkLoadingScreen = IntermissionManager.main.networkLoadingScreen;
+            }
+                
 
             if (main.networkLoadingScreen)
                 main.networkLoadingScreen.ShowNetworkLoading();
@@ -2189,6 +2196,9 @@ namespace PIERStory
         /// </summary>
         public void OpenCoinShopWebview() {
             
+            if(main.isWebViewOpened)
+                return;
+            
             if(string.IsNullOrEmpty(SystemManager.main.coinShopURL)) {
                 Debug.LogError("No Coinshop url");
                 return;
@@ -2219,12 +2229,12 @@ namespace PIERStory
                 NetworkLoader.main.RequestUserBaseProperty();
             }, null, null);            
             */
-            
+
             webView = WebView.CreateInstance();
             WebView.OnHide += OnHideWebview;
             
             
-            Debug.Log(">> OnHideWebview LoadURL");
+            Debug.Log(">> OpenCoinShopWebview OPEN");
             webView.ClearCache();
             webView.SetFullScreen(); // 풀스크린 
             webView.ScalesPageToFit = true;
@@ -2236,9 +2246,15 @@ namespace PIERStory
         }
         
         void OnHideWebview(WebView __view) {
-            SystemManager.main.isWebViewOpened = false;  // 닫힐때 false로 변경 
+            
             Debug.Log(">> OnHideWebview");
+            
+            
+            SystemManager.main.isWebViewOpened = false;  // 닫힐때 false로 변경 
+            
             WebView.OnHide -= OnHideWebview;
+            __view.gameObject.SetActive(false);
+            
             Destroy(__view);
 
             if (LobbyManager.main != null)
@@ -2251,10 +2267,12 @@ namespace PIERStory
 
         // 웹뷰 강제로 닫기.         
         public void HideWebviewForce() {
+            Debug.Log(">> HideWebviewForce");
+            
             if(webView == null) {
                 return;
             }
-            
+
             webView.Hide();            
             
         }
@@ -2387,10 +2405,14 @@ namespace PIERStory
         /// </summary>
         /// <param name="__currentView"></param>
         public static void CheckExitPopupShowInLobby(CommonView __currentView) {
+            
+            Debug.Log("^^^ CheckExitPopupShowInLobby ");
+            
             CommonView.DeleteDumpViews();
             
             // 웹뷰 활성화중에는 웹뷰를 닫는다. 
             if(main != null && main.isWebViewOpened) {
+                Debug.Log("^^^ CheckExitPopupShowInLobby #1");
                 main.HideWebviewForce();
                 return;
             }

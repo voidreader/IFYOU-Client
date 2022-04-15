@@ -172,8 +172,14 @@ namespace PIERStory {
                 //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
             };
             
+            
+            DownloadStatus downloadStatus;
+            
             while(!downloadHandle.IsDone) {
-                loadingBar.fillAmount = downloadHandle.PercentComplete;
+                
+                // 다운로드 얼만큼 되었는지 표시하기 
+                downloadStatus = downloadHandle.GetDownloadStatus();
+                loadingBar.fillAmount = downloadStatus.Percent;
                 yield return null;
             }
 

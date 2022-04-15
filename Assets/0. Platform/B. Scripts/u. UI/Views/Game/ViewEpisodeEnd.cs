@@ -17,6 +17,12 @@ namespace PIERStory
             if(Input.GetKeyDown(KeyCode.Escape)) {
                 CommonView.DeleteDumpViews(); 
                 
+                if(SystemManager.main.isWebViewOpened) {
+                    SystemManager.main.HideWebviewForce();
+                    return;
+                }
+                
+                
                 if(PopupManager.main.GetFrontActivePopup() != null) {
                     return;
                 }

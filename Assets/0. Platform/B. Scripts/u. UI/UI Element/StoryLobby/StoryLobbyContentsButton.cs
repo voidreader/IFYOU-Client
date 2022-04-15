@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using LitJson;
 
 namespace PIERStory {
@@ -23,6 +24,11 @@ namespace PIERStory {
         public bool hasNewContents = false; // 확인하지 않은 신규 컨텐츠 존재
         public GameObject newSign; // 신규 컨텐츠 존재시 표시 사인 
         JsonData galleryData = null;
+        
+        public Color colorDisable; 
+        public Image buttonImage; 
+        
+        
         
         /// <summary>
         /// 초기화
@@ -90,6 +96,19 @@ namespace PIERStory {
         /// 신규 스페셜 에피소드 체크 
         /// </summary>
         void CheckNewSpecialEpisodes() {
+            
+           
+            // 스페셜 에피소드 => 스페셜 에피소드 보유개수에 따라서 버튼 색상 조정 
+            if(StoryManager.main.sideEpisodeCount <= 0) {
+                buttonImage.color = colorDisable;
+                
+
+            }
+            else {
+                buttonImage.color = Color.white;;
+            }
+            
+            
             for(int i=0; i<StoryManager.main.SideEpisodeList.Count;i++) {
                 if(StoryManager.main.SideEpisodeList[i].isUnlock && StoryManager.main.SideEpisodeList[i].purchaseState == PurchaseState.None) {
                     SetNotification(true);
@@ -131,6 +150,24 @@ namespace PIERStory {
             }
             
             SetNotification(false);
+        }
+        
+        public void OnClickContentsButton() {
+            if(contentsType == StoryContentsType.Special) {
+                
+                if(StoryManager.main.SideEpisodeList.Count == 0) {
+                    SystemManager.ShowSimpleAlertLocalize("6304");
+                    return;
+                }
+                else {
+                    // 스페셜 에피소드 띄우기. 
+                    Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showSpecialEpisode", string.Empty);        
+                    return;
+                }
+            }
+            
+            
+            
         }
         
     }

@@ -7,17 +7,26 @@ namespace PIERStory
     public class IntermissionManager : MonoBehaviour
     {
         // * 게임씬에서는 어느 씬으로 이동을 하던, 무조건 intermissino을 거치도록 한다. 
+        public static IntermissionManager main = null;
         public static bool isMovingLobby = false; // 
 
+        public NetworkLoadingScreen networkLoadingScreen = null; 
+        
         public AudioClip[] audioClips = null;
         public RenderTexture[] renderTextures = null;
         public Texture2D[] texture2Ds = null;
+        
+        void Awake() {
+            main = this;   
+        }
 
         
         IEnumerator Start()
         {
             
             // AdManager.main.HideBanner();
+            SystemManager.ShowNetworkLoading(true);
+            
             
             // * 메모리 누수를 알아보기 위해 FindObject 검사 실행. 
             audioClips = FindObjectsOfType<AudioClip>(true); // 정리되지 않음

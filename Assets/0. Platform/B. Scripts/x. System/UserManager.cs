@@ -2901,6 +2901,9 @@ namespace PIERStory
         }
         
         void OnUpdateIntroComplete (HTTPRequest request, HTTPResponse response) {
+            
+            NetworkLoader.CheckResponseValidation(request, response);
+            
             isIntroDone = true; // 그냥 true 처리 
         }
         

@@ -47,9 +47,22 @@ namespace PIERStory {
             this.gameObject.SetActive(true);
             
             if(_isInstant) 
-                _overlay.DOFade(0.7f, 1f).OnComplete(OnStartShow);
+                _overlay.DOFade(0.7f, 0.1f).OnComplete(OnInstantShow);
             else
                 _overlay.DOFade(0.7f, 1f).SetDelay(0.5f).OnComplete(OnStartShow); // 딜레이
+        }
+        
+        void OnInstantShow() {
+            _icon.gameObject.SetActive(true);
+            
+            
+            _textLoading.text = "Loading...";
+            _textLoading.DOFade(1, 0.1f);
+            
+            
+            // 아이콘 둥둥 
+            _icon.transform.DOScale(1.1f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+            _icon.DOFade(1, 0.1f);
         }
 
         /// <summary>

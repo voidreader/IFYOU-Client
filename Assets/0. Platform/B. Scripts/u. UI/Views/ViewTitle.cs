@@ -272,75 +272,10 @@ namespace PIERStory {
         
 
   
+   
         
-        IEnumerator RoutinePrepareMainPage() {
+        
 
-            SystemManager.main.QueryPushTokenInfo();
-            NetworkLoader.main.RequestPlatformServiceEvents(); // 공지사항, 프로모션, 장르 조회 
-            
-            // NetworkLoader.main.RequestComingSoonList(); // 커밍순 리스트 요청
-            NetworkLoader.main.RequestAttendanceList(); // 출석 보상 리스트 요청
-            DownloadStoryMainImages(); // 여기 추가 
-
-            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
-
-            /*
-            DownloadStoryMainImages(); // 다운로드 요청 
-            
-            // 다운로드 완료될때까지 기다린다.
-            yield return new WaitUntil(()=> totalDownloadingImageCount <= 0);
-            
-            // 게이지 다 찰때까지 기다린다.
-            // yield return new WaitUntil(()=> progressBar.fillAmount >= 1);
-         
-            // 준비 끝났으면 signal 전송 
-            Signal.Send(LobbyConst.STREAM_IFYOU, "moveMain", "open!");
-            */
-        }
-        
-        
-        /// <summary>
-        /// 메인화면에 필요한 이미지 다운받기 
-        /// </summary>
-        void DownloadStoryMainImages() {
-            totalDownloadingImageCount = 0;
-            StoryData currentData;
-            string imageURL = string.Empty;
-            string imageKey = string.Empty;
-            
-            for(int i=0; i<StoryManager.main.listTotalStory.Count;i++) {
-                
-                currentData = StoryManager.main.listTotalStory[i];
-                   
-                imageURL = currentData.categoryImageURL;
-                imageKey = currentData.categoryImageKey;
-                
-                if(string.IsNullOrEmpty(imageURL) || string.IsNullOrEmpty(imageKey))
-                    continue;
-
-                // 이미 있으면 continue;                
-                if(ES3.FileExists(imageKey))
-                    continue;
-                
-                // Debug.Log(imageURL +" / " + imageKey);
-                
-                // 다운로드 요청 
-                totalDownloadingImageCount++; // 유효한 URL당 
-                SystemManager.RequestDownloadImage(imageURL, imageKey, OnDownloadEachMainImage);
-            }
-        }
-        
-        // 다운로드 이미지 콜백, 성공시에 1씩 차감한다.
-        void OnDownloadEachMainImage(HTTPRequest request, HTTPResponse response) {
-            
-            Debug.Log(string.Format("OnDownloadEachMainImage [{0}] / [{1}]", request.State, response.IsSuccess));
-            
-            // 성공시, 로컬 저장 
-            if(request.State == HTTPRequestStates.Finished && response.IsSuccess) {
-                totalDownloadingImageCount--;
-            }
-        }
-        
         
         /// <summary>
         /// 타이틀 texture 설정 
@@ -361,43 +296,7 @@ namespace PIERStory {
         }
         
         
-        
-        /// <summary>
-        /// 랜덤 로딩 화면 조회하기.
-        /// </summary>
-        /// <returns></returns>
-        Texture2D GetRandomPlatformLoadingTexture() {
-            
-            JsonData data = null; // 로컬에 저장된 로딩 이미지 목록 
-            int imageIndex = 0; // 랜덤 index 
-            string imageKey = string.Empty; // 불러올 이미지 key 
-            string imageURL = string.Empty; // 불러올 이미지 url
-            Texture2D selectedTexture = null;
-            
-            
-            if(!ES3.KeyExists(SystemConst.KEY_PLATFORM_LOADING))
-                return null;
-                
-            
-            data = JsonMapper.ToObject(ES3.Load<string>(SystemConst.KEY_PLATFORM_LOADING));
-            Debug.Log("GetRandomPlatformLoadingTexture : " + JsonMapper.ToStringUnicode(data));
-            
-            if(data == null || data.Count == 0)
-                return null;
-            
-            imageIndex = UnityEngine.Random.Range(0, data.Count);
-            imageKey = data[imageIndex][SystemConst.IMAGE_KEY].ToString();
-            imageURL = data[imageIndex][SystemConst.IMAGE_URL].ToString();
-            
-            if(string.IsNullOrEmpty(imageKey) || string.IsNullOrEmpty(imageURL)) 
-                return null;
-                
-            selectedTexture = SystemManager.GetLocalTexture2D(imageKey);
-            
-           
-            return selectedTexture;
-        }
-        
+
         
         /// <summary>
         /// 플랫폼 로딩의 텍스트 

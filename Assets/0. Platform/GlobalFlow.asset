@@ -195,6 +195,17 @@ MonoBehaviour:
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 1
     CanBeReordered: 1
+  - NodeId: a8ebe4a6-90d5-4838-8f40-12baf8a4f54b
+    PortId: 56011dfb-7fd8-4757-8f41-d0907a6e8364
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 669980c1-0ffd-4456-834f-a21ef4598143
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"IFYOU","Name":"showSpecialEpisode","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
   RunUpdate: 0
   RunFixedUpdate: 0
   RunLateUpdate: 0
@@ -325,7 +336,7 @@ MonoBehaviour:
   - Id:
       Category: Game
       Name: InGameOption
-      Custom: 0
+      Custom: 1
     Mode: 0
   OnExitShowViews: []
   OnExitHideViews: []
@@ -2899,6 +2910,7 @@ MonoBehaviour:
     Capacity: 1
     Connections:
     - 64fabc9d-3114-4fb2-b0fe-36adae036e20
+    - 56011dfb-7fd8-4757-8f41-d0907a6e8364
     Value: '{"CanGoBack":true}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -3376,7 +3388,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 1
-  Position: {x: 2655.0435, y: 1189}
+  Position: {x: 2647, y: 1183}
   OnEnterShowViews:
   - Id:
       Category: Game

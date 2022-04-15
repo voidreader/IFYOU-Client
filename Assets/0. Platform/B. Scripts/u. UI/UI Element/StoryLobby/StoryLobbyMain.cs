@@ -1020,7 +1020,7 @@ namespace PIERStory {
             }
 
             // 통신 
-            NetworkLoader.main.UpdateUserProjectCurrent(currentEpisodeData.episodeID, lastPlaySceneID, lastPlayScriptNO);
+            NetworkLoader.main.UpdateUserProjectCurrent(currentEpisodeData.episodeID, lastPlaySceneID, lastPlayScriptNO, true);
             
             
             Firebase.Analytics.FirebaseAnalytics.LogEvent("EpisodeStart", new Firebase.Analytics.Parameter("project_id", StoryManager.main.CurrentProjectID)

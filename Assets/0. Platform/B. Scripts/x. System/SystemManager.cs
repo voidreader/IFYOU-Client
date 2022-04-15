@@ -1570,7 +1570,7 @@ namespace PIERStory
                 
 
             if (main.networkLoadingScreen)
-                main.networkLoadingScreen.ShowNetworkLoading();
+                main.networkLoadingScreen.ShowNetworkLoading(__isInstant);
         }
 
         /// <summary>

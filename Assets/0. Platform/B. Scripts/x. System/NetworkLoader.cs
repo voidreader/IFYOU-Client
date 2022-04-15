@@ -328,11 +328,13 @@ namespace PIERStory
 
 
         /// <summary>
-        /// 작품의 플레이 지점을 업데이트한다. (이어하기에 사용)
+        /// 작품의 플레이 지점을 저장한다 (작품 순번 체크와 이어하기에서 사용)
         /// </summary>
-        /// <param name="__sceneID"></param>
-        /// <param name="__scriptNO"></param>
-        public void UpdateUserProjectCurrent(string __episodeID, string __sceneID, long __scriptNO) 
+        /// <param name="__episodeID">에피소드 ID</param>
+        /// <param name="__sceneID">사건 ID</param>
+        /// <param name="__scriptNO">Script NO</param>
+        /// <param name="__isStarting">시작시점에서의 호출인지 여부 </param>
+        public void UpdateUserProjectCurrent(string __episodeID, string __sceneID, long __scriptNO, bool __isStarting = false) 
         {
             if (!UserManager.main.useRecord)
                 return;
@@ -343,8 +345,12 @@ namespace PIERStory
             sending["scene_id"] = __sceneID;
             sending["script_no"] = __scriptNO;
             sending["func"] = "updateUserProjectCurrent"; // func 지정 
-
-            SendPost(UserManager.main.CallbackUpdateProjectCurrent, sending);
+            
+            // 에피소드 시작시점과, 플레이 도중일때 콜백을 다르게 분리했다. 
+            if(__isStarting) 
+                SendPost(UserManager.main.CallbackUpdateProjectCurrentWhenStart, sending);
+            else
+                SendPost(UserManager.main.CallbackUpdateProjectCurrent, sending);
         }
 
         /// <summary>

@@ -1915,6 +1915,26 @@ namespace PIERStory
             currentStoryJson[NODE_PROJECT_CURRENT] = resultProjectCurrent;
         }
         
+        /// <summary>
+        /// 프로젝트 플레이 위치 저장(시작 시점에!) 콜백
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackUpdateProjectCurrentWhenStart(HTTPRequest req, HTTPResponse res) {
+            // 통신 실패했을 때 갱신하지 않음. 
+            if (!NetworkLoader.CheckResponseValidation(req, res, true))
+            {
+                Debug.LogError("CallbackUpdateProjectCurrent");
+                return;
+            }
+
+            resultProjectCurrent = JsonMapper.ToObject(res.DataAsText); // 결과 
+
+            // 갱신
+            currentStoryJson[NODE_PROJECT_CURRENT] = resultProjectCurrent;
+        }
+        
+        
         
 
         /// <summary>

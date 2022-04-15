@@ -27,7 +27,7 @@ namespace PIERStory {
             
             // 네트워크 로딩 화면은 바로 등장시키지 않고, 약간의 텀을 두고 나오도록 한다. 
             // 빠른 통신의 경우 굳이 이 화면을 노출할 필요는 없다. 
-            Debug.Log("[[NetworkLoading]]");
+            Debug.Log("<color=white>[[NetworkLoading]]</color>");
             
             _icon.transform.localScale = Vector3.one;
             _icon.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
@@ -46,8 +46,10 @@ namespace PIERStory {
             
             this.gameObject.SetActive(true);
             
-            if(_isInstant) 
-                _overlay.DOFade(0.7f, 0.1f).OnComplete(OnInstantShow);
+            if(_isInstant) {
+                _overlay.color = new Color(0, 0, 0, 0.7f);
+                OnInstantShow();
+            }
             else
                 _overlay.DOFade(0.7f, 1f).SetDelay(0.5f).OnComplete(OnStartShow); // 딜레이
         }
@@ -57,12 +59,13 @@ namespace PIERStory {
             
             
             _textLoading.text = "Loading...";
-            _textLoading.DOFade(1, 0.1f);
+            _textLoading.color = Color.white;
             
             
             // 아이콘 둥둥 
+            _icon.color = Color.white;
             _icon.transform.DOScale(1.1f, 0.5f).SetLoops(-1, LoopType.Yoyo);
-            _icon.DOFade(1, 0.1f);
+            
         }
 
         /// <summary>
@@ -90,6 +93,8 @@ namespace PIERStory {
         /// </summary>
         public void OffNetworkLoading()
         {
+            Debug.Log("<color=white>OffNetworkLoading</color>");
+            
             _icon.transform.localScale = Vector3.one;
             _icon.gameObject.SetActive(false);
             this.gameObject.SetActive(false);

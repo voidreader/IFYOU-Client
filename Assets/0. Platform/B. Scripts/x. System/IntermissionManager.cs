@@ -24,6 +24,7 @@ namespace PIERStory
         IEnumerator Start()
         {
             
+            
             // AdManager.main.HideBanner();
             SystemManager.ShowNetworkLoading(true);
             

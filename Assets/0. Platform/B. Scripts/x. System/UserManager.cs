@@ -2933,14 +2933,14 @@ namespace PIERStory
         /// <summary>
         /// 유저 업적 리스트 요청
         /// </summary>
-        public void RequestUserGradeInfo(OnRequestFinishedDelegate __cb)
+        public void RequestUserGradeInfo(OnRequestFinishedDelegate __cb, bool isSync = false)
         {
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "requestUserGradeInfo";
             sending[CommonConst.COL_USERKEY] = userKey;
             sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
 
-            NetworkLoader.main.SendPost(__cb, sending);
+            NetworkLoader.main.SendPost(__cb, sending, isSync);
         }
 
         

@@ -20,9 +20,10 @@ namespace PIERStory
         public UnityEngine.UI.Image buttonBox;
         public GameObject newSign;
         public GameObject showChoiceButton;
+        public GameObject endingHintButton;
 
-        readonly Vector2 openEndingSize = new Vector2(660, 500);
-        readonly Vector2 lockEndingSize = new Vector2(660, 435);
+        readonly Vector2 openEndingSize = new Vector2(660, 553);
+        readonly Vector2 lockEndingSize = new Vector2(660, 488);
 
         EpisodeData endingData;
 
@@ -39,31 +40,37 @@ namespace PIERStory
 
             if (endingData.endingOpen)
             {
-                endingTitle.text = epiData.episodeTitle;
                 GetComponent<RectTransform>().sizeDelta = openEndingSize;
                 buttonBox.sprite = LobbyManager.main.spriteEpisodeOpen;
+                buttonBox.rectTransform.anchoredPosition = new Vector2(0, 62);
 
                 newSign.SetActive(!UserManager.main.IsCompleteEpisode(epiData.episodeID));
-                showChoiceButton.SetActive(true);
             }
             else
             {
-                EpisodeData dependEpisodeData = StoryManager.GetRegularEpisodeByID(epiData.dependEpisode);
-
-                endingTitle.text = string.Format(SystemManager.GetLocalizedText("5165"), dependEpisodeData.episodeNO);
                 GetComponent<RectTransform>().sizeDelta = lockEndingSize;
                 buttonBox.sprite = LobbyManager.main.spriteEpisodeLock;
+                buttonBox.rectTransform.anchoredPosition = Vector2.zero;
 
                 newSign.SetActive(false);
-                showChoiceButton.SetActive(false);
             }
 
+            endingTitle.text = string.Format("{0}\n<size=22>{1}</size>", epiData.episodeTitle, epiData.episodeSummary);
+
+            showChoiceButton.SetActive(endingData.endingOpen);
+            endingHintButton.SetActive(!endingData.endingOpen);
 
             gameObject.SetActive(true);
         }
 
 
         #region OnClick Button Event
+
+        public void OnClickEndingHintButton()
+        {
+
+        }
+
 
         /// <summary>
         /// 엔딩 플레이!

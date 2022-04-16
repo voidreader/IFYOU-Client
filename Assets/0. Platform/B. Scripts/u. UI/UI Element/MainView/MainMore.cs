@@ -58,19 +58,15 @@ namespace PIERStory {
             clickLevelCount = 0;
             clickVersionCount = 0;
             
-            // accountBonus.SetActive(false);
+            accountBonus.SetActive(false);
 
             if (UserManager.main == null || string.IsNullOrEmpty(UserManager.main.userKey))
                 return;
                 
             Debug.Log("#### RefreshScreen");
 
-            /*
-            if (UserManager.main.accountLink == "-")
-                accountBonus.SetActive(true);
-            else 
-                accountBonus.SetActive(false);
-            */
+            
+            accountBonus.SetActive(!UserManager.main.CheckAccountLink());
             
 
             textVersion.text = SystemManager.GetLocalizedText("5053") + " " + Application.version;      // 버전

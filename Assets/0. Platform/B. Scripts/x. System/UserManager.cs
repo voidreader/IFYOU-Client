@@ -408,6 +408,7 @@ namespace PIERStory
             isHowToPlayClear = SystemManager.GetJsonNodeBool(userJson, "how_to_play"); // 하우 투 플레이 튜토리얼 
             
             accountLink = SystemManager.GetJsonNodeString(userJson, "account_link");
+            ViewCommonTop.OnRefreshAccountLink?.Invoke(); // 상단 갱신 (계정연동 보상때문에)
             
             SetNewNickname(SystemManager.GetJsonNodeString(userJson, "nickname"));
             
@@ -424,6 +425,8 @@ namespace PIERStory
             
             // 인트로 완료 여부
             isIntroDone = SystemManager.GetJsonNodeBool(userJson, "intro_done");
+            
+            
             
         }
         
@@ -1162,8 +1165,21 @@ namespace PIERStory
         #endregion
 
         #region 유저 노드 제어 
-
-
+        
+        /// <summary>
+        /// 계정 연동되어있는지 체크 
+        /// </summary>
+        /// <returns>true : 연동됨</returns>
+        public bool CheckAccountLink() {
+            if(UserManager.main == null)
+                return false;
+                
+            if(UserManager.main.accountLink == "-")
+                return false;
+            
+            return true;
+        }
+        
         /// <summary>
         /// 유저 계정 노드 
         /// </summary>

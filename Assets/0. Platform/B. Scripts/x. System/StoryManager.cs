@@ -419,6 +419,17 @@ namespace PIERStory
 
             return null;
         }
+        
+        public bool CheckExistsProject(string __projectID) {
+            
+            for(int i=0; i<listTotalStory.Count;i++) {
+                
+                if(listTotalStory[i].projectID == __projectID)
+                    return true;
+            }
+            
+            return false;
+        }
 
        
         /// <summary>

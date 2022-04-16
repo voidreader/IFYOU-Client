@@ -89,9 +89,8 @@ namespace PIERStory {
             
             buttons.SetActive(true);
             
-            if(UserManager.main.accountLink != "-") {
-                groupBonus.SetActive(true);
-            }
+            // 계정연동 안되어있는 경우 groupBonus 활성화 
+            groupBonus.SetActive(!UserManager.main.CheckAccountLink());
         }
         
         

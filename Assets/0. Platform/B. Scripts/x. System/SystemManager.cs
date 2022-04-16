@@ -1338,11 +1338,12 @@ namespace PIERStory
             
             Debug.Log("#### RefreshAccountLinkRelated");
             
-            MainToggleNavigation.OnToggleAccountBonus?.Invoke();
-            PopupAccount.OnRefresh?.Invoke();
-            MainMore.OnRefreshMore?.Invoke();
+            // MainToggleNavigation.OnToggleAccountBonus?.Invoke();
+            PopupAccount.OnRefresh?.Invoke(); // 계정연동 팝업 
+            MainMore.OnRefreshMore?.Invoke(); // 세팅화면 
             
-            ViewMain.OnRefreshViewMain?.Invoke();
+            ViewMain.OnRefreshViewMain?.Invoke(); // 메인화면 
+            ViewCommonTop.OnRefreshAccountLink?.Invoke(); // 상단 
             
             
             // 유저의 구매 내역 받아오기

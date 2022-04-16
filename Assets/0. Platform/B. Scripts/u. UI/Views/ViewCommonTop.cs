@@ -11,11 +11,18 @@ namespace PIERStory {
     {
         public static bool isBackgroundShow = true;                 // 배경 보여지고 있는지 
         public static string staticCurrentTopOwner = string.Empty;  // static owner.
+     
+        
+        #region Actions 
         
         public static Action OnRefreshSuperUser = null; // 슈퍼유저 표기용도 
         public static Action OnBackAction = null;       // 백 버튼 터치 추가 액션 필요시 사용
 
         public static Action<int> OnForShowCoin = null; // 보여주기용 코인
+        
+        public static Action OnRefreshAccountLink = null; // 계정연동 리프레시
+        
+        #endregion
 
         [SerializeField] GameObject backButton; // 뒤로가기 버튼 
         [SerializeField] TextMeshProUGUI textViewName; // 뷰 이름  
@@ -81,7 +88,7 @@ namespace PIERStory {
         SignalReceiver signalReceiverParent;
         
         private void Awake() {
-            
+            OnRefreshAccountLink = RefreshAccountLink;            
 
             signalStreamTopViewNameExist = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST);
             signalReceiverTopViewNameExist = new SignalReceiver().SetOnSignalCallback(OnTopViewNameExistSignal);
@@ -175,10 +182,26 @@ namespace PIERStory {
             superUserSign.SetActive(UserManager.main.CheckAdminUser());
         }
 
-
+        
+        /// <summary>
+        /// 코인 리프레시 
+        /// </summary>
+        /// <param name="__newValue"></param>
         void RefreshCoin(int __newValue)
         {
             topCoin.RefreshCoin(__newValue);
+        }
+        
+        /// <summary>
+        /// 계정연동 refresh 
+        /// </summary>        
+        void RefreshAccountLink() {
+            if(UserManager.main == null) {
+                moreNotify.SetActive(false);
+                return;
+            }
+            
+            moreNotify.SetActive(!UserManager.main.CheckAccountLink());
         }
 
 

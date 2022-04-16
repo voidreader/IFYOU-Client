@@ -241,7 +241,7 @@ namespace PIERStory {
            
             
             // 최근에 플레이한 작품 있음 
-            if(StoryManager.main.latestPlayProjectID > 0) {
+            if(StoryManager.main.latestPlayProjectID > 0 && StoryManager.main.CheckExistsProject(StoryManager.main.latestPlayProjectID.ToString()))  {
                 readyArea.SetActive(true);
                
                // readyArea에 대한 처리 

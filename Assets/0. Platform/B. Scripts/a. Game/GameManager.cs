@@ -43,6 +43,7 @@ namespace PIERStory
         public bool useSkip = false;                // 스킵을 사용했는가?
         public bool skipable = false;               // 스킵 기능 사용이 가능한가?
         public bool isAutoPlay = false;
+        public bool hasFirstClearReward = false; // 첫클리어 보상 있음
 
         public bool isJustSkipStop = false; // * 막 스킵이 끝났는지 체크 변수 
 
@@ -130,8 +131,7 @@ namespace PIERStory
         public Sprite spriteSelectionLockIcon = null;       // 선택지 잠김 아이콘
         public Sprite spriteSelectionUnlockIcon = null;     // 선택지 잠김 풀림 아이콘
 
-        [Space]
-        public Sprite spriteInappOriginIcon = null;         // 메일함에서 사용하는 아이콘
+        
 
         [Space]
         public Sprite spriteGameMessageNormal = null;       // 게임 메시지 일반
@@ -577,8 +577,8 @@ namespace PIERStory
             isPlaying = true; // 플레이 시작함!
 
             // 시작 기록 업데이트를 호출한다.
-            NetworkLoader.main.UpdateEpisodeStartRecord();
-            yield return new WaitUntil(() => NetworkLoader.CheckServerWork()); // 통신 완료까지 대기.
+            // NetworkLoader.main.UpdateEpisodeStartRecord();
+            // yield return new WaitUntil(() => NetworkLoader.CheckServerWork()); // 통신 완료까지 대기.
 
             Debug.Log("<<< UpdateEpisodeStartRecord done >>>");
 
@@ -1985,7 +1985,8 @@ namespace PIERStory
 
         IEnumerator RoutineFinishGame(string __nextEpisodeID)
         {
-
+            hasFirstClearReward = false;
+                
             // 안전을 위해..
             yield return new WaitForSeconds(0.1f);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
@@ -2094,66 +2095,32 @@ namespace PIERStory
                         
             #endregion
             
-            // * 2. 열린 엔딩 체크 
-            #region 엔딩
-            // * 2022.03.17 엔딩은 에피소드 종료화면에서 처리하기로 변경 
-            
-            // Debug.Log("### 엔딩 오픈 체크 시작 ###");
-
-            // 다음 에피소드가 엔딩인 경우
-            /*
-            if (nextEpisodeData != null && nextEpisodeData.episodeType == EpisodeType.Ending)
-            {
-
-                Debug.Log("<color=yellow>Ending Alert open </color>");
-
-                PopupBase endingPopup = PopupManager.main.GetPopup(GameConst.POPUP_ENDING_ALERT);
-
-                string endingType = string.Empty;
-
-                if (nextEpisodeData.endingType == LobbyConst.COL_HIDDEN)
-                    endingType = SystemManager.GetLocalizedText("5087");
-                else
-                    endingType = SystemManager.GetLocalizedText("5088");
-
-                endingPopup.Data.SetLabelsTexts(endingType, string.Format(SystemManager.GetLocalizedText("6063"), nextEpisodeData.episodeTitle));
-                endingPopup.Data.imageURL = nextEpisodeData.squareImageURL;
-                endingPopup.Data.imageKey = nextEpisodeData.squareImageKey;
-
-
-                PopupManager.main.ShowPopup(endingPopup, true, false);
-                yield return new WaitForSeconds(0.1f);
-
-                Debug.Log("<color=yellow>Ending Alert close </color>");
-            }            
-            
-            Debug.Log("### 엔딩 오픈 체크 종료 ###");
-            */
-            #endregion
             
 
             // * 3. 미션 해금
             UserManager.main.ShowCompleteMissionByEpisode(false);
             
+            yield return null;
+            
             // * 첫 클리어 보상 
             #region 첫 클리어 보상 
-            JsonData firstReward = UserManager.main.GetNodeFirstClearResult();  // 최초 보상 노드 가져오기 
-            if(firstReward != null && firstReward.Count > 0) {
+            
+            if(hasFirstClearReward) {
                 // 최초 보상 있으면 팝업 호출
-                Debug.Log(">> First Reward exists : " + JsonMapper.ToStringUnicode(firstReward[0]));
+                Debug.Log(">> First Reward exists : " + JsonMapper.ToStringUnicode(UserManager.main.GetNodeFirstClearResult()));
                 
                 PopupBase p = PopupManager.main.GetPopup(GameConst.POPUP_EPISODE_FIRST_REWARD);
                 if(p == null) {
                     Debug.LogError("First reward popup is null");
                 }
                 else {
-                    p.Data.SetContentJson(firstReward[0]); // 첫번째 로우 (항상 1개만 온다)
+                    p.Data.SetContentJson(UserManager.main.GetNodeFirstClearResult()); // 서버에서 받아온 첫 결제 보상
                     PopupManager.main.ShowPopup(p, true, false); // 보여주기.  (queue 사용으로 변경)                    
                 }
                 
                 yield return new WaitForSeconds(0.1f);
-
-            } // 첫 클리어 보상 팝업 끝 
+            }
+            
             #endregion
             
 

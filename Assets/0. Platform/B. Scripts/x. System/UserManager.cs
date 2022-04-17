@@ -1467,6 +1467,14 @@ namespace PIERStory
         {
             return currentStoryJson[NODE_EPISODE_PROGRESS];
         }
+        
+        /// <summary>
+        /// 에피소드 진행도에 단일 에피소드 추가 
+        /// </summary>
+        /// <param name="__playEpisodeID"></param>
+        public void AddUserEpisodeProgress(int __playEpisodeID) {
+            GetNodeUserEpisodeProgress().Add(__playEpisodeID);
+        }
 
         /// <summary>
         /// 유저 에피소드 진행도
@@ -1520,6 +1528,16 @@ namespace PIERStory
         public void SetNodeUserEpisodeHistory(JsonData __j)
         {
             currentStoryJson[NODE_EPISODE_HISTORY] = __j;
+        }
+        
+        /// <summary>
+        /// 유저 에피소드 히스토리에 에피소드 단일 개체 추가 
+        /// </summary>
+        /// <param name="__playEpisodeID"></param>
+        public void AddUserEpisodeHistory(int __playEpisodeID) {
+            GetNodeUserEpisodeHistory().Add(__playEpisodeID);
+            
+            Debug.Log("AddUserEpisodeHistory : " + JsonMapper.ToStringUnicode(GetNodeUserEpisodeHistory()));
         }
 
         public JsonData GetNodeUserEpisodePurchase()
@@ -1995,14 +2013,27 @@ namespace PIERStory
             
             // ! 여기에 JSON 따로 저장합니다. 
             resultEpisodeRecord = JsonMapper.ToObject(res.DataAsText);
+            
+            int playedEpisodeID = SystemManager.GetJsonNodeInt(resultEpisodeRecord, "episode_id");
+            
 
             // 노드 저장!
-            SetNodeUserEpisodeHistory(resultEpisodeRecord[NODE_EPISODE_HISTORY]); // 히스토리 
-            SetNodeUserEpisodeProgress(resultEpisodeRecord[NODE_EPISODE_PROGRESS]); // 진행도 
+            if(playedEpisodeID > 0) {
+                
+                // 첫 클리어 보상 관련 변수
+                GameManager.main.hasFirstClearReward = !IsCompleteEpisode(playedEpisodeID.ToString());
+                
+                AddUserEpisodeHistory(playedEpisodeID); // 히스토리 
+                AddUserEpisodeProgress(playedEpisodeID);  // 진행도 
+            }
+            
+            // SetNodeUserEpisodeHistory(resultEpisodeRecord[NODE_EPISODE_HISTORY]); // 히스토리 
+            // SetNodeUserEpisodeProgress(resultEpisodeRecord[NODE_EPISODE_PROGRESS]); // 진행도 
             SetNodeUserProjectCurrent(resultEpisodeRecord[NODE_PROJECT_CURRENT]);
 
 
             // played scene count 업데이트 
+            /*
             if(resultEpisodeRecord.ContainsKey("playedSceneCount")) {
                 Debug.Log(JsonMapper.ToStringUnicode(resultEpisodeRecord["playedSceneCount"]));
                 Debug.Log("Check this method : CallbackUpdateEpisodeRecord"); 
@@ -2012,36 +2043,16 @@ namespace PIERStory
                 // * EpisodeData는 StoryManager로부터 시작해서 모두 참조가 같으므로 따로 변수를 만들어서 처리한다. 
                 GameManager.main.updatedEpisodeSceneProgressValue = SystemManager.GetJsonNodeFloat(resultEpisodeRecord, "playedSceneCount");
             }
+            */
 
             // 현재 플레이한 에피소드가 정규 에피소드인 경우 이프유 업적 통신하기
             if (GameManager.main != null && GameManager.main.currentEpisodeData.episodeType == EpisodeType.Chapter)
                 NetworkLoader.main.RequestIFYOUAchievement(12, -1, int.Parse(StoryManager.main.CurrentEpisodeID));
 
-            // 뱅크 설정 (리프레시 없이)
-            // SetBankInfo(resultEpisodeRecord, false);
 
         }
 
-        /// <summary>
-        /// 에피소드 시작 기록 업데이트 콜백 
-        /// </summary>
-        /// <param name="req"></param>
-        /// <param name="res"></param>
-        public void CallbackUpdateEpisodeStartRecord(HTTPRequest req, HTTPResponse res)
-        {
-            // 통신 실패했을 때 갱신하지 않음. 
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("CallbackUpdateEpisodeRecord");
-                return;
-            }
 
-            resultEpisodeRecord = JsonMapper.ToObject(res.DataAsText);
-
-            // Progress, 현재 에피소드 정보 저장 
-            SetNodeUserEpisodeProgress(resultEpisodeRecord[NODE_EPISODE_PROGRESS]);
-            
-        }
 
         /// <summary>
         /// 에피소드 리셋 프로그레스 콜백

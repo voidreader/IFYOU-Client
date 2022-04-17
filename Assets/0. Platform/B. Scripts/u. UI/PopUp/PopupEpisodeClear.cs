@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using BestHTTP;
 using LitJson;
@@ -12,17 +13,15 @@ namespace PIERStory {
     /// </summary>
     public class PopupEpisodeClear : PopupBase
     {
-        [SerializeField] ImageRequireDownload iconImage;
+        [SerializeField] Image iconImage;
         
         [SerializeField] TextMeshProUGUI textBaseQuantity;
         [SerializeField] TextMeshProUGUI textBonusQuantity;
-        
-        [SerializeField] string iconURL = string.Empty;
-        [SerializeField] string iconKey = string.Empty;
+
         string currency = string.Empty;
         public int quantity = 0;
         public int bonusQuantity = 0;
-        public int clearExp = 0;
+        
         
         
         
@@ -39,10 +38,14 @@ namespace PIERStory {
             
             // 아이콘 이미지 
             currency = SystemManager.GetJsonNodeString(Data.contentJson, "currency");
-            iconURL = SystemManager.GetJsonNodeString(Data.contentJson, "icon_url");
-            iconKey = SystemManager.GetJsonNodeString(Data.contentJson, "icon_key");
             
-            iconImage.SetDownloadURL(iconURL, iconKey);
+            if(currency == "coin") {
+                iconImage.sprite = SystemManager.main.spriteCoin;
+            }
+            else {
+                iconImage.sprite = SystemManager.main.spriteStar;
+            }
+            
             
             quantity = SystemManager.GetJsonNodeInt(Data.contentJson, "quantity"); // 보상 
             bonusQuantity = quantity * 5; // 보너스 수량 
@@ -50,24 +53,9 @@ namespace PIERStory {
             // 수량
             textBaseQuantity.text = quantity.ToString() + " " + SystemManager.GetLocalizedText("6240");
             textBonusQuantity.text = bonusQuantity.ToString() + " " + SystemManager.GetLocalizedText("6240");
-            
-            clearExp = SystemManager.GetJsonNodeInt(Data.contentJson, "first_reward_exp"); // 최초 클리어 경험치 
-            
-            // 경험치 얻을게 없으면 진행하지 않음.
-            if(clearExp <= 0)
-                return;
-            
-            Invoke("OnShow", 0.5f);
+
         }
         
-        public void OnShow() {
-            
-            Debug.Log(">>>>> Update EXP <<<<<<");
-            
-            // * 최초 클리어 경험치 연계하기  
-            // NetworkLoader.main.UpdateUserExp(clearExp, "episode_clear", -1); 
-            
-        }
         
         /// <summary>
         /// 즉시 획득
@@ -77,7 +65,7 @@ namespace PIERStory {
             // UserManager.main.RefreshIndicators(); // 상단 갱신만 하면 된다. (이미 재화는 들어온 상태)
             
             // 재화 요청
-            NetworkLoader.main.RequestEpisodeFirstClearReward(false);
+            NetworkLoader.main.RequestEpisodeFirstClearReward(currency, quantity, false);
             
         }
 
@@ -116,7 +104,7 @@ namespace PIERStory {
             Hide();
             
             // 재화 요청
-            NetworkLoader.main.RequestEpisodeFirstClearReward(true);
+            NetworkLoader.main.RequestEpisodeFirstClearReward(currency, quantity, true);
         }
         
         /// <summary>

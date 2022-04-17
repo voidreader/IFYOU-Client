@@ -30,7 +30,7 @@ namespace PIERStory
         public const string FUNC_DELETE_EPISODE_SCENE_HISTORY = "deleteUserEpisodeSceneHistory";
         public const string FUNC_INSERT_DRESS_PROGRESS = "insertUserProjectDressProgress";
 
-        public const string FUNC_UPDATE_EPISODE_COMPLETE_RECORD = "updateUserEpisodePlayRecord"; // 에피소드 플레이 완료 기록 
+        public const string FUNC_UPDATE_EPISODE_COMPLETE_RECORD = "requestCompleteEpisode"; // 에피소드 플레이 완료 기록 
         public const string FUNC_UPDATE_EPISODE_START_RECORD = "insertUserEpisodeStartRecord"; // 에피소드 플레이 시작 기록 
         public const string FUNC_RESET_EPISODE_PROGRESS = "resetUserEpisodeProgress"; // 에피소드 진행도 리셋 
         public const string FUNC_RESET_EPISODE_PROGRESS_TYPE2 = "resetUserEpisodeProgressType2"; // 에피소드 진행도 리셋 신규 15버전 2022.02.28 
@@ -157,11 +157,13 @@ namespace PIERStory
         /// 에피소드 클리어 보상 요청 
         /// </summary>
         /// <param name="isDouble"></param>
-        public void RequestEpisodeFirstClearReward(bool isDouble) {
+        public void RequestEpisodeFirstClearReward(string __currency, int __quantity, bool isDouble) {
             JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "requestEpisodeFirstClearReward";
+            sending[CommonConst.FUNC] = "requestEpisodeFirstClear";
             sending["is_double"] = isDouble;
             sending["episode_id"] = StoryManager.main.CurrentEpisodeID;
+            sending["currency"] = __currency;
+            sending["quantity"] = __quantity;
             
             // 통신 
             SendPost(UserManager.main.CallbackEpisodeFirstClearReward, sending, true);
@@ -519,23 +521,7 @@ namespace PIERStory
         }
 
 
-        /// <summary>
-        /// 에피소드 플레이 시작 기록 저장하기 
-        /// </summary>
-        public void UpdateEpisodeStartRecord()
-        {
-            // 수집 엔딩을 보는 경우 기록하지 않는다
-            if (!UserManager.main.useRecord)
-                return;
 
-            // Progress에만 저장이 된다. 
-            JsonData sending = new JsonData();
-            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
-            sending["episodeID"] = StoryManager.main.CurrentEpisodeID; // 현재 프로젝트 ID 
-            sending["func"] = FUNC_UPDATE_EPISODE_START_RECORD;
-
-            SendPost(UserManager.main.CallbackUpdateEpisodeStartRecord, sending);
-        }
 
         /// <summary>
         /// 에피소드 완료 기록 저장하기 
@@ -555,10 +541,11 @@ namespace PIERStory
             sending["ver"] = 10; // 버전 2022.01.24
             sending["useRecord"] = UserManager.main.useRecord;
 
-            // 에피소드 완료 기록을 하면서 현재 선택지 기록을 갱신한다
-            UserManager.main.SetCurrentStorySelectionList(StoryManager.main.CurrentProjectID);
 
             SendPost(UserManager.main.CallbackUpdateEpisodeRecord, sending);
+            
+            // 에피소드 완료 기록을 하면서 현재 선택지 기록을 갱신한다
+            UserManager.main.SetCurrentStorySelectionList(StoryManager.main.CurrentProjectID);
         }
         
         /// <summary>

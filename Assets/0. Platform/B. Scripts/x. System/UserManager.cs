@@ -496,7 +496,8 @@ namespace PIERStory
             // 능력치            
             SetStoryAbilityDictionary(currentStoryJson[NODE_USER_ABILITY]);
             
-
+            // 선택지 히스토리 
+            currentStorySelectionHistoryJson = currentStoryJson["selectionHistory"];
 
             /// 데이터 확인용도 
             if (!Application.isEditor)
@@ -593,32 +594,6 @@ namespace PIERStory
 
 
         #region 선택지 관련
-
-        /// <summary>
-        /// 작품 선택하는 순간 해당 작품의 선택지 내역도 함께 불러온다
-        /// </summary>
-        /// <param name="__projectId">선택한 작품의 id</param>
-        public void SetCurrentStorySelectionList(string __projectId)
-        {
-            JsonData sendingData = new JsonData();
-            sendingData[CommonConst.FUNC] = FUNC_GET_SELECTION_CURRENT;
-            sendingData[CommonConst.COL_USERKEY] = userKey;
-            sendingData[CommonConst.COL_PROJECT_ID] = __projectId;
-            sendingData[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
-
-            NetworkLoader.main.SendPost(CallbackSelectionList, sendingData);
-        }
-
-        void CallbackSelectionList(HTTPRequest req, HTTPResponse res)
-        {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("Failed CallbackSelectionList");
-                return;
-            }
-
-            currentStorySelectionHistoryJson = JsonMapper.ToObject(res.DataAsText);
-        }
 
         /// <summary>
         /// 선택지 구매
@@ -2029,7 +2004,9 @@ namespace PIERStory
             
             // SetNodeUserEpisodeHistory(resultEpisodeRecord[NODE_EPISODE_HISTORY]); // 히스토리 
             // SetNodeUserEpisodeProgress(resultEpisodeRecord[NODE_EPISODE_PROGRESS]); // 진행도 
+            
             SetNodeUserProjectCurrent(resultEpisodeRecord[NODE_PROJECT_CURRENT]);
+            currentStorySelectionHistoryJson = resultEpisodeRecord["selectionHistory"]; // 선택지 히스토리 
 
 
             // played scene count 업데이트 

@@ -433,7 +433,7 @@ namespace PIERStory
 
        
         /// <summary>
-        /// 스토리 정보 요청 
+        /// 진입하는 스토리의 정보 요청 
         /// </summary>
         /// <param name="__projectID">프로젝트 ID </param>
         /// <param name="__J">작품 기본 정보</param>
@@ -466,7 +466,7 @@ namespace PIERStory
             sendingData[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
 
             // 선택지 히스토리 통신도 함께 진행합시다(여기서 받으면 선택지 페이지 안들어갔다고 해도, 에피소드 종료 페이지에서 사용해야함)
-            UserManager.main.SetCurrentStorySelectionList(__storyData.projectID);
+            // UserManager.main.SetCurrentStorySelectionList(__storyData.projectID);
 
 
             // 콜백에서 이어지도록 처리 

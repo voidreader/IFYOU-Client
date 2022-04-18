@@ -1563,11 +1563,11 @@ namespace PIERStory
             // 각 씬마다 보유하고 있음.
             if (LobbyManager.main != null)
                 main.networkLoadingScreen = LobbyManager.main.GetLobbyNetworkLoadingScreen();
-            else if (GameManager.main != null)
+                
+            if (GameManager.main != null)
                 main.networkLoadingScreen = GameManager.main.GetGameNetworkLoadingScreen();
-            else if (IntermissionManager.main != null) {
-                main.networkLoadingScreen = IntermissionManager.main.networkLoadingScreen;
-            }
+                
+            
                 
 
             if (main.networkLoadingScreen)

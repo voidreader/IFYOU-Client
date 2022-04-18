@@ -122,6 +122,9 @@ namespace PIERStory {
             signalStreamParent = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_PARENT);
             signalReceiverParent = new SignalReceiver().SetOnSignalCallback(OnShowParent);
             
+            
+            mailNotify.gameObject.SetActive(false);
+            moreNotify.gameObject.SetActive(false);
         }
         
         private void Start() {
@@ -143,6 +146,11 @@ namespace PIERStory {
 
             signalStreamAttendace.ConnectReceiver(signalReceiverAttendance);
             signalStreamParent.ConnectReceiver(signalReceiverParent);
+            
+            if(UserManager.main != null && UserManager.main.unreadMailCount > 0) {
+                mailNotify.SetActive(true);
+            }
+            
         }
         
         void OnDisable() {

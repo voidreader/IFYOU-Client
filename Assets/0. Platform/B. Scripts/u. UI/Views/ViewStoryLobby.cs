@@ -927,6 +927,7 @@ namespace PIERStory
 
                 #endregion
 
+                StartCoroutine(RoutineBackgroundDetailSetting());
                 ActiveInteractable(false);
                 mainContainer.Show();
             }

@@ -207,6 +207,9 @@ namespace PIERStory
 
         void SetBadgeSprite(Image __img, TextMeshProUGUI __text, int __grade)
         {
+            __img.gameObject.SetActive(true);
+            __text.gameObject.SetActive(true);
+
             switch (__grade)
             {
                 case 1:
@@ -228,6 +231,10 @@ namespace PIERStory
                 case 5:
                     __img.sprite = LobbyManager.main.spriteIFYOUBadge;
                     __text.text = SystemManager.GetLocalizedText("5195");
+                    break;
+                default:
+                    __img.gameObject.SetActive(false);
+                    __text.gameObject.SetActive(false);
                     break;
             }
         }

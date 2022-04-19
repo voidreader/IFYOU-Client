@@ -131,6 +131,12 @@ namespace PIERStory
         {
             camWidth = (2 * Camera.main.orthographicSize) * Camera.main.aspect;
         }
+        
+        void Update() {
+            
+        }
+        
+        
 
         public override void OnStartView()
         {
@@ -1400,6 +1406,10 @@ namespace PIERStory
         /// </summary>
         void OpenStoryCoinShop()
         {
+            // 중복호출 막는다.
+            if(SystemManager.main.isWebViewOpened)
+                return;
+            
             UserManager.main.SaveCurrentAbilityDictionary(); // 코인샵 열기전에 현재 능력치 정보 저장해놓고 시작 
 
             if (Application.isEditor)
@@ -1451,15 +1461,19 @@ namespace PIERStory
             SystemManager.main.webView.Show();
             
             SystemManager.main.isWebViewOpened = true; // 오픈할때 true로 변경 
+            Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = true;
             
         }
         
         void OnHideWebview(WebView __view) {
                 
                 SystemManager.main.isWebViewOpened = false;  // 닫힐때 false로 변경 
+                Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = false;
                 
-                Debug.Log(">> OnHideWebview");
+                Debug.Log(">> OnHideWebview in ViewStoryLobby");
                 WebView.OnHide -= OnHideWebview;
+                
+                __view.gameObject.SetActive(false);
                 Destroy(__view);
                 
                 RefreshAfterProjectCoinShop();

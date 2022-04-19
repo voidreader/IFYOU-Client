@@ -2182,6 +2182,7 @@ namespace PIERStory
             webView.Show();            
             
             SystemManager.main.isWebViewOpened = true; // 오픈할때 true로 변경 
+            Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = true;
         }
         
         public void OpenPrivacyURL() {
@@ -2244,6 +2245,7 @@ namespace PIERStory
             webView.Show();
             
             SystemManager.main.isWebViewOpened = true; // 오픈할때 true로 변경 
+            Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = true;
         }
         
         void OnHideWebview(WebView __view) {
@@ -2252,6 +2254,7 @@ namespace PIERStory
             
             
             SystemManager.main.isWebViewOpened = false;  // 닫힐때 false로 변경 
+            Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = false;
             
             WebView.OnHide -= OnHideWebview;
             __view.gameObject.SetActive(false);
@@ -2423,6 +2426,8 @@ namespace PIERStory
                 SystemManager.ShowSystemPopup(SystemManager.GetLocalizedText("6064"), Application.Quit, null, true);    
             }
         }
-         
+        
+        
+ 
     }
 }

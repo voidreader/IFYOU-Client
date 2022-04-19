@@ -126,6 +126,8 @@ namespace PIERStory {
         
         protected virtual void Update() {
             
+
+            
             // * 기다무 시스템 관련 타이밍 처리 
             if(!isOpenTimeCountable) {
                 return;

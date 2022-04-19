@@ -154,8 +154,7 @@ namespace PIERStory
 
         // getUserSelectedStory를 통해 받아온 작품 관련 정보 
 
-        const string FUNC_GET_TOP3_SELECTION_LIST = "getTop3SelectionList";
-        const string FUNC_GET_SELECTION_CURRENT = "getSelectionCurrent";
+        
 
         public const string UN_UNREAD_MAIL_COUNT = "unreadMailCount"; // 미수신 메일 개수
         public const string UN_UNREAD_MAIL_LIST = "mailList"; // 미수신 메일 리스트
@@ -164,7 +163,7 @@ namespace PIERStory
         const string NODE_TUTORIAL_CLEAR = "tutorial_clear";
         const string NODE_TUTORIAL_CURRENT = "tutorial_current";
 
-        const string NODE_DRESS_CODE = "dressCode"; // dressCode (프로젝트 기준정보)
+        
         
         public const string NODE_BUBBLE_SET = "bubbleSet"; // 말풍선 세트 정보 
         const string NODE_BUBBLE_SPRITE = "bubbleSprite"; // 말풍선 스프라이트 정보 
@@ -193,7 +192,7 @@ namespace PIERStory
 
         
         const string NODE_NEXT_EPISODE = "nextEpisodeID"; // 다음 에피소드 정보 
-        const string NODE_PROJECT_USER_PROPERTY = "userProperty"; // 유저의 프로젝트 관련 재화 정보(대여권과 자유이용권)
+        
         
         const string NODE_COLLECTION_PROGRESS = "progress"; // 유저 작품 수집요소 Progress 
         const string NODE_PROJECT_CURRENT = "projectCurrent"; // 유저의 작품에서의 플레이 위치 
@@ -1213,14 +1212,7 @@ namespace PIERStory
                 return false;
         }
 
-        /// <summary>
-        /// 프로젝트 연관 재화 갱신(자유이용권, 대여권)
-        /// </summary>
-        /// <param name="__j"></param>
-        public void SetNodeProjectUserProperty(JsonData __j)
-        {
-            currentStoryJson[NODE_PROJECT_USER_PROPERTY] = __j;
-        }
+        
 
 
         /// <summary>
@@ -1834,8 +1826,7 @@ namespace PIERStory
             JsonData purchaseResult = result.ContainsKey("purchaseResult")?result["purchaseResult"]:null;
             // 갱신
             
-            // * "userProperty" (프로젝트 귀속 Property)
-            SetNodeProjectUserProperty(result[NODE_PROJECT_USER_PROPERTY]); 
+            
             
             // * bank 
             SetBankInfo(result);
@@ -2218,10 +2209,7 @@ namespace PIERStory
             if (responseData.ContainsKey(NODE_PURCHASE_HIST))
                 SetNodeEpisodePurchaseHistory(responseData[NODE_PURCHASE_HIST]);
                 
-            // 유저 프로젝트 연결 재화 
-            if(responseData.ContainsKey(NODE_PROJECT_USER_PROPERTY)) {
-                SetNodeProjectUserProperty(responseData[NODE_PROJECT_USER_PROPERTY]);
-            }
+            
 
             OnRequestEpisodePurchase?.Invoke(true);
 

@@ -6,6 +6,7 @@ using UnityEngine;
 
 using LitJson;
 using BestHTTP;
+using Sirenix.OdinInspector;
 using Doozy.Runtime.Signals;
 
 namespace PIERStory
@@ -15,7 +16,7 @@ namespace PIERStory
     /// <summary>
     /// 사용자 정보 
     /// </summary>
-    public class UserManager : MonoBehaviour
+    public class UserManager : SerializedMonoBehaviour
     {
         public static UserManager main = null;
         
@@ -145,8 +146,8 @@ namespace PIERStory
         public Sprite spriteMissionPopup;       // 미션 팝업에서 사용되는 아이콘
 
         JsonData currentStoryAbilityJson = null;    // 현재 선택한 작품의 능력치 Json
-        public Dictionary<string, List<AbilityData>> DictStoryAbility; // 받아온 능력치 화자별로 딕셔너리 처리 
-        public Dictionary<string, List<AbilityData>> DictOldStoryAbility; // 코인샵에서 구매전의 능력치 정보 저장용도
+        public Dictionary<string, List<AbilityData>> DictStoryAbility;      // 받아온 능력치 화자별로 딕셔너리 처리 
+        public Dictionary<string, List<AbilityData>> DictOldStoryAbility;   // 코인샵에서 구매전의 능력치 정보 저장용도
 
         public List<AchievementData> listAchievement;
 
@@ -582,12 +583,37 @@ namespace PIERStory
                     
                     // 능력치 팝업 호출하자. 
                     SystemManager.ShowAbilityPopup(key, DictStoryAbility[key][i].originAbilityName, Mathf.RoundToInt(gap));
-                    
                 }
-                
             }
-            
         }
+
+        /// <summary>
+        /// 능력치를 찾아줘
+        /// </summary>
+        /// <param name="__name">캐릭터 이름(=speaker)</param>
+        /// <param name="__ability">능력치 이름(한글 오리지널 이름)</param>
+        /// <returns></returns>
+        public AbilityData GetAbilityData(string __name, string __ability)
+        {
+            if (!DictStoryAbility.ContainsKey(__name))
+            {
+                Debug.LogError(__name + ", 이 캐릭터는 능력치 데이터에 없는걸");
+                return null;
+            }
+
+            // 해당 캐릭터의 능력치 정보를 찾아서 return
+            for (int i = 0; i < DictStoryAbility[__name].Count; i++)
+            {
+                if (DictStoryAbility[__name][i].originAbilityName == __ability)
+                    return DictStoryAbility[__name][i];
+            }
+
+            Debug.LogError(string.Format("{0}, 이 캐릭터는 {1} 능력치가 존재하지 않습니다", __name, __ability));
+            return null;
+        }
+
+
+
         
         #endregion
         
@@ -2338,8 +2364,6 @@ namespace PIERStory
         #endregion
 
 
-
-
         /// <summary>
         /// 현재의 사건 ID를 기록에 추가한다. 
         /// 사건 History, 사건 Progress 같이 추가된다. 
@@ -2369,14 +2393,11 @@ namespace PIERStory
             j[CommonConst.COL_EPISODE_ID] = __episode_id;
             j[GameConst.COL_SCENE_ID] = __scene_id;
 
-            
-
             NetworkLoader.main.SendPost(CallbackUpdateSceneRecord, j);
         }
 
         public void UpdateSceneIDRecord(string __scene_id)
         {
-            
             // 이미 프로그레스에 있으면 통신할 필요없다. 
             // 스킵에서 또 호출하기 싫으니까!
             if(UserManager.main.CheckSceneProgress(__scene_id))
@@ -2386,11 +2407,6 @@ namespace PIERStory
         }
 
         
-
-
-
-
-
 
         /// <summary>
         /// 지정한 사건ID를 Progress에서 제거합니다.
@@ -2423,8 +2439,6 @@ namespace PIERStory
 
             Debug.Log(JsonMapper.ToStringUnicode(GetNodeProjectSceneHistory()));
         }
-
-
 
 
         /// <summary>
@@ -2497,7 +2511,6 @@ namespace PIERStory
 
             // 다 하고, 콜백 메소드 호출한다(GameManager)
             OnCleanUserEpisodeProgress?.Invoke();
-
         }
 
 
@@ -2591,6 +2604,27 @@ namespace PIERStory
             __j = null;
             return false;
         }
+
+        /// <summary>
+        /// 엔딩 에피소드 Id에 해당하는 엔딩 힌트 정보를 넘겨준다
+        /// </summary>
+        /// <param name="__episodeId"></param>
+        /// <returns>엔딩 힌트 요소 데이터</returns>
+        public JsonData EndingHintData(string __episodeId)
+        {
+            JsonData hintData = SystemManager.GetJsonNode(currentStoryJson, "endingHint");
+
+            for (int i = 0; i < hintData.Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(hintData[i], "ending_id") == __episodeId)
+                    return hintData[i];
+            }
+
+            return null;
+        }
+
+
+
 
         #endregion
 

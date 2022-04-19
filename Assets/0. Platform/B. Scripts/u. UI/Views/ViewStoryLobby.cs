@@ -548,6 +548,12 @@ namespace PIERStory
 
                     case LobbyConst.NODE_STANDING:      // 스탠딩 캐릭터
 
+                        if (string.IsNullOrEmpty(SystemManager.GetJsonNodeString(storyProfile[i], GameConst.COL_MODEL_NAME)))
+                        {
+                            CharacterLoadComplete();
+                            break;
+                        }
+
                         ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(storyProfile[i], GameConst.COL_MODEL_NAME), CharacterLoadComplete, LobbyManager.main);
                         character.SetModelDataFromStoryManager(true);
 

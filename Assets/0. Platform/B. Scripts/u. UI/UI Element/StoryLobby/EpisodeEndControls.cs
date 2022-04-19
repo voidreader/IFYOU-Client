@@ -1,8 +1,13 @@
 using UnityEngine;
-
 using TMPro;
+using LitJson;
 
 namespace PIERStory {
+
+    /// <summary>
+    /// 게임 종료 화면에서 사용하는 클래스
+    /// StoryLobbyMain 상속받아서 override.
+    /// </summary>
 
     public class EpisodeEndControls : StoryLobbyMain
     {
@@ -10,6 +15,8 @@ namespace PIERStory {
         [Space]
         public TextMeshProUGUI textSummary;
         public EndingNotification endingNotification;
+        
+        JsonData timedeal = null;
         
         
 
@@ -25,6 +32,8 @@ namespace PIERStory {
             OnEpisodePlay = OnClickPlay;
                         
             this.InitBaseInfo(); // 기본정보
+            
+            NotifyPassTimeDeal(); // 타임딜 체크 및 생성 
             
             // 일반 설정 시작 
             SetPlayState(); // 플레이 및 타이머 설정 
@@ -85,6 +94,35 @@ namespace PIERStory {
         
         
         /// <summary>
+        /// 새로운 프리미엄패스 타임딜 알림 
+        /// </summary>
+        void NotifyPassTimeDeal() {
+            
+            timedeal = SystemManager.main.GetNewTimeDeal(currentEpisodeData);
+            
+            if(timedeal == null)
+                return;
+                
+            // 타임딜 정보 있으면 유저 타임딜로 입력 처리. 
+            int timedealID = SystemManager.GetJsonNodeInt(timedeal, "timedeal_id");
+            int deadline = SystemManager.GetJsonNodeInt(timedeal, "deadline");
+            int discount = SystemManager.GetJsonNodeInt(timedeal, "discount");
+            
+            
+            JsonData sendingData = new JsonData();
+            sendingData["timedeal_id"] = timedealID;
+            sendingData["deadline"] = deadline;
+            sendingData["discount"] = discount;
+            sendingData["project_id"] = StoryManager.main.CurrentProjectID;
+            
+            NetworkLoader.main.SendPost(UserManager.main.CallbackUpdateTimeDeal, sendingData, true);
+
+        }
+        
+        
+        
+        
+        /// <summary>
         /// 거의 똑같은데 마지막만 다름 
         /// </summary>
         void InitBaseInfo() {
@@ -109,7 +147,7 @@ namespace PIERStory {
             }
             
             currentEpisodeID = SystemManager.GetJsonNodeString(projectCurrentJSON, "episode_id");
-            currentEpisodeData = StoryManager.GetRegularEpisodeByID(currentEpisodeID);
+            currentEpisodeData = StoryManager.GetRegularEpisodeByID(currentEpisodeID); // 다음번 플레이될 차례의 에피소드 데이터 
             currentEpisodeData.SetPurchaseState(); // 구매기록 refresh.
             
             

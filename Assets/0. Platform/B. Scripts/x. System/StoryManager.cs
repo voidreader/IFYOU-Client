@@ -123,12 +123,10 @@ namespace PIERStory
         JsonData illustJson = null; // 이미지 일러스트 정보
         JsonData minicutJSON = null; // 이미지 미니컷 정보 
         JsonData dressCodeJson = null; // 의상 정보
-        JsonData emoticonJson = null; // 이모티콘 정보(백그라운드 다운로드)
+        
         public JsonData loadingJson = null;    // 로딩 스크린 정보
         public JsonData loadingDetailJson = null; // 로딩 디테일 정보 
-        [SerializeField] Dictionary<string, byte[]> DictDownloadedEmoticons = new Dictionary<string, byte[]>(); // 다운받아놓은 이모티콘 bytes. 
-        [SerializeField] int CountDownloadingEmoticon = 0; // 이모티콘 다운로드 카운팅용! 
-        [SerializeField] bool isDownloadEmoticonsSaved = false; // 이모티콘 다운로드 1회 실행했는지 체크용 변수
+        
 
         Dictionary<string, byte[]> DictDownloadedLoadings = new Dictionary<string, byte[]>();       // 다운 받아놓은 로딩화면 bytes
         [SerializeField] int countDownloadingLoading = 0;        // 로딩화면 다운로드 카운팅용
@@ -1698,120 +1696,10 @@ namespace PIERStory
         #endregion
         
         #region 작품 리소스 몰래 내려받기 
-        
-        
-        /// <summary>
-        /// 프로젝트의 모든 이모티콘 조회 
-        /// </summary>
-        public void RequestProjectAllEmoticon() {
-            emoticonJson = null;
-            DictDownloadedEmoticons.Clear();
-            CountDownloadingEmoticon = 0;
-            isDownloadEmoticonsSaved = false;
-            
-            JsonData sending = new JsonData();
-            sending["func"] = NetworkLoader.FUNC_PROJECT_ALL_EMOTICONS;
-            sending["project_id"] = CurrentProjectID;
-            
-            NetworkLoader.main.SendPost(OnReceivedProjectAllEmoticon, sending);
-        }
-        
-        void OnReceivedProjectAllEmoticon(HTTPRequest request, HTTPResponse response) {
-            
-            if (!NetworkLoader.CheckResponseValidation(request, response))
-            {
-                Debug.LogError("Network Error in OnReceivedProjectAllEmoticon");
-                return;
-            }
-            
-            Debug.Log(response.DataAsText);
 
-           // 조회하고 와서 json으로 변환 
-            emoticonJson = JsonMapper.ToObject(response.DataAsText);
-            // Debug.Log(string.Format("TOTAL EMOTICON COUNT [{0}] ", emoticonJson.Count));
-            
-            DownloadProjectEmoticonBackground();
-        }
-        
-        /// <summary>
-        /// 다운로드 프로젝트 이모티콘! 몰래몰래!
-        /// 
-        /// </summary>
-        public void DownloadProjectEmoticonBackground() {
-            
-            string image_url = string.Empty;
-            string image_key = string.Empty;
-            
-            if(emoticonJson == null)
-                return;
-                
-            Debug.Log(string.Format("DownloadProjectEmoticonBackground [{0}] images", emoticonJson.Count));                
-                
-            // 곧바로 다운로드 시작합니다. 
-            for(int i=0; i<emoticonJson.Count; i++) {
-                
-                image_url = emoticonJson[i]["image_url"].ToString();
-                image_key = emoticonJson[i]["image_key"].ToString();
-                
-                // 있으면 continue
-                if(ES3.FileExists(image_key))
-                    continue;
-                    
-                
-                // 없으면 개별 다운로드 시작 
-                var req = new HTTPRequest(new System.Uri(image_url), OnEmoticonDownloaded);
-                req.Tag = image_key;
-                req.Send();
-                
-                CountDownloadingEmoticon++; // 카운트 증가
-            }
-        }
-        
-        void OnEmoticonDownloaded(HTTPRequest request, HTTPResponse response) {
-            
-            // 다운로드에 실패해도 카운트는 차감한다.
-            // 어차피 에피소드 실행할때 또 다운로드를 시도한다.
-            
-            CountDownloadingEmoticon--;
-            
-            if (request.State != HTTPRequestStates.Finished)
-            {
-                return;
-            }
-            
-            // 다운로드 성공했으면, 로컬에 저장은 하지말고 모아놓는다. 
-            if(DictDownloadedEmoticons.ContainsKey(request.Tag.ToString()))
-                return;
-            
-            // 추가 
-            DictDownloadedEmoticons.Add(request.Tag.ToString(), response.Data); 
-            
-            if(CountDownloadingEmoticon <= 0)
-                SaveDownloadedEmoticons();
-            
-        }
-        
-        /// <summary>
-        /// 다운받은 이모티콘 byte 저장. 
-        /// </summary>
-        public void SaveDownloadedEmoticons() {
-            
-            if(isDownloadEmoticonsSaved)
-                return;
-            
-            
-            Debug.Log(">> SaveDownloadedEmoticons Starts!");
-            
-            foreach(string key in DictDownloadedEmoticons.Keys) {
-                ES3.SaveRaw(DictDownloadedEmoticons[key], key); // SaveRaw로 저장한다.
-                
-                // 어차피 ES3에서 LoadImage는 Raw를 불러와서 texture로 변환하기 때문에 
-                // Raw로 저장해!
-            }
-            
-            DictDownloadedEmoticons.Clear(); // 다했으면 클리어!
-            isDownloadEmoticonsSaved = true;
-        }
+
+
+
         
         /// <summary>
         /// 해당 작품 모든 로딩 화면 다운로드

@@ -167,7 +167,8 @@ namespace PIERStory
             }
 
             levelText.text = string.Format("Lv. {0}", UserManager.main.level);
-            int totalExp = SystemManager.main.GetLevelMaxExp((UserManager.main.level + 1).ToString());
+            // int totalExp = SystemManager.main.GetLevelMaxExp((UserManager.main.level + 1).ToString());
+            int totalExp = 1;
             expGauge.fillAmount = (float)UserManager.main.exp / (float)totalExp;
             expText.text = string.Format("{0}/{1}", UserManager.main.exp, totalExp);
             profileBriefContent.SetActive(true);

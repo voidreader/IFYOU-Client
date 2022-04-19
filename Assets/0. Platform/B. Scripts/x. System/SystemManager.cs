@@ -79,7 +79,6 @@ namespace PIERStory
         public StoryData givenStoryData = null; // 선택된 스토리 JSON 데이터 (프로젝트)
         public EpisodeData givenEpisodeData = null; // 로비에서 전달받은 에피소드 데이터 (에피소드)
         public JsonData appComonResourceData = null; // 앱 공용 리소스 데이터 (2021.09.14)
-        JsonData levelData = null; // 레벨 데이터 
         JsonData baseCurrencyData = null; // 기본 재화 데이터 
 
         
@@ -89,6 +88,7 @@ namespace PIERStory
         [SerializeField] bool isServerInfoReceived = false; // 서버 기준 정보 전달받았는지 체크 한다. (2021.08.31)
         [SerializeField] bool isAppCommonResourcesReceived = false; // 앱 공용 리소스 통신 완료했는지 체크 (2021.09.14)
         
+        JsonData timedealStandard = null; // 타임딜 기준정보 
         [SerializeField] int localVer = 0; // 로컬라이징 텍스트 버전
         public bool isCoinPrizeUse = false; // 코인 응모권 시스템
         public string coinPrizeURL = string.Empty; // 코인 응모권 URL
@@ -573,7 +573,6 @@ namespace PIERStory
             appComonResourceData = JsonMapper.ToObject(response.DataAsText);
             
             // 레벨 기준정보 데이터 추가 
-            levelData = appComonResourceData["levelList"]; 
             baseCurrencyData = appComonResourceData["currency"];
             
             Debug.Log("### " + JsonMapper.ToStringUnicode(baseCurrencyData));
@@ -624,6 +623,10 @@ namespace PIERStory
                     
             // Debug.Log(JsonMapper.ToStringUnicode(result["master"]));
             JsonData masterInfo = result["master"]; // 마스터 정보 
+            
+            // * 타임딜 기준정보 추가 
+            if(result.ContainsKey("timedeal"))
+                timedealStandard = result["timedeal"];
             
             // Debug.Log(JsonMapper.ToStringUnicode(result["ad"]));
             JsonData adInfo = result["ad"]; // 광고 기준정보 
@@ -2099,32 +2102,9 @@ namespace PIERStory
         }
         
         
-        /// <summary>
-        /// 경험치 획득 정보 및 레벨업 효과 보여주기
-        /// </summary>
-        public void ShowExpGain(JsonData __j) {
-            PopupBase p = PopupManager.main.GetPopup("EXP");
-            p.Data.SetContentJson(__j);
-            
-            PopupManager.main.ShowPopup(p, false, false);
-        }
 
 
-        /// <summary>
-        /// 레벨의 최대 경험치 구하기 
-        /// </summary>
-        /// <param name="__level"></param>
-        /// <returns></returns>
-        public int GetLevelMaxExp(string __level)
-        {
-            for (int i = 0; i < levelData.Count; i++)
-            {
-                if (GetJsonNodeString(levelData[i], "next_level") == __level)
-                    return GetJsonNodeInt(levelData[i], "experience");
-            }
 
-            return -1;
-        }
 
 
 
@@ -2148,6 +2128,10 @@ namespace PIERStory
         /// </summary>
         /// <param name="__url"></param>
         public void ShowDefaultWebview(string __url, string __title) {
+            
+            if(SystemManager.main.isWebViewOpened)
+                return;
+            
                 /*            
             GamebaseRequest.Webview.GamebaseWebViewConfiguration configuration = new GamebaseRequest.Webview.GamebaseWebViewConfiguration();
             configuration.title = __title;
@@ -2307,6 +2291,61 @@ namespace PIERStory
                 
             return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], CommonConst.COL_IMAGE_KEY);
         }
+        
+        
+        /// <summary>
+        /// 조건에 걸리는 프리미엄패스 타임딜 정보 가져오기 
+        /// </summary>
+        /// <param name="__episodeNumber"></param>
+        /// <param name="__type"></param>
+        /// <returns></returns>
+        public JsonData GetNewTimeDeal(EpisodeData __currentEpisode) {
+            if(timedealStandard == null)
+                return null;
+                
+            if(!__currentEpisode.isValidData)
+                return null;
+                
+            if(__currentEpisode.episodeType == EpisodeType.Side)
+                return null;
+            
+            if(__currentEpisode.episodeType == EpisodeType.Chapter) { // * 정규 에피소드에 대한 체크 
+                for(int i=0; i<timedealStandard.Count;i++) {
+                    
+                    if(SystemManager.GetJsonNodeBool(timedealStandard[i], "conditions"))
+                        continue;
+                        
+                    // 넘어온 number에서 -1 값이랑 동일한 progress가 있는지 체크한다. 
+                    if(SystemManager.GetJsonNodeInt(timedealStandard[i], "episode_progress") == __currentEpisode.episodeNumber - 1) {
+                        return timedealStandard[i]; // * 찾았다..!
+                    }
+                    
+                }
+            }
+            else if (__currentEpisode.episodeType == EpisodeType.Ending) {  // 엔딩에 대한 체크 
+            
+            
+                // 히든엔딩만 해당한다. 
+                if(__currentEpisode.endingType != "hidden")
+                    return null;
+                
+                for(int i=0; i<timedealStandard.Count;i++) {
+                    
+                    // 컨디션 값 1을 걸 찾는거다. 
+                    // 공용 타임딜 정보에는 히든엔딩 관련 row는 하나 밖에 없다. 
+                    if(SystemManager.GetJsonNodeBool(timedealStandard[i], "conditions"))
+                        return timedealStandard[i];
+                }                
+            }
+            
+            return null;
+            
+            
+        } // ? GetNewTimeDeal
+        
+        
+        
+        // ! 여기서부터 static 칱구들 
         
         /// <summary>
         /// 상점으로 보내는 팝업 호출

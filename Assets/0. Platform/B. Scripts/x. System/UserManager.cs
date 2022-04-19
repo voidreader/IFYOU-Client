@@ -1778,35 +1778,7 @@ namespace PIERStory
             
         }
         
-        /// <summary>
-        /// 경험치 통신 콜백 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="response"></param>
-        public void CallbackEXP(HTTPRequest request, HTTPResponse response) {
-            if (!NetworkLoader.CheckResponseValidation(request, response))
-            {
-                Debug.LogError("CallbackEXP");
-                return;
-            }
-            
-            
-            Debug.Log("CallbackEXP : " + response.DataAsText);
-            
-            JsonData result = JsonMapper.ToObject(response.DataAsText);
-            
-            if(result.ContainsKey("current")) {
-                userJson[CommonConst.NODE_LEVEL] = result["current"]["level"];
-                userJson[CommonConst.NODE_EXP] = result["current"]["experience"];
-                SetLevelInfo(); // 유저 레벨 갱신
-                
-                // 뱅킹 리프레시 없이. 
-                SetBankInfo(result, false);
-            }
-            
-            // 팝업 화면 호출 
-            SystemManager.main.ShowExpGain(result);
-        }
+
         
         
         /// <summary>
@@ -2017,7 +1989,29 @@ namespace PIERStory
             if (GameManager.main != null && GameManager.main.currentEpisodeData.episodeType == EpisodeType.Chapter)
                 NetworkLoader.main.RequestIFYOUAchievement(12, -1, int.Parse(StoryManager.main.CurrentEpisodeID));
 
-
+        }
+        
+        
+        /// <summary>
+        /// 작품별 타임딜 생성 콜백 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        public void CallbackUpdateTimeDeal(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response))
+                return;
+                
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            
+            // 새로운 타임딜 없음 
+            if(!SystemManager.GetJsonNodeBool(result, "hasNew")) {
+                return;
+            }
+            
+            
+            
+            // 타임딜 새로 나왔다..!!!
+            // 타임딜 팝업 노출
         }
 
 
@@ -2270,60 +2264,8 @@ namespace PIERStory
         #region 사용자 에피소드 관련 메소드
 
 
-        #region 유저 리셋 정보 2022.01
-        
-        /// <summary>
-        /// 현재 프로젝트의 리셋 가격
-        /// </summary>
-        /// <returns></returns>
-        public int GetProjectResetPrice() {
-            
-            // 프리미엄 패스 유저는 0원이다. 
-            if(HasProjectFreepass()) {
-                return 0;
-            }
-            
-            return SystemManager.main.firsetResetPrice;
+     
 
-        }
-        
-        
-
-        
-        
-        
-        
-        
-        #endregion
-
-        
-
-        #region 유저 의상 변경점 업데이트 
-        public void UpdateDressProgress(string __speaker, string __dress_id)
-        {
-            JsonData j = new JsonData();
-
-            j[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
-            j[GameConst.COL_SPEAKER] = __speaker;
-            j["dress_id"] = __dress_id;
-            j[CommonConst.FUNC] = NetworkLoader.FUNC_INSERT_DRESS_PROGRESS;
-
-
-            NetworkLoader.main.SendPost(OnUpdateDressProgress, j);
-        }
-
-        void OnUpdateDressProgress(HTTPRequest req, HTTPResponse res)
-        {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("OnUpdateDressProgress");
-                return;
-            }
-
-            // 갱신해서 받아온 데이터를 설정 
-            SetNodeDressProgress(JsonMapper.ToObject(res.DataAsText));
-        }
-        #endregion
 
 
 

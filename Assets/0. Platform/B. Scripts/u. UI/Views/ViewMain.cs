@@ -97,6 +97,9 @@ namespace PIERStory {
             
             Firebase.Analytics.FirebaseAnalytics.LogEvent("MainEnter");
             
+            // * ViewMain 활성화될때 유저의 활성화된 타임딜 목록 갱신 (2022.04.19)
+            UserManager.main.RequestUserActiveTimeDeal();
+            
         }
 
         public override void OnStartView()

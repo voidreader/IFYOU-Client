@@ -2264,12 +2264,6 @@ namespace PIERStory
         #region 사용자 에피소드 관련 메소드
 
 
-     
-
-
-
-
-
         /// <summary>
         /// 현재의 사건 ID를 기록에 추가한다. 
         /// 사건 History, 사건 Progress 같이 추가된다. 
@@ -2699,7 +2693,6 @@ namespace PIERStory
 
         #endregion
 
-
         
         #region 유저 능력치 관련 메소드 
         
@@ -2864,11 +2857,6 @@ namespace PIERStory
         
         
         #endregion 
-
-
-
-        
-
 
         #region IFYOU 업적 관련
 
@@ -3071,6 +3059,28 @@ namespace PIERStory
             return true;
         }
 
+        #endregion
+    
+        #region 유저 타임딜 
+        
+        /// <summary>
+        /// 유저의 활성화된 타임들 목록 요청 
+        /// </summary>
+        public void RequestUserActiveTimeDeal() {
+            JsonData sendData = new JsonData();
+            sendData["func"] = "getUserActiveTimeDeal";
+            
+            NetworkLoader.main.SendPost(CallbackRequestUserActiveTimeDeal, sendData, false);
+            
+        }
+        
+        void CallbackRequestUserActiveTimeDeal(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response))
+                return;
+                
+            
+        }
+        
         #endregion
     }
 }

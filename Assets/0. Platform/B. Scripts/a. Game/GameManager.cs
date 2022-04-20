@@ -1198,11 +1198,18 @@ namespace PIERStory
                 return false;
             }
 
+            int openIllustCount = 0;
+
             for (int i = targetRow; i < currentPage.ListRows.Count; i++)
             {
-                // 행을 진행하다가 다음 사건ID를 만나게 된다면 일러스트가 존재하지 않으므로 return false를 해준다
+                // 행을 진행하다가 다음 사건ID를 만나는 사이에 열리는 일러스트가 한개도 없으면 false가 리턴된다
                 if (!string.IsNullOrEmpty(currentPage.ListRows[i].scene_id) && currentPage.ListRows[i].scene_id != __sceneID)
-                    return false;
+                {
+                    if (openIllustCount > 0)
+                        return true;
+                    else
+                        return false;
+                }
 
                 switch (currentPage.ListRows[i].template)
                 {
@@ -1213,9 +1220,9 @@ namespace PIERStory
 
                         // 공개용 일러스트이며, 해당 에피소드에 연결된 등장 일러스트가 맞는지 확인
                         if (UserManager.main.RevealedGalleryImage(currentPage.ListRows[i].script_data) && IsEpisodeContainIllust(currentPage.ListRows[i].script_data))
-                            return true;
-                        else
-                            return false;
+                            openIllustCount++;
+
+                    break;
                 }
             }
 

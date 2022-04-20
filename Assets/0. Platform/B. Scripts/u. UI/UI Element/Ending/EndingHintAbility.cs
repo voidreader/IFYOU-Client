@@ -2,7 +2,7 @@
 using UnityEngine;
 
 using TMPro;
-using LitJson;
+
 
 namespace PIERStory
 {
@@ -16,41 +16,39 @@ namespace PIERStory
         public TextMeshProUGUI abilityPercent;
 
 
-        public void InitHintAbility(JsonData __j)
+        public void InitHintAbility(string speaker, string abilityName, string __oper, int value)
         {
-            AbilityData data = UserManager.main.GetAbilityData(SystemManager.GetJsonNodeString(__j, GameConst.COL_SPEAKER), SystemManager.GetJsonNodeString(__j, "ability_name"));
+            AbilityData data = UserManager.main.GetAbilityData(speaker, abilityName);
             emoticonImage.SetDownloadURL(data.emoticonDesignUrl, data.emoticonDesignKey);
             abilityIcon.SetDownloadURL(data.iconDesignUrl, data.iconDesignKey);
 
             string __operator = string.Empty;
-            int neccesaryValue = SystemManager.GetJsonNodeInt(__j, "value");
 
-            switch (SystemManager.GetJsonNodeString(__j, "operator"))
+            switch (__oper)
             {
                 case ">=":
                     __operator = "≥";
-                    radioButton.SetActive(neccesaryValue >= data.currentValue);
+                    radioButton.SetActive(value >= data.currentValue);
                     break;
                 case "<=":
                     __operator = "≤";
-                    radioButton.SetActive(neccesaryValue <= data.currentValue);
+                    radioButton.SetActive(value <= data.currentValue);
                     break;
                 case ">":
-                    __operator = SystemManager.GetJsonNodeString(__j, "operator");
-                    radioButton.SetActive(neccesaryValue > data.currentValue);
+                    __operator = __oper;
+                    radioButton.SetActive(value > data.currentValue);
                     break;
                 case "<":
-                    __operator = SystemManager.GetJsonNodeString(__j, "operator");
-                    radioButton.SetActive(neccesaryValue < data.currentValue);
+                    __operator = __oper;
+                    radioButton.SetActive(value < data.currentValue);
                     break;
                 case "=":
-                    __operator = SystemManager.GetJsonNodeString(__j, "operator");
-                    radioButton.SetActive(neccesaryValue == data.currentValue);
+                    __operator = __oper;
+                    radioButton.SetActive(value == data.currentValue);
                     break;
             }
 
-            float percent = (float)neccesaryValue / (float)data.maxValue;
-
+            float percent = (float)value / (float)data.maxValue;
             abilityPercent.text = string.Format("{0}    {1}%", __operator, Math.Truncate(percent * 100f));
         }
     }

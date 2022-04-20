@@ -68,7 +68,7 @@ MonoBehaviour:
     Buttons: []
     Images: []
     Labels:
-    - {fileID: 3976885722007137615}
+    - {fileID: 3976885722364502796}
     contentEpisode:
       episodeID: 
       episodeNO: 
@@ -1171,9 +1171,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 3976885720491336878}
         m_TargetAssemblyTypeName: PIERStory.PopupBase, Assembly-CSharp
-        m_MethodName: OnClickNegative
+        m_MethodName: Hide
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2483,6 +2483,7 @@ GameObject:
   - component: {fileID: 3976885722364502799}
   - component: {fileID: 3976885722364502796}
   - component: {fileID: 3976885722364502797}
+  - component: {fileID: 5110322817913997393}
   m_Layer: 5
   m_Name: EndingUnlockCondition
   m_TagString: Untagged
@@ -2613,12 +2614,29 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3976885722364502787}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _textID: 
+  _text: {fileID: 3976885722364502796}
+  _localizedText: 
+  isException: 1
+  isTextSet: 0
+--- !u!114 &5110322817913997393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3976885722364502787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _textID: 5201
   _text: {fileID: 3976885722364502796}
   _localizedText: 
   isException: 1

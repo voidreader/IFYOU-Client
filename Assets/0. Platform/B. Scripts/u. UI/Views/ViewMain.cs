@@ -20,13 +20,16 @@ namespace PIERStory {
         public IFYouLobby lobby;
         
         [SerializeField] UIToggle mainToggle;
-        public UIContainer lobbyContainer;
+        UIContainer lobbyContainer;
 
         public UIToggle shopToggle;
         
         [Header("내서재")]
         public MainLibrary library;
+        UIContainer libraryContainer;
 
+        [Space(15)]
+        public UIContainer shopContainer;
 
         [Header("프로필(등급)")]
         public MainProfile ifyouProfile;
@@ -34,6 +37,8 @@ namespace PIERStory {
         public UIContainer profileContainer;
         public UIToggle profileToggle;
         public MainToggleNavigation profileNavigation;
+
+        UIContainer currentShowContainer;
 
         /*
                 [Header("더보기")]
@@ -45,6 +50,11 @@ namespace PIERStory {
 
         private void Awake()
         {
+            lobbyContainer = lobby.GetComponent<UIContainer>();
+            libraryContainer = library.GetComponent<UIContainer>();
+
+            currentShowContainer = lobbyContainer;
+
             OnRefreshProfileNewSign = EnableNewAchievementSign;
             OnRefreshViewMain = RefreshMainView;
             OnReturnLobby = ReturnLobby;
@@ -157,14 +167,17 @@ namespace PIERStory {
         public void OnClickTabNavigation(int index) {
             switch(index) {
                 case 0:  // 로비
+                    currentShowContainer = lobbyContainer;
                     OnLobbyTab();
                 break;
                 
                 case 1:  // 내서재 (라이브러리)
+                    currentShowContainer = libraryContainer;
                     OnLibraryTab();
                 break;
                 
                 case 2: // 상점
+                    currentShowContainer = shopContainer;
                     OnShopTab();
                 break;
 
@@ -263,6 +276,7 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
 
             profileNavigation.OnToggle();
+            currentShowContainer.Hide();
             profileContainer.Show();
         }
 
@@ -273,6 +287,7 @@ namespace PIERStory {
 
         public void OnClickProfileTab()
         {
+            currentShowContainer.Show();
             UserManager.main.RequestUserGradeInfo(CallbackUserGreadeInfo, true);
         }
 
@@ -315,6 +330,9 @@ namespace PIERStory {
             profileNavigation.OffToggle();
             mainToggle.isOn = true;
             mainToggle.OnToggleOnCallback.Execute();
+
+            if (currentShowContainer != lobbyContainer)
+                currentShowContainer.Hide();
         }
 
         #endregion

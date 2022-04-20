@@ -39,14 +39,14 @@ namespace PIERStory {
                     NetworkLoader.main.RequestIFYOUAchievement(9);
 
                 // 다음화의 EpisodeData의 엔딩 해금을 true로 만들어준다
-                for(int i=0;i<StoryManager.main.RegularEpisodeList.Count;i++)
+                for(int i=0;i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++)
                 {
-                    if (StoryManager.main.RegularEpisodeList[i].episodeType != EpisodeType.Ending)
+                    if (StoryManager.main.ListCurrentProjectEpisodes[i].episodeType != EpisodeType.Ending)
                         continue;
 
-                    if (StoryManager.main.RegularEpisodeList[i].episodeID == currentEpisodeData.episodeID)
+                    if (StoryManager.main.ListCurrentProjectEpisodes[i].episodeID == currentEpisodeData.episodeID)
                     {
-                        StoryManager.main.RegularEpisodeList[i].endingOpen = true;
+                        StoryManager.main.ListCurrentProjectEpisodes[i].endingOpen = true;
 
                         // 엔딩 해금을 true로 변경해준 뒤에 allClear 체크를 해서 통신한다
                         if (UserManager.main.ProjectAllClear())

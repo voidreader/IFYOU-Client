@@ -77,6 +77,7 @@ namespace PIERStory
             }
 
             p.Data.contentEpisode = endingData;
+            //p.Data.SetLabelsTexts(string.Format("{0} {1}", SystemManager.GetLocalizedText("5025"), SystemManager.GetLocalizedText("5201")));
             PopupManager.main.ShowPopup(p, false);
         }
 

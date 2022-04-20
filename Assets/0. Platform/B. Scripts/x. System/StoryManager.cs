@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
+
 using LitJson;
 using BestHTTP;
 using Sirenix.OdinInspector;
-using System.Collections;
 using Doozy.Runtime.Signals;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
+
 
 namespace PIERStory
 {
@@ -19,8 +19,9 @@ namespace PIERStory
         Gem,
         Coin,
         Freepass,
+
+        // 현재 미사용
         OneTime, // 1회권
-        
         Rent // 대여권
     }
     
@@ -45,6 +46,7 @@ namespace PIERStory
         public List<EpisodeData> ReverseRegularEpisodeList = new List<EpisodeData>(); // 정규 에피소드의 역순 
         public List<EpisodeData> SideEpisodeList = new List<EpisodeData>(); // 사이드 에피소드
         public List<EpisodeData> ListCurrentProjectEpisodes = new List<EpisodeData>(); // 현재 선택된 혹은 플레이중인 작품의 EpisodeData의 List.
+        public List<EndingHintData> listEndingHint = new List<EndingHintData>();        // 현재 선택된 작품의 엔딩 힌트(선택지 힌트)
         
         [Space]
         [Header("== 에피소드 카운팅 ==")]
@@ -227,9 +229,6 @@ namespace PIERStory
         public const string BUBBLE_VARIATION_DOUBLE = "double"; // 2인스탠딩 배리에이션 
 
         #endregion
-
-
-        
 
 
         private void Awake()
@@ -658,8 +657,9 @@ namespace PIERStory
                 yield return new WaitForSeconds(0.1f);
             
             Debug.Log("### loading image download done");
-            
-            
+
+            SetEndingHintData();
+
             // 완료했으면 loadingJson, loaindgDetailJson 재할당.
             // loadingJson은 처음에는 다운로드를 위해 episodeLoadingList 노드를 사용했지만 
             // 그 후에는 loading 노드를 사용한다. 
@@ -670,6 +670,27 @@ namespace PIERStory
             // 기초작업 완료 후 View 오픈 요청 
             OpenViewStoryDetail();             
             
+        }
+
+        void SetEndingHintData()
+        {
+            JsonData hintData = SystemManager.GetJsonNode(ProjectDetailJson, "endingHint");
+
+            if (hintData == null || hintData.Count == 0)
+            {
+                Debug.LogWarning("<color=FF0080>### 엔딩 힌트 데이터가 없음</color>");
+                return;
+            }
+
+            listEndingHint = new List<EndingHintData>();
+            EndingHintData endingHint = null;
+
+            for (int i = 0; i < hintData.Count; i++)
+            {
+                endingHint = new EndingHintData(hintData[i]);
+                listEndingHint.Add(endingHint);
+            }
+
         }
         
         
@@ -948,8 +969,6 @@ namespace PIERStory
         }
         
         
-        
-        
         #region 작품 리소스 관리 일러스트, 미니컷, 라이브 일러스트, 라이브 오브제, 캐릭터 모델
         
         
@@ -1102,14 +1121,12 @@ namespace PIERStory
                 return null;
 
             return DictProjectLiveObject[__name];
-        }        
-        
+        }
+
         #endregion
-        
-        
-        
 
 
+        #region 말풍선 리소스
 
         /// <summary>
         /// 버블 이미지 수집하기 
@@ -1315,6 +1332,8 @@ namespace PIERStory
             }
         }
 
+        #endregion
+
         /// <summary>
         /// 노드가져오기 
         /// </summary>
@@ -1374,17 +1393,6 @@ namespace PIERStory
             
         }
 
-
-
-        public string GetStoryTitle()
-        {
-            return CurrentProject.title;
-        }
-
-        public string GetAuthor()
-        {
-            return CurrentProject.writer;
-        }
 
         #region 의장 정보 컨트롤 
 
@@ -1565,27 +1573,6 @@ namespace PIERStory
             return DictProjectLiveIllust.ContainsKey(__name);
         }
 
-        /// <summary>
-        /// 작품 title 반환하기
-        /// </summary>
-        /// <param name="projectId">작품 ID</param>
-        /// <returns>파라미터로 받은 작품ID의 작품 제목 반환</returns>
-        public string GetStoryTitle(string projectId)
-        {
-            
-            if(listTotalStory.Count == 0)
-                return null;
-            
-
-            for(int i=0;i<listTotalStory.Count;i++)
-            {
-                if (listTotalStory[i].projectID == projectId)
-                    return listTotalStory[i].title;
-            }
-
-            return null;
-        }
-        
         #region 작품 상세정보 
         
         

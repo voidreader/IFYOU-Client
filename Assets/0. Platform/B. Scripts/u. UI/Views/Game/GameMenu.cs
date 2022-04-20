@@ -105,18 +105,17 @@ namespace PIERStory
                 // OnClickBlockSkip();
                 return;
             }
-            
-            
+
+
             // 선택지 도중에서는 스킵할 수 없음.
-            if(GameManager.main.isSelectionInputWait) {
+            if (GameManager.main.isSelectionInputWait)
+            {
                 SystemManager.ShowMessageWithLocalize("6102");
-                return;    
-                
+                return;
             }
+
             Debug.Log("## SkipScene ##");
 
-            menuContainer.Hide();
-            
 
             // 시간 흐름중 스킵하면 시간흐름용 fadeImage를 비활성화 해버린다
             if (GameManager.main.currentRow.template.Equals(GameConst.TEMPLATE_FLOWTIME))

@@ -68,7 +68,17 @@ namespace PIERStory
 
         public void OnClickEndingHintButton()
         {
+            PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_ENDING_HINT);
 
+            if(p == null)
+            {
+                Debug.LogError("엔딩 힌트 팝업 없음!");
+                return;
+            }
+
+            p.Data.contentEpisode = endingData;
+            //p.Data.SetLabelsTexts(string.Format("{0} {1}", SystemManager.GetLocalizedText("5025"), SystemManager.GetLocalizedText("5201")));
+            PopupManager.main.ShowPopup(p, false);
         }
 
 

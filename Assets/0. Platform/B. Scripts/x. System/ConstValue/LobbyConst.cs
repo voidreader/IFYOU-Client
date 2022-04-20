@@ -172,7 +172,7 @@ namespace PIERStory {
         public const string POPUP_GRADE_BENEFIT_INFO = "GradeBenefitInfo";
         public const string POPUP_GRADE_EXP = "GradeExp";
         public const string POPUP_GRADE_UP = "GradeUp";
-
+        public const string POPUP_ENDING_HINT = "EndingHint";
 
         #endregion
 

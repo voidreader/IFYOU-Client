@@ -42,6 +42,7 @@ namespace PIERStory {
                 return;
             
             base.Show();
+            
             InitPremiumPass();
         }
         
@@ -60,8 +61,17 @@ namespace PIERStory {
             normnalTitle.SetActive(false);
             timedealTitle.SetActive(false);
             
-            // 현재 띄워놓은 작품 
-            passStory = StoryManager.main.CurrentProject;
+            // * 상점에서 열렸는지, 진입한 작품에서 열렸는지 구분된다.  (2022.04.20)
+            
+            // * 작품에서 진입 (targetData가 프로젝트ID로 들어온다)
+            if(string.IsNullOrEmpty(Data.targetData)) {
+                passStory = StoryManager.main.CurrentProject;    
+            }
+            else { // * 상점에서 진입 
+                passStory = StoryManager.main.FindProject(Data.targetData);
+            }
+            
+            
             
             // 가격. 
             originFreepassPrice = StoryManager.main.GetProjectPremiumPassOriginPrice();

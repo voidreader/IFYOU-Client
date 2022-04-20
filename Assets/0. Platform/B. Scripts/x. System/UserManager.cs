@@ -28,6 +28,9 @@ namespace PIERStory
         [HideInInspector] public JsonData userProfile = null;               // 유저 프로필 정보
         [HideInInspector] public JsonData userProfileCurrency = null;       // 유저 프로필 재화 정보
         [HideInInspector] public JsonData userAttendanceList = null;        // 유저 출석 보상 리스트
+        
+        JsonData userActiveTimeDeal = null; // 유저 활성화 타임딜 목록 
+        
         [SerializeField] string debugBankString = string.Empty;
 
         public List<CoinIndicator> ListCoinIndicators = new List<CoinIndicator>(); // 코인 표시기
@@ -3078,7 +3081,26 @@ namespace PIERStory
             if(!NetworkLoader.CheckResponseValidation(request, response))
                 return;
                 
+            userActiveTimeDeal = JsonMapper.ToObject(response.DataAsText);
+        }
+        
+        /// <summary>
+        /// 대상 작품에 활성화된 타임딜 정보 요청 
+        /// </summary>
+        /// <param name="__projectID"></param>
+        /// <returns></returns>
+        public PassTimeDealData GetProjectActiveTimeDeal(string __projectID) {
+            if(userActiveTimeDeal == null)
+                return null;
+                
+                
+            for(int i=0; i<userActiveTimeDeal.Count;i++) {
+                if(SystemManager.GetJsonNodeString(userActiveTimeDeal[i], "project_id") == __projectID) {
+                    return new PassTimeDealData(userActiveTimeDeal[i]);
+                }
+            }
             
+            return null;
         }
         
         #endregion

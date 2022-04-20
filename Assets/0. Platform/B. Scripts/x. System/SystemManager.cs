@@ -51,7 +51,7 @@ namespace PIERStory
         
         
         // 언어 코드 추가 
-        [SerializeField] string currentGamebaseLanguageCode = "en"; // 게임베이스 언어코드
+        public string currentGamebaseLanguageCode = "en"; // 게임베이스 언어코드
         public string currentAppLanguageCode = "EN"; // 앱, 서버 사용하는 언어코드 (게임베이스와 살짝 다르기 때문에 컨버팅 필요)
 
 
@@ -399,13 +399,15 @@ namespace PIERStory
             configuration.displayLanguageCode = currentGamebaseLanguageCode; // Display 언어 코드 
             configuration.enablePopup = true;                                   // Gamebase 제공 팝업 사용 true
             configuration.enableLaunchingStatusPopup = false;                   // Gamebase 제공 점검 팝업 사용 false
-
+            
 
 #if UNITY_ANDROID
             configuration.storeCode = GamebaseStoreCode.GOOGLE;
 #elif UNITY_IOS
             configuration.storeCode = GamebaseStoreCode.APPSTORE;
 #endif
+
+            Debug.Log("currentGamebaseLanguageCode :: " + currentGamebaseLanguageCode);
 
             // ! 게임베이스 초기화 호출 
             Gamebase.Initialize(configuration, OnGamebaseInitialize);
@@ -419,6 +421,7 @@ namespace PIERStory
         /// <param name="error"></param>
         void OnGamebaseInitialize(GamebaseResponse.Launching.LaunchingInfo launchingInfo, GamebaseError error) {
             
+           
             Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventAppOpen);
             
             // 초기화 실패했을 경우에 대한 처리. 
@@ -765,62 +768,44 @@ namespace PIERStory
                 
                 switch(Application.systemLanguage) {
                     case SystemLanguage.Korean:
-                    currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Korean; // ko
+                    currentAppLanguageCode = "KO";
                     break;
                     
                     case SystemLanguage.English:
-                    currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.English; // en
+                    currentAppLanguageCode = "EN";
                     break;
                     
                     case SystemLanguage.Japanese:
-                    currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Japanese; // ja
-                    break;
-                    
-                    case SystemLanguage.ChineseSimplified:
-                    currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Chinese_Simplified; // zh-CN
-                    break;
-                    
-                    case SystemLanguage.ChineseTraditional:
-                    currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Chinese_Traditional; // zh-TW
+                    currentAppLanguageCode = "JA";
                     break;
                     
                     default:
-                    currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.English; // 기본값 영어
+                    currentAppLanguageCode = "EN";
                     break;
                 } // ? end of switch
                 
-                // 영어랑 한글, 일본어 지원. 
-                if(currentGamebaseLanguageCode != GamebaseDisplayLanguageCode.Korean 
-                    && currentGamebaseLanguageCode != GamebaseDisplayLanguageCode.English
-                    && currentGamebaseLanguageCode != GamebaseDisplayLanguageCode.Japanese) {
-                        
-                    currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.English;
-                }
                 
-                ES3.Save<string>(SystemConst.KEY_LANG, currentGamebaseLanguageCode.ToUpper()); // 저장한다. 
-            }
+                ES3.Save<string>(SystemConst.KEY_LANG, currentAppLanguageCode); // 저장한다. 
+            } // 저장된 언어 정보 없는 경우 
             
-            currentGamebaseLanguageCode = ES3.Load<string>(SystemConst.KEY_LANG);
+            currentAppLanguageCode = ES3.Load<string>(SystemConst.KEY_LANG);
             
             // 게임베이스와 서버에서 사용하는 언어코드가 서로 다르기 때문에 컨버팅 해준다. 
-            
-            // 중국어는 바꿔줘야한다. 특별처리.
-            if(currentGamebaseLanguageCode == GamebaseDisplayLanguageCode.Chinese_Simplified)  // 간체
-                currentAppLanguageCode = "ZH";
-            else if(currentGamebaseLanguageCode == GamebaseDisplayLanguageCode.Chinese_Traditional)  // 번체
-                currentAppLanguageCode = "TC";
-            else 
-                currentAppLanguageCode = currentGamebaseLanguageCode.ToUpper(); // 나머지는 대문자로 바꿔주면 끝!
-                
-            if(string.IsNullOrEmpty(currentGamebaseLanguageCode))
-                currentAppLanguageCode = "EN";
-                
-            // 영어랑 한글만 지원 
-            if(currentAppLanguageCode != "EN" && currentAppLanguageCode != "KO") {
-                currentAppLanguageCode = "EN"; 
+            switch(currentAppLanguageCode) {
+                case "EN":
+                currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.English;
+                break;
+                case "KO":
+                currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Korean;
+                break;
+                case "JA":
+                currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Japanese;
+                break;
+                default:
+                currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.English;
+                break;
             }
-        
-            currentAppLanguageCode = currentAppLanguageCode.ToUpper();
+
         }
         
         

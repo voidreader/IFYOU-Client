@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
+using Toast.Gamebase;
 
 namespace PIERStory
 {
@@ -123,12 +124,66 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin"); // 시그널 보내서 Nody를 이동시킨다. 
             IntermissionManager.isMovingLobby = true;
             
-            // 인터미션 씬으로 이동 
-            SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            
+            switch(SystemManager.main.currentAppLanguageCode) {
+                case "EN":
+                SystemManager.main.currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.English;
+                break;
+                case "KO":
+                SystemManager.main.currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Korean;
+                break;
+                case "JA":
+                SystemManager.main.currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Japanese;
+                break;
+                default:
+                SystemManager.main.currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.English;
+                break;
+            }
+            
+            // 게임베이스 디스플레이 언어 변경 
+            Gamebase.SetDisplayLanguageCode(SystemManager.main.currentGamebaseLanguageCode); 
+            
+            Debug.Log(">> Changed gamebase language : " + SystemManager.main.currentGamebaseLanguageCode);
+            Debug.Log(">> current GamebaseCODE : " + Gamebase.GetDisplayLanguageCode());
+            
+            // 다시 Gamebase Initialize  ... 언어때문에 
+            InitGamebaseAgain();
+            
+                        
+            
             // SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
 
         }
         
+        void InitGamebaseAgain() {
+            // configuration 설정 (초기화)
+            var configuration = new GamebaseRequest.GamebaseConfiguration();
+            configuration.appID = SystemManager.main.gamebaseAPP_ID;
+            configuration.appVersion = Application.version; // 어플리케이션 버전(게임베이스 콘솔 등록 필수)
+            configuration.displayLanguageCode = SystemManager.main.currentGamebaseLanguageCode; // Display 언어 코드 
+            configuration.enablePopup = true;                                   // Gamebase 제공 팝업 사용 true
+            configuration.enableLaunchingStatusPopup = false;                   // Gamebase 제공 점검 팝업 사용 false
+            
+
+#if UNITY_ANDROID
+            configuration.storeCode = GamebaseStoreCode.GOOGLE;
+#elif UNITY_IOS
+            configuration.storeCode = GamebaseStoreCode.APPSTORE;
+#endif
+
+            Gamebase.Initialize(configuration, (launchingInfo, error) =>{
+                if(Gamebase.IsSuccess(error)) {
+                    // 인터미션 씬으로 이동 
+                    Debug.Log("<color=white>GameBaseInitialize Again</color>");
+                    SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+                }
+                else {
+                    Debug.Log(string.Format("Initialization failed. error is {0}", error));
+                    SystemManager.ShowMessageAlert(string.Format("Initialization failed. error is {0}", error));
+                }
+            });
+        }
+      
         
     }
 }

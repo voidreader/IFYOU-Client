@@ -22,7 +22,7 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textTimer; // 타이머 
         [SerializeField] TextMeshProUGUI textDiscount; // 할인율 
          public const long addTick = 621355968000000000; // C#과 javascript 타임 Tick 차이 
-        public string freepass_no = string.Empty;
+        public int timeDealID = 0;
         [SerializeField] long end_date_tick = 0; // 서버에서 받아오는 타임딜 종료시간 tick
         
         [SerializeField] DateTime endDate;
@@ -33,9 +33,9 @@ namespace PIERStory {
         
         
         
+        public PassTimeDealData passTimeDeal;
         
         
-        JsonData userFreepassTimedealJSON; // 대상 작품의 유저 프리패스 타임딜 
         
         public Sprite spriteNoTime; // 상시 스프라이트 
         public Sprite spriteTimedeal; // 타임딜 스프라이트 
@@ -89,18 +89,16 @@ namespace PIERStory {
             
            
             // 타임딜 정보 가져오기 
-            userFreepassTimedealJSON = null;
+            passTimeDeal = UserManager.main.GetProjectActiveTimeDeal(passStory.projectID);
             
-            // 일반 
-            if(userFreepassTimedealJSON == null || userFreepassTimedealJSON.Count == 0) {
+            if(passTimeDeal == null || !passTimeDeal.isValidData) { // 일반 (타임딜 X)
                 // Debug.Log("No Freepass User >> Normal Product");
                 groupTimedeal.SetActive(false);
                 iconButton.sprite = spriteNoTime;
                 
                 loopScaleEffect.enabled = false;
             }
-            else { // 타임딜 
-                
+            else {
                 iconButton.sprite = spriteTimedeal;
                 groupTimedeal.SetActive(true);
                 
@@ -110,6 +108,7 @@ namespace PIERStory {
                 
                 loopScaleEffect.enabled = true;
             }
+            
             
             iconButton.SetNativeSize();
             
@@ -123,14 +122,13 @@ namespace PIERStory {
         void SetTimedeal() {
             
             // 유저 타임딜
-            userFreepassTimedealJSON = userFreepassTimedealJSON[0]; //  2개일때도 있다.
             
             
-            freepass_no = userFreepassTimedealJSON["target_id"].ToString();
+            timeDealID = passTimeDeal.timedealID;
             
            
             // 시간 준비 
-            end_date_tick = StoryLobbyMain.ConvertServerTimeTick(long.Parse(userFreepassTimedealJSON["end_tick"].ToString()));
+            end_date_tick = StoryLobbyMain.ConvertServerTimeTick(passTimeDeal.expireTick);
             endDate = new DateTime(end_date_tick); // 틱으로 생성
             
             
@@ -149,14 +147,11 @@ namespace PIERStory {
             textTimer.text = GetDiffTime(); // 일단 값 넣어주고.
             
             // 할인율 처리
-            discountFloat = float.Parse(userFreepassTimedealJSON["discount"].ToString());
-            discountInt = (int)(discountFloat * 100);
+            discountInt = passTimeDeal.discountINT;
+            discountFloat = (float)discountInt * 0.01f;
             
             // 할인율 표시
             textDiscount.text = discountInt.ToString() + "%";
-            
-            
-                        
         }
         
         /// <summary>
@@ -178,13 +173,12 @@ namespace PIERStory {
             return string.Format ("{0:D2}:{1:D2}:{2:D2}",timeDifference.Hours ,timeDifference.Minutes, timeDifference.Seconds);
         }
         
+        /// <summary>
+        /// 타임딜 시간초과 
+        /// </summary>
         void TimeOver() {
             
-            // 유저 프리패스 타임딜 노드를 없애준다. 
-            // UserManager.main.SetUserFreepassTimedeal(null);
-            
-            // 그리고 리프레시
-            UserManager.OnFreepassPurchase?.Invoke();
+            SetPremiumPass();
         }        
     }
 }

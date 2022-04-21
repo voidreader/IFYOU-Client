@@ -34,8 +34,12 @@ namespace PIERStory {
         [Space]
         public List<BaseCoinExchangeProduct> listCoinExchangeProducts; // 코인 환전 상품
         
+        [Space]
+        public List<ShopPassTimeDeal> listPassTimeDeal; // 패스 타임딜 최대 6개
+        public GameObject passTimeDealTitle; // 타임딜 타이틀 
+        public RectTransform passTimeDealGrid; // 타임딜 그리드 
         
-        
+        [Space]
         [SerializeField] UIToggle packageToggle;
         [SerializeField] UIToggle normalToggle;
 
@@ -242,6 +246,13 @@ namespace PIERStory {
              for (int i=0; i<listGeneralPackProducts.Count;i++) {
                  listGeneralPackProducts[i].gameObject.SetActive(false);
              }
+             
+             // 타임딜 
+             passTimeDealTitle.SetActive(false);
+             passTimeDealGrid.gameObject.SetActive(false);
+             for(int i=0; i<listPassTimeDeal.Count;i++) {
+                 listPassTimeDeal[i].gameObject.SetActive(false);
+             }
             
             
             if(BillingManager.main == null || BillingManager.main.productMasterJSON == null) {
@@ -258,6 +269,37 @@ namespace PIERStory {
             int maxCount = 0;
             
             Debug.Log("## InitPackContainer ###2");
+            int activePassTimeDealCount = 0; // 활성화 타임딜 카운트 
+            
+            // 타임딜 설정
+            for(int i=0; i<UserManager.main.userActiveTimeDeal.Count; i++) {
+                
+                // 최대 6개
+                if(i > 5)
+                    break;
+                
+                listPassTimeDeal[i].Init(new PassTimeDealData(UserManager.main.userActiveTimeDeal[i]));
+                
+                if(listPassTimeDeal[i].gameObject.activeSelf)
+                    activePassTimeDealCount++;
+            }
+            
+            // 활성 타임딜에 따라서 그리드 높이 조정
+            if(activePassTimeDealCount > 0) {
+                passTimeDealTitle.SetActive(true); // 타이틀 보여주고 
+                passTimeDealGrid.gameObject.SetActive(true);
+                
+                if(activePassTimeDealCount <= 2)
+                    passTimeDealGrid.sizeDelta = new Vector2(660, 300);
+                else if(activePassTimeDealCount > 2 && activePassTimeDealCount <= 4) 
+                    passTimeDealGrid.sizeDelta = new Vector2(660, 600);
+                else
+                    passTimeDealGrid.sizeDelta = new Vector2(660, 930);
+                
+            }
+            // ? 타임딜 설정 종료 
+            
+            
             
             // 패키지 초기화 
             for(int i=0; i<BillingManager.main.productMasterJSON.Count;i++) {

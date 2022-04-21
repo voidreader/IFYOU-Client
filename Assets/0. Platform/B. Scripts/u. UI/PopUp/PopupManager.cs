@@ -181,6 +181,7 @@ namespace PIERStory {
             GameObject clone = Instantiate(DictPopup[popupName], popupCanvas.transform);
             PopupBase popup = clone.GetComponent<PopupBase>();
             popup.InitPopup(); // 알파값을 0으로 만들기. 
+            popup.popupName = popupName;
            
             return popup;
         }
@@ -222,6 +223,21 @@ namespace PIERStory {
                 Debug.Log("<color=yellow>### new Popup. </color>" + popup.name);
                 popup.Show(); // 독립적인 실행 
             }
+        }
+        
+        /// <summary>
+        /// 독립팝업 보여주기
+        /// 다른 팝업이 하나라도 떠있으면 실행되지 않음. 
+        /// </summary>
+        /// <param name="popup"></param>
+        public void ShowIndependentPopup(PopupBase popup) {
+            if(popup == null)
+                return;
+                
+            if(ListShowingPopup.Count > 0)
+                return;
+                
+            popup.Show();
         }
         
         

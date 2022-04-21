@@ -1,17 +1,32 @@
+using System;
 using UnityEngine;
-
 using TMPro;
+using LitJson;
 
 namespace PIERStory {
 
+    /// <summary>
+    /// 게임 종료 화면에서 사용하는 클래스
+    /// StoryLobbyMain 상속받아서 override.
+    /// </summary>
+
     public class EpisodeEndControls : StoryLobbyMain
     {
+        public static Action OnRefreshUpdateTimeDeal = null;
         
         [Space]
         public TextMeshProUGUI textSummary;
         public EndingNotification endingNotification;
         
+        JsonData timedeal = null;
         
+        [Space]
+        public PassButton passButton; // 패스 버튼
+        public ImageRequireDownload passBadge; // 패스 뱃지 
+        
+        private void Start() {
+            OnRefreshUpdateTimeDeal = SetPremiumPassObject; // Action 설정 
+        }
 
         protected override void Update() {
             base.Update();
@@ -23,8 +38,10 @@ namespace PIERStory {
             CallbackReduceWaitingTimeSuccess = RefreshAfterReduceWaitingTime; 
             CallbackReduceWaitingTimeFail = FailReduceWaitingTime;
             OnEpisodePlay = OnClickPlay;
-                        
+            
             this.InitBaseInfo(); // 기본정보
+            
+            NotifyPassTimeDeal(); // 타임딜 체크 및 생성 
             
             // 일반 설정 시작 
             SetPlayState(); // 플레이 및 타이머 설정 
@@ -80,7 +97,44 @@ namespace PIERStory {
             if ((UserManager.main.tutorialStep == 2 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 3 && !UserManager.main.tutorialClear))
                 UserManager.main.UpdateTutorialStep(3, 0, CallbackStartTutorial);            
             
+            
+            
         }
+        
+        
+        
+        /// <summary>
+        /// 새로운 프리미엄패스 타임딜 알림 
+        /// </summary>
+        void NotifyPassTimeDeal() {
+            
+            // 프리패스 보유중이면 필요없다.
+            if(UserManager.main.HasProjectFreepass(StoryManager.main.CurrentProjectID)) {
+                return;
+            }
+            
+            timedeal = SystemManager.main.GetNewTimeDeal(currentEpisodeData);
+            
+            if(timedeal == null)
+                return;
+                
+            // 타임딜 정보 있으면 유저 타임딜로 입력 처리. 
+            int timedealID = SystemManager.GetJsonNodeInt(timedeal, "timedeal_id");
+            int deadline = SystemManager.GetJsonNodeInt(timedeal, "deadline");
+            int discount = SystemManager.GetJsonNodeInt(timedeal, "discount");
+            
+            
+            JsonData sendingData = new JsonData();
+            sendingData["func"] = "updatePassTimeDeal";
+            sendingData["timedeal_id"] = timedealID;
+            sendingData["deadline"] = deadline;
+            sendingData["discount"] = discount;
+            sendingData["project_id"] = StoryManager.main.CurrentProjectID;
+            
+            NetworkLoader.main.SendPost(UserManager.main.CallbackUpdateTimeDeal, sendingData, true);
+
+        }
+        
         
         
         
@@ -91,8 +145,11 @@ namespace PIERStory {
             
             Debug.Log("## EpisodeEndControls.InitBaseInfo");
             
+
+            // 엔딩 알림창 
             endingNotification.gameObject.SetActive(false);
             
+            // 오픈시간 관련 처리 
             textReduceWaitingTime.text = SystemManager.main.waitingReduceTimeAD.ToString() +" min"; // 광고보고 차감되는 시간 SysteManager..
            
             currentStoryData =  StoryManager.main.CurrentProject; // 현재 작품 
@@ -103,21 +160,47 @@ namespace PIERStory {
             // 에피소드 타이틀 초기화
             SetEpisodeTitleText(string.Empty);
             
+            // 프리미엄 관련 처리 
+            SetPremiumPassObject();
+            
             if(projectCurrentJSON == null) {
                 SystemManager.ShowSimpleAlert("Invalid Episode State. Please contact to help center");
                 return;
             }
             
             currentEpisodeID = SystemManager.GetJsonNodeString(projectCurrentJSON, "episode_id");
-            currentEpisodeData = StoryManager.GetRegularEpisodeByID(currentEpisodeID);
+            currentEpisodeData = StoryManager.GetRegularEpisodeByID(currentEpisodeID); // 다음번 플레이될 차례의 에피소드 데이터 
             currentEpisodeData.SetPurchaseState(); // 구매기록 refresh.
             
             
-            hasPremium = UserManager.main.HasProjectFreepass();
-            isEpisodeContinuePlay = false;
             
+            isEpisodeContinuePlay = false;
             textSummary.text = currentEpisodeData.episodeSummary; // 요약정보 추가 
             
+
+            
+        }
+        
+        /// <summary>
+        /// 프리미엄 패스 오브젝트 설정 
+        /// </summary>
+        void SetPremiumPassObject() {
+            
+            // 프리미엄 패스 오브젝트 추가 
+            passButton.gameObject.SetActive(false);
+            passBadge.gameObject.SetActive(false);
+            
+            hasPremium = UserManager.main.HasProjectFreepass(); // 프리미엄 패스 보유 여부 
+            
+            // 프리미엄 패스 보유 여부에 따른 오브젝트 설정 
+            if(hasPremium) {
+                passBadge.gameObject.SetActive(true);
+                passBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey, true);
+            }
+            else {
+                passButton.gameObject.SetActive(true);
+                passButton.SetPremiumPass();
+            }
         }
         
         /// <summary>
@@ -144,6 +227,16 @@ namespace PIERStory {
             PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MISSION_3);
             p.Data.contentValue = GetEpisodeTimeOpenPrice();
             PopupManager.main.ShowPopup(p, true);
+        }
+        
+        /// <summary>
+        /// 에피소드 종료 화면에서 팝업패스 클리규 
+        /// </summary>
+        public void OnClickPassButton() {
+            SystemManager.ShowPopupPass(StoryManager.main.CurrentProjectID, false);
+            
+            // 패스 구매 콜백. 
+            UserManager.OnFreepassPurchase = this.InitStoryLobbyControls;
         }
     }
 }

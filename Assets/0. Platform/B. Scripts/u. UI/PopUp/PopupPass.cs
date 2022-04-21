@@ -21,7 +21,7 @@ namespace PIERStory {
         public int originFreepassPrice = 0;
         public int saleFreepassPrice = 0;
         
-        JsonData userFreepassTimedealJSON; // 대상 작품의 유저 프리패스 타임딜 
+        
         
         public const long addTick = 621355968000000000; // C#과 javascript 타임 Tick 차이 
         public string freepass_no = string.Empty;
@@ -34,7 +34,12 @@ namespace PIERStory {
         [SerializeField] float discountFloat = 0; // 할인율 
         [SerializeField] int discountInt = 0;
         
+        
+        
         [SerializeField] bool useTimer = false;        
+        
+        public PassTimeDealData passTimeDeal;
+        public int timeDealID = 0;
         
         public override void Show()
         {
@@ -42,6 +47,7 @@ namespace PIERStory {
                 return;
             
             base.Show();
+            
             InitPremiumPass();
         }
         
@@ -60,65 +66,66 @@ namespace PIERStory {
             normnalTitle.SetActive(false);
             timedealTitle.SetActive(false);
             
-            // 현재 띄워놓은 작품 
-            passStory = StoryManager.main.CurrentProject;
+            // * 상점에서 열렸는지, 진입한 작품에서 열렸는지 구분된다.  (2022.04.20)
             
-            // 가격. 
-            originFreepassPrice = StoryManager.main.GetProjectPremiumPassOriginPrice();
-            saleFreepassPrice = StoryManager.main.GetProjectPremiumPassCurrentPrice();
-         
+            // * 작품에서 진입 (targetData가 프로젝트ID로 들어온다)
+            if(string.IsNullOrEmpty(Data.targetData)) {
+                passStory = StoryManager.main.CurrentProject;    
+            }
+            else { // * 상점에서 진입 
+                passStory = StoryManager.main.FindProject(Data.targetData);
+            }
+            
+            
+            
+            
+            // 가격, 할인율 처리 (작품진행도에 따른 할인율 + 타임딜 할인율)
+            originFreepassPrice = passStory.passPrice;
+            discountFloat = passStory.passDiscount;
+            
             
             // 타임딜 정보 가져오기 
-            userFreepassTimedealJSON = null;
+            passTimeDeal = UserManager.main.GetProjectActiveTimeDeal(passStory.projectID);
             
             // 이미지 
             imagePass.SetDownloadURL(passStory.premiumPassURL, passStory.premiumPassKey);
             
             
-            normnalTitle.SetActive(true);
+            
+            if(passTimeDeal != null && passTimeDeal.isValidData) {// 타임딜 
+                timedealTitle.SetActive(true);
+                SetTimedeal();
+            }
+            else { // 일반!
+                normnalTitle.SetActive(true);
+            }
+            
+            
+            // 최종 할인율을 통해서 할인 가격 구한다. 
+            saleFreepassPrice = SystemConst.GetSalePrice(originFreepassPrice, discountFloat);
+            discountInt = Mathf.RoundToInt(discountFloat * 100);
+            
+            // 레이블 처리 
             textOriginPrice.text = originFreepassPrice.ToString();
             textSalePrice.text = saleFreepassPrice.ToString();
-            textSale.text = StoryManager.main.GetProjectPremiumPassCurrentDiscountString() + "%";
+            textSale.text = discountInt.ToString() + "%";            
 
-            // 일반 
-            /*
-            if(userFreepassTimedealJSON == null || userFreepassTimedealJSON.Count == 0) {
-                Debug.Log("No Freepass User >> Normal Product");
-                
-                normnalTitle.SetActive(true);
-                
-                // 가격 설정 
-                textOriginPrice.text = originFreepassPrice.ToString();
-                textSalePrice.text = saleFreepassPrice.ToString();
-                textSale.text = "10%";
-                
-            }
-            else { // 타임딜 
-                
-                Debug.Log("No Freepass User >> TimeDeal Product");
-                
-                timedealTitle.SetActive(true);
-                
-                
-                // * 타임딜
-                SetTimedeal();
-            }            
-            */
         }
         
+        /// <summary>
+        /// 타임딜 설정
+        /// </summary>
         void SetTimedeal() {
-            // 유저 타임딜
-            userFreepassTimedealJSON = userFreepassTimedealJSON[0]; //  2개일때도 있다.
-            freepass_no = userFreepassTimedealJSON["target_id"].ToString();
+            timeDealID = passTimeDeal.timedealID;
             
             // 시간 준비 
-            end_date_tick = StoryLobbyMain.ConvertServerTimeTick(long.Parse(userFreepassTimedealJSON["end_tick"].ToString()));
+            end_date_tick = SystemConst.ConvertServerTimeTick(passTimeDeal.expireTick);
             endDate = new DateTime(end_date_tick); // 틱으로 생성
             
             
-            Debug.Log("EndDate : " + endDate);
-            Debug.Log("Now : " + DateTime.Now);
-            Debug.Log("UTC : " + DateTime.UtcNow);
+            // Debug.Log("EndDate : " + endDate);
+            // Debug.Log("Now : " + DateTime.Now);
+            // Debug.Log("UTC : " + DateTime.UtcNow);
             timeDifference = endDate - System.DateTime.UtcNow;
             
             if(timeDifference.Ticks <= 0) {
@@ -130,24 +137,9 @@ namespace PIERStory {
             
             textTimer.text = GetDiffTime(); // 일단 값 넣어주고.
             
-            // 할인율 처리
-            discountFloat = float.Parse(userFreepassTimedealJSON["discount"].ToString());
-            discountInt = (int)(discountFloat * 100);
+            // 할인율 추가 처리 
+            discountFloat += (float)passTimeDeal.discountINT * 0.01f;
             
-            // 할인율 표시
-            textSale.text = discountInt.ToString() + "%";
-            
-            // 할인 가격 구하기 
-            saleFreepassPrice = (int)(originFreepassPrice * (1-discountFloat));
-            if(saleFreepassPrice < 3)
-                saleFreepassPrice = 3;
-                
-            if(originFreepassPrice < 3) {
-                originFreepassPrice = 3;
-            }
-            
-            textOriginPrice.text = originFreepassPrice.ToString();
-            textSalePrice.text = saleFreepassPrice.ToString();
         }
         
         /// <summary>
@@ -186,7 +178,7 @@ namespace PIERStory {
         public void OnClickPurchase() {
             
             if(UserManager.main.CheckGemProperty(saleFreepassPrice)) {
-                NetworkLoader.main.PurchaseProjectFreepass(freepass_no, originFreepassPrice, saleFreepassPrice);
+                NetworkLoader.main.PurchaseProjectPass(timeDealID, passStory.projectID, originFreepassPrice, saleFreepassPrice);
                 return;
             }
            

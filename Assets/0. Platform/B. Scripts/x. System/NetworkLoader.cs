@@ -32,13 +32,13 @@ namespace PIERStory
 
         public const string FUNC_UPDATE_EPISODE_COMPLETE_RECORD = "requestCompleteEpisode"; // 에피소드 플레이 완료 기록 
         public const string FUNC_UPDATE_EPISODE_START_RECORD = "insertUserEpisodeStartRecord"; // 에피소드 플레이 시작 기록 
-        public const string FUNC_RESET_EPISODE_PROGRESS = "resetUserEpisodeProgress"; // 에피소드 진행도 리셋 
+
         public const string FUNC_RESET_EPISODE_PROGRESS_TYPE2 = "resetUserEpisodeProgressType2"; // 에피소드 진행도 리셋 신규 15버전 2022.02.28 
 
         public const string FUNC_UPDATE_USER_VOICE_HISTORY = "updateUserVoiceHistory";      // 보이스 해금 갱신
         public const string FUNC_UPDATE_USER_ILLUST_HISTORY = "updateUserIllustHistory";    // 일러스트 해금 갱신
         public const string FUNC_UPDATE_USER_MINICUT_HISTORY = "updateUserMinicutHistoryVer2";  // 미니컷 해금 갱신
-        public const string FUNC_UPDATE_USER_FAVOR_HISTORY = "updateUserFavorHistory";      // 호감도 갱신
+        
         public const string FUNC_UPDATE_USER_SCRIPT_MISSION = "updateUserScriptMission";    // Drop미션 통신
         public const string FUNC_CHANGE_ACCOUNT_GAMEBASE = "changeAccountByGamebase";
 
@@ -51,10 +51,7 @@ namespace PIERStory
         public const string FUNC_MAIL_SINGLE_READ = "requestReceiveSingleMail"; // 메일 하나만 읽기
         public const string FUNC_MAIL_ALL_READ = "requestReceiveAllMail"; // 메일 다 읽기!
         
-        public const string FUNC_PROJECT_ALL_EMOTICONS = "getProjectAllEmoticon"; // 프로젝트의 모든 이모티콘 
 
-        // 엔딩 관련
-        public const string FUNC_USER_ENDING_LIST = "getUserEndingList";        // 획득한 엔딩 리스트 불러오기
 
         // 미션 관련
         public const string FUNC_USER_MISSION_REWARD = "getUserMisionReward";   // 미션 개별 보상
@@ -218,25 +215,7 @@ namespace PIERStory
             SendPost(__cb, sending);
         }
         
-        /// <summary>
-        /// 경험치 획득 처리
-        /// </summary>
-        public void UpdateUserExp(int __exp, string __route, int __clearID) {
-            JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "updateUserLevelProcess";
-            
-            sending["current_level"] = UserManager.main.level; // 현재 레벨 
-            sending["current_experience"] = UserManager.main.exp; // 현재 경험치
-            
-            sending["experience"] = __exp;
-            sending["route"] = __route;
-            sending["clear_id"] = __clearID;
-            sending["project_id"] = StoryManager.main.CurrentProjectID;
-            sending["ver"] = 10;
-            
-            
-            SendPost(UserManager.main.CallbackEXP, sending);
-        }
+
         
         /// <summary>
         /// 기본 재화 정보 요청 
@@ -274,19 +253,20 @@ namespace PIERStory
         /// <param name="__freepassNo">timedeal ID</param>
         /// <param name="__originPrice">원 가격</param>
         /// <param name="__salePrice">할인 가격</param>
-        public void PurchaseProjectFreepass(string __freepassNo, int __originPrice, int __salePrice) {
+        public void PurchaseProjectPass(int __timeDealID, string __projectID, int __originPrice, int __salePrice) {
             JsonData sending = new JsonData();
-            sending["project_id"] = StoryManager.main.CurrentProjectID;
-            sending["currency"] = StoryManager.main.GetProjectCurrencyCode(CurrencyType.Freepass);
+            sending["project_id"] = __projectID;
+            sending["currency"] = "Free" + __projectID;
             sending["originPrice"] = __originPrice;
-            sending["salePrice"] = __salePrice;
             
-            if(!string.IsNullOrEmpty(__freepassNo)) {
-                sending["freepass_no"] = __freepassNo;
-            }
+            // 최소값 설정 
+            if(__salePrice < 3)
+                sending["salePrice"] = 3;
+            else
+                sending["salePrice"] = __salePrice;
             
-            
-            sending["func"] = "purchaseFreepass";
+            sending["timedeal_id"] = __timeDealID;
+            sending["func"] = "purchasePremiumPass"; //  purchaseFreepass > purchasePremiumPass 변경 
             
             SendPost(UserManager.main.CallbackPurchaseFreepass, sending);
         }

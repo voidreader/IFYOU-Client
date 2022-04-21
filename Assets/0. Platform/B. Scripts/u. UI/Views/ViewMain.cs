@@ -107,12 +107,20 @@ namespace PIERStory {
             
             Firebase.Analytics.FirebaseAnalytics.LogEvent("MainEnter");
             
+            // * ViewMain 활성화될때 유저의 활성화된 타임딜 목록 갱신 (2022.04.19)
+            UserManager.main.RequestUserActiveTimeDeal();
+            
         }
 
         public override void OnStartView()
         {
 
             base.OnStartView();
+            
+            // ViewMain 돌아왔을때 스토리매니저 변수 초기화
+            StoryManager.main.CurrentProjectID = string.Empty;
+            StoryManager.main.CurrentProjectTitle = string.Empty;
+            
 
             InitLobby();
 

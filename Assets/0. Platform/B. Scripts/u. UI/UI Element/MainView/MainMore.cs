@@ -281,7 +281,7 @@ namespace PIERStory {
 
         public void OnClickInquiry()
         {
-            Debug.Log("Open Contact");
+            Debug.Log("Open Contact :: " + Gamebase.GetDeviceLanguageCode() +"/" + Gamebase.GetDisplayLanguageCode());
 
             Gamebase.Contact.OpenContact((error) =>
             {

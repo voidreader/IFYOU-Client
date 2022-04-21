@@ -60,8 +60,18 @@ namespace PIERStory {
         public bool isSerial = false; // 연재작 체크 
         public List<string> listSerialDays = new List<string>();
         
+        
+        public int passPrice = 0; // 프리미엄 패스 프라이스 
+        public float passDiscount = 0.1f; // 프리이엄 패스 진행도에 따른 할인율 
+        
+        public bool isValidData {
+            get {
+                return originData != null && !string.IsNullOrEmpty(projectID);
+            }
+        }
+        
         public StoryData() {
-            
+            originData = null;
         }
         
         /// <summary>
@@ -115,6 +125,10 @@ namespace PIERStory {
             categoryImageURL = SystemManager.GetJsonNodeString(originData, "category_thumbnail_url");
             categoryImageKey = SystemManager.GetJsonNodeString(originData, "category_thumbnail_key");
             
+            
+            // 프리미엄 패스 가격정보
+            passPrice = SystemManager.GetJsonNodeInt(originData, "pass_price");
+            passDiscount = SystemManager.GetJsonNodeFloat(originData, "pass_discount");
             
             
             

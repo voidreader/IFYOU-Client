@@ -88,7 +88,7 @@ namespace PIERStory
 
             // 구매 후 처리 추가
             UserManager.OnFreepassPurchase = UpdateTutorialStep;
-            NetworkLoader.main.PurchaseProjectFreepass(string.Empty, originalPrice, salePrice);
+            NetworkLoader.main.PurchaseProjectPass(-1, StoryManager.main.CurrentProjectID, originalPrice, salePrice);
         }
 
 

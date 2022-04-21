@@ -28,6 +28,9 @@ namespace PIERStory
         [HideInInspector] public JsonData userProfile = null;               // 유저 프로필 정보
         [HideInInspector] public JsonData userProfileCurrency = null;       // 유저 프로필 재화 정보
         [HideInInspector] public JsonData userAttendanceList = null;        // 유저 출석 보상 리스트
+        
+        [HideInInspector] public JsonData userActiveTimeDeal = null; // 유저 활성화 타임딜 목록 
+        
         [SerializeField] string debugBankString = string.Empty;
 
         public List<CoinIndicator> ListCoinIndicators = new List<CoinIndicator>(); // 코인 표시기
@@ -178,7 +181,6 @@ namespace PIERStory
         
         const string NODE_USER_GALLERY_IMAGES = "galleryImages"; // * 유저 갤러리 이미지 (해금 여부 포함됨) - 일반 & 라이브 페어 시스템 
         
-        const string NODE_DRESS_PROGRESS = "dressProgress"; // 유저 의상 진행정보 (의상 템플릿 관련)
 
         public const string NODE_PURCHASE_HIST = "episodePurchase";  //episodePurchase 에피소드 구매 기록
         const string NODE_SCENE_PROGRESS = "sceneProgress"; // 사건ID 진행도. 조건 판정에 사용한다. 
@@ -1236,6 +1238,13 @@ namespace PIERStory
             else
                 return false;
         }
+        
+        public bool HasProjectFreepass(string __targetProjectID) {
+            if (SystemManager.GetJsonNodeBool(bankJson, "Free" + __targetProjectID))
+                return true;
+            else
+                return false;   
+        }
 
         
 
@@ -1385,18 +1394,7 @@ namespace PIERStory
         
 
 
-        /// <summary>
-        /// 유저 프로젝트별 의상 진행정보 
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetNodeDressProgress()
-        {
-            return currentStoryJson[NODE_DRESS_PROGRESS];
-        }
-        public void SetNodeDressProgress(JsonData __j)
-        {
-            currentStoryJson[NODE_DRESS_PROGRESS] = __j;
-        }
+
 
 
         /// <summary>
@@ -1803,35 +1801,7 @@ namespace PIERStory
             
         }
         
-        /// <summary>
-        /// 경험치 통신 콜백 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="response"></param>
-        public void CallbackEXP(HTTPRequest request, HTTPResponse response) {
-            if (!NetworkLoader.CheckResponseValidation(request, response))
-            {
-                Debug.LogError("CallbackEXP");
-                return;
-            }
-            
-            
-            Debug.Log("CallbackEXP : " + response.DataAsText);
-            
-            JsonData result = JsonMapper.ToObject(response.DataAsText);
-            
-            if(result.ContainsKey("current")) {
-                userJson[CommonConst.NODE_LEVEL] = result["current"]["level"];
-                userJson[CommonConst.NODE_EXP] = result["current"]["experience"];
-                SetLevelInfo(); // 유저 레벨 갱신
-                
-                // 뱅킹 리프레시 없이. 
-                SetBankInfo(result, false);
-            }
-            
-            // 팝업 화면 호출 
-            SystemManager.main.ShowExpGain(result);
-        }
+
         
         
         /// <summary>
@@ -1848,21 +1818,24 @@ namespace PIERStory
             }
 
             JsonData result = JsonMapper.ToObject(res.DataAsText); // 결과 
-            JsonData purchaseResult = result.ContainsKey("purchaseResult")?result["purchaseResult"]:null;
-            // 갱신
-            
+            Debug.Log(JsonMapper.ToStringUnicode(result));
             
             
             // * bank 
             SetBankInfo(result);
             
-            // projectCurrent갱신
-            SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);
+            // 작품에 진입한 상태에서만 아래 노드들 갱신처리 
+            if(!string.IsNullOrEmpty(StoryManager.main.CurrentProjectID)) {
             
-            // 에피소드 구매 기록 갱신 
-            if (result.ContainsKey(NODE_PURCHASE_HIST)) {
-                SetNodeEpisodePurchaseHistory(result[NODE_PURCHASE_HIST]);
-                StoryManager.main.RefreshRegularEpisodesPurchaseState();
+                // projectCurrent갱신
+                if(result.ContainsKey(NODE_PROJECT_CURRENT))
+                    SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);
+                
+                // 에피소드 구매 기록 갱신 
+                if (result.ContainsKey(NODE_PURCHASE_HIST)) {
+                    SetNodeEpisodePurchaseHistory(result[NODE_PURCHASE_HIST]);
+                    StoryManager.main.RefreshRegularEpisodesPurchaseState();
+                }
             }
                 
             
@@ -1871,16 +1844,15 @@ namespace PIERStory
             
             // 콜백 처리 
             OnFreepassPurchase?.Invoke();
-            // 에피소드 시작화면 갱신
-            //ViewEpisodeStart.OnRefreshPremiumPass?.Invoke();
 
             // 이프유업적 프리패스 구매
-            NetworkLoader.main.RequestIFYOUAchievement(15, int.Parse(StoryManager.main.CurrentProjectID));
+            NetworkLoader.main.RequestIFYOUAchievement(15, SystemManager.GetJsonNodeInt(result, "project_id"));
             
-            // View 종료를 위해 Event 처리 
-            // Doozy.Engine.GameEventMessage.SendEvent("PurchaseFreepass"); 
-            // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_PURCHASE_FREEPASS, string.Empty);
-            SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle));
+            // 6306
+            if(string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
+                SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6306"));
+            else 
+                SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle));
         }
         
         /// <summary>
@@ -2042,7 +2014,44 @@ namespace PIERStory
             if (GameManager.main != null && GameManager.main.currentEpisodeData.episodeType == EpisodeType.Chapter)
                 NetworkLoader.main.RequestIFYOUAchievement(12, -1, int.Parse(StoryManager.main.CurrentEpisodeID));
 
-
+        }
+        
+        
+        /// <summary>
+        /// 작품별 타임딜 생성 콜백 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        public void CallbackUpdateTimeDeal(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response))
+                return;
+                
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            Debug.Log("### CallbackUpdateTimeDeal : "  + JsonMapper.ToStringUnicode(result));
+            
+            // 새로운 타임딜 없음 
+            if(!SystemManager.GetJsonNodeBool(result, "hasNew")) {
+                return;
+            }
+            
+            if(!result.ContainsKey("timedeal"))
+                return;
+            
+            
+            
+            // 타임딜 새로 나왔다..!!!
+            // add 해줘야되서 null 인경우 배열하나 만들어준다. 
+            if(userActiveTimeDeal == null) {
+                userActiveTimeDeal = JsonMapper.ToObject("[]");
+            }
+            
+            userActiveTimeDeal.Add(result["timedeal"]); // 리스트에 넣어준다. 
+            EpisodeEndControls.OnRefreshUpdateTimeDeal?.Invoke(); // EpisodeEndControl에게 알려준다. 
+            
+            
+            // 타임딜 팝업 노출
+            SystemManager.ShowPopupPass(StoryManager.main.CurrentProjectID, false);
+            
         }
 
 
@@ -2293,62 +2302,6 @@ namespace PIERStory
         #endregion
 
         #region 사용자 에피소드 관련 메소드
-
-
-        #region 유저 리셋 정보 2022.01
-        
-        /// <summary>
-        /// 현재 프로젝트의 리셋 가격
-        /// </summary>
-        /// <returns></returns>
-        public int GetProjectResetPrice() {
-            
-            // 프리미엄 패스 유저는 0원이다. 
-            if(HasProjectFreepass()) {
-                return 0;
-            }
-            
-            return SystemManager.main.firsetResetPrice;
-
-        }
-        
-        
-
-        
-        
-        
-        
-        
-        #endregion
-
-        
-
-        #region 유저 의상 변경점 업데이트 
-        public void UpdateDressProgress(string __speaker, string __dress_id)
-        {
-            JsonData j = new JsonData();
-
-            j[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
-            j[GameConst.COL_SPEAKER] = __speaker;
-            j["dress_id"] = __dress_id;
-            j[CommonConst.FUNC] = NetworkLoader.FUNC_INSERT_DRESS_PROGRESS;
-
-
-            NetworkLoader.main.SendPost(OnUpdateDressProgress, j);
-        }
-
-        void OnUpdateDressProgress(HTTPRequest req, HTTPResponse res)
-        {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("OnUpdateDressProgress");
-                return;
-            }
-
-            // 갱신해서 받아온 데이터를 설정 
-            SetNodeDressProgress(JsonMapper.ToObject(res.DataAsText));
-        }
-        #endregion
 
 
         /// <summary>
@@ -2790,7 +2743,6 @@ namespace PIERStory
 
         #endregion
 
-
         
         #region 유저 능력치 관련 메소드 
         
@@ -2955,11 +2907,6 @@ namespace PIERStory
         
         
         #endregion 
-
-
-
-        
-
 
         #region IFYOU 업적 관련
 
@@ -3162,6 +3109,47 @@ namespace PIERStory
             return true;
         }
 
+        #endregion
+    
+        #region 유저 타임딜 
+        
+        /// <summary>
+        /// 유저의 활성화된 타임들 목록 요청 
+        /// </summary>
+        public void RequestUserActiveTimeDeal() {
+            JsonData sendData = new JsonData();
+            sendData["func"] = "getUserActiveTimeDeal";
+            
+            NetworkLoader.main.SendPost(CallbackRequestUserActiveTimeDeal, sendData, false);
+            
+        }
+        
+        void CallbackRequestUserActiveTimeDeal(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response))
+                return;
+                
+            userActiveTimeDeal = JsonMapper.ToObject(response.DataAsText);
+        }
+        
+        /// <summary>
+        /// 대상 작품에 활성화된 타임딜 정보 요청 
+        /// </summary>
+        /// <param name="__projectID"></param>
+        /// <returns></returns>
+        public PassTimeDealData GetProjectActiveTimeDeal(string __projectID) {
+            if(userActiveTimeDeal == null)
+                return null;
+                
+                
+            for(int i=0; i<userActiveTimeDeal.Count;i++) {
+                if(SystemManager.GetJsonNodeString(userActiveTimeDeal[i], "project_id") == __projectID) {
+                    return new PassTimeDealData(userActiveTimeDeal[i]);
+                }
+            }
+            
+            return null;
+        }
+        
         #endregion
     }
 }

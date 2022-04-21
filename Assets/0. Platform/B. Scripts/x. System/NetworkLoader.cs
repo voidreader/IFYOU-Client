@@ -253,19 +253,20 @@ namespace PIERStory
         /// <param name="__freepassNo">timedeal ID</param>
         /// <param name="__originPrice">원 가격</param>
         /// <param name="__salePrice">할인 가격</param>
-        public void PurchaseProjectFreepass(string __freepassNo, int __originPrice, int __salePrice) {
+        public void PurchaseProjectPass(int __timeDealID, string __projectID, int __originPrice, int __salePrice) {
             JsonData sending = new JsonData();
-            sending["project_id"] = StoryManager.main.CurrentProjectID;
-            sending["currency"] = StoryManager.main.GetProjectCurrencyCode(CurrencyType.Freepass);
+            sending["project_id"] = __projectID;
+            sending["currency"] = "Free" + __projectID;
             sending["originPrice"] = __originPrice;
-            sending["salePrice"] = __salePrice;
             
-            if(!string.IsNullOrEmpty(__freepassNo)) {
-                sending["freepass_no"] = __freepassNo;
-            }
+            // 최소값 설정 
+            if(__salePrice < 3)
+                sending["salePrice"] = 3;
+            else
+                sending["salePrice"] = __salePrice;
             
-            
-            sending["func"] = "purchaseFreepass";
+            sending["timedeal_id"] = __timeDealID;
+            sending["func"] = "purchasePremiumPass"; //  purchaseFreepass > purchasePremiumPass 변경 
             
             SendPost(UserManager.main.CallbackPurchaseFreepass, sending);
         }

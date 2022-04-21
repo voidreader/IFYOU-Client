@@ -29,7 +29,7 @@ namespace PIERStory
         [HideInInspector] public JsonData userProfileCurrency = null;       // 유저 프로필 재화 정보
         [HideInInspector] public JsonData userAttendanceList = null;        // 유저 출석 보상 리스트
         
-        JsonData userActiveTimeDeal = null; // 유저 활성화 타임딜 목록 
+        [HideInInspector] public JsonData userActiveTimeDeal = null; // 유저 활성화 타임딜 목록 
         
         [SerializeField] string debugBankString = string.Empty;
 
@@ -181,7 +181,6 @@ namespace PIERStory
         
         const string NODE_USER_GALLERY_IMAGES = "galleryImages"; // * 유저 갤러리 이미지 (해금 여부 포함됨) - 일반 & 라이브 페어 시스템 
         
-        const string NODE_DRESS_PROGRESS = "dressProgress"; // 유저 의상 진행정보 (의상 템플릿 관련)
 
         public const string NODE_PURCHASE_HIST = "episodePurchase";  //episodePurchase 에피소드 구매 기록
         const string NODE_SCENE_PROGRESS = "sceneProgress"; // 사건ID 진행도. 조건 판정에 사용한다. 
@@ -1214,6 +1213,13 @@ namespace PIERStory
             else
                 return false;
         }
+        
+        public bool HasProjectFreepass(string __targetProjectID) {
+            if (SystemManager.GetJsonNodeBool(bankJson, "Free" + __targetProjectID))
+                return true;
+            else
+                return false;   
+        }
 
         
 
@@ -1363,18 +1369,7 @@ namespace PIERStory
         
 
 
-        /// <summary>
-        /// 유저 프로젝트별 의상 진행정보 
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetNodeDressProgress()
-        {
-            return currentStoryJson[NODE_DRESS_PROGRESS];
-        }
-        public void SetNodeDressProgress(JsonData __j)
-        {
-            currentStoryJson[NODE_DRESS_PROGRESS] = __j;
-        }
+
 
 
         /// <summary>
@@ -1798,21 +1793,24 @@ namespace PIERStory
             }
 
             JsonData result = JsonMapper.ToObject(res.DataAsText); // 결과 
-            JsonData purchaseResult = result.ContainsKey("purchaseResult")?result["purchaseResult"]:null;
-            // 갱신
-            
+            Debug.Log(JsonMapper.ToStringUnicode(result));
             
             
             // * bank 
             SetBankInfo(result);
             
-            // projectCurrent갱신
-            SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);
+            // 작품에 진입한 상태에서만 아래 노드들 갱신처리 
+            if(!string.IsNullOrEmpty(StoryManager.main.CurrentProjectID)) {
             
-            // 에피소드 구매 기록 갱신 
-            if (result.ContainsKey(NODE_PURCHASE_HIST)) {
-                SetNodeEpisodePurchaseHistory(result[NODE_PURCHASE_HIST]);
-                StoryManager.main.RefreshRegularEpisodesPurchaseState();
+                // projectCurrent갱신
+                if(result.ContainsKey(NODE_PROJECT_CURRENT))
+                    SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);
+                
+                // 에피소드 구매 기록 갱신 
+                if (result.ContainsKey(NODE_PURCHASE_HIST)) {
+                    SetNodeEpisodePurchaseHistory(result[NODE_PURCHASE_HIST]);
+                    StoryManager.main.RefreshRegularEpisodesPurchaseState();
+                }
             }
                 
             
@@ -1821,16 +1819,15 @@ namespace PIERStory
             
             // 콜백 처리 
             OnFreepassPurchase?.Invoke();
-            // 에피소드 시작화면 갱신
-            //ViewEpisodeStart.OnRefreshPremiumPass?.Invoke();
 
             // 이프유업적 프리패스 구매
-            NetworkLoader.main.RequestIFYOUAchievement(15, int.Parse(StoryManager.main.CurrentProjectID));
+            NetworkLoader.main.RequestIFYOUAchievement(15, SystemManager.GetJsonNodeInt(result, "project_id"));
             
-            // View 종료를 위해 Event 처리 
-            // Doozy.Engine.GameEventMessage.SendEvent("PurchaseFreepass"); 
-            // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_PURCHASE_FREEPASS, string.Empty);
-            SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle));
+            // 6306
+            if(string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
+                SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6306"));
+            else 
+                SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle));
         }
         
         /// <summary>
@@ -2005,16 +2002,31 @@ namespace PIERStory
                 return;
                 
             JsonData result = JsonMapper.ToObject(response.DataAsText);
+            Debug.Log("### CallbackUpdateTimeDeal : "  + JsonMapper.ToStringUnicode(result));
             
             // 새로운 타임딜 없음 
             if(!SystemManager.GetJsonNodeBool(result, "hasNew")) {
                 return;
             }
             
+            if(!result.ContainsKey("timedeal"))
+                return;
+            
             
             
             // 타임딜 새로 나왔다..!!!
+            // add 해줘야되서 null 인경우 배열하나 만들어준다. 
+            if(userActiveTimeDeal == null) {
+                userActiveTimeDeal = JsonMapper.ToObject("[]");
+            }
+            
+            userActiveTimeDeal.Add(result["timedeal"]); // 리스트에 넣어준다. 
+            EpisodeEndControls.OnRefreshUpdateTimeDeal?.Invoke(); // EpisodeEndControl에게 알려준다. 
+            
+            
             // 타임딜 팝업 노출
+            SystemManager.ShowPopupPass(StoryManager.main.CurrentProjectID, false);
+            
         }
 
 

@@ -172,8 +172,8 @@ namespace PIERStory
             if (Application.isEditor)
                 Application.runInBackground = true;
 
-            // 프레임레이트 60으로 설정 (iOS는 기본값이 30이라 애니메이션이 예쁘지 않음)
-            Application.targetFrameRate = 60;
+            // 프레임레이트 45으로 설정 (iOS는 기본값이 30이라 애니메이션이 예쁘지 않음)
+            Application.targetFrameRate = 45;
             safeArea = Screen.safeArea;
             Debug.Log("safeArea : " + safeArea.ToString());
 
@@ -2449,6 +2449,27 @@ namespace PIERStory
             && ((CommonView.ListActiveViews.Count == 1 && CommonView.ListActiveViews.Contains(__currentView)) || CommonView.ListActiveViews.Count < 1)) {
                 SystemManager.ShowSystemPopup(SystemManager.GetLocalizedText("6064"), Application.Quit, null, true);    
             }
+        }
+        
+        
+        public static void ShowPopupPass(string __projectID, bool __isIndependant = false) {
+            
+            PopupBase p = PopupManager.main.GetPopup("PremiumPass");
+            
+            if(p == null) {
+                Debug.LogError("No Premium Pass popup");
+                return;
+            }
+            
+            p.Data.targetData = __projectID; // 대상 스토리의 프로젝트ID를 넘겨줘서 오픈시킨다. 
+            
+            // 프리미엄 패스 팝업이 무거워서. 여러번 누르는 경우가 있다. 
+            // 그래서 동일 팝업이 뜨지 않게 처리.. 
+            if(__isIndependant)
+                PopupManager.main.ShowIndependentPopup(p); 
+            else 
+                PopupManager.main.ShowPopup(p, true, false);
+            
         }
         
         

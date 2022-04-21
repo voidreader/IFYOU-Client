@@ -106,6 +106,11 @@ namespace PIERStory {
         {
 
             base.OnStartView();
+            
+            // ViewMain 돌아왔을때 스토리매니저 변수 초기화
+            StoryManager.main.CurrentProjectID = string.Empty;
+            StoryManager.main.CurrentProjectTitle = string.Empty;
+            
 
             InitLobby();
 

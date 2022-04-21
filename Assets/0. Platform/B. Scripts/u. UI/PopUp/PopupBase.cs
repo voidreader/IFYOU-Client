@@ -16,6 +16,8 @@ namespace PIERStory {
         public UIContainer overlay; // 오버레이 
         public UIContainer content; // 컨텐츠 
         
+        public string popupName = string.Empty;
+        
         
         
         // 자동파괴까지 걸리는 시간

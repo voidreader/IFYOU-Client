@@ -69,7 +69,7 @@ namespace PIERStory {
                 return;
             }
             
-            p.Data.targetData = passStory.projectID;
+            // p.Data.targetData = passStory.projectID;
             
             PopupManager.main.ShowPopup(p, false, false);
         }
@@ -147,8 +147,10 @@ namespace PIERStory {
             textTimer.text = GetDiffTime(); // 일단 값 넣어주고.
             
             // 할인율 처리
-            discountInt = passTimeDeal.discountINT;
-            discountFloat = (float)discountInt * 0.01f;
+            discountFloat = passStory.passDiscount;
+            discountFloat += (float)passTimeDeal.discountINT * 0.01f;
+            discountInt = Mathf.RoundToInt(discountFloat * 100);
+            
             
             // 할인율 표시
             textDiscount.text = discountInt.ToString() + "%";

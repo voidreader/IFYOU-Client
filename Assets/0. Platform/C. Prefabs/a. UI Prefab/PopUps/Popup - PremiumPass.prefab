@@ -517,7 +517,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1020,7 +1020,7 @@ MonoBehaviour:
       FromReferenceValue: 2
       ToReferenceValue: 2
       FromCustomValue: 0
-      ToCustomValue: 0.6
+      ToCustomValue: 0.8
       FromOffset: 0
       ToOffset: 0
   HideAnimation:
@@ -1289,7 +1289,7 @@ MonoBehaviour:
       StartAlpha: 1
       FromReferenceValue: 2
       ToReferenceValue: 2
-      FromCustomValue: 0.6
+      FromCustomValue: 0.8
       ToCustomValue: 0
       FromOffset: 0
       ToOffset: 0
@@ -1408,7 +1408,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1706,6 +1706,7 @@ MonoBehaviour:
       currencyStarPlay: 
       priceOneTime: 0
       isUnlock: 0
+      isSerial: 0
     imageURL: 
     imageKey: 
     isConfirm: 1
@@ -1713,6 +1714,7 @@ MonoBehaviour:
     contentValue: 0
   overlay: {fileID: 3832634691364359617}
   content: {fileID: 5834091837895946655}
+  popupName: 
   autoDestroyTime: 0
   isOverlayUse: 1
   addQueue: 0
@@ -1753,6 +1755,8 @@ MonoBehaviour:
     serialDay: 
     isSerial: 0
     listSerialDays: []
+    passPrice: 0
+    passDiscount: 0.1
   textOriginPrice: {fileID: 8978306263474774313}
   textSalePrice: {fileID: 7981967738401865625}
   originFreepassPrice: 0
@@ -1764,6 +1768,13 @@ MonoBehaviour:
   discountFloat: 0
   discountInt: 0
   useTimer: 0
+  passTimeDeal:
+    debugJSON: 
+    projectID: 
+    timedealID: 0
+    discountINT: 0
+    expireTick: 0
+  timeDealID: 0
 --- !u!225 &-6261489868366409965
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2400,7 +2411,7 @@ MonoBehaviour:
       FromValue: {x: -649, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 1
+      Enabled: 0
       AnimationType: 0
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -2569,7 +2580,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.5
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -2595,11 +2606,11 @@ MonoBehaviour:
       FromValue: 1
       ToValue: 1
       CurrentValue: 0
-      Enabled: 0
+      Enabled: 1
       StartAlpha: 1
-      FromReferenceValue: 0
-      ToReferenceValue: 0
-      FromCustomValue: 1
+      FromReferenceValue: 2
+      ToReferenceValue: 2
+      FromCustomValue: 0
       ToCustomValue: 1
       FromOffset: 0
       ToOffset: 0
@@ -2670,7 +2681,7 @@ MonoBehaviour:
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 649, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 1
+      Enabled: 0
       AnimationType: 1
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 2
@@ -3066,7 +3077,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3173,7 +3184,7 @@ RectTransform:
   m_GameObject: {fileID: 3521001333258669800}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children:
   - {fileID: 1068361167220869534}
   m_Father: {fileID: 6404098259888715058}
@@ -4759,7 +4770,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

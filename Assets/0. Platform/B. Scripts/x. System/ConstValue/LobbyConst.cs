@@ -100,8 +100,6 @@ namespace PIERStory {
         public const string COL_PAGE = "page";
         public const string NODE_PROMOTION_BANNER_URL = "promotion_banner_url";
         public const string NODE_PROMOTION_BANNER_KEY = "promotion_banner_key";
-        public const string COL_STAR = "star";
-        public const string COL_COIN = "coin";
         public const string COL_IFYOU = "ifyou";
 
 
@@ -133,10 +131,8 @@ namespace PIERStory {
         public const string SIGNAL_EPISODE_RESET = "EpisodeReset";
         
         public const string SIGNAL_LANGUAGE = "language";
-        public const string SIGNAL_STAR_HISTORY = "starHistory";
         public const string SIGNAL_DATA_MANAGE = "dataManage";
         public const string SIGNAL_COUPON = "coupon";
-        public const string SIGNAL_NOTICE = "notice";
         
         
         public const string TOP_SIGNAL_SHOW_BACKGROUND = "topSignalShowBackground"; // 상단 배경 보여주기
@@ -173,6 +169,8 @@ namespace PIERStory {
         public const string POPUP_GRADE_EXP = "GradeExp";
         public const string POPUP_GRADE_UP = "GradeUp";
         public const string POPUP_ENDING_HINT = "EndingHint";
+
+        public const string POPUP_COIN_STAR_HISTORY = "CoinStarHistory";
 
         #endregion
 

@@ -117,8 +117,6 @@ namespace PIERStory
             
             // 타이틀로 보내버리기
             SystemManager.main.givenStoryData = null; // 목록으로 가는것을 막기 위해 작성
-            ViewNoticeDetail.isDependent = true;           
-            
             
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin"); // 시그널 보내서 Nody를 이동시킨다. 
             IntermissionManager.isMovingLobby = true;

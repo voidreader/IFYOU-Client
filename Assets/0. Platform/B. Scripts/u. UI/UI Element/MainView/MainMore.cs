@@ -223,12 +223,14 @@ namespace PIERStory {
 
 
         /// <summary>
-        /// 스타 히스토리 
+        /// 코인스타 히스토리 
         /// </summary>
         public void OnClickStarHistory()
         {
+            PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_COIN_STAR_HISTORY);
             Debug.Log(">> OnClickStarHistory");
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_STAR_HISTORY, string.Empty);
+
+            PopupManager.main.ShowPopup(p, true);
         }
 
 

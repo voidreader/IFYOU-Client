@@ -13,9 +13,6 @@ namespace PIERStory
         string startDate = string.Empty;
 
         const string START_DATE = "start_date";
-        const string SHOW_NOTICE_DETAIL = "showNoticeDetail";
-        
-        bool isFromView = false;
 
         /// <summary>
         /// 프로모션에서 독립적으로 띄워질때는 fromView가 true로 온다. 
@@ -24,9 +21,6 @@ namespace PIERStory
         /// <param name="__fromView"></param>
         public void InitNoticeBanner(JsonData __j, bool __fromView = false)
         {
-            
-            isFromView = __fromView;
-            
             detailNotice = null;
             gameObject.SetActive(true);
 
@@ -54,9 +48,7 @@ namespace PIERStory
 
         public void OnClickNoticeBanner()
         {
-            ViewNoticeDetail.isDependent = isFromView;
-            ViewNoticeDetail.SetNoticeDetail(detailNotice, startDate);
-            Signal.Send(LobbyConst.STREAM_IFYOU, SHOW_NOTICE_DETAIL, string.Empty);
+            PopupNotice.ShowNoticeDetail(detailNotice, startDate);
         }
     }
 }

@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 using LitJson;
 using Doozy.Runtime.Signals;
 
@@ -96,19 +95,18 @@ namespace PIERStory {
                      Debug.LogError(string.Format("Can't find notice detail [{0}]", targetID));
                      return;
                  }
-                 
-                ViewNoticeDetail.isDependent = true;
-                ViewNoticeDetail.SetNoticeDetail(noticeDetailData, startDate);
-                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showNoticeDetail", string.Empty); // 공지사항 상세 불러온다. 
-                 
-                 
+
+                PopupBase p = PopupManager.main.GetPopup("Notice");
+                PopupManager.main.ShowPopup(p, false);
+
+                PopupNotice.ShowNoticeDetail(noticeDetailData, startDate);
             }
             else if(promotionType == "project") { // 프로젝트 소개 페이지 오픈 
                 if(storyData == null) {
                     Debug.LogError(string.Format("Can't find story [{0}]", targetID));
                 }
                 else {
-                    Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, storyData);
+                    Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, storyData);
                     
                 }
             }

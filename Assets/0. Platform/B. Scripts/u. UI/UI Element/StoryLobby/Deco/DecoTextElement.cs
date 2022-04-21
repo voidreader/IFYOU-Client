@@ -61,9 +61,6 @@ namespace PIERStory
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            
-            if(!selectedBox.activeSelf)
-                ViewProfileDeco.OnDisableAllOptionals?.Invoke();
 
             switch (state)
             {

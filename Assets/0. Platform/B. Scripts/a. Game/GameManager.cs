@@ -1204,12 +1204,7 @@ namespace PIERStory
             {
                 // 행을 진행하다가 다음 사건ID를 만나는 사이에 열리는 일러스트가 한개도 없으면 false가 리턴된다
                 if (!string.IsNullOrEmpty(currentPage.ListRows[i].scene_id) && currentPage.ListRows[i].scene_id != __sceneID)
-                {
-                    if (openIllustCount > 0)
-                        return true;
-                    else
-                        return false;
-                }
+                    return openIllustCount > 0;
 
                 switch (currentPage.ListRows[i].template)
                 {

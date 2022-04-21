@@ -5,12 +5,11 @@ using UnityEngine.UI;
 using TMPro;
 using LitJson;
 using BestHTTP;
-using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
 
 namespace PIERStory
 {
-    public class ViewCoinStarHistory : CommonView
+    public class PopupCoinStarHistory : PopupBase
     {
         [Header("재화")]
         public Image starButton;
@@ -40,29 +39,14 @@ namespace PIERStory
         Color toggleOffColor = new Color32(153, 153, 153, 255);
 
         const string FUNC_GET_USER_PROPERTY_HISTORY = "getUserPropertyHistory";
-        const string PROPERTY_GEM = "gem";
-        const string PROPERTY_COIN = "coin";
         const string KEY_PROPERTY = "property";
         const string KEY_RANGE = "range";
 
         bool viewShow = false;
 
-        public override void OnStartView()
+        public override void Show()
         {
-            base.OnStartView();
-
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
-        }
-
-        public override void OnView()
-        {
-            base.OnView();
-
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5047"), string.Empty);
+            base.Show();
 
             viewShow = true;
 
@@ -72,14 +56,7 @@ namespace PIERStory
 
             starToggle.isOn = true;
             _7dayToggle.isOn = true;
-        }
 
-        public override void OnHideView()
-        {
-            base.OnHideView();
-
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
-            viewShow = false;
         }
 
 
@@ -126,10 +103,10 @@ namespace PIERStory
             SelectedDayFontSetting(_7dayText, _30dayText, _90dayText);
 
             if (starToggle.isOn)
-                InquireUserHistory(PROPERTY_GEM, 7, CallbackGemHistory);
+                InquireUserHistory(LobbyConst.GEM, 7, CallbackGemHistory);
 
             if(coinToggle.isOn)
-                InquireUserHistory(PROPERTY_COIN, 7, CallbackCoinHistory);
+                InquireUserHistory(LobbyConst.COIN, 7, CallbackCoinHistory);
         }
 
 
@@ -141,10 +118,10 @@ namespace PIERStory
             SelectedDayFontSetting(_30dayText, _7dayText, _90dayText);
 
             if (starToggle.isOn)
-                InquireUserHistory(PROPERTY_GEM, 30, CallbackGemHistory);
+                InquireUserHistory(LobbyConst.GEM, 30, CallbackGemHistory);
 
             if (coinToggle.isOn)
-                InquireUserHistory(PROPERTY_COIN, 30, CallbackCoinHistory);
+                InquireUserHistory(LobbyConst.COIN, 30, CallbackCoinHistory);
         }
 
         /// <summary>
@@ -155,10 +132,10 @@ namespace PIERStory
             SelectedDayFontSetting(_90dayText, _30dayText, _7dayText);
 
             if (starToggle.isOn)
-                InquireUserHistory(PROPERTY_GEM, 90, CallbackGemHistory);
+                InquireUserHistory(LobbyConst.GEM, 90, CallbackGemHistory);
 
             if (coinToggle.isOn)
-                InquireUserHistory(PROPERTY_COIN, 90, CallbackCoinHistory);
+                InquireUserHistory(LobbyConst.COIN, 90, CallbackCoinHistory);
         }
 
         #endregion

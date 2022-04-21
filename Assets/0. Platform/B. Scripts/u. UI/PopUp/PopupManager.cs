@@ -29,6 +29,7 @@ namespace PIERStory {
 
         [SerializeField] GameObject popupConfirm;
         public GameObject popupConnectingShop;
+        public GameObject popupCoinStarHistory;
         [SerializeField] GameObject popupCoupon;
 
         public GameObject popupEndingHint;
@@ -350,6 +351,12 @@ namespace PIERStory {
                 DictPopup[CommonConst.POPUP_CONNECTING_SHOP] = popupConnectingShop;
             else
                 DictPopup.Add(CommonConst.POPUP_CONNECTING_SHOP, popupConnectingShop);
+
+            if (DictPopup.ContainsKey(LobbyConst.POPUP_COIN_STAR_HISTORY))
+                DictPopup[LobbyConst.POPUP_COIN_STAR_HISTORY] = popupCoinStarHistory;
+            else
+                DictPopup.Add(LobbyConst.POPUP_COIN_STAR_HISTORY, popupCoinStarHistory);
+
 
             if (DictPopup.ContainsKey(CommonConst.POPUP_CONFIRM))
                 DictPopup[CommonConst.POPUP_CONFIRM] = popupConfirm;

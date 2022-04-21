@@ -18,10 +18,10 @@ namespace PIERStory
 
         public override void Show()
         {
-            base.Show();
-
             if (isShow)
                 return;
+
+            base.Show();
 
             endingHint = GetEndingHintData();
             string episodeNum = string.Empty;

@@ -141,8 +141,6 @@ namespace PIERStory
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            ViewProfileDeco.OnDisableAllOptionals?.Invoke();
-            ViewProfileDeco.OnControlStanding?.Invoke(this);
             selected = true;
         }
 

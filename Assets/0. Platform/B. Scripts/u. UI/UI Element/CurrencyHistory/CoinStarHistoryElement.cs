@@ -18,13 +18,10 @@ namespace PIERStory
         const string KEY_QUANTITY = "quantity";
         const string KEY_ACTION_DATE = "action_date";
         const string USE = "use";
-
+         
         public void InitHistoryInfo(JsonData __j)
         {
-            string sign = "+";
-
-            if (SystemManager.GetJsonNodeString(__j, KEY_LOG_TYPE).Equals(USE))
-                sign = "-";
+            string sign = SystemManager.GetJsonNodeString(__j, KEY_LOG_TYPE).Equals(USE) ? "-" : "+";
 
             historyContent.text = string.Format("{0} {1} {2}", SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, KEY_LOG_CODE_TEXTID)), SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, KEY_CURRENCY_TEXTID)), SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, KEY_LOG_TYPE_TEXTID)));
             date.text = SystemManager.GetJsonNodeString(__j, KEY_ACTION_DATE);

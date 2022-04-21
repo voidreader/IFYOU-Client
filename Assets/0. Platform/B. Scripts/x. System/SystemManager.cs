@@ -1850,7 +1850,6 @@ namespace PIERStory
             promotionData = result["promotion"];
             noticeData = result["notice"];
             storyGenreData = result["genre"];
-
         }
 
 

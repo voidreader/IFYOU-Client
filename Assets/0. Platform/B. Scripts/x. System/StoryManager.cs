@@ -714,6 +714,41 @@ namespace PIERStory
                 ListCurrentProjectEpisodes[i].SetEpisodePlayState();
             }    
         }
+        
+        /// <summary>
+        /// 정규 에피소드 찾기 
+        /// </summary>
+        /// <param name="__episodeID"></param>
+        /// <returns></returns>
+        public EpisodeData FindRegularEpisode(string __episodeID) {
+            for(int i=0; i<RegularEpisodeList.Count;i++) {
+                if(RegularEpisodeList[i].episodeID == __episodeID)
+                    return RegularEpisodeList[i];
+            }
+            
+            
+            return null;
+        }
+        
+        
+        /// <summary>
+        /// 에피소드 아이디를 가지고 에피소드 찾기 
+        /// </summary>
+        /// <param name="__episodeID"></param>
+        /// <returns></returns>
+        public EpisodeData FindEpisode(string __episodeID) {
+            for(int i=0; i<RegularEpisodeList.Count;i++) {
+                if(RegularEpisodeList[i].episodeID == __episodeID)
+                    return RegularEpisodeList[i];
+            }
+            
+            for(int i=0; i<SideEpisodeList.Count;i++) {
+                if(SideEpisodeList[i].episodeID == __episodeID)
+                    return SideEpisodeList[i];
+            }
+            
+            return null;
+        }
 
         #region 네임태그 관련 메소드 
 

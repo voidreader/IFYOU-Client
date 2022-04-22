@@ -30,6 +30,7 @@ namespace PIERStory
         public GameObject objNew; // 신규 마크 
         public int playPrice = 0; 
         
+        public GameObject buttonHint; // 힌트 버튼 
 
         public void InitSpecialEpisode(EpisodeData epiData)
         {
@@ -37,7 +38,7 @@ namespace PIERStory
             episodeBanner.SetDownloadURL(epiData.popupImageURL, epiData.popupImageKey);
             groupPrice.SetActive(false);
             objNew.SetActive(false);
-
+            buttonHint.SetActive(false);
 
             if(specialEpisode.isUnlock) { // 잠금해제된 상태 
                 textTitle.gameObject.SetActive(true);
@@ -65,6 +66,10 @@ namespace PIERStory
                     objNew.SetActive(true);
             }
             
+            // 언락스타일 있으면, 버튼 보여준다.
+            if(specialEpisode.unlockStyle != "none") {
+                buttonHint.SetActive(true); 
+            }
             
             gameObject.SetActive(true);
         }
@@ -127,6 +132,15 @@ namespace PIERStory
             SystemManager.ShowNetworkLoading(); 
             StartSpecialEpisode();
   
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnClickHint() {
+            PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_SPECIAL_HINT);
+            p.Data.contentEpisode = specialEpisode;
+            PopupManager.main.ShowPopup(p, true);
         }
         
         

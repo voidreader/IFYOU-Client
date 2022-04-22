@@ -57,6 +57,8 @@ namespace PIERStory {
         [SerializeField] GameObject popupSimpleAlert;
         [SerializeField] GameObject popupSpecialEpisodeBuy; // 스페셜 에피소드 구매 
         [SerializeField] GameObject popupStoryReset; // 스토리 전체 리셋 1화로.. 
+        
+        [SerializeField] GameObject popupSpecialHint;
 
         // 튜토리얼 팝업 모음
         public GameObject popupTutorial1;
@@ -383,6 +385,11 @@ namespace PIERStory {
                 DictPopup[LobbyConst.POPUP_ENDING_HINT] = popupEndingHint;
             else
                 DictPopup.Add(LobbyConst.POPUP_ENDING_HINT, popupEndingHint);
+                
+            if (DictPopup.ContainsKey(LobbyConst.POPUP_SPECIAL_HINT))
+                DictPopup[LobbyConst.POPUP_SPECIAL_HINT] = popupSpecialHint;
+            else
+                DictPopup.Add(LobbyConst.POPUP_SPECIAL_HINT, popupSpecialHint);
 
             if (DictPopup.ContainsKey(GameConst.POPUP_EPISODE_FIRST_REWARD)) 
                 DictPopup[GameConst.POPUP_EPISODE_FIRST_REWARD] = popupEpisodeClearReward;

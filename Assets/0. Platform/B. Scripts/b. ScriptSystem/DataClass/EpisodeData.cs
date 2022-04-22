@@ -15,6 +15,7 @@ namespace PIERStory {
         JsonData episodeJSON; // 에피소드 정보 
         
         JsonData purchaseData; // 에피소드 구매 정보
+        public JsonData sideHintData = null; // 사이드 에피소드 힌트 JSON
         
         public string episodeID = string.Empty; // 에피소드 ID 
         public string episodeNO = string.Empty; // 에피소드 순번
@@ -42,8 +43,7 @@ namespace PIERStory {
         
         public float episodeGalleryImageProgressValue = 0; // 일러스트 프로그레서 값 
         
-        public string squareImageURL = string.Empty; // 목록 사각 썸네일 
-        public string squareImageKey = string.Empty; 
+
         
         public string popupImageURL = string.Empty; // 팝업 이미지 
         public string popupImageKey = string.Empty; 
@@ -51,15 +51,16 @@ namespace PIERStory {
         public EpisodeState episodeState = EpisodeState.Future; // 에피소드 플레이 상태 
         public PurchaseState purchaseState = PurchaseState.None; // 구매 상태
         
-        public bool OneTimePlayable = false; // 1회 플레이 가능여부  
+    
         
         public int priceStarPlaySale = 0; // 스타플레이 세일 가격
         public int priceStarPlay = 0; // 스타플레이 가격
         
-        public string currencyOneTime = string.Empty; // 1회 플레이 화폐
+        
         public string currencyStarPlay =  string.Empty; // 스타플레이 화폐 
         public int priceOneTime = 0; // 1회 플레이 가격
         
+        public string unlockStyle = "none"; // 해금 스타일 
         public bool isUnlock = true; // 언락 여부 
         public bool isSerial = false; // 연재 여부 
         public DateTime publishDate;
@@ -114,8 +115,6 @@ namespace PIERStory {
             episodeGalleryImageProgressValue = UserManager.main.CalcEpisodeGalleryProgress(episodeID);
             
             // * 이미지 
-            squareImageURL = SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.TITLE_IMAGE_URL);
-            squareImageKey = SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.TITLE_IMAGE_KEY);
             popupImageURL = SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.POPUP_IMAGE_URL);
             popupImageKey = SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.POPUP_IMAGE_KEY);
             
@@ -124,7 +123,6 @@ namespace PIERStory {
             priceStarPlaySale = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.EPISODE_SALE_PRICE));
             priceStarPlay = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, LobbyConst.EPISODE_PRICE));
             currencyStarPlay = SystemManager.GetJsonNodeString(episodeJSON, "currency");
-            currencyOneTime = SystemManager.GetJsonNodeString(episodeJSON, "one_currency");
             priceOneTime = int.Parse(SystemManager.GetJsonNodeString(episodeJSON, "one_price"));
             
             
@@ -163,7 +161,13 @@ namespace PIERStory {
             if(episodeType == EpisodeType.Side) {
                 isUnlock = SystemManager.GetJsonNodeBool(episodeJSON, "is_open");
             }
+            // 언락 스타일 
+            unlockStyle = SystemManager.GetJsonNodeString(episodeJSON, "unlock_style");
             
+            // 사이드 에피소드 힌트 
+            if(episodeJSON.ContainsKey("side_hint")) {
+                sideHintData = episodeJSON["side_hint"];
+            }
                 
             SetEpisodePlayState();
             SetPurchaseState();

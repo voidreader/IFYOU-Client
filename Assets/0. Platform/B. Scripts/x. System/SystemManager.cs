@@ -219,7 +219,7 @@ namespace PIERStory
             main = this;
             
             // * 코원, 피어 프로젝트 분기하기. 
-            Debug.Log("IDENTIFIER : " + Application.identifier);
+            // Debug.Log("IDENTIFIER : " + Application.identifier);
             if(Application.identifier.Contains("cowon")) {
                 // 코원 프로젝트 
                 gamebaseAPP_ID = "qtV3HLW5";

@@ -9,11 +9,16 @@ using Unity.Services.Core;
 using LitJson;
 using Firebase;
 using Facebook.Unity;
+using GoogleMobileAds.Api;
+using GoogleMobileAds.Common;
+
 
 #if UNITY_IOS
 using UnityEngine.iOS;
 using Unity.Advertisement.IosSupport;
 #endif
+
+
 
 
 
@@ -35,22 +40,50 @@ namespace PIERStory {
         
         // * 광고 도중 터치 막기 위한 변수.
         public bool isAdShowing = false; // 현재 광고가 보여지고 있다.
-        
-        public string rewardedAdUnitId = "Rewarded_Android";
-        public string interstitialAdUnitId = "Interstitial_Android";
+
         
         [SerializeField] int gamePlayRowCount = 0;
         [SerializeField] bool isRewarded = false; // 영상광고 끝까지 재생되었는지. 
         
-        
-        
         JsonData serverData = null;
+
+
+        #region Unity Mediation
+        public string rewardedAdUnitId = "Rewarded_Android";
+        public string interstitialAdUnitId = "Interstitial_Android";
         
         IRewardedAd rewardedAd;
         IInterstitialAd interstitialAd;
+        #endregion
+        
+        
+        #region Google Admob
+        
+        [Space]
+        [Header("Google Admob")]
+        GoogleMobileAds.Api.RewardedAd admobRewardedAd; 
+        
+        
+        [SerializeField] string admobRewardID = string.Empty;  // 애드몹 보상형 광고 ID 
+        [SerializeField] string admobBannerID = string.Empty; // 애드몹 배너 광고 ID 
+        [SerializeField] string admobInterstitialID = string.Empty; // 애드몹 전면 광고 ID
+        
+        // 아래 플랫폼별 ID 인스펙터에서 초기화 
+        [SerializeField] string admobRewardID_Anroid = string.Empty;
+        [SerializeField] string admobRewardID_iOS = string.Empty;
+        
+        [SerializeField] string aadmobBannerID_Anroid = string.Empty;
+        [SerializeField] string aadmobBannerID_iOS = string.Empty;
+        
+        [SerializeField] string admobInterstitialID_Anroid = string.Empty;
+        [SerializeField] string admobInterstitialID_iOS = string.Empty;
+        
+        #endregion
+        
         
         #region 서버 광고 기준정보
-        
+        [Space]
+        [Header("Standard Info")]
         public bool useLoadingAD = false; // 에피소드 로딩 광고 사용여부
         int shareLoadingInterstitial = 0; // 에피소드 로딩 전면광고 점유율
         int shareLoadingRewarded = 0; // 에피소드 로딩 동영상 광고 점유율
@@ -87,6 +120,7 @@ namespace PIERStory {
             // iOS 추적 권한 요청 
             RequestAuthorizationTracking(); 
             
+            InitAdmob();
 
             InitUnityMediation();
             
@@ -94,6 +128,95 @@ namespace PIERStory {
             
             InitFacebook();
         }
+        
+        
+        #region 구글 애드몹 
+        /// <summary>
+        /// 애드몹 초기화 
+        /// </summary>
+        void InitAdmob() {
+            // 플랫폼에 따른 ID 값 설정
+                        
+            #if UNITY_IOS
+            admobRewardID = admobRewardID_iOS;
+            admobInterstitialID = admobInterstitialID_iOS;
+            admobBannerID = aadmobBannerID_iOS;
+                        
+            #else
+            admobRewardID = admobRewardID_Anroid;
+            admobInterstitialID = admobInterstitialID_Anroid;
+            admobBannerID = aadmobBannerID_Anroid;
+            #endif
+            
+            // 초기화 시작 
+            MobileAds.Initialize(initStatus => {
+                Debug.Log("Google Admob Init : " + initStatus.ToString());
+                InitAdmobRewardedAd();
+            });
+        }
+        
+        /// <summary>
+        /// 애드몹 보상형 광고 초기화 
+        /// </summary>
+        void InitAdmobRewardedAd() {
+            this.admobRewardedAd = new GoogleMobileAds.Api.RewardedAd(admobRewardID);
+                    // Called when an ad request has successfully loaded.
+            this.admobRewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
+            // Called when an ad request failed to load.
+            this.admobRewardedAd.OnAdFailedToLoad += HandleRewardedAdFailedToLoad;
+            // Called when an ad is shown.
+            this.admobRewardedAd.OnAdOpening += HandleRewardedAdOpening;
+            // Called when an ad request failed to show.
+            this.admobRewardedAd.OnAdFailedToShow += HandleRewardedAdFailedToShow;
+            // Called when the user should be rewarded for interacting with the ad.
+            this.admobRewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
+            
+            // Called when the ad is closed.
+            this.admobRewardedAd.OnAdClosed += HandleRewardedAdClosed;
+
+            AdRequest request = new AdRequest.Builder().Build();
+            // Load the rewarded ad with the request.
+            this.admobRewardedAd.LoadAd(request);
+
+        }
+        
+        public void HandleRewardedAdLoaded(object sender, EventArgs args)
+        {
+            Debug.Log("HandleRewardedAdLoaded event received");
+        }
+
+        public void HandleRewardedAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+        {
+            Debug.Log("HandleRewardedAdFailedToLoad event received : " + args.LoadAdError.GetMessage());
+        }
+
+        public void HandleRewardedAdOpening(object sender, EventArgs args)
+        {
+            Debug.Log("HandleRewardedAdOpening event received");
+        }
+
+        public void HandleRewardedAdFailedToShow(object sender, AdErrorEventArgs args)
+        {
+            Debug.Log("HandleRewardedAdFailedToShow event received with message: " + args.AdError.GetMessage());
+                                
+        }
+
+        public void HandleRewardedAdClosed(object sender, EventArgs args)
+        {
+            Debug.Log("HandleRewardedAdClosed event received");
+            InitAdmobRewardedAd(); // 광고 닫히고, 생성 
+        }
+
+        public void HandleUserEarnedReward(object sender, GoogleMobileAds.Api.Reward __reward)
+        {
+            Debug.Log("HandleUserEarnedReward event received");
+        }
+
+        
+        
+        #endregion
+        // ? 애드몹 종료 
+        
         
         void InitFirebase() {
             /*
@@ -122,6 +245,7 @@ namespace PIERStory {
         void RequestAuthorizationTracking() {
             if(Application.isEditor)
                 return;
+                
             
 #if UNITY_IOS
 
@@ -499,10 +623,11 @@ namespace PIERStory {
         /// </summary>
         /// <returns></returns>
         public bool CheckRewardedAdPossible() {
-            if(rewardedAd == null)
+            
+            if(admobRewardedAd == null || rewardedAd == null)
                 return false;
                 
-            if(rewardedAd.AdState == AdState.Loaded)
+            if(admobRewardedAd.IsLoaded() || rewardedAd.AdState == AdState.Loaded)
                 return true;
                 
             return false;
@@ -513,9 +638,24 @@ namespace PIERStory {
         /// </summary>
         /// <param name="callback"></param>
         public void ShowRewardAdWithCallback(Action<bool> callback) {
+            
+            // * 2022.04.22 콜백있는 동영상 광고는 애드몹 우선으로 변경한다. 
+            
             OnCompleteRewardAD = callback;
             isRewarded = false;
             
+            // * 애드몹 우선으로 실행 
+            if(admobRewardedAd.IsLoaded()) {
+               admobRewardedAd.Show();  
+               return;
+            }
+            else {
+                // 애드몹 로딩이 완료되지 않았으면 로딩처리 지시하고, 유니티 애즈로 넘어간다.
+                InitAdmobRewardedAd();
+            }
+            
+            
+            // * 유니티 애즈 
             if(rewardedAd.AdState == AdState.Loaded)
                 rewardedAd.Show();
             else {

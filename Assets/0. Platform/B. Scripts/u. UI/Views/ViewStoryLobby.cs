@@ -190,6 +190,9 @@ namespace PIERStory
             
             if(LobbyManager.main == null || !LobbyManager.main.isLobbyManagerInit)
                 return;
+                
+            if(UserManager.main == null || !UserManager.main.completeReadUserData)
+                return;
             
             
             base.OnHideView();
@@ -1329,7 +1332,7 @@ namespace PIERStory
         /// <param name="__interactable"></param>
         void ActiveInteractable(bool __interactable)
         {
-            Debug.Log("##### ActiveInteractable :: " + __interactable );
+            // Debug.Log("##### ActiveInteractable :: " + __interactable );
             
             for (int i = 0; i < bubbleStickerParent.childCount; i++)
                 bubbleStickerParent.GetChild(i).GetComponent<Image>().raycastTarget = __interactable;

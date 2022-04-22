@@ -234,8 +234,10 @@ namespace PIERStory {
              
              Debug.Log("## InitPackContainer");
              
-             
-             
+            if(BillingManager.main == null || BillingManager.main.productMasterJSON == null) {
+                Debug.Log("## BillingManager is not inited");
+                return;
+            }
              
              // 이벤트 팩
              for(int i=0; i<listEventPackProducts.Count;i++) {
@@ -253,12 +255,6 @@ namespace PIERStory {
              for(int i=0; i<listPassTimeDeal.Count;i++) {
                  listPassTimeDeal[i].gameObject.SetActive(false);
              }
-            
-            
-            if(BillingManager.main == null || BillingManager.main.productMasterJSON == null) {
-                Debug.Log("## BillingManager is not inited");
-                return;
-            }
              
             int packIndex = 0;
             int eventPackIndex = 0;
@@ -267,11 +263,17 @@ namespace PIERStory {
             
             string productID = string.Empty;
             int maxCount = 0;
-            
-            Debug.Log("## InitPackContainer ###2");
             int activePassTimeDealCount = 0; // 활성화 타임딜 카운트 
             
+            
             // 타임딜 설정
+            if(UserManager.main.userActiveTimeDeal != null) {
+                Debug.Log(string.Format("### userActiveTimeDeal : [{0}]", UserManager.main.userActiveTimeDeal.Count));
+            }
+            else {
+                Debug.Log("### No Active Time Deal");
+            }
+            
             for(int i=0; i<UserManager.main.userActiveTimeDeal.Count; i++) {
                 
                 // 최대 6개
@@ -302,6 +304,7 @@ namespace PIERStory {
             
             
             // 패키지 초기화 
+            Debug.Log(string.Format("### productMasterJSON : [{0}]", BillingManager.main.productMasterJSON.Count));
             for(int i=0; i<BillingManager.main.productMasterJSON.Count;i++) {
                 
                 masterData = BillingManager.main.productMasterJSON[i];

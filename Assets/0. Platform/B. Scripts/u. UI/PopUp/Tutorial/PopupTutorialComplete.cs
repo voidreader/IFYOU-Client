@@ -10,7 +10,7 @@ namespace PIERStory
             
             base.Show();
             
-            AdManager.main.AnalyticsEnter("tutorial_clear");
+            // AdManager.main.AnalyticsEnter("tutorial_clear");
         }
     }
 }

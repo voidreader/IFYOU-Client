@@ -63,27 +63,33 @@ namespace PIERStory
 
 
             // * 생성과 동시에 로드
-            // * 보이스는 에셋번들 거쳐서 처리             
-            if(template == GameConst.COL_VOICE)
-                MountVoice();
-            else 
-                MountSound();
+            // * 에셋번들 
+            MountAddressableSound();
 
         }
         
         /// <summary>
         /// 어드레서블 키 
         /// </summary>
-        /// <param name="__templage"></param>
+        /// <param name="__template"></param>
         /// <returns></returns>
-        string GetAddressableKey(string __templage) {
+        string GetAddressableKey(string __template) {
             
             string middleKey = string.Empty;
             string key = string.Empty;
             
-            switch(__templage) {
+            // 보이스, 배경음, 효과음
+            switch(__template) {
                 case GameConst.COL_VOICE:
                 middleKey = "/voice/";
+                break;
+                
+                case GameConst.TEMPLATE_BGM:
+                middleKey = "/bgm/";
+                break;
+                
+                case ScriptPage.COL_SOUND_EFFECT:
+                middleKey = "/se/";
                 break;
             }
             
@@ -113,8 +119,13 @@ namespace PIERStory
         /// <summary>
         /// 보이스 - 어드레서블 마운트
         /// </summary>
-        void MountVoice() {
+        void MountAddressableSound() {
             addressableKey = GetAddressableKey(template);
+            
+            if(string.IsNullOrEmpty(addressableKey)) {
+                MountSound();
+                return;
+            }
             
             Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
                 

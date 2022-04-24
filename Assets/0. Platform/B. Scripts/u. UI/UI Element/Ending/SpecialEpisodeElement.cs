@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 using TMPro;
 using Doozy.Runtime.Signals;
@@ -181,7 +182,10 @@ namespace PIERStory
             // 통신 
             NetworkLoader.main.UpdateUserProjectCurrent(specialEpisode.episodeID, null, 0);
             
-            Firebase.Analytics.FirebaseAnalytics.LogEvent("SpecialEpisodeStart", "episode_id", specialEpisode.episodeID);
+            Dictionary<string, string> eventValues = new Dictionary<string, string>();
+            eventValues.Add("project_id", StoryManager.main.CurrentProjectID);
+            eventValues.Add("episode_id", specialEpisode.episodeID);
+            AdManager.main.SendAppsFlyerEvent("af_special_episode_start", eventValues);
         }
 
         #endregion

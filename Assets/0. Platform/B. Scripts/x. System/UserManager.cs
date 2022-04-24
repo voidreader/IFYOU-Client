@@ -291,7 +291,9 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CONNECT_SERVER, string.Empty);
             
             
-            Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventLogin);
+            Dictionary<string, string> eventValues = new Dictionary<string, string>();
+            eventValues.Add(AFInAppEvents.CUSTOMER_USER_ID, userKey);
+            AdManager.main.SendAppsFlyerEvent(AFInAppEvents.LOGIN, eventValues);
             
             ViewTitle.ActionTitleLoading("login");
             
@@ -2974,6 +2976,9 @@ namespace PIERStory
             }
 
             JsonData result = JsonMapper.ToObject(res.DataAsText);
+            
+            Debug.Log(JsonMapper.ToStringUnicode(result));
+            
             SetSeasonCheck(result);
             SetAchievementList(result);
         }

@@ -422,7 +422,6 @@ namespace PIERStory
         void OnGamebaseInitialize(GamebaseResponse.Launching.LaunchingInfo launchingInfo, GamebaseError error) {
             
            
-            Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventAppOpen);
             
             // 초기화 실패했을 경우에 대한 처리. 
             if (!Gamebase.IsSuccess(error))

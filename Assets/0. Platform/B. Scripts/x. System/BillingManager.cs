@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using Toast.Gamebase;
 using LitJson;
 using BestHTTP;
+using AppsFlyerSDK;
 
 namespace PIERStory {
     public class BillingManager : MonoBehaviour
@@ -185,14 +186,14 @@ namespace PIERStory {
             
             
             // 통합 인앱결제
-            /*
+            
             Dictionary<string, string> eventValues = new Dictionary<string, string>();
             eventValues.Add(AFInAppEvents.CURRENCY, receipt.currency);
             eventValues.Add(AFInAppEvents.REVENUE, receipt.price.ToString());
             eventValues.Add(AFInAppEvents.ORDER_ID, receipt.gamebaseProductId);
-            eventValues.Add("af_quantity", "1");
+            eventValues.Add(AFInAppEvents.QUANTITY, "1");
             AppsFlyerSDK.AppsFlyer.sendEvent(AFInAppEvents.PURCHASE, eventValues);
-            */
+            
   
         }
         

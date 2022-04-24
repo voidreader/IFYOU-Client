@@ -600,10 +600,11 @@ namespace PIERStory
             // ! 띠배너 광고 
             // AdManager.main.LoadBanner();
             
-
-            Firebase.Analytics.FirebaseAnalytics.LogEvent("EpisodeLoadingDone", new Firebase.Analytics.Parameter("project_id", StoryManager.main.CurrentProjectID)
-            , new Firebase.Analytics.Parameter("episode_id", StoryManager.main.CurrentEpisodeID));
-
+            // AFInAppEvents.
+            Dictionary<string, string> eventValues = new Dictionary<string, string>();
+            eventValues.Add("project_id", StoryManager.main.CurrentProjectID);
+            eventValues.Add("episode_id", StoryManager.main.CurrentEpisodeID);
+            AdManager.main.SendAppsFlyerEvent("af_episode_loading", eventValues);            
 
             // 모든 라인을, 혹은 종료 명령어를 만날때까지 계속해! 
             while (currentRow != null && isPlaying)
@@ -1993,10 +1994,12 @@ namespace PIERStory
             yield return new WaitForSeconds(0.1f);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
+
             
-            Firebase.Analytics.FirebaseAnalytics.LogEvent("EpisodeEnd", new Firebase.Analytics.Parameter("project_id", StoryManager.main.CurrentProjectID)
-            , new Firebase.Analytics.Parameter("episode_id", StoryManager.main.CurrentEpisodeID));
-            
+            Dictionary<string, string> eventValues = new Dictionary<string, string>();
+            eventValues.Add("project_id", StoryManager.main.CurrentProjectID);
+            eventValues.Add("episode_id", StoryManager.main.CurrentEpisodeID);
+            AdManager.main.SendAppsFlyerEvent("af_episode_end", eventValues);            
 
 
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터

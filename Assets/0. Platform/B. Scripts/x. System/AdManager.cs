@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Services.Mediation;
 using Unity.Services.Core;
+using AppsFlyerSDK;
 
 
 using LitJson;
@@ -713,7 +714,11 @@ namespace PIERStory {
         
         
 
-        #region 유니티 애널리틱스
+        #region 앱 이벤트 기록하기 
+        
+        public void SendAppsFlyerEvent(string __eventName, Dictionary<string, string> __eventValues) {
+            AppsFlyer.sendEvent(__eventName, __eventValues);
+        }
 
         /// <summary>
         /// 패키지 버튼 클릭
@@ -721,7 +726,9 @@ namespace PIERStory {
         /// <param name="_packageName"></param>
         public void AnalyticsPackageButtonClick(string _packageName) {
             
-           Firebase.Analytics.FirebaseAnalytics.LogEvent("PackageButton", new Firebase.Analytics.Parameter("package", _packageName));
+            Dictionary<string, string> eventValues = new Dictionary<string, string>();
+            eventValues.Add("product_id", _packageName);
+            AdManager.main.SendAppsFlyerEvent("af_open_package", eventValues);
             
         }
         
@@ -731,19 +738,16 @@ namespace PIERStory {
         /// <param name="__openPosition"></param>
         public void AnalyticsCoinShopOpen(string __openPosition) {
             
-            Firebase.Analytics.FirebaseAnalytics.LogEvent("OpenCoinShop", new Firebase.Analytics.Parameter("position", __openPosition));
+            
+            Dictionary<string, string> eventValues = new Dictionary<string, string>();
+            eventValues.Add("position", __openPosition);
+            AdManager.main.SendAppsFlyerEvent("af_open_coin_shop", eventValues);
 
             
         }
         
 
-        
-        public void AnalyticsEnter(string position) {
-            
-            Firebase.Analytics.FirebaseAnalytics.LogEvent(position);
-            
-        }
-        
+         
         
         #endregion
 

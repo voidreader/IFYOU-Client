@@ -1025,8 +1025,11 @@ namespace PIERStory {
             NetworkLoader.main.UpdateUserProjectCurrent(currentEpisodeData.episodeID, lastPlaySceneID, lastPlayScriptNO, true);
             
             
-            Firebase.Analytics.FirebaseAnalytics.LogEvent("EpisodeStart", new Firebase.Analytics.Parameter("project_id", StoryManager.main.CurrentProjectID)
-            , new Firebase.Analytics.Parameter("episode_id", StoryManager.main.CurrentEpisodeID));
+            
+            Dictionary<string, string> eventValues = new Dictionary<string, string>();
+            eventValues.Add("project_id", StoryManager.main.CurrentProjectID);
+            eventValues.Add("episode_id", StoryManager.main.CurrentEpisodeID);
+            AdManager.main.SendAppsFlyerEvent("af_episode_start", eventValues);
             
         }               
         

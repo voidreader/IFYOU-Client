@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 using LitJson;
@@ -105,7 +106,13 @@ namespace PIERStory {
             mainToggle.SetIsOn(true); // '메인' 네이게이션이 언제나 선택된 상태 
             
             
-            Firebase.Analytics.FirebaseAnalytics.LogEvent("MainEnter");
+            
+            // AFInAppEvents.
+            Dictionary<string, string> eventValues = new Dictionary<string, string>();
+            eventValues.Add(AFInAppEvents.CUSTOMER_USER_ID, UserManager.main.userKey);
+            AdManager.main.SendAppsFlyerEvent("af_main_enter", eventValues);
+            
+            
             
             // * ViewMain 활성화될때 유저의 활성화된 타임딜 목록 갱신 (2022.04.19)
             UserManager.main.RequestUserActiveTimeDeal();

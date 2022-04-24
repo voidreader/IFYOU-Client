@@ -36,7 +36,7 @@ namespace PIERStory
 
         public bool isPageImagesInitialized = false; // 페이지 초기화 완료 여부
 
-        static readonly string COL_SOUND_EFFECT = "se";
+        public const string COL_SOUND_EFFECT = "se";
 
         /// <summary>
         /// 페이지 초기화

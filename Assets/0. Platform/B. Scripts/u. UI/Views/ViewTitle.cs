@@ -72,7 +72,7 @@ namespace PIERStory {
             base.OnView();
             
             Debug.Log("<color=cyan>ViewTitle OnView</color>");
-            AdManager.main.AnalyticsEnter("titleEnter");
+            // AdManager.main.AnalyticsEnter("titleEnter");
             
             // 언어변경등으로 강제로 씬로딩이 진행될때. 
             if(SystemManager.IsGamebaseInit && UserManager.main.completeReadUserData && string.IsNullOrEmpty(currentStep)) {

@@ -194,23 +194,32 @@ namespace PIERStory {
         public void HandleRewardedAdOpening(object sender, EventArgs args)
         {
             Debug.Log("HandleRewardedAdOpening event received");
+            SetFrontAdStatus(true);
         }
 
         public void HandleRewardedAdFailedToShow(object sender, AdErrorEventArgs args)
         {
             Debug.Log("HandleRewardedAdFailedToShow event received with message: " + args.AdError.GetMessage());
-                                
+            SetFrontAdStatus(false);                                
         }
 
         public void HandleRewardedAdClosed(object sender, EventArgs args)
         {
             Debug.Log("HandleRewardedAdClosed event received");
             InitAdmobRewardedAd(); // 광고 닫히고, 생성 
+            
+            SetFrontAdStatus(false);
         }
 
         public void HandleUserEarnedReward(object sender, GoogleMobileAds.Api.Reward __reward)
         {
             Debug.Log("HandleUserEarnedReward event received");
+            
+            // 광고 기록
+            NetworkLoader.main.LogAdvertisement("rewarded");
+            
+            isRewarded = true; // true로 변경! 다 봤다!
+            OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
         }
 
         

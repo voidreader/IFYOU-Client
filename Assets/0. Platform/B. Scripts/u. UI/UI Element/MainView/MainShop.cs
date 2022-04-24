@@ -234,6 +234,9 @@ namespace PIERStory {
              
              Debug.Log("## InitPackContainer");
              
+            if(UserManager.main == null || !UserManager.main.completeReadUserData)
+                return;
+             
             if(BillingManager.main == null || BillingManager.main.productMasterJSON == null) {
                 Debug.Log("## BillingManager is not inited");
                 return;

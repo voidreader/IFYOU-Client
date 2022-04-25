@@ -28,21 +28,21 @@ namespace GoogleMobileAds.Editor
         {
             get { return Instance.adMobAndroidAppId; }
 
-            set { Instance.adMobAndroidAppId = value; }
+            set { Instance.adMobAndroidAppId = value; EditorUtility.SetDirty(Instance); }
         }
 
         public string GoogleMobileAdsIOSAppId
         {
             get { return Instance.adMobIOSAppId; }
 
-            set { Instance.adMobIOSAppId = value; }
+            set { Instance.adMobIOSAppId = value; EditorUtility.SetDirty(Instance);}
         }
 
         public bool DelayAppMeasurementInit
         {
             get { return Instance.delayAppMeasurementInit; }
 
-            set { Instance.delayAppMeasurementInit = value; }
+            set { Instance.delayAppMeasurementInit = value; EditorUtility.SetDirty(Instance);}
         }
 
         public static GoogleMobileAdsSettings Instance

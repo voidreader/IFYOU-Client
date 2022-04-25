@@ -3130,6 +3130,8 @@ namespace PIERStory
             
             if(LobbyManager.main != null) {
                 ViewMain.OnRefreshShopNewSign?.Invoke();
+                MainShop.OnRefreshPackageShop?.Invoke();
+                MainShop.OnRefreshNormalShop?.Invoke();
             }
         }
         

@@ -1341,6 +1341,10 @@ namespace PIERStory
 
             // 업적 리스트 갱신
             UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
+            
+            
+            // 타임딜 갱신 
+            UserManager.main.RequestUserActiveTimeDeal();
         }      
         
         

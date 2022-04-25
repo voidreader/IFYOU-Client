@@ -47,25 +47,27 @@ namespace PIERStory {
         [SerializeField] int selectionIndex = 0; // 선택지 순서 
 
 
-        [SerializeField] CanvasGroup canvasGroup; // 캔버스 그룹 
-        [SerializeField] Image imageSelection; // 선택지 버튼 이미지 
-        [SerializeField] Image imageBar; // 선택지 채워짐 바
-        [SerializeField] Image imageAura; // 아우라 이미지 
+        [SerializeField] CanvasGroup canvasGroup;   // 캔버스 그룹 
+        [SerializeField] Image imageSelection;      // 선택지 버튼 이미지 
+        [SerializeField] Image imageBar;            // 선택지 채워짐 바
+        [SerializeField] Image imageAura;           // 아우라 이미지 
         public GameObject illustIcon;
         [SerializeField] TextMeshProUGUI textSelection; //  텍스트
         public Image lockIcon;
         public GameObject selectionPrice;
         public TextMeshProUGUI priceText;
         public ImageRequireDownload freepassBadge;
-        [SerializeField] bool isButtonSelected = false; // 버튼 선택됨!
-        [SerializeField] bool isLock = false; // 잠금 여부 
-        [SerializeField] bool isFilling = false; // 채워짐 
+
+        [SerializeField] bool isLock = false;       // 잠금 여부 
+        [SerializeField] bool isFilling = false;    // 채워짐 
+        bool selectionPurchaseStart = false;        // 선택지 구매 시작
         
 
         string selectionText = string.Empty; // 선택지 문구 
         [SerializeField] string requisite = string.Empty; // 조건 
         [SerializeField] string targetSceneID = string.Empty; // 이동할 사건 ID 
         [SerializeField] float fillAmount = 0; // 게이지 값
+
 
         int targetPosY = 0; // 최종적으로 도달할 위치 (Y)
         int appearPosY = 0; // 등장 위치 
@@ -229,7 +231,6 @@ namespace PIERStory {
 
 
             // 변수들 초기화 
-            isButtonSelected = false;
             isLock = false;
             isFilling = false;
             fillAmount = 0;
@@ -501,6 +502,11 @@ namespace PIERStory {
             if (UserManager.main.HasProjectFreepass())
                 scriptRow.selectionPrice = 0;
 
+            // 이중 처리 방지
+            if (selectionPurchaseStart)
+                return;
+
+            selectionPurchaseStart = true;
             UserManager.main.PurchaseSelection(scriptRow.selection_group, scriptRow.selection_no, scriptRow.selectionPrice, CallbackPurchaseSelection);
         }
 
@@ -537,6 +543,7 @@ namespace PIERStory {
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackPurchaseSelection");
+                selectionPurchaseStart = false;
                 return;
             }
 
@@ -553,8 +560,17 @@ namespace PIERStory {
 
             NetworkLoader.main.RequestIFYOUAchievement(20);
 
+            selectionPurchaseStart = false;
+
             // 선택지 선택완료 처리
             SelectionSelected();
         }
+
+        public void OnClickSelectionHint()
+        {
+            // 힌트를 구매한적 있는지 체크하고, 구매한 적 있으면 바로 팝업 띄워주고
+            // 구매 기록이 없다면 통신 완료 후, 선택지 힌트 팝업을 띄워주는데, 그 전에 코인 갯수를 체크해서 부족하면 상점 
+        }
+        
     }
 }

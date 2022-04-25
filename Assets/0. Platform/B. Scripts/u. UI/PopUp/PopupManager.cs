@@ -32,6 +32,7 @@ namespace PIERStory {
         public GameObject popupCoinStarHistory;
         [SerializeField] GameObject popupCoupon;
 
+        public GameObject popupDataManager;
         public GameObject popupEndingHint;
         [SerializeField] GameObject popupEpisodeClearReward;
         [SerializeField] GameObject popupExpireToken; // 로그인 토큰 만료 팝업 
@@ -380,6 +381,13 @@ namespace PIERStory {
                 DictPopup[CommonConst.POPUP_CONFIRM] = popupConfirm;
             else
                 DictPopup.Add(CommonConst.POPUP_CONFIRM, popupConfirm);
+
+
+            if (DictPopup.ContainsKey(LobbyConst.POPUP_DATA_MANAGER))
+                DictPopup[LobbyConst.POPUP_DATA_MANAGER] = popupDataManager;
+            else
+                DictPopup.Add(LobbyConst.POPUP_DATA_MANAGER, popupDataManager);
+
 
             if (DictPopup.ContainsKey(LobbyConst.POPUP_ENDING_HINT))
                 DictPopup[LobbyConst.POPUP_ENDING_HINT] = popupEndingHint;

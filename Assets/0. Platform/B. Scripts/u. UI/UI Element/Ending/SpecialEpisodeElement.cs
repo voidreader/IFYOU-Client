@@ -19,9 +19,7 @@ namespace PIERStory
         public EpisodeData specialEpisode; // 스페셜 에피소드 
         public Image imageInfo; // 하단 인포 
         
-        
-        public GameObject objLock; // OPEN 열쇠 표시 
-        
+
         public Sprite spriteUnlock;
         public Sprite spriteLock;
         
@@ -41,23 +39,17 @@ namespace PIERStory
             buttonHint.SetActive(false);
 
             if(specialEpisode.isUnlock) { // 잠금해제된 상태 
-                textTitle.gameObject.SetActive(true);
-                textTitle.text = epiData.episodeTitle;
-                
-                objLock.SetActive(false);
-                
                 imageInfo.sprite = spriteUnlock;
-                
             }
             else { // 잠김 상태
-                textTitle.gameObject.SetActive(false);
-                objLock.SetActive(true);
-                
                 imageInfo.sprite = spriteLock;
             }
-            
+
+            textTitle.text = string.Format("{0}\n<size=22>{1}</size>", epiData.episodeTitle, epiData.episodeSummary);
+
+
             // 구매 상태에 따른 가격 표시 추가
-            if(specialEpisode.purchaseState == PurchaseState.None) {
+            if (specialEpisode.purchaseState == PurchaseState.None) {
                 groupPrice.SetActive(true);
                 textPrice.text = specialEpisode.priceStarPlaySale.ToString();
                 playPrice = specialEpisode.priceStarPlaySale;

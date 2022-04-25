@@ -131,7 +131,6 @@ namespace PIERStory {
         public const string SIGNAL_EPISODE_RESET = "EpisodeReset";
         
         public const string SIGNAL_LANGUAGE = "language";
-        public const string SIGNAL_DATA_MANAGE = "dataManage";
         public const string SIGNAL_COUPON = "coupon";
         
         
@@ -172,6 +171,7 @@ namespace PIERStory {
         public const string POPUP_SPECIAL_HINT = "SpecialHint";
 
         public const string POPUP_COIN_STAR_HISTORY = "CoinStarHistory";
+        public const string POPUP_DATA_MANAGER = "DataManager";
 
         #endregion
 

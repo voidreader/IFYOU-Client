@@ -239,8 +239,10 @@ namespace PIERStory {
         /// </summary>
         public void OnClickDataManage()
         {
+            PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_DATA_MANAGER);
             Debug.Log(">> OnClickDataManage");
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_DATA_MANAGE, string.Empty);
+
+            PopupManager.main.ShowPopup(p, true);
         }
 
         /// <summary>

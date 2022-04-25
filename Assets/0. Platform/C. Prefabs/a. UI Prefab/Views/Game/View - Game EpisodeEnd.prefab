@@ -531,7 +531,7 @@ MonoBehaviour:
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 1
+      Enabled: 0
       AnimationType: 0
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -700,7 +700,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.5
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -726,11 +726,11 @@ MonoBehaviour:
       FromValue: 1
       ToValue: 1
       CurrentValue: 0
-      Enabled: 0
+      Enabled: 1
       StartAlpha: 1
-      FromReferenceValue: 0
-      ToReferenceValue: 0
-      FromCustomValue: 1
+      FromReferenceValue: 2
+      ToReferenceValue: 2
+      FromCustomValue: 0
       ToCustomValue: 1
       FromOffset: 0
       ToOffset: 0
@@ -801,7 +801,7 @@ MonoBehaviour:
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 1
+      Enabled: 0
       AnimationType: 1
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -998,10 +998,10 @@ MonoBehaviour:
       CurrentValue: 0
       Enabled: 0
       StartAlpha: 1
-      FromReferenceValue: 0
-      ToReferenceValue: 0
+      FromReferenceValue: 2
+      ToReferenceValue: 2
       FromCustomValue: 1
-      ToCustomValue: 1
+      ToCustomValue: 0
       FromOffset: 0
       ToOffset: 0
 --- !u!114 &8561084225737851890
@@ -1042,6 +1042,11 @@ MonoBehaviour:
     projectProgress: 0
     isPlaying: 0
     genre: 
+    serialDay: 
+    isSerial: 0
+    listSerialDays: []
+    passPrice: 0
+    passDiscount: 0.1
   episodeImage: {fileID: 669336049437141916}
   episodeEndControls: {fileID: 280537779323609733}
 --- !u!1 &8657830054245747050

@@ -172,8 +172,8 @@ namespace PIERStory
             if (Application.isEditor)
                 Application.runInBackground = true;
 
-            // 프레임레이트 45으로 설정 (iOS는 기본값이 30이라 애니메이션이 예쁘지 않음)
-            Application.targetFrameRate = 45;
+            // 프레임레이트 설정 (iOS는 기본값이 30이라 애니메이션이 예쁘지 않음)
+            Application.targetFrameRate = 50;
             safeArea = Screen.safeArea;
             Debug.Log("safeArea : " + safeArea.ToString());
 
@@ -2458,6 +2458,8 @@ namespace PIERStory
                 Debug.LogError("No Premium Pass popup");
                 return;
             }
+            
+            ShowNetworkLoading(true);
             
             p.Data.targetData = __projectID; // 대상 스토리의 프로젝트ID를 넘겨줘서 오픈시킨다. 
             

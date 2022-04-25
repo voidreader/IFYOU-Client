@@ -691,12 +691,24 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnVisibleCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnVisibleCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 7593154706087426573}
+          m_TargetAssemblyTypeName: PIERStory.PopupPass, Assembly-CSharp
+          m_MethodName: OnCompleteOverlayShow
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnHideCallback:
     Enabled: 0
     EventName: OnHideCallback
@@ -1693,18 +1705,15 @@ MonoBehaviour:
       playedSceneCount: 0
       sceneProgressorValue: 0
       episodeGalleryImageProgressValue: 0
-      squareImageURL: 
-      squareImageKey: 
       popupImageURL: 
       popupImageKey: 
       episodeState: 0
       purchaseState: 0
-      OneTimePlayable: 0
       priceStarPlaySale: 0
       priceStarPlay: 0
-      currencyOneTime: 
       currencyStarPlay: 
       priceOneTime: 0
+      unlockStyle: 
       isUnlock: 0
       isSerial: 0
     imageURL: 

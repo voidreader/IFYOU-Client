@@ -32,6 +32,8 @@ namespace PIERStory
         public static Action<JsonData, ProfileItemElement> OnStickerSetting = null; // 스티커 화면에 띄우기 
         public static Action<JsonData, ProfileItemElement> OnBubbleSetting = null;  // 말풍선 
 
+        public static Action OnPassPurchase = null;
+
         public static bool loadComplete = false;
         
         
@@ -125,6 +127,7 @@ namespace PIERStory
             OnBubbleSetting = CreateBubbleElement;
             
             OnInActiveInteractable = ActiveInteractable;
+            OnPassPurchase = SetPremiumPassObject;
         }
 
         private void Start()
@@ -470,6 +473,18 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobbyDeco", string.Empty);
         }
         
+        
+        /// <summary>
+        /// 프리미엄 패스 관련 오브젝트 설정 
+        /// </summary>
+        void SetPremiumPassObject() {
+            if(!this.gameObject.activeSelf)
+                return;
+                
+            premiumpassButton.SetActive(!UserManager.main.HasProjectFreepass());
+            premiumpassBadge.SetActive(UserManager.main.HasProjectFreepass());
+        }
+        
 
         /// <summary>
         /// 로비 꾸며놓은거 자세히 보기
@@ -485,8 +500,7 @@ namespace PIERStory
             }
             else
             {
-                premiumpassButton.SetActive(!UserManager.main.HasProjectFreepass());
-                premiumpassBadge.SetActive(UserManager.main.HasProjectFreepass());
+                SetPremiumPassObject();
                 showDetailIcon.sprite = spriteIconEyeOpen;
                 mainContainer.Show();
             }
@@ -675,8 +689,7 @@ namespace PIERStory
 
             currencyElements.Clear();
 
-            premiumpassButton.SetActive(!UserManager.main.HasProjectFreepass());
-            premiumpassBadge.SetActive(UserManager.main.HasProjectFreepass());
+            SetPremiumPassObject();
             //showDetailButton.SetActive(true);
 
             foreach(GameModelCtrl models in liveModels)
@@ -690,6 +703,8 @@ namespace PIERStory
 
             ViewCommonTop.OnBackAction = null;
         }
+        
+        
 
 
         /// <summary>

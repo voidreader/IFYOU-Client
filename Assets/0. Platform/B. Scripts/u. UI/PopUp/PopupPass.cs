@@ -61,6 +61,10 @@ namespace PIERStory {
                 textTimer.text = GetDiffTime();
         }
         
+        public void OnCompleteOverlayShow() {
+            SystemManager.HideNetworkLoading();
+        }
+        
         void InitPremiumPass() {
             
             normnalTitle.SetActive(false);

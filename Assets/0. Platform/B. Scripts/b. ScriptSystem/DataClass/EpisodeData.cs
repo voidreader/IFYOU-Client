@@ -239,7 +239,7 @@ namespace PIERStory {
             // * purchaseState 정한다. 
             if (UserManager.main.CheckPurchaseEpisode(episodeID, ref purchaseData))
             {
-                Debug.Log(JsonMapper.ToStringUnicode(purchaseData));
+                // Debug.Log(JsonMapper.ToStringUnicode(purchaseData));
                 
                 if(purchaseData["purchase_type"].ToString() == "Permanent")
                 {

@@ -37,7 +37,7 @@ namespace PIERStory
         /// 패키지 초기화
         /// </summary>
         /// <param name="__productID"></param>        
-        public void InitPackage(string __productID) {
+        public void InitPackage(string __productID, JsonData __productMasterJSON) {
             this.gameObject.SetActive(true);
             
             soldOut.SetActive(false);
@@ -56,7 +56,8 @@ namespace PIERStory
             }
             
             // 게임 Product 정보 
-            productMasterJSON = BillingManager.main.GetGameProductItemMasterInfo(productID);
+            productMasterJSON = __productMasterJSON;
+            
             if(productMasterJSON != null) {
                 productMasterID = productMasterJSON["product_master_id"].ToString(); // master_id
    
@@ -79,7 +80,7 @@ namespace PIERStory
                 // 구매횟수가 maxCount 이상이면 솔드아웃 처리 
                 if(maxCount <= currentPurchaseCount) {
                     soldOut.SetActive(true);
-            }
+                }
             }
             
             

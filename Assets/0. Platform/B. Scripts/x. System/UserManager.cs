@@ -26,7 +26,7 @@ namespace PIERStory
         [HideInInspector] public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)
         [HideInInspector] public JsonData notReceivedMailJson = null;     // 미수신 메일
         [HideInInspector] public JsonData userProfile = null;               // 유저 프로필 정보
-        [HideInInspector] public JsonData userProfileCurrency = null;       // 유저 프로필 재화 정보
+        
         [HideInInspector] public JsonData userAttendanceList = null;        // 유저 출석 보상 리스트
         
         [HideInInspector] public JsonData userActiveTimeDeal = null; // 유저 활성화 타임딜 목록 
@@ -38,14 +38,14 @@ namespace PIERStory
         public List<NicknameIndicator> ListNicknameIndicators = new List<NicknameIndicator>(); // 닉네임 표시기
         
         
-        [HideInInspector] public Queue<JsonData> OpenSideStories = new Queue<JsonData>();     // 해금된 사이드 에피소드 목록
+        
         [HideInInspector] public Queue<JsonData> CompleteMissions = new Queue<JsonData>();      // 완료된 미션 목록
 
 
         #region Actions
         public static Action OnCleanUserEpisodeProgress; // 유저 에피소드 씬 진척도 클리어 콜백 
         public static Action<bool> OnRequestEpisodePurchase = null; // 에피소드 구매 콜백처리
-        public static Action OnRequestEpisodeReset = null; // 에피소드 리셋 콜백처리
+        
         public static Action OnFreepassPurchase = null; // 프리패스 구매 콜백처리 
 
         public static Action<int> OnRefreshUnreadMailCount = null; // 미수신 메일 개수 Refresh Action
@@ -59,12 +59,9 @@ namespace PIERStory
         [SerializeField]
         List<string> DebugUserIllusts = new List<string>();
 
-        [SerializeField]
-        List<string> DebugProjectChallenges = new List<string>();
+        
 
 
-        [SerializeField]
-        List<string> DebugProjectFavors = new List<string>();
         
 
         #endregion
@@ -507,12 +504,8 @@ namespace PIERStory
                 return;
 
             DebugProjectIllusts.Clear();
-            DebugProjectChallenges.Clear();
-            DebugProjectFavors.Clear();
             
 
-            for (int i = 0; i < GetNodeProjectMissions().Count; i++)
-                DebugProjectChallenges.Add(JsonMapper.ToStringUnicode(GetNodeProjectMissions()[i]));
         }
         
         #region 작품 능력치 
@@ -1844,8 +1837,23 @@ namespace PIERStory
             // 모든 팝업 비활성화 
             PopupManager.main.HideActivePopup();
             
-            // 콜백 처리 
+            // * 프리미엄 패스는 구매하면 여기저기 갱신해야될 화면이 많다.. 
+            
+            // 콜백 처리 (상점)
             OnFreepassPurchase?.Invoke();
+            
+            // 게임플레이 도중에 구매했다면, EpisodeEndControls 갱신 
+            if(GameManager.main != null) {
+                EpisodeEndControls.OnPassPurchase?.Invoke();
+            }
+            
+            // 게임플레이 도중이 아니라면, ViewStory 쪽 갱신 
+            if(LobbyManager.main != null) {
+                StoryLobbyMain.OnPassPurchase?.Invoke();
+                ViewStoryLobby.OnPassPurchase?.Invoke();
+                ViewMain.OnRefreshShopNewSign?.Invoke();
+            }
+            
 
             // 이프유업적 프리패스 구매
             NetworkLoader.main.RequestIFYOUAchievement(15, SystemManager.GetJsonNodeInt(result, "project_id"));
@@ -2031,23 +2039,8 @@ namespace PIERStory
             JsonData result = JsonMapper.ToObject(response.DataAsText);
             Debug.Log("### CallbackUpdateTimeDeal : "  + JsonMapper.ToStringUnicode(result));
             
-            // 새로운 타임딜 없음 
-            if(!SystemManager.GetJsonNodeBool(result, "hasNew")) {
-                return;
-            }
-            
-            if(!result.ContainsKey("timedeal"))
-                return;
-            
-            
-            
-            // 타임딜 새로 나왔다..!!!
-            // add 해줘야되서 null 인경우 배열하나 만들어준다. 
-            if(userActiveTimeDeal == null) {
-                userActiveTimeDeal = JsonMapper.ToObject("[]");
-            }
-            
-            userActiveTimeDeal.Add(result["timedeal"]); // 리스트에 넣어준다. 
+            userActiveTimeDeal = result["timedeal"];
+    
             EpisodeEndControls.OnRefreshUpdateTimeDeal?.Invoke(); // EpisodeEndControl에게 알려준다. 
             
             
@@ -3134,6 +3127,10 @@ namespace PIERStory
                 return;
                 
             userActiveTimeDeal = JsonMapper.ToObject(response.DataAsText);
+            
+            if(LobbyManager.main != null) {
+                ViewMain.OnRefreshShopNewSign?.Invoke();
+            }
         }
         
         /// <summary>
@@ -3153,6 +3150,53 @@ namespace PIERStory
             }
             
             return null;
+        }
+        
+        /// <summary>
+        /// 유효한 타임딜을 갖고 있나?
+        /// </summary>
+        /// <returns></returns>
+        public bool HasActiveTimeDeal() {
+            
+            if(userActiveTimeDeal == null)
+                return false;
+                
+            string projectID = string.Empty;
+            long endTick = 0;
+            TimeSpan timeDiff;
+            DateTime endDate;
+        
+            Debug.Log(">> HasActiveTimeDeal Count :: " + userActiveTimeDeal.Count);
+                
+            // for문 
+            for(int i=0; i<userActiveTimeDeal.Count;i++) {
+                projectID = SystemManager.GetJsonNodeString(userActiveTimeDeal[i], "project_id");
+                endTick = long.Parse(SystemManager.GetJsonNodeString(userActiveTimeDeal[i], "end_date_tick"));
+                
+                if(string.IsNullOrEmpty(projectID))
+                    continue;
+                    
+                if(HasProjectFreepass(projectID)) { // 프리미엄 패스 보유중이라면 continue
+                    Debug.Log(string.Format("alread purchased Timedeal [{0}]", projectID));
+                    continue;
+                }
+                
+                endTick = SystemConst.ConvertServerTimeTick(endTick);
+                endDate = new DateTime(endTick);
+                timeDiff = endDate - DateTime.UtcNow;
+                
+                // 시간 오버했어도 continue
+                if(timeDiff.Ticks <= 0) {
+                    Debug.Log(string.Format("Timeover Timedeal [{0}]", projectID));
+                    continue;
+                }
+                    
+                // 여기까지 통과했으면 return true;
+                return true;
+                
+            }
+            
+            return false;
         }
         
         #endregion

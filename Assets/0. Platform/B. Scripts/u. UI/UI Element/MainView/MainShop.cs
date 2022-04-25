@@ -204,7 +204,7 @@ namespace PIERStory {
                         continue;
                     }
                     
-                    listNormalTabPackages[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"));
+                    listNormalTabPackages[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"), masterData);
    
                 }
                 
@@ -328,7 +328,7 @@ namespace PIERStory {
                     }
                         
                     
-                    listEventPackProducts[eventPackIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"));
+                    listEventPackProducts[eventPackIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"), masterData);
                     hasEventPack = true;
    
                 }
@@ -346,7 +346,7 @@ namespace PIERStory {
                         continue;
                     }
                     
-                    listGeneralPackProducts[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"));
+                    listGeneralPackProducts[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"), masterData);
                 }
             } // ? end of for 
             

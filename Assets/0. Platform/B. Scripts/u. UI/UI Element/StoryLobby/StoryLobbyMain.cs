@@ -20,7 +20,9 @@ namespace PIERStory {
         public static Action CallbackReduceWaitingTimeFail = null; // 시간감소 콜백(실패)
         public static Action<EpisodeData> SuperUserFlowEpisodeStart = null; // 플로우맵 슈퍼유저 에피소드 시작하기 
         public static Action OnInitializeContentGroup = null;
-        public static Action OnEpisodePlay = null;
+        public static Action OnEpisodePlay = null; 
+        
+        public static Action OnPassPurchase = null;  // 프리미엄패스 구매 콜백 
         
         
         public StoryData currentStoryData;
@@ -121,7 +123,7 @@ namespace PIERStory {
             // 슈퍼유저 관련 처리 
             SuperUserFlowEpisodeStart = SuperUserEpisodeStart;
             
-            UserManager.OnFreepassPurchase = PostPurchasePremiumPass;
+            OnPassPurchase = PostPurchasePremiumPass;
         }
         
         protected virtual void Update() {

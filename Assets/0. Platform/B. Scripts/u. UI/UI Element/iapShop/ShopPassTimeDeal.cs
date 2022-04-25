@@ -130,6 +130,11 @@ namespace PIERStory {
         
         void TimeOver() {
             this.gameObject.SetActive(true); // 타임딜 종료되면 비활성화 하기 
+            
+            // 네비게이션 리프레시 
+            if(LobbyManager.main != null) {
+                ViewMain.OnRefreshShopNewSign?.Invoke();
+            }
         }
         
         public void OnClick() {

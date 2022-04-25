@@ -26,6 +26,7 @@ namespace PIERStory {
         
         private void Start() {
             OnRefreshUpdateTimeDeal = SetPremiumPassObject; // Action 설정 
+            OnPassPurchase = PostPurchasePremiumPass; 
         }
 
         protected override void Update() {
@@ -186,6 +187,9 @@ namespace PIERStory {
         /// </summary>
         void SetPremiumPassObject() {
             
+            if(!this.gameObject.activeSelf)
+                return;
+                        
             // 프리미엄 패스 오브젝트 추가 
             passButton.gameObject.SetActive(false);
             passBadge.gameObject.SetActive(false);
@@ -238,5 +242,19 @@ namespace PIERStory {
             // 패스 구매 콜백. 
             UserManager.OnFreepassPurchase = this.InitStoryLobbyControls;
         }
+        
+        
+        /// <summary>
+        /// 프리미엄 패스 구매 후 호출 
+        /// </summary>
+        void PostPurchasePremiumPass() {
+            Debug.Log(">>> PostPurchasePremiumPass <<<");
+            
+            if(!this.gameObject.activeSelf)
+                return;
+                
+            this.InitStoryLobbyControls();
+        }        
+        
     }
 }

@@ -15,7 +15,10 @@ namespace PIERStory {
         public static Action OnMoveStarShop = null;
         public static Action OnRefreshViewMain = null;
         public static Action OnRefreshProfileNewSign = null;
+        public static Action OnRefreshShopNewSign = null;
         public static Action OnReturnLobby = null;
+        
+        
         
         [Header("로비")]
         public IFYouLobby lobby;
@@ -38,6 +41,9 @@ namespace PIERStory {
         public UIContainer profileContainer;
         public UIToggle profileToggle;
         public MainToggleNavigation profileNavigation;
+        
+        [Header("상점")]
+        public GameObject shopNewSign;
 
         UIContainer currentShowContainer;
 
@@ -57,6 +63,8 @@ namespace PIERStory {
             currentShowContainer = lobbyContainer;
 
             OnRefreshProfileNewSign = EnableNewAchievementSign;
+            OnRefreshShopNewSign = RefreshShopNewSign;
+            
             OnRefreshViewMain = RefreshMainView;
             OnReturnLobby = ReturnLobby;
         }
@@ -124,6 +132,8 @@ namespace PIERStory {
 
             base.OnStartView();
             
+            Debug.Log("<color=cyan>ViewMain OnStartView </color>");
+            
             // ViewMain 돌아왔을때 스토리매니저 변수 초기화
             StoryManager.main.CurrentProjectID = string.Empty;
             StoryManager.main.CurrentProjectTitle = string.Empty;
@@ -136,6 +146,8 @@ namespace PIERStory {
             
             // 신규 업적이 있을때 표시
             EnableNewAchievementSign();
+            
+            RefreshShopNewSign();
 
         }
         
@@ -298,6 +310,12 @@ namespace PIERStory {
         void EnableNewAchievementSign()
         {
             achievementNewSign.SetActive(UserManager.main.CountClearAchievement() > 0);
+        }
+        
+        void RefreshShopNewSign() {
+            Debug.Log("RefreshShopNewSign");
+            
+            shopNewSign.SetActive(UserManager.main.HasActiveTimeDeal());
         }
 
         public void OnClickProfileTab()

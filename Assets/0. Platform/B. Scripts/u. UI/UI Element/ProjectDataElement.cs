@@ -32,7 +32,7 @@ namespace PIERStory
         {
             ES3.DeleteDirectory(Application.persistentDataPath + "/" + storyData.projectID);
 
-            ViewDataManager.OnRequestCalcAllProejctDataSize?.Invoke();
+            PopupDataManager.OnRequestCalcAllProejctDataSize?.Invoke();
 
             Destroy(gameObject);
         }

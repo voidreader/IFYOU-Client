@@ -28,19 +28,19 @@ namespace PIERStory
             {
                 case ">=":
                     __operator = "≥";
-                    radioButton.SetActive(value >= data.currentValue);
+                    radioButton.SetActive(value <= data.currentValue);
                     break;
                 case "<=":
                     __operator = "≤";
-                    radioButton.SetActive(value <= data.currentValue);
+                    radioButton.SetActive(value >= data.currentValue);
                     break;
                 case ">":
                     __operator = __oper;
-                    radioButton.SetActive(value > data.currentValue);
+                    radioButton.SetActive(value < data.currentValue);
                     break;
                 case "<":
                     __operator = __oper;
-                    radioButton.SetActive(value < data.currentValue);
+                    radioButton.SetActive(value > data.currentValue);
                     break;
                 case "=":
                     __operator = __oper;
@@ -49,7 +49,7 @@ namespace PIERStory
             }
 
             float percent = (float)value / (float)data.maxValue;
-            abilityPercent.text = string.Format("{0}    {1}%", __operator, Math.Truncate(percent * 100f));
+            abilityPercent.text = string.Format("{0}    {1}%", __operator, Math.Round(percent * 100f, 1));
         }
     }
 }

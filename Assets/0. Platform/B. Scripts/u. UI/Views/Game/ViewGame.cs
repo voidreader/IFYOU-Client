@@ -483,9 +483,8 @@ namespace PIERStory
             }
 
             // 선택지 리스트 중 힌트 포함하고 있는지 체크
-            /*
             bool hasSelectionHint = false;
-            for (int i=0;i<ListAppearSelection.Count;i++)
+            for (int i = 0; i < ListAppearSelection.Count; i++)
             {
                 if (ListAppearSelection[i].hasSelectionHint)
                 {
@@ -496,22 +495,24 @@ namespace PIERStory
 
             if(hasSelectionHint)
             {
-
+                for (int i = 0; i < ListAppearSelection.Count; i++)
+                    ListAppearSelection[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(ListAppearSelection[i].GetComponent<RectTransform>().anchoredPosition.x - 20, ListAppearSelection[i].GetComponent<RectTransform>().anchoredPosition.y);
             }
-            */
 
+
+            // 구매할 것이 있는지 체크
             bool hasPurchaseSelection = false;
 
             for (int i = 0; i < ListAppearSelection.Count; i++)
             {
-                if (ListAppearSelection[i].isPurchaseSelection)
+                if (ListAppearSelection[i].isPurchaseSelection || !ListAppearSelection[i].isPurchasedHint)
                 {
                     hasPurchaseSelection = true;
                     break;
                 }
             }
 
-            // 구매해야하는 선택지가 있다면
+            // 구매해야하는 선택지 혹은 선택지 힌트가 있다면
             if (hasPurchaseSelection)
             {
                 Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);

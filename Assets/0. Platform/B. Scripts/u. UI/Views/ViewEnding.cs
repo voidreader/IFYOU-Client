@@ -22,6 +22,7 @@ namespace PIERStory
         public Image collectionGauge;
 
         public EndingElement[] endingElements;
+        public GameObject comingSoonTexts;
 
         [Space(20)][Header("선택지 관련")]
         public Transform currentContent;
@@ -72,6 +73,8 @@ namespace PIERStory
                     endingElementIndex++;
                 }
             }
+
+            comingSoonTexts.SetActive(endingElementIndex == 0);
 
             #region 현재회차 선택지 보기
 

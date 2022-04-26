@@ -63,7 +63,7 @@ namespace PIERStory
 
         EndingHintData GetEndingHintData()
         {
-            foreach(EndingHintData hintData in StoryManager.main.listEndingHint)
+            foreach(EndingHintData hintData in StoryManager.main.endingHintList)
             {
                 if (hintData.endingId == Data.contentEpisode.episodeID)
                     return hintData;

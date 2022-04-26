@@ -1,38 +1,42 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
+
+using TMPro;
 
 namespace PIERStory
 {
     public class PopupSelectionHint : PopupBase
     {
         [Space(15)]
-        string targetSceneId = string.Empty;
-        List<EndingHintData> endingList = new List<EndingHintData>();
+        public GameObject selectionHintElementPrefab;
+        public Transform prefabParent;
+
 
         public override void Show()
         {
+            if (isShow)
+                return;
+
             base.Show();
 
-            targetSceneId = Data.contentValue.ToString();
-            FillEndingList();
-        }
+            GameObject g = null;
+            TextMeshProUGUI[] texts = null;
 
-        void FillEndingList()
-        {
-            endingList.Clear();
-
-            foreach (EndingHintData hintdata in StoryManager.main.listEndingHint)
+            foreach(EndingHintData hintData in StoryManager.main.selectedEndingHintList)
             {
-                for (int i = 0; i < hintdata.unlockScenes.Length; i++)
-                {
-                    // 타겟 scene Id가 힌트 scene id에 포함되어 있으면 list에 포함시킨다
-                    if (hintdata.unlockScenes[i] == targetSceneId)
-                    {
-                        endingList.Add(hintdata);
-                        break;
-                    }
-                }
+                g = Instantiate(selectionHintElementPrefab, prefabParent);
+                texts = g.GetComponentsInChildren<TextMeshProUGUI>();
+
+                if (hintData.isHidden)
+                    g.GetComponent<Image>().sprite = GameManager.main.spriteSelectionUnlockedBase;
+                else
+                    g.GetComponent<Image>().sprite = GameManager.main.spriteSelectionNormalBase;
+
+                texts[0].text = hintData.endingType;
+                texts[1].text = hintData.endingTitle;
             }
+
+
         }
     }
 }

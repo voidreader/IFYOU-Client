@@ -31,6 +31,7 @@ namespace PIERStory
         public const string POPUP_GAME_ABILITY = "GameAbility";
 
         public const string POPUP_GAME_OPTION = "GameOption";
+        public const string POPUP_SELECTION_HINT = "SelectionHint";
 
 
         public const string VOICE_VOLUME = "voiceVolume";

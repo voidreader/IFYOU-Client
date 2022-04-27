@@ -14,6 +14,7 @@ namespace PIERStory
 
         public string endingTitle = string.Empty;
         public string endingType = string.Empty;
+        public bool isHidden = false;
         public EpisodeData dependEpisodeData = null;
 
         string scenes = string.Empty;
@@ -68,8 +69,9 @@ namespace PIERStory
                     continue;
 
                 endingTitle = epi.episodeTitle;
+                isHidden = epi.endingType == LobbyConst.COL_HIDDEN;
 
-                if(epi.endingType == LobbyConst.COL_HIDDEN)
+                if (epi.endingType == LobbyConst.COL_HIDDEN)
                     endingType = SystemManager.GetLocalizedText("5087");
                 else
                     endingType = SystemManager.GetLocalizedText("5088");

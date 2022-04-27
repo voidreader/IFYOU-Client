@@ -78,10 +78,10 @@ namespace PIERStory
 
                 if (isMinicut)
                     illustImage.OnDownloadImage = MinicutResize;
-                else
-                    illustImage.OnDownloadImage = IllustSetNativeSize;
+                //else
+                //    illustImage.OnDownloadImage = IllustSetNativeSize;
 
-                illustImage.SetDownloadURL(SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_KEY));
+                illustImage.SetDownloadURL(SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_KEY), true);
             }
             else
             {
@@ -299,8 +299,8 @@ namespace PIERStory
         /// </summary>
         public void RequestShareBonus() {
             JsonData sending = new JsonData();
-            sending["func"] = "requestGalleryShareBonus";
-            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            sending[CommonConst.FUNC] = "requestGalleryShareBonus";
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
             sending["illust_type"] = SystemManager.GetJsonNodeString(userGalleryData, "illust_type");
             sending["illust_id"] = SystemManager.GetJsonNodeInt(userGalleryData, "illust_id");
             

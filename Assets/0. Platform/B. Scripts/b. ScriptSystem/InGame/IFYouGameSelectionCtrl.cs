@@ -32,6 +32,16 @@ namespace PIERStory {
         public static bool isChooseCompleted = false; // 선택 완료 (다른거 누를 수 없도록 막는다)
         public bool isPurchaseSelection = false;     // 구매해야 하는 선택지인가요?
         public bool hasSelectionHint = false;           // 선택지 힌트가 연결되어 있나요?
+        public bool isPurchasedHint
+        {
+            get
+            {
+                if (!hasSelectionHint)
+                    return true;
+
+                return hasSelectionHint && UserManager.main.IsPurchaseSelectionHint(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no);
+            }
+        }
 
         #region const & readonly
         static readonly Vector2 originSizeDelta = new Vector2(550, 90); // 기본 크기 
@@ -91,6 +101,10 @@ namespace PIERStory {
             Debug.Log(string.Format("<color=yellow>SetOtherSelectionState [{0}]/[{1}]</color>", __selected.selectionText, __state.ToString()));
 
             for (int i = 0; i < ListStacks.Count; i++) {
+
+                // 선택지 리스트를 가지고 있는 경우 활성화 조절
+                if (ListStacks[i].hasSelectionHint)
+                    ListStacks[i].selectionHint.SetActive(__state == SelectionState.Idle);
 
                 if (ListStacks[i] == __selected) {
                     Debug.Log("SetOtherSelectionState pass itself");
@@ -189,6 +203,10 @@ namespace PIERStory {
             if (string.IsNullOrEmpty(targetSceneID))
                 SystemManager.ShowMessageAlert("이동해야 하는 사건ID 정보 없음");
 
+            // 선택지 힌트 설정
+            SetSelectionHintState();
+
+
             // 위치 잡기
             InitPosition();
 
@@ -199,25 +217,10 @@ namespace PIERStory {
         }
 
         /// <summary>
-        /// 위치잡기 
-        /// </summary>
-        void InitPosition() {
-
-            // 위치잡기 
-            targetPosY = originPosY + (selectionIndex * offsetPosY); // 타겟 위치 
-            //appearPosY = targetPosY - 100; // 등장 위치 
-            appearPosY = targetPosY + 100; // 등장 위치 
-
-            // 시작 위치 지정하고.
-            this.transform.localPosition = new Vector2(0, appearPosY);
-        }
-
-
-        /// <summary>
         ///  초기화 
         /// </summary>
-        void InitSelection() {
-
+        void InitSelection()
+        {
             isOneOfSelectionPointerDown = false;
 
             this.transform.localScale = Vector3.one; // 스케일 
@@ -239,10 +242,69 @@ namespace PIERStory {
             canvasGroup.alpha = 0; // 알파값 초기화 
             imageBar.fillAmount = fillAmount;
 
-            
 
             ListStacks.Add(this);
         }
+
+
+        void SetLockStatus()
+        {
+            // 조건 컬럼에 값이 없으면 그냥 끝!
+            if (string.IsNullOrEmpty(requisite))
+            {
+                lockIcon.gameObject.SetActive(false);
+                return;
+            }
+
+            // imageSelection.sprite = GameSpriteHolder.main.spriteSelectionNormal
+
+            // 잠금 여부 
+            isLock = !ScriptExpressionParser.main.ParseScriptExpression(requisite);
+            lockIcon.gameObject.SetActive(true);
+
+            // 잠금여부에 따른 스프라이트 변경
+            if (isLock)
+            {
+                imageSelection.sprite = GameManager.main.spriteSelectionLockedBase;
+                lockIcon.sprite = GameManager.main.spriteSelectionLockIcon;
+                // textSelection.text = string.Empty; // 잠긴 선택지에서는 텍스트 보이지 않음 
+            }
+            else
+            {
+                imageSelection.sprite = GameManager.main.spriteSelectionUnlockedBase;
+                lockIcon.sprite = GameManager.main.spriteSelectionUnlockIcon;
+            }
+        }
+
+
+        void SetSelectionHintState()
+        {
+            hasSelectionHint = SelectionHintPrice() > 0;
+            selectionHint.SetActive(hasSelectionHint);
+
+            // 선택지 힌트가 없으면 함수 종료!
+            if (!hasSelectionHint)
+                return;
+
+            hintPrice.text = string.Format("{0}", SelectionHintPrice());
+            coinBox.SetActive(!UserManager.main.IsPurchaseSelectionHint(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no));
+        }
+
+
+        /// <summary>
+        /// 위치잡기 
+        /// </summary>
+        void InitPosition() {
+
+            // 위치잡기 
+            targetPosY = originPosY + (selectionIndex * offsetPosY); // 타겟 위치 
+            //appearPosY = targetPosY - 100; // 등장 위치 
+            appearPosY = targetPosY + 100; // 등장 위치 
+
+            // 시작 위치 지정하고.
+            transform.localPosition = new Vector2(0, appearPosY);
+        }
+        
 
         #region 포인터 다운, 업 
 
@@ -409,35 +471,7 @@ namespace PIERStory {
             }
         } // ? end of SetState
 
-        void SetLockStatus() {
-
-            // 조건 컬럼에 값이 없으면 그냥 끝!
-            if (string.IsNullOrEmpty(requisite))
-            {
-                lockIcon.gameObject.SetActive(false);
-                return;
-            }
-
-            // imageSelection.sprite = GameSpriteHolder.main.spriteSelectionNormal
-
-            // 잠금 여부 
-            isLock = !ScriptExpressionParser.main.ParseScriptExpression(requisite);
-            lockIcon.gameObject.SetActive(true);
-
-            // 잠금여부에 따른 스프라이트 변경
-            if (isLock) {
-                imageSelection.sprite = GameManager.main.spriteSelectionLockedBase;
-                lockIcon.sprite = GameManager.main.spriteSelectionLockIcon;
-                // textSelection.text = string.Empty; // 잠긴 선택지에서는 텍스트 보이지 않음 
-            }
-            else {
-                imageSelection.sprite = GameManager.main.spriteSelectionUnlockedBase;
-                lockIcon.sprite = GameManager.main.spriteSelectionUnlockIcon;
-            }
-
-        }
-
-
+        
         /// <summary>
         /// 선택 완료.
         /// </summary>
@@ -516,8 +550,8 @@ namespace PIERStory {
         void SelectionSelected()
         {
             // 트윈 후, 나머지 퇴장처리 
-            this.transform.DOKill();
-            this.transform.DOScale(1.1f, 0.2f).SetLoops(2, LoopType.Yoyo).OnComplete(() =>
+            transform.DOKill();
+            transform.DOScale(1.1f, 0.2f).SetLoops(2, LoopType.Yoyo).OnComplete(() =>
             {
 
                 Debug.Log("Select State! Set Others to Out");
@@ -535,7 +569,6 @@ namespace PIERStory {
                 ChooseSelection(); // 선택완료처리
             });
         }
-
 
 
         void CallbackPurchaseSelection(HTTPRequest req, HTTPResponse res)
@@ -566,11 +599,99 @@ namespace PIERStory {
             SelectionSelected();
         }
 
+
+        /// <summary>
+        /// 선택지 힌트 클릭
+        /// </summary>
         public void OnClickSelectionHint()
         {
             // 힌트를 구매한적 있는지 체크하고, 구매한 적 있으면 바로 팝업 띄워주고
-            // 구매 기록이 없다면 통신 완료 후, 선택지 힌트 팝업을 띄워주는데, 그 전에 코인 갯수를 체크해서 부족하면 상점 
+            if (UserManager.main.IsPurchaseSelectionHint(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no))
+            {
+                ShowSelectionHintPopup();
+                return;
+            }
+
+            // 구매 기록이 없다면 통신 완료 후, 선택지 힌트 팝업을 띄워주는데, 그 전에 코인 갯수를 체크해서 부족하면 상점
+            if(!UserManager.main.CheckCoinProperty(SelectionHintPrice()))
+            {
+                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteCoin, SelectionHintPrice() - UserManager.main.coin);
+                return;
+            }
+
+            UserManager.main.RequestSelectionHint(scriptRow.selection_group, scriptRow.selection_no, CallbackPurchaseSelectionHint);
+            selectionHint.GetComponent<Button>().interactable = false;
         }
-        
+
+
+        void ShowSelectionHintPopup()
+        {
+            StoryManager.main.selectedEndingHintList.Clear();
+
+            // 선택된 엔딩힌트 리스트 쌓기
+            foreach (EndingHintData hintData in StoryManager.main.endingHintList)
+            {
+                for (int i = 0; i < hintData.unlockScenes.Length; i++)
+                {
+                    if (hintData.unlockScenes[i] == targetSceneID)
+                    {
+                        StoryManager.main.selectedEndingHintList.Add(hintData);
+                        break;
+                    }
+                }
+            }
+
+            PopupBase p = PopupManager.main.GetPopup(GameConst.POPUP_SELECTION_HINT);
+
+            if (p == null)
+            {
+                Debug.LogError("선택지 힌트 팝업이 없음!");
+                return;
+            }
+
+            p.Data.SetLabelsTexts(scriptRow.script_data);
+            PopupManager.main.ShowPopup(p, false);
+        }
+
+        int SelectionHintPrice()
+        {
+            int totalPrice = 0;
+
+            foreach (EndingHintData hintData in StoryManager.main.endingHintList)
+            {
+                for (int i = 0; i < hintData.unlockScenes.Length; i++)
+                {
+                    if (hintData.unlockScenes[i] == targetSceneID)
+                    {
+                        totalPrice += hintData.price;
+                        break;
+                    }
+                }
+            }
+
+            return totalPrice;
+        }
+
+
+        void CallbackPurchaseSelectionHint(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackPurchaseSelectionHint");
+                selectionHint.GetComponent<Button>().interactable = true;
+                return;
+            }
+
+            LitJson.JsonData result = LitJson.JsonMapper.ToObject(res.DataAsText);
+
+            // 선택지 힌트 구매목록 갱신
+            UserManager.main.SetSelectionHint(result);
+            UserManager.main.SetBankInfo(result);
+
+            coinBox.SetActive(!UserManager.main.IsPurchaseSelectionHint(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no));
+
+            ShowSelectionHintPopup();
+            selectionHint.GetComponent<Button>().interactable = true;
+        }
     }
 }

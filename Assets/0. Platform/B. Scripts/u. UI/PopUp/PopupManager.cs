@@ -54,6 +54,8 @@ namespace PIERStory {
         [SerializeField] GameObject popupPackDetail;
         [SerializeField] GameObject popupPremiumPass;
         [SerializeField] GameObject popupResource; // 리소스 표현  팝업 
+
+        public GameObject popupSelectionHint;
         [SerializeField] GameObject popupSideAlert;
         [SerializeField] GameObject popupSimpleAlert;
         [SerializeField] GameObject popupSpecialEpisodeBuy; // 스페셜 에피소드 구매 
@@ -434,6 +436,11 @@ namespace PIERStory {
                 DictPopup["PremiumPass"] = popupPremiumPass;
             else 
                 DictPopup.Add("PremiumPass", popupPremiumPass);
+
+            if (DictPopup.ContainsKey(GameConst.POPUP_SELECTION_HINT))
+                DictPopup[GameConst.POPUP_SELECTION_HINT] = popupSelectionHint;
+            else
+                DictPopup.Add(GameConst.POPUP_SELECTION_HINT, popupSelectionHint);
                 
             if(DictPopup.ContainsKey(GameConst.POPUP_SIDE_ALERT)) 
                 DictPopup[GameConst.POPUP_SIDE_ALERT] = popupSideAlert;

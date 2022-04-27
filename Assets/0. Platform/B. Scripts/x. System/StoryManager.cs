@@ -42,11 +42,12 @@ namespace PIERStory
         [HideInInspector] public JsonData EpisodeListJson = null; // 에피소드 리스트 JSON 
         [HideInInspector] public JsonData SideEpisodeListJson = null; // 사이드 에피소드 리스트 JSON 
         
-        public List<EpisodeData> RegularEpisodeList = new List<EpisodeData>(); // chapter(정규)만 따로 빼놓는다.
-        public List<EpisodeData> ReverseRegularEpisodeList = new List<EpisodeData>(); // 정규 에피소드의 역순 
-        public List<EpisodeData> SideEpisodeList = new List<EpisodeData>(); // 사이드 에피소드
-        public List<EpisodeData> ListCurrentProjectEpisodes = new List<EpisodeData>(); // 현재 선택된 혹은 플레이중인 작품의 EpisodeData의 List.
-        public List<EndingHintData> listEndingHint = new List<EndingHintData>();        // 현재 선택된 작품의 엔딩 힌트(선택지 힌트)
+        public List<EpisodeData> RegularEpisodeList = new List<EpisodeData>();          // chapter(정규)만 따로 빼놓는다.
+        public List<EpisodeData> ReverseRegularEpisodeList = new List<EpisodeData>();   // 정규 에피소드의 역순 
+        public List<EpisodeData> SideEpisodeList = new List<EpisodeData>();             // 사이드 에피소드
+        public List<EpisodeData> ListCurrentProjectEpisodes = new List<EpisodeData>();  // 현재 선택된 혹은 플레이중인 작품의 EpisodeData의 List.
+        public List<EndingHintData> endingHintList = new List<EndingHintData>();        // 현재 선택된 작품의 엔딩 힌트(선택지 힌트)
+        public List<EndingHintData> selectedEndingHintList = new List<EndingHintData>();// 선택된 선택지에 엮여있는 선택지 힌트 리스트
         
         [Space]
         [Header("== 에피소드 카운팅 ==")]
@@ -163,7 +164,6 @@ namespace PIERStory
         public static bool playSideEpisode = false;         // speical episode를 플레이했는지
 
 
-        
         public string CurrentProjectID = string.Empty;      // 선택한 프로젝트 ID 
         public string CurrentProjectTitle = string.Empty;   // 선택한 프로젝트 Title 
         public string CurrentEpisodeID = string.Empty;      // 선택한 에피소드 ID 
@@ -680,13 +680,13 @@ namespace PIERStory
                 return;
             }
 
-            listEndingHint = new List<EndingHintData>();
+            endingHintList = new List<EndingHintData>();
             EndingHintData endingHint = null;
 
             for (int i = 0; i < hintData.Count; i++)
             {
                 endingHint = new EndingHintData(hintData[i]);
-                listEndingHint.Add(endingHint);
+                endingHintList.Add(endingHint);
             }
 
         }

@@ -28,7 +28,6 @@ namespace PIERStory
         [HideInInspector] public JsonData userProfile = null;               // 유저 프로필 정보
         
         [HideInInspector] public JsonData userAttendanceList = null;        // 유저 출석 보상 리스트
-        
         [HideInInspector] public JsonData userActiveTimeDeal = null; // 유저 활성화 타임딜 목록 
         
         [SerializeField] string debugBankString = string.Empty;
@@ -36,7 +35,6 @@ namespace PIERStory
         public List<CoinIndicator> ListCoinIndicators = new List<CoinIndicator>(); // 코인 표시기
         public List<GemIndicator> ListGemIndicators = new List<GemIndicator>(); // 젬 표시기
         public List<NicknameIndicator> ListNicknameIndicators = new List<NicknameIndicator>(); // 닉네임 표시기
-        
         
         
         [HideInInspector] public Queue<JsonData> CompleteMissions = new Queue<JsonData>();      // 완료된 미션 목록
@@ -199,9 +197,9 @@ namespace PIERStory
         
 
         const string NODE_SELECTION_PURCHASE = "selectionPurchase";
+        const string NODE_SELECTION_HINT_PURCHASE = "selectionHintPurchase";
 
 
-        
         public const string NODE_USER_ABILITY = "ability"; // 포장된 유저 능력치
         public const string NODE_RAW_STORY_ABILITY = "rawStoryAbility"; // 스토리 누적 능력치 RAW 데이터 
 
@@ -213,9 +211,7 @@ namespace PIERStory
             // System(SystemManager)에 귀속이라 Destory 할 필요없다.
             // 다른 씬에서 넘어온 객체가 있을경우. 
             if (main != null)
-            {
                 return;
-            }
 
             // Singleton
             main = this;
@@ -666,6 +662,62 @@ namespace PIERStory
 
                 // 같은 선택지 그룹 내에서 같은 번호면 구매한적이 있으니 true 반환
                 if (SystemManager.GetJsonNodeInt(selectionPurchaseData[i], GameConst.COL_SELECTION_NO) == __selectionNo)
+                    return true;
+            }
+
+            return false;
+        }
+
+
+        /// <summary>
+        /// 선택지 힌트 요청 및 구매
+        /// </summary>
+        public void RequestSelectionHint(int __selectionGroup, int __selectionNo, OnRequestFinishedDelegate __cb)
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestSelectionHint";
+            sending[CommonConst.COL_USERKEY] = userKey;
+            sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
+            sending[CommonConst.COL_EPISODE_ID] = StoryManager.main.CurrentEpisodeID;
+            sending[GameConst.COL_SELECTION_GROUP] = __selectionGroup;
+            sending[GameConst.COL_SELECTION_NO] = __selectionNo;
+
+            NetworkLoader.main.SendPost(__cb, sending, true);
+        }
+
+        /// <summary>
+        /// 선택지 힌트 구매 목록 갱신
+        /// </summary>
+        public void SetSelectionHint(JsonData __j)
+        {
+            if(!__j.ContainsKey(NODE_SELECTION_HINT_PURCHASE))
+            {
+                Debug.LogError("선택지 힌트 노드가 존재하지 않음!");
+                return;
+            }
+
+            currentStoryJson[NODE_SELECTION_HINT_PURCHASE] = __j[NODE_SELECTION_HINT_PURCHASE];
+        }
+
+        /// <summary>
+        /// 구매한적 있는 선택지 힌트인가요?
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPurchaseSelectionHint(string __episodeId, int __selectionGroup, int __selectionNo)
+        {
+            // 해당 에피소드 key가 존재하지 않으면 구매한적 없음
+            if (!currentStoryJson[NODE_SELECTION_HINT_PURCHASE].ContainsKey(__episodeId))
+                return false;
+
+            JsonData selectionHintData = currentStoryJson[NODE_SELECTION_HINT_PURCHASE][__episodeId];
+
+            for (int i = 0; i < selectionHintData.Count; i++)
+            {
+                if (SystemManager.GetJsonNodeInt(selectionHintData[i], GameConst.COL_SELECTION_GROUP) != __selectionGroup)
+                    continue;
+
+                if (SystemManager.GetJsonNodeInt(selectionHintData[i], GameConst.COL_SELECTION_NO) == __selectionNo)
                     return true;
             }
 

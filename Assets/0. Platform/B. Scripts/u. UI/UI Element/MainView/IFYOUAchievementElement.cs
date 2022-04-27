@@ -108,7 +108,12 @@ namespace PIERStory
             }
 
             JsonData result = JsonMapper.ToObject(res.DataAsText);
-            Debug.Log(JsonMapper.ToStringUnicode(result));
+
+            MainProfile.OnSaveVerticalNormalize?.Invoke();
+
+            UserManager.main.SetSeasonCheck(result["list"]);
+            UserManager.main.SetUserGradeInfo(result["list"]);
+            UserManager.main.SetAchievementList(result["list"]);
 
             PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_GRADE_EXP);
 
@@ -145,11 +150,6 @@ namespace PIERStory
             p.Data.contentValue = achievementData.experience;
             PopupManager.main.ShowPopup(p, false);
 
-            MainProfile.OnSaveVerticalNormalize?.Invoke();
-
-            UserManager.main.SetSeasonCheck(result["list"]);
-            UserManager.main.SetUserGradeInfo(result["list"]);
-            UserManager.main.SetAchievementList(result["list"]);
         }
     }
 }

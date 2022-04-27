@@ -22,6 +22,23 @@ namespace PIERStory
         public GameObject showChoiceButton;
         public GameObject endingHintButton;
 
+        /// <summary>
+        /// 엔딩 힌트 데이터 존재 여부
+        /// </summary>
+        bool hasEndingHintData
+        {
+            get {
+
+                foreach (EndingHintData hintData in StoryManager.main.endingHintList)
+                {
+                    if (hintData.endingId == endingData.episodeID)
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
         readonly Vector2 openEndingSize = new Vector2(660, 553);
         readonly Vector2 lockEndingSize = new Vector2(660, 488);
 
@@ -58,7 +75,7 @@ namespace PIERStory
             endingTitle.text = string.Format("{0}\n<size=22>{1}</size>", epiData.episodeTitle, epiData.episodeSummary);
 
             showChoiceButton.SetActive(endingData.endingOpen);
-            endingHintButton.SetActive(!endingData.endingOpen);
+            endingHintButton.SetActive(!endingData.endingOpen && hasEndingHintData);
 
             gameObject.SetActive(true);
         }

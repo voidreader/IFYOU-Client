@@ -1,11 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
 using LitJson;
 using BestHTTP;
-using DG.Tweening;
-using Doozy.Runtime.UIManager.Components;
 
 namespace PIERStory
 {
@@ -14,6 +13,7 @@ namespace PIERStory
         [Header("미션 이미지 관련")]
         public ImageRequireDownload missionThumbnail;
         public GameObject hiddenHighlight;
+        public GameObject missionHintButton;
 
         public TextMeshProUGUI missionText;
         public GameObject hiddenMissionTexts;   // 히든 미션 표기 관련 object
@@ -36,12 +36,6 @@ namespace PIERStory
         public Image rewardButton;
         public TextMeshProUGUI getRewardText;
 
-        Color pinkColor = new Color32(255, 163, 212, 255);
-        Color orangeColor = new Color32(254, 200, 150, 255);
-        Color violetColor = new Color32(197, 198, 254, 255);
-
-        Color disableGreyColor = new Color32(248, 248, 248, 255);
-
         public MissionState state;
 
         
@@ -63,7 +57,6 @@ namespace PIERStory
 
             SetCurrencyIcon(missionData.rewardQuantity);
             SetMissionState(missionData.missionState);
-            //MissionGradeColor();
 
             // 버튼 비활성화 표기
             /*
@@ -87,6 +80,7 @@ namespace PIERStory
             gameObject.SetActive(true);
 
             missionThumbnail.gameObject.SetActive(false);
+            missionHintButton.SetActive(false);
             hiddenHighlight.SetActive(true);
             hiddenMissionTexts.SetActive(true);
             missionText.gameObject.SetActive(false);
@@ -110,6 +104,7 @@ namespace PIERStory
 
         void SetMissionState(MissionState __state)
         {
+            missionHintButton.SetActive(false);
             rewardInfo.SetActive(true);
             missionProgress.SetActive(false);
             rewardButton.gameObject.SetActive(false);
@@ -130,10 +125,55 @@ namespace PIERStory
                     break;
 
                 default:
+                    SetMissionHint();
+
+                    missionProgress.SetActive(true);
+                    missionHintButton.SetActive(true);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 미션 힌트 세팅
+        /// </summary>
+        void SetMissionHint()
+        {
+            int total = 1;
+            int current = 0;
+            float percent = 1f;
+
+            switch (missionData.missionType)
+            {
+                case MissionType.drop:
                     missionProgressText.text = string.Format(SystemManager.GetLocalizedText("5042") + "(0/1)");
                     missionPercent.text = "0%";
                     missionGauge.fillAmount = 0f;
-                    missionProgress.SetActive(true);
+                    break;
+                case MissionType.scene:
+                    total = missionData.eventDetailHint.Count;
+                    for(int i=0;i<missionData.eventDetailHint.Count;i++)
+                    {
+                        if (missionData.eventDetailHint[i].played >= missionData.eventDetailHint[i].total)
+                            current++;
+                    }
+                    percent = (float)current / total;
+
+                    missionProgressText.text = string.Format(SystemManager.GetLocalizedText("5042") + "({0}/{1})", current, total);
+                    missionPercent.text = string.Format("{0}%", Mathf.RoundToInt(percent * 100f));
+                    missionGauge.fillAmount = percent;
+                    break;
+                case MissionType.episode:
+                    total = missionData.episodeDetailHint.Count;
+
+                    for(int i=0;i<missionData.episodeDetailHint.Count;i++)
+                    {
+                        if (UserManager.main.IsCompleteEpisode(missionData.episodeDetailHint[i]))
+                            current++;
+                    }
+                    percent = (float)current / (float)total;
+                    missionProgressText.text = string.Format(SystemManager.GetLocalizedText("5042") + "({0}/{1})", current, total);
+                    missionPercent.text = string.Format("{0}%", Math.Round(percent * 100f, 0));
+                    missionGauge.fillAmount = percent;
                     break;
             }
         }
@@ -150,16 +190,12 @@ namespace PIERStory
         
         void CallbackGetMissionReward(HTTPRequest req, HTTPResponse res)
         {
-            
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
-                // SystemManager.ShowMessageAlert("통신 실패!", false);
+                Debug.LogError("Failed CallbackGetMissionReward");
                 return;
             }
 
-            Debug.Log("> CallbackGetMissionReward : " + res.DataAsText);
-            rewardButton.GetComponent<UIButton>().interactable = false;
-            
             JsonData resposeData = JsonMapper.ToObject(res.DataAsText);
             
             // 재화 획득 팝업 
@@ -168,47 +204,31 @@ namespace PIERStory
             // 미션 상태 변경 (보상 받고, 완료로 변경)
             missionData.missionState = MissionState.finish; 
             UserManager.main.SetMissionData(missionData.missionID, missionData);
-            
-            // StoryContentsButton.onStoryContentsButtonMission?.Invoke();
-            
+
             
             // * 성공 했다. => 미션이 해금도 되었고, 보상도 받은 상태가 되는거다. 
-            SetMissionComplete();
+            ViewMission.OnRefreshProgressor?.Invoke();
 
             /*
             if(!ViewMission.clickGetAll)
                 SystemManager.ShowSimpleAlertLocalize("6123");
             */
         }
-        
-        /// <summary>
-        /// 미션 보상 받는 연출 시작
-        /// </summary>
-        void SetMissionComplete() {
-            
-            // 경험치 처리 
-            // NetworkLoader.main.UpdateUserExp(missionData.rewardExp, "mission", missionData.missionID);
-            RefreshViewMission();
-            //rewardCanvasGroup.DOFade(0, 0.2f).OnComplete(CompleteStep2);
-            // RewardMask.DOFade(1, 0.2f).OnComplete(CompleteStep2);
 
-            //completeMark.transform.localScale = Vector3.one * 1.5f;
+        public void OnClickOpenMissionHint()
+        {
+            PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_MISSION_HINT);
 
-        }
-        
-        void CompleteStep2() {
-            //completeMark.gameObject.SetActive(true);
-            //completeMark.transform.DOScale(Vector3.one, 0.4f).SetEase(Ease.InQuad).OnComplete(RefreshViewMission);
-            
-            // ViewMission.OnCompleteReward?.Invoke();
-        }
-        
-        void RefreshViewMission() {
-            // ViewMission.OnCompleteReward?.Invoke();
-            ViewMission.OnRefreshProgressor?.Invoke();
-            rewardButton.GetComponent<UIButton>().interactable = true;
+            if(p == null)
+            {
+                Debug.LogError("미션 힌트 팝업 없음!");
+                return;
+            }
+
+            p.Data.SetLabelsTexts(missionData.missionName, missionData.missionHint);
+            p.Data.isPositive = missionData.detailHint;
+            p.Data.contentValue = missionData.missionID;
+            PopupManager.main.ShowPopup(p, false);
         }
     }
-    
-    
 }

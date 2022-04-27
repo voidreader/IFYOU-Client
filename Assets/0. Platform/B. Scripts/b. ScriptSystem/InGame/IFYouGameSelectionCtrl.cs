@@ -613,7 +613,7 @@ namespace PIERStory {
             }
 
             // 구매 기록이 없다면 통신 완료 후, 선택지 힌트 팝업을 띄워주는데, 그 전에 코인 갯수를 체크해서 부족하면 상점
-            if (UserManager.main.coin < SelectionHintPrice())
+            if(!UserManager.main.CheckCoinProperty(SelectionHintPrice()))
             {
                 SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteCoin, SelectionHintPrice() - UserManager.main.coin);
                 return;

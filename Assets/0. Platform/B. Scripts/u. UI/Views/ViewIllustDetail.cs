@@ -108,6 +108,8 @@ namespace PIERStory
             
             shareBonus.SetActive(!isShareBonusGet);
             HideShareBox();
+
+            LobbyManager.main.touchEffect.gameObject.SetActive(false);
         }
 
         public override void OnHideView()
@@ -134,6 +136,8 @@ namespace PIERStory
                 foreach (GameLiveImageCtrl gl in gameLive)
                     gl.DestroySelf();
             }
+
+            LobbyManager.main.touchEffect.gameObject.SetActive(true);
         }
         
         void Update() {

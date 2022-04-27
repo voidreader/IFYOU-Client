@@ -24,6 +24,7 @@ namespace PIERStory {
 
         public ScriptLiveMount currentLiveIllust = null; // Live Illust for Gallery 
         public ScriptLiveMount currentLiveObject = null; // Live Object for Gallery
+        public TouchEffect touchEffect;                  // 일러스트 상세에서 터치 이펙트 제어용
         
         int scaleOffset = 0;
         string illustName = string.Empty;

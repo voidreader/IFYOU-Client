@@ -140,6 +140,7 @@ namespace PIERStory {
             
             #else
             catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/bundle/Android/catalog_1.json";
+            // catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/test_bundle/Android/catalog_1.json";
             
             #endif
             

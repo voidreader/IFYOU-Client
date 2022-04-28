@@ -1171,9 +1171,9 @@ namespace PIERStory
                 character.SetModelDataFromStoryManager(true);
 
                 if (SystemManager.main.hasSafeArea)
-                    character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_SAFEAREA_POS_Y + 1, 0);
+                    character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_SAFEAREA_POS_Y, 0);
                 else
-                    character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_ORIGIN_POS_Y + 1, 0);
+                    character.modelController.transform.localPosition = new Vector3(0, GameConst.MODEL_PARENT_ORIGIN_POS_Y, 0);
 
                 character.modelController.currencyName = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
                 

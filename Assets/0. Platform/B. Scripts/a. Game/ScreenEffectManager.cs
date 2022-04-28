@@ -11,7 +11,10 @@ namespace PIERStory
         public static ScreenEffectManager main = null;
 
         public Camera mainCam;
-        public Camera modelRenderCamC;
+        public Camera modelRenderCamC; // 모델용 중앙 카메라 
+        public Camera modelRenderCamL; // 모델용 L 카메라 
+        public Camera modelRenderCamR; // 모델용 R 카메라 
+        
         public Camera generalCam;
         
 
@@ -374,9 +377,16 @@ namespace PIERStory
 
                     shakeTime = Mathf.Clamp(shakeTime, 0f, 3f);
                     shakeStrength = Mathf.Clamp(shakeStrength, 0f, 3f);
-
-                    generalCam.transform.DOShakePosition(shakeTime, 0.6f, (int)(shakeStrength * 30), 90).OnComplete(OnCompleteShake);
-                    mainCam.transform.DOShakePosition(shakeTime, 0.2f, (int)(shakeStrength * 30), 90);
+                        
+                    // generalCam.transform.DOShakePosition(shakeTime, 0.6f, (int)(shakeStrength * 30), 90).OnComplete(OnCompleteShake);
+                    // mainCam.transform.DOShakePosition(shakeTime, 0.2f, (int)(shakeStrength * 30), 90);
+                    
+                    // * generalCam을 흔들면 캐릭터가 지직 거려서, 모델캠을 흔들도록 변경 2022.04.28
+                    
+                    modelRenderCamC.transform.DOShakePosition(shakeTime, 0.2f, (int)(shakeStrength * 30), 90);
+                    modelRenderCamL.transform.DOShakePosition(shakeTime, 0.2f, (int)(shakeStrength * 30), 90);
+                    modelRenderCamR.transform.DOShakePosition(shakeTime, 0.2f, (int)(shakeStrength * 30), 90);
+                    mainCam.transform.DOShakePosition(shakeTime, 0.6f, (int)(shakeStrength * 30), 90).OnComplete(OnCompleteShake);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BROKEN:

@@ -1441,6 +1441,19 @@ namespace PIERStory
         
 
 
+        public void SetProjectMissionAllClear(int __v)
+        {
+            currentStoryJson["missionAllClear"] = __v;
+        }
+
+        /// <summary>
+        /// 미션 올클리어 체크
+        /// </summary>
+        /// <returns>true = 미션 올클리어 보상 받음, false = 미션 올클리어 보상 아직 받지 못함</returns>
+        public bool GetProjectMissionAllClear()
+        {
+            return SystemManager.GetJsonNodeBool(currentStoryJson, "missionAllClear");
+        }
 
 
 

@@ -48,7 +48,9 @@ namespace PIERStory {
 
         [SerializeField] GameObject popupMail;
         [SerializeField] GameObject popupMessageAlert;
+        public GameObject popupMissionClearReward;
         public GameObject popupMissionHint;
+        public GameObject popupMissionRewardList;
         [SerializeField] GameObject popupNotice;
         [SerializeField] GameObject popupNickname;       
         
@@ -433,10 +435,20 @@ namespace PIERStory {
             else 
                 DictPopup.Add(CommonConst.POPUP_MESSAGE_ALERT, popupMessageAlert);
 
+            if (DictPopup.ContainsKey(LobbyConst.POPUP_MISSION_CLEAR_REWARD))
+                DictPopup[LobbyConst.POPUP_MISSION_CLEAR_REWARD] = popupMissionClearReward;
+            else
+                DictPopup.Add(LobbyConst.POPUP_MISSION_CLEAR_REWARD, popupMissionClearReward);
+
             if (DictPopup.ContainsKey(LobbyConst.POPUP_MISSION_HINT))
                 DictPopup[LobbyConst.POPUP_MISSION_HINT] = popupMissionHint;
             else
                 DictPopup.Add(LobbyConst.POPUP_MISSION_HINT, popupMissionHint);
+
+            if (DictPopup.ContainsKey(LobbyConst.POPUP_ALL_CLEAR_REWARD_LIST))
+                DictPopup[LobbyConst.POPUP_ALL_CLEAR_REWARD_LIST] = popupMissionRewardList;
+            else
+                DictPopup.Add(LobbyConst.POPUP_ALL_CLEAR_REWARD_LIST, popupMissionRewardList);
 
 
             if(DictPopup.ContainsKey("PremiumPass")) 

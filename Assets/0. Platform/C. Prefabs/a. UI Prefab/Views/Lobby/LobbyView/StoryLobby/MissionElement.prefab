@@ -936,6 +936,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   missionThumbnail: {fileID: 4389795928187161382}
   hiddenHighlight: {fileID: 4262181064499308379}
+  missionHintButton: {fileID: 5051361251688345130}
   missionText: {fileID: 4389795927740975251}
   hiddenMissionTexts: {fileID: 8195278505689873369}
   hiddenText: {fileID: 2571023563868679361}
@@ -965,6 +966,7 @@ MonoBehaviour:
     imageURL: 
     imageKey: 
     missionState: 0
+    episodeDetailHint: []
 --- !u!1 &4389795927740975253
 GameObject:
   m_ObjectHideFlags: 0
@@ -1695,13 +1697,13 @@ MonoBehaviour:
       Event:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 4389795926756010390}
-            m_TargetAssemblyTypeName: 
-            m_MethodName: 
+          - m_Target: {fileID: 3373089548830491573}
+            m_TargetAssemblyTypeName: PIERStory.MissionElement, Assembly-CSharp
+            m_MethodName: OnClickOpenMissionHint
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: 
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
               m_IntArgument: 0
               m_FloatArgument: 0
               m_StringArgument: 

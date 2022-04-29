@@ -169,6 +169,7 @@ namespace PIERStory {
         public const string POPUP_GRADE_UP = "GradeUp";
         public const string POPUP_ENDING_HINT = "EndingHint";
         public const string POPUP_SPECIAL_HINT = "SpecialHint";
+        public const string POPUP_MISSION_HINT = "MissionHint";
 
         public const string POPUP_COIN_STAR_HISTORY = "CoinStarHistory";
         public const string POPUP_DATA_MANAGER = "DataManager";

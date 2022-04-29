@@ -10,6 +10,7 @@ namespace PIERStory
         [Space(15)]
         public RectTransform expBackAura;
 
+        public TMPro.TextMeshProUGUI currentExp;
         public UnityEngine.UI.Image expGauge;
         public Progressor expProgressor;
         
@@ -28,9 +29,8 @@ namespace PIERStory
             
             Debug.Log(string.Format("PopupGradeExp [{0}]/[{1}]", UserManager.main.gradeExperience, UserManager.main.upgradeGoalPoint));
 
-            // expProgressor = expGauge.GetComponent<Progressor>();
-            expProgressor.fromValue = (float)UserManager.main.gradeExperience / (float)UserManager.main.upgradeGoalPoint;
-            expProgressor.toValue = (float)(Data.contentValue + UserManager.main.gradeExperience) / (float)UserManager.main.upgradeGoalPoint;
+            expProgressor.fromValue = (float)UserManager.main.gradeExperience / UserManager.main.upgradeGoalPoint;
+            expProgressor.toValue = (float)(Data.contentValue + UserManager.main.gradeExperience) / UserManager.main.upgradeGoalPoint;
 
 
             Debug.Log(string.Format("expProgressor [{0}]/[{1}]", expProgressor.fromValue, expProgressor.toValue));
@@ -39,7 +39,8 @@ namespace PIERStory
         public void ShowComplete()
         {
             Debug.Log("### ShowComplete");
-            
+
+            currentExp.DOCounter(UserManager.main.gradeExperience, Data.contentValue + UserManager.main.gradeExperience, 0.8f);
             expProgressor.Play();
         }
 

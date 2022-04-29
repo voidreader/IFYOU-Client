@@ -121,11 +121,16 @@ namespace PIERStory
                 return;
 
 
-            if (LobbyManager.main.currentLiveIllust != null && LobbyManager.main.currentLiveIllust.liveImageController != null)
-                LobbyManager.main.currentLiveIllust.liveImageController.DestroySelf();
+            if (LobbyManager.main.currentLiveIllust != null && LobbyManager.main.currentLiveIllust.liveImageController != null) {
+                
+                LobbyManager.main.currentLiveIllust.DestroyAddressableModel();
+                LobbyManager.main.currentLiveIllust = null;
+            }
 
-            if (LobbyManager.main.currentLiveObject != null && LobbyManager.main.currentLiveObject.liveImageController != null)
-                LobbyManager.main.currentLiveObject.liveImageController.DestroySelf();
+            if (LobbyManager.main.currentLiveObject != null && LobbyManager.main.currentLiveObject.liveImageController != null) {
+                LobbyManager.main.currentLiveObject.DestroyAddressableModel();
+                LobbyManager.main.currentLiveObject = null;
+            }
 
 
             // 연타 클릭되어 생성된 것이 있다면 파괴(혹시 모를 안전장치)
@@ -138,6 +143,8 @@ namespace PIERStory
             }
 
             LobbyManager.main.touchEffect.gameObject.SetActive(true);
+            
+            System.GC.Collect();
         }
         
         void Update() {

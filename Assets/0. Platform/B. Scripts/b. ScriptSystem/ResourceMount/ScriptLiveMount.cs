@@ -302,6 +302,26 @@ namespace PIERStory
         }
 
         /// <summary>
+        /// 파괴처리 
+        /// </summary>
+        public void DestroyAddressableModel() {
+            
+            if(isAddressable && isMounted) {
+                bool result = Addressables.ReleaseInstance(mountedModelAddressable);
+                
+                liveImageController = null;
+                Debug.Log("DestroyAddressable :: " + liveName + " / " + result);
+                return;
+            }
+            
+            // 어드레서블 아니면 직접 destroy
+            if(liveImageController != null) {
+                liveImageController.DestroySelf();
+            }
+            
+        }
+
+        /// <summary>
         /// 모델 본격 로드!
         /// </summary>
         void InitCubismModel()

@@ -29,8 +29,7 @@ namespace PIERStory
             }
 
             MissionData missionData = UserManager.main.DictStoryMission[Data.contentValue];
-            string title = string.Empty, episodeNum = string.Empty;
-            string amount = string.Empty;
+            string title = string.Empty, amount = string.Empty;
             MissionHintElement hintElement = null;
             EpisodeData episodeData = null;
 
@@ -51,18 +50,13 @@ namespace PIERStory
                     }
 
                     if (episodeData.episodeType == EpisodeType.Chapter)
-                    {
-                        title = SystemManager.GetLocalizedText("5027");
-                        episodeNum = episodeData.episodeNumber < 10 ? "0" + episodeData.episodeNumber.ToString() : episodeData.episodeNumber.ToString();
-                        amount = UserManager.main.IsCompleteEpisode(episodeData.episodeID) ? "1/1" : "0/1";
-                        hintElement.InitMissionHint(UserManager.main.IsCompleteEpisode(missionData.episodeDetailHint[i]), title + episodeNum, amount);
-                    }
+                        title = string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber);
                     else
-                    {
                         title = episodeData.episodeTitle;
-                        amount = UserManager.main.IsCompleteEpisode(episodeData.episodeID) ? "1/1" : "0/1";
-                        hintElement.InitMissionHint(UserManager.main.IsCompleteEpisode(missionData.episodeDetailHint[i]), title, amount);
-                    }
+
+                    amount = UserManager.main.IsCompleteEpisode(episodeData.episodeID) ? "1/1" : "0/1";
+                    hintElement.InitMissionHint(UserManager.main.IsCompleteEpisode(missionData.episodeDetailHint[i]), title, amount);
+
                 }
             }
 
@@ -83,18 +77,12 @@ namespace PIERStory
                     }
 
                     if (episodeData.episodeType == EpisodeType.Chapter)
-                    {
-                        title = SystemManager.GetLocalizedText("5027");
-                        episodeNum = episodeData.episodeNumber < 10 ? "0" + episodeData.episodeNumber.ToString() : episodeData.episodeNumber.ToString();
-                        amount = string.Format("{0}/{1}", missionData.eventDetailHint[i].played, missionData.eventDetailHint[i].total);
-                        hintElement.InitMissionHint(missionData.eventDetailHint[i].played >= missionData.eventDetailHint[i].total, title + episodeNum, amount);
-                    }
+                        title = string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber);
                     else
-                    {
                         title = episodeData.episodeTitle;
-                        amount = string.Format("{0}/{1}", missionData.eventDetailHint[i].played, missionData.eventDetailHint[i].total);
-                        hintElement.InitMissionHint(missionData.eventDetailHint[i].played >= missionData.eventDetailHint[i].total, title, amount);
-                    }
+
+                    amount = string.Format("{0}/{1}", missionData.eventDetailHint[i].played, missionData.eventDetailHint[i].total);
+                    hintElement.InitMissionHint(missionData.eventDetailHint[i].played >= missionData.eventDetailHint[i].total, title, amount);
 
                 }
             }

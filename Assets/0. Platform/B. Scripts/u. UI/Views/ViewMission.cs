@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
+using LitJson;
+using BestHTTP;
 using Doozy.Runtime.Signals;
 
 namespace PIERStory
@@ -12,6 +14,8 @@ namespace PIERStory
         public static Action OnCompleteReward = null;
         public static Action OnRefreshProgressor = null;
         public static bool clickGetAll = false;
+
+        public Image allClearRewardBox;
 
         public TextMeshProUGUI missionProgressText;
         public TextMeshProUGUI missionPercent;
@@ -25,6 +29,9 @@ namespace PIERStory
 
         public Color32 getAllOpenColor = new Color32(51, 51, 51, 255);
         public Color32 getAllLockColor = new Color32(153, 153, 153, 255);
+
+        public Sprite spriteAllClearOff;
+        public Sprite spriteAllClearOn;
 
         void OnEnable() {
             // 상태 저장 
@@ -54,6 +61,34 @@ namespace PIERStory
             SetMissionProgressor();
 
             missionScroll.verticalNormalizedPosition = 1f;
+            
+            // 미션 올클리어 이미지 세팅
+            if(UserManager.main.GetProjectMissionAllClear())
+            {
+                allClearRewardBox.sprite = spriteAllClearOn;
+                allClearRewardBox.material.EnableKeyword("GREYSCALE_ON");
+                allClearRewardBox.SetNativeSize();
+                allClearRewardBox.rectTransform.localScale = Vector2.one * 0.8f;
+            }
+            else
+            {
+                allClearRewardBox.material.DisableKeyword("GREYSCALE_ON");
+
+                if (missionProgressBar.fillAmount < 1f)
+                {
+                    allClearRewardBox.sprite = spriteAllClearOff;
+                    allClearRewardBox.SetNativeSize();
+                    allClearRewardBox.rectTransform.localScale = Vector2.one;
+                }
+                else
+                {
+                    allClearRewardBox.sprite = spriteAllClearOn;
+                    allClearRewardBox.SetNativeSize();
+                    allClearRewardBox.rectTransform.localScale = Vector2.one * 0.8f;
+                }
+                
+            }
+
             clickGetAll = false;
         }
 
@@ -203,6 +238,80 @@ namespace PIERStory
             SystemManager.ShowSimpleAlertLocalize("6123");
             //SetGetAllButtonState();
             OnCompleteReward?.Invoke();
+        }
+
+        /// <summary>
+        /// 미션 올 클리어 보상 받기
+        /// </summary>
+        public void OnClickGetMissionAllClearReward()
+        {
+            // 이미 받았으면 안함
+            if (UserManager.main.GetProjectMissionAllClear())
+                return;
+
+            allClearRewardBox.GetComponent<Button>().interactable = false;
+
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestMissionAllReward";
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
+            sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
+
+            NetworkLoader.main.SendPost(CallbackRequestMissionAllReward, sending, true);
+        }
+
+        void CallbackRequestMissionAllReward(HTTPRequest req, HTTPResponse res)
+        {
+            allClearRewardBox.GetComponent<Button>().interactable = true;
+
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackRequestMissionAllReward");
+                return;
+            }
+
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+
+            if(result["reward"] == null || result["reward"].Count == 0)
+            {
+                SystemManager.ShowSystemPopup("미션 올클리어 보상이 존재하지 않습니다.", null, null, false, false);
+                return;
+            }
+
+            PopupBase p = null;
+
+            if (!result["bank"].ContainsKey(LobbyConst.COIN))
+            {
+                p = PopupManager.main.GetPopup(LobbyConst.POPUP_ALL_CLEAR_REWARD_LIST);
+
+                string coinAmount = string.Empty, starAmount = string.Empty;
+
+                if (!result.ContainsKey("reward"))
+                    return;
+
+                for (int i = 0; i < result["reward"].Count; i++)
+                {
+                    if (SystemManager.GetJsonNodeString(result["reward"][i], LobbyConst.NODE_CURRENCY) == LobbyConst.COIN)
+                        coinAmount = SystemManager.GetJsonNodeString(result["reward"][i], "quantity");
+                    else if (SystemManager.GetJsonNodeString(result["reward"][i], LobbyConst.NODE_CURRENCY) == LobbyConst.GEM)
+                        starAmount = SystemManager.GetJsonNodeString(result["reward"][i], "quantity");
+                }
+                
+                p.Data.SetLabelsTexts(coinAmount, starAmount);
+            }
+            else
+            {
+                p = PopupManager.main.GetPopup(LobbyConst.POPUP_MISSION_CLEAR_REWARD);
+            }
+
+            if (p == null)
+            {
+                Debug.LogError(string.Format("{0} 팝업이 없음!", p.popupName));
+                return;
+            }
+
+            p.Data.contentJson = result;
+            PopupManager.main.ShowPopup(p, false);
         }
     }
 }

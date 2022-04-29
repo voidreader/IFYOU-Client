@@ -171,6 +171,9 @@ namespace PIERStory {
         public const string POPUP_SPECIAL_HINT = "SpecialHint";
         public const string POPUP_MISSION_HINT = "MissionHint";
 
+        public const string POPUP_ALL_CLEAR_REWARD_LIST = "AllClearRewardList";
+        public const string POPUP_MISSION_CLEAR_REWARD = "MissionClearReward";
+
         public const string POPUP_COIN_STAR_HISTORY = "CoinStarHistory";
         public const string POPUP_DATA_MANAGER = "DataManager";
 

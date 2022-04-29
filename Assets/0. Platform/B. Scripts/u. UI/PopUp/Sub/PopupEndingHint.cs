@@ -30,12 +30,12 @@ namespace PIERStory
             if (endingHint == null)
             {
                 EpisodeData dependsEpisode = StoryManager.GetRegularEpisodeByID(Data.contentEpisode.dependEpisode);
-                episodeNum = dependsEpisode.episodeNumber < 10 ? "0" + dependsEpisode.episodeNO : dependsEpisode.episodeNO;
+                episodeNum = string.Format("{0:D2}", dependsEpisode.episodeNumber);
                 dependEpisodeRadioButton.SetActive(UserManager.main.IsCompleteEpisode(dependsEpisode.episodeID));
             }
             else
             {
-                episodeNum = endingHint.dependEpisodeData.episodeNumber < 10 ? "0" + endingHint.dependEpisodeData.episodeNO : endingHint.dependEpisodeData.episodeNO;
+                episodeNum = string.Format("{0:D2}", endingHint.dependEpisodeData.episodeNumber);
 
                 // 해당 귀속 에피소드 클리어 체크
                 dependEpisodeRadioButton.SetActive(UserManager.main.IsCompleteEpisode(endingHint.dependEpisodeData.episodeID));

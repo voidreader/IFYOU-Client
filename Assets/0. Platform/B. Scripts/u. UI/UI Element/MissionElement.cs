@@ -150,6 +150,10 @@ namespace PIERStory
                     missionGauge.fillAmount = 0f;
                     break;
                 case MissionType.scene:
+
+                    if (missionData.eventDetailHint == null)
+                        break;
+
                     total = missionData.eventDetailHint.Count;
                     for(int i=0;i<missionData.eventDetailHint.Count;i++)
                     {
@@ -163,6 +167,10 @@ namespace PIERStory
                     missionGauge.fillAmount = percent;
                     break;
                 case MissionType.episode:
+
+                    if (missionData.episodeDetailHint == null)
+                        break;
+
                     total = missionData.episodeDetailHint.Count;
 
                     for(int i=0;i<missionData.episodeDetailHint.Count;i++)

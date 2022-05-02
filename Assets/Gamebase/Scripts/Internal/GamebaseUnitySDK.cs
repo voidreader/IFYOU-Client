@@ -9,7 +9,7 @@ namespace Toast.Gamebase.Internal
 {
     public static class GamebaseUnitySDK
     {
-        public const string SDK_VERSION = "2.29.0";
+        public const string SDK_VERSION = "2.37.0";
 
         public static bool IsInitialized { get; set; }
         public static string SDKVersion { get { return SDK_VERSION; } }
@@ -20,7 +20,6 @@ namespace Toast.Gamebase.Internal
         public static bool EnablePopup { get; set; }
         public static bool EnableLaunchingStatusPopup { get; set; }
         public static bool EnableBanPopup { get; set; }
-        public static bool EnableKickoutPopup { get; set; }
         public static string StoreCode { get; set; }
         public static string FcmSenderId { get; set; }
         public static bool UseWebViewLogin { get; set; }

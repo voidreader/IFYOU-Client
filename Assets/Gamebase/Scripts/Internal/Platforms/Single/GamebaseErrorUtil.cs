@@ -30,7 +30,15 @@ namespace Toast.Gamebase.Internal.Single
                     }
                 case GamebaseServerErrorCode.NOT_AUTHENTICATED:
                     {
-                        errorCode = GamebaseErrorCode.NOT_LOGGED_IN;
+                        if (apiId.Equals(Lighthouse.API.Presence.ID.HEARTBEAT, StringComparison.Ordinal) == true)
+                        {
+                            errorCode = GamebaseErrorCode.AUTH_INVALID_GAMEBASE_TOKEN;
+                        }
+                        else
+                        {
+                            errorCode = GamebaseErrorCode.NOT_LOGGED_IN;
+                        }
+
                         break;
                     }
                 case GamebaseServerErrorCode.UNKNOWN_SYSTEM:
@@ -59,7 +67,15 @@ namespace Toast.Gamebase.Internal.Single
                 //----------------------------------------
                 case GamebaseServerErrorCode.LIGHT_HOUSE_NOT_AUTHENTICATED:
                     {
-                        errorCode = GamebaseErrorCode.NOT_LOGGED_IN;
+                        if (apiId.Equals(Lighthouse.API.Presence.ID.HEARTBEAT, StringComparison.Ordinal) == true)
+                        {
+                            errorCode = GamebaseErrorCode.AUTH_INVALID_GAMEBASE_TOKEN;
+                        }
+                        else
+                        {
+                            errorCode = GamebaseErrorCode.NOT_LOGGED_IN;
+                        }
+
                         break;
                     }
                 case GamebaseServerErrorCode.LIGHT_HOUSE_NO_SUCH_REQUEST_API:

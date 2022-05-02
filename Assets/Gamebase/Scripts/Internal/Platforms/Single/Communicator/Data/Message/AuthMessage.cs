@@ -33,7 +33,13 @@ namespace Toast.Gamebase.Internal.Single.Communicator
                 {
                     vo.payload.idPInfo.subCode = "web";
                 }
-            }   
+#if !UNITY_WEBGL
+                if (providerName.Equals(GamebaseAuthProvider.GOOGLE) == true)
+                {
+                    vo.payload.idPInfo.redirectUri = "http://localhost:8080/";
+                }
+#endif
+            }
 
             vo.payload.idPInfo.authorizationCode = authorizationCode;
             vo.payload.idPInfo.clientId = idpDic[providerName].clientId;

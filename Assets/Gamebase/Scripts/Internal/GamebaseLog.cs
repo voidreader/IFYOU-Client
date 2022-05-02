@@ -61,18 +61,14 @@ namespace Toast.Gamebase.Internal
         /// </summary>
         public static void Debug(object message, object classObj, [System.Runtime.CompilerServices.CallerMemberName] string methodName = "")
         {
+            if (isDebugLog == false)
+            {
+                return;
+            }
+            
             string log = MakeLog(message, classObj, methodName);
 
-            if (isDebugLog == true)
-            {
-                UnityEngine.Debug.Log(log);
-            }
-
-            GamebaseInternalReport.Instance.SendDebugLog(
-                new System.Collections.Generic.Dictionary<string, string>
-                {
-                    {GAMEBASE_LOG, log},
-                });
+            UnityEngine.Debug.Log(log);
         }
 
         /// <summary>

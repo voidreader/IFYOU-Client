@@ -56,7 +56,10 @@ namespace Toast.Gamebase
             /// <summary>
             /// This setting regards to applying default pop-ups provided by Gamebase, when the game user has been kicked out.
             /// <para/>Default: true
+            /// since Added 1.8.0.
+            /// @deprecated As of release 2.34.0, This Property is not used anymore.
             /// </summary>
+            [Obsolete("This Property is not used anymore.")]
             public bool enableKickoutPopup = true;
 
             /// <summary>
@@ -315,6 +318,11 @@ namespace Toast.Gamebase
                 public bool isBackButtonVisible;
 
                 /// <summary>
+                /// Activate/Deactivate Navigation Bar
+                /// </summary>
+                public bool isNavigationBarVisible;
+
+                /// <summary>
                 /// Image of Go Back Button
                 /// </summary>
                 public string backButtonImageResource;
@@ -331,6 +339,13 @@ namespace Toast.Gamebase
                 /// <para/>Default: GamebaseWebViewContentMode.RECOMMENDED
                 /// </summary>
                 public int contentMode = GamebaseWebViewContentMode.RECOMMENDED;
+
+                /// <summary>
+                /// Android only
+                /// This method fixes the font size.
+                /// <para/>Default: false
+                /// </summary>
+                public bool enableFixedFontSize;
             }
         }
 
@@ -456,11 +471,32 @@ namespace Toast.Gamebase
                 /// Data to be added when calling the customer center URL.
                 /// </summary>
                 public string additionalURL;
+
+                /// <summary>
+                /// Additional parameters for the contact center URL.
+                /// </summary>
+                public Dictionary<string, string> additionalParameters;
             }
         }
 
         public static class Terms
         {
+            public class GamebaseTermsConfiguration
+            {
+                /// <summary>
+                /// Set whether to force the termsView to be displayed.
+                /// <para/>Default: false
+                /// </summary>
+                public bool forceShow = false;
+                
+                /// <summary>
+                /// Android only
+                /// This method fixes the font size.
+                /// <para/>Default: false
+                /// </summary>
+                public bool enableFixedFontSize = false;
+            }
+            
             public class Content
             {
                 /// <summary>

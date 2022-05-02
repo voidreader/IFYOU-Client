@@ -23,11 +23,11 @@ namespace Toast.Gamebase.Internal.Single
             }
         }
 
-        public void ShowTermsView(int handle)
+        public void ShowTermsView(GamebaseRequest.Terms.GamebaseTermsConfiguration configuration, int handle)
         {
             GamebaseErrorNotifier.FireNotSupportedAPI(this, GamebaseCallbackHandler.GetCallback<GamebaseCallback.GamebaseDelegate<GamebaseResponse.DataContainer>>(handle));
         }
-
+        
         public void UpdateTerms(GamebaseRequest.Terms.UpdateTermsConfiguration configuration, int handle)
         {
             GamebaseErrorNotifier.FireNotSupportedAPI(this, GamebaseCallbackHandler.GetCallback<GamebaseCallback.ErrorDelegate>(handle));
@@ -36,6 +36,12 @@ namespace Toast.Gamebase.Internal.Single
         public void QueryTerms(int handle)
         {
             GamebaseErrorNotifier.FireNotSupportedAPI(this, GamebaseCallbackHandler.GetCallback<GamebaseCallback.GamebaseDelegate<List<GamebaseResponse.Terms.QueryTermsResult>>>(handle));
+        }
+        
+        public bool IsShowingTermsView()
+        {
+            GamebaseErrorNotifier.FireNotSupportedAPI(this);
+            return false;
         }
     }
 }

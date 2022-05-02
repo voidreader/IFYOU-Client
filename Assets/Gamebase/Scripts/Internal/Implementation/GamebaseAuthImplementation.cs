@@ -101,6 +101,13 @@ namespace Toast.Gamebase.Internal
             auth.LoginForLastLoggedInProvider(handle);
         }
 
+        public void ChangeLogin(GamebaseResponse.Auth.ForcingMappingTicket forcingMappingTicket, GamebaseCallback.GamebaseDelegate<GamebaseResponse.Auth.AuthToken> callback)
+        {
+            GamebaseGameInformationReport.Instance.AddApiName("ChangeLogin");
+            int handle = GamebaseCallbackHandler.RegisterCallback(callback);
+            auth.ChangeLogin(forcingMappingTicket, handle);   
+        }
+
         public void AddMapping(string providerName, GamebaseCallback.GamebaseDelegate<GamebaseResponse.Auth.AuthToken> callback)
         {
             GamebaseGameInformationReport.Instance.AddApiName();
@@ -143,6 +150,13 @@ namespace Toast.Gamebase.Internal
             auth.AddMappingForcibly(credentialInfo, forcingMappingKey, handle);
         }
 
+        public void AddMappingForcibly(GamebaseResponse.Auth.ForcingMappingTicket forcingMappingTicket, GamebaseCallback.GamebaseDelegate<GamebaseResponse.Auth.AuthToken> callback)
+        {
+            GamebaseGameInformationReport.Instance.AddApiName("AddMappingForciblyWithForcingMappingTicket");
+            int handle = GamebaseCallbackHandler.RegisterCallback(callback);
+            auth.AddMappingForcibly(forcingMappingTicket, handle);
+        }
+        
         public void RemoveMapping(string providerName, GamebaseCallback.ErrorDelegate callback)
         {
             GamebaseGameInformationReport.Instance.AddApiName();

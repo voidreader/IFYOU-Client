@@ -109,6 +109,7 @@ namespace Toast.Gamebase.Internal
                     public string endDate;
                     public long localBeginDate;
                     public long localEndDate;
+                    public bool hideDate;
                 }
 
                 public class Notice

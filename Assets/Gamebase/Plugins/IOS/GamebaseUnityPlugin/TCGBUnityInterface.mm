@@ -1,7 +1,10 @@
 #import "TCGBUnityInterface.h"
 #import <Gamebase/Gamebase.h>
+#import <GamebasePlugin/GamebasePlugin.h>
 
 @implementation TCGBUnityInterface
+
+static bool _startUnityScheduled = false;
 
 + (TCGBUnityInterface *)sharedUnityInterface {
     static dispatch_once_t onceToken;
@@ -12,15 +15,13 @@
     return instance;
 }
 
-- (id)init {
-    if (self = [super init]) {
-        UnityRegisterAppDelegateListener(self);
-    }
-    return self;
++ (void)load {
+    UnityRegisterAppDelegateListener([TCGBUnityInterface sharedUnityInterface]);
 }
 
-- (void)dealloc {
-    UnityUnregisterAppDelegateListener(self);
+- (void)setupViewController {
+    [TCGBUtil logDebugWithFormat:@"[TCGB][Plugin][TCGBUnityInterface] setupViewController"];
+    [[TCGBViewControllerManager sharedGamebaseViewControllerManager] setViewController:UnityGetGLViewController()];
 }
 
 #pragma mark - LifeCycleListener
@@ -29,30 +30,45 @@
 }
 
 - (void)didBecomeActive:(NSNotification*)notification {
-    [TCGBGamebase applicationDidBecomeActive:[UIApplication sharedApplication]];
+    if (!_startUnityScheduled)
+    {
+        _startUnityScheduled = true;
+        [self performSelector: @selector(setupViewController) withObject: nil afterDelay: 0];
+    }
+    
+    if ([TCGBGamebase appID] != nil) {
+        [TCGBGamebase applicationDidBecomeActive:[UIApplication sharedApplication]];
+    }
 }
 
 - (void)willResignActive:(NSNotification*)notification {
-    [TCGBGamebase applicationWillResignActive:[UIApplication sharedApplication]];
+    if ([TCGBGamebase appID] != nil) {
+        [TCGBGamebase applicationWillResignActive:[UIApplication sharedApplication]];
+    }
 }
 
 - (void)didEnterBackground:(NSNotification*)notification {
-    [TCGBGamebase applicationDidEnterBackground:[UIApplication sharedApplication]];
+    if ([TCGBGamebase appID] != nil) {
+        [TCGBGamebase applicationDidEnterBackground:[UIApplication sharedApplication]];
+    }
 }
 
 - (void)willEnterForeground:(NSNotification*)notification {
-    [TCGBGamebase applicationWillEnterForeground:[UIApplication sharedApplication]];
+    if ([TCGBGamebase appID] != nil) {
+        [TCGBGamebase applicationWillEnterForeground:[UIApplication sharedApplication]];
+    }
 }
 
 - (void)willTerminate:(NSNotification*)notification {
-    [TCGBGamebase applicationWillTerminate:[UIApplication sharedApplication]];
+    if ([TCGBGamebase appID] != nil) {
+        [TCGBGamebase applicationWillTerminate:[UIApplication sharedApplication]];
+    }
 }
 
 #pragma mark - AppDelegateListener
 - (void)onOpenURL:(NSNotification*)notification {
     NSURL* url = [notification userInfo][@"url"];
     [TCGBGamebase application:[UIApplication sharedApplication] openURL:url sourceApplication:[notification userInfo][@"sourceApplication"] annotation:[notification userInfo][@"annotation"]];
-    //TODO:??
 }
 
 // these are just hooks to existing notifications

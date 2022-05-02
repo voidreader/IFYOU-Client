@@ -219,7 +219,6 @@ namespace Toast.Gamebase.Internal
             configuration.enablePopup                       = GamebaseUnitySDK.EnablePopup;
             configuration.enableLaunchingStatusPopup        = GamebaseUnitySDK.EnableLaunchingStatusPopup;
             configuration.enableBanPopup                    = GamebaseUnitySDK.EnableBanPopup;
-            configuration.enableKickoutPopup                = GamebaseUnitySDK.EnableKickoutPopup;
 #pragma warning disable 0618
             configuration.fcmSenderId                       = GamebaseUnitySDK.FcmSenderId;
 #pragma warning restore 0618
@@ -239,7 +238,6 @@ namespace Toast.Gamebase.Internal
             GamebaseUnitySDK.EnablePopup                    = configuration.enablePopup;
             GamebaseUnitySDK.EnableLaunchingStatusPopup     = configuration.enableLaunchingStatusPopup;
             GamebaseUnitySDK.EnableBanPopup                 = configuration.enableBanPopup;
-            GamebaseUnitySDK.EnableKickoutPopup             = configuration.enableKickoutPopup;
 #pragma warning disable 0618
             GamebaseUnitySDK.FcmSenderId                    = configuration.fcmSenderId;
 #pragma warning restore 0618

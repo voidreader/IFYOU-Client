@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Toast.Gamebase.LitJson;
 using UnityEngine;
@@ -33,11 +33,24 @@ namespace Toast.Gamebase
             public class GamebaseEventServerPushData
             {
                 public string extras;
+                public ServerPushPopup popup;
+
+                public class ServerPushPopup
+                {
+                    public string defaultLanguage;
+                    public Dictionary<string, ServerPushPopupMessage> messages;
+            
+                    public class ServerPushPopupMessage
+                    {
+                        public string message;
+                        public string title;
+                    }
+                }
 
                 public static GamebaseEventServerPushData From(string jsonString)
                 {
-                    GamebaseEventServerPushData gamebaseEventServerPushData = JsonMapper.ToObject<GamebaseEventServerPushData>(jsonString);
-                    return gamebaseEventServerPushData;
+                    GamebaseEventServerPushData serverPushData = JsonMapper.ToObject<GamebaseEventServerPushData>(jsonString);
+                    return serverPushData;
                 }
             }
 
@@ -49,8 +62,20 @@ namespace Toast.Gamebase
 
                 public static GamebaseEventObserverData From(string jsonString)
                 {
-                    GamebaseEventObserverData gamebaseEventObserverData = JsonMapper.ToObject<GamebaseEventObserverData>(jsonString);
-                    return gamebaseEventObserverData;
+                    GamebaseEventObserverData observerData = JsonMapper.ToObject<GamebaseEventObserverData>(jsonString);
+                    return observerData;
+                }
+            }
+
+            public class GamebaseEventLoggedOutData
+            {
+                public string message;
+                public string extras;
+                
+                public static GamebaseEventLoggedOutData From(string jsonString)
+                {
+                    GamebaseEventLoggedOutData loggedOutData = JsonMapper.ToObject<GamebaseEventLoggedOutData>(jsonString);
+                    return loggedOutData;
                 }
             }
 
@@ -318,6 +343,11 @@ namespace Toast.Gamebase
                         /// End time of maintenance. (Epoch time)
                         /// </summary>
                         public long localEndDate;
+
+                        /// <summary>
+                        /// Display Date/Time on maintenance page.
+                        /// </summary>
+                        public bool hideDate;
                     }
 
                     /// <summary>
@@ -579,7 +609,8 @@ namespace Toast.Gamebase
                 public string idPCode;
                 public string forcingMappingKey;
                 public long expirationDate;
-
+                public string accessToken;
+                
                 [Obsolete("As of release 2.9.0, use GamebaseResponse.Auth.ForcingMappingTicket.From instead.")]
                 public static ForcingMappingTicket MakeForcingMappingTicket(GamebaseError error)
                 {
@@ -783,6 +814,16 @@ namespace Toast.Gamebase
                 /// The input payload is delivered when the purchase is completed.
                 /// </summary>
                 public string payload;
+                
+                /// <summary>
+                /// Whether promotion purchase
+                /// </summary>
+                public bool isPromotion;
+                
+                /// <summary>
+                /// Whether test purchase
+                /// </summary>
+                public bool isTestPurchase;
             }
 
             /// <summary>
@@ -840,7 +881,7 @@ namespace Toast.Gamebase
                 /// <summary>
                 /// The display language on the push notification UI.
                 /// </summary>
-                public string displayLanguageCode;
+                public string displayLanguageCode = null;
 
                 public static PushConfiguration From(DataContainer dataContainer)
                 {
@@ -1304,6 +1345,36 @@ namespace Toast.Gamebase
                 /// URL where you can see details about the terms and conditions
                 /// </summary>
                 public string detailPageUrl;
+            }
+
+            public class ShowTermsViewResult
+            {
+                /// <summary>
+                /// This field indicates whether the user has agreed to the Terms and Conditions agreement popup displayed.
+                /// </summary>
+                public bool isTermsUIOpened;
+                
+                /// <summary>
+                /// This field allows you to check the PushConfiguraion settings as a result of agreeing to the terms view.
+                /// If this field is not null, call Gamebase.Push.RegisterPush(PushConfiguration, GamebaseCallback).
+                /// </summary>
+                public Push.PushConfiguration pushConfiguration;
+                
+                public static ShowTermsViewResult From(DataContainer container)
+                {
+                    return (container != null) ? From(container.data) : null;
+                }
+                
+                private static ShowTermsViewResult From(string jsonString)
+                {
+                    if (string.IsNullOrEmpty(jsonString) == true)
+                    {
+                        return null;
+                    }
+ 
+                    return JsonMapper.ToObject<ShowTermsViewResult>(jsonString);
+                }
+
             }
         }
     }    

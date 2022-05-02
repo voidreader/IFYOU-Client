@@ -29,7 +29,8 @@ namespace Toast.Iap
         public string DeveloperPayload { get; set; }
 
         public string LinkedPaymentId { get; set; }
-        public bool IsStorePayment { get; set; }
+        public bool IsSandboxPayment { get; set; }
+        public bool IsStorePayment { get; set; }    // true if promoting an Apple purchase; otherwise, false.
 
         internal static IapPurchase From(JSONObject purchaseJson)
         {
@@ -51,9 +52,11 @@ namespace Toast.Iap
                     ExpiryTime = purchaseJson["expiryTime"],
                     DeveloperPayload = purchaseJson["developerPayload"],
 #if UNITY_IOS
+                    IsSandboxPayment = purchaseJson["isSandboxPayment"],
                     IsStorePayment = purchaseJson["isStorePayment"],
                     LinkedPaymentId = "",
 #else
+                    IsSandboxPayment = false,
                     IsStorePayment = false,
                     LinkedPaymentId = purchaseJson["linkedPaymentId"],
 #endif
@@ -76,9 +79,11 @@ namespace Toast.Iap
                     PurchaseTime = purchaseJson["purchaseTime"],
                     ExpiryTime = purchaseJson["expiryTime"],
 #if UNITY_IOS
+                    IsSandboxPayment = purchaseJson["isSandboxPayment"],
                     IsStorePayment = purchaseJson["isStorePayment"],
                     LinkedPaymentId = "",
 #else
+                    IsSandboxPayment = false,
                     IsStorePayment = false,
                     LinkedPaymentId = purchaseJson["linkedPaymentId"],
 #endif
@@ -102,6 +107,7 @@ namespace Toast.Iap
                     {"productType", ProductType},
                     {"expiryTime", expiryTime.ToString("s")},
                     {"userId", UserId},
+                    {"IsSandboxPayment", IsSandboxPayment},
                     {"IsStorePayment", IsStorePayment},
                     {"linkedPaymentId", LinkedPaymentId},
                 });
@@ -119,6 +125,7 @@ namespace Toast.Iap
                     {"productType", ProductType},
                     {"expiryTime", expiryTime.ToString("s")},
                     {"userId", UserId},
+                    {"IsSandboxPayment", IsSandboxPayment},
                     {"IsStorePayment", IsStorePayment},
                     {"developerPayload", DeveloperPayload},
                     {"linkedPaymentId", LinkedPaymentId},

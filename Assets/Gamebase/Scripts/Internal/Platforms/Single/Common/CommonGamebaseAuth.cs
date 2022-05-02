@@ -243,6 +243,13 @@ namespace Toast.Gamebase.Internal.Single
             GamebaseCallbackHandler.UnregisterCallback(handle);
         }
 
+        public void ChangeLogin(GamebaseResponse.Auth.ForcingMappingTicket forcingMappingTicket, int handle)
+        {
+            var callback = GamebaseCallbackHandler.GetCallback<GamebaseCallback.GamebaseDelegate<GamebaseResponse.Auth.AuthToken>>(handle);
+            GamebaseErrorNotifier.FireNotSupportedAPI(this, callback);
+            GamebaseCallbackHandler.UnregisterCallback(handle);
+        }
+
         public void AddMapping(string providerName, int handle)
         {
             var callback = GamebaseCallbackHandler.GetCallback<GamebaseCallback.GamebaseDelegate<GamebaseResponse.Auth.AuthToken>>(handle);
@@ -275,6 +282,13 @@ namespace Toast.Gamebase.Internal.Single
         {
             var callback = GamebaseCallbackHandler.GetCallback<GamebaseCallback.GamebaseDelegate<GamebaseResponse.Auth.AuthToken>>(handle);
             GamebaseErrorNotifier.FireNotSupportedAPI(this, callback, "AddMapping(credentialInfo)");
+            GamebaseCallbackHandler.UnregisterCallback(handle);
+        }
+
+        public void AddMappingForcibly(GamebaseResponse.Auth.ForcingMappingTicket forcingMappingTicket, int handle)
+        {
+            var callback = GamebaseCallbackHandler.GetCallback<GamebaseCallback.GamebaseDelegate<GamebaseResponse.Auth.AuthToken>>(handle);
+            GamebaseErrorNotifier.FireNotSupportedAPI(this, callback);
             GamebaseCallbackHandler.UnregisterCallback(handle);
         }
 

@@ -25,7 +25,6 @@
         public const string NOT_SUPPORTED_UNITY_STANDALONE_WIN                  = "Not supported on UnityStandalone of Windows";
         public const string NOT_SUPPORTED_UNITY_STANDALONE_OSX                  = "Not supported on UnityStandalone of OSX";
         public const string NOT_SUPPORTED_UNITY_WEBGL                           = "Not supported on UnityWebGL";
-        public const string UNKNOWN_ERROR                                       = "Unknown error";
         public const string ALREADY_LOGGED_IN                                   = "You are already logged in";
         public const string LOCALIZED_STRING_NOT_FOUND                          = "The localizedstring file not found";
         public const string LOCALIZED_STRING_LOAD_FAILED                        = "Failed to load the localizedstring";
@@ -43,6 +42,8 @@
         public const string ADD_EVENT_HANDLER_FAILED                            = "Failed to add eventHandler";
         public const string REMOVE_EVENT_HANDLER_FAILED                         = "Failed to remove eventHandler";
 
+        public const string UNKNOWN_ERROR                                       = "Unknown error";
+        
         //----------------------------------------
         //  Network (Socket)
         //----------------------------------------
@@ -52,6 +53,7 @@
         public const string SOCKET_ERROR                                        = "Socket error";
         public const string SOCKET_SEND_FAIL                                    = "Send failed.";
         public const string SOCKET_NO_INTERNET_CONNECTION                       = "No internet connection";
+        public const string SOCKET_UNKNOWN_ERROR                                = "Socket unknown error";
 
         //----------------------------------------
         //  Launching
@@ -70,6 +72,7 @@
         public const string AUTH_EXTERNAL_LIBRARY_INITIALIZATION_ERROR          = "Failed to initialize external library.";
         public const string AUTH_EXTERNAL_LIBRARY_ERROR                         = "External library error";
         public const string AUTH_ALREADY_IN_PROGRESS_ERROR                      = "Previous authentication process is not finished yet";
+        public const string AUTH_INVALID_GAMEBASE_TOKEN                         = "You have been logged out because your Gamebase Access Token is not valid. Please try logging in again.";
 
         public const string AUTH_TRANSFERKEY_EXPIRED                            = "TransferKey has been expired";
         public const string AUTH_TRANSFERKEY_CONSUMED                           = "TransferKey has already been used";

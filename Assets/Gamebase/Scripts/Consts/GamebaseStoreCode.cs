@@ -8,4 +8,6 @@
     public const string WINDOWS = "WIN";
     public const string WEBGL = "WEB";
     public const string GALAXY = "GALAXY";
+    public const string AMAZON = "AMAZON";
+    public const string HUAWEI = "HUAWEI";
 }

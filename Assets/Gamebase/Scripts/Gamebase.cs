@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Toast.Gamebase.Internal;
 
@@ -236,7 +236,9 @@ namespace Toast.Gamebase
         /// <summary>
         /// Add a Gamebase event handler to be called when every events are arrived.
         /// You have to convert the message data to VO below according to the category value.
+        ///  - GamebaseEventCategory.LOGGED_OUT : GamebaseEventLoggedOutData
         ///  - GamebaseEventCategory.SERVER_PUSH_APP_KICKOUT : GamebaseEventServerPushData
+        ///  - GamebaseEventCategory.SERVER_PUSH_APP_KICKOUT_MESSAGE_RECEIVED : GamebaseEventServerPushData
         ///  - GamebaseEventCategory.SERVER_PUSH_TRANSFER_KICKOUT : GamebaseEventServerPushData
         ///  - GamebaseEventCategory.OBSERVER_LAUNCHING : GamebaseEventObserverData
         ///  - GamebaseEventCategory.OBSERVER_HEARTBEAT : GamebaseEventObserverData
@@ -248,17 +250,13 @@ namespace Toast.Gamebase
         ///  - GamebaseEventCategory.PUSH_CLICK_MESSAGE : PushMessage
         ///  - GamebaseEventCategory.PUSH_CLICK_ACTION : PushAction
         ///  
-        /// SERVER_PUSH : Receive messages from the Gamebase server.
-        /// 
-        /// OBSERVER : This is an event that fires when the launch, login account(hearbeat), or network connection 'status changes', webview event, introspect fail event.
-        /// 
-        /// PURCHASE_UPDATED : Promotion payment events can be received.
-        /// 
-        /// PUSH_RECEIVED_MESSAGE : This event operates when a Push message is received. It has a 'isForeground' boolean value in the extras field.
-        /// 
-        /// PUSH_CLICK_MESSAGE : This event is executed when the Push message is clicked. Note that there is no 'isForeground' boolean value.
-        /// 
+        /// SERVER_PUSH : Receive messages from the Gamebase server. 
+        /// OBSERVER : This is an event that fires when the launch, login account(hearbeat), or network connection 'status changes', webview event, introspect fail event. 
+        /// PURCHASE_UPDATED : Promotion payment events can be received. 
+        /// PUSH_RECEIVED_MESSAGE : This event operates when a Push message is received.
+        /// PUSH_CLICK_MESSAGE : This event is executed when the Push message is clicked.
         /// PUSH_CLICK_ACTION : This is an event that is triggered when the action button added through the rich message function is clicked.
+        /// 
         /// @since Added 2.10.0
         /// </summary>
         /// <param name="eventHandler">The callback that will run.</param>
@@ -267,14 +265,25 @@ namespace Toast.Gamebase
         /// <code>
         /// public void AddEventHandlerSample()
         /// {
-        ///     Gamebase.AddEventHandler(GamebaseObserverHandler);
+        ///     Gamebase.AddEventHandler(GamebaseEventHandler);
         /// }
         /// 
-        /// private void GamebaseObserverHandler(GamebaseResponse.Event.GamebaseEventMessage message)
+        /// private void GamebaseEventHandler(GamebaseResponse.Event.GamebaseEventMessage message)
         /// {
         ///     switch (message.category)
         ///     {
+        ///         case GamebaseEventCategory.LOGGED_OUT:
+        ///             {
+        ///                 GamebaseResponse.Event.GamebaseEventLoggedOutData loggedData = GamebaseResponse.Event.GamebaseEventLoggedOutData.From(message.data);
+        ///                 if (loggedData != null)
+        ///                 {
+        ///                     // There was a problem with the access token.
+        ///                     // Call login again.
+        ///                 }
+        ///                 break;
+        ///             }
         ///         case GamebaseEventCategory.SERVER_PUSH_APP_KICKOUT:
+        ///         case GamebaseEventCategory.SERVER_PUSH_APP_KICKOUT_MESSAGE_RECEIVED:
         ///         case GamebaseEventCategory.SERVER_PUSH_TRANSFER_KICKOUT:
         ///             {
         ///                 GamebaseResponse.Event.GamebaseEventServerPushData serverPushData = GamebaseResponse.Event.GamebaseEventServerPushData.From(message.data);
@@ -377,7 +386,13 @@ namespace Toast.Gamebase
         ///     if (category.Equals(GamebaseEventCategory.SERVER_PUSH_APP_KICKOUT) == true)
         ///     {
         ///         // Kicked out from Gamebase server.(Maintenance, banned or etc.)
+        ///         // And the game user closes the kickout pop-up.
         ///         // Return to title and initialize Gamebase again.
+        ///     }
+        ///     else if (category.Equals(GamebaseEventCategory.SERVER_PUSH_APP_KICKOUT_MESSAGE_RECEIVED) == true)
+        ///     {
+        ///         // Currently, the kickout pop-up is displayed.
+        ///         // If your game is running, stop it.
         ///     }
         ///     else if (category.Equals(GamebaseEventCategory.SERVER_PUSH_TRANSFER_KICKOUT) == true)
         ///     {
@@ -733,6 +748,70 @@ namespace Toast.Gamebase
             GamebaseAuthImplementation.Instance.LoginForLastLoggedInProvider(callback);
         }
 
+        /// <summary>
+        /// Change logged in account with ForcingMappingTicket.
+        /// @since Added 2.30.0.
+        /// </summary>
+        /// <param name="forcingMappingTicket">The mapping information which is necessary to log in another account.</param>
+        /// <param name="callback">Resume mapping result callback, returns the authentication token as a result of mapping.</param>
+        /// <example> 
+        /// Example Usage : 
+        /// <code>
+        /// public void ChangeLoginSample()
+        /// {
+        ///     Gamebase.AddMapping(GamebaseAuthProvider.XXX, (authToken, error) =>
+        ///     {
+        ///         if (Gamebase.IsSuccess(error) == true)
+        ///         {
+        ///             // AddMapping succeeded.
+        ///         }
+        ///         else
+        ///         {
+        ///             // If you got this error code(AUTH_ADD_MAPPING_ALREADY_MAPPED_TO_OTHER_MEMBER) that means this user already has another account of the AuthProvider.XXX),
+        ///             // You can call this method, Gamebase.addMappingForcibly() which can try to map forcibly with the AuthProvider.XXX.
+        ///             if (error.code.Equals(GamebaseErrorCode.AUTH_ADD_MAPPING_ALREADY_MAPPED_TO_OTHER_MEMBER) == true)
+        ///             {
+        ///                 // Before calling the mapping forcibly api, You should get this ForcingMappingTicket for this method parameter.
+        ///                 GamebaseResponse.Auth.ForcingMappingTicket forcingMappingTicket = GamebaseResponse.Auth.ForcingMappingTicket.From(error);
+        /// 
+        ///                 if (forcingMappingTicket == null)
+        ///                 {
+        ///                     // Unexpected error occurred. Contact Administrator.
+        ///                 }
+        /// 
+        ///                 // Try to change log in account with the ForcingMappingTicket.
+        ///                 Gamebase.ChangeLogin(forcingMappingTicket, (innerAuthToken, innerError) =>
+        ///                 {
+        ///                     if (Gamebase.IsSuccess(innerError) == true)
+        ///                     {
+        ///                         // Log in account changed successfully.
+        ///                         string userId = innerAuthToken.member.userId;
+        ///                         Debug.Log(string.Format("ChangeLogin succeeded. Gamebase userId is {0}", userId));
+        ///                     }
+        ///                     else
+        ///                     {
+        ///                         // Change login failed.
+        ///                         // The UserID will not changed.
+        ///                         Debug.Log(string.Format("ChangeLogin failed. error is {0}", innerError));
+        ///                     }
+        ///                 });
+        ///             }
+        ///             else
+        ///             {
+        ///                 // Add Mapping Forcibly Failed.
+        ///                 // Check the error code and handle the error appropriately.
+        ///                 Debug.Log(string.Format("AddMapping failed. error is {0}", error));
+        ///             }
+        ///         }
+        ///     });
+        /// }
+        /// </code>
+        /// </example>
+        public static void ChangeLogin(GamebaseResponse.Auth.ForcingMappingTicket forcingMappingTicket, GamebaseCallback.GamebaseDelegate<GamebaseResponse.Auth.AuthToken> callback)
+        {
+            GamebaseAuthImplementation.Instance.ChangeLogin(forcingMappingTicket, callback);
+        }
+        
         /// <summary>
         /// Try to log out from logged-in IdP. In many cases, the logout button is located on the game configuration screen. 
         /// Even if a logout is successful, a game user's data remain. 
@@ -1132,6 +1211,68 @@ namespace Toast.Gamebase
             GamebaseAuthImplementation.Instance.AddMappingForcibly(credentialInfo, forcingMappingKey, callback);
         }
 
+        /// <summary>
+        /// Forcibly trying to map the currently authenticated user identifier of Gamebase with the credential of external authentication provider.
+        /// @since Added 2.30.0.
+        /// </summary>
+        /// <param name="forcingMappingTicket">The mapping information which is necessary to map forcibly with the provider that is already mappped with another account.</param>
+        /// <param name="callback">Mapping result callback, returns the authentication token as a result of mapping.</param>
+        /// <example> 
+        /// Example Usage : 
+        /// <code>
+        /// public void AddMappingForciblySample()
+        /// {
+        ///     Gamebase.AddMapping(GamebaseAuthProvider.XXX, (authToken, error) =>
+        ///     {
+        ///         if (Gamebase.IsSuccess(error) == true)
+        ///         {
+        ///             // AddMapping succeeded.
+        ///         }
+        ///         else
+        ///         {
+        ///             // If you got this error code(AUTH_ADD_MAPPING_ALREADY_MAPPED_TO_OTHER_MEMBER) that means this user already has another account of the AuthProvider.XXX),
+        ///             // You can call this method, Gamebase.addMappingForcibly() which can try to map forcibly with the AuthProvider.XXX.
+        ///             if (error.code.Equals(GamebaseErrorCode.AUTH_ADD_MAPPING_ALREADY_MAPPED_TO_OTHER_MEMBER) == true)
+        ///             {
+        ///                 // Before calling the mapping forcibly api, You should get this ForcingMappingTicket and ForcingMappingKey string for this method parameter.
+        ///                 GamebaseResponse.Auth.ForcingMappingTicket forcingMappingTicket = GamebaseResponse.Auth.ForcingMappingTicket.From(error);
+        /// 
+        ///                 if (forcingMappingTicket == null)
+        ///                 {
+        ///                     // Unexpected error occurred. Contact Administrator.
+        ///                 }
+        /// 
+        ///                 // Try to add mapping forcibly with the ForcingMappingTicket.
+        ///                 Gamebase.AddMappingForcibly(forcingMappingTicket, (innerAuthToken, innerError) =>
+        ///                 {
+        ///                     if (Gamebase.IsSuccess(innerError) == true)
+        ///                     {
+        ///                         string userId = innerAuthToken.member.userId;
+        ///                         Debug.Log(string.Format("AddMappingForcibly succeeded. Gamebase userId is {0}", userId));
+        ///                     }
+        ///                     else
+        ///                     {
+        ///                         // Check the error code and handle the error appropriately.
+        ///                         Debug.Log(string.Format("AddMappingForcibly failed. error is {0}", innerError));
+        ///                     }
+        ///                 });
+        ///             }
+        ///             else
+        ///             {
+        ///                 // Add Mapping Forcibly Failed.
+        ///                 // Check the error code and handle the error appropriately.
+        ///                 Debug.Log(string.Format("AddMapping failed. error is {0}", error));
+        ///             }
+        ///         }
+        ///     });
+        /// }
+        /// </code>
+        /// </example>
+        public static void AddMappingForcibly(GamebaseResponse.Auth.ForcingMappingTicket forcingMappingTicket, GamebaseCallback.GamebaseDelegate<GamebaseResponse.Auth.AuthToken> callback)
+        {
+            GamebaseAuthImplementation.Instance.AddMappingForcibly(forcingMappingTicket, callback);
+        }
+        
         /// <summary>
         /// Forcibly trying to map the currently authenticated user identifier of Gamebase with the credential of external authentication provider.
         /// Remove mapping with a specific IdP. 
@@ -2387,6 +2528,42 @@ namespace Toast.Gamebase
             {
                 return GamebasePushImplementation.Instance.GetNotificationOptions();
             }
+            
+            /// <summary>
+            /// This API tells that the user has allowed the device to display notification.
+            /// @since Added 2.34.1.
+            /// </summary>
+            /// <param name="callback">Callback pass to API result.</param>
+            /// <example> 
+            /// Example Usage : 
+            /// <code>
+            /// public void QueryNotificationAllowedSample()
+            /// {
+            ///     Gamebase.Push.QueryNotificationAllowed((isAllowed, error)=> 
+            ///     {
+            ///         if (Gamebase.IsSuccess(error) == true) 
+            ///         {
+            ///             if (isAllowed == true)
+            ///             {
+            ///                 // The user allowed notification.
+            ///             }
+            ///             else
+            ///             {
+            ///                 // The user blocked notification.
+            ///             }
+            ///         }
+            ///         else 
+            ///         {
+            ///             // Failed to check device setting.
+            ///         }
+            ///     });
+            /// }
+            /// </code>
+            /// </example>
+            public static void QueryNotificationAllowed(GamebaseCallback.GamebaseDelegate<bool> callback)
+            {
+                GamebasePushImplementation.Instance.QueryNotificationAllowed(callback);
+            }
         }
 
         /// <summary>
@@ -3312,10 +3489,10 @@ namespace Toast.Gamebase
             /// <summary>
             /// Displays the terms and conditions window on the screen.
             /// If the user agrees to the terms and conditions, it registers the consent or not on the server.
-            /// If you agree to the terms and conditions calling showTermsView again does not display the terms and conditions and immediately returns a success callback.
+            /// If you agree to the terms and conditions calling ShowTermsView again does not display the terms and conditions and immediately returns a success callback.
             /// @since Added 2.20.0.
             /// </summary>
-            /// <param name="callback">After agreeing to the terms and conditions, when the terms and conditions window is closed, the user is notified by a callback. The GamebaseDataContainer object that comes as a callback can be converted to PushConfiguration and used in Gamebase.Push.registerPush API after logging in.</param>
+            /// <param name="callback">After agreeing to the terms and conditions, when the terms and conditions window is closed, the user is notified by a callback.</param>
             /// <example> 
             /// Example Usage : 
             /// <code>
@@ -3326,7 +3503,7 @@ namespace Toast.Gamebase
             ///         if (Gamebase.IsSuccess(error) == true)
             ///         {
             ///             Debug.Log("ShowTermsView succeeded.");
-            ///             GamebaseResponse.Push.PushConfiguration pushConfiguration = GamebaseResponse.Push.PushConfiguration.From(data);
+            ///             GamebaseResponse.Terms.ShowTermsViewResult result = GamebaseResponse.Terms.ShowTermsViewResult.From(data);
             ///         }
             ///         else
             ///         {
@@ -3338,12 +3515,49 @@ namespace Toast.Gamebase
             /// </example>
             public static void ShowTermsView(GamebaseCallback.GamebaseDelegate<GamebaseResponse.DataContainer> callback)
             {
-                GamebaseTermsImplementation.Instance.ShowTermsView(callback);
+                ShowTermsView(null, callback);
+            }
+            
+            /// <summary>
+            /// Displays the terms and conditions window on the screen.
+            /// If the user agrees to the terms and conditions, it registers the consent or not on the server.
+            /// @since Added 2.33.0.
+            /// </summary>
+            /// <param name="configuration">The initial settings of terms view.</param>
+            /// <param name="callback">After agreeing to the terms and conditions, when the terms and conditions window is closed, the user is notified by a callback.</param>
+            /// <example> 
+            /// Example Usage : 
+            /// <code>
+            /// public void SampleShowTermsView(bool forceShow)
+            /// {
+            ///     var configuration = new GamebaseRequest.Terms.GamebaseTermsConfiguration
+            ///     {
+            ///         forceShow = forceShow
+            ///     };
+            /// 
+            ///     Gamebase.Terms.ShowTermsView(configuration, (data, error) => 
+            ///     {
+            ///         if (Gamebase.IsSuccess(error) == true)
+            ///         {
+            ///             Debug.Log("ShowTermsView succeeded.");
+            ///             GamebaseResponse.Terms.ShowTermsViewResult result = GamebaseResponse.Terms.ShowTermsViewResult.From(data);
+            ///         }
+            ///         else
+            ///         {
+            ///             Debug.Log(string.Format("ShowTermsView failed. error:{0}", error));
+            ///         }
+            ///     });
+            /// }
+            /// </code>
+            /// </example>
+            public static void ShowTermsView(GamebaseRequest.Terms.GamebaseTermsConfiguration configuration, GamebaseCallback.GamebaseDelegate<GamebaseResponse.DataContainer> callback)
+            {
+                GamebaseTermsImplementation.Instance.ShowTermsView(configuration, callback);
             }
 
             /// <summary>
-            /// If you have created your own UI with the terms and conditions information downloaded through the queryTerms API,
-            /// Please send the game user's agreement to the terms and conditions to the Gamebase server through the updateTerms API.
+            /// If you have created your own UI with the terms and conditions information downloaded through the QueryTerms API,
+            /// Please send the game user's agreement to the terms and conditions to the Gamebase server through the UpdateTerms API.
             /// You can also use it for the purpose of changing the details of your agreement to the terms, such as canceling the agreement to the optional terms and conditions.
             /// @since Added 2.20.0.
             /// </summary>            
@@ -3353,7 +3567,7 @@ namespace Toast.Gamebase
             /// Example Usage : 
             /// <code>
             /// public void SampleUpdateTerms()
-            /// {            
+            /// {
             ///     List<GamebaseRequest.Terms.Content> list = new List<GamebaseRequest.Terms.Content>();
             ///     list.Add(new GamebaseRequest.Terms.Content()
             ///     {
@@ -3392,7 +3606,7 @@ namespace Toast.Gamebase
             /// If you call the API after logging in, you can also check whether the game user has agreed to the terms and conditions.
             /// @since Added 2.20.0.
             /// </summary>
-            /// <param name="callback">The result of the API call is notified to the user as a callback. You can get the terms and conditions set in the console with GamebaseQueryTermsResult that comes as a callback.</param>
+            /// <param name="callback">The result of the API call is notified to the user as a callback. You can get the terms and conditions set in the console with QueryTermsResult that comes as a callback.</param>
             /// <example> 
             /// Example Usage : 
             /// <code>
@@ -3415,6 +3629,26 @@ namespace Toast.Gamebase
             public static void QueryTerms(GamebaseCallback.GamebaseDelegate<GamebaseResponse.Terms.QueryTermsResult> callback)
             {
                 GamebaseTermsImplementation.Instance.QueryTerms(callback);
+            }
+            
+            /// <summary>
+            /// This is the method to check if terms view is being shown.
+            /// @since Added 2.35.0.
+            /// </summary>
+            /// <returns>Whether the terms view is currently show.</returns>
+            /// <example> 
+            /// Example Usage : 
+            /// <code>
+            /// public void IsShowingTermsView()
+            /// {
+            ///     bool isShowingTermsView = Gamebase.Terms.IsShowingTermsView();
+            ///     Debug.Log(string.Format("isShowingTermsView:{0}", isShowingTermsView));
+            /// }
+            /// </code>
+            /// </example>
+            public static bool IsShowingTermsView()
+            {
+                return GamebaseTermsImplementation.Instance.IsShowingTermsView();
             }
         }
 

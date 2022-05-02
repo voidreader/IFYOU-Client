@@ -46,7 +46,7 @@ namespace Toast.Gamebase.Internal.Single
                     }
                 case GamebaseLaunchingStatus.INSPECTING_ALL_SERVICES:   // 서비스 전체 점검
                     {
-                        ShowInspectingAllServicesPopup(launchingInfo);
+                        ShowInspectingServicePopup(launchingInfo);
                         break;
                     }
 
@@ -122,22 +122,25 @@ namespace Toast.Gamebase.Internal.Single
 
         public void ShowHeartbeatErrorPopup(GamebaseError error)
         {
-            if (true == Gamebase.IsSuccess(error))
+            if (Gamebase.IsSuccess(error) == true)
             {
                 return;
             }
 
-            GamebaseLog.Debug(string.Format("ErrorCode : {0}", error.code), this);
+            GamebaseLog.Debug(string.Format("code:{0}", error.code), this);
 
             switch (error.code)
             {
-                case GamebaseErrorCode.BANNED_MEMBER:                   // 이용정지 KickOut
+                case GamebaseErrorCode.INVALID_MEMBER: // 잘못된 사용자 KickOut
                     {
-                        ShowKickOutPopup();
                         break;
                     }
-                case GamebaseErrorCode.INVALID_MEMBER:                  // 잘못된 사용자 KickOut
+                case GamebaseErrorCode.BANNED_MEMBER: // 이용정지 KickOut
                     {
+                        if (GamebaseUnitySDK.EnableBanPopup == true)
+                        {
+                            ShowKickOutPopup();
+                        }
                         break;
                     }
                 default:
@@ -150,10 +153,6 @@ namespace Toast.Gamebase.Internal.Single
         public void ShowKickOutPopup()
         {
             GamebaseLog.Debug("ShowKickOutPopup", this);
-            if (false == GamebaseUnitySDK.EnablePopup || false == GamebaseUnitySDK.EnableKickoutPopup)
-            {
-                return;
-            }
             
             ShowSystemPopup(
                 GamebaseUtilAlertType.ALERT_OK,
@@ -165,23 +164,25 @@ namespace Toast.Gamebase.Internal.Single
                 (buttonID) => { });
         }
 
-        public void ShowServerPushPopup(ServerPush.ServerPushMessage.ServerPushPopup popup)
+        public void ShowServerPushPopup(
+            ServerPush.ServerPushMessage.ServerPushPopup popup,
+            GamebaseCallback.VoidDelegate callback = null)
         {
             GamebaseLog.Debug("ShowServerPushPopup", this);
 
-            if (null == popup || null == popup.messages || 0 == popup.messages.Count)
+            if (popup == null || popup.messages == null || popup.messages.Count == 0)
             {
                 return;
             }
 
             string languageCode = GamebaseImplementation.Instance.GetDisplayLanguageCode();
-            if(true == string.IsNullOrEmpty(languageCode) || false == popup.messages.ContainsKey(languageCode))
+            if(string.IsNullOrEmpty(languageCode) == true || popup.messages.ContainsKey(languageCode) == false)
             {
                 languageCode = GamebaseImplementation.Instance.GetDeviceLanguageCode();
-                if (true == string.IsNullOrEmpty(languageCode) || false == popup.messages.ContainsKey(languageCode))
+                if (string.IsNullOrEmpty(languageCode) == true || popup.messages.ContainsKey(languageCode) == false)
                 {
                     languageCode = popup.defaultLanguage;
-                    if (true == string.IsNullOrEmpty(languageCode) || false == popup.messages.ContainsKey(languageCode))
+                    if (string.IsNullOrEmpty(languageCode) == true || popup.messages.ContainsKey(languageCode) == false)
                     {
                         return;
                     }
@@ -190,7 +191,7 @@ namespace Toast.Gamebase.Internal.Single
 
             ServerPush.ServerPushMessage.ServerPushPopup.Message message = popup.messages[languageCode];
 
-            if(null == message)
+            if(message == null)
             {
                 return;
             }
@@ -202,7 +203,13 @@ namespace Toast.Gamebase.Internal.Single
                 string.Empty,
                 DisplayLanguage.Instance.GetString("common_ok_button"),
                 string.Empty,
-                (buttonID) => { });
+                (buttonID) =>
+                {
+                    if (callback != null)
+                    {
+                        callback();
+                    }
+                });
         }
 
         private void CheckNotice(LaunchingResponse.LaunchingInfo launchingInfo)
@@ -241,15 +248,21 @@ namespace Toast.Gamebase.Internal.Single
 
         private void ShowInspectingServicePopup(LaunchingResponse.LaunchingInfo launchingInfo)
         {
-            if (null != launchingInfo.launching.maintenance)
+            var maintenanceInfo = launchingInfo.launching.maintenance;
+
+            if (maintenanceInfo != null)
             {
                 StringBuilder msg = new StringBuilder();
                 msg.AppendLine(DisplayLanguage.Instance.GetString("launching_maintenance_message"));
-                msg.AppendLine();
-                msg.AppendLine(MakePeriod(launchingInfo.launching.maintenance.localBeginDate, launchingInfo.launching.maintenance.localEndDate));
+
+                if (maintenanceInfo.hideDate == false)
+                {
+                    msg.AppendLine();
+                    msg.AppendLine(MakePeriod(maintenanceInfo.localBeginDate, maintenanceInfo.localEndDate));
+                }
 
                 ShowSystemPopup(
-                    GetButtonTypeWithPageTypeCode(launchingInfo.launching.maintenance.pageTypeCode),
+                    GetButtonTypeWithPageTypeCode(maintenanceInfo.pageTypeCode),
                     DisplayLanguage.Instance.GetString("launching_maintenance_title"),
                     msg.ToString(),
                     DisplayLanguage.Instance.GetString("common_show_detail_button"),
@@ -259,38 +272,9 @@ namespace Toast.Gamebase.Internal.Single
                     {
                         if (GamebaseUtilAlertButtonID.BUTTON_ONE == buttonID)
                         {
-                            if (false == string.IsNullOrEmpty(launchingInfo.launching.maintenance.url))
+                            if (string.IsNullOrEmpty(maintenanceInfo.url) == false)
                             {
-                                GamebaseWebviewImplementation.Instance.OpenWebBrowser(launchingInfo.launching.maintenance.url);
-                            }
-                        }
-                    });
-            }
-        }
-
-        private void ShowInspectingAllServicesPopup(LaunchingResponse.LaunchingInfo launchingInfo)
-        {
-            if (null != launchingInfo.launching.maintenance)
-            {
-                StringBuilder msg = new StringBuilder();
-                msg.AppendLine(DisplayLanguage.Instance.GetString("launching_maintenance_message"));
-                msg.AppendLine();
-                msg.AppendLine(MakePeriod(launchingInfo.launching.maintenance.localBeginDate, launchingInfo.launching.maintenance.localEndDate));
-
-                ShowSystemPopup(
-                    GetButtonTypeWithPageTypeCode(launchingInfo.launching.maintenance.pageTypeCode),
-                    DisplayLanguage.Instance.GetString("launching_maintenance_title"),
-                    msg.ToString(),
-                    DisplayLanguage.Instance.GetString("common_show_detail_button"),
-                    DisplayLanguage.Instance.GetString("common_close_button"),
-                    DisplayLanguage.Instance.GetString("common_show_detail_message"),
-                    (buttonID) =>
-                    {
-                        if (GamebaseUtilAlertButtonID.BUTTON_ONE == buttonID)
-                        {
-                            if (false == string.IsNullOrEmpty(launchingInfo.launching.maintenance.url))
-                            {
-                                GamebaseWebviewImplementation.Instance.OpenWebBrowser(launchingInfo.launching.maintenance.url);
+                                GamebaseWebviewImplementation.Instance.OpenWebBrowser(maintenanceInfo.url);
                             }
                         }
                     });

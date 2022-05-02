@@ -38,6 +38,7 @@ namespace Toast.Gamebase.Internal
             {
                 public const string TRACE = "TRACE";
                 public const string DEBUG = "DEBUG";
+                public const string INFO = "INFO";
                 public const string WARN = "WARN";
                 public const string ERROR = "ERROR";
             }
@@ -48,6 +49,7 @@ namespace Toast.Gamebase.Internal
                 public const string UNITY_DEBUG_REPORT = "UNITY_DEBUG_REPORT";
                 public const string UNITY_WARN_REPORT = "UNITY_WARN_REPORT";
                 public const string UNITY_ERROR_REPORT = "UNITY_ERROR_REPORT";
+                public const string UNITY_PLUGIN_REPORT = "UNITY_PLUGIN_REPORT";
             }
         }
 
@@ -148,6 +150,19 @@ namespace Toast.Gamebase.Internal
                 {
                     { GB_USER_ID, userId }
                 });
+        }
+        
+        public void SendPluginLog(Dictionary<string, string> data)
+        {
+            if (CheckIndicatorStatus(appKeyLog, data) == false)
+            {
+                return;
+            }
+            
+            SendLogHTTPPost(
+                Log.LevelType.INFO,
+                Log.BodyType.UNITY_PLUGIN_REPORT,
+                data);
         }
 
         public void SendDebugLog(Dictionary<string, string> data)

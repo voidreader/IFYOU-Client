@@ -235,7 +235,7 @@ namespace Toast.Gamebase.Inspector
 
             popupFoldout = EditorGUILayout.Foldout(popupFoldout, "Popup Settings", foldoutStyle);
 
-            if (true == popupFoldout)
+            if (popupFoldout == true)
             {
                 settings.enablePopup = EditorGUILayout.BeginToggleGroup(popupContent, settings.enablePopup);
 
@@ -245,9 +245,6 @@ namespace Toast.Gamebase.Inspector
                 EditorGUILayout.EndToggleGroup();
 
                 settings.enableBanPopup = EditorGUILayout.BeginToggleGroup(banPopupContent, settings.enableBanPopup);
-                EditorGUILayout.EndToggleGroup();
-
-                settings.enableKickoutPopup = EditorGUILayout.BeginToggleGroup(kickoutPopupContent, settings.enableKickoutPopup);
                 EditorGUILayout.EndToggleGroup();
 
                 EditorGUI.indentLevel = 0;

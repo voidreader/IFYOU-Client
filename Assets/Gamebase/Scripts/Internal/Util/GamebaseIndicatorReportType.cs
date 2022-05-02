@@ -40,6 +40,7 @@
             public const string GB_AUTH_CANCEL_TEMPORARY_WITHDRAWAL_FAILED = "GB_AUTH_CANCEL_TEMPORARY_WITHDRAWAL_FAILED";
             public const string GB_EVENT_OBSERVER_BANNED_MEMBER = "GB_EVENT_OBSERVER_BANNED_MEMBER";
             public const string GB_EVENT_OBSERVER_INVALID_MEMBER = "GB_EVENT_OBSERVER_INVALID_MEMBER";
+            public const string GB_EVENT_LOGGED_OUT = "GB_EVENT_LOGGED_OUT";
             public const string GB_IAP_PURCHASE_SUCCESS = "GB_IAP_PURCHASE_SUCCESS";
             public const string GB_IAP_PURCHASE_FAILED = "GB_IAP_PURCHASE_FAILED";
             public const string GB_IAP_PURCHASE_CANCELED = "GB_IAP_PURCHASE_CANCELED";
@@ -62,6 +63,7 @@
             public const string GB_TCIAP_APP_KEY = "GBTCIapAppKey";
             public const string GB_ITEM_SEQ = "GBItemSeq";
             public const string GB_OBSERVER_DATA = "txtGBObserverData";
+            public const string GB_EVENT_LOGGED_OUT_DATA = "txtGBEventLoggedOutData";
             public const string GB_SUB_CATEGORY1 = "GBSubCategory1";
             public const string GB_TAA_USER_LEVEL = "GBTAAUserLevel";
             public const string GB_PAYMENT_SEQ = "GBPaymentSeq";

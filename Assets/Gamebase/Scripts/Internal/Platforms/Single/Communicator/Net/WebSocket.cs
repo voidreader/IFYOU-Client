@@ -279,13 +279,18 @@ namespace Toast.Gamebase.Internal.Single.Communicator
 
             ProtocolResponse protocol = JsonMapper.ToObject<ProtocolResponse>(response);
 
-            if (null != protocol.header.serverPush)
+            if (protocol.header.serverPush != null)
             {
                 ServerPush.Instance.OnServerPush(response);
                 return;
             }
-            
-            if(protocol.header.transactionId == requestQueueItem.requestVO.transactionId)
+
+            if (requestQueueItem == null || requestQueueItem.requestVO == null)
+            {
+                return;
+            }
+
+            if (protocol.header.transactionId == requestQueueItem.requestVO.transactionId)
             {                
                 if (requestQueueItem.callback != null)
                 {

@@ -13,6 +13,7 @@ namespace Toast.Gamebase.Internal.Mobile
             public const string AUTH_API_LOGIN_ADDITIONAL_INFO                  = "gamebase://loginWithAdditionalInfo";
             public const string AUTH_API_LOGIN_CREDENTIAL_INFO                  = "gamebase://loginWithCredentialInfo";
             public const string AUTH_API_LOGIN_FOR_LAST_LOGGED_IN_PROVIDER      = "gamebase://loginForLastLoggedInProvider";
+            public const string AUTH_API_CHANGE_LOGIN                           = "gamebase://changeLoginWithForcingMappingTicket";
             public const string AUTH_API_LOGOUT                                 = "gamebase://logout";
             public const string AUTH_API_ADD_MAPPING                            = "gamebase://addMapping";
             public const string AUTH_API_ADD_MAPPING_CREDENTIAL_INFO            = "gamebase://addMappingWithCredentialInfo";
@@ -20,9 +21,10 @@ namespace Toast.Gamebase.Internal.Mobile
             public const string AUTH_API_ADD_MAPPING_FORCIBLY                   = "gamebase://addMappingForcibly";
             public const string AUTH_API_ADD_MAPPING_FORCIBLY_CREDENTIAL_INFO   = "gamebase://addMappingForciblyWithCredentialInfo";
             public const string AUTH_API_ADD_MAPPING_FORCIBLY_ADDITIONAL_INFO   = "gamebase://addMappingForciblyWithAdditionalInfo";
+            public const string AUTH_API_ADD_MAPPING_FORCIBLY_MAPPING_TICKET    = "gamebase://addMappingForciblyWithForcingMappingTicket";
             public const string AUTH_API_REMOVE_MAPPING                         = "gamebase://removeMapping";
-            public const string AUTH_API_WITHDRAW_ACCOUT                       = "gamebase://withdraw";
-            public const string AUTH_API_WITHDRAW_IMMEDIATELY_ACCOUT           = "gamebase://withdrawImmediately";
+            public const string AUTH_API_WITHDRAW_ACCOUT                        = "gamebase://withdraw";
+            public const string AUTH_API_WITHDRAW_IMMEDIATELY_ACCOUT            = "gamebase://withdrawImmediately";
             public const string AUTH_API_REQUEST_TEMPORARY_WITHDRAWAL_ACCOUT    = "gamebase://requestTemporaryWithdrawal";
             public const string AUTH_API_CANCEL_TEMPORARY_WITHDRAWAL_ACCOUT     = "gamebase://cancelTemporaryWithdrawal";
             public const string AUTH_API_ISSUE_TRANSFER_ACCOUNT                 = "gamebase://issueTransferAccount";
@@ -53,11 +55,13 @@ namespace Toast.Gamebase.Internal.Mobile
             DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_LOGIN_ADDITIONAL_INFO,                DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.AuthToken>);
             DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_LOGIN_CREDENTIAL_INFO,                DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.AuthToken>, OnLogin);
             DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_LOGIN_FOR_LAST_LOGGED_IN_PROVIDER,    DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.AuthToken>);
+            DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_CHANGE_LOGIN,                         DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.AuthToken>);
             DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_ADD_MAPPING,                          DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.AuthToken>);
             DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_ADD_MAPPING_CREDENTIAL_INFO,          DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.AuthToken>, OnAddMapping);
             DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_ADD_MAPPING_FORCIBLY,                 DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.AuthToken>);
             DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_ADD_MAPPING_FORCIBLY_CREDENTIAL_INFO, DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.AuthToken>);
             DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_ADD_MAPPING_FORCIBLY_ADDITIONAL_INFO, DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.AuthToken>);
+            DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_ADD_MAPPING_FORCIBLY_MAPPING_TICKET,  DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.AuthToken>);
             DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_ADD_MAPPING_ADDITIONAL_INFO,          DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.AuthToken>);            
             DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_ISSUE_TRANSFER_ACCOUNT,               DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.TransferAccountInfo>);
             DelegateManager.AddDelegate(GamebaseAuth.AUTH_API_QUERY_TRANSFER_ACCOUNT,               DelegateManager.SendGamebaseDelegateOnce<GamebaseResponse.Auth.TransferAccountInfo>);
@@ -117,6 +121,17 @@ namespace Toast.Gamebase.Internal.Mobile
                     GamebaseAuth.AUTH_API_LOGIN_FOR_LAST_LOGGED_IN_PROVIDER,
                     handle: handle
                     ));
+            messageSender.GetAsync(jsonData);
+        }
+
+        virtual public void ChangeLogin(GamebaseResponse.Auth.ForcingMappingTicket forcingMappingTicket, int handle)
+        {
+            string jsonData = JsonMapper.ToJson(
+                new UnityMessage(
+                    GamebaseAuth.AUTH_API_CHANGE_LOGIN,
+                    handle: handle,
+                    jsonData: JsonMapper.ToJson(forcingMappingTicket)
+                ));
             messageSender.GetAsync(jsonData);
         }
 
@@ -199,6 +214,17 @@ namespace Toast.Gamebase.Internal.Mobile
                     jsonData: JsonMapper.ToJson(vo)
                     ));
             messageSender.GetAsync(jsonData);
+        }
+
+        virtual public void AddMappingForcibly(GamebaseResponse.Auth.ForcingMappingTicket forcingMappingTicket, int handle)
+        {
+            string jsonData = JsonMapper.ToJson(
+                new UnityMessage(
+                    GamebaseAuth.AUTH_API_ADD_MAPPING_FORCIBLY_MAPPING_TICKET,
+                    handle: handle,
+                    jsonData: JsonMapper.ToJson(forcingMappingTicket)
+                ));
+            messageSender.GetAsync(jsonData);   
         }
 
         virtual public void RemoveMapping(string providerName, int handle)

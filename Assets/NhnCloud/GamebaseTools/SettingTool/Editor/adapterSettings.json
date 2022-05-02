@@ -1,0 +1,244 @@
+
+{
+    "useAndroid" : false,
+    "useIOS"     : true,
+    "unity"      : {
+        "fileName" : "sdk/gamebase-sdk",
+        "authentication" : {
+            "name" : "authentication",
+            "onlyOneCanBeSelectedFromCategory" : false,
+            "adapters"                         : [
+                {
+                    "name" : "Facebook",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : true,
+                    "fileName"                         : "sdk/gamebase-adapter-auth-facebook"
+                }
+            ]
+        },
+        "purchase"       : {
+            "name" : "purchase",
+            "onlyOneCanBeSelectedFromCategory" : false,
+            "adapters"                         : null
+        },
+        "push"           : {
+            "name" : "push",
+            "onlyOneCanBeSelectedFromCategory" : false,
+            "adapters"                         : null
+        },
+        "etc"            : {
+            "name" : "etc",
+            "onlyOneCanBeSelectedFromCategory" : false,
+            "adapters"                         : [
+                {
+                    "name" : "WebView",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "sdk/gamebase-adapter-etc-webview"
+                }
+            ]
+        }
+    },
+    "android"    : {
+        "fileName" : "com.toast.android.gamebase:gamebase-sdk",
+        "authentication" : {
+            "name" : "authentication",
+            "onlyOneCanBeSelectedFromCategory" : false,
+            "adapters"                         : [
+                {
+                    "name" : "Facebook",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : true,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-auth-facebook"
+                },
+                {
+                    "name" : "Google",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-auth-google"
+                },
+                {
+                    "name" : "Naver",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-auth-naver"
+                },
+                {
+                    "name" : "Twitter",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-auth-twitter"
+                },
+                {
+                    "name" : "Line",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-auth-line"
+                },
+                {
+                    "name" : "AppleId",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-auth-appleid"
+                },
+                {
+                    "name" : "Weibo",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-auth-weibo"
+                },
+                {
+                    "name" : "Payco",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-auth-payco"
+                }
+            ]
+        },
+        "purchase"       : {
+            "name" : "purchase",
+            "onlyOneCanBeSelectedFromCategory" : true,
+            "adapters"                         : [
+                {
+                    "name" : "IapGoogle",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-purchase-google"
+                },
+                {
+                    "name" : "IapOnsStore",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-purchase-onestore"
+                },
+                {
+                    "name" : "IapGalaxy",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-purchase-galaxy"
+                },
+                {
+                    "name" : "IapAmazon",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-purchase-amazon"
+                },
+                {
+                    "name" : "IapHuawei",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-purchase-huawei"
+                }
+            ]
+        },
+        "push"           : {
+            "name" : "push",
+            "onlyOneCanBeSelectedFromCategory" : true,
+            "adapters"                         : [
+                {
+                    "name" : "FCM",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-push-fcm"
+                }
+            ]
+        },
+        "etc"            : {
+            "name" : "etc",
+            "onlyOneCanBeSelectedFromCategory" : false,
+            "adapters"                         : null
+        }
+    },
+    "ios"        : {
+        "fileName" : "Gamebase",
+        "authentication" : {
+            "name" : "authentication",
+            "onlyOneCanBeSelectedFromCategory" : false,
+            "adapters"                         : [
+                {
+                    "name" : "Facebook",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : true,
+                    "fileName"                         : "GamebaseAuthFacebookAdapter"
+                },
+                {
+                    "name" : "Google",
+                    "used" : true,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "GamebaseAuthGoogleAdapter"
+                },
+                {
+                    "name" : "Gamecenter",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "GamebaseAuthGamecenterAdapter"
+                },
+                {
+                    "name" : "Naver",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "GamebaseAuthNaverAdapter"
+                },
+                {
+                    "name" : "Twitter",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "GamebaseAuthTwitterAdapter"
+                },
+                {
+                    "name" : "Line",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "GamebaseAuthLineAdapter"
+                },
+                {
+                    "name" : "AppleId",
+                    "used" : true,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "GamebaseAuthAppleidAdapter"
+                },
+                {
+                    "name" : "Weibo",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "GamebaseAuthWeiboAdapter"
+                },
+                {
+                    "name" : "Payco",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "GamebaseAuthPaycoAdapter"
+                }
+            ]
+        },
+        "purchase"       : {
+            "name" : "purchase",
+            "onlyOneCanBeSelectedFromCategory" : false,
+            "adapters"                         : [
+                {
+                    "name" : "IapAppStore",
+                    "used" : true,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "GamebasePurchaseIAPAdapter"
+                }
+            ]
+        },
+        "push"           : {
+            "name" : "push",
+            "onlyOneCanBeSelectedFromCategory" : false,
+            "adapters"                         : [
+                {
+                    "name" : "APNS",
+                    "used" : true,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "GamebasePushAdapter"
+                }
+            ]
+        },
+        "etc"            : {
+            "name" : "etc",
+            "onlyOneCanBeSelectedFromCategory" : false,
+            "adapters"                         : null
+        }
+    }
+}

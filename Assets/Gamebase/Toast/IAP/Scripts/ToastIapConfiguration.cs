@@ -14,6 +14,8 @@
         OneStore,
         Redbean,
         GalaxyStore,
+        AmazonAppStore,
+        HuaweiAppGallery,
         Unknown
     }
 

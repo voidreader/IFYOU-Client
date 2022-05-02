@@ -77,6 +77,12 @@ namespace Toast.Iap
                 case StoreCode.GalaxyStore:
                     storeCode = "GALAXY";
                     break;
+                case StoreCode.AmazonAppStore:
+                    storeCode = "AMAZON";
+                    break;
+                case StoreCode.HuaweiAppGallery:
+                    storeCode = "HUAWEI";
+                    break;
                 default:
                     ToastLog.Error("Unsupported store code : {0}", configuration.StoreCode);
                     return false;

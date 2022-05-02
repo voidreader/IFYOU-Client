@@ -80,8 +80,21 @@ namespace PIERStory
             else
             {
                 imageName = SystemManager.GetJsonNodeString(resourceData, "origin_name");
+                
                 imageUrl = SystemManager.GetJsonNodeString(resourceData, LobbyConst.NODE_CURRENCY_URL);
                 imageKey = SystemManager.GetJsonNodeString(resourceData, LobbyConst.NODE_CURRENCY_KEY);
+                
+                // 만약 origin_name에 없다면. 
+                if(string.IsNullOrEmpty(imageName)) {
+                    imageName = SystemManager.GetJsonNodeString(resourceData, "image_name");
+                }
+                
+                // 이미지 URL 없으면 다른 노드 체크 
+                if(string.IsNullOrEmpty(imageUrl)) {
+                    imageUrl = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_URL);
+                    imageKey = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_KEY);
+                }
+                
 
                 JsonData backgroundData = UserManager.main.currentStoryJson["backgrounds"];
 
@@ -122,12 +135,15 @@ namespace PIERStory
                     if(!string.IsNullOrEmpty(speaker)) {
                         SetEmoticonImage();
                     }
-
                     return;
+                
+                case GameConst.TEMPLATE_ILLUST:
+                    SetIllustImage(); // 일러스트 처리 
+                break;
             }
 
             // 일러스트만 예외 처리 
-            LoadImage();
+            // LoadImage();
         }
 
         
@@ -141,6 +157,7 @@ namespace PIERStory
             string middleKey = string.Empty;
             string key = string.Empty;
             
+            // 용도에 따라 중간 폴더 다름 
             switch(__template) {
                 case GameConst.TEMPLATE_BACKGROUND:
                 middleKey = "/bg/";
@@ -153,6 +170,10 @@ namespace PIERStory
                 case "emoticon":
                 middleKey = "/emoticon/";
                 break;
+                
+                case GameConst.TEMPLATE_ILLUST:
+                middleKey = "/illust/";
+                break;
             }
             
             // 중간 키 없으면 엠티 리턴 
@@ -163,8 +184,10 @@ namespace PIERStory
             key = StoryManager.main.CurrentProjectID + middleKey + imageName;
             
             
-            // 배경과 미니컷(image)은 spriteatlas 사용 
-            if(__template == GameConst.TEMPLATE_BACKGROUND || __template == GameConst.TEMPLATE_IMAGE) {
+            // 배경과 미니컷(image), 일러스트는 spriteatlas 사용 
+            if(__template == GameConst.TEMPLATE_BACKGROUND 
+                || __template == GameConst.TEMPLATE_IMAGE
+                || __template == GameConst.TEMPLATE_ILLUST) {
                 key += ".spriteatlas";
             }
             else {
@@ -265,6 +288,47 @@ namespace PIERStory
         
         
         /// <summary>
+        /// 일러스트 이미지 처리 
+        /// </summary>
+        void SetIllustImage() {
+            addressableKey = GetAddressableKey(template);
+            
+            Debug.Log(">> SetIllustImage  : " + addressableKey);
+            
+            Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
+                
+   
+                // 에셋번들 있음 
+               if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0)  {
+                   
+                   // 미니컷도 POT (2의 지수) 이슈로 인해서 SpriteAtals로 불러오도록 처리 
+                   Addressables.LoadAssetAsync<SpriteAtlas>(addressableKey).Completed += (handle) => {
+                       if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공!
+                            
+                            isAddressable = true; // 어드레서블을 사용합니다. 
+                            mountedAtalsAddressable = handle; // 메모리 해제를 위한 변수.
+                            sprite = mountedAtalsAddressable.Result.GetSprite(imageName); // 이미지 이름으로 스프라이트 할당 
+                            
+                            
+                            SendSuccessMessage(); // 성공처리 
+                       }
+                       else {
+                           
+                           Debug.Log(">> Failed LoadAssetAsync " + imageName + " / " + handle.OperationException.Message);
+                           DownloadImage();
+                       }
+                   }; // end of LoadAssetAsync
+               }
+               else {
+                   // 없음
+                   DownloadImage();
+               }
+            }; // ? end of LoadResourceLocationsAsync                
+        }
+        
+        
+        
+        /// <summary>
         /// 이모티콘 이미지 세팅 
         /// </summary>
         void SetEmoticonImage() {
@@ -315,6 +379,9 @@ namespace PIERStory
             req.Timeout = System.TimeSpan.FromSeconds(40);
             req.Send();
         }
+        
+        
+
 
         /// <summary>
         /// 다운로드만 해두는 처리!
@@ -339,6 +406,9 @@ namespace PIERStory
             ES3.SaveRaw(res.Data, imageKey);
             SendSuccessMessage(); // 완료
         }
+        
+        
+        
 
         /// <summary>
         /// 서버 기준정보 기반으로 이미지 정보 불러오기 
@@ -404,7 +474,7 @@ namespace PIERStory
             {
                 
                 // 어드레서블은 asyncOperationHandle에서 가져오고 sprite도 생성해놓는다.
-                if(isAddressable && ( template == GameConst.TEMPLATE_BACKGROUND || template == GameConst.TEMPLATE_IMAGE))  {
+                if(isAddressable && ( template == GameConst.TEMPLATE_BACKGROUND || template == GameConst.TEMPLATE_IMAGE || template == GameConst.TEMPLATE_ILLUST)) {
                     return true;
                 }
                 
@@ -448,6 +518,21 @@ namespace PIERStory
         {
             useCount -= 1;
         }
+        
+        public void DestroyAddressable() {
+            if(!isAddressable || !isMounted) {
+                return;
+            }
+            
+            if(template == GameConst.COL_EMOTICON) 
+                Addressables.ReleaseInstance(mountedSpriteAddressable);
+            else 
+                Addressables.ReleaseInstance(mountedAtalsAddressable);
+                
+            sprite = null;
+            
+        }
+        
 
         /// <summary>
         /// 이미지 사용 종료 신고!

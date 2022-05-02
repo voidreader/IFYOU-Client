@@ -25,6 +25,8 @@ namespace PIERStory
         public RectTransform viewRect;
         
         public ImageRequireDownload illustImage;
+        public Image image;
+        
         public RawImage liveRenderTexture;
 
         public GameObject illustContents;
@@ -36,10 +38,14 @@ namespace PIERStory
         public bool isShareBonusGet = false; // 공유 보너스 맞았었는지 
         public GameObject buttonShare;
         
+        [Space]        
+        public ScriptImageMount imageMount;
 
         public static void SetData(JsonData __j, bool __live, bool __minicut, string __title, string __summary, JsonData __userGalleryData)
         {
             illustData = __j;
+            Debug.Log(JsonMapper.ToStringUnicode(illustData));
+            
             userGalleryData = __userGalleryData;
 
             isLive = __live;
@@ -68,20 +74,23 @@ namespace PIERStory
         public override void OnStartView()
         {
             base.OnStartView();
-
+            illustImage.gameObject.SetActive(false);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE, string.Empty);
             
             // live2D 아닌 경우
             if (!isLive)
             {
-                illustImage.gameObject.SetActive(true);
+                // 일반 이미지, 에셋번들부터 확인할 수 있게 Mount로 변경한다. 
+                
+                string imageType = GameConst.TEMPLATE_ILLUST;
+                
+                if(isMinicut) {
+                    imageType = GameConst.TEMPLATE_IMAGE;
+                }
 
-                if (isMinicut)
-                    illustImage.OnDownloadImage = MinicutResize;
-                //else
-                //    illustImage.OnDownloadImage = IllustSetNativeSize;
+                // OnCompleteImageLoad 에서 이미지 활성화 
+                imageMount = new ScriptImageMount(imageType, illustData, OnCompleteImageLoad);
 
-                illustImage.SetDownloadURL(SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_KEY), true);
             }
             else
             {
@@ -115,7 +124,30 @@ namespace PIERStory
         public override void OnHideView()
         {
             base.OnHideView();
+            
+            // 시그널 보내고 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_RECOVER, string.Empty);
+            
+            
+            // 터치 이펙트 활성화, 
+            LobbyManager.main.touchEffect.gameObject.SetActive(true);
+            
+            // 이미지 비활성화 
+            illustImage.gameObject.SetActive(false);
+            
+            // 로딩 하이드.
+            SystemManager.HideNetworkLoading(); 
+            
+            try {
+                // 일반 이미지의 경우 어드레서블 체크해서 Release. 
+                if(!isLive && imageMount != null && imageMount.isAddressable && imageMount.isMounted) {
+                    imageMount.DestroyAddressable();
+                }
+            }
+            catch {
+                
+            }
+            
 
             if (LobbyManager.main.transform.childCount < 1)
                 return;
@@ -142,10 +174,43 @@ namespace PIERStory
                     gl.DestroySelf();
             }
 
-            LobbyManager.main.touchEffect.gameObject.SetActive(true);
+            
             
             System.GC.Collect();
         }
+        
+        
+        /// <summary>
+        /// 이미지 로드 완료됨 (미니컷 이미지, 일반 일러스트)
+        /// </summary>
+        void OnCompleteImageLoad() {
+            
+            illustImage.gameObject.SetActive(true);
+            
+            if(imageMount.isAddressable && imageMount.isMounted) {
+                image.sprite = imageMount.sprite;
+                image.SetNativeSize();
+                
+                if(isMinicut) {
+                    MinicutResize();
+                }
+                else {
+                    IllustResize();
+                }
+                
+            }
+            else {
+                illustImage.SetDownloadURL(SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_KEY), true);
+                
+                if(isMinicut) {
+                    illustImage.OnDownloadImage = MinicutResize;
+                }
+                else {
+                    illustImage.OnDownloadImage = IllustResize;
+                }
+            }
+        }
+        
         
         void Update() {
             if(Input.GetKeyDown(KeyCode.C)) {
@@ -156,11 +221,17 @@ namespace PIERStory
             }
         }
 
-        void IllustSetNativeSize()
-        {
-            illustImage.GetComponent<RectTransform>().sizeDelta = new Vector2(1000, 1755);
-        }
 
+        /// <summary>
+        /// 일러스트 사이즈 조정
+        /// </summary>
+        void IllustResize() {
+            image.rectTransform.localScale = Vector3.one * 0.76f;
+        }
+        
+        /// <summary>
+        /// 미니컷 사이즈 조정 
+        /// </summary>
         void MinicutResize()
         {
             illustImage.GetComponent<Image>().SetNativeSize();

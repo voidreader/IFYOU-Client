@@ -176,8 +176,15 @@ namespace PIERStory {
         public void InitNormalContainer()
         {
             Debug.Log(">> InitNormalContainer");
-            if(!this.gameObject.activeSelf)
+            
+            try {
+            
+                if(!this.gameObject.activeSelf)
+                    return;
+            }
+            catch {
                 return;
+            }
             
             for(int i=0; i<listNormalTabPackages.Count;i++) {
                  listNormalTabPackages[i].gameObject.SetActive(false);
@@ -236,9 +243,13 @@ namespace PIERStory {
              
              Debug.Log("## InitPackContainer");
              
-             
-             if(!this.gameObject.activeSelf)
-                return;
+             try {
+                if(!this.gameObject.activeSelf)
+                    return;
+             }
+             catch {
+                 return;
+             }
              
              
             if(UserManager.main == null || !UserManager.main.completeReadUserData)

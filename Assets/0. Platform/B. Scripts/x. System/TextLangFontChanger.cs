@@ -21,6 +21,11 @@ namespace PIERStory {
                 _text = this.GetComponent<TextMeshProUGUI>();
         }
         
+        void Start() {
+            SetFont();
+        }
+
+        
         void SetFont() {
             if(_text == null) 
                 return;

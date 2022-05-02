@@ -24,6 +24,10 @@ namespace PIERStory {
             SetText();
         }
         
+        void Start() {
+            SetText();    
+        }
+        
 
         void SetText() {
             if(_text == null)

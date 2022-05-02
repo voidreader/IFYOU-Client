@@ -208,12 +208,51 @@ namespace PIERStory
             
             // 재화 획득 팝업 
             SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6123"), missionData.rewardQuantity, missionData.currency_icon_url, missionData.currency_icon_key);
+            UserManager.main.SetBankInfo(resposeData);
             
             // 미션 상태 변경 (보상 받고, 완료로 변경)
             missionData.missionState = MissionState.finish; 
             UserManager.main.SetMissionData(missionData.missionID, missionData);
 
-            
+            // 경험치 획득 팝업 출현
+            PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_GRADE_EXP);
+
+            if (p == null)
+            {
+                Debug.LogError("등급 경험치 획득 팝업 없음!");
+                return;
+            }
+
+            Sprite s = null;
+
+            switch (UserManager.main.nextGrade + 1)
+            {
+                case 1:
+                    s = LobbyManager.main.spriteBronzeBadge;
+                    break;
+                case 2:
+                    s = LobbyManager.main.spriteSilverBadge;
+                    break;
+                case 3:
+                    s = LobbyManager.main.spriteGoldBadge;
+                    break;
+                case 4:
+                    s = LobbyManager.main.spritePlatinumBadge;
+                    break;
+                case 5:
+                    s = LobbyManager.main.spriteIFYOUBadge;
+                    break;
+            }
+
+            p.Data.SetImagesSprites(s);
+            p.isOverlayUse = false;
+            p.Data.SetLabelsTexts(string.Format("+{0}", missionData.rewardExp), string.Format("/{0}", UserManager.main.upgradeGoalPoint));
+            p.Data.contentValue = missionData.rewardExp;
+            PopupManager.main.ShowPopup(p, false);
+
+            // 혹시 등급업 할 수도 있으니 다음 등급을 갱신
+            UserManager.main.nextGrade = SystemManager.GetJsonNodeInt(resposeData["grade_info"], "next_grade");
+
             // * 성공 했다. => 미션이 해금도 되었고, 보상도 받은 상태가 되는거다. 
             ViewMission.OnRefreshProgressor?.Invoke();
 

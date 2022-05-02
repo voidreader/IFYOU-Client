@@ -118,13 +118,15 @@ namespace PIERStory
             {
                 if (missionData.missionState == MissionState.locked)
                 {
-                    if (missionData.isHidden)
-                        lockHiddenMissionCount++;
-                    else
+                    missionElements[sortIndex].InitMission(missionData);
+
+                    if(missionData.isHidden && missionElements[sortIndex].missionGauge.fillAmount == 0f)
                     {
-                        missionElements[sortIndex].InitMission(missionData);
-                        sortIndex++;
+                        lockHiddenMissionCount++;
+                        continue;
                     }
+
+                    sortIndex++;
                 }
             }
 

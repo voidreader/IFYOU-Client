@@ -111,10 +111,6 @@ namespace PIERStory
 
             MainProfile.OnSaveVerticalNormalize?.Invoke();
 
-            UserManager.main.SetSeasonCheck(result["list"]);
-            UserManager.main.SetUserGradeInfo(result["list"]);
-            UserManager.main.SetAchievementList(result["list"]);
-
             PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_GRADE_EXP);
 
             if(p == null)
@@ -145,10 +141,13 @@ namespace PIERStory
             }
 
             p.Data.SetImagesSprites(s);
-            //p.Data.SetLabelsTexts(string.Format("{0}/{1}", UserManager.main.currentAchievement, UserManager.main.upgradeGoalPoint), string.Format("+{0}", achievementData.experience));
-            p.Data.SetLabelsTexts(string.Format("+{0}", achievementData.experience));
+            p.Data.SetLabelsTexts(string.Format("+{0}", achievementData.experience), string.Format("/{0}", UserManager.main.upgradeGoalPoint));
             p.Data.contentValue = achievementData.experience;
             PopupManager.main.ShowPopup(p, false);
+
+            UserManager.main.SetSeasonCheck(result["list"]);
+            UserManager.main.SetUserGradeInfo(result["list"]);
+            UserManager.main.SetAchievementList(result["list"]);
 
         }
     }

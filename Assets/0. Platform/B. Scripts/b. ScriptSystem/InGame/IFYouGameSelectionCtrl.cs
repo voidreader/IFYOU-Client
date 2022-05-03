@@ -649,7 +649,7 @@ namespace PIERStory {
                 return;
             }
 
-            p.Data.SetLabelsTexts(scriptRow.script_data);
+            p.Data.SetLabelsTexts(string.Format("‘ {0}’", scriptRow.script_data));
             PopupManager.main.ShowPopup(p, false);
         }
 

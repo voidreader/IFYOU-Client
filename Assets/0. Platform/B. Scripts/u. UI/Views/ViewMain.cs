@@ -97,8 +97,8 @@ namespace PIERStory {
             {   
                 Debug.Log("<color=yellow> Notice Call </color>");
                 
-                // 실행당 한번만 오픈                 
-                if(!SystemManager.noticePopupExcuted) {
+                // 실행당 한번만 오픈. 오늘 더이상 보지 않기에 대한 key가 없을때(하루가 지나거나, 설정하지 않은 경우)                 
+                if(!SystemManager.noticePopupExcuted && !PlayerPrefs.HasKey("noticeOneday")) {
                     PopupBase p = PopupManager.main.GetPopup("Notice");
                     PopupManager.main.ShowPopup(p, true);
                     SystemManager.noticePopupExcuted = true; // true 로 설정. 이번 실행헤서는 또 뜨지 않게. 

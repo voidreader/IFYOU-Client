@@ -15,6 +15,7 @@ namespace PIERStory
         [SerializeField] RectTransform footer;
         UIContainer menuContainer;
         PopupBase gameOptionPopup;
+        public RectTransform gameMenuTop;
         public GameObject replayButton;
 
         [Header("Skip")]
@@ -54,6 +55,12 @@ namespace PIERStory
             
             // 타이틀 처리 타입, 순번, 타이틀 조합
             textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
+
+            // 화면에 상단바가 표출중인 경우 아래로 80만큼 내린다
+            if (ViewGame.main.commonTop.isVisible || ViewGame.main.commonTop.isShowing)
+                gameMenuTop.anchoredPosition = new Vector2(0, -80f);
+            else
+                gameMenuTop.anchoredPosition = Vector2.zero;
         }
         
         public override void OnHideView() {
@@ -127,6 +134,7 @@ namespace PIERStory
             GameManager.main.useSkip = true;
             GameManager.main.isThreadHold = false;
             GameManager.main.isWaitingScreenTouch = false;
+            menuContainer.Hide();
         }
         
 

@@ -916,6 +916,10 @@ namespace PIERStory
             {
                 Handheld.Vibrate();
                 yield return new WaitForSeconds(1.2f);
+
+                // 전화오는 중에 스킵을 하면 코루틴 벗어나기
+                if (GameManager.main.useSkip)
+                    yield break;
             }    
         }
 

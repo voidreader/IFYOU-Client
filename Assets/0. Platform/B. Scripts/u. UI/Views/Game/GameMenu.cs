@@ -134,6 +134,9 @@ namespace PIERStory
             GameManager.main.useSkip = true;
             GameManager.main.isThreadHold = false;
             GameManager.main.isWaitingScreenTouch = false;
+
+            ViewGame.main.isVibrate = false;
+
             menuContainer.Hide();
         }
         

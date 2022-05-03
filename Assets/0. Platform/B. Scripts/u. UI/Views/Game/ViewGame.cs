@@ -84,6 +84,7 @@ namespace PIERStory
         string answerSceneId = string.Empty;
         bool timeEnd = false;
         public bool userCall = false;                  // 전화를 걸었는가?
+        public bool isVibrate = false;                 // 현재 핸드폰이 진동중인가요?
 
 
         [Header("***메신저***")]
@@ -113,7 +114,7 @@ namespace PIERStory
         ScrollRect sr;
         string msgPrevSpeaker = string.Empty;       // 메신저에서 전에 말했던 사람
         string msgCurrSpeaker = string.Empty;       // 메신저에서 현재 말하고 있는 사람
-        const int splitWord = 18;
+
 
         [Header("게임로그")]
         public GameObject logPanel;
@@ -798,6 +799,7 @@ namespace PIERStory
         /// </summary>
         public void AnswerPhoneButton()
         {
+            isVibrate = false;
             timeEnd = true;
             phoneImage.GetComponent<RectTransform>().DOAnchorPosY(-1350f, 0.5f);
 
@@ -912,14 +914,13 @@ namespace PIERStory
 
             yield return new WaitForSeconds(0.7f);
 
-            while(!callBackground.gameObject.activeSelf)
+            // 전화가 오는 상황에만 true
+            isVibrate = !userCall ? true : false;
+
+            while(isVibrate)
             {
                 Handheld.Vibrate();
                 yield return new WaitForSeconds(1.2f);
-
-                // 전화오는 중에 스킵을 하면 코루틴 벗어나기
-                if (GameManager.main.useSkip)
-                    yield break;
             }    
         }
 

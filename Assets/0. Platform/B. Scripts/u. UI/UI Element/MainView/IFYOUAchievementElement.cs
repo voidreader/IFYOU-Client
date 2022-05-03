@@ -93,8 +93,6 @@ namespace PIERStory
 
         void CallbackUpdateUserAchievement(HTTPRequest req, HTTPResponse res)
         {
-            getButton.GetComponent<Button>().interactable = true;
-
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("CallbackUpdateUserAchievement");
@@ -104,6 +102,7 @@ namespace PIERStory
                 if (SystemManager.GetJsonNodeInt(errordata, "code") == 80117)
                     ViewMain.OnReturnLobby?.Invoke();
 
+                getButton.GetComponent<Button>().interactable = true;
                 return;
             }
 
@@ -149,6 +148,7 @@ namespace PIERStory
             UserManager.main.SetUserGradeInfo(result["list"]);
             UserManager.main.SetAchievementList(result["list"]);
 
+            getButton.GetComponent<Button>().interactable = true;
         }
     }
 }

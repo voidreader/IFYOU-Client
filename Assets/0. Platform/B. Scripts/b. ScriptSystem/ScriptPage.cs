@@ -691,8 +691,7 @@ namespace PIERStory
                 }
             }
 
-            // 유저 드레스 Progress의 모델 수집 
-            // CollectUserDressProgressModelResource(UserManager.main.GetNodeDressProgress());
+            
         }
 
 
@@ -725,45 +724,6 @@ namespace PIERStory
             return false;
         }
 
-        /// <summary>
-        /// 유저 의상 저장 정보의 모델 리소스 수집 
-        /// </summary>
-        void CollectUserDressProgressModelResource(JsonData __progress)
-        {
-            string speaker = string.Empty;
-            string dress_id = string.Empty;
-            string targetModelName = string.Empty;
-
-            for (int i = 0; i < __progress.Count; i++)
-            {
-                speaker = SystemManager.GetJsonNodeString(__progress[i], GameConst.COL_SPEAKER);
-                dress_id = SystemManager.GetJsonNodeString(__progress[i], GameConst.COL_DEFAULT_DRESS_ID);
-
-                // 2021.06.15 스크립트에서 등장하지 않는 인물도 로드하는것을 확인해서 
-                // 실제 등장 인물에 대한 데이터만 불러오도록 수정함!
-                if (!CheckDressProgressSpeakerExistsInScript(speaker))
-                    continue;
-
-
-                // 화자와 의상 ID로 타겟 모델 - 일치하는 모델 이름을 찾는다.
-                targetModelName = StoryManager.main.GetTargetDressModelNameByDressID(speaker, dress_id);
-                // 없으면 문제인데.? 
-                if (string.IsNullOrEmpty(targetModelName))
-                {
-                    Debug.Log(">> Wrong targetModelName, is null");
-                    continue;
-                }
-
-                // 중복 로딩 체크 후 없으면 로딩 
-                if (GameManager.main.AddLoadingModel(targetModelName))
-                {
-                    Debug.Log(string.Format("Model Loading Begin {0}", targetModelName));
-                    ScriptModelMount mounter = new ScriptModelMount(targetModelName, speaker, OnModelMountInitialized, this);
-                    ListModelMount.Add(mounter);
-                }
-
-            } // end of for i
-        }
 
         /// <summary>
         /// 의상 템플릿을 통한 모델 리소스 수집

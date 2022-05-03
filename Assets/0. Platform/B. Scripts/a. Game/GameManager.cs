@@ -1312,7 +1312,6 @@ namespace PIERStory
         /// </summary>
         public void CollectDistinctSpeaker()
         {
-            JsonData dressProgress;
 
             // 앞에서부터. 한번 등록하면 continue한다. 
             // 유저 데이터를 참고해서 있으면 사용한다.
@@ -1328,16 +1327,7 @@ namespace PIERStory
                 DictModelByDress.Add(currentPage.ListRows[i].speaker, currentPage.ListRows[i].speaker);
             }
             
-            /*
-            dressProgress = UserManager.main.GetNodeDressProgress();
 
-            // DictModelByDress 를 수집하고 유저 데이터 기반해서 재설정
-            for (int i = 0; i < dressProgress.Count; i++)
-            {
-                if (DictModelByDress.ContainsKey(SystemManager.GetJsonNodeString(dressProgress[i], GameConst.COL_SPEAKER)))
-                    DictModelByDress[SystemManager.GetJsonNodeString(dressProgress[i], GameConst.COL_SPEAKER)] = SystemManager.GetJsonNodeString(dressProgress[i], GameConst.COL_MODEL_NAME);
-            }
-            */
 
         }
 
@@ -2085,6 +2075,7 @@ namespace PIERStory
                             sidePopup.Data.imageKey = StoryManager.main.SideEpisodeList[j].popupImageKey;
                             StoryManager.main.SideEpisodeList[j].isUnlock = true;
                             PopupManager.main.ShowPopup(sidePopup, true, false);
+                            yield return new WaitForSeconds(1f); // 딜레이 주기 
                             break;
                         }
                     }

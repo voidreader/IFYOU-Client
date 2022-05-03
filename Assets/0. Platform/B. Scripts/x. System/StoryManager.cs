@@ -156,7 +156,7 @@ namespace PIERStory
 
         #endregion
         
-        JsonData storyCurrencyJSON = null; // 작품 화폐 정보 
+        
 
 
         
@@ -192,7 +192,7 @@ namespace PIERStory
         const string NODE_BUBBLE_MASTER = "bubbleMaster"; // 말풍선 마스터 노드 
         const string NODE_NAMETAG = "nametag";  // 네임태그 노드 
         
-        const string NODE_CURRENCY = "currency"; // 프로젝트 화폐코드 
+        
         
         // * 프로젝트에 소속된 배너 및 관련 이미지 친구들 
         const string NODE_GALLERY_BANNER = "galleryBanner";
@@ -252,7 +252,7 @@ namespace PIERStory
             minicutJSON = null;
             EpisodeListJson = null;
             storyNametagJSON = null;
-            storyCurrencyJSON = null;
+            
 
             EpisodeListJson = null;
             SideEpisodeListJson = null;
@@ -834,7 +834,7 @@ namespace PIERStory
             
             dressCodeJson = ProjectDetailJson[NODE_DRESS_CODE]; // 의상 
             
-            storyCurrencyJSON = ProjectDetailJson[NODE_CURRENCY]; // 화폐
+            
             
             // 상세정보 
             storyDetailJson = ProjectDetailJson[LobbyConst.NODE_DETAIL][0];
@@ -1770,51 +1770,7 @@ namespace PIERStory
         
         #endregion
     
-        #region 작품 재화(화폐) 기준정보 관련 
-        
-        
-        /// <summary>
-        /// 작품에서 사용하는 화폐코드를 가져온다.
-        /// </summary>
-        /// <param name="__type"></param>
-        /// <returns></returns>
-        public string GetProjectCurrencyCode(CurrencyType __type) {
-            
-            string dataType = string.Empty;
-            
-            switch(__type) {
-                case CurrencyType.Freepass:
-                dataType = "nonconsumable";
-                break;
-                
-                case CurrencyType.OneTime:
-                dataType = "consumable";
-                break;
-                
-                case CurrencyType.Rent:
-                dataType = "ticket";
-                break;
-                
-                default:
-                break;
-                
-            }
-            
-            if(string.IsNullOrEmpty(dataType))
-                return null;
-                
-            // loop.
-            for(int i=0;i<storyCurrencyJSON.Count;i++) {
-                if(storyCurrencyJSON[i]["currency_type"].ToString() == dataType)
-                    return storyCurrencyJSON[i]["currency"].ToString();
-            }
-                
-            return null;
-            
-        }
-        
-        #endregion
-        
+
         #region 갤러리 리소스 
         
 

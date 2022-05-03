@@ -28,10 +28,10 @@ namespace PIERStory
 
         public const string FUNC_CLEAR_EPISODE_SCENE_HISTORY = "clearUserEpisodeSceneHistory";
         public const string FUNC_DELETE_EPISODE_SCENE_HISTORY = "deleteUserEpisodeSceneHistory";
-        public const string FUNC_INSERT_DRESS_PROGRESS = "insertUserProjectDressProgress";
+        
 
         public const string FUNC_UPDATE_EPISODE_COMPLETE_RECORD = "requestCompleteEpisode"; // 에피소드 플레이 완료 기록 
-        public const string FUNC_UPDATE_EPISODE_START_RECORD = "insertUserEpisodeStartRecord"; // 에피소드 플레이 시작 기록 
+
 
         public const string FUNC_RESET_EPISODE_PROGRESS_TYPE2 = "resetUserEpisodeProgressType2"; // 에피소드 진행도 리셋 신규 15버전 2022.02.28 
 

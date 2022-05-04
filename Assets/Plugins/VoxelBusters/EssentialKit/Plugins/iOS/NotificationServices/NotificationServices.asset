@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4eeec00769cc43f2a21921915f8fa89, type: 3}
   m_Name: NotificationServices
   m_EditorClassIdentifier: 
-  m_isEnabled: 1
+  m_isEnabled: 0
   m_iosProperties:
     m_files:
     - m_reference: {fileID: -1121539586, guid: d52d4437b65924546b8d7fff06144999, type: 3}
@@ -38,10 +38,6 @@ MonoBehaviour:
     m_frameworks:
     - m_name: UserNotifications.framework
       m_isWeak: 0
-    m_capabilities:
-    - m_type: 3
-      m_associatedDomainsEntitlement:
-        m_domains: []
+    m_capabilities: []
     m_macros:
     - NATIVE_PLUGINS_USES_NOTIFICATION
-    - NATIVE_PLUGINS_USES_PUSH_NOTIFICATION

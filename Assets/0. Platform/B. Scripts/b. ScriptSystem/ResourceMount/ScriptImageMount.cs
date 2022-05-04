@@ -315,13 +315,13 @@ namespace PIERStory
                        else {
                            
                            Debug.Log(">> Failed LoadAssetAsync " + imageName + " / " + handle.OperationException.Message);
-                           DownloadImage();
+                           LoadImage();
                        }
                    }; // end of LoadAssetAsync
                }
                else {
                    // 없음
-                   DownloadImage();
+                   LoadImage();
                }
             }; // ? end of LoadResourceLocationsAsync                
         }

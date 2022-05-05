@@ -6,7 +6,7 @@ using Sirenix.OdinInspector;
 using Doozy.Runtime.UIManager.Input;
 
 namespace PIERStory {
-    public class PopupManager : SerializedMonoBehaviour
+    public class PopupManager : MonoBehaviour
     {
         public static PopupManager main = null;
         
@@ -14,7 +14,7 @@ namespace PIERStory {
         
         public Canvas popupCanvas = null;
         
-        public Dictionary<string, GameObject> DictPopup;
+        public Dictionary<string, GameObject> DictPopup = null;
         public Queue<PopupBase> PopupQueue = new Queue<PopupBase>(); 
         public PopupBase CurrentQueuePopup = null; // 큐 팝업. 
         
@@ -87,6 +87,8 @@ namespace PIERStory {
         }
         
         void Start() {
+            
+            DictPopup = new Dictionary<string, GameObject>();
             CreatePopupDict();
         }
         

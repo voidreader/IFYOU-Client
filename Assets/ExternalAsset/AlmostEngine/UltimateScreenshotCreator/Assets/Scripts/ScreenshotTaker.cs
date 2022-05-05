@@ -819,7 +819,7 @@ namespace AlmostEngine.Screenshot
             }
             else if (texture.width != width || texture.height != height || texture.format != format)
             {
-                texture.Resize(width, height, format, false);
+                texture.Reinitialize(width, height, format, false);
             }
         }
 

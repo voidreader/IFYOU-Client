@@ -64,6 +64,7 @@ namespace Doozy.Editor.UIManager.Nodes
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(UINode)))
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048215593/UI+Node?atlOrigin=eyJpIjoiNTJjN2ZjZjgwYjJkNDM0YTk1ZjViZDk5MTYwN2RhZmIiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Nodes.UINode.html")
                 .AddYouTubeButton();
 
             enterNodeHeader =

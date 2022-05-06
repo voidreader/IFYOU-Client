@@ -5,19 +5,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Doozy.Runtime.Common.Attributes;
 using Doozy.Runtime.Common.Events;
 using Doozy.Runtime.Common.Extensions;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Reactor.Internal;
 using Doozy.Runtime.Reactor.Reactions;
+using Doozy.Runtime.Reactor.Ticker;
 using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberCanBeProtected.Global
 
 namespace Doozy.Runtime.Reactor
 {
-    [AddComponentMenu("Doozy/Reactor/Progressor")]
-    public class Progressor : MonoBehaviour
+    [AddComponentMenu("Reactor/Progressor")]
+    public partial class Progressor : MonoBehaviour
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/Reactor/Progressor", false, 6)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<Progressor>(false, true);
+        }
+        #endif
+
+        public static HashSet<Progressor> database { get; private set; } = new HashSet<Progressor>();
+
+        [ExecuteOnReload]
+        private static void OnReload()
+        {
+            database = new HashSet<Progressor>();
+        }
+
         [SerializeField] private List<ProgressTarget> ProgressTargets;
         /// <summary> Progress targets that get updated by this Progressor when activated </summary>
         public List<ProgressTarget> progressTargets
@@ -36,10 +55,10 @@ namespace Doozy.Runtime.Reactor
             get
             {
                 Initialize();
-                return progressorTargets;
+                return ProgressorTargets;
             }
         }
-        
+
         [SerializeField] protected float FromValue = 0f;
         /// <summary> Start Value </summary>
         public float fromValue
@@ -94,12 +113,23 @@ namespace Doozy.Runtime.Reactor
         public ResetValue ResetValueOnEnable = ResetValue.Disabled;
 
         public FloatEvent OnValueChanged;
-        
+
         public FloatEvent OnProgressChanged;
 
-        private bool initialized { get; set; }
+        public bool initialized
+        {
+            get;
+            set;
+        }
 
-        protected virtual void Initialize()
+        public ProgressorId Id;
+
+        protected Progressor()
+        {
+            Id = new ProgressorId();
+        }
+
+        public virtual void Initialize()
         {
             if (initialized) return;
             ProgressTargets ??= new List<ProgressTarget>();
@@ -114,27 +144,41 @@ namespace Doozy.Runtime.Reactor
 
         protected virtual void Awake()
         {
-            if(!Application.isPlaying) return;
+            if (!Application.isPlaying)
+                return;
+
+            database.Add(this);
             Initialize();
         }
 
         protected virtual void OnEnable()
         {
-            if(!Application.isPlaying) return;
+            if (!Application.isPlaying)
+                return;
+
+            CleanDatabase();
             ValidateTargets();
             ResetCurrentValue(ResetValueOnEnable);
         }
 
         protected virtual void OnDisable()
         {
-            if(!Application.isPlaying) return;
+            if (!Application.isPlaying)
+                return;
+
+            CleanDatabase();
             ValidateTargets();
             reaction.Stop();
         }
 
         protected void OnDestroy()
         {
-            if(!Application.isPlaying) return;
+            if (!Application.isPlaying)
+                return;
+
+            database.Remove(this);
+            CleanDatabase();
+
             Reaction?.Recycle();
         }
 
@@ -164,6 +208,21 @@ namespace Doozy.Runtime.Reactor
                 default:
                     throw new ArgumentOutOfRangeException(nameof(resetValue), resetValue, null);
             }
+        }
+
+        /// <summary> Reset all the reactions to their initial values (if the animation is enabled) </summary>
+        public void ResetToStartValues()
+        {
+            if (reaction.isActive) Stop();
+
+            ResetCurrentValue(ResetValueOnEnable);
+
+            #if UNITY_EDITOR
+            foreach (var progressTarget in progressTargets)
+                UnityEditor.EditorUtility.SetDirty(progressTarget);
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.SceneView.RepaintAll();
+            #endif
         }
 
         /// <summary> Update current value and trigger callbacks </summary>
@@ -225,7 +284,7 @@ namespace Doozy.Runtime.Reactor
         public void PlayToValue(float value)
         {
             value = Mathf.Clamp(value, fromValue, toValue); //clamp the value
-            
+
             if (Math.Abs(value - fromValue) < 0.001f)
             {
                 PlayToProgress(0f);
@@ -237,7 +296,7 @@ namespace Doozy.Runtime.Reactor
                 PlayToProgress(1f);
                 return;
             }
-            
+
             PlayToProgress(Mathf.InverseLerp(fromValue, toValue, value));
         }
 
@@ -272,14 +331,67 @@ namespace Doozy.Runtime.Reactor
         /// <summary> Rewind the Progressor to 0% if playing forward or to 100% if playing in reverse </summary>
         public void Rewind() =>
             reaction.Rewind();
-        
+
+        /// <summary>
+        /// Progressor start delay.
+        /// <para/>
+        /// If the Progressor is active, it will return the current start delay, otherwise it returns the value from settings.
+        /// <para/>
+        /// For random, it returns the maximum value from settings.
+        /// </summary>
         public float GetStartDelay() =>
             reaction.isActive ? reaction.startDelay : reaction.settings.GetStartDelay();
 
+        /// <summary>
+        /// Progressor duration.
+        /// <para/>
+        /// If the Progressor is active, it will return the current duration, otherwise it returns the value from settings.
+        /// <para/>
+        /// For random, it returns the maximum value from settings.
+        /// </summary>
         public float GetDuration() =>
             reaction.isActive ? reaction.duration : reaction.settings.GetDuration();
 
+        /// <summary>
+        /// Progressor start delay + duration.
+        /// <para/>
+        /// If the Progressor is active, it will return the current start delay + current duration, otherwise it returns the summed values from settings.
+        /// <para/>
+        /// For random, it returns the maximum value from settings.
+        /// </summary>
         public float GetTotalDuration() =>
             GetStartDelay() + GetDuration();
+
+        /// <summary> Set animation heartbeat </summary>
+        public List<Heartbeat> SetHeartbeat<T>() where T : Heartbeat, new()
+        {
+            var list = new List<Heartbeat>() { new T() };
+            reaction.SetHeartbeat(list[0]);
+            return list;
+        }
+
+        #region Static Methods
+
+        /// <summary> Remove all null references from the database </summary>
+        protected static void CleanDatabase() =>
+            database.Remove(null);
+
+        /// <summary> Get all the registered progressors with the given category and name </summary>
+        /// <param name="category"> Progressor category </param>
+        /// <param name="name"> Progressor name (from the given category) </param>
+        public static IEnumerable<Progressor> GetProgressors(string category, string name) =>
+            database.Where(p => p.Id.Category.Equals(category)).Where(button => button.Id.Name.Equals(name));
+
+        /// <summary> Get all the registered progressors with the given category </summary>
+        /// <param name="name"> Progressor category </param>
+        public static IEnumerable<Progressor> GetAllProgressorsInCategory(string name) =>
+            database.Where(p => p.Id.Category.Equals(name));
+
+        /// <summary> Get all the registered progressors with the given name (regardless of their category) </summary>
+        /// <param name="name"> Progressor name (from the given category) </param>
+        public static IEnumerable<Progressor> GetAllProgressorsByName(string name) =>
+            database.Where(p => p.Id.Name.Equals(name));
+
+        #endregion
     }
 }

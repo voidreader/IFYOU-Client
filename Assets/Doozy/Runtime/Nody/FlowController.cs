@@ -4,6 +4,7 @@
 
 using System.Collections;
 using Doozy.Runtime.Common.Extensions;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.UIManager.Input;
 using Doozy.Runtime.UIManager.ScriptableObjects;
 using UnityEngine;
@@ -16,9 +17,17 @@ namespace Doozy.Runtime.Nody
     /// The Flow Controller is responsible of managing a Flow Graph.
     /// It can control the graph either as a local graph (instance) or a global graph.
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Nody/Flow Controller")]
+    [AddComponentMenu("Nody/Flow Controller")]
     public class FlowController : MonoBehaviour, IUseMultiplayerInfo
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/Nody/Flow Controller", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<FlowController>(false, true);
+        }
+        #endif
+        
         /// <summary> Reference to the UIManager Input Settings </summary>
         public static UIManagerInputSettings inputSettings => UIManagerInputSettings.instance;
         /// <summary> True if Multiplayer Mode is enabled </summary>

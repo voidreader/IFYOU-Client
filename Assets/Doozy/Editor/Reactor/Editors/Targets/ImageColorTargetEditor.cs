@@ -19,6 +19,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(Image)))
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048969271/Image+Color+Target?atlOrigin=eyJpIjoiNjhlNWEyZjE2ZTVjNDY2OWJhZDJjYTFmNmZlOWUwOGQiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Reactor.Targets.ImageColorTarget.html")
                 .AddYouTubeButton();
 
             targetObjectField

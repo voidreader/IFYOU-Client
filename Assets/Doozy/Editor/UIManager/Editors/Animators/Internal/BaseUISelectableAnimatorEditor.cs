@@ -6,15 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
-using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
+using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.Utils;
+using Doozy.Editor.UIManager.Components;
 using Doozy.Editor.UIManager.Editors.Components;
 using Doozy.Runtime.UIElements.Extensions;
 using Doozy.Runtime.UIManager;
+using Doozy.Runtime.UIManager.Animators;
 using Doozy.Runtime.UIManager.Components;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -22,26 +25,22 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
 {
     public abstract class BaseUISelectableAnimatorEditor : BaseTargetComponentAnimatorEditor
     {
-        protected static IEnumerable<Texture2D> uiSelectableIconTextures => UISelectableEditor.selectableIconTextures;
-        protected static IEnumerable<Texture2D> uiSelectableAnimatorIconTextures => EditorSpriteSheets.UIManager.Icons.UISelectableAnimator;
+        protected ComponentReactionControls reactionControls { get; set; }
 
-        protected FluidToggleButtonTab normalTabButton { get; set; }
-        protected FluidToggleButtonTab highlightedTabButton { get; set; }
-        protected FluidToggleButtonTab pressedTabButton { get; set; }
-        protected FluidToggleButtonTab selectedTabButton { get; set; }
-        protected FluidToggleButtonTab disabledTabButton { get; set; }
+        protected BaseUISelectableAnimator castedAnimator => (BaseUISelectableAnimator)target;
+        protected List<BaseUISelectableAnimator> castedAnimators => targets.Cast<BaseUISelectableAnimator>().ToList();
+
+        protected FluidTab normalTab { get; set; }
+        protected FluidTab highlightedTab { get; set; }
+        protected FluidTab pressedTab { get; set; }
+        protected FluidTab selectedTab { get; set; }
+        protected FluidTab disabledTab { get; set; }
 
         protected FluidAnimatedContainer normalAnimatedContainer { get; set; }
         protected FluidAnimatedContainer highlightedAnimatedContainer { get; set; }
         protected FluidAnimatedContainer pressedAnimatedContainer { get; set; }
         protected FluidAnimatedContainer selectedAnimatedContainer { get; set; }
         protected FluidAnimatedContainer disabledAnimatedContainer { get; set; }
-
-        // protected FluidToggleCheckbox isOnCheckbox { get; set; }
-        // protected FluidField isOnField { get; set; }
-
-        protected EnumField toggleCommandEnumField { get; set; }
-        protected FluidField toggleCommandField { get; set; }
 
         protected SerializedProperty propertyToggleCommand { get; set; }
         protected SerializedProperty propertyNormalAnimation { get; set; }
@@ -50,23 +49,115 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
         protected SerializedProperty propertySelectedAnimation { get; set; }
         protected SerializedProperty propertyDisabledAnimation { get; set; }
 
+        protected bool resetToStartValue { get; set; }
+
+        protected override void OnEnable()
+        {
+            if (Application.isPlaying) return;
+            resetToStartValue = false;
+            ResetAnimatorInitializedState();
+        }
+
+        protected override void OnDisable()
+        {
+            if (Application.isPlaying) return;
+            if (resetToStartValue) ResetToStartValues();
+        }
+        
         protected override void OnDestroy()
         {
             base.OnDestroy();
 
-            normalTabButton?.Recycle();
-            highlightedTabButton?.Recycle();
-            pressedTabButton?.Recycle();
-            selectedTabButton?.Recycle();
-            disabledTabButton?.Recycle();
-
-            toggleCommandField?.Recycle();
+            normalTab?.Recycle();
+            highlightedTab?.Recycle();
+            pressedTab?.Recycle();
+            selectedTab?.Recycle();
+            disabledTab?.Recycle();
 
             normalAnimatedContainer?.Dispose();
             highlightedAnimatedContainer?.Dispose();
             pressedAnimatedContainer?.Dispose();
             selectedAnimatedContainer?.Dispose();
             disabledAnimatedContainer?.Dispose();
+        }
+
+        protected abstract void ResetAnimatorInitializedState();
+        protected abstract void ResetToStartValues();
+        protected abstract void PlayNormal();
+        protected abstract void PlayHighlighted();
+        protected abstract void PlayPressed();
+        protected abstract void PlaySelected();
+        protected abstract void PlayDisabled();
+        protected abstract void HeartbeatCheck();
+        
+        protected virtual void InitializeReactionControls()
+        {
+            reactionControls =
+                new ComponentReactionControls(castedAnimator.controller)
+                    .AddComponentControls
+                    (
+                        resetCallback: () =>
+                        {
+                            resetToStartValue = true;
+                            HeartbeatCheck();
+                            ResetToStartValues();
+                        },
+                        normalCallback: () =>
+                        {
+                            if (Application.isPlaying)
+                            {
+                                castedAnimators.ForEach(a => a.Play(UISelectionState.Normal));
+                                return;
+                            }
+                            resetToStartValue = true;
+                            HeartbeatCheck();
+                            PlayNormal();
+                        },
+                        highlightedCallback: () =>
+                        {
+                            if (Application.isPlaying)
+                            {
+                                castedAnimators.ForEach(a => a.Play(UISelectionState.Highlighted));
+                                return;
+                            }
+                            resetToStartValue = true;
+                            HeartbeatCheck();
+                            PlayHighlighted();
+                        },
+                        pressedCallback: () =>
+                        {
+                            if (Application.isPlaying)
+                            {
+                                castedAnimators.ForEach(a => a.Play(UISelectionState.Pressed));
+                                return;
+                            }
+                            resetToStartValue = true;
+                            HeartbeatCheck();
+                            PlayPressed();
+                        },
+                        selectedCallback: () =>
+                        {
+                            if (Application.isPlaying)
+                            {
+                                castedAnimators.ForEach(a => a.Play(UISelectionState.Selected));
+                                return;
+                            }
+                            resetToStartValue = true;
+                            HeartbeatCheck();
+                            PlaySelected();
+                        },
+                        disabledCallback: () =>
+                        {
+                            if (Application.isPlaying)
+                            {
+                                castedAnimators.ForEach(a => a.Play(UISelectionState.Disabled));
+                                return;
+                            }
+                            resetToStartValue = true;
+                            HeartbeatCheck();
+                            PlayDisabled();
+                        }
+                    );
         }
 
         protected override void FindProperties()
@@ -83,25 +174,135 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
         protected override void InitializeEditor()
         {
             base.InitializeEditor();
-
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(UISelectable)))
-                .SetIcon(uiSelectableAnimatorIconTextures.ToList());
+                .SetIcon(EditorSpriteSheets.UIManager.Icons.UISelectableAnimator);
+            InitializeReactionControls();
+            InitializeNormal();
+            InitializeHighlighted();
+            InitializePressed();
+            InitializeSelected();
+            InitializeDisabled();
+
+            //refresh tabs enabled indicator
+            root.schedule.Execute(() =>
+            {
+                void UpdateIndicator(FluidTab tab, bool toggleOn, bool animateChange)
+                {
+                    if (tab == null) return;
+                    if (tab.indicator.isOn != toggleOn)
+                        tab.indicator.Toggle(toggleOn, animateChange);
+                }
+
+                //initial indicators state update (no animation)
+                UpdateIndicator(normalTab, castedAnimator.IsStateEnabled(UISelectionState.Normal), false);
+                UpdateIndicator(highlightedTab, castedAnimator.IsStateEnabled(UISelectionState.Highlighted), false);
+                UpdateIndicator(pressedTab, castedAnimator.IsStateEnabled(UISelectionState.Pressed), false);
+                UpdateIndicator(selectedTab, castedAnimator.IsStateEnabled(UISelectionState.Selected), false);
+                UpdateIndicator(disabledTab, castedAnimator.IsStateEnabled(UISelectionState.Disabled), false);
+
+                //subsequent indicators state update (animated)
+                root.schedule.Execute(() =>
+                {
+                    UpdateIndicator(normalTab, castedAnimator.IsStateEnabled(UISelectionState.Normal), true);
+                    UpdateIndicator(highlightedTab, castedAnimator.IsStateEnabled(UISelectionState.Highlighted), true);
+                    UpdateIndicator(pressedTab, castedAnimator.IsStateEnabled(UISelectionState.Pressed), true);
+                    UpdateIndicator(selectedTab, castedAnimator.IsStateEnabled(UISelectionState.Selected), true);
+                    UpdateIndicator(disabledTab, castedAnimator.IsStateEnabled(UISelectionState.Disabled), true);
+                    
+                }).Every(200);;
+            });
         }
 
-        protected override void InitializeAnimatedContainers()
+        private FluidTab GetFluidTab(string labelText, UnityAction<bool> callback) =>
+            FluidTab.Get()
+                .SetLabelText(labelText)
+                .SetElementSize(ElementSize.Small)
+                .IndicatorSetEnabledColor(accentColor)
+                .ButtonSetAccentColor(selectableAccentColor)
+                .ButtonSetOnValueChanged(evt => callback?.Invoke(evt.newValue))
+                .AddToToggleGroup(tabsGroup);
+
+        protected virtual void InitializeNormal()
         {
-            base.InitializeAnimatedContainers();
-            normalAnimatedContainer = GetAnimatedContainer(propertyNormalAnimation);
-            highlightedAnimatedContainer = GetAnimatedContainer(propertyHighlightedAnimation);
-            pressedAnimatedContainer = GetAnimatedContainer(propertyPressedAnimation);
-            selectedAnimatedContainer = GetAnimatedContainer(propertySelectedAnimation);
-            disabledAnimatedContainer = GetAnimatedContainer(propertyDisabledAnimation);
+            normalAnimatedContainer = new FluidAnimatedContainer("Normal", true).Hide(false);
+            normalTab = GetFluidTab("Normal", value => normalAnimatedContainer.Toggle(value));
+            normalAnimatedContainer.AddOnShowCallback(() =>
+            {
+                normalAnimatedContainer
+                    .AddContent(DesignUtils.NewPropertyField(propertyNormalAnimation))
+                    .Bind(serializedObject);
+            });
         }
 
-        protected override void ComposeAnimatedContainers()
+        protected virtual void InitializeHighlighted()
         {
-            animatedContainers
+            highlightedAnimatedContainer = new FluidAnimatedContainer("Highlighted", true).Hide(false);
+            highlightedTab = GetFluidTab("Highlighted", value => highlightedAnimatedContainer.Toggle(value));
+            highlightedAnimatedContainer.AddOnShowCallback(() =>
+            {
+                highlightedAnimatedContainer
+                    .AddContent(DesignUtils.NewPropertyField(propertyHighlightedAnimation))
+                    .Bind(serializedObject);
+            });
+        }
+
+        protected virtual void InitializePressed()
+        {
+            pressedAnimatedContainer = new FluidAnimatedContainer("Pressed", true).Hide(false);
+            pressedTab = GetFluidTab("Pressed", value => pressedAnimatedContainer.Toggle(value));
+            pressedAnimatedContainer.AddOnShowCallback(() =>
+            {
+                pressedAnimatedContainer
+                    .AddContent(DesignUtils.NewPropertyField(propertyPressedAnimation))
+                    .Bind(serializedObject);
+            });
+        }
+
+        protected virtual void InitializeSelected()
+        {
+            selectedAnimatedContainer = new FluidAnimatedContainer("Selected", true).Hide(false);
+            selectedTab = GetFluidTab("Selected", value => selectedAnimatedContainer.Toggle(value));
+            selectedAnimatedContainer.AddOnShowCallback(() =>
+            {
+                selectedAnimatedContainer
+                    .AddContent(DesignUtils.NewPropertyField(propertySelectedAnimation))
+                    .Bind(serializedObject);
+            });
+        }
+
+        protected virtual void InitializeDisabled()
+        {
+            disabledAnimatedContainer = new FluidAnimatedContainer("Disabled", true).Hide(false);
+            disabledTab = GetFluidTab("Disabled", value => disabledAnimatedContainer.Toggle(value));
+            disabledAnimatedContainer.AddOnShowCallback(() =>
+            {
+                disabledAnimatedContainer
+                    .AddContent(DesignUtils.NewPropertyField(propertyDisabledAnimation))
+                    .Bind(serializedObject);
+            });
+        }
+
+        protected override VisualElement Toolbar()
+        {
+            return base.Toolbar()
+                .AddChild(normalTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(highlightedTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(pressedTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(selectedTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(disabledTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(DesignUtils.flexibleSpace);
+        }
+
+
+        protected override VisualElement Content()
+        {
+            return base.Content()
                 .AddChild(normalAnimatedContainer)
                 .AddChild(highlightedAnimatedContainer)
                 .AddChild(pressedAnimatedContainer)
@@ -109,15 +310,29 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
                 .AddChild(disabledAnimatedContainer);
         }
 
-        protected override void InitializeController()
+
+        protected override void Compose()
         {
-            controllerObjectField =
-                DesignUtils.NewObjectField(propertyController, typeof(UISelectable))
+            root
+                .AddChild(reactionControls)
+                .AddChild(componentHeader)
+                .AddChild(Toolbar())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(Content())
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(GetController(propertyController, propertyToggleCommand))
+                .AddChild(DesignUtils.endOfLineBlock);
+        }
+
+        protected internal static FluidField GetController(SerializedProperty controllerProperty, SerializedProperty toggleCommandProperty)
+        {
+            ObjectField controllerObjectField =
+                DesignUtils.NewObjectField(controllerProperty, typeof(UISelectable))
                     .SetTooltip($"{ObjectNames.NicifyVariableName(nameof(UISelectable))} controller")
                     .SetStyleFlexGrow(1);
 
-            toggleCommandEnumField =
-                DesignUtils.NewEnumField(propertyToggleCommand)
+            EnumField toggleCommandEnumField =
+                DesignUtils.NewEnumField(toggleCommandProperty)
                     .SetStyleWidth(50, 50, 50)
                     .SetStyleAlignSelf(Align.Center)
                     .SetStyleMarginRight(DesignUtils.k_Spacing);
@@ -125,7 +340,7 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
             void ShowToggleCommand(bool show) =>
                 toggleCommandEnumField.SetStyleDisplay(show ? DisplayStyle.Flex : DisplayStyle.None);
 
-            ShowToggleCommand(propertyController.objectReferenceValue != null && ((UISelectable)propertyController.objectReferenceValue).isToggle);
+            ShowToggleCommand(controllerProperty.objectReferenceValue != null && ((UISelectable)controllerProperty.objectReferenceValue).isToggle);
             controllerObjectField.RegisterValueChangedCallback(evt =>
             {
                 if (evt.newValue == null)
@@ -137,22 +352,17 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
                 ShowToggleCommand(((UISelectable)evt.newValue).isToggle);
             });
 
-            controllerField =
-                FluidField.Get()
-                    .SetLabelText($"Controller")
-                    .SetIcon(uiSelectableIconTextures)
-                    .SetStyleMinWidth(200)
-                    .AddFieldContent
-                    (
-                        DesignUtils.row
-                            .SetStyleFlexGrow(0)
-                            .AddChild(toggleCommandEnumField)
-                            .AddChild(controllerObjectField)
-                    );
+            return FluidField.Get()
+                .SetLabelText($"Controller")
+                .SetIcon(UISelectableEditor.selectableIconTextures)
+                .SetStyleMinWidth(200)
+                .AddFieldContent
+                (
+                    DesignUtils.row
+                        .SetStyleFlexGrow(0)
+                        .AddChild(toggleCommandEnumField)
+                        .AddChild(controllerObjectField)
+                );
         }
-
-
-        protected static FluidToggleButtonTab GetTab(UISelectionState state, FluidAnimatedContainer targetContainer, EditorSelectableColorInfo selectableColor) =>
-            GetTab(targetContainer, state.ToString(), $"{state} selection state animation", selectableColor);
     }
 }

@@ -46,6 +46,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(Animator)))
                 .AddManualButton()
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Reactor.Targets.ProgressTargets.AnimatorProgressTarget.html")
                 .AddYouTubeButton();
 
             targetObjectField

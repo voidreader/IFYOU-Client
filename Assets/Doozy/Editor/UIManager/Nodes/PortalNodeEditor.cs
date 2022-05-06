@@ -75,6 +75,7 @@ namespace Doozy.Editor.UIManager.Nodes
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(PortalNode)))
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048182826/Portal+Node?atlOrigin=eyJpIjoiNTJhMWI3NTBiNTBhNDg2M2I2Mzc2ZTQyOGIzZjY5MmMiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Nodes.PortalNode.html")
                 .AddYouTubeButton();
 
             icon =

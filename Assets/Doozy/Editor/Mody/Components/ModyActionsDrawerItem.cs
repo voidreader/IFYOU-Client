@@ -48,17 +48,14 @@ namespace Doozy.Editor.Mody.Components
             this.actionProperty = actionProperty;
             actionNameProperty = this.actionProperty.FindPropertyRelative("ActionName");
             actionEnabledProperty = this.actionProperty.FindPropertyRelative("ActionEnabled");
-            animatedContainer = new FluidAnimatedContainer().SetName(actionNameProperty.stringValue);
+            animatedContainer = new FluidAnimatedContainer(actionNameProperty.stringValue, true);
 
             animatedContainer.OnShowCallback = () =>
             {
                 animatedContainer
-                    .AddContent
-                    (
-                        DesignUtils.NewPropertyField(actionProperty.propertyPath)
-                            .SetStyleMarginBottom(DesignUtils.k_Spacing)
-                    );
-
+                    .AddContent(DesignUtils.NewPropertyField(actionProperty.propertyPath))
+                    .AddContent(DesignUtils.spaceBlock)
+                    ;
 
                 animatedContainer.Bind(actionProperty.serializedObject);
             };

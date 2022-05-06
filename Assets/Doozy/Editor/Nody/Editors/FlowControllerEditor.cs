@@ -16,7 +16,6 @@ using Doozy.Runtime.UIManager.ScriptableObjects;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UIElements;
 // ReSharper disable UnusedMember.Local
 
@@ -25,10 +24,6 @@ namespace Doozy.Editor.Nody.Editors
     [CustomEditor(typeof(FlowController), true)]
     public class FlowControllerEditor : UnityEditor.Editor
     {
-        private static IEnumerable<Texture2D> graphControllerIconTextures => EditorSpriteSheets.Nody.Icons.GraphController;
-        private static IEnumerable<Texture2D> settingsIconTextures => EditorSpriteSheets.EditorUI.Icons.Settings;
-        private static IEnumerable<Texture2D> unityIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
-
         private static Color accentColor => EditorColors.Nody.Color;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Nody.Color;
 
@@ -41,23 +36,22 @@ namespace Doozy.Editor.Nody.Editors
 
         private VisualElement root { get; set; }
         private FluidComponentHeader componentHeader { get; set; }
+        private VisualElement toolbarContainer { get; set; }
+        private VisualElement contentContainer { get; set; }
 
-        private FluidToggleGroup toggleGroup { get; set; }
-        private FluidToggleButtonTab settingsTabButton { get; set; }
-        private FluidToggleButtonTab callbacksTabButton { get; set; }
-        private EnabledIndicator callbacksTabIndicator { get; set; }
+        private FluidToggleGroup tabsGroup { get; set; }
+        private FluidTab settingsTab { get; set; }
+        private FluidTab callbacksTab { get; set; }
+
         private FluidAnimatedContainer callbacksAnimatedContainer { get; set; }
         private FluidAnimatedContainer settingsAnimatedContainer { get; set; }
-        private VisualElement callbacksTab { get; set; }
-
-        private ObjectField flowObjectField { get; set; }
-        private EnumField flowTypeEnumField { get; set; }
-        private ObjectField multiplayerInfoObjectField { get; set; }
 
         private FluidField flowField { get; set; }
-        private FluidField flowTypeField { get; set; }
+        private FluidField flowTypeFluidField { get; set; }
         private FluidToggleSwitch dontDestroyOnSceneChangeSwitch { get; set; }
         private FluidField multiplayerInfoField { get; set; }
+
+        private FluidButton openNodyButton { get; set; }
 
         private SerializedProperty propertyFlow { get; set; }
         private SerializedProperty propertyFlowType { get; set; }
@@ -77,17 +71,19 @@ namespace Doozy.Editor.Nody.Editors
         {
             componentHeader?.Recycle();
 
-            toggleGroup?.Recycle();
-            settingsTabButton?.Recycle();
-            callbacksTabButton?.Recycle();
-            callbacksTabIndicator?.Recycle();
+            tabsGroup?.Recycle();
+            settingsTab?.Recycle();
+            callbacksTab?.Recycle();
+
             callbacksAnimatedContainer?.Dispose();
             settingsAnimatedContainer?.Dispose();
 
             flowField?.Recycle();
-            flowTypeField?.Recycle();
+            flowTypeFluidField?.Recycle();
             dontDestroyOnSceneChangeSwitch?.Recycle();
             multiplayerInfoField?.Recycle();
+
+            openNodyButton?.Recycle();
         }
 
         private void FindProperties()
@@ -103,185 +99,184 @@ namespace Doozy.Editor.Nody.Editors
         private void InitializeEditor()
         {
             FindProperties();
-
-            root = new VisualElement();
-
+            root = DesignUtils.GetEditorRoot();
             componentHeader =
-                FluidComponentHeader.Get()
-                    .SetElementSize(ElementSize.Large)
+                DesignUtils.editorComponentHeader
                     .SetAccentColor(accentColor)
                     .SetComponentNameText((ObjectNames.NicifyVariableName(nameof(FlowController))))
-                    .SetIcon(graphControllerIconTextures.ToList())
+                    .SetIcon(EditorSpriteSheets.Nody.Icons.GraphController)
                     .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048477732/Flow+Controller?atlOrigin=eyJpIjoiMzY3OGYxY2U4YTQ0NDI1Njk4MjVjNmVkMmI5ODAxZGEiLCJwIjoiYyJ9")
+                    .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Nody.FlowController.html")
                     .AddYouTubeButton();
+            toolbarContainer = DesignUtils.editorToolbarContainer;
+            tabsGroup = FluidToggleGroup.Get().SetControlMode(FluidToggleGroup.ControlMode.OneToggleOn);
+            contentContainer = DesignUtils.editorContentContainer;
 
-            callbacksAnimatedContainer =
-                new FluidAnimatedContainer()
-                    .SetName("Callbacks")
-                    .SetClearOnHide(true)
-                    .Hide(false);
-
-            settingsAnimatedContainer =
-                new FluidAnimatedContainer()
-                    .SetName("Settings")
-                    .SetClearOnHide(false)
-                    .Show(false);
-
-            toggleGroup =
-                FluidToggleGroup.Get()
-                    .SetControlMode(FluidToggleGroup.ControlMode.OneToggleOnEnforced);
-
-            settingsTabButton =
-                DesignUtils.GetTabButtonForComponentSection(settingsIconTextures, selectableAccentColor);
-
-            settingsTabButton
-                .SetLabelText("Settings")
-                .SetOnValueChanged(evt => settingsAnimatedContainer.Toggle(evt.newValue))
-                .SetIsOn(true, false)
-                .AddToToggleGroup(toggleGroup);
-
+            InitializeSettings();
             InitializeCallbacks();
 
-            flowObjectField =
-                DesignUtils.NewObjectField(propertyFlow, typeof(FlowGraph))
-                    .SetStyleFlexGrow(1);
+            root.schedule.Execute(() => settingsTab.ButtonSetIsOn(true, false));
+        }
 
-            flowTypeEnumField =
-                DesignUtils.NewEnumField(propertyFlowType)
-                    .SetStyleWidth(60)
-                    .SetStyleFlexShrink(0);
+        private void InitializeSettings()
+        {
+            settingsAnimatedContainer = new FluidAnimatedContainer("Settings", true).Hide(false);
+            settingsTab =
+                FluidTab.Get()
+                    .SetLabelText("Settings")
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Settings)
+                    .IndicatorSetEnabledColor(accentColor)
+                    .ButtonSetAccentColor(selectableAccentColor)
+                    .ButtonSetOnValueChanged(evt => settingsAnimatedContainer.Toggle(evt.newValue, evt.animateChange))
+                    .AddToToggleGroup(tabsGroup);
 
-            multiplayerInfoObjectField =
-                DesignUtils.NewObjectField(propertyMultiplayerInfo, typeof(MultiplayerInfo))
-                    .SetStyleFlexGrow(1);
-
-            dontDestroyOnSceneChangeSwitch =
-                FluidToggleSwitch.Get()
-                    .SetStyleMarginLeft(40)
-                    .SetLabelText("Don't destroy controller on scene change")
-                    .BindToProperty(propertyDontDestroyOnSceneChange);
-
-            dontDestroyOnSceneChangeSwitch.SetEnabled(castedTarget.transform.parent == null);
-            if (castedTarget.transform.parent != null && propertyDontDestroyOnSceneChange.boolValue)
+            settingsAnimatedContainer.AddOnShowCallback(() =>
             {
-                propertyDontDestroyOnSceneChange.boolValue = false;
-                serializedObject.ApplyModifiedPropertiesWithoutUndo();
-            }
+                dontDestroyOnSceneChangeSwitch =
+                    FluidToggleSwitch.Get()
+                        .SetStyleMarginLeft(40)
+                        .SetLabelText("Don't destroy controller on scene change")
+                        .BindToProperty(propertyDontDestroyOnSceneChange);
 
-            flowField =
-                FluidField.Get()
-                    .SetLabelText("Flow Graph")
-                    .AddFieldContent(flowObjectField);
+                dontDestroyOnSceneChangeSwitch.SetEnabled(castedTarget.transform.parent == null);
+                if (castedTarget.transform.parent != null && propertyDontDestroyOnSceneChange.boolValue)
+                {
+                    propertyDontDestroyOnSceneChange.boolValue = false;
+                    serializedObject.ApplyModifiedPropertiesWithoutUndo();
+                }
 
-            flowTypeField =
-                FluidField.Get()
-                    .SetStyleFlexGrow(0)
-                    .SetLabelText("Flow Type")
-                    .AddFieldContent(flowTypeEnumField);
+                openNodyButton =
+                    FluidButton.Get()
+                        .SetIcon(EditorSpriteSheets.Nody.Icons.Nody)
+                        .SetLabelText("Nody")
+                        .SetTooltip("Open referenced graph in Nody")
+                        .SetStyleFlexShrink(0)
+                        .SetAccentColor(EditorSelectableColors.Nody.Color)
+                        .SetButtonStyle(ButtonStyle.Contained)
+                        .SetElementSize(ElementSize.Tiny)
+                        .SetOnClick(() =>
+                        {
+                            NodyWindow.Open();
+                            NodyWindow.OpenGraph(castedTarget.flow);
+                        });
 
-            multiplayerInfoField =
-                FluidField.Get()
-                    .SetLabelText("Player Index")
-                    .AddFieldContent(multiplayerInfoObjectField)
-                    .SetStyleMarginTop(DesignUtils.k_Spacing2X)
-                    .SetStyleDisplay(UIManagerInputSettings.instance.multiplayerMode ? DisplayStyle.Flex : DisplayStyle.None);
+                flowField =
+                    FluidField.Get()
+                        .SetLabelText("Flow Graph")
+                        .AddFieldContent
+                        (
+                            DesignUtils.row
+                                .SetStyleFlexGrow(0)
+                                .SetStyleFlexShrink(1)
+                                .AddChild(DesignUtils.NewObjectField(propertyFlow, typeof(FlowGraph)).SetStyleFlexGrow(1))
+                                .AddChild(DesignUtils.spaceBlock2X)
+                                .AddChild(openNodyButton)
+                        );
 
+                flowTypeFluidField =
+                    FluidField.Get()
+                        .SetStyleFlexGrow(0)
+                        .SetStyleFlexShrink(0)
+                        .SetLabelText("Flow Type")
+                        .AddFieldContent(DesignUtils.NewEnumField(propertyFlowType).SetStyleWidth(60).SetStyleFlexShrink(0));
+
+                multiplayerInfoField =
+                    FluidField.Get()
+                        .SetLabelText("Player Index")
+                        .AddFieldContent(DesignUtils.NewObjectField(propertyMultiplayerInfo, typeof(MultiplayerInfo)).SetStyleFlexGrow(1))
+                        .SetStyleMarginTop(DesignUtils.k_Spacing2X)
+                        .SetStyleDisplay(UIManagerInputSettings.instance.multiplayerMode ? DisplayStyle.Flex : DisplayStyle.None);
+
+                settingsAnimatedContainer
+                    .AddContent
+                    (
+                        DesignUtils.row
+                            .AddChild(flowField)
+                            .AddChild(DesignUtils.spaceBlock)
+                            .AddChild(flowTypeFluidField)
+                    )
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddContent(multiplayerInfoField)
+                    .Bind(serializedObject);
+            });
         }
 
         private void InitializeCallbacks()
         {
-            (callbacksTabButton, callbacksTabIndicator, callbacksTab) =
-                DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(unityIconTextures, DesignUtils.callbackSelectableColor, DesignUtils.callbacksColor);
+            callbacksAnimatedContainer = new FluidAnimatedContainer("Callbacks", true).Hide(false);
+            callbacksTab =
+                FluidTab.Get()
+                    .SetLabelText("Callbacks")
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.UnityEvent)
+                    .IndicatorSetEnabledColor(DesignUtils.callbacksColor)
+                    .ButtonSetAccentColor(DesignUtils.callbackSelectableColor)
+                    .ButtonSetOnValueChanged(evt => callbacksAnimatedContainer.Toggle(evt.newValue, evt.animateChange))
+                    .AddToToggleGroup(tabsGroup);
 
-            callbacksAnimatedContainer.SetOnShowCallback(() =>
+            callbacksAnimatedContainer.AddOnShowCallback(() =>
             {
-                callbacksAnimatedContainer.fluidContainer
-                    .AddChild
-                    (
+                callbacksAnimatedContainer
+                    .AddContent(
                         FluidField.Get()
-                            .SetElementSize(ElementSize.Large)
-                            .SetIcon(EditorSpriteSheets.EditorUI.Icons.UnityEvent)
-                            .SetLabelText("Controller started controlling a flow graph")
-                            .AddFieldContent(DesignUtils.NewPropertyField(propertyOnStart))
+                            .AddFieldContent(DesignUtils.UnityEventField("Controller started controlling a flow graph", propertyOnStart))
                     )
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild
-                    (
+                    .AddContent(DesignUtils.spaceBlock2X)
+                    .AddContent(
                         FluidField.Get()
-                            .SetElementSize(ElementSize.Large)
-                            .SetIcon(EditorSpriteSheets.EditorUI.Icons.UnityEvent)
-                            .SetLabelText("Controller stopped controlling a flow graph")
-                            .AddFieldContent(DesignUtils.NewPropertyField(propertyOnStop))
+                            .AddFieldContent(DesignUtils.UnityEventField("Controller stopped controlling a flow graph", propertyOnStop))
                     )
-                    .AddChild(DesignUtils.endOfLineBlock);
-
-                callbacksAnimatedContainer.Bind(serializedObject);
+                    .Bind(serializedObject);
             });
 
-            callbacksTabIndicator.Toggle(hasCallbacks, false);
-
-            bool previousHasCallbacks = !hasCallbacks;
-            IVisualElementScheduledItem callbacksScheduler =
-                callbacksTabButton.schedule.Execute(() =>
+            //refresh tabs enabled indicator
+            root.schedule.Execute(() =>
+            {
+                void UpdateIndicator(FluidTab tab, bool toggleOn, bool animateChange)
                 {
-                    if (previousHasCallbacks == hasCallbacks) return;
-                    callbacksTabIndicator.Toggle(hasCallbacks, true);
-                    previousHasCallbacks = hasCallbacks;
-                }).Every(250);
+                    if (tab == null) return;
+                    if (tab.indicator.isOn != toggleOn)
+                        tab.indicator.Toggle(toggleOn, animateChange);
+                }
 
-            callbacksScheduler.Pause();
+                bool HasOnStartCallbacks() => castedTarget.onStart != null && castedTarget.onStart.GetPersistentEventCount() > 0;
+                bool HasOnStopCallbacks() => castedTarget.onStop != null && castedTarget.onStop.GetPersistentEventCount() > 0;
+                bool HasCallbacks() => HasOnStartCallbacks() || HasOnStopCallbacks();
 
-            callbacksTabButton
-                .SetLabelText("Callbacks")
-                .SetOnValueChanged(evt =>
-                {
-                    callbacksAnimatedContainer.Toggle(evt.newValue);
-                    callbacksTabIndicator.Toggle(hasCallbacks, true);
-                    if (evt.newValue)
-                        callbacksScheduler.Resume();
-                    else
-                        callbacksScheduler.Pause();
-                })
-                .AddToToggleGroup(toggleGroup);
+                //initial indicators state update (no animation)
+                UpdateIndicator(callbacksTab, HasCallbacks(), false);
+
+                //subsequent indicators state update (animated)
+                callbacksTab.schedule.Execute(() => UpdateIndicator(callbacksTab, HasCallbacks(), true)).Every(200);
+            });
+        }
+
+        private VisualElement Toolbar()
+        {
+            return
+                toolbarContainer
+                    .AddChild(settingsTab)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(callbacksTab)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(DesignUtils.flexibleSpace);
+        }
+
+        private VisualElement Content()
+        {
+            return
+                contentContainer
+                    .AddChild(settingsAnimatedContainer)
+                    .AddChild(callbacksAnimatedContainer);
         }
 
         private void Compose()
         {
             root
                 .AddChild(componentHeader)
-                .AddChild
-                (
-                    DesignUtils.row
-                        .SetStyleMargins(50, -4, DesignUtils.k_Spacing2X, DesignUtils.k_Spacing2X)
-                        .AddChild(settingsTabButton)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild(callbacksTab)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild(DesignUtils.flexibleSpace)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                )
-                .AddChild(DesignUtils.spaceBlock)
-                .AddChild(callbacksAnimatedContainer)
-                .AddChild
-                (
-                    settingsAnimatedContainer
-                        .AddContent
-                        (
-                            DesignUtils.column
-                                .AddChild(dontDestroyOnSceneChangeSwitch)
-                                .AddChild(DesignUtils.spaceBlock2X)
-                                .AddChild
-                                (
-                                    DesignUtils.row
-                                        .AddChild(flowField)
-                                        .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(flowTypeField)
-                                )
-                                .AddChild(DesignUtils.spaceBlock)
-                        )
-                )
-                .AddChild(DesignUtils.endOfLineBlock)
-                ;
+                .AddChild(Toolbar())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(Content())
+                .AddChild(DesignUtils.endOfLineBlock);
         }
     }
 }

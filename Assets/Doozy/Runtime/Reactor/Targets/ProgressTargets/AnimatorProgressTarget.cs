@@ -6,7 +6,7 @@ using System;
 using UnityEngine;
 namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
 {
-    [AddComponentMenu("Doozy/Reactor/Targets/Animator Progress Target")]
+    [AddComponentMenu("Reactor/Targets/Animator Progress Target")]
     public class AnimatorProgressTarget : MetaProgressTarget<Animator>
     {
         [SerializeField] private string ParameterName = "Progress";

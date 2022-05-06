@@ -5,7 +5,6 @@
 using System;
 using Doozy.Runtime.Reactor.Internal;
 using Doozy.Runtime.Reactor.Reactions;
-using UnityEditor;
 using UnityEngine;
 
 namespace Doozy.Runtime.Reactor.Animations
@@ -114,7 +113,6 @@ namespace Doozy.Runtime.Reactor.Animations
         /// </summary>
         /// <param name="targetRectTransform"> RectTransform target </param>
         /// <param name="targetCanvasGroup"> CanvasGroup target </param>
-        /// <exception cref="NullReferenceException"> RectTransform target is null </exception>
         public void SetTarget(RectTransform targetRectTransform, CanvasGroup targetCanvasGroup = null)
         {
             rectTransform = null;
@@ -281,10 +279,11 @@ namespace Doozy.Runtime.Reactor.Animations
         /// <param name="forced"> If true, forced will ignore if the animation is enabled or not </param>
         public override void ResetToStartValues(bool forced = false)
         {
-            if (forced | !Move.enabled) Move.SetValue(startPosition);
-            if (forced | !Rotate.enabled) Rotate.SetValue(startRotation);
-            if (forced | !Scale.enabled) Scale.SetValue(startScale);
-            if (forced | !Fade.enabled) Fade.SetValue(startAlpha);
+            if (rectTransform == null) return;
+            if (forced || !Move.enabled) Move.SetValue(startPosition);
+            if (forced || !Rotate.enabled) Rotate.SetValue(startRotation);
+            if (forced || !Scale.enabled) Scale.SetValue(startScale);
+            if (forced || !Fade.enabled) Fade.SetValue(startAlpha);
         }
 
         /// <summary>
@@ -387,7 +386,7 @@ namespace Doozy.Runtime.Reactor.Animations
 
         public float GetTotalDuration() =>
             GetStartDelay() + GetDuration();
-        
+
         /// <summary>
         /// Register all callbacks to the animation
         /// </summary>

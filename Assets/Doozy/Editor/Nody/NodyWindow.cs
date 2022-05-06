@@ -2,7 +2,6 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
-using System;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Components.Internal;
@@ -10,6 +9,9 @@ using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.EditorUI.Windows.Internal;
 using Doozy.Editor.Nody.Automation.Generators;
+using Doozy.Editor.Nody.ScriptableObjects;
+using Doozy.Editor.UIElements;
+using Doozy.Runtime.Common;
 using Doozy.Runtime.Nody;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
@@ -30,7 +32,6 @@ namespace Doozy.Editor.Nody
         public static void Open()
         {
             InternalOpenWindow(WINDOW_TITLE);
-            _ = NodyInspectorWindow.instance;
         }
 
         [MenuItem(k_WindowMenuPath + "Refresh", priority = -800)]
@@ -44,15 +45,17 @@ namespace Doozy.Editor.Nody
         [OnOpenAsset]
         public static bool OnOpenAsset(int instanceId, int line)
         {
-            if (!(Selection.activeObject is FlowGraph))
-                return false;
+            if (Selection.activeObject is FlowGraph)
+            {
+                Open();
+                OpenGraph((FlowGraph)Selection.activeObject);
+                return true;
+            }
 
-            Open();
-            return true;
-
+            return false;
         }
 
-        public static NodyInspectorWindow inspector => NodyInspectorWindow.instance;
+        private static NodySettings settings => NodySettings.instance;
 
         public static Color accentColor => EditorColors.Nody.Color;
         public static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Nody.Color;
@@ -62,23 +65,83 @@ namespace Doozy.Editor.Nody
         private VisualElement sideMenuContainer { get; set; }
         private VisualElement graphView { get; set; }
 
-        private FlowGraphView flowGraphView { get; set; }
+        public FlowGraphView flowGraphView { get; private set; }
+        public FlowGraph flowGraph => flowGraphView?.flowGraph;
 
         private NodyMiniMap miniMap { get; set; }
+
+        private FluidPlaceholder emptyPlaceholder { get; set; }
 
         private FluidSideMenu sideMenu { get; set; }
         private FluidToggleButtonTab showMinimapButton { get; set; }
         private FluidToggleButtonTab loadGraphButton { get; set; }
         private FluidToggleButtonTab saveGraphButton { get; set; }
-        private FluidToggleButtonTab openInspectorButton { get; set; }
         private FluidToggleButtonTab closeGraphButton { get; set; }
 
         private Label openedGraphPathLabel { get; set; }
         private FluidButton pingOpenGraphButton { get; set; }
 
+        protected override void OnDestroy()
+        {
+            // Debugger.Log($"{nameof(NodyWindow)}.{nameof(OnDestroy)}");
+            NodySettings.Save();
+            base.OnDestroy();
+        }
+
+        private void UpdateSettings()
+        {
+            if (flowGraph == null) return;
+            bool saveSettings =
+                flowGraphView.viewTransform.position != flowGraph.EditorPosition ||
+                flowGraphView.viewTransform.scale != flowGraph.EditorScale;
+            if (!saveSettings) return;
+            flowGraph.EditorPosition = flowGraphView.viewTransform.position;
+            flowGraph.EditorScale = flowGraphView.viewTransform.scale;
+        }
+
+        protected override void OnPlayModeStateChanged(PlayModeStateChange playModeState)
+        {
+            // Debugger.Log($"{nameof(NodyWindow)}.{nameof(OnPlayModeStateChanged)}({playModeState})");
+            switch (playModeState)
+            {
+                case PlayModeStateChange.EnteredPlayMode:
+                    //ignored
+                    break;
+                case PlayModeStateChange.EnteredEditMode:
+                    //ignored
+                    break;
+                case PlayModeStateChange.ExitingEditMode:
+                    SaveSettings();
+                    break;
+                case PlayModeStateChange.ExitingPlayMode:
+                    //ignored
+                    break;
+            }
+            base.OnPlayModeStateChanged(playModeState);
+            switch (playModeState)
+            {
+                case PlayModeStateChange.EnteredPlayMode:
+                    LoadSettings();
+                    break;
+                case PlayModeStateChange.EnteredEditMode:
+                    //ignored
+                    break;
+                case PlayModeStateChange.ExitingEditMode:
+                    //ignored
+                    break;
+                case PlayModeStateChange.ExitingPlayMode:
+                    //ignored
+                    break;
+            }
+        }
+
         protected override void CreateGUI()
         {
-            root.Add(templateContainer = EditorLayouts.Nody.NodyWindow.CloneTree());
+            // Debugger.Log($"{nameof(NodyWindow)}.{nameof(CreateGUI)}()");
+
+            root
+                .RecycleAndClear()
+                .Add(templateContainer = EditorLayouts.Nody.NodyWindow.CloneTree());
 
             templateContainer
                 .SetStyleFlexGrow(1)
@@ -88,29 +151,28 @@ namespace Doozy.Editor.Nody
             sideMenuContainer = layoutContainer.Q<VisualElement>(nameof(sideMenuContainer));
             graphView = layoutContainer.Q<VisualElement>(nameof(graphView));
 
+            emptyPlaceholder =
+                FluidPlaceholder.Get()
+                    .SetStyleAlignSelf(Align.Center)
+                    .SetIcon(EditorSpriteSheets.Nody.Icons.Nody)
+                    .SetAccentColor(EditorColors.Default.Background)
+                    .Hide();
+
             CreateFlowGraphView();
             CreateMiniMap();
             CreateSideMenu();
 
             Compose();
 
-            OnSelectionChange();
-        }
+            switch (currentPlayModeState)
+            {
+                case PlayModeStateChange.EnteredEditMode:
+                case PlayModeStateChange.EnteredPlayMode:
+                    LoadSettings();
+                    break;
+            }
 
-        /// <summary> Loads a graph from the given path </summary>
-        /// <param name="path"> Asset path where the graph can be found </param>
-        public static T LoadGraph<T>(string path) where T : FlowGraph
-        {
-            if (string.IsNullOrEmpty(path)) return null;
-            T graph = AssetDatabase.LoadAssetAtPath<T>(FileUtil.GetProjectRelativePath(path));
-            return graph == null ? null : graph;
-        }
-
-        /// <summary> Opens a file panel set to filter only the given Graph type and returns the selected asset file </summary>
-        public static T LoadGraphWithDialog<T>() where T : FlowGraph
-        {
-            string path = EditorUtility.OpenFilePanelWithFilters($"Load {ObjectNames.NicifyVariableName(typeof(T).Name)}", "", new[] { typeof(T).Name, "asset" });
-            return LoadGraph<T>(path);
+            root.schedule.Execute(UpdateSettings).Every(250);
         }
 
         private void CreateSideMenu()
@@ -122,7 +184,7 @@ namespace Doozy.Editor.Nody
                     .IsCollapsable(true)
                     .CollapseMenu(false);
 
-            #region Load Graph Button
+            #region LOAD --- Graph Button
 
             loadGraphButton =
                 sideMenu.AddButton("Load", selectableAccentColor, false)
@@ -130,13 +192,23 @@ namespace Doozy.Editor.Nody
                     .SetOnClick(() =>
                     {
                         saveGraphButton.schedule.Execute(() => loadGraphButton.SetIsOn(false));
-                        FlowGraph flowGraph = LoadGraphWithDialog<FlowGraph>();
-                        if (flowGraph != null) OpenGraph(flowGraph);
+
+                        FlowGraph graph = LoadGraphWithDialog<FlowGraph>();
+                        if (graph == null) return;
+
+                        Debugger.Log($"---> {nameof(LoadGraph)}({graph.name})");
+                        OpenGraph(graph);
+                        flowGraphView.schedule.Execute(() =>
+                            {
+                                Debugger.Log($"---> {nameof(LoadGraph)} FrameAll");
+                                flowGraphView.FrameAll();
+                            })
+                            .ExecuteLater(100);
                     });
 
             #endregion
 
-            #region Save Graph Button
+            #region SAVE --- Graph Button
 
             saveGraphButton =
                 sideMenu.AddButton("Save", selectableAccentColor, false)
@@ -147,16 +219,20 @@ namespace Doozy.Editor.Nody
                         saveGraphButton.schedule.Execute(() => saveGraphButton.SetIsOn(false));
 
                         if (flowGraphView.flowGraph == null)
+                        {
+                            NodySettings.ResetSettings();
                             return;
+                        }
 
                         EditorUtility.SetDirty(flowGraphView.flowGraph);
                         flowGraphView.flowGraph.nodes.ForEach(EditorUtility.SetDirty);
                         AssetDatabase.SaveAssets();
+                        SaveSettings();
                     });
 
             #endregion
 
-            #region Save Graph Button
+            #region CLOSE --- Graph Button
 
             closeGraphButton =
                 sideMenu.AddButton("Close", selectableAccentColor, false)
@@ -173,39 +249,8 @@ namespace Doozy.Editor.Nody
                         flowGraphView.flowGraph.nodes.ForEach(EditorUtility.SetDirty);
                         AssetDatabase.SaveAssets();
                         CloseGraph();
+                        NodySettings.ResetSettings();
                     });
-
-            #endregion
-
-            #region Open Nody Inspector
-
-            openInspectorButton =
-                sideMenu.AddButton("Inspector", selectableAccentColor, false)
-                    .SetIcon(EditorSpriteSheets.Nody.Icons.Nody)
-                    .SetIsOn(NodyInspectorWindow.isOpen)
-                    .SetOnClick(() =>
-                    {
-                        if (NodyInspectorWindow.isOpen)
-                        {
-                            NodyInspectorWindow.instance.Focus();
-                            return;
-                        }
-                        _ = NodyInspectorWindow.instance;
-
-                        if (flowGraphView == null) return;
-                        if (flowGraphView.selection.Count != 1) return;
-                        if (flowGraphView.selection[0] is FlowNodeView nodeView)
-                        {
-                            NodyInspectorWindow.instance.UpdateSelection(nodeView);
-                        }
-
-                    })
-                    .SetStyleMarginTop(DesignUtils.k_Spacing4X);
-
-            openInspectorButton.schedule.Execute(() =>
-            {
-                openInspectorButton.SetIsOn(NodyInspectorWindow.isOpen);
-            }).Every(200);
 
             #endregion
 
@@ -237,8 +282,6 @@ namespace Doozy.Editor.Nody
             }
 
             #endregion
-
-
         }
 
         private void CreateFlowGraphView()
@@ -252,6 +295,7 @@ namespace Doozy.Editor.Nody
             openedGraphPathLabel =
                 DesignUtils.NewFieldNameLabel("Graph Path")
                     .SetStyleTextAlign(TextAnchor.MiddleLeft);
+
             pingOpenGraphButton =
                 DesignUtils.GetNewTinyButton
                     (
@@ -315,48 +359,43 @@ namespace Doozy.Editor.Nody
                         .SetStyleFlexGrow(0)
                         .AddChild(pingOpenGraphButton)
                         .AddChild(openedGraphPathLabel)
+                )
+                .AddChild
+                (
+                    DesignUtils.FullScreenVisualElement()
+                        .AddChild(emptyPlaceholder)
                 );
         }
 
-        protected override void OnEnable()
+        private void SaveSettings()
         {
-            base.OnEnable();
-
-            EditorApplication.playModeStateChanged -= PlayModeStateChanged;
-            EditorApplication.playModeStateChanged += PlayModeStateChanged;
+            NodySettings.SaveSettings();
         }
 
-        protected override void OnDisable()
+        private void LoadSettings()
         {
-            base.OnDisable();
-            EditorApplication.playModeStateChanged -= PlayModeStateChanged;
-
-            if (NodyInspectorWindow.isOpen)
-                NodyInspectorWindow.instance.ClearInspector();
-        }
-
-        private void PlayModeStateChanged(PlayModeStateChange playModeState)
-        {
-            switch (playModeState)
+            if (Selection.activeObject != null && Selection.activeObject is GameObject go)
             {
-                case PlayModeStateChange.EnteredEditMode:
-                    CloseGraph();
-                    OnSelectionChange();
-                    break;
-                case PlayModeStateChange.ExitingEditMode:
-                    break;
-                case PlayModeStateChange.EnteredPlayMode:
-                    OnSelectionChange();
-                    break;
-                case PlayModeStateChange.ExitingPlayMode:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(playModeState), playModeState, null);
+                FlowController fc = go.GetComponent<FlowController>();
+                if (fc != null && fc.flow != null)
+                {
+                    OpenGraph(fc.flow);
+                    return;
+                }
             }
+
+            if (settings.Graph == null)
+            {
+                ShowEmptyState();
+                return; //no reference was saved -> stop
+            }
+            OpenGraph(settings.Graph);
         }
 
         private void OnSelectionChange()
         {
+            // Debugger.Log($"{nameof(NodyWindow)}.{nameof(OnSelectionChange)}");
+
             if (flowGraphView?.flowGraph == null)
                 CloseGraph();
 
@@ -380,45 +419,50 @@ namespace Doozy.Editor.Nody
 
             FlowController controller = Selection.activeGameObject.GetComponent<FlowController>();
 
-            if (controller != null)
+            if (controller == null)
+                return;
+
+            if (controller.flow == null)
+                return;
+
+            if (flowGraphView?.flowGraph == controller.flow)
+                return;
+
+            OpenGraph(controller.flow);
+        }
+
+        private void ShowEmptyState()
+        {
+            emptyPlaceholder?.Show();
+            pingOpenGraphButton?.SetStyleDisplay(DisplayStyle.None);
+            openedGraphPathLabel?.SetStyleDisplay(DisplayStyle.None).SetText(string.Empty);
+        }
+
+        private void HideEmptyState()
+        {
+            emptyPlaceholder?.Hide();
+            pingOpenGraphButton?.SetStyleDisplay(DisplayStyle.Flex);
+            openedGraphPathLabel?.SetStyleDisplay(DisplayStyle.Flex);
+        }
+
+        private static void OnNodeSelectionChanged(FlowNodeView nodeView)
+        {
+            if (nodeView == null)
             {
-                if (controller.flow == null)
-                    return;
-                if (flowGraphView?.flowGraph == controller.flow)
-                    return;
-                OpenGraph(controller.flow);
+                Selection.activeObject = null;
                 return;
             }
-
+            Selection.activeObject = nodeView.flowNode;
         }
 
-        public void CloseGraph()
+        public static void OpenGraph(FlowGraph graph)
         {
-            openedGraphPathLabel?
-                .SetStyleDisplay(DisplayStyle.None)
-                .SetText(string.Empty);
+            // Debugger.Log($"{nameof(NodyWindow)}.{nameof(OpenGraph)}({(graph == null ? "null" : $"{graph.name}")})");
 
-            pingOpenGraphButton?
-                .SetStyleDisplay(DisplayStyle.None);
+            if (graph == null)
+                CloseGraph();
 
-            if (flowGraphView != null)
-            {
-                if (flowGraphView.flowGraph != null)
-                    AssetDatabase.SaveAssetIfDirty(flowGraphView.flowGraph);
-                
-                flowGraphView.flowGraph = null;
-                flowGraphView.ClearGraphView();
-            }
-
-            if (NodyInspectorWindow.isOpen)
-                inspector.ClearInspector();
-        }
-
-        public void OpenGraph(FlowGraph flowGraph)
-        {
-            CloseGraph();
-
-            if (flowGraph == null)
+            if (graph == null)
             {
                 if (Selection.activeGameObject == null)
                     return;
@@ -428,41 +472,79 @@ namespace Doozy.Editor.Nody
                 if (controller == null)
                     return;
 
-                flowGraph = controller.flow;
+                graph = controller.flow;
             }
 
+            if (graph == null) return;
+            
             if (Application.isPlaying)
             {
-                if (flowGraph != null && flowGraphView != null)
-                {
-                    flowGraphView.PopulateView(flowGraph);
-                }
+                if (instance.flowGraphView == null) return;
+                instance.flowGraphView.PopulateView(graph);
+                instance.flowGraphView.UpdateViewTransform(graph.EditorPosition, graph.EditorScale);
+                UpdatePathInfo();
 
                 return;
             }
 
-            if (flowGraph != null & AssetDatabase.CanOpenForEdit(flowGraph))
+            if (!AssetDatabase.CanOpenForEdit(graph)) return;
+
+
+            graph.ResetGraph();
+            if (instance.flowGraphView == null) return;
+            instance.flowGraphView.PopulateView(graph);
+            instance.flowGraphView.UpdateViewTransform(graph.EditorPosition, graph.EditorScale);
+            UpdatePathInfo();
+
+            void UpdatePathInfo()
             {
-                openedGraphPathLabel?
-                    .SetStyleDisplay(DisplayStyle.Flex)
-                    .SetText(AssetDatabase.GetAssetPath(flowGraph));
-                pingOpenGraphButton?
-                    .SetStyleDisplay(DisplayStyle.Flex);
-
-                flowGraph.ResetGraph();
-
-                if (flowGraphView == null) return;
-                flowGraphView.PopulateView(flowGraph);
-                root.schedule.Execute(() => flowGraphView.FrameAll()).ExecuteLater(100);
-                root.schedule.Execute(() => flowGraphView.FrameAll()).ExecuteLater(300);
-                root.schedule.Execute(() => flowGraphView.FrameAll()).ExecuteLater(500);
+                instance.HideEmptyState();
+                if (EditorUtility.IsPersistent(graph))
+                {
+                    instance.openedGraphPathLabel.SetText(AssetDatabase.GetAssetPath(graph));
+                }
+                else
+                {
+                    instance.openedGraphPathLabel.SetText("Local Graph");
+                    instance.pingOpenGraphButton.SetStyleDisplay(DisplayStyle.None);
+                }
             }
         }
 
-        private static void OnNodeSelectionChanged(FlowNodeView nodeView)
+        public static void CloseGraph()
         {
-            if (NodyInspectorWindow.isOpen)
-                inspector.UpdateSelection(nodeView);
+            // Debugger.Log($"{nameof(NodyWindow)}.{nameof(CloseGraph)}");
+
+            instance.ShowEmptyState();
+
+            if (instance.flowGraphView == null) return;
+            if (instance.flowGraphView.flowGraph != null)
+                AssetDatabase.SaveAssetIfDirty(instance.flowGraphView.flowGraph);
+
+            instance.flowGraphView.flowGraph = null;
+            instance.flowGraphView.ClearGraphView(true);
         }
+
+        /// <summary> Loads a graph from the given path </summary>
+        /// <param name="path"> Asset path where the graph can be found </param>
+        public static T LoadGraph<T>(string path) where T : FlowGraph
+        {
+            if (string.IsNullOrEmpty(path)) return null;
+            T graph = AssetDatabase.LoadAssetAtPath<T>(FileUtil.GetProjectRelativePath(path));
+            return graph == null ? null : graph;
+        }
+
+        /// <summary> Opens a file panel set to filter only the given Graph type and returns the selected asset file </summary>
+        public static T LoadGraphWithDialog<T>() where T : FlowGraph
+        {
+            string path = EditorUtility.OpenFilePanelWithFilters
+            (
+                $"Load {ObjectNames.NicifyVariableName(typeof(T).Name)}",
+                "",
+                new[] { typeof(T).Name, "asset" }
+            );
+            return LoadGraph<T>(path);
+        }
+
     }
 }

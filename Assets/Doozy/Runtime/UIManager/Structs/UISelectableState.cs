@@ -13,11 +13,10 @@ namespace Doozy.Runtime.UIManager
     public struct UISelectableState
     {
         [SerializeField] private UISelectionState StateType;
-        [SerializeField] private string StateName;
         [SerializeField] private ModyEvent StateEvent;
 
-        /// <summary> Name of the state </summary>
-        public string stateName => StateName;
+        /// <summary> State type </summary>
+        public UISelectionState stateType => StateType;
         /// <summary> State events </summary>
         public ModyEvent stateEvent => StateEvent;
 
@@ -25,9 +24,8 @@ namespace Doozy.Runtime.UIManager
         /// <param name="type"> Type of the state </param>
         public UISelectableState(UISelectionState type)
         {
-            StateName = type.ToString();
             StateType = type;
-            StateEvent = new ModyEvent().SetEnabled(true);
+            StateEvent = new ModyEvent(type.ToString());
         }
     }
 }

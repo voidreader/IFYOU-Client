@@ -26,6 +26,7 @@ namespace Doozy.Editor.Nody.Nodes
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(RandomNode)))
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1046675536/Random+Node?atlOrigin=eyJpIjoiYjdjNjQyYmMzNmYwNDZiMmE1ZmNmZjc3ZjlkMmVmN2UiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Nody.Nodes.RandomNode.html")
                 .AddYouTubeButton();
 
             RefreshNodeEditor();

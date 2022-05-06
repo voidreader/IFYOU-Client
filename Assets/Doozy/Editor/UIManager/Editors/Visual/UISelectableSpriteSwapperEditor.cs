@@ -55,8 +55,6 @@ namespace Doozy.Editor.UIManager.Editors.Visual
         private ObjectField disabledSpriteObjectField { get; set; }
 
         private SerializedProperty propertyToggleCommand { get; set; }
-        private EnumField toggleCommandEnumField { get; set; }
-        private FluidField toggleCommandField { get; set; }
         
         private IVisualElementScheduledItem targetFinder { get; set; }
 
@@ -70,8 +68,6 @@ namespace Doozy.Editor.UIManager.Editors.Visual
             pressedSpriteFluidField?.Recycle();
             selectedSpriteFluidField?.Recycle();
             disabledSpriteFluidField?.Recycle();
-            
-            toggleCommandField?.Recycle();
         }
 
         protected override void FindProperties()
@@ -96,7 +92,8 @@ namespace Doozy.Editor.UIManager.Editors.Visual
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(UISelectable)))
                 .SetIcon(spriteSwapperIconTextures.ToList())
                 .SetComponentTypeText("Sprite Swapper")
-                // .AddManualButton("")
+                .AddManualButton()
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Visual.UISelectableSpriteSwapper.html")
                 .AddYouTubeButton();
             
             spriteTargetObjectField =
@@ -145,7 +142,7 @@ namespace Doozy.Editor.UIManager.Editors.Visual
             root
                 .AddChild(componentHeader)
                 .AddChild(DesignUtils.spaceBlock)
-                .AddChild(controllerField)
+                .AddChild(BaseUISelectableAnimatorEditor.GetController(propertyController, propertyToggleCommand))
                 .AddChild(DesignUtils.spaceBlock2X)
                 .AddChild(spriteTargetFluidField)
                 .AddChild(DesignUtils.spaceBlock2X)
@@ -162,49 +159,5 @@ namespace Doozy.Editor.UIManager.Editors.Visual
                 ;
         }
         
-        protected override void ComposeAnimatedContainers() {} //ignored
-        protected override void ComposeTabs() {}               //ignored
-
-        protected override void InitializeController()
-        {
-            controllerObjectField =
-                DesignUtils.NewObjectField(propertyController, typeof(UISelectable))
-                    .SetTooltip($"{ObjectNames.NicifyVariableName(nameof(UISelectable))} controller")
-                    .SetStyleFlexGrow(1);
-
-            toggleCommandEnumField =
-                DesignUtils.NewEnumField(propertyToggleCommand)
-                    .SetStyleWidth(50, 50, 50)
-                    .SetStyleAlignSelf(Align.Center)
-                    .SetStyleMarginRight(DesignUtils.k_Spacing);
-
-            void ShowToggleCommand(bool show) =>
-                toggleCommandEnumField.SetStyleDisplay(show ? DisplayStyle.Flex : DisplayStyle.None);
-
-            ShowToggleCommand(propertyController.objectReferenceValue != null && ((UISelectable)propertyController.objectReferenceValue).isToggle);
-            controllerObjectField.RegisterValueChangedCallback(evt =>
-            {
-                if (evt.newValue == null)
-                {
-                    ShowToggleCommand(false);
-                    return;
-                }
-
-                ShowToggleCommand(((UISelectable)evt.newValue).isToggle);
-            });
-
-            controllerField =
-                FluidField.Get()
-                    .SetLabelText($"Controller")
-                    .SetIcon(uiSelectableIconTextures)
-                    .SetStyleMinWidth(200)
-                    .AddFieldContent
-                    (
-                        DesignUtils.row
-                            .SetStyleFlexGrow(0)
-                            .AddChild(toggleCommandEnumField)
-                            .AddChild(controllerObjectField)
-                    );
-        }
     }
 }

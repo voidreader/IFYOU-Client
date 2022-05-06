@@ -3,9 +3,10 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Doozy.Runtime.Mody;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.UIManager.Events;
 using Doozy.Runtime.UIManager.Input;
 using Doozy.Runtime.UIManager.ScriptableObjects;
@@ -19,10 +20,18 @@ namespace Doozy.Runtime.UIManager.Components
 {
     /// <summary> UI object used to create a selectable control. This class is derived from Unity's Selectable class </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("Doozy/UI/Components/UI Selectable")]
+    [AddComponentMenu("UI/Components/UISelectable")]
     [SelectionBase]
     public class UISelectable : Selectable, ICanvasElement, IUseMultiplayerInfo
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Components/UISelectable", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UISelectable>("UISelectable", false, true);
+        }
+        #endif
+
         public const string k_StreamCategory = nameof(UISelectable);
         public const float k_DefaultAnimationDuration = 0.2f;
 
@@ -115,6 +124,10 @@ namespace Doozy.Runtime.UIManager.Components
         /// <summary> Callbacks for the disabled selection state </summary>
         public UISelectableState disabledState => DisabledState;
 
+        [SerializeField] private UIBehaviours Behaviours;
+        /// <summary> Manages UIBehaviour components </summary>
+        public UIBehaviours behaviours => Behaviours;
+
         private bool selectableInitialized { get; set; }
 
         #if UNITY_EDITOR
@@ -143,14 +156,25 @@ namespace Doozy.Runtime.UIManager.Components
 
         #endregion
 
+        public UISelectable()
+        {
+            Behaviours =
+                new UIBehaviours()
+                    .SetSelectable(this);
+        }
+        
         protected override void Awake()
         {
-            if (Application.isPlaying) BackButton.Initialize();
+            if (Application.isPlaying) 
+                BackButton.Initialize();
+            
             targetGraphic = null;
             transition = Transition.None;
             m_RectTransform = GetComponent<RectTransform>();
             selectableInitialized = false;
-            EnableAllStateEvents();
+            Behaviours
+                .SetSelectable(this)
+                .SetSignalSource(gameObject);
         }
 
         protected override void Start()
@@ -161,10 +185,55 @@ namespace Doozy.Runtime.UIManager.Components
 
         protected override void OnEnable()
         {
+            if (Application.isPlaying) 
+                BackButton.Initialize();
+            
             base.OnEnable();
             if (!Application.isPlaying) return;
             if (selectableInitialized) RefreshState();
+            StartCoroutine(ConnectBehaviours());
         }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            behaviours.Disconnect();
+        }
+
+        private IEnumerator ConnectBehaviours()
+        {
+            yield return null;
+            behaviours?
+                .SetSelectable(this)
+                .SetSignalSource(gameObject)
+                .Connect();
+        }
+
+        /// <summary>
+        /// Add the given behaviour and get a reference to it (automatically connects)
+        /// If the behaviour already exists, the reference to it will get automatically returned. 
+        /// </summary>
+        /// <param name="behaviourName"> UIBehaviour.Name </param>
+        public UIBehaviour AddBehaviour(UIBehaviour.Name behaviourName) =>
+            behaviours.AddBehaviour(behaviourName);
+
+        /// <summary> Remove the given behaviour (automatically disconnects) </summary>
+        /// <param name="behaviourName"> UIBehaviour.Name </param>
+        public void RemoveBehaviour(UIBehaviour.Name behaviourName) =>
+            behaviours.RemoveBehaviour(behaviourName);
+
+        /// <summary> Check if the given behaviour has been added (exists) </summary>
+        /// <param name="behaviourName"> UIBehaviour.Name </param>
+        public bool HasBehaviour(UIBehaviour.Name behaviourName) =>
+            behaviours.HasBehaviour(behaviourName);
+
+        /// <summary>
+        /// Get the behaviour with the given name.
+        /// Returns null if the behaviour has not been added (does not exist)
+        /// </summary>
+        /// <param name="behaviourName"> UIBehaviour.Name </param>
+        public UIBehaviour GetBehaviour(UIBehaviour.Name behaviourName) =>
+            behaviours.GetBehaviour(behaviourName);
 
         protected override void InstantClearState()
         {
@@ -183,13 +252,6 @@ namespace Doozy.Runtime.UIManager.Components
                 return;
 
             SetState(GetUISelectionState(state));
-        }
-
-        /// <summary> Helper method that makes sure all the UISelectableStates have their events enabled </summary>
-        private void EnableAllStateEvents()
-        {
-            foreach (UISelectionState state in Enum.GetValues(typeof(UISelectionState)))
-                GetUISelectableState(state).stateEvent.SetEnabled(true);
         }
 
         /// <summary> Set (by force) the UISelectable to the given selection state </summary>

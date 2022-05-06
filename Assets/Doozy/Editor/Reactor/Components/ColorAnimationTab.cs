@@ -3,10 +3,9 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using Doozy.Editor.EditorUI;
-using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Components.Internal;
-using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
+using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -14,52 +13,35 @@ using UnityEngine.UIElements;
 
 namespace Doozy.Editor.Reactor.Components
 {
-    public class ColorAnimationTab : PoolableElement<ColorAnimationTab>
+    /// <summary> A tab button with an enabled indicator and a color indicator attached </summary>
+    public class ColorAnimationTab : FluidTabBase<ColorAnimationTab>
     {
-        public const float k_TabMinWidth = 68f;
-        public const float k_ColorReferenceWidth = 60f;
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            tabButton?.Recycle();
-        }
-
-        public override void Reset()
-        {
-            SetTabAccentColor(EditorSelectableColors.Default.ButtonIcon);
-            SetReferenceColor(Color.clear);
-
-            tabButton
-                .Reset();
-
-            tabButton
-                .SetContainerColorOff(DesignUtils.tabButtonColorOff)
-                .SetTabPosition(TabPosition.TabOnBottom)
-                .SetElementSize(ElementSize.Small);
-        }
+        private const float TAB_MIN_WIDTH = 68f;
+        private const float COLOR_REFERENCE_WIDTH = 60f;
 
         public VisualElement referenceColorElement { get; }
-        public FluidToggleButtonTab tabButton { get; }
-
         public Color referenceColor { get; private set; }
 
         public ColorAnimationTab()
         {
-            tabButton = DesignUtils.GetTabButtonForComponentSection();
             referenceColorElement = GetReferenceColorElement();
 
-            this
-                .SetStyleFlexGrow(0)
-                .SetStyleMinWidth(k_TabMinWidth)
-                .AddChild(tabButton)
-                .AddChild(referenceColorElement);
+            Reset();
         }
 
-        public ColorAnimationTab SetTabAccentColor(EditorSelectableColorInfo selectableAccentColor)
+        public override void Reset()
         {
-            tabButton.SetToggleAccentColor(selectableAccentColor);
-            return this;
+            base.Reset();
+
+            this
+                .ResetStyleSize()
+                .SetStyleMinWidth(TAB_MIN_WIDTH)
+                .ResetTabPosition()
+                .SetElementSize(ElementSize.Small)
+                .ButtonSetContainerColorOff(DesignUtils.tabButtonColorOff);
+            
+            this
+                .AddChild(referenceColorElement);
         }
 
         public ColorAnimationTab SetReferenceColor(Color color)
@@ -68,13 +50,39 @@ namespace Doozy.Editor.Reactor.Components
             referenceColorElement.SetStyleBackgroundColor(referenceColor);
             return this;
         }
-        
+
         public static VisualElement GetReferenceColorElement() =>
             new VisualElement()
                 .SetStyleHeight(6)
-                .SetStyleWidth(k_ColorReferenceWidth)
+                .SetStyleWidth(COLOR_REFERENCE_WIDTH)
                 .SetStyleAlignSelf(Align.Center)
                 .SetStyleBorderRadius(3)
                 .SetStyleMarginTop(DesignUtils.k_Spacing);
+
+        public ColorAnimationTab RefreshTabReferenceColor(ColorAnimation animation)
+        {
+            bool isValid = animation.hasTarget && animation.isEnabled;
+            referenceColorElement.SetStyleDisplay(isValid ? DisplayStyle.Flex : DisplayStyle.None);
+
+            if (!isValid)
+                return this;
+
+            SetReferenceColor
+            (
+                animation.animation.GetValue
+                (
+                    animation.animation.toReferenceValue,
+                    animation.animation.startColor,
+                    animation.animation.currentColor,
+                    animation.animation.toCustomValue,
+                    animation.animation.toHueOffset,
+                    animation.animation.toSaturationOffset,
+                    animation.animation.toLightnessOffset,
+                    animation.animation.toAlphaOffset
+                )
+            );
+
+            return this;
+        }
     }
 }

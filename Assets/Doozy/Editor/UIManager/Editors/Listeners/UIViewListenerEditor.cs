@@ -74,8 +74,7 @@ namespace Doozy.Editor.UIManager.Editors.Listeners
         private void InitializeEditor()
         {
             FindProperties();
-
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader =
                 FluidComponentHeader.Get()
@@ -84,6 +83,7 @@ namespace Doozy.Editor.UIManager.Editors.Listeners
                     .SetComponentNameText((ObjectNames.NicifyVariableName(nameof(UIViewListener))))
                     .SetIcon(componentIconTextures.ToList())
                     .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048150120/UIView+Listener?atlOrigin=eyJpIjoiYmZhYTA3ZTMxZTgyNDkzNWI1ZDBjOTA1NDVlNGJiNTEiLCJwIjoiYyJ9")
+                    .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Listeners.UIViewListener.html")
                     .AddYouTubeButton();
 
             viewIdPropertyField =

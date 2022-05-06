@@ -133,7 +133,7 @@ namespace Doozy.Editor.UIManager.UIMenu
         {
             FindProperties();
 
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader =
                 FluidComponentHeader.Get()

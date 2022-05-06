@@ -64,8 +64,7 @@ namespace Doozy.Editor.UIManager.Editors.Audio
         private void InitializeEditor()
         {
             FindProperties();
-
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader =
                 FluidComponentHeader.Get()
@@ -74,6 +73,7 @@ namespace Doozy.Editor.UIManager.Editors.Audio
                     .SetComponentNameText("Signal To AudioSource")
                     .SetIcon(componentIconTextures.ToList())
                     .AddManualButton()
+                    .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Audio.SignalToAudioSource.html")
                     .AddYouTubeButton();
 
             streamIdPropertyField = DesignUtils.NewPropertyField(propertyStreamId);

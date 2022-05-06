@@ -29,16 +29,12 @@ namespace Doozy.Editor.UIManager.Drawers
             var behaviourNameProperty = property.FindPropertyRelative("BehaviourName");
             var receiverProperty = property.FindPropertyRelative("Receiver");
             var cooldownProperty = property.FindPropertyRelative("Cooldown");
+            
+            //ToDo add cooldown to the editor
 
-            SerializedProperty enabledProperty = property.FindPropertyRelative(nameof(ModyEvent.Enabled));
             SerializedProperty eventNameProperty = property.FindPropertyRelative(nameof(ModyEvent.EventName));
             SerializedProperty runnersProperty = property.FindPropertyRelative(nameof(ModyEvent.Runners));
             SerializedProperty eventProperty = property.FindPropertyRelative(nameof(ModyEvent.Event));
-
-            FluidToggleSwitch enabledSwitch = FluidToggleSwitch.Get().BindToProperty(enabledProperty.propertyPath);
-            PropertyField eventPropertyField = DesignUtils.NewPropertyField(eventProperty.propertyPath);
-
-            //ToDo add cooldown to the editor
 
             var behaviourName = (UIBehaviour.Name)behaviourNameProperty.enumValueIndex;
 
@@ -62,10 +58,11 @@ namespace Doozy.Editor.UIManager.Drawers
 
             foldout.animatedContainer.SetOnShowCallback(() =>
             {
-                foldout.AddContent(ModyEventDrawer.ActionRunnersListView(runnersProperty));
-                foldout.AddContent(DesignUtils.spaceBlock2X);
-                foldout.AddContent(eventPropertyField);
-                foldout.Bind(property.serializedObject);
+                foldout
+                    .AddContent(DesignUtils.UnityEventField(eventNameProperty.stringValue, eventProperty))
+                    .AddContent(DesignUtils.spaceBlock2X)
+                    .AddContent(ModyEventDrawer.ActionRunnersListView(runnersProperty))
+                    .Bind(property.serializedObject);
             });
 
             drawer.RegisterCallback<PointerEnterEvent>(evt =>

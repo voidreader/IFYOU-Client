@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Doozy.Runtime.Common.Attributes;
 using Doozy.Runtime.Common.Events;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Mody;
 using Doozy.Runtime.Signals;
-using Doozy.Runtime.UIManager.Components.Internal;
 using Doozy.Runtime.UIManager.Events;
 using UnityEngine;
 using UnityEngine.Events;
@@ -22,21 +22,42 @@ namespace Doozy.Runtime.UIManager.Components
     /// Toggle component based on UISelectable with category/name id identifier.
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
-    [AddComponentMenu("Doozy/UI/Components/UI Toggle")]
+    [AddComponentMenu("UI/Components/UIToggle")]
     [SelectionBase]
-    public partial class UIToggle : UISelectableComponent<UIToggle>, IPointerClickHandler, ISubmitHandler
+    public partial class UIToggle : UISelectable, IPointerClickHandler, ISubmitHandler
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Components/UIToggle", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UIToggle>("UIToggle", false, true);
+        }
+        #endif
+    
+        /// <summary> UIToggles database </summary>
+        public static HashSet<UIToggle> database { get; private set; } = new HashSet<UIToggle>();
+        
+        [ExecuteOnReload]
+        private static void OnReload()
+        {
+            database = new HashSet<UIToggle>();
+        }
+        
         [ClearOnReload]
         private static SignalStream s_stream;
-        /// <summary> Signal stream for this component type </summary>
+        /// <summary> UIToggle signal stream </summary>
         public static SignalStream stream => s_stream ?? (s_stream = SignalsService.GetStream(k_StreamCategory, nameof(UIToggle)));
 
-        /// <summary> All buttons that are active and enabled </summary>
+        /// <summary> All toggles that are active and enabled </summary>
         public static IEnumerable<UIToggle> availableToggles => database.Where(item => item.isActiveAndEnabled);
 
+        /// <summary> TRUE is this selectable is selected by EventSystem.current, FALSE otherwise </summary>
+        public bool isSelected => EventSystem.current.currentSelectedGameObject == gameObject;
+        
+        /// <summary> Type of selectable </summary>
         public override SelectableType selectableType => SelectableType.Toggle;
 
-        /// <summary> Category Name Id </summary>
+        /// <summary> UIToggle identifier </summary>
         public UIToggleId Id = new UIToggleId();
 
         /// <summary> Toggle became ON - executed when isOn becomes TRUE </summary>
@@ -90,14 +111,14 @@ namespace Doozy.Runtime.UIManager.Components
 
         protected override void Awake()
         {
-            if (!Application.isPlaying) return;
+            database.Add(this);
             toggleInitialized = false;
             base.Awake();
         }
 
         protected override void OnEnable()
         {
-            if (!Application.isPlaying) return;
+            database.Remove(null);
             base.OnEnable();
             if (!toggleInitialized) return;
             AddToToggleGroup(toggleGroup);
@@ -114,11 +135,17 @@ namespace Doozy.Runtime.UIManager.Components
 
         protected override void OnDisable()
         {
-            if (!Application.isPlaying) return;
+            database.Remove(null);
             base.OnDisable();
-            behaviours?.Disconnect();
         }
 
+        protected override void OnDestroy()
+        {
+            database.Remove(null);
+            database.Remove(this);
+            base.OnDestroy();
+        }
+        
         protected virtual void InitializeToggle()
         {
             if (toggleInitialized) return;

@@ -8,7 +8,7 @@ using TMPro;
 using UnityEngine;
 namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
 {
-    [AddComponentMenu("Doozy/Reactor/Targets/TextMeshPro Progress Target")]
+    [AddComponentMenu("Reactor/Targets/TextMeshPro Progress Target")]
     public class TextMeshProProgressTarget : MetaProgressTarget<TMP_Text>
     {
         [SerializeField] private bool WholeNumbers = true;

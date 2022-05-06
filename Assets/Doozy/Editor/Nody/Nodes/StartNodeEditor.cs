@@ -26,6 +26,7 @@ namespace Doozy.Editor.Nody.Nodes
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(StartNode)))
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048150085/Start+Node?atlOrigin=eyJpIjoiYzQ5MzI0MzA3M2NiNDBkZTg0NmFhZjQwNzY0YWI3MDgiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Nody.Nodes.System.StartNode.html")
                 .AddYouTubeButton();
 
         }

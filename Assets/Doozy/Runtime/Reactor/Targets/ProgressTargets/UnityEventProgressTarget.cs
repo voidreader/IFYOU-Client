@@ -7,7 +7,7 @@ using Doozy.Runtime.Common.Events;
 using UnityEngine;
 namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
 {
-    [AddComponentMenu("Doozy/Reactor/Targets/UnityEvent Progress Target")]
+    [AddComponentMenu("Reactor/Targets/UnityEvent Progress Target")]
     public class UnityEventProgressTarget : MetaProgressTarget<FloatEvent>
     {
         [SerializeField] private bool WholeNumbers = true;

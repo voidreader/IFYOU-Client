@@ -19,6 +19,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(Image)))
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048838201/Image+Sprite+Target?atlOrigin=eyJpIjoiY2I1Y2EyNWQzYzYzNDg0Mjk1OTQ5OTNiZDhmNmJlNTIiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Reactor.Targets.ImageSpriteTarget.html")
                 .AddYouTubeButton();
 
             targetObjectField

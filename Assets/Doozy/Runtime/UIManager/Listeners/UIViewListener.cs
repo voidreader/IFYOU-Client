@@ -3,6 +3,7 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using Doozy.Runtime.Common.Extensions;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Containers;
 using Doozy.Runtime.UIManager.Input;
@@ -20,9 +21,17 @@ namespace Doozy.Runtime.UIManager.Listeners
     /// <summary>
     /// Connects to the UIView stream and reacts to ‘pings’ (signals) sent for the view with the given id, filtered by Show/Hide commands.
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Listeners/UI View Listener")]
+    [AddComponentMenu("UI/Containers/Listeners/UIView Listener")]
     public class UIViewListener : BaseListener, IUseMultiplayerInfo
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Containers/Listeners/UIView Listener", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UIViewListener>("UIView Listener", false, true);
+        }
+        #endif
+        
         /// <summary> Reference to the UIManager Input Settings </summary>
         public static UIManagerInputSettings inputSettings => UIManagerInputSettings.instance;
 

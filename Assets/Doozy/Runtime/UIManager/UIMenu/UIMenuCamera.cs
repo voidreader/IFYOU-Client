@@ -34,9 +34,17 @@ namespace Doozy.Runtime.UIManager.UIMenu
     /// <para/> Works on only in Play Mode in the Unity Editor 
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
-    [AddComponentMenu("Doozy/UIMenu Camera")]
+    [AddComponentMenu("UIMenu/Editor Only/UIMenu Camera")]
     public class UIMenuCamera : MonoBehaviour
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UIMenu/Editor Only/UIMenu Camera", false, 7)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UIMenuCamera>("UIMenu Camera", false, true);
+        }
+        #endif
+
         /// <summary>
         /// Constant used to lower the given FPS frequency by 0.1% to avoid the "dot crawl" effect (a display artifact)
         /// <footer>https://en.wikipedia.org/wiki/Frame_rate</footer>
@@ -68,6 +76,8 @@ namespace Doozy.Runtime.UIManager.UIMenu
 
         public UISelectable TargetUISelectable;
         public float UISelectableStateDuration = 1.5f;
+
+        public ReactorController TargetReactorController;
 
         public ReactorAnimator TargetAnimator;
 
@@ -118,21 +128,47 @@ namespace Doozy.Runtime.UIManager.UIMenu
 
         private static bool canRun => Application.isPlaying;
 
-        #if UNITY_EDITOR
-        private void OnValidate() =>
-            FindTarget();
-        #endif
-
         private void Reset()
         {
-            FindTarget();
             ResetTargetPath();
         }
 
-        private void FindTarget()
+        public void FindTarget()
         {
-            SnapshotCamera = SnapshotCamera ? SnapshotCamera : GetComponentInParent<Canvas>().rootCanvas.worldCamera ? GetComponentInParent<Canvas>().rootCanvas.worldCamera : Camera.main;
             SnapshotTarget = SnapshotTarget ? SnapshotTarget : GetComponent<RectTransform>();
+
+            if (SnapshotCamera != null) return;
+
+
+            Canvas canvas = GetComponentInParent<Canvas>();
+            if (canvas == null)
+            {
+                Debug.LogError("UIMenuCamera: No Canvas found in the hierarchy");
+                return;
+            }
+
+            if (!canvas.isRootCanvas) canvas = canvas.rootCanvas;
+
+            if (canvas == null)
+            {
+                Debug.LogError("UIMenuCamera: No ROOT Canvas found in the hierarchy");
+                return;
+            }
+
+            Camera targetCamera = canvas.worldCamera;
+
+            if (targetCamera == null)
+            {
+                targetCamera = Camera.main;
+
+                if (targetCamera == null)
+                {
+                    Debug.LogError("UIMenuCamera: No Camera found in the hierarchy");
+                    return;
+                }
+            }
+
+            SnapshotCamera = targetCamera;
         }
 
         private void Initialize()
@@ -312,6 +348,29 @@ namespace Doozy.Runtime.UIManager.UIMenu
 
         #endregion
 
+        #region ReactorController MultiShot
+
+        public void ReactorControllerMultiShot()
+        {
+            if (TargetReactorController == null) return;
+            StopAllCoroutines();
+            StartCoroutine(MultiShotReactorController());
+        }
+
+        private IEnumerator MultiShotReactorController()
+        {
+            // TargetReactorController.SetProgressAtZero();
+            StartMultiShot();
+            yield return new WaitForSecondsRealtime(tickInterval * 3f);
+            TargetReactorController.Play();
+            yield return null;
+            yield return new WaitForSecondsRealtime(TargetReactorController.GetTotalDuration());
+            yield return new WaitForSecondsRealtime(tickInterval * 3f);
+            StopMultiShot();
+        }
+
+        #endregion
+
         #region Animator MultiShot
 
         public void AnimatorMultiShot()
@@ -323,12 +382,13 @@ namespace Doozy.Runtime.UIManager.UIMenu
 
         private IEnumerator MultiShotAnimator()
         {
+            // TargetAnimator.SetProgressAtZero();
             StartMultiShot();
-            yield return new WaitForSecondsRealtime(0.1f);
+            yield return new WaitForSecondsRealtime(tickInterval * 3f);
             TargetAnimator.Play();
             yield return null;
             yield return new WaitForSecondsRealtime(TargetAnimator.GetTotalDuration());
-            yield return new WaitForSecondsRealtime(0.1f);
+            yield return new WaitForSecondsRealtime(tickInterval * 3f);
             StopMultiShot();
         }
 

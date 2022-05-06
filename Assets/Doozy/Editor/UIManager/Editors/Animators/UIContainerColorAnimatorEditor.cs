@@ -9,73 +9,117 @@ using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.Reactor.Components;
+using Doozy.Editor.Reactor.Ticker;
+using Doozy.Editor.UIElements;
 using Doozy.Editor.UIManager.Editors.Animators.Internal;
-using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.Reactor.Targets;
 using Doozy.Runtime.UIElements.Extensions;
 using Doozy.Runtime.UIManager.Animators;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Editor.UIManager.Editors.Animators
 {
-    [CanEditMultipleObjects]
     [CustomEditor(typeof(UIContainerColorAnimator), true)]
+    [CanEditMultipleObjects]
     public class UIContainerColorAnimatorEditor : BaseUIContainerAnimatorEditor
     {
         public UIContainerColorAnimator castedTarget => (UIContainerColorAnimator)target;
-        public IEnumerable<UIContainerColorAnimator> castedTargets => targets.Cast<UIContainerColorAnimator>();
+        public List<UIContainerColorAnimator> castedTargets => targets.Cast<UIContainerColorAnimator>().ToList();
 
-        public static IEnumerable<Texture2D> colorAnimatorIconTextures => EditorSpriteSheets.Reactor.Icons.ColorAnimator;
-        public static IEnumerable<Texture2D> colorAnimationIconTextures => EditorSpriteSheets.Reactor.Icons.ColorAnimation;
-        public static IEnumerable<Texture2D> colorTargetIconTextures => EditorSpriteSheets.Reactor.Icons.ColorTarget;
-        
+        private ColorAnimationTab showColorTab { get; set; }
+        private ColorAnimationTab hideColorTab { get; set; }
+
         private ObjectField colorTargetObjectField { get; set; }
         private FluidField colorTargetFluidField { get; set; }
         private SerializedProperty propertyColorTarget { get; set; }
         private IVisualElementScheduledItem targetFinder { get; set; }
 
-        private ColorAnimationTab showTab { get; set; }
-        private ColorAnimationTab hideTab { get; set; }
-        
         protected override void OnDestroy()
         {
             base.OnDestroy();
-
-            showTab?.Recycle();
-            hideTab?.Recycle();
-
             colorTargetFluidField?.Recycle();
-            controllerField?.Recycle();
+            showColorTab?.Dispose();
+            hideColorTab?.Dispose();
         }
-        
+
+        protected override void ResetAnimatorInitializedState()
+        {
+            foreach (var a in castedTargets)
+                a.animatorInitialized = false;
+        }
+
+        protected override void ResetToStartValues()
+        {
+            foreach (var a in castedTargets)
+            {
+                a.StopAllReactions();
+                a.ResetToStartValues();
+            }
+        }
+
+        protected override void PlayShow()
+        {
+            foreach (var a in castedTargets)
+                a.Show();
+        }
+
+        protected override void PlayHide()
+        {
+            foreach (var a in castedTargets)
+                a.Hide();
+        }
+
+        protected override void PlayReverseShow()
+        {
+            foreach (var a in castedTargets)
+                a.ReverseShow();
+        }
+
+        protected override void PlayReverseHide()
+        {
+            foreach (var a in castedTargets)
+                a.ReverseHide();
+        }
+
+        protected override void HeartbeatCheck()
+        {
+            if (Application.isPlaying) return;
+            foreach (var a in castedTargets)
+                if (a.animatorInitialized == false)
+                    if (a.hasColorTarget)
+                    {
+                        a.InitializeAnimator();
+                        foreach (EditorHeartbeat eh in a.SetHeartbeat<EditorHeartbeat>().Cast<EditorHeartbeat>())
+                            eh.StartSceneViewRefresh(a);
+                    }
+        }
+
         protected override void FindProperties()
         {
             base.FindProperties();
             propertyColorTarget = serializedObject.FindProperty("ColorTarget");
         }
-        
-         protected override void InitializeEditor()
+
+        protected override void InitializeEditor()
         {
             base.InitializeEditor();
 
             componentHeader
                 .SetComponentTypeText("Color Animator")
-                .SetIcon(colorAnimatorIconTextures.ToList())
+                .SetIcon(EditorSpriteSheets.Reactor.Icons.ColorAnimator)
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048739917/UIContainer+Color+Animator?atlOrigin=eyJpIjoiMmY2YTdiNjcwNGUzNDYzNWI0ZDBmNTAyYWI4YzVjZTEiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Animators.UIContainerColorAnimator.html")
                 .AddYouTubeButton();
 
             InitializeColorTarget();
 
-            showAnimatedContainer.AddOnShowCallback(() => showAnimatedContainer.Bind(serializedObject));
-            hideAnimatedContainer.AddOnShowCallback(() => hideAnimatedContainer.Bind(serializedObject));
-
+            //search for color target
             if (!EditorApplication.isPlayingOrWillChangePlaymode)
-            {
                 targetFinder = root.schedule.Execute(() =>
                 {
                     if (castedTarget == null)
@@ -93,47 +137,84 @@ namespace Doozy.Editor.UIManager.Editors.Animators
                     castedTarget.FindTarget();
 
                 }).Every(1000);
-            }
 
+            //refresh tabs enabled indicator
             root.schedule.Execute(() =>
             {
-                if (castedTarget == null)
-                    return;
+                void UpdateIndicator(ColorAnimationTab tab, bool toggleOn, bool animateChange)
+                {
+                    if (tab == null) return;
+                    if (tab.indicator.isOn != toggleOn)
+                        tab.indicator.Toggle(toggleOn, animateChange);
+                }
+
+                //initial indicators state update (no animation)
+                UpdateIndicator(showColorTab, castedTarget.showAnimation.animation.enabled, false);
+                UpdateIndicator(hideColorTab, castedTarget.hideAnimation.animation.enabled, false);
+
+                //subsequent indicators state update (animated)
+                showColorTab.schedule.Execute(() => UpdateIndicator(showColorTab, castedTarget.showAnimation.animation.enabled, true)).Every(200);
+                hideColorTab.schedule.Execute(() => UpdateIndicator(hideColorTab, castedTarget.hideAnimation.animation.enabled, true)).Every(200);
+            });
+        }
+
+        private ColorAnimationTab GetColorTab(string labelText, UnityAction<bool> callback) =>
+            ColorAnimationTab.Get()
+                .SetLabelText(labelText)
+                .SetElementSize(ElementSize.Small)
+                .IndicatorSetEnabledColor(accentColor)
+                .ButtonSetAccentColor(selectableAccentColor)
+                .ButtonSetOnValueChanged(evt => callback?.Invoke(evt.newValue))
+                .AddToToggleGroup(tabsGroup);
+
+        protected override void InitializeShow()
+        {
+            base.InitializeShow();
+
+            //remove the default show tab and replace it with the color tab
+            showTab?.RemoveFromToggleGroup();
+            showTab?.Recycle();
+
+            showColorTab = GetColorTab("Show", value => showAnimatedContainer.Toggle(value))
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Show);
+
+            //refresh colorTab reference color
+            root.schedule.Execute(() =>
+            {
+                if (castedTarget == null) return;
 
                 if (!EditorApplication.isPlayingOrWillChangePlaymode)
-                {
-                    if (castedTarget.hasColorTarget)
-                        castedTarget.UpdateSettings();
-                }
-                
-                void RefreshTab(ColorAnimationTab tab, ColorAnimation animation)
-                {
-                    bool isValid = animation.hasTarget && animation.isEnabled;
-                    tab.referenceColorElement.SetStyleDisplay(isValid ? DisplayStyle.Flex : DisplayStyle.None);
-                
-                    if (!isValid)
-                        return;
-                
-                    tab.SetReferenceColor
-                    (
-                        animation.animation.GetValue
-                        (
-                            animation.animation.toReferenceValue,
-                            animation.animation.startColor,
-                            animation.animation.currentColor,
-                            animation.animation.toCustomValue,
-                            animation.animation.toHueOffset,
-                            animation.animation.toSaturationOffset,
-                            animation.animation.toLightnessOffset,
-                            animation.animation.toAlphaOffset
-                        )
-                    );
-                }
-                
-                RefreshTab(showTab, castedTarget.showAnimation);
-                RefreshTab(hideTab, castedTarget.hideAnimation);
+                    if (castedTarget.hasColorTarget && !castedTarget.animatorInitialized)
+                        HeartbeatCheck();
 
-            }).Every(100);
+                showColorTab.RefreshTabReferenceColor(castedTarget.showAnimation);
+
+            }).Every(200);
+        }
+
+        protected override void InitializeHide()
+        {
+            base.InitializeHide();
+
+            //remove the default hide tab and replace it with the color tab
+            hideTab?.RemoveFromToggleGroup();
+            hideTab?.Recycle();
+
+            hideColorTab = GetColorTab("Hide", value => hideAnimatedContainer.Toggle(value))
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Show);
+
+            //refresh colorTab reference color
+            root.schedule.Execute(() =>
+            {
+                if (castedTarget == null) return;
+
+                if (!EditorApplication.isPlayingOrWillChangePlaymode)
+                    if (castedTarget.hasColorTarget && !castedTarget.animatorInitialized)
+                        HeartbeatCheck();
+
+                hideColorTab.RefreshTabReferenceColor(castedTarget.hideAnimation);
+
+            }).Every(200);
         }
 
         private void InitializeColorTarget()
@@ -146,76 +227,34 @@ namespace Doozy.Editor.UIManager.Editors.Animators
             colorTargetFluidField =
                 FluidField.Get()
                     .SetLabelText("Color Target")
-                    .SetIcon(colorTargetIconTextures)
+                    .SetIcon(EditorSpriteSheets.Reactor.Icons.ColorTarget)
                     .SetStyleFlexShrink(0)
                     .AddFieldContent(colorTargetObjectField);
         }
 
-        protected override void InitializeTabs()
+        protected override VisualElement Toolbar()
         {
-            base.InitializeTabs();
-
-            ColorAnimationTab GetColorAnimationTab(FluidAnimatedContainer targetContainer, string labelText, string tooltip)
-            {
-                ColorAnimationTab animationTab =
-                    ColorAnimationTab.Get()
-                        .SetTabAccentColor(selectableAccentColor);
-
-                animationTab.tabButton
-                    .SetLabelText(labelText)
-                    .SetTooltip(tooltip)
-                    .SetOnValueChanged(evt => targetContainer.Toggle(evt.newValue));
-
-                return animationTab;
-            }
-
-            showTab = GetColorAnimationTab(showAnimatedContainer, "Show", "Show Animation");
-            hideTab = GetColorAnimationTab(hideAnimatedContainer, "Hide", "Hide Animation");
-
-            tabsGroup = FluidToggleGroup.Get().SetControlMode(FluidToggleGroup.ControlMode.OneToggleOn);
-            showTab.tabButton.AddToToggleGroup(tabsGroup);
-            hideTab.tabButton.AddToToggleGroup(tabsGroup);
-        }
-
-        protected override void ComposeTabs()
-        {
-            tabsContainer
-                .AddChild(showTab)
-                .AddChild(DesignUtils.spaceBlock2X)
-                .AddChild(hideTab)
-                .AddChild(DesignUtils.spaceBlock2X)
-                .AddChild(DesignUtils.flexibleSpace)
+            return base.Toolbar()
+                .RecycleAndClear()
+                .AddChild(showColorTab)
                 .AddChild(DesignUtils.spaceBlock)
-                .AddChild
-                (
-                    DesignUtils.SystemButton_SortComponents
-                    (
-                        castedTarget.gameObject,
-                        nameof(RectTransform),
-                        nameof(Canvas),
-                        nameof(CanvasGroup),
-                        nameof(GraphicRaycaster)
-                    )
-                );
+                .AddChild(hideColorTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(DesignUtils.flexibleSpace);
         }
 
         protected override void Compose()
         {
-            ComposeTabs();
-            ComposeAnimatedContainers();
-
             root
+                .AddChild(reactionControls)
                 .AddChild(componentHeader)
-                .AddChild(tabsContainer)
+                .AddChild(Toolbar())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(Content())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(colorTargetFluidField)
                 .AddChild(DesignUtils.spaceBlock)
-                .AddChild(animatedContainers)
-                .AddChild
-                (
-                    DesignUtils.row
-                        .AddChild(controllerField)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(colorTargetFluidField)
-                )
+                .AddChild(GetController(propertyController))
                 .AddChild(DesignUtils.endOfLineBlock);
         }
     }

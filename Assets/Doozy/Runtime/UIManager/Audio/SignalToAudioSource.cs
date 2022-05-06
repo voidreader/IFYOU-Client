@@ -2,6 +2,7 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Signals;
 using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
@@ -12,9 +13,17 @@ namespace Doozy.Runtime.UIManager.Audio
     /// Connects to a specific stream and reacts to signals, sent through said stream, that have an AudioClip value payload.
     /// The signal's AudioClip value will be assigned to and played by the target AudioSource. 
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Audio/Signal To AudioSource")]
+    [AddComponentMenu("Signals/Signal To AudioSource")]
     public class SignalToAudioSource : BaseStreamListener
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/Signals/Signal To AudioSource", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<SignalToAudioSource>("Signal To AudioSource", false, true);
+        }
+        #endif
+        
         [SerializeField] private StreamId StreamId;
         /// <summary> Stream Id </summary>
         public StreamId streamId => StreamId;

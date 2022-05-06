@@ -2,14 +2,13 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System.Collections.Generic;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
-using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 // ReSharper disable MemberCanBePrivate.Global
@@ -18,38 +17,35 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
 {
     public abstract class BaseTargetComponentAnimatorEditor : UnityEditor.Editor
     {
-        protected const float k_MarginLeft = 35;
-
         protected virtual Color accentColor => EditorColors.Reactor.Red;
         protected virtual EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Reactor.Red;
 
+        public static IEnumerable<Texture2D> reactorIconTextures => EditorSpriteSheets.Reactor.Icons.ReactorIcon;
+        
         protected VisualElement root { get; set; }
         protected FluidComponentHeader componentHeader { get; set; }
-
-        protected FluidField controllerField { get; set; }
+        protected VisualElement toolbarContainer { get; private set; }
+        protected VisualElement contentContainer { get; private set; }
+        
+        protected SerializedProperty propertyController { get; set; }
+        
         protected FluidToggleGroup tabsGroup { get; set; }
 
-        protected ObjectField controllerObjectField { get; set; }
-
-        protected SerializedProperty propertyController { get; set; }
-
-        protected VisualElement animatedContainers { get; set; }
-        protected VisualElement tabsContainer { get; set; }
-
+        protected virtual void OnEnable() {}
+        
+        protected virtual void OnDisable() {}
+        
+        protected virtual void OnDestroy()
+        {
+            componentHeader?.Recycle();
+            tabsGroup?.Recycle();
+        }
+        
         public override VisualElement CreateInspectorGUI()
         {
             InitializeEditor();
             Compose();
             return root;
-        }
-
-        protected virtual void OnDestroy()
-        {
-            componentHeader?.Recycle();
-
-            controllerField?.Recycle();
-
-            tabsGroup?.Recycle();
         }
 
         protected virtual void FindProperties()
@@ -60,71 +56,35 @@ namespace Doozy.Editor.UIManager.Editors.Animators.Internal
         protected virtual void InitializeEditor()
         {
             FindProperties();
-
-            root = new VisualElement();
-
+            root = DesignUtils.GetEditorRoot();
             componentHeader =
-                FluidComponentHeader.Get()
-                    .SetAccentColor(accentColor)
-                    .SetElementSize(ElementSize.Small);
-
-            InitializeController();
-            InitializeAnimatedContainers();
-            InitializeTabs();
+                DesignUtils.editorComponentHeader
+                    .SetAccentColor(accentColor);
+            toolbarContainer = DesignUtils.editorToolbarContainer;
+            tabsGroup = FluidToggleGroup.Get().SetControlMode(FluidToggleGroup.ControlMode.OneToggleOn);
+            contentContainer = DesignUtils.editorContentContainer;
         }
 
-        protected virtual void InitializeAnimatedContainers()
+        protected virtual VisualElement Toolbar()
         {
-            animatedContainers =
-                new VisualElement()
-                    .SetName("Animated Containers");
+            return
+                toolbarContainer;
         }
         
-        protected abstract void ComposeAnimatedContainers();
-
-        protected virtual void InitializeTabs()
+        protected virtual VisualElement Content()
         {
-            tabsContainer =
-                DesignUtils.row
-                    .SetName("Tabs Container")
-                    .SetStyleMargins(42, -2, DesignUtils.k_Spacing2X, DesignUtils.k_Spacing2X);
+            return
+                contentContainer;
         }
         
-        protected abstract void ComposeTabs();
-
-        protected abstract void InitializeController();
-
         protected virtual void Compose()
         {
-            ComposeTabs();
-            ComposeAnimatedContainers();
-
             root
                 .AddChild(componentHeader)
-                .AddChild(tabsContainer)
-                .AddChild(DesignUtils.spaceBlock)
-                .AddChild(animatedContainers)
-                .AddChild(controllerField)
+                .AddChild(Toolbar())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(Content())
                 .AddChild(DesignUtils.endOfLineBlock);
         }
-
-        protected FluidAnimatedContainer GetAnimatedContainer(SerializedProperty animationProperty)
-        {
-            FluidAnimatedContainer container = new FluidAnimatedContainer().SetClearOnHide(true).Hide(false).SetStyleMarginLeft(k_MarginLeft);
-            container.SetOnShowCallback(() =>
-            {
-                container.AddContent(DesignUtils.NewPropertyField(animationProperty));
-                container.AddContent(DesignUtils.endOfLineBlock);
-                container.Bind(serializedObject);
-            });
-
-            return container;
-        }
-
-        protected static FluidToggleButtonTab GetTab(FluidAnimatedContainer targetContainer, string labelText, string tooltip, EditorSelectableColorInfo selectableColor) =>
-            DesignUtils.GetTabButtonForComponentSection(null, selectableColor)
-                .SetLabelText(labelText)
-                .SetTooltip(tooltip)
-                .SetOnValueChanged(evt => targetContainer.Toggle(evt.newValue));
     }
 }

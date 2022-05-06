@@ -2,7 +2,10 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System.Collections.Generic;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Reactor.Targets;
+using Doozy.Runtime.Reactor.Ticker;
 using Doozy.Runtime.UIManager.Animators;
 using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
@@ -12,9 +15,17 @@ namespace Doozy.Runtime.UIManager.Visual
     /// <summary>
     /// Specialized visual component used to swap a Sprites for a Reactor Sprite Target by listening to a UIContainer (controller) show/hide commands.
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Visual/Container/UI Container Sprite Swapper")]
+    [AddComponentMenu("UI/Containers/Addons/UIContainer SpriteSwapper")]
     public class UIContainerSpriteSwapper : BaseUIContainerAnimator
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Containers/Addons/UIContainer SpriteSwapper", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UIContainerSpriteSwapper>("UIContainer SpriteSwapper", false, true);
+        }
+        #endif
+        
         [SerializeField] private ReactorSpriteTarget SpriteTarget;
         /// <summary> Reference to a sprite target component </summary>
         public ReactorSpriteTarget spriteTarget => SpriteTarget;
@@ -86,5 +97,8 @@ namespace Doozy.Runtime.UIManager.Visual
 
         public override void InstantHide() =>
             Hide();
+        
+        public override void ResetToStartValues(bool forced = false) {}    //ignored
+        public override List<Heartbeat> SetHeartbeat<T>() { return null; } //ignored
     }
 }

@@ -3,16 +3,28 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System.Collections;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Signals;
+using Doozy.Runtime.UIManager.Events;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace Doozy.Runtime.UIManager.Triggers
 {
-    [AddComponentMenu("Doozy/UI/Triggers/Pointer/Pointer Long Click")]
+    [AddComponentMenu("UI/Triggers/PointerLongClick")]
     public class PointerLongClickTrigger : SignalProvider, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Triggers/PointerLongClick", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<PointerLongClickTrigger>("PointerLongClick Trigger", false, true);
+        }
+        #endif
+        
+        /// <summary> Called when the pointer pressed down for a set interval of time over the trigger </summary>
+        public PointerEventDataEvent OnTrigger = new PointerEventDataEvent();
+        
         private const float LONG_CLICK_REGISTER_INTERVAL = 0.5f;
 
         private float m_LongClickTriggerTime;
@@ -54,6 +66,7 @@ namespace Doozy.Runtime.UIManager.Triggers
 
             if (UISettings.interactionsDisabled) yield break;
             SendSignal(eventData);
+            OnTrigger?.Invoke(eventData);
             Reset();
         }
     }

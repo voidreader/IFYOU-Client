@@ -60,7 +60,7 @@ namespace Doozy.Editor.EditorUI.ScriptableObjects
         {
             FindProperties();
 
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader =
                 FluidComponentHeader.Get()

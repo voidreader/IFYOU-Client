@@ -8,7 +8,7 @@ using UnityEngine.Audio;
 using static UnityEngine.Mathf;
 namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
 {
-    [AddComponentMenu("Doozy/Reactor/Targets/AudioMixer Progress Target")]
+    [AddComponentMenu("Reactor/Targets/AudioMixer Progress Target")]
     public class AudioMixerProgressTarget : MetaProgressTarget<AudioMixer>
     {
         #region Constants

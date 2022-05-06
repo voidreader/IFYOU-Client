@@ -67,6 +67,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(TextMeshPro)))
                 .AddManualButton()
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Reactor.Targets.ProgressTargets.TextMeshProProgressTarget.html")
                 .AddYouTubeButton();
 
             targetObjectField

@@ -14,8 +14,8 @@ namespace Doozy.Editor.UIManager.UIMenu
 {
     public static class UIMenuContextMenu
     {
-        private const int MENU_ITEM_PRIORITY = 11;
-        private const string MENU_PATH = "GameObject/Doozy";
+        private const int MENU_ITEM_PRIORITY = 7;
+        private const string MENU_PATH = "GameObject/UIMenu";
 
         public static class Components
         {

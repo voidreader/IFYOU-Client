@@ -74,7 +74,7 @@ namespace Doozy.Editor.EditorUI.Editors
 
         private void InitializeEditor()
         {
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             loadFilesFromFolderButton = FluidButton.Get()
                 .SetIcon(EditorSpriteSheets.EditorUI.Icons.Search)

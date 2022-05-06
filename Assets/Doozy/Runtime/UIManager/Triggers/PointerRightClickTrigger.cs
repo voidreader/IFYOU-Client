@@ -2,16 +2,28 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Signals;
+using Doozy.Runtime.UIManager.Events;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace Doozy.Runtime.UIManager.Triggers
 {
-    [AddComponentMenu("Doozy/UI/Triggers/Pointer/Pointer Right Click")]
+    [AddComponentMenu("UI/Triggers/PointerRightClick")]
     public class PointerRightClickTrigger : SignalProvider, IPointerClickHandler
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Triggers/PointerRightClick", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<PointerRightClickTrigger>("PointerRightClick Trigger", false, true);
+        }
+        #endif
+        
+        /// <summary> Called when pointer right button is clicked over the trigger </summary>
+        public PointerEventDataEvent OnTrigger = new PointerEventDataEvent();
+        
         public PointerRightClickTrigger() : base(ProviderType.Local, "Pointer", "Right Click", typeof(PointerRightClickTrigger)) {}
 
         public void OnPointerClick(PointerEventData eventData)
@@ -19,6 +31,7 @@ namespace Doozy.Runtime.UIManager.Triggers
             if (UISettings.interactionsDisabled) return;
             if (eventData.button != PointerEventData.InputButton.Right) return;
             SendSignal(eventData);
+            OnTrigger?.Invoke(eventData);
         }
     }
 }

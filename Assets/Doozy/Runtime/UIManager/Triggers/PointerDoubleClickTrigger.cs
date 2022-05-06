@@ -2,16 +2,28 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Signals;
+using Doozy.Runtime.UIManager.Events;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace Doozy.Runtime.UIManager.Triggers
 {
-    [AddComponentMenu("Doozy/UI/Triggers/Pointer/Pointer Double Click")]
+    [AddComponentMenu("UI/Triggers/PointerDoubleClick")]
     public class PointerDoubleClickTrigger : SignalProvider, IPointerDownHandler, IPointerUpHandler
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Triggers/PointerDoubleClick", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<PointerDoubleClickTrigger>("PointerDoubleClick Trigger", false, true);
+        }
+        #endif
+        
+        /// <summary> Called when a pointer double click event happens </summary>
+        public PointerEventDataEvent OnTrigger = new PointerEventDataEvent();
+        
         private const float DOUBLE_CLICK_REGISTER_INTERVAL = 0.2f;
         
         private bool m_ClickedOnce;
@@ -51,6 +63,7 @@ namespace Doozy.Runtime.UIManager.Triggers
             Reset();
             if(UISettings.interactionsDisabled) return;
             SendSignal(eventData);
+            OnTrigger?.Invoke(eventData);
             // Debug.Log($"clicked twice - SIGNAL");
         }
     }

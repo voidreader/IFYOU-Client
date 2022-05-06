@@ -2,6 +2,7 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Doozy.Editor.EditorUI;
@@ -108,6 +109,17 @@ namespace Doozy.Editor.Nody.Nodes.Internal
             flowNode.refreshNodeEditor -= OnNodeRefresh;
             flowNode.refreshNodeEditor += OnNodeRefresh;
 
+            //find nodeView
+            if (
+                flowNode.flowGraph != null &&
+                NodyWindow.isOpen &&
+                NodyWindow.instance.flowGraph != null &&
+                NodyWindow.instance.flowGraph == flowNode.flowGraph
+            )
+            {
+                nodeView = NodyWindow.instance.flowGraphView.GetNodeView(flowNode);
+            }
+
             return root;
         }
 
@@ -168,8 +180,7 @@ namespace Doozy.Editor.Nody.Nodes.Internal
         protected virtual void InitializeEditor()
         {
             FindProperties();
-
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader =
                 FluidComponentHeader.Get()
@@ -301,21 +312,13 @@ namespace Doozy.Editor.Nody.Nodes.Internal
                 if (nodeView == null) return;
                 nodeView.nodeDescriptionLabel.text = evt.newValue;
                 nodeView.nodeDescriptionLabel.SetStyleDisplay(evt.newValue.IsNullOrEmpty() ? DisplayStyle.None : DisplayStyle.Flex);
+                nodeView.RefreshNodeView();
             });
 
             nodeDescriptionField =
                 FluidField.Get()
                     .SetLabelText("Node Description")
                     .AddFieldContent(nodeDescriptionTextField);
-
-            //if visible in the Unity Inspector -> disable it to avoid letting developers messing up things outside Nody
-            root.schedule.Execute(() =>
-            {
-                if (nodeView != null)
-                    return;
-                root.DisableElement();
-            });
-
         }
 
         protected virtual void Compose()
@@ -335,6 +338,24 @@ namespace Doozy.Editor.Nody.Nodes.Internal
                 .AddChild(nodeDescriptionField)
                 .AddChild(DesignUtils.spaceBlock2X)
                 .AddChild(portsContainer);
+        }
+
+        /// <summary>
+        /// Start auto-refresh for the node view
+        /// </summary>
+        /// <param name="intervalMS"> Minimum amount of time in milliseconds between each action execution </param>
+        protected void AutoRefreshNodeView(long intervalMS = 100)
+        {
+            root.schedule.Execute
+                (
+                    () =>
+                    {
+                        if (nodeView == null) return;
+                        nodeView.RefreshNodeView();
+                    }
+                )
+                .Every(intervalMS)
+                .Until(() => nodeView == null);
         }
     }
 }

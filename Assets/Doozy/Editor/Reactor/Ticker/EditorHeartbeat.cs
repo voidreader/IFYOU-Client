@@ -4,6 +4,9 @@
 
 using Doozy.Runtime.Reactor.Internal;
 using Doozy.Runtime.Reactor.Ticker;
+using UnityEditor;
+using UnityEngine;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Editor.Reactor.Ticker
 {
@@ -32,6 +35,51 @@ namespace Doozy.Editor.Reactor.Ticker
         {
             base.UnregisterFromTickService();
             EditorTicker.service.Unregister(this);
+        }
+
+        /// <summary>
+        /// EditorUtility needs to SetDirty on this UnityEngine.Object to perform the SceneView.RepaintAll()
+        /// </summary>
+        private Object targetObject { get; set; }
+        
+        /// <summary>
+        /// Calls EditorUtility.SetDirty on the targetObject and then SceneView.RepaintAll
+        /// </summary>
+        private void RefreshSceneViewOnTick()
+        {
+            if (targetObject == null)
+            {
+                StopSceneViewRefresh();
+                return;
+            }
+            EditorUtility.SetDirty(targetObject);
+            SceneView.RepaintAll();
+        }
+
+        /// <summary>
+        /// Triggers a SceneView.RepaintAll whenever this heartbeat ticks 
+        /// </summary>
+        /// <param name="target">
+        /// Target UnityEngine.Object needed by the EditorUtility to SetDirty.
+        /// SceneView.RepaintAll does not work otherwise.
+        /// </param>
+        public EditorHeartbeat StartSceneViewRefresh(Object target)
+        {
+            StopSceneViewRefresh();
+            targetObject = target;
+            if (target == null) return this;
+            this.AddOnTickCallback(RefreshSceneViewOnTick);
+            return this;
+        }
+
+        /// <summary>
+        /// Stop SceneView.RepaintAll whenever this heartbeat ticks
+        /// </summary>
+        public EditorHeartbeat StopSceneViewRefresh()
+        {
+            targetObject = null;
+            this.RemoveOnTickCallback(RefreshSceneViewOnTick);
+            return this;
         }
     }
 }

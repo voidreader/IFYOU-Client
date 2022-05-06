@@ -2,8 +2,6 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
-using System.Collections.Generic;
-using System.Reflection;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Components.Internal;
@@ -23,78 +21,48 @@ namespace Doozy.Editor.Mody
 {
     public class ModyModuleEditor<T> : EditorUIEditor<T> where T : ModyModule
     {
-        public override Color accentColor => EditorColors.Mody.Module;
-        public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Mody.Module;
-        public sealed override List<Texture2D> iconTextures => EditorSpriteSheets.Mody.Icons.ModyModule;
+        protected override Color accentColor => EditorColors.Mody.Module;
+        protected override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Mody.Module;
+
+        protected FluidTab settingsTab { get; set; }
+        protected FluidTab nameTab { get; set; }
+
+        protected FluidAnimatedContainer settingsAnimatedContainer { get; set; }
+        protected FluidAnimatedContainer moduleNameAnimatedContainer { get; set; }
+
+        protected SerializedProperty propertyModuleName { get; private set; }
 
         private ModyModuleStateIndicator m_StateIndicator;
 
-        protected VisualElement settingsContainer { get; private set; }
-
-        protected ModyActionsDrawer actionsDrawer { get; private set; }
-        protected VisualElement actionsContainer { get; private set; }
-
-        protected SerializedProperty moduleNameProperty { get; private set; }
-        protected TextField moduleNameTextField { get; private set; }
-        protected FluidField moduleNameField { get; private set; }
-        protected FluidAnimatedContainer moduleNameAnimatedContainer { get; private set; }
-        protected FluidToggleButtonTab moduleNameTab { get; private set; }
-
-        protected virtual void OnDisable()
+        protected override void OnDestroy()
         {
-            moduleNameTab?.Recycle();
-            moduleNameField?.Recycle();
+            base.OnDestroy();
+            nameTab?.Recycle();
+            settingsTab?.Recycle();
+            settingsAnimatedContainer?.Dispose();
             moduleNameAnimatedContainer?.Dispose();
             m_StateIndicator?.Dispose();
         }
 
-        protected override void CreateEditor()
+        protected override void FindProperties()
         {
-            base.CreateEditor();
+            base.FindProperties();
 
-            actionsDrawer = new ModyActionsDrawer();
+            propertyModuleName = serializedObject.FindProperty("ModuleName");
+        }
 
-            settingsContainer = new VisualElement();
-            actionsContainer = new VisualElement();
+        protected override void InitializeEditor()
+        {
+            base.InitializeEditor();
 
-            moduleNameProperty = serializedObject.FindProperty("ModuleName");
-            moduleNameTextField = DesignUtils.NewTextField(moduleNameProperty).SetStyleFlexGrow(1);
-            moduleNameTextField.RegisterValueChangedCallback(evt => UpdateComponentTypeText(evt.newValue));
-            moduleNameField =
-                FluidField.Get()
-                    .SetLabelText("Module Name")
-                    .SetTooltip("Name of the Module")
-                    .AddFieldContent(moduleNameTextField)
-                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Label)
-                    .SetStyleMarginTop(DesignUtils.k_Spacing)
-                    .SetStyleMarginBottom(DesignUtils.k_EndOfLineSpacing);
-
-            moduleNameAnimatedContainer =
-                new FluidAnimatedContainer()
-                    .SetClearOnHide(false)
-                    .Hide(false)
-                    .AddContent(moduleNameField);
-
-            moduleNameTab = DesignUtils.NameTab()
-                .SetLabelText("Module Name")
-                .SetOnValueChanged(evt => moduleNameAnimatedContainer.Toggle(evt.newValue));
-            
-            void UpdateComponentTypeText(string nameOfTheModule)
-            {
-                nameOfTheModule = nameOfTheModule.IsNullOrEmpty() ? string.Empty : $" - {nameOfTheModule}";
-                fluidHeader.SetComponentTypeText($"{nameof(Module)}{nameOfTheModule}");
-            }
-
-            UpdateComponentTypeText(moduleNameProperty.stringValue);
-
-            fluidHeader.SetIcon(iconTextures);
-            fluidHeader.SetElementSize(ElementSize.Small);
+            componentHeader
+                .SetIcon(EditorSpriteSheets.Mody.Icons.ModyModule);
 
             m_StateIndicator = new ModyModuleStateIndicator().SetStyleMarginLeft(DesignUtils.k_Spacing2X);
             castedTarget.UpdateState();
             m_StateIndicator.UpdateState(castedTarget.state);
 
-            EnumField invisibleStateEnum = DesignUtils.NewEnumField("ModuleCurrentState", true); 
+            EnumField invisibleStateEnum = DesignUtils.NewEnumField("ModuleCurrentState", true);
             root.Add(invisibleStateEnum);
             invisibleStateEnum?.RegisterValueChangedCallback(evt =>
             {
@@ -103,40 +71,111 @@ namespace Doozy.Editor.Mody
             });
 
             if (EditorApplication.isPlayingOrWillChangePlaymode)
-                fluidHeader.AddElement(m_StateIndicator);
+                componentHeader.AddElement(m_StateIndicator);
+
+            InitializeSettings();
+            InitializeModuleName();
+
+            root.schedule.Execute(() => settingsTab.ButtonSetIsOn(true, false));
         }
 
-        protected void AddActionToDrawer(ModyActionsDrawerItem item)
+        protected FluidTab GetTab(string labelText) =>
+            FluidTab.Get()
+                .SetElementSize(ElementSize.Small)
+                .SetLabelText(labelText)
+                .IndicatorSetEnabledColor(accentColor)
+                .ButtonSetAccentColor(selectableAccentColor)
+                .AddToToggleGroup(tabsGroup);
+
+        protected virtual void InitializeSettings()
         {
-            actionsDrawer.AddItem(item);
-            actionsContainer.AddChild(item.animatedContainer);
+            settingsAnimatedContainer = new FluidAnimatedContainer("Settings", true).Hide(false);
+            settingsTab =
+                GetTab("Settings")
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Settings)
+                    .ButtonSetOnValueChanged(evt => settingsAnimatedContainer.Toggle(evt.newValue, evt.animateChange));
+
+            settingsAnimatedContainer.SetOnShowCallback(() =>
+            {
+                var actionsDrawer =
+                    new ModyActionsDrawer();
+
+                actionsDrawer.schedule.Execute(() => actionsDrawer.Update());
+
+                VisualElement actionsContainer =
+                    new VisualElement().SetName("Actions Container");
+
+                #pragma warning disable CS8321
+                void AddActionToDrawer(ModyActionsDrawerItem item)
+                {
+                    actionsDrawer.AddItem(item);
+                    actionsContainer.AddChild(item.animatedContainer);
+                }
+                #pragma warning restore CS8321
+
+                settingsAnimatedContainer
+                    .AddContent(actionsDrawer)
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(actionsContainer)
+                    .Bind(serializedObject);
+            });
+        }
+
+        protected virtual void InitializeModuleName()
+        {
+            moduleNameAnimatedContainer = new FluidAnimatedContainer("Module Name", true).Hide(false);
+            nameTab =
+                GetTab("Module Name")
+                    .SetElementSize(ElementSize.Small)
+                    .ButtonSetOnValueChanged(evt => moduleNameAnimatedContainer.Toggle(evt.newValue, evt.animateChange));
+
+            void UpdateComponentTypeText(string nameOfTheAnimator)
+            {
+                nameOfTheAnimator = nameOfTheAnimator.IsNullOrEmpty() ? string.Empty : $"Module - {nameOfTheAnimator}";
+                componentHeader.SetComponentTypeText(nameOfTheAnimator);
+            }
+
+            UpdateComponentTypeText(propertyModuleName.stringValue);
             
-         
+            moduleNameAnimatedContainer.SetOnShowCallback(() =>
+            {
+                TextField moduleNameTextField =
+                    DesignUtils.NewTextField(propertyModuleName).SetStyleFlexGrow(1);
+                moduleNameTextField.RegisterValueChangedCallback(evt => UpdateComponentTypeText(evt.newValue));
+
+                UpdateComponentTypeText(propertyModuleName.stringValue);
+
+                moduleNameAnimatedContainer
+                    .AddContent
+                    (
+                        FluidField.Get()
+                            .SetLabelText("Module Name")
+                            .SetTooltip("Name of the Module")
+                            .AddFieldContent(moduleNameTextField)
+                            .SetIcon(EditorSpriteSheets.EditorUI.Icons.Label)
+                    )
+                    .AddChild(DesignUtils.endOfLineBlock)
+                    .Bind(serializedObject);
+            });
         }
 
-        protected void Compose()
+        protected override VisualElement Toolbar()
         {
-            root
-                .AddChild
-                (
-                    DesignUtils.row
-                        .SetStyleMargins(DesignUtils.k_Spacing2X, -10, DesignUtils.k_Spacing2X, DesignUtils.k_Spacing)
-                        .AddChild(DesignUtils.flexibleSpace)
-                        .AddChild(moduleNameTab)
-                )
-                .AddChild(moduleNameAnimatedContainer)
-                .AddChild(settingsContainer)
-                .AddChild(DesignUtils.spaceBlock2X)
-                .AddChild
-                (
-                    DesignUtils.row
-                        .AddChild(actionsDrawer)
-                )
-                .AddChild(DesignUtils.spaceBlock)
-                .AddChild(actionsContainer)
-                .AddChild(DesignUtils.endOfLineBlock);
+            return
+                base.Toolbar()
+                    .AddChild(settingsTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(DesignUtils.flexibleSpace)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(nameTab);
+        }
 
-            actionsDrawer.schedule.Execute(() => actionsDrawer.Update());
+        protected override VisualElement Content()
+        {
+            return
+                base.Content()
+                    .AddChild(settingsAnimatedContainer)
+                    .AddChild(moduleNameAnimatedContainer);
         }
     }
 }

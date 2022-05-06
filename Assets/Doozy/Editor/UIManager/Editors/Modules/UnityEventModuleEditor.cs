@@ -2,15 +2,15 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
-using System.Collections.Generic;
 using Doozy.Editor.EditorUI;
+using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.Mody;
 using Doozy.Editor.Mody.Components;
 using Doozy.Runtime.UIElements.Extensions;
 using Doozy.Runtime.UIManager.Modules;
 using UnityEditor;
-using UnityEngine;
+using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace Doozy.Editor.UIManager.Editors.Modules
@@ -18,31 +18,62 @@ namespace Doozy.Editor.UIManager.Editors.Modules
     [CustomEditor(typeof(UnityEventModule), true)]
     public sealed class UnityEventModuleEditor : ModyModuleEditor<UnityEventModule>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
+        private SerializedProperty propertyEvent { get; set; }
 
-        public override VisualElement CreateInspectorGUI()
+        protected override void FindProperties()
         {
-            CreateEditor();
-            return root;
+            base.FindProperties();
+
+            propertyEvent = serializedObject.FindProperty(nameof(UnityEventModule.Event));
         }
 
-        protected override void CreateEditor()
+        protected override void InitializeEditor()
         {
-            base.CreateEditor();
-
-            //MODULE HEADER
-            fluidHeader.SetSecondaryIcon(secondaryIconTextures);
-            fluidHeader.SetComponentNameText(UnityEventModule.k_DefaultModuleName);
+            base.InitializeEditor();
             
-            //MODULE SETTINGS
-            settingsContainer
-                .AddChild(DesignUtils.NewPropertyField(serializedObject.FindProperty(nameof(UnityEventModule.Event))));
+            componentHeader
+                .SetComponentNameText(UnityEventModule.k_DefaultModuleName)
+                .SetSecondaryIcon(EditorSpriteSheets.EditorUI.Icons.UnityEvent)
+                .AddManualButton()
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Modules.UnityEventModule.html")
+                .AddYouTubeButton();
+        }
 
-            //MODULE ACTIONS
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(UnityEventModule.InvokeEvent))));
+        protected override void InitializeSettings()
+        {
+            base.InitializeSettings();
             
-            //COMPOSE
-            Compose();
+            settingsAnimatedContainer.SetOnShowCallback(() =>
+            {
+                var actionsDrawer =
+                    new ModyActionsDrawer();
+
+                actionsDrawer.schedule.Execute(() => actionsDrawer.Update());
+
+                VisualElement actionsContainer =
+                    new VisualElement().SetName("Actions Container");
+
+                void AddActionToDrawer(ModyActionsDrawerItem item)
+                {
+                    actionsDrawer.AddItem(item);
+                    actionsContainer.AddChild(item.animatedContainer);
+                }
+
+                //MODULE ACTIONS
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(UnityEventModule.InvokeEvent))));
+               
+                settingsAnimatedContainer
+                    .AddContent
+                    (
+                        FluidField.Get()
+                            .AddFieldContent(DesignUtils.UnityEventField("Called when invoked", propertyEvent))
+                    )
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(actionsDrawer)
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(actionsContainer)
+                    .Bind(serializedObject);
+            });
         }
     }
 }

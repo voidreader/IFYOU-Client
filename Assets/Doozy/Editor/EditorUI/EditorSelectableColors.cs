@@ -285,6 +285,34 @@ namespace Doozy.Editor.EditorUI
             
         }
 
+        public static class SceneManagement
+        {
+            private static EditorDataSelectableColorPalette s_selectableColorPalette;
+            private static EditorDataSelectableColorPalette selectableColorPalette =>
+                s_selectableColorPalette != null
+                    ? s_selectableColorPalette
+                    : s_selectableColorPalette = EditorDataSelectableColorDatabase.GetSelectableColorPalette("SceneManagement");
+
+            public static Color GetColor(ColorName colorName, SelectionState state) =>
+                selectableColorPalette.GetColor(colorName.ToString(), state);
+
+            public static EditorThemeColor GetThemeColor(ColorName colorName, SelectionState state) =>
+                selectableColorPalette.GetThemeColor(colorName.ToString(), state);
+
+            public static EditorSelectableColorInfo GetSelectableColorInfo(ColorName colorName) =>
+                selectableColorPalette.GetSelectableColorInfo(colorName.ToString());
+            
+            public enum ColorName
+            {
+                Component
+            }
+            
+
+            private static EditorSelectableColorInfo s_Component;
+            public static EditorSelectableColorInfo Component => s_Component ?? (s_Component = GetSelectableColorInfo(ColorName.Component));
+            
+        }
+
         public static class Signals
         {
             private static EditorDataSelectableColorPalette s_selectableColorPalette;
@@ -319,6 +347,34 @@ namespace Doozy.Editor.EditorUI
             public static EditorSelectableColorInfo Signal => s_Signal ?? (s_Signal = GetSelectableColorInfo(ColorName.Signal));
             private static EditorSelectableColorInfo s_Stream;
             public static EditorSelectableColorInfo Stream => s_Stream ?? (s_Stream = GetSelectableColorInfo(ColorName.Stream));
+            
+        }
+
+        public static class UIDesigner
+        {
+            private static EditorDataSelectableColorPalette s_selectableColorPalette;
+            private static EditorDataSelectableColorPalette selectableColorPalette =>
+                s_selectableColorPalette != null
+                    ? s_selectableColorPalette
+                    : s_selectableColorPalette = EditorDataSelectableColorDatabase.GetSelectableColorPalette("UIDesigner");
+
+            public static Color GetColor(ColorName colorName, SelectionState state) =>
+                selectableColorPalette.GetColor(colorName.ToString(), state);
+
+            public static EditorThemeColor GetThemeColor(ColorName colorName, SelectionState state) =>
+                selectableColorPalette.GetThemeColor(colorName.ToString(), state);
+
+            public static EditorSelectableColorInfo GetSelectableColorInfo(ColorName colorName) =>
+                selectableColorPalette.GetSelectableColorInfo(colorName.ToString());
+            
+            public enum ColorName
+            {
+                Color
+            }
+            
+
+            private static EditorSelectableColorInfo s_Color;
+            public static EditorSelectableColorInfo Color => s_Color ?? (s_Color = GetSelectableColorInfo(ColorName.Color));
             
         }
 

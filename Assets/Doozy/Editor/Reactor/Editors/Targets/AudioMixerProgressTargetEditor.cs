@@ -53,6 +53,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(AudioMixer)))
                 .AddManualButton()
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Reactor.Targets.ProgressTargets.AudioMixerProgressTarget.html")
                 .AddYouTubeButton();
 
             targetObjectField

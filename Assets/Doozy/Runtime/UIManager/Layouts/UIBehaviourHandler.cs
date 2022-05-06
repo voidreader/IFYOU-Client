@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections;
+using Doozy.Runtime.Common.Utils;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -12,7 +13,9 @@ using UnityEngine.UI;
 namespace Doozy.Runtime.UIManager.Layouts
 {
     /// <summary> Specialized helper class for layout groups. It helps triggering layout calculations just in time </summary>
+    [AddComponentMenu("UI/Layouts/UIBehaviour Handler")]
     [ExecuteAlways]
+    [DisallowMultipleComponent]
     [RequireComponent(typeof(RectTransform))]
     public class UIBehaviourHandler : UnityEngine.EventSystems.UIBehaviour
     {

@@ -15,7 +15,6 @@ using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.Reactor.Windows;
 using Doozy.Editor.UIElements;
 using Doozy.Runtime.Common.Extensions;
-using Doozy.Runtime.Pooler;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.Reactor.Animators;
@@ -25,6 +24,7 @@ using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 namespace Doozy.Editor.Reactor.Drawers
@@ -32,6 +32,8 @@ namespace Doozy.Editor.Reactor.Drawers
     [CustomPropertyDrawer(typeof(UIAnimation), true)]
     public class UIAnimationDrawer : PropertyDrawer
     {
+        private const float TAB_BUTTON_WIDTH = 68;
+
         private static Color accentColor => EditorColors.Reactor.Red;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Reactor.Red;
 
@@ -56,29 +58,12 @@ namespace Doozy.Editor.Reactor.Drawers
         private static IEnumerable<Texture2D> unityEventIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
         private static IEnumerable<Texture2D> resetIconTextures => EditorSpriteSheets.EditorUI.Icons.Reset;
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {}
-
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             var drawer = new VisualElement();
             if (property == null) return drawer;
+            drawer.RegisterCallback<DetachFromPanelEvent>(evt => drawer.RecycleAndClear());
             var target = property.GetTargetObjectOfProperty() as UIAnimation;
-
-            var poolables = new List<IPoolable>();
-            var disposables = new List<IDisposable>();
-
-            void Dispose()
-            {
-                foreach (IPoolable poolable in poolables)
-                    poolable?.Recycle();
-
-                foreach (IDisposable disposable in disposables)
-                    disposable?.Dispose();
-
-                drawer.Clear();
-            }
-
-            drawer.RegisterCallback<DetachFromPanelEvent>(evt => Dispose());
 
             #region SerializedProperties
 
@@ -106,304 +91,244 @@ namespace Doozy.Editor.Reactor.Drawers
 
             #region ComponentHeader
 
-            EnumField fieldAnimationTypeEnum = new EnumField().SetBindingPath(propertyAnimationType.propertyPath).ResetLayout().SetStyleAlignSelf(Align.Center).SetStyleWidth(80);
+            EnumField fieldAnimationTypeEnum =
+                DesignUtils.NewEnumField(propertyAnimationType)
+                    .SetStyleAlignSelf(Align.Center)
+                    .SetStyleMargins(DesignUtils.k_Spacing * 2, 0, DesignUtils.k_Spacing * 2, 0)
+                    .SetStyleWidth(80);
 
             FluidComponentHeader componentHeader =
                 FluidComponentHeader.Get()
-                    .SetSecondaryIcon(uiAnimationIconTextures.ToList())
                     .SetAccentColor(accentColor)
                     .SetElementSize(ElementSize.Tiny)
-                    .AddElement(fieldAnimationTypeEnum.SetStyleMargins(DesignUtils.k_Spacing * 2, 0, DesignUtils.k_Spacing * 2, 0))
+                    .AddElement(fieldAnimationTypeEnum)
                     .AddManualButton("www.bit.ly/DoozyKnowledgeBase4")
                     .AddYouTubeButton();
 
-            poolables.Add(componentHeader);
-
             #endregion
 
-            #region Tabs
+            #region Containers
 
-            VisualElement tabsContainer = DesignUtils.row.SetStyleJustifyContent(Justify.Center).SetStyleMargins(12, 0, 12, 0);
-            FluidToggleButtonTab moveTabButton, rotateTabButton, scaleTabButton, fadeTabButton, callbacksTabButton, presetsTabButton;
-            EnabledIndicator moveTabIndicator, rotateTabIndicator, scaleTabIndicator, fadeTabIndicator, callbacksTabIndicator, presetsTabIndicator;
-            VisualElement moveTabContainer, rotateTabContainer, scaleTabContainer, fadeTabContainer, callbacksTabContainer, presetsTabContainer;
+            VisualElement contentContainer = new VisualElement().SetName("Content Container").SetStyleFlexGrow(1);
+            FluidAnimatedContainer moveAnimatedContainer = new FluidAnimatedContainer("Move", true).Hide(false);
+            FluidAnimatedContainer rotateAnimatedContainer = new FluidAnimatedContainer("Rotate", true).Hide(false);
+            FluidAnimatedContainer scaleAnimatedContainer = new FluidAnimatedContainer("Scale", true).Hide(false);
+            FluidAnimatedContainer fadeAnimatedContainer = new FluidAnimatedContainer("Fade", true).Hide(false);
+            FluidAnimatedContainer callbacksAnimatedContainer = new FluidAnimatedContainer("Callbacks", true).Hide(false);
+            FluidAnimatedContainer presetsAnimatedContainer = new FluidAnimatedContainer("Presets", true).Hide(false);
 
-            (moveTabButton, moveTabIndicator, moveTabContainer) = DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(moveIconTextures, moveSColor, moveColor);
-            (rotateTabButton, rotateTabIndicator, rotateTabContainer) = DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(rotateIconTextures, rotateSColor, rotateColor);
-            (scaleTabButton, scaleTabIndicator, scaleTabContainer) = DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(scaleIconTextures, scaleSColor, scaleColor);
-            (fadeTabButton, fadeTabIndicator, fadeTabContainer) = DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(fadeIconTextures, fadeSColor, fadeColor);
-            (callbacksTabButton, callbacksTabIndicator, callbacksTabContainer) = DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(unityEventIconTextures, DesignUtils.callbackSelectableColor, DesignUtils.callbacksColor);
-            (presetsTabButton, presetsTabIndicator, presetsTabContainer) = DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(uiAnimationPresetIconTextures, selectableAccentColor, presetsColor);
-
-            moveTabIndicator.Toggle(propertyMoveEnabled.boolValue, false);
-            rotateTabIndicator.Toggle(propertyRotateEnabled.boolValue, false);
-            scaleTabIndicator.Toggle(propertyScaleEnabled.boolValue, false);
-            fadeTabIndicator.Toggle(propertyFadeEnabled.boolValue, false);
-
-            poolables.Add(moveTabIndicator);
-            poolables.Add(rotateTabIndicator);
-            poolables.Add(scaleTabIndicator);
-            poolables.Add(fadeTabIndicator);
-            poolables.Add(callbacksTabIndicator);
-            poolables.Add(presetsTabIndicator);
-
-            const float tabButtonWidth = 68;
-            moveTabButton.SetLabelText("Move").SetStyleWidth(tabButtonWidth);
-            rotateTabButton.SetLabelText("Rotate").SetStyleWidth(tabButtonWidth);
-            scaleTabButton.SetLabelText("Scale").SetStyleWidth(tabButtonWidth);
-            fadeTabButton.SetLabelText("Fade").SetStyleWidth(tabButtonWidth);
-            callbacksTabButton.SetLabelText("Callbacks");
-            presetsTabButton.SetLabelText("Presets");
-
-            poolables.Add(moveTabButton);
-            poolables.Add(rotateTabButton);
-            poolables.Add(scaleTabButton);
-            poolables.Add(fadeTabButton);
-            poolables.Add(callbacksTabButton);
-            poolables.Add(presetsTabButton);
-
-
-            FluidToggleGroup showToggleGroup =
-                FluidToggleGroup.Get()
-                    .SetControlMode(FluidToggleGroup.ControlMode.OneToggleOn, animateChange: false);
-
-            poolables.Add(showToggleGroup);
-
-            moveTabButton.AddToToggleGroup(showToggleGroup);
-            rotateTabButton.AddToToggleGroup(showToggleGroup);
-            scaleTabButton.AddToToggleGroup(showToggleGroup);
-            fadeTabButton.AddToToggleGroup(showToggleGroup);
-            callbacksTabButton.AddToToggleGroup(showToggleGroup);
-            presetsTabButton.AddToToggleGroup(showToggleGroup);
-
-            FluidAnimatedContainer moveAnimatedContainer = new FluidAnimatedContainer().SetName("Move").SetClearOnHide(true);
-            FluidAnimatedContainer rotateAnimatedContainer = new FluidAnimatedContainer().SetName("Rotate").SetClearOnHide(true);
-            FluidAnimatedContainer scaleAnimatedContainer = new FluidAnimatedContainer().SetName("Scale").SetClearOnHide(true);
-            FluidAnimatedContainer fadeAnimatedContainer = new FluidAnimatedContainer().SetName("Fade").SetClearOnHide(true);
-
-            disposables.Add(moveAnimatedContainer);
-            disposables.Add(rotateAnimatedContainer);
-            disposables.Add(scaleAnimatedContainer);
-            disposables.Add(fadeAnimatedContainer);
-
-            moveAnimatedContainer.OnShowCallback = () => moveAnimatedContainer.AddContent(GetMoveContent(propertyMove, propertyMoveEnabled, propertyAnimationType));
-            rotateAnimatedContainer.OnShowCallback = () => rotateAnimatedContainer.AddContent(GetRotateContent(propertyRotate, propertyRotateEnabled));
-            scaleAnimatedContainer.OnShowCallback = () => scaleAnimatedContainer.AddContent(GetScaleContent(propertyScale, propertyScaleEnabled));
-            fadeAnimatedContainer.OnShowCallback = () => fadeAnimatedContainer.AddContent(GetFadeContent(propertyFade, propertyFadeEnabled));
-
-            tabsContainer
-                .AddChild(moveTabContainer)
-                .AddSpace(DesignUtils.k_Spacing, 0)
-                .AddChild(rotateTabContainer)
-                .AddSpace(DesignUtils.k_Spacing, 0)
-                .AddChild(scaleTabContainer)
-                .AddSpace(DesignUtils.k_Spacing, 0)
-                .AddChild(fadeTabContainer)
-                .AddSpace(DesignUtils.k_Spacing * 4, 0)
-                .AddChild(callbacksTabContainer)
-                .AddSpace(DesignUtils.k_Spacing * 4, 0)
-                .AddChild(DesignUtils.flexibleSpace)
-                .AddChild(presetsTabContainer);
-
-            #endregion
-
-            #region Fields
-
-            //PRESETS
-            FluidAnimatedContainer presetsAnimatedContainer = new FluidAnimatedContainer().SetName("Presets").SetClearOnHide(true);
-            disposables.Add(presetsAnimatedContainer);
-
-            presetsAnimatedContainer.OnShowCallback =
-                () => presetsAnimatedContainer.AddContent(GetPresetsContent(target, property, propertyMoveEnabled, propertyRotateEnabled, propertyScaleEnabled, propertyFadeEnabled, propertyAnimationType));
-
-            bool HasOnPlayCallback() => target?.OnPlayCallback?.GetPersistentEventCount() > 0;
-
-            bool HasOnStopCallback() => target?.OnStopCallback?.GetPersistentEventCount() > 0;
-
-            bool HasOnFinishCallback() => target?.OnFinishCallback?.GetPersistentEventCount() > 0;
-
-            bool HasCallbacks() => HasOnPlayCallback() | HasOnStopCallback() | HasOnFinishCallback();
-
-            callbacksTabIndicator.Toggle(HasCallbacks(), false);
-
-            //OnPlayCallback
-            var onPlayCallbackFoldout = new FluidFoldout("OnPlay");
-            disposables.Add(onPlayCallbackFoldout);
-
-            onPlayCallbackFoldout.animatedContainer.OnShowCallback = () =>
+            moveAnimatedContainer.SetOnShowCallback(() =>
             {
-                onPlayCallbackFoldout.ResetContentLeftPadding();
-                onPlayCallbackFoldout.AddContent(DesignUtils.NewPropertyField(propertyOnPlayCallback.propertyPath));
-                onPlayCallbackFoldout.Bind(property.serializedObject);
-            };
+                moveAnimatedContainer
+                    .AddContent(GetMoveContent(propertyMove, propertyMoveEnabled, propertyAnimationType))
+                    .Bind(property.serializedObject);
+            });
 
-            //OnStopCallback
-            var onStopCallbackFoldout = new FluidFoldout("OnStop");
-            disposables.Add(onStopCallbackFoldout);
-
-            onStopCallbackFoldout.animatedContainer.OnShowCallback = () =>
+            rotateAnimatedContainer.SetOnShowCallback(() =>
             {
-                onStopCallbackFoldout.ResetContentLeftPadding();
-                onStopCallbackFoldout.AddContent(DesignUtils.NewPropertyField(propertyOnStopCallback.propertyPath));
-                onStopCallbackFoldout.Bind(property.serializedObject);
-            };
+                rotateAnimatedContainer
+                    .AddContent(GetRotateContent(propertyRotate, propertyRotateEnabled))
+                    .Bind(property.serializedObject);
+            });
 
-
-            //OnFinishCallback
-            var onFinishCallbackFoldout = new FluidFoldout("OnFinish");
-            disposables.Add(onFinishCallbackFoldout);
-
-            onFinishCallbackFoldout.animatedContainer.OnShowCallback = () =>
+            scaleAnimatedContainer.SetOnShowCallback(() =>
             {
-                onFinishCallbackFoldout.ResetContentLeftPadding();
-                onFinishCallbackFoldout.AddContent(DesignUtils.NewPropertyField(propertyOnFinishCallback.propertyPath));
-                onFinishCallbackFoldout.Bind(property.serializedObject);
-            };
+                scaleAnimatedContainer
+                    .AddContent(GetScaleContent(propertyScale, propertyScaleEnabled))
+                    .Bind(property.serializedObject);
+            });
 
+            fadeAnimatedContainer.SetOnShowCallback(() =>
+            {
+                fadeAnimatedContainer
+                    .AddContent(GetFadeContent(propertyFade, propertyFadeEnabled))
+                    .Bind(property.serializedObject);
+            });
 
-            //Callbacks container
-            FluidAnimatedContainer callbacksAnimatedContainer = new FluidAnimatedContainer().SetName("Callbacks");
-            disposables.Add(callbacksAnimatedContainer);
-
-            callbacksAnimatedContainer.OnShowCallback = () =>
+            callbacksAnimatedContainer.SetOnShowCallback(() =>
             {
                 callbacksAnimatedContainer.AddContent
                 (
-                    new VisualElement()
-                        .AddChild(onPlayCallbackFoldout)
-                        .AddSpace(0, DesignUtils.k_Spacing)
-                        .AddChild(onStopCallbackFoldout)
-                        .AddSpace(0, DesignUtils.k_Spacing)
-                        .AddChild(onFinishCallbackFoldout)
+                    FluidField.Get()
+                        .AddFieldContent(DesignUtils.NewPropertyField(propertyOnPlayCallback.propertyPath))
+                        .AddFieldContent(DesignUtils.spaceBlock)
+                        .AddFieldContent(DesignUtils.NewPropertyField(propertyOnStopCallback.propertyPath))
+                        .AddFieldContent(DesignUtils.spaceBlock)
+                        .AddFieldContent(DesignUtils.NewPropertyField(propertyOnFinishCallback.propertyPath))
                 );
-            };
+                callbacksAnimatedContainer.AddContent(DesignUtils.endOfLineBlock);
+                callbacksAnimatedContainer.Bind(property.serializedObject);
+            });
 
-            callbacksAnimatedContainer.OnHideCallback =
-                () =>
-                {
-                    if (onPlayCallbackFoldout.isOn) onPlayCallbackFoldout.SetIsOn(false, animateChange: true);
-                    if (onStopCallbackFoldout.isOn) onStopCallbackFoldout.SetIsOn(false, animateChange: true);
-                    if (onFinishCallbackFoldout.isOn) onFinishCallbackFoldout.SetIsOn(false, animateChange: true);
-                };
+            presetsAnimatedContainer.SetOnShowCallback(() =>
+            {
+                presetsAnimatedContainer
+                    .AddContent
+                    (
+                        GetPresetsContent
+                        (
+                            target,
+                            property,
+                            propertyMoveEnabled,
+                            propertyRotateEnabled,
+                            propertyScaleEnabled,
+                            propertyFadeEnabled,
+                            propertyAnimationType
+                        )
+                    )
+                    .Bind(property.serializedObject);
+            });
 
             #endregion
 
-            void TabSetOnValueChanged(FluidBoolEvent evt, FluidAnimatedContainer animatedContainer, FluidToggleButtonTab tab) =>
-                animatedContainer.Toggle(evt.newValue);
 
-            moveTabButton.SetOnValueChanged(evt => TabSetOnValueChanged(evt, moveAnimatedContainer, moveTabButton));
-            rotateTabButton.SetOnValueChanged(evt => TabSetOnValueChanged(evt, rotateAnimatedContainer, rotateTabButton));
-            scaleTabButton.SetOnValueChanged(evt => TabSetOnValueChanged(evt, scaleAnimatedContainer, scaleTabButton));
-            fadeTabButton.SetOnValueChanged(evt => TabSetOnValueChanged(evt, fadeAnimatedContainer, fadeTabButton));
+            #region Toolbar
 
-            bool previousHasCallbacks = !HasCallbacks();
-            IVisualElementScheduledItem callbacksScheduler =
-                callbacksTabButton.schedule.Execute(() =>
-                {
-                    bool hasCallbacks = HasCallbacks();
-                    if (previousHasCallbacks == hasCallbacks) return;
-                    UpdateIndicators(true);
-                    previousHasCallbacks = hasCallbacks;
-                }).Every(250);
-            callbacksScheduler.Pause();
+            VisualElement toolbarContainer =
+                new VisualElement()
+                    .SetName("Toolbar Container")
+                    .SetStyleFlexDirection(FlexDirection.Row)
+                    .SetStyleMarginTop(-1)
+                    .SetStyleMarginLeft(4)
+                    .SetStyleMarginRight(4)
+                    .SetStyleFlexGrow(1);
 
-            callbacksTabButton.OnValueChanged = evt =>
+            FluidTab GetTab(string labelText, IEnumerable<Texture2D> icon, EditorSelectableColorInfo sColor, Color color, UnityAction<bool> callback) =>
+                FluidTab.Get().SetElementSize(ElementSize.Small)
+                    .SetLabelText(labelText).SetIcon(icon)
+                    .ButtonSetAccentColor(sColor).IndicatorSetEnabledColor(color)
+                    .ButtonSetOnValueChanged(evt => callback?.Invoke(evt.newValue));
+
+            FluidTab moveTab =
+                GetTab("Move", moveIconTextures, moveSColor, moveColor, value => moveAnimatedContainer.Toggle(value))
+                    .SetStyleWidth(TAB_BUTTON_WIDTH);
+
+            FluidTab rotateTab =
+                GetTab("Rotate", rotateIconTextures, rotateSColor, rotateColor, value => rotateAnimatedContainer.Toggle(value))
+                    .SetStyleWidth(TAB_BUTTON_WIDTH);
+
+            FluidTab scaleTab =
+                GetTab("Scale", scaleIconTextures, scaleSColor, scaleColor, value => scaleAnimatedContainer.Toggle(value))
+                    .SetStyleWidth(TAB_BUTTON_WIDTH);
+
+            FluidTab fadeTab =
+                GetTab("Fade", fadeIconTextures, fadeSColor, fadeColor, value => fadeAnimatedContainer.Toggle(value))
+                    .SetStyleWidth(TAB_BUTTON_WIDTH);
+
+            FluidTab callbacksTab =
+                GetTab("Callbacks", unityEventIconTextures, DesignUtils.callbackSelectableColor, DesignUtils.callbacksColor, value => callbacksAnimatedContainer.Toggle(value));
+
+            FluidTab presetsTab =
+                GetTab("Presets", uiAnimationPresetIconTextures, selectableAccentColor, presetsColor, value => presetsAnimatedContainer.Toggle(value));
+
+            //create tabs group
+            FluidToggleGroup tabsGroup = FluidToggleGroup.Get().SetControlMode(FluidToggleGroup.ControlMode.OneToggleOn);
+            moveTab.button.AddToToggleGroup(tabsGroup);
+            rotateTab.button.AddToToggleGroup(tabsGroup);
+            scaleTab.button.AddToToggleGroup(tabsGroup);
+            fadeTab.button.AddToToggleGroup(tabsGroup);
+            callbacksTab.button.AddToToggleGroup(tabsGroup);
+            presetsTab.button.AddToToggleGroup(tabsGroup);
+
+            //update tab indicators
+            drawer.schedule.Execute(() =>
             {
-                TabSetOnValueChanged(evt, callbacksAnimatedContainer, callbacksTabButton);
-                if (evt.newValue)
-                    callbacksScheduler?.Resume();
-                else
-                    callbacksScheduler?.Pause();
-            };
-            presetsTabButton.OnValueChanged = evt => TabSetOnValueChanged(evt, presetsAnimatedContainer, presetsTabButton);
+                void UpdateIndicator(FluidTab fluidTab, bool toggleOn, bool animateChange)
+                {
+                    if (fluidTab.indicator.isOn == toggleOn) return;
+                    fluidTab.indicator.Toggle(toggleOn, animateChange);
+                }
+
+                bool HasCallbacks() =>
+                    target != null &&
+                    target.OnPlayCallback?.GetPersistentEventCount() > 0 |  //HasOnPlayCallback
+                    target.OnStopCallback?.GetPersistentEventCount() > 0 |  //HasOnPlayCallback
+                    target.OnFinishCallback?.GetPersistentEventCount() > 0; //HasOnFinishCallback
+
+                //initial indicators state update (no animation)
+                UpdateIndicator(moveTab, propertyMoveEnabled.boolValue, false);
+                UpdateIndicator(rotateTab, propertyRotateEnabled.boolValue, false);
+                UpdateIndicator(scaleTab, propertyScaleEnabled.boolValue, false);
+                UpdateIndicator(fadeTab, propertyFadeEnabled.boolValue, false);
+                UpdateIndicator(callbacksTab, HasCallbacks(), false);
+
+                drawer.schedule.Execute(() =>
+                {
+                    //subsequent indicators state update (animated)
+                    UpdateIndicator(moveTab, propertyMoveEnabled.boolValue, true);
+                    UpdateIndicator(rotateTab, propertyRotateEnabled.boolValue, true);
+                    UpdateIndicator(scaleTab, propertyScaleEnabled.boolValue, true);
+                    UpdateIndicator(fadeTab, propertyFadeEnabled.boolValue, true);
+                    UpdateIndicator(callbacksTab, HasCallbacks(), true);
+
+                }).Every(200);
+            });
+
+            toolbarContainer
+                .AddChild(moveTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(rotateTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(scaleTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(fadeTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(callbacksTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(DesignUtils.flexibleSpace)
+                .AddChild(presetsTab);
+
+            #endregion
+
+            #region Compose
 
             drawer
                 .AddChild(componentHeader)
-                .AddChild(tabsContainer)
-                .AddSpace(0, DesignUtils.k_Spacing * 2)
-                .AddChild(presetsAnimatedContainer)
-                .AddChild(moveAnimatedContainer)
-                .AddChild(rotateAnimatedContainer)
-                .AddChild(scaleAnimatedContainer)
-                .AddChild(fadeAnimatedContainer)
-                .AddChild(callbacksAnimatedContainer);
+                .AddChild(toolbarContainer)
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild
+                (
+                    contentContainer
+                        .AddChild(moveAnimatedContainer)
+                        .AddChild(rotateAnimatedContainer)
+                        .AddChild(scaleAnimatedContainer)
+                        .AddChild(fadeAnimatedContainer)
+                        .AddChild(callbacksAnimatedContainer)
+                        .AddChild(presetsAnimatedContainer)
+                );
+
+            #endregion
+
+            #region SyncAnimationType
+
+            void SyncAnimationType()
+            {
+                propertyMoveAnimationType.enumValueIndex = propertyAnimationType.enumValueIndex;
+                property.serializedObject.ApplyModifiedPropertiesWithoutUndo();
+                componentHeader.SetComponentNameText($"{(UIAnimationType)propertyAnimationType.enumValueIndex} Animation");
+            }
 
             SyncAnimationType();
-
-            UIAnimationType CurrentAnimationType() => (UIAnimationType)propertyAnimationType.enumValueIndex;
-
-            UpdateComponentHeaderComponentName(CurrentAnimationType());
-            
-            void UpdateComponentHeaderComponentName(UIAnimationType animationType) =>
-                componentHeader.SetComponentNameText($"{animationType} Animation");
-
-            #region Dynamic Setup
-
             drawer.RegisterCallback<AttachToPanelEvent>(evt => Undo.undoRedoPerformed += SyncAnimationType);
             drawer.RegisterCallback<DetachFromPanelEvent>(evt => Undo.undoRedoPerformed -= SyncAnimationType);
 
-            void SyncAnimationType() => propertyMoveAnimationType.enumValueIndex = propertyAnimationType.enumValueIndex;
-
-            fieldAnimationTypeEnum.RegisterValueChangedCallback(changeEvent =>
+            EnumField iAnimationTypeEnumField = DesignUtils.NewEnumField(propertyAnimationType, true);
+            drawer.AddChild(iAnimationTypeEnumField);
+            iAnimationTypeEnumField.RegisterValueChangedCallback(evt =>
             {
-                try
-                {
-                    propertyMoveAnimationType.enumValueIndex = (int)(UIAnimationType)changeEvent.newValue;
-                    UpdateComponentHeaderComponentName((UIAnimationType)changeEvent.newValue);
-
-                    presetsTabButton.SetIsOn(newValue: false, animateChange: false);
-                    moveAnimatedContainer.Hide(false);
-                    rotateAnimatedContainer.Hide(false);
-                    scaleAnimatedContainer.Hide(false);
-                    fadeAnimatedContainer.Hide(false);
-                }
-                catch
-                {
-                    // ignored
-                }
+                if(evt?.newValue == null) return;
+                moveTab.button.SetIsOn(false, false);
+                rotateTab.button.SetIsOn(false, false);
+                scaleTab.button.SetIsOn(false, false);
+                fadeTab.button.SetIsOn(false, false);
+                callbacksTab.button.SetIsOn(false, false);
+                presetsTab.button.SetIsOn(false, false);
+                SyncAnimationType();
             });
 
-            #region Invisible Fields
-
-            Toggle invisibleMoveEnabledToggle = DesignUtils.NewToggle(propertyMoveEnabled.propertyPath, invisibleField: true);
-            Toggle invisibleRotateEnabledToggle = DesignUtils.NewToggle(propertyRotateEnabled.propertyPath, invisibleField: true);
-            Toggle invisibleScaleEnabledToggle = DesignUtils.NewToggle(propertyScaleEnabled.propertyPath, invisibleField: true);
-            Toggle invisibleFadeEnabledToggle = DesignUtils.NewToggle(propertyFadeEnabled.propertyPath, invisibleField: true);
-
-            drawer
-                .AddChild(invisibleMoveEnabledToggle)
-                .AddChild(invisibleRotateEnabledToggle)
-                .AddChild(invisibleScaleEnabledToggle)
-                .AddChild(invisibleFadeEnabledToggle);
-
-            invisibleMoveEnabledToggle.RegisterValueChangedCallback(evt => UpdateIndicators(true));
-            invisibleRotateEnabledToggle.RegisterValueChangedCallback(evt => UpdateIndicators(true));
-            invisibleScaleEnabledToggle.RegisterValueChangedCallback(evt => UpdateIndicators(true));
-            invisibleFadeEnabledToggle.RegisterValueChangedCallback(evt => UpdateIndicators(true));
-
-            UpdateIndicators(false);
-
-            void UpdateIndicator(EnabledIndicator indicator, bool enabled, bool animateChange = true)
-            {
-                indicator.Toggle(enabled, animateChange);
-            }
-
-            void UpdateIndicators(bool animateChange)
-            {
-                drawer.schedule.Execute(() =>
-                {
-                    UpdateIndicator(moveTabIndicator, propertyMoveEnabled.boolValue, animateChange);
-                    UpdateIndicator(rotateTabIndicator, propertyRotateEnabled.boolValue, animateChange);
-                    UpdateIndicator(scaleTabIndicator, propertyScaleEnabled.boolValue, animateChange);
-                    UpdateIndicator(fadeTabIndicator, propertyFadeEnabled.boolValue, animateChange);
-                    UpdateIndicator(callbacksTabIndicator, HasCallbacks(), animateChange);
-                });
-            }
-
             #endregion
-
-            #endregion
-
+            
             return drawer;
         }
 
@@ -534,9 +459,9 @@ namespace Doozy.Editor.Reactor.Drawers
                 }
 
                 if (!EditorUtility.DisplayDialog(
-                    "Delete Preset",
-                    $"Are you sure you want to delete the selected preset? '{popupCategories.value} - {popupPresetNames.value}'",
-                    "Continue", "Cancel"))
+                        "Delete Preset",
+                        $"Are you sure you want to delete the selected preset? '{popupCategories.value} - {popupPresetNames.value}'",
+                        "Continue", "Cancel"))
                     return;
 
                 UIAnimationPreset preset = UIAnimationPresetDatabase.instance.GetPreset(animationType, popupCategories.value, popupPresetNames.value);

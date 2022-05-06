@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
 {
-    [AddComponentMenu("Doozy/Reactor/Targets/Text Progress Target")]
+    [AddComponentMenu("Reactor/Targets/Text Progress Target")]
     public class TextProgressTarget : MetaProgressTarget<Text>
     {
         [SerializeField] private bool WholeNumbers = true;

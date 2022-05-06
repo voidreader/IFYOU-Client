@@ -276,9 +276,7 @@ namespace Doozy.Editor.UIManager.UIMenu
         /// <summary> Stop preview animation and set the first frame </summary>
         public void StopPreview()
         {
-            if (iconReaction == null) return;
-            if (!iconReaction.isActive) return;
-            iconReaction.SetProgressAtZero();
+            iconReaction?.SetProgressAtZero();
         }
 
         public UIMenuItemButton SetUIMenuItem(UIMenuItem item)
@@ -312,8 +310,6 @@ namespace Doozy.Editor.UIManager.UIMenu
             StateChanged();
             return this;
         }
-
-
     }
 
     public static class UIMenuItemButtonExtensions

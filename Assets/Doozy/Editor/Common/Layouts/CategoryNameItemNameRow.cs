@@ -29,7 +29,7 @@ namespace Doozy.Editor.Common.Layouts
         public FluidToggleButtonTab buttonRename { get; }
         public FluidButton buttonSave { get; }
         public FluidButton buttonCancel { get; }
-        public FluidButton buttonRemoveItem { get; }
+        public FluidButton buttonRemove { get; }
 
         private static Color layoutContainerNormalColor => EditorColors.Default.Background;
         private static Color layoutContainerHoverColor => EditorColors.Default.WindowHeaderBackground;
@@ -73,14 +73,14 @@ namespace Doozy.Editor.Common.Layouts
             buttonRename = NewButtonRename();
             buttonSave = NewButtonSave().SetStyleDisplay(DisplayStyle.None);
             buttonCancel = NewButtonCancel().SetStyleDisplay(DisplayStyle.None);
-            buttonRemoveItem = NewButtonRemoveItem();
+            buttonRemove = NewButtonRemove();
 
             buttonRename.SetOnValueChanged(change =>
             {
                 if (change.newValue)
                 {
                     nameLabel.SetStyleDisplay(DisplayStyle.None);
-                    buttonRemoveItem.SetStyleDisplay(DisplayStyle.None);
+                    buttonRemove.SetStyleDisplay(DisplayStyle.None);
                     nameTextField.SetStyleDisplay(DisplayStyle.Flex);
                     buttonSave.SetStyleDisplay(DisplayStyle.Flex);
                     buttonCancel.SetStyleDisplay(DisplayStyle.Flex);
@@ -88,7 +88,7 @@ namespace Doozy.Editor.Common.Layouts
                 }
 
                 nameLabel.SetStyleDisplay(DisplayStyle.Flex);
-                buttonRemoveItem.SetStyleDisplay(DisplayStyle.Flex);
+                buttonRemove.SetStyleDisplay(DisplayStyle.Flex);
                 nameTextField.SetStyleDisplay(DisplayStyle.None);
                 buttonSave.SetStyleDisplay(DisplayStyle.None);
                 buttonCancel.SetStyleDisplay(DisplayStyle.None);
@@ -102,9 +102,12 @@ namespace Doozy.Editor.Common.Layouts
                 buttonRename.SetIsOn(false);
             });
 
-            buttonCancel.SetOnClick(() => buttonRename.SetIsOn(false));
+            buttonCancel.SetOnClick(() =>
+            {
+                buttonRename.SetIsOn(false);
+            });
 
-            buttonRemoveItem.SetOnClick(() =>
+            buttonRemove.SetOnClick(() =>
             {
                 if (removeHandler == null) throw new NullReferenceException(nameof(removeHandler));
                 removeHandler.Invoke(target);
@@ -116,7 +119,7 @@ namespace Doozy.Editor.Common.Layouts
             rightContainer
                 .AddChild(buttonSave)
                 .AddChild(buttonCancel)
-                .AddChild(buttonRemoveItem);
+                .AddChild(buttonRemove);
         }
 
         public override void Reset()
@@ -131,7 +134,7 @@ namespace Doozy.Editor.Common.Layouts
             saveHandler = null;
 
             nameLabel.SetStyleDisplay(DisplayStyle.Flex);
-            buttonRemoveItem.SetStyleDisplay(DisplayStyle.Flex);
+            buttonRemove.SetStyleDisplay(DisplayStyle.Flex);
             nameTextField.SetStyleDisplay(DisplayStyle.None);
             buttonSave.SetStyleDisplay(DisplayStyle.None);
             buttonCancel.SetStyleDisplay(DisplayStyle.None);
@@ -143,7 +146,7 @@ namespace Doozy.Editor.Common.Layouts
             target = categoryNameItem;
             nameLabel.text = target.name;
             nameTextField.value = target.name;
-            SetEnabled(!name.Equals(CategoryNameItem.k_DefaultName));
+            SetEnabled(!categoryNameItem.category.Equals(CategoryNameItem.k_DefaultName));
             return this;
         }
 
@@ -180,7 +183,7 @@ namespace Doozy.Editor.Common.Layouts
                 .SetAccentColor(EditorSelectableColors.Default.Remove)
                 .SetTooltip("Cancel");
 
-        private static FluidButton NewButtonRemoveItem() =>
+        private static FluidButton NewButtonRemove() =>
             FluidButton.Get()
                 .SetElementSize(ElementSize.Tiny)
                 .SetIcon(EditorSpriteSheets.EditorUI.Icons.Minus)

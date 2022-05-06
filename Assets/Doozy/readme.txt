@@ -4,9 +4,15 @@ A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/a
 
 GETTING STARTED
 ---
-After importing DoozyUI you can start using it without doing anything else.
+After importing Doozy UI Manager you can start using it without doing anything else.
 You can find a quick Getting Started guide at Assets/Doozy/_Extras/_Manual
 We recommend checking out the Knowledge Base to see the full documentation at http://docs.doozyui.com/
+
+ERRORS
+---
+If you're seeing any errors, before doing anything else, we recommend running a Global Refresh.
+Tools > Doozy > Global Refresh
+This will regenerate all databases, re-write all custom classes and perform an integrity check.  
 
 
 LINKS

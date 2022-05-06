@@ -112,7 +112,6 @@ namespace Doozy.Runtime.Reactor.Animations
 
         /// <summary> Apply the settings to the target UIAnimation (copy the setting to the target) </summary>
         /// <param name="target"> Target UIAnimation </param>
-        /// <exception cref="NullReferenceException"> Target UIAnimation is null </exception>
         public void SetAnimationSettings(UIAnimation target)
         {
             _ = target ?? throw new NullReferenceException(nameof(target));
@@ -161,7 +160,6 @@ namespace Doozy.Runtime.Reactor.Animations
 
         /// <summary> Get the settings from a source UIAnimation (copy the settings from the source) </summary>
         /// <param name="source"> Source UIAnimation </param>
-        /// <exception cref="NullReferenceException"> Target UIAnimation is null </exception>
         public void GetAnimationSettings(UIAnimation source)
         {
             _ = source ?? throw new NullReferenceException(nameof(source));
@@ -214,7 +212,6 @@ namespace Doozy.Runtime.Reactor.Animations
         /// </summary>
         /// <param name="source"> Source UIAnimationSettings </param>
         /// <param name="target"> Target UIAnimation </param>
-        /// <exception cref="NullReferenceException"> Source and/or Target UIAnimations are null </exception>
         public static void SetAnimationSettings(UIAnimationSettings source, UIAnimation target)
         {
             _ = source ?? throw new NullReferenceException(nameof(source));
@@ -229,7 +226,6 @@ namespace Doozy.Runtime.Reactor.Animations
         /// </summary>
         /// <param name="source"> Source UIAnimation </param>
         /// <param name="target"> Target UIAnimationSettings </param>
-        /// <exception cref="NullReferenceException"> Source and/or Target UIAnimations are null </exception>
         public static void GetAnimationSettings(UIAnimation source, UIAnimationSettings target)
         {
             _ = source ?? throw new NullReferenceException(nameof(source));

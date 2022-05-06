@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Mody;
 using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
@@ -17,10 +18,18 @@ namespace Doozy.Runtime.UIManager.Components
     /// Toggle component that can control other UIToggles, based on UIToggle. 
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
-    [AddComponentMenu("Doozy/UI/Components/UI Toggle Group")]
+    [AddComponentMenu("UI/Components/UIToggle Group")]
     [SelectionBase]
     public class UIToggleGroup : UIToggle
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Components/UIToggle Group", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UIToggleGroup>("UIToggle Group", false, true);
+        }
+        #endif
+        
         #region Enums
 
         /// <summary> Defines all the values a Toggle Group can have </summary>

@@ -18,7 +18,7 @@ namespace Doozy.Runtime.UIManager.Input
     /// It can either get it from a Player Input component, or use a custom player index.
     /// This component is available only if Multiplayer mode is enabled.
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Input/Multiplayer Info")]
+    [AddComponentMenu("Input/Multiplayer Info")]
     public class MultiplayerInfo : MonoBehaviour
     {
         /// <summary> Reference to the UIManager Input Settings </summary>

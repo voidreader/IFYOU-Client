@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using Doozy.Runtime.Common.Extensions;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Mody;
 using Doozy.Runtime.Mody.Actions;
 using Doozy.Runtime.Reactor;
@@ -14,11 +15,19 @@ using UnityEngine;
 namespace Doozy.Runtime.UIManager.Modules
 {
     /// <summary> Mody module used to control a list of Reactor animators </summary>
-    [AddComponentMenu("Doozy/UI/Modules/Animator Module")]
+    [AddComponentMenu("Mody/Animator Module")]
     public class AnimatorModule : ModyModule
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/Mody/Animator Module", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<AnimatorModule>("Animator Module", false, true);
+        }
+        #endif
+        
         /// <summary> Default module name </summary>
-        public const string k_DefaultModuleName = "Animator Module";
+        public const string k_DefaultModuleName = "Animator";
 
         /// <summary> Construct an Animator Module with the default name </summary>
         public AnimatorModule() : this(k_DefaultModuleName) {}

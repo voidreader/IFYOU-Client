@@ -12,7 +12,7 @@ using Doozy.Editor.Reactor.Components;
 using Doozy.Runtime.UIElements.Extensions;
 using Doozy.Runtime.UIManager.Modules;
 using UnityEditor;
-using UnityEngine;
+using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace Doozy.Editor.UIManager.Editors.Modules
@@ -20,44 +20,92 @@ namespace Doozy.Editor.UIManager.Editors.Modules
     [CustomEditor(typeof(AnimatorModule), true)]
     public class AnimatorModuleEditor : ModyModuleEditor<AnimatorModule>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.Reactor.Icons.UIAnimator;
+        private SerializedProperty propertyAnimators { get; set; }
 
-        private List<SerializedProperty> itemsSource { get; set; }
-        private SerializedProperty arrayProperty { get; set; }
-        private FluidListView fluidListView { get; set; }
-
-        public override VisualElement CreateInspectorGUI()
+        protected override void FindProperties()
         {
-            CreateEditor();
-            return root;
+            base.FindProperties();
+
+            propertyAnimators = serializedObject.FindProperty(nameof(AnimatorModule.Animators));
         }
 
-        protected override void CreateEditor()
+        protected override void InitializeEditor()
         {
-            base.CreateEditor();
+            base.InitializeEditor();
 
-            //MODULE HEADER
-            fluidHeader.SetSecondaryIcon(secondaryIconTextures);
-            fluidHeader.SetComponentNameText(AnimatorModule.k_DefaultModuleName);
+            componentHeader
+                .SetComponentNameText(AnimatorModule.k_DefaultModuleName)
+                .SetSecondaryIcon(EditorSpriteSheets.Reactor.Icons.UIAnimator)
+                .AddManualButton()
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Modules.AnimatorModule.html")
+                .AddYouTubeButton();
+        }
 
-            #region ListView
+        protected override void InitializeSettings()
+        {
+            base.InitializeSettings();
 
-            itemsSource = new List<SerializedProperty>();
-            arrayProperty = serializedObject.FindProperty(nameof(AnimatorModule.Animators));
-            fluidListView = new FluidListView();
+            settingsAnimatedContainer.SetOnShowCallback(() =>
+            {
+                var actionsDrawer =
+                    new ModyActionsDrawer();
+
+                actionsDrawer.schedule.Execute(() => actionsDrawer.Update());
+
+                VisualElement actionsContainer =
+                    new VisualElement().SetName("Actions Container");
+
+                void AddActionToDrawer(ModyActionsDrawerItem item)
+                {
+                    actionsDrawer.AddItem(item);
+                    actionsContainer.AddChild(item.animatedContainer);
+                }
+
+                //MODULE ACTIONS
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.PlayForward))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.PlayReverse))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.Stop))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.Finish))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.Reverse))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.Rewind))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.Pause))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.Resume))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.SetProgressAt))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.SetProgressAtZero))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.SetProgressAtOne))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.PlayToProgress))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.PlayFromProgress))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.UpdateValues))));
+
+                settingsAnimatedContainer
+                    .AddContent(AnimatorsListView())
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(actionsDrawer)
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(actionsContainer)
+                    .Bind(serializedObject);
+            });
+        }
+
+
+        private FluidListView AnimatorsListView()
+        {
+            var itemsSource = new List<SerializedProperty>();
+            SerializedProperty arrayProperty = propertyAnimators;
+            var flv = new FluidListView();
             const string animationName = "Animator";
-            fluidListView
+            flv
                 // .SetListTitle($"{uiAnimationName}s")
                 .SetListDescription($"List of {animationName}s controlled by this module")
                 .UseSmallEmptyListPlaceholder(true)
                 .HideFooter(true)
                 .ShowItemIndex(false);
-            
-            fluidListView.emptyListPlaceholder.SetIcon(EditorSpriteSheets.EditorUI.Placeholders.EmptyListViewSmall);
-            fluidListView.listView.selectionType = SelectionType.None;
-            fluidListView.listView.itemsSource = itemsSource;
-            fluidListView.listView.makeItem = () => new AnimatorFluidListViewItem(fluidListView).SetStylePaddingLeft(DesignUtils.k_Spacing);
-            fluidListView.listView.bindItem = (element, i) =>
+
+            flv.emptyListPlaceholder.SetIcon(EditorSpriteSheets.EditorUI.Placeholders.EmptyListViewSmall);
+            flv.listView.selectionType = SelectionType.None;
+            flv.listView.itemsSource = itemsSource;
+            flv.listView.makeItem = () => new AnimatorFluidListViewItem(flv).SetStylePaddingLeft(DesignUtils.k_Spacing);
+            flv.listView.bindItem = (element, i) =>
             {
                 var item = (AnimatorFluidListViewItem)element;
                 item.Update(i, itemsSource[i]);
@@ -76,19 +124,19 @@ namespace Doozy.Editor.UIManager.Editors.Modules
                     UpdateItemsSource();
                 };
             };
-            
+
             #if UNITY_2021_2_OR_NEWER
-            fluidListView.listView.fixedItemHeight = 30;
-            fluidListView.SetPreferredListHeight((int)fluidListView.listView.fixedItemHeight * 5);
+            flv.listView.fixedItemHeight = 30;
+            flv.SetPreferredListHeight((int)flv.listView.fixedItemHeight * 5);
             #else
-            fluidListView.listView.itemHeight = 30;
-            fluidListView.SetPreferredListHeight(fluidListView.listView.itemHeight * 5);
+            flv.listView.itemHeight = 30;
+            flv.SetPreferredListHeight(flv.listView.itemHeight * 5);
             #endif
-            
-            fluidListView.SetDynamicListHeight(false);
-            
+
+            flv.SetDynamicListHeight(false);
+
             //ADD ITEM BUTTON (plus button)
-            fluidListView.AddNewItemButtonCallback += () =>
+            flv.AddNewItemButtonCallback += () =>
             {
                 arrayProperty.InsertArrayElementAtIndex(0);
                 arrayProperty.GetArrayElementAtIndex(0).objectReferenceValue = null;
@@ -97,9 +145,9 @@ namespace Doozy.Editor.UIManager.Editors.Modules
             };
 
             UpdateItemsSource();
-            
+
             int arraySize = arrayProperty.arraySize;
-            fluidListView.schedule.Execute(() =>
+            flv.schedule.Execute(() =>
             {
                 if (arrayProperty == null) return;
                 if (arrayProperty.arraySize == arraySize) return;
@@ -107,39 +155,17 @@ namespace Doozy.Editor.UIManager.Editors.Modules
                 UpdateItemsSource();
 
             }).Every(100);
-            
+
             void UpdateItemsSource()
             {
                 itemsSource.Clear();
                 for (int i = 0; i < arrayProperty.arraySize; i++)
                     itemsSource.Add(arrayProperty.GetArrayElementAtIndex(i));
 
-                fluidListView?.Update();
+                flv?.Update();
             }
-            #endregion
-            
-            
-            //MODULE SETTINGS
-            settingsContainer.AddChild(fluidListView);
-            
-            //MODULE ACTIONS
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.PlayForward))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.PlayReverse))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.Stop))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.Finish))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.Reverse))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.Rewind))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.Pause))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.Resume))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.SetProgressAt))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.SetProgressAtZero))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.SetProgressAtOne))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.PlayToProgress))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.PlayFromProgress))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AnimatorModule.UpdateValues))));
 
-            //COMPOSE
-            Compose();
+            return flv;
         }
     }
 }

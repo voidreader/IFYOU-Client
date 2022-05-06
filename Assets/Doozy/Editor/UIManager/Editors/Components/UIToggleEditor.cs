@@ -10,12 +10,14 @@ using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.UIManager.Editors.Components.Internal;
+using Doozy.Runtime.Common.Extensions;
 using Doozy.Runtime.UIElements.Extensions;
+using Doozy.Runtime.UIManager;
+using Doozy.Runtime.UIManager.Animators;
 using Doozy.Runtime.UIManager.Components;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -23,81 +25,63 @@ namespace Doozy.Editor.UIManager.Editors.Components
 {
     [CustomEditor(typeof(UIToggle), true)]
     [CanEditMultipleObjects]
-    public class UIToggleEditor : UISelectableBaseEditor
+    public sealed class UIToggleEditor : UISelectableBaseEditor
     {
         public override Color accentColor => EditorColors.UIManager.UIComponent;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.UIComponent;
 
         public UIToggle castedTarget => (UIToggle)target;
-        public IEnumerable<UIToggle> castedTargets => targets.Cast<UIToggle>();
+        public List<UIToggle> castedTargets => targets.Cast<UIToggle>().ToList();
 
-        public static IEnumerable<Texture2D> toggleIconTextures => EditorSpriteSheets.UIManager.Icons.UIToggle;
-        public static IEnumerable<Texture2D> toggleGroupIconTextures => EditorSpriteSheets.UIManager.Icons.UIToggleGroup;
-        public static IEnumerable<Texture2D> unityEventIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
-        public static IEnumerable<Texture2D> buttonClickIconTextures => EditorSpriteSheets.EditorUI.Icons.ButtonClick;
-        public static IEnumerable<Texture2D> toggleOnIconTextures => EditorSpriteSheets.EditorUI.Icons.ToggleON;
-        public static IEnumerable<Texture2D> toggleOffIconTextures => EditorSpriteSheets.EditorUI.Icons.ToggleOFF;
-
-        private VisualElement callbacksTab { get; set; }
-        private EnabledIndicator callbacksTabIndicator { get; set; }
-
+        private FluidTab callbacksTab { get; set; }
         private FluidAnimatedContainer callbacksAnimatedContainer { get; set; }
-
         private FluidField idField { get; set; }
-        private FluidField toggleGroupField { get; set; }
-
-        private ObjectField toggleGroupObjectField { get; set; }
-        private FluidToggleCheckbox isOnCheckbox { get; set; }
 
         private SerializedProperty propertyId { get; set; }
-        private SerializedProperty propertyBehaviours { get; set; }
         private SerializedProperty propertyIsOn { get; set; }
-        private SerializedProperty propertyToggleGroup { get; set; }
-        private SerializedProperty propertyOnToggleOnCallback { get; set; }
+        private SerializedProperty propertyOnInstantToggleOffCallback { get; set; }
         private SerializedProperty propertyOnInstantToggleOnCallback { get; set; }
         private SerializedProperty propertyOnToggleOffCallback { get; set; }
-        private SerializedProperty propertyOnInstantToggleOffCallback { get; set; }
-        private SerializedProperty propertyOnValueChanged { get; set; }
-
-        private bool hasOnToggleOnCallback => castedTarget != null && castedTarget.OnToggleOnCallback is { Enabled: true } && castedTarget.OnToggleOnCallback.hasEvents | castedTarget.OnToggleOnCallback.hasRunners;
-        private bool hasOnInstantToggleOnCallback => castedTarget != null && castedTarget.OnInstantToggleOnCallback is { Enabled: true } && castedTarget.OnInstantToggleOnCallback.hasEvents | castedTarget.OnInstantToggleOnCallback.hasRunners;
-        private bool hasOnToggleOffCallback => castedTarget != null && castedTarget.OnToggleOffCallback is { Enabled: true } && castedTarget.OnToggleOffCallback.hasEvents | castedTarget.OnToggleOffCallback.hasRunners;
-        private bool hasOnInstantToggleOffCallback => castedTarget != null && castedTarget.OnInstantToggleOffCallback is { Enabled: true } && castedTarget.OnInstantToggleOffCallback.hasEvents | castedTarget.OnInstantToggleOffCallback.hasRunners;
-        private bool hasOnValueChangedCallback => castedTarget != null && castedTarget.OnValueChangedCallback?.GetPersistentEventCount() > 0;
-        private bool hasCallbacks =>
-            hasOnToggleOnCallback |
-            hasOnInstantToggleOnCallback |
-            hasOnToggleOffCallback |
-            hasOnInstantToggleOffCallback |
-            hasOnValueChangedCallback;
+        private SerializedProperty propertyOnToggleOnCallback { get; set; }
+        private SerializedProperty propertyOnValueChangedCallback { get; set; }
+        private SerializedProperty propertyToggleGroup { get; set; }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-
-            callbacksTabIndicator?.Recycle();
-
-            idField?.Recycle();
-            toggleGroupField?.Recycle();
-
-            isOnCheckbox?.Recycle();
-
+            callbacksTab?.Recycle();
             callbacksAnimatedContainer?.Dispose();
+            idField?.Recycle();
         }
 
+        protected override void SearchForAnimators()
+        {
+            selectableAnimators ??= new List<BaseUISelectableAnimator>();
+            selectableAnimators.Clear();
+            
+            //check if prefab was selected
+            if (castedTargets.Any(s => s.gameObject.scene.name == null)) 
+            {
+                selectableAnimators.AddRange(castedSelectable.GetComponentsInChildren<BaseUISelectableAnimator>());
+                return;
+            }
+            
+            //not prefab
+            selectableAnimators.AddRange(FindObjectsOfType<BaseUISelectableAnimator>());
+        }
+        
         protected override void FindProperties()
         {
             base.FindProperties();
 
             propertyId = serializedObject.FindProperty(nameof(UIToggle.Id));
-            propertyBehaviours = serializedObject.FindProperty("Behaviours");
             propertyIsOn = serializedObject.FindProperty("IsOn");
-            propertyToggleGroup = serializedObject.FindProperty("ToggleGroup");
-            propertyOnToggleOnCallback = serializedObject.FindProperty(nameof(UIToggle.OnToggleOnCallback));
+            propertyOnInstantToggleOffCallback = serializedObject.FindProperty(nameof(UIToggle.OnInstantToggleOffCallback));
             propertyOnInstantToggleOnCallback = serializedObject.FindProperty(nameof(UIToggle.OnInstantToggleOnCallback));
             propertyOnToggleOffCallback = serializedObject.FindProperty(nameof(UIToggle.OnToggleOffCallback));
-            propertyOnInstantToggleOffCallback = serializedObject.FindProperty(nameof(UIToggle.OnInstantToggleOffCallback));
-            propertyOnValueChanged = serializedObject.FindProperty(nameof(UIToggle.OnValueChangedCallback));
+            propertyOnToggleOnCallback = serializedObject.FindProperty(nameof(UIToggle.OnToggleOnCallback));
+            propertyOnValueChangedCallback = serializedObject.FindProperty(nameof(UIToggle.OnValueChangedCallback));
+            propertyToggleGroup = serializedObject.FindProperty("ToggleGroup");
         }
 
         protected override void InitializeEditor()
@@ -106,174 +90,227 @@ namespace Doozy.Editor.UIManager.Editors.Components
 
             componentHeader
                 .SetAccentColor(accentColor)
-                .SetComponentNameText((ObjectNames.NicifyVariableName(nameof(UIToggle))))
-                .SetIcon(toggleIconTextures.ToList())
+                .SetComponentNameText("UIToggle")
+                .SetIcon(EditorSpriteSheets.UIManager.Icons.UIToggle)
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048084542/UIToggle?atlOrigin=eyJpIjoiNjQ4NmRmNjIyNjY2NDM5YmEyOTBlMzhhZjFmZWI0ZDciLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Components.UIToggle.html")
                 .AddYouTubeButton();
 
 
             idField = FluidField.Get().AddFieldContent(DesignUtils.NewPropertyField(propertyId));
 
-            isOnCheckbox =
-                FluidToggleCheckbox.Get()
-                    .SetLabelText("Is On")
-                    .BindToProperty(propertyIsOn);
-
-            toggleGroupObjectField =
-                DesignUtils.NewObjectField(propertyToggleGroup, typeof(UIToggleGroup))
-                    .SetStyleFlexGrow(1);
-
-            toggleGroupField =
-                FluidField.Get()
-                    .SetLabelText("Toggle Group")
-                    .SetIcon(toggleGroupIconTextures)
-                    .AddFieldContent(toggleGroupObjectField);
-
             InitializeCallbacks();
+
+            //refresh tabs enabled indicator
+            root.schedule.Execute(() =>
+            {
+                void UpdateIndicator(FluidTab tab, bool toggleOn, bool animateChange)
+                {
+                    if (tab == null) return;
+                    if (tab.indicator.isOn != toggleOn)
+                        tab.indicator.Toggle(toggleOn, animateChange);
+                }
+
+                bool HasCallbacks()
+                {
+                    if (castedTarget == null)
+                        return false;
+                    
+                    return castedTarget.OnToggleOnCallback.hasCallbacks ||
+                           castedTarget.OnInstantToggleOnCallback.hasCallbacks ||
+                           castedTarget.OnToggleOffCallback.hasCallbacks ||
+                           castedTarget.OnInstantToggleOffCallback.hasCallbacks ||
+                           castedTarget.OnValueChangedCallback?.GetPersistentEventCount() > 0;
+                }
+
+                //initial indicators state update (no animation)
+                UpdateIndicator(callbacksTab, HasCallbacks(), false);
+
+                //subsequent indicators state update (animated)
+                root.schedule.Execute(() =>
+                {
+                    UpdateIndicator(callbacksTab, HasCallbacks(), true);
+
+                }).Every(200);
+            });
+        }
+
+        protected override void InitializeSettings()
+        {
+            base.InitializeSettings();
+
+            settingsAnimatedContainer.SetOnShowCallback(() =>
+            {
+                #region Interactable
+
+                FluidToggleCheckbox interactableCheckbox = FluidToggleCheckbox.Get()
+                    .SetLabelText("Interactable")
+                    .SetTooltip("Can the Selectable be interacted with?")
+                    .BindToProperty(propertyInteractable);
+
+                #endregion
+
+                #region Deselect after Press
+
+                FluidToggleCheckbox deselectAfterPressCheckbox = FluidToggleCheckbox.Get()
+                    .SetLabelText("Deselect after Press")
+                    .BindToProperty(propertyDeselectAfterPress);
+
+                #endregion
+
+                #region Is On
+
+                FluidToggleCheckbox isOnCheckbox =
+                    FluidToggleCheckbox.Get()
+                        .SetLabelText("Is On")
+                        .BindToProperty(propertyIsOn)
+                        .SetOnClick(() =>
+                        {
+                            if (Application.isPlaying)
+                            {
+                                foreach (var t in castedTargets)
+                                    t.isOn = !castedTarget.isOn;
+                                return;
+                            }
+                            HeartbeatCheck();
+                            foreach (var a in selectableAnimators.RemoveNulls())
+                            {
+                                switch (a.ToggleCommand)
+                                {
+                                    case CommandToggle.On when !castedTarget.isOn:
+                                    case CommandToggle.Off when castedTarget.isOn:
+                                        continue;
+                                    default:
+                                        a.Play(castedSelectable.currentUISelectionState);
+                                        break;
+                                }
+                            }
+                        });
+
+                #endregion
+
+                #region Toggle Group
+
+                ObjectField toggleGroupObjectField =
+                    DesignUtils.NewObjectField(propertyToggleGroup, typeof(UIToggleGroup))
+                        .SetStyleFlexGrow(1);
+
+                FluidField toggleGroupField =
+                    FluidField.Get()
+                        .SetLabelText("Toggle Group")
+                        .SetIcon(EditorSpriteSheets.UIManager.Icons.UIToggleGroup)
+                        .AddFieldContent(toggleGroupObjectField);
+
+                #endregion
+
+                settingsAnimatedContainer
+                    .AddContent
+                    (
+                        DesignUtils.row
+                            .AddChild(interactableCheckbox)
+                            .AddChild(DesignUtils.spaceBlock)
+                            .AddChild(deselectAfterPressCheckbox)
+                    )
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(isOnCheckbox)
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(toggleGroupField)
+                    .Bind(serializedObject);
+            });
         }
 
         private void InitializeCallbacks()
         {
-            callbacksAnimatedContainer = new FluidAnimatedContainer().SetName("Callbacks").SetClearOnHide(true).Hide(false);
-
-            (callbacksTabButton, callbacksTabIndicator, callbacksTab) =
-                DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(unityEventIconTextures, DesignUtils.callbackSelectableColor, DesignUtils.callbacksColor);
+            callbacksAnimatedContainer = new FluidAnimatedContainer("Callbacks", true).Hide(false);
+            callbacksTab =
+                GetTab("Callbacks")
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.UnityEvent)
+                    .IndicatorSetEnabledColor(DesignUtils.callbacksColor)
+                    .ButtonSetAccentColor(DesignUtils.callbackSelectableColor)
+                    .ButtonSetOnValueChanged(evt => callbacksAnimatedContainer.Toggle(evt.newValue, evt.animateChange));
 
             callbacksAnimatedContainer.SetOnShowCallback(() =>
             {
-                FluidField GetField(SerializedProperty property, IEnumerable<Texture2D> iconTextures, string fieldLabelText, string fieldTooltip) =>
+                FluidField GetField(SerializedProperty property, string fieldLabelText) =>
                     FluidField.Get()
                         .SetLabelText(fieldLabelText)
-                        .SetTooltip(fieldTooltip)
-                        .SetIcon(iconTextures)
                         .SetElementSize(ElementSize.Small)
                         .AddFieldContent(DesignUtils.NewPropertyField(property));
 
                 callbacksAnimatedContainer
-                    .fluidContainer
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(GetField(propertyOnToggleOnCallback, toggleOnIconTextures, "Toggle ON - Toggle became ON", "Callbacks triggered then the toggle value changed from OFF to ON"))
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(GetField(propertyOnInstantToggleOnCallback, toggleOnIconTextures, "Instant Toggle ON - Toggle became ON (without animations)", "Callbacks triggered then the toggle value changed from OFF to ON (without animations)"))
-                    .AddChild(DesignUtils.spaceBlock2X)
-                    .AddChild(GetField(propertyOnToggleOffCallback, toggleOffIconTextures, "Toggle OFF - Toggle became OFF", "Callbacks triggered then the toggle value changed from ON to OFF"))
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(GetField(propertyOnInstantToggleOffCallback, toggleOffIconTextures, "Instant Toggle OFF - Toggle became OFF (without animations)", "Callbacks triggered then the toggle value changed from ON to OFF (without animations)"))
-                    .AddChild(DesignUtils.spaceBlock2X)
-                    .AddChild(GetField(propertyOnValueChanged, toggleIconTextures, "Toggle Value Changed", "Callbacks triggered then the toggle value changed"))
-                    .AddChild(DesignUtils.endOfLineBlock);
-
-                callbacksAnimatedContainer.schedule.Execute
-                (
-                    () =>
-                        callbacksAnimatedContainer.Bind(serializedObject)
-                );
+                    .AddContent(GetField(propertyOnToggleOnCallback, "Toggle ON - toggle value changed from OFF to ON"))
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(GetField(propertyOnInstantToggleOnCallback, "Instant Toggle ON - toggle value changed from OFF to ON (without animations)"))
+                    .AddContent(DesignUtils.spaceBlock2X)
+                    .AddContent(GetField(propertyOnToggleOffCallback, "Toggle OFF - toggle value changed from ON to OFF"))
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(GetField(propertyOnInstantToggleOffCallback, "Instant Toggle OFF - toggle value changed from ON to OFF (without animations)"))
+                    .AddContent(DesignUtils.spaceBlock2X)
+                    .AddContent(GetField(propertyOnValueChangedCallback, "Toggle Value Changed - toggle value changed"))
+                    .AddContent(DesignUtils.endOfLineBlock)
+                    .Bind(serializedObject);
             });
-
-            callbacksAnimatedContainer.SetOnHideCallback(() =>
-            {
-                serializedObject.ApplyModifiedProperties();
-            });
-
-            callbacksTabIndicator.Toggle(hasCallbacks, false);
-
-            IVisualElementScheduledItem callbacksScheduler =
-                callbacksTabButton.schedule
-                    .Execute(() => callbacksTabIndicator.Toggle(hasCallbacks, true))
-                    .Every(250);
-
-            callbacksScheduler.Pause();
-
-            callbacksTabButton
-                .SetLabelText("Callbacks")
-                .SetOnValueChanged(evt =>
-                {
-                    callbacksAnimatedContainer.Toggle(evt.newValue);
-                    callbacksTabIndicator.Toggle(hasCallbacks, true);
-                    if (evt.newValue)
-                        callbacksScheduler.Resume();
-                    else
-                        callbacksScheduler.Pause();
-                });
-
-            callbacksTabButton.AddToToggleGroup(toggleGroup);
         }
 
+        protected override VisualElement Toolbar()
+        {
+            return
+                toolbarContainer
+                    .AddChild(settingsTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(statesTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(behavioursTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(callbacksTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(navigationTab)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(DesignUtils.flexibleSpace)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild
+                    (
+                        DesignUtils.SystemButton_RenameComponent
+                        (
+                            castedTarget.gameObject,
+                            () => $"Toggle - {castedTarget.Id.Name}"
+                        )
+                    )
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild
+                    (
+                        DesignUtils.SystemButton_SortComponents
+                        (
+                            ((UISelectable)target).gameObject,
+                            nameof(RectTransform),
+                            nameof(UIToggle),
+                            nameof(UIToggleGroup)
+                        )
+                    );
+        }
 
+        protected override VisualElement Content()
+        {
+            return
+                contentContainer
+                    .AddChild(settingsAnimatedContainer)
+                    .AddChild(statesAnimatedContainer)
+                    .AddChild(behavioursAnimatedContainer)
+                    .AddChild(callbacksAnimatedContainer)
+                    .AddChild(navigationAnimatedContainer);
+        }
 
         protected override void Compose()
         {
-            if (castedTarget == null)
-                return;
-
             root
+                .AddChild(reactionControls)
                 .AddChild(componentHeader)
-                .AddChild
-                (
-                    DesignUtils.row
-                        .SetStyleMargins(50, -4, DesignUtils.k_Spacing2X, DesignUtils.k_Spacing2X)
-                        .AddChild(settingsTabButton)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild(statesTabButton)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(navigationTabButton)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild(callbacksTab)
-                        .AddChild(DesignUtils.flexibleSpace)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild
-                        (
-                            DesignUtils.SystemButton_RenameComponent
-                            (
-                                castedTarget.gameObject,
-                                () => $"Toggle - {castedTarget.Id.Category} {castedTarget.Id.Name}"
-                            )
-                        )
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild
-                        (
-                            DesignUtils.SystemButton_SortComponents
-                            (
-                                castedTarget.gameObject,
-                                nameof(RectTransform),
-                                nameof(Canvas),
-                                nameof(CanvasGroup),
-                                nameof(GraphicRaycaster),
-                                nameof(UIToggle)
-                            )
-                        )
-                )
-                .AddChild(DesignUtils.spaceBlock)
-                .AddChild
-                (
-                    settingsAnimatedContainer
-                        .AddContent
-                        (
-                            DesignUtils.column
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild
-                                (
-                                    DesignUtils.row
-                                        .AddChild(interactableCheckbox)
-                                        .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(deselectAfterPressCheckbox)
-                                        .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(GetStateButtons())
-                                )
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild(isOnCheckbox)
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild(toggleGroupField)
-                                .AddChild(DesignUtils.spaceBlock2X)
-                                .AddChild(idField)
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild(DesignUtils.NewPropertyField(propertyBehaviours))
-                                .AddChild(DesignUtils.endOfLineBlock)
-                        )
-                )
-                .AddChild(statesAnimatedContainer)
-                .AddChild(navigationAnimatedContainer)
-                .AddChild(callbacksAnimatedContainer);
+                .AddChild(Toolbar())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(Content())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(idField)
+                .AddChild(DesignUtils.endOfLineBlock);
         }
     }
 }

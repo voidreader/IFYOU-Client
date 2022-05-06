@@ -3,7 +3,10 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
+using System.Collections.Generic;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Reactor.Targets;
+using Doozy.Runtime.Reactor.Ticker;
 using Doozy.Runtime.UIManager.Animators;
 using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
@@ -13,9 +16,17 @@ namespace Doozy.Runtime.UIManager.Visual
     /// <summary>
     /// Specialized visual component used to swap a Sprites for a Reactor Sprite Target by listening to a UISelectable (controller) selection state changes.
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Visual/Selectable/UI Selectable Sprite Swapper")]
+    [AddComponentMenu("UI/Components/Addons/UISelectable SpriteSwapper")]
     public class UISelectableSpriteSwapper : BaseUISelectableAnimator
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Components/Addons/UISelectable SpriteSwapper", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UISelectableSpriteSwapper>("UISelectable SpriteSwapper", false, true);
+        }
+        #endif
+        
         [SerializeField] private ReactorSpriteTarget SpriteTarget;
         /// <summary> Reference to a sprite target component </summary>
         public ReactorSpriteTarget spriteTarget => SpriteTarget;
@@ -104,5 +115,8 @@ namespace Doozy.Runtime.UIManager.Visual
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
         }
+        
+        public override void ResetToStartValues(bool forced = false) {}    //ignored
+        public override List<Heartbeat> SetHeartbeat<T>() { return null; } //ignored
     }
 }

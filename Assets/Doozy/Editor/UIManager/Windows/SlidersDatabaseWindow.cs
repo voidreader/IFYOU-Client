@@ -4,6 +4,7 @@
 
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Windows.Internal;
+using Doozy.Editor.UIElements;
 using Doozy.Editor.UIManager.Layouts.Databases;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
@@ -21,7 +22,9 @@ namespace Doozy.Editor.UIManager.Windows
         protected override void CreateGUI()
         {
             windowLayout = new SlidersDatabaseWindowLayout();
-            root.AddChild(windowLayout);
+            root
+                .RecycleAndClear()
+                .AddChild(windowLayout);
         }
 
         protected override void OnEnable()

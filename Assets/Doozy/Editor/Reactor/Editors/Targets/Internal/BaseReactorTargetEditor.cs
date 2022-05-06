@@ -55,8 +55,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
         protected virtual void InitializeEditor()
         {
             FindProperties();
-
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader = FluidComponentHeader.Get()
                 .SetAccentColor(accentColor)

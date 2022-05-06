@@ -2,6 +2,8 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using Doozy.Runtime.Common.Utils;
+using Doozy.Runtime.Mody;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Listeners.Internal;
 using UnityEngine;
@@ -16,9 +18,22 @@ namespace Doozy.Runtime.UIManager.Listeners
     /// <summary>
     /// Connects to a specific stream and reacts to 'pings' (signals) sent through said stream
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Listeners/Signal Listener")]
+    [AddComponentMenu("Signals/Signal Listener")]
     public class SignalListener : BaseListener
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/Signals/Signal Listener", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<SignalListener>("Signal Listener", false, true);
+        }
+        #endif
+
+        public SignalListener()
+        {
+            Callback.SetEventName("Callback triggered every time a signal is received");
+        }
+        
         [SerializeField] private StreamId StreamId;
 
         /// <summary> Stream Id </summary>

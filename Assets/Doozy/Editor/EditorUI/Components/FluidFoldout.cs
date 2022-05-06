@@ -158,7 +158,7 @@ namespace Doozy.Editor.EditorUI.Components
             content = layoutContainer.Q<VisualElement>("ContentContainer");
             footer = layoutContainer.Q<VisualElement>("Footer");
 
-            content.Add(animatedContainer = new FluidAnimatedContainer().SetClearOnHide(false));
+            content.Add(animatedContainer = new FluidAnimatedContainer(false));
 
             tabButton =
                 FluidToggleButtonTab.Get()

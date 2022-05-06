@@ -2,9 +2,10 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
-using System;
+using System.Collections.Generic;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
+using Doozy.Runtime.Reactor.Ticker;
 using Doozy.Runtime.UIManager.Containers;
 using Doozy.Runtime.UIManager.Layouts;
 using Doozy.Runtime.UIManager.Utils;
@@ -17,7 +18,7 @@ namespace Doozy.Runtime.UIManager.Animators
     /// <summary>
     /// Specialized animator component used to animate a RectTransform’s position, rotation, scale and alpha by listening to a target UIContainer (controller) show/hide commands.
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Animators/Container/UI Container UI Animator")]
+    [AddComponentMenu("UI/Containers/Animators/UIContainer UIAnimator")]
     [RequireComponent(typeof(CanvasGroup))]
     [RequireComponent(typeof(RectTransform))]
     public class UIContainerUIAnimator : BaseUIContainerAnimator
@@ -28,11 +29,11 @@ namespace Doozy.Runtime.UIManager.Animators
 
         [SerializeField] private UIAnimation ShowAnimation;
         /// <summary> Container Show Animation </summary>
-        public UIAnimation showAnimation => ShowAnimation;
+        public UIAnimation showAnimation => ShowAnimation ?? (ShowAnimation = new UIAnimation(rectTransform));
 
         [SerializeField] private UIAnimation HideAnimation;
         /// <summary> Container Hide Animation </summary>
-        public UIAnimation hideAnimation => HideAnimation;
+        public UIAnimation hideAnimation => HideAnimation ?? (HideAnimation = new UIAnimation(rectTransform));
 
         public bool anyAnimationIsActive => showAnimation.isActive || hideAnimation.isActive;
         private bool isInLayoutGroup { get; set; }
@@ -43,19 +44,16 @@ namespace Doozy.Runtime.UIManager.Animators
         #if UNITY_EDITOR
         protected override void Reset()
         {
-            ShowAnimation ??= new UIAnimation(rectTransform);
-            HideAnimation ??= new UIAnimation(rectTransform);
+            ResetAnimation(showAnimation);
+            ResetAnimation(hideAnimation);
 
-            ResetAnimation(ShowAnimation);
-            ResetAnimation(HideAnimation);
+            showAnimation.animationType = UIAnimationType.Show;
+            showAnimation.Move.enabled = true;
+            showAnimation.Move.fromDirection = MoveDirection.Left;
 
-            ShowAnimation.animationType = UIAnimationType.Show;
-            ShowAnimation.Move.enabled = true;
-            ShowAnimation.Move.fromDirection = MoveDirection.Left;
-
-            HideAnimation.animationType = UIAnimationType.Hide;
-            HideAnimation.Move.enabled = true;
-            HideAnimation.Move.toDirection = MoveDirection.Right;
+            hideAnimation.animationType = UIAnimationType.Hide;
+            hideAnimation.Move.enabled = true;
+            hideAnimation.Move.toDirection = MoveDirection.Right;
 
             base.Reset();
         }
@@ -118,24 +116,27 @@ namespace Doozy.Runtime.UIManager.Animators
             uiBehaviourHandler.SetDirty();
         }
 
+        /// <summary> Refresh the layout the container is in </summary>
         private void RefreshLayout()
         {
             if (uiBehaviourHandler == null) return;
             uiBehaviourHandler.RefreshLayout();
         }
 
+        /// <summary> Update the start position of the container </summary>
         public void UpdateStartPosition()
         {
             // if (name.Contains("#")) Debug.Log($"({Time.frameCount}) [{name}] {nameof(UpdateStartPosition)}");
             Vector3 anchoredPosition3D = rectTransform.anchoredPosition3D;
-            ShowAnimation.startPosition = anchoredPosition3D;
-            HideAnimation.startPosition = anchoredPosition3D;
-            if (ShowAnimation.Move.isPlaying) ShowAnimation.Move.UpdateValues();
-            if (HideAnimation.Move.isPlaying) HideAnimation.Move.UpdateValues();
+            showAnimation.startPosition = anchoredPosition3D;
+            hideAnimation.startPosition = anchoredPosition3D;
+            if (showAnimation.Move.isPlaying) showAnimation.Move.UpdateValues();
+            if (hideAnimation.Move.isPlaying) hideAnimation.Move.UpdateValues();
             localPosition = rectTransform.localPosition;
             updateStartPositionInLateUpdate = false;
         }
 
+        /// <summary> Refresh the layout and then the start position of the container </summary>
         private void RefreshStartPosition()
         {
             if (!isConnected) return;
@@ -145,81 +146,133 @@ namespace Doozy.Runtime.UIManager.Animators
             UpdateStartPosition();
         }
 
+        /// <summary> Connect to Controller </summary>
         protected override void ConnectToController()
         {
             base.ConnectToController();
             if (!controller) return;
 
-            controller.showReactions.Add(ShowAnimation.Move);
-            controller.showReactions.Add(ShowAnimation.Rotate);
-            controller.showReactions.Add(ShowAnimation.Scale);
-            controller.showReactions.Add(ShowAnimation.Fade);
+            controller.showReactions.Add(showAnimation.Move);
+            controller.showReactions.Add(showAnimation.Rotate);
+            controller.showReactions.Add(showAnimation.Scale);
+            controller.showReactions.Add(showAnimation.Fade);
 
-            controller.hideReactions.Add(HideAnimation.Move);
-            controller.hideReactions.Add(HideAnimation.Rotate);
-            controller.hideReactions.Add(HideAnimation.Scale);
-            controller.hideReactions.Add(HideAnimation.Fade);
+            controller.hideReactions.Add(hideAnimation.Move);
+            controller.hideReactions.Add(hideAnimation.Rotate);
+            controller.hideReactions.Add(hideAnimation.Scale);
+            controller.hideReactions.Add(hideAnimation.Fade);
         }
 
+        /// <summary> Disconnect from Controller </summary>
         protected override void DisconnectFromController()
         {
             base.DisconnectFromController();
             if (!controller) return;
 
-            controller.showReactions.Remove(ShowAnimation.Move);
-            controller.showReactions.Remove(ShowAnimation.Rotate);
-            controller.showReactions.Remove(ShowAnimation.Scale);
-            controller.showReactions.Remove(ShowAnimation.Fade);
+            controller.showReactions.Remove(showAnimation.Move);
+            controller.showReactions.Remove(showAnimation.Rotate);
+            controller.showReactions.Remove(showAnimation.Scale);
+            controller.showReactions.Remove(showAnimation.Fade);
 
-            controller.hideReactions.Remove(HideAnimation.Move);
-            controller.hideReactions.Remove(HideAnimation.Rotate);
-            controller.hideReactions.Remove(HideAnimation.Scale);
-            controller.hideReactions.Remove(HideAnimation.Fade);
+            controller.hideReactions.Remove(hideAnimation.Move);
+            controller.hideReactions.Remove(hideAnimation.Rotate);
+            controller.hideReactions.Remove(hideAnimation.Scale);
+            controller.hideReactions.Remove(hideAnimation.Fade);
         }
 
+        /// <summary> Play the show animation </summary>
         public override void Show()
         {
-            ShowAnimation?.Play(PlayDirection.Forward);
+            showAnimation.Play(PlayDirection.Forward);
             if (animatorInitialized && isInLayoutGroup) updateStartPositionInLateUpdate = true;
         }
 
+        /// <summary> Reverse the show animation (if playing) </summary>
+        public override void ReverseShow() =>
+            showAnimation.Reverse();
+
+        /// <summary> Play the hide animation </summary>
         public override void Hide()
         {
             if (animatorInitialized && isInLayoutGroup) RefreshStartPosition();
-            HideAnimation?.Play(PlayDirection.Forward);
+            hideAnimation.Play(PlayDirection.Forward);
         }
 
-        public override void InstantShow()
-        {
-            ShowAnimation?.SetProgressAtOne();
-            if (animatorInitialized && isInLayoutGroup) updateStartPositionInLateUpdate = true;
-        }
-
-        public override void InstantHide()
-        {
-            if (animatorInitialized && isInLayoutGroup) RefreshStartPosition();
-            HideAnimation?.SetProgressAtOne();
-        }
-
-        public override void ReverseShow() =>
-            ShowAnimation?.Reverse();
-
+        /// <summary> Reverse the hide animation (if playing) </summary>
         public override void ReverseHide()
         {
-            HideAnimation?.Reverse();
+            hideAnimation.Reverse();
             updateStartPositionInLateUpdate = true;
         }
 
-        public override void UpdateSettings()
+        /// <summary> Set show animation's progress at one </summary>
+        public override void InstantShow()
         {
-            ShowAnimation?.SetTarget(rectTransform, canvasGroup);
-            HideAnimation?.SetTarget(rectTransform, canvasGroup);
+            showAnimation.SetProgressAtOne();
+            if (animatorInitialized && isInLayoutGroup) updateStartPositionInLateUpdate = true;
         }
 
+        /// <summary> Set hide animation's progress at one </summary>
+        public override void InstantHide()
+        {
+            if (animatorInitialized && isInLayoutGroup) RefreshStartPosition();
+            hideAnimation.SetProgressAtOne();
+        }
+
+        /// <summary> Update the animations settings (if a colorTarget is referenced) </summary>
+        public override void UpdateSettings()
+        {
+            showAnimation.SetTarget(rectTransform, canvasGroup);
+            hideAnimation.SetTarget(rectTransform, canvasGroup);
+        }
+
+        /// <summary> Stop all animations </summary>
         public override void StopAllReactions()
         {
-            ShowAnimation?.Stop();
-            HideAnimation?.Stop();
+            showAnimation.Stop();
+            hideAnimation.Stop();
+        }
+
+        /// <summary> Reset all the reactions to their initial values (if the animation is enabled) </summary>
+        /// <param name="forced"> If true, forced will ignore if the animation is enabled or not </param>
+        public override void ResetToStartValues(bool forced = false)
+        {
+            if (m_RectTransform == null) return;
+
+            if (showAnimation.isActive) showAnimation.Stop();
+            if (hideAnimation.isActive) hideAnimation.Stop();
+
+            showAnimation.ResetToStartValues(forced);
+            hideAnimation.ResetToStartValues(forced);
+
+            rectTransform.anchoredPosition3D = showAnimation.startPosition;
+            rectTransform.localEulerAngles = showAnimation.startRotation;
+            rectTransform.localScale = showAnimation.startScale;
+            canvasGroup.alpha = showAnimation.startAlpha;
+
+            #if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(rectTransform);
+            UnityEditor.SceneView.RepaintAll();
+            #endif
+        }
+
+        /// <summary> Set animation heartbeat </summary>
+        public override List<Heartbeat> SetHeartbeat<T>()
+        {
+            var list = new List<Heartbeat>();
+            for (int i = 0; i < 8; i++) list.Add(new T());
+
+            showAnimation.Move.SetHeartbeat(list[0]);
+            showAnimation.Rotate.SetHeartbeat(list[1]);
+            showAnimation.Scale.SetHeartbeat(list[2]);
+            showAnimation.Fade.SetHeartbeat(list[3]);
+
+            hideAnimation.Move.SetHeartbeat(list[4]);
+            hideAnimation.Rotate.SetHeartbeat(list[5]);
+            hideAnimation.Scale.SetHeartbeat(list[6]);
+            hideAnimation.Fade.SetHeartbeat(list[7]);
+
+            return list;
         }
 
         /// <summary> Set a new start position value (RectTransform.anchoredPosition3D) for all animations </summary>

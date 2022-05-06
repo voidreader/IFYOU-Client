@@ -12,7 +12,7 @@ namespace Doozy.Runtime.UIManager.Listeners.Internal
         public ModyEvent Callback;
 
         protected BaseListener() =>
-            Callback = new ModyEvent("Callback").SetEnabled(true);
+            Callback = new ModyEvent("Callback");
 
         protected override void ProcessSignal(Signal signal) =>
             Callback?.Execute(signal);

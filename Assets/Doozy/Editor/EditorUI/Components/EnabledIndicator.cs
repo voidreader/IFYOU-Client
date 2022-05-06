@@ -79,7 +79,7 @@ namespace Doozy.Editor.EditorUI.Components
             return this;
         }
 
-        public EnabledIndicator Toggle(bool enabled, bool animateChange)
+        public EnabledIndicator Toggle(bool enabled, bool animateChange = true)
         {
             if (enabled)
             {
@@ -139,7 +139,7 @@ namespace Doozy.Editor.EditorUI.Components
 
         public EnabledIndicator SetIcon(IEnumerable<Texture2D> textures, bool isLooping = false)
         {
-            hasIcon = true;
+            hasIcon = textures != null;
             if (iconReaction == null)
                 iconReaction = this.GetTexture2DReaction(textures).SetEditorHeartbeat().SetDuration(0.6f);
             else
@@ -150,12 +150,12 @@ namespace Doozy.Editor.EditorUI.Components
             return this;
         }
 
-        public EnabledIndicator SetIcon(Texture2D iconTexture2D)
+        public EnabledIndicator SetIcon(Texture2D texture)
         {
-            hasIcon = true;
+            hasIcon = texture != null;
             iconReaction?.Recycle();
             iconReaction = null;
-            this.SetStyleBackgroundImage(iconTexture2D);
+            this.SetStyleBackgroundImage(texture);
             IconIsLooping(false);
             Update();
             return this;

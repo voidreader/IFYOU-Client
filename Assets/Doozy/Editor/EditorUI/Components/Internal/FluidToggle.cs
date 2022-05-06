@@ -47,7 +47,7 @@ namespace Doozy.Editor.EditorUI.Components.Internal
             ResetColors();
             fluidElement.ResetAccentColor();
 
-            RemoveFromToggleGroup();
+            this.RemoveFromToggleGroup();
             IsOn = false;
 
             const bool animateChange = false;
@@ -92,12 +92,12 @@ namespace Doozy.Editor.EditorUI.Components.Internal
             toggleGroup?.UnregisterToggle(this);
             value.RegisterToggle(this);
         }
-
+        
         public void RemoveFromToggleGroup()
         {
             toggleGroup?.UnregisterToggle(this);
         }
-
+        
         public virtual void UpdateValueFromGroup(bool newValue, bool animateChange, bool silent = false)
         {
             bool previousValue = IsOn;
@@ -339,6 +339,21 @@ namespace Doozy.Editor.EditorUI.Components.Internal
 
     public static class FluidToggleExtensions
     {
+        public static T RegisterToToggleGroup<T>(this T target, IToggleGroup value) where T : FluidToggle<T>, new()
+        {
+            if (value == null) return target;
+            if (target.toggleGroup == value) return target;
+            target.toggleGroup?.UnregisterToggle(target);
+            value.RegisterToggle(target);
+            return target;
+        }
+
+        public  static T UnregisterFromToggleGroup<T>(this T target) where T : FluidToggle<T>, new()
+        {
+            target.toggleGroup?.UnregisterToggle(target);
+            return target;
+        }
+        
         public static T Enable<T>(this T target) where T : FluidToggle<T>, new()
         {
             target.fluidElement.Enable();

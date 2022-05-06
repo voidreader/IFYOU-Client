@@ -139,7 +139,7 @@ namespace PIERStory {
             
             
             
-            BackButton.blockBackInput = false; 
+            SystemManager.SetBlockBackButton(false);
             
             PopupQueue.Clear();
             CurrentQueuePopup = null;
@@ -290,7 +290,7 @@ namespace PIERStory {
             if(!ListShowingPopup.Contains(__p))
                 ListShowingPopup.Add(__p);
             
-            BackButton.blockBackInput = true;
+            SystemManager.SetBlockBackButton(true);
             
         }
         
@@ -300,10 +300,12 @@ namespace PIERStory {
             CheckShowingPopupListValidation();            
             
             // 종료 시점에 살아있는 팝업이 있으면 backbutton true 처리 
+            
             if(ListShowingPopup.Count > 0)
-                BackButton.blockBackInput = true;
+                SystemManager.SetBlockBackButton(true);
             else 
-                BackButton.blockBackInput = false;
+                SystemManager.SetBlockBackButton(false);
+            
             
         }
 

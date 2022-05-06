@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Doozy.Editor.EditorUI.Components;
+using Doozy.Editor.UIElements;
 using Doozy.Runtime.Common.Extensions;
 using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.UIElements.Extensions;
@@ -22,7 +23,9 @@ namespace Doozy.Editor.EditorUI.Windows.Internal
             if (windowLayout == null)
                 return;
             windowLayout.SetStyleFlexGrow(1);
-            root.AddChild(windowLayout);
+            root
+                .RecycleAndClear() 
+                .AddChild(windowLayout);
         }
 
         protected override void OnDestroy()

@@ -81,7 +81,7 @@ namespace Doozy.Editor.EditorUI.Components
 
             iconReaction
                 .SetTextures(EditorSpriteSheets.EditorUI.Components.Switch)
-                .SetDuration(0.15f);
+                .SetDuration(0.2f);
             
             selectionState = SelectionState.Normal;
         }

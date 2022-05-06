@@ -154,8 +154,7 @@ namespace Doozy.Editor.UIManager.Editors.Layouts
         private void InitializeEditor()
         {
             FindProperties();
-
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader =
                 FluidComponentHeader.Get()
@@ -164,6 +163,7 @@ namespace Doozy.Editor.UIManager.Editors.Layouts
                     .SetComponentNameText((ObjectNames.NicifyVariableName(nameof(UIRadialLayout))))
                     .SetIcon(radialLayoutIconTextures.ToList())
                     .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1049100324/UIRadialLayout?atlOrigin=eyJpIjoiNDU1ZWE0ZDE3YzM5NDJkYWI5NWM2M2I3MzkxZDZiZjEiLCJwIjoiYyJ9")
+                    .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Layouts.UIRadialLayout.html")
                     .AddYouTubeButton();
 
             radiusSlider = new Slider(0f, propertyMaxRadius.floatValue).SetName("Radius Slider").ResetLayout().SetStyleFlexGrow(1).BindToProperty(propertyRadius);

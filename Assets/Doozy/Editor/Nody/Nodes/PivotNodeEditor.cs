@@ -39,6 +39,7 @@ namespace Doozy.Editor.Nody.Nodes
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(PivotNode)))
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048871142/Pivot+Node?atlOrigin=eyJpIjoiZTY5MzhiZGJmOGRlNGM4NDlmNjllY2IwN2E1OTcwNjYiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Nody.Nodes.PivotNode.html")
                 .AddYouTubeButton();
 
             nodeNameField.SetEnabled(false);
@@ -59,6 +60,9 @@ namespace Doozy.Editor.Nody.Nodes
             pivotOrientationEnumField.RegisterValueChangedCallback(evt =>
             {
                 if (nodeView == null)
+                    return;
+                
+                if(evt?.newValue == null)
                     return;
                 
                 ((PivotNodeView)nodeView).OnOrientationChanged((PivotNode.Orientation)evt.newValue);

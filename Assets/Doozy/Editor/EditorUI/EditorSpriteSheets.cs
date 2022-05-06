@@ -211,6 +211,7 @@ namespace Doozy.Editor.EditorUI
                     QuestionMark,
                     RawImage,
                     Recent,
+                    Redo,
                     Refresh,
                     Reset,
                     Reverse,
@@ -244,6 +245,7 @@ namespace Doozy.Editor.EditorUI
                     ToggleON,
                     Tooltip,
                     UIBehaviour,
+                    Undo,
                     Unity,
                     UnityEvent,
                     Unlink,
@@ -350,6 +352,7 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> QuestionMark => GetTextures(SpriteSheetName.QuestionMark);
                 public static List<Texture2D> RawImage => GetTextures(SpriteSheetName.RawImage);
                 public static List<Texture2D> Recent => GetTextures(SpriteSheetName.Recent);
+                public static List<Texture2D> Redo => GetTextures(SpriteSheetName.Redo);
                 public static List<Texture2D> Refresh => GetTextures(SpriteSheetName.Refresh);
                 public static List<Texture2D> Reset => GetTextures(SpriteSheetName.Reset);
                 public static List<Texture2D> Reverse => GetTextures(SpriteSheetName.Reverse);
@@ -383,6 +386,7 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> ToggleON => GetTextures(SpriteSheetName.ToggleON);
                 public static List<Texture2D> Tooltip => GetTextures(SpriteSheetName.Tooltip);
                 public static List<Texture2D> UIBehaviour => GetTextures(SpriteSheetName.UIBehaviour);
+                public static List<Texture2D> Undo => GetTextures(SpriteSheetName.Undo);
                 public static List<Texture2D> Unity => GetTextures(SpriteSheetName.Unity);
                 public static List<Texture2D> UnityEvent => GetTextures(SpriteSheetName.UnityEvent);
                 public static List<Texture2D> Unlink => GetTextures(SpriteSheetName.Unlink);
@@ -638,16 +642,23 @@ namespace Doozy.Editor.EditorUI
                     ColorTarget,
                     EditorHeartbeat,
                     Fade,
+                    FloatAnimation,
+                    FloatAnimator,
                     FrameByFrameAnimation,
                     FrameByFrameAnimator,
                     Heartbeat,
                     ImageProgressTarget,
+                    IntAnimation,
+                    IntAnimator,
                     Move,
                     Progressor,
                     ProgressorGroup,
                     ProgressTarget,
+                    ReactorController,
                     ReactorIcon,
                     ReactorIconToFull,
+                    RectAnimation,
+                    RectAnimator,
                     Rotate,
                     Scale,
                     SignalProgressTarget,
@@ -659,7 +670,13 @@ namespace Doozy.Editor.EditorUI
                     UIAnimation,
                     UIAnimationPreset,
                     UIAnimator,
-                    UnityEventProgressTarget
+                    UnityEventProgressTarget,
+                    Vector2Animation,
+                    Vector2Animator,
+                    Vector3Animation,
+                    Vector3Animator,
+                    Vector4Animation,
+                    Vector4Animator
                 }
                 
 
@@ -670,16 +687,23 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> ColorTarget => GetTextures(SpriteSheetName.ColorTarget);
                 public static List<Texture2D> EditorHeartbeat => GetTextures(SpriteSheetName.EditorHeartbeat);
                 public static List<Texture2D> Fade => GetTextures(SpriteSheetName.Fade);
+                public static List<Texture2D> FloatAnimation => GetTextures(SpriteSheetName.FloatAnimation);
+                public static List<Texture2D> FloatAnimator => GetTextures(SpriteSheetName.FloatAnimator);
                 public static List<Texture2D> FrameByFrameAnimation => GetTextures(SpriteSheetName.FrameByFrameAnimation);
                 public static List<Texture2D> FrameByFrameAnimator => GetTextures(SpriteSheetName.FrameByFrameAnimator);
                 public static List<Texture2D> Heartbeat => GetTextures(SpriteSheetName.Heartbeat);
                 public static List<Texture2D> ImageProgressTarget => GetTextures(SpriteSheetName.ImageProgressTarget);
+                public static List<Texture2D> IntAnimation => GetTextures(SpriteSheetName.IntAnimation);
+                public static List<Texture2D> IntAnimator => GetTextures(SpriteSheetName.IntAnimator);
                 public static List<Texture2D> Move => GetTextures(SpriteSheetName.Move);
                 public static List<Texture2D> Progressor => GetTextures(SpriteSheetName.Progressor);
                 public static List<Texture2D> ProgressorGroup => GetTextures(SpriteSheetName.ProgressorGroup);
                 public static List<Texture2D> ProgressTarget => GetTextures(SpriteSheetName.ProgressTarget);
+                public static List<Texture2D> ReactorController => GetTextures(SpriteSheetName.ReactorController);
                 public static List<Texture2D> ReactorIcon => GetTextures(SpriteSheetName.ReactorIcon);
                 public static List<Texture2D> ReactorIconToFull => GetTextures(SpriteSheetName.ReactorIconToFull);
+                public static List<Texture2D> RectAnimation => GetTextures(SpriteSheetName.RectAnimation);
+                public static List<Texture2D> RectAnimator => GetTextures(SpriteSheetName.RectAnimator);
                 public static List<Texture2D> Rotate => GetTextures(SpriteSheetName.Rotate);
                 public static List<Texture2D> Scale => GetTextures(SpriteSheetName.Scale);
                 public static List<Texture2D> SignalProgressTarget => GetTextures(SpriteSheetName.SignalProgressTarget);
@@ -692,6 +716,47 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> UIAnimationPreset => GetTextures(SpriteSheetName.UIAnimationPreset);
                 public static List<Texture2D> UIAnimator => GetTextures(SpriteSheetName.UIAnimator);
                 public static List<Texture2D> UnityEventProgressTarget => GetTextures(SpriteSheetName.UnityEventProgressTarget);
+                public static List<Texture2D> Vector2Animation => GetTextures(SpriteSheetName.Vector2Animation);
+                public static List<Texture2D> Vector2Animator => GetTextures(SpriteSheetName.Vector2Animator);
+                public static List<Texture2D> Vector3Animation => GetTextures(SpriteSheetName.Vector3Animation);
+                public static List<Texture2D> Vector3Animator => GetTextures(SpriteSheetName.Vector3Animator);
+                public static List<Texture2D> Vector4Animation => GetTextures(SpriteSheetName.Vector4Animation);
+                public static List<Texture2D> Vector4Animator => GetTextures(SpriteSheetName.Vector4Animator);
+                
+            }
+
+
+        }
+
+
+        public static class SceneManagement
+        {
+            public static class Icons
+            {
+                private static EditorDataSpriteSheetGroup s_spriteSheetGroup;
+                private static EditorDataSpriteSheetGroup spriteSheetGroup =>
+                    s_spriteSheetGroup
+                        ? s_spriteSheetGroup
+                        : s_spriteSheetGroup = EditorDataSpriteSheetDatabase.GetSpriteSheetGroup("SceneManagement","Icons");
+
+                public static List<Texture2D> GetTextures(SpriteSheetName sheetName) =>
+                    spriteSheetGroup.GetTextures(sheetName.ToString());
+
+                public enum SpriteSheetName
+                {
+                    ActivateLoadedScenesNode,
+                    LoadSceneNode,
+                    SceneDirector,
+                    SceneLoader,
+                    UnloadSceneNode
+                }
+                
+
+                public static List<Texture2D> ActivateLoadedScenesNode => GetTextures(SpriteSheetName.ActivateLoadedScenesNode);
+                public static List<Texture2D> LoadSceneNode => GetTextures(SpriteSheetName.LoadSceneNode);
+                public static List<Texture2D> SceneDirector => GetTextures(SpriteSheetName.SceneDirector);
+                public static List<Texture2D> SceneLoader => GetTextures(SpriteSheetName.SceneLoader);
+                public static List<Texture2D> UnloadSceneNode => GetTextures(SpriteSheetName.UnloadSceneNode);
                 
             }
 
@@ -906,6 +971,7 @@ namespace Doozy.Editor.EditorUI
                     TabButtonRightTop,
                     TabButtonTopLeft,
                     TabButtonTopRight,
+                    UIFX,
                     UIMenuHeader,
                     UIMenuItem,
                     UIPack,
@@ -950,6 +1016,7 @@ namespace Doozy.Editor.EditorUI
                 public static List<Texture2D> TabButtonRightTop => GetTextures(SpriteSheetName.TabButtonRightTop);
                 public static List<Texture2D> TabButtonTopLeft => GetTextures(SpriteSheetName.TabButtonTopLeft);
                 public static List<Texture2D> TabButtonTopRight => GetTextures(SpriteSheetName.TabButtonTopRight);
+                public static List<Texture2D> UIFX => GetTextures(SpriteSheetName.UIFX);
                 public static List<Texture2D> UIMenuHeader => GetTextures(SpriteSheetName.UIMenuHeader);
                 public static List<Texture2D> UIMenuItem => GetTextures(SpriteSheetName.UIMenuItem);
                 public static List<Texture2D> UIPack => GetTextures(SpriteSheetName.UIPack);

@@ -19,6 +19,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(SpriteMask)))
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048871135/SpriteMask+Sprite+Target?atlOrigin=eyJpIjoiNTFhNTg2OGNkN2M2NDliYThiMDQxMjU0YjQ2YTNmNjYiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Reactor.Targets.SpriteMaskSpriteTarget.html")
                 .AddYouTubeButton();
 
             targetObjectField

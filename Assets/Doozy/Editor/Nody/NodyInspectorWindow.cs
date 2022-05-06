@@ -22,7 +22,7 @@ namespace Doozy.Editor.Nody
         private const string WINDOW_TITLE = "Nody Inspector";
         public const string k_WindowMenuPath = "Tools/Doozy/Nody/";
 
-        [MenuItem(k_WindowMenuPath + "Inspector", priority = -850)]
+        // [MenuItem(k_WindowMenuPath + "Inspector", priority = -850)]
         public static void Open() => InternalOpenWindow(WINDOW_TITLE);
 
         public static Color accentColor => EditorColors.Nody.Color;
@@ -47,7 +47,9 @@ namespace Doozy.Editor.Nody
 
         protected override void CreateGUI()
         {
-            root.Add(templateContainer = EditorLayouts.Nody.NodyInspectorWindow.CloneTree());
+            root
+                .RecycleAndClear()
+                .Add(templateContainer = EditorLayouts.Nody.NodyInspectorWindow.CloneTree());
 
             templateContainer
                 .SetStyleFlexGrow(1)
@@ -84,6 +86,8 @@ namespace Doozy.Editor.Nody
 
         public void UpdateSelection(FlowNodeView view)
         {
+            if (view != null && nodeView != null && view == nodeView) return;
+
             nodeView = view;
             bool showPlaceholder = view == null; //node view is null -> nothing selected -> show placeholder
             ClearInspector(showPlaceholder);

@@ -6,7 +6,11 @@
     xsi:noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd"
 >
     <engine:VisualElement class="CategoryNameItem CategoryRow" name="layoutContainer">
-        <engine:Label class="CategoryNameItem CategoryRow" name="nameLabel"/>
-        <engine:VisualElement class="CategoryNameItem CategoryRow" name="buttonsContainer"/>
+        <engine:VisualElement class="CategoryNameItem CategoryRow" name="leftContainer"/>
+        <engine:VisualElement class="CategoryNameItem CategoryRow" name="middleContainer">
+            <engine:Label class="CategoryNameItem CategoryRow" name="nameLabel"/>
+            <engine:TextField class="CategoryNameItem CategoryRow" name="nameTextField"/>
+        </engine:VisualElement>
+        <engine:VisualElement class="CategoryNameItem CategoryRow" name="rightContainer"/>
     </engine:VisualElement>
 </engine:UXML>

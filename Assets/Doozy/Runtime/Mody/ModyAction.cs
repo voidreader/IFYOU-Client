@@ -205,7 +205,7 @@ namespace Doozy.Runtime.Mody
 
         #endregion
 
-        #region Action OnStart Stop Other Actions 
+        #region Action OnStart Stop Other Actions
 
         /// <summary> Stop for all other ModyActions, on the Module (MonoBehaviour), when this ModyAction starts running </summary>
         [SerializeField] private bool ActionOnStartStopOtherActions;
@@ -273,22 +273,25 @@ namespace Doozy.Runtime.Mody
 
         #endregion
 
-        
+
         private bool m_BehaviourIsModule;
         private ModyModule m_Module;
 
         /// <summary> Flag used to mark the this ModyAction has a value </summary>
         public bool HasValue;
+        
         /// <summary> The type of value this ModyAction has </summary>
         public Type ValueType;
-        /// <summary> Flag used to ignore signal values when triggering this action via a <see cref="Signal"/> </summary>
+        
+        /// <summary> Flag used to ignore signal values when triggering this action via a Signal </summary>
         public bool IgnoreSignalValue;
+        
         /// <summary> Flag used to set this ModyAction to react to any signal </summary>
         public bool ReactToAnySignal;
 
         //ToDo - add IgnoreSignalValue to editor options
         //ToDo - add ReactToAnySignal to editor options
-        
+
         protected ModyAction(MonoBehaviour behaviour, string actionName)
         {
             actionBehaviourReference = behaviour;
@@ -407,14 +410,12 @@ namespace Doozy.Runtime.Mody
 
             if (totalDuration == 0)
             {
-                if (onStartEvents is { Enabled: true })
-                {
-                    onStartEvents.Execute();
-                    onStateChanged?.Invoke(TriggeredActionState.OnStart);
-                }
+                onStartEvents?.Execute();
+                onStateChanged?.Invoke(TriggeredActionState.OnStart);
+
                 currentState = ActionState.IsRunning;
                 onStateChanged?.Invoke(TriggeredActionState.Run);
-                onStartEvents?.Execute();
+
                 Run(signal);
                 FinishRunning();
                 return;
@@ -448,11 +449,8 @@ namespace Doozy.Runtime.Mody
                 }
             }
 
-            if (onStartEvents is { Enabled: true })
-            {
-                onStartEvents.Execute();
-                onStateChanged?.Invoke(TriggeredActionState.OnStart);
-            }
+            onStartEvents?.Execute();
+            onStateChanged?.Invoke(TriggeredActionState.OnStart);
 
             currentState = ActionState.IsRunning;
             onStateChanged?.Invoke(TriggeredActionState.Run);
@@ -583,11 +581,8 @@ namespace Doozy.Runtime.Mody
         {
             if (!isActive && !enabled) return;
 
-            if (onFinishEvents is { Enabled: true })
-            {
-                onFinishEvents.Execute();
-                onStateChanged?.Invoke(TriggeredActionState.OnFinish);
-            }
+            onFinishEvents?.Execute();
+            onStateChanged?.Invoke(TriggeredActionState.OnFinish);
 
             if (cooldown > 0)
             {
@@ -646,12 +641,12 @@ namespace Doozy.Runtime.Mody
         /// <summary> Try to set a value to the MetaSignal. Returns TRUE if the operation was successful </summary>
         /// <param name="objectValue"> Value </param>
         public abstract bool SetValue(object objectValue);
-        
+
         /// <summary> Try to set a value to the MetaSignal. Returns TRUE if the operation was successful </summary>
         /// <param name="objectValue"> Value </param>
         /// <param name="restrictValueType"> Check if the passed object type is the same as the action's ValueType </param>
         internal abstract bool SetValue(object objectValue, bool restrictValueType);
-        
+
         /// <summary> Update all the signal receivers references </summary>
         private void UpdateSignalReceivers()
         {
@@ -754,5 +749,5 @@ namespace Doozy.Runtime.Mody
             target.isTimescaleIndependent = value;
             return target;
         }
-        }
+    }
 }

@@ -11,6 +11,7 @@ using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.EditorUI.Windows.Internal;
 using Doozy.Editor.Nody.Automation.Generators;
 using Doozy.Editor.Reactor.Internal;
+using Doozy.Editor.UIElements;
 using Doozy.Runtime;
 using Doozy.Runtime.Common.Extensions;
 using Doozy.Runtime.Common.Utils;
@@ -112,6 +113,7 @@ namespace Doozy.Editor.Nody
         private void Initialize()
         {
             root
+                .RecycleAndClear()
                 .SetStyleBackgroundColor(EditorColors.Default.BoxBackground);
 
             magicLabel =
@@ -184,9 +186,43 @@ namespace Doozy.Editor.Nody
 
             TextField GetTextField() => new TextField().ResetLayout().SetStyleFlexShrink(0).SetStyleFlexGrow(1);
 
+            TextField GetPathTextField()
+            {
+                TextField textfield = new TextField().ResetLayout().SetStyleFlexShrink(0).SetStyleFlexGrow(1);
+
+                textfield.RegisterCallback<AttachToPanelEvent>(_ =>
+                {
+                    textfield.RegisterCallback<DragUpdatedEvent>(OnDragUpdate);
+                    textfield.RegisterCallback<DragPerformEvent>(OnDragPerformEvent);
+                });
+
+                textfield.RegisterCallback<DetachFromPanelEvent>(_ =>
+                {
+                    textfield.UnregisterCallback<DragUpdatedEvent>(OnDragUpdate);
+                    textfield.UnregisterCallback<DragPerformEvent>(OnDragPerformEvent);
+                });
+
+                void OnDragUpdate(DragUpdatedEvent dragUpdatedEvent)
+                {
+                    bool isValid =
+                        DragAndDrop.objectReferences.Length == 1 &&
+                        DragAndDrop.objectReferences[0] != null &&
+                        PathUtils.PathIsDirectory(AssetDatabase.GetAssetPath(DragAndDrop.objectReferences[0]));
+                    if (!isValid) return;
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Generic;
+                }
+
+                void OnDragPerformEvent(DragPerformEvent dragPerformEvent)
+                {
+                    textfield.value = PathUtils.CleanPath(AssetDatabase.GetAssetPath(DragAndDrop.objectReferences[0]));
+                }
+
+                return textfield;
+            }
+
             nodeNameTextField = GetTextField().SetName(nameof(nodeNameTextField));
-            runtimePathTextField = GetTextField().SetName(nameof(runtimePathTextField));
-            editorPathTextField = GetTextField().SetName(nameof(editorPathTextField));
+            runtimePathTextField = GetPathTextField().SetName(nameof(runtimePathTextField));
+            editorPathTextField = GetPathTextField().SetName(nameof(editorPathTextField));
 
             FluidButton GetButton(string openFolderPanelTitle, TextField textField) =>
                 FluidButton.Get()

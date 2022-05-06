@@ -7,6 +7,7 @@ using System.Linq;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
+using Doozy.Editor.EditorUI.Utils;
 using Doozy.Runtime.Reactor.Ticker;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
@@ -43,14 +44,15 @@ namespace Doozy.Editor.Reactor.Editors
 
         private void CreateEditor()
         {
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader = FluidComponentHeader.Get()
                 .SetAccentColor(accentColor)
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(RuntimeTicker)))
                 .SetIcon(heartbeatIconTextures.ToList())
                 .SetElementSize(ElementSize.Large)
-                .AddManualButton("www.bit.ly/DoozyKnowledgeBase4")
+                .AddManualButton()
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Reactor.Ticker.RuntimeTicker.html")
                 .AddYouTubeButton();
         }
 

@@ -12,6 +12,7 @@ using Doozy.Runtime.Reactor.Internal;
 using Doozy.Runtime.Reactor.Reactions;
 using Doozy.Runtime.UIElements;
 using Doozy.Runtime.UIElements.Extensions;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -110,6 +111,9 @@ namespace Doozy.Editor.EditorUI.Components
 
         public static FluidField Get(string fieldName, VisualElement content) =>
             Get().SetLabelText(fieldName).AddFieldContent(content);
+
+        public static FluidField Get<T>(SerializedProperty property, string labelText = "", string tooltip = "", bool tryToRemovePropertyLabel = false) where T : VisualElement, IBindable, new() =>
+            Get<T>(property.propertyPath, labelText, tooltip, tryToRemovePropertyLabel);
 
         public static FluidField Get<T>(string bindingPath, string labelText = "", string tooltip = "", bool tryToRemovePropertyLabel = false) where T : VisualElement, IBindable, new()
         {

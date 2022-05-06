@@ -12,7 +12,7 @@ namespace Doozy.Runtime.Reactor.Targets
     /// </summary>
     [Serializable]
     [RequireComponent(typeof(SpriteMask))]
-    [AddComponentMenu("Doozy/Reactor/Targets/SpriteMask Sprite Target")]
+    [AddComponentMenu("Reactor/Targets/SpriteMask Sprite Target")]
     public class SpriteMaskSpriteTarget : ReactorMetaSpriteTarget<SpriteMask>
     {
         #if UNITY_EDITOR

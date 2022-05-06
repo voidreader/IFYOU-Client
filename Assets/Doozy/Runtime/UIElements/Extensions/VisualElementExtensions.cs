@@ -52,13 +52,13 @@ namespace Doozy.Runtime.UIElements.Extensions
         #region AddSpace, AddHorizontalSpace, AddVerticalSpace
 
         public static T AddSpace<T>(this T target, float width, float height) where T : VisualElement =>
-            target.AddChild(new VisualElement().SetName("Space").SetStyleSize(width, height));
+            target.AddChild(new VisualElement().SetStyleFlexShrink(0).SetName("Space").SetStyleSize(width, height));
 
         public static T AddHorizontalSpace<T>(this T target, float height) where T : VisualElement =>
-            target.AddChild(new VisualElement().SetName("HSpace").SetStyleHeight(height));
+            target.AddChild(new VisualElement().SetStyleFlexShrink(0).SetName("HSpace").SetStyleHeight(height));
 
         public static T AddVerticalSpace<T>(this T target, float width) where T : VisualElement =>
-            target.AddChild(new VisualElement().SetName("VSpace").SetStyleWidth(width));
+            target.AddChild(new VisualElement().SetStyleFlexShrink(0).SetName("VSpace").SetStyleWidth(width));
 
         #endregion
 

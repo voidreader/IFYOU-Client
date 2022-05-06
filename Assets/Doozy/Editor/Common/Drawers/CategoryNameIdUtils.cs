@@ -52,6 +52,8 @@ namespace Doozy.Editor.Common.Drawers
             {
                 categories.Clear();
                 categories.AddRange(getCategories.Invoke());
+                if (!categories.Contains(CategoryNameId.defaultCategory))
+                    categories.Insert(0, CategoryNameId.defaultCategory);
             }
 
             var names = new List<string> { CategoryNameId.defaultName };
@@ -64,11 +66,17 @@ namespace Doozy.Editor.Common.Drawers
             void RefreshNames(string targetCategory)
             {
                 names.Clear();
+                if (targetCategory.Equals(CategoryNameId.defaultCategory))
+                {
+                    names.Add(CategoryNameId.defaultName);
+                    return;
+                }
                 names.AddRange(getNames.Invoke(targetCategory));
             }
 
             FluidButton openDatabaseButton =
                 NewOpenDatabaseButton()
+                    .SetButtonStyle(ButtonStyle.Contained)
                     .SetIcon(openDatabaseButtonIconTextures)
                     .SetAccentColor(selectableAccentColor)
                     .SetOnClick(openDatabaseButtonCallback)

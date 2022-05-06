@@ -19,7 +19,6 @@ namespace Doozy.Editor.Common.Extensions
     {
         /// <summary> Convert Sprite to Texture2D </summary>
         /// <param name="sprite"> Target Sprite </param>
-        /// <exception cref="NullReferenceException"> Sprite reference is null </exception>
         public static Texture2D ToTexture2D(this Sprite sprite)
         {
             if (sprite == null) throw new NullReferenceException(nameof(sprite));
@@ -57,7 +56,6 @@ namespace Doozy.Editor.Common.Extensions
 
         /// <summary> Convert a collection of Sprite to a collection of Texture2D </summary>
         /// <param name="sprites"> Sprite collection </param>
-        /// <exception cref="NullReferenceException"> Sprites reference is null </exception>
         public static IEnumerable<Texture2D> ToTexture2D(this IEnumerable<Sprite> sprites)
         {
             if (sprites == null) throw new NullReferenceException(nameof(sprites));

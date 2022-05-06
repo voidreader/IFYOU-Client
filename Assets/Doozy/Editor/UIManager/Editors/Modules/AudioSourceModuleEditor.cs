@@ -2,16 +2,16 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
-using System.Collections.Generic;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
+using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.Mody;
 using Doozy.Editor.Mody.Components;
+using Doozy.Editor.UIElements;
 using Doozy.Runtime.UIElements.Extensions;
 using Doozy.Runtime.UIManager.Modules;
 using UnityEditor;
 using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Doozy.Editor.UIManager.Editors.Modules
@@ -19,36 +19,68 @@ namespace Doozy.Editor.UIManager.Editors.Modules
     [CustomEditor(typeof(AudioSourceModule), true)]
     public sealed class AudioSourceModuleEditor : ModyModuleEditor<AudioSourceModule>
     {
-        public override List<Texture2D> secondaryIconTextures => EditorSpriteSheets.EditorUI.Icons.Sound;
+        private SerializedProperty propertySource { get; set; }
 
-        public override VisualElement CreateInspectorGUI()
+        protected override void FindProperties()
         {
-            CreateEditor();
-            return root;
+            base.FindProperties();
+
+            propertySource = serializedObject.FindProperty(nameof(AudioSourceModule.Source));
         }
 
-        protected override void CreateEditor()
+        protected override void InitializeEditor()
         {
-            base.CreateEditor();
+            base.InitializeEditor();
 
-            //MODULE HEADER
-            fluidHeader.SetSecondaryIcon(secondaryIconTextures);
-            fluidHeader.SetComponentNameText(AudioSourceModule.k_DefaultModuleName);
+            componentHeader
+                .SetComponentNameText(AudioSourceModule.k_DefaultModuleName)
+                .SetSecondaryIcon(EditorSpriteSheets.EditorUI.Icons.Sound)
+                .AddManualButton()
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Modules.AudioSourceModule.html")
+                .AddYouTubeButton();
+        }
 
-            //MODULE SETTINGS
-            settingsContainer
-                .AddChild(FluidField.Get<PropertyField>(nameof(AudioSourceModule.Source), "Source Reference", "Audio Source Reference", true));
+        protected override void InitializeSettings()
+        {
+            base.InitializeSettings();
 
-            //MODULE ACTIONS
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AudioSourceModule.Play))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AudioSourceModule.Stop))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AudioSourceModule.Mute))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AudioSourceModule.Unmute))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AudioSourceModule.Pause))));
-            AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AudioSourceModule.Unpause))));
+            settingsAnimatedContainer.SetOnShowCallback(() =>
+            {
+                var actionsDrawer =
+                    new ModyActionsDrawer();
 
-            //COMPOSE
-            Compose();
+                actionsDrawer.schedule.Execute(() => actionsDrawer.Update());
+
+                VisualElement actionsContainer =
+                    new VisualElement().SetName("Actions Container");
+
+                void AddActionToDrawer(ModyActionsDrawerItem item)
+                {
+                    actionsDrawer.AddItem(item);
+                    actionsContainer.AddChild(item.animatedContainer);
+                }
+
+                //MODULE ACTIONS
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AudioSourceModule.Play))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AudioSourceModule.Stop))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AudioSourceModule.Mute))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AudioSourceModule.Unmute))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AudioSourceModule.Pause))));
+                AddActionToDrawer(new ModyActionsDrawerItem(serializedObject.FindProperty(nameof(AudioSourceModule.Unpause))));
+
+                settingsAnimatedContainer
+                    .AddContent
+                    (
+                        FluidField.Get()
+                            .SetLabelText("AudioSource Reference")
+                            .AddFieldContent(DesignUtils.NewPropertyField(propertySource).TryToHideLabel())
+                    )
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(actionsDrawer)
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(actionsContainer)
+                    .Bind(serializedObject);
+            });
         }
     }
 }

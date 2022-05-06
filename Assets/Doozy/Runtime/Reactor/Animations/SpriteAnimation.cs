@@ -98,7 +98,6 @@ namespace Doozy.Runtime.Reactor.Animations
 
         /// <summary> Set the sprite target </summary>
         /// <param name="target"> Sprite target </param>
-        /// <exception cref="NullReferenceException"> Sprite target is null </exception>
         public void SetTarget(ReactorSpriteTarget target)
         {
             spriteTarget = null;
@@ -210,10 +209,12 @@ namespace Doozy.Runtime.Reactor.Animations
         /// <param name="forced"> If true, forced will ignore if the animation is enabled or not </param>
         public override void ResetToStartValues(bool forced = false)
         {
-            if (!(forced | !animation.enabled))
-                return;
-            UpdateAnimationSprites();
-            animation.SetValue(startFrame);
+            if(spriteTarget == null) return;
+            if (forced || animation.enabled)
+            {
+                UpdateAnimationSprites();
+                animation.SetValue(startFrame);
+            }
         }
 
         /// <summary>

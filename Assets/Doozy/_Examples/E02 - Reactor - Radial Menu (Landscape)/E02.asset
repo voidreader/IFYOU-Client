@@ -44,7 +44,7 @@ MonoBehaviour:
   RunUpdate: 0
   RunFixedUpdate: 0
   RunLateUpdate: 0
-  NodeState: 2
+  NodeState: 0
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
@@ -207,10 +207,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02761efe598a45c98fa1baf4d446c6a7, type: 3}
   m_Name: E02
   m_EditorClassIdentifier: 
+  EditorPosition: {x: -144, y: -194, z: 0}
+  EditorScale: {x: 2.0113573, y: 2.0113573, z: 1}
   Id: 38afa5de-0411-4c36-9b48-c5dd5db7c961
   GraphName: Flow Graph
   GraphDescription: 
   IsSubGraph: 0
+  GraphState: 0
+  OnStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
   Nodes:
   - {fileID: 2844491160451983128}
   - {fileID: -5776570682990602539}
@@ -220,7 +226,7 @@ MonoBehaviour:
   - {fileID: 3642059406411486584}
   - {fileID: 5981971962937186307}
   RootNode: {fileID: 2844491160451983128}
-  ActiveNode: {fileID: -5776570682990602539}
+  ActiveNode: {fileID: 0}
 --- !u!114 &1012612027900926886
 MonoBehaviour:
   m_ObjectHideFlags: 0

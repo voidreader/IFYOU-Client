@@ -9,7 +9,7 @@ using static UnityEngine.Mathf;
 
 namespace Doozy.Runtime.Reactor.Targets.ProgressTargets
 {
-    [AddComponentMenu("Doozy/Reactor/Targets/Image Progress Target")]
+    [AddComponentMenu("Reactor/Targets/Image Progress Target")]
     public class ImageProgressTarget : MetaProgressTarget<Image>
     {
         #if UNITY_EDITOR

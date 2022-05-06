@@ -10,9 +10,9 @@ using Doozy.Runtime.Reactor.Easings;
 using Doozy.Runtime.Reactor.Internal;
 using Doozy.Runtime.Reactor.Reactions;
 using Doozy.Runtime.UIElements.Extensions;
-using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Editor.EditorUI.Components
 {
@@ -94,8 +94,8 @@ namespace Doozy.Editor.EditorUI.Components
         #endregion
 
         //SETTINGS
-        public const Ease k_ReactionEase = Ease.OutEasy;
-        public const float k_ReactionDuration = 0.25f;
+        public const Ease k_ReactionEase = Ease.InOutCubic;
+        public const float k_ReactionDuration = 0.2f;
 
         private float fluidContainerWidth { get; set; }
         private float fluidContainerHeight { get; set; }
@@ -109,7 +109,9 @@ namespace Doozy.Editor.EditorUI.Components
         public bool clearOnHide { get; set; }
         public UnityAction OnShowCallback;
         public UnityAction OnHideCallback;
-        public UnityAction<State> onStateChanged { get; set; }
+        public UnityAction<State> onStateChanged { get; private set; }
+
+        public FluidAnimatedContainer(bool clearOnHide) : this(string.Empty, clearOnHide) {}
 
         public FluidAnimatedContainer(string name, bool clearOnHide) : this()
         {
@@ -136,7 +138,6 @@ namespace Doozy.Editor.EditorUI.Components
                     fluidContainer.SetStyleDisplay(value < 0.99f ? DisplayStyle.Flex : DisplayStyle.None);
                     switch (direction)
                     {
-
                         case Direction.Top:
                         case Direction.Bottom:
                             // Debug.Log($"{reaction} > -{fluidContainerHeight} * {value.Round(2)} = {-fluidContainerHeight * value}");
@@ -170,7 +171,7 @@ namespace Doozy.Editor.EditorUI.Components
         {
             RecalculateValues();
 
-            if (reaction is { isActive: true })
+            if (reaction.isActive)
                 return;
 
             switch (state)
@@ -194,15 +195,17 @@ namespace Doozy.Editor.EditorUI.Components
         private void OnGeometryChanged(GeometryChangedEvent evt)
         {
             // Debug.Log($"{name}.{nameof(OnGeometryChanged)}: {evt}");
-            // RecalculateValues();
             UpdateContainer();
             if (!m_ShowContainer) return;
             if (reaction == null) return;
             if (reaction.isActive) return;
-            m_ShowContainer = false;
             ResetToHiddenPosition();
-            reaction.Play(PlayDirection.Reverse);
-            fluidContainer.visible = true;
+            schedule.Execute(() =>
+            {
+                m_ShowContainer = false;
+                reaction.Play(PlayDirection.Reverse);
+                fluidContainer.visible = true;
+            });
         }
 
         public void ResetToHiddenPosition()

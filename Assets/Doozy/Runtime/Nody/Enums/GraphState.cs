@@ -7,13 +7,13 @@ namespace Doozy.Runtime.Nody
     /// <summary> Defines the states of a graph </summary>
     public enum GraphState
     {
-        /// <summary> Graph is disabled </summary>
-        Disabled,
-        
         /// <summary> Graph is waiting to become active </summary>
         Idle,
         
         /// <summary> Graph is active </summary>
-        Active
+        Running,
+        
+        /// <summary> Graph is active and paused </summary>
+        Paused
     }
 }

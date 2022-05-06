@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Doozy.Runtime.Common.Attributes;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.UIManager.ScriptableObjects;
 using UnityEngine;
 
@@ -24,9 +25,17 @@ namespace Doozy.Runtime.UIManager.Input
     /// Bridge that connects the Input System with the Input Stream.
     /// It does that by listening for when a specific action has been performed and sends a meta-signal on the Input Stream.
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Input/Input To Signal")]
+    [AddComponentMenu("Input/Input To Signal")]
     public class InputToSignal : MonoBehaviour
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/Input/Input To Signal", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<InputToSignal>("Input To Signal", false, true);
+        }
+        #endif
+        
         /// <summary> Reference to the UIManager Input Settings </summary>
         public static UIManagerInputSettings inputSettings => UIManagerInputSettings.instance;
 

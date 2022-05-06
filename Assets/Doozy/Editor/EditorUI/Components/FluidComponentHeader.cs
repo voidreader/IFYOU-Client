@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.Reactor.Internal;
 using Doozy.Editor.UIElements;
 using Doozy.Runtime.Colors;
@@ -194,10 +195,12 @@ namespace Doozy.Editor.EditorUI.Components
         }
 
         private FluidButton GetNewButton(string buttonTooltip) =>
-            FluidButton.Get().SetTooltip(buttonTooltip)
+            FluidButton.Get()
+                .SetTooltip(buttonTooltip)
                 .SetButtonStyle(ButtonStyle.Clear)
                 .SetElementSize(GetButtonSize())
-                .SetStyleFlexShrink(0);
+                .SetStyleFlexShrink(0)
+                .SetStyleMarginRight(DesignUtils.k_Spacing);
 
         private FluidButton GetNewButton(Texture2D staticIcon, string buttonTooltip) =>
             GetNewButton(buttonTooltip).SetIcon(staticIcon);

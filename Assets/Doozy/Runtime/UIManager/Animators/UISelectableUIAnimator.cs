@@ -3,8 +3,10 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
+using System.Collections.Generic;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
+using Doozy.Runtime.Reactor.Ticker;
 using Doozy.Runtime.UIManager.Components;
 using Doozy.Runtime.UIManager.Layouts;
 using Doozy.Runtime.UIManager.Utils;
@@ -20,7 +22,7 @@ namespace Doozy.Runtime.UIManager.Animators
     /// </summary>
     [RequireComponent(typeof(CanvasGroup))]
     [RequireComponent(typeof(RectTransform))]
-    [AddComponentMenu("Doozy/UI/Animators/Selectable/UI Selectable UI Animator")]
+    [AddComponentMenu("UI/Components/Animators/UISelectable UIAnimator")]
     public class UISelectableUIAnimator : BaseUISelectableAnimator
     {
         private CanvasGroup m_CanvasGroup;
@@ -29,25 +31,32 @@ namespace Doozy.Runtime.UIManager.Animators
 
         [SerializeField] private UIAnimation NormalAnimation;
         /// <summary> Animation for the Normal selection state </summary>
-        public UIAnimation normalAnimation => NormalAnimation;
+        public UIAnimation normalAnimation => NormalAnimation ?? (NormalAnimation = new UIAnimation(rectTransform));
 
         [SerializeField] private UIAnimation HighlightedAnimation;
         /// <summary> Animation for the Highlighted selection state </summary>
-        public UIAnimation highlightedAnimation => HighlightedAnimation;
+        public UIAnimation highlightedAnimation => HighlightedAnimation ?? (HighlightedAnimation = new UIAnimation(rectTransform));
 
         [SerializeField] private UIAnimation PressedAnimation;
         /// <summary> Animation for the Pressed selection state </summary>
-        public UIAnimation pressedAnimation => PressedAnimation;
+        public UIAnimation pressedAnimation => PressedAnimation ?? (PressedAnimation = new UIAnimation(rectTransform));
 
         [SerializeField] private UIAnimation SelectedAnimation;
         /// <summary> Animation for the Selected selection state </summary>
-        public UIAnimation selectedAnimation => SelectedAnimation;
+        public UIAnimation selectedAnimation => SelectedAnimation ?? (SelectedAnimation = new UIAnimation(rectTransform));
 
         [SerializeField] private UIAnimation DisabledAnimation;
         /// <summary> Animation for the Disabled selection state </summary>
-        public UIAnimation disabledAnimation => DisabledAnimation;
+        public UIAnimation disabledAnimation => DisabledAnimation ?? (DisabledAnimation = new UIAnimation(rectTransform));
 
-        public bool anyAnimationIsActive => normalAnimation.isActive || highlightedAnimation.isActive || pressedAnimation.isActive || selectedAnimation.isActive || disabledAnimation.isActive;
+        /// <summary> Returns TRUE if any animation is active </summary>
+        public bool anyAnimationIsActive => 
+            normalAnimation.isActive || 
+            highlightedAnimation.isActive || 
+            pressedAnimation.isActive || 
+            selectedAnimation.isActive || 
+            disabledAnimation.isActive;
+        
         private bool isInLayoutGroup { get; set; }
         private Vector3 localPosition { get; set; }
         private UIBehaviourHandler uiBehaviourHandler { get; set; }
@@ -56,34 +65,23 @@ namespace Doozy.Runtime.UIManager.Animators
 
         /// <summary> Get the Animation triggered by the given selection state </summary>
         /// <param name="state"> Target selection state </param>
-        public UIAnimation GetAnimation(UISelectionState state)
-        {
-            switch (state)
+        public UIAnimation GetAnimation(UISelectionState state) =>
+            state switch
             {
-                case UISelectionState.Normal: return NormalAnimation;
-                case UISelectionState.Highlighted: return HighlightedAnimation;
-                case UISelectionState.Pressed: return PressedAnimation;
-                case UISelectionState.Selected: return SelectedAnimation;
-                case UISelectionState.Disabled: return DisabledAnimation;
-                default: throw new ArgumentOutOfRangeException(nameof(state), state, null);
-            }
-        }
+                UISelectionState.Normal      => normalAnimation,
+                UISelectionState.Highlighted => highlightedAnimation,
+                UISelectionState.Pressed     => pressedAnimation,
+                UISelectionState.Selected    => selectedAnimation,
+                UISelectionState.Disabled    => disabledAnimation,
+                _                            => throw new ArgumentOutOfRangeException(nameof(state), state, null)
+            };
 
         #if UNITY_EDITOR
         protected override void Reset()
         {
-            NormalAnimation ??= new UIAnimation(rectTransform);
-            HighlightedAnimation ??= new UIAnimation(rectTransform);
-            PressedAnimation ??= new UIAnimation(rectTransform);
-            SelectedAnimation ??= new UIAnimation(rectTransform);
-            DisabledAnimation ??= new UIAnimation(rectTransform);
-
-            ResetAnimation(NormalAnimation);
-            ResetAnimation(HighlightedAnimation);
-            ResetAnimation(PressedAnimation);
-            ResetAnimation(SelectedAnimation);
-            ResetAnimation(DisabledAnimation);
-
+            foreach (UISelectionState state in UISelectable.uiSelectionStates)
+                ResetAnimation(GetAnimation(state));
+            
             NormalAnimation.animationType = UIAnimationType.Reset;
             NormalAnimation.Move.enabled = true;
             NormalAnimation.Rotate.enabled = true;
@@ -134,18 +132,8 @@ namespace Doozy.Runtime.UIManager.Animators
             updateStartPositionInLateUpdate = true;
         }
 
-        private Vector3 prevScale = Vector3.zero;
         private void LateUpdate()
         {
-            if (name.Contains("(Clone)"))
-            {
-                if (rectTransform.localScale != prevScale)
-                {
-                    Debug.Log($"{name} {rectTransform.localScale}");
-                    prevScale = rectTransform.localScale;
-                }
-            }
-            
             if (!animatorInitialized) return;
 
             if (playStateAnimationFromLateUpdate)
@@ -179,12 +167,14 @@ namespace Doozy.Runtime.UIManager.Animators
             uiBehaviourHandler.SetDirty();
         }
 
+        /// <summary> Refresh the layout the selectable is in </summary>
         private void RefreshLayout()
         {
             if (uiBehaviourHandler == null) return;
             uiBehaviourHandler.RefreshLayout();
         }
 
+        /// <summary> Update the start position of the selectable </summary>
         public void UpdateStartPosition()
         {
             foreach (UISelectionState state in UISelectable.uiSelectionStates)
@@ -197,24 +187,88 @@ namespace Doozy.Runtime.UIManager.Animators
             updateStartPositionInLateUpdate = false;
         }
 
-        public override bool IsStateEnabled(UISelectionState state)
-        {
-            UIAnimation uiAnimation = GetAnimation(state);
-            return uiAnimation != null && uiAnimation.isEnabled;
-        }
+        /// <summary> Returns True if the givens selection state is enabled and the animation is not null. </summary>
+        /// <param name="state"> Selection state </param>
+        public override bool IsStateEnabled(UISelectionState state) =>
+            GetAnimation(state).isEnabled;
 
+        /// <summary> Update the animations settings </summary>
         public override void UpdateSettings()
         {
             foreach (UISelectionState state in UISelectable.uiSelectionStates)
                 GetAnimation(state).SetTarget(rectTransform, canvasGroup);
         }
 
+        /// <summary> Stop all animations </summary>
         public override void StopAllReactions()
         {
             foreach (UISelectionState state in UISelectable.uiSelectionStates)
                 GetAnimation(state)?.Stop();
         }
+        
+        /// <summary> Reset all the reactions to their initial values (if the animation is enabled) </summary>
+        /// <param name="forced"> If true, forced will ignore if the animation is enabled or not </param>
+        public override void ResetToStartValues(bool forced = false)
+        {
+            if(normalAnimation.isActive) normalAnimation.Stop();
+            if(highlightedAnimation.isActive) highlightedAnimation.Stop();
+            if(pressedAnimation.isActive) pressedAnimation.Stop();
+            if(selectedAnimation.isActive) selectedAnimation.Stop();
+            if(disabledAnimation.isActive) disabledAnimation.Stop();
+            
+            normalAnimation.ResetToStartValues();
+            highlightedAnimation.ResetToStartValues();
+            pressedAnimation.ResetToStartValues();
+            selectedAnimation.ResetToStartValues();
+            disabledAnimation.ResetToStartValues();
+            
+            rectTransform.anchoredPosition3D = normalAnimation.startPosition;
+            rectTransform.localEulerAngles = normalAnimation.startRotation;
+            rectTransform.localScale = normalAnimation.startScale;
+            canvasGroup.alpha = normalAnimation.startAlpha;
+            
+            #if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(rectTransform);
+            UnityEditor.SceneView.RepaintAll();
+            #endif
+        }
+        
+        /// <summary> Set animation heartbeat </summary>*
+        public override List<Heartbeat> SetHeartbeat<T>()
+        {
+            var list = new List<Heartbeat>();
+            for (int i = 0; i < 20; i++) list.Add(new T());
+            
+            normalAnimation.Move.SetHeartbeat(list[0]);
+            normalAnimation.Rotate.SetHeartbeat(list[1]);
+            normalAnimation.Scale.SetHeartbeat(list[2]);
+            normalAnimation.Fade.SetHeartbeat(list[3]);
+            
+            highlightedAnimation.Move.SetHeartbeat(list[4]);
+            highlightedAnimation.Rotate.SetHeartbeat(list[5]);
+            highlightedAnimation.Scale.SetHeartbeat(list[6]);
+            highlightedAnimation.Fade.SetHeartbeat(list[7]);
+            
+            pressedAnimation.Move.SetHeartbeat(list[8]);
+            pressedAnimation.Rotate.SetHeartbeat(list[9]);
+            pressedAnimation.Scale.SetHeartbeat(list[10]);
+            pressedAnimation.Fade.SetHeartbeat(list[11]);
+            
+            selectedAnimation.Move.SetHeartbeat(list[12]);
+            selectedAnimation.Rotate.SetHeartbeat(list[13]);
+            selectedAnimation.Scale.SetHeartbeat(list[14]);
+            selectedAnimation.Fade.SetHeartbeat(list[15]);
+            
+            disabledAnimation.Move.SetHeartbeat(list[16]);
+            disabledAnimation.Rotate.SetHeartbeat(list[17]);
+            disabledAnimation.Scale.SetHeartbeat(list[18]);
+            disabledAnimation.Fade.SetHeartbeat(list[19]);
+            
+            return list;
+        }
 
+        /// <summary> Play the animation for the given selection state </summary>
+        /// <param name="state"> Selection state </param>
         public override void Play(UISelectionState state)
         {
             if (playStateAnimationFromLateUpdate)
@@ -269,6 +323,8 @@ namespace Doozy.Runtime.UIManager.Animators
             disabledAnimation.startAlpha = value;
         }
 
+        /// <summary> Reset the give animation to a set of default values </summary>
+        /// <param name="target"> Target animation </param>
         private static void ResetAnimation(UIAnimation target)
         {
             target.Move.Reset();

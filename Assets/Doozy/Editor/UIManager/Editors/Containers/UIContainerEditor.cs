@@ -16,11 +16,12 @@ namespace Doozy.Editor.UIManager.Editors.Containers
         protected override void InitializeEditor()
         {
             base.InitializeEditor();
-            
+
             componentHeader
-                .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(UIContainer)))
+                .SetComponentNameText("UIContainer")
                 .SetIcon(EditorSpriteSheets.UIManager.Icons.UIContainer)
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048412188/UIContainer?atlOrigin=eyJpIjoiNjk1NzI0Njg0MmY5NGY1NWJjMWQxYzU0NzE2Nzg2NDQiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Containers.UIContainer.html")
                 .AddYouTubeButton();
         }
     }

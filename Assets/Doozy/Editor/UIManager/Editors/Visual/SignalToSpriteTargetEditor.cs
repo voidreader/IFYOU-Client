@@ -70,7 +70,7 @@ namespace Doozy.Editor.UIManager.Editors.Visual
         {
             FindProperties();
 
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader =
                 FluidComponentHeader.Get()
@@ -79,6 +79,7 @@ namespace Doozy.Editor.UIManager.Editors.Visual
                     .SetComponentNameText("Signal To Sprite Target")
                     .SetIcon(componentIconTextures.ToList())
                     .AddManualButton()
+                    .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Visual.SignalToSpriteTarget.html")
                     .AddYouTubeButton();
 
             streamIdPropertyField = DesignUtils.NewPropertyField(propertyStreamId);

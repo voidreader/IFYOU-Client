@@ -9,8 +9,8 @@ using System.Linq;
 using Doozy.Runtime.Common.Attributes;
 using Doozy.Runtime.Common.Events;
 using Doozy.Runtime.Common.Extensions;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Signals;
-using Doozy.Runtime.UIManager.Components.Internal;
 using Doozy.Runtime.UIManager.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -24,23 +24,44 @@ namespace Doozy.Runtime.UIManager.Components
     /// Scrollbar component based on UISelectable.
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
-    [AddComponentMenu("Doozy/UI/Components/UI Scrollbar")]
+    [AddComponentMenu("UI/Components/UIScrollbar")]
     [SelectionBase]
-    public class UIScrollbar : UISelectableComponent<UIScrollbar>, IBeginDragHandler, IDragHandler, IInitializePotentialDragHandler
+    public class UIScrollbar : UISelectable, IBeginDragHandler, IDragHandler, IInitializePotentialDragHandler
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Components/UIScrollbar", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UIScrollbar>("UIScrollbar", false, true);
+        }
+        #endif
+        
         public const float k_MINValue = 0f;
         public const float k_MAXValue = 1f;
         public const int k_MINNumberOfSteps = 0;
         public const int k_MAXNumberOfSteps = 20;
         
+        /// <summary> UIScrollbars database </summary>
+        public static HashSet<UIScrollbar> database { get; private set; } = new HashSet<UIScrollbar>();
+        
+        [ExecuteOnReload]
+        private static void OnReload()
+        {
+            database = new HashSet<UIScrollbar>();
+        }
+        
         [ClearOnReload]
         private static SignalStream s_stream;
-        /// <summary> Signal stream for this component type </summary>
+        /// <summary> UIScrollbar signal stream </summary>
         public static SignalStream stream => s_stream ??= SignalsService.GetStream(k_StreamCategory, nameof(UIScrollbar));
 
         /// <summary> All scrollbars that are active and enabled </summary>
         public static IEnumerable<UIScrollbar> availableScrollbars => database.Where(item => item.isActiveAndEnabled);
 
+        /// <summary> TRUE is this selectable is selected by EventSystem.current, FALSE otherwise </summary>
+        public bool isSelected => EventSystem.current.currentSelectedGameObject == gameObject;
+        
+        /// <summary> Type of selectable </summary>
         public override SelectableType selectableType => SelectableType.Button;
 
         /// <summary> Scrollbar changed its value - executed when the scrollbar changes its value </summary>
@@ -129,8 +150,6 @@ namespace Doozy.Runtime.UIManager.Components
 
         private bool reverseValue => Direction == SlideDirection.RightToLeft || Direction == SlideDirection.TopToBottom;
 
-
-
         // Private fields
         private RectTransform m_ContainerRect;
 
@@ -180,8 +199,15 @@ namespace Doozy.Runtime.UIManager.Components
             #endif //UNITY_EDITOR
         }
 
+        protected override void Awake()
+        {
+            database.Add(this);
+            base.Awake();
+        }
+
         protected override void OnEnable()
         {
+            database.Remove(null);
             base.OnEnable();
             UpdateCachedReferences();
             Set(Value, false);
@@ -190,8 +216,16 @@ namespace Doozy.Runtime.UIManager.Components
 
         protected override void OnDisable()
         {
+            database.Remove(null);
             m_Tracker.Clear();
             base.OnDisable();
+        }
+
+        protected override void OnDestroy()
+        {
+            database.Remove(null);
+            database.Remove(this);
+            base.OnDestroy();
         }
 
         private void Update()

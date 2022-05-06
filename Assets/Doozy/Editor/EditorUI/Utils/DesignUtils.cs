@@ -5,11 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.UIElements;
+using Doozy.Runtime.Colors;
+using Doozy.Runtime.Common.Extensions;
 using Doozy.Runtime.Reactor.Internal;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
@@ -33,26 +34,7 @@ namespace Doozy.Editor.EditorUI.Utils
         public const int k_Spacing4X = k_Spacing * 4;
         public const int k_EndOfLineSpacing = k_Spacing * 6;
         public const int k_ToolbarHeight = 32;
-
-        public static VisualElement GetToolbarContainer() =>
-            row
-                .SetStyleHeight(k_ToolbarHeight)
-                .SetStylePaddingLeft(k_Spacing)
-                .SetStylePaddingRight(k_Spacing)
-                .SetStyleAlignItems(Align.Center)
-                .SetStyleJustifyContent(Justify.FlexEnd)
-                .SetStyleBackgroundColor(EditorColors.Default.BoxBackground);
-
-        public static VisualElement GetSpaceBlock(int size, string name = "") =>
-            GetSpaceBlock(size, size, name);
-
-        public static VisualElement GetSpaceBlock(int width, int height, string name = "") =>
-            new VisualElement()
-                .SetName($"{name} Space Block ({width}x{height})")
-                .SetStyleWidth(width)
-                .SetStyleHeight(height)
-                .SetStyleAlignSelf(Align.Center)
-                .SetStyleFlexShrink(0);
+        public const int k_RootPadding = 6;
 
         public static VisualElement endOfLineBlock => GetSpaceBlock(0, k_EndOfLineSpacing, "End of Line");
         public static VisualElement spaceBlock => GetSpaceBlock(k_Spacing, k_Spacing);
@@ -69,18 +51,34 @@ namespace Doozy.Editor.EditorUI.Utils
 
         public static Color placeholderColor => EditorColors.Default.Placeholder;
 
-        public static Color tabButtonColorOff => EditorColors.Default.FieldBackground;
+        public static Color tabButtonColorOff => EditorColors.Default.Background;
         public static Color fieldBackgroundColor => EditorColors.Default.FieldBackground;
         public static Color fieldIconColor => EditorColors.Default.FieldIcon;
         public static Color fieldNameTextColor => EditorColors.Default.TextSubtitle;
         public static Font fieldNameTextFont => EditorFonts.Ubuntu.Light;
 
-        public static Color dividerColor => EditorColors.Default.FieldBackground;
+        public static Color dividerColor => EditorColors.Default.UnityThemeInversed.WithAlpha(0.1f);
 
         public static Color disabledTextColor => EditorColors.Default.Placeholder;
 
         public static Color callbacksColor => EditorColors.Default.Action;
         public static EditorSelectableColorInfo callbackSelectableColor => EditorSelectableColors.Default.Action;
+
+        private static VisualElement divider =>
+            new VisualElement()
+                .SetName("Divider")
+                .SetStyleFlexGrow(1)
+                .SetStyleFlexShrink(0)
+                .SetStyleAlignSelf(Align.Stretch)
+                .SetStyleMargins(k_Spacing)
+                .SetStyleBackgroundColor(dividerColor);
+
+
+        public static VisualElement dividerHorizontal =>
+            divider.SetStyleHeight(1, 1, 1);
+
+        public static VisualElement dividerVertical =>
+            divider.SetStyleWidth(1, 1, 1);
 
         /// <summary> Get a new VisualElement as a column </summary>
         public static VisualElement column =>
@@ -109,10 +107,80 @@ namespace Doozy.Editor.EditorUI.Utils
                 .SetStyleFontSize(k_FieldLabelFontSize)
                 .SetStyleColor(fieldNameTextColor);
 
+        public static VisualElement GetEditorRoot() =>
+            new VisualElement()
+                .SetStylePaddingRight(k_RootPadding);
+
+        public static VisualElement editorRoot
+            => GetEditorRoot();
+
+        public static FluidComponentHeader editorComponentHeader =>
+            FluidComponentHeader.Get()
+                .SetElementSize(ElementSize.Large);
+
+        public static VisualElement editorToolbarContainer =>
+            new VisualElement()
+                .SetName("Toolbar Container")
+                .SetStyleFlexDirection(FlexDirection.Row)
+                .SetStyleMarginTop(-4)
+                .SetStyleMarginLeft(47)
+                .SetStyleMarginRight(4)
+                .SetStyleFlexGrow(1);
+
+        public static VisualElement editorContentContainer =>
+            new VisualElement()
+                .SetName("Content Container")
+                .SetStyleFlexGrow(1)
+                .SetStyleMarginLeft(43);
+
+        public static VisualElement FullScreenVisualElement() =>
+            new VisualElement()
+                .SetStylePosition(Position.Absolute)
+                .SetStyleLeft(0)
+                .SetStyleTop(0)
+                .SetStyleRight(0)
+                .SetStyleBottom(0)
+                .SetPickingMode(PickingMode.Ignore)
+                .SetStyleJustifyContent(Justify.Center)
+                .SetStyleAlignItems(Align.Center);
+
+        public static VisualElement GetToolbarContainer() =>
+            row
+                .SetStyleHeight(k_ToolbarHeight)
+                .SetStylePaddingLeft(k_Spacing)
+                .SetStylePaddingRight(k_Spacing)
+                .SetStyleAlignItems(Align.Center)
+                .SetStyleJustifyContent(Justify.FlexEnd)
+                .SetStyleBackgroundColor(EditorColors.Default.BoxBackground);
+
+        public static VisualElement GetSpaceBlock(int size, string name = "") =>
+            GetSpaceBlock(size, size, name);
+
+        public static VisualElement GetSpaceBlock(int width, int height, string name = "") =>
+            new VisualElement()
+                .SetName($"{name} Space Block ({width}x{height})")
+                .SetStyleWidth(width)
+                .SetStyleHeight(height)
+                .SetStyleAlignSelf(Align.Center)
+                .SetStyleFlexShrink(0);
+
+        public static VisualElement UnityEventField(string labelText, SerializedProperty property) =>
+            new VisualElement()
+                .SetName($"UnityEvent: {labelText}")
+                .AddChild(UnityEventLabel(labelText))
+                .AddChild(NewPropertyField(property));
+
         public static Label NewFieldNameLabel(string text) =>
             fieldLabel
                 .SetName($"Label: {text}")
                 .SetText(text);
+
+        public static Label UnityEventLabel(string labelText) =>
+            NewLabel(labelText, 10)
+                .SetStyleBackgroundColor(EditorColors.Default.BoxBackground)
+                .SetStyleBorderRadius(4, 4, 0, 0)
+                .SetStylePadding(8, 4, 8, 6)
+                .SetStyleMarginBottom(-2);
 
         public static Label NewLabel(string text, int labelFontSize = k_NormalLabelFontSize) =>
             new Label(text)
@@ -220,6 +288,15 @@ namespace Doozy.Editor.EditorUI.Utils
             return field;
         }
 
+        public static Slider NewSlider(SerializedProperty property, float start, float end) =>
+            NewSlider(property.propertyPath, start, end);
+
+        public static Slider NewSlider(string bindingPath, float start, float end) =>
+            new Slider(start, end)
+                .SetBindingPath(bindingPath)
+                .ResetLayout()
+                .SetStyleFlexGrow(1);
+
         public static Toggle NewToggle(SerializedProperty property, bool invisibleField = false) =>
             NewToggle(property.propertyPath, invisibleField);
 
@@ -233,7 +310,7 @@ namespace Doozy.Editor.EditorUI.Utils
         public static FluidToggleButtonTab NameTab() =>
             FluidToggleButtonTab.Get()
                 .SetTabPosition(TabPosition.TabOnBottom)
-                .SetElementSize(ElementSize.Tiny)
+                .SetElementSize(ElementSize.Small)
                 .SetIcon(EditorSpriteSheets.EditorUI.Icons.Label)
                 .SetLabelText("Name")
                 .SetContainerColorOff(tabButtonColorOff);
@@ -245,6 +322,33 @@ namespace Doozy.Editor.EditorUI.Utils
                 .SetIcon(textures)
                 .SetStyleAlignSelf(Align.FlexStart)
                 .SetElementSize(ElementSize.Tiny);
+
+        /// <summary>
+        /// Get a switch that connects to a given property and applies SetEnabled on a target container, depending on its value
+        /// </summary>
+        /// <param name="property"> Target bool property </param>
+        /// <param name="content"> Content that gets SetEnabled true or false, depending on the switch value changes </param>
+        /// <param name="sColor"> Selectable color </param>
+        /// <param name="labelPrefix"> Prefix added to the label '{labelPrefix} Enabled' </param>
+        public static FluidToggleSwitch GetEnableDisableSwitch(SerializedProperty property, VisualElement content, EditorSelectableColorInfo sColor, string labelPrefix = "")
+        {
+            FluidToggleSwitch fluidSwitch =
+                FluidToggleSwitch.Get()
+                    .SetToggleAccentColor(sColor)
+                    .BindToProperty(property.propertyPath);
+
+            fluidSwitch.SetOnValueChanged(evt => Update(evt.newValue));
+
+            Update(property.boolValue);
+
+            void Update(bool enabled)
+            {
+                fluidSwitch.SetLabelText($"{labelPrefix}{(labelPrefix.IsNullOrEmpty() ? "" : " ")}{(enabled ? "Enabled" : "Disabled")}");
+                content.SetEnabled(enabled);
+            }
+
+            return fluidSwitch;
+        }
 
         /// <summary>
         /// Sorts the component order in the Inspector
@@ -293,14 +397,14 @@ namespace Doozy.Editor.EditorUI.Utils
                 FluidToggleButtonTab.Get()
                     .SetContainerColorOff(tabButtonColorOff)
                     .SetTabPosition(TabPosition.TabOnBottom)
-                    .SetElementSize(ElementSize.Small);
+                    .SetElementSize(ElementSize.Normal);
 
             if (textures != null)
                 tabButton.SetIcon(textures);
             if (selectableAccentColor != null)
                 tabButton.SetToggleAccentColor(selectableAccentColor);
 
-            tabButton.iconReaction?.SetDuration(0.4f);
+            tabButton.iconReaction?.SetDuration(0.6f);
 
             return tabButton;
         }
@@ -413,7 +517,7 @@ namespace Doozy.Editor.EditorUI.Utils
 
             if (!allowDragAndDrop)
                 return flv;
-            
+
             //Drag and Drop
             {
                 flv.RegisterCallback<AttachToPanelEvent>(_ =>
@@ -430,17 +534,23 @@ namespace Doozy.Editor.EditorUI.Utils
 
                 void OnDragUpdate(DragUpdatedEvent evt)
                 {
-                    bool isValid = DragAndDrop.objectReferences.Any(item => item.GetType() == objectType);
+                    bool isValid = DragAndDrop.objectReferences.Any(item => item.GetType() == objectType || item.GetType().IsSubclassOf(objectType));
                     if (!isValid)
                     {
                         foreach (Object item in DragAndDrop.objectReferences)
                         {
-                            if (!(item is GameObject go))
-                                continue;
-                            if (go.GetComponent(objectType) == null)
-                                continue;
-                            isValid = true;
-                            break;
+                            Type itemType = item.GetType();
+                            if (itemType == objectType)
+                            {
+                                isValid = true;
+                                break;
+                            }
+
+                            if (item is GameObject go && go.GetComponent(objectType) != null)
+                            {
+                                isValid = true;
+                                break;
+                            }
                         }
                     }
                     if (!isValid) return;
@@ -457,51 +567,55 @@ namespace Doozy.Editor.EditorUI.Utils
 
                     foreach (Object item in references)
                     {
-                        bool addItem = item.GetType() == objectType;
-                        bool addComponent = false;
-
-                        switch (addItem)
+                        //check if we're dragging the correct object
+                        if (item.GetType() == objectType || item.GetType().IsSubclassOf(objectType))
                         {
-                            case false when item is GameObject go:
-                                addComponent = go.GetComponent(objectType) != null;
+                            bool canAddItem = true;
+                            for (int i = 0; i < arrayProperty.arraySize; i++)
+                            {
+                                if (arrayProperty.GetArrayElementAtIndex(i).objectReferenceValue != item)
+                                    continue;
+                                canAddItem = false;
                                 break;
-                            case true:
-                                bool canAddItem = true;
-                                for (int i = 0; i < arrayProperty.arraySize; i++)
-                                {
-                                    if (arrayProperty.GetArrayElementAtIndex(i).objectReferenceValue != item)
-                                        continue;
-                                    canAddItem = false;
-                                    break;
-                                }
-                                if (!canAddItem) continue;
-                                arrayProperty.InsertArrayElementAtIndex(arrayProperty.arraySize);
-                                arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1).objectReferenceValue = item;
-                                continue;
-                        }
-
-                        if (!addComponent)
+                            }
+                            if (!canAddItem) continue;
+                            arrayProperty.InsertArrayElementAtIndex(arrayProperty.arraySize);
+                            arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1).objectReferenceValue = item;
                             continue;
-
-                        bool canAddComponent = true;
-                        Component component = ((GameObject)item).GetComponent(objectType);
-                        for (int i = 0; i < arrayProperty.arraySize; i++)
-                        {
-                            if (arrayProperty.GetArrayElementAtIndex(i).objectReferenceValue != component)
-                                continue;
-                            canAddComponent = false;
-                            break;
                         }
-                        if (!canAddComponent) continue;
-                        arrayProperty.InsertArrayElementAtIndex(arrayProperty.arraySize);
-                        arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1).objectReferenceValue = ((GameObject)item).GetComponent(objectType);
+
+                        //if the dragged object is a GameObject, check to see if the correct object is attached to it
+                        if (item is GameObject go)
+                        {
+                            Component component = go.GetComponent(objectType);
+                            if (component == null) continue;
+                            bool canAddComponent = true;
+                            for (int i = 0; i < arrayProperty.arraySize; i++)
+                            {
+                                if (arrayProperty.GetArrayElementAtIndex(i).objectReferenceValue != component)
+                                    continue;
+                                canAddComponent = false;
+                                break;
+                            }
+                            if (!canAddComponent) continue;
+                            arrayProperty.InsertArrayElementAtIndex(arrayProperty.arraySize);
+                            arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1).objectReferenceValue = go.GetComponent(objectType);
+                        }
                     }
                     arrayProperty.serializedObject.ApplyModifiedProperties();
                 }
             }
 
+            flv.schedule.Execute(flv.Update);
             return flv;
         }
 
+        public static FluidToggleSwitch GetDebugSwitch(SerializedProperty property) =>
+            FluidToggleSwitch.Get()
+                .SetLabelText("Debug Mode")
+                .SetTooltip("Enable relevant debug messages to be printed to the console")
+                .SetToggleAccentColor(EditorSelectableColors.EditorUI.Red)
+                .BindToProperty(property)
+                .SetStyleAlignSelf(Align.FlexEnd);
     }
 }

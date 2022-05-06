@@ -2,19 +2,29 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Reactor.Targets;
 using Doozy.Runtime.Signals;
 using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
+
 namespace Doozy.Runtime.UIManager.Visual
 {
     /// <summary>
     /// Connects to a specific stream and reacts to signals, sent through said stream, that have a Color value payload.
     /// The signal's Color value will be assigned to the target ColorTarget. 
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Visual/Signal To Color Target")]
+    [AddComponentMenu("Signals/Signal To ColorTarget")]
     public class SignalToColorTarget : BaseStreamListener
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/Signals/Signal To ColorTarget", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<SignalToColorTarget>("Signal To ColorTarget", false, true);
+        }
+        #endif
+        
         [SerializeField] private StreamId StreamId;
         /// <summary> Stream Id </summary>
         public StreamId streamId => StreamId;

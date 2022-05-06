@@ -11,6 +11,7 @@ using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.EditorUI.Windows.Internal;
+using Doozy.Editor.UIElements;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -41,7 +42,9 @@ namespace Doozy.Editor.UIManager.Windows
 
         protected override void CreateGUI()
         {
-            root.Add(templateContainer = EditorLayouts.UIManager.UIManagerWindow.CloneTree());
+            root
+                .RecycleAndClear()
+                .Add(templateContainer = EditorLayouts.UIManager.UIManagerWindow.CloneTree());
 
             templateContainer
                 .SetStyleFlexGrow(1)

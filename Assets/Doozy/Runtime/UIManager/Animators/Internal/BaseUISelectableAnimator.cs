@@ -24,6 +24,7 @@ namespace Doozy.Runtime.UIManager.Animators
         /// <summary> Returns TRUE if the controller selectable type is Toggle </summary>
         public bool controllerIsToggle => hasController && controller.isToggle;
 
+        /// <summary> Connect to Controller </summary>
         protected override void ConnectToController()
         {
             if (controller == null) return;
@@ -31,12 +32,15 @@ namespace Doozy.Runtime.UIManager.Animators
             StartCoroutine(UpdateStateLater());
         }
 
+        /// <summary> Disconnect from Controller </summary>
         protected override void DisconnectFromController()
         {
             if (controller == null) return;
             controller.OnSelectionStateChangedCallback.RemoveListener(OnSelectionStateChanged);
         }
 
+        /// <summary> Do on selection state changed </summary>
+        /// <param name="state"> New state </param>
         protected virtual void OnSelectionStateChanged(UISelectionState state)
         {
             if (controller == null) return;
@@ -54,12 +58,17 @@ namespace Doozy.Runtime.UIManager.Animators
             if (!IsStateEnabled(state)) return;
             if (!Application.isPlaying) return;
 
+            StopAllReactions();
             Play(state);
         }
 
+        /// <summary> Returns TRUE if the state is enabled </summary>
         public abstract bool IsStateEnabled(UISelectionState state);
+        
+        /// <summary> Play the animation for the given state </summary>
         public abstract void Play(UISelectionState state);
 
+        /// <summary> Update the state at the end of the frame </summary>
         private IEnumerator UpdateStateLater()
         {
             yield return new WaitForEndOfFrame();

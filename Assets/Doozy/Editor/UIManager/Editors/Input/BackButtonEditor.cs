@@ -53,8 +53,7 @@ namespace Doozy.Editor.UIManager.Editors.Input
         private void InitializeEditor()
         {
             FindProperties();
-
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader = FluidComponentHeader.Get()
                 .SetAccentColor(accentColor)
@@ -62,6 +61,7 @@ namespace Doozy.Editor.UIManager.Editors.Input
                 .SetIcon(backIconTextures.ToList())
                 .SetElementSize(ElementSize.Large)
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048477760/Back+Button?atlOrigin=eyJpIjoiMWZiNTE0ZDBkZjZhNDMwZjgzYTY1ZjgzMmQ4OTc5MDUiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Input.BackButton.html")
                 .AddYouTubeButton();
 
             stateIndicator =

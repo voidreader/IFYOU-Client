@@ -2,10 +2,11 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
-using System;
+using System.Collections.Generic;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.Reactor.Targets;
+using Doozy.Runtime.Reactor.Ticker;
 using Doozy.Runtime.UIManager.Containers;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace Doozy.Runtime.UIManager.Animators
     /// <summary>
     /// Specialized animator component used to animate the Color for a Reactor Color Target by listening to a UIContainer (controller) show/hide commands.
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Animators/Container/UI Container Color Animator")]
+    [AddComponentMenu("UI/Containers/Animators/UIContainer Color Animator")]
     public class UIContainerColorAnimator : BaseUIContainerAnimator
     {
         [SerializeField] private ReactorColorTarget ColorTarget;
@@ -26,22 +27,19 @@ namespace Doozy.Runtime.UIManager.Animators
 
         [SerializeField] private ColorAnimation ShowAnimation;
         /// <summary> Container Show Animation </summary>
-        public ColorAnimation showAnimation => ShowAnimation;
+        public ColorAnimation showAnimation => ShowAnimation ?? (ShowAnimation = new ColorAnimation(colorTarget));
 
         [SerializeField] private ColorAnimation HideAnimation;
         /// <summary> Container Hide Animation </summary>
-        public ColorAnimation hideAnimation => HideAnimation;
+        public ColorAnimation hideAnimation => HideAnimation ?? (HideAnimation = new ColorAnimation(colorTarget));
 
         #if UNITY_EDITOR
         protected override void Reset()
         {
             FindTarget();
 
-            ShowAnimation ??= new ColorAnimation(colorTarget);
-            HideAnimation ??= new ColorAnimation(colorTarget);
-
-            ResetAnimation(ShowAnimation);
-            ResetAnimation(HideAnimation);
+            ResetAnimation(showAnimation);
+            ResetAnimation(hideAnimation);
 
             base.Reset();
         }
@@ -71,63 +69,98 @@ namespace Doozy.Runtime.UIManager.Animators
             HideAnimation?.Recycle();
         }
 
+        /// <summary> Connect to Controller </summary>
         protected override void ConnectToController()
         {
             base.ConnectToController();
             if (!controller) return;
 
-            controller.showReactions.Add(ShowAnimation.animation);
-            controller.hideReactions.Add(HideAnimation.animation);
+            controller.showReactions.Add(showAnimation.animation);
+            controller.hideReactions.Add(hideAnimation.animation);
         }
 
+        /// <summary> Disconnect from Controller </summary>
         protected override void DisconnectFromController()
         {
             base.DisconnectFromController();
             if (!controller) return;
 
-            controller.showReactions.Remove(ShowAnimation.animation);
-            controller.hideReactions.Remove(HideAnimation.animation);
+            controller.showReactions.Remove(showAnimation.animation);
+            controller.hideReactions.Remove(hideAnimation.animation);
         }
 
         /// <summary> Play the show animation </summary>
         public override void Show() =>
-            ShowAnimation?.Play(PlayDirection.Forward);
-
-        /// <summary> Play the hide animation </summary>
-        public override void Hide() =>
-            HideAnimation?.Play(PlayDirection.Forward);
-
-        /// <summary> Set show animation's progress at one </summary>
-        public override void InstantShow() =>
-            ShowAnimation?.SetProgressAtOne();
-
-        /// <summary> Set hide animation's progress at one </summary>
-        public override void InstantHide() =>
-            HideAnimation?.SetProgressAtOne();
+            showAnimation.Play(PlayDirection.Forward);
 
         /// <summary> Reverse the show animation (if playing) </summary>
         public override void ReverseShow() =>
-            ShowAnimation?.Reverse();
+            showAnimation.Reverse();
+
+        /// <summary> Play the hide animation </summary>
+        public override void Hide() =>
+            hideAnimation.Play(PlayDirection.Forward);
 
         /// <summary> Reverse the hide animation (if playing) </summary>
         public override void ReverseHide() =>
-            HideAnimation?.Reverse();
+            hideAnimation.Reverse();
 
+        /// <summary> Set show animation's progress at one </summary>
+        public override void InstantShow() =>
+            showAnimation.SetProgressAtOne();
+
+        /// <summary> Set hide animation's progress at one </summary>
+        public override void InstantHide() =>
+            hideAnimation.SetProgressAtOne();
+        
         /// <summary> Update the animations settings (if a colorTarget is referenced) </summary>
         public override void UpdateSettings()
         {
             if (colorTarget == null)
                 return;
 
-            ShowAnimation?.SetTarget(colorTarget);
-            HideAnimation?.SetTarget(colorTarget);
+            showAnimation.SetTarget(colorTarget);
+            hideAnimation.SetTarget(colorTarget);
         }
 
         /// <summary> Stop all animations </summary>
         public override void StopAllReactions()
         {
-            ShowAnimation?.Stop();
-            HideAnimation?.Stop();
+            showAnimation.Stop();
+            hideAnimation.Stop();
+        }
+
+        /// <summary> Reset all the reactions to their initial values (if the animation is enabled) </summary>
+        /// <param name="forced"> If true, forced will ignore if the animation is enabled or not </param>
+        public override void ResetToStartValues(bool forced = false)
+        {
+            if (showAnimation.isActive) showAnimation.Stop();
+            if (hideAnimation.isActive) hideAnimation.Stop();
+
+            showAnimation.ResetToStartValues(forced);
+            hideAnimation.ResetToStartValues(forced);
+
+            if (colorTarget == null)
+                return;
+
+            colorTarget.color = showAnimation.startColor;
+
+            #if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(rectTransform);
+            UnityEditor.SceneView.RepaintAll();
+            #endif
+        }
+
+        /// <summary> Set animation heartbeat </summary>
+        public override List<Heartbeat> SetHeartbeat<T>()
+        {
+            var list = new List<Heartbeat>();
+            for (int i = 0; i < 2; i++) list.Add(new T());
+
+            showAnimation.animation.SetHeartbeat(list[0]);
+            hideAnimation.animation.SetHeartbeat(list[1]);
+
+            return list;
         }
 
         private static void ResetAnimation(ColorAnimation target)
@@ -150,16 +183,15 @@ namespace Doozy.Runtime.UIManager.Animators
         /// <param name="color"> New start color </param>
         public void SetStartColorForShow(Color color)
         {
-            if (ShowAnimation == null) return;
-            ShowAnimation.startColor = color;
+            showAnimation.startColor = color;
             if (controller == null) return;
             switch (controller.visibilityState)
             {
                 case VisibilityState.Visible:
-                    ShowAnimation.SetProgressAtOne();
+                    showAnimation.SetProgressAtOne();
                     break;
                 case VisibilityState.IsShowing:
-                    ShowAnimation.Play();
+                    showAnimation.Play();
                     break;
             }
         }
@@ -168,8 +200,7 @@ namespace Doozy.Runtime.UIManager.Animators
         /// <param name="color"> New start color </param>
         public void SetStartColorForHide(Color color)
         {
-            if (ShowAnimation == null) return;
-            ShowAnimation.startColor = color;
+            hideAnimation.startColor = color;
             switch (controller.visibilityState)
             {
                 case VisibilityState.Hidden:

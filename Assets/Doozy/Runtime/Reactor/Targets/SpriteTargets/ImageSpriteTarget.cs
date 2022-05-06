@@ -13,7 +13,7 @@ namespace Doozy.Runtime.Reactor.Targets
     /// </summary>
     [Serializable]
     [RequireComponent(typeof(Image))]
-    [AddComponentMenu("Doozy/Reactor/Targets/Image Sprite Target")]
+    [AddComponentMenu("Reactor/Targets/Image Sprite Target")]
     public class ImageSpriteTarget : ReactorMetaSpriteTarget<Image>
     {
         #if UNITY_EDITOR

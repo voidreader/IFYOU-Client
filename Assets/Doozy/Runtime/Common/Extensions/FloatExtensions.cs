@@ -33,9 +33,43 @@ namespace Doozy.Runtime.Common.Extensions
 
         /// <summary> Compare two floating point values and returns true if they are similar </summary>
         /// <param name="target"> Target floating point </param>
-        /// <param name="other"> Other floating point to compare against </param>
+        /// <param name="otherValue"> Other floating point to compare against </param>
         /// <returns> TRUE if the values are similar and FALSE otherwise </returns>
-        public static bool Approximately(this float target, float other) =>
-            Mathf.Approximately(target, other);
+        public static bool Approximately(this float target, float otherValue) =>
+            Mathf.Approximately(target, otherValue);
+        
+        /// <summary> Returns the absolute value of the given float </summary>
+        /// <param name="target"> Target float </param>
+        /// <returns> Absolute value of the given float </returns>
+        public static float Abs(this float target) =>
+            Mathf.Abs(target);
+        
+        /// <summary> Returns the smallest integer greater to or equal to the given float </summary>
+        public static float RoundToMultiple(this float target, float multiple)
+        {
+            float remainder = target % multiple;
+            if (remainder < 0.5f) return target - remainder;
+            return target + multiple - remainder;
+        }
+        
+        /// <summary> Returns the smallest integer greater to or equal to the given float </summary>
+        public static float RoundToMultiple(this float target, int multiple) =>
+            target.RoundToMultiple((float)multiple);
+        
+        /// <summary> Returns the smallest integer greater to or equal to the given float </summary>
+        public static float RoundToMultiple(this float target, float multiple, float offset)
+        {
+            float remainder = target % multiple;
+            if (remainder < offset) return target - remainder;
+            return target + multiple - remainder;
+        }
+        
+        /// <summary> Returns the smallest integer greater to or equal to the given float </summary>
+        /// <param name="target"> Target float </param>
+        /// <param name="otherValue"> Other value </param>
+        /// <param name="tolerance"> Tolerance (step) </param>
+        public static bool CloseTo(this float target, float otherValue, float tolerance) =>
+            Mathf.Abs(target - otherValue) <= tolerance;
+        
     }
 }

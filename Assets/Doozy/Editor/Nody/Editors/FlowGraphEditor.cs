@@ -66,7 +66,7 @@ namespace Doozy.Editor.Nody.Editors
         {
             FindProperties();
 
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader = 
                 FluidComponentHeader.Get()

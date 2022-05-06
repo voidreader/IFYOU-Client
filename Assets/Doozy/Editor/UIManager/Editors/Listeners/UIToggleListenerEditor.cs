@@ -74,8 +74,7 @@ namespace Doozy.Editor.UIManager.Editors.Listeners
         private void InitializeEditor()
         {
             FindProperties();
-
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader =
                 FluidComponentHeader.Get()
@@ -84,6 +83,7 @@ namespace Doozy.Editor.UIManager.Editors.Listeners
                     .SetComponentNameText((ObjectNames.NicifyVariableName(nameof(UIToggleListener))))
                     .SetIcon(componentIconTextures.ToList())
                     .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048084577/UIToggle+Listener?atlOrigin=eyJpIjoiOTkxMDYxZDllYzk0NDkzZTllZTdiYzYwZmZhNjA5YTkiLCJwIjoiYyJ9")
+                    .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Listeners.UIToggleListener.html")
                     .AddYouTubeButton();
 
             toggleIdPropertyField =

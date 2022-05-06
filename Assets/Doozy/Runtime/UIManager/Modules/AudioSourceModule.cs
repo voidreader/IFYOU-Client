@@ -3,6 +3,7 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using Doozy.Runtime.Common.Extensions;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Mody;
 using Doozy.Runtime.Mody.Actions;
 using UnityEngine;
@@ -11,9 +12,17 @@ using UnityEngine;
 namespace Doozy.Runtime.UIManager.Modules
 {
 	/// <summary> Mody module used to control an AudioSource </summary>
-	[AddComponentMenu("Doozy/UI/Modules/AudioSource Module")]
+	[AddComponentMenu("Mody/AudioSource Module")]
 	public class AudioSourceModule : ModyModule
 	{
+		#if UNITY_EDITOR
+		[UnityEditor.MenuItem("GameObject/Mody/AudioSource Module", false, 8)]
+		private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+		{
+			GameObjectUtils.AddToScene<AudioSourceModule>("AudioSource Module", false, true);
+		}
+		#endif
+		
 		/// <summary> Default module name </summary>
 		public const string k_DefaultModuleName = "AudioSource";
 		

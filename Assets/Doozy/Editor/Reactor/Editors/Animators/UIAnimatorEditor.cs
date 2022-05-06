@@ -8,12 +8,13 @@ using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.Reactor.Components;
 using Doozy.Editor.Reactor.Editors.Animators.Internal;
+using Doozy.Editor.Reactor.Ticker;
+using Doozy.Runtime.Common.Extensions;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animators;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -23,26 +24,76 @@ namespace Doozy.Editor.Reactor.Editors.Animators
     [CanEditMultipleObjects]
     public class UIAnimatorEditor : BaseReactorAnimatorEditor
     {
-        public static IEnumerable<Texture2D> uiAnimatorIconTextures => EditorSpriteSheets.Reactor.Icons.UIAnimator;
-        public static IEnumerable<Texture2D> uiAnimationIconTextures => EditorSpriteSheets.Reactor.Icons.UIAnimation;
-
         private UIAnimator castedTarget => (UIAnimator)target;
-        private IEnumerable<UIAnimator> castedTargets => targets.Cast<UIAnimator>();
+        private List<UIAnimator> castedTargets => targets.Cast<UIAnimator>().ToList();
 
-        private VisualElement animationTabContainer { get; set; }
-        private UIAnimatorIndicators animationTabIndicators { get; set; }
+        private UIAnimationTab uiAnimationTab { get; set; }
 
-        public override VisualElement CreateInspectorGUI()
-        {
-            InitializeEditor();
-            Compose();
-            return root;
-        }
+        private SerializedProperty propertyMoveEnabled { get; set; }
+        private SerializedProperty propertyRotateEnabled { get; set; }
+        private SerializedProperty propertyScaleEnabled { get; set; }
+        private SerializedProperty propertyFadeEnabled { get; set; }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            animationTabButton?.Recycle();
+            uiAnimationTab?.Dispose();
+        }
+
+        protected override void ResetAnimatorInitializedState()
+        {
+            foreach (var a in castedTargets)
+                a.animatorInitialized = false;
+        }
+
+        protected override void ResetToStartValues()
+        {
+            foreach (var a in castedTargets)
+            {
+                a.Stop();
+                a.ResetToStartValues();
+            }
+        }
+        
+        protected override void SetProgressAtZero() =>
+            castedTargets.ForEach(a => a.SetProgressAtZero());
+
+        protected override void PlayForward() =>
+            castedTargets.ForEach(a => a.Play(PlayDirection.Forward));
+        
+        protected override void Stop() =>
+            castedTargets.ForEach(a => a.Stop());
+        
+        protected override void PlayReverse() =>
+            castedTargets.ForEach(a => a.Play(PlayDirection.Reverse));
+        
+        protected override void Reverse() =>
+            castedTargets.ForEach(a => a.Reverse());
+        
+        protected override void SetProgressAtOne() =>
+            castedTargets.ForEach(a => a.SetProgressAtOne());
+
+        protected override void HeartbeatCheck()
+        {
+            if (Application.isPlaying) return;
+            foreach (var a in castedTargets)
+            {
+                if (a.animatorInitialized) continue;
+                resetToStartValue = true;
+                a.InitializeAnimator();
+                foreach (EditorHeartbeat eh in a.SetHeartbeat<EditorHeartbeat>().Cast<EditorHeartbeat>())
+                    eh.StartSceneViewRefresh(a);
+            }
+        }
+
+        protected override void FindProperties()
+        {
+            base.FindProperties();
+
+            propertyMoveEnabled = serializedObject.FindProperty("Animation.Move.Enabled");
+            propertyRotateEnabled = serializedObject.FindProperty("Animation.Rotate.Enabled");
+            propertyScaleEnabled = serializedObject.FindProperty("Animation.Scale.Enabled");
+            propertyFadeEnabled = serializedObject.FindProperty("Animation.Fade.Enabled");
         }
 
         protected override void InitializeEditor()
@@ -50,119 +101,88 @@ namespace Doozy.Editor.Reactor.Editors.Animators
             base.InitializeEditor();
 
             componentHeader
-                .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(UIAnimator)))
-                .SetIcon(uiAnimatorIconTextures.ToList())
+                .SetComponentNameText("UI Animator")
+                .SetIcon(EditorSpriteSheets.Reactor.Icons.UIAnimator)
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048150050/UI+Animator?atlOrigin=eyJpIjoiYzMxOTZiNGQwYmRjNGVkNTkxOTA1MGYyNzBlMGFmZWIiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Reactor.Animators.UIAnimator.html")
                 .AddYouTubeButton();
-
-            animationTabContainer =
-                new VisualElement();
-
-            animationTabButton
-                .SetIcon(uiAnimationIconTextures);
-
-            animationTabIndicators =
-                new UIAnimatorIndicators()
-                    .Initialize(propertyAnimation, animationTabButton, animationTabContainer);
-
-            controls
-                .SetFirstFrameButtonCallback(() =>
-                {
-                    if (serializedObject.isEditingMultipleObjects)
-                    {
-                        foreach (UIAnimator animator in castedTargets)
-                            animator.SetProgressAtZero();
-                        return;
-                    }
-                    castedTarget.SetProgressAtZero();
-                })
-                .SetPlayForwardButtonCallback(() =>
-                {
-                    if (serializedObject.isEditingMultipleObjects)
-                    {
-                        foreach (UIAnimator animator in castedTargets)
-                            animator.Play(PlayDirection.Forward);
-                        return;
-                    }
-                    castedTarget.Play(PlayDirection.Forward);
-                })
-                .SetStopButtonCallback(() =>
-                {
-                    if (serializedObject.isEditingMultipleObjects)
-                    {
-                        foreach (UIAnimator animator in castedTargets)
-                            animator.Stop();
-                        return;
-                    }
-                    castedTarget.Stop();
-                })
-                .SetPlayReverseButtonCallback(() =>
-                {
-                    if (serializedObject.isEditingMultipleObjects)
-                    {
-                        foreach (UIAnimator animator in castedTargets)
-                            animator.Play(PlayDirection.Reverse);
-                        return;
-                    }
-                    castedTarget.Play(PlayDirection.Reverse);
-                })
-                .SetReverseButtonCallback(() =>
-                {
-                    if (serializedObject.isEditingMultipleObjects)
-                    {
-                        foreach (UIAnimator animator in castedTargets)
-                            animator.Reverse();
-                        return;
-                    }
-                    castedTarget.Reverse();
-                })
-                .SetLastFrameButtonCallback(() =>
-                {
-                    if (serializedObject.isEditingMultipleObjects)
-                    {
-                        foreach (UIAnimator animator in castedTargets)
-                            animator.SetProgressAtOne();
-                        return;
-                    }
-                    castedTarget.SetProgressAtOne();
-                });
         }
 
-        protected override void Compose()
+        protected override void InitializeAnimation()
         {
-            base.Compose();
+            base.InitializeAnimation();
 
-            root
-                .AddChild(componentHeader)
-                .AddChild
+            //remove the default animation tab and replace it with the color tab
+            animationTab.button.RemoveFromToggleGroup();
+            animationTab?.Recycle();
+
+            uiAnimationTab =
+                UIAnimationTab.Get()
+                    .SetLabelText("Animation")
+                    .SetIcon(EditorSpriteSheets.Reactor.Icons.UIAnimation)
+                    .ButtonSetAccentColor(selectableAccentColor)
+                    .ButtonSetOnValueChanged(evt => animationAnimatedContainer.Toggle(evt.newValue));
+
+            uiAnimationTab.button.AddToToggleGroup(tabsGroup);
+
+            //refresh animationTab enabled indicators
+            root.schedule.Execute(() =>
+            {
+                void UpdateIndicator(UIAnimationTab tab, bool move, bool rotate, bool scale, bool fade, bool animateChange)
+                {
+                    if (tab.moveIndicator.isOn != move)
+                        tab.moveIndicator.Toggle(move, animateChange);
+
+                    if (tab.rotateIndicator.isOn != rotate)
+                        tab.rotateIndicator.Toggle(rotate, animateChange);
+
+                    if (tab.scaleIndicator.isOn != scale)
+                        tab.scaleIndicator.Toggle(scale, animateChange);
+
+                    if (tab.fadeIndicator.isOn != fade)
+                        tab.fadeIndicator.Toggle(fade, animateChange);
+                }
+
+                //initial indicators state update (no animation)
+                UpdateIndicator
                 (
-                    DesignUtils.row
-                        .SetStyleMargins(42, -2, DesignUtils.k_Spacing2X, DesignUtils.k_Spacing2X)
-                        .AddChild(animationTabContainer)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(settingsTab)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(DesignUtils.flexibleSpace)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild(animatorNameTab)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild
-                        (
-                            DesignUtils.SystemButton_SortComponents
-                            (
-                                castedTarget.gameObject,
-                                nameof(RectTransform),
-                                nameof(Canvas),
-                                nameof(CanvasGroup),
-                                nameof(GraphicRaycaster)
-                            )
-                        )
-                )
-                .AddChild(controls.SetStyleMargins(DesignUtils.k_Spacing))
-                .AddChild(animationAnimatedContainer)
-                .AddChild(behaviourAnimatedContainer)
-                .AddChild(animatorNameAnimatedContainer)
-                .AddChild(DesignUtils.endOfLineBlock);
+                    uiAnimationTab,
+                    propertyMoveEnabled.boolValue,
+                    propertyRotateEnabled.boolValue,
+                    propertyScaleEnabled.boolValue,
+                    propertyFadeEnabled.boolValue,
+                    false
+                );
+
+                root.schedule.Execute(() =>
+                {
+                    //subsequent indicators state update (animated)
+                    UpdateIndicator
+                    (
+                        uiAnimationTab,
+                        propertyMoveEnabled.boolValue,
+                        propertyRotateEnabled.boolValue,
+                        propertyScaleEnabled.boolValue,
+                        propertyFadeEnabled.boolValue,
+                        true
+                    );
+
+                }).Every(200);
+            });
+        }
+
+        protected override VisualElement Toolbar()
+        {
+            return
+                toolbarContainer
+                    .AddChild(uiAnimationTab)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(behaviourTab)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(DesignUtils.flexibleSpace)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(nameTab)
+                    .AddChild(DesignUtils.spaceBlock);
         }
     }
 }

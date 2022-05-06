@@ -5,6 +5,7 @@
 using System;
 using Doozy.Editor.EditorUI.Windows.Internal;
 using Doozy.Editor.Signals.Layouts;
+using Doozy.Editor.UIElements;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
 using UnityEngine;
@@ -25,7 +26,9 @@ namespace Doozy.Editor.Signals.Windows
         }
 
         protected override void CreateGUI() =>
-            root.AddChild(windowLayout = Activator.CreateInstance<StreamsDatabaseWindowLayout>());
+            root
+                .RecycleAndClear()
+                .AddChild(windowLayout = Activator.CreateInstance<StreamsDatabaseWindowLayout>());
 
         protected override void OnDestroy()
         {

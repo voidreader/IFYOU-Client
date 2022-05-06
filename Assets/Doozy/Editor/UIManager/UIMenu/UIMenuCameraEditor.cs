@@ -2,6 +2,7 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using System;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Utils;
@@ -25,73 +26,86 @@ namespace Doozy.Editor.UIManager.UIMenu
         private VisualElement root { get; set; }
         private FluidComponentHeader componentHeader { get; set; }
 
-        private FluidField snapshotCameraFluidField { get; set; }
-        private FluidField snapshotTargetFluidField { get; set; }
-        private FluidField multiShotFluidField { get; set; }
-        private FluidField targetUIContainerFluidField { get; set; }
-        private FluidField uiContainerShowDelayFluidField { get; set; }
-        private FluidField targetUISelectableFluidField { get; set; }
-        private FluidField uiSelectableStateDurationFluidField { get; set; }
-        private FluidField targetAnimatorFluidField { get; set; }
-        private FluidField targetProgressorFluidField { get; set; }
-        private FluidField snapshotsFolderNameFluidField { get; set; }
-        private FluidField targetPathFluidField { get; set; }
+        private FloatField uiContainerShowDelayFloatField { get; set; }
+        private FloatField uiSelectableStateDurationFloatField { get; set; }
 
-        private FluidButton takeSnapshotButton { get; set; }
-        private FluidButton recordUIContainerButton { get; set; }
-        private FluidButton recordUISelectableButton { get; set; }
         private FluidButton recordAnimatorButton { get; set; }
         private FluidButton recordProgressorButton { get; set; }
+        private FluidButton recordReactorControllerButton { get; set; }
+        private FluidButton recordUIContainerButton { get; set; }
+        private FluidButton recordUISelectableButton { get; set; }
         private FluidButton resetPathButton { get; set; }
+        private FluidButton takeSnapshotButton { get; set; }
 
-        private FluidToggleSwitch generateSpriteSheetSwitch { get; set; }
-        private TextField snapshotsFolderNameTextField { get; set; }
-        private TextField targetPathTextField { get; set; }
+        private FluidField multiShotFluidField { get; set; }
+        private FluidField snapshotCameraFluidField { get; set; }
+        private FluidField snapshotsFolderNameFluidField { get; set; }
+        private FluidField snapshotTargetFluidField { get; set; }
+        private FluidField targetAnimatorFluidField { get; set; }
+        private FluidField targetPathFluidField { get; set; }
+        private FluidField targetProgressorFluidField { get; set; }
+        private FluidField targetReactorControllerFluidField { get; set; }
+        private FluidField targetUIContainerFluidField { get; set; }
+        private FluidField targetUISelectableFluidField { get; set; }
+        private FluidField uiContainerShowDelayFluidField { get; set; }
+        private FluidField uiSelectableStateDurationFluidField { get; set; }
+
         private FluidToggleSwitch autoDeleteFilesFromTargetPathSwitch { get; set; }
+        private FluidToggleSwitch generateSpriteSheetSwitch { get; set; }
+
+        private IntegerField multiShotFPSIntegerField { get; set; }
+
         private ObjectField snapshotCameraObjectField { get; set; }
         private ObjectField snapshotTargetObjectField { get; set; }
-        private IntegerField multiShotFPSIntegerField { get; set; }
-        private ObjectField targetUIContainerObjectField { get; set; }
-        private FloatField uiContainerShowDelayFloatField { get; set; }
-        private ObjectField targetUISelectableObjectField { get; set; }
-        private FloatField uiSelectableStateDurationFloatField { get; set; }
         private ObjectField targetAnimatorObjectField { get; set; }
         private ObjectField targetProgressorObjectField { get; set; }
+        private ObjectField targetReactorControllerObjectField { get; set; }
+        private ObjectField targetUIContainerObjectField { get; set; }
+        private ObjectField targetUISelectableObjectField { get; set; }
 
-        private SerializedProperty propertySnapshotsFolderName { get; set; }
-        private SerializedProperty propertyTargetPath { get; set; }
+        private TextField snapshotsFolderNameTextField { get; set; }
+        private TextField targetPathTextField { get; set; }
+
         private SerializedProperty propertyAutoDeleteFilesFromTargetPath { get; set; }
-        private SerializedProperty propertySnapshotCamera { get; set; }
-        private SerializedProperty propertySnapshotTarget { get; set; }
-        private SerializedProperty propertyMultiShotFPS { get; set; }
         private SerializedProperty propertyGenerateSpriteSheet { get; set; }
-        private SerializedProperty propertyTargetUIContainer { get; set; }
-        private SerializedProperty propertyUIContainerShowDelay { get; set; }
-        private SerializedProperty propertyTargetUISelectable { get; set; }
-        private SerializedProperty propertyUISelectableStateDuration { get; set; }
+        private SerializedProperty propertyMultiShotFPS { get; set; }
+        private SerializedProperty propertySnapshotCamera { get; set; }
+        private SerializedProperty propertySnapshotsFolderName { get; set; }
+        private SerializedProperty propertySnapshotTarget { get; set; }
         private SerializedProperty propertyTargetAnimator { get; set; }
+        private SerializedProperty propertyTargetPath { get; set; }
         private SerializedProperty propertyTargetProgressor { get; set; }
+        private SerializedProperty propertyTargetReactorController { get; set; }
+        private SerializedProperty propertyTargetUIContainer { get; set; }
+        private SerializedProperty propertyTargetUISelectable { get; set; }
+        private SerializedProperty propertyUIContainerShowDelay { get; set; }
+        private SerializedProperty propertyUISelectableStateDuration { get; set; }
+
+        private void OnEnable()
+        {
+            castedTarget.FindTarget();
+        }
 
         private void OnDestroy()
         {
             componentHeader?.Recycle();
 
-            snapshotCameraFluidField?.Recycle();
-            snapshotTargetFluidField?.Recycle();
-            multiShotFluidField?.Recycle();
-            uiContainerShowDelayFluidField?.Recycle();
-            targetUISelectableFluidField?.Recycle();
-            uiSelectableStateDurationFluidField?.Recycle();
-            targetAnimatorFluidField?.Recycle();
-            targetProgressorFluidField?.Recycle();
-
             autoDeleteFilesFromTargetPathSwitch?.Recycle();
-
-            recordUIContainerButton?.Recycle();
-            recordUISelectableButton?.Recycle();
+            multiShotFluidField?.Recycle();
             recordAnimatorButton?.Recycle();
             recordProgressorButton?.Recycle();
+            recordReactorControllerButton?.Recycle();
+            recordUIContainerButton?.Recycle();
+            recordUISelectableButton?.Recycle();
             resetPathButton?.Recycle();
+            snapshotCameraFluidField?.Recycle();
+            snapshotTargetFluidField?.Recycle();
+            targetAnimatorFluidField?.Recycle();
+            targetProgressorFluidField?.Recycle();
+            targetReactorControllerFluidField?.Recycle();
+            targetUISelectableFluidField?.Recycle();
+            uiContainerShowDelayFluidField?.Recycle();
+            uiSelectableStateDurationFluidField?.Recycle();
         }
 
         public override VisualElement CreateInspectorGUI()
@@ -103,26 +117,27 @@ namespace Doozy.Editor.UIManager.UIMenu
 
         private void FindProperties()
         {
-            propertySnapshotsFolderName = serializedObject.FindProperty(nameof(UIMenuCamera.SnapshotsFolderName));
-            propertyTargetPath = serializedObject.FindProperty(nameof(UIMenuCamera.TargetPath));
             propertyAutoDeleteFilesFromTargetPath = serializedObject.FindProperty(nameof(UIMenuCamera.AutoDeleteFilesFromTargetPath));
-            propertySnapshotCamera = serializedObject.FindProperty(nameof(UIMenuCamera.SnapshotCamera));
-            propertySnapshotTarget = serializedObject.FindProperty(nameof(UIMenuCamera.SnapshotTarget));
-            propertyMultiShotFPS = serializedObject.FindProperty(nameof(UIMenuCamera.MultiShotFPS));
             propertyGenerateSpriteSheet = serializedObject.FindProperty(nameof(UIMenuCamera.GenerateSpriteSheet));
-            propertyTargetUIContainer = serializedObject.FindProperty(nameof(UIMenuCamera.TargetUIContainer));
-            propertyUIContainerShowDelay = serializedObject.FindProperty(nameof(UIMenuCamera.UIContainerShowDelay));
-            propertyTargetUISelectable = serializedObject.FindProperty(nameof(UIMenuCamera.TargetUISelectable));
-            propertyUISelectableStateDuration = serializedObject.FindProperty(nameof(UIMenuCamera.UISelectableStateDuration));
+            propertyMultiShotFPS = serializedObject.FindProperty(nameof(UIMenuCamera.MultiShotFPS));
+            propertySnapshotCamera = serializedObject.FindProperty(nameof(UIMenuCamera.SnapshotCamera));
+            propertySnapshotsFolderName = serializedObject.FindProperty(nameof(UIMenuCamera.SnapshotsFolderName));
+            propertySnapshotTarget = serializedObject.FindProperty(nameof(UIMenuCamera.SnapshotTarget));
             propertyTargetAnimator = serializedObject.FindProperty(nameof(UIMenuCamera.TargetAnimator));
+            propertyTargetPath = serializedObject.FindProperty(nameof(UIMenuCamera.TargetPath));
             propertyTargetProgressor = serializedObject.FindProperty(nameof(UIMenuCamera.TargetProgressor));
+            propertyTargetReactorController = serializedObject.FindProperty(nameof(UIMenuCamera.TargetReactorController));
+            propertyTargetUIContainer = serializedObject.FindProperty(nameof(UIMenuCamera.TargetUIContainer));
+            propertyTargetUISelectable = serializedObject.FindProperty(nameof(UIMenuCamera.TargetUISelectable));
+            propertyUIContainerShowDelay = serializedObject.FindProperty(nameof(UIMenuCamera.UIContainerShowDelay));
+            propertyUISelectableStateDuration = serializedObject.FindProperty(nameof(UIMenuCamera.UISelectableStateDuration));
         }
 
         private void InitializeEditor()
         {
             FindProperties();
 
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader =
                 FluidComponentHeader.Get()
@@ -132,18 +147,19 @@ namespace Doozy.Editor.UIManager.UIMenu
                     .AddManualButton()
                     .AddYouTubeButton();
 
-            snapshotsFolderNameTextField = DesignUtils.NewTextField(propertySnapshotsFolderName).SetStyleFlexGrow(1);
-            targetPathTextField = DesignUtils.NewTextField(propertyTargetPath).SetStyleFlexGrow(1);
             autoDeleteFilesFromTargetPathSwitch = FluidToggleSwitch.Get("Auto Delete files from Target Path").BindToProperty(propertyAutoDeleteFilesFromTargetPath);
-            snapshotCameraObjectField = DesignUtils.NewObjectField(propertySnapshotCamera, typeof(Camera)).SetStyleFlexGrow(1);
-            snapshotTargetObjectField = DesignUtils.NewObjectField(propertySnapshotTarget, typeof(RectTransform)).SetStyleFlexGrow(1);
             multiShotFPSIntegerField = DesignUtils.NewIntegerField(propertyMultiShotFPS).SetStyleFlexGrow(1);
-            targetUIContainerObjectField = DesignUtils.NewObjectField(propertyTargetUIContainer, typeof(UIContainer)).SetStyleFlexGrow(1);
-            uiContainerShowDelayFloatField = DesignUtils.NewFloatField(propertyUIContainerShowDelay).SetStyleFlexGrow(1);
-            targetUISelectableObjectField = DesignUtils.NewObjectField(propertyTargetUISelectable, typeof(UISelectable)).SetStyleFlexGrow(1);
-            uiSelectableStateDurationFloatField = DesignUtils.NewFloatField(propertyUISelectableStateDuration).SetStyleFlexGrow(1);
+            snapshotCameraObjectField = DesignUtils.NewObjectField(propertySnapshotCamera, typeof(Camera)).SetStyleFlexGrow(1);
+            snapshotsFolderNameTextField = DesignUtils.NewTextField(propertySnapshotsFolderName).SetStyleFlexGrow(1);
+            snapshotTargetObjectField = DesignUtils.NewObjectField(propertySnapshotTarget, typeof(RectTransform)).SetStyleFlexGrow(1);
             targetAnimatorObjectField = DesignUtils.NewObjectField(propertyTargetAnimator, typeof(ReactorAnimator)).SetStyleFlexGrow(1);
+            targetPathTextField = DesignUtils.NewTextField(propertyTargetPath).SetStyleFlexGrow(1);
             targetProgressorObjectField = DesignUtils.NewObjectField(propertyTargetProgressor, typeof(Progressor)).SetStyleFlexGrow(1);
+            targetReactorControllerObjectField = DesignUtils.NewObjectField(propertyTargetReactorController, typeof(ReactorController)).SetStyleFlexGrow(1);
+            targetUIContainerObjectField = DesignUtils.NewObjectField(propertyTargetUIContainer, typeof(UIContainer)).SetStyleFlexGrow(1);
+            targetUISelectableObjectField = DesignUtils.NewObjectField(propertyTargetUISelectable, typeof(UISelectable)).SetStyleFlexGrow(1);
+            uiContainerShowDelayFloatField = DesignUtils.NewFloatField(propertyUIContainerShowDelay).SetStyleFlexGrow(1);
+            uiSelectableStateDurationFloatField = DesignUtils.NewFloatField(propertyUISelectableStateDuration).SetStyleFlexGrow(1);
 
             snapshotTargetFluidField = FluidField.Get("Snapshot Target").AddFieldContent(snapshotTargetObjectField);
             snapshotCameraFluidField = FluidField.Get("Snapshot Camera").AddFieldContent(snapshotCameraObjectField);
@@ -190,6 +206,17 @@ namespace Doozy.Editor.UIManager.UIMenu
                 FluidField.Get("State Duration")
                     .AddFieldContent(uiSelectableStateDurationFloatField)
                     .SetStyleWidth(durationFieldWidth, durationFieldWidth, durationFieldWidth);
+
+            //ReactorController
+            recordReactorControllerButton = SnapshotButton().SetOnClick(() => castedTarget.ReactorControllerMultiShot());
+            targetReactorControllerFluidField = FluidField.Get("Reactor Controller").SetIcon(EditorSpriteSheets.Reactor.Icons.ReactorController)
+                .AddFieldContent(targetReactorControllerObjectField);
+            recordReactorControllerButton.SetEnabled(propertyTargetReactorController.objectReferenceValue);
+            targetReactorControllerObjectField.RegisterValueChangedCallback(evt =>
+            {
+                if (evt == null) return;
+                recordReactorControllerButton.SetEnabled(evt.newValue);
+            });
 
             //ReactorAnimator
             recordAnimatorButton = SnapshotButton().SetOnClick(() => castedTarget.AnimatorMultiShot());
@@ -265,10 +292,7 @@ namespace Doozy.Editor.UIManager.UIMenu
                 string folderPath = $"{AssetDatabase.GetAssetPath(DragAndDrop.objectReferences[0])}/";
                 targetPathTextField.value = folderPath;
             }
-
         }
-
-
 
         private void Compose()
         {
@@ -319,6 +343,15 @@ namespace Doozy.Editor.UIManager.UIMenu
                         .AddChild(uiSelectableStateDurationFluidField)
                         .AddChild(DesignUtils.spaceBlock)
                         .AddChild(recordUISelectableButton)
+                )
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild
+                (
+                    DesignUtils.row
+                        .SetStyleAlignItems(Align.Center)
+                        .AddChild(targetReactorControllerFluidField)
+                        .AddChild(DesignUtils.spaceBlock)
+                        .AddChild(recordReactorControllerButton)
                 )
                 .AddChild(DesignUtils.spaceBlock)
                 .AddChild

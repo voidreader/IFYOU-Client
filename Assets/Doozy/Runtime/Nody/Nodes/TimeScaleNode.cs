@@ -23,23 +23,7 @@ namespace Doozy.Runtime.Nody.Nodes
     {
         public static string timescaleAnimationId => $"{nameof(TimeScaleNode)} TimeScale Animation";
 
-        private static FloatReaction s_timeScaleReaction;
-        public static FloatReaction timeScaleReaction
-        {
-            get
-            {
-                if (s_timeScaleReaction != null)
-                    return s_timeScaleReaction;
-
-                return
-                    s_timeScaleReaction =
-                        Reaction
-                            .Get<FloatReaction>()
-                            .SetStringId(timescaleAnimationId)
-                            .SetSetter(value => Time.timeScale = value)
-                            .SetGetter(() => Time.timeScale);
-            }
-        }
+        public FloatReaction timeScaleReaction { get; private set; }
 
         public float TargetValue;
         public bool AnimateValue;
@@ -54,7 +38,7 @@ namespace Doozy.Runtime.Nody.Nodes
             AnimationDuration = 1f;
             AnimationEase = Ease.Linear;
             WaitForAnimationToFinish = false;
-            
+
             AddInputPort()
                 .SetCanBeDeleted(false)
                 .SetCanBeReordered(false);
@@ -70,38 +54,57 @@ namespace Doozy.Runtime.Nody.Nodes
             StartTimer();
         }
 
-        public override void OnExit()
-        {
-            base.OnExit();
-            StopTimer();
-        }
-
         private void StartTimer()
         {
-            timeScaleReaction.Stop();
+            if (Math.Abs(Time.timeScale - TargetValue) < 0.01f)
+            {
+                Time.timeScale = TargetValue;
+                GoToNextNode(firstOutputPort);
+                return;
+            }
+
+            timeScaleReaction =
+                Reaction
+                    .Get<FloatReaction>()
+                    .SetStringId(timescaleAnimationId)
+                    .SetSetter(value => Time.timeScale = value)
+                    .SetGetter(() => Time.timeScale);
+
             timeScaleReaction.SetEase(AnimationEase);
             if (AnimateValue && AnimationDuration > 0)
             {
                 timeScaleReaction.settings.duration = AnimationDuration;
                 timeScaleReaction.SetFrom(Time.timeScale);
                 timeScaleReaction.SetTo(TargetValue);
-                timeScaleReaction.Play();
+                timeScaleReaction.ClearOnFinishCallback();
                 if (WaitForAnimationToFinish)
                 {
-                    timeScaleReaction.ClearOnFinishCallback();
-                    timeScaleReaction.AddOnFinishCallback(() => GoToNextNode(firstOutputPort));
+                    timeScaleReaction.AddOnFinishCallback(() =>
+                    {
+                        StopTimer();
+                        GoToNextNode(firstOutputPort);
+                    });
+                    timeScaleReaction.Play();
                     return;
                 }
+                timeScaleReaction.AddOnFinishCallback(StopTimer);
+                timeScaleReaction.Play();
                 GoToNextNode(firstOutputPort);
                 return;
             }
             Time.timeScale = TargetValue;
+            GoToNextNode(firstOutputPort);
         }
 
         private void StopTimer()
         {
+            if (timeScaleReaction == null)
+                return;
+
             timeScaleReaction.Finish();
             timeScaleReaction.ClearOnFinishCallback();
+            timeScaleReaction.Recycle();
+            timeScaleReaction = null;
         }
 
 

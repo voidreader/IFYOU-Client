@@ -32,20 +32,15 @@ namespace Doozy.Editor.Reactor.Editors.Animators.Internal
         public static IEnumerable<Texture2D> reactorIconTextures => EditorSpriteSheets.Reactor.Icons.ReactorIcon;
 
         protected VisualElement root { get; set; }
+        protected ReactionControls reactionControls { get; set; }
         protected FluidComponentHeader componentHeader { get; set; }
-        protected ReactionControls controls { get; set; }
-
-        protected FluidField onStartBehaviourFluidField { get; set; }
-        protected FluidField onEnableBehaviourFluidField { get; set; }
-
-        protected PropertyField animationPropertyField { get; set; }
-        protected TextField animatorNameTextField { get; private set; }
-        protected FluidField animatorNameField { get; private set; }
+        protected VisualElement toolbarContainer { get; private set; }
+        protected VisualElement contentContainer { get; private set; }
 
         protected FluidToggleGroup tabsGroup { get; private set; }
-        protected FluidToggleButtonTab animationTabButton { get; private set; }
-        protected FluidToggleButtonTab settingsTab { get; private set; }
-        protected FluidToggleButtonTab animatorNameTab { get; private set; }
+        protected FluidTab animationTab { get; private set; }
+        protected FluidTab behaviourTab { get; private set; }
+        protected FluidTab nameTab { get; private set; }
 
         protected FluidAnimatedContainer animationAnimatedContainer { get; private set; }
         protected FluidAnimatedContainer behaviourAnimatedContainer { get; private set; }
@@ -56,32 +51,97 @@ namespace Doozy.Editor.Reactor.Editors.Animators.Internal
         protected SerializedProperty propertyOnStartBehaviour { get; set; }
         protected SerializedProperty propertyOnEnableBehaviour { get; set; }
 
-        public override VisualElement CreateInspectorGUI()
+        protected bool resetToStartValue { get; set; }
+
+        protected virtual void OnEnable()
         {
-            InitializeEditor();
-            Compose();
-            return root;
+            if (Application.isPlaying) return;
+            resetToStartValue = false;
+            ResetAnimatorInitializedState();
         }
-        
+
+        protected virtual void OnDisable()
+        {
+            if (Application.isPlaying) return;
+            if (resetToStartValue) ResetToStartValues();
+        }
+
         protected virtual void OnDestroy()
         {
+            reactionControls?.Dispose();
+
             componentHeader?.Recycle();
-            onStartBehaviourFluidField?.Recycle();
-            onEnableBehaviourFluidField?.Recycle();
 
             tabsGroup?.Recycle();
-
-            animationTabButton?.Recycle();
-            settingsTab?.Recycle();
-            animatorNameTab?.Recycle();
-
-            animatorNameField?.Recycle();
+            animationTab?.Recycle();
+            behaviourTab?.Recycle();
+            nameTab?.Recycle();
 
             animationAnimatedContainer?.Dispose();
             behaviourAnimatedContainer?.Dispose();
             animatorNameAnimatedContainer?.Dispose();
         }
 
+        public override VisualElement CreateInspectorGUI()
+        {
+            InitializeEditor();
+            Compose();
+            return root;
+        }
+
+        protected abstract void ResetAnimatorInitializedState();
+        protected abstract void ResetToStartValues();
+        protected abstract void SetProgressAtZero();
+        protected abstract void PlayForward();
+        protected abstract void Stop();
+        protected abstract void PlayReverse();
+        protected abstract void Reverse();
+        protected abstract void SetProgressAtOne();
+        protected abstract void HeartbeatCheck();
+        
+        protected virtual void InitializeReactionControls()
+        {
+            reactionControls
+                .AddReactionControls
+                (
+                    resetCallback: () =>
+                    {
+                        HeartbeatCheck();
+                        ResetToStartValues();
+                    },
+                    fromCallback: () =>
+                    {
+                        HeartbeatCheck();
+                        SetProgressAtZero();
+                    },
+                    playForwardCallback: () =>
+                    {
+                        HeartbeatCheck();
+                        PlayForward();
+                    },
+                    stopCallback: () =>
+                    {
+                        HeartbeatCheck();
+                        Stop();
+                    },
+                    playReverseCallback: () =>
+                    {
+                        HeartbeatCheck();
+                        PlayReverse();
+                    },
+                    reverseCallback: () =>
+                    {
+                        HeartbeatCheck();
+                        Reverse();
+                    },
+                    toCallback: () =>
+                    {
+                        HeartbeatCheck();
+                        SetProgressAtOne();
+                    }
+                );
+        }
+        
         protected virtual void FindProperties()
         {
             propertyAnimatorName = serializedObject.FindProperty("AnimatorName");
@@ -93,142 +153,185 @@ namespace Doozy.Editor.Reactor.Editors.Animators.Internal
         protected virtual void InitializeEditor()
         {
             FindProperties();
+            root = DesignUtils.GetEditorRoot();
+            reactionControls = new ReactionControls();
+            componentHeader =
+                DesignUtils.editorComponentHeader
+                    .SetComponentNameText("Reactor")
+                    .SetComponentTypeText("Animator")
+                    .SetIcon(reactorIconTextures.ToList())
+                    .SetAccentColor(accentColor);
+            toolbarContainer = DesignUtils.editorToolbarContainer;
+            tabsGroup = FluidToggleGroup.Get().SetControlMode(FluidToggleGroup.ControlMode.OneToggleOn);
+            contentContainer = DesignUtils.editorContentContainer;
+            InitializeReactionControls();
+            InitializeAnimation();
+            InitializeBehaviour();
+            InitializeAnimatorName();
+        }
 
-            root = new VisualElement();
-
-            componentHeader = FluidComponentHeader.Get()
-                .SetAccentColor(accentColor)
-                .SetComponentNameText("Reactor")
-                .SetComponentTypeText("Animator")
-                .SetIcon(reactorIconTextures.ToList())
-                .SetElementSize(ElementSize.Small);
-
-            animationAnimatedContainer = new FluidAnimatedContainer().SetClearOnHide(false).Show(false);
-            behaviourAnimatedContainer = new FluidAnimatedContainer().SetClearOnHide(false).Hide(false);
-            animatorNameAnimatedContainer = new FluidAnimatedContainer().SetClearOnHide(false).Hide(false);
-
-            animationTabButton =
-                DesignUtils.GetTabButtonForComponentSection(reactorIconTextures)
+        protected virtual void InitializeAnimation()
+        {
+            animationAnimatedContainer = new FluidAnimatedContainer("Animation", true).Hide(false);
+            animationTab =
+                FluidTab.Get()
                     .SetLabelText("Animation")
-                    .SetOnValueChanged(evt => animationAnimatedContainer.Toggle(evt.newValue));
+                    .SetElementSize(ElementSize.Small)
+                    .IndicatorSetEnabledColor(accentColor)
+                    .ButtonSetAccentColor(selectableAccentColor)
+                    .ButtonSetOnValueChanged(evt => animationAnimatedContainer.Toggle(evt.newValue))
+                    .AddToToggleGroup(tabsGroup);
 
-            settingsTab =
-                DesignUtils.GetTabButtonForComponentSection(EditorSpriteSheets.EditorUI.Icons.Settings)
+            animationAnimatedContainer.SetOnShowCallback(() =>
+            {
+                animationAnimatedContainer
+                    .AddContent(DesignUtils.NewPropertyField(propertyAnimation))
+                    .Bind(serializedObject);
+            });
+        }
+
+        protected virtual void InitializeBehaviour()
+        {
+            behaviourAnimatedContainer = new FluidAnimatedContainer("Behaviour", true).Hide(false);
+            behaviourTab =
+                FluidTab.Get()
                     .SetLabelText("Behaviour")
-                    .SetOnValueChanged(evt => behaviourAnimatedContainer.Toggle(evt.newValue));
+                    .SetElementSize(ElementSize.Small)
+                    .ButtonSetAccentColor(EditorSelectableColors.Default.Action)
+                    .IndicatorSetEnabledColor(EditorColors.Default.Action)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.UIBehaviour)
+                    .ButtonSetOnValueChanged(evt => behaviourAnimatedContainer.Toggle(evt.newValue));
+            behaviourTab.button.AddToToggleGroup(tabsGroup);
 
-
-            animatorNameTab = 
-                DesignUtils.NameTab()
-                .SetLabelText("Animator Name")
-                .SetOnValueChanged(evt => animatorNameAnimatedContainer.Toggle(evt.newValue));
-
-            tabsGroup = FluidToggleGroup.Get().SetControlMode(FluidToggleGroup.ControlMode.OneToggleOnEnforced);
-            animationTabButton.AddToToggleGroup(tabsGroup);
-            settingsTab.AddToToggleGroup(tabsGroup);
-            animatorNameTab.AddToToggleGroup(tabsGroup);
-
-            animatorNameTextField = DesignUtils.NewTextField(propertyAnimatorName).SetStyleFlexGrow(1);
-            animatorNameTextField.RegisterValueChangedCallback(evt => UpdateComponentTypeText(evt.newValue));
-            animatorNameField =
-                FluidField.Get()
-                    .SetLabelText("Animator Name")
-                    .SetTooltip("Name of the Animator")
-                    .AddFieldContent(animatorNameTextField)
-                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Label)
-                    .SetStyleMarginTop(DesignUtils.k_Spacing);
-
-            void UpdateComponentTypeText(string nameOfTheAnimator)
+            root.schedule.Execute(() =>
             {
-                nameOfTheAnimator = nameOfTheAnimator.IsNullOrEmpty() ? string.Empty : $" - {nameOfTheAnimator}";
-                componentHeader.SetComponentTypeText(nameOfTheAnimator);
-            }
+                UpdateBehaviourTabIndicator(false);
+                behaviourAnimatedContainer.schedule.Execute(() => UpdateBehaviourTabIndicator(true)).Every(200);
 
-            UpdateComponentTypeText(propertyAnimatorName.stringValue);
-
-            animationPropertyField = DesignUtils.NewPropertyField(propertyAnimation);
-
-            EnumField onStartBehaviourEnumField = DesignUtils.NewEnumField(propertyOnStartBehaviour.propertyPath).SetStyleFlexGrow(1);
-            onStartBehaviourFluidField =
-                FluidField.Get("OnStart Behaviour")
-                    .SetElementSize(ElementSize.Tiny)
-                    .AddFieldContent(onStartBehaviourEnumField);
-
-            onStartBehaviourEnumField.RegisterValueChangedCallback(evt =>
-            {
-                if (evt.newValue == null) return;
-                UpdateInitialBehaviourTooltip(onStartBehaviourFluidField, (AnimatorBehaviour)evt.newValue);
-            });
-            UpdateInitialBehaviourTooltip(onStartBehaviourFluidField, (AnimatorBehaviour)propertyOnStartBehaviour.enumValueIndex);
-
-            EnumField onEnableBehaviourEnumField = DesignUtils.NewEnumField(propertyOnEnableBehaviour.propertyPath).SetStyleFlexGrow(1);
-            onEnableBehaviourFluidField = FluidField.Get("OnEnable Behaviour").SetElementSize(ElementSize.Tiny).AddFieldContent(onEnableBehaviourEnumField);
-            onEnableBehaviourEnumField.RegisterValueChangedCallback(evt =>
-            {
-                if (evt.newValue == null) return;
-                UpdateInitialBehaviourTooltip(onEnableBehaviourFluidField, (AnimatorBehaviour)evt.newValue);
-            });
-            UpdateInitialBehaviourTooltip(onEnableBehaviourFluidField, (AnimatorBehaviour)propertyOnEnableBehaviour.enumValueIndex);
-
-            void UpdateInitialBehaviourTooltip(VisualElement targetElement, AnimatorBehaviour value)
-            {
-                string message;
-                switch (value)
+                void UpdateBehaviourTabIndicator(bool animateChange)
                 {
-                    case AnimatorBehaviour.Disabled:
-                        message = "Do nothing";
-                        break;
-                    case AnimatorBehaviour.PlayForward:
-                        message = "Play the animation forward (from 0 to 1)";
-                        break;
-                    case AnimatorBehaviour.PlayReverse:
-                        message = "Play the animation in reverse (from 1 to 0)";
-                        break;
-                    case AnimatorBehaviour.SetFromValue:
-                        message = "Set the animation at 'from' value (at the start value of the animation)";
-                        break;
-                    case AnimatorBehaviour.SetToValue:
-                        message = "Set the animation at 'to' value (at the end value of the animation) ";
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(value), value, null);
+                    bool toggleOn =
+                        (AnimatorBehaviour)propertyOnStartBehaviour.enumValueIndex != AnimatorBehaviour.Disabled ||
+                        (AnimatorBehaviour)propertyOnEnableBehaviour.enumValueIndex != AnimatorBehaviour.Disabled;
+                    if (toggleOn != behaviourTab.indicator.isOn)
+                        behaviourTab.indicator.Toggle(toggleOn, animateChange);
+                }
+            });
+
+            behaviourAnimatedContainer.SetOnShowCallback(() =>
+            {
+                FluidField GetBehaviourFluidField(SerializedProperty property, string behaviourName)
+                {
+                    EnumField enumField = DesignUtils.NewEnumField(property.propertyPath).SetStyleFlexGrow(1);
+                    FluidField fluidField =
+                        FluidField.Get()
+                            .SetIcon(EditorSpriteSheets.EditorUI.Icons.UIBehaviour)
+                            .SetElementSize(ElementSize.Small).AddFieldContent(enumField);
+
+                    UpdateLabel((AnimatorBehaviour)property.enumValueIndex);
+                    enumField.RegisterValueChangedCallback(evt => UpdateLabel((AnimatorBehaviour)evt.newValue));
+
+                    void UpdateLabel(AnimatorBehaviour behaviour) =>
+                        fluidField.SetLabelText($"{behaviourName} - {BehaviourInfo(behaviour)}");
+
+                    return fluidField;
                 }
 
-                targetElement.SetTooltip(message);
-            }
-
-            controls =
-                new ReactionControls()
-                    .SetStyleDisplay(EditorApplication.isPlaying ? DisplayStyle.Flex : DisplayStyle.None);
+                behaviourAnimatedContainer
+                    .AddContent(GetBehaviourFluidField(propertyOnStartBehaviour, "OnStart"))
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(GetBehaviourFluidField(propertyOnEnableBehaviour, "OnEnable"))
+                    .AddContent(DesignUtils.endOfLineBlock)
+                    .Bind(serializedObject);
+            });
         }
-        
-        protected virtual void Compose()
+
+        public static string BehaviourInfo(AnimatorBehaviour value)
         {
-            const float marginLeft = 35;
+            switch (value)
+            {
+                case AnimatorBehaviour.Disabled: return "Do nothing";
+                case AnimatorBehaviour.PlayForward: return "Play the animation forward (from 0 to 1)";
+                case AnimatorBehaviour.PlayReverse: return "Play the animation in reverse (from 1 to 0)";
+                case AnimatorBehaviour.SetFromValue: return "Set the animation at 'from' value (at the start value of the animation)";
+                case AnimatorBehaviour.SetToValue: return "Set the animation at 'to' value (at the end value of the animation) ";
+                default: throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+        }
 
-            animationAnimatedContainer
-                .fluidContainer
-                .AddChild(animationPropertyField.SetStyleMarginLeft(marginLeft));
+        protected virtual void InitializeAnimatorName()
+        {
+            animatorNameAnimatedContainer = new FluidAnimatedContainer("Animator Name", true).Hide(false);
+            nameTab =
+                FluidTab.Get()
+                    .SetLabelText("Animator Name")
+                    .SetElementSize(ElementSize.Small)
+                    .ButtonSetAccentColor(selectableAccentColor)
+                    .ButtonSetOnValueChanged(evt => animatorNameAnimatedContainer.Toggle(evt.newValue));
+            nameTab.button.AddToToggleGroup(tabsGroup);
 
-            behaviourAnimatedContainer
-                .fluidContainer
-                .AddChild
-                (
-                    DesignUtils.row
-                        .SetStyleMarginLeft(marginLeft)
-                        .AddChild(onStartBehaviourFluidField)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(onEnableBehaviourFluidField)
-                )
-                .AddChild(DesignUtils.endOfLineBlock);
+            animatorNameAnimatedContainer.SetOnShowCallback(() =>
+            {
+                TextField animatorNameTextField = 
+                    DesignUtils.NewTextField(propertyAnimatorName).SetStyleFlexGrow(1);
+                
+                animatorNameTextField.RegisterValueChangedCallback(evt => UpdateComponentTypeText(evt.newValue));
 
+                void UpdateComponentTypeText(string nameOfTheAnimator)
+                {
+                    nameOfTheAnimator = nameOfTheAnimator.IsNullOrEmpty() ? string.Empty : $" - {nameOfTheAnimator}";
+                    componentHeader.SetComponentTypeText(nameOfTheAnimator);
+                }
 
-            animatorNameAnimatedContainer
-                .fluidContainer
-                .AddChild(animatorNameField.SetStyleMarginLeft(marginLeft))
-                .AddChild(DesignUtils.endOfLineBlock);
+                UpdateComponentTypeText(propertyAnimatorName.stringValue);
+                
+                animatorNameAnimatedContainer
+                    .AddContent
+                    (
+                        FluidField.Get()
+                            .SetLabelText("Animator Name")
+                            .SetTooltip("Name of the Animator")
+                            .AddFieldContent(animatorNameTextField)
+                            .SetIcon(EditorSpriteSheets.EditorUI.Icons.Label)
+                    )
+                    .AddContent(DesignUtils.endOfLineBlock)
+                    .Bind(serializedObject);
+            });
 
            
+        }
+
+        protected virtual VisualElement Toolbar()
+        {
+            return
+                toolbarContainer
+                    .AddChild(animationTab)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(behaviourTab)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(DesignUtils.flexibleSpace)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(nameTab);
+        }
+
+        protected virtual VisualElement Content()
+        {
+            return
+                contentContainer
+                    .AddChild(animationAnimatedContainer)
+                    .AddChild(behaviourAnimatedContainer)
+                    .AddChild(animatorNameAnimatedContainer);
+        }
+
+        protected virtual void Compose()
+        {
+            root
+                .AddChild(reactionControls)
+                .AddChild(componentHeader)
+                .AddChild(Toolbar())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(Content())
+                .AddChild(DesignUtils.endOfLineBlock);
         }
     }
 }

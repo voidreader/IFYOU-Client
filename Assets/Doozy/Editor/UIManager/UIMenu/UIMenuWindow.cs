@@ -104,7 +104,10 @@ namespace Doozy.Editor.UIManager.UIMenu
 
         private void Initialize()
         {
-            root.Add(templateContainer = EditorLayouts.UIManager.UIMenuWindow.CloneTree());
+            root
+                .RecycleAndClear()
+                .Add(templateContainer = EditorLayouts.UIManager.UIMenuWindow.CloneTree());
+            
             templateContainer
                 .SetStyleFlexGrow(1)
                 .AddStyle(EditorUI.EditorStyles.UIManager.UIMenuWindow);
@@ -458,12 +461,21 @@ namespace Doozy.Editor.UIManager.UIMenu
         public void LoadItems(IEnumerable<UIMenuItem> items)
         {
             ClearItems();
-            foreach (UIMenuItemButton itemButton in items.Select(item => new UIMenuItemButton().SetUIMenuItem(item)))
+            foreach (UIMenuItem item in items)
             {
+                var itemButton = new UIMenuItemButton();
+                itemButton.SetUIMenuItem(item);
                 itemButton.Resize(UIMenuSettings.instance.itemSize);
                 itemButtons.Add(itemButton);
                 itemsContainer.AddChild(itemButton);
             }
+            
+            // foreach (UIMenuItemButton itemButton in items.Select(item => new UIMenuItemButton().SetUIMenuItem(item)))
+            // {
+            //     itemButton.Resize(UIMenuSettings.instance.itemSize);
+            //     itemButtons.Add(itemButton);
+            //     itemsContainer.AddChild(itemButton);
+            // }
         }
 
         private void UpdateBottomTabs(bool animateChange)

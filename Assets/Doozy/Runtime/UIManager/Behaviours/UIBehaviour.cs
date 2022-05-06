@@ -3,6 +3,7 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
+using Doozy.Runtime.Common.Extensions;
 using Doozy.Runtime.Mody;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
@@ -31,7 +32,6 @@ namespace Doozy.Runtime.UIManager
         {
             BehaviourName = behaviourName;
             EventName = behaviourName.ToString();
-            Enabled = true;
             Receiver =
                 new SignalReceiver()
                     .SetSignalSource(target)
@@ -40,17 +40,9 @@ namespace Doozy.Runtime.UIManager
 
         public void Connect()
         {
-            if (!Enabled)
-                return;
-            
-            if (receiver.isConnected) 
-                return;
-            
+            if (receiver.isConnected) return;
             receiver.Connect();
-            
-            if(!receiver.isConnected)
-                return;
-            
+            if(!receiver.isConnected) return;
             receiver.providerReference.cooldown = cooldown;
             receiver.onSignal += Execute;
         }
@@ -75,15 +67,9 @@ namespace Doozy.Runtime.UIManager
 
         public override void Execute(Signal signal = null)
         {
-            if (!Enabled)
-                return;
-
-            if (selectable != null && !selectable.IsActive() | !selectable.IsInteractable())
-                return;
-
-            foreach (ModyActionRunner runner in Runners)
-                runner?.Execute();
-            
+            if (selectable != null && !selectable.IsActive() | !selectable.IsInteractable()) return;
+            Runners.RemoveNulls();
+            Runners.ForEach(r => r.Execute());
             Event?.Invoke();
         }
     }

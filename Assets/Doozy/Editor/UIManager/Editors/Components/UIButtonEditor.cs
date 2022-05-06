@@ -10,10 +10,11 @@ using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.UIManager.Editors.Components.Internal;
 using Doozy.Runtime.UIElements.Extensions;
+using Doozy.Runtime.UIManager.Animators;
 using Doozy.Runtime.UIManager.Components;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Editor.UIManager.Editors.Components
@@ -33,14 +34,28 @@ namespace Doozy.Editor.UIManager.Editors.Components
         private FluidField idField { get; set; }
 
         private SerializedProperty propertyId { get; set; }
-        private SerializedProperty propertyBehaviours { get; set; }
 
+        protected override void SearchForAnimators()
+        {
+            selectableAnimators ??= new List<BaseUISelectableAnimator>();
+            selectableAnimators.Clear();
+            
+            //check if prefab was selected
+            if (castedTargets.Any(s => s.gameObject.scene.name == null)) 
+            {
+                selectableAnimators.AddRange(castedSelectable.GetComponentsInChildren<BaseUISelectableAnimator>());
+                return;
+            }
+            
+            //not prefab
+            selectableAnimators.AddRange(FindObjectsOfType<BaseUISelectableAnimator>());
+        }
+        
         protected override void FindProperties()
         {
             base.FindProperties();
 
             propertyId = serializedObject.FindProperty(nameof(UIButton.Id));
-            propertyBehaviours = serializedObject.FindProperty("Behaviours");
         }
 
         protected override void InitializeEditor()
@@ -49,9 +64,10 @@ namespace Doozy.Editor.UIManager.Editors.Components
 
             componentHeader
                 .SetAccentColor(accentColor)
-                .SetComponentNameText((ObjectNames.NicifyVariableName(nameof(UIButton))))
+                .SetComponentNameText("UIButton")
                 .SetIcon(buttonIconTextures.ToList())
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048117262/UIButton?atlOrigin=eyJpIjoiOTY4ZDg1Yjk5NDYwNDRmMmFmZDg4OWQyM2VlMjBmNmQiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Components.UIButton.html")
                 .AddYouTubeButton();
 
             idField = 
@@ -59,73 +75,51 @@ namespace Doozy.Editor.UIManager.Editors.Components
                     .AddFieldContent(DesignUtils.NewPropertyField(propertyId));
         }
 
+        protected override VisualElement Toolbar()
+        {
+            return
+                toolbarContainer
+                    .AddChild(settingsTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(statesTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(behavioursTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(navigationTab)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(DesignUtils.flexibleSpace)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild
+                    (
+                        DesignUtils.SystemButton_RenameComponent
+                        (
+                            castedTarget.gameObject,
+                            () => $"Button - {castedTarget.Id.Name}"
+                        )
+                    )
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild
+                    (
+                        DesignUtils.SystemButton_SortComponents
+                        (
+                            ((UISelectable)target).gameObject,
+                            nameof(RectTransform),
+                            nameof(UIButton)
+                        )
+                    );
+        }
+        
         protected override void Compose()
         {
-            if (castedTarget == null)
-                return;
-
             root
+                .AddChild(reactionControls)
                 .AddChild(componentHeader)
-                .AddChild
-                (
-                    DesignUtils.row
-                        .SetStyleMargins(50, -4, DesignUtils.k_Spacing2X, DesignUtils.k_Spacing2X)
-                        .AddChild(settingsTabButton)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild(statesTabButton)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(navigationTabButton)
-                        .AddChild(DesignUtils.flexibleSpace)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild
-                        (
-                            DesignUtils.SystemButton_RenameComponent
-                            (
-                                castedTarget.gameObject,
-                                () => $"Button - {castedTarget.Id.Category} {castedTarget.Id.Name}"
-                            )
-                        )
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild
-                        (
-                            DesignUtils.SystemButton_SortComponents
-                            (
-                                castedTarget.gameObject,
-                                nameof(RectTransform),
-                                nameof(Canvas),
-                                nameof(CanvasGroup),
-                                nameof(GraphicRaycaster),
-                                nameof(UIButton)
-                            )
-                        )
-                )
-                .AddChild(DesignUtils.spaceBlock)
-                .AddChild
-                (
-                    settingsAnimatedContainer
-                        .AddContent
-                        (
-                            DesignUtils.column
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild
-                                (
-                                    DesignUtils.row
-                                        .AddChild(interactableCheckbox)
-                                        .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(deselectAfterPressCheckbox)
-                                        .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(GetStateButtons())
-                                )
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild(idField)
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild(DesignUtils.NewPropertyField(propertyBehaviours))
-                                .AddChild(DesignUtils.endOfLineBlock)
-                        )
-                )
-                .AddChild(statesAnimatedContainer)
-                .AddChild(navigationAnimatedContainer);
+                .AddChild(Toolbar())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(Content())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(idField)
+                .AddChild(DesignUtils.endOfLineBlock);
         }
-
     }
 }

@@ -121,8 +121,8 @@ namespace Doozy.Editor.Mody.Components
             }
 
             bool hasStartDelay = action.startDelay > 0;
-            bool hasOnStart = action.onStartEvents != null && action.onStartEvents.Enabled;
-            bool hasOnFinish = action.onFinishEvents != null && action.onFinishEvents.Enabled;
+            bool hasOnStart = action.onStartEvents != null;
+            bool hasOnFinish = action.onFinishEvents != null;
             bool hasCooldown = action.cooldown > 0;
             bool instantAction = action.duration == 0;
 

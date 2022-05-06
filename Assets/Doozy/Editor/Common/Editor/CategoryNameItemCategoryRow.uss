@@ -6,15 +6,31 @@
     flex-shrink: 0;
 }
 
+.CategoryNameItem.CategoryRow#leftContainer {
+    flex-direction: row;
+    align-items: center;
+    margin-right: 8px;
+}
+
+.CategoryNameItem.CategoryRow#middleContainer {
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 1;
+}
+
 .CategoryNameItem.CategoryRow#nameLabel {
     flex-shrink: 0;
     font-size: 18px;
     align-self: center;
 }
 
-.CategoryNameItem.CategoryRow#buttonsContainer {
+.CategoryNameItem.CategoryRow#nameTextField {
     flex-grow: 1;
+    display: none;
+}
+
+.CategoryNameItem.CategoryRow#rightContainer {
+    flex-direction: row;
+    align-items: center;
     margin-left: 16px;
-    align-items: flex-end;
-    justify-content: center;
 }

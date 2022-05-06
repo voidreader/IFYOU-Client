@@ -11,6 +11,7 @@ using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.EditorUI.Windows.Internal;
 using Doozy.Editor.Signals.Layouts;
+using Doozy.Editor.UIElements;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
 using UnityEngine;
@@ -52,7 +53,9 @@ namespace Doozy.Editor.Signals.Windows
         {
             layouts = new List<VisualElement>();
 
-            root.Add(templateContainer = EditorLayouts.Signals.SignalsWindow.CloneTree());
+            root
+                .RecycleAndClear()
+                .Add(templateContainer = EditorLayouts.Signals.SignalsWindow.CloneTree());
             templateContainer
                 .AddStyle(EditorUI.EditorStyles.Signals.SignalsWindow)
                 .SetStyleFlexGrow(1);

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Doozy.Runtime.Common.Attributes;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Containers.Internal;
 using UnityEngine;
@@ -19,20 +20,29 @@ namespace Doozy.Runtime.UIManager.Containers
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(GraphicRaycaster))]
     [RequireComponent(typeof(RectTransform))]
-    [AddComponentMenu("Doozy/UI/Containers/UI View")]
+    [AddComponentMenu("UI/Containers/UIView")]
     public partial class UIView : UIContainerComponent<UIView>
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Containers/UIView", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UIView>("UIView", false, true);
+        }
+        #endif
+        
+        [ClearOnReload]
+        private static SignalStream s_stream;
+        /// <summary> Signal stream for this component type </summary>
+        public static SignalStream stream => s_stream ??= SignalsService.GetStream(k_StreamCategory, nameof(UIView));
+        
         /// <summary> Get all the visible views (return all views that are either in the isVisible or isShowing state) </summary>
         public static IEnumerable<UIView> visibleViews =>
             database.Where(view => view.isVisible || view.isShowing);
 
         /// <summary> Get all the hidden views (return all views that are either in the isHidden or isHiding state) </summary>
-        public static IEnumerable<UIView> hiddenViews => database.Where(view => view.isHidden || view.isHiding);
-
-        [ClearOnReload]
-        private static SignalStream s_stream;
-        /// <summary> Signal stream for this component type </summary>
-        public static SignalStream stream => s_stream ??= SignalsService.GetStream(k_StreamCategory, nameof(UIView));
+        public static IEnumerable<UIView> hiddenViews => 
+            database.Where(view => view.isHidden || view.isHiding);
 
         /// <summary> UIView signal receiver </summary>
         private SignalReceiver receiver { get; set; }

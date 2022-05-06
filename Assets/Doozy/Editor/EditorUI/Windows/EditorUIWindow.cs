@@ -14,6 +14,7 @@ using Doozy.Editor.EditorUI.ScriptableObjects.SpriteSheets;
 using Doozy.Editor.EditorUI.ScriptableObjects.Styles;
 using Doozy.Editor.EditorUI.ScriptableObjects.Textures;
 using Doozy.Editor.EditorUI.Windows.Internal;
+using Doozy.Editor.UIElements;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -52,7 +53,9 @@ namespace Doozy.Editor.EditorUI.Windows
 
         protected override void CreateGUI()
         {
-            root.Add(templateContainer = EditorLayouts.EditorUI.EditorUIWindow.CloneTree());
+            root
+                .RecycleAndClear()
+                .Add(templateContainer = EditorLayouts.EditorUI.EditorUIWindow.CloneTree());
 
             templateContainer
                 .SetStyleFlexGrow(1)

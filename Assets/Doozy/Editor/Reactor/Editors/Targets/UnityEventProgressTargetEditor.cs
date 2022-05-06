@@ -55,7 +55,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
         {
             FindProperties();
 
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader = FluidComponentHeader.Get()
                 .SetAccentColor(accentColor)
@@ -64,6 +64,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
                 .SetComponentTypeText("Progress Target")
                 .SetComponentNameText("UnityEvent")
                 .AddManualButton()
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Reactor.Targets.ProgressTargets.UnityEventProgressTarget.html")
                 .AddYouTubeButton();
             
             targetModeEnumField =

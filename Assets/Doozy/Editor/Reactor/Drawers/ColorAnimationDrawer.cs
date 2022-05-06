@@ -3,19 +3,15 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Doozy.Editor.Common.Extensions;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Components.Internal;
-using Doozy.Editor.EditorUI.Events;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.UIElements;
 using Doozy.Runtime.Common.Extensions;
-using Doozy.Runtime.Pooler;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.UIElements.Extensions;
@@ -33,33 +29,12 @@ namespace Doozy.Editor.Reactor.Drawers
         private static Color accentColor => EditorColors.Reactor.Red;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Reactor.Red;
 
-        private static IEnumerable<Texture2D> colorAnimationIconTextures => EditorSpriteSheets.Reactor.Icons.ColorAnimation;
-        private static IEnumerable<Texture2D> unityEventIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
-        private static IEnumerable<Texture2D> resetIconTextures => EditorSpriteSheets.EditorUI.Icons.Reset;
-
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {}
-
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             var drawer = new VisualElement();
             if (property == null) return drawer;
+            drawer.RegisterCallback<DetachFromPanelEvent>(evt => drawer.RecycleAndClear());
             var target = property.GetTargetObjectOfProperty() as ColorAnimation;
-
-            var poolables = new List<IPoolable>();
-            var disposables = new List<IDisposable>();
-
-            void Dispose()
-            {
-                foreach (IPoolable poolable in poolables)
-                    poolable?.Recycle();
-
-                foreach (IDisposable disposable in disposables)
-                    disposable?.Dispose();
-
-                drawer.Clear();
-            }
-
-            drawer.RegisterCallback<DetachFromPanelEvent>(evt => Dispose());
 
             #region SerializedProperties
 
@@ -79,199 +54,137 @@ namespace Doozy.Editor.Reactor.Drawers
                 FluidComponentHeader.Get()
                     .SetAccentColor(accentColor)
                     .SetElementSize(ElementSize.Tiny)
-                    .SetSecondaryIcon(colorAnimationIconTextures.ToList())
-                    .SetComponentNameText("Color Animation")
+                    .SetComponentNameText("Color")
+                    .SetComponentTypeText("Animation")
                     .AddManualButton("www.bit.ly/DoozyKnowledgeBase4")
+                    .AddApiButton()
                     .AddYouTubeButton();
-
-            poolables.Add(componentHeader);
 
             #endregion
 
-            #region Tabs
+            #region Containers
 
-            VisualElement tabsContainer = DesignUtils.row.SetStyleJustifyContent(Justify.Center).SetStyleMargins(12, 0, 12, 0);
-            FluidToggleButtonTab animationTabButton, callbacksTabButton;
-            EnabledIndicator animationTabIndicator, callbacksTabIndicator;
-            VisualElement animationTabContainer, callbacksTabContainer;
+            VisualElement contentContainer = new VisualElement().SetName("Content Container").SetStyleFlexGrow(1);
+            FluidAnimatedContainer settingsAnimatedContainer = new FluidAnimatedContainer("Animation", true).Hide(false);
+            FluidAnimatedContainer callbacksAnimatedContainer = new FluidAnimatedContainer("Callbacks", true).Hide(false);
 
-            (animationTabButton, animationTabIndicator, animationTabContainer) = DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(colorAnimationIconTextures, selectableAccentColor, accentColor);
-            (callbacksTabButton, callbacksTabIndicator, callbacksTabContainer) = DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(unityEventIconTextures, DesignUtils.callbackSelectableColor, DesignUtils.callbacksColor);
+            //settings container content
+            settingsAnimatedContainer.SetOnShowCallback(() =>
+            {
+                settingsAnimatedContainer
+                    .AddContent(GetAnimationContent(propertyAnimation, propertyAnimationEnabled))
+                    .Bind(property.serializedObject);
+            });
 
-            animationTabIndicator.Toggle(propertyAnimationEnabled.boolValue, false);
+            //callbacks container content
+            callbacksAnimatedContainer.SetOnShowCallback(() =>
+            {
+                callbacksAnimatedContainer
+                    .AddContent
+                    (
+                        FluidField.Get()
+                            .AddFieldContent(DesignUtils.NewPropertyField(propertyOnPlayCallback.propertyPath))
+                            .AddFieldContent(DesignUtils.spaceBlock)
+                            .AddFieldContent(DesignUtils.NewPropertyField(propertyOnStopCallback.propertyPath))
+                            .AddFieldContent(DesignUtils.spaceBlock)
+                            .AddFieldContent(DesignUtils.NewPropertyField(propertyOnFinishCallback.propertyPath))
+                    )
+                    .AddContent(DesignUtils.endOfLineBlock)
+                    .Bind(property.serializedObject);
+            });
 
-            poolables.Add(animationTabIndicator);
-            poolables.Add(callbacksTabIndicator);
+            #endregion
 
-            animationTabButton.SetLabelText("Animation");
-            callbacksTabButton.SetLabelText("Callbacks");
+            #region Toolbar
 
-            poolables.Add(animationTabButton);
-            poolables.Add(callbacksTabButton);
+            VisualElement toolbarContainer =
+                new VisualElement()
+                    .SetName("Toolbar Container")
+                    .SetStyleFlexDirection(FlexDirection.Row)
+                    .SetStyleMarginTop(-1)
+                    .SetStyleMarginLeft(4)
+                    .SetStyleMarginRight(4)
+                    .SetStyleFlexGrow(1);
 
-            FluidToggleGroup showToggleGroup =
-                FluidToggleGroup.Get()
-                    .SetControlMode(FluidToggleGroup.ControlMode.OneToggleOn, animateChange: false);
+            FluidTab settingsTab =
+                FluidTab.Get()
+                    .SetLabelText("Settings")
+                    .SetElementSize(ElementSize.Small)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Settings)
+                    .ButtonSetAccentColor(selectableAccentColor)
+                    .IndicatorSetEnabledColor(accentColor)
+                    .ButtonSetOnValueChanged(evt => settingsAnimatedContainer.Toggle(evt.newValue));
 
-            poolables.Add(showToggleGroup);
+            FluidTab callbacksTab =
+                FluidTab.Get()
+                    .SetLabelText("Callbacks")
+                    .SetElementSize(ElementSize.Small)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.UnityEvent)
+                    .ButtonSetAccentColor(DesignUtils.callbackSelectableColor)
+                    .IndicatorSetEnabledColor(DesignUtils.callbacksColor)
+                    .ButtonSetOnValueChanged(evt => callbacksAnimatedContainer.Toggle(evt.newValue));
 
-            animationTabButton.AddToToggleGroup(showToggleGroup);
-            callbacksTabButton.AddToToggleGroup(showToggleGroup);
+            //create tabs group
+            FluidToggleGroup tabsGroup = FluidToggleGroup.Get().SetControlMode(FluidToggleGroup.ControlMode.OneToggleOn);
+            settingsTab.button.AddToToggleGroup(tabsGroup);
+            callbacksTab.button.AddToToggleGroup(tabsGroup);
 
-            FluidAnimatedContainer animationAnimatedContainer = new FluidAnimatedContainer().SetName("Animation");
+            //update tab indicators
+            drawer.schedule.Execute(() =>
+            {
+                void UpdateIndicator(FluidTab fluidTab, bool toggleOn, bool animateChange)
+                {
+                    if (fluidTab.indicator.isOn == toggleOn) return;
+                    fluidTab.indicator.Toggle(toggleOn, animateChange);
+                }
 
-            disposables.Add(animationAnimatedContainer);
+                bool HasCallbacks() =>
+                    target != null &&
+                    target.OnPlayCallback?.GetPersistentEventCount() > 0 |  //HasOnPlayCallback
+                    target.OnStopCallback?.GetPersistentEventCount() > 0 |  //HasOnPlayCallback
+                    target.OnFinishCallback?.GetPersistentEventCount() > 0; //HasOnFinishCallback
 
-            animationAnimatedContainer.OnShowCallback = () => animationAnimatedContainer.AddContent(GetAnimationContent(propertyAnimation, propertyAnimationEnabled));
+                //initial indicators state update (no animation)
+                UpdateIndicator(settingsTab, propertyAnimationEnabled.boolValue, false);
+                UpdateIndicator(callbacksTab, HasCallbacks(), false);
 
-            tabsContainer
-                .AddChild(animationTabContainer)
-                .AddSpace(DesignUtils.k_Spacing * 4, 0)
-                .AddChild(callbacksTabContainer)
-                .AddSpace(DesignUtils.k_Spacing * 4, 0)
+                drawer.schedule.Execute(() =>
+                {
+                    //subsequent indicators state update (animated)
+                    UpdateIndicator(settingsTab, propertyAnimationEnabled.boolValue, true);
+                    UpdateIndicator(callbacksTab, HasCallbacks(), true);
+
+                }).Every(200);
+            });
+            
+            toolbarContainer
+                .AddChild(settingsTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(callbacksTab)
+                .AddChild(DesignUtils.spaceBlock)
                 .AddChild(DesignUtils.flexibleSpace);
 
             #endregion
 
-            #region Fields
-
-            bool HasOnPlayCallback() => target?.OnPlayCallback?.GetPersistentEventCount() > 0;
-
-            bool HasOnStopCallback() => target?.OnStopCallback?.GetPersistentEventCount() > 0;
-
-            bool HasOnFinishCallback() => target?.OnFinishCallback?.GetPersistentEventCount() > 0;
-
-            bool HasCallbacks() => HasOnPlayCallback() | HasOnStopCallback() | HasOnFinishCallback();
-
-            callbacksTabIndicator.Toggle(HasCallbacks(), false);
-
-            //OnPlayCallback
-            var onPlayCallbackFoldout = new FluidFoldout("OnPlay");
-            disposables.Add(onPlayCallbackFoldout);
-
-            onPlayCallbackFoldout.animatedContainer.OnShowCallback = () =>
-            {
-                onPlayCallbackFoldout.ResetContentLeftPadding();
-                onPlayCallbackFoldout.AddContent(DesignUtils.NewPropertyField(propertyOnPlayCallback.propertyPath));
-                onPlayCallbackFoldout.Bind(property.serializedObject);
-            };
-
-            //OnStopCallback
-            var onStopCallbackFoldout = new FluidFoldout("OnStop");
-            disposables.Add(onStopCallbackFoldout);
-
-            onStopCallbackFoldout.animatedContainer.OnShowCallback = () =>
-            {
-                onStopCallbackFoldout.ResetContentLeftPadding();
-                onStopCallbackFoldout.AddContent(DesignUtils.NewPropertyField(propertyOnStopCallback.propertyPath));
-                onStopCallbackFoldout.Bind(property.serializedObject);
-            };
-
-
-            //OnFinishCallback
-            var onFinishCallbackFoldout = new FluidFoldout("OnFinish");
-            disposables.Add(onFinishCallbackFoldout);
-
-            onFinishCallbackFoldout.animatedContainer.OnShowCallback = () =>
-            {
-                onFinishCallbackFoldout.ResetContentLeftPadding();
-                onFinishCallbackFoldout.AddContent(DesignUtils.NewPropertyField(propertyOnFinishCallback.propertyPath));
-                onFinishCallbackFoldout.Bind(property.serializedObject);
-            };
-
-
-            //Callbacks container
-            FluidAnimatedContainer callbacksAnimatedContainer = new FluidAnimatedContainer().SetName("Callbacks");
-            disposables.Add(callbacksAnimatedContainer);
-
-            callbacksAnimatedContainer.OnShowCallback = () =>
-            {
-                callbacksAnimatedContainer.AddContent
-                (
-                    new VisualElement()
-                        .AddChild(onPlayCallbackFoldout)
-                        .AddSpace(0, DesignUtils.k_Spacing)
-                        .AddChild(onStopCallbackFoldout)
-                        .AddSpace(0, DesignUtils.k_Spacing)
-                        .AddChild(onFinishCallbackFoldout)
-                );
-            };
-
-            callbacksAnimatedContainer.OnHideCallback =
-                () =>
-                {
-                    if (onPlayCallbackFoldout.isOn) onPlayCallbackFoldout.SetIsOn(false, animateChange: true);
-                    if (onStopCallbackFoldout.isOn) onStopCallbackFoldout.SetIsOn(false, animateChange: true);
-                    if (onFinishCallbackFoldout.isOn) onFinishCallbackFoldout.SetIsOn(false, animateChange: true);
-                };
-
-            #endregion
-
-            void TabSetOnValueChanged(FluidBoolEvent evt, FluidAnimatedContainer animatedContainer, FluidToggleButtonTab tab) =>
-                animatedContainer.Toggle(evt.newValue);
-
-            animationTabButton.SetOnValueChanged(evt => TabSetOnValueChanged(evt, animationAnimatedContainer, animationTabButton));
-
-            bool previousHasCallbacks = !HasCallbacks();
-            IVisualElementScheduledItem callbacksScheduler =
-                callbacksTabButton.schedule.Execute(() =>
-                {
-                    bool hasCallbacks = HasCallbacks();
-                    if (previousHasCallbacks == hasCallbacks) return;
-                    UpdateIndicators(true);
-                    previousHasCallbacks = hasCallbacks;
-                }).Every(250);
-            callbacksScheduler.Pause();
-
-            callbacksTabButton.OnValueChanged = evt =>
-            {
-                TabSetOnValueChanged(evt, callbacksAnimatedContainer, callbacksTabButton);
-                if (evt.newValue)
-                    callbacksScheduler?.Resume();
-                else
-                    callbacksScheduler?.Pause();
-            };
+            #region Compose
 
             drawer
                 .AddChild(componentHeader)
-                .AddChild(tabsContainer)
-                .AddSpace(0, DesignUtils.k_Spacing * 2)
-                .AddChild(animationAnimatedContainer)
-                .AddChild(callbacksAnimatedContainer);
-
-            #region Dynamic Setup
-
-            #region Invisible Fields
-
-            Toggle invisibleAnimationEnabledToggle = DesignUtils.NewToggle(propertyAnimationEnabled.propertyPath, invisibleField: true);
-
-            drawer
-                .AddChild(invisibleAnimationEnabledToggle);
-
-            invisibleAnimationEnabledToggle.RegisterValueChangedCallback(evt => UpdateIndicators(true));
-
-            UpdateIndicators(false);
-
-            void UpdateIndicator(EnabledIndicator indicator, bool enabled, bool animateChange = true)
-            {
-                indicator.Toggle(enabled, animateChange);
-            }
-
-            void UpdateIndicators(bool animateChange)
-            {
-                drawer.schedule.Execute(() =>
-                {
-                    UpdateIndicator(animationTabIndicator, propertyAnimationEnabled.boolValue, animateChange);
-                    UpdateIndicator(callbacksTabIndicator, HasCallbacks(), animateChange);
-                });
-            }
-
-            #endregion
+                .AddChild(toolbarContainer)
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild
+                (
+                    contentContainer
+                        .AddChild(settingsAnimatedContainer)
+                        .AddChild(callbacksAnimatedContainer)
+                );
 
             #endregion
 
             return drawer;
         }
+
+        private const int HEIGHT = 42;
 
         private static VisualElement GetAnimationContent
         (
@@ -280,133 +193,61 @@ namespace Doozy.Editor.Reactor.Drawers
         )
         {
             SerializedProperty propertyFromReferenceValue = propertyAnimation.FindPropertyRelative("FromReferenceValue");
-            SerializedProperty propertyFromCustomValue = propertyAnimation.FindPropertyRelative("FromCustomValue");
-            SerializedProperty propertyFromHueOffset = propertyAnimation.FindPropertyRelative("FromHueOffset");
-            SerializedProperty propertyFromSaturationOffset = propertyAnimation.FindPropertyRelative("FromSaturationOffset");
-            SerializedProperty propertyFromLightnessOffset = propertyAnimation.FindPropertyRelative("FromLightnessOffset");
-            SerializedProperty propertyFromAlphaOffset = propertyAnimation.FindPropertyRelative("FromAlphaOffset");
-
             SerializedProperty propertyToReferenceValue = propertyAnimation.FindPropertyRelative("ToReferenceValue");
+
+            SerializedProperty propertyFromCustomValue = propertyAnimation.FindPropertyRelative("FromCustomValue");
             SerializedProperty propertyToCustomValue = propertyAnimation.FindPropertyRelative("ToCustomValue");
+
+            SerializedProperty propertyFromHueOffset = propertyAnimation.FindPropertyRelative("FromHueOffset");
             SerializedProperty propertyToHueOffset = propertyAnimation.FindPropertyRelative("ToHueOffset");
+
+            SerializedProperty propertyFromSaturationOffset = propertyAnimation.FindPropertyRelative("FromSaturationOffset");
             SerializedProperty propertyToSaturationOffset = propertyAnimation.FindPropertyRelative("ToSaturationOffset");
+
+            SerializedProperty propertyFromLightnessOffset = propertyAnimation.FindPropertyRelative("FromLightnessOffset");
             SerializedProperty propertyToLightnessOffset = propertyAnimation.FindPropertyRelative("ToLightnessOffset");
+
+            SerializedProperty propertyFromAlphaOffset = propertyAnimation.FindPropertyRelative("FromAlphaOffset");
             SerializedProperty propertyToAlphaOffset = propertyAnimation.FindPropertyRelative("ToAlphaOffset");
 
             SerializedProperty propertySettings = propertyAnimation.FindPropertyRelative("Settings");
 
             var content = new VisualElement();
             content.SetEnabled(propertyAnimationEnabled.boolValue);
-            var enableSwitch = NewEnableAnimationSwitch(string.Empty, selectableAccentColor, propertyAnimationEnabled, content);
+            FluidToggleSwitch enableSwitch = DesignUtils.GetEnableDisableSwitch(propertyAnimationEnabled, content, selectableAccentColor, "Animation");
 
-            
-            var fieldFromReferenceValue = new EnumField().SetBindingPath(propertyFromReferenceValue.propertyPath).ResetLayout();
 
-            #region From Hue Offset
+            FluidField fromReferenceValueFluidField = FluidField.Get<EnumField>(propertyFromReferenceValue, "From Color").SetStyleHeight(HEIGHT, HEIGHT, HEIGHT);
+            FluidField toReferenceValueFluidField = FluidField.Get<EnumField>(propertyToReferenceValue, "To Color").SetStyleHeight(HEIGHT, HEIGHT, HEIGHT);
 
-            var fromHueOffsetLabel = GetOffsetLabel(() => (propertyFromHueOffset.floatValue * 360).Round(0).ToString(CultureInfo.InvariantCulture));
-            var fromHueOffsetSlider = new Slider(-1f, 1f).SetBindingPath(propertyFromHueOffset.propertyPath).ResetLayout().SetStyleFlexGrow(1);
-            fromHueOffsetSlider.RegisterValueChangedCallback(evt => fromHueOffsetLabel.SetText((evt.newValue * 360).Round(0).ToString(CultureInfo.InvariantCulture)));
-            var fieldFromHueOffset =
+            #region Hue
+
+            Label fromHueOffsetLabel = GetOffsetLabel(() => (propertyFromHueOffset.floatValue * 360).Round(0).ToString(CultureInfo.InvariantCulture));
+            Label toHueOffsetLabel = GetOffsetLabel(() => (propertyToHueOffset.floatValue * 360).Round(0).ToString(CultureInfo.InvariantCulture));
+
+            Slider fromHueOffsetSlider = DesignUtils.NewSlider(propertyFromHueOffset, -1f, 1f);
+            Slider toHueOffsetSlider = DesignUtils.NewSlider(propertyToHueOffset, -1f, 1f);
+
+            fromHueOffsetSlider.RegisterValueChangedCallback(evt =>
+                fromHueOffsetLabel.SetText((evt.newValue * 360).Round(0).ToString(CultureInfo.InvariantCulture)));
+
+            toHueOffsetSlider.RegisterValueChangedCallback(evt =>
+                toHueOffsetLabel.SetText((evt.newValue * 360).Round(0).ToString(CultureInfo.InvariantCulture)));
+
+            FluidField fromHueOffsetFluidField =
                 GetOffsetField
                 (
-                    "Hue Offset",
-                    fromHueOffsetLabel,
-                    fromHueOffsetSlider,
+                    "Hue Offset", fromHueOffsetLabel, fromHueOffsetSlider,
                     () =>
                     {
                         propertyFromHueOffset.floatValue = 0f;
                         propertyFromHueOffset.serializedObject.ApplyModifiedProperties();
                     });
 
-            #endregion
-
-            #region From Saturation Offset
-
-            var fromSaturationOffsetLabel = GetOffsetLabel(() => $"{(propertyFromSaturationOffset.floatValue * 100).Round(0)}%");
-            var fromSaturationOffsetSlider = new Slider(-1f, 1f).SetBindingPath(propertyFromSaturationOffset.propertyPath).ResetLayout().SetStyleFlexGrow(1);
-            fromSaturationOffsetSlider.RegisterValueChangedCallback(evt => fromSaturationOffsetLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
-            var fieldFromSaturationOffset =
+            FluidField toHueOffsetFluidField =
                 GetOffsetField
                 (
-                    "Saturation Offset",
-                    fromSaturationOffsetLabel,
-                    fromSaturationOffsetSlider,
-                    () =>
-                    {
-                        propertyFromSaturationOffset.floatValue = 0f;
-                        propertyFromSaturationOffset.serializedObject.ApplyModifiedProperties();
-                    });
-
-            #endregion
-
-            #region From Lightness Offset
-
-            var fromLightnessOffsetLabel = GetOffsetLabel(() => $"{(propertyFromLightnessOffset.floatValue * 100).Round(0)}%");
-            var fromLightnessOffsetSlider = new Slider(-1f, 1f).SetBindingPath(propertyFromLightnessOffset.propertyPath).ResetLayout().SetStyleFlexGrow(1);
-            fromLightnessOffsetSlider.RegisterValueChangedCallback(evt => fromLightnessOffsetLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
-            var fieldFromLightnessOffset =
-                GetOffsetField
-                (
-                    "Lightness Offset",
-                    fromLightnessOffsetLabel,
-                    fromLightnessOffsetSlider,
-                    () =>
-                    {
-                        propertyFromLightnessOffset.floatValue = 0f;
-                        propertyFromLightnessOffset.serializedObject.ApplyModifiedProperties();
-                    });
-
-            #endregion
-
-            #region From Alpha Offset
-
-            var fromAlphaOffsetLabel = GetOffsetLabel(() => $"{(propertyFromAlphaOffset.floatValue * 100).Round(0)}%");
-            var fromAlphaOffsetSlider = new Slider(-1f, 1f).SetBindingPath(propertyFromAlphaOffset.propertyPath).ResetLayout().SetStyleFlexGrow(1);
-            fromAlphaOffsetSlider.RegisterValueChangedCallback(evt => fromAlphaOffsetLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
-            var fieldFromAlphaOffset =
-                GetOffsetField
-                (
-                    "Alpha Offset",
-                    fromAlphaOffsetLabel,
-                    fromAlphaOffsetSlider,
-                    () =>
-                    {
-                        propertyFromAlphaOffset.floatValue = 0f;
-                        propertyFromAlphaOffset.serializedObject.ApplyModifiedProperties();
-                    });
-
-            #endregion
-
-            var fromOffsetContainer =
-                DesignUtils.column
-                    .SetName("From Offset")
-                    .AddChild(fieldFromHueOffset)
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(fieldFromSaturationOffset)
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(fieldFromLightnessOffset)
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(fieldFromAlphaOffset);
-
-            var fieldFromCustomValue = FluidField.Get("From Custom Color", new ColorField().SetBindingPath(propertyFromCustomValue.propertyPath).ResetLayout());
-            
-            var fieldFrom = FluidField.Get("Color From")
-                .AddFieldContent(fieldFromReferenceValue);
-            
-            var fieldToReferenceValue = new EnumField().SetBindingPath(propertyToReferenceValue.propertyPath).ResetLayout();
-
-            #region To Hue Offset
-
-            var toHueOffsetLabel = GetOffsetLabel(() => (propertyToHueOffset.floatValue * 360).Round(0).ToString(CultureInfo.InvariantCulture));
-            var toHueOffsetSlider = new Slider(-1f, 1f).SetBindingPath(propertyToHueOffset.propertyPath).ResetLayout().SetStyleFlexGrow(1);
-            toHueOffsetSlider.RegisterValueChangedCallback(evt => toHueOffsetLabel.SetText((evt.newValue * 360).Round(0).ToString(CultureInfo.InvariantCulture)));
-            var fieldToHueOffset =
-                GetOffsetField
-                (
-                    "Hue Offset",
-                    toHueOffsetLabel,
-                    toHueOffsetSlider,
+                    "Hue Offset", toHueOffsetLabel, toHueOffsetSlider,
                     () =>
                     {
                         propertyToHueOffset.floatValue = 0f;
@@ -415,17 +256,34 @@ namespace Doozy.Editor.Reactor.Drawers
 
             #endregion
 
-            #region To Saturation Offset
+            #region Saturation
 
-            var toSaturationOffsetLabel = GetOffsetLabel(() => $"{(propertyToSaturationOffset.floatValue * 100).Round(0)}%");
-            var toSaturationOffsetSlider = new Slider(-1f, 1f).SetBindingPath(propertyToSaturationOffset.propertyPath).ResetLayout().SetStyleFlexGrow(1);
-            toSaturationOffsetSlider.RegisterValueChangedCallback(evt => toSaturationOffsetLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
-            var fieldToSaturationOffset =
+            Label fromSaturationOffsetLabel = GetOffsetLabel(() => $"{(propertyFromSaturationOffset.floatValue * 100).Round(0)}%");
+            Label toSaturationOffsetLabel = GetOffsetLabel(() => $"{(propertyToSaturationOffset.floatValue * 100).Round(0)}%");
+
+            Slider fromSaturationOffsetSlider = DesignUtils.NewSlider(propertyFromSaturationOffset, -1f, 1f);
+            Slider toSaturationOffsetSlider = DesignUtils.NewSlider(propertyToSaturationOffset, -1f, 1f);
+
+            fromSaturationOffsetSlider.RegisterValueChangedCallback(evt =>
+                fromSaturationOffsetLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
+
+            toSaturationOffsetSlider.RegisterValueChangedCallback(evt =>
+                toSaturationOffsetLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
+
+            FluidField fromSaturationOffsetFluidField =
                 GetOffsetField
                 (
-                    "Saturation Offset",
-                    toSaturationOffsetLabel,
-                    toSaturationOffsetSlider,
+                    "Saturation Offset", fromSaturationOffsetLabel, fromSaturationOffsetSlider,
+                    () =>
+                    {
+                        propertyFromSaturationOffset.floatValue = 0f;
+                        propertyFromSaturationOffset.serializedObject.ApplyModifiedProperties();
+                    });
+
+            FluidField toSaturationOffsetFluidField =
+                GetOffsetField
+                (
+                    "Saturation Offset", toSaturationOffsetLabel, toSaturationOffsetSlider,
                     () =>
                     {
                         propertyToSaturationOffset.floatValue = 0f;
@@ -434,17 +292,34 @@ namespace Doozy.Editor.Reactor.Drawers
 
             #endregion
 
-            #region To Lightness Offset
+            #region Lightness
 
-            var toLightnessOffsetLabel = GetOffsetLabel(() => $"{(propertyToLightnessOffset.floatValue * 100).Round(0)}%");
-            var toLightnessOffsetSlider = new Slider(-1f, 1f).SetBindingPath(propertyToLightnessOffset.propertyPath).ResetLayout().SetStyleFlexGrow(1);
-            toLightnessOffsetSlider.RegisterValueChangedCallback(evt => toLightnessOffsetLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
-            var fieldToLightnessOffset =
+            Label fromLightnessOffsetLabel = GetOffsetLabel(() => $"{(propertyFromLightnessOffset.floatValue * 100).Round(0)}%");
+            Label toLightnessOffsetLabel = GetOffsetLabel(() => $"{(propertyToLightnessOffset.floatValue * 100).Round(0)}%");
+
+            Slider fromLightnessOffsetSlider = DesignUtils.NewSlider(propertyFromLightnessOffset, -1f, 1f);
+            Slider toLightnessOffsetSlider = DesignUtils.NewSlider(propertyToLightnessOffset, -1f, 1f);
+
+            fromLightnessOffsetSlider.RegisterValueChangedCallback(evt =>
+                fromLightnessOffsetLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
+
+            toLightnessOffsetSlider.RegisterValueChangedCallback(evt =>
+                toLightnessOffsetLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
+
+            FluidField fromLightnessOffsetFluidField =
                 GetOffsetField
                 (
-                    "Lightness Offset",
-                    toLightnessOffsetLabel,
-                    toLightnessOffsetSlider,
+                    "Lightness Offset", fromLightnessOffsetLabel, fromLightnessOffsetSlider,
+                    () =>
+                    {
+                        propertyFromLightnessOffset.floatValue = 0f;
+                        propertyFromLightnessOffset.serializedObject.ApplyModifiedProperties();
+                    });
+
+            FluidField toLightnessOffsetFluidField =
+                GetOffsetField
+                (
+                    "Lightness Offset", toLightnessOffsetLabel, toLightnessOffsetSlider,
                     () =>
                     {
                         propertyToLightnessOffset.floatValue = 0f;
@@ -453,17 +328,34 @@ namespace Doozy.Editor.Reactor.Drawers
 
             #endregion
 
-            #region To Alpha Offset
+            #region Alpha
 
-            var toAlphaOffsetLabel = GetOffsetLabel(() => $"{(propertyToAlphaOffset.floatValue * 100).Round(0)}%");
-            var toAlphaOffsetSlider = new Slider(-1f, 1f).SetBindingPath(propertyToAlphaOffset.propertyPath).ResetLayout().SetStyleFlexGrow(1);
-            toAlphaOffsetSlider.RegisterValueChangedCallback(evt => toAlphaOffsetLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
-            var fieldToAlphaOffset =
+            Label fromAlphaOffsetLabel = GetOffsetLabel(() => $"{(propertyFromAlphaOffset.floatValue * 100).Round(0)}%");
+            Label toAlphaOffsetLabel = GetOffsetLabel(() => $"{(propertyToAlphaOffset.floatValue * 100).Round(0)}%");
+
+            Slider fromAlphaOffsetSlider = DesignUtils.NewSlider(propertyFromAlphaOffset, -1f, 1f);
+            Slider toAlphaOffsetSlider = DesignUtils.NewSlider(propertyToAlphaOffset, -1f, 1f);
+
+            fromAlphaOffsetSlider.RegisterValueChangedCallback(evt =>
+                fromAlphaOffsetLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
+
+            toAlphaOffsetSlider.RegisterValueChangedCallback(evt =>
+                toAlphaOffsetLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
+
+            FluidField fromAlphaOffsetFluidField =
                 GetOffsetField
                 (
-                    "Alpha Offset",
-                    toAlphaOffsetLabel,
-                    toAlphaOffsetSlider,
+                    "Alpha Offset", fromAlphaOffsetLabel, fromAlphaOffsetSlider,
+                    () =>
+                    {
+                        propertyFromAlphaOffset.floatValue = 0f;
+                        propertyFromAlphaOffset.serializedObject.ApplyModifiedProperties();
+                    });
+
+            FluidField toAlphaOffsetFluidField =
+                GetOffsetField
+                (
+                    "Alpha Offset", toAlphaOffsetLabel, toAlphaOffsetSlider,
                     () =>
                     {
                         propertyToAlphaOffset.floatValue = 0f;
@@ -472,19 +364,35 @@ namespace Doozy.Editor.Reactor.Drawers
 
             #endregion
 
-            var toOffsetContainer =
-                DesignUtils.column
-                    .SetName("To Offset")
-                    .AddChild(fieldToHueOffset)
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(fieldToSaturationOffset)
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(fieldToLightnessOffset)
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(fieldToAlphaOffset);
+            FluidField fromCustomValueFluidField = FluidField.Get<ColorField>(propertyFromCustomValue, "From Custom Color").SetStyleHeight(HEIGHT, HEIGHT, HEIGHT);
+            FluidField toCustomValueFluidField = FluidField.Get<ColorField>(propertyToCustomValue, "To Custom Color").SetStyleHeight(HEIGHT, HEIGHT, HEIGHT);
 
-            var fieldToCustomValue = FluidField.Get("To Custom Color", new ColorField().SetBindingPath(propertyToCustomValue.propertyPath).ResetLayout());
-            var fieldTo = FluidField.Get("Color To").AddFieldContent(fieldToReferenceValue);
+            PropertyField settingsPropertyField = DesignUtils.NewPropertyField(propertySettings).SetName("Animation Settings");
+
+            VisualElement fromOffsetContainer =
+                DesignUtils.column
+                    // .SetStyleFlexGrow(1)
+                    .SetName("From Offset")
+                    .AddChild(fromHueOffsetFluidField)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(fromSaturationOffsetFluidField)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(fromLightnessOffsetFluidField)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(fromAlphaOffsetFluidField);
+
+
+            VisualElement toOffsetContainer =
+                DesignUtils.column
+                    // .SetStyleFlexGrow(1)
+                    .SetName("To Offset")
+                    .AddChild(toHueOffsetFluidField)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(toSaturationOffsetFluidField)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(toLightnessOffsetFluidField)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(toAlphaOffsetFluidField);
 
             VisualElement foldoutContent =
                 new VisualElement()
@@ -500,45 +408,49 @@ namespace Doozy.Editor.Reactor.Drawers
                             .AddChild
                             (
                                 DesignUtils.row
+                                    .SetName("From To Settings")
                                     .AddChild
                                     (
-                                        DesignUtils.flexibleSpace
-                                            .AddChild(fieldFrom.SetStyleFlexGrow(1))
-                                            .AddSpace(0, DesignUtils.k_Spacing)
-                                            .AddChild(fromOffsetContainer.SetStyleFlexGrow(1))
-                                            .AddChild(fieldFromCustomValue.SetStyleHeight(42).SetStyleFlexGrow(1).SetStyleMaxHeight(42))
+                                        DesignUtils.column
+                                            .SetName("From Settings")
+                                            .AddChild(fromReferenceValueFluidField)
+                                            .AddChild(DesignUtils.spaceBlock)
+                                            .AddChild(fromOffsetContainer)
+                                            .AddChild(fromCustomValueFluidField)
                                     )
-                                    .AddSpace(DesignUtils.k_Spacing, 0)
+                                    .AddChild(DesignUtils.spaceBlock)
                                     .AddChild
                                     (
-                                        DesignUtils.flexibleSpace
-                                            .AddChild(fieldTo.SetStyleFlexGrow(1))
-                                            .AddSpace(0, DesignUtils.k_Spacing)
-                                            .AddChild(toOffsetContainer.SetStyleFlexGrow(1))
-                                            .AddChild(fieldToCustomValue.SetStyleHeight(42).SetStyleFlexGrow(1).SetStyleMaxHeight(42))
-                                    ))
-                            .AddSpace(0, DesignUtils.k_Spacing)
-                            .AddChild(new PropertyField().SetBindingPath(propertySettings.propertyPath))
-                            .AddSpace(0, DesignUtils.k_EndOfLineSpacing)
+                                        DesignUtils.column
+                                            .SetName("To Settings")
+                                            .AddChild(toReferenceValueFluidField)
+                                            .AddChild(DesignUtils.spaceBlock)
+                                            .AddChild(toOffsetContainer)
+                                            .AddChild(toCustomValueFluidField)
+                                    )
+                            )
+                            .AddChild(DesignUtils.spaceBlock)
+                            .AddChild(settingsPropertyField)
+                            .AddChild(DesignUtils.endOfLineBlock)
                     );
 
             void Update()
             {
                 fromOffsetContainer.SetStyleDisplay((ReferenceValue)propertyFromReferenceValue.enumValueIndex == ReferenceValue.CustomValue ? DisplayStyle.None : DisplayStyle.Flex);
-                fieldFromCustomValue.SetStyleDisplay((ReferenceValue)propertyFromReferenceValue.enumValueIndex != ReferenceValue.CustomValue ? DisplayStyle.None : DisplayStyle.Flex);
+                fromCustomValueFluidField.SetStyleDisplay((ReferenceValue)propertyFromReferenceValue.enumValueIndex != ReferenceValue.CustomValue ? DisplayStyle.None : DisplayStyle.Flex);
                 toOffsetContainer.SetStyleDisplay((ReferenceValue)propertyToReferenceValue.enumValueIndex == ReferenceValue.CustomValue ? DisplayStyle.None : DisplayStyle.Flex);
-                fieldToCustomValue.SetStyleDisplay((ReferenceValue)propertyToReferenceValue.enumValueIndex != ReferenceValue.CustomValue ? DisplayStyle.None : DisplayStyle.Flex);
+                toCustomValueFluidField.SetStyleDisplay((ReferenceValue)propertyToReferenceValue.enumValueIndex != ReferenceValue.CustomValue ? DisplayStyle.None : DisplayStyle.Flex);
             }
 
             //FromReferenceValue
-            var invisibleFieldFromReferenceValueEnum = new EnumField().SetBindingPath(propertyFromReferenceValue.propertyPath).SetStyleDisplay(DisplayStyle.None);
-            foldoutContent.AddChild(invisibleFieldFromReferenceValueEnum);
-            invisibleFieldFromReferenceValueEnum.RegisterValueChangedCallback(changeEvent => Update());
+            EnumField invisibleFieldRotateFromReferenceValueEnum = new EnumField { bindingPath = propertyFromReferenceValue.propertyPath }.SetStyleDisplay(DisplayStyle.None);
+            foldoutContent.AddChild(invisibleFieldRotateFromReferenceValueEnum);
+            invisibleFieldRotateFromReferenceValueEnum.RegisterValueChangedCallback(changeEvent => Update());
 
             //ToReferenceValue
-            var invisibleFieldToReferenceValueEnum = new EnumField().SetBindingPath(propertyToReferenceValue.propertyPath).SetStyleDisplay(DisplayStyle.None);
-            foldoutContent.AddChild(invisibleFieldToReferenceValueEnum);
-            invisibleFieldToReferenceValueEnum.RegisterValueChangedCallback(changeEvent => Update());
+            EnumField invisibleFieldRotateToReferenceValueEnum = new EnumField { bindingPath = propertyToReferenceValue.propertyPath }.SetStyleDisplay(DisplayStyle.None);
+            foldoutContent.AddChild(invisibleFieldRotateToReferenceValueEnum);
+            invisibleFieldRotateToReferenceValueEnum.RegisterValueChangedCallback(changeEvent => Update());
 
             foldoutContent.Bind(propertyAnimation.serializedObject);
 
@@ -556,6 +468,7 @@ namespace Doozy.Editor.Reactor.Drawers
 
         private static FluidField GetOffsetField(string labelText, VisualElement label, VisualElement slider, UnityAction onClickCallback) =>
             FluidField.Get()
+                .SetStyleHeight(HEIGHT, HEIGHT, HEIGHT)
                 .SetLabelText(labelText)
                 .AddFieldContent
                 (
@@ -566,31 +479,11 @@ namespace Doozy.Editor.Reactor.Drawers
                         .AddChild(slider)
                         .AddChild
                         (
-                            FluidButton.Get(resetIconTextures)
+                            FluidButton.Get(EditorSpriteSheets.EditorUI.Icons.Reset)
                                 .SetElementSize(ElementSize.Tiny)
                                 .SetTooltip("Reset")
                                 .SetOnClick(onClickCallback)
                         )
                 );
-
-        private static FluidToggleSwitch NewEnableAnimationSwitch(string animationName, EditorSelectableColorInfo sColor, SerializedProperty propertyEnabled, VisualElement content)
-        {
-            FluidToggleSwitch fluidSwitch =
-                FluidToggleSwitch.Get($"Enable {animationName}")
-                    .SetToggleAccentColor(sColor)
-                    .BindToProperty(propertyEnabled.propertyPath);
-
-            fluidSwitch.SetOnValueChanged(evt => Update(evt.newValue));
-
-            Update(propertyEnabled.boolValue);
-
-            void Update(bool enabled)
-            {
-                fluidSwitch.SetLabelText($"{animationName}{(animationName.IsNullOrEmpty() ? "" : " ")}{(enabled ? "Enabled" : "Disabled")}");
-                content.SetEnabled(enabled);
-            }
-
-            return fluidSwitch;
-        }
     }
 }

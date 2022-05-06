@@ -107,6 +107,8 @@ namespace Doozy.Editor.EditorUI
                     PointerExit,
                     PointerUp,
                     Prefab,
+                    Redo,
+                    Reset,
                     SelectableStates,
                     Selected,
                     SpriteSheet,
@@ -115,6 +117,7 @@ namespace Doozy.Editor.EditorUI
                     ToggleON,
                     UIBehaviour,
                     UISelectable,
+                    Undo,
                     Unity,
                     UnityEvent,
                     Unlocked,
@@ -195,6 +198,10 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D PointerUp => s_PointerUp ? s_PointerUp : s_PointerUp = GetTexture2D(TextureName.PointerUp);
                 private static Texture2D s_Prefab;
                 public static Texture2D Prefab => s_Prefab ? s_Prefab : s_Prefab = GetTexture2D(TextureName.Prefab);
+                private static Texture2D s_Redo;
+                public static Texture2D Redo => s_Redo ? s_Redo : s_Redo = GetTexture2D(TextureName.Redo);
+                private static Texture2D s_Reset;
+                public static Texture2D Reset => s_Reset ? s_Reset : s_Reset = GetTexture2D(TextureName.Reset);
                 private static Texture2D s_SelectableStates;
                 public static Texture2D SelectableStates => s_SelectableStates ? s_SelectableStates : s_SelectableStates = GetTexture2D(TextureName.SelectableStates);
                 private static Texture2D s_Selected;
@@ -211,6 +218,8 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D UIBehaviour => s_UIBehaviour ? s_UIBehaviour : s_UIBehaviour = GetTexture2D(TextureName.UIBehaviour);
                 private static Texture2D s_UISelectable;
                 public static Texture2D UISelectable => s_UISelectable ? s_UISelectable : s_UISelectable = GetTexture2D(TextureName.UISelectable);
+                private static Texture2D s_Undo;
+                public static Texture2D Undo => s_Undo ? s_Undo : s_Undo = GetTexture2D(TextureName.Undo);
                 private static Texture2D s_Unity;
                 public static Texture2D Unity => s_Unity ? s_Unity : s_Unity = GetTexture2D(TextureName.Unity);
                 private static Texture2D s_UnityEvent;
@@ -504,12 +513,19 @@ namespace Doozy.Editor.EditorUI
                     ColorAnimator,
                     ColorTarget,
                     EditorHeartbeat,
+                    FloatAnimation,
+                    FloatAnimator,
                     FrameByFrameAnimation,
                     FrameByFrameAnimator,
                     Heartbeat,
                     ImageProgressTarget,
+                    IntAnimation,
+                    IntAnimator,
                     ProgressTarget,
                     Reactor,
+                    ReactorController,
+                    RectAnimation,
+                    RectAnimator,
                     SignalProgressTarget,
                     SpriteAnimation,
                     SpriteAnimator,
@@ -519,7 +535,13 @@ namespace Doozy.Editor.EditorUI
                     UIAnimation,
                     UIAnimationData,
                     UIAnimator,
-                    UnityEventProgressTarget
+                    UnityEventProgressTarget,
+                    Vector2Animation,
+                    Vector2Animator,
+                    Vector3Animation,
+                    Vector3Animator,
+                    Vector4Animation,
+                    Vector4Animator
                 }
                 
 
@@ -535,6 +557,10 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D ColorTarget => s_ColorTarget ? s_ColorTarget : s_ColorTarget = GetTexture2D(TextureName.ColorTarget);
                 private static Texture2D s_EditorHeartbeat;
                 public static Texture2D EditorHeartbeat => s_EditorHeartbeat ? s_EditorHeartbeat : s_EditorHeartbeat = GetTexture2D(TextureName.EditorHeartbeat);
+                private static Texture2D s_FloatAnimation;
+                public static Texture2D FloatAnimation => s_FloatAnimation ? s_FloatAnimation : s_FloatAnimation = GetTexture2D(TextureName.FloatAnimation);
+                private static Texture2D s_FloatAnimator;
+                public static Texture2D FloatAnimator => s_FloatAnimator ? s_FloatAnimator : s_FloatAnimator = GetTexture2D(TextureName.FloatAnimator);
                 private static Texture2D s_FrameByFrameAnimation;
                 public static Texture2D FrameByFrameAnimation => s_FrameByFrameAnimation ? s_FrameByFrameAnimation : s_FrameByFrameAnimation = GetTexture2D(TextureName.FrameByFrameAnimation);
                 private static Texture2D s_FrameByFrameAnimator;
@@ -543,10 +569,20 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D Heartbeat => s_Heartbeat ? s_Heartbeat : s_Heartbeat = GetTexture2D(TextureName.Heartbeat);
                 private static Texture2D s_ImageProgressTarget;
                 public static Texture2D ImageProgressTarget => s_ImageProgressTarget ? s_ImageProgressTarget : s_ImageProgressTarget = GetTexture2D(TextureName.ImageProgressTarget);
+                private static Texture2D s_IntAnimation;
+                public static Texture2D IntAnimation => s_IntAnimation ? s_IntAnimation : s_IntAnimation = GetTexture2D(TextureName.IntAnimation);
+                private static Texture2D s_IntAnimator;
+                public static Texture2D IntAnimator => s_IntAnimator ? s_IntAnimator : s_IntAnimator = GetTexture2D(TextureName.IntAnimator);
                 private static Texture2D s_ProgressTarget;
                 public static Texture2D ProgressTarget => s_ProgressTarget ? s_ProgressTarget : s_ProgressTarget = GetTexture2D(TextureName.ProgressTarget);
                 private static Texture2D s_Reactor;
                 public static Texture2D Reactor => s_Reactor ? s_Reactor : s_Reactor = GetTexture2D(TextureName.Reactor);
+                private static Texture2D s_ReactorController;
+                public static Texture2D ReactorController => s_ReactorController ? s_ReactorController : s_ReactorController = GetTexture2D(TextureName.ReactorController);
+                private static Texture2D s_RectAnimation;
+                public static Texture2D RectAnimation => s_RectAnimation ? s_RectAnimation : s_RectAnimation = GetTexture2D(TextureName.RectAnimation);
+                private static Texture2D s_RectAnimator;
+                public static Texture2D RectAnimator => s_RectAnimator ? s_RectAnimator : s_RectAnimator = GetTexture2D(TextureName.RectAnimator);
                 private static Texture2D s_SignalProgressTarget;
                 public static Texture2D SignalProgressTarget => s_SignalProgressTarget ? s_SignalProgressTarget : s_SignalProgressTarget = GetTexture2D(TextureName.SignalProgressTarget);
                 private static Texture2D s_SpriteAnimation;
@@ -567,6 +603,18 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D UIAnimator => s_UIAnimator ? s_UIAnimator : s_UIAnimator = GetTexture2D(TextureName.UIAnimator);
                 private static Texture2D s_UnityEventProgressTarget;
                 public static Texture2D UnityEventProgressTarget => s_UnityEventProgressTarget ? s_UnityEventProgressTarget : s_UnityEventProgressTarget = GetTexture2D(TextureName.UnityEventProgressTarget);
+                private static Texture2D s_Vector2Animation;
+                public static Texture2D Vector2Animation => s_Vector2Animation ? s_Vector2Animation : s_Vector2Animation = GetTexture2D(TextureName.Vector2Animation);
+                private static Texture2D s_Vector2Animator;
+                public static Texture2D Vector2Animator => s_Vector2Animator ? s_Vector2Animator : s_Vector2Animator = GetTexture2D(TextureName.Vector2Animator);
+                private static Texture2D s_Vector3Animation;
+                public static Texture2D Vector3Animation => s_Vector3Animation ? s_Vector3Animation : s_Vector3Animation = GetTexture2D(TextureName.Vector3Animation);
+                private static Texture2D s_Vector3Animator;
+                public static Texture2D Vector3Animator => s_Vector3Animator ? s_Vector3Animator : s_Vector3Animator = GetTexture2D(TextureName.Vector3Animator);
+                private static Texture2D s_Vector4Animation;
+                public static Texture2D Vector4Animation => s_Vector4Animation ? s_Vector4Animation : s_Vector4Animation = GetTexture2D(TextureName.Vector4Animation);
+                private static Texture2D s_Vector4Animator;
+                public static Texture2D Vector4Animator => s_Vector4Animator ? s_Vector4Animator : s_Vector4Animator = GetTexture2D(TextureName.Vector4Animator);
                 
             }
 
@@ -650,6 +698,46 @@ namespace Doozy.Editor.EditorUI
         }
 
 
+        public static class SceneManagement
+        {
+            public static class Icons
+            {
+                private static EditorDataTextureGroup s_textureGroup;
+                private static EditorDataTextureGroup textureGroup =>
+                    s_textureGroup
+                        ? s_textureGroup
+                        : s_textureGroup = EditorDataTextureDatabase.GetTextureGroup("SceneManagement","Icons");
+
+                public static Texture2D GetTexture2D(TextureName textureName) =>
+                    textureGroup.GetTexture(textureName.ToString());
+
+                public enum TextureName
+                {
+                    ActivateLoadedScenesNode,
+                    LoadSceneNode,
+                    SceneDirector,
+                    SceneLoader,
+                    UnloadSceneNode
+                }
+                
+
+                private static Texture2D s_ActivateLoadedScenesNode;
+                public static Texture2D ActivateLoadedScenesNode => s_ActivateLoadedScenesNode ? s_ActivateLoadedScenesNode : s_ActivateLoadedScenesNode = GetTexture2D(TextureName.ActivateLoadedScenesNode);
+                private static Texture2D s_LoadSceneNode;
+                public static Texture2D LoadSceneNode => s_LoadSceneNode ? s_LoadSceneNode : s_LoadSceneNode = GetTexture2D(TextureName.LoadSceneNode);
+                private static Texture2D s_SceneDirector;
+                public static Texture2D SceneDirector => s_SceneDirector ? s_SceneDirector : s_SceneDirector = GetTexture2D(TextureName.SceneDirector);
+                private static Texture2D s_SceneLoader;
+                public static Texture2D SceneLoader => s_SceneLoader ? s_SceneLoader : s_SceneLoader = GetTexture2D(TextureName.SceneLoader);
+                private static Texture2D s_UnloadSceneNode;
+                public static Texture2D UnloadSceneNode => s_UnloadSceneNode ? s_UnloadSceneNode : s_UnloadSceneNode = GetTexture2D(TextureName.UnloadSceneNode);
+                
+            }
+
+
+        }
+
+
         public static class Signals
         {
             public static class Icons
@@ -695,6 +783,115 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D SignalStream => s_SignalStream ? s_SignalStream : s_SignalStream = GetTexture2D(TextureName.SignalStream);
                 private static Texture2D s_StreamDatabase;
                 public static Texture2D StreamDatabase => s_StreamDatabase ? s_StreamDatabase : s_StreamDatabase = GetTexture2D(TextureName.StreamDatabase);
+                
+            }
+
+
+        }
+
+
+        public static class UIDesigner
+        {
+            public static class Icons
+            {
+                private static EditorDataTextureGroup s_textureGroup;
+                private static EditorDataTextureGroup textureGroup =>
+                    s_textureGroup
+                        ? s_textureGroup
+                        : s_textureGroup = EditorDataTextureDatabase.GetTextureGroup("UIDesigner","Icons");
+
+                public static Texture2D GetTexture2D(TextureName textureName) =>
+                    textureGroup.GetTexture(textureName.ToString());
+
+                public enum TextureName
+                {
+                    AlignModeCenter,
+                    AlignModeInside,
+                    AlignModeOutside,
+                    DistributeSpacingHorizontal,
+                    DistributeSpacingVertical,
+                    HorizontalAlignCenter,
+                    HorizontalAlignLeft,
+                    HorizontalAlignRight,
+                    HorizontalDistributeCenter,
+                    HorizontalDistributeLeft,
+                    HorizontalDistributeRight,
+                    KeyObject,
+                    Parent,
+                    RectTrandform,
+                    RootCanvas,
+                    RotateLeft,
+                    RotateRight,
+                    ScaleDecrease,
+                    ScaleIncrease,
+                    Selection,
+                    SizeDecrease,
+                    SizeIncrease,
+                    VerticalAlignBottom,
+                    VerticalAlignCenter,
+                    VerticalAlignTop,
+                    VerticalDistributeBottom,
+                    VerticalDistributeCenter,
+                    VerticalDistributeTop
+                }
+                
+
+                private static Texture2D s_AlignModeCenter;
+                public static Texture2D AlignModeCenter => s_AlignModeCenter ? s_AlignModeCenter : s_AlignModeCenter = GetTexture2D(TextureName.AlignModeCenter);
+                private static Texture2D s_AlignModeInside;
+                public static Texture2D AlignModeInside => s_AlignModeInside ? s_AlignModeInside : s_AlignModeInside = GetTexture2D(TextureName.AlignModeInside);
+                private static Texture2D s_AlignModeOutside;
+                public static Texture2D AlignModeOutside => s_AlignModeOutside ? s_AlignModeOutside : s_AlignModeOutside = GetTexture2D(TextureName.AlignModeOutside);
+                private static Texture2D s_DistributeSpacingHorizontal;
+                public static Texture2D DistributeSpacingHorizontal => s_DistributeSpacingHorizontal ? s_DistributeSpacingHorizontal : s_DistributeSpacingHorizontal = GetTexture2D(TextureName.DistributeSpacingHorizontal);
+                private static Texture2D s_DistributeSpacingVertical;
+                public static Texture2D DistributeSpacingVertical => s_DistributeSpacingVertical ? s_DistributeSpacingVertical : s_DistributeSpacingVertical = GetTexture2D(TextureName.DistributeSpacingVertical);
+                private static Texture2D s_HorizontalAlignCenter;
+                public static Texture2D HorizontalAlignCenter => s_HorizontalAlignCenter ? s_HorizontalAlignCenter : s_HorizontalAlignCenter = GetTexture2D(TextureName.HorizontalAlignCenter);
+                private static Texture2D s_HorizontalAlignLeft;
+                public static Texture2D HorizontalAlignLeft => s_HorizontalAlignLeft ? s_HorizontalAlignLeft : s_HorizontalAlignLeft = GetTexture2D(TextureName.HorizontalAlignLeft);
+                private static Texture2D s_HorizontalAlignRight;
+                public static Texture2D HorizontalAlignRight => s_HorizontalAlignRight ? s_HorizontalAlignRight : s_HorizontalAlignRight = GetTexture2D(TextureName.HorizontalAlignRight);
+                private static Texture2D s_HorizontalDistributeCenter;
+                public static Texture2D HorizontalDistributeCenter => s_HorizontalDistributeCenter ? s_HorizontalDistributeCenter : s_HorizontalDistributeCenter = GetTexture2D(TextureName.HorizontalDistributeCenter);
+                private static Texture2D s_HorizontalDistributeLeft;
+                public static Texture2D HorizontalDistributeLeft => s_HorizontalDistributeLeft ? s_HorizontalDistributeLeft : s_HorizontalDistributeLeft = GetTexture2D(TextureName.HorizontalDistributeLeft);
+                private static Texture2D s_HorizontalDistributeRight;
+                public static Texture2D HorizontalDistributeRight => s_HorizontalDistributeRight ? s_HorizontalDistributeRight : s_HorizontalDistributeRight = GetTexture2D(TextureName.HorizontalDistributeRight);
+                private static Texture2D s_KeyObject;
+                public static Texture2D KeyObject => s_KeyObject ? s_KeyObject : s_KeyObject = GetTexture2D(TextureName.KeyObject);
+                private static Texture2D s_Parent;
+                public static Texture2D Parent => s_Parent ? s_Parent : s_Parent = GetTexture2D(TextureName.Parent);
+                private static Texture2D s_RectTrandform;
+                public static Texture2D RectTrandform => s_RectTrandform ? s_RectTrandform : s_RectTrandform = GetTexture2D(TextureName.RectTrandform);
+                private static Texture2D s_RootCanvas;
+                public static Texture2D RootCanvas => s_RootCanvas ? s_RootCanvas : s_RootCanvas = GetTexture2D(TextureName.RootCanvas);
+                private static Texture2D s_RotateLeft;
+                public static Texture2D RotateLeft => s_RotateLeft ? s_RotateLeft : s_RotateLeft = GetTexture2D(TextureName.RotateLeft);
+                private static Texture2D s_RotateRight;
+                public static Texture2D RotateRight => s_RotateRight ? s_RotateRight : s_RotateRight = GetTexture2D(TextureName.RotateRight);
+                private static Texture2D s_ScaleDecrease;
+                public static Texture2D ScaleDecrease => s_ScaleDecrease ? s_ScaleDecrease : s_ScaleDecrease = GetTexture2D(TextureName.ScaleDecrease);
+                private static Texture2D s_ScaleIncrease;
+                public static Texture2D ScaleIncrease => s_ScaleIncrease ? s_ScaleIncrease : s_ScaleIncrease = GetTexture2D(TextureName.ScaleIncrease);
+                private static Texture2D s_Selection;
+                public static Texture2D Selection => s_Selection ? s_Selection : s_Selection = GetTexture2D(TextureName.Selection);
+                private static Texture2D s_SizeDecrease;
+                public static Texture2D SizeDecrease => s_SizeDecrease ? s_SizeDecrease : s_SizeDecrease = GetTexture2D(TextureName.SizeDecrease);
+                private static Texture2D s_SizeIncrease;
+                public static Texture2D SizeIncrease => s_SizeIncrease ? s_SizeIncrease : s_SizeIncrease = GetTexture2D(TextureName.SizeIncrease);
+                private static Texture2D s_VerticalAlignBottom;
+                public static Texture2D VerticalAlignBottom => s_VerticalAlignBottom ? s_VerticalAlignBottom : s_VerticalAlignBottom = GetTexture2D(TextureName.VerticalAlignBottom);
+                private static Texture2D s_VerticalAlignCenter;
+                public static Texture2D VerticalAlignCenter => s_VerticalAlignCenter ? s_VerticalAlignCenter : s_VerticalAlignCenter = GetTexture2D(TextureName.VerticalAlignCenter);
+                private static Texture2D s_VerticalAlignTop;
+                public static Texture2D VerticalAlignTop => s_VerticalAlignTop ? s_VerticalAlignTop : s_VerticalAlignTop = GetTexture2D(TextureName.VerticalAlignTop);
+                private static Texture2D s_VerticalDistributeBottom;
+                public static Texture2D VerticalDistributeBottom => s_VerticalDistributeBottom ? s_VerticalDistributeBottom : s_VerticalDistributeBottom = GetTexture2D(TextureName.VerticalDistributeBottom);
+                private static Texture2D s_VerticalDistributeCenter;
+                public static Texture2D VerticalDistributeCenter => s_VerticalDistributeCenter ? s_VerticalDistributeCenter : s_VerticalDistributeCenter = GetTexture2D(TextureName.VerticalDistributeCenter);
+                private static Texture2D s_VerticalDistributeTop;
+                public static Texture2D VerticalDistributeTop => s_VerticalDistributeTop ? s_VerticalDistributeTop : s_VerticalDistributeTop = GetTexture2D(TextureName.VerticalDistributeTop);
                 
             }
 
@@ -870,6 +1067,7 @@ namespace Doozy.Editor.EditorUI
                     TabButtonRightTop,
                     TabButtonTopLeft,
                     TabButtonTopRight,
+                    UIFX,
                     UIMenuHeader128x32,
                     UIMenuItem,
                     VerticalLayout
@@ -938,6 +1136,8 @@ namespace Doozy.Editor.EditorUI
                 public static Texture2D TabButtonTopLeft => s_TabButtonTopLeft ? s_TabButtonTopLeft : s_TabButtonTopLeft = GetTexture2D(TextureName.TabButtonTopLeft);
                 private static Texture2D s_TabButtonTopRight;
                 public static Texture2D TabButtonTopRight => s_TabButtonTopRight ? s_TabButtonTopRight : s_TabButtonTopRight = GetTexture2D(TextureName.TabButtonTopRight);
+                private static Texture2D s_UIFX;
+                public static Texture2D UIFX => s_UIFX ? s_UIFX : s_UIFX = GetTexture2D(TextureName.UIFX);
                 private static Texture2D s_UIMenuHeader128x32;
                 public static Texture2D UIMenuHeader128x32 => s_UIMenuHeader128x32 ? s_UIMenuHeader128x32 : s_UIMenuHeader128x32 = GetTexture2D(TextureName.UIMenuHeader128x32);
                 private static Texture2D s_UIMenuItem;

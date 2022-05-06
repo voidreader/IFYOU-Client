@@ -5,7 +5,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.Reactor.Internal;
@@ -105,6 +104,7 @@ namespace Doozy.Editor.EditorUI.Components
         public int preferredListHeight { get; private set; }
         public bool hideToolbarWhileSearching { get; private set; }
         public bool addNewItemButtonIsHidden { get; private set; }
+        public bool disableToolbarWhenEmpty { get; private set; } = true;
 
         //SELECTABLE COLORS
         private static EditorSelectableColorInfo actionSelectableColor => EditorSelectableColors.Default.Action;
@@ -267,9 +267,10 @@ namespace Doozy.Editor.EditorUI.Components
 
             if (!hasToolbar) return;
 
-            if (listViewIsEmpty)
+            if (listViewIsEmpty & disableToolbarWhenEmpty)
             {
-                if (inSearchMode == false) //do not disable toolbar if in search mode
+                //do not disable toolbar if in search mode
+                if (inSearchMode == false) 
                     toolbarContainer.DisableElement();
             }
             else
@@ -348,6 +349,13 @@ namespace Doozy.Editor.EditorUI.Components
 
         #endregion
 
+        public FluidListView SetDisableToolbarWhenEmpty(bool disableWhenEmpty)
+        {
+            disableToolbarWhenEmpty = disableWhenEmpty;
+            VisualUpdate_Toolbar();
+            return this;
+        }
+        
         public FluidListView SetFooterLabelText(string text)
         {
             footerLabel.text = text;

@@ -19,6 +19,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
             componentHeader
                .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(TextMeshPro)))
                .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048051758/TextMeshPro+Color+Target?atlOrigin=eyJpIjoiODU1NmEzMDcwY2Y3NGI5NWEwZDU2ZWMzODBiZjRkNTMiLCJwIjoiYyJ9")
+               .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Reactor.Targets.TextMeshProColorTarget.html")
                .AddYouTubeButton();
 
             targetObjectField

@@ -2,6 +2,7 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
 using Doozy.Runtime.UIManager.Input;
@@ -19,9 +20,17 @@ namespace Doozy.Runtime.UIManager.Listeners
     /// <summary>
     /// Connects to the UIToggle stream and reacts to ‘pings’ (signals) sent for the toggle with the given id.
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Listeners/UI Toggle Listener")]
+    [AddComponentMenu("UI/Components/Listeners/UIToggle Listener")]
     public class UIToggleListener : BaseListener, IUseMultiplayerInfo
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Components/Listeners/UIToggle Listener", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UIToggleListener>("UIToggle Listener", false, true);
+        }
+        #endif
+        
         /// <summary> Reference to the UIManager Input Settings </summary>
         public static UIManagerInputSettings inputSettings => UIManagerInputSettings.instance;
 

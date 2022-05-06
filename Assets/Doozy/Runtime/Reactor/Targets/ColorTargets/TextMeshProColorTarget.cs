@@ -12,7 +12,7 @@ namespace Doozy.Runtime.Reactor.Targets
     /// Connects a TextMeshPro component with a Reactor animator.
     /// </summary>
     [Serializable]
-    [AddComponentMenu("Doozy/Reactor/Targets/TextMeshPro Color Target")]
+    [AddComponentMenu("Reactor/Targets/TextMeshPro Color Target")]
     public class TextMeshProColorTarget : ReactorMetaColorTarget<TMP_Text>
     {
         #if UNITY_EDITOR

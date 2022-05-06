@@ -89,7 +89,19 @@ namespace Doozy.Runtime.Reactor.Ticker
         /// <param name="callback"> Target callback </param>
         public static T AddOnTickCallback<T>(this T target, ReactionCallback callback) where T : Heartbeat
         {
+            target.onTickCallback -= callback; //sanity check
             target.onTickCallback += callback;
+            return target;
+        }
+        
+        /// <summary>
+        /// Remove a target callback from being invoked every time the tick service (this Heartbeat is registered to) ticks
+        /// </summary>
+        /// <param name="target"> Target Heartbeat </param>
+        /// <param name="callback"> Target callback </param>
+        public static T RemoveOnTickCallback<T>(this T target, ReactionCallback callback) where T : Heartbeat
+        {
+            target.onTickCallback -= callback;
             return target;
         }
     }

@@ -24,18 +24,15 @@ namespace Doozy.Runtime.UIManager.Containers.Internal
 
         protected override void OnEnable()
         {
-            CleanDatabase();
+            database.Remove(null);
             base.OnEnable();
         }
 
         protected override void OnDestroy()
         {
             database.Remove(component);
-            CleanDatabase();
+            database.Remove(null);
             base.OnDestroy();
         }
-
-        protected static void CleanDatabase() =>
-            database.Remove(null);
     }
 }

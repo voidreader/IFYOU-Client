@@ -6,6 +6,7 @@ using Doozy.Runtime.Common.Attributes;
 using Doozy.Runtime.Reactor.ScriptableObjects;
 using Doozy.Runtime.Reactor.Ticker;
 using UnityEditor;
+using UnityEngine;
 // ReSharper disable UnusedMember.Local
 
 namespace Doozy.Editor.Reactor.Ticker

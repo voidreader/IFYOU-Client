@@ -23,6 +23,7 @@ namespace Doozy.Editor.Nody.Nodes
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(ApplicationQuitNode)))
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048805446/Application+Quit+Node?atlOrigin=eyJpIjoiYmIzODEzYTM2YTE0NGNmOWE3ODExMmM3ZDc0MzE1NmIiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Nody.Nodes.ApplicationQuitNode.html")
                 .AddYouTubeButton(); 
         }
     }

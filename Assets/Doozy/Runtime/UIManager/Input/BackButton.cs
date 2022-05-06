@@ -6,6 +6,7 @@ using System.Collections;
 using System.Linq;
 using Doozy.Runtime.Common;
 using Doozy.Runtime.Common.Attributes;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
 using Doozy.Runtime.UIManager.ScriptableObjects;
@@ -16,8 +17,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 #endif
 
-
-
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Doozy.Runtime.UIManager.Input
@@ -27,10 +26,18 @@ namespace Doozy.Runtime.UIManager.Input
     /// It does that by automatically attaching a Input To Signal to the Event System.
     /// This is an automated system that is activated by any UI component in DoozyUI.
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Input/Back Button")]
+    [AddComponentMenu("Input/Back Button")]
     [DisallowMultipleComponent]
     public class BackButton : SingletonBehaviour<BackButton>
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/Input/Back Button", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<BackButton>("Back Button", false, true);
+        }
+        #endif
+        
         #if LEGACY_INPUT_MANAGER
         public const KeyCode k_BackButtonKeyCode = KeyCode.Escape;
         public const string k_BackButtonVirtualButtonName = "Cancel";
@@ -111,6 +118,7 @@ namespace Doozy.Runtime.UIManager.Input
         private bool initialized { get; set; }
         
         public static bool blockBackInput = false;
+        
 
         public static void Initialize()
         {
@@ -261,6 +269,7 @@ namespace Doozy.Runtime.UIManager.Input
         /// </summary>
         public static void Fire()
         {
+            
             if(blockBackInput)
                 return;
             

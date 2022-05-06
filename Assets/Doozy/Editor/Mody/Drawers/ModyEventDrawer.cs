@@ -30,40 +30,21 @@ namespace Doozy.Editor.Mody.Drawers
         {
             VisualElement drawer = DesignUtils.row;
 
-            SerializedProperty enabledProperty = property.FindPropertyRelative(nameof(ModyEvent.Enabled));
             SerializedProperty eventNameProperty = property.FindPropertyRelative(nameof(ModyEvent.EventName));
             SerializedProperty runnersProperty = property.FindPropertyRelative(nameof(ModyEvent.Runners));
             SerializedProperty eventProperty = property.FindPropertyRelative(nameof(ModyEvent.Event));
 
-            FluidToggleSwitch enabledSwitch = FluidToggleSwitch.Get().BindToProperty(enabledProperty.propertyPath);
-            PropertyField eventPropertyField = DesignUtils.NewPropertyField(eventProperty.propertyPath);
-
-            var foldout = new FluidFoldout(eventNameProperty.stringValue);
-            foldout.SetStyleFlexGrow(1).SetEnabled(enabledProperty.boolValue);
-
-            foldout.animatedContainer
-                .ClearContent()
-                .SetClearOnHide(true)
-                .SetOnShowCallback(() =>
-                {
-                    foldout.AddContent(ActionRunnersListView(runnersProperty));
-                    foldout.AddContent(DesignUtils.spaceBlock2X);
-                    foldout.AddContent(eventPropertyField);
-                    foldout.Bind(property.serializedObject);
-                });
-
-            enabledSwitch.SetOnValueChanged(evt =>
-            {
-                foldout.SetEnabled(evt.newValue);
-                if (!evt.newValue && foldout.isOn)
-                {
-                    foldout.Close();
-                }
-            });
+            FluidField fluidField =
+                FluidField.Get()
+                    .SetStyleFlexGrow(1)
+                    .AddFieldContent(DesignUtils.UnityEventField(eventNameProperty.stringValue, eventProperty))
+                    .AddFieldContent(DesignUtils.spaceBlock2X)
+                    .AddFieldContent(ActionRunnersListView(runnersProperty));
+            
+            fluidField.Bind(property.serializedObject);
 
             drawer
-                .AddChild(enabledSwitch.SetStyleMarginRight(DesignUtils.k_Spacing))
-                .AddChild(foldout);
+                .AddChild(fluidField);
 
             return drawer;
         }

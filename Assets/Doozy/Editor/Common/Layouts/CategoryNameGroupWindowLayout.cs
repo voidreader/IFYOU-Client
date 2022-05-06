@@ -46,17 +46,12 @@ namespace Doozy.Editor.Common.Layouts
 
         private bool databaseIsEmpty => database.isEmpty;
 
-        private FluidPlaceholder placeholderEmptyDatabase { get; set; }
         private Dictionary<string, FluidToggleButtonTab> categoryButtons { get; set; }
 
         private string selectedCategoryName { get; set; }
 
         private FluidListView fluidListView { get; set; }
         private readonly List<CategoryNameItem> m_Items = new List<CategoryNameItem>();
-
-        private static Color titleTextColor => EditorColors.Default.TextDescription;
-        private static Font titleFont => EditorFonts.Ubuntu.Light;
-        private static int titleFontSize => 16;
 
         private bool initialized { get; set; }
 
@@ -111,11 +106,6 @@ namespace Doozy.Editor.Common.Layouts
                 sideMenu.toolbarContainer.Add(DesignUtils.spaceBlock2X);
                 sideMenu.toolbarContainer.Add(generateEnumButton);
 
-
-                placeholderEmptyDatabase =
-                    FluidPlaceholder.Get("Empty Database", EditorSpriteSheets.EditorUI.Placeholders.EmptyDatabase)
-                        .Hide();
-
                 selectedCategoryName = string.Empty;
                 categoryButtons = new Dictionary<string, FluidToggleButtonTab>();
 
@@ -153,10 +143,17 @@ namespace Doozy.Editor.Common.Layouts
             if (!databaseIsEmpty)
                 return false; //database is NOT empty
 
-            content.Clear();
             content
+                .RecycleAndClear()
                 .AddChild(createNewIdContainer.SetStyleMarginBottom(DesignUtils.k_Spacing * 4))
-                .AddChild(placeholderEmptyDatabase);
+                .AddChild
+                (
+                    new VisualElement()
+                        .SetName("Empty Database - Placeholder Container")
+                        .SetStyleFlexGrow(1)
+                        .SetStyleJustifyContent(Justify.Center)
+                        .AddChild(FluidPlaceholder.Get("Empty Database", EditorSpriteSheets.EditorUI.Placeholders.EmptyDatabase).Play())
+                );
 
             UpdateCreateNewIdContainer();
 
@@ -193,7 +190,13 @@ namespace Doozy.Editor.Common.Layouts
                     foreach (CategoryNameItem item in database.items.Where(item => item.category.Equals(category))) m_Items.Add(item);
                     content
                         .AddChild(createNewIdContainer.SetStyleMarginBottom(DesignUtils.k_Spacing * 4))
-                        .AddChild(new CategoryNameItemCategoryRow().SetTarget(category).SetRemoveHandler(CategoryRemoveHandler))
+                        .AddChild
+                        (
+                            new CategoryNameItemCategoryRow()
+                                .SetTarget(category)
+                                .SetSaveHandler(CategoryRenameHandler)
+                                .SetRemoveHandler(CategoryRemoveHandler)
+                        )
                         .AddChild(fluidListView);
                     fluidListView.Update();
 
@@ -428,8 +431,11 @@ namespace Doozy.Editor.Common.Layouts
             foreach (string category in database.GetCategories())
             {
                 if (category.Equals(defaultCategory)) continue;
-                FluidToggleCheckbox toggle = FluidToggleCheckbox.Get().SetLabelText(category).SetToggleAccentColor(selectableActionColor);
-                toggle.AddToToggleGroup(exportToggleGroup);
+                FluidToggleCheckbox toggle =
+                    FluidToggleCheckbox.Get()
+                        .SetLabelText(category)
+                        .SetToggleAccentColor(selectableActionColor)
+                        .RegisterToToggleGroup(exportToggleGroup);
                 exportScrollableContent.AddChild(toggle);
                 exportToggles.Add(category, toggle);
             }
@@ -466,7 +472,12 @@ namespace Doozy.Editor.Common.Layouts
                 ScriptableObject asset = AssetDatabase.LoadAssetAtPath<ScriptableObject>(assetPath);
                 string assetName = asset.name;
                 string assetPrettyName = assetName.RemoveAllSpecialCharacters().Replace(roamingDatabaseTypeName, "");
-                FluidToggleCheckbox toggle = FluidToggleCheckbox.Get().SetLabelText(assetPrettyName).SetToggleAccentColor(selectableActionColor);
+                FluidToggleCheckbox toggle =
+                    FluidToggleCheckbox.Get()
+                        .SetLabelText(assetPrettyName)
+                        .SetToggleAccentColor(selectableActionColor)
+                        .RegisterToToggleGroup(importToggleGroup);
+
                 FluidButton pingAssetButton = NewPingAssetButton().SetOnClick(() => EditorGUIUtility.PingObject(asset));
                 FluidButton deleteAssetButton = NewDeleteAssetButton().SetOnClick(() =>
                 {
@@ -476,7 +487,7 @@ namespace Doozy.Editor.Common.Layouts
                     Debug.Log($"Asset '{assetPrettyName}' database moved to trash! ({assetPath})");
                     UpdateImport();
                 });
-                toggle.AddToToggleGroup(importToggleGroup);
+
                 importScrollableContent
                     .AddChild
                     (
@@ -501,6 +512,55 @@ namespace Doozy.Editor.Common.Layouts
 
         #region Handlers
 
+        private bool CategoryRenameHandler(string targetCategory, string newCategoryName)
+        {
+            bool canRenameCategory;
+            string message;
+            (canRenameCategory, message) = database.CanRenameCategory(targetCategory, newCategoryName);
+            if (!canRenameCategory)
+            {
+                EditorUtility.DisplayDialog
+                (
+                    "Attention Required",
+                    message,
+                    "OK"
+                );
+                return false;
+            }
+            if (!EditorUtility.DisplayDialog
+                (
+                    "Rename Category",
+                    $"Are you sure you want to rename the '{targetCategory}' category to '{newCategoryName}'?",
+                    "Yes",
+                    "Cancel")
+               )
+                return false;
+            if (!EditorUtility.DisplayDialog
+                (
+                    "Confirm Rename",
+                    $"This operation cannot be undone and does not (and cannot) automatically update the places where the '{targetCategory}' category name was used to the new '{newCategoryName}' category name." +
+                    $"\n\nYou alone are responsible to perform these updates manually.",
+                    "Continue",
+                    "Cancel Rename")
+               )
+                return false;
+            database.RenameCategory(targetCategory, newCategoryName);
+            EditorUtility.SetDirty(targetObject);
+            AssetDatabase.SaveAssetIfDirty(targetObject);
+            UpdateDatabase();
+            schedule.Execute(() =>
+            {
+                FluidToggleButtonTab button = sideMenu.buttons.FirstOrDefault(b => b.buttonLabel.text.Equals(newCategoryName));
+                if (button == null)
+                {
+                    sideMenu.buttons.First()?.SetIsOn(true);
+                    return;
+                }
+                button.SetIsOn(true);
+            });
+            return true;
+        }
+
         private void CategoryRemoveHandler(string targetCategory)
         {
             bool canRemoveCategory;
@@ -518,7 +578,7 @@ namespace Doozy.Editor.Common.Layouts
                     "Yes",
                     "Cancel"
                 )
-            ) return;
+               ) return;
 
             regenerateEnumOnDisable = true;
             Undo.RecordObject(targetObject, "Remove Category");
@@ -548,7 +608,7 @@ namespace Doozy.Editor.Common.Layouts
                     "Yes",
                     "Cancel"
                 )
-            ) return;
+               ) return;
 
             regenerateEnumOnDisable = true;
             Undo.RecordObject(targetObject, "Remove Item");
@@ -834,7 +894,11 @@ namespace Doozy.Editor.Common.Layouts
                 {
                     if (!category.IsNullOrEmpty()) searchResults.AddSpace(0, DesignUtils.k_Spacing * 4);
                     category = resultsItem.category;
-                    CategoryNameItemCategoryRow categoryRow = new CategoryNameItemCategoryRow().SetTarget(category).HideRemoveCategoryButton();
+                    CategoryNameItemCategoryRow categoryRow =
+                        new CategoryNameItemCategoryRow()
+                            .SetTarget(category)
+                            .SetSaveHandler(CategoryRenameHandler)
+                            .HideRemoveCategoryButton();
                     categoryRow.layoutContainer.SetStyleMarginBottom(DesignUtils.k_Spacing);
                     searchResults.Add(categoryRow);
                 }

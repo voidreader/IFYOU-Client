@@ -28,10 +28,6 @@ namespace Doozy.Editor.UIManager.Editors.Visual
         protected override Color accentColor => EditorColors.UIManager.VisualComponent;
         protected override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.VisualComponent;
 
-        private static IEnumerable<Texture2D> uiContainerIconTextures => EditorSpriteSheets.UIManager.Icons.UIContainer;
-        private static IEnumerable<Texture2D> spriteSwapperIconTextures => EditorSpriteSheets.UIManager.Icons.SpriteSwapper;
-        private static IEnumerable<Texture2D> spriteTargetIconTextures => EditorSpriteSheets.Reactor.Icons.SpriteTarget;
-
         private SerializedProperty propertySpriteTarget { get; set; }
         private SerializedProperty propertyShowSprite { get; set; }
         private SerializedProperty propertyHideSprite { get; set; }
@@ -70,11 +66,11 @@ namespace Doozy.Editor.UIManager.Editors.Visual
 
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(UIContainer)))
-                .SetIcon(spriteSwapperIconTextures.ToList())
+                .SetIcon(EditorSpriteSheets.UIManager.Icons.SpriteSwapper)
                 .SetComponentTypeText("Sprite Swapper")
                 .AddManualButton()
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Visual.UIContainerSpriteSwapper.html")
                 .AddYouTubeButton();
-
 
             spriteTargetObjectField =
                 DesignUtils.NewObjectField(propertySpriteTarget, typeof(ReactorSpriteTarget), false)
@@ -83,7 +79,7 @@ namespace Doozy.Editor.UIManager.Editors.Visual
             spriteTargetFluidField =
                 FluidField.Get()
                     .SetLabelText("Sprite Target")
-                    .SetIcon(spriteTargetIconTextures)
+                    .SetIcon(EditorSpriteSheets.Reactor.Icons.SpriteTarget)
                     .AddFieldContent(spriteTargetObjectField);
 
             showSpriteObjectField = DesignUtils.NewObjectField(propertyShowSprite, typeof(Sprite), false).SetStyleFlexGrow(1).SetTooltip("Sprite set on Show");
@@ -113,7 +109,7 @@ namespace Doozy.Editor.UIManager.Editors.Visual
             root
                 .AddChild(componentHeader)
                 .AddChild(DesignUtils.spaceBlock)
-                .AddChild(controllerField)
+                .AddChild(BaseUIContainerAnimatorEditor.GetController(propertyController))
                 .AddChild(DesignUtils.spaceBlock2X)
                 .AddChild(spriteTargetFluidField)
                 .AddChild(DesignUtils.spaceBlock2X)
@@ -124,22 +120,6 @@ namespace Doozy.Editor.UIManager.Editors.Visual
                 ;
         }
 
-        protected override void ComposeAnimatedContainers() {} //ignored
-        protected override void ComposeTabs() {}               //ignored
-
-        protected override void InitializeController()
-        {
-            controllerObjectField =
-                DesignUtils.NewObjectField(propertyController, typeof(UIContainer))
-                    .SetTooltip($"{ObjectNames.NicifyVariableName(nameof(UIContainer))} controller")
-                    .SetStyleFlexGrow(1);
-
-            controllerField =
-                FluidField.Get()
-                    .SetLabelText($"Controller")
-                    .SetIcon(uiContainerIconTextures)
-                    .SetStyleMinWidth(200)
-                    .AddFieldContent(controllerObjectField);
-        }
+      
     }
 }

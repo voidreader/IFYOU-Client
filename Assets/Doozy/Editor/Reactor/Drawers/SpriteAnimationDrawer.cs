@@ -14,7 +14,6 @@ using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.Reactor.Components;
 using Doozy.Editor.UIElements;
 using Doozy.Runtime.Common.Extensions;
-using Doozy.Runtime.Pooler;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.UIElements.Extensions;
@@ -32,34 +31,12 @@ namespace Doozy.Editor.Reactor.Drawers
         private static Color accentColor => EditorColors.Reactor.Red;
         private static EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.Reactor.Red;
 
-        private static IEnumerable<Texture2D> spriteAnimationIconTextures => EditorSpriteSheets.Reactor.Icons.SpriteAnimation;
-        private static IEnumerable<Texture2D> unityEventIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
-        private static IEnumerable<Texture2D> resetIconTextures => EditorSpriteSheets.EditorUI.Icons.Reset;
-        private static IEnumerable<Texture2D> spriteIconTextures => EditorSpriteSheets.EditorUI.Icons.Sprite;
-
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {}
-
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             var drawer = new VisualElement();
             if (property == null) return drawer;
+            drawer.RegisterCallback<DetachFromPanelEvent>(evt => drawer.RecycleAndClear());
             var target = property.GetTargetObjectOfProperty() as SpriteAnimation;
-
-            var poolables = new List<IPoolable>();
-            var disposables = new List<IDisposable>();
-
-            void Dispose()
-            {
-                foreach (IPoolable poolable in poolables)
-                    poolable?.Recycle();
-
-                foreach (IDisposable disposable in disposables)
-                    disposable?.Dispose();
-
-                drawer.Clear();
-            }
-
-            drawer.RegisterCallback<DetachFromPanelEvent>(evt => Dispose());
 
             #region SerializedProperties
 
@@ -80,215 +57,155 @@ namespace Doozy.Editor.Reactor.Drawers
                 FluidComponentHeader.Get()
                     .SetAccentColor(accentColor)
                     .SetElementSize(ElementSize.Tiny)
-                    .SetSecondaryIcon(spriteAnimationIconTextures.ToList())
                     .SetComponentNameText("Sprite Animation")
                     .AddManualButton("www.bit.ly/DoozyKnowledgeBase4")
+                    .AddApiButton()
                     .AddYouTubeButton();
-
-            poolables.Add(componentHeader);
 
             #endregion
 
-            #region Tabs
+            #region Containers
 
-            VisualElement tabsContainer = DesignUtils.row.SetStyleJustifyContent(Justify.Center).SetStyleMargins(12, 0, 12, 0);
-            FluidToggleButtonTab animationTabButton, callbacksTabButton, spritesTabButton;
-            EnabledIndicator animationTabIndicator, callbacksTabIndicator;
-            VisualElement animationTabContainer, callbacksTabContainer;
+            VisualElement contentContainer = new VisualElement().SetName("Content Container").SetStyleFlexGrow(1);
+            FluidAnimatedContainer settingsAnimatedContainer = new FluidAnimatedContainer("Animation", true).Hide(false);
+            FluidAnimatedContainer spritesAnimatedContainer = new FluidAnimatedContainer("Sprites", true).Hide(false);
+            FluidAnimatedContainer callbacksAnimatedContainer = new FluidAnimatedContainer("Callbacks", true).Hide(false);
 
-            (animationTabButton, animationTabIndicator, animationTabContainer) = DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(spriteAnimationIconTextures, selectableAccentColor, accentColor);
-            (callbacksTabButton, callbacksTabIndicator, callbacksTabContainer) = DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(unityEventIconTextures, DesignUtils.callbackSelectableColor, DesignUtils.callbacksColor);
-            spritesTabButton = DesignUtils.GetTabButtonForComponentSection(spriteIconTextures, selectableAccentColor);
-
-
-            animationTabIndicator.Toggle(propertyAnimationEnabled.boolValue, false);
-
-            poolables.Add(animationTabIndicator);
-            poolables.Add(callbacksTabIndicator);
-
-            animationTabButton.SetLabelText("Animation");
-            callbacksTabButton.SetLabelText("Callbacks");
-            spritesTabButton.SetLabelText("Sprites");
-
-            poolables.Add(animationTabButton);
-            poolables.Add(callbacksTabButton);
-            poolables.Add(spritesTabButton);
-
-            FluidToggleGroup showToggleGroup =
-                FluidToggleGroup.Get()
-                    .SetControlMode(FluidToggleGroup.ControlMode.OneToggleOn, animateChange: false);
-
-            poolables.Add(showToggleGroup);
-
-            animationTabButton.AddToToggleGroup(showToggleGroup);
-            callbacksTabButton.AddToToggleGroup(showToggleGroup);
-            spritesTabButton.AddToToggleGroup(showToggleGroup);
-
-            FluidAnimatedContainer animationAnimatedContainer = new FluidAnimatedContainer().SetName("Animation").SetClearOnHide(true);
-            FluidAnimatedContainer spritesAnimatedContainer = new FluidAnimatedContainer().SetName("Sprites").SetClearOnHide(true);
-
-            disposables.Add(animationAnimatedContainer);
-            disposables.Add(spritesAnimatedContainer);
-
-            animationAnimatedContainer.OnShowCallback = () =>
+            //settings container content
+            settingsAnimatedContainer.SetOnShowCallback(() =>
             {
-                animationAnimatedContainer.AddContent(GetAnimationContent(propertyAnimation, propertyAnimationEnabled));
-                animationAnimatedContainer.Bind(property.serializedObject);
-            };
+                settingsAnimatedContainer
+                    .AddContent(GetAnimationContent(propertyAnimation, propertyAnimationEnabled))
+                    .Bind(property.serializedObject);
+            });
 
-            spritesAnimatedContainer.OnShowCallback = () =>
+            //sprites container content
+            spritesAnimatedContainer.SetOnShowCallback(() =>
             {
-                spritesAnimatedContainer.AddContent(GetSpritesContent(propertySprites, target));
-                spritesAnimatedContainer.Bind(property.serializedObject);
-            };
+                spritesAnimatedContainer
+                    .AddContent(GetSpritesContent(propertySprites, target))
+                    .Bind(property.serializedObject);
+            });
 
-            tabsContainer
-                .AddChild(animationTabContainer)
-                .AddSpace(DesignUtils.k_Spacing * 4, 0)
-                .AddChild(callbacksTabContainer)
-                .AddSpace(DesignUtils.k_Spacing * 4, 0)
-                .AddChild(spritesTabButton)
-                .AddSpace(DesignUtils.k_Spacing * 4, 0)
+            //callbacks container content
+            callbacksAnimatedContainer.SetOnShowCallback(() =>
+            {
+                callbacksAnimatedContainer
+                    .AddContent
+                    (
+                        FluidField.Get()
+                            .AddFieldContent(DesignUtils.NewPropertyField(propertyOnPlayCallback.propertyPath))
+                            .AddFieldContent(DesignUtils.spaceBlock)
+                            .AddFieldContent(DesignUtils.NewPropertyField(propertyOnStopCallback.propertyPath))
+                            .AddFieldContent(DesignUtils.spaceBlock)
+                            .AddFieldContent(DesignUtils.NewPropertyField(propertyOnFinishCallback.propertyPath))
+                    )
+                    .AddContent(DesignUtils.endOfLineBlock)
+                    .Bind(property.serializedObject);
+            });
+
+            #endregion
+
+            #region Toolbar
+
+            VisualElement toolbarContainer =
+                new VisualElement()
+                    .SetName("Toolbar Container")
+                    .SetStyleFlexDirection(FlexDirection.Row)
+                    .SetStyleMarginTop(-1)
+                    .SetStyleMarginLeft(4)
+                    .SetStyleMarginRight(4)
+                    .SetStyleFlexGrow(1);
+
+            FluidTab settingsTab =
+                FluidTab.Get()
+                    .SetLabelText("Settings")
+                    .SetElementSize(ElementSize.Small)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Settings)
+                    .ButtonSetAccentColor(selectableAccentColor)
+                    .IndicatorSetEnabledColor(accentColor)
+                    .ButtonSetOnValueChanged(evt => settingsAnimatedContainer.Toggle(evt.newValue));
+
+            FluidTab spritesTab =
+                FluidTab.Get()
+                    .SetLabelText("Sprites")
+                    .SetElementSize(ElementSize.Small)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Sprite)
+                    .ButtonSetAccentColor(selectableAccentColor)
+                    .IndicatorSetEnabledColor(accentColor)
+                    .ButtonSetOnValueChanged(evt => spritesAnimatedContainer.Toggle(evt.newValue));
+
+            FluidTab callbacksTab =
+                FluidTab.Get()
+                    .SetLabelText("Callbacks")
+                    .SetElementSize(ElementSize.Small)
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.UnityEvent)
+                    .ButtonSetAccentColor(DesignUtils.callbackSelectableColor)
+                    .IndicatorSetEnabledColor(DesignUtils.callbacksColor)
+                    .ButtonSetOnValueChanged(evt => callbacksAnimatedContainer.Toggle(evt.newValue));
+
+            //create tabs group
+            FluidToggleGroup tabsGroup = FluidToggleGroup.Get().SetControlMode(FluidToggleGroup.ControlMode.OneToggleOn);
+            settingsTab.button.AddToToggleGroup(tabsGroup);
+            callbacksTab.button.AddToToggleGroup(tabsGroup);
+            spritesTab.button.AddToToggleGroup(tabsGroup);
+
+
+
+            //update tab indicators
+            drawer.schedule.Execute(() =>
+            {
+                void UpdateIndicator(FluidTab fluidTab, bool toggleOn, bool animateChange)
+                {
+                    if (fluidTab.indicator.isOn == toggleOn) return;
+                    fluidTab.indicator.Toggle(toggleOn, animateChange);
+                }
+
+                bool HasCallbacks() =>
+                    target != null &&
+                    target.OnPlayCallback?.GetPersistentEventCount() > 0 |  //HasOnPlayCallback
+                    target.OnStopCallback?.GetPersistentEventCount() > 0 |  //HasOnPlayCallback
+                    target.OnFinishCallback?.GetPersistentEventCount() > 0; //HasOnFinishCallback
+
+                //initial indicators state update (no animation)
+                UpdateIndicator(settingsTab, propertyAnimationEnabled.boolValue, false);
+                UpdateIndicator(spritesTab, propertySprites.arraySize > 0, false);
+                UpdateIndicator(callbacksTab, HasCallbacks(), false);
+
+                drawer.schedule.Execute(() =>
+                {
+                    //subsequent indicators state update (animated)
+                    UpdateIndicator(settingsTab, propertyAnimationEnabled.boolValue, true);
+                    UpdateIndicator(spritesTab, propertySprites.arraySize > 0, true);
+                    UpdateIndicator(callbacksTab, HasCallbacks(), true);
+
+                }).Every(200);
+            });
+
+            toolbarContainer
+                .AddChild(settingsTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(spritesTab)
+                .AddChild(DesignUtils.spaceBlock)
+                .AddChild(callbacksTab)
+                .AddChild(DesignUtils.spaceBlock)
                 .AddChild(DesignUtils.flexibleSpace);
 
             #endregion
 
-            #region Fields
-
-            bool HasOnPlayCallback() => target?.OnPlayCallback?.GetPersistentEventCount() > 0;
-
-            bool HasOnStopCallback() => target?.OnStopCallback?.GetPersistentEventCount() > 0;
-
-            bool HasOnFinishCallback() => target?.OnFinishCallback?.GetPersistentEventCount() > 0;
-
-            bool HasCallbacks() => HasOnPlayCallback() | HasOnStopCallback() | HasOnFinishCallback();
-
-            callbacksTabIndicator.Toggle(HasCallbacks(), false);
-
-            //OnPlayCallback
-            var onPlayCallbackFoldout = new FluidFoldout("OnPlay");
-            disposables.Add(onPlayCallbackFoldout);
-
-            onPlayCallbackFoldout.animatedContainer.OnShowCallback = () =>
-            {
-                onPlayCallbackFoldout.ResetContentLeftPadding();
-                onPlayCallbackFoldout.AddContent(DesignUtils.NewPropertyField(propertyOnPlayCallback.propertyPath));
-                onPlayCallbackFoldout.Bind(property.serializedObject);
-            };
-
-            //OnStopCallback
-            var onStopCallbackFoldout = new FluidFoldout("OnStop");
-            disposables.Add(onStopCallbackFoldout);
-
-            onStopCallbackFoldout.animatedContainer.OnShowCallback = () =>
-            {
-                onStopCallbackFoldout.ResetContentLeftPadding();
-                onStopCallbackFoldout.AddContent(DesignUtils.NewPropertyField(propertyOnStopCallback.propertyPath));
-                onStopCallbackFoldout.Bind(property.serializedObject);
-            };
-
-
-            //OnFinishCallback
-            var onFinishCallbackFoldout = new FluidFoldout("OnFinish");
-            disposables.Add(onFinishCallbackFoldout);
-
-            onFinishCallbackFoldout.animatedContainer.OnShowCallback = () =>
-            {
-                onFinishCallbackFoldout.ResetContentLeftPadding();
-                onFinishCallbackFoldout.AddContent(DesignUtils.NewPropertyField(propertyOnFinishCallback.propertyPath));
-                onFinishCallbackFoldout.Bind(property.serializedObject);
-            };
-
-
-            //Callbacks container
-            FluidAnimatedContainer callbacksAnimatedContainer = new FluidAnimatedContainer().SetName("Callbacks").SetClearOnHide(true);
-            disposables.Add(callbacksAnimatedContainer);
-
-            callbacksAnimatedContainer.OnShowCallback = () =>
-            {
-                callbacksAnimatedContainer.AddContent
-                (
-                    new VisualElement()
-                        .AddChild(onPlayCallbackFoldout)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(onStopCallbackFoldout)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(onFinishCallbackFoldout)
-                        .AddChild(DesignUtils.endOfLineBlock)
-                );
-
-                callbacksAnimatedContainer.Bind(property.serializedObject);
-            };
-
-            callbacksAnimatedContainer.OnHideCallback =
-                () =>
-                {
-                    if (onPlayCallbackFoldout.isOn) onPlayCallbackFoldout.SetIsOn(false, animateChange: true);
-                    if (onStopCallbackFoldout.isOn) onStopCallbackFoldout.SetIsOn(false, animateChange: true);
-                    if (onFinishCallbackFoldout.isOn) onFinishCallbackFoldout.SetIsOn(false, animateChange: true);
-                };
-
-            #endregion
-
-            animationTabButton.SetOnValueChanged(evt => animationAnimatedContainer.Toggle(evt.newValue));
-            spritesTabButton.SetOnValueChanged(evt => spritesAnimatedContainer.Toggle(evt.newValue));
-
-            bool previousHasCallbacks = !HasCallbacks();
-            IVisualElementScheduledItem callbacksScheduler =
-                callbacksTabButton.schedule.Execute(() =>
-                {
-                    bool hasCallbacks = HasCallbacks();
-                    if (previousHasCallbacks == hasCallbacks) return;
-                    UpdateIndicators(true);
-                    previousHasCallbacks = hasCallbacks;
-                }).Every(250);
-            callbacksScheduler.Pause();
-
-            callbacksTabButton.OnValueChanged = evt =>
-            {
-                callbacksAnimatedContainer.Toggle(evt.newValue);
-                if (evt.newValue)
-                    callbacksScheduler?.Resume();
-                else
-                    callbacksScheduler?.Pause();
-            };
+            #region Compose
 
             drawer
                 .AddChild(componentHeader)
-                .AddChild(tabsContainer)
-                .AddSpace(0, DesignUtils.k_Spacing * 2)
-                .AddChild(animationAnimatedContainer)
-                .AddChild(callbacksAnimatedContainer)
-                .AddChild(spritesAnimatedContainer);
-
-            #region Dynamic Setup
-
-            #region Invisible Fields
-
-            Toggle invisibleAnimationEnabledToggle = DesignUtils.NewToggle(propertyAnimationEnabled.propertyPath, invisibleField: true);
-
-            drawer
-                .AddChild(invisibleAnimationEnabledToggle);
-
-            invisibleAnimationEnabledToggle.RegisterValueChangedCallback(evt => UpdateIndicators(true));
-
-            UpdateIndicators(false);
-
-            void UpdateIndicator(EnabledIndicator indicator, bool enabled, bool animateChange = true)
-            {
-                indicator.Toggle(enabled, animateChange);
-            }
-
-            void UpdateIndicators(bool animateChange)
-            {
-                drawer.schedule.Execute(() =>
-                {
-                    UpdateIndicator(animationTabIndicator, propertyAnimationEnabled.boolValue, animateChange);
-                    UpdateIndicator(callbacksTabIndicator, HasCallbacks(), animateChange);
-                });
-            }
-
-            #endregion
+                .AddChild(toolbarContainer)
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild
+                (
+                    contentContainer
+                        .AddChild(settingsAnimatedContainer)
+                        .AddChild(spritesAnimatedContainer)
+                        .AddChild(callbacksAnimatedContainer)
+                );
 
             #endregion
 
@@ -297,7 +214,7 @@ namespace Doozy.Editor.Reactor.Drawers
 
         private static VisualElement GetSpritesContent(SerializedProperty arrayProperty, SpriteAnimation animation)
         {
-            var animationInfo =
+            SpriteAnimationInfo animationInfo =
                 new SpriteAnimationInfo(arrayProperty)
                     .SetStyleMarginTop(DesignUtils.k_Spacing);
 
@@ -365,7 +282,7 @@ namespace Doozy.Editor.Reactor.Drawers
                     foreach (Texture texture in temp.OfType<Texture>().ToList())
                     {
                         string assetPath = AssetDatabase.GetAssetPath(texture); //get sheet asset path
-                        
+
                         if (texture.IsSpriteSheet())
                         {
                             references.AddRange(AssetDatabase.LoadAllAssetRepresentationsAtPath(assetPath).OfType<Sprite>().OrderBy(item => item.name));
@@ -380,13 +297,18 @@ namespace Doozy.Editor.Reactor.Drawers
                 if (references.Count == 0)
                     return;
 
+                Sprite firstSprite = null;
                 arrayProperty.ClearArray();
                 foreach (Sprite sprite in references.OfType<Sprite>())
                 {
+                    firstSprite ??= sprite;
                     arrayProperty.InsertArrayElementAtIndex(arrayProperty.arraySize);
                     arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1).objectReferenceValue = sprite;
                 }
-
+                
+                //Update sprite via the Set Sprite button setter
+                animationInfo.spriteSetter.Invoke(firstSprite);
+                
                 arrayProperty.serializedObject.ApplyModifiedProperties();
                 animation.UpdateAnimationSprites();
                 animationInfo.Update();
@@ -517,76 +439,78 @@ namespace Doozy.Editor.Reactor.Drawers
             }
 
             UpdateItemsSource();
+
             return content;
         }
 
+        private const int HEIGHT = 42;
+        
         private static VisualElement GetAnimationContent(SerializedProperty propertyAnimation, SerializedProperty propertyAnimationEnabled)
         {
             SerializedProperty propertyFromReferenceValue = propertyAnimation.FindPropertyRelative("FromReferenceValue");
-            SerializedProperty propertyFromFrameOffset = propertyAnimation.FindPropertyRelative("FromFrameOffset");
-            SerializedProperty propertyFromCustomValue = propertyAnimation.FindPropertyRelative("FromCustomValue");
-            SerializedProperty propertyFromCustomProgress = propertyAnimation.FindPropertyRelative("FromCustomProgress");
-
             SerializedProperty propertyToReferenceValue = propertyAnimation.FindPropertyRelative("ToReferenceValue");
+
+            SerializedProperty propertyFromFrameOffset = propertyAnimation.FindPropertyRelative("FromFrameOffset");
             SerializedProperty propertyToFrameOffset = propertyAnimation.FindPropertyRelative("ToFrameOffset");
+
+            SerializedProperty propertyFromCustomValue = propertyAnimation.FindPropertyRelative("FromCustomValue");
             SerializedProperty propertyToCustomValue = propertyAnimation.FindPropertyRelative("ToCustomValue");
+
+            SerializedProperty propertyFromCustomProgress = propertyAnimation.FindPropertyRelative("FromCustomProgress");
             SerializedProperty propertyToCustomProgress = propertyAnimation.FindPropertyRelative("ToCustomProgress");
 
             SerializedProperty propertySettings = propertyAnimation.FindPropertyRelative("Settings");
 
             var content = new VisualElement();
             content.SetEnabled(propertyAnimationEnabled.boolValue);
-            var enableSwitch = NewEnableAnimationSwitch(string.Empty, selectableAccentColor, propertyAnimationEnabled, content);
+            FluidToggleSwitch enableSwitch = DesignUtils.GetEnableDisableSwitch(propertyAnimationEnabled, content, selectableAccentColor, "Animation");
+            
+            FluidField fromReferenceValueFluidField = FluidField.Get<EnumField>(propertyFromReferenceValue, "From Frame").SetStyleHeight(HEIGHT, HEIGHT, HEIGHT);
+            FluidField toReferenceValueFluidField = FluidField.Get<EnumField>(propertyToReferenceValue, "To Frame").SetStyleHeight(HEIGHT, HEIGHT, HEIGHT);
 
-            var fieldFromReferenceValue = new EnumField().SetBindingPath(propertyFromReferenceValue.propertyPath).ResetLayout();
-            var fieldFromFrameOffset = FluidField.Get("Frame Offset", new IntegerField().SetBindingPath(propertyFromFrameOffset.propertyPath).ResetLayout());
-            var fieldFromCustomValue = FluidField.Get("Custom Frame Number", new IntegerField().SetBindingPath(propertyFromCustomValue.propertyPath).ResetLayout());
+            FluidField fromFrameOffsetFluidField = FluidField.Get<FloatField>(propertyFromFrameOffset, "From Offset").SetStyleHeight(HEIGHT, HEIGHT, HEIGHT);
+            FluidField toFrameOffsetFluidField = FluidField.Get<FloatField>(propertyToFrameOffset, "To Offset").SetStyleHeight(HEIGHT, HEIGHT, HEIGHT);
 
-            #region From Custom Progress
+            FluidField fromCustomValueFluidField = FluidField.Get<FloatField>(propertyFromCustomValue, "From Custom Frame").SetStyleHeight(HEIGHT, HEIGHT, HEIGHT);
+            FluidField toCustomValueFluidField = FluidField.Get<FloatField>(propertyToCustomValue, "To Custom Frame").SetStyleHeight(HEIGHT, HEIGHT, HEIGHT);
 
-            var fromCustomProgressLabel = GetOffsetLabel(() => $"{(propertyFromCustomProgress.floatValue * 100).Round(0)}%");
-            var fromCustomProgressSlider = new Slider(0f, 1f).SetBindingPath(propertyFromCustomProgress.propertyPath).ResetLayout().SetStyleFlexGrow(1);
-            fromCustomProgressSlider.RegisterValueChangedCallback(evt => fromCustomProgressLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
-            var fieldFromCustomProgress =
+            #region Custom Progress
+
+            Label fromCustomProgressLabel = GetOffsetLabel(() => $"{(propertyFromCustomProgress.floatValue * 100).Round(0)}%");
+            Label toCustomProgressLabel = GetOffsetLabel(() => $"{(propertyToCustomProgress.floatValue * 100).Round(0)}%");
+
+            Slider fromCustomProgressSlider = DesignUtils.NewSlider(propertyFromCustomProgress, 0f, 1f);
+            Slider toCustomProgressSlider = DesignUtils.NewSlider(propertyToCustomProgress, 0f, 1f);
+
+            fromCustomProgressSlider.RegisterValueChangedCallback(evt =>
+                fromCustomProgressLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
+
+            toCustomProgressSlider.RegisterValueChangedCallback(evt =>
+                toCustomProgressLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
+
+            FluidField fromCustomProgressFluidField =
                 GetOffsetField
                 (
-                    "Custom Progress",
-                    fromCustomProgressLabel,
-                    fromCustomProgressSlider,
+                    "Custom Progress", fromCustomProgressLabel, fromCustomProgressSlider,
                     () =>
                     {
                         propertyFromCustomProgress.floatValue = 0f;
                         propertyFromCustomProgress.serializedObject.ApplyModifiedProperties();
                     });
 
-            #endregion
-
-            var fieldFrom = FluidField.Get("From").AddFieldContent(fieldFromReferenceValue);
-
-            var fieldToReferenceValue = new EnumField().SetBindingPath(propertyToReferenceValue.propertyPath).ResetLayout();
-            var fieldToFrameOffset = FluidField.Get("Frame Offset", new IntegerField().SetBindingPath(propertyToFrameOffset.propertyPath).ResetLayout());
-            var fieldToCustomValue = FluidField.Get("Custom Frame Number", new IntegerField().SetBindingPath(propertyToCustomValue.propertyPath).ResetLayout());
-
-            #region To Custom Progress
-
-            var toCustomProgressLabel = GetOffsetLabel(() => $"{(propertyToCustomProgress.floatValue * 100).Round(0)}%");
-            var toCustomProgressSlider = new Slider(0f, 1f).SetBindingPath(propertyToCustomProgress.propertyPath).ResetLayout().SetStyleFlexGrow(1);
-            toCustomProgressSlider.RegisterValueChangedCallback(evt => toCustomProgressLabel.SetText($"{(evt.newValue * 100).Round(0)}%"));
-            var fieldToCustomProgress =
+            FluidField toCustomProgressFluidField =
                 GetOffsetField
                 (
-                    "Custom Progress",
-                    toCustomProgressLabel,
-                    toCustomProgressSlider,
+                    "Custom Progress", toCustomProgressLabel, toCustomProgressSlider,
                     () =>
                     {
-                        propertyFromCustomProgress.floatValue = 1f;
-                        propertyFromCustomProgress.serializedObject.ApplyModifiedProperties();
+                        propertyToCustomProgress.floatValue = 1f;
+                        propertyToCustomProgress.serializedObject.ApplyModifiedProperties();
                     });
 
             #endregion
 
-            var fieldTo = FluidField.Get("To").AddFieldContent(fieldToReferenceValue);
+            PropertyField settingsPropertyField = DesignUtils.NewPropertyField(propertySettings).SetName("Animation Settings");
 
             VisualElement foldoutContent =
                 new VisualElement()
@@ -602,28 +526,32 @@ namespace Doozy.Editor.Reactor.Drawers
                             .AddChild
                             (
                                 DesignUtils.row
+                                    .SetName("From To Settings")
                                     .AddChild
                                     (
-                                        DesignUtils.flexibleSpace
-                                            .AddChild(fieldFrom.SetStyleFlexGrow(1))
-                                            .AddSpace(0, DesignUtils.k_Spacing)
-                                            .AddChild(fieldFromFrameOffset.SetStyleFlexGrow(1).SetStyleHeight(42).SetStyleMaxHeight(42))
-                                            .AddChild(fieldFromCustomValue.SetStyleHeight(42).SetStyleFlexGrow(1).SetStyleMaxHeight(42))
-                                            .AddChild(fieldFromCustomProgress.SetStyleHeight(42).SetStyleFlexGrow(1).SetStyleMaxHeight(42))
+                                        DesignUtils.column
+                                            .SetName("From Settings")
+                                            .AddChild(fromReferenceValueFluidField)
+                                            .AddChild(DesignUtils.spaceBlock)
+                                            .AddChild(fromFrameOffsetFluidField)
+                                            .AddChild(fromCustomValueFluidField)
+                                            .AddChild(fromCustomProgressFluidField)
                                     )
-                                    .AddSpace(DesignUtils.k_Spacing, 0)
+                                    .AddChild(DesignUtils.spaceBlock)
                                     .AddChild
                                     (
-                                        DesignUtils.flexibleSpace
-                                            .AddChild(fieldTo.SetStyleFlexGrow(1))
-                                            .AddSpace(0, DesignUtils.k_Spacing)
-                                            .AddChild(fieldToFrameOffset.SetStyleFlexGrow(1).SetStyleHeight(42).SetStyleMaxHeight(42))
-                                            .AddChild(fieldToCustomValue.SetStyleHeight(42).SetStyleFlexGrow(1).SetStyleMaxHeight(42))
-                                            .AddChild(fieldToCustomProgress.SetStyleHeight(42).SetStyleFlexGrow(1).SetStyleMaxHeight(42))
-                                    ))
-                            .AddSpace(0, DesignUtils.k_Spacing)
-                            .AddChild(new PropertyField().SetBindingPath(propertySettings.propertyPath))
-                            .AddSpace(0, DesignUtils.k_EndOfLineSpacing)
+                                        DesignUtils.column
+                                            .SetName("To Settings")
+                                            .AddChild(toReferenceValueFluidField)
+                                            .AddChild(DesignUtils.spaceBlock)
+                                            .AddChild(toFrameOffsetFluidField)
+                                            .AddChild(toCustomValueFluidField)
+                                            .AddChild(toCustomProgressFluidField)
+                                    )
+                            )
+                            .AddChild(DesignUtils.spaceBlock)
+                            .AddChild(settingsPropertyField)
+                            .AddChild(DesignUtils.endOfLineBlock)
                     );
 
             void Update()
@@ -634,9 +562,9 @@ namespace Doozy.Editor.Reactor.Drawers
                     fromReferenceValue == FrameReferenceValue.LastFrame ||
                     fromReferenceValue == FrameReferenceValue.CurrentFrame;
 
-                fieldFromFrameOffset.SetStyleDisplay(showFromOffset ? DisplayStyle.Flex : DisplayStyle.None);
-                fieldFromCustomValue.SetStyleDisplay(fromReferenceValue == FrameReferenceValue.CustomFrame ? DisplayStyle.Flex : DisplayStyle.None);
-                fieldFromCustomProgress.SetStyleDisplay(fromReferenceValue == FrameReferenceValue.CustomProgress ? DisplayStyle.Flex : DisplayStyle.None);
+                fromFrameOffsetFluidField.SetStyleDisplay(showFromOffset ? DisplayStyle.Flex : DisplayStyle.None);
+                fromCustomValueFluidField.SetStyleDisplay(fromReferenceValue == FrameReferenceValue.CustomFrame ? DisplayStyle.Flex : DisplayStyle.None);
+                fromCustomProgressFluidField.SetStyleDisplay(fromReferenceValue == FrameReferenceValue.CustomProgress ? DisplayStyle.Flex : DisplayStyle.None);
 
                 var toReferenceValue = (FrameReferenceValue)propertyToReferenceValue.enumValueIndex;
                 bool showToOffset =
@@ -644,20 +572,20 @@ namespace Doozy.Editor.Reactor.Drawers
                     toReferenceValue == FrameReferenceValue.LastFrame ||
                     toReferenceValue == FrameReferenceValue.CurrentFrame;
 
-                fieldToFrameOffset.SetStyleDisplay(showToOffset ? DisplayStyle.Flex : DisplayStyle.None);
-                fieldToCustomValue.SetStyleDisplay(toReferenceValue == FrameReferenceValue.CustomFrame ? DisplayStyle.Flex : DisplayStyle.None);
-                fieldToCustomProgress.SetStyleDisplay(toReferenceValue == FrameReferenceValue.CustomProgress ? DisplayStyle.Flex : DisplayStyle.None);
+                toFrameOffsetFluidField.SetStyleDisplay(showToOffset ? DisplayStyle.Flex : DisplayStyle.None);
+                toCustomValueFluidField.SetStyleDisplay(toReferenceValue == FrameReferenceValue.CustomFrame ? DisplayStyle.Flex : DisplayStyle.None);
+                toCustomProgressFluidField.SetStyleDisplay(toReferenceValue == FrameReferenceValue.CustomProgress ? DisplayStyle.Flex : DisplayStyle.None);
             }
 
             //FromReferenceValue
-            var invisibleFieldFromReferenceValueEnum = new EnumField().SetBindingPath(propertyFromReferenceValue.propertyPath).SetStyleDisplay(DisplayStyle.None);
-            foldoutContent.AddChild(invisibleFieldFromReferenceValueEnum);
-            invisibleFieldFromReferenceValueEnum.RegisterValueChangedCallback(changeEvent => Update());
+            EnumField invisibleFieldRotateFromReferenceValueEnum = new EnumField { bindingPath = propertyFromReferenceValue.propertyPath }.SetStyleDisplay(DisplayStyle.None);
+            foldoutContent.AddChild(invisibleFieldRotateFromReferenceValueEnum);
+            invisibleFieldRotateFromReferenceValueEnum.RegisterValueChangedCallback(changeEvent => Update());
 
             //ToReferenceValue
-            var invisibleFieldToReferenceValueEnum = new EnumField().SetBindingPath(propertyToReferenceValue.propertyPath).SetStyleDisplay(DisplayStyle.None);
-            foldoutContent.AddChild(invisibleFieldToReferenceValueEnum);
-            invisibleFieldToReferenceValueEnum.RegisterValueChangedCallback(changeEvent => Update());
+            EnumField invisibleFieldRotateToReferenceValueEnum = new EnumField { bindingPath = propertyToReferenceValue.propertyPath }.SetStyleDisplay(DisplayStyle.None);
+            foldoutContent.AddChild(invisibleFieldRotateToReferenceValueEnum);
+            invisibleFieldRotateToReferenceValueEnum.RegisterValueChangedCallback(changeEvent => Update());
 
             foldoutContent.Bind(propertyAnimation.serializedObject);
 
@@ -675,6 +603,7 @@ namespace Doozy.Editor.Reactor.Drawers
 
         private static FluidField GetOffsetField(string labelText, VisualElement label, VisualElement slider, UnityAction onClickCallback) =>
             FluidField.Get()
+                .SetStyleHeight(HEIGHT, HEIGHT, HEIGHT)
                 .SetLabelText(labelText)
                 .AddFieldContent
                 (
@@ -685,31 +614,11 @@ namespace Doozy.Editor.Reactor.Drawers
                         .AddChild(slider)
                         .AddChild
                         (
-                            FluidButton.Get(resetIconTextures)
+                            FluidButton.Get(EditorSpriteSheets.EditorUI.Icons.Reset)
                                 .SetElementSize(ElementSize.Tiny)
                                 .SetTooltip("Reset")
                                 .SetOnClick(onClickCallback)
                         )
                 );
-
-        private static FluidToggleSwitch NewEnableAnimationSwitch(string animationName, EditorSelectableColorInfo sColor, SerializedProperty propertyEnabled, VisualElement content)
-        {
-            FluidToggleSwitch fluidSwitch =
-                FluidToggleSwitch.Get($"Enable {animationName}")
-                    .SetToggleAccentColor(sColor)
-                    .BindToProperty(propertyEnabled.propertyPath);
-
-            fluidSwitch.SetOnValueChanged(evt => Update(evt.newValue));
-
-            Update(propertyEnabled.boolValue);
-
-            void Update(bool enabled)
-            {
-                fluidSwitch.SetLabelText($"{animationName}{(animationName.IsNullOrEmpty() ? "" : " ")}{(enabled ? "Enabled" : "Disabled")}");
-                content.SetEnabled(enabled);
-            }
-
-            return fluidSwitch;
-        }
     }
 }

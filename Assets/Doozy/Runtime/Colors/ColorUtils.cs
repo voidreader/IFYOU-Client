@@ -63,7 +63,7 @@ namespace Doozy.Runtime.Colors
 		public static float RGBtoHUE(RGB target, bool factorize = false) =>
 			Hue(target.r, target.g, target.b, factorize);
 
-		/// <summary> Get <see cref="RGB"/> from hue </summary>
+		/// <summary> Get RGB from hue </summary>
 		/// <param name="hue"> HUE value </param>
 		/// <returns> A new RGB </returns>
 		public static RGB HUEtoRGB(float hue)

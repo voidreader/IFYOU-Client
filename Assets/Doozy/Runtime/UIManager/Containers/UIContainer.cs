@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Doozy.Runtime.Common.Extensions;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Global;
 using Doozy.Runtime.Mody;
 using Doozy.Runtime.Reactor;
@@ -32,10 +33,18 @@ namespace Doozy.Runtime.UIManager.Containers
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(GraphicRaycaster))]
     [RequireComponent(typeof(RectTransform))]
-    [AddComponentMenu("Doozy/UI/Containers/UI Container")]
+    [AddComponentMenu("UI/Containers/UIContainer")]
     [SelectionBase]
     public class UIContainer : MonoBehaviour, ICanvasElement, IUseMultiplayerInfo
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Containers/UIContainer", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UIContainer>("UIContainer", false, true);
+        }
+        #endif
+        
         /// <summary> Stream category name </summary>
         public const string k_StreamCategory = nameof(UIContainer);
         /// <summary> Default animation duration </summary>
@@ -120,18 +129,36 @@ namespace Doozy.Runtime.UIManager.Containers
         /// <summary> Show animation started - executed when visibility state changed to IsShowing </summary>
         public ModyEvent OnShowCallback;
 
+        /// <summary> Returns TRUE if the OnShowCallback event is not null and has at least one listener </summary>
+        public bool hasOnShowCallbacks => OnShowCallback != null && OnShowCallback.hasCallbacks;
+        
         /// <summary> Visible - Show animation finished - executed when visibility state changed to Visible </summary>
         public ModyEvent OnVisibleCallback;
+        
+        /// <summary> Returns TRUE if the OnVisibleCallback event is not null and has at least one listener </summary>
+        public bool hasOnVisibleCallbacks => OnVisibleCallback != null && OnVisibleCallback.hasCallbacks;
 
         /// <summary> Hide animation started - executed when visibility state changed to IsHiding </summary>
         public ModyEvent OnHideCallback;
+        
+        /// <summary> Returns TRUE if the OnHideCallback event is not null and has at least one listener </summary>
+        public bool hasOnHideCallbacks => OnHideCallback != null && OnHideCallback.hasCallbacks;
 
         /// <summary> Hidden - Hide animation finished - callback invoked when visibility state changed to Hidden </summary>
         public ModyEvent OnHiddenCallback;
+        
+        /// <summary> Returns TRUE if the OnHiddenCallback event is not null and has at least one listener </summary>
+        public bool hasOnHiddenCallbacks => OnHiddenCallback != null && OnHiddenCallback.hasCallbacks;
 
         /// <summary> Visibility changed - callback invoked when visibility state changed </summary>
         public VisibilityStateEvent OnVisibilityChangedCallback;
 
+        /// <summary> Returns TRUE if the OnVisibilityChangedCallback event is not null and has at least one listener </summary>
+        public bool hasOnVisibilityChangedCallbacks => OnVisibilityChangedCallback != null && OnVisibilityChangedCallback.GetPersistentEventCount() > 0;
+        
+        /// <summary> Returns TRUE if any of the available callbacks has at least one listener </summary>
+        public bool hasCallbacks => hasOnShowCallbacks | hasOnVisibleCallbacks | hasOnHideCallbacks | hasOnHiddenCallbacks | hasOnVisibilityChangedCallbacks;
+        
         [SerializeField] private List<Progressor> ShowProgressors;
         /// <summary> Progressors triggered on Show. Plays forward. </summary>
         public List<Progressor> showProgressors => ShowProgressors ?? (ShowProgressors = new List<Progressor>());
@@ -198,13 +225,13 @@ namespace Doozy.Runtime.UIManager.Containers
         public bool anyAnimationIsActive => anyShowAnimationIsActive | anyHideAnimationIsActive;
 
         /// <summary> Check if there are any referenced Show progressors </summary>
-        public bool hasShowProgressors => showProgressors.Any(p => p != null);
+        public bool hasShowProgressors => showProgressors.Count > 0;
 
         /// <summary> Check if there are any referenced Hide progressors </summary>
-        public bool hasHideProgressors => hideProgressors.Any(p => p != null);
+        public bool hasHideProgressors => hideProgressors.Count > 0;
 
         /// <summary> Check if there are any referenced ShowHide progressors </summary>
-        public bool hasShowHideProgressors => showHideProgressors.Any(p => p != null);
+        public bool hasShowHideProgressors => showHideProgressors.Count > 0;
 
         /// <summary> Check if there are any referenced progressors </summary>
         public bool hasProgressors => hasShowProgressors || hasHideProgressors || hasShowHideProgressors;

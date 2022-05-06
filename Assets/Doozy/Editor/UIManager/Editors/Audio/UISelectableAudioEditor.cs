@@ -28,9 +28,6 @@ namespace Doozy.Editor.UIManager.Editors.Audio
         protected override Color accentColor => EditorColors.UIManager.AudioComponent;
         protected override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.AudioComponent;
         
-        private static IEnumerable<Texture2D> uiSelectableIconTextures => UISelectableEditor.selectableIconTextures;
-        private static IEnumerable<Texture2D> soundIconTextures => EditorSpriteSheets.EditorUI.Icons.Sound;
-
         private SerializedProperty propertyAudioSource { get; set; }
         private SerializedProperty propertyNormalAudioClip { get; set; }
         private SerializedProperty propertyHighlightedAudioClip { get; set; }
@@ -53,8 +50,6 @@ namespace Doozy.Editor.UIManager.Editors.Audio
         private ObjectField disabledAudioClipObjectField { get; set; }
 
         private SerializedProperty propertyToggleCommand { get; set; }
-        private EnumField toggleCommandEnumField { get; set; }
-        private FluidField toggleCommandField { get; set; }
 
         protected override void OnDestroy()
         {
@@ -66,8 +61,6 @@ namespace Doozy.Editor.UIManager.Editors.Audio
             pressedAudioClipFluidField?.Recycle();
             selectedAudioClipFluidField?.Recycle();
             disabledAudioClipFluidField?.Recycle();
-
-            toggleCommandField?.Recycle();
         }
 
         protected override void FindProperties()
@@ -89,9 +82,10 @@ namespace Doozy.Editor.UIManager.Editors.Audio
 
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(UISelectable)))
-                .SetIcon(soundIconTextures.ToList())
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Sound)
                 .SetComponentTypeText("Audio")
-                // .AddManualButton("")
+                .AddManualButton()
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Audio.UISelectableAudio.html")
                 .AddYouTubeButton();
 
             audioSourceObjectField =
@@ -125,7 +119,7 @@ namespace Doozy.Editor.UIManager.Editors.Audio
             root
                 .AddChild(componentHeader)
                 .AddChild(DesignUtils.spaceBlock)
-                .AddChild(controllerField)
+                .AddChild(BaseUISelectableAnimatorEditor.GetController(propertyController, propertyToggleCommand))
                 .AddChild(DesignUtils.spaceBlock2X)
                 .AddChild(audioSourceFluidField)
                 .AddChild(DesignUtils.spaceBlock2X)
@@ -142,49 +136,6 @@ namespace Doozy.Editor.UIManager.Editors.Audio
                 ;
         }
 
-        protected override void ComposeAnimatedContainers() {} //ignored
-        protected override void ComposeTabs() {}               //ignored
-
-        protected override void InitializeController()
-        {
-            controllerObjectField =
-                DesignUtils.NewObjectField(propertyController, typeof(UISelectable))
-                    .SetTooltip($"{ObjectNames.NicifyVariableName(nameof(UISelectable))} controller")
-                    .SetStyleFlexGrow(1);
-
-            toggleCommandEnumField =
-                DesignUtils.NewEnumField(propertyToggleCommand)
-                    .SetStyleWidth(50, 50, 50)
-                    .SetStyleAlignSelf(Align.Center)
-                    .SetStyleMarginRight(DesignUtils.k_Spacing);
-
-            void ShowToggleCommand(bool show) =>
-                toggleCommandEnumField.SetStyleDisplay(show ? DisplayStyle.Flex : DisplayStyle.None);
-
-            ShowToggleCommand(propertyController.objectReferenceValue != null && ((UISelectable)propertyController.objectReferenceValue).isToggle);
-            controllerObjectField.RegisterValueChangedCallback(evt =>
-            {
-                if (evt.newValue == null)
-                {
-                    ShowToggleCommand(false);
-                    return;
-                }
-
-                ShowToggleCommand(((UISelectable)evt.newValue).isToggle);
-            });
-
-            controllerField =
-                FluidField.Get()
-                    .SetLabelText($"Controller")
-                    .SetIcon(uiSelectableIconTextures)
-                    .SetStyleMinWidth(200)
-                    .AddFieldContent
-                    (
-                        DesignUtils.row
-                            .SetStyleFlexGrow(0)
-                            .AddChild(toggleCommandEnumField)
-                            .AddChild(controllerObjectField)
-                    );
-        }
+       
     }
 }

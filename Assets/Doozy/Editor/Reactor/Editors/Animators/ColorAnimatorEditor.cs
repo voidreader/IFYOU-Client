@@ -10,6 +10,7 @@ using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.Reactor.Components;
 using Doozy.Editor.Reactor.Editors.Animators.Internal;
+using Doozy.Editor.Reactor.Ticker;
 using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.Reactor.Animators;
@@ -18,7 +19,6 @@ using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -28,31 +28,68 @@ namespace Doozy.Editor.Reactor.Editors.Animators
     [CanEditMultipleObjects]
     public class ColorAnimatorEditor : BaseReactorAnimatorEditor
     {
-        public static IEnumerable<Texture2D> colorAnimatorIconTextures => EditorSpriteSheets.Reactor.Icons.ColorAnimator;
-        public static IEnumerable<Texture2D> colorAnimationIconTextures => EditorSpriteSheets.Reactor.Icons.ColorAnimation;
-        public static IEnumerable<Texture2D> colorTargetIconTextures => EditorSpriteSheets.Reactor.Icons.ColorTarget;
-
         private ColorAnimator castedTarget => (ColorAnimator)target;
-        private IEnumerable<ColorAnimator> castedTargets => targets.Cast<ColorAnimator>();
+        private List<ColorAnimator> castedTargets => targets.Cast<ColorAnimator>().ToList();
 
-        private ColorAnimationTab colorAnimationTab { get; set; }
+        private ColorAnimationTab colorTab { get; set; }
 
         private ObjectField colorTargetObjectField { get; set; }
         private FluidField colorTargetFluidField { get; set; }
         private SerializedProperty propertyColorTarget { get; set; }
         private IVisualElementScheduledItem targetFinder { get; set; }
 
-        public override VisualElement CreateInspectorGUI()
-        {
-            InitializeEditor();
-            Compose();
-            return root;
-        }
-
         protected override void OnDestroy()
         {
             base.OnDestroy();
             colorTargetFluidField?.Recycle();
+            colorTab?.Dispose();
+        }
+
+        protected override void ResetAnimatorInitializedState()
+        {
+            foreach (var a in castedTargets)
+                a.animatorInitialized = false;
+        }
+
+        protected override void ResetToStartValues()
+        {
+            foreach (var a in castedTargets)
+            {
+                a.Stop();
+                a.ResetToStartValues();
+            }
+        }
+
+        protected override void SetProgressAtZero() =>
+            castedTargets.ForEach(a => a.SetProgressAtZero());
+
+        protected override void PlayForward() =>
+            castedTargets.ForEach(a => a.Play(PlayDirection.Forward));
+
+        protected override void Stop() =>
+            castedTargets.ForEach(a => a.Stop());
+
+        protected override void PlayReverse() =>
+            castedTargets.ForEach(a => a.Play(PlayDirection.Reverse));
+
+        protected override void Reverse() =>
+            castedTargets.ForEach(a => a.Reverse());
+
+        protected override void SetProgressAtOne() =>
+            castedTargets.ForEach(a => a.SetProgressAtOne());
+
+        protected override void HeartbeatCheck()
+        {
+            if (Application.isPlaying) return;
+            foreach (var a in castedTargets)
+            {
+                if (a.animatorInitialized) continue;
+                if (!a.hasTarget) continue;
+                resetToStartValue = true;
+                a.InitializeAnimator();
+                foreach (EditorHeartbeat eh in a.SetHeartbeat<EditorHeartbeat>().Cast<EditorHeartbeat>())
+                    eh.StartSceneViewRefresh(a);
+            }
         }
 
         protected override void FindProperties()
@@ -65,108 +102,52 @@ namespace Doozy.Editor.Reactor.Editors.Animators
         {
             base.InitializeEditor();
 
-            animationTabButton.RemoveFromToggleGroup();
-            animationTabButton?.Recycle();
-
-            colorAnimationTab =
-                ColorAnimationTab.Get()
-                    .SetTabAccentColor(selectableAccentColor);
-
-            colorAnimationTab.tabButton
-                .SetIcon(colorAnimationIconTextures)
-                .SetLabelText("Animation")
-                .SetOnValueChanged(evt => animationAnimatedContainer.Toggle(evt.newValue));
-
-            colorAnimationTab.tabButton.AddToToggleGroup(tabsGroup);
-            colorAnimationTab.tabButton.SetIsOn(true, false);
-
             componentHeader
-                .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(ColorAnimator)))
-                .SetIcon(colorAnimatorIconTextures.ToList())
+                .SetComponentNameText("Color Animator")
+                .SetIcon(EditorSpriteSheets.Reactor.Icons.ColorAnimator)
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1046675529/Color+Animator?atlOrigin=eyJpIjoiNmIwYjkxNTQwNjdhNGZkYTg1NTNlOTRiOGZlY2I5ZjIiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Reactor.Animators.ColorAnimator.html")
                 .AddYouTubeButton();
+        }
 
-            controls
-                .SetFirstFrameButtonCallback(() =>
-                {
-                    if (serializedObject.isEditingMultipleObjects)
-                    {
-                        foreach (ColorAnimator animator in castedTargets)
-                            animator.SetProgressAtZero();
-                        return;
-                    }
-                    castedTarget.SetProgressAtZero();
-                })
-                .SetPlayForwardButtonCallback(() =>
-                {
-                    if (serializedObject.isEditingMultipleObjects)
-                    {
-                        foreach (ColorAnimator animator in castedTargets)
-                            animator.Play(PlayDirection.Forward);
-                        return;
-                    }
-                    castedTarget.Play(PlayDirection.Forward);
-                })
-                .SetStopButtonCallback(() =>
-                {
-                    if (serializedObject.isEditingMultipleObjects)
-                    {
-                        foreach (ColorAnimator animator in castedTargets)
-                            animator.Stop();
-                        return;
-                    }
-                    castedTarget.Stop();
-                })
-                .SetPlayReverseButtonCallback(() =>
-                {
-                    if (serializedObject.isEditingMultipleObjects)
-                    {
-                        foreach (ColorAnimator animator in castedTargets)
-                            animator.Play(PlayDirection.Reverse);
-                        return;
-                    }
-                    castedTarget.Play(PlayDirection.Reverse);
-                })
-                .SetReverseButtonCallback(() =>
-                {
-                    if (serializedObject.isEditingMultipleObjects)
-                    {
-                        foreach (ColorAnimator animator in castedTargets)
-                            animator.Reverse();
-                        return;
-                    }
-                    castedTarget.Reverse();
-                })
-                .SetLastFrameButtonCallback(() =>
-                {
-                    if (serializedObject.isEditingMultipleObjects)
-                    {
-                        foreach (ColorAnimator animator in castedTargets)
-                            animator.SetProgressAtOne();
-                        return;
-                    }
-                    castedTarget.SetProgressAtOne();
-                });
+        protected override void InitializeAnimation()
+        {
+            base.InitializeAnimation();
+
+            //remove the default animation tab and replace it with the color tab
+            animationTab?.RemoveFromToggleGroup();
+            animationTab?.Recycle();
+
+            colorTab =
+                ColorAnimationTab.Get()
+                    .SetIcon(EditorSpriteSheets.Reactor.Icons.ColorAnimation)
+                    .SetLabelText("Animation")
+                    .ButtonSetAccentColor(selectableAccentColor)
+                    .IndicatorSetEnabledColor(accentColor)
+                    .ButtonSetOnValueChanged(evt => animationAnimatedContainer.Toggle(evt.newValue))
+                    .AddToToggleGroup(tabsGroup);
 
             colorTargetObjectField =
                 DesignUtils.NewObjectField(propertyColorTarget, typeof(ReactorColorTarget))
                     .SetStyleFlexGrow(1)
                     .SetTooltip("Animation color target");
+
             colorTargetFluidField =
                 FluidField.Get()
                     .SetLabelText("Color Target")
-                    .SetIcon(colorTargetIconTextures)
+                    .SetIcon(EditorSpriteSheets.Reactor.Icons.ColorTarget)
                     .AddFieldContent(colorTargetObjectField);
 
+            //search for color target
             if (!EditorApplication.isPlayingOrWillChangePlaymode)
-            {
                 targetFinder = root.schedule.Execute(() =>
                 {
-                    if (castedTarget == null)
+                    if (castedTarget == null) 
                         return;
-
+                    
                     if (castedTarget.colorTarget != null)
                     {
+                        castedTarget.animation.SetTarget(castedTarget.colorTarget);
                         targetFinder.Pause();
                         return;
                     }
@@ -174,81 +155,64 @@ namespace Doozy.Editor.Reactor.Editors.Animators
                     castedTarget.FindTarget();
 
                 }).Every(1000);
-            }
 
+            //refresh colorTab reference color
             root.schedule.Execute(() =>
             {
                 if (castedTarget == null) return;
 
                 if (!EditorApplication.isPlayingOrWillChangePlaymode)
+                    if (castedTarget.hasTarget && !castedTarget.animatorInitialized)
+                        HeartbeatCheck();
+
+                colorTab.RefreshTabReferenceColor(castedTarget.animation);
+
+            }).Every(200);
+
+            //refresh colorTab enabled indicator
+            SerializedProperty propertyEnabled = serializedObject.FindProperty("Animation.Animation.Enabled");
+            root.schedule.Execute(() =>
+            {
+                void UpdateIndicator(ColorAnimationTab tab, bool toggleOn, bool animateChange)
                 {
-                    if (castedTarget.hasTarget)
-                        castedTarget.SetTarget(castedTarget.colorTarget);
+                    if (tab.indicator.isOn != toggleOn)
+                        tab.indicator.Toggle(toggleOn, animateChange);
                 }
 
-                void RefreshTab(ColorAnimationTab tab, ColorAnimation animation)
+                //initial indicators state update (no animation)
+                UpdateIndicator(colorTab, propertyEnabled.boolValue, false);
+
+                root.schedule.Execute(() =>
                 {
-                    bool isValid = animation.hasTarget && animation.isEnabled;
-                    tab.referenceColorElement.SetStyleDisplay(isValid ? DisplayStyle.Flex : DisplayStyle.None);
+                    //subsequent indicators state update (animated)
+                    UpdateIndicator(colorTab, propertyEnabled.boolValue, true);
 
-                    if (!isValid)
-                        return;
+                }).Every(200);
+            });
+        }
 
-                    tab.SetReferenceColor
-                    (
-                        animation.animation.GetValue
-                        (
-                            animation.animation.toReferenceValue,
-                            animation.animation.startColor,
-                            animation.animation.currentColor,
-                            animation.animation.toCustomValue,
-                            animation.animation.toHueOffset,
-                            animation.animation.toSaturationOffset,
-                            animation.animation.toLightnessOffset,
-                            animation.animation.toAlphaOffset
-                        )
-                    );
-                }
-
-                RefreshTab(colorAnimationTab, castedTarget.animation);
-
-            }).Every(100);
+        protected override VisualElement Toolbar()
+        {
+            return
+                toolbarContainer
+                    .AddChild(colorTab)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(behaviourTab)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(DesignUtils.flexibleSpace)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(nameTab)
+                    .AddChild(DesignUtils.spaceBlock);
         }
 
         protected override void Compose()
         {
-            base.Compose();
-
             root
+                .AddChild(reactionControls)
                 .AddChild(componentHeader)
-                .AddChild
-                (
-                    DesignUtils.row
-                        .SetStyleMargins(42, -2, DesignUtils.k_Spacing2X, DesignUtils.k_Spacing2X)
-                        .AddChild(colorAnimationTab)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(settingsTab)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(DesignUtils.flexibleSpace)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild(animatorNameTab)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild
-                        (
-                            DesignUtils.SystemButton_SortComponents
-                            (
-                                castedTarget.gameObject,
-                                nameof(RectTransform),
-                                nameof(Canvas),
-                                nameof(CanvasGroup),
-                                nameof(GraphicRaycaster)
-                            )
-                        )
-                )
-                .AddChild(controls.SetStyleMargins(DesignUtils.k_Spacing))
-                .AddChild(animationAnimatedContainer)
-                .AddChild(behaviourAnimatedContainer)
-                .AddChild(animatorNameAnimatedContainer)
+                .AddChild(Toolbar())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(Content())
                 .AddChild(colorTargetFluidField)
                 .AddChild(DesignUtils.endOfLineBlock);
         }

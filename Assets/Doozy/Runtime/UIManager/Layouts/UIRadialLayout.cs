@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Reactor.Animations;
 using Doozy.Runtime.Reactor.Animators;
 using Doozy.Runtime.UIManager.Animators;
@@ -18,12 +19,20 @@ namespace Doozy.Runtime.UIManager.Layouts
     /// <summary>
     /// The Radial Layout component sets child elements in a radial or circular arrangement.
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Layouts/UI Radial Layout")]
+    [AddComponentMenu("UI/Layouts/UI RadialLayout")]
     [RequireComponent(typeof(RectTransform))]
     [DisallowMultipleComponent]
     [ExecuteAlways]
     public class UIRadialLayout : UILayoutGroup
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Layouts/UI RadialLayout", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UIRadialLayout>("UI RadialLayout", false, true);
+        }
+        #endif
+        
         public const bool k_AutoRebuildDefaultValue = true;
         public const bool k_ClockwiseDefaultValue = true;
         public const bool k_ControlChildHeightDefaultValue = false;

@@ -9,8 +9,13 @@ using Doozy.Editor.EditorUI.Components;
 using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
+using Doozy.Editor.Reactor.Components;
+using Doozy.Editor.Reactor.Ticker;
+using Doozy.Editor.UIManager.Components;
+using Doozy.Runtime.Common.Extensions;
 using Doozy.Runtime.UIElements.Extensions;
 using Doozy.Runtime.UIManager;
+using Doozy.Runtime.UIManager.Animators;
 using Doozy.Runtime.UIManager.Components;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -28,46 +33,30 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
         protected const string k_ShowNavigationKey = "SelectableEditor.ShowNavigation";
         protected static bool showNavigation { get; set; }
 
-        protected static IEnumerable<Texture2D> navigationIconTextures => EditorSpriteSheets.EditorUI.Icons.Navigation;
-        protected static IEnumerable<Texture2D> statesIconTextures => EditorSpriteSheets.EditorUI.Icons.SelectableStates;
-        protected static IEnumerable<Texture2D> hideIconTextures => EditorSpriteSheets.EditorUI.Icons.Hide;
-        protected static IEnumerable<Texture2D> showIconTextures => EditorSpriteSheets.EditorUI.Icons.Show;
-        protected static IEnumerable<Texture2D> settingsIconTextures => EditorSpriteSheets.EditorUI.Icons.Settings;
-
         public virtual Color accentColor => EditorColors.UIManager.UIComponent;
         public virtual EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.UIComponent;
 
-        public UISelectable selectable => (UISelectable)target;
-        public IEnumerable<UISelectable> selectables => targets.Cast<UISelectable>();
+        public UISelectable castedSelectable => (UISelectable)target;
+        public List<UISelectable> castedSelectables => targets.Cast<UISelectable>().ToList();
+
+        protected List<BaseUISelectableAnimator> selectableAnimators { get; set; }
 
         protected VisualElement root { get; set; }
-
-        protected EnumField navigationModeEnumField { get; set; }
-
-        protected FluidAnimatedContainer explicitNavigationAnimatedContainer { get; set; }
-        protected FluidAnimatedContainer navigationAnimatedContainer { get; set; }
-        protected FluidAnimatedContainer statesAnimatedContainer { get; set; }
-        protected FluidAnimatedContainer settingsAnimatedContainer { get; set; }
-
-        protected FluidButton visualizeNavigationButton { get; set; }
-
+        protected ComponentReactionControls reactionControls { get; set; }
         protected FluidComponentHeader componentHeader { get; set; }
+        protected VisualElement toolbarContainer { get; private set; }
+        protected VisualElement contentContainer { get; private set; }
 
-        protected FluidToggleButtonTab callbacksTabButton { get; set; }
-        protected FluidToggleButtonTab navigationTabButton { get; set; }
-        protected FluidToggleButtonTab settingsTabButton { get; set; }
-        protected FluidToggleButtonTab statesTabButton { get; set; }
+        protected FluidToggleGroup tabsGroup { get; set; }
+        protected FluidTab settingsTab { get; set; }
+        protected FluidTab statesTab { get; set; }
+        protected FluidTab behavioursTab { get; set; }
+        protected FluidTab navigationTab { get; set; }
 
-        protected FluidToggleCheckbox interactableCheckbox { get; set; }
-        protected FluidToggleCheckbox deselectAfterPressCheckbox { get; set; }
-
-        protected FluidToggleGroup toggleGroup { get; set; }
-
-        protected FluidToggleButtonTab normalStateButton { get; set; }
-        protected FluidToggleButtonTab highlightedStateButton { get; set; }
-        protected FluidToggleButtonTab pressedStateButton { get; set; }
-        protected FluidToggleButtonTab selectedStateButton { get; set; }
-        protected FluidToggleButtonTab disabledStateButton { get; set; }
+        protected FluidAnimatedContainer settingsAnimatedContainer { get; set; }
+        protected FluidAnimatedContainer statesAnimatedContainer { get; set; }
+        protected FluidAnimatedContainer behavioursAnimatedContainer { get; set; }
+        protected FluidAnimatedContainer navigationAnimatedContainer { get; set; }
 
         protected SerializedProperty propertyInteractable { get; set; }
         protected SerializedProperty propertyNavigationMode { get; set; }
@@ -85,7 +74,43 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
         protected SerializedProperty propertySelectedState { get; set; }
         protected SerializedProperty propertyDisabledState { get; set; }
         protected SerializedProperty propertyDeselectAfterPress { get; set; }
+        private SerializedProperty propertyBehaviours { get; set; }
 
+        protected bool resetToStartValue { get; set; }
+
+        protected virtual void OnEnable()
+        {
+            showNavigation = EditorPrefs.GetBool(k_ShowNavigationKey);
+            if (showNavigation) RegisterToSceneView();
+
+            if (Application.isPlaying) return;
+            resetToStartValue = false;
+            SearchForAnimators();
+            ResetAnimatorInitializedState();
+        }
+
+        protected virtual void OnDisable()
+        {
+            UnregisterFromSceneView();
+            if (Application.isPlaying) return;
+            if (resetToStartValue) ResetToStartValues();
+        }
+
+        protected virtual void OnDestroy()
+        {
+            reactionControls?.Dispose();
+
+            componentHeader?.Recycle();
+
+            tabsGroup?.Recycle();
+            settingsTab?.Recycle();
+            statesTab?.Recycle();
+            navigationTab?.Recycle();
+
+            statesAnimatedContainer?.Dispose();
+            navigationAnimatedContainer?.Dispose();
+            settingsAnimatedContainer?.Dispose();
+        }
 
         public override VisualElement CreateInspectorGUI()
         {
@@ -94,40 +119,78 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
             return root;
         }
 
-        protected virtual void OnEnable()
+        protected virtual void ResetAnimatorInitializedState()
         {
-            showNavigation = EditorPrefs.GetBool(k_ShowNavigationKey);
-            if (showNavigation) RegisterToSceneView();
+            foreach (UISelectable s in castedSelectables)
+                foreach (var animator in selectableAnimators.RemoveNulls())
+                    if (animator.controller == s)
+                        animator.animatorInitialized = false;
         }
 
-        protected virtual void OnDisable()
+        protected virtual void ResetToStartValues()
         {
-            UnregisterFromSceneView();
+            foreach (UISelectable s in castedSelectables)
+                foreach (var a in selectableAnimators.RemoveNulls())
+                    if (a.controller == s)
+                    {
+                        a.StopAllReactions();
+                        a.ResetToStartValues();
+                    }
         }
 
-        protected virtual void OnDestroy()
+        protected virtual void SetState(UISelectionState state)
         {
-            componentHeader?.Recycle();
+            foreach (UISelectable s in castedSelectables)
+            {
+                if (Application.isPlaying)
+                {
+                    s.SetState(state);
+                    continue;
+                }
 
-            interactableCheckbox?.Recycle();
-            deselectAfterPressCheckbox?.Recycle();
+                HeartbeatCheck();
+                foreach (var a in selectableAnimators.RemoveNulls())
+                    if (a.controller == s)
+                        a.Play(state);
+            }
+        }
 
-            toggleGroup?.Recycle();
-            settingsTabButton?.Recycle();
-            statesTabButton?.Recycle();
-            navigationTabButton?.Recycle();
-            callbacksTabButton?.Recycle();
+        protected abstract void SearchForAnimators();
 
-            normalStateButton?.Recycle();
-            highlightedStateButton?.Recycle();
-            pressedStateButton?.Recycle();
-            selectedStateButton?.Recycle();
-            disabledStateButton?.Recycle();
+        protected virtual void HeartbeatCheck()
+        {
+            if (Application.isPlaying) return;
 
-            statesAnimatedContainer?.Dispose();
-            navigationAnimatedContainer?.Dispose();
-            explicitNavigationAnimatedContainer?.Dispose();
-            settingsAnimatedContainer?.Dispose();
+            foreach (UISelectable s in castedSelectables)
+                foreach (var a in selectableAnimators.RemoveNulls())
+                    if (a.controller == s && a.animatorInitialized == false)
+                    {
+                        resetToStartValue = true;
+                        a.InitializeAnimator();
+                        foreach (EditorHeartbeat eh in a.SetHeartbeat<EditorHeartbeat>().Cast<EditorHeartbeat>())
+                            eh.StartSceneViewRefresh(a);
+                    }
+        }
+
+        protected virtual void InitializeReactionControls()
+        {
+            reactionControls =
+                new ComponentReactionControls(castedSelectable)
+                    .SetBackgroundColor(color: EditorColors.Default.BoxBackground)
+                    .AddComponentControls
+                    (
+                        resetCallback: () =>
+                        {
+                            HeartbeatCheck();
+                            ResetToStartValues();
+                        },
+                        normalCallback: () => SetState(UISelectionState.Normal),
+                        highlightedCallback: () => SetState(UISelectionState.Highlighted),
+                        pressedCallback: () => SetState(UISelectionState.Pressed),
+                        selectedCallback: () => SetState(UISelectionState.Selected),
+                        disabledCallback: () => SetState(UISelectionState.Disabled)
+                    )
+                    .SetButtonSetAccentColor(selectableAccentColor);
         }
 
         protected virtual void FindProperties()
@@ -150,302 +213,295 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
             propertyNavigationSelectOnRight = propertyNavigation.FindPropertyRelative("m_SelectOnRight");
 
             propertyDeselectAfterPress = serializedObject.FindProperty("DeselectAfterPress");
+
+            propertyBehaviours = serializedObject.FindProperty("Behaviours");
         }
 
         protected virtual void InitializeEditor()
         {
             FindProperties();
+            root = DesignUtils.GetEditorRoot();
+            componentHeader = DesignUtils.editorComponentHeader.SetAccentColor(accentColor);
+            toolbarContainer = DesignUtils.editorToolbarContainer;
+            tabsGroup = FluidToggleGroup.Get().SetControlMode(FluidToggleGroup.ControlMode.OneToggleOn);
+            contentContainer = DesignUtils.editorContentContainer;
 
-            root = new VisualElement();
-
-            componentHeader =
-                FluidComponentHeader.Get()
-                    .SetElementSize(ElementSize.Large);
-
-            interactableCheckbox = FluidToggleCheckbox.Get()
-                .SetLabelText("Interactable")
-                .SetTooltip("Can the Selectable be interacted with?")
-                .BindToProperty(propertyInteractable);
-
-            deselectAfterPressCheckbox = FluidToggleCheckbox.Get()
-                .SetLabelText("Deselect after Press")
-                .BindToProperty(propertyDeselectAfterPress);
-
-            statesAnimatedContainer =
-                new FluidAnimatedContainer()
-                    .SetName("States")
-                    .SetClearOnHide(false)
-                    .Hide(false);
-
-            navigationAnimatedContainer =
-                new FluidAnimatedContainer()
-                    .SetName("Navigation")
-                    .SetClearOnHide(true)
-                    .Hide(false);
-
-            settingsAnimatedContainer =
-                new FluidAnimatedContainer()
-                    .SetName("Settings")
-                    .SetClearOnHide(false)
-                    .Show(false);
-
-            toggleGroup =
-                FluidToggleGroup.Get()
-                    .SetControlMode(FluidToggleGroup.ControlMode.OneToggleOnEnforced);
-
-            settingsTabButton =
-                DesignUtils.GetTabButtonForComponentSection(settingsIconTextures, selectableAccentColor);
-
-            settingsTabButton
-                .SetLabelText("Settings")
-                .SetOnValueChanged(evt => settingsAnimatedContainer.Toggle(evt.newValue))
-                .SetIsOn(true, false)
-                .AddToToggleGroup(toggleGroup);
-
-            statesTabButton = DesignUtils.GetTabButtonForComponentSection(statesIconTextures, selectableAccentColor);
-            statesTabButton
-                .SetLabelText("States")
-                .SetOnValueChanged(evt => statesAnimatedContainer.Toggle(evt.newValue))
-                .AddToToggleGroup(toggleGroup);
-
+            InitializeReactionControls();
+            InitializeSettings();
             InitializeStates();
+            BehavioursCallbacks();
             InitializeNavigation();
-        }
 
-        protected VisualElement GetStateButtons() =>
-            EditorApplication.isPlayingOrWillChangePlaymode
-                ? DesignUtils.row
-                    .SetName("State Buttons")
-                    .AddChild(DesignUtils.flexibleSpace)
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(normalStateButton)
-                    .AddChild(highlightedStateButton)
-                    .AddChild(pressedStateButton)
-                    .AddChild(selectedStateButton)
-                    .AddChild(disabledStateButton)
-                    .AddChild(DesignUtils.spaceBlock)
-                : DesignUtils.flexibleSpace;
+            root.schedule.Execute(() => settingsTab.ButtonSetIsOn(true, false));
 
-        protected virtual void Compose()
-        {
-
-            root
-                .AddChild(componentHeader)
-                .AddChild
-                (
-                    DesignUtils.row
-                        .SetStyleMargins(50, -4, DesignUtils.k_Spacing2X, DesignUtils.k_Spacing2X)
-                        .AddChild(settingsTabButton)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild(statesTabButton)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(navigationTabButton)
-                        .AddChild(DesignUtils.flexibleSpace)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild
-                        (
-                            DesignUtils.SystemButton_SortComponents
-                            (
-                                ((UISelectable)target).gameObject,
-                                nameof(RectTransform),
-                                nameof(Canvas),
-                                nameof(CanvasGroup),
-                                nameof(GraphicRaycaster),
-                                nameof(UISelectable)
-                            )
-                        )
-                )
-                .AddChild(DesignUtils.spaceBlock)
-                .AddChild
-                (
-                    settingsAnimatedContainer
-                        .AddContent
-                        (
-                            DesignUtils.column
-                                .AddChild
-                                (
-                                    DesignUtils.row
-                                        .AddChild(interactableCheckbox)
-                                        .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(deselectAfterPressCheckbox)
-                                        .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(GetStateButtons())
-                                )
-                        )
-                )
-                .AddChild(statesAnimatedContainer)
-                .AddChild(navigationAnimatedContainer)
-                .AddChild(DesignUtils.endOfLineBlock);
-        }
-
-        private void InitializeStates()
-        {
-            EnumField currentStateEnumField = DesignUtils.NewEnumField(propertyCurrentUISelectionState, true);
-            root.Add(currentStateEnumField);
-
-            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            //refresh tabs enabled indicator
+            root.schedule.Execute(() =>
             {
-                FluidToggleButtonTab GetStateButton(UISelectionState selectionState) =>
-                    FluidToggleButtonTab.Get()
-                        .SetLabelText(selectionState.ToString())
-                        .SetTabPosition(TabPosition.FloatingTab)
-                        .SetElementSize(ElementSize.Tiny)
-                        .SetToggleAccentColor(selectableAccentColor)
-                        .SetStyleMarginTop(DesignUtils.k_Spacing / 2f)
-                        .SetStyleMarginRight(DesignUtils.k_Spacing / 2f)
-                        .SetContainerColorOff(DesignUtils.tabButtonColorOff)
-                        .SetOnClick(() =>
-                        {
-                            if (serializedObject.isEditingMultipleObjects)
-                            {
-                                foreach (UISelectable s in selectables)
-                                    s.SetState(selectionState);
-                                return;
-                            }
-
-                            selectable.SetState(selectionState);
-                        });
-
-
-                normalStateButton = GetStateButton(UISelectionState.Normal);
-                highlightedStateButton = GetStateButton(UISelectionState.Highlighted);
-                pressedStateButton = GetStateButton(UISelectionState.Pressed);
-                selectedStateButton = GetStateButton(UISelectionState.Selected);
-                disabledStateButton = GetStateButton(UISelectionState.Disabled);
-
-                void UpdateStateButtons(UISelectionState state)
+                void UpdateIndicator(FluidTab tab, bool toggleOn, bool animateChange)
                 {
-                    normalStateButton.SetIsOn(state == UISelectionState.Normal);
-                    highlightedStateButton.SetIsOn(state == UISelectionState.Highlighted);
-                    pressedStateButton.SetIsOn(state == UISelectionState.Pressed);
-                    selectedStateButton.SetIsOn(state == UISelectionState.Selected);
-                    disabledStateButton.SetIsOn(state == UISelectionState.Disabled);
+                    if (tab == null) return;
+                    if (tab.indicator.isOn != toggleOn)
+                        tab.indicator.Toggle(toggleOn, animateChange);
                 }
 
-                currentStateEnumField.RegisterValueChangedCallback(evt =>
-                {
-                    if(evt?.newValue == null) return;
-                    UpdateStateButtons((UISelectionState)evt.newValue);
-                });
-                UpdateStateButtons((UISelectionState)propertyCurrentUISelectionState.enumValueIndex);
-            }
+                bool HasStates() =>
+                    castedSelectable.normalState.stateEvent.hasCallbacks ||
+                    castedSelectable.highlightedState.stateEvent.hasCallbacks ||
+                    castedSelectable.pressedState.stateEvent.hasCallbacks ||
+                    castedSelectable.selectedState.stateEvent.hasCallbacks ||
+                    castedSelectable.disabledState.stateEvent.hasCallbacks;
 
-            statesAnimatedContainer.AddContent
-            (
-                DesignUtils.column
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(DesignUtils.NewPropertyField(propertyNormalState))
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(DesignUtils.NewPropertyField(propertyHighlightedState))
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(DesignUtils.NewPropertyField(propertyPressedState))
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(DesignUtils.NewPropertyField(propertySelectedState))
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(DesignUtils.NewPropertyField(propertyDisabledState))
-                    .AddChild(DesignUtils.endOfLineBlock)
-            );
+                bool HasBehaviours()
+                {
+                    UIBehaviours behaviours = castedSelectable.behaviours;
+                    return
+                        behaviours?.behaviours != null &&
+                        behaviours.behaviours.Count > 0 &&
+                        behaviours.behaviours.Any(b => b.hasCallbacks);
+                }
+
+                //initial indicators state update (no animation)
+                UpdateIndicator(statesTab, HasStates(), false);
+                UpdateIndicator(behavioursTab, HasBehaviours(), false);
+                UpdateIndicator(navigationTab, showNavigation, false);
+
+                //subsequent indicators state update (animated)
+                root.schedule.Execute(() =>
+                {
+                    UpdateIndicator(statesTab, HasStates(), true);
+                    UpdateIndicator(behavioursTab, HasBehaviours(), true);
+                    UpdateIndicator(navigationTab, showNavigation, true);
+
+                }).Every(200);
+            });
         }
 
-        private void InitializeNavigation()
+        protected FluidTab GetTab(string labelText) =>
+            FluidTab.Get()
+                .SetLabelText(labelText)
+                .IndicatorSetEnabledColor(accentColor)
+                .ButtonSetAccentColor(selectableAccentColor)
+                .AddToToggleGroup(tabsGroup);
+
+        protected virtual void InitializeSettings()
         {
-            navigationTabButton =
-                DesignUtils.GetTabButtonForComponentSection(navigationIconTextures, selectableAccentColor);
+            settingsAnimatedContainer = new FluidAnimatedContainer("Settings", true).Hide(false);
+            settingsTab =
+                GetTab("Settings")
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Settings)
+                    .ButtonSetOnValueChanged(evt => settingsAnimatedContainer.Toggle(evt.newValue, evt.animateChange));
 
-            navigationTabButton
-                .SetLabelText("Navigation")
-                .SetOnValueChanged(evt => navigationAnimatedContainer.Toggle(evt.newValue))
-                .AddToToggleGroup(toggleGroup);
+            settingsAnimatedContainer.SetOnShowCallback(() =>
+            {
+                FluidToggleCheckbox interactableCheckbox = FluidToggleCheckbox.Get()
+                    .SetLabelText("Interactable")
+                    .SetTooltip("Can the Selectable be interacted with?")
+                    .BindToProperty(propertyInteractable);
 
+                FluidToggleCheckbox deselectAfterPressCheckbox = FluidToggleCheckbox.Get()
+                    .SetLabelText("Deselect after Press")
+                    .BindToProperty(propertyDeselectAfterPress);
 
-            FluidField NavigationSelectField(string text, IEnumerable<Texture2D> textures, SerializedProperty property) =>
-                FluidField.Get()
-                    .SetLabelText(text)
-                    .SetIcon(textures)
-                    .SetElementSize(ElementSize.Small)
-                    .AddFieldContent
+                settingsAnimatedContainer
+                    .AddContent
                     (
-                        DesignUtils.NewObjectField(property, typeof(Selectable))
-                            .SetStyleFlexGrow(1)
-                    );
+                        DesignUtils.row
+                            .AddChild(interactableCheckbox)
+                            .AddChild(DesignUtils.spaceBlock)
+                            .AddChild(deselectAfterPressCheckbox)
+                    )
+                    .Bind(serializedObject);
+            });
+
+        }
+
+        protected virtual void InitializeStates()
+        {
+            statesAnimatedContainer = new FluidAnimatedContainer("States", true).Hide(false);
+            statesTab =
+                GetTab("States")
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.SelectableStates)
+                    .IndicatorSetEnabledColor(DesignUtils.callbacksColor)
+                    .ButtonSetAccentColor(DesignUtils.callbackSelectableColor)
+                    .ButtonSetOnValueChanged(evt => statesAnimatedContainer.Toggle(evt.newValue, evt.animateChange));
+
+            statesAnimatedContainer.SetOnShowCallback(() =>
+            {
+                statesAnimatedContainer
+                    .AddContent(DesignUtils.NewPropertyField(propertyNormalState))
+                    .AddContent(DesignUtils.spaceBlock2X)
+                    .AddContent(DesignUtils.NewPropertyField(propertyHighlightedState))
+                    .AddContent(DesignUtils.spaceBlock2X)
+                    .AddContent(DesignUtils.NewPropertyField(propertyPressedState))
+                    .AddContent(DesignUtils.spaceBlock2X)
+                    .AddContent(DesignUtils.NewPropertyField(propertySelectedState))
+                    .AddContent(DesignUtils.spaceBlock2X)
+                    .AddContent(DesignUtils.NewPropertyField(propertyDisabledState))
+                    .Bind(serializedObject);
+            });
+        }
+
+        protected virtual void BehavioursCallbacks()
+        {
+            behavioursAnimatedContainer = new FluidAnimatedContainer("Behaviours", true).Hide(false);
+            behavioursTab =
+                GetTab("Behaviours")
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.UIBehaviour)
+                    .IndicatorSetEnabledColor(DesignUtils.callbacksColor)
+                    .ButtonSetAccentColor(DesignUtils.callbackSelectableColor)
+                    .ButtonSetOnValueChanged(evt => behavioursAnimatedContainer.Toggle(evt.newValue, evt.animateChange));
+
+            behavioursAnimatedContainer.SetOnShowCallback(() =>
+            {
+                behavioursAnimatedContainer
+                    .AddContent(DesignUtils.NewPropertyField(propertyBehaviours))
+                    .Bind(serializedObject);
+            });
+        }
+
+        protected virtual void InitializeNavigation()
+        {
+            navigationAnimatedContainer = new FluidAnimatedContainer("Navigation", true).Hide(false);
+            navigationTab =
+                GetTab("Navigation")
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Navigation)
+                    .ButtonSetOnValueChanged(evt => navigationAnimatedContainer.Toggle(evt.newValue, evt.animateChange));
 
             navigationAnimatedContainer.SetOnShowCallback(() =>
             {
-                navigationModeEnumField = DesignUtils.NewEnumField(propertyNavigationMode).SetStyleFlexGrow(1).SetStyleHeight(26);
+                FluidField NavigationSelectField(string text, IEnumerable<Texture2D> textures, SerializedProperty property) =>
+                    FluidField.Get()
+                        .SetLabelText(text)
+                        .SetIcon(textures)
+                        .SetElementSize(ElementSize.Small)
+                        .AddFieldContent
+                        (
+                            DesignUtils.NewObjectField(property, typeof(Selectable))
+                                .SetStyleFlexGrow(1)
+                        );
+
+                VisualElement explicitNavigationContainer =
+                    new VisualElement()
+                        .SetName("Explicit Navigation")
+                        .AddChild(DesignUtils.spaceBlock)
+                        .AddChild(NavigationSelectField("Select On Up", EditorSpriteSheets.EditorUI.Arrows.ArrowUp, propertyNavigationSelectOnUp))
+                        .AddChild(DesignUtils.spaceBlock)
+                        .AddChild(NavigationSelectField("Select On Down", EditorSpriteSheets.EditorUI.Arrows.ArrowDown, propertyNavigationSelectOnDown))
+                        .AddChild(DesignUtils.spaceBlock)
+                        .AddChild(NavigationSelectField("Select On Left", EditorSpriteSheets.EditorUI.Arrows.ArrowLeft, propertyNavigationSelectOnLeft))
+                        .AddChild(DesignUtils.spaceBlock)
+                        .AddChild(NavigationSelectField("Select On Right", EditorSpriteSheets.EditorUI.Arrows.ArrowRight, propertyNavigationSelectOnRight));
+
+                EnumField navigationModeEnumField = DesignUtils.NewEnumField(propertyNavigationMode).SetStyleFlexGrow(1).SetStyleHeight(26);
                 navigationModeEnumField.RegisterValueChangedCallback(evt =>
                 {
                     if (evt?.newValue == null) return;
-                    explicitNavigationAnimatedContainer?.Toggle((Navigation.Mode)evt.newValue == Navigation.Mode.Explicit);
+                    explicitNavigationContainer?.SetStyleDisplay((Navigation.Mode)evt.newValue == Navigation.Mode.Explicit ? DisplayStyle.Flex : DisplayStyle.None);
                 });
 
-                visualizeNavigationButton = FluidButton.Get()
-                    .SetLabelText("Navigation")
-                    .SetButtonStyle(ButtonStyle.Contained)
-                    .SetElementSize(ElementSize.Small)
-                    .SetStyleFlexShrink(0)
-                    .SetOnClick(() =>
-                    {
-                        showNavigation = !showNavigation;
-                        UpdateVisualizeNavigationButton();
-                    });
+                explicitNavigationContainer?.SetStyleDisplay((Navigation.Mode)propertyNavigationMode.enumValueIndex == Navigation.Mode.Explicit ? DisplayStyle.Flex : DisplayStyle.None);
 
-                UpdateVisualizeNavigationButton();
+                FluidToggleButtonTab visualizeNavigationButton =
+                    FluidToggleButtonTab.Get()
+                        .SetLabelText("Navigation")
+                        .SetToggleAccentColor(selectableAccentColor)
+                        .SetElementSize(ElementSize.Small)
+                        .SetTabPosition(TabPosition.FloatingTab)
+                        .SetStyleFlexShrink(0)
+                        .SetIsOn(showNavigation, false);
 
+                visualizeNavigationButton.SetOnClick(() =>
+                {
+                    showNavigation = !showNavigation;
+                    UpdateVisualizeNavigationButton(visualizeNavigationButton);
+                });
 
-                explicitNavigationAnimatedContainer = new FluidAnimatedContainer().SetClearOnHide(true);
-                explicitNavigationAnimatedContainer
-                    .SetOnShowCallback(() =>
-                    {
-                        explicitNavigationAnimatedContainer.AddContent(DesignUtils.spaceBlock);
-                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Up", EditorSpriteSheets.EditorUI.Arrows.ArrowUp, propertyNavigationSelectOnUp));
-                        explicitNavigationAnimatedContainer.AddContent(DesignUtils.spaceBlock);
-                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Down", EditorSpriteSheets.EditorUI.Arrows.ArrowDown, propertyNavigationSelectOnDown));
-                        explicitNavigationAnimatedContainer.AddContent(DesignUtils.spaceBlock);
-                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Left", EditorSpriteSheets.EditorUI.Arrows.ArrowLeft, propertyNavigationSelectOnLeft));
-                        explicitNavigationAnimatedContainer.AddContent(DesignUtils.spaceBlock);
-                        explicitNavigationAnimatedContainer.AddContent(NavigationSelectField("Select On Right", EditorSpriteSheets.EditorUI.Arrows.ArrowRight, propertyNavigationSelectOnRight));
-                        explicitNavigationAnimatedContainer.Bind(serializedObject);
-                    })
-                    .Toggle((Navigation.Mode)propertyNavigationMode.enumValueIndex == Navigation.Mode.Explicit, false);
+                UpdateVisualizeNavigationButton(visualizeNavigationButton);
 
                 navigationAnimatedContainer
                     .AddContent(DesignUtils.spaceBlock)
                     .AddContent
                     (
                         FluidField.Get("Navigation Mode")
-                            .SetIcon(navigationIconTextures)
-                            .AddFieldContent(navigationModeEnumField)
-                            .AddInfoElement
+                            .SetIcon(EditorSpriteSheets.EditorUI.Icons.Navigation)
+                            .AddFieldContent
                             (
-                                DesignUtils.column
-                                    .AddChild(DesignUtils.flexibleSpace)
+                                DesignUtils.row
+                                    .SetStyleJustifyContent(Justify.FlexEnd)
+                                    .AddChild(navigationModeEnumField)
+                                    .AddChild(DesignUtils.spaceBlock)
                                     .AddChild(visualizeNavigationButton)
                             )
                     )
-                    .AddContent(explicitNavigationAnimatedContainer)
-                    .AddContent(DesignUtils.endOfLineBlock);
-
-                navigationAnimatedContainer.Bind(serializedObject);
+                    .AddContent(explicitNavigationContainer)
+                    .AddContent(DesignUtils.endOfLineBlock)
+                    .Bind(serializedObject);
             });
         }
 
-        private void UpdateVisualizeNavigationButton()
+        protected virtual VisualElement Toolbar()
+        {
+            return
+                toolbarContainer
+                    .AddChild(settingsTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(statesTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(behavioursTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(navigationTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(DesignUtils.flexibleSpace)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild
+                    (
+                        DesignUtils.SystemButton_SortComponents
+                        (
+                            ((UISelectable)target).gameObject,
+                            nameof(RectTransform),
+                            nameof(UISelectable)
+                        )
+                    );
+        }
+
+        protected virtual VisualElement Content()
+        {
+            return
+                contentContainer
+                    .AddChild(settingsAnimatedContainer)
+                    .AddChild(statesAnimatedContainer)
+                    .AddChild(behavioursAnimatedContainer)
+                    .AddChild(navigationAnimatedContainer);
+        }
+
+        protected virtual void Compose()
+        {
+            root
+                .AddChild(reactionControls)
+                .AddChild(componentHeader)
+                .AddChild(Toolbar())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(Content())
+                .AddChild(DesignUtils.endOfLineBlock);
+        }
+
+        private void UpdateVisualizeNavigationButton(FluidToggleButtonTab navigationButton)
         {
             if (showNavigation)
             {
                 RegisterToSceneView();
-                visualizeNavigationButton
+                navigationButton
                     .SetLabelText("Hide Navigation")
                     .SetTooltip("Hide selectable navigation flow in Scene View")
-                    .SetIcon(hideIconTextures);
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Hide);
             }
             else
             {
                 UnregisterFromSceneView();
-                visualizeNavigationButton
+                navigationButton
                     .SetLabelText("Show Navigation")
                     .SetTooltip("Show selectable navigation flow in Scene View")
-                    .SetIcon(showIconTextures);
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.Show);
             }
             EditorPrefs.SetBool(k_ShowNavigationKey, showNavigation);
             SceneView.RepaintAll();
@@ -465,30 +521,21 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
             }
         }
 
-        private static void DrawNavigationForSelectable(Selectable s)
+        private static void DrawNavigationForSelectable(Selectable sel)
         {
-            if (s == null)
+            if (sel == null)
                 return;
 
-            Transform transform = s.transform;
+            Transform transform = sel.transform;
             bool active = Selection.transforms.Any(e => e == transform);
+
+            Handles.color = new Color(1.0f, 0.6f, 0.2f, active ? 1.0f : 0.4f);
+            DrawNavigationArrow(-Vector2.right, sel, sel.FindSelectableOnLeft());
+            DrawNavigationArrow(Vector2.up, sel, sel.FindSelectableOnUp());
+
             Handles.color = new Color(1.0f, 0.9f, 0.1f, active ? 1.0f : 0.4f);
-
-            Selectable findSelectableOnLeft = s.FindSelectableOnLeft();
-            if (findSelectableOnLeft != null)
-                DrawNavigationArrow(-Vector2.right, s, findSelectableOnLeft);
-
-            Selectable findSelectableOnRight = s.FindSelectableOnRight();
-            if (findSelectableOnRight != null)
-                DrawNavigationArrow(Vector2.right, s, findSelectableOnRight);
-
-            Selectable findSelectableOnUp = s.FindSelectableOnUp();
-            if (findSelectableOnUp)
-                DrawNavigationArrow(Vector2.up, s, findSelectableOnUp);
-
-            Selectable findSelectableOnDown = s.FindSelectableOnDown();
-            if (findSelectableOnDown)
-                DrawNavigationArrow(-Vector2.up, s, findSelectableOnDown);
+            DrawNavigationArrow(Vector2.right, sel, sel.FindSelectableOnRight());
+            DrawNavigationArrow(-Vector2.up, sel, sel.FindSelectableOnDown());
         }
 
         private const float K_ARROW_THICKNESS = 2.5f;
@@ -501,7 +548,7 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
             Transform fromTransform = fromObj.transform;
             Transform toTransform = toObj.transform;
 
-            Vector2 sideDir = new Vector2(direction.y, -direction.x);
+            var sideDir = new Vector2(direction.y, -direction.x);
             Vector3 fromPoint = fromTransform.TransformPoint(GetPointOnRectEdge(fromTransform as RectTransform, direction));
             Vector3 toPoint = toTransform.TransformPoint(GetPointOnRectEdge(toTransform as RectTransform, -direction));
             float fromSize = HandleUtility.GetHandleSize(fromPoint) * 0.05f;
@@ -509,22 +556,21 @@ namespace Doozy.Editor.UIManager.Editors.Components.Internal
             fromPoint += fromTransform.TransformDirection(sideDir) * fromSize;
             toPoint += toTransform.TransformDirection(sideDir) * toSize;
             float length = Vector3.Distance(fromPoint, toPoint);
-
-            Quaternion fromObjRotation = fromTransform.rotation;
-            Quaternion toObjRotation = toTransform.rotation;
-
-            Vector3 fromTangent = fromObjRotation * direction * length * 0.3f;
-            Vector3 toTangent = toObjRotation * -direction * length * 0.3f;
+            Vector3 fromTangent = fromTransform.rotation * direction * length * 0.3f;
+            Quaternion rotation = toTransform.rotation;
+            Vector3 toTangent = rotation * -direction * length * 0.3f;
 
             Handles.DrawBezier(fromPoint, toPoint, fromPoint + fromTangent, toPoint + toTangent, Handles.color, null, K_ARROW_THICKNESS);
-            Handles.DrawAAPolyLine(K_ARROW_THICKNESS, toPoint, toPoint + toObjRotation * (-direction - sideDir) * toSize * K_ARROW_HEAD_SIZE);
-            Handles.DrawAAPolyLine(K_ARROW_THICKNESS, toPoint, toPoint + toObjRotation * (-direction + sideDir) * toSize * K_ARROW_HEAD_SIZE);
+            Handles.DrawAAPolyLine(K_ARROW_THICKNESS, toPoint, toPoint + rotation * (-direction - sideDir) * toSize * K_ARROW_HEAD_SIZE);
+            Handles.DrawAAPolyLine(K_ARROW_THICKNESS, toPoint, toPoint + rotation * (-direction + sideDir) * toSize * K_ARROW_HEAD_SIZE);
         }
 
         private static Vector3 GetPointOnRectEdge(RectTransform rect, Vector2 dir)
         {
-            if (rect == null) return Vector3.zero;
-            if (dir != Vector2.zero) dir /= Mathf.Max(Mathf.Abs(dir.x), Mathf.Abs(dir.y));
+            if (rect == null)
+                return Vector3.zero;
+            if (dir != Vector2.zero)
+                dir /= Mathf.Max(Mathf.Abs(dir.x), Mathf.Abs(dir.y));
             Rect rectRect = rect.rect;
             dir = rectRect.center + Vector2.Scale(rectRect.size, dir * 0.5f);
             return dir;

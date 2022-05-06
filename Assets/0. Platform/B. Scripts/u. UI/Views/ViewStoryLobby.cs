@@ -1485,14 +1485,15 @@ namespace PIERStory
             SystemManager.main.webView.Show();
             
             SystemManager.main.isWebViewOpened = true; // 오픈할때 true로 변경 
-            Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = true;
+            SystemManager.SetBlockBackButton(true);
+            
             
         }
         
         void OnHideWebview(WebView __view) {
                 
                 SystemManager.main.isWebViewOpened = false;  // 닫힐때 false로 변경 
-                Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = false;
+                SystemManager.SetBlockBackButton(false);
                 
                 Debug.Log(">> OnHideWebview in ViewStoryLobby");
                 WebView.OnHide -= OnHideWebview;

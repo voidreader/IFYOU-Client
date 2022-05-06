@@ -1,4 +1,4 @@
-// Copyright (c) 2015 - 2022 Doozy Entertainment. All Rights Reserved.
+// Copyright (c) 2015 - 2021 Doozy Entertainment. All Rights Reserved.
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
@@ -20,6 +20,9 @@ namespace Doozy.Editor.Nody
                 Doozy.Runtime.UIManager.Nodes.PortalNode _ => new Doozy.Editor.UIManager.Nodes.PortalNodeView(graphView, node),
                 Doozy.Runtime.UIManager.Nodes.SignalNode _ => new Doozy.Editor.UIManager.Nodes.SignalNodeView(graphView, node),
                 Doozy.Runtime.UIManager.Nodes.UINode _ => new Doozy.Editor.UIManager.Nodes.UINodeView(graphView, node),
+                Doozy.Runtime.SceneManagement.Nodes.ActivateLoadedScenesNode _ => new Doozy.Editor.SceneManagement.Nodes.ActivateLoadedScenesNodeView(graphView, node),
+                Doozy.Runtime.SceneManagement.Nodes.LoadSceneNode _ => new Doozy.Editor.SceneManagement.Nodes.LoadSceneNodeView(graphView, node),
+                Doozy.Runtime.SceneManagement.Nodes.UnloadSceneNode _ => new Doozy.Editor.SceneManagement.Nodes.UnloadSceneNodeView(graphView, node),
                 Doozy.Runtime.Nody.Nodes.ApplicationQuitNode _ => new Doozy.Editor.Nody.Nodes.ApplicationQuitNodeView(graphView, node),
                 Doozy.Runtime.Nody.Nodes.DebugNode _ => new Doozy.Editor.Nody.Nodes.DebugNodeView(graphView, node),
                 Doozy.Runtime.Nody.Nodes.PivotNode _ => new Doozy.Editor.Nody.Nodes.PivotNodeView(graphView, node),

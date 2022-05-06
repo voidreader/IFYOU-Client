@@ -14,20 +14,24 @@ namespace Doozy.Runtime.UIManager.Animators
     {
         private Coroutine executeCommandCoroutine { get; set; }
 
+        /// <summary> Connect to Controller </summary>
         protected override void ConnectToController()
         {
             if (controller == null) return;
+            controller.showHideExecute -= Execute;
             controller.showHideExecute += Execute;
             if (controller.executedFirstCommand)
                 Execute(controller.previouslyExecutedCommand);
         }
 
+        /// <summary> Disconnect from Controller </summary>
         protected override void DisconnectFromController()
         {
             if (controller == null) return;
             controller.showHideExecute -= Execute;
         }
 
+        /// <summary> Execute the given ShowHide command </summary>
         protected virtual void Execute(ShowHideExecute execute)
         {
             if (executeCommandCoroutine != null)
@@ -73,21 +77,30 @@ namespace Doozy.Runtime.UIManager.Animators
             }
         }
 
+        /// <summary> Execute the given ShowHide command after the animator has been initialized </summary>
         private IEnumerator ExecuteCommandAfterAnimatorInitialized(ShowHideExecute execute)
         {
             yield return new WaitUntil(() => animatorInitialized);
             Execute(execute);
             executeCommandCoroutine = null;
         }
-
+        
+        /// <summary> Play the show animation </summary>
         public abstract void Show();
+        
+        /// <summary> Reverse the show animation (if playing) </summary>
         public abstract void ReverseShow();
 
+        /// <summary> Play the hide animation </summary>
         public abstract void Hide();
+        
+        /// <summary> Reverse the hide animation (if playing) </summary>
         public abstract void ReverseHide();
 
+        /// <summary> Set show animation's progress at one </summary>
         public abstract void InstantShow();
+        
+        /// <summary> Set hide animation's progress at one </summary>
         public abstract void InstantHide();
-
     }
 }

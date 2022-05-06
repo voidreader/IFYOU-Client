@@ -116,7 +116,13 @@ namespace Doozy.Editor.Reactor.Drawers
                     // ignored
                 }
             });
-            playModeField.schedule.Execute(() => UpdatePlayMode((PlayMode)playModeEnum.value));
+
+            playModeField?.schedule.Execute(() =>
+            {
+                if (playModeEnum?.value == null) return;
+                var playMode = (PlayMode)playModeEnum.value;
+                UpdatePlayMode(playMode);
+            });
 
             void UpdatePlayMode(PlayMode playMode)
             {
@@ -171,8 +177,9 @@ namespace Doozy.Editor.Reactor.Drawers
             });
             easeModeField.schedule.Execute(() =>
             {
-                if (easeModeEnum != null)
-                    UpdateEaseMode((EaseMode)easeModeEnum.value);
+                if (easeModeEnum?.value == null) return;
+                var easeMode = (EaseMode)easeModeEnum.value;
+                UpdateEaseMode(easeMode);
             });
 
             void UpdateEaseMode(EaseMode easeMode)
@@ -306,7 +313,6 @@ namespace Doozy.Editor.Reactor.Drawers
             Toggle useRandom
         )
         {
-            
             value.ResetLayout();
             useRandom.SetStyleDisplay(DisplayStyle.None);
 

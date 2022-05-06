@@ -11,12 +11,14 @@ using Doozy.Editor.EditorUI.Components.Internal;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
 using Doozy.Editor.EditorUI.Utils;
 using Doozy.Editor.UIManager.Editors.Components.Internal;
+using Doozy.Runtime.Common.Extensions;
 using Doozy.Runtime.UIElements.Extensions;
+using Doozy.Runtime.UIManager;
+using Doozy.Runtime.UIManager.Animators;
 using Doozy.Runtime.UIManager.Components;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -29,78 +31,52 @@ namespace Doozy.Editor.UIManager.Editors.Components
         public override Color accentColor => EditorColors.UIManager.UIComponent;
         public override EditorSelectableColorInfo selectableAccentColor => EditorSelectableColors.UIManager.UIComponent;
 
-        public UIToggle castedTarget => (UIToggle)target;
-        public IEnumerable<UIToggle> castedTargets => targets.Cast<UIToggle>();
+        public UIToggleGroup castedTarget => (UIToggleGroup)target;
+        public IEnumerable<UIToggleGroup> castedTargets => targets.Cast<UIToggleGroup>();
 
-        public static IEnumerable<Texture2D> toggleIconTextures => EditorSpriteSheets.UIManager.Icons.UIToggle;
-        public static IEnumerable<Texture2D> toggleGroupIconTextures => EditorSpriteSheets.UIManager.Icons.UIToggleGroup;
-        public static IEnumerable<Texture2D> unityEventIconTextures => EditorSpriteSheets.EditorUI.Icons.UnityEvent;
-        public static IEnumerable<Texture2D> buttonClickIconTextures => EditorSpriteSheets.EditorUI.Icons.ButtonClick;
-        public static IEnumerable<Texture2D> sortIconTextures => EditorSpriteSheets.EditorUI.Icons.SortAz;
-        public static IEnumerable<Texture2D> toggleOnIconTextures => EditorSpriteSheets.EditorUI.Icons.ToggleON;
-        public static IEnumerable<Texture2D> toggleOffIconTextures => EditorSpriteSheets.EditorUI.Icons.ToggleOFF;
-        public static IEnumerable<Texture2D> toggleMixedIconTextures => EditorSpriteSheets.EditorUI.Icons.ToggleMixed;
-
-        private VisualElement callbacksTab { get; set; }
-        private EnabledIndicator callbacksTabIndicator { get; set; }
-
+        private FluidTab callbacksTab { get; set; }
         private FluidAnimatedContainer callbacksAnimatedContainer { get; set; }
-
         private FluidField idField { get; set; }
-        private FluidField toggleGroupField { get; set; }
-        private FluidField toggleModeField { get; set; }
-        private FluidField autoSortField { get; set; }
 
-        private FluidToggleCheckbox overrideInteractabilityForTogglesToggle { get; set; }
-        private FluidToggleCheckbox isOnToggle { get; set; }
-        private FluidToggleCheckbox hasMixedValuesToggle { get; set; }
-
-        private ObjectField toggleGroupObjectField { get; set; }
-
-        private EnumField toggleGroupValueEnumField { get; set; }
-        private EnumField modeEnumField { get; set; }
-        private EnumField autoSortEnumField { get; set; }
-
-        private ObjectField firstToggleObjectField { get; set; }
-        private FluidField firstToggleField { get; set; }
-
-        private SerializedProperty propertyId { get; set; }
-        private SerializedProperty propertyBehaviours { get; set; }
-        private SerializedProperty propertyOverrideInteractabilityForToggles { get; set; }
-        private SerializedProperty propertyIsOn { get; set; }
-        private SerializedProperty propertyToggleGroup { get; set; }
-        private SerializedProperty propertyOnToggleOnCallback { get; set; }
-        private SerializedProperty propertyOnInstantToggleOnCallback { get; set; }
-        private SerializedProperty propertyOnToggleOffCallback { get; set; }
-        private SerializedProperty propertyOnInstantToggleOffCallback { get; set; }
-        private SerializedProperty propertyOnValueChangedCallback { get; set; }
-        private SerializedProperty propertyOnToggleGroupMixedValuesCallback { get; set; }
-
-        private SerializedProperty propertyHasMixedValues { get; set; }
-        private SerializedProperty propertyToggleGroupValue { get; set; }
-        private SerializedProperty propertyMode { get; set; }
         private SerializedProperty propertyAutoSort { get; set; }
+        private SerializedProperty propertyBehaviours { get; set; }
         private SerializedProperty propertyFirstToggle { get; set; }
+        private SerializedProperty propertyHasMixedValues { get; set; }
+        private SerializedProperty propertyId { get; set; }
+        private SerializedProperty propertyIsOn { get; set; }
+        private SerializedProperty propertyMode { get; set; }
+        private SerializedProperty propertyOnInstantToggleOffCallback { get; set; }
+        private SerializedProperty propertyOnInstantToggleOnCallback { get; set; }
+        private SerializedProperty propertyOnToggleGroupMixedValuesCallback { get; set; }
+        private SerializedProperty propertyOnToggleOffCallback { get; set; }
+        private SerializedProperty propertyOnToggleOnCallback { get; set; }
+        private SerializedProperty propertyOnValueChangedCallback { get; set; }
+        private SerializedProperty propertyOverrideInteractabilityForToggles { get; set; }
+        private SerializedProperty propertyToggleGroup { get; set; }
+        private SerializedProperty propertyToggleGroupValue { get; set; }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-
-            callbacksTabIndicator?.Recycle();
-
-            idField?.Recycle();
-            toggleGroupField?.Recycle();
-            toggleModeField?.Recycle();
-            autoSortField?.Recycle();
-
-            firstToggleField?.Recycle();
-
-            overrideInteractabilityForTogglesToggle?.Recycle();
-
-            isOnToggle?.Recycle();
-            hasMixedValuesToggle?.Recycle();
-
+            callbacksTab?.Recycle();
             callbacksAnimatedContainer?.Dispose();
+            idField?.Recycle();
+        }
+
+        protected override void SearchForAnimators()
+        {
+            selectableAnimators ??= new List<BaseUISelectableAnimator>();
+            selectableAnimators.Clear();
+
+            //check if prefab was selected -> get the animators from it alone and return
+            if (castedTargets.Any(s => s.gameObject.scene.name == null))
+            {
+                selectableAnimators.AddRange(castedSelectable.GetComponentsInChildren<BaseUISelectableAnimator>());
+                return;
+            }
+
+            //a prefab was not selected -> search for all the animators in the scene (not efficient, but there is no other way)
+            selectableAnimators.AddRange(FindObjectsOfType<BaseUISelectableAnimator>());
         }
 
         protected override void FindProperties()
@@ -131,20 +107,138 @@ namespace Doozy.Editor.UIManager.Editors.Components
 
             componentHeader
                 .SetAccentColor(accentColor)
-                .SetComponentNameText((ObjectNames.NicifyVariableName(nameof(UIToggleGroup))))
-                .SetIcon(toggleGroupIconTextures.ToList())
+                .SetComponentNameText("UIToggle Group")
+                .SetIcon(EditorSpriteSheets.UIManager.Icons.UIToggleGroup)
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048576017/UIToggleGroup?atlOrigin=eyJpIjoiOGM5NzYxYzhhOTJiNDQ4MTg0MTNiNmIwZTIwNjVmNGEiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Components.UIToggleGroup.html")
                 .AddYouTubeButton();
 
             idField = FluidField.Get().AddFieldContent(DesignUtils.NewPropertyField(propertyId));
-            overrideInteractabilityForTogglesToggle = FluidToggleCheckbox.Get().SetLabelText("Override interactabilty for connected UIToggles").BindToProperty(propertyOverrideInteractabilityForToggles).SetTooltip("Override and control the interactable state for all the connected UIToggles");
-            isOnToggle = FluidToggleCheckbox.Get().SetLabelText("Is On").BindToProperty(propertyIsOn);
-            hasMixedValuesToggle = FluidToggleCheckbox.Get().SetLabelText("Has Mixed Values").BindToProperty(propertyHasMixedValues);
-            hasMixedValuesToggle.SetEnabled(false);
-            toggleGroupValueEnumField = DesignUtils.NewEnumField(propertyToggleGroupValue).SetStyleWidth(120);
-            toggleGroupValueEnumField.SetEnabled(false);
-            modeEnumField = DesignUtils.NewEnumField(propertyMode).SetStyleFlexGrow(1);
+
+            InitializeCallbacks();
+
+            //refresh tabs enabled indicator
+            root.schedule.Execute(() =>
             {
+                void UpdateIndicator(FluidTab tab, bool toggleOn, bool animateChange)
+                {
+                    if (tab == null) return;
+                    if (tab.indicator.isOn != toggleOn)
+                        tab.indicator.Toggle(toggleOn, animateChange);
+                }
+
+                bool HasCallbacks()
+                {
+                    if (castedTarget == null)
+                        return false;
+
+                    return castedTarget.OnToggleOnCallback.hasCallbacks ||
+                        castedTarget.OnInstantToggleOnCallback.hasCallbacks ||
+                        castedTarget.OnToggleOffCallback.hasCallbacks ||
+                        castedTarget.OnInstantToggleOffCallback.hasCallbacks ||
+                        castedTarget.OnValueChangedCallback?.GetPersistentEventCount() > 0 ||
+                        castedTarget.OnToggleGroupMixedValuesCallback.hasCallbacks;
+                }
+
+                //initial indicators state update (no animation)
+                UpdateIndicator(callbacksTab, HasCallbacks(), false);
+
+                //subsequent indicators state update (animated)
+                root.schedule.Execute(() =>
+                {
+                    UpdateIndicator(callbacksTab, HasCallbacks(), true);
+
+                }).Every(200);
+            });
+        }
+
+        protected override void InitializeSettings()
+        {
+            base.InitializeSettings();
+
+            settingsAnimatedContainer.SetOnShowCallback(() =>
+            {
+                #region Override interactability for connected UIToggles
+
+                FluidToggleCheckbox overrideInteractabilityForTogglesToggle =
+                    FluidToggleCheckbox.Get()
+                        .SetLabelText("Override interactability for connected UIToggles")
+                        .BindToProperty(propertyOverrideInteractabilityForToggles)
+                        .SetTooltip("Override and control the interactable state for all the connected UIToggles");
+
+                #endregion
+
+                #region Interactable
+
+                FluidToggleCheckbox interactableCheckbox = FluidToggleCheckbox.Get()
+                    .SetLabelText("Interactable")
+                    .SetTooltip("Can the Selectable be interacted with?")
+                    .BindToProperty(propertyInteractable);
+
+                #endregion
+
+                #region Deselect after Press
+
+                FluidToggleCheckbox deselectAfterPressCheckbox = FluidToggleCheckbox.Get()
+                    .SetLabelText("Deselect after Press")
+                    .BindToProperty(propertyDeselectAfterPress);
+
+                #endregion
+
+                #region Is On
+
+                FluidToggleCheckbox isOnCheckbox =
+                    FluidToggleCheckbox.Get()
+                        .SetLabelText("Is On")
+                        .BindToProperty(propertyIsOn)
+                        .SetOnClick(() =>
+                        {
+                            if (Application.isPlaying)
+                            {
+                                foreach (var t in castedTargets)
+                                    t.isOn = !castedTarget.isOn;
+                                return;
+                            }
+                            HeartbeatCheck();
+                            foreach (var a in selectableAnimators.RemoveNulls())
+                            {
+                                switch (a.ToggleCommand)
+                                {
+                                    case CommandToggle.On when !castedTarget.isOn:
+                                    case CommandToggle.Off when castedTarget.isOn:
+                                        continue;
+                                    default:
+                                        a.Play(castedSelectable.currentUISelectionState);
+                                        break;
+                                }
+                            }
+                        });
+
+                #endregion
+
+                #region Has Mixed Values
+
+                FluidToggleCheckbox hasMixedValuesToggle =
+                    FluidToggleCheckbox.Get()
+                        .SetLabelText("Has Mixed Values")
+                        .BindToProperty(propertyHasMixedValues);
+
+                hasMixedValuesToggle.SetEnabled(false);
+
+                EnumField toggleGroupValueEnumField =
+                    DesignUtils.NewEnumField(propertyToggleGroupValue)
+                        .SetStyleWidth(120);
+
+                toggleGroupValueEnumField.SetEnabled(false);
+
+                #endregion
+
+                #region Control Mode
+
+                EnumField modeEnumField =
+                    DesignUtils.NewEnumField(propertyMode)
+                        .SetStyleFlexGrow(1);
+
                 void UpdateToggleModeTooltip(UIToggleGroup.ControlMode value)
                 {
                     switch (value)
@@ -172,11 +266,21 @@ namespace Doozy.Editor.UIManager.Editors.Components
                     if (evt?.newValue == null) return;
                     UpdateToggleModeTooltip((UIToggleGroup.ControlMode)evt.newValue);
                 });
-            }
-            toggleModeField = FluidField.Get().SetLabelText("Control Mode").SetIcon(toggleGroupIconTextures).AddFieldContent(modeEnumField);
 
-            autoSortEnumField = DesignUtils.NewEnumField(propertyAutoSort).SetStyleFlexGrow(1);
-            {
+                FluidField toggleModeField =
+                    FluidField.Get()
+                        .SetLabelText("Control Mode")
+                        .SetIcon(EditorSpriteSheets.UIManager.Icons.UIToggleGroup)
+                        .AddFieldContent(modeEnumField);
+
+                #endregion
+
+                #region Auto Sort
+
+                EnumField autoSortEnumField =
+                    DesignUtils.NewEnumField(propertyAutoSort)
+                        .SetStyleFlexGrow(1);
+
                 void UpdateAutoSortTooltip(UIToggleGroup.SortMode value)
                 {
                     switch (value)
@@ -204,205 +308,173 @@ namespace Doozy.Editor.UIManager.Editors.Components
                     if (evt?.newValue == null) return;
                     UpdateAutoSortTooltip((UIToggleGroup.SortMode)evt.newValue);
                 });
-            }
-            autoSortField = FluidField.Get().SetLabelText("Auto Sort").SetIcon(sortIconTextures).AddFieldContent(autoSortEnumField);
 
-            toggleGroupObjectField =
-                DesignUtils.NewObjectField(propertyToggleGroup, typeof(UIToggleGroup))
-                    .SetStyleFlexGrow(1);
+                FluidField autoSortField =
+                    FluidField.Get()
+                        .SetLabelText("Auto Sort")
+                        .SetIcon(EditorSpriteSheets.EditorUI.Icons.SortAz)
+                        .AddFieldContent(autoSortEnumField);
 
-            toggleGroupObjectField.RegisterValueChangedCallback(evt =>
-            {
-                if (evt.newValue == null || evt.newValue != castedTarget)
-                    return;
-                toggleGroupObjectField.value = null;
-                serializedObject.ApplyModifiedPropertiesWithoutUndo();
+                #endregion
+
+                #region First Toggle
+
+                ObjectField firstToggleObjectField =
+                    DesignUtils.NewObjectField(propertyFirstToggle, typeof(UIToggle))
+                        .SetStyleFlexGrow(1);
+
+                FluidField firstToggleField =
+                    FluidField.Get()
+                        .SetLabelText("First Toggle")
+                        .SetIcon(EditorSpriteSheets.UIManager.Icons.UIToggle)
+                        .AddFieldContent(firstToggleObjectField);
+
+                #endregion
+
+                #region Toggle Group
+
+                ObjectField toggleGroupObjectField =
+                    DesignUtils.NewObjectField(propertyToggleGroup, typeof(UIToggleGroup))
+                        .SetStyleFlexGrow(1);
+
+                FluidField toggleGroupField =
+                    FluidField.Get()
+                        .SetLabelText("Toggle Group")
+                        .SetIcon(EditorSpriteSheets.UIManager.Icons.UIToggleGroup)
+                        .AddFieldContent(toggleGroupObjectField);
+
+                #endregion
+
+                settingsAnimatedContainer
+                    .AddContent
+                    (
+                        DesignUtils.row
+                            .AddChild(interactableCheckbox)
+                            .AddChild(DesignUtils.spaceBlock)
+                            .AddChild(deselectAfterPressCheckbox)
+                    )
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent
+                    (
+                        DesignUtils.row
+                            .AddChild(isOnCheckbox)
+                            .AddChild(DesignUtils.spaceBlock)
+                            .AddChild(hasMixedValuesToggle)
+                            .AddChild(DesignUtils.spaceBlock)
+                            .AddChild(toggleGroupValueEnumField)
+                    )
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(overrideInteractabilityForTogglesToggle)
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent
+                    (
+                        DesignUtils.row
+                            .AddChild(toggleModeField)
+                            .AddChild(DesignUtils.spaceBlock)
+                            .AddChild(autoSortField)
+                    )
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(firstToggleField)
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(toggleGroupField)
+                    .Bind(serializedObject);
             });
-
-            toggleGroupField =
-                FluidField.Get()
-                    .SetLabelText("Toggle Group")
-                    .SetIcon(toggleGroupIconTextures)
-                    .AddFieldContent(toggleGroupObjectField);
-
-            firstToggleObjectField =
-                DesignUtils.NewObjectField(propertyFirstToggle, typeof(UIToggle))
-                    .SetStyleFlexGrow(1);
-
-            firstToggleField =
-                FluidField.Get()
-                    .SetLabelText("First Toggle")
-                    .SetIcon(toggleIconTextures)
-                    .AddFieldContent(firstToggleObjectField);
-
-            InitializeCallbacks();
         }
 
         private void InitializeCallbacks()
         {
-            callbacksAnimatedContainer = new FluidAnimatedContainer().SetName("Callbacks").SetClearOnHide(true).Hide(false);
-
-            (callbacksTabButton, callbacksTabIndicator, callbacksTab) =
-                DesignUtils.GetTabButtonForComponentSectionWithEnabledIndicator(unityEventIconTextures, DesignUtils.callbackSelectableColor, DesignUtils.callbacksColor);
+            callbacksAnimatedContainer = new FluidAnimatedContainer("Callbacks", true).Hide(false);
+            callbacksTab =
+                GetTab("Callbacks")
+                    .SetIcon(EditorSpriteSheets.EditorUI.Icons.UnityEvent)
+                    .IndicatorSetEnabledColor(DesignUtils.callbacksColor)
+                    .ButtonSetAccentColor(DesignUtils.callbackSelectableColor)
+                    .ButtonSetOnValueChanged(evt => callbacksAnimatedContainer.Toggle(evt.newValue, evt.animateChange));
 
             callbacksAnimatedContainer.SetOnShowCallback(() =>
             {
-                FluidField GetField(SerializedProperty property, IEnumerable<Texture2D> iconTextures, string fieldLabelText, string fieldTooltip) =>
+                FluidField GetField(SerializedProperty property, string fieldLabelText) =>
                     FluidField.Get()
                         .SetLabelText(fieldLabelText)
-                        .SetTooltip(fieldTooltip)
-                        .SetIcon(iconTextures)
                         .SetElementSize(ElementSize.Small)
                         .AddFieldContent(DesignUtils.NewPropertyField(property));
 
                 callbacksAnimatedContainer
-                    .fluidContainer
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(GetField(propertyOnToggleOnCallback, toggleOnIconTextures, "Toggle ON - Toggle became ON", "Callbacks triggered then the toggle value changed from OFF to ON"))
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(GetField(propertyOnInstantToggleOnCallback, toggleOnIconTextures, "Instant Toggle ON - Toggle became ON (without animations)", "Callbacks triggered then the toggle value changed from OFF to ON (without animations)"))
-                    .AddChild(DesignUtils.spaceBlock2X)
-                    .AddChild(GetField(propertyOnToggleOffCallback, toggleOffIconTextures, "Toggle OFF - Toggle became OFF", "Callbacks triggered then the toggle value changed from ON to OFF"))
-                    .AddChild(DesignUtils.spaceBlock)
-                    .AddChild(GetField(propertyOnInstantToggleOffCallback, toggleOffIconTextures, "Instant Toggle OFF - Toggle became OFF (without animations)", "Callbacks triggered then the toggle value changed from ON to OFF (without animations)"))
-                    .AddChild(DesignUtils.spaceBlock2X)
-                    .AddChild(GetField(propertyOnValueChangedCallback, toggleIconTextures, "Toggle Value Changed", "Callbacks triggered then the toggle changes value"))
-                    .AddChild(DesignUtils.spaceBlock2X)
-                    .AddChild(GetField(propertyOnToggleGroupMixedValuesCallback, toggleMixedIconTextures, "Toggle Group has Mixed Values - Executed when hasMixedValues becomes TRUE", "Callbacks triggered then the toggle group hasMixedValues becomes TRUE"))
-                    .AddChild(DesignUtils.endOfLineBlock);
-
-                callbacksAnimatedContainer.Bind(serializedObject);
+                    .AddContent(GetField(propertyOnToggleOnCallback, "Toggle ON - toggle value changed from OFF to ON"))
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(GetField(propertyOnInstantToggleOnCallback, "Instant Toggle ON - toggle value changed from OFF to ON (without animations)"))
+                    .AddContent(DesignUtils.spaceBlock2X)
+                    .AddContent(GetField(propertyOnToggleOffCallback, "Toggle OFF - toggle value changed from ON to OFF"))
+                    .AddContent(DesignUtils.spaceBlock)
+                    .AddContent(GetField(propertyOnInstantToggleOffCallback, "Instant Toggle OFF - toggle value changed from ON to OFF (without animations)"))
+                    .AddContent(DesignUtils.spaceBlock2X)
+                    .AddContent(GetField(propertyOnValueChangedCallback, "Toggle Value Changed - toggle value changed"))
+                    .AddContent(DesignUtils.spaceBlock2X)
+                    .AddContent(GetField(propertyOnToggleGroupMixedValuesCallback, "Toggle Group has Mixed Values - toggle group hasMixedValues becomes TRUE"))
+                    .AddContent(DesignUtils.endOfLineBlock)
+                    .Bind(serializedObject);
             });
-
-            callbacksTabIndicator.Toggle(hasCallbacks, false);
-
-            IVisualElementScheduledItem callbacksScheduler =
-                callbacksTabButton.schedule
-                    .Execute(() => callbacksTabIndicator.Toggle(hasCallbacks, true))
-                    .Every(250);
-
-            callbacksScheduler.Pause();
-
-            callbacksTabButton
-                .SetLabelText("Callbacks")
-                .SetOnValueChanged(evt =>
-                {
-                    callbacksAnimatedContainer.Toggle(evt.newValue);
-                    callbacksTabIndicator.Toggle(hasCallbacks, true);
-                    if (evt.newValue)
-                        callbacksScheduler.Resume();
-                    else
-                        callbacksScheduler.Pause();
-                });
-
-            callbacksTabButton.AddToToggleGroup(toggleGroup);
         }
 
-        private bool hasOnToggleOnCallback => castedTarget != null && castedTarget.OnToggleOnCallback != null && castedTarget.OnToggleOnCallback.Enabled && castedTarget.OnToggleOnCallback.hasEvents | castedTarget.OnToggleOnCallback.hasRunners;
-        private bool hasOnInstantToggleOnCallback => castedTarget != null && castedTarget.OnInstantToggleOnCallback is { Enabled: true } && castedTarget.OnInstantToggleOnCallback.hasEvents | castedTarget.OnInstantToggleOnCallback.hasRunners;
-        private bool hasOnToggleOffCallback => castedTarget != null && castedTarget.OnToggleOffCallback != null && castedTarget.OnToggleOffCallback.Enabled && castedTarget.OnToggleOffCallback.hasEvents | castedTarget.OnToggleOffCallback.hasRunners;
-        private bool hasOnInstantToggleOffCallback => castedTarget != null && castedTarget.OnInstantToggleOffCallback is { Enabled: true } && castedTarget.OnInstantToggleOffCallback.hasEvents | castedTarget.OnInstantToggleOffCallback.hasRunners;
-        private bool hasOnValueChangedCallback => castedTarget != null && castedTarget.OnValueChangedCallback?.GetPersistentEventCount() > 0;
-        private bool hasCallbacks =>
-            hasOnToggleOnCallback |
-            hasOnInstantToggleOnCallback |
-            hasOnToggleOffCallback |
-            hasOnInstantToggleOffCallback |
-            hasOnValueChangedCallback;
+        protected override VisualElement Toolbar()
+        {
+            return
+                toolbarContainer
+                    .AddChild(settingsTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(statesTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(behavioursTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(callbacksTab)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild(navigationTab)
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild(DesignUtils.flexibleSpace)
+                    .AddChild(DesignUtils.spaceBlock2X)
+                    .AddChild
+                    (
+                        DesignUtils.SystemButton_RenameComponent
+                        (
+                            castedTarget.gameObject,
+                            () => $"Toggle Group - {castedTarget.Id.Name}"
+                        )
+                    )
+                    .AddChild(DesignUtils.spaceBlock)
+                    .AddChild
+                    (
+                        DesignUtils.SystemButton_SortComponents
+                        (
+                            ((UISelectable)target).gameObject,
+                            nameof(RectTransform),
+                            nameof(UIToggle),
+                            nameof(UIToggleGroup)
+                        )
+                    );
+        }
+
+        protected override VisualElement Content()
+        {
+            return
+                contentContainer
+                    .AddChild(settingsAnimatedContainer)
+                    .AddChild(statesAnimatedContainer)
+                    .AddChild(behavioursAnimatedContainer)
+                    .AddChild(callbacksAnimatedContainer)
+                    .AddChild(navigationAnimatedContainer);
+        }
 
         protected override void Compose()
         {
-            if (castedTarget == null)
-                return;
-
             root
+                .AddChild(reactionControls)
                 .AddChild(componentHeader)
-                .AddChild
-                (
-                    DesignUtils.row
-                        .SetStyleMargins(50, -4, DesignUtils.k_Spacing2X, DesignUtils.k_Spacing2X)
-                        .AddChild(settingsTabButton)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild(statesTabButton)
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild(navigationTabButton)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild(callbacksTab)
-                        .AddChild(DesignUtils.flexibleSpace)
-                        .AddChild(DesignUtils.spaceBlock2X)
-                        .AddChild
-                        (
-                            DesignUtils.SystemButton_RenameComponent
-                            (
-                                castedTarget.gameObject,
-                                () => $"Toggle Group - {castedTarget.Id.Name}"
-                            )
-                        )
-                        .AddChild(DesignUtils.spaceBlock)
-                        .AddChild
-                        (
-                            DesignUtils.SystemButton_SortComponents
-                            (
-                                castedTarget.gameObject,
-                                nameof(RectTransform),
-                                nameof(Canvas),
-                                nameof(CanvasGroup),
-                                nameof(GraphicRaycaster),
-                                nameof(UIToggleGroup)
-                            )
-                        )
-                )
-                .AddChild(DesignUtils.spaceBlock)
-                .AddChild
-                (
-                    settingsAnimatedContainer
-                        .AddContent
-                        (
-                            DesignUtils.column
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild(overrideInteractabilityForTogglesToggle)
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild
-                                (
-                                    DesignUtils.row
-                                        .AddChild(interactableCheckbox)
-                                        .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(deselectAfterPressCheckbox)
-                                        .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(GetStateButtons())
-                                )
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild
-                                (
-                                    DesignUtils.row
-                                        .AddChild(isOnToggle)
-                                        .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(hasMixedValuesToggle)
-                                        .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(toggleGroupValueEnumField)
-                                )
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild
-                                (
-                                    DesignUtils.row
-                                        .AddChild(toggleModeField)
-                                        .AddChild(DesignUtils.spaceBlock)
-                                        .AddChild(autoSortField)
-                                )
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild(firstToggleField)
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild(idField)
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild(toggleGroupField)
-                                .AddChild(DesignUtils.spaceBlock)
-                                .AddChild(DesignUtils.NewPropertyField(propertyBehaviours))
-                                .AddChild(DesignUtils.endOfLineBlock)
-                        )
-                )
-                .AddChild(statesAnimatedContainer)
-                .AddChild(navigationAnimatedContainer)
-                .AddChild(callbacksAnimatedContainer);
+                .AddChild(Toolbar())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(Content())
+                .AddChild(DesignUtils.spaceBlock2X)
+                .AddChild(idField)
+                .AddChild(DesignUtils.endOfLineBlock);
         }
     }
 }

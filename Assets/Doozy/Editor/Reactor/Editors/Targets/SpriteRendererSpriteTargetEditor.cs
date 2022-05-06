@@ -19,6 +19,7 @@ namespace Doozy.Editor.Reactor.Editors.Targets
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(SpriteRenderer)))
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1046544484/SpriteRenderer+Sprite+Target?atlOrigin=eyJpIjoiYzNlYmUxM2NhOGM1NGU2MThlNTNiNTA2MGJkNjY1Y2YiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.Reactor.Targets.SpriteRendererSpriteTarget.html")
                 .AddYouTubeButton();
 
             targetObjectField

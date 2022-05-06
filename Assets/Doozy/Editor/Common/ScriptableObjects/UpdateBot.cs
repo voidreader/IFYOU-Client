@@ -21,7 +21,7 @@ namespace Doozy.Editor.Common.ScriptableObjects
 {
     public class UpdateBot : SingletonEditorScriptableObject<UpdateBot>
     {
-        public bool Update = true;
+        public bool Update = false;
 
         [InitializeOnLoadMethod]
         public static void Initialize()

@@ -5,6 +5,8 @@
 using System;
 using Doozy.Editor.EditorUI;
 using Doozy.Editor.EditorUI.Components;
+using Doozy.Editor.EditorUI.Components.Internal;
+using Doozy.Runtime.Common;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEngine;
 using UnityEngine.Events;
@@ -17,17 +19,24 @@ namespace Doozy.Editor.Common.Layouts
     {
         public TemplateContainer templateContainer { get; }
         public VisualElement layoutContainer { get; }
+        public VisualElement leftContainer { get; }
+        public VisualElement middleContainer { get; }
         public Label nameLabel { get; }
-        public VisualElement buttonsContainer { get; }
+        public TextField nameTextField { get; }
+        public VisualElement rightContainer { get; }
 
         public static Font font => EditorFonts.Ubuntu.Regular;
         private static Color textColor => EditorColors.Default.TextDescription;
         
-        public FluidButton buttonRemoveCategory { get; }
+        public FluidToggleButtonTab buttonRename { get; }
+        public FluidButton buttonSave { get; }
+        public FluidButton buttonCancel { get; }
+        public FluidButton buttonRemove { get; }
         
         public string target { get; private set; }
         
         public UnityAction<string> removeHandler { get; set; }
+        public Func<string, string, bool> saveHandler { get; set; }
         
         public CategoryNameItemCategoryRow()
         {
@@ -40,33 +49,92 @@ namespace Doozy.Editor.Common.Layouts
                 .AddStyle(EditorStyles.Common.CategoryNameItemCategoryRow);
 
             layoutContainer = templateContainer.Q<VisualElement>(nameof(layoutContainer));
-            nameLabel = layoutContainer.Q<Label>(nameof(nameLabel));
-            buttonsContainer = layoutContainer.Q<VisualElement>(nameof(buttonsContainer));
+            leftContainer = layoutContainer.Q<VisualElement>(nameof(leftContainer));
+            middleContainer = layoutContainer.Q<VisualElement>(nameof(middleContainer));
+            nameLabel = middleContainer.Q<Label>(nameof(nameLabel));
+            nameTextField = middleContainer.Q<TextField>(nameof(nameTextField));
+            rightContainer = layoutContainer.Q<VisualElement>(nameof(rightContainer));
 
             nameLabel.SetStyleColor(textColor);
             nameLabel.SetStyleUnityFont(font);
 
-            buttonRemoveCategory = NewButtonRemoveCategory();
+            buttonRename = NewButtonRename();
+            buttonSave = NewButtonSave().SetStyleDisplay(DisplayStyle.None);
+            buttonCancel = NewButtonCancel().SetStyleDisplay(DisplayStyle.None);
+            buttonRemove = NewButtonRemove();
             
-            buttonRemoveCategory.SetOnClick(() =>
+            buttonRename.SetOnValueChanged(change =>
+            {
+                if (change.newValue)
+                {
+                    nameLabel.SetStyleDisplay(DisplayStyle.None);
+                    buttonRemove.SetStyleDisplay(DisplayStyle.None);
+                    nameTextField.SetStyleDisplay(DisplayStyle.Flex);
+                    buttonSave.SetStyleDisplay(DisplayStyle.Flex);
+                    buttonCancel.SetStyleDisplay(DisplayStyle.Flex);
+                    return;
+                }
+
+                nameLabel.SetStyleDisplay(DisplayStyle.Flex);
+                buttonRemove.SetStyleDisplay(DisplayStyle.Flex);
+                nameTextField.SetStyleDisplay(DisplayStyle.None);
+                buttonSave.SetStyleDisplay(DisplayStyle.None);
+                buttonCancel.SetStyleDisplay(DisplayStyle.None);
+            });
+            
+            buttonSave.SetOnClick(() =>
+            {
+                if (saveHandler == null) throw new NullReferenceException(nameof(saveHandler));
+                bool result = saveHandler.Invoke(target, nameTextField.value);
+                if (!result) return;
+                buttonRename.SetIsOn(false);
+            });
+            
+            buttonCancel.SetOnClick(() =>
+            {
+                buttonRename.SetIsOn(false);
+            });
+            
+            buttonRemove.SetOnClick(() =>
             {
                 if (removeHandler == null) throw new NullReferenceException(nameof(removeHandler));
                 removeHandler.Invoke(target);
             });
             
-            buttonsContainer.Add(buttonRemoveCategory);
+            leftContainer
+                .AddChild(buttonRename);
+            
+            rightContainer
+                .AddChild(buttonSave)
+                .AddChild(buttonCancel)
+                .AddChild(buttonRemove);
         }
 
         public void Reset()
         {
             target = string.Empty;
             nameLabel.text = string.Empty;
+            nameTextField.value = string.Empty;
+            
+            buttonRename.isOn = false;
+
+            removeHandler = null;
+            saveHandler = null;
+
+            nameLabel.SetStyleDisplay(DisplayStyle.Flex);
+            buttonRemove.SetStyleDisplay(DisplayStyle.Flex);
+            nameTextField.SetStyleDisplay(DisplayStyle.None);
+            buttonSave.SetStyleDisplay(DisplayStyle.None);
+            buttonCancel.SetStyleDisplay(DisplayStyle.None);
         }
         
         public CategoryNameItemCategoryRow SetTarget(string category)
         {
+            Reset();
             target = category;
             nameLabel.text = category;
+            nameTextField.value = category;
+            SetEnabled(!category.Equals(CategoryNameItem.k_DefaultName));
             return this;
         }
         
@@ -76,19 +144,46 @@ namespace Doozy.Editor.Common.Layouts
             return this;
         }
         
+        public CategoryNameItemCategoryRow SetSaveHandler(Func<string, string, bool> saveCallback)
+        {
+            saveHandler = saveCallback;
+            return this;
+        }
+        
         public CategoryNameItemCategoryRow ShowRemoveCategoryButton()
         {
-            buttonRemoveCategory.SetStyleDisplay(DisplayStyle.Flex);
+            buttonRemove.SetStyleDisplay(DisplayStyle.Flex);
             return this;
         }
         
         public CategoryNameItemCategoryRow HideRemoveCategoryButton()
         {
-            buttonRemoveCategory.SetStyleDisplay(DisplayStyle.None);
+            buttonRemove.SetStyleDisplay(DisplayStyle.None);
             return this;
         }
         
-        private static FluidButton NewButtonRemoveCategory() =>
+        private static FluidToggleButtonTab NewButtonRename() =>
+            FluidToggleButtonTab.Get()
+                .SetElementSize(ElementSize.Small)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Edit)
+                .SetToggleAccentColor(EditorSelectableColors.Default.Action)
+                .SetTooltip("Rename Category");
+        
+        private static FluidButton NewButtonSave() =>
+            FluidButton.Get()
+                .SetElementSize(ElementSize.Small)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Save)
+                .SetAccentColor(EditorSelectableColors.Default.Add)
+                .SetTooltip("Save");
+
+        private static FluidButton NewButtonCancel() =>
+            FluidButton.Get()
+                .SetElementSize(ElementSize.Small)
+                .SetIcon(EditorSpriteSheets.EditorUI.Icons.Close)
+                .SetAccentColor(EditorSelectableColors.Default.Remove)
+                .SetTooltip("Cancel");
+        
+        private static FluidButton NewButtonRemove() =>
             FluidButton.Get()
                 .SetElementSize(ElementSize.Small)
                 .SetIcon(EditorSpriteSheets.EditorUI.Icons.Minus)

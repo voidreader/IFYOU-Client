@@ -130,7 +130,7 @@ namespace Doozy.Editor.EditorUI.Components
                 else
                     sideMenu.ExpandMenu(false);
             }
-                
+
             //RESIZER
             sideMenu.SetCustomWidth(EditorPrefs.GetInt(sideMenuWidthKey, 200));
             sideMenuResizer = new FluidResizer(FluidResizer.Position.Right);
@@ -299,15 +299,11 @@ namespace Doozy.Editor.EditorUI.Components
         }
 
 
-        protected FluidToggleButtonTab GetNewTabButton(string buttonText, FluidToggleGroup addToToggleGroup = null)
-        {
-            FluidToggleButtonTab tab =
-                FluidToggleButtonTab.Get(buttonText)
-                    .SetElementSize(ElementSize.Normal)
-                    .SetTabPosition(TabPosition.FloatingTab);
-            tab.AddToToggleGroup(addToToggleGroup);
-            return tab;
-        }
+        protected FluidToggleButtonTab GetNewTabButton(string buttonText, FluidToggleGroup addToToggleGroup = null) =>
+            FluidToggleButtonTab.Get(buttonText)
+                .SetElementSize(ElementSize.Normal)
+                .SetTabPosition(TabPosition.FloatingTab)
+                .RegisterToToggleGroup(addToToggleGroup);
 
         protected static Label GetNewTabButtonInfoLabel(string labelText) =>
             new Label(labelText)

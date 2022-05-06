@@ -277,7 +277,7 @@ namespace Doozy.Runtime.Reactor.Internal
             if (isActive) Stop(true);
             ResetElapsedValues();
             RefreshSettings();
-
+            
             direction = inReverse ? PlayDirection.Reverse : PlayDirection.Forward;
 
             customStartDuration = false;
@@ -314,13 +314,14 @@ namespace Doozy.Runtime.Reactor.Internal
             direction = fromProgress <= toProgress ? PlayDirection.Forward : PlayDirection.Reverse;
 
             customStartDuration = true;
-            
+
             float fromDuration = GetDurationAtProgress(fromProgress, duration);
             float toDuration = GetDurationAtProgress(toProgress, duration);
-            
+
             startDuration = direction == PlayDirection.Forward ? fromDuration : toDuration;
-            targetDuration = direction == PlayDirection.Forward ? toDuration : fromDuration;;
-            
+            targetDuration = direction == PlayDirection.Forward ? toDuration : fromDuration;
+            ;
+
             elapsedDuration = direction == PlayDirection.Forward ? startDuration : targetDuration;
             m_LastProgress = progress;
 
@@ -388,7 +389,7 @@ namespace Doozy.Runtime.Reactor.Internal
             m_LastProgress = progress;
 
             if (heartbeat.isActive) heartbeat.UnregisterFromTickService();
-
+            
             if (settings.playMode != PlayMode.Normal)
                 ComputePlayMode(); //This operation needed here because if we set the progress before the reaction ran, we have no values and can get NaN (Not a Number) values
             UpdateCurrentCycleIndex();
@@ -562,7 +563,7 @@ namespace Doozy.Runtime.Reactor.Internal
         public void SetHeartbeat(Heartbeat h)
         {
             heartbeat = h ?? new RuntimeHeartbeat();
-            heartbeat.onTickCallback = UpdateReaction;
+            heartbeat.AddOnTickCallback(UpdateReaction);
         }
 
         /// <summary>
@@ -587,7 +588,9 @@ namespace Doozy.Runtime.Reactor.Internal
             settings.Validate();
 
             startDelay = Settings.GetStartDelay();
-            duration = Max(MIN_DURATION, Settings.GetDuration()); //avoid zero duration as it creates NaN values
+            duration = Settings.GetDuration();
+            duration = float.IsNaN(duration) || float.IsInfinity(duration) ? 0 : duration;
+            duration = Max(MIN_DURATION, duration); //avoid zero duration as it creates NaN values
             loops = Settings.GetLoops();
             loopDelay = Settings.GetLoopDelay();
 

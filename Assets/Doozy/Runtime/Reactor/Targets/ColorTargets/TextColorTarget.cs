@@ -12,7 +12,7 @@ namespace Doozy.Runtime.Reactor.Targets
     /// Connects a Text component with a Reactor animator.
     /// </summary>
     [Serializable]
-    [AddComponentMenu("Doozy/Reactor/Targets/Text Color Target")]
+    [AddComponentMenu("Reactor/Targets/Text Color Target")]
     public class TextColorTarget : ReactorMetaColorTarget<Text>
     {
         #if UNITY_EDITOR

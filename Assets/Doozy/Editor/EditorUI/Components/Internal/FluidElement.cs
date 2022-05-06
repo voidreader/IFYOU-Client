@@ -4,7 +4,6 @@
 
 using System;
 using Doozy.Editor.EditorUI.ScriptableObjects.Colors;
-using Doozy.Editor.EditorUI.Utils;
 using Doozy.Runtime.Colors;
 using UnityEditor;
 using UnityEngine;

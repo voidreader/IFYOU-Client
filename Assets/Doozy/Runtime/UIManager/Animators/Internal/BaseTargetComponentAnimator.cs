@@ -3,6 +3,8 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System.Collections;
+using System.Collections.Generic;
+using Doozy.Runtime.Reactor.Ticker;
 using UnityEngine;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -28,7 +30,7 @@ namespace Doozy.Runtime.UIManager.Animators
         public bool isConnected { get; protected set; }
 
         protected Coroutine connectLater { get; set; }
-        protected bool animatorInitialized { get; set; }
+        public bool animatorInitialized { get; set; }
 
         /// <summary> Set a new target controller and connect to it </summary>
         /// <param name="newTarget"> New target controller </param>
@@ -83,6 +85,13 @@ namespace Doozy.Runtime.UIManager.Animators
             Disconnect();
         }
 
+        /// <summary> Initialize the animator (update settings and set the initialized flag) </summary>
+        public virtual void InitializeAnimator()
+        {
+            UpdateSettings();
+            animatorInitialized = true;
+        }
+        
         /// <summary> Connect to the referenced target controller </summary>
         protected virtual void Connect()
         {
@@ -102,6 +111,7 @@ namespace Doozy.Runtime.UIManager.Animators
             isConnected = false;
         }
 
+        /// <summary> Connect to the referenced target controller </summary>
         protected IEnumerator ConnectLater()
         {
             yield return new WaitForEndOfFrame();
@@ -110,10 +120,23 @@ namespace Doozy.Runtime.UIManager.Animators
             Connect();
         }
 
+        /// <summary> Connect to Controller </summary>
         protected abstract void ConnectToController();
+        
+        /// <summary> Disconnect from Controller </summary>
         protected abstract void DisconnectFromController();
 
+        /// <summary> Update settings </summary>
         public abstract void UpdateSettings();
+        
+        /// <summary> Stop all reactions </summary>
         public abstract void StopAllReactions();
+        
+        /// <summary> Reset all the reactions to their initial values (if the animation is enabled) </summary>
+        /// <param name="forced"> If true, forced will ignore if the animation is enabled or not </param>
+        public abstract void ResetToStartValues(bool forced = false);
+        
+        /// <summary> Set animation heartbeat </summary>
+        public abstract List<Heartbeat> SetHeartbeat<Theartbeat>() where Theartbeat : Heartbeat, new();
     }
 }

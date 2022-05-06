@@ -61,7 +61,6 @@ namespace Doozy.Runtime.Reactor.Animations
 
         /// <summary> Set the color target </summary>
         /// <param name="target"> Color target </param>
-        /// <exception cref="NullReferenceException"> Color target is null </exception>
         public void SetTarget(ReactorColorTarget target)
         {
             colorTarget = null;
@@ -154,7 +153,11 @@ namespace Doozy.Runtime.Reactor.Animations
         /// <param name="forced"> If true, forced will ignore if the animation is enabled or not </param>
         public override void ResetToStartValues(bool forced = false)
         {
-            if (forced | !animation.enabled) animation.SetValue(startColor);
+            if (colorTarget == null) return;
+            if (forced || animation.enabled)
+            {
+                animation.SetValue(startColor);
+            }
         }
 
         /// <summary>

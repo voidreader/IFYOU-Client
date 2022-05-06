@@ -63,8 +63,7 @@ namespace Doozy.Editor.UIManager.Editors.Listeners
         private void InitializeEditor()
         {
             FindProperties();
-
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader =
                 FluidComponentHeader.Get()
@@ -73,6 +72,7 @@ namespace Doozy.Editor.UIManager.Editors.Listeners
                     .SetComponentNameText((ObjectNames.NicifyVariableName(nameof(SignalListener))))
                     .SetIcon(componentIconTextures.ToList())
                     .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048772618/Signal+Listener?atlOrigin=eyJpIjoiNmM1M2MyZDg1ZDM4NGYzZTljMWM3ZWZiNDYyZjg2MjAiLCJwIjoiYyJ9")
+                    .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Listeners.SignalListener.html")
                     .AddYouTubeButton();
 
             streamIdPropertyField =

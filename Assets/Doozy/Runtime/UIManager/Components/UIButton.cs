@@ -6,8 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Doozy.Runtime.Common.Attributes;
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Signals;
-using Doozy.Runtime.UIManager.Components.Internal;
 using UnityEngine;
 using UnityEngine.EventSystems;
 // ReSharper disable MemberCanBePrivate.Global
@@ -18,19 +18,42 @@ namespace Doozy.Runtime.UIManager.Components
     /// Button component based on UISelectable with category/name id identifier.
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
-    [AddComponentMenu("Doozy/UI/Components/UI Button")]
+    [AddComponentMenu("UI/Components/UI Button")]
     [SelectionBase]
-    public partial class UIButton : UISelectableComponent<UIButton>, IPointerClickHandler, ISubmitHandler
+    public partial class UIButton : UISelectable, IPointerClickHandler, ISubmitHandler
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Components/UIButton", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UIButton>("UIButton", false, true);
+        }
+        #endif
+        
+        /// <summary> UIButtons database </summary>
+        public static HashSet<UIButton> database { get; private set; } = new HashSet<UIButton>();
+        
+        [ExecuteOnReload]
+        private static void OnReload()
+        {
+            database = new HashSet<UIButton>();
+        }
+        
         [ClearOnReload]
         private static SignalStream s_stream;
+        /// <summary> UIButton signal stream </summary>
         public static SignalStream stream => s_stream ??= SignalsService.GetStream(k_StreamCategory, nameof(UIButton));
 
         /// <summary> All buttons that are active and enabled </summary>
         public static IEnumerable<UIButton> availableButtons => database.Where(item => item.isActiveAndEnabled);
 
+        /// <summary> TRUE is this selectable is selected by EventSystem.current, FALSE otherwise </summary>
+        public bool isSelected => EventSystem.current.currentSelectedGameObject == gameObject;
+        
+        /// <summary> Type of selectable </summary>
         public override SelectableType selectableType => SelectableType.Button;
 
+        /// <summary> UIButton identifier </summary>
         public UIButtonId Id;
 
         protected UIButton()
@@ -38,10 +61,29 @@ namespace Doozy.Runtime.UIManager.Components
             Id = new UIButtonId();
         }
 
+        protected override void Awake()
+        {
+            database.Add(this);
+            base.Awake();
+        }
+
+        protected override void OnEnable()
+        {
+            database.Remove(null);
+            base.OnEnable();
+        }
+
         protected override void OnDisable()
         {
+            database.Remove(null);
             base.OnDisable();
-            behaviours?.Disconnect();
+        }
+
+        protected override void OnDestroy()
+        {
+            database.Remove(null);
+            database.Remove(this);
+            base.OnDestroy();
         }
 
         public virtual void OnPointerClick(PointerEventData eventData)

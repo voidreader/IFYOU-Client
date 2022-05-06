@@ -33,7 +33,7 @@ namespace Doozy.Editor.UIManager.ScriptableObjects
                 return;
 
             EditorUtility.SetDirty(this);
-            AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssetIfDirty(this);
         }
     }
 }

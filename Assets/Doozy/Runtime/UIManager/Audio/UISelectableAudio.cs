@@ -3,6 +3,9 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using System;
+using System.Collections.Generic;
+using Doozy.Runtime.Common.Utils;
+using Doozy.Runtime.Reactor.Ticker;
 using Doozy.Runtime.UIManager.Animators;
 using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
@@ -12,9 +15,17 @@ namespace Doozy.Runtime.UIManager.Audio
     /// <summary>
     /// Specialized audio component used to play a set AudioClip by listening to a UISelectable (controller) selection state changes.
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Audio/Selectable/UI Selectable Audio")]
+    [AddComponentMenu("UI/Components/Addons/UISelectable Audio")]
     public class UISelectableAudio : BaseUISelectableAnimator
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/UI/Components/Addons/UISelectable Audio", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<UISelectableAudio>("UISelectable Audio", false, true);
+        }
+        #endif
+
         [SerializeField] private AudioSource AudioSource;
         /// <summary> Reference to a target Audio source </summary>
         public AudioSource audioSource => AudioSource;
@@ -100,6 +111,8 @@ namespace Doozy.Runtime.UIManager.Audio
                 audioSource.Play();
         }
 
-        public override void UpdateSettings() {} //ignored
+        public override void UpdateSettings() {}                           //ignored
+        public override void ResetToStartValues(bool forced = false) {}    //ignored
+        public override List<Heartbeat> SetHeartbeat<T>() { return null; } //ignored
     }
 }

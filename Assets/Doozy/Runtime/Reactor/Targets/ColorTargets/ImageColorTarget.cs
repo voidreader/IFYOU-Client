@@ -13,7 +13,7 @@ namespace Doozy.Runtime.Reactor.Targets
     /// </summary>
     [Serializable]
     [RequireComponent(typeof(Image))]
-    [AddComponentMenu("Doozy/Reactor/Targets/Image Color Target")]
+    [AddComponentMenu("Reactor/Targets/Image Color Target")]
     public class ImageColorTarget : ReactorMetaColorTarget<Image>
     {
         #if UNITY_EDITOR

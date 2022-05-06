@@ -4,6 +4,7 @@
 
 using Doozy.Editor.EditorUI.Windows.Internal;
 using Doozy.Editor.Reactor.Components;
+using Doozy.Editor.UIElements;
 using Doozy.Runtime.UIElements.Extensions;
 using UnityEditor;
 using UnityEngine;
@@ -21,7 +22,9 @@ namespace Doozy.Editor.Reactor.Windows
         
         protected override void CreateGUI()
         {
-            root.AddChild(m_TickerVisualizer = new TickerVisualizer(TickerVisualizer.TickerType.Runtime, ReactorWindow.Open));
+            root
+                .RecycleAndClear()
+                .AddChild(m_TickerVisualizer = new TickerVisualizer(TickerVisualizer.TickerType.Runtime, ReactorWindow.Open));
             EditorApplication.playModeStateChanged += TickVisualizer;
         }
 

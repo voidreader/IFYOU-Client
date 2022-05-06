@@ -62,7 +62,6 @@ namespace Doozy.Runtime.Common
                 : ContainsCategory(category)
                     ? (false, $"'{category}' already exists")
                     : (true, $"Can add the '{category}' category");
-
         }
 
         /// <summary> Add a new item to the database with the given category value and the default name value </summary>
@@ -74,6 +73,44 @@ namespace Doozy.Runtime.Common
             (canAddCategory, _) = CanAddCategory(category);
             if (!canAddCategory) return false;
             items.Add((T)new CategoryNameItem(category));
+            CleanDatabase();
+            return true;
+        }
+
+        /// <summary> Check if the given category name can be renamed to the new category name. </summary>
+        /// <param name="oldCategory"> Old category name </param>
+        /// <param name="newCategory"> New category value </param>
+        /// <returns> Operation result (True or False) and a success or failure reason message </returns>
+        public (bool, string) CanRenameCategory(string oldCategory, string newCategory)
+        {
+            oldCategory = CleanString(oldCategory);
+            newCategory = CleanString(newCategory);
+
+            return oldCategory.IsNullOrEmpty()
+                ? (false, $"Invalid '{nameof(oldCategory)}'. It cannot be null or empty or contain special characters")
+                : !ContainsCategory(oldCategory)
+                    ? (false, $"'{oldCategory}' does not exist")
+                    : newCategory.IsNullOrEmpty()
+                        ? (false, $"Invalid '{nameof(newCategory)}'. It cannot be null or empty or contain special characters")
+                        : oldCategory.Equals(newCategory)
+                            ? (false, $"The new category '{newCategory}' is the same as the old category '{oldCategory}'")
+                            : (true, $"Can rename the '{oldCategory}' category to '{newCategory}'");
+        }
+
+        /// <summary> Rename the given category value to the new category value </summary>
+        /// <param name="oldCategory"> Old category value </param>
+        /// <param name="newCategory"> New category value </param>
+        /// <returns> True if the operation was successful and false otherwise </returns>
+        public bool RenameCategory(string oldCategory, string newCategory)
+        {
+            bool canAddCategory;
+            (canAddCategory, _) = CanRenameCategory(oldCategory, newCategory);
+            if (!canAddCategory) return false;
+            oldCategory = CleanString(oldCategory);
+            newCategory = CleanString(newCategory);
+            var categoryItems = items.Where(data => data.category.Equals(oldCategory)).ToList();
+            foreach (T item in categoryItems)
+                item.SetCategory(newCategory);
             CleanDatabase();
             return true;
         }

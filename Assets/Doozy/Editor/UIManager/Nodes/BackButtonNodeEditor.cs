@@ -28,6 +28,7 @@ namespace Doozy.Editor.UIManager.Nodes
             componentHeader
                 .SetComponentNameText(ObjectNames.NicifyVariableName(nameof(BackButtonNode)))
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1048805453/Back+Button+Node?atlOrigin=eyJpIjoiN2ZlNTIzOTIxMzVhNGM3YmE1Yjk2NDk5NTAxMTBkMTkiLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Nodes.BackButtonNode.html")
                 .AddYouTubeButton();
         }
 

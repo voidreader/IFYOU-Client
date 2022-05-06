@@ -2,6 +2,7 @@
 // This code can only be used under the standard Unity Asset Store End User License Agreement
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
+using Doozy.Runtime.Common.Utils;
 using Doozy.Runtime.Reactor.Targets;
 using Doozy.Runtime.Signals;
 using UnityEngine;
@@ -13,9 +14,17 @@ namespace Doozy.Runtime.UIManager.Visual
     /// Connects to a specific stream and reacts to signals, sent through said stream, that have a Sprite value payload.
     /// The signal's Sprite value will be assigned to the target SpriteTarget. 
     /// </summary>
-    [AddComponentMenu("Doozy/UI/Visual/Signal To Sprite Target")]
+    [AddComponentMenu("Signals/Signal To SpriteTarget")]
     public class SignalToSpriteTarget : BaseStreamListener
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("GameObject/Signals/Signal To SpriteTarget", false, 8)]
+        private static void CreateComponent(UnityEditor.MenuCommand menuCommand)
+        {
+            GameObjectUtils.AddToScene<SignalToSpriteTarget>("Signal To SpriteTarget", false, true);
+        }
+        #endif
+        
         [SerializeField] private StreamId StreamId;
         /// <summary> Stream Id </summary>
         public StreamId streamId => StreamId;

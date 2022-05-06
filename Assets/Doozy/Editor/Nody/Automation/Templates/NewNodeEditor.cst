@@ -8,6 +8,7 @@ using Doozy.Editor.Nody.Nodes.Internal;
 using Doozy.Runtime.Nody.Nodes;
 using UnityEditor;
 using UnityEngine;
+
 namespace Doozy.Editor.Nody.Nodes
 {
     [CustomEditor(typeof(//NodeName//))]
@@ -21,23 +22,28 @@ namespace Doozy.Editor.Nody.Nodes
 
             componentHeader.SetComponentNameText(ObjectNames.NicifyVariableName(nameof(//NodeName//))); //node name
             
-            // componentHeader.SetIcon(EditorMicroAnimations.Nody.Icons.Infinity);                     //custom animated icon
-            // componentHeader.SetIcon(EditorTextures.Nody.Icons.Infinity);                            //custom static icon
+            // --- Icon ---
+            // componentHeader.SetIcon(EditorSpriteSheets.Nody.Icons.Infinity); //custom animated icon
+            // componentHeader.SetIcon(EditorTextures.Nody.Icons.Infinity);     //custom static icon
             
-            // componentHeader.SetSecondaryIcon(EditorMicroAnimations.Nody.Icons.One);                 //custom secondary animated icon
-            // componentHeader.SetSecondaryIcon(EditorTextures.Nody.Icons.One);                        //custom secondary static icon
+            // --- Secondary Icon ---
+            // componentHeader.SetSecondaryIcon(EditorSpriteSheets.Nody.Icons.One); //custom secondary animated icon
+            // componentHeader.SetSecondaryIcon(EditorTextures.Nody.Icons.One);     //custom secondary static icon
             
-            // componentHeader.SetAccentColor(EditorColors.Nody.Color);                                //custom color
-            // componentHeader.AddManualButton("www.bit.ly/DoozyKnowledgeBase");                       //custom manual link
-            // componentHeader.AddYouTubeButton("www.youtube.com/c/DoozyEntertainment");               //custom video link
-
-
-            // usage example
+            // --- Accent Color ---
+            // componentHeader.SetAccentColor(EditorColors.Nody.Color); //custom color
+            
+            // --- Extra Buttons ---
+            // componentHeader.AddManualButton("https://docs.doozyui.com/");     //custom manual link
+            // componentHeader.AddApiButton("https://api.doozyui.com/");         //custom manual link
+            // componentHeader.AddYouTubeButton("https://youtube.doozyui.com/"); //custom video link
+            
+            // --- Usage Example ---
             // componentHeader
             //     .SetComponentNameText("Component Name")
             //     .SetComponentTypeText("Nody Node")
-            //     .SetIcon(EditorMicroAnimations.Nody.Icons.Nody)
-            //     .SetSecondaryIcon(EditorMicroAnimations.Nody.Icons.Infinity)
+            //     .SetIcon(EditorSpriteSheets.Nody.Icons.Nody)
+            //     .SetSecondaryIcon(EditorSpriteSheets.Nody.Icons.Infinity)
             //     .SetAccentColor(EditorColors.EditorUI.Amber);
         }
     }

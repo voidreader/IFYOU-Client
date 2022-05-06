@@ -24,39 +24,18 @@ namespace Doozy.Editor.UIManager.Drawers
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             SerializedProperty stateTypeProperty = property.FindPropertyRelative("StateType");
-            SerializedProperty stateNameProperty = property.FindPropertyRelative("StateName");
             SerializedProperty stateEventProperty = property.FindPropertyRelative("StateEvent");
-            SerializedProperty runnersProperty = stateEventProperty.FindPropertyRelative(nameof(ModyEvent.Runners));
-            SerializedProperty eventProperty = stateEventProperty.FindPropertyRelative(nameof(ModyEvent.Event));
-
-            PropertyField eventPropertyField = DesignUtils.NewPropertyField(eventProperty.propertyPath);
-
-            VisualElement drawer = DesignUtils.row;
-            FluidFoldout foldout = new FluidFoldout()
+            var state = (UISelectionState)stateTypeProperty.enumValueIndex;
+            stateEventProperty.FindPropertyRelative("EventName").stringValue = $"{state} State";
+            return new VisualElement()
+                .SetName($"UISelectableState: {state}")
                 .SetStyleFlexGrow(1)
-                .SetElementSize(ElementSize.Normal)
-                .SetLabelText(ObjectNames.NicifyVariableName(stateNameProperty.stringValue));
-
-            foldout.animatedContainer.SetClearOnHide(true);
-
-            foldout.animatedContainer.SetOnShowCallback(() =>
-            {
-                foldout.AddContent(ModyEventDrawer.ActionRunnersListView(runnersProperty));
-                foldout.AddContent(DesignUtils.spaceBlock2X);
-                foldout.AddContent(eventPropertyField);
-                foldout.Bind(property.serializedObject);
-            });
-
-            drawer.RegisterCallback<DetachFromPanelEvent>(evt =>
-            {
-                foldout.Dispose();
-            });
-
-            drawer
-                // .AddChild(behaviourIcon)
-                .AddChild(foldout);
-
-            return drawer;
+                .AddChild
+                (
+                    FluidField.Get()
+                        .AddFieldContent(DesignUtils.NewPropertyField(stateEventProperty))
+                );
+            ;
         }
     }
 }

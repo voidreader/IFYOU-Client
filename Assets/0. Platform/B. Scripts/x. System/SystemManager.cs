@@ -2153,7 +2153,7 @@ namespace PIERStory
             webView.Show();            
             
             SystemManager.main.isWebViewOpened = true; // 오픈할때 true로 변경 
-            Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = true;
+            SetBlockBackButton(true);
         }
         
         public void OpenPrivacyURL() {
@@ -2216,7 +2216,7 @@ namespace PIERStory
             webView.Show();
             
             SystemManager.main.isWebViewOpened = true; // 오픈할때 true로 변경 
-            Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = true;
+            SetBlockBackButton(true);
         }
         
         void OnHideWebview(WebView __view) {
@@ -2225,7 +2225,7 @@ namespace PIERStory
             
             
             SystemManager.main.isWebViewOpened = false;  // 닫힐때 false로 변경 
-            Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = false;
+            SetBlockBackButton(false);
             
             WebView.OnHide -= OnHideWebview;
             __view.gameObject.SetActive(false);
@@ -2474,6 +2474,15 @@ namespace PIERStory
             else 
                 PopupManager.main.ShowPopup(p, true, false);
             
+        }
+        
+        
+        /// <summary>
+        /// Doozy BackButton 제어 
+        /// </summary>
+        /// <param name="__flag"></param>
+        public static void SetBlockBackButton(bool __flag) {
+            Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = __flag;
         }
         
         

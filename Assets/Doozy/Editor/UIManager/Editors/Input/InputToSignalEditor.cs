@@ -49,7 +49,7 @@ namespace Doozy.Editor.UIManager.Editors.Input
         #if !INPUT_SYSTEM_PACKAGE && !LEGACY_INPUT_MANAGER
         private void InitializeEditor()
         {
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader = FluidComponentHeader.Get()
                 .SetAccentColor(accentColor)
@@ -58,6 +58,7 @@ namespace Doozy.Editor.UIManager.Editors.Input
                 .SetIcon(inputToSignalIconTextures.ToList())
                 .SetElementSize(ElementSize.Large)
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1046675564/Input+To+Signal?atlOrigin=eyJpIjoiZjU4MWZjODY2OWNlNGJjNDljN2ZiNzE1OWZhZmI1ZTciLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Input.InputToSignal.html")
                 .AddYouTubeButton();
         }
 
@@ -108,8 +109,7 @@ namespace Doozy.Editor.UIManager.Editors.Input
         private void InitializeEditor()
         {
             FindProperties();
-
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader = FluidComponentHeader.Get()
                 .SetAccentColor(accentColor)
@@ -118,6 +118,7 @@ namespace Doozy.Editor.UIManager.Editors.Input
                 .SetIcon(inputToSignalIconTextures.ToList())
                 .SetElementSize(ElementSize.Large)
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1046675564/Input+To+Signal?atlOrigin=eyJpIjoiZjU4MWZjODY2OWNlNGJjNDljN2ZiNzE1OWZhZmI1ZTciLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Input.InputToSignal.html")
                 .AddYouTubeButton();
 
             autoConnectSwitch =
@@ -239,8 +240,7 @@ namespace Doozy.Editor.UIManager.Editors.Input
         private void InitializeEditor()
         {
             FindProperties();
-
-            root = new VisualElement();
+            root = DesignUtils.GetEditorRoot();
 
             componentHeader = FluidComponentHeader.Get()
                 .SetAccentColor(accentColor)
@@ -249,6 +249,7 @@ namespace Doozy.Editor.UIManager.Editors.Input
                 .SetIcon(inputToSignalIconTextures.ToList())
                 .SetElementSize(ElementSize.Large)
                 .AddManualButton("https://doozyentertainment.atlassian.net/wiki/spaces/DUI4/pages/1046675564/Input+To+Signal?atlOrigin=eyJpIjoiZjU4MWZjODY2OWNlNGJjNDljN2ZiNzE1OWZhZmI1ZTciLCJwIjoiYyJ9")
+                .AddApiButton("https://api.doozyui.com/api/Doozy.Runtime.UIManager.Input.InputToSignal.html")
                 .AddYouTubeButton();
 
             inputModeEnumField = DesignUtils.NewEnumField(propertyInputMode).SetStyleFlexGrow(1);

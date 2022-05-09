@@ -136,10 +136,10 @@ namespace PIERStory {
             
             
             #if UNITY_IOS
-            catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/bundle/iOS/catalog_1.json";
+            catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/bundle2021/iOS/catalog_1.json";
             
             #else
-            catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/bundle/Android/catalog_1.json";
+            catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/bundle2021/Android/catalog_1.json";
             // catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/test_bundle/Android/catalog_1.json";
             
             #endif
@@ -151,21 +151,37 @@ namespace PIERStory {
                 if(op.Status == AsyncOperationStatus.Succeeded) {
                     Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
                     SystemManager.main.isAddressableCatalogUpdated = true;
+                    return;
                 }
                 else {
-                    NetworkLoader.main.ReportRequestError(op.OperationException.ToString(), "LoadContentCatalogAsync");
-                    SystemManager.main.isAddressableCatalogUpdated = false;
                     
-                    // Addressables.CleanBundleCache
+                    // 한번더 시도한다. 
+                    Addressables.LoadContentCatalogAsync(catalogURL).Completed += (op) => {
+            
+                        if(op.Status == AsyncOperationStatus.Succeeded) {
+                            Debug.Log("### InitAddressableCatalog #2" +  op.Status.ToString());
+                            SystemManager.main.isAddressableCatalogUpdated = true;
+                            
+                            return;
+                        }
+                        else {
+                            
+                            NetworkLoader.main.ReportRequestError(op.OperationException.ToString(), "LoadContentCatalogAsync");
+                            SystemManager.main.isAddressableCatalogUpdated = false;
+                            
+                            
+                            //  카탈로그 실패시 접속 할 수 없음. 
+                            SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
+                            return;
+                            
+                        }
+                        
+                    }; // end of second try
                     
-                    //  카탈로그 실패시 접속 할 수 없음. 
-                    SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
-                    return;
                     
-                    
-                }
+                } // end of else
                 
-            };
+            }; // END!!!
         }
         
         

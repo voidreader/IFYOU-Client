@@ -28,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4506435257585695330}
   m_RootOrder: 0
@@ -106,6 +107,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1855575380273273680}
   - {fileID: 6312050049273333674}
@@ -171,7 +173,6 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   OnStartBehaviour: 1
   OnShowCallback:
-    Enabled: 1
     EventName: OnShowCallback
     Runners: []
     Event:
@@ -190,38 +191,23 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   OnVisibleCallback:
-    Enabled: 0
     EventName: OnVisibleCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
   OnHideCallback:
-    Enabled: 0
     EventName: OnHideCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
   OnHiddenCallback:
-    Enabled: 0
     EventName: OnHiddenCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 8773778837732916862}
-          m_TargetAssemblyTypeName: PIERStory.PopupBase, Assembly-CSharp
-          m_MethodName: SelfDestroy
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -837,6 +823,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 778640315938865502}
   m_RootOrder: 0
@@ -937,28 +924,24 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   OnStartBehaviour: 1
   OnShowCallback:
-    Enabled: 0
     EventName: OnShowCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
   OnVisibleCallback:
-    Enabled: 0
     EventName: OnVisibleCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
   OnHideCallback:
-    Enabled: 0
     EventName: OnHideCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
   OnHiddenCallback:
-    Enabled: 0
     EventName: OnHiddenCallback
     Runners: []
     Event:
@@ -1574,6 +1557,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 778640314241410314}
   - {fileID: 778640314223155233}
@@ -1621,18 +1605,15 @@ MonoBehaviour:
       playedSceneCount: 0
       sceneProgressorValue: 0
       episodeGalleryImageProgressValue: 0
-      squareImageURL: 
-      squareImageKey: 
       popupImageURL: 
       popupImageKey: 
       episodeState: 0
       purchaseState: 0
-      OneTimePlayable: 0
       priceStarPlaySale: 0
       priceStarPlay: 0
-      currencyOneTime: 
       currencyStarPlay: 
       priceOneTime: 0
+      unlockStyle: 
       isUnlock: 0
       isSerial: 0
     imageURL: 
@@ -1642,6 +1623,7 @@ MonoBehaviour:
     contentValue: 0
   overlay: {fileID: 778640314241410305}
   content: {fileID: 778640314223155234}
+  popupName: 
   autoDestroyTime: 0
   isOverlayUse: 1
   addQueue: 0
@@ -1694,6 +1676,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6312050049273333674}
   m_RootOrder: 1
@@ -1769,6 +1752,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1855575380273273680}
   m_RootOrder: 0
@@ -1844,6 +1828,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4506435257585695330}
   m_RootOrder: 1
@@ -1979,6 +1964,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1855575380273273680}
   m_RootOrder: 1
@@ -2130,6 +2116,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7798257442185481680}
   - {fileID: 694585193692448920}
@@ -2207,6 +2194,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2315808872316340812}
   - {fileID: 3701878459542821546}
@@ -2286,6 +2274,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6312050049273333674}
   m_RootOrder: 0
@@ -2422,6 +2411,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9159149032473904021}
   - {fileID: 3715068331573970417}
@@ -2534,6 +2524,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1855575380273273680}
   m_RootOrder: 2
@@ -2856,9 +2847,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &7997028480920834563 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1042516235608025570, guid: 90532f85fbf13d843b09c54d8d7e9acd, type: 3}
+--- !u!224 &5668454271163001627 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3325487035132596474, guid: 90532f85fbf13d843b09c54d8d7e9acd, type: 3}
   m_PrefabInstance: {fileID: 6957188371790281697}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &6480660726402149735 stripped
@@ -2872,9 +2863,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77c6d918500348269ab48ea9646e337b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &5668454271163001627 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 3325487035132596474, guid: 90532f85fbf13d843b09c54d8d7e9acd, type: 3}
+--- !u!1 &7997028480920834563 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1042516235608025570, guid: 90532f85fbf13d843b09c54d8d7e9acd, type: 3}
   m_PrefabInstance: {fileID: 6957188371790281697}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &8692233771303183799

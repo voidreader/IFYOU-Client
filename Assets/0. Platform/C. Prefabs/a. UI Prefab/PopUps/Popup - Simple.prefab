@@ -28,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8560708739938593003}
   - {fileID: 7947647311301655618}
@@ -105,6 +106,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7947647311301655618}
   m_RootOrder: 0
@@ -185,6 +187,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1615564214391979386}
   m_RootOrder: 0
@@ -285,28 +288,24 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   OnStartBehaviour: 0
   OnShowCallback:
-    Enabled: 0
     EventName: OnShowCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
   OnVisibleCallback:
-    Enabled: 0
     EventName: OnVisibleCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
   OnHideCallback:
-    Enabled: 0
     EventName: OnHideCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
   OnHiddenCallback:
-    Enabled: 0
     EventName: OnHiddenCallback
     Runners: []
     Event:
@@ -315,6 +314,9 @@ MonoBehaviour:
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
@@ -322,6 +324,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &3585175036319839166
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -920,6 +926,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1032951144}
   m_Father: {fileID: 1615564214391979386}
@@ -1021,7 +1028,6 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   OnStartBehaviour: 0
   OnShowCallback:
-    Enabled: 1
     EventName: OnShowCallback
     Runners: []
     Event:
@@ -1040,53 +1046,29 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   OnVisibleCallback:
-    Enabled: 0
     EventName: OnVisibleCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1038139884}
-          m_TargetAssemblyTypeName: PIERStory.PopupEpisodeClear, Assembly-CSharp
-          m_MethodName: OnShow
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
   OnHideCallback:
-    Enabled: 0
     EventName: OnHideCallback
     Runners: []
     Event:
       m_PersistentCalls:
         m_Calls: []
   OnHiddenCallback:
-    Enabled: 1
     EventName: OnHiddenCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1038139884}
-          m_TargetAssemblyTypeName: PIERStory.PopupBase, Assembly-CSharp
-          m_MethodName: SelfDestroy
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []
+  ShowProgressors: []
+  HideProgressors: []
+  ShowHideProgressors: []
   CustomStartPosition: {x: 0, y: 0, z: 0}
   UseCustomStartPosition: 1
   AutoHideAfterShow: 0
@@ -1094,6 +1076,10 @@ MonoBehaviour:
   DisableGameObjectWhenHidden: 1
   DisableCanvasWhenHidden: 1
   DisableGraphicRaycasterWhenHidden: 1
+  ClearSelectedOnShow: 0
+  ClearSelectedOnHide: 0
+  AutoSelectAfterShow: 0
+  AutoSelectTarget: {fileID: 0}
 --- !u!225 &1217721156226286306
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1686,6 +1672,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1615564212844096013}
   - {fileID: 1615564213197433141}
@@ -1714,19 +1701,56 @@ MonoBehaviour:
     Buttons: []
     Images: []
     Labels: []
+    contentEpisode:
+      episodeID: 
+      episodeNO: 
+      episodeNumber: 0
+      episodeTypeString: 
+      episodeType: 0
+      episodeTitle: 
+      episodeSummary: 
+      combinedEpisodeTitle: 
+      storyLobbyTitle: 
+      flowPrefix: 
+      endingType: 
+      dependEpisode: 
+      endingOpen: 0
+      nextOpenMin: 0
+      totalSceneCount: 0
+      playedSceneCount: 0
+      sceneProgressorValue: 0
+      episodeGalleryImageProgressValue: 0
+      popupImageURL: 
+      popupImageKey: 
+      episodeState: 0
+      purchaseState: 0
+      priceStarPlaySale: 0
+      priceStarPlay: 0
+      currencyStarPlay: 
+      priceOneTime: 0
+      unlockStyle: 
+      isUnlock: 0
+      isSerial: 0
     imageURL: 
     imageKey: 
     isConfirm: 1
     isPositive: 1
+    contentValue: 0
   overlay: {fileID: 1615564212844096012}
   content: {fileID: 1615564213197433140}
+  popupName: 
   autoDestroyTime: 0
   isOverlayUse: 1
   addQueue: 0
+  mainCanvasGroup: {fileID: 0}
+  isShow: 0
+  isOnShow: 0
+  isBlockBackButton: 0
   iconImage: {fileID: 0}
-  textQuantity: {fileID: 0}
-  iconURL: 
-  iconKey: 
+  textBaseQuantity: {fileID: 0}
+  textBonusQuantity: {fileID: 0}
+  quantity: 0
+  bonusQuantity: 0
 --- !u!1 &3130850597466324018
 GameObject:
   m_ObjectHideFlags: 0
@@ -1755,6 +1779,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8560708739938593003}
   m_RootOrder: 0
@@ -1890,6 +1915,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1672875211391091236}
   m_Father: {fileID: 1032951144}
@@ -2011,6 +2037,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 166932500638145420}
   m_Father: {fileID: 1032951144}

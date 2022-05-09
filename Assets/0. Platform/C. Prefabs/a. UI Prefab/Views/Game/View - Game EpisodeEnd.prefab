@@ -28,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4622942796724680184}
   - {fileID: 4613186362826541722}
@@ -106,6 +107,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2075209239931832126}
   - {fileID: 6216221518422720061}
@@ -201,6 +203,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4622942796724680184}
   m_RootOrder: 0
@@ -280,6 +283,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3427907369738015405}
   m_Father: {fileID: 0}
@@ -355,7 +359,6 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   OnStartBehaviour: 1
   OnShowCallback:
-    Enabled: 1
     EventName: OnShowCallback
     Runners: []
     Event:
@@ -374,7 +377,6 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   OnVisibleCallback:
-    Enabled: 1
     EventName: OnVisibleCallback
     Runners: []
     Event:
@@ -393,26 +395,12 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   OnHideCallback:
-    Enabled: 0
     EventName: OnHideCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 8561084225737851890}
-          m_TargetAssemblyTypeName: PIERStory.ViewEpisodeEnd, Assembly-CSharp
-          m_MethodName: OnHideView
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
   OnHiddenCallback:
-    Enabled: 1
     EventName: OnHiddenCallback
     Runners: []
     Event:
@@ -1077,6 +1065,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4622942796724680184}
   m_RootOrder: 1
@@ -1221,11 +1210,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
---- !u!224 &4613186362826541722 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6125200692612866329, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
-  m_PrefabInstance: {fileID: 1514406971335863171}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &280537779323609733 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1648575309184780550, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
@@ -1237,3 +1221,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 218ca61f8ad9b6f408492be4643bd7b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &4613186362826541722 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6125200692612866329, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
+  m_PrefabInstance: {fileID: 1514406971335863171}
+  m_PrefabAsset: {fileID: 0}

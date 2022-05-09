@@ -36,7 +36,7 @@ namespace PIERStory
             attendanceId = SystemManager.GetJsonNodeString(__j, "attendance_id");
             daySeq = SystemManager.GetJsonNodeInt(__j, "day_seq");
 
-            currency = SystemManager.GetJsonNodeString(__j, "currency");
+            currency = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
 
             imageUrl = SystemManager.GetJsonNodeString(__j, "icon_image_url");
             imageKey = SystemManager.GetJsonNodeString(__j, "icon_image_key");
@@ -45,14 +45,12 @@ namespace PIERStory
             clickCheck = SystemManager.GetJsonNodeBool(__j, "click_check");
             current = SystemManager.GetJsonNodeBool(__j, "current");
 
-            amountText.text = SystemManager.GetJsonNodeString(__j, "quantity");
+            amountText.text = SystemManager.GetJsonNodeString(__j, CommonConst.NODE_QUANTITY);
 
-            if(currency == "coin")
+            if (currency == LobbyConst.COIN)
                 currencyIcon.GetComponent<Image>().sprite = SystemManager.main.spriteCoin;
-            else if(currency =="gem")
-            {
+            else if (currency == LobbyConst.GEM)
                 currencyIcon.GetComponent<Image>().sprite = SystemManager.main.spriteStar;
-            }
             else
                 currencyIcon.SetDownloadURL(imageUrl, imageKey);
 

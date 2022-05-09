@@ -16,14 +16,10 @@ namespace PIERStory
         public RenderTexture[] renderTextures = null;
         public Texture2D[] texture2Ds = null;
         
-        void Awake() {
-            
-        }
 
         
         IEnumerator Start()
         {
-            
             
             // AdManager.main.HideBanner();
             SystemManager.ShowNetworkLoading(true);

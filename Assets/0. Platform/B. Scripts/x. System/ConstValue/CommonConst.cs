@@ -61,7 +61,7 @@ namespace PIERStory
 
         public const string IS_OPEN = "is_open";
 
-
+        public const string NODE_QUANTITY = "quantity";
 
         public const string COL_ONETIME = "onetime";
         public const string COL_TICKET = "ticket";

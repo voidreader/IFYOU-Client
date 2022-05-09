@@ -23,8 +23,6 @@ namespace PIERStory
         [SerializeField] string projectTitle = string.Empty; // 연결 프로젝트 타이틀
         
         
-        
-
         string mailType = string.Empty;
         string mailNo = string.Empty;
         string currency = string.Empty;
@@ -34,8 +32,7 @@ namespace PIERStory
         const string MAIL_NO = "mail_no";
         const string MAIL_TYPE_TEXTID = "mail_type_textid";
         const string MAIL_LIST = "mailList";
-        const string CURRENCY = "currency";
-        const string QUANTITY = "quantity";
+        
         const string REMAIN_HOURS = "remain_hours";
         const string REMAIN_MINS = "remain_mins";
 
@@ -44,23 +41,23 @@ namespace PIERStory
             gameObject.SetActive(true);
             mailNo = SystemManager.GetJsonNodeString(__j, MAIL_NO);
             mailType = SystemManager.GetJsonNodeString(__j, "mail_type");
-            currency = SystemManager.GetJsonNodeString(__j, CURRENCY);
-            quantity = SystemManager.GetJsonNodeString(__j, QUANTITY);
+            currency = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
+            quantity = SystemManager.GetJsonNodeString(__j, CommonConst.NODE_QUANTITY);
             mailTitle.text = SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, MAIL_TYPE_TEXTID));
             hour = int.Parse(SystemManager.GetJsonNodeString(__j, REMAIN_HOURS));
             min = int.Parse(SystemManager.GetJsonNodeString(__j, REMAIN_MINS));
             
             
             // 재화 아이콘 처리 (기본재화, 다운로드 아이콘 재화 구분 )
-            if(currency == "gem" || currency == "coin") {
+            if(currency == LobbyConst.GEM || currency == LobbyConst.COIN) {
                 
                 // * 여기는 일반 재화 (젬, 코인)
                 currencyIcon.gameObject.SetActive(false);
                 imageBaseCurrencyIcon.gameObject.SetActive(true);
                 
-                if(currency == "gem")
+                if(currency == LobbyConst.GEM)
                     imageBaseCurrencyIcon.sprite = SystemManager.main.spriteStar;
-                else if(currency == "coin")
+                else if(currency == LobbyConst.COIN)
                     imageBaseCurrencyIcon.sprite = SystemManager.main.spriteCoin;
                     
                 imageBaseCurrencyIcon.SetNativeSize();

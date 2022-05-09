@@ -665,6 +665,19 @@ namespace PIERStory
 
             SendPost(UserManager.main.CallbackGetAttendacneList, sending);
         }
+
+
+        /// <summary>
+        /// 이프유 플레이 출석미션 정보 요청
+        /// </summary>
+        public void RequestAttendanceMission()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestAttendanceMission";
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+
+            SendPost(UserManager.main.CallbackAttendanceMission, sending);
+        }
         
         
         /// <summary>

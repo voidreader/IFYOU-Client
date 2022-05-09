@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 using TMPro;
-using BestHTTP;
 using LitJson;
+using BestHTTP;
 
 namespace PIERStory {
     
@@ -23,10 +22,6 @@ namespace PIERStory {
         public int bonusQuantity = 0;
         
         
-        
-        
-        
-        
         public override void Show()
         {
             if(isShow)
@@ -37,9 +32,9 @@ namespace PIERStory {
             base.Show();
             
             // 아이콘 이미지 
-            currency = SystemManager.GetJsonNodeString(Data.contentJson, "currency");
+            currency = SystemManager.GetJsonNodeString(Data.contentJson, LobbyConst.NODE_CURRENCY);
             
-            if(currency == "coin") {
+            if(currency == LobbyConst.COIN) {
                 iconImage.sprite = SystemManager.main.spriteCoin;
             }
             else {
@@ -47,7 +42,7 @@ namespace PIERStory {
             }
             
             
-            quantity = SystemManager.GetJsonNodeInt(Data.contentJson, "quantity"); // 보상 
+            quantity = SystemManager.GetJsonNodeInt(Data.contentJson, CommonConst.NODE_QUANTITY); // 보상 
             bonusQuantity = quantity * 5; // 보너스 수량 
             
             // 수량

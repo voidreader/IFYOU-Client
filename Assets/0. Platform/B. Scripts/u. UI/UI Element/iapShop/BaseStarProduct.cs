@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 using TMPro;
 using LitJson;
 using Toast.Gamebase;
@@ -131,9 +129,9 @@ namespace PIERStory {
                 
             for(int i=0; i< productDetailJSON.Count; i++) {
                 // 메인이면서 화폐가 보석인것만. 
-                if(!SystemManager.GetJsonNodeBool(productDetailJSON[i], "first_purchase")
+                if (!SystemManager.GetJsonNodeBool(productDetailJSON[i], "first_purchase")
                     && SystemManager.GetJsonNodeBool(productDetailJSON[i], "is_main")
-                    && SystemManager.GetJsonNodeString(productDetailJSON[i], "currency") == "gem") { 
+                    && SystemManager.GetJsonNodeString(productDetailJSON[i], LobbyConst.NODE_CURRENCY) == LobbyConst.GEM) { 
                     
                     quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], "quantity"));
                 }
@@ -152,7 +150,7 @@ namespace PIERStory {
                 // 메인이 아니면서 화폐가 보석인것만. 
                 if(!SystemManager.GetJsonNodeBool(productDetailJSON[i], "first_purchase")
                     && !SystemManager.GetJsonNodeBool(productDetailJSON[i], "is_main")
-                    && SystemManager.GetJsonNodeString(productDetailJSON[i], "currency") == "gem") { 
+                    && SystemManager.GetJsonNodeString(productDetailJSON[i], LobbyConst.NODE_CURRENCY) == LobbyConst.GEM) { 
                     
                     quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], "quantity"));
                 }
@@ -175,7 +173,7 @@ namespace PIERStory {
                 
             for(int i=0; i< productDetailJSON.Count; i++) {
                 // 메인이면서 화폐가 보석인것만. 
-                if(SystemManager.GetJsonNodeString(productDetailJSON[i], "currency") == "coin") { 
+                if(SystemManager.GetJsonNodeString(productDetailJSON[i], LobbyConst.NODE_CURRENCY) == LobbyConst.COIN) { 
 
                     
 
@@ -183,10 +181,10 @@ namespace PIERStory {
                     if(SystemManager.GetJsonNodeBool(productDetailJSON[i], "first_purchase")) {
                         
                         if(!hasPurchaseHistory)
-                            quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], "quantity"));    
+                            quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], CommonConst.NODE_QUANTITY));    
                     }
                     else {
-                        quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], "quantity"));    
+                        quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], CommonConst.NODE_QUANTITY));    
                     }
                     
                     
@@ -219,9 +217,9 @@ namespace PIERStory {
                 
             for(int i=0; i< productDetailJSON.Count; i++) {
                 // 메인이면서 화폐가 보석인것만. 
-                if(SystemManager.GetJsonNodeString(productDetailJSON[i], "currency") == "gem"
+                if(SystemManager.GetJsonNodeString(productDetailJSON[i], LobbyConst.NODE_CURRENCY) == LobbyConst.GEM
                     && SystemManager.GetJsonNodeBool(productDetailJSON[i], "first_purchase")) { 
-                    return int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], "quantity"));
+                    return int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], LobbyConst.NODE_CURRENCY));
                 }
             }
             

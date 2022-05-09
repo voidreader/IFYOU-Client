@@ -263,6 +263,7 @@ namespace PIERStory
             // 모션 처리
             string file_key = string.Empty;
             string motion_name = string.Empty;
+            string clip_name = string.Empty;
             string debugMotionName = string.Empty;
             
             // 생으로 다운받는것과 방식이 다르다. 
@@ -270,6 +271,7 @@ namespace PIERStory
                 
                 file_key = string.Empty;
                 motion_name = string.Empty;
+                clip_name = clips.ListClips[i].name.Replace(".anim", "");
                 
                 for(int j=0; j<resourceData.Count;j++) {
                     file_key = SystemManager.GetJsonNodeString(resourceData[j], CommonConst.COL_FILE_KEY);
@@ -279,7 +281,7 @@ namespace PIERStory
                         continue;
                         
                     // file_key에 이름+ motion3.json 있으면 dict에 넣는다. 
-                    if(file_key.Contains("/" + clips.ListClips[i].name + GameConst.MOTION3_JSON)) {
+                    if(file_key.Contains("/" + clip_name + GameConst.MOTION3_JSON)) {
                         
                         // Dict에 추가하기. 
                         if(!DictMotion.ContainsKey(motion_name)) {

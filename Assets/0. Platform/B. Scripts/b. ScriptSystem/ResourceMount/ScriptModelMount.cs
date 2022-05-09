@@ -336,6 +336,7 @@ namespace PIERStory
             
             string file_key = string.Empty;
             string motion_name = string.Empty;
+            string clip_name = string.Empty;
             string debugMotionName = string.Empty;
             
             // * legacy는 이전에 생으로 다운받아 생성하는 그 방식. 
@@ -348,8 +349,11 @@ namespace PIERStory
                 
                 
                 for(int j=0; j<clips.ListClips.Count;j++) {
+                    
+                    clip_name = clips.ListClips[j].name.Replace(".anim", "");
+                    
                     // file_key에 이름+ motion3.json 있으면 dict에 넣는다. 
-                    if(file_key.Contains("/" + clips.ListClips[j].name + GameConst.MOTION3_JSON)) {
+                    if(file_key.Contains("/" + clip_name + GameConst.MOTION3_JSON)) {
                         
                         // Dict에 추가하기. 
                         if(!DictMotion.ContainsKey(motion_name)) {
@@ -360,38 +364,7 @@ namespace PIERStory
                     }
                 }
                 
-            } // 모션 처리 완료 
-            
-            
-            // DictMotion 갖추기
-            /*
-            for(int i=0; i<clips.ListClips.Count;i++) {
-                
-                file_key = string.Empty;
-                motion_name = string.Empty;
-                
-                for(int j=0; j<resourceData.Count;j++) {
-                    file_key = SystemManager.GetJsonNodeString(resourceData[j], CommonConst.COL_FILE_KEY);
-                    motion_name = SystemManager.GetJsonNodeString(resourceData[j], CommonConst.MOTION_NAME);
-                    
-                    if (!file_key.Contains(GameConst.MOTION3_JSON) || string.IsNullOrEmpty(motion_name))
-                        continue;
-                        
-                    // file_key에 이름+ motion3.json 있으면 dict에 넣는다. 
-                    if(file_key.Contains("/" + clips.ListClips[i].name + GameConst.MOTION3_JSON)) {
-                        
-                        // Dict에 추가하기. 
-                        if(!DictMotion.ContainsKey(motion_name)) {
-                            DictMotion.Add(motion_name, clips.ListClips[i]); // ADD    
-                            modelController.motionLists.Add(motion_name);
-                            debugMotionName += motion_name +", ";
-                        }
-                    }
-                    
-                } // ? end of j for
-            } // ? end of i for
-            */
-            // ? motion 처리 완료 
+            } // ? motion 처리 완료 
             
 
             Debug.Log(originModelName + " motions : " + debugMotionName);

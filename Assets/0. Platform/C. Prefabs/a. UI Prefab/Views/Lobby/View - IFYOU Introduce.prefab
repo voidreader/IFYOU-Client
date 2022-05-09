@@ -29,6 +29,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5542269554809169433}
   - {fileID: 9073847191372809917}
@@ -129,9 +130,7 @@ MonoBehaviour:
   CurrentStateName: Normal
   NormalState:
     StateType: 0
-    StateName: Normal
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -139,9 +138,7 @@ MonoBehaviour:
           m_Calls: []
   HighlightedState:
     StateType: 1
-    StateName: Highlighted
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -149,9 +146,7 @@ MonoBehaviour:
           m_Calls: []
   PressedState:
     StateType: 2
-    StateName: Pressed
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -159,9 +154,7 @@ MonoBehaviour:
           m_Calls: []
   SelectedState:
     StateType: 3
-    StateName: Selected
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -169,9 +162,7 @@ MonoBehaviour:
           m_Calls: []
   DisabledState:
     StateType: 4
-    StateName: Disabled
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -213,6 +204,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4681447589171477825}
   m_Father: {fileID: 3938792981062420389}
@@ -289,6 +281,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4382051651710772755}
   m_RootOrder: 1
@@ -364,6 +357,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4382051651710772755}
   m_RootOrder: 2
@@ -440,6 +434,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5388683397522646955}
   m_RootOrder: 4
@@ -572,6 +567,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4322068600744047675}
   m_RootOrder: 3
@@ -725,6 +721,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4322068600744047675}
   m_RootOrder: 0
@@ -823,9 +820,7 @@ MonoBehaviour:
   CurrentStateName: Normal
   NormalState:
     StateType: 0
-    StateName: Normal
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -833,9 +828,7 @@ MonoBehaviour:
           m_Calls: []
   HighlightedState:
     StateType: 1
-    StateName: Highlighted
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -843,9 +836,7 @@ MonoBehaviour:
           m_Calls: []
   PressedState:
     StateType: 2
-    StateName: Pressed
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -853,9 +844,7 @@ MonoBehaviour:
           m_Calls: []
   SelectedState:
     StateType: 3
-    StateName: Selected
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -863,9 +852,7 @@ MonoBehaviour:
           m_Calls: []
   DisabledState:
     StateType: 4
-    StateName: Disabled
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -908,14 +895,15 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5388683397522646955}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 30, y: -128.07}
-  m_SizeDelta: {x: -46.09, y: 135.4}
+  m_AnchoredPosition: {x: 30, y: -130}
+  m_SizeDelta: {x: -46.09, y: 144}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &8325418593346476972
 CanvasRenderer:
@@ -1058,6 +1046,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3938792981062420389}
   m_RootOrder: 1
@@ -1211,6 +1200,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2307620819434894539}
   - {fileID: 7929257363642577071}
@@ -1312,9 +1302,7 @@ MonoBehaviour:
   CurrentStateName: Normal
   NormalState:
     StateType: 0
-    StateName: Normal
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -1322,9 +1310,7 @@ MonoBehaviour:
           m_Calls: []
   HighlightedState:
     StateType: 1
-    StateName: Highlighted
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -1332,9 +1318,7 @@ MonoBehaviour:
           m_Calls: []
   PressedState:
     StateType: 2
-    StateName: Pressed
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -1342,9 +1326,7 @@ MonoBehaviour:
           m_Calls: []
   SelectedState:
     StateType: 3
-    StateName: Selected
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -1352,9 +1334,7 @@ MonoBehaviour:
           m_Calls: []
   DisabledState:
     StateType: 4
-    StateName: Disabled
     StateEvent:
-      Enabled: 1
       EventName: Unnamed
       Runners: []
       Event:
@@ -1362,8 +1342,7 @@ MonoBehaviour:
           m_Calls: []
   Behaviours:
     Behaviours:
-    - Enabled: 1
-      EventName: PointerUp
+    - EventName: PointerUp
       Runners: []
       Event:
         m_PersistentCalls:
@@ -2806,14 +2785,15 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5388683397522646955}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 30, y: 35}
-  m_SizeDelta: {x: -60, y: 30}
+  m_AnchoredPosition: {x: 30, y: 40}
+  m_SizeDelta: {x: -60, y: 36}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &4185743681844068
 CanvasRenderer:
@@ -2953,6 +2933,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6820014375006739572}
   - {fileID: 1769754251814266325}
@@ -2996,6 +2977,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6889702316072819790}
   m_RootOrder: 0
@@ -3148,14 +3130,15 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5388683397522646955}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 30, y: 105}
-  m_SizeDelta: {x: -60, y: 30}
+  m_AnchoredPosition: {x: 30, y: 115}
+  m_SizeDelta: {x: -94.4, y: 36}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &3199112345857830939
 CanvasRenderer:
@@ -3215,9 +3198,9 @@ MonoBehaviour:
   m_fontSize: 22
   m_fontSizeBase: 22
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 20
+  m_fontSizeMax: 22
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -3298,6 +3281,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3938792981062420389}
   - {fileID: 5388683397522646955}
@@ -3389,6 +3373,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6525641269965236672}
   m_RootOrder: 1
@@ -3465,6 +3450,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6893519578782143805}
   - {fileID: 7998750331342534323}
@@ -3562,14 +3548,15 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5388683397522646955}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 30, y: 70}
-  m_SizeDelta: {x: -60, y: 30}
+  m_AnchoredPosition: {x: 30, y: 78}
+  m_SizeDelta: {x: -94.4, y: 36}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &6342234894851572711
 CanvasRenderer:
@@ -3629,9 +3616,9 @@ MonoBehaviour:
   m_fontSize: 22
   m_fontSizeBase: 22
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 20
+  m_fontSizeMax: 22
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -3713,6 +3700,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5008039408267409985}
   m_RootOrder: 2
@@ -3875,6 +3863,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3938792981062420389}
   m_RootOrder: 0
@@ -3954,6 +3943,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2052958771350821456}
   - {fileID: 5008039408267409985}
@@ -4033,7 +4023,6 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   OnStartBehaviour: 1
   OnShowCallback:
-    Enabled: 1
     EventName: OnShowCallback
     Runners: []
     Event:
@@ -4052,7 +4041,6 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   OnVisibleCallback:
-    Enabled: 1
     EventName: OnVisibleCallback
     Runners: []
     Event:
@@ -4071,7 +4059,6 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   OnHideCallback:
-    Enabled: 0
     EventName: OnHideCallback
     Runners: []
     Event:
@@ -4090,7 +4077,6 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   OnHiddenCallback:
-    Enabled: 1
     EventName: OnHiddenCallback
     Runners: []
     Event:
@@ -4736,6 +4722,8 @@ MonoBehaviour:
     serialDay: 
     isSerial: 0
     listSerialDays: []
+    passPrice: 0
+    passDiscount: 0.1
 --- !u!1 &9107199104670967040
 GameObject:
   m_ObjectHideFlags: 0
@@ -4765,6 +4753,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4382051651710772755}
   m_RootOrder: 0
@@ -4917,6 +4906,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6525641269965236672}
   m_RootOrder: 0

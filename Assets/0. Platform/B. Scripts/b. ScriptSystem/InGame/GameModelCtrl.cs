@@ -507,7 +507,7 @@ namespace PIERStory
 
             SetCurRenderTexture(layerName);
             transform.localPosition = new Vector3(posX, transform.localPosition.y, 0);
-            currRenderTexture.color = new Color(1, 1, 1, 0);
+            currRenderTexture.color = new Color(currRenderTexture.color.r, currRenderTexture.color.g, currRenderTexture.color.b, 0);
 
             currRenderTexture.DOFade(1f, fadeTime).OnComplete(OnMoveCompleted);
         }

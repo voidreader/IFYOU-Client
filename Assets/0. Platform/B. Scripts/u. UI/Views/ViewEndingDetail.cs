@@ -118,7 +118,7 @@ namespace PIERStory
 
             // for문이 전부 돌고, 제일 마지막에 엔딩 무엇에 도달했는지 표기
             SelectionEndingTitleElement endingTitleElement = Instantiate(endingTitlePrefab, scrollContent).GetComponent<SelectionEndingTitleElement>();
-            endingTitleElement.SetEndingTitle(string.Format("{0}. {1}", endingType.text, endingTitle.text));
+            endingTitleElement.SetEndingTitle(string.Format("{0}. {1}", endingType.text, endingData.episodeTitle));
             createObject.Add(endingTitleElement.gameObject);
 
             endingType.gameObject.SetActive(true);

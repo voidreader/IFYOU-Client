@@ -247,10 +247,6 @@ namespace PIERStory
         /// </summary>
         public void OnClickGetMissionAllClearReward()
         {
-            // 이미 받았으면 안함
-            if (UserManager.main.GetProjectMissionAllClear())
-                return;
-
             allClearRewardBox.GetComponent<Button>().interactable = false;
 
             JsonData sending = new JsonData();

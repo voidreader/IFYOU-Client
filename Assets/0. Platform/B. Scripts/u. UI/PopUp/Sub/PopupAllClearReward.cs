@@ -15,7 +15,6 @@ namespace PIERStory
         {
             base.Show();
 
-
             JsonData rewardData = SystemManager.GetJsonNode(Data.contentJson, "reward");
 
             if (rewardData == null)

@@ -36,6 +36,9 @@ namespace PIERStory
             decoCurrency.SetDownloadURL(iconUrl, iconKey);
 
             UserManager.main.SetBankInfo(Data.contentJson);
+
+            UserManager.main.SetProjectMissionAllClear(1);
+            ViewMission.OnCompleteReward?.Invoke();
         }
     }
 }

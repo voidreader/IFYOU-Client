@@ -286,6 +286,13 @@ namespace PIERStory {
             
             currentEpisodeID = SystemManager.GetJsonNodeString(projectCurrentJSON, "episode_id");
             currentEpisodeData = StoryManager.GetRegularEpisodeByID(currentEpisodeID);
+
+            if(currentEpisodeData == null || !currentEpisodeData.isValidData) {
+                SystemManager.ShowMessageAlert("개발팀에 문의해주세요");
+                return;
+            }
+
+
             currentEpisodeData.SetPurchaseState(); // 구매기록 refresh.
             
             

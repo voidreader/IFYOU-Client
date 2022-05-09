@@ -28,6 +28,7 @@ namespace PIERStory
         [HideInInspector] public JsonData userProfile = null;               // 유저 프로필 정보
         
         [HideInInspector] public JsonData userAttendanceList = null;        // 유저 출석 보상 리스트
+        [HideInInspector] public JsonData userAttendanceMission = null;     // 유저 출석미션 데이터
         [HideInInspector] public JsonData userActiveTimeDeal = null; // 유저 활성화 타임딜 목록 
         
         [SerializeField] string debugBankString = string.Empty;
@@ -240,7 +241,7 @@ namespace PIERStory
         void ConnectServer()
         {
             JsonData sendingData = new JsonData(); // 서버 전송 데이터 
-            sendingData["func"] = NetworkLoader.FUNC_LOGIN_CLIENT;
+            sendingData[CommonConst.FUNC] = NetworkLoader.FUNC_LOGIN_CLIENT;
             sendingData["deviceid"] = SystemInfo.deviceUniqueIdentifier;
             sendingData["gamebaseid"] = gamebaseID;
 
@@ -329,6 +330,7 @@ namespace PIERStory
         public void RequestServiceEvents() {
             NetworkLoader.main.RequestPlatformServiceEvents(); // 공지사항, 프로모션, 장르 조회 
             NetworkLoader.main.RequestAttendanceList(); // 출석 보상 리스트 요청
+            //NetworkLoader.main.RequestAttendanceMission();
         }        
         
         
@@ -739,6 +741,19 @@ namespace PIERStory
             Debug.Log("출석 보상 리스트 : " + JsonMapper.ToStringUnicode(userAttendanceList));
         }
 
+
+        public void CallbackAttendanceMission(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackAttendanceMission");
+                return;
+            }
+
+            userAttendanceMission = JsonMapper.ToObject(res.DataAsText);
+        }
+
+
         /// <summary>
         /// 오늘의 출석체크 보상을 받았는지 체크합니다
         /// </summary>
@@ -1101,8 +1116,8 @@ namespace PIERStory
             debugBankString = JsonMapper.ToStringUnicode(bankJson);
 
             // 재화 값 갱신
-            gem = int.Parse(bankJson["gem"].ToString());
-            coin = int.Parse(bankJson["coin"].ToString());
+            gem = int.Parse(bankJson[LobbyConst.GEM].ToString());
+            coin = int.Parse(bankJson[LobbyConst.COIN].ToString());
 
             // 상단 리프레시
             if(!__refresh)

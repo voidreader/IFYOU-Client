@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 using TMPro;
 using LitJson;
 
@@ -108,8 +106,8 @@ namespace PIERStory {
             // 구매(5039) / 취소 (5038)
             SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6204"), price.ToString(), quantity.ToString())
                                             , quantity
-                                            , SystemManager.main.GetCurrencyImageURL("coin")
-                                            , SystemManager.main.GetCurrencyImageKey("coin")
+                                            , SystemManager.main.GetCurrencyImageURL(LobbyConst.COIN)
+                                            , SystemManager.main.GetCurrencyImageKey(LobbyConst.COIN)
                                             , Exchange
                                             , SystemManager.GetLocalizedText("5039")
                                             , SystemManager.GetLocalizedText("5038"));

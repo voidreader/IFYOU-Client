@@ -561,7 +561,7 @@ namespace PIERStory
             isAppCommonResourcesReceived = false;
             
             JsonData reqData  = new JsonData();
-            reqData["func"] = "getAppCommonResources";
+            reqData[CommonConst.FUNC] = "getAppCommonResources";
             
             NetworkLoader.main.SendPost(OnRequestAppCommonResources, reqData, false);
         }
@@ -575,16 +575,16 @@ namespace PIERStory
             appComonResourceData = JsonMapper.ToObject(response.DataAsText);
             
             // 레벨 기준정보 데이터 추가 
-            baseCurrencyData = appComonResourceData["currency"];
+            baseCurrencyData = appComonResourceData[LobbyConst.NODE_CURRENCY];
             
             Debug.Log("### " + JsonMapper.ToStringUnicode(baseCurrencyData));
             
             // 코인, 젬 미리 다운로드 시켜놓기. 
-            if(baseCurrencyData != null && baseCurrencyData.ContainsKey("coin")) {
-                RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData["coin"], "image_url"), SystemManager.GetJsonNodeString(baseCurrencyData["coin"], "image_key"), null);
+            if(baseCurrencyData != null && baseCurrencyData.ContainsKey(LobbyConst.COIN)) {
+                RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData[LobbyConst.COIN], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(baseCurrencyData[LobbyConst.COIN], CommonConst.COL_IMAGE_KEY), null);
             }
-            if(baseCurrencyData != null && baseCurrencyData.ContainsKey("gem")) {
-                RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData["gem"], "image_url"), SystemManager.GetJsonNodeString(baseCurrencyData["gem"], "image_key"), null);
+            if(baseCurrencyData != null && baseCurrencyData.ContainsKey(LobbyConst.GEM)) {
+                RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData[LobbyConst.GEM], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(baseCurrencyData[LobbyConst.GEM], CommonConst.COL_IMAGE_KEY), null);
             }
             
             
@@ -603,7 +603,7 @@ namespace PIERStory
             isServerInfoReceived = false; 
             
             JsonData reqData  = new JsonData();
-            reqData["func"] = "getServerMasterInfo";
+            reqData[CommonConst.FUNC] = "getServerMasterInfo";
             
             NetworkLoader.main.SendPost(OnRequestGameServerInfo, reqData, false);
         }
@@ -1683,10 +1683,10 @@ namespace PIERStory
             p.Data.imageURL = string.Empty;
             p.Data.imageKey = string.Empty;
             
-            if(__currency == "gem") {
+            if(__currency == LobbyConst.GEM) {
                 p.Data.SetImagesSprites(SystemManager.main.spriteStar);
             }
-            else if(__currency == "coin") {
+            else if(__currency == LobbyConst.COIN) {
                 p.Data.SetImagesSprites(SystemManager.main.spriteCoin);
             }
             

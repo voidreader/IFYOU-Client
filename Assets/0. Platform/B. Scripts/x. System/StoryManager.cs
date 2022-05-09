@@ -672,6 +672,12 @@ namespace PIERStory
 
         void SetEndingHintData()
         {
+            if(ProjectDetailJson == null)
+            {
+                Debug.LogError("작품 정보가 안들어옴");
+                return;
+            }
+
             JsonData hintData = SystemManager.GetJsonNode(ProjectDetailJson, "endingHint");
 
             if (hintData == null || hintData.Count == 0)

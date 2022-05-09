@@ -44,11 +44,6 @@ namespace PIERStory {
         [SerializeField] UIToggle normalToggle;
 
 
-        void Start()
-        {
-            
-        }
-
         public void DelayEnterFromMain()
         {
             StartCoroutine(RoutineEnterFromMain());
@@ -57,6 +52,9 @@ namespace PIERStory {
             OnRefreshTopShop = EnterFromMain;
         }
 
+        /// <summary>
+        /// 메인 하단 탭을 통해서 상점 접근
+        /// </summary>
         IEnumerator RoutineEnterFromMain()
         {
             yield return new WaitForSeconds(0.1f);
@@ -73,6 +71,9 @@ namespace PIERStory {
             OnRefreshTopShop = EnterFromSignal;
         }
 
+        /// <summary>
+        /// 메인 하단 탭이 아닌 상단바의 재화버튼 혹은 팝업을 통한 signal로 열리는 등의 상점 접근
+        /// </summary>
         IEnumerator RoutineEnterFromSignal()
         {
             yield return new WaitForSeconds(0.1f);
@@ -120,7 +121,6 @@ namespace PIERStory {
         /// </summary>
         void EnterFromMain()
         {
-            
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
@@ -134,8 +134,6 @@ namespace PIERStory {
         /// </summary>
         void EnterFromSignal()
         {
-
-
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);

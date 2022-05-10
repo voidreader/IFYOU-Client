@@ -47,6 +47,11 @@ namespace PIERStory {
         /// 상품 초기화
         /// </summary>
         public void InitProduct() {
+            
+            if(!this.gameObject.activeSelf)
+                return;
+            
+            
             // 게임서버, 게임베이스에서 각각 정보를 가져온다. 
             gamebaseItem = BillingManager.main.GetGamebasePurchaseItem(productID);
             
@@ -219,7 +224,10 @@ namespace PIERStory {
                 // 메인이면서 화폐가 보석인것만. 
                 if(SystemManager.GetJsonNodeString(productDetailJSON[i], LobbyConst.NODE_CURRENCY) == LobbyConst.GEM
                     && SystemManager.GetJsonNodeBool(productDetailJSON[i], "first_purchase")) { 
-                    return int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], LobbyConst.NODE_CURRENCY));
+                        
+                    return SystemManager.GetJsonNodeInt(productDetailJSON[i], "quantity");
+ 
+                    // return int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], LobbyConst.NODE_CURRENCY));
                 }
             }
             

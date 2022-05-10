@@ -179,7 +179,14 @@ namespace PIERStory {
             sendData["receipt"] = receipt.paymentId;
             sendData["paymentSeq"] = receipt.paymentSeq;
             sendData["purchaseToken"] = receipt.purchaseToken;
-            sendData["price"] = receipt.price;
+            
+            try {
+                sendData["price"] = System.Math.Round(receipt.price, 2);
+            }
+            catch {
+                sendData["price"] = receipt.price;
+            }
+            
             sendData["currency"] = receipt.currency;
             
             NetworkLoader.main.SendPost(OnRequestPurchaseReward, sendData, true);

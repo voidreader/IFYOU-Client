@@ -99,6 +99,10 @@ namespace PIERStory
                     gradeBackground.sprite = spritePlatinumBackground;
                     gradeTitle.color = platinumText;
                     break;
+                default:
+                    gradeBackground.sprite = spriteIFYOUBackground;
+                    gradeTitle.color = ifyouText;
+                    break;
             }
 
             SetBadgeSprite(gradeBadge, gradeTitle, UserManager.main.grade);

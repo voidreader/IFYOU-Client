@@ -304,7 +304,9 @@ namespace PIERStory {
 
             profileNavigation.OnToggle();
             currentShowContainer.Hide();
+
             profileContainer.Show();
+            currentShowContainer = profileContainer;
         }
 
         void EnableNewAchievementSign()
@@ -320,6 +322,10 @@ namespace PIERStory {
 
         public void OnClickProfileTab()
         {
+            // 현재 보여지는 container가 profile컨테이너라면 호출하지 않는다
+            if (currentShowContainer == profileContainer)
+                return;
+
             currentShowContainer.Show();
             UserManager.main.RequestUserGradeInfo(CallbackUserGreadeInfo, true);
         }

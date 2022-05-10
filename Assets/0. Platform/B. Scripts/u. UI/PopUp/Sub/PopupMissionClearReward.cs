@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-
 using LitJson;
+using TMPro;
 
 namespace PIERStory
 {
@@ -10,6 +10,10 @@ namespace PIERStory
         public ImageRequireDownload decoCurrency;
 
         string iconUrl = string.Empty, iconKey = string.Empty;
+        
+        [Space(15)]
+        public TextMeshProUGUI textCoinQuantity;
+        public TextMeshProUGUI textGemQuantity;
 
         public override void Show()
         {
@@ -25,8 +29,18 @@ namespace PIERStory
 
             for (int i = 0; i < rewardData.Count; i++)
             {
-                if (SystemManager.GetJsonNodeString(rewardData[i], LobbyConst.NODE_CURRENCY) == LobbyConst.COIN || SystemManager.GetJsonNodeString(rewardData[i], LobbyConst.NODE_CURRENCY) == LobbyConst.GEM)
+                
+                // 수량 추가 
+                if (SystemManager.GetJsonNodeString(rewardData[i], LobbyConst.NODE_CURRENCY) == LobbyConst.COIN) {
+                    textCoinQuantity.text = SystemManager.GetJsonNodeString(rewardData[i], "quantity");
                     continue;
+                }
+                
+                if (SystemManager.GetJsonNodeString(rewardData[i], LobbyConst.NODE_CURRENCY) == LobbyConst.GEM) {
+                    textGemQuantity.text = SystemManager.GetJsonNodeString(rewardData[i], "quantity");
+                    continue;
+                }
+                
 
                 iconUrl = SystemManager.GetJsonNodeString(rewardData[i], "icon_image_url");
                 iconKey = SystemManager.GetJsonNodeString(rewardData[i], "icon_image_key");

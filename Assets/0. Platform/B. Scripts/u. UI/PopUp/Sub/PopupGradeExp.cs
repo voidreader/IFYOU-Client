@@ -22,6 +22,8 @@ namespace PIERStory
                 return;
             
             base.Show();
+            
+            currentExp.text = string.Empty;
 
             Vector2 imageSize = Data.Images[0].rectTransform.sizeDelta;
             Data.Images[0].rectTransform.sizeDelta = new Vector2(imageSize.x, imageSize.y) * 0.15f;

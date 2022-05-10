@@ -66,7 +66,7 @@ namespace PIERStory
             // 매번 New 하지 말고 Pooling 하는 것도 고려해보자. 
             for (int i = 0; i < scriptData.Count; i++)
             {
-                ScriptRow row = new ScriptRow(scriptData[i], OnRowInitialized); // 각 Row에 해당하는 ScriptRow를 생성합니다. (생성자에서 초기화 호출함)
+                ScriptRow row = new ScriptRow(i, scriptData[i], OnRowInitialized); // 각 Row에 해당하는 ScriptRow를 생성합니다. (생성자에서 초기화 호출함)
                 ListRows.Add(row);
             }
             // ScriptRow 생성 끝. 

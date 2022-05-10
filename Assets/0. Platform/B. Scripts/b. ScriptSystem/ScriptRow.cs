@@ -15,6 +15,7 @@ namespace PIERStory
         public string resource_key = string.Empty; // 캐릭터 모델을 제외한 리소스의 key 입니다. 
         public string speaker_key = string.Empty;  // 캐릭터 모델 키 
 
+        public int lineNumber = 0;
 
         public int project_id = -1;
         public int episode_id = -1;
@@ -192,8 +193,10 @@ namespace PIERStory
 
         #endregion
 
-        public ScriptRow(JsonData __j, Action __cb)
+        public ScriptRow(int __lineNumber, JsonData __j, Action __cb)
         {
+            lineNumber = __lineNumber + 1;
+            
             rowData = __j;
             OnRowInitialized = __cb;
 

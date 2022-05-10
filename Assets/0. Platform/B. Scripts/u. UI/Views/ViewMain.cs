@@ -64,7 +64,9 @@ namespace PIERStory {
         {
             lobbyContainer = lobby.GetComponent<UIContainer>();
             libraryContainer = library.GetComponent<UIContainer>();
-            ifyouplayContainer = ifyouplay.GetComponent<UIContainer>();
+
+            if (ifyouplay != null)
+                ifyouplayContainer = ifyouplay.GetComponent<UIContainer>();
 
             currentShowContainer = lobbyContainer;
 

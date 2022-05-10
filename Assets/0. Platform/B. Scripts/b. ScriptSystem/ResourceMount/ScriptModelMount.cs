@@ -559,7 +559,7 @@ namespace PIERStory
 
             for (int i = 0; i < resourceData.Count; i++)
             {
-                file_key = resourceData[i]["file_key"].ToString(); // file_key 기반으로.. 
+                file_key = SystemManager.GetJsonNodeString(resourceData[i], "file_key"); // file_key 기반으로.. 
 
                 if (file_key.Contains(".model3.json")) // main model 처리 
                 {
@@ -569,7 +569,7 @@ namespace PIERStory
             } // 여기까지 모델 생성 처리 
 
             // Animation Component 추가한다. (애니메이션용)
-            if (anim == null)
+            if (anim == null && model != null)
                 anim = model.gameObject.AddComponent<Animation>();
 
             // 세팅된 모션 준비하기

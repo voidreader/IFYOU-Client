@@ -547,6 +547,10 @@ namespace PIERStory
         /// </summary>
         void SetTalker()
         {
+            // 더미 캐릭터인경우 상태설정 안함
+            if(defaultSprite != null && defaultSprite.sprite != null)
+                return;
+
             currRenderTexture.transform.SetParent(ViewGame.main.modelRenderParents[2]);
         }
 

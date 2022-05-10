@@ -142,11 +142,11 @@ namespace PIERStory
             p.Data.SetImagesSprites(s);
             p.Data.SetLabelsTexts(string.Format("+{0}", achievementData.experience), string.Format("/{0}", UserManager.main.upgradeGoalPoint));
             p.Data.contentValue = achievementData.experience;
+            p.Data.contentJson = result["list"]; // 전달 주고 
             PopupManager.main.ShowPopup(p, false);
 
             UserManager.main.SetSeasonCheck(result["list"]);
-            UserManager.main.SetUserGradeInfo(result["list"]);
-            UserManager.main.SetAchievementList(result["list"]);
+            
 
             getButton.GetComponent<Button>().interactable = true;
         }

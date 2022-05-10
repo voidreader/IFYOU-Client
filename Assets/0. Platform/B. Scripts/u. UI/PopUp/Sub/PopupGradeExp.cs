@@ -38,10 +38,19 @@ namespace PIERStory
 
         public void ShowComplete()
         {
-            Debug.Log("### ShowComplete");
+            Debug.Log(string.Format("### ShowComplete [{0}] / [{1}]", UserManager.main.gradeExperience, Data.contentValue + UserManager.main.gradeExperience));
 
             currentExp.DOCounter(UserManager.main.gradeExperience, Data.contentValue + UserManager.main.gradeExperience, 0.8f);
             expProgressor.Play();
+            
+            
+            // 업적에서만 사용
+            if(Data.contentJson != null && isOverlayUse) {
+                Debug.Log("### ShowComplete ### 2");
+            
+                UserManager.main.SetUserGradeInfo(Data.contentJson);
+                UserManager.main.SetAchievementList(Data.contentJson);
+            }
         }
 
         public void OpenGradeUpPopup()

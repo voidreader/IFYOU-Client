@@ -87,5 +87,22 @@ namespace PIERStory
                 Hide();
             }
         }
+
+
+        public override void Hide()
+        {
+            base.Hide();
+
+            // 미션 보상에서 호출되는 경우
+            if(!isOverlayUse)
+            {
+                // 현재 등급 경험치, 등급업 경험치를 갱신해준다
+                UserManager.main.upgradeGoalPoint = SystemManager.GetJsonNodeInt(Data.contentJson["grade_info"], "upgrade_point");
+                UserManager.main.gradeExperience = SystemManager.GetJsonNodeInt(Data.contentJson["experience_info"], "total_exp");
+
+                // 혹시 등급업 할 수도 있으니 다음 등급을 갱신
+                UserManager.main.nextGrade = SystemManager.GetJsonNodeInt(Data.contentJson["grade_info"], "next_grade");
+            }
+        }
     }
 }

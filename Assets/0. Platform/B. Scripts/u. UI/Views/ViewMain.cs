@@ -32,6 +32,11 @@ namespace PIERStory {
         public MainLibrary library;
         UIContainer libraryContainer;
 
+        [Header("이프유플레이")]
+        public MainIfyouplay ifyouplay;
+        UIContainer ifyouplayContainer;
+
+
         [Space(15)]
         public UIContainer shopContainer;
 
@@ -59,6 +64,7 @@ namespace PIERStory {
         {
             lobbyContainer = lobby.GetComponent<UIContainer>();
             libraryContainer = library.GetComponent<UIContainer>();
+            ifyouplayContainer = ifyouplay.GetComponent<UIContainer>();
 
             currentShowContainer = lobbyContainer;
 
@@ -208,7 +214,8 @@ namespace PIERStory {
                     OnShopTab();
                 break;
 
-                case 3:
+                case 3:     // 이프유플레이
+                    currentShowContainer = ifyouplayContainer;
                     break;
 
                 case 4:     // 프로필
@@ -267,13 +274,26 @@ namespace PIERStory {
             
             MainShop.isMainNavigationShop = false;
         }
-        
 
-                
+
+
+        #endregion
+
+
+        #region 이프유플레이
+
+        void OnIfyouPlayTab()
+        {
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
+        }
+
         #endregion
 
         #region 상점
-        
+
         /// <summary>
         /// 상점 탭 활성화
         /// </summary>
@@ -375,7 +395,7 @@ namespace PIERStory {
         }
 
         #endregion
-
+         
 
         #region 더보기
 

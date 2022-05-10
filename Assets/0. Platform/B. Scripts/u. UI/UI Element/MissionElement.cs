@@ -247,11 +247,9 @@ namespace PIERStory
             p.Data.SetImagesSprites(s);
             p.isOverlayUse = false;
             p.Data.SetLabelsTexts(string.Format("+{0}", missionData.rewardExp), string.Format("/{0}", UserManager.main.upgradeGoalPoint));
+            p.Data.contentJson = resposeData;
             p.Data.contentValue = missionData.rewardExp;
             PopupManager.main.ShowPopup(p, false);
-
-            // 혹시 등급업 할 수도 있으니 다음 등급을 갱신
-            UserManager.main.nextGrade = SystemManager.GetJsonNodeInt(resposeData["grade_info"], "next_grade");
 
             // * 성공 했다. => 미션이 해금도 되었고, 보상도 받은 상태가 되는거다. 
             ViewMission.OnRefreshProgressor?.Invoke();

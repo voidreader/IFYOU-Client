@@ -136,7 +136,9 @@ namespace PIERStory {
             {
                 if (Gamebase.IsSuccess(error)) // * 성공
                 {
-                    Debug.Log("Purchase succeeded.");
+                    Debug.Log("###### Purchase succeeded.");
+                    
+                    /*
                     string logMessage = string.Empty;
                     
                     logMessage += string.Format("gamebaseProductID : [{0}]", purchasableReceipt.gamebaseProductId);
@@ -149,6 +151,7 @@ namespace PIERStory {
                     logMessage += string.Format("\npaymentId : [{0}]", purchasableReceipt.paymentId);
                        
                     Debug.Log(logMessage);
+                    */
                     
                     RequestPurchaseReward(purchasableReceipt);
                 }
@@ -173,6 +176,9 @@ namespace PIERStory {
         /// </summary>
         /// <param name="receipt"></param>
         void RequestPurchaseReward(GamebaseResponse.Purchase.PurchasableReceipt receipt) {
+            
+            Debug.Log("##### RequestPurchaseReward ####");
+            
             JsonData sendData = new JsonData();
             sendData["func"] = "userPurchase";
             sendData["product_id"] = receipt.gamebaseProductId;

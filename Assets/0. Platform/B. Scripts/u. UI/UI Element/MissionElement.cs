@@ -192,7 +192,10 @@ namespace PIERStory
             // 열려 있는 상태가 아니라면 동작하지 않는다
             if (state != MissionState.unlocked)
                 return;
-                
+
+
+            rewardButton.GetComponent<Doozy.Runtime.UIManager.Components.UIButton>().interactable = false;
+
             UserManager.main.GetMissionRewared(missionData, CallbackGetMissionReward);
         }
         
@@ -201,6 +204,7 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackGetMissionReward");
+                rewardButton.GetComponent<Doozy.Runtime.UIManager.Components.UIButton>().interactable = true;
                 return;
             }
 
@@ -254,6 +258,7 @@ namespace PIERStory
             // * 성공 했다. => 미션이 해금도 되었고, 보상도 받은 상태가 되는거다. 
             ViewMission.OnRefreshProgressor?.Invoke();
 
+            rewardButton.GetComponent<Doozy.Runtime.UIManager.Components.UIButton>().interactable = true;
             /*
             if(!ViewMission.clickGetAll)
                 SystemManager.ShowSimpleAlertLocalize("6123");

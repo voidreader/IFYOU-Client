@@ -26,9 +26,8 @@ namespace PIERStory
         [HideInInspector] public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)
         [HideInInspector] public JsonData notReceivedMailJson = null;     // 미수신 메일
         [HideInInspector] public JsonData userProfile = null;               // 유저 프로필 정보
-        
-        [HideInInspector] public JsonData userAttendanceList = null;        // 유저 출석 보상 리스트
-        [HideInInspector] public JsonData userAttendanceMission = null;     // 유저 출석미션 데이터
+
+        [HideInInspector] public JsonData userIfyouPlayJson = null;         // 이프유플레이 json data
         [HideInInspector] public JsonData userActiveTimeDeal = null; // 유저 활성화 타임딜 목록 
         
         [SerializeField] string debugBankString = string.Empty;
@@ -90,8 +89,11 @@ namespace PIERStory
 
         public float prevIllustProgress = -1f;
 
-        // 사건 기록을 하는 통신을 사용할 것인가?
-        // 엔딩 수집 화면에서 사용할 변수
+        
+        /// <summary>
+        /// 사건 기록을 하는 통신을 사용할 것인가?
+        /// 엔딩 수집 화면에서 사용할 변수
+        /// </summary>
         public bool useRecord = true;       
 
         public string userKey = string.Empty;
@@ -116,7 +118,8 @@ namespace PIERStory
         public int coin = 0;
         public int unreadMailCount = 0; // 미수신 메일 카운트
 
-        // 유저 등급
+        #region 유저 등급 관련 변수
+
         public int grade = 1;
         public string gradeName = string.Empty;
 
@@ -132,6 +135,7 @@ namespace PIERStory
         public int waitingSaleDegree = 0;
         public bool canPreview = false;
 
+        #endregion
 
         JsonData resultProjectCurrent = null; // 플레이 위치 
 
@@ -329,8 +333,7 @@ namespace PIERStory
         /// </summary>
         public void RequestServiceEvents() {
             NetworkLoader.main.RequestPlatformServiceEvents(); // 공지사항, 프로모션, 장르 조회 
-            NetworkLoader.main.RequestAttendanceList(); // 출석 보상 리스트 요청
-            //NetworkLoader.main.RequestAttendanceMission();
+            NetworkLoader.main.RequestAttendanceMission();
         }        
         
         
@@ -423,9 +426,6 @@ namespace PIERStory
             
             // 인트로 완료 여부
             isIntroDone = SystemManager.GetJsonNodeBool(userJson, "intro_done");
-            
-            
-            
         }
         
         public void SetNewNickname(string __newNickname) {
@@ -477,7 +477,6 @@ namespace PIERStory
         {
             currentStoryJson = __j;
 
-            
             #region 미션 
             currentStoryMissionJSON = GetNodeProjectMissions();
             DictStoryMission = new Dictionary<int, MissionData>();
@@ -489,7 +488,6 @@ namespace PIERStory
             }
 
             #endregion
-
 
             // 능력치            
             SetStoryAbilityDictionary(currentStoryJson[NODE_USER_ABILITY]);
@@ -729,57 +727,7 @@ namespace PIERStory
 
         #endregion
 
-        public void CallbackGetAttendacneList(HTTPRequest req, HTTPResponse res)
-        {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("Failed CallbackGetAttendacneList");
-                return;
-            }
-
-            userAttendanceList = JsonMapper.ToObject(res.DataAsText);
-            Debug.Log("출석 보상 리스트 : " + JsonMapper.ToStringUnicode(userAttendanceList));
-        }
-
-
-        public void CallbackAttendanceMission(HTTPRequest req, HTTPResponse res)
-        {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("Failed CallbackAttendanceMission");
-                return;
-            }
-
-            userAttendanceMission = JsonMapper.ToObject(res.DataAsText);
-        }
-
-
-        /// <summary>
-        /// 오늘의 출석체크 보상을 받았는지 체크합니다
-        /// </summary>
-        /// <returns></returns>
-        public bool TodayAttendanceCheck()
-        {
-            string attendanceId = string.Empty;
-
-            for (int i = 0; i < userAttendanceList["attendance"].Count; i++)
-            {
-                attendanceId = userAttendanceList["attendance"][i].ToString();
-
-                for (int j = 0; j < userAttendanceList[attendanceId].Count; j++)
-                {
-                    if (!SystemManager.GetJsonNodeBool(userAttendanceList[attendanceId][j], "current"))
-                        continue;
-
-                    // 클릭할 수 있는게 있다면 아직 안받은거야
-                    if (SystemManager.GetJsonNodeBool(userAttendanceList[attendanceId][j], "click_check"))
-                        return false;
-                }
-            }
-
-            return true;
-        }
-
+        
 
         #region 작품 미션
 
@@ -982,7 +930,7 @@ namespace PIERStory
 
             // 미수신 mail json
             notReceivedMailJson = JsonMapper.ToObject(res.DataAsText);
-            unreadMailCount = int.Parse(notReceivedMailJson["unreadMailCount"].ToString());
+            unreadMailCount = SystemManager.GetJsonNodeInt(notReceivedMailJson, UN_UNREAD_MAIL_COUNT);
             SetRefreshInfo(notReceivedMailJson);
         }
 
@@ -1147,7 +1095,7 @@ namespace PIERStory
             // 미수신 메일 개수 
             if(__j.ContainsKey(UN_UNREAD_MAIL_COUNT))
             {
-                unreadMailCount = int.Parse(__j[UN_UNREAD_MAIL_COUNT].ToString());
+                unreadMailCount = SystemManager.GetJsonNodeInt(__j, UN_UNREAD_MAIL_COUNT);
                 // 등록된 Action을 통해서 갱신하도록 해줍니다!
                 OnRefreshUnreadMailCount?.Invoke(unreadMailCount);
             }
@@ -2978,10 +2926,104 @@ namespace PIERStory
             
             isIntroDone = true; // 그냥 true 처리 
         }
+
+
+
+        #endregion
+
+        #region 이프유플레이 관련
+
+
+        /// <summary>
+        /// 수령가능 보상이 있거나, 출석 보충을 해야하거나 하는 경우 사용되는 함수
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckIfyouplayAction()
+        {
+            if (userIfyouPlayJson == null || !userIfyouPlayJson.ContainsKey("user_info"))
+                return false;
+
+            // 출석 보충이 필요한 경우 true
+            if (!SystemManager.GetJsonNodeBool(userIfyouPlayJson["user_info"][0], "is_attendance"))
+                return true;
+
+            // 연속 출석 보상 수령가능한 것이 있을 때 true
+            for(int i=0;i<userIfyouPlayJson["continuous_attendance"].Count;i++)
+            {
+                if (SystemManager.GetJsonNodeInt(userIfyouPlayJson["continuous_attendance"][i], "day_seq") <= SystemManager.GetJsonNodeInt(userIfyouPlayJson["user_info"][0], "attendance_day")
+                    && !SystemManager.GetJsonNodeBool(userIfyouPlayJson["continuous_attendance"][i], "reward_check"))
+                    return true;
+            }
+
+            // 오늘 아직 출석하지 않았을 때 true
+            if (!TodayAttendanceCheck())
+                return true;
+
+            return false;
+        }
+
+
+
+        #region 출석
+
+        public void CallbackAttendanceMission(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackAttendanceMission");
+                return;
+            }
+
+            userIfyouPlayJson = JsonMapper.ToObject(res.DataAsText);
+        }
+
+
+        /// <summary>
+        /// 이프유플레이 jsonData 갱신
+        /// </summary>
+        /// <param name="__j"></param>
+        public void RefreshIfyouplayJsonData(JsonData __j)
+        {
+            userIfyouPlayJson["user_info"] = __j["user_info"];
+            userIfyouPlayJson["continuous_attendance"] = __j["continuous_attendance"];
+            userIfyouPlayJson["attendance"] = __j["attendance"];
+
+            ViewMain.OnRefreshIfyouplayNewSign?.Invoke();
+        }
+
+        /// <summary>
+        /// 오늘의 출석체크 보상을 받았는지 체크합니다
+        /// </summary>
+        /// <returns></returns>
+        public bool TodayAttendanceCheck()
+        {
+            string attendanceId = userIfyouPlayJson["attendance"]["attendance"][0].ToString();
+            JsonData attendanceList = SystemManager.GetJsonNode(userIfyouPlayJson["attendance"], attendanceId);
+
+            for (int i = 0; i < attendanceList.Count; i++)
+            {
+                if (!SystemManager.GetJsonNodeBool(attendanceList[i], "current"))
+                    continue;
+
+                // 클릭할 수 있는게 있다면 아직 안받은거야
+                if (SystemManager.GetJsonNodeBool(attendanceList[i], "click_check"))
+                    return false;
+            }
+
+            return true;
+        }
+
+
+        #endregion
+
+        #region Daily Mission
+
         
-        
-        
-        #endregion 
+
+        #endregion
+
+
+        #endregion
 
         #region IFYOU 업적 관련
 
@@ -2993,7 +3035,7 @@ namespace PIERStory
         {
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
-                Debug.LogError("CallbackRequestAchievement");
+                Debug.LogError("Failed CallbackRequestAchievement");
                 return;
             }
 

@@ -241,7 +241,7 @@ namespace PIERStory
         /// </summary>
         public void UpdateWithdrawDate() {
             JsonData sending = new JsonData();
-            sending["func"] = "updateWithdrawDate";
+            sending[CommonConst.FUNC] = "updateWithdrawDate";
             
             SendPost(OnResponseEmptyPostProcess, sending);
         }
@@ -255,8 +255,8 @@ namespace PIERStory
         /// <param name="__salePrice">할인 가격</param>
         public void PurchaseProjectPass(int __timeDealID, string __projectID, int __originPrice, int __salePrice) {
             JsonData sending = new JsonData();
-            sending["project_id"] = __projectID;
-            sending["currency"] = "Free" + __projectID;
+            sending[CommonConst.COL_PROJECT_ID] = __projectID;
+            sending[LobbyConst.NODE_CURRENCY] = "Free" + __projectID;
             sending["originPrice"] = __originPrice;
             
             // 최소값 설정 
@@ -266,7 +266,7 @@ namespace PIERStory
                 sending["salePrice"] = __salePrice;
             
             sending["timedeal_id"] = __timeDealID;
-            sending["func"] = "purchasePremiumPass"; //  purchaseFreepass > purchasePremiumPass 변경 
+            sending[CommonConst.FUNC] = "purchasePremiumPass"; //  purchaseFreepass > purchasePremiumPass 변경 
             
             SendPost(UserManager.main.CallbackPurchaseFreepass, sending);
         }
@@ -278,11 +278,11 @@ namespace PIERStory
         /// <param name="__selectionData">버튼 텍스트</param>
         public void UpdateUserSelectionProgress(string __targetSceneID, string __selectionData) {
             JsonData sending = new JsonData();
-            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 
             sending["episodeID"] = StoryManager.main.CurrentEpisodeID; 
             sending["target_scene_id"] = __targetSceneID;
             sending["selection_data"] = __selectionData;
-            sending["func"] = "updateSelectionProgress"; // func 지정 
+            sending[CommonConst.FUNC] = "updateSelectionProgress"; // func 지정 
 
             SendPost(UserManager.main.CallbackUpdateSelectionProgress, sending);
         }
@@ -322,11 +322,11 @@ namespace PIERStory
                 return;
 
             JsonData sending = new JsonData();
-            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 
             sending["episodeID"] = __episodeID;
             sending["scene_id"] = __sceneID;
             sending["script_no"] = __scriptNO;
-            sending["func"] = "updateUserProjectCurrent"; // func 지정 
+            sending[CommonConst.FUNC] = "updateUserProjectCurrent"; // func 지정 
             
             // 에피소드 시작시점과, 플레이 도중일때 콜백을 다르게 분리했다. 
             if(__isStarting) 
@@ -345,8 +345,8 @@ namespace PIERStory
             // GET 방식으로 호출
             HTTPRequest request = new HTTPRequest(new System.Uri(FUNC_GAMEBASE_LAUNCHING), HTTPMethods.Get, __cb);
             request.SetHeader("Content-Type", "application/json; charset=UTF-8");
-            request.ConnectTimeout = System.TimeSpan.FromSeconds(10);
-            request.Timeout = System.TimeSpan.FromSeconds(30);
+            request.ConnectTimeout = TimeSpan.FromSeconds(10);
+            request.Timeout = TimeSpan.FromSeconds(30);
             request.Send();
         }
 
@@ -356,7 +356,7 @@ namespace PIERStory
         /// <summary>
         /// Drop미션 완료 요청
         /// </summary>
-    /// <param name="missionName">scriptData에 입력된 미션 이름</param>
+        /// <param name="missionName">scriptData에 입력된 미션 이름</param>
         public void UpdateScriptMission(string missionName)
         {
             
@@ -654,17 +654,27 @@ namespace PIERStory
         }
 
 
+        #region 이프유플레이
+
+
+        #region 출석
+
         /// <summary>
-        /// 출석 보상 리스트 요청
+        /// Daily 출석보상 요청
         /// </summary>
-        public void RequestAttendanceList()
+        /// <param name="attendanceId">출석보상 id</param>
+        /// <param name="daySeq">몇일차</param>
+        public void SendAttendanceReward(int attendanceId, int daySeq, OnRequestFinishedDelegate callback)
         {
             JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "getAttendanceList";
+            sending[CommonConst.FUNC] = "sendAttendanceReward";
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+            sending["attendance_id"] = attendanceId;
+            sending["day_seq"] = daySeq;
 
-            SendPost(UserManager.main.CallbackGetAttendacneList, sending);
+            SendPost(callback, sending, true);
         }
+
 
 
         /// <summary>
@@ -679,7 +689,13 @@ namespace PIERStory
             SendPost(UserManager.main.CallbackAttendanceMission, sending);
         }
         
-        
+
+        #endregion
+
+
+        #endregion
+
+
         /// <summary>
         /// 서비스 중인 프로모션, 공지사항, 장르 통합 조회
         /// </summary>

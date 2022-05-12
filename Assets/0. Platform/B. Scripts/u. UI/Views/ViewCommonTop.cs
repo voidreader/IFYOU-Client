@@ -60,8 +60,6 @@ namespace PIERStory {
         
         
         // Stream, Signal
-        
-        
         SignalStream signalStreamTopViewName;
         SignalStream signalStreamTopViewNameExist;
         SignalStream signalStreamTopPropertyGroup;
@@ -70,7 +68,6 @@ namespace PIERStory {
         SignalStream signalStreamTopBackButton;
         SignalStream signalStreamRecover;
         SignalStream signalStreamSaveState;
-        SignalStream signalStreamAttendace;
         SignalStream signalStreamParent;
         
         
@@ -84,7 +81,6 @@ namespace PIERStory {
         SignalReceiver signalReceiverRecover;
         SignalReceiver signalReceiverSaveState;
 
-        SignalReceiver signalReceiverAttendance;
         SignalReceiver signalReceiverParent;
         
         private void Awake() {
@@ -102,8 +98,6 @@ namespace PIERStory {
             signalStreamTopMail = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON);
             signalReceiverTopMail = new SignalReceiver().SetOnSignalCallback(OnTopMailSignal);
             
-            
-            
             signalStreamTopBackButton = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON);
             signalReceiverTopBackButton = new SignalReceiver().SetOnSignalCallback(OnTopBackButtonSignal);
 
@@ -115,9 +109,6 @@ namespace PIERStory {
             signalStreamSaveState = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SAVE_STATE);
             signalReceiverSaveState = new SignalReceiver().SetOnSignalCallback(OnTopSaveState);
 
-
-            signalStreamAttendace = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE);
-            signalReceiverAttendance = new SignalReceiver().SetOnSignalCallback(OnShowAttendance);
             
             signalStreamParent = SignalStream.Get(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_PARENT);
             signalReceiverParent = new SignalReceiver().SetOnSignalCallback(OnShowParent);
@@ -144,7 +135,6 @@ namespace PIERStory {
             OnRefreshSuperUser = SetSuperUser;
             OnForShowCoin = RefreshCoin;
 
-            signalStreamAttendace.ConnectReceiver(signalReceiverAttendance);
             signalStreamParent.ConnectReceiver(signalReceiverParent);
             
             if(UserManager.main != null && UserManager.main.unreadMailCount > 0) {
@@ -163,7 +153,6 @@ namespace PIERStory {
             signalStreamRecover.DisconnectReceiver(signalReceiverRecover);
             signalStreamSaveState.DisconnectReceiver(signalReceiverSaveState);
 
-            signalStreamAttendace.DisconnectReceiver(signalReceiverAttendance);
             signalStreamParent.DisconnectReceiver(signalReceiverParent);
         }
         
@@ -383,27 +372,6 @@ namespace PIERStory {
 
 
         /// <summary>
-        /// 출석체크 플로팅 버튼 보여주기, 감추기 시그널
-        /// </summary>
-        /// <param name="s"></param>
-        void OnShowAttendance(Signal s)
-        {
-            if(!s.hasValue)
-            {
-                // attendanceButton.SetActive(false);
-                // howToPlayButton.SetActive(false);
-                
-                return;
-            }
-
-            // bool isShow = s.GetValueUnsafe<bool>();
-            
-            // attendanceButton.SetActive(isShow);
-            // howToPlayButton.SetActive(isShow);
-        }
-
-
-        /// <summary>
         /// 메일 알림 표시 
         /// </summary>
         /// <param name="__cnt"></param>
@@ -444,40 +412,6 @@ namespace PIERStory {
         }
 
 
-
-        public void OnClickOpenAttendanceList()
-        {
-            SystemManager.ShowNetworkLoading();
-            StartCoroutine(OpenAttendanceList());
-        }
-
-        IEnumerator OpenAttendanceList()
-        {
-            NetworkLoader.main.RequestAttendanceList();
-            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
-            SystemManager.HideNetworkLoading();
-
-            PopupBase p = PopupManager.main.GetPopup("Attendance");
-            PopupManager.main.ShowPopup(p, true);
-        }
-        
-        
-        /// <summary>
-        /// How to play 처리 
-        /// </summary>
-        public void OnClickHowToPlay() {
-            PopupBase p = PopupManager.main.GetPopup("HowToPlay");
-            
-            if(p == null) {
-                Debug.LogError("No How to play popup");
-                return;
-            }
-            
-            PopupManager.main.ShowPopup(p, false);
-            
-        }
-        
-        
         /// <summary>
         /// 백버튼 터치 추가 액션 
         /// </summary>

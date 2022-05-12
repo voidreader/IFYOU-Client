@@ -14,7 +14,8 @@ namespace PIERStory {
     {
         public static Action OnMoveStarShop = null;
         public static Action OnRefreshViewMain = null;
-        public static Action OnRefreshProfileNewSign = null;
+        public static Action OnRefreshIfyouplayNewSign = null;      // 이프유플레이 N 갱신
+        public static Action OnRefreshProfileNewSign = null;        // 프로필 N 갱신
         public static Action OnRefreshShopNewSign = null;
         public static Action OnReturnLobby = null;
         
@@ -34,8 +35,8 @@ namespace PIERStory {
 
         [Header("이프유플레이")]
         public MainIfyouplay ifyouplay;
+        public GameObject ifyouplayNewSign;
         UIContainer ifyouplayContainer;
-
 
         [Space(15)]
         public UIContainer shopContainer;
@@ -70,6 +71,7 @@ namespace PIERStory {
 
             currentShowContainer = lobbyContainer;
 
+            OnRefreshIfyouplayNewSign = EnableIfyouplayNewSign;
             OnRefreshProfileNewSign = EnableNewAchievementSign;
             OnRefreshShopNewSign = RefreshShopNewSign;
             
@@ -151,6 +153,8 @@ namespace PIERStory {
 
             // 라이브러리 컨테이너 초기화 
             library.InitLibrary();
+
+            EnableIfyouplayNewSign();
             
             // 신규 업적이 있을때 표시
             EnableNewAchievementSign();
@@ -170,8 +174,8 @@ namespace PIERStory {
 
             // 라이브러리 컨테이너 초기화 
             library.InitLibrary();
-            
-            // 신규 업적이 있을때 표시
+
+            EnableIfyouplayNewSign();
             EnableNewAchievementSign();
         }
         
@@ -291,6 +295,12 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
         }
+
+        void EnableIfyouplayNewSign()
+        {
+            ifyouplayNewSign.SetActive(UserManager.main.CheckIfyouplayAction());
+        }
+
 
         #endregion
 

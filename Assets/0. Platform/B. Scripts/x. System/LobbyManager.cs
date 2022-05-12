@@ -29,6 +29,11 @@ namespace PIERStory {
         int scaleOffset = 0;
         string illustName = string.Empty;
 
+        [Header("이프유플레이")]
+        public Sprite spriteCircleBase;
+        public Sprite spriteCircleOpen;
+        public Sprite spriteSquareBase;
+        public Sprite spriteSquareOpen;
 
 
         [Header("프로필")]

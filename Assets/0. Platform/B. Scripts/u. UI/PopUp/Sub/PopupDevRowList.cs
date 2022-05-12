@@ -30,31 +30,39 @@ public class PopupDevRowList : PopupBase
             
             
             // 신규 사건 ID 등장 
+            /*
             if(!string.IsNullOrEmpty(page.ListRows[i].scene_id)) {
                 MakeDevRow(page.ListRows[i]);
                 continue;
             }
+            */
             
-            // 배경 템플릿마다 
-            if(page.ListRows[i].template == "background" || page.ListRows[i].template == "move_in") {
+            // 템플릿 지정 
+            if(page.ListRows[i].template == "background" || page.ListRows[i].template == "move_in" || page.ListRows[i].template == "clear_screen" || page.ListRows[i].template == "illust") {
                 MakeDevRow(page.ListRows[i]);
                 continue;
             }
-            
-            
         }
         
         
     }
     
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="__row"></param>
     void MakeDevRow(ScriptRow __row) {
-        listDevRows[devRowIndex].InitDevRow(__row);
+        
+        if(devRowIndex >= listDevRows.Count)
+            return;
+        
+        listDevRows[devRowIndex++].InitDevRow(__row);
         
     }    
     
     
     public override void Hide() {
-        
+        base.Hide();
     }
     
 }

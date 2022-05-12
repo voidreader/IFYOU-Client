@@ -38,7 +38,10 @@ namespace PIERStory {
         /// 버튼 눌렀을때 스크립트 이동 
         /// </summary>
         public void OnClickRowButton() {
-            
+            if(GameManager.main == null)
+                return;
+                
+            GameManager.main.JumpForce(row);    
         }
     }
 }

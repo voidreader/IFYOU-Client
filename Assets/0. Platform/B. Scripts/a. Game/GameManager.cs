@@ -787,6 +787,36 @@ namespace PIERStory
 
             MoveToTargetSceneID(__row.target_scene_id);
         }
+        
+        /// <summary>
+        /// 지정한 행으로 강제 이동 (개발용도)
+        /// </summary>
+        public void JumpForce(ScriptRow __row) {
+            
+            Debug.Log(" JumpForce Line : " + __row.lineNumber);
+            
+            targetRow = -1;
+            
+            
+            for(int i=0; i<currentPage.ListRows.Count;i++) {
+                if(currentPage.ListRows[i].script_no == __row.script_no) {
+                    targetRow = i;
+                    break;
+                }
+            }
+            
+            if(targetRow < 0) {
+                ShowMissingComponent("이동하려는 행 없음", string.Empty);
+                return;
+            }
+            
+            currentPage.playRow = targetRow;
+            isThreadHold = false;
+            isWaitingScreenTouch= false;
+            
+            PopupManager.main.HideActivePopup();
+            
+        }
 
         /// <summary>
         /// 타겟 상황ID로 이동시키기 

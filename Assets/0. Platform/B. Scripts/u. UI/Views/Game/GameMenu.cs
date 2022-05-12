@@ -216,5 +216,19 @@ namespace PIERStory
 
             menuContainer.Hide();
         }
+        
+        
+        /// <summary>
+        /// 개발전용 점프 팝업 
+        /// </summary>
+        public void OpenDevRowJump() {
+            
+            if(!SystemManager.main.isTestServerAccess) {
+                return;
+            }
+            
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_DEV_JUMP);
+            PopupManager.main.ShowPopup(p, true);
+        }
     }
 }

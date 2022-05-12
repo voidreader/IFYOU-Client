@@ -336,7 +336,7 @@ namespace PIERStory
                 return;
             }
 
-            Debug.Log(res.DataAsText);
+            // Debug.Log(res.DataAsText);
 
             launchingJSON = JsonMapper.ToObject(res.DataAsText);
 
@@ -348,7 +348,6 @@ namespace PIERStory
                     if(isTestServerAccess) {
                         coinShopURL =launchingJSON["launching"]["server"]["test_coinshop_url"].ToString();    
                     }
-                    
                     
                 }
                 else
@@ -498,6 +497,7 @@ namespace PIERStory
                     break;
 
                 case GamebaseLaunchingStatus.IN_REVIEW: // iOS & Android 심사
+                    isTestServerAccess = true; // 테스트 버전.
                     // 심사할때는 라이브 서버인척 하기. 
                     break;
 

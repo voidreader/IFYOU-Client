@@ -36,7 +36,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -270, y: 0}
+  m_AnchoredPosition: {x: -275, y: 0}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &385781509
@@ -113,8 +113,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -97.70001, y: 0}
-  m_SizeDelta: {x: 100, y: 60}
+  m_AnchoredPosition: {x: -110, y: 0}
+  m_SizeDelta: {x: 84, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &426697831
 CanvasRenderer:
@@ -190,7 +190,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -4, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &750403817
 CanvasRenderer:
@@ -596,7 +596,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -193.4, y: 0}
+  m_AnchoredPosition: {x: -198.4, y: 0}
   m_SizeDelta: {x: 80, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1300206147
@@ -680,7 +680,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1300206146}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7299979253525532676}
+        m_TargetAssemblyTypeName: PIERStory.DevRowCtrl, Assembly-CSharp
+        m_MethodName: OnClickRowButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1516111065
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,8 +729,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 7.3, y: 0}
-  m_SizeDelta: {x: 100, y: 60}
+  m_AnchoredPosition: {x: -4.9999876, y: 0}
+  m_SizeDelta: {x: 110, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1516111068
 CanvasRenderer:
@@ -1064,7 +1076,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 191.9, y: 0}
+  m_AnchoredPosition: {x: 186.9, y: 0}
   m_SizeDelta: {x: 260, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2126900345
@@ -1159,3 +1171,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b3fc5018cb3f7740a0ff5e7bca9e871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  row:
+    resource_key: 
+    speaker_key: 
+    lineNumber: 0
+    project_id: 0
+    episode_id: 0
+    script_no: 0
+    scene_id: 
+    template: 
+    speaker: 
+    direction: 
+    script_data: 
+    target_scene_id: 
+    requisite: 
+    character_expression: 
+    emoticon_expression: 
+    in_effect: 
+    out_effect: 
+    bubble_size: 0
+    bubble_pos: 0
+    bubble_hold: 0
+    bubble_reverse: 0
+    voice: 
+    se: 
+    autoplay_row: 0
+    control: 
+    controlParams: []
+    controlAlternativeName: 
+    controlMouthCommand: 
+    controlCallCommand: 
+    selectionPrice: 0
+    selection_group: 0
+    selection_no: 0
+  textLineNumber: {fileID: 2019367339}
+  textTemplate: {fileID: 750403816}
+  textSceneID: {fileID: 1178498350}
+  textData: {fileID: 916527077}

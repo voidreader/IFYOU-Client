@@ -72,6 +72,9 @@ namespace PIERStory {
         public GameObject popupTutorial3;
         
         
+        public GameObject popupDevRowJump;
+        
+        
         private void Awake() {
             if(main != null) {
                 Destroy(this.gameObject);
@@ -552,6 +555,12 @@ namespace PIERStory {
                 DictPopup[CommonConst.POPUP_EXPIRE_TOKEN] = popupExpireToken;
             else 
                 DictPopup.Add(CommonConst.POPUP_EXPIRE_TOKEN, popupExpireToken);
+            
+            if(DictPopup.ContainsKey(CommonConst.POPUP_DEV_JUMP)) 
+                DictPopup[CommonConst.POPUP_DEV_JUMP] = popupDevRowJump;
+            else 
+                DictPopup.Add(CommonConst.POPUP_DEV_JUMP, popupDevRowJump);
+            
         }
         
         #endregion

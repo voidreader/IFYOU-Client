@@ -34,12 +34,12 @@ namespace PIERStory
         public void InitAttendanceReward(JsonData __j)
         {
             attendanceId = SystemManager.GetJsonNodeInt(__j, "attendance_id");
-            daySeq = SystemManager.GetJsonNodeInt(__j, "day_seq");
+            daySeq = SystemManager.GetJsonNodeInt(__j, LobbyConst.NODE_DAY_SEQ);
 
             currency = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
 
-            imageUrl = SystemManager.GetJsonNodeString(__j, "icon_image_url");
-            imageKey = SystemManager.GetJsonNodeString(__j, "icon_image_key");
+            imageUrl = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_IMAGE_URL);
+            imageKey = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_IMAGE_KEY);
 
             isReceive = SystemManager.GetJsonNodeBool(__j, "is_receive");
             clickCheck = SystemManager.GetJsonNodeBool(__j, "click_check");

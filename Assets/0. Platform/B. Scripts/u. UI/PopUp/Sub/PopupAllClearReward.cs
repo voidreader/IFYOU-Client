@@ -25,8 +25,8 @@ namespace PIERStory
                 if (SystemManager.GetJsonNodeString(rewardData[i], LobbyConst.NODE_CURRENCY) == LobbyConst.COIN || SystemManager.GetJsonNodeString(rewardData[i], LobbyConst.NODE_CURRENCY) == LobbyConst.GEM)
                     continue;
 
-                iconUrl = SystemManager.GetJsonNodeString(rewardData[i], "icon_image_url");
-                iconKey = SystemManager.GetJsonNodeString(rewardData[i], "icon_image_key");
+                iconUrl = SystemManager.GetJsonNodeString(rewardData[i], LobbyConst.NODE_ICON_IMAGE_URL);
+                iconKey = SystemManager.GetJsonNodeString(rewardData[i], LobbyConst.NODE_ICON_IMAGE_KEY);
                 break;
             }
 

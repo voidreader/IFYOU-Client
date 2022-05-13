@@ -220,6 +220,7 @@ namespace PIERStory {
             
             isRewarded = true; // true로 변경! 다 봤다!
             OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
+            NetworkLoader.main.RequestDailyMission(3);
         }
 
         
@@ -591,7 +592,7 @@ namespace PIERStory {
             
             // 광고 기록 
             NetworkLoader.main.LogAdvertisement("interstitial");
-            
+            NetworkLoader.main.RequestDailyMission(3);
         }
    
                 
@@ -709,6 +710,7 @@ namespace PIERStory {
             
             isRewarded = true; // true로 변경! 다 봤다!
             OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
+            NetworkLoader.main.RequestDailyMission(3);
         }
         
         void OnRewardedFailedToShow(object sender, ShowErrorEventArgs args) {

@@ -103,6 +103,19 @@ namespace PIERStory {
         public const string COL_IFYOU = "ifyou";
 
 
+        // 이프유플레이 관련
+        public const string NODE_ATTENDANCE_MISSION = "attendanceMission";
+        public const string NODE_USER_INFO = "user_info";
+        public const string NODE_CONTINUOUS_ATTENDANCE = "continuous_attendance";
+        public const string NODE_ATTENDANCE = "attendance";
+        public const string NODE_DAY_SEQ = "day_seq";
+        public const string NODE_DAILY_MISSION = "dailyMission";
+
+
+        public const string NODE_ICON_IMAGE_URL = "icon_image_url";
+        public const string NODE_ICON_IMAGE_KEY = "icon_image_key";
+
+
         #region 재화 
         public const string COIN = "coin";
         public const string GEM = "gem";

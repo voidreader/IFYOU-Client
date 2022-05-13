@@ -12,6 +12,7 @@ namespace PIERStory
     public class MainIfyouplay : MonoBehaviour
     {
         public static Action OnRefreshIfyouplay = null;
+        public ScrollRect scroll;
 
         //[Header("프로모션 파트")][Space(15)]
 
@@ -25,10 +26,16 @@ namespace PIERStory
         public IFYOURewardElement[] continuousRewards = new IFYOURewardElement[4];
         [Tooltip("매일 출석")]
         public IFYOURewardElement[] dailyAttendanceRewards = new IFYOURewardElement[7];
+        JsonData attendanceData = null;
+
 
         [Space(15)][Header("Daily Mission")]
+        public TextMeshProUGUI timerText;
         public Image dailyMissionGauge;
         public IFYOURewardElement dailyMissionReward;
+        public IFYOUDailyMissionElement[] dailyMissionElements = new IFYOUDailyMissionElement[4];
+
+        JsonData dailyMissionData = null;
 
         private void Start()
         {
@@ -37,25 +44,22 @@ namespace PIERStory
 
         public void EnterIfyouplay()
         {
+            scroll.verticalNormalizedPosition = 0f;
+
+            attendanceData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_ATTENDANCE_MISSION);
+
+            // 출석 관련 세팅
             InitContinuousAttendance();
             InitDailyAttendance();
 
-            //StartCoroutine(CountDownDailyMission());
+            dailyMissionData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_DAILY_MISSION);
+
+            InitDailyMission();
+
+            ViewMain.OnRefreshIfyouplayNewSign?.Invoke();
         }
 
-
-        /// <summary>
-        /// Daily Mission 남은시간 카운트 다운
-        /// </summary>
-        IEnumerator CountDownDailyMission()
-        {
-            while (gameObject.activeSelf)
-            {
-
-
-                yield return null;
-            }
-        }
+        #region 출석 관련
 
 
         /// <summary>
@@ -63,10 +67,10 @@ namespace PIERStory
         /// </summary>
         void InitContinuousAttendance()
         {
-            continuousAttendanceDate.text = string.Format(SystemManager.GetLocalizedText("5205"), SystemManager.GetJsonNodeInt(UserManager.main.userIfyouPlayJson["user_info"][0], "attendance_day"));
-            attendacneEventDeadline.text = string.Format(SystemManager.GetLocalizedText("5206"), SystemManager.GetJsonNodeInt(UserManager.main.userIfyouPlayJson["user_info"][0], "remain_day"));
+            continuousAttendanceDate.text = string.Format(SystemManager.GetLocalizedText("5205"), SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day"));
+            attendacneEventDeadline.text = string.Format(SystemManager.GetLocalizedText("5206"), SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "remain_day"));
 
-            JsonData continuousData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, "continuous_attendance");
+            JsonData continuousData = SystemManager.GetJsonNode(attendanceData, LobbyConst.NODE_CONTINUOUS_ATTENDANCE);
 
             if(continuousData == null || continuousData.Count == 0)
             {
@@ -75,11 +79,11 @@ namespace PIERStory
             }
 
             for (int i = 0; i < continuousRewards.Length; i++)
-                continuousRewards[i].InitContinuousAttendanceReward(continuousData[i], SystemManager.GetJsonNodeInt(UserManager.main.userIfyouPlayJson["user_info"][0], "attendance_day") >= SystemManager.GetJsonNodeInt(continuousData[i], "day_seq"));
+                continuousRewards[i].InitContinuousAttendanceReward(continuousData[i]);
 
-            continuousAttendanceGauge.fillAmount = SystemManager.GetJsonNodeFloat(UserManager.main.userIfyouPlayJson["user_info"][0], "attendance_day") / 14;
-            chargeAttendanceButton.gameObject.SetActive(!SystemManager.GetJsonNodeBool(UserManager.main.userIfyouPlayJson["user_info"][0], "is_attendance"));
-            chargeAttendanceButton.anchoredPosition = new Vector2(600 * (SystemManager.GetJsonNodeFloat(UserManager.main.userIfyouPlayJson["user_info"][0], "attendance_day") + SystemManager.GetJsonNodeFloat(UserManager.main.userIfyouPlayJson["user_info"][0], "reset_day")) / 14, 55f);
+            continuousAttendanceGauge.fillAmount = SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day") / 14;
+            chargeAttendanceButton.gameObject.SetActive(!SystemManager.GetJsonNodeBool(attendanceData[LobbyConst.NODE_USER_INFO][0], "is_attendance"));
+            chargeAttendanceButton.anchoredPosition = new Vector2(600 * (SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day") + SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day")) / 14, 55f);
         }
 
 
@@ -88,12 +92,12 @@ namespace PIERStory
         /// </summary>
         void InitDailyAttendance()
         {
-            JsonData dailyData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, "attendance");
-            string attendanceKey = dailyData["attendance"][0].ToString();
+            JsonData dailyData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION], LobbyConst.NODE_ATTENDANCE);
+            string attendanceKey = dailyData[LobbyConst.NODE_ATTENDANCE][0].ToString();
             dailyData = SystemManager.GetJsonNode(dailyData, attendanceKey);
 
             for(int i=0;i < dailyAttendanceRewards.Length;i++)
-                dailyAttendanceRewards[i].InitIfyouPlayReward(dailyData[i]);
+                dailyAttendanceRewards[i].InitDailyAttendanceReward(dailyData[i]);
         }
 
 
@@ -102,8 +106,8 @@ namespace PIERStory
         /// </summary>
         public void OnClickChargeContinuousAttendance()
         {
-            SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6307"), SystemManager.GetJsonNodeInt(UserManager.main.userIfyouPlayJson["user_info"][0], "reset_day") * 100)
-                                            , SystemManager.GetJsonNodeInt(UserManager.main.userIfyouPlayJson["user_info"][0], "reset_day") * 100
+            SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6307"), SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") * 100)
+                                            , SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") * 100
                                             , SystemManager.main.GetCurrencyImageURL(LobbyConst.COIN)
                                             , SystemManager.main.GetCurrencyImageKey(LobbyConst.COIN)
                                             , ChargeAttendance
@@ -151,7 +155,17 @@ namespace PIERStory
         /// </summary>
         public void OnClickContinuousInfo()
         {
-            
+            PopupBase p = PopupManager.main.GetPopup("HelpBox");
+
+            if(p == null)
+            {
+                Debug.LogError("도움말 박스 팝업이 없음");
+                return;
+            }
+
+            p.Data.SetLabelsTexts(SystemManager.GetLocalizedText("6308"));
+            p.Data.contentValue = 226;
+            PopupManager.main.ShowPopup(p, false);
         }
 
         
@@ -160,7 +174,52 @@ namespace PIERStory
         /// </summary>
         public void OnClickDailyAttendanceInfo()
         {
+            PopupBase p = PopupManager.main.GetPopup("HelpBox");
 
+            if (p == null)
+            {
+                Debug.LogError("도움말 박스 팝업이 없음");
+                return;
+            }
+
+            p.Data.SetLabelsTexts(SystemManager.GetLocalizedText("6309"));
+            p.Data.contentValue = 166;
+            PopupManager.main.ShowPopup(p, false);
         }
+
+        #endregion
+
+        #region 데일리 미션
+
+        void InitDailyMission()
+        {
+            if (dailyMissionData == null)
+                return;
+
+            dailyMissionGauge.fillAmount = SystemManager.GetJsonNodeFloat(dailyMissionData["all"][0], "current_result") / SystemManager.GetJsonNodeInt(dailyMissionData["all"][0], "limit_count");
+            dailyMissionReward.InitDailyTotalReward(dailyMissionData["all"][0]);
+
+            for (int i = 0; i < dailyMissionElements.Length; i++)
+                dailyMissionElements[i].InitDailyMission(dailyMissionData["single"][i]);
+
+            StartCoroutine(CountDownDailyMission());
+        }
+
+
+        /// <summary>
+        /// Daily Mission 남은시간 카운트 다운
+        /// </summary>
+        IEnumerator CountDownDailyMission()
+        {
+            while (gameObject.activeSelf)
+            {
+                timerText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", UserManager.main.dailyMissionTimer.Hours, UserManager.main.dailyMissionTimer.Minutes, UserManager.main.dailyMissionTimer.Seconds);
+                yield return null;
+                yield return null;
+                yield return null;
+            }
+        }
+
+        #endregion
     }
 }

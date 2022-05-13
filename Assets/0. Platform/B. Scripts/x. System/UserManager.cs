@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +11,6 @@ using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
-
 
     /// <summary>
     /// 사용자 정보 
@@ -117,6 +117,8 @@ namespace PIERStory
         public int gem = 0;
         public int coin = 0;
         public int unreadMailCount = 0; // 미수신 메일 카운트
+
+        public TimeSpan dailyMissionTimer;
 
         #region 유저 등급 관련 변수
 
@@ -333,7 +335,8 @@ namespace PIERStory
         /// </summary>
         public void RequestServiceEvents() {
             NetworkLoader.main.RequestPlatformServiceEvents(); // 공지사항, 프로모션, 장르 조회 
-            NetworkLoader.main.RequestAttendanceMission();
+            NetworkLoader.main.RequestIfyouplayList();
+            StartCoroutine(RoutineDailyMissionTimer());
         }        
         
         
@@ -1880,11 +1883,14 @@ namespace PIERStory
                 StoryLobbyMain.OnPassPurchase?.Invoke();
                 ViewStoryLobby.OnPassPurchase?.Invoke();
                 ViewMain.OnRefreshShopNewSign?.Invoke();
+
+                RequestUserGradeInfo(CallbackNewCompleteAchievement);
+                NetworkLoader.main.RequestIfyouplayList();
             }
             
 
             // 이프유업적 프리패스 구매
-            NetworkLoader.main.RequestIFYOUAchievement(15, SystemManager.GetJsonNodeInt(result, "project_id"));
+            NetworkLoader.main.RequestIFYOUAchievement(15, SystemManager.GetJsonNodeInt(result, CommonConst.COL_PROJECT_ID));
             
             // 6306
             if(string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
@@ -2051,6 +2057,8 @@ namespace PIERStory
             // 현재 플레이한 에피소드가 정규 에피소드인 경우 이프유 업적 통신하기
             if (GameManager.main != null && GameManager.main.currentEpisodeData.episodeType == EpisodeType.Chapter)
                 NetworkLoader.main.RequestIFYOUAchievement(12, -1, int.Parse(StoryManager.main.CurrentEpisodeID));
+
+            NetworkLoader.main.RequestDailyMission(2);
 
         }
         
@@ -2933,44 +2941,11 @@ namespace PIERStory
 
         #region 이프유플레이 관련
 
-
-        /// <summary>
-        /// 수령가능 보상이 있거나, 출석 보충을 해야하거나 하는 경우 사용되는 함수
-        /// </summary>
-        /// <returns></returns>
-        public bool CheckIfyouplayAction()
-        {
-            if (userIfyouPlayJson == null || !userIfyouPlayJson.ContainsKey("user_info"))
-                return false;
-
-            // 출석 보충이 필요한 경우 true
-            if (!SystemManager.GetJsonNodeBool(userIfyouPlayJson["user_info"][0], "is_attendance"))
-                return true;
-
-            // 연속 출석 보상 수령가능한 것이 있을 때 true
-            for(int i=0;i<userIfyouPlayJson["continuous_attendance"].Count;i++)
-            {
-                if (SystemManager.GetJsonNodeInt(userIfyouPlayJson["continuous_attendance"][i], "day_seq") <= SystemManager.GetJsonNodeInt(userIfyouPlayJson["user_info"][0], "attendance_day")
-                    && !SystemManager.GetJsonNodeBool(userIfyouPlayJson["continuous_attendance"][i], "reward_check"))
-                    return true;
-            }
-
-            // 오늘 아직 출석하지 않았을 때 true
-            if (!TodayAttendanceCheck())
-                return true;
-
-            return false;
-        }
-
-
-
-        #region 출석
-
-        public void CallbackAttendanceMission(HTTPRequest req, HTTPResponse res)
+        public void CallbackIfyouplayList(HTTPRequest req, HTTPResponse res)
         {
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
-                Debug.LogError("Failed CallbackAttendanceMission");
+                Debug.LogError("Failed CallbackIfyouplayList");
                 return;
             }
 
@@ -2979,14 +2954,93 @@ namespace PIERStory
 
 
         /// <summary>
+        /// 수령가능 보상이 있거나, 출석 보충을 해야하거나 하는 경우 사용되는 함수
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckIfyouplayAction()
+        {
+            if (userIfyouPlayJson == null)
+                return false;
+
+            JsonData attendanceMission = SystemManager.GetJsonNode(userIfyouPlayJson, LobbyConst.NODE_ATTENDANCE_MISSION);
+
+            if (attendanceMission == null)
+                return false;
+
+            JsonData dailyMission = SystemManager.GetJsonNode(userIfyouPlayJson, LobbyConst.NODE_DAILY_MISSION);
+
+            if (dailyMission == null)
+                return false;
+
+            // 출석 보충이 필요한 경우 true
+            if (!SystemManager.GetJsonNodeBool(attendanceMission[LobbyConst.NODE_USER_INFO][0], "is_attendance"))
+                return true;
+
+            // 연속 출석 보상 수령가능한 것이 있을 때 true
+            for (int i = 0; i < attendanceMission[LobbyConst.NODE_CONTINUOUS_ATTENDANCE].Count; i++)
+            {
+                if (SystemManager.GetJsonNodeInt(attendanceMission[LobbyConst.NODE_CONTINUOUS_ATTENDANCE][i], LobbyConst.NODE_DAY_SEQ) <= SystemManager.GetJsonNodeInt(attendanceMission[LobbyConst.NODE_USER_INFO][0], "attendance_day")
+                    && !SystemManager.GetJsonNodeBool(attendanceMission[LobbyConst.NODE_CONTINUOUS_ATTENDANCE][i], "reward_check"))
+                    return true;
+            }
+
+            // 오늘 아직 출석하지 않았을 때 true
+            if (!TodayAttendanceCheck())
+                return true;
+
+            // 데일리 미션 전체완료 보상 안받았을 때 true
+            if (SystemManager.GetJsonNodeInt(dailyMission["all"][0], "state") == 1)
+                return true;
+
+            // 데일리 미션 보상 안받은게 있을 떄
+            for (int i = 0; i < dailyMission["single"].Count; i++)
+            {
+                if (SystemManager.GetJsonNodeInt(dailyMission["single"][i], "state") == 1)
+                    return true;
+            }
+
+            return false;
+        }
+
+
+        IEnumerator RoutineDailyMissionTimer()
+        {
+            // 이프유플레이 데이터를 받아올 때까지 대기
+            yield return new WaitUntil(() => userIfyouPlayJson != null);
+
+            JsonData dailyMissionData = SystemManager.GetJsonNode(userIfyouPlayJson, LobbyConst.NODE_DAILY_MISSION);
+
+            if (dailyMissionData == null)
+                yield break;
+
+            long endDateTick = SystemConst.ConvertServerTimeTick(long.Parse(SystemManager.GetJsonNodeString(dailyMissionData["all"][0], "end_date_tick")));
+            DateTime endDate = new DateTime(endDateTick);
+
+            while(true)
+            {
+                dailyMissionTimer = endDate - DateTime.UtcNow;
+                yield return null;
+                yield return null;
+                yield return null;
+                yield return null;
+                yield return null;
+            }
+
+        }
+
+
+        #region 출석
+
+
+        /// <summary>
         /// 이프유플레이 jsonData 갱신
         /// </summary>
         /// <param name="__j"></param>
         public void RefreshIfyouplayJsonData(JsonData __j)
         {
-            userIfyouPlayJson["user_info"] = __j["user_info"];
-            userIfyouPlayJson["continuous_attendance"] = __j["continuous_attendance"];
-            userIfyouPlayJson["attendance"] = __j["attendance"];
+            userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_USER_INFO] = __j[LobbyConst.NODE_USER_INFO];
+            userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_CONTINUOUS_ATTENDANCE] = __j[LobbyConst.NODE_CONTINUOUS_ATTENDANCE];
+            userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_ATTENDANCE] = __j[LobbyConst.NODE_ATTENDANCE];
 
             ViewMain.OnRefreshIfyouplayNewSign?.Invoke();
         }
@@ -2997,8 +3051,8 @@ namespace PIERStory
         /// <returns></returns>
         public bool TodayAttendanceCheck()
         {
-            string attendanceId = userIfyouPlayJson["attendance"]["attendance"][0].ToString();
-            JsonData attendanceList = SystemManager.GetJsonNode(userIfyouPlayJson["attendance"], attendanceId);
+            string attendanceId = userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_ATTENDANCE][LobbyConst.NODE_ATTENDANCE][0].ToString();
+            JsonData attendanceList = SystemManager.GetJsonNode(userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_ATTENDANCE], attendanceId);
 
             for (int i = 0; i < attendanceList.Count; i++)
             {
@@ -3018,7 +3072,21 @@ namespace PIERStory
 
         #region Daily Mission
 
-        
+        /// <summary>
+        /// 데일리 미션 보상 요청
+        /// </summary>
+        /// <param name="missionNo">미션 번호</param>
+        /// <param name="__callback"></param>
+        public void RequestDailyMissionReward(int missionNo, OnRequestFinishedDelegate __callback)
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestDailyMissionReward";
+            sending[CommonConst.COL_USERKEY] = userKey;
+            sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
+            sending["mission_no"] = missionNo;
+
+            NetworkLoader.main.SendPost(__callback, sending, true);
+        }
 
         #endregion
 
@@ -3096,6 +3164,8 @@ namespace PIERStory
             
             SetSeasonCheck(result);
             SetAchievementList(result);
+
+            ViewMain.OnRefreshProfileNewSign?.Invoke();
         }
 
         /// <summary>

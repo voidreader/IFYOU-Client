@@ -656,6 +656,19 @@ namespace PIERStory
 
         #region 이프유플레이
 
+        /// <summary>
+        /// 이프유 플레이 페이지에 들어가는 모든 정보 리스트
+        /// </summary>
+        public void RequestIfyouplayList()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestIfyouPlayList";
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+            sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
+
+            SendPost(UserManager.main.CallbackIfyouplayList, sending);
+        }
+
 
         #region 출석
 
@@ -670,27 +683,25 @@ namespace PIERStory
             sending[CommonConst.FUNC] = "sendAttendanceReward";
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             sending["attendance_id"] = attendanceId;
-            sending["day_seq"] = daySeq;
+            sending[LobbyConst.NODE_DAY_SEQ] = daySeq;
 
             SendPost(callback, sending, true);
         }
 
 
+        #endregion
 
-        /// <summary>
-        /// 이프유 플레이 출석미션 정보 요청
-        /// </summary>
-        public void RequestAttendanceMission()
+
+        public void RequestDailyMission(int missionNo)
         {
             JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "requestAttendanceMission";
+            sending[CommonConst.FUNC] = "requestDailyMissionCount";
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+            sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
+            sending["mission_no"] = missionNo;
 
-            SendPost(UserManager.main.CallbackAttendanceMission, sending);
+            SendPost(UserManager.main.CallbackIfyouplayList, sending);
         }
-        
-
-        #endregion
 
 
         #endregion

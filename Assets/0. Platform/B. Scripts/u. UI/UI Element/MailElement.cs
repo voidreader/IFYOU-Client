@@ -31,7 +31,6 @@ namespace PIERStory
 
         const string MAIL_NO = "mail_no";
         const string MAIL_TYPE_TEXTID = "mail_type_textid";
-        const string MAIL_LIST = "mailList";
         
         const string REMAIN_HOURS = "remain_hours";
         const string REMAIN_MINS = "remain_mins";
@@ -66,8 +65,8 @@ namespace PIERStory
             }
             else {
                 // * 기본재화 아닌 경우 
-                currencyURL = SystemManager.GetJsonNodeString(__j, "icon_image_url");
-                currencyKey = SystemManager.GetJsonNodeString(__j, "icon_image_key");
+                currencyURL = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_IMAGE_URL);
+                currencyKey = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_IMAGE_KEY);
                 
                 currencyIcon.gameObject.SetActive(true);
                 imageBaseCurrencyIcon.gameObject.SetActive(false);

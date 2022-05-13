@@ -36,16 +36,16 @@ namespace PIERStory
         /// <summary>
         /// 연속 출석 보상 세팅
         /// </summary>
-        public void InitContinuousAttendanceReward(JsonData __j, bool getable)
+        public void InitContinuousAttendanceReward(JsonData __j)
         {
             InitCommonReward();
 
             rewardDayText.gameObject.SetActive(true);
 
-            rewardDayText.text = SystemManager.GetJsonNodeString(__j, "day_seq");
+            daySeq = SystemManager.GetJsonNodeInt(__j, LobbyConst.NODE_DAY_SEQ);
+            rewardDayText.text = string.Format("{0}", daySeq);
             currency = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
             attendanceId = SystemManager.GetJsonNodeInt(__j, "attendance_id");
-            daySeq = SystemManager.GetJsonNodeInt(__j, "day_seq");
 
             switch (currency)
             {
@@ -68,31 +68,30 @@ namespace PIERStory
 
             rewardAmount.gameObject.SetActive(currency == LobbyConst.COIN || currency == LobbyConst.GEM);
 
-            rewardHalo.gameObject.SetActive(!SystemManager.GetJsonNodeBool(__j, "reward_check") && getable);
+            // 받을 수 있는 상태이고, 아직 안받음
+            rewardHalo.gameObject.SetActive(!SystemManager.GetJsonNodeBool(__j, "reward_check") &&
+                SystemManager.GetJsonNodeInt(UserManager.main.userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_USER_INFO][0], "attendance_day") >= daySeq);
 
-            if (rewardHalo.gameObject.activeSelf)
-            {
-                rewardHalo.DOKill();
-                rewardHalo.color = new Color(1, 1, 1, 0);
-                rewardHalo.DOFade(1, 1).SetLoops(-1, LoopType.Yoyo);
-            }
+            HaloEffect();
 
             rewardMask.sprite = rewardHalo.gameObject.activeSelf ? LobbyManager.main.spriteCircleOpen : LobbyManager.main.spriteCircleBase;
 
             getRewardCheck.SetActive(SystemManager.GetJsonNodeBool(__j, "reward_check"));
-            disableBox.SetActive(!getable);
+
+            // 아직 못받았고, 연속출석이 끊긴 상태
+            disableBox.SetActive(!SystemManager.GetJsonNodeBool(UserManager.main.userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_USER_INFO][0], "is_attendance") && !SystemManager.GetJsonNodeBool(__j, "reward_check"));
         }
 
 
         /// <summary>
         /// 기본적인 보상 세팅
         /// </summary>
-        public void InitIfyouPlayReward(JsonData __j)
+        public void InitDailyAttendanceReward(JsonData __j)
         {
             InitCommonReward();
 
             currency = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
-            daySeq = SystemManager.GetJsonNodeInt(__j, "day_seq");
+            daySeq = SystemManager.GetJsonNodeInt(__j, LobbyConst.NODE_DAY_SEQ);
 
             switch (currency)
             {
@@ -108,22 +107,88 @@ namespace PIERStory
                     break;
 
                 default:
-                    rewardCurrency.SetDownloadURL(SystemManager.GetJsonNodeString(__j, "icon_image_url"), SystemManager.GetJsonNodeString(__j, "icon_image_key"));
+                    rewardCurrency.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_IMAGE_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_IMAGE_KEY));
                     break;
             }
 
             rewardHalo.gameObject.SetActive(!SystemManager.GetJsonNodeBool(__j, "is_receive") && SystemManager.GetJsonNodeBool(__j, "click_check") && SystemManager.GetJsonNodeBool(__j, "current"));
 
-            if(rewardHalo.gameObject.activeSelf)
-            {
-                rewardHalo.DOKill();
-                rewardHalo.color = new Color(1, 1, 1, 0);
-                rewardHalo.DOFade(1, 1).SetLoops(-1, LoopType.Yoyo);
-            }
+            HaloEffect();
 
             rewardMask.sprite = rewardHalo.gameObject.activeSelf ? LobbyManager.main.spriteSquareOpen : LobbyManager.main.spriteSquareBase;
             getRewardCheck.SetActive(SystemManager.GetJsonNodeBool(__j, "is_receive"));
         }
+
+        /// <summary>
+        /// 전체미션보상 세팅
+        /// </summary>
+        /// <param name="__j"></param>
+        public void InitDailyTotalReward(JsonData __j)
+        {
+            InitCommonReward();
+
+            currency = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
+
+            switch (currency)
+            {
+                case LobbyConst.COIN:
+                case LobbyConst.GEM:
+
+                    if (SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY) == LobbyConst.COIN)
+                        rewardIcon.sprite = SystemManager.main.spriteCoin;
+                    else
+                        rewardIcon.sprite = SystemManager.main.spriteStar;
+
+                    rewardAmount.text = SystemManager.GetJsonNodeString(__j, CommonConst.NODE_QUANTITY);
+                    break;
+
+                default:
+                    rewardCurrency.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_IMAGE_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_IMAGE_KEY));
+                    break;
+            }
+
+            rewardHalo.gameObject.SetActive(SystemManager.GetJsonNodeInt(__j, "state") == 1);
+            rewardMask.sprite = rewardHalo.gameObject.activeSelf ? LobbyManager.main.spriteCircleOpen : LobbyManager.main.spriteCircleBase;
+            getRewardCheck.SetActive(SystemManager.GetJsonNodeInt(__j, "state") == 2);
+
+            HaloEffect();
+        }
+
+        /// <summary>
+        /// 데일리 미션 개별 세팅
+        /// </summary>
+        /// <param name="__j"></param>
+        public void InitDailyMissionReward(JsonData __j)
+        {
+            InitCommonReward();
+
+            currency = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
+
+            switch (currency)
+            {
+                case LobbyConst.COIN:
+                case LobbyConst.GEM:
+
+                    if (SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY) == LobbyConst.COIN)
+                        rewardIcon.sprite = SystemManager.main.spriteCoin;
+                    else
+                        rewardIcon.sprite = SystemManager.main.spriteStar;
+
+                    rewardAmount.text = SystemManager.GetJsonNodeString(__j, CommonConst.NODE_QUANTITY);
+                    break;
+
+                default:
+                    rewardCurrency.SetDownloadURL(SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_IMAGE_URL), SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_IMAGE_KEY));
+                    break;
+            }
+
+            rewardHalo.gameObject.SetActive(SystemManager.GetJsonNodeInt(__j, "state") == 1);
+            rewardMask.sprite = rewardHalo.gameObject.activeSelf ? LobbyManager.main.spriteSquareOpen : LobbyManager.main.spriteSquareBase;
+            getRewardCheck.SetActive(SystemManager.GetJsonNodeInt(__j, "state") == 2);
+
+            HaloEffect();
+        }
+
 
         void InitCommonReward()
         {
@@ -208,17 +273,52 @@ namespace PIERStory
 
 
         /// <summary>
-        /// 보상 받기
+        /// 데일리 전체미션 달성 보상 받기
         /// </summary>
-        public void OnClickGetReward()
+        public void OnClickGetTotalMissionReward()
         {
-            
+            getRewardButton.interactable = false;
+
+            UserManager.main.RequestDailyMissionReward(1, CallbackGetMissionReward);
         }
 
-       
+
+        void CallbackGetMissionReward(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackGetMissionReward");
+                getRewardButton.interactable = true;
+                return;
+            }
+
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+
+            UserManager.main.SetBankInfo(result);
+            UserManager.main.userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION] = result[LobbyConst.NODE_ATTENDANCE_MISSION];
+            UserManager.main.userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION] = result[LobbyConst.NODE_DAILY_MISSION];
+
+            MainIfyouplay.OnRefreshIfyouplay?.Invoke();
+
+            getRewardButton.interactable = true;
+        }
+
+
+
         void CurrencyLoadComplete()
         {
             rewardIcon.rectTransform.sizeDelta = Vector2.one * 100f;
         }
+
+
+        void HaloEffect()
+        {
+            if (!rewardHalo.gameObject.activeSelf)
+                return;
+
+            rewardHalo.DOKill();
+            rewardHalo.color = new Color(1, 1, 1, 0);
+            rewardHalo.DOFade(1, 1).SetLoops(-1, LoopType.Yoyo);
+        }    
     }
 }

@@ -35,6 +35,11 @@ namespace PIERStory {
         public Sprite spriteSquareBase;
         public Sprite spriteSquareOpen;
 
+        [Space]
+        public Sprite spriteDailyMissionOngoing;
+        public Sprite spriteDailyMissionClaim;
+        public Sprite spriteDailyMissionFinish;
+
 
         [Header("프로필")]
         public Texture2D textureNoneFrame;
@@ -67,17 +72,6 @@ namespace PIERStory {
         public Sprite spriteGotReward;          // 얻은 보상 버튼
         
         [Header("에피소드 관련 Sprite")]
-        public Sprite spriteEpisodePrevCover; // 과거 커버
-        public Sprite spriteEpisodeNextCover; // 미래 커버
-        public Sprite spriteEpisodeCurrentCover; // 현재 커버
-        
-        public Sprite spriteEpisodePrevIcon; // 과거 커버
-        public Sprite spriteEpisodeNextIcon; // 미래 커버 
-        
-        public Sprite spritePlateStarPlay; // 스타플레이 플레이트
-        public Sprite spritePlateFree; // 프리 플레이트
-        public Sprite spritePlatePremium; // 패스 플레이트
-
         public Sprite spriteEpisodeOpen;    // 열린 스페셜, 엔딩 에피소드
         public Sprite spriteEpisodeLock;    // 잠긴 스페셜, 엔딩 에피소드
         
@@ -402,11 +396,11 @@ namespace PIERStory {
 
             for(int i=0;i<data.Count;i++)
             {
-                if(data[i]["image_key"] == null)
+                if(data[i][CommonConst.COL_IMAGE_KEY] == null)
                     continue;
                 
-                imageKey = data[i]["image_key"].ToString();
-                imageURL = data[i]["image_url"].ToString();
+                imageKey = SystemManager.GetJsonNodeString(data[i] ,CommonConst.COL_IMAGE_KEY);
+                imageURL = SystemManager.GetJsonNodeString(data[i], CommonConst.COL_IMAGE_URL);
                 
                 if(string.IsNullOrEmpty(imageKey))
                     continue;
@@ -420,7 +414,6 @@ namespace PIERStory {
             
             // Save 로컬에 세이브한다. 
             ES3.Save<string>(SystemConst.KEY_PLATFORM_LOADING, JsonMapper.ToJson(data));
-            
         }
 
 

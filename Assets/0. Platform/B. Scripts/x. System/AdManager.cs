@@ -8,7 +8,7 @@ using AppsFlyerSDK;
 
 
 using LitJson;
-using Firebase;
+// using Firebase;
 using Facebook.Unity;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Common;
@@ -35,7 +35,7 @@ namespace PIERStory {
         public static Action<bool> OnCompleteRewardAD = null; // 동영상 광고 보고 콜백
         
         // * Firebase
-        FirebaseApp app;
+        // FirebaseApp app;
         
         public bool isPaidSelection = false; // 유료 선택지 선택됨. 
         

@@ -20,7 +20,7 @@ namespace PIERStory
         public Image coverOverlay;
         // public Image checkIcon;
 
-        string attendanceId = string.Empty;
+        int attendanceId = 7;
         int daySeq = 0;
 
         string currency = string.Empty;
@@ -33,13 +33,13 @@ namespace PIERStory
 
         public void InitAttendanceReward(JsonData __j)
         {
-            attendanceId = SystemManager.GetJsonNodeString(__j, "attendance_id");
-            daySeq = SystemManager.GetJsonNodeInt(__j, "day_seq");
+            attendanceId = SystemManager.GetJsonNodeInt(__j, "attendance_id");
+            daySeq = SystemManager.GetJsonNodeInt(__j, LobbyConst.NODE_DAY_SEQ);
 
             currency = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
 
-            imageUrl = SystemManager.GetJsonNodeString(__j, "icon_image_url");
-            imageKey = SystemManager.GetJsonNodeString(__j, "icon_image_key");
+            imageUrl = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_IMAGE_URL);
+            imageKey = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_ICON_IMAGE_KEY);
 
             isReceive = SystemManager.GetJsonNodeBool(__j, "is_receive");
             clickCheck = SystemManager.GetJsonNodeBool(__j, "click_check");
@@ -111,13 +111,7 @@ namespace PIERStory
 
             clickCheck = false;
 
-            JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "sendAttendanceReward";
-            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
-            sending["attendance_id"] = attendanceId;
-            sending["day_seq"] = daySeq;
-
-            NetworkLoader.main.SendPost(CallbackAttendanceReward, sending, true);
+            NetworkLoader.main.SendAttendanceReward(attendanceId, daySeq, CallbackAttendanceReward);
         }
 
         void CallbackAttendanceReward(HTTPRequest req, HTTPResponse res)
@@ -128,9 +122,11 @@ namespace PIERStory
                 return;
             }
 
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+
             // 보상을 받았으니 리스트를 갱신해주자
-            NetworkLoader.main.RequestAttendanceList();
-            UserManager.main.SetNotificationInfo(JsonMapper.ToObject(res.DataAsText));
+            UserManager.main.SetNotificationInfo(result);
+            UserManager.main.RefreshIfyouplayJsonData(result);
 
             dayHighlight.gameObject.SetActive(false);
             // rewardToday.SetActive(false);
@@ -140,11 +136,15 @@ namespace PIERStory
             coverOverlay.DOFade(1f, 0.4f);
             // checkIcon.DOFade(1f, 0.2f).SetDelay(0.2f);
             // checkIcon.transform.DOPunchScale(Vector3.one * 1.5f, 0.4f).SetDelay(0.3f);
+
+
+            // 이프유 업적
             NetworkLoader.main.RequestIFYOUAchievement(2);
 
             NetworkLoader.main.RequestIFYOUAchievement(7);
 
             SystemManager.ShowSimpleAlertLocalize("6177", false);
+            MainIfyouplay.OnRefreshIfyouplay?.Invoke();
         }
         
     }

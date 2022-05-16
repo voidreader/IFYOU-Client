@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
-using LitJson;
+
 using TMPro;
+using LitJson;
 
 namespace PIERStory
 {
@@ -32,18 +33,18 @@ namespace PIERStory
                 
                 // 수량 추가 
                 if (SystemManager.GetJsonNodeString(rewardData[i], LobbyConst.NODE_CURRENCY) == LobbyConst.COIN) {
-                    textCoinQuantity.text = SystemManager.GetJsonNodeString(rewardData[i], "quantity");
+                    textCoinQuantity.text = SystemManager.GetJsonNodeString(rewardData[i], CommonConst.NODE_QUANTITY);
                     continue;
                 }
                 
                 if (SystemManager.GetJsonNodeString(rewardData[i], LobbyConst.NODE_CURRENCY) == LobbyConst.GEM) {
-                    textGemQuantity.text = SystemManager.GetJsonNodeString(rewardData[i], "quantity");
+                    textGemQuantity.text = SystemManager.GetJsonNodeString(rewardData[i], CommonConst.NODE_QUANTITY);
                     continue;
                 }
                 
 
-                iconUrl = SystemManager.GetJsonNodeString(rewardData[i], "icon_image_url");
-                iconKey = SystemManager.GetJsonNodeString(rewardData[i], "icon_image_key");
+                iconUrl = SystemManager.GetJsonNodeString(rewardData[i], LobbyConst.NODE_ICON_IMAGE_URL);
+                iconKey = SystemManager.GetJsonNodeString(rewardData[i], LobbyConst.NODE_ICON_IMAGE_KEY);
                 break;
             }
 

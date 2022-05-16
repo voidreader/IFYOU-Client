@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 378561076659191895}
   - {fileID: 573313287061911333}
@@ -45,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47e3f3756fcd0a5448f8bf367a947429, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLobbyManagerInit: 0
   currentLiveIllust:
     liveImage: {fileID: 0}
     anim: {fileID: 0}
@@ -75,6 +77,14 @@ MonoBehaviour:
     addressableKey: 
     motionController: {fileID: 0}
     isImmediateInstance: 0
+  touchEffect: {fileID: 0}
+  spriteCircleBase: {fileID: 21300000, guid: 38fdba2e6650d124199034a3a25bfde6, type: 3}
+  spriteCircleOpen: {fileID: 21300000, guid: cf77fe99e66af774ab7695d907dcc7bf, type: 3}
+  spriteSquareBase: {fileID: 21300000, guid: e61151948b124344891df9eec1a14b90, type: 3}
+  spriteSquareOpen: {fileID: 21300000, guid: 3101c81644a581c44bee12012991ba81, type: 3}
+  spriteDailyMissionOngoing: {fileID: 21300000, guid: 7d9eee2b7c03a2a429ba8f94574b500d, type: 3}
+  spriteDailyMissionClaim: {fileID: 21300000, guid: 161afe9e86bb5bf44873d6e67b7f7655, type: 3}
+  spriteDailyMissionFinish: {fileID: 21300000, guid: c11f38ea97959554985601e14cbf8952, type: 3}
   textureNoneFrame: {fileID: 2800000, guid: 8c6685a543b4935488e073350604bbb0, type: 3}
   spriteBronzeBadge: {fileID: 21300000, guid: 2a65235bf5be4a14382ad25a4f76bca1, type: 3}
   spriteSilverBadge: {fileID: 21300000, guid: 28f5070ad98a85c43afee04c5c6f33ea, type: 3}
@@ -102,11 +112,6 @@ MonoBehaviour:
   spritePlatePremium: {fileID: 21300000, guid: 8692790e2f09fac4681b6ea03ece5682, type: 3}
   spriteEpisodeOpen: {fileID: 21300000, guid: 3d817a99066d9964a961c43a7e1aaf21, type: 3}
   spriteEpisodeLock: {fileID: 21300000, guid: 6cef183b781060c46990ddee3fa18fac, type: 3}
-  colorFreeBox: {r: 0.9529412, g: 0.54901963, b: 0.6313726, a: 1}
-  colorNavOn: {r: 0.9529412, g: 0.54901963, b: 0.6313726, a: 1}
-  colorNavOff: {r: 0.6, g: 0.6, b: 0.6, a: 1}
-  colorGenreOn: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
-  colorGenreOff: {r: 0.6, g: 0.6, b: 0.6, a: 1}
   colorEndingFutureCover: {r: 1, g: 1, b: 1, a: 0.69803923}
   colorEndingPastCover: {r: 0, g: 0, b: 0, a: 0.4}
   lobbyNetworkLoadingScreen: {fileID: 0}
@@ -137,6 +142,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3912782711662323685}
   m_RootOrder: 0
@@ -152,6 +158,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1

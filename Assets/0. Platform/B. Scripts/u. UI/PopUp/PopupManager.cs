@@ -44,7 +44,7 @@ namespace PIERStory {
         public GameObject popupGradeBenefitInfo;
         [SerializeField] GameObject popupGradeExp;
         [SerializeField] GameObject popupGradeUp;
-        [SerializeField] GameObject popupHowToPlay; // How to play 팝업
+        public GameObject popupHelpBox;             // 도움말 팝업
 
         [SerializeField] GameObject popupMail;
         [SerializeField] GameObject popupMessageAlert;
@@ -521,10 +521,10 @@ namespace PIERStory {
                 DictPopup.Add("Resource", popupResource);
                 
                 
-            if(DictPopup.ContainsKey("HowToPlay")) 
-                DictPopup["HowToPlay"] = popupHowToPlay;
+            if(DictPopup.ContainsKey("HelpBox")) 
+                DictPopup["HelpBox"] = popupHelpBox;
             else 
-                DictPopup.Add("HowToPlay", popupHowToPlay);
+                DictPopup.Add("HelpBox", popupHelpBox);
                 
             if(DictPopup.ContainsKey("Reset")) 
                 DictPopup["Reset"] = popupFlowReset;

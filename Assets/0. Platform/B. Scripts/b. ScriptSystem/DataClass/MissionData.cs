@@ -92,11 +92,11 @@ namespace PIERStory
             rewardExp = SystemManager.GetJsonNodeInt(missionJSON, "reward_exp");
             rewardQuantity = SystemManager.GetJsonNodeInt(missionJSON, "reward_quantity");
 
-            imageURL = SystemManager.GetJsonNodeString(missionJSON, "image_url");
-            imageKey = SystemManager.GetJsonNodeString(missionJSON, "image_key");
+            imageURL = SystemManager.GetJsonNodeString(missionJSON, CommonConst.COL_IMAGE_URL);
+            imageKey = SystemManager.GetJsonNodeString(missionJSON, CommonConst.COL_IMAGE_KEY);
 
-            currency_icon_url = SystemManager.GetJsonNodeString(missionJSON, "icon_image_url");
-            currency_icon_key = SystemManager.GetJsonNodeString(missionJSON, "icon_image_key");
+            currency_icon_url = SystemManager.GetJsonNodeString(missionJSON, LobbyConst.NODE_ICON_IMAGE_URL);
+            currency_icon_key = SystemManager.GetJsonNodeString(missionJSON, LobbyConst.NODE_ICON_IMAGE_KEY);
 
             string originMissionType = SystemManager.GetJsonNodeString(missionJSON, "mission_type");
             string originUnlockState = SystemManager.GetJsonNodeString(missionJSON, "unlock_state");

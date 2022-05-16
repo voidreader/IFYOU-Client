@@ -1240,6 +1240,7 @@ namespace PIERStory
             MainMore.OnRefreshMore?.Invoke();
 
             UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
+            NetworkLoader.main.RequestIfyouplayList();
         }
                 
         
@@ -1341,8 +1342,9 @@ namespace PIERStory
 
             // 업적 리스트 갱신
             UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
-            
-            
+
+            NetworkLoader.main.RequestIfyouplayList();
+
             // 타임딜 갱신 
             UserManager.main.RequestUserActiveTimeDeal();
         }      
@@ -2233,7 +2235,10 @@ namespace PIERStory
             Destroy(__view);
 
             if (LobbyManager.main != null)
+            {
                 UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
+                NetworkLoader.main.RequestIfyouplayList();
+            }
         }
         
         void ForwardToStore() {

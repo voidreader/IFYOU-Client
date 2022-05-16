@@ -268,6 +268,7 @@ namespace PIERStory
             loadComplete = false;
 
             UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackNewCompleteAchievement);
+            NetworkLoader.main.RequestIfyouplayList();
         }
         
         /// <summary>

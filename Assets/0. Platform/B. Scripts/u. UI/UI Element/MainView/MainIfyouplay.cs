@@ -44,7 +44,7 @@ namespace PIERStory
 
         public void EnterIfyouplay()
         {
-            scroll.verticalNormalizedPosition = 0f;
+            scroll.verticalNormalizedPosition = 1f;
 
             attendanceData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_ATTENDANCE_MISSION);
 

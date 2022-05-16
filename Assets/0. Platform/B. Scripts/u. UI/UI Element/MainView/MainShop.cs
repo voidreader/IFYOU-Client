@@ -46,6 +46,9 @@ namespace PIERStory {
 
         public void DelayEnterFromMain()
         {
+            
+            Debug.Log("## DelayEnterFromMain ##");
+            
             StartCoroutine(RoutineEnterFromMain());
             OnRefreshNormalShop = InitNormalContainer;
             OnRefreshPackageShop = InitPackContainer;
@@ -61,10 +64,15 @@ namespace PIERStory {
             EnterFromMain();
             yield return new WaitForSeconds(0.2f);
             InitPackContainer();
+            
+            // packageToggle.SetIsOn(true, true);
         }
 
         public void DelayEnterFromSignal()
         {
+            
+            Debug.Log("## DelayEnterFromSignal ##");
+            
             StartCoroutine(RoutineEnterFromSignal());
             OnRefreshNormalShop = InitNormalContainer;
             OnRefreshPackageShop = InitPackContainer;
@@ -80,6 +88,8 @@ namespace PIERStory {
             EnterFromSignal();
             yield return new WaitForSeconds(0.2f);
             InitPackContainer();
+            
+            // packageToggle.SetIsOn(true, true);
         }
 
         /*
@@ -246,6 +256,8 @@ namespace PIERStory {
                     return;
              }
              catch {
+                 
+                 NetworkLoader.main.ReportRequestError("InitPackContainer #1", "InitPackContainer #1");
                  return;
              }
              
@@ -286,85 +298,96 @@ namespace PIERStory {
             
             
             // 타임딜 설정
-            if(UserManager.main.userActiveTimeDeal != null) {
-                Debug.Log(string.Format("### userActiveTimeDeal : [{0}]", UserManager.main.userActiveTimeDeal.Count));
+            try {
+                
+                if(UserManager.main.userActiveTimeDeal != null) {
+                    Debug.Log(string.Format("### userActiveTimeDeal : [{0}]", UserManager.main.userActiveTimeDeal.Count));
+                    for(int i=0; i<UserManager.main.userActiveTimeDeal.Count; i++) {
+                        
+                        // 최대 6개
+                        if(i > 5)
+                            break;
+                        
+                        listPassTimeDeal[i].Init(new PassTimeDealData(UserManager.main.userActiveTimeDeal[i]));
+                        
+                        if(listPassTimeDeal[i].gameObject.activeSelf)
+                            activePassTimeDealCount++;
+                    }
+                    
+                    // 활성 타임딜에 따라서 그리드 높이 조정
+                    if(activePassTimeDealCount > 0) {
+                        passTimeDealTitle.SetActive(true); // 타이틀 보여주고 
+                        passTimeDealGrid.gameObject.SetActive(true);
+                        
+                        if(activePassTimeDealCount <= 2)
+                            passTimeDealGrid.sizeDelta = new Vector2(660, 300);
+                        else if(activePassTimeDealCount > 2 && activePassTimeDealCount <= 4) 
+                            passTimeDealGrid.sizeDelta = new Vector2(660, 600);
+                        else
+                            passTimeDealGrid.sizeDelta = new Vector2(660, 930);
+                        
+                    }
+                    // ? 타임딜 설정 종료                     
+                }
+                else {
+                    Debug.Log("### No Active Time Deal");
+                }
             }
-            else {
-                Debug.Log("### No Active Time Deal");
+            catch {
+                NetworkLoader.main.ReportRequestError("InitPackContainer #2", "InitPackContainer #2");
+                return;
             }
-            
-            for(int i=0; i<UserManager.main.userActiveTimeDeal.Count; i++) {
-                
-                // 최대 6개
-                if(i > 5)
-                    break;
-                
-                listPassTimeDeal[i].Init(new PassTimeDealData(UserManager.main.userActiveTimeDeal[i]));
-                
-                if(listPassTimeDeal[i].gameObject.activeSelf)
-                    activePassTimeDealCount++;
-            }
-            
-            // 활성 타임딜에 따라서 그리드 높이 조정
-            if(activePassTimeDealCount > 0) {
-                passTimeDealTitle.SetActive(true); // 타이틀 보여주고 
-                passTimeDealGrid.gameObject.SetActive(true);
-                
-                if(activePassTimeDealCount <= 2)
-                    passTimeDealGrid.sizeDelta = new Vector2(660, 300);
-                else if(activePassTimeDealCount > 2 && activePassTimeDealCount <= 4) 
-                    passTimeDealGrid.sizeDelta = new Vector2(660, 600);
-                else
-                    passTimeDealGrid.sizeDelta = new Vector2(660, 930);
-                
-            }
-            // ? 타임딜 설정 종료 
-            
             
             
             // 패키지 초기화 
-            Debug.Log(string.Format("### productMasterJSON : [{0}]", BillingManager.main.productMasterJSON.Count));
-            for(int i=0; i<BillingManager.main.productMasterJSON.Count;i++) {
-                
-                masterData = BillingManager.main.productMasterJSON[i];
-                productID =SystemManager.GetJsonNodeString(masterData, "product_id");  // ID 
-                maxCount = SystemManager.GetJsonNodeInt(masterData, "max_count"); // 구매 제한 횟수 
-                // Debug.Log(SystemManager.GetJsonNodeString(masterData, "product_id"));
-                
-                // 이벤트 상품. 이름을 꼭 조건으로 걸어야한다. 
-                if(SystemManager.GetJsonNodeString(masterData, "product_id").Contains("story_pack") 
-                    && SystemManager.GetJsonNodeBool(masterData, "is_event")) {
+            try {
+                Debug.Log(string.Format("### productMasterJSON : [{0}]", BillingManager.main.productMasterJSON.Count));
+                for(int i=0; i<BillingManager.main.productMasterJSON.Count;i++) {
+                    
+                    masterData = BillingManager.main.productMasterJSON[i];
+                    productID =SystemManager.GetJsonNodeString(masterData, "product_id");  // ID 
+                    maxCount = SystemManager.GetJsonNodeInt(masterData, "max_count"); // 구매 제한 횟수 
+                    // Debug.Log(SystemManager.GetJsonNodeString(masterData, "product_id"));
+                    
+                    // 이벤트 상품. 이름을 꼭 조건으로 걸어야한다. 
+                    if(SystemManager.GetJsonNodeString(masterData, "product_id").Contains("story_pack") 
+                        && SystemManager.GetJsonNodeBool(masterData, "is_event")) {
+                            
+                        if(eventPackIndex >= listEventPackProducts.Count)
+                            break;
+                            
+                        // 구매된 상품은 제거한다.
+                        if(maxCount > 0 && BillingManager.main.GetProductPurchaseCount(productID) >= maxCount) {
+                            continue;
+                        }
+                            
                         
-                    if(eventPackIndex >= listEventPackProducts.Count)
-                        break;
-                        
-                    // 구매된 상품은 제거한다.
-                    if(maxCount > 0 && BillingManager.main.GetProductPurchaseCount(productID) >= maxCount) {
-                        continue;
+                        listEventPackProducts[eventPackIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"), masterData);
+                        hasEventPack = true;
+    
                     }
+                    else if(SystemManager.GetJsonNodeString(masterData, "product_id").Contains("pack") 
+                            && !SystemManager.GetJsonNodeBool(masterData, "is_event")) {
                         
-                    
-                    listEventPackProducts[eventPackIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"), masterData);
-                    hasEventPack = true;
-   
-                }
-                else if(SystemManager.GetJsonNodeString(masterData, "product_id").Contains("pack") 
-                        && !SystemManager.GetJsonNodeBool(masterData, "is_event")) {
-                    
-                    if(productID.Contains("pre_reward_pack"))
-                        continue;
-                    
-                    if(packIndex >= listGeneralPackProducts.Count)
-                        break; 
+                        if(productID.Contains("pre_reward_pack"))
+                            continue;
                         
-                    // 구매된 상품은 제거한다.
-                    if(maxCount > 0 && BillingManager.main.GetProductPurchaseCount(productID) >= maxCount) {
-                        continue;
+                        if(packIndex >= listGeneralPackProducts.Count)
+                            break; 
+                            
+                        // 구매된 상품은 제거한다.
+                        if(maxCount > 0 && BillingManager.main.GetProductPurchaseCount(productID) >= maxCount) {
+                            continue;
+                        }
+                        
+                        listGeneralPackProducts[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"), masterData);
                     }
-                    
-                    listGeneralPackProducts[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"), masterData);
-                }
-            } // ? end of for 
+                } // ? end of for 
+            }
+            catch {
+                NetworkLoader.main.ReportRequestError("InitPackContainer #3", "InitPackContainer #3");
+                return;
+            }
             
             eventPackText.SetActive(hasEventPack);
             

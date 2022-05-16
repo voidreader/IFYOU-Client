@@ -33,7 +33,7 @@ namespace PIERStory
                     break;
                 case 1:
                     buttonImage.sprite = LobbyManager.main.spriteDailyMissionClaim;
-                    buttonLabel.text = SystemManager.GetLocalizedText("5099");
+                    buttonLabel.text = SystemManager.GetLocalizedText("5212");
                     buttonLabel.color = Color.white;
                     break;
                 case 2:

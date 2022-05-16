@@ -24,6 +24,7 @@ namespace PIERStory
 
         [Tooltip("연속 출석")]
         public IFYOURewardElement[] continuousRewards = new IFYOURewardElement[4];
+        public Image[] progressDots;
         [Tooltip("매일 출석")]
         public IFYOURewardElement[] dailyAttendanceRewards = new IFYOURewardElement[7];
         JsonData attendanceData = null;
@@ -81,9 +82,27 @@ namespace PIERStory
             for (int i = 0; i < continuousRewards.Length; i++)
                 continuousRewards[i].InitContinuousAttendanceReward(continuousData[i]);
 
+            for (int i = 1; i <= progressDots.Length; i++)
+            {
+                if (i == 3 || i == 7 || i == 10 || i == 14)
+                    continue;
+
+
+                if (i <= SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day"))
+                    progressDots[i - 1].color = HexCodeChanger.HexToColor("FF0080");
+                else
+                {
+                    if(SystemManager.GetJsonNodeBool(attendanceData[LobbyConst.NODE_USER_INFO][0], "is_attendance"))
+                        progressDots[i - 1].color = HexCodeChanger.HexToColor("FFAFD7");
+                    else
+                        progressDots[i - 1].color = HexCodeChanger.HexToColor("E1E1E1");
+                }
+            }
+
+
             continuousAttendanceGauge.fillAmount = SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day") / 14;
             chargeAttendanceButton.gameObject.SetActive(!SystemManager.GetJsonNodeBool(attendanceData[LobbyConst.NODE_USER_INFO][0], "is_attendance"));
-            chargeAttendanceButton.anchoredPosition = new Vector2(600 * (SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day") + SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day")) / 14, 55f);
+            chargeAttendanceButton.anchoredPosition = new Vector2(600 * (SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day") + SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day")) / 14, 35f);
         }
 
 

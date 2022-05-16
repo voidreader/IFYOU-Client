@@ -222,6 +222,7 @@ namespace PIERStory {
 
                 case 3:     // 이프유플레이
                     currentShowContainer = ifyouplayContainer;
+                    OnIfyouPlayTab();
                     break;
 
                 case 4:     // 프로필
@@ -294,6 +295,8 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
+
+            MainShop.isMainNavigationShop = false;
         }
 
         void EnableIfyouplayNewSign()
@@ -339,6 +342,8 @@ namespace PIERStory {
 
             profileContainer.Show();
             currentShowContainer = profileContainer;
+
+            MainShop.isMainNavigationShop = false;
         }
 
         void EnableNewAchievementSign()

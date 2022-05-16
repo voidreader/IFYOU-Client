@@ -155,6 +155,9 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
 
             StartCoroutine(RoutineBackgroundDetailSetting());
+
+            mainContainer.Show();
+            decoContainer.Hide();
         }
 
 

@@ -3053,7 +3053,7 @@ namespace PIERStory
         /// <param name="__j"></param>
         public void RefreshIfyouplayJsonData(JsonData __j)
         {
-            userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_USER_INFO] = __j[LobbyConst.NODE_USER_INFO];
+            //userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_USER_INFO] = __j[LobbyConst.NODE_USER_INFO];
             //userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_CONTINUOUS_ATTENDANCE] = __j[LobbyConst.NODE_CONTINUOUS_ATTENDANCE];
             userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_ATTENDANCE] = __j[LobbyConst.NODE_ATTENDANCE];
 

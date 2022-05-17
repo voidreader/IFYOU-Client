@@ -105,6 +105,8 @@ namespace PIERStory
         // 개인정보 보호 정책 및 이용약관 URL
         string privacyURL = string.Empty;
         string termsOfUseURL = string.Empty;
+        public string bundleURL = string.Empty; // 에셋번들 URL
+       
         public string contentsURL = string.Empty; // 리소스 다운로드 URL 
         
         
@@ -344,9 +346,12 @@ namespace PIERStory
             {
                 if (launchingJSON["header"]["isSuccessful"].IsBoolean && bool.Parse(launchingJSON["header"]["isSuccessful"].ToString()) == true)
                 {
-                    // 테스트 서버의 경우 코인샵 변경 
+                    // 테스트 서버의 경우 URL 변경 
                     if(isTestServerAccess) {
-                        coinShopURL =launchingJSON["launching"]["server"]["test_coinshop_url"].ToString();    
+                        coinShopURL = launchingJSON["launching"]["server"]["test_coinshop_url"].ToString();    
+                        privacyURL = launchingJSON["launching"]["server"]["test_privacy_url"].ToString();
+                        termsOfUseURL = launchingJSON["launching"]["server"]["test_terms_url"].ToString();
+                        bundleURL = launchingJSON["launching"]["server"]["test_bundle_url"].ToString();
                     }
                     
                 }
@@ -2151,7 +2156,7 @@ namespace PIERStory
             webView.SetFullScreen(); // 풀스크린 
             webView.ScalesPageToFit = true;
             // webView.Style = WebViewStyle.Popup; // 팝업 스타일 테스트
-            webView.LoadURL(URLString.URLWithPath(__url));
+            webView.LoadURL(URLString.URLWithPath(__url + langParam));
             webView.Show();            
             
             SystemManager.main.isWebViewOpened = true; // 오픈할때 true로 변경 

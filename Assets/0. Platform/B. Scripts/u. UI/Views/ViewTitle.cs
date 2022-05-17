@@ -218,13 +218,22 @@ namespace PIERStory {
         IEnumerator MovingNextScene() {
             Debug.Log("<color=cyan>MoveingNextScene START</color>");
 
-            UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
+            // UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork()); // 서버 통신 종료되길 기다린다. 
-            yield return new WaitUntil(() =>SystemManager.main.mainAssetFont != null); // 폰트 불러오길 기다린다. 
+            yield return new WaitUntil(() =>SystemManager.main.mainAssetFont != null); // 폰트 불러오길 기다린다.             
+            
+            // * 2022.05.16 스토리 직접 진입
+            // * 108번 
+            StoryData story = StoryManager.main.FindProject("108");
+            
+            // StoryManager에서 곧바로 콜백을 통해서 StoryManager.OpenViewStoryDetail 호출
+            StoryManager.main.RequestStoryInfo(story); 
+          
+
             
             Debug.Log("<color=cyan>MoveingNextScene END</color>");
             
-            Signal.Send(LobbyConst.STREAM_IFYOU, "moveMain", "open!"); // ViewMain으로 이동한다.
+            
             
         }
         

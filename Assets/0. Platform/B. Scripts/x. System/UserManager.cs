@@ -2972,6 +2972,7 @@ namespace PIERStory
             if (dailyMission == null)
                 return false;
 
+            /*
             // 출석 보충이 필요한 경우 true
             if (!SystemManager.GetJsonNodeBool(attendanceMission[LobbyConst.NODE_USER_INFO][0], "is_attendance"))
                 return true;
@@ -2983,6 +2984,7 @@ namespace PIERStory
                     && !SystemManager.GetJsonNodeBool(attendanceMission[LobbyConst.NODE_CONTINUOUS_ATTENDANCE][i], "reward_check"))
                     return true;
             }
+            */
 
             // 오늘 아직 출석하지 않았을 때 true
             if (!TodayAttendanceCheck())
@@ -3016,9 +3018,22 @@ namespace PIERStory
             long endDateTick = SystemConst.ConvertServerTimeTick(long.Parse(SystemManager.GetJsonNodeString(dailyMissionData["all"][0], "end_date_tick")));
             DateTime endDate = new DateTime(endDateTick);
 
-            while(true)
+            dailyMissionTimer = endDate - DateTime.UtcNow;
+
+            if(dailyMissionTimer.Ticks < 0)
+                Debug.LogError("시간이 조작되어 정확한 타이머를 제공할 수 없음");
+
+            while (true)
             {
                 dailyMissionTimer = endDate - DateTime.UtcNow;
+
+                // 타이머가 끝나면 전체리스트 갱신을 해준다
+                if (dailyMissionTimer.Ticks <= 0)
+                {
+                    RequestServiceEvents();
+                    break;
+                }
+                    
                 yield return null;
                 yield return null;
                 yield return null;
@@ -3039,7 +3054,7 @@ namespace PIERStory
         public void RefreshIfyouplayJsonData(JsonData __j)
         {
             userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_USER_INFO] = __j[LobbyConst.NODE_USER_INFO];
-            userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_CONTINUOUS_ATTENDANCE] = __j[LobbyConst.NODE_CONTINUOUS_ATTENDANCE];
+            //userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_CONTINUOUS_ATTENDANCE] = __j[LobbyConst.NODE_CONTINUOUS_ATTENDANCE];
             userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_ATTENDANCE] = __j[LobbyConst.NODE_ATTENDANCE];
 
             ViewMain.OnRefreshIfyouplayNewSign?.Invoke();

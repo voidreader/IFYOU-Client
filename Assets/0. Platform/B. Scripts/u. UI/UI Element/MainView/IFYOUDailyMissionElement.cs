@@ -55,7 +55,13 @@ namespace PIERStory
             if (!interactable)
                 return;
 
-            buttonImage.GetComponent<Button>().interactable = false;
+            if (!MainIfyouplay.ScreenSetComplete)
+            {
+                Debug.LogWarning("화면 갱신이 아직 안됨!");
+                return;
+            }
+
+            MainIfyouplay.ScreenSetComplete = false;
 
             UserManager.main.RequestDailyMissionReward(missionNo, CallbackGetMissionReward);
         }
@@ -65,7 +71,7 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackGetMissionReward");
-                buttonImage.GetComponent<Button>().interactable = true;
+                MainIfyouplay.ScreenSetComplete = true;
                 return;
             }
 
@@ -76,9 +82,6 @@ namespace PIERStory
             UserManager.main.userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION] = result[LobbyConst.NODE_DAILY_MISSION];
 
             MainIfyouplay.OnRefreshIfyouplay?.Invoke();
-
-            buttonImage.GetComponent<Button>().interactable = true;
         }
-
     }
 }

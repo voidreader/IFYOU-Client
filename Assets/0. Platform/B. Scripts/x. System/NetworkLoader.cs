@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BestHTTP;
+
 using LitJson;
-using System.Text;
+using BestHTTP;
 using Toast.Gamebase;
 
 namespace PIERStory
@@ -1157,28 +1158,5 @@ namespace PIERStory
         {
             return main.ListNetwork.Count <= 0;
         }
-
-
-        /// <summary>
-        /// 특정 함수 요청건에 대한 응답처리 확인 메소드
-        /// </summary>
-        /// <param name="__func">통신 요청 보낸 API 함수명</param>
-        /// <returns></returns>
-        public static bool CheckServerProcessingComplete(string __func)
-        {
-            // 통신 중인 것이 없으므로 통신 완료로 체크
-            if (CheckServerWork())
-                return true;
-
-            foreach(string str in main.ListNetwork)
-            {
-                // 리스트에 아직 동일한게 있다면 통신이 완료된 것이 아님
-                if (str.Equals(__func))
-                    return false;
-            }
-
-            return true;
-        }
     }
-
 }

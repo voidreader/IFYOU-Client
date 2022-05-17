@@ -96,11 +96,14 @@ namespace PIERStory {
             
 
             // 출석보상 안 먹었으면 무조건 또 띄워!
+            /*
+             * 22.05.17 이프유플레이가 하단 네비게이션으로 생겼기 때문에 더이상 출석체크 팝업을 띄우지 않는다
             if (!UserManager.main.TodayAttendanceCheck())
             {
                 PopupBase p = PopupManager.main.GetPopup("Attendance");
                 PopupManager.main.ShowPopup(p, true);
             }
+            */
 
             // 앱 첫실행 시에만 출석보상 체크하고 띄워!
             if (!StoryManager.enterGameScene && !PlayerPrefs.HasKey("noticeOneday") && SystemManager.main.noticeData.Count > 0)
@@ -113,7 +116,6 @@ namespace PIERStory {
                     PopupManager.main.ShowPopup(p, true);
                     SystemManager.noticePopupExcuted = true; // true 로 설정. 이번 실행헤서는 또 뜨지 않게. 
                 }
-                
             }
 
             LobbyManager.main.RequestPlatformLoadingImages(); // 플랫폼 로딩 이미지 다운로드 처리 

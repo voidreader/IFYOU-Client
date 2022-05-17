@@ -11,7 +11,6 @@ namespace PIERStory
     public class IFYOURewardElement : MonoBehaviour
     {
         public Image rewardHalo;
-        Button getRewardButton;
 
         public Image rewardMask;
         public Image rewardIcon;
@@ -30,7 +29,6 @@ namespace PIERStory
         private void Start()
         {
             rewardCurrency = rewardIcon.GetComponent<ImageRequireDownload>();
-            getRewardButton = rewardHalo.GetComponent<Button>();
         }
 
         /// <summary>
@@ -79,7 +77,7 @@ namespace PIERStory
             getRewardCheck.SetActive(SystemManager.GetJsonNodeBool(__j, "reward_check"));
 
             // 아직 못받았고, 연속출석이 끊긴 상태
-            disableBox.SetActive(!SystemManager.GetJsonNodeBool(UserManager.main.userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_USER_INFO][0], "is_attendance") && !SystemManager.GetJsonNodeBool(__j, "reward_check"));
+            disableBox.SetActive(!SystemManager.GetJsonNodeBool(UserManager.main.userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_USER_INFO][0], "is_attendance") && !SystemManager.GetJsonNodeBool(__j, "reward_check") && !rewardHalo.gameObject.activeSelf);
         }
 
 
@@ -206,7 +204,13 @@ namespace PIERStory
         /// </summary>
         public void OnClickContinuousAttendanceReward()
         {
-            getRewardButton.interactable = false;
+            if (!MainIfyouplay.ScreenSetComplete)
+            {
+                Debug.LogWarning("화면 갱신이 아직 안됨!");
+                return;
+            }
+
+            MainIfyouplay.ScreenSetComplete = false;
 
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "receiveAttendanceMissionReward";
@@ -221,6 +225,7 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackReceiveContinuousAttendanceReward");
+                MainIfyouplay.ScreenSetComplete = true;
                 return;
             }
 
@@ -239,8 +244,13 @@ namespace PIERStory
         /// </summary>
         public void OnClickDailyAttendanceReward()
         {
-            // 터치 연타 막기
-            getRewardButton.interactable = false;
+            if (!MainIfyouplay.ScreenSetComplete)
+            {
+                Debug.LogWarning("화면 갱신이 아직 안됨!");
+                return;
+            }
+
+            MainIfyouplay.ScreenSetComplete = false;
 
             NetworkLoader.main.SendAttendanceReward(attendanceId, daySeq, CallbackAttendanceReward);
         }
@@ -250,7 +260,7 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackAttendanceReward");
-                getRewardButton.interactable = true;
+                MainIfyouplay.ScreenSetComplete = true;
                 return;
             }
 
@@ -268,7 +278,6 @@ namespace PIERStory
             SystemManager.ShowSimpleAlertLocalize("6177", false);
 
             MainIfyouplay.OnRefreshIfyouplay?.Invoke();
-            getRewardButton.interactable = true;
         }
 
 
@@ -277,7 +286,13 @@ namespace PIERStory
         /// </summary>
         public void OnClickGetTotalMissionReward()
         {
-            getRewardButton.interactable = false;
+            if (!MainIfyouplay.ScreenSetComplete)
+            {
+                Debug.LogWarning("화면 갱신이 아직 안됨!");
+                return;
+            }
+
+            MainIfyouplay.ScreenSetComplete = false;
 
             UserManager.main.RequestDailyMissionReward(1, CallbackGetMissionReward);
         }
@@ -288,7 +303,7 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackGetMissionReward");
-                getRewardButton.interactable = true;
+                MainIfyouplay.ScreenSetComplete = true;
                 return;
             }
 
@@ -299,8 +314,6 @@ namespace PIERStory
             UserManager.main.userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION] = result[LobbyConst.NODE_DAILY_MISSION];
 
             MainIfyouplay.OnRefreshIfyouplay?.Invoke();
-
-            getRewardButton.interactable = true;
         }
 
 

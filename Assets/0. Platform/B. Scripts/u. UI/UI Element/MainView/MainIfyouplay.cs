@@ -12,6 +12,7 @@ namespace PIERStory
     public class MainIfyouplay : MonoBehaviour
     {
         public static Action OnRefreshIfyouplay = null;
+        public static bool ScreenSetComplete = false;
         public ScrollRect scroll;
 
         //[Header("프로모션 파트")][Space(15)]
@@ -50,7 +51,7 @@ namespace PIERStory
             attendanceData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_ATTENDANCE_MISSION);
 
             // 출석 관련 세팅
-            InitContinuousAttendance();
+            //InitContinuousAttendance();
             InitDailyAttendance();
 
             dailyMissionData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_DAILY_MISSION);
@@ -58,6 +59,8 @@ namespace PIERStory
             InitDailyMission();
 
             ViewMain.OnRefreshIfyouplayNewSign?.Invoke();
+
+            ScreenSetComplete = true;
         }
 
         #region 출석 관련
@@ -99,7 +102,6 @@ namespace PIERStory
                 }
             }
 
-
             continuousAttendanceGauge.fillAmount = SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day") / 14;
             chargeAttendanceButton.gameObject.SetActive(!SystemManager.GetJsonNodeBool(attendanceData[LobbyConst.NODE_USER_INFO][0], "is_attendance"));
             chargeAttendanceButton.anchoredPosition = new Vector2(600 * (SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day") + SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day")) / 14, 35f);
@@ -125,6 +127,14 @@ namespace PIERStory
         /// </summary>
         public void OnClickChargeContinuousAttendance()
         {
+            // 코인 부족한거 먼저 체크
+            if(!UserManager.main.CheckCoinProperty(SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") * 100))
+            {
+                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteCoin, (SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") * 100) - UserManager.main.coin);
+                return;
+            }
+
+
             SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6307"), SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") * 100)
                                             , SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") * 100
                                             , SystemManager.main.GetCurrencyImageURL(LobbyConst.COIN)
@@ -137,7 +147,13 @@ namespace PIERStory
 
         void ChargeAttendance()
         {
-            chargeAttendanceButton.GetComponent<Button>().interactable = false;
+            if(!ScreenSetComplete)
+            {
+                Debug.LogWarning("화면 갱신이 아직 안됨!");
+                return;
+            }
+
+            ScreenSetComplete = false;
 
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "resetAttendanceMission";
@@ -151,7 +167,6 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackChargeAttendanceMission");
-                chargeAttendanceButton.GetComponent<Button>().interactable = true;
                 return;
             }
 
@@ -166,7 +181,6 @@ namespace PIERStory
 
             // 이프유플레이 화면 갱신이 필요함
             OnRefreshIfyouplay?.Invoke();
-            chargeAttendanceButton.GetComponent<Button>().interactable = true;
         }
 
         /// <summary>
@@ -230,11 +244,9 @@ namespace PIERStory
         /// </summary>
         IEnumerator CountDownDailyMission()
         {
-            while (gameObject.activeSelf)
+            while (gameObject.activeSelf && UserManager.main.dailyMissionTimer.Ticks > 0)
             {
                 timerText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", UserManager.main.dailyMissionTimer.Hours, UserManager.main.dailyMissionTimer.Minutes, UserManager.main.dailyMissionTimer.Seconds);
-                yield return null;
-                yield return null;
                 yield return null;
             }
         }

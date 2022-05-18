@@ -75,9 +75,6 @@ namespace PIERStory {
         public RectTransform arrowGroupContetns; // 컨텐츠 그룹 화살표 
         public GameObject groupStoryContentsBlock; // 접혀있는 상태에서 터치 못하게 하려고..
         
-        
-        
-        [SerializeField] RectTransform flowMap; // flow map 
         bool inTransitionFlow = false;
         
         
@@ -369,7 +366,6 @@ namespace PIERStory {
         /// </summary>
         void InitFlowMap() {
             
-            flowMap.anchoredPosition = new Vector2(-820, 0); // flowmap 위치
             bool isMatchEpisode = false; // 아래 for문에서 사용 
 
             
@@ -448,20 +444,6 @@ namespace PIERStory {
             }
 
         }
-        
-        public void OnClickFlowOpen() {
-            if(inTransitionFlow)           
-                return;
-                
-            flowMap.DOAnchorPos(new Vector2(-85, 0), 0.3f).OnStart(()=> {inTransitionFlow = true;}).OnComplete(()=>{inTransitionFlow = false;});
-        }
-        
-        public void OnClickFlowClose() {
-            if(inTransitionFlow)           
-                    return;   
-                    
-            flowMap.DOAnchorPos(new Vector2(-820, 0), 0.3f).OnStart(()=> {inTransitionFlow = true;}).OnComplete(()=>{inTransitionFlow = false;});
-        }  
         
         #endregion
         

@@ -210,8 +210,6 @@ namespace PIERStory {
 
         public void OnClickMail()
         {
-            //Signal.Send(LobbyConst.STREAM_COMMON, "Mail");
-
             // 22.01.20 Doozy Nody global로 변경하면서 Popup으로 변경
             NetworkLoader.main.RequestUnreadMailList(CallbackOpenMail);
         }
@@ -394,10 +392,6 @@ namespace PIERStory {
                 return;
             
             Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);
-            
-            // SystemManager.main.OpenCoinShopWebview();
-            
-            // AdManager.main.AnalyticsCoinShopOpen("top");
         }
         
         public void OnClickShop() {

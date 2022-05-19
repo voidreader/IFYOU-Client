@@ -150,8 +150,10 @@ namespace PIERStory
             
             // 진입시에 백버튼 시그널 추가 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_MAIL_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
 
             StartCoroutine(RoutineBackgroundDetailSetting());
@@ -162,8 +164,10 @@ namespace PIERStory
         {
             base.OnView();
 
+            /*
             if (UserManager.main.tutorialStep == 1 && !UserManager.main.tutorialClear)
                 UserManager.main.UpdateTutorialStep(1, 0, CallbackStartTutorial);
+            */
 
             
             // 리뷰 팝업 위치 

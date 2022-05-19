@@ -111,8 +111,7 @@ MonoBehaviour:
     PortId: b7c0e384-b6ee-4118-97c2-8a5e4b72aba7
     Direction: 1
     Capacity: 0
-    Connections:
-    - cb1084f1-1cd2-4435-b9d5-b96f2c59e7ca
+    Connections: []
     Value: '{"Trigger":2,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"Common","Name":"Back","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -212,7 +211,7 @@ MonoBehaviour:
   NodeState: 0
   CanBeDeleted: 1
   Passthrough: 0
-  ClearGraphHistory: 0
+  ClearGraphHistory: 1
   Position: {x: 1929.074, y: -415.88477}
   OnEnterShowViews:
   - Id:
@@ -827,7 +826,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: -281.18503, y: 135.68993}
+  Position: {x: -264, y: 213}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -1096,8 +1095,7 @@ MonoBehaviour:
     PortId: cb1084f1-1cd2-4435-b9d5-b96f2c59e7ca
     Direction: 0
     Capacity: 1
-    Connections:
-    - b7c0e384-b6ee-4118-97c2-8a5e4b72aba7
+    Connections: []
     Value: '{"CanGoBack":false}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -1231,7 +1229,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 1
-  Position: {x: 822.1739, y: -349.26096}
+  Position: {x: 888.3501, y: 68.49994}
   OnEnterShowViews:
   - Id:
       Category: IFYOU
@@ -1560,7 +1558,7 @@ MonoBehaviour:
   - Id:
       Category: IFYOU
       Name: Notice
-      Custom: 0
+      Custom: 1
     Mode: 0
   OnExitShowViews: []
   OnExitHideViews: []
@@ -1633,8 +1631,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02761efe598a45c98fa1baf4d446c6a7, type: 3}
   m_Name: RabiFlow
   m_EditorClassIdentifier: 
-  EditorPosition: {x: -631, y: 831, z: 0}
-  EditorScale: {x: 1, y: 1, z: 1}
+  EditorPosition: {x: 220, y: 260, z: 0}
+  EditorScale: {x: 0.2842624, y: 0.2842624, z: 1}
   Id: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
   GraphName: RabiFlow
   GraphDescription: 
@@ -2429,7 +2427,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: 2320, y: -343.00003}
+  Position: {x: 1929, y: -452}
 --- !u!114 &7066925349952838486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2620,7 +2618,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 1
-  Position: {x: 2647, y: 1183}
+  Position: {x: 2647.0007, y: 1182.4286}
   OnEnterShowViews:
   - Id:
       Category: Game

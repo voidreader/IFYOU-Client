@@ -640,6 +640,7 @@ namespace PIERStory
                 }
 
                 // 튜토리얼 1단계를 완료 했으며, 이제 곧 실행될 것이 선택지 관련인 경우 튜토리얼 실행
+                /*
                 if(((UserManager.main.tutorialStep == 1 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 2 && !UserManager.main.tutorialClear)) &&
                     currentRow.template.Contains(GameConst.TEMPLATE_SELECTION))
                 {
@@ -653,6 +654,7 @@ namespace PIERStory
                     yield return new WaitUntil(() => PopupManager.main.ListShowingPopup.Count < 1 && (UserManager.main.tutorialStep == 2 && UserManager.main.tutorialClear));
                     ViewGame.main.commonTop.Hide();
                 }
+                */
 
 
                 // 현재 '행'의 동작을 수행합니다. 
@@ -2129,8 +2131,10 @@ namespace PIERStory
             yield return null;
             
             // * 첫 클리어 보상 
+            // * 라비소프트 첫클리어 보상 없음 
             #region 첫 클리어 보상 
             
+            /*
             if(hasFirstClearReward) {
                 // 최초 보상 있으면 팝업 호출
                 Debug.Log(">> First Reward exists : " + JsonMapper.ToStringUnicode(UserManager.main.GetNodeFirstClearResult()));
@@ -2146,6 +2150,7 @@ namespace PIERStory
                 
                 yield return new WaitForSeconds(0.1f);
             }
+            */
             
             #endregion
             

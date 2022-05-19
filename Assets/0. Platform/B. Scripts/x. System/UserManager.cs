@@ -198,7 +198,7 @@ namespace PIERStory
         const string NODE_NEXT_EPISODE = "nextEpisodeID"; // 다음 에피소드 정보 
         
         
-        const string NODE_COLLECTION_PROGRESS = "progress"; // 유저 작품 수집요소 Progress 
+        
         const string NODE_PROJECT_CURRENT = "projectCurrent"; // 유저의 작품에서의 플레이 위치 
         const string NODE_SELECTION_PROGRESS = "selectionProgress"; // 선택지 프로그레스 
         
@@ -1572,18 +1572,7 @@ namespace PIERStory
         }
 
 
-        /// <summary>
-        /// 유저 작품별 컬렉션 진행도 
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetNodeUserCollectionProgress()
-        {
-            if (currentStoryJson == null || !currentStoryJson.ContainsKey(NODE_COLLECTION_PROGRESS))
-                return null;
 
-            return currentStoryJson[NODE_COLLECTION_PROGRESS];
-        }
-        
         
         /// <summary>
         /// 플레이 위치 노드 저장 

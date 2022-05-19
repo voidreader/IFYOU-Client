@@ -5,6 +5,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_ANDROID
+using Unity.Notifications.Android;
+#elif UNITY_IOS
+using Unity.Notifications.iOS;
+#endif
+
 using LitJson;
 using BestHTTP;
 using Doozy.Runtime.Signals;
@@ -160,14 +166,12 @@ namespace PIERStory
         // getUserSelectedStory를 통해 받아온 작품 관련 정보 
 
         
-
         public const string UN_UNREAD_MAIL_COUNT = "unreadMailCount"; // 미수신 메일 개수
         public const string UN_UNREAD_MAIL_LIST = "mailList"; // 미수신 메일 리스트
 
         const string NODE_TUTORIAL_STEP = "tutorial_step";
         const string NODE_TUTORIAL_CLEAR = "tutorial_clear";
         const string NODE_TUTORIAL_CURRENT = "tutorial_current";
-
         
         
         public const string NODE_BUBBLE_SET = "bubbleSet"; // 말풍선 세트 정보 
@@ -206,9 +210,10 @@ namespace PIERStory
         const string NODE_SELECTION_PURCHASE = "selectionPurchase";
         const string NODE_SELECTION_HINT_PURCHASE = "selectionHintPurchase";
 
-
         public const string NODE_USER_ABILITY = "ability"; // 포장된 유저 능력치
         public const string NODE_RAW_STORY_ABILITY = "rawStoryAbility"; // 스토리 누적 능력치 RAW 데이터 
+
+        const string PUSH_CHANNEL_ID = "EpisodeOpenWaiting";
 
         #endregion
 
@@ -227,6 +232,38 @@ namespace PIERStory
             ListGemIndicators.Clear();
             ListNicknameIndicators.Clear();
         }
+
+        /*
+        private void OnApplicationPause(bool pause)
+        {
+            if (Application.isEditor)
+                return;
+
+
+            // 채널 생성
+            AndroidNotificationChannel notificationChannel = new AndroidNotificationChannel(
+                "notification_channel1",
+                "notification_title",
+                "This is a notification",
+                Importance.High);
+
+
+            // 채널 등록
+            AndroidNotificationCenter.RegisterNotificationChannel(notificationChannel);
+
+            DateTime toNotify = DateTime.Now.AddMinutes(1);
+
+            // 푸쉬 알림 설정
+            AndroidNotification notification = new AndroidNotification(
+                "이프유앱 알림",
+                "앱을 멈춘지 1분이 지났습니다",
+                toNotify);
+
+            // 푸쉬 예약
+            AndroidNotificationCenter.SendNotification(notification, "notification_channel1");
+            AndroidNotificationCenter.SendNotificationWithExplicitID(notification, "notification_channel1", 1);
+        }
+        */
 
         /// <summary>
         /// 유저 정보 초기화 
@@ -1175,6 +1212,45 @@ namespace PIERStory
 
             return __requirePrice <= coin;
         }
+
+
+        public void RegisterLocalPush(string __projectId)
+        {
+            if (Application.isEditor)
+                return;
+
+            int projectId = 0;
+
+            if(string.IsNullOrEmpty(__projectId) || !int.TryParse(__projectId, out projectId))
+            {
+                Debug.LogError("작품 ID가 없거나 잘못되었습니다.");
+                return;
+            }    
+
+            // 채널 생성
+            AndroidNotificationChannel notificationChannel = new AndroidNotificationChannel(
+                PUSH_CHANNEL_ID,
+                "EpisodeOpen_Notification",
+                "Episode open notification push alert",
+                Importance.High);
+
+
+            // 채널 등록
+            AndroidNotificationCenter.RegisterNotificationChannel(notificationChannel);
+
+            DateTime toNotify = DateTime.Now.AddMinutes(1);
+
+            // 푸쉬 알림 설정
+            AndroidNotification notification = new AndroidNotification(
+                SystemManager.GetLocalizedText("5001"),
+                "앱을 멈춘지 1분이 지났습니다",
+                toNotify);
+
+            // 푸쉬 예약
+            AndroidNotificationCenter.SendNotificationWithExplicitID(notification, PUSH_CHANNEL_ID, 1);
+        }
+
+
 
         #endregion
 

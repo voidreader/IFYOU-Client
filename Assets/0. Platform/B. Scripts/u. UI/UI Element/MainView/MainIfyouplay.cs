@@ -1,5 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Collections;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,15 +18,18 @@ namespace PIERStory
 
         //[Header("프로모션 파트")][Space(15)]
 
-        [Header("출석 관련 파트")]
+        [Space(15)][Header("출석 관련 파트")]
+        public GameObject continuousTag;
         public TextMeshProUGUI continuousAttendanceDate;
+        public Button attendanceChargeButton;
+        public TextMeshProUGUI continuousAttendanceDate2;
         public TextMeshProUGUI attendacneEventDeadline;
-        public Image continuousAttendanceGauge;
-        public RectTransform chargeAttendanceButton;
 
         [Tooltip("연속 출석")]
         public IFYOURewardElement[] continuousRewards = new IFYOURewardElement[4];
-        public Image[] progressDots;
+        public List<Image> progressDots;
+        public GameObject disableContinuousBox;
+        public List<IFYOURewardElement> obtainableRewards;
         [Tooltip("매일 출석")]
         public IFYOURewardElement[] dailyAttendanceRewards = new IFYOURewardElement[7];
         JsonData attendanceData = null;
@@ -51,7 +55,7 @@ namespace PIERStory
             attendanceData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_ATTENDANCE_MISSION);
 
             // 출석 관련 세팅
-            //InitContinuousAttendance();
+            InitContinuousAttendance();
             InitDailyAttendance();
 
             dailyMissionData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_DAILY_MISSION);
@@ -72,6 +76,7 @@ namespace PIERStory
         void InitContinuousAttendance()
         {
             continuousAttendanceDate.text = string.Format(SystemManager.GetLocalizedText("5205"), SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day"));
+            continuousAttendanceDate2.text = continuousAttendanceDate.text;
             attendacneEventDeadline.text = string.Format(SystemManager.GetLocalizedText("5206"), SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "remain_day"));
 
             JsonData continuousData = SystemManager.GetJsonNode(attendanceData, LobbyConst.NODE_CONTINUOUS_ATTENDANCE);
@@ -85,7 +90,7 @@ namespace PIERStory
             for (int i = 0; i < continuousRewards.Length; i++)
                 continuousRewards[i].InitContinuousAttendanceReward(continuousData[i]);
 
-            for (int i = 1; i <= progressDots.Length; i++)
+            for (int i = 1; i <= progressDots.Count; i++)
             {
                 if (i == 3 || i == 7 || i == 10 || i == 14)
                     continue;
@@ -101,10 +106,6 @@ namespace PIERStory
                         progressDots[i - 1].color = HexCodeChanger.HexToColor("E1E1E1");
                 }
             }
-
-            continuousAttendanceGauge.fillAmount = SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day") / 14;
-            chargeAttendanceButton.gameObject.SetActive(!SystemManager.GetJsonNodeBool(attendanceData[LobbyConst.NODE_USER_INFO][0], "is_attendance"));
-            chargeAttendanceButton.anchoredPosition = new Vector2(600 * (SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day") + SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day")) / 14, 35f);
         }
 
 

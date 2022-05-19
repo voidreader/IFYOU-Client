@@ -32,6 +32,7 @@ namespace PIERStory {
         [Header("이프유플레이")]
         public Sprite spriteCircleBase;
         public Sprite spriteCircleOpen;
+        public Sprite spriteCircleLimit;                // 출석 보충해야 받을 수 있는 상태
         public Sprite spriteSquareBase;
         public Sprite spriteSquareOpen;
 

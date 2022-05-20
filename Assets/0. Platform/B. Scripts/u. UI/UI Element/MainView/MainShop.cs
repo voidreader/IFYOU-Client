@@ -257,7 +257,7 @@ namespace PIERStory {
              }
              catch {
                  
-                 NetworkLoader.main.ReportRequestError("InitPackContainer #1", "InitPackContainer #1");
+                 // NetworkLoader.main.ReportRequestError("InitPackContainer #1", "InitPackContainer #1");
                  return;
              }
              

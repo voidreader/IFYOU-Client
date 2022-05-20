@@ -26,10 +26,6 @@ namespace PIERStory
         public GameObject disableBox;           // 비활성화 상태 표시
         public TextMeshProUGUI rewardDayText;   // 연속 출석 보상일
 
-        private void Start()
-        {
-            rewardCurrency = rewardIcon.GetComponent<ImageRequireDownload>();
-        }
 
         /// <summary>
         /// 연속 출석 보상 세팅
@@ -195,6 +191,8 @@ namespace PIERStory
 
             rewardHalo.SetNativeSize();
             rewardMask.SetNativeSize();
+
+            rewardCurrency = rewardIcon.GetComponent<ImageRequireDownload>();
         }    
 
 

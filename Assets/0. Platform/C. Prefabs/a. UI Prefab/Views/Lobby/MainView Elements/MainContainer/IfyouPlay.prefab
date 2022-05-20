@@ -275,7 +275,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6154932688906800372}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5067633297606010283}
+        m_TargetAssemblyTypeName: PIERStory.MainIfyouplay, Assembly-CSharp
+        m_MethodName: OnClickChargeContinuousAttendance
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1111067727364901105
 GameObject:
   m_ObjectHideFlags: 0
@@ -2505,6 +2517,8 @@ MonoBehaviour:
   - {fileID: 3741425771176819934}
   - {fileID: 3741425770820578068}
   - {fileID: 3741425769171119517}
+  spriteDotLimit: {fileID: 21300000, guid: 4acca781d8bdd4641b217f5dd302df64, type: 3}
+  spriteDotLimitWhite: {fileID: 21300000, guid: 6f101f40ae1d9d64f8e2e1f061ba0c04, type: 3}
   timerText: {fileID: 5876985844358520361}
   dailyMissionGauge: {fileID: 5876985843660946076}
   dailyMissionReward: {fileID: 3741425770494422184}

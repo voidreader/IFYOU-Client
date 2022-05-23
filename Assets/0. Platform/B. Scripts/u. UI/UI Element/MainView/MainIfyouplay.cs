@@ -1,5 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Collections;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,18 +18,28 @@ namespace PIERStory
 
         //[Header("프로모션 파트")][Space(15)]
 
-        [Header("출석 관련 파트")]
+        [Space(15)][Header("출석 관련 파트")]
+        public GameObject continuousTag;
         public TextMeshProUGUI continuousAttendanceDate;
+        public Button attendanceChargeButton;
+        public TextMeshProUGUI continuousAttendanceDate2;
         public TextMeshProUGUI attendacneEventDeadline;
-        public Image continuousAttendanceGauge;
-        public RectTransform chargeAttendanceButton;
 
         [Tooltip("연속 출석")]
         public IFYOURewardElement[] continuousRewards = new IFYOURewardElement[4];
-        public Image[] progressDots;
+        public List<Image> progressDots;
+        public GameObject disableContinuousBox;
+        public List<IFYOURewardElement> obtainableRewards;
+        int attendanceDay = 0;
+        int chargingDay = 0;
+        int remainDay = 0;
+        bool isAttendance = false;
         [Tooltip("매일 출석")]
         public IFYOURewardElement[] dailyAttendanceRewards = new IFYOURewardElement[7];
         JsonData attendanceData = null;
+
+        public Sprite spriteDotLimit;
+        public Sprite spriteDotLimitWhite;
 
 
         [Space(15)][Header("Daily Mission")]
@@ -51,7 +62,7 @@ namespace PIERStory
             attendanceData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_ATTENDANCE_MISSION);
 
             // 출석 관련 세팅
-            //InitContinuousAttendance();
+            InitContinuousAttendance();
             InitDailyAttendance();
 
             dailyMissionData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_DAILY_MISSION);
@@ -72,6 +83,7 @@ namespace PIERStory
         void InitContinuousAttendance()
         {
             continuousAttendanceDate.text = string.Format(SystemManager.GetLocalizedText("5205"), SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day"));
+            continuousAttendanceDate2.text = continuousAttendanceDate.text;
             attendacneEventDeadline.text = string.Format(SystemManager.GetLocalizedText("5206"), SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "remain_day"));
 
             JsonData continuousData = SystemManager.GetJsonNode(attendanceData, LobbyConst.NODE_CONTINUOUS_ATTENDANCE);
@@ -83,28 +95,93 @@ namespace PIERStory
             }
 
             for (int i = 0; i < continuousRewards.Length; i++)
-                continuousRewards[i].InitContinuousAttendanceReward(continuousData[i]);
-
-            for (int i = 1; i <= progressDots.Length; i++)
             {
-                if (i == 3 || i == 7 || i == 10 || i == 14)
-                    continue;
+                continuousRewards[i].InitContinuousAttendanceReward(continuousData[i]);
+                obtainableRewards[i].InitContinuousAttendanceReward(continuousData[i]);
+            }
+
+            attendanceDay = SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day");
+            chargingDay = UserManager.main.TodayAttendanceCheck() ? SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") : SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") - 1;
+            remainDay = SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "remain_day");
+            isAttendance = SystemManager.GetJsonNodeBool(attendanceData[LobbyConst.NODE_USER_INFO][0], "is_attendance");
+
+            // 보충 관련 초기화
+            foreach (Image img in progressDots)
+                img.transform.GetChild(0).gameObject.SetActive(false);
 
 
-                if (i <= SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day"))
+            for (int i = 1; i <= progressDots.Count; i++)
+            {
+                // 연속 출석으로 채운 날은 진분홍(자주색)
+                if (i <= attendanceDay)
                     progressDots[i - 1].color = HexCodeChanger.HexToColor("FF0080");
                 else
                 {
-                    if(SystemManager.GetJsonNodeBool(attendanceData[LobbyConst.NODE_USER_INFO][0], "is_attendance"))
-                        progressDots[i - 1].color = HexCodeChanger.HexToColor("FFAFD7");
+                    // 연속출석 중인가?
+                    if(isAttendance)
+                    {
+                        // 앞으로 도달할 수 있는 만큼은 하얀색
+                        progressDots[i - 1].color = HexCodeChanger.HexToColor("FFFFFF");
+
+                        // 출석 보충할거 딱히 없으면 슈루루루룩
+                        if (chargingDay <= 0)
+                            continue;
+
+                        // 출석일 + 충전해야하는 갯수가 i 보다 클때는 무조건 스트록 표기
+                        if (i <= attendanceDay + chargingDay)
+                        {
+                            // progressDots 오브젝트에는 자식 오브젝트가 1개 있는데, 해당 오브젝트를 활성화해주고, 시즌의 남은 기간 동안 연속출석으로 받을 수 있는지 없는지를 체크해서 해당 오브젝트의 sprite를 변경해준다
+                            progressDots[i - 1].transform.GetChild(0).gameObject.SetActive(true);
+                            progressDots[i - 1].transform.GetChild(0).GetComponent<Image>().sprite = i <= attendanceDay + remainDay ? spriteDotLimitWhite : spriteDotLimit;
+                            
+                            // 연속출석일은 3, 7, 10, 14일이므로 남은 기간동안 연속출석 보상을 받을수 있는지 없는지 체크해서 해당 오브젝트의 sprite를 변경해준다
+                            if (i == 3)
+                                continuousRewards[0].rewardMask.sprite = i <= attendanceDay + remainDay ? LobbyManager.main.spriteCircleLimitWhite : LobbyManager.main.spriteCircleLimit;
+                            else if (i == 7)
+                                continuousRewards[1].rewardMask.sprite = i <= attendanceDay + remainDay ? LobbyManager.main.spriteCircleLimitWhite : LobbyManager.main.spriteCircleLimit;
+                            else if (i == 10)
+                                continuousRewards[2].rewardMask.sprite = i <= attendanceDay + remainDay ? LobbyManager.main.spriteCircleLimitWhite : LobbyManager.main.spriteCircleLimit;
+                            else if (i == 14)
+                                continuousRewards[3].rewardMask.sprite = i <= attendanceDay + remainDay ? LobbyManager.main.spriteCircleLimitWhite : LobbyManager.main.spriteCircleLimit;
+                        }
+
+                        // 충전하지 않으면 아예 도달하지 못하는 곳은 비활성화쳐럼 보이게
+                        if (i > attendanceDay + remainDay)
+                        {
+                            progressDots[i - 1].color = HexCodeChanger.HexToColor("E1E1E1");
+
+                            if (i == 3)
+                                continuousRewards[0].disableBox.SetActive(true);
+                            else if (i == 7)
+                                continuousRewards[1].disableBox.SetActive(true);
+                            else if (i == 10)
+                                continuousRewards[2].disableBox.SetActive(true);
+                            else if (i == 14)
+                                continuousRewards[3].disableBox.SetActive(true);
+
+                        }
+                    }
                     else
                         progressDots[i - 1].color = HexCodeChanger.HexToColor("E1E1E1");
                 }
             }
 
-            continuousAttendanceGauge.fillAmount = SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day") / 14;
-            chargeAttendanceButton.gameObject.SetActive(!SystemManager.GetJsonNodeBool(attendanceData[LobbyConst.NODE_USER_INFO][0], "is_attendance"));
-            chargeAttendanceButton.anchoredPosition = new Vector2(600 * (SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day") + SystemManager.GetJsonNodeFloat(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day")) / 14, 35f);
+            // 연속 출석이 끊어졌으면 무조건 비활성화 overlay를 씌운다
+            disableContinuousBox.SetActive(!isAttendance);
+            continuousTag.SetActive(!disableContinuousBox.activeSelf && chargingDay < 1);
+
+            if(disableContinuousBox.activeSelf)
+            {
+                // 연속출석 끊겼는데 안 받은 보상이 있는 경우
+                obtainableRewards[0].gameObject.SetActive(obtainableRewards[0].rewardHalo.gameObject.activeSelf);
+                obtainableRewards[1].gameObject.SetActive(obtainableRewards[1].rewardHalo.gameObject.activeSelf);
+                obtainableRewards[2].gameObject.SetActive(obtainableRewards[2].rewardHalo.gameObject.activeSelf);
+                obtainableRewards[3].gameObject.SetActive(obtainableRewards[3].rewardHalo.gameObject.activeSelf);
+            }
+
+            // 출석 충전할 일이 있으면 무조건 출석충전 버튼을 띄운다
+            attendanceChargeButton.gameObject.SetActive(chargingDay > 0);
+            continuousAttendanceDate2.gameObject.SetActive(attendanceChargeButton.gameObject.activeSelf && isAttendance);
         }
 
 
@@ -128,15 +205,15 @@ namespace PIERStory
         public void OnClickChargeContinuousAttendance()
         {
             // 코인 부족한거 먼저 체크
-            if(!UserManager.main.CheckCoinProperty(SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") * 100))
+            if(!UserManager.main.CheckCoinProperty(chargingDay * 100))
             {
-                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteCoin, (SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") * 100) - UserManager.main.coin);
+                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteCoin, (chargingDay * 100) - UserManager.main.coin);
                 return;
             }
 
 
-            SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6307"), SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") * 100)
-                                            , SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") * 100
+            SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6307"), chargingDay * 100)
+                                            , chargingDay * 100
                                             , SystemManager.main.GetCurrencyImageURL(LobbyConst.COIN)
                                             , SystemManager.main.GetCurrencyImageKey(LobbyConst.COIN)
                                             , ChargeAttendance

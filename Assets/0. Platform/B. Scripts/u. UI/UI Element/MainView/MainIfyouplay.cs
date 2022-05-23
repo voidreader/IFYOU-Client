@@ -253,6 +253,13 @@ namespace PIERStory
             UserManager.main.SetBankInfo(result);
             UserManager.main.SetNotificationInfo(result);
 
+            // 데이터를 갱신해주기 전에 팝업 띄워주기
+            SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("6314"), chargingDay));
+
+            // 연속출석이 끊긴 상태에서 오늘치 일일출석을 하지 않았을 때 뜨는 팝업
+            if (!isAttendance && !UserManager.main.TodayAttendanceCheck())
+                SystemManager.ShowSimpleAlertLocalize("6177", false);
+
             // 출석 관련 정보도 갱신해주고
             UserManager.main.RefreshIfyouplayJsonData(result);
 

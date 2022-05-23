@@ -130,9 +130,11 @@ namespace PIERStory
                         // 출석일 + 충전해야하는 갯수가 i 보다 클때는 무조건 스트록 표기
                         if (i <= attendanceDay + chargingDay)
                         {
+                            // progressDots 오브젝트에는 자식 오브젝트가 1개 있는데, 해당 오브젝트를 활성화해주고, 시즌의 남은 기간 동안 연속출석으로 받을 수 있는지 없는지를 체크해서 해당 오브젝트의 sprite를 변경해준다
                             progressDots[i - 1].transform.GetChild(0).gameObject.SetActive(true);
                             progressDots[i - 1].transform.GetChild(0).GetComponent<Image>().sprite = i <= attendanceDay + remainDay ? spriteDotLimitWhite : spriteDotLimit;
-
+                            
+                            // 연속출석일은 3, 7, 10, 14일이므로 남은 기간동안 연속출석 보상을 받을수 있는지 없는지 체크해서 해당 오브젝트의 sprite를 변경해준다
                             if (i == 3)
                                 continuousRewards[0].rewardMask.sprite = i <= attendanceDay + remainDay ? LobbyManager.main.spriteCircleLimitWhite : LobbyManager.main.spriteCircleLimit;
                             else if (i == 7)

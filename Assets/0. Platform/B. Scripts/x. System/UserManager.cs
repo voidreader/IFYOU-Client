@@ -429,7 +429,15 @@ namespace PIERStory
             isIntroDone = SystemManager.GetJsonNodeBool(userJson, "intro_done");
             
             // 올패스 만료 일시에 대한  처리 2022.05.23
-            allpassExpireTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(userJson, "allpass_expire_tick"));
+            SetAllpassExpire(SystemManager.GetJsonNodeLong(userJson, "allpass_expire_tick"));
+        }
+        
+        /// <summary>
+        /// 올 패스 만료시간 세팅 
+        /// </summary>
+        /// <param name="__expireTick"></param>
+        public void SetAllpassExpire(long __expireTick) {
+            allpassExpireTick = SystemConst.ConvertServerTimeTick(__expireTick);
             allpassExpireDate = new DateTime(allpassExpireTick);
         }
         

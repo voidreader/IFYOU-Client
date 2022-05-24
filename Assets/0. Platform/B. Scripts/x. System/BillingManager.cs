@@ -240,10 +240,16 @@ namespace PIERStory {
             // 히스토리 갱신 
             if(result.ContainsKey("userPurchaseHistory"))
                 userPurchaseHistoryJSON = result["userPurchaseHistory"];
+                
+            // * 2022.05.24 allpass_expire_tick 올패스 만료시간 갱신 
+            if(result.ContainsKey("allpass_expire_tick")) {
+                UserManager.main.SetAllpassExpire(SystemManager.GetJsonNodeLong(result, "allpass_expire_tick"));
+            }
 
-            // Shop 리프레시
+            // Shop 리프레시 탭 3개와 상단...
             MainShop.OnRefreshNormalShop?.Invoke();
             MainShop.OnRefreshPackageShop?.Invoke();
+            MainShop.OnRefreshEventShop?.Invoke();
             MainShop.OnRefreshTopShop?.Invoke();
 
             // 모든 활성 팝업 제거

@@ -46,6 +46,7 @@ namespace PIERStory {
         [Space]
         [SerializeField] UIToggle packageToggle;
         [SerializeField] UIToggle normalToggle;
+        [SerializeField] UIToggle eventToggle;
 
 
         public void DelayEnterFromMain()
@@ -98,39 +99,7 @@ namespace PIERStory {
             // packageToggle.SetIsOn(true, true);
         }
 
-        /*
-        public void DelayInitShop() {
-            StartCoroutine(RoutineInitShop());
-        }
-        
-        IEnumerator RoutineInitShop() {
-            
-            Debug.Log("## RoutineInitShop ##");
-            
-            yield return new WaitForSeconds(0.1f);
-            InitShopTop();
-            yield return new WaitForSeconds(0.2f);
-            InitPackContainer();
-        }
-        
-        /// <summary>
-        /// 상점 상단 초기화 
-        /// </summary>
-        public void InitShopTop() {
-            
-            Debug.Log("### InitShopTop() ###");
-            
 
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
-
-            // packageToggle.SetIsOn(true);
-            // InitPackContainer();
-        }
-        */
 
         /// <summary>
         /// 메인 로비로부터 진입할 때 상단 제어
@@ -190,6 +159,10 @@ namespace PIERStory {
         public void InitNormalContainer()
         {
             Debug.Log(">> InitNormalContainer");
+            
+            if(!normalToggle.isOn)
+                return;
+            
             
             try {
             
@@ -254,7 +227,10 @@ namespace PIERStory {
         /// 패키지 컨테이너 초기화 
         /// </summary>
          public void InitPackContainer() {
-             
+
+            if(!packageToggle.isOn)
+                return;
+                         
              Debug.Log("## InitPackContainer");
              
              try {
@@ -407,6 +383,10 @@ namespace PIERStory {
         /// 이벤트 컨테이너 
         /// </summary>
         public void InitEventContainer() {
+            
+            if(!eventToggle.isOn)
+                return;
+            
             try {
                 if(!this.gameObject.activeSelf)
                     return;

@@ -101,7 +101,7 @@ namespace PIERStory
             }
 
             attendanceDay = SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day");
-            chargingDay = UserManager.main.TodayAttendanceCheck() ? SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") : SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") - 1;
+            chargingDay = UserManager.main.TodayAttendanceCheck() || !isAttendance? SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") : SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") - 1;
             remainDay = SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "remain_day");
             isAttendance = SystemManager.GetJsonNodeBool(attendanceData[LobbyConst.NODE_USER_INFO][0], "is_attendance");
 
@@ -124,7 +124,7 @@ namespace PIERStory
                         progressDots[i - 1].color = HexCodeChanger.HexToColor("FFFFFF");
 
                         // 출석 보충할거 딱히 없으면 슈루루루룩
-                        if (chargingDay <= 0)
+                        if (chargingDay <= 0 || attendanceDay == 0)
                             continue;
 
                         // 출석일 + 충전해야하는 갯수가 i 보다 클때는 무조건 스트록 표기
@@ -158,7 +158,6 @@ namespace PIERStory
                                 continuousRewards[2].disableBox.SetActive(true);
                             else if (i == 14)
                                 continuousRewards[3].disableBox.SetActive(true);
-
                         }
                     }
                     else
@@ -167,8 +166,9 @@ namespace PIERStory
             }
 
             // 연속 출석이 끊어졌으면 무조건 비활성화 overlay를 씌운다
+            // 22.05.24 시즌 중간에 들어온 0일차 복귀 또는 신규 유저는 일일 출석으로 attendanceDay를 1로 올리기 전까지는 연속출석으로 보이게 한다
             disableContinuousBox.SetActive(!isAttendance);
-            continuousTag.SetActive(!disableContinuousBox.activeSelf && chargingDay < 1);
+            continuousTag.SetActive((!disableContinuousBox.activeSelf && chargingDay < 1) || (isAttendance && attendanceDay == 0));
 
             if(disableContinuousBox.activeSelf)
             {
@@ -180,7 +180,7 @@ namespace PIERStory
             }
 
             // 출석 충전할 일이 있으면 무조건 출석충전 버튼을 띄운다
-            attendanceChargeButton.gameObject.SetActive(chargingDay > 0);
+            attendanceChargeButton.gameObject.SetActive(chargingDay > 0 && !continuousTag.activeSelf);
             continuousAttendanceDate2.gameObject.SetActive(attendanceChargeButton.gameObject.activeSelf && isAttendance);
         }
 
@@ -212,7 +212,7 @@ namespace PIERStory
             }
 
 
-            SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6307"), chargingDay * 100)
+            SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6307"), chargingDay)
                                             , chargingDay * 100
                                             , SystemManager.main.GetCurrencyImageURL(LobbyConst.COIN)
                                             , SystemManager.main.GetCurrencyImageKey(LobbyConst.COIN)
@@ -244,6 +244,7 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackChargeAttendanceMission");
+                ScreenSetComplete = true;
                 return;
             }
 

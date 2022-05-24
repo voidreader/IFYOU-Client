@@ -1352,8 +1352,21 @@ namespace PIERStory
 
             // 타임딜 갱신 
             UserManager.main.RequestUserActiveTimeDeal();
+
+            StartCoroutine(RefreshScreenView());
         }      
         
+
+        /// <summary>
+        /// 화면 갱신
+        /// </summary>
+        IEnumerator RefreshScreenView()
+        {
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+
+            MainProfile.OnRefreshIFYOUAchievement?.Invoke();
+            MainIfyouplay.OnRefreshIfyouplay?.Invoke();
+        }
         
         public void Logout()
         {

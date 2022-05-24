@@ -1498,6 +1498,25 @@ namespace PIERStory
             
         }
         
+        public static long GetJsonNodeLong(JsonData __node, string __col) {
+            if (__node == null || !__node.ContainsKey(__col))
+                return 0;
+
+
+            if (__node[__col] == null)
+                return 0;
+            
+            try {    
+                return long.Parse(GetJsonNodeString(__node, __col));
+            }
+            catch (System.Exception e) {
+                return 0;
+            }
+
+            
+        }
+        
+        
         /// <summary>
         /// 
         /// </summary>

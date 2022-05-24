@@ -95,10 +95,8 @@ namespace PIERStory {
                 return;
             
             // 튜토리얼 3 호출
-            if ((UserManager.main.tutorialStep == 2 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 3 && !UserManager.main.tutorialClear))
+            if ((UserManager.main.tutorialStep <= 2 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 3 && !UserManager.main.tutorialClear))
                 UserManager.main.UpdateTutorialStep(3, 0, CallbackStartTutorial);            
-            
-            
             
         }
         

@@ -266,11 +266,17 @@ namespace PIERStory {
             
             if(__productID == "pre_reward_pack") {
                 SystemManager.ShowSystemPopupLocalize("6300", null, null, true, false); // 사전예약보상
-            }
-            else {
-                SystemManager.ShowSystemPopupLocalize("6113", null, null, true, false);  // 일반구매 
+                yield break;
             }
             
+            
+            if(__productID.Contains("allpass_")) {
+                SystemManager.ShowSystemPopupLocalize("6435", null, null, true, false); // 올패스 구매 완료
+                yield break;
+            }
+            
+            
+            SystemManager.ShowSystemPopupLocalize("6113", null, null, true, false);  // 일반구매 
             
         }
         
@@ -366,11 +372,11 @@ namespace PIERStory {
         
         
         /// <summary>
-        /// 전달받은 ID로 구매 내역이 있는지 체크
+        /// 전달받은 ID로 구매 내역이 있는지 체크 (2022.05.24 사용하지 않음 )
         /// </summary>
         /// <param name="__productMasterID"></param>
         /// <returns></returns>
-        public bool CheckProductPurchaseHistory(string __product_id) {
+        bool CheckProductPurchaseHistory(string __product_id) {
             
             Debug.Log(">> CheckProductPurchaseHistory : " + __product_id);
             
@@ -388,6 +394,29 @@ namespace PIERStory {
             
             return false;
         }
+        
+        
+        /// <summary>
+        /// 마스터ID에 해당하는 상품의 구매 횟수 가져오기 
+        /// </summary>
+        /// <param name="__masterID"></param>
+        /// <returns></returns>
+        public int CheckProductPurchaseCount(string __masterID) {
+            
+            int purchaseCount = 0; // 구매 카운트 
+            
+            if(userPurchaseHistoryJSON == null)
+                return 0;
+            
+            for(int i=0; i<userPurchaseHistoryJSON.Count;i++) {
+                if(SystemManager.GetJsonNodeString(userPurchaseHistoryJSON[i], "product_master_id") == __masterID)
+                    purchaseCount++;
+                    
+            }
+            
+            return purchaseCount;
+        }
+        
         
         /// <summary>
         /// 구매 횟수

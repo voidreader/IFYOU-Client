@@ -25,7 +25,7 @@ namespace PIERStory
         [HideInInspector] public JsonData userJson = null; // 계정정보 (table_account) 
         [HideInInspector] public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)
         [HideInInspector] public JsonData notReceivedMailJson = null;     // 미수신 메일
-        [HideInInspector] public JsonData userProfile = null;               // 유저 프로필 정보
+        
 
         [HideInInspector] public JsonData userIfyouPlayJson = null;         // 이프유플레이 json data
         [HideInInspector] public JsonData userActiveTimeDeal = null; // 유저 활성화 타임딜 목록 
@@ -109,8 +109,7 @@ namespace PIERStory
         
         public int adCharge = 0;
         
-        public int level = 0; // 레벨 
-        public int exp = 0; // 경험치 
+
         public string nickname = string.Empty;      // 유저 닉네임
         public string accountLink = string.Empty; // 유저 계정 연동 정보 (table_account)
         
@@ -119,6 +118,11 @@ namespace PIERStory
         public int unreadMailCount = 0; // 미수신 메일 카운트
 
         public TimeSpan dailyMissionTimer;
+        
+        public long allpassExpireTick = 0; // 올패스 만료일시 tick
+        public DateTime allpassExpireDate; // 올패스 만료일시
+        TimeSpan allpassTimeDiff;
+        
 
         #region 유저 등급 관련 변수
 
@@ -416,19 +420,17 @@ namespace PIERStory
             
             SetNewNickname(SystemManager.GetJsonNodeString(userJson, "nickname"));
             
-            // 레벨 정보
-            SetLevelInfo();
-            
-            // 프로필 정보 
-            if(__accountInfo.ContainsKey("profile")) { // 프로필 정보가 있을때만. 
-                userProfile = __accountInfo["profile"];
-            }
+           
             
             // 슈퍼유저 처리 
             isAdminUser = SystemManager.GetJsonNodeBool(userJson, "admin");
             
             // 인트로 완료 여부
             isIntroDone = SystemManager.GetJsonNodeBool(userJson, "intro_done");
+            
+            // 올패스 만료 일시에 대한  처리 2022.05.23
+            allpassExpireTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(userJson, "allpass_expire_tick"));
+            allpassExpireDate = new DateTime(allpassExpireTick);
         }
         
         public void SetNewNickname(string __newNickname) {
@@ -1025,23 +1027,7 @@ namespace PIERStory
             }
         }
         
-        
-        /// <summary>
-        /// 레벨 정보 세팅 
-        /// </summary>
-        /// <param name="__j"></param>
-        public void SetLevelInfo() {
-            if(!userJson.ContainsKey(CommonConst.NODE_LEVEL)) {
-                Debug.LogError("No level Node");
-                return;
-            }
-            
-            
-            // 레벨과 경험치             
-            level = SystemManager.GetJsonNodeInt(userJson, CommonConst.NODE_LEVEL);
-            exp = SystemManager.GetJsonNodeInt(userJson, CommonConst.NODE_EXP);
-            
-        }
+
         
 
         /// <summary>
@@ -1246,6 +1232,15 @@ namespace PIERStory
         /// <returns></returns>
         public bool HasProjectFreepass()
         {
+            
+            // 올패스 사용여부를 먼저 체크한다 (2022.05.23)
+            allpassTimeDiff = allpassExpireDate - System.DateTime.UtcNow;
+            if(allpassTimeDiff.Ticks > 0) {
+                return true;
+            }
+            
+            
+            // 기존 프리미엄 패스 보유 체크 
             if (SystemManager.GetJsonNodeBool(bankJson, "Free" + StoryManager.main.CurrentProjectID))
                 return true;
             else
@@ -1253,12 +1248,53 @@ namespace PIERStory
         }
         
         public bool HasProjectFreepass(string __targetProjectID) {
+            // 올패스 사용여부를 먼저 체크한다 (2022.05.23)
+            allpassTimeDiff = allpassExpireDate - System.DateTime.UtcNow;
+            if(allpassTimeDiff.Ticks > 0) {
+                return true;
+            }
+            
+            
+            // 기존 프리미엄 패스 보유 체크             
             if (SystemManager.GetJsonNodeBool(bankJson, "Free" + __targetProjectID))
                 return true;
             else
                 return false;   
         }
 
+        /// <summary>
+        /// 타겟 프로젝트의 프리미엄 패스 보유 여부 
+        /// </summary>
+        /// <param name="__targetProjectID"></param>
+        /// <returns></returns>        
+        public bool HasProjectPremiumPassOnly(string __targetProjectID) {
+            if (SystemManager.GetJsonNodeBool(bankJson, "Free" + __targetProjectID))
+                return true;
+            else
+                return false;   
+        }
+
+
+        /// <summary>
+        /// 올패스 유효시간 차 주세요 
+        /// </summary>
+        /// <returns></returns>
+        public string GetAllPassTimeDiff() {
+            allpassTimeDiff = allpassExpireDate - System.DateTime.UtcNow;
+            
+            if(allpassTimeDiff.Ticks <= 0) {
+                return string.Empty;
+            }  
+            
+            if(allpassTimeDiff.TotalHours < 24) {
+                return string.Format ("{0:D2}:{1:D2}:{2:D2}",allpassTimeDiff.Hours ,allpassTimeDiff.Minutes, allpassTimeDiff.Seconds);    
+            }
+            else {
+                return string.Format ("{0}d {1:D2}:{2:D2}:{3:D2}",allpassTimeDiff.Days, allpassTimeDiff.Hours, allpassTimeDiff.Minutes, allpassTimeDiff.Seconds);    
+            }
+            
+            
+        }
         
 
 

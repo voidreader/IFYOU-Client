@@ -14,6 +14,7 @@ namespace PIERStory {
         // refresh 용도의 action
         public static System.Action OnRefreshNormalShop = null; // 노멀 탭 리프레시
         public static System.Action OnRefreshPackageShop = null; // 패키지 탭 리프레시
+        public static System.Action OnRefreshEventShop = null; // 이벤트 탭 리프레시
         public static System.Action OnRefreshTopShop = null; // 상점 탑 리프레이 
         
         public GameObject eventPackText;
@@ -28,8 +29,11 @@ namespace PIERStory {
         
         
         [Header("패키지탭 패키지")]
-        public List<GeneralPackProduct> listEventPackProducts; // 이벤트 패키지 상품 
+        public List<GeneralPackProduct> listLimitPackProducts; // 패키지 탭의 기간한정 상품 
         public List<GeneralPackProduct> listGeneralPackProducts; // 일반 패키지 상품 
+        
+        public List<GeneralPackProduct> listSpecialEventPackProducts; // 스페셜 이벤트 패키지
+        
         
         [Space]
         public List<BaseCoinExchangeProduct> listCoinExchangeProducts; // 코인 환전 상품
@@ -52,6 +56,7 @@ namespace PIERStory {
             StartCoroutine(RoutineEnterFromMain());
             OnRefreshNormalShop = InitNormalContainer;
             OnRefreshPackageShop = InitPackContainer;
+            OnRefreshEventShop = InitEventContainer;
             OnRefreshTopShop = EnterFromMain;
         }
 
@@ -76,6 +81,7 @@ namespace PIERStory {
             StartCoroutine(RoutineEnterFromSignal());
             OnRefreshNormalShop = InitNormalContainer;
             OnRefreshPackageShop = InitPackContainer;
+            OnRefreshEventShop = InitEventContainer;
             OnRefreshTopShop = EnterFromSignal;
         }
 
@@ -270,9 +276,9 @@ namespace PIERStory {
                 return;
             }
              
-             // 이벤트 팩
-             for(int i=0; i<listEventPackProducts.Count;i++) {
-                 listEventPackProducts[i].gameObject.SetActive(false);
+             // 기간한정 팩
+             for(int i=0; i<listLimitPackProducts.Count;i++) {
+                 listLimitPackProducts[i].gameObject.SetActive(false);
              }
              
              // 일반 팩 
@@ -295,7 +301,7 @@ namespace PIERStory {
             string productID = string.Empty;
             int maxCount = 0;
             int activePassTimeDealCount = 0; // 활성화 타임딜 카운트 
-            
+            string productType = string.Empty; // 제품 타입 
             
             // 타임딜 설정
             try {
@@ -336,52 +342,53 @@ namespace PIERStory {
             catch {
                 NetworkLoader.main.ReportRequestError("InitPackContainer #2", "InitPackContainer #2");
                 return;
-            }
+            } // ? 프리미엄패스 타임딜 처리 종료 
             
             
             // 패키지 초기화 
             try {
                 Debug.Log(string.Format("### productMasterJSON : [{0}]", BillingManager.main.productMasterJSON.Count));
+                
                 for(int i=0; i<BillingManager.main.productMasterJSON.Count;i++) {
                     
                     masterData = BillingManager.main.productMasterJSON[i];
                     productID =SystemManager.GetJsonNodeString(masterData, "product_id");  // ID 
                     maxCount = SystemManager.GetJsonNodeInt(masterData, "max_count"); // 구매 제한 횟수 
-                    // Debug.Log(SystemManager.GetJsonNodeString(masterData, "product_id"));
+                    productType = SystemManager.GetJsonNodeString(masterData, "product_type"); // 제품 타입 
                     
-                    // 이벤트 상품. 이름을 꼭 조건으로 걸어야한다. 
-                    if(SystemManager.GetJsonNodeString(masterData, "product_id").Contains("story_pack") 
-                        && SystemManager.GetJsonNodeBool(masterData, "is_event")) {
-                            
-                        if(eventPackIndex >= listEventPackProducts.Count)
+                    // 사전 예약 패키지 제거 
+                    if(productID.Contains("pre_reward_pack"))
+                        continue;
+                    
+                    // 기간한정과 일반 상품으로 분리시킨다. 
+                    if(productType == "limited") {
+                        if(eventPackIndex >= listLimitPackProducts.Count)
                             break;
+                            
                             
                         // 구매된 상품은 제거한다.
                         if(maxCount > 0 && BillingManager.main.GetProductPurchaseCount(productID) >= maxCount) {
                             continue;
                         }
-                            
                         
-                        listEventPackProducts[eventPackIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"), masterData);
-                        hasEventPack = true;
-    
+                        listLimitPackProducts[eventPackIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"), masterData);
+                        hasEventPack = true;                        
                     }
-                    else if(SystemManager.GetJsonNodeString(masterData, "product_id").Contains("pack") 
-                            && !SystemManager.GetJsonNodeBool(masterData, "is_event")) {
-                        
-                        if(productID.Contains("pre_reward_pack"))
-                            continue;
-                        
+                    else if (productType == "base") {
                         if(packIndex >= listGeneralPackProducts.Count)
                             break; 
                             
+                        if(!productID.Contains("pack"))
+                            continue;
+                            
                         // 구매된 상품은 제거한다.
                         if(maxCount > 0 && BillingManager.main.GetProductPurchaseCount(productID) >= maxCount) {
                             continue;
                         }
                         
-                        listGeneralPackProducts[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"), masterData);
+                        listGeneralPackProducts[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"), masterData);                        
                     }
+                   
                 } // ? end of for 
             }
             catch {
@@ -392,6 +399,69 @@ namespace PIERStory {
             eventPackText.SetActive(hasEventPack);
             
          }
+         
+         
+        
+        
+        /// <summary>
+        /// 이벤트 컨테이너 
+        /// </summary>
+        public void InitEventContainer() {
+            try {
+                if(!this.gameObject.activeSelf)
+                    return;
+            }
+            catch {
+                return;
+            }
+            
+            if(UserManager.main == null || !UserManager.main.completeReadUserData)
+                return;
+             
+            if(BillingManager.main == null || BillingManager.main.productMasterJSON == null) {
+                return;
+            }
+            
+            // 상품 비활성화에서 시작 
+            for(int i=0; i<listSpecialEventPackProducts.Count;i++) {
+                listSpecialEventPackProducts[i].gameObject.SetActive(false);
+            }
+            
+            int packIndex = 0;
+            JsonData masterData;
+            
+            string productID = string.Empty;
+            string productType = string.Empty;
+            int maxCount = 0;
+            
+            // 패키지 초기화 
+            try {
+                
+                for(int i=0; i<BillingManager.main.productMasterJSON.Count;i++) {
+                    
+                    masterData = BillingManager.main.productMasterJSON[i];
+                    productID =SystemManager.GetJsonNodeString(masterData, "product_id");  // ID 
+                    maxCount = SystemManager.GetJsonNodeInt(masterData, "max_count"); // 구매 제한 횟수 
+                    productType = SystemManager.GetJsonNodeString(masterData, "product_type"); // 제품 타입 
+                    
+                    // 올패스와 event 타입만 걸러낸다. 
+                    if(productType != "allpass" && productType != "event")
+                        continue;
+                    
+                    
+                    // 구매 상품을 화면에서 제거하지 않는다. 
+                    listSpecialEventPackProducts[packIndex++].InitPackage(SystemManager.GetJsonNodeString(masterData, "product_id"), masterData);
+                    
+                    if(packIndex >= listSpecialEventPackProducts.Count)
+                        break;
+                } // ? end of for 
+            }
+            catch {
+                NetworkLoader.main.ReportRequestError("InitPackContainer #3", "InitPackContainer #3");
+                return;
+            }            
+            
+        }
         
         
         public void OnClickCoinShop() {

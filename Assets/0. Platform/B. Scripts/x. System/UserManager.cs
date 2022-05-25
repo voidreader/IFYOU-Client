@@ -1914,7 +1914,6 @@ namespace PIERStory
             // 게임플레이 도중이 아니라면, ViewStory 쪽 갱신 
             if(LobbyManager.main != null) {
                 StoryLobbyMain.OnPassPurchase?.Invoke();
-                ViewStoryLobby.OnPassPurchase?.Invoke();
                 ViewMain.OnRefreshShopNewSign?.Invoke();
 
                 RequestUserGradeInfo(CallbackNewCompleteAchievement);

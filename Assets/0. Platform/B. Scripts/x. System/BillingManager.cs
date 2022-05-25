@@ -278,6 +278,17 @@ namespace PIERStory {
             
             if(__productID.Contains("allpass_")) {
                 SystemManager.ShowSystemPopupLocalize("6435", null, null, true, false); // 올패스 구매 완료
+                
+                // * 올패스 구매시에 화면 갱신처리. 
+                // 화면 갱신
+                if(GameManager.main != null) {
+                    EpisodeEndControls.OnPassPurchase?.Invoke();
+                }
+                
+                if(LobbyManager.main != null) {
+                    StoryLobbyMain.OnPassPurchase?.Invoke();
+                }
+                
                 yield break;
             }
             

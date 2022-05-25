@@ -2244,7 +2244,7 @@ namespace PIERStory
             */
 
             webView = WebView.CreateInstance();
-            WebView.OnHide += OnHideWebview;
+            WebView.OnHide += OnHideCoinShopWebview;
             
             
             Debug.Log(">> OpenCoinShopWebview OPEN");

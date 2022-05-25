@@ -69,7 +69,8 @@ namespace PIERStory {
             yield return new WaitForSeconds(0.1f);
             EnterFromMain();
             yield return new WaitForSeconds(0.2f);
-            InitPackContainer();
+            // InitPackContainer();
+            InitEventContainer();
             
             // packageToggle.SetIsOn(true, true);
         }
@@ -94,7 +95,8 @@ namespace PIERStory {
             yield return new WaitForSeconds(0.1f);
             EnterFromSignal();
             yield return new WaitForSeconds(0.2f);
-            InitPackContainer();
+            // InitPackContainer();
+            InitEventContainer();
             
             // packageToggle.SetIsOn(true, true);
         }

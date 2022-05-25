@@ -151,6 +151,7 @@ namespace PIERStory
         public Sprite spriteStar;       // 60 사이 사이즈 스타
         public Sprite spriteFreepassIcon; // 프리패스 아이콘
         public Sprite spriteInappOriginIcon; // 인앱 구매확정 메일 아이콘        
+        public Sprite spriteAllPassIcon; // 올 패스 아이콘
 
         
         

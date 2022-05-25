@@ -23,6 +23,7 @@ namespace PIERStory {
         [Space]
         public PassButton passButton; // 패스 버튼
         public ImageRequireDownload passBadge; // 패스 뱃지 
+        public AllPassTimer allpassTimer; // 올패스 타이머 
         
         private void Start() {
             OnRefreshUpdateTimeDeal = SetPremiumPassObject; // Action 설정 
@@ -191,15 +192,27 @@ namespace PIERStory {
             // 프리미엄 패스 오브젝트 추가 
             passButton.gameObject.SetActive(false);
             passBadge.gameObject.SetActive(false);
+            allpassTimer.gameObject.SetActive(false);
             
             hasPremium = UserManager.main.HasProjectFreepass(); // 프리미엄 패스 보유 여부 
             
             // 프리미엄 패스 보유 여부에 따른 오브젝트 설정 
             if(hasPremium) {
-                passBadge.gameObject.SetActive(true);
-                passBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey, true);
+                
+                if(UserManager.main.HasProjectPremiumPassOnly(StoryManager.main.CurrentProjectID)) {
+                    passBadge.gameObject.SetActive(true);
+                    passBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey, true);    
+                }
+                else {
+                    // 올패스 처리 
+                    allpassTimer.InitAllPassTimer();
+                }
+                
+                
             }
             else {
+                
+                
                 passButton.gameObject.SetActive(true);
                 passButton.SetPremiumPass();
             }

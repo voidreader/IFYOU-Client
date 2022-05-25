@@ -574,9 +574,14 @@ namespace PIERStory {
                         currentPlayState = hasPremium ? StatePlayButton.premium : StatePlayButton.active;        
                     }
                 }
+
+                UserManager.main.UpdateLocalPush(currentStoryData.projectID, SystemManager.GetJsonNodeInt(projectCurrentJSON, "chapter_number"), openDateTick);
+
             } 
             else { // 대기시간 없음 
-            
+
+                UserManager.main.CancelLocalPush(currentStoryData.projectID);
+
                 // 상태 처리 
                 currentPlayState = hasPremium ? StatePlayButton.premium : StatePlayButton.active;
                 

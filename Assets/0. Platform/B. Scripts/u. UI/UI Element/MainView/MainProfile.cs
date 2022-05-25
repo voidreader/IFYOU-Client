@@ -127,10 +127,10 @@ namespace PIERStory
             }
 
             // 등급 방어 포인트 바 표기
-            float posX = ((float)UserManager.main.keepPoint / (float)UserManager.main.upgradeGoalPoint) * expGauge.rectTransform.sizeDelta.x;
+            float posX = ((float)UserManager.main.keepPoint / UserManager.main.upgradeGoalPoint) * expGauge.rectTransform.sizeDelta.x;
             expMinimumBar.anchoredPosition = new Vector2(posX, expMinimumBar.anchoredPosition.y);
 
-            expGauge.fillAmount = (float)UserManager.main.gradeExperience / (float)UserManager.main.upgradeGoalPoint;
+            expGauge.fillAmount = (float)UserManager.main.gradeExperience / UserManager.main.upgradeGoalPoint;
             expText.text = string.Format("({0}/{1})", UserManager.main.gradeExperience, UserManager.main.upgradeGoalPoint);
 
             seasonEndText.text = string.Format(SystemManager.GetLocalizedText("6293"), UserManager.main.remainDay);

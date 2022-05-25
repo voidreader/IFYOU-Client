@@ -106,10 +106,16 @@
                     "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-purchase-google"
                 },
                 {
-                    "name" : "IapOnsStore",
+                    "name" : "IapOnestore",
                     "used" : false,
                     "canOnlyChooseEitherUnityOrNative" : false,
                     "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-purchase-onestore"
+                },
+                {
+                    "name" : "IapOnestoreExternal",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-purchase-onestore-external"
                 },
                 {
                     "name" : "IapGalaxy",
@@ -133,13 +139,19 @@
         },
         "push"           : {
             "name" : "push",
-            "onlyOneCanBeSelectedFromCategory" : true,
+            "onlyOneCanBeSelectedFromCategory" : false,
             "adapters"                         : [
                 {
                     "name" : "FCM",
                     "used" : false,
                     "canOnlyChooseEitherUnityOrNative" : false,
                     "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-push-fcm"
+                },
+                {
+                    "name" : "ADM",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-push-adm"
                 }
             ]
         },

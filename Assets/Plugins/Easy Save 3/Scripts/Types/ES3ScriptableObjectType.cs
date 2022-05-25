@@ -20,9 +20,9 @@ namespace ES3Types
 				throw new ArgumentException("Only types of UnityEngine.ScriptableObject can be written with this method, but argument given is type of "+obj.GetType());
 
 			// If this object is in the instance manager, store it's instance ID with it.
-			var refMgr = ES3ReferenceMgrBase.Current;
+			/*var refMgr = ES3ReferenceMgrBase.Current;
 			if(refMgr != null)
-				writer.WriteRef(instance);
+				writer.WriteRef(instance);*/
 			WriteScriptableObject(instance, writer);
 		}
 

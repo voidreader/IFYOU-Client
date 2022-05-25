@@ -114,7 +114,6 @@ else if(isset($_POST["deleteFile"]))
 // ----- GET FILENAMES WITH PATTERN -----
 else if(isset($_POST["getFilenames"]) && isset($_POST["pattern"]))
 {
-	echo "Here";
 	$stmt = $db->prepare("SELECT $filenameField FROM $tableName WHERE $userField = :user AND $filenameField LIKE :pattern");
 	$postUser = GetPOSTUser();
 	$stmt->bindParam(":user", $postUser);

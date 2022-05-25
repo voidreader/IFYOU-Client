@@ -56,9 +56,9 @@ namespace ES3Types
             List<Component> components;
 
             // If there's an ES3AutoSave attached and Components are marked to be saved, save these.
-            var autoSave = instance.GetComponent<ES3AutoSave>();
-            if (autoSave != null && autoSave.componentsToSave != null && autoSave.componentsToSave.Count > 0)
-                components = autoSave.componentsToSave;
+            if (es3AutoSave != null)
+                components = es3AutoSave.componentsToSave;
+
             // Otherwise, only save explicitly-supported Components, /*or those explicitly marked as Serializable*/.
             else
             {
@@ -68,7 +68,8 @@ namespace ES3Types
                         components.Add(component);
             }
 
-            writer.WriteProperty("components", components, ES3.ReferenceMode.ByRefAndValue);
+            if(components != null & components.Count > 0)
+                writer.WriteProperty("components", components, ES3.ReferenceMode.ByRefAndValue);
         }
 
         protected override object ReadObject<T>(ES3Reader reader)
@@ -187,7 +188,8 @@ namespace ES3Types
                     break;
 
                 if (reader.StartReadObject())
-                    return;
+                    // We're reading null, so skip this Component.
+                    continue;
 
                 Type type = null;
 

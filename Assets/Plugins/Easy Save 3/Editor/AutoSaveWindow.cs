@@ -191,7 +191,7 @@ namespace ES3Editor
                         GUIContent saveIcon;
                         EditorGUIUtility.SetIconSize(new Vector2(16, 16));
 
-                        if (HasSelectedComponents())
+                        if (HasSelectedComponentsOrFields())
                             saveIcon = new GUIContent(t.name, EditorStyle.Get.saveIconSelected, "There are Components on this GameObject which will be saved.");
                         else
                             saveIcon = new GUIContent(t.name, EditorStyle.Get.saveIconUnselected, "No Components on this GameObject will be saved");
@@ -218,23 +218,23 @@ namespace ES3Editor
                 }
 
                 // Draw children
-                if(children != null)
+                if (children != null)
                     foreach (var child in children)
-                        if(child != null)
+                        if (child != null)
                             child.DrawHierarchy(searchTerm);
 
-                if(containsSearchTerm)
-                    EditorGUI.indentLevel-=1;
+                if (containsSearchTerm)
+                    EditorGUI.indentLevel -= 1;
             }
 
             public void DrawComponents()
             {
-                EditorGUI.indentLevel+=3;
+                EditorGUI.indentLevel += 3;
                 using (var scope = new EditorGUILayout.VerticalScope())
                 {
                     bool toggle;
                     toggle = EditorGUILayout.ToggleLeft("active", autoSave != null ? autoSave.saveActive : false);
-                    if((autoSave = (toggle && autoSave == null) ? t.gameObject.AddComponent<ES3AutoSave>() : autoSave) != null)
+                    if ((autoSave = (toggle && autoSave == null) ? t.gameObject.AddComponent<ES3AutoSave>() : autoSave) != null)
                         autoSave.saveActive = toggle;
 
                     toggle = EditorGUILayout.ToggleLeft("hideFlags", autoSave != null ? autoSave.saveHideFlags : false);
@@ -246,7 +246,7 @@ namespace ES3Editor
                         autoSave.saveLayer = toggle;
 
                     toggle = EditorGUILayout.ToggleLeft("name", autoSave != null ? autoSave.saveName : false);
-                        if ((autoSave = (toggle && autoSave == null) ? t.gameObject.AddComponent<ES3AutoSave>() : autoSave) != null)
+                    if ((autoSave = (toggle && autoSave == null) ? t.gameObject.AddComponent<ES3AutoSave>() : autoSave) != null)
                         autoSave.saveName = toggle;
 
                     toggle = EditorGUILayout.ToggleLeft("tag", autoSave != null ? autoSave.saveTag : false);
@@ -280,26 +280,33 @@ namespace ES3Editor
                                 else
                                     autoSave.componentsToSave.Add(component);
                             }
-                            if(GUILayout.Button(EditorGUIUtility.IconContent("_Popup"), new GUIStyle("Label")))
+                            if (GUILayout.Button(EditorGUIUtility.IconContent("_Popup"), new GUIStyle("Label")))
                                 ES3Window.InitAndShowTypes(component.GetType());
                         }
                     }
                 }
 
-                if(autoSave != null && (autoSave.componentsToSave == null || autoSave.componentsToSave.Count == 0) && !autoSave.saveActive && !autoSave.saveChildren && !autoSave.saveHideFlags && !autoSave.saveLayer && !autoSave.saveName && !autoSave.saveTag)
+                if (autoSave != null && (autoSave.componentsToSave == null || autoSave.componentsToSave.Count == 0) && !autoSave.saveActive && !autoSave.saveChildren && !autoSave.saveHideFlags && !autoSave.saveLayer && !autoSave.saveName && !autoSave.saveTag)
                 {
                     Undo.DestroyObjectImmediate(autoSave);
                     autoSave = null;
                 }
-                EditorGUI.indentLevel-=3;
+                EditorGUI.indentLevel -= 3;
             }
 
-            public bool HasSelectedComponents()
+            public bool HasSelectedComponentsOrFields()
             {
-                if (autoSave != null)
-                    foreach (var component in components)
-                        if (component != null && autoSave.componentsToSave.Contains(component))
-                            return true;
+                if (autoSave == null)
+                    return false;
+
+
+                foreach (var component in components)
+                    if (component != null && autoSave.componentsToSave.Contains(component))
+                        return true;
+
+                if (autoSave.saveActive || autoSave.saveHideFlags || autoSave.saveLayer || autoSave.saveName || autoSave.saveTag)
+                    return true;
+
                 return false;
             }
         }

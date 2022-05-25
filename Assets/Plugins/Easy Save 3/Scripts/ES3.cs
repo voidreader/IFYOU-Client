@@ -7,7 +7,15 @@ using ES3Internal;
 using UnityEngine.Networking;
 #endif
 
-public static class ES3
+/// <summary>
+/// The main class for Easy Save methods. All methods in this class are static.
+/// </summary> 
+#if UNITY_VISUAL_SCRIPTING
+[Unity.VisualScripting.IncludeInSettings(true)]
+#elif BOLT_VISUAL_SCRIPTING
+[Ludiq.IncludeInSettings(true)]
+#endif
+public class ES3
 {
 	public enum Location 		{ File, PlayerPrefs, InternalMS, Resources, Cache };
 	public enum Directory		{ PersistentDataPath, DataPath }
@@ -349,6 +357,42 @@ public static class ES3
     }
 
     /// <summary>Loads the value from a file with the given key.</summary>
+    /// <param name="key">The key which identifies the value we want to load.</param>
+    /// <param name="defaultValue">The value we want to return if the file or key does not exist.</param>
+    public static object Load(string key, object defaultValue)
+    {
+        return Load<object>(key, defaultValue, new ES3Settings());
+    }
+
+    /// <summary>Loads the value from a file with the given key.</summary>
+    /// <param name="key">The key which identifies the value we want to load.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to load from.</param>
+    /// <param name="defaultValue">The value we want to return if the file or key does not exist.</param>
+    public static object Load(string key, string filePath, object defaultValue)
+    {
+        return Load<object>(key, defaultValue, new ES3Settings(filePath));
+    }
+
+    /// <summary>Loads the value from a file with the given key.</summary>
+    /// <param name="key">The key which identifies the value we want to load.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to load from.</param>
+    /// <param name="defaultValue">The value we want to return if the file or key does not exist.</param>
+    /// <param name="settings">The settings we want to use to override the default settings.</param>
+    public static object Load(string key, string filePath, object defaultValue, ES3Settings settings)
+    {
+        return Load<object>(key, defaultValue, new ES3Settings(filePath, settings));
+    }
+
+    /// <summary>Loads the value from a file with the given key.</summary>
+    /// <param name="key">The key which identifies the value we want to load.</param>
+    /// <param name="defaultValue">The value we want to return if the file or key does not exist.</param>
+    /// <param name="settings">The settings we want to use to override the default settings.</param>
+    public static object Load(string key, object defaultValue, ES3Settings settings)
+    {
+        return Load<object>(key, defaultValue, settings);
+    }
+
+    /// <summary>Loads the value from a file with the given key.</summary>
     /// <param name="T">The type of the data that we want to load.</param>
     /// <param name="key">The key which identifies the value we want to load.</param>
     public static T Load<T>(string key)
@@ -538,10 +582,20 @@ public static class ES3
     /// <summary>Loads the value from a file with the given key.</summary>
     /// <param name="key">The key which identifies the value we want to load.</param>
     /// <param name="defaultValue">The value we want to return if the file or key does not exist.</param>
-    /// <param name="filePath">The relative or absolute path of the file we want to load from.</param>
-    public static string LoadString(string key, string defaultValue, string filePath=null)
+    /// <param name="settings">The settings we want to use to override the default settings.</param>
+    public static string LoadString(string key, string defaultValue, ES3Settings settings)
     {
-        return Load<string>(key, filePath, defaultValue, new ES3Settings(filePath));
+        return Load<string>(key, null, defaultValue, settings);
+    }
+
+    /// <summary>Loads the value from a file with the given key.</summary>
+    /// <param name="key">The key which identifies the value we want to load.</param>
+    /// <param name="defaultValue">The value we want to return if the file or key does not exist.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to load from.</param>
+    /// <param name="settings">The settings we want to use to override the default settings.</param>
+    public static string LoadString(string key, string defaultValue, string filePath = null, ES3Settings settings = null)
+    {
+        return Load<string>(key, filePath, defaultValue, settings);
     }
 
     #endregion
@@ -765,6 +819,11 @@ public static class ES3
 
     public static byte[] Serialize<T>(T value, ES3Settings settings=null)
     {
+        return Serialize(value, ES3TypeMgr.GetOrCreateES3Type(typeof(T)), settings);
+    }
+
+    internal static byte[] Serialize(object value, ES3Types.ES3Type type, ES3Settings settings = null)
+    {
         if (settings == null) settings = new ES3Settings();
 
         using (var ms = new System.IO.MemoryStream())
@@ -775,7 +834,7 @@ public static class ES3
                 {
                     // If T is object, use the value to get it's type. Otherwise, use T so that it works with inheritence.
                     //var type = typeof(T) != typeof(object) ? typeof(T) : (value == null ? typeof(T) : value.GetType());
-                    baseWriter.Write(value, ES3TypeMgr.GetOrCreateES3Type(typeof(T)), settings.referenceMode);
+                    baseWriter.Write(value, type, settings.referenceMode);
                 }
 
                 return ms.ToArray();

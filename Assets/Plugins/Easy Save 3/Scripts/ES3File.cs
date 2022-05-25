@@ -470,7 +470,7 @@ public class ES3File
     {
         ES3File cachedFile;
         if (!cachedFiles.TryGetValue(settings.path, out cachedFile))
-            throw new FileNotFoundException("Could not get timestamp from the file '" + settings.path + "' because it could not be found in the cache.");
+            return new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
         return cachedFile.timestamp;
     }
 }

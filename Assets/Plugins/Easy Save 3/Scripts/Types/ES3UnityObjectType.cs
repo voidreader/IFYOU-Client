@@ -27,7 +27,6 @@ namespace ES3Types
 		{
 			if(WriteUsingDerivedType(obj, writer, mode))
 				return;
-
 			var instance = obj as UnityEngine.Object;
 			if(obj != null && instance == null)
 				throw new ArgumentException("Only types of UnityEngine.Object can be written with this method, but argument given is type of "+obj.GetType());

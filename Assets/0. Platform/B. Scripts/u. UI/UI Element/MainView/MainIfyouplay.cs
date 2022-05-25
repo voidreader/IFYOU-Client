@@ -82,9 +82,14 @@ namespace PIERStory
         /// </summary>
         void InitContinuousAttendance()
         {
-            continuousAttendanceDate.text = string.Format(SystemManager.GetLocalizedText("5205"), SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day"));
+            attendanceDay = SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day");
+            chargingDay = SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day");
+            remainDay = SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "remain_day");
+            isAttendance = SystemManager.GetJsonNodeBool(attendanceData[LobbyConst.NODE_USER_INFO][0], "is_attendance");
+
+            continuousAttendanceDate.text = string.Format(SystemManager.GetLocalizedText("5205"), attendanceDay);
             continuousAttendanceDate2.text = continuousAttendanceDate.text;
-            attendacneEventDeadline.text = string.Format(SystemManager.GetLocalizedText("5206"), SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "remain_day"));
+            attendacneEventDeadline.text = string.Format(SystemManager.GetLocalizedText("5206"), remainDay);
 
             JsonData continuousData = SystemManager.GetJsonNode(attendanceData, LobbyConst.NODE_CONTINUOUS_ATTENDANCE);
 
@@ -99,11 +104,6 @@ namespace PIERStory
                 continuousRewards[i].InitContinuousAttendanceReward(continuousData[i]);
                 obtainableRewards[i].InitContinuousAttendanceReward(continuousData[i]);
             }
-
-            attendanceDay = SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "attendance_day");
-            chargingDay = UserManager.main.TodayAttendanceCheck() || !isAttendance? SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") : SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "reset_day") - 1;
-            remainDay = SystemManager.GetJsonNodeInt(attendanceData[LobbyConst.NODE_USER_INFO][0], "remain_day");
-            isAttendance = SystemManager.GetJsonNodeBool(attendanceData[LobbyConst.NODE_USER_INFO][0], "is_attendance");
 
             // 보충 관련 초기화
             foreach (Image img in progressDots)
@@ -130,10 +130,15 @@ namespace PIERStory
                         // 출석일 + 충전해야하는 갯수가 i 보다 클때는 무조건 스트록 표기
                         if (i <= attendanceDay + chargingDay)
                         {
+                            // 오늘치 출석을 아직 하지 않았다면 오늘 출석 일단 한 것으로 판단한다
+                            if (!UserManager.main.TodayAttendanceCheck())
+                                attendanceDay++;
+
                             // progressDots 오브젝트에는 자식 오브젝트가 1개 있는데, 해당 오브젝트를 활성화해주고, 시즌의 남은 기간 동안 연속출석으로 받을 수 있는지 없는지를 체크해서 해당 오브젝트의 sprite를 변경해준다
                             progressDots[i - 1].transform.GetChild(0).gameObject.SetActive(true);
                             progressDots[i - 1].transform.GetChild(0).GetComponent<Image>().sprite = i <= attendanceDay + remainDay ? spriteDotLimitWhite : spriteDotLimit;
-                            
+
+                                                        
                             // 연속출석일은 3, 7, 10, 14일이므로 남은 기간동안 연속출석 보상을 받을수 있는지 없는지 체크해서 해당 오브젝트의 sprite를 변경해준다
                             if (i == 3)
                                 continuousRewards[0].rewardMask.sprite = i <= attendanceDay + remainDay ? LobbyManager.main.spriteCircleLimitWhite : LobbyManager.main.spriteCircleLimit;
@@ -143,6 +148,10 @@ namespace PIERStory
                                 continuousRewards[2].rewardMask.sprite = i <= attendanceDay + remainDay ? LobbyManager.main.spriteCircleLimitWhite : LobbyManager.main.spriteCircleLimit;
                             else if (i == 14)
                                 continuousRewards[3].rewardMask.sprite = i <= attendanceDay + remainDay ? LobbyManager.main.spriteCircleLimitWhite : LobbyManager.main.spriteCircleLimit;
+
+                            // 잠시 실데이터를 조작한 것이므로 다시 원상복구
+                            if (!UserManager.main.TodayAttendanceCheck())
+                                attendanceDay--;
                         }
 
                         // 충전하지 않으면 아예 도달하지 못하는 곳은 비활성화쳐럼 보이게
@@ -204,14 +213,6 @@ namespace PIERStory
         /// </summary>
         public void OnClickChargeContinuousAttendance()
         {
-            // 코인 부족한거 먼저 체크
-            if(!UserManager.main.CheckCoinProperty(chargingDay * 100))
-            {
-                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteCoin, (chargingDay * 100) - UserManager.main.coin);
-                return;
-            }
-
-
             SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6307"), chargingDay)
                                             , chargingDay * 100
                                             , SystemManager.main.GetCurrencyImageURL(LobbyConst.COIN)
@@ -224,7 +225,14 @@ namespace PIERStory
 
         void ChargeAttendance()
         {
-            if(!ScreenSetComplete)
+            // 코인 부족한거 먼저 체크
+            if (!UserManager.main.CheckCoinProperty(chargingDay * 100))
+            {
+                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteCoin, (chargingDay * 100) - UserManager.main.coin);
+                return;
+            }
+
+            if (!ScreenSetComplete)
             {
                 Debug.LogWarning("화면 갱신이 아직 안됨!");
                 return;

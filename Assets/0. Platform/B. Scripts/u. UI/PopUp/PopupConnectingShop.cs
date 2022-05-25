@@ -9,6 +9,8 @@ namespace PIERStory
         {
             base.Show();
 
+            if (Data.Images[0].rectTransform.sizeDelta.x < 100f || Data.Images[0].rectTransform.sizeDelta.y < 100f)
+                Data.Images[0].rectTransform.sizeDelta = Data.Images[0].rectTransform.sizeDelta * 2f;
         }
 
         public void OnClickGoShopButton()

@@ -2259,6 +2259,33 @@ namespace PIERStory
             SetBlockBackButton(true);
         }
         
+        /// <summary>
+        /// 작품 로비 외에 
+        /// </summary>
+        /// <param name="__view"></param>
+        void OnHideCoinShopWebview(WebView __view) {
+            Debug.Log(">> OnHideCoinShopWebview");
+            
+            
+            SystemManager.main.isWebViewOpened = false;  // 닫힐때 false로 변경 
+            SetBlockBackButton(false);
+            
+            WebView.OnHide -= OnHideCoinShopWebview;
+            __view.gameObject.SetActive(false);
+            
+            Destroy(__view);
+            
+            if (LobbyManager.main != null)
+            {
+                UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
+                NetworkLoader.main.RequestIfyouplayList();
+            }            
+            
+            // 추가로 뱅크 갱신 필요 
+            NetworkLoader.main.RequestUserBaseProperty();
+        }
+        
+        
         void OnHideWebview(WebView __view) {
             
             Debug.Log(">> OnHideWebview");

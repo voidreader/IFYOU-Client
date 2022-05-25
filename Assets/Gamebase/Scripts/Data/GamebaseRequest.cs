@@ -82,12 +82,6 @@ namespace Toast.Gamebase
             /// Set whether or not to log in to WebView on a (Standalone) platform.
             /// </summary>
             public bool useWebViewLogin;
-
-            /// <summary>
-            /// Android only
-            /// Set the type of push.
-            /// </summary>
-            public string pushType;
         }        
 
         public static class Auth

@@ -352,21 +352,7 @@ namespace Toast.Gamebase.Internal.Single
                         errorCode = GamebaseErrorCode.SERVER_INTERNAL_ERROR;
                         break;
                     }
-                case GamebaseServerErrorCode.CANNOT_FIND_DEPLOY_TERMS:
-                    {
-                        errorCode = GamebaseErrorCode.UI_TERMS_NOT_EXIST_IN_CONSOLE;
-                        break;
-                    }
-                case GamebaseServerErrorCode.CANNOT_FIND_DEFAULT_TERMS:
-                    {
-                        errorCode = GamebaseErrorCode.UI_TERMS_NOT_EXIST_FOR_DEVICE_COUNTRY;
-                        break;
-                    }
-                case GamebaseServerErrorCode.ILLEGAL_TERMS_SEQUENCE_NUMBER:
-                    {
-                        errorCode = GamebaseErrorCode.UI_TERMS_UNREGISTERED_SEQ;
-                        break;
-                    }
+
                 default:
                     {
                         errorCode = GamebaseErrorCode.UNKNOWN_ERROR;

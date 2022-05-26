@@ -2793,6 +2793,7 @@ MonoBehaviour:
     listSerialDays: []
     passPrice: 0
     passDiscount: 0.1
+    isNotify: 0
   currentEpisodeID: 
   currentEpisodeData:
     episodeID: 
@@ -2913,7 +2914,6 @@ MonoBehaviour:
   canvasGroupContents: {fileID: 9085397242139942268}
   arrowGroupContetns: {fileID: 6846769427911607430}
   groupStoryContentsBlock: {fileID: 8887813192445819300}
-  flowMap: {fileID: 0}
   spriteActiveEpisodeTitleBG: {fileID: 21300000, guid: 27e091c7420558d49a9a4c24192ef992, type: 3}
   spriteInactiveEpisodeTitleBG: {fileID: 21300000, guid: eb382ef3e9d836e4cb6a54df1eefc3ea, type: 3}
   openDateTick: 0
@@ -3700,7 +3700,7 @@ GameObject:
   - component: {fileID: 5217060289227923535}
   - component: {fileID: 4900276086535143381}
   - component: {fileID: 3646268341928870904}
-  - component: {fileID: 8356769242813332887}
+  - component: {fileID: 6834284311048729485}
   m_Layer: 5
   m_Name: btnFlow
   m_TagString: Untagged
@@ -3767,7 +3767,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8356769242813332887
+--- !u!114 &6834284311048729485
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3859,7 +3859,7 @@ MonoBehaviour:
   Behaviours:
     Behaviours: []
     SignalSource: {fileID: 6629575794668400216}
-    Selectable: {fileID: 8356769242813332887}
+    Selectable: {fileID: 6834284311048729485}
   Id:
     Category: Lobby
     Name: Flow
@@ -5123,39 +5123,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67bd7fe6e2fa45848bce1e011653a030, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!224 &6686901145083021266 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1184293913537914455, guid: 58575c57242d9a040b1b9eb554d0c65e, type: 3}
-  m_PrefabInstance: {fileID: 5522486419022815621}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3493872466923702259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2818594169991094510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _textID: 5169
-  _text: {fileID: 3906957118763297517}
-  _localizedText: 
-  isException: 1
-  isTextSet: 0
---- !u!114 &3906957118763297517 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8834827645173091176, guid: 58575c57242d9a040b1b9eb554d0c65e, type: 3}
-  m_PrefabInstance: {fileID: 5522486419022815621}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2818594169991094510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &6686901145083021266 stripped

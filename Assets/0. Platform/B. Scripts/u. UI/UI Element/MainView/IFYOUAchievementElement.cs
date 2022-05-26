@@ -81,7 +81,13 @@ namespace PIERStory
 
         public void OnClickAchieveClaim()
         {
-            getButton.GetComponent<Button>().interactable = false;
+            if(!MainProfile.ScreenSetComplete)
+            {
+                Debug.LogWarning("아직 화면 갱신이 이루어지지 않았음!");
+                return;
+            }
+
+            MainProfile.ScreenSetComplete = false;
 
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "updateUserAchievement";
@@ -102,7 +108,7 @@ namespace PIERStory
                 if (SystemManager.GetJsonNodeInt(errordata, "code") == 80117)
                     ViewMain.OnReturnLobby?.Invoke();
 
-                getButton.GetComponent<Button>().interactable = true;
+                MainProfile.ScreenSetComplete = true;
                 return;
             }
 
@@ -146,9 +152,6 @@ namespace PIERStory
             PopupManager.main.ShowPopup(p, false);
 
             UserManager.main.SetSeasonCheck(result["list"]);
-            
-
-            getButton.GetComponent<Button>().interactable = true;
         }
     }
 }

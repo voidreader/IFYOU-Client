@@ -25,7 +25,7 @@ namespace PIERStory
         [HideInInspector] public JsonData userJson = null; // 계정정보 (table_account) 
         [HideInInspector] public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)
         [HideInInspector] public JsonData notReceivedMailJson = null;     // 미수신 메일
-        [HideInInspector] public JsonData userProfile = null;               // 유저 프로필 정보
+        
 
         [HideInInspector] public JsonData userIfyouPlayJson = null;         // 이프유플레이 json data
         [HideInInspector] public JsonData userActiveTimeDeal = null; // 유저 활성화 타임딜 목록 
@@ -109,8 +109,7 @@ namespace PIERStory
         
         public int adCharge = 0;
         
-        public int level = 0; // 레벨 
-        public int exp = 0; // 경험치 
+
         public string nickname = string.Empty;      // 유저 닉네임
         public string accountLink = string.Empty; // 유저 계정 연동 정보 (table_account)
         
@@ -119,6 +118,11 @@ namespace PIERStory
         public int unreadMailCount = 0; // 미수신 메일 카운트
 
         public TimeSpan dailyMissionTimer;
+        
+        public long allpassExpireTick = 0; // 올패스 만료일시 tick
+        public DateTime allpassExpireDate; // 올패스 만료일시
+        TimeSpan allpassTimeDiff;
+        
 
         #region 유저 등급 관련 변수
 
@@ -198,7 +202,7 @@ namespace PIERStory
         const string NODE_NEXT_EPISODE = "nextEpisodeID"; // 다음 에피소드 정보 
         
         
-        const string NODE_COLLECTION_PROGRESS = "progress"; // 유저 작품 수집요소 Progress 
+        
         const string NODE_PROJECT_CURRENT = "projectCurrent"; // 유저의 작품에서의 플레이 위치 
         const string NODE_SELECTION_PROGRESS = "selectionProgress"; // 선택지 프로그레스 
         
@@ -416,19 +420,25 @@ namespace PIERStory
             
             SetNewNickname(SystemManager.GetJsonNodeString(userJson, "nickname"));
             
-            // 레벨 정보
-            SetLevelInfo();
-            
-            // 프로필 정보 
-            if(__accountInfo.ContainsKey("profile")) { // 프로필 정보가 있을때만. 
-                userProfile = __accountInfo["profile"];
-            }
+           
             
             // 슈퍼유저 처리 
             isAdminUser = SystemManager.GetJsonNodeBool(userJson, "admin");
             
             // 인트로 완료 여부
             isIntroDone = SystemManager.GetJsonNodeBool(userJson, "intro_done");
+            
+            // 올패스 만료 일시에 대한  처리 2022.05.23
+            SetAllpassExpire(SystemManager.GetJsonNodeLong(userJson, "allpass_expire_tick"));
+        }
+        
+        /// <summary>
+        /// 올 패스 만료시간 세팅 
+        /// </summary>
+        /// <param name="__expireTick"></param>
+        public void SetAllpassExpire(long __expireTick) {
+            allpassExpireTick = SystemConst.ConvertServerTimeTick(__expireTick);
+            allpassExpireDate = new DateTime(allpassExpireTick);
         }
         
         public void SetNewNickname(string __newNickname) {
@@ -1025,23 +1035,7 @@ namespace PIERStory
             }
         }
         
-        
-        /// <summary>
-        /// 레벨 정보 세팅 
-        /// </summary>
-        /// <param name="__j"></param>
-        public void SetLevelInfo() {
-            if(!userJson.ContainsKey(CommonConst.NODE_LEVEL)) {
-                Debug.LogError("No level Node");
-                return;
-            }
-            
-            
-            // 레벨과 경험치             
-            level = SystemManager.GetJsonNodeInt(userJson, CommonConst.NODE_LEVEL);
-            exp = SystemManager.GetJsonNodeInt(userJson, CommonConst.NODE_EXP);
-            
-        }
+
         
 
         /// <summary>
@@ -1246,6 +1240,15 @@ namespace PIERStory
         /// <returns></returns>
         public bool HasProjectFreepass()
         {
+            
+            // 올패스 사용여부를 먼저 체크한다 (2022.05.23)
+            allpassTimeDiff = allpassExpireDate - System.DateTime.UtcNow;
+            if(allpassTimeDiff.Ticks > 0) {
+                return true;
+            }
+            
+            
+            // 기존 프리미엄 패스 보유 체크 
             if (SystemManager.GetJsonNodeBool(bankJson, "Free" + StoryManager.main.CurrentProjectID))
                 return true;
             else
@@ -1253,12 +1256,53 @@ namespace PIERStory
         }
         
         public bool HasProjectFreepass(string __targetProjectID) {
+            // 올패스 사용여부를 먼저 체크한다 (2022.05.23)
+            allpassTimeDiff = allpassExpireDate - System.DateTime.UtcNow;
+            if(allpassTimeDiff.Ticks > 0) {
+                return true;
+            }
+            
+            
+            // 기존 프리미엄 패스 보유 체크             
             if (SystemManager.GetJsonNodeBool(bankJson, "Free" + __targetProjectID))
                 return true;
             else
                 return false;   
         }
 
+        /// <summary>
+        /// 타겟 프로젝트의 프리미엄 패스 보유 여부 
+        /// </summary>
+        /// <param name="__targetProjectID"></param>
+        /// <returns></returns>        
+        public bool HasProjectPremiumPassOnly(string __targetProjectID) {
+            if (SystemManager.GetJsonNodeBool(bankJson, "Free" + __targetProjectID))
+                return true;
+            else
+                return false;   
+        }
+
+
+        /// <summary>
+        /// 올패스 유효시간 차 주세요 
+        /// </summary>
+        /// <returns></returns>
+        public string GetAllPassTimeDiff() {
+            allpassTimeDiff = allpassExpireDate - System.DateTime.UtcNow;
+            
+            if(allpassTimeDiff.Ticks <= 0) {
+                return string.Empty;
+            }  
+            
+            if(allpassTimeDiff.TotalHours < 24) {
+                return string.Format ("{0:D2}:{1:D2}:{2:D2}",allpassTimeDiff.Hours ,allpassTimeDiff.Minutes, allpassTimeDiff.Seconds);    
+            }
+            else {
+                return string.Format ("{0}d {1:D2}:{2:D2}:{3:D2}",allpassTimeDiff.Days, allpassTimeDiff.Hours, allpassTimeDiff.Minutes, allpassTimeDiff.Seconds);    
+            }
+            
+            
+        }
         
 
 
@@ -1572,18 +1616,7 @@ namespace PIERStory
         }
 
 
-        /// <summary>
-        /// 유저 작품별 컬렉션 진행도 
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetNodeUserCollectionProgress()
-        {
-            if (currentStoryJson == null || !currentStoryJson.ContainsKey(NODE_COLLECTION_PROGRESS))
-                return null;
 
-            return currentStoryJson[NODE_COLLECTION_PROGRESS];
-        }
-        
         
         /// <summary>
         /// 플레이 위치 노드 저장 
@@ -1881,7 +1914,6 @@ namespace PIERStory
             // 게임플레이 도중이 아니라면, ViewStory 쪽 갱신 
             if(LobbyManager.main != null) {
                 StoryLobbyMain.OnPassPurchase?.Invoke();
-                ViewStoryLobby.OnPassPurchase?.Invoke();
                 ViewMain.OnRefreshShopNewSign?.Invoke();
 
                 RequestUserGradeInfo(CallbackNewCompleteAchievement);
@@ -2973,7 +3005,7 @@ namespace PIERStory
                 return false;
 
             // 출석 보충이 필요한 경우 true
-            if (!SystemManager.GetJsonNodeBool(attendanceMission[LobbyConst.NODE_USER_INFO][0], "is_attendance"))
+            if (!SystemManager.GetJsonNodeBool(attendanceMission[LobbyConst.NODE_USER_INFO][0], "is_attendance") || SystemManager.GetJsonNodeInt(attendanceMission[LobbyConst.NODE_USER_INFO][0], "reset_day") > 0)
                 return true;
 
             // 연속 출석 보상 수령가능한 것이 있을 때 true
@@ -3016,9 +3048,22 @@ namespace PIERStory
             long endDateTick = SystemConst.ConvertServerTimeTick(long.Parse(SystemManager.GetJsonNodeString(dailyMissionData["all"][0], "end_date_tick")));
             DateTime endDate = new DateTime(endDateTick);
 
-            while(true)
+            dailyMissionTimer = endDate - DateTime.UtcNow;
+
+            if(dailyMissionTimer.Ticks < 0)
+                Debug.LogError("시간이 조작되어 정확한 타이머를 제공할 수 없음");
+
+            while (true)
             {
                 dailyMissionTimer = endDate - DateTime.UtcNow;
+
+                // 타이머가 끝나면 전체리스트 갱신을 해준다
+                if (dailyMissionTimer.Ticks <= 0)
+                {
+                    RequestServiceEvents();
+                    break;
+                }
+                    
                 yield return null;
                 yield return null;
                 yield return null;

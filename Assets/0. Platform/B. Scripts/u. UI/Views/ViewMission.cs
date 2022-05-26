@@ -13,7 +13,7 @@ namespace PIERStory
     {
         public static Action OnCompleteReward = null;
         public static Action OnRefreshProgressor = null;
-        public static bool clickGetAll = false;
+        public static bool ScreenSetComplete = false;
 
         public Image allClearRewardBox;
 
@@ -86,10 +86,7 @@ namespace PIERStory
                     allClearRewardBox.SetNativeSize();
                     allClearRewardBox.rectTransform.localScale = Vector2.one * 0.8f;
                 }
-                
             }
-
-            clickGetAll = false;
         }
 
         void SetMissionProgressor()
@@ -172,6 +169,8 @@ namespace PIERStory
             float percentage = (float)completeValue / (float)UserManager.main.DictStoryMission.Count;
             missionPercent.text = string.Format("{0}%", Mathf.Round(percentage * 100));
             missionProgressBar.fillAmount = percentage;
+
+            ScreenSetComplete = true;
         }
 
 
@@ -229,8 +228,6 @@ namespace PIERStory
             if (UnlockRewardCount() == 0)
                 return;
 
-            clickGetAll = true;
-
             foreach (MissionElement missionElement in missionElements)
             {
                 if (missionElement.state == MissionState.unlocked)
@@ -247,7 +244,13 @@ namespace PIERStory
         /// </summary>
         public void OnClickGetMissionAllClearReward()
         {
-            allClearRewardBox.GetComponent<Button>().interactable = false;
+            if(!ScreenSetComplete)
+            {
+                Debug.LogWarning("화면 갱신이 아직 이루어지지 않음!");
+                return;
+            }
+
+            ScreenSetComplete = false;
 
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "requestMissionAllReward";
@@ -260,8 +263,6 @@ namespace PIERStory
 
         void CallbackRequestMissionAllReward(HTTPRequest req, HTTPResponse res)
         {
-            allClearRewardBox.GetComponent<Button>().interactable = true;
-
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackRequestMissionAllReward");

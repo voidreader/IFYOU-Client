@@ -87,7 +87,7 @@ namespace PIERStory {
         public Sprite spriteInactiveEpisodeTitleBG;
         
         
-        public const long addTick = 621355968000000000; // C#과 javascript 타임 Tick 차이 
+        
         public DateTime openDate;
         public long openDateTick;
         public TimeSpan timeDiff; // 오픈시간까지 남은 차이 
@@ -554,7 +554,7 @@ namespace PIERStory {
             
             
             // 에피소드 오픈 시간 처리
-            openDateTick = ConvertServerTimeTick(long.Parse(projectCurrentJSON["next_open_tick"].ToString()));
+            openDateTick = SystemConst.ConvertServerTimeTick(long.Parse(projectCurrentJSON["next_open_tick"].ToString()));
             openDate = new DateTime(openDateTick); // 틱으로 오픈 시간 생성 
             
             Debug.Log("## open date : " + openDate.ToString());
@@ -1047,11 +1047,7 @@ namespace PIERStory {
         
         
         
-        
-        public static long ConvertServerTimeTick(long __serverTick) {
-            return (__serverTick * 10000) + addTick;
-        } 
-        
+ 
         
         /// <summary>
         /// 슈퍼유저 

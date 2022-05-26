@@ -10,6 +10,10 @@ using System.Reflection;
 using System;
 #endif
 
+#if UNITY_VISUAL_SCRIPTING
+using Unity.VisualScripting;
+[IncludeInSettings(true)]
+#endif
 public class ES3ReferenceMgr : ES3ReferenceMgrBase
 {
 #if UNITY_EDITOR

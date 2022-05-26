@@ -21,7 +21,7 @@ namespace PIERStory {
         [SerializeField] GameObject groupTimedeal;
         [SerializeField] TextMeshProUGUI textTimer; // 타이머 
         [SerializeField] TextMeshProUGUI textDiscount; // 할인율 
-         public const long addTick = 621355968000000000; // C#과 javascript 타임 Tick 차이 
+         
         public int timeDealID = 0;
         [SerializeField] long end_date_tick = 0; // 서버에서 받아오는 타임딜 종료시간 tick
         
@@ -128,7 +128,7 @@ namespace PIERStory {
             
            
             // 시간 준비 
-            end_date_tick = StoryLobbyMain.ConvertServerTimeTick(passTimeDeal.expireTick);
+            end_date_tick = SystemConst.ConvertServerTimeTick(passTimeDeal.expireTick);
             endDate = new DateTime(end_date_tick); // 틱으로 생성
             
             

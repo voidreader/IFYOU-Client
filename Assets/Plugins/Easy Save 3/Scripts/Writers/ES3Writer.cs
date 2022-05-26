@@ -179,7 +179,7 @@ public abstract class ES3Writer : IDisposable
             type = ES3TypeMgr.GetOrCreateES3Type(valueType);
 
             if(type == null)
-                throw new NotSupportedException("Types of " + valueType + " are not supported.");
+                throw new NotSupportedException("Types of " + valueType + " are not supported. Please see the Supported Types guide for more information: https://docs.moodkie.com/easy-save-3/es3-supported-types/");
 
             if (!type.isCollection && !type.isDictionary)
             {
@@ -195,10 +195,15 @@ public abstract class ES3Writer : IDisposable
 
 		if(type == null)
 			throw new ArgumentNullException("ES3Type argument cannot be null.");
-		if(type.isUnsupported)
-			throw new NotSupportedException("Types of "+type.type+" are not supported.");
+        if (type.isUnsupported)
+        {
+            if(type.isCollection || type.isDictionary)
+                throw new NotSupportedException(type.type + " is not supported because it's element type is not supported. Please see the Supported Types guide for more information: https://docs.moodkie.com/easy-save-3/es3-supported-types/");
+            else
+                throw new NotSupportedException("Types of " + type.type + " are not supported. Please see the Supported Types guide for more information: https://docs.moodkie.com/easy-save-3/es3-supported-types/");
+        }
 
-        if (type.isPrimitive)
+        if (type.isPrimitive || type.isEnum)
             type.Write(value, this);
         else if (type.isCollection)
         {

@@ -83,6 +83,7 @@ namespace PIERStory
         public const string POPUP_SPECIAL_EPISODE_BUY = "SpecialEpisodeBuy";
         public const string POPUP_EXPIRE_TOKEN = "ExpireToken";
         public const string POPUP_DEV_JUMP = "DevJump";
+        public const string POPUP_ALL_PASS_GUIDE = "AllPassGuide";
         
         // JSON COLUMN
         public const string JSON_EPISODE_SCENE_HISTORY = "sceneProgress";

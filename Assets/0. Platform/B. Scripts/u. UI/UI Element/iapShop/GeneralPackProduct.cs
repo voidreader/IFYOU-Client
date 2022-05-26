@@ -61,7 +61,9 @@ namespace PIERStory
             if(productMasterJSON != null) {
                 productMasterID = productMasterJSON["product_master_id"].ToString(); // master_id
    
-                hasPurchaseHistory = BillingManager.main.CheckProductPurchaseHistory(productID); // 구매 내역
+                // * product_id로 구매내역을 체크하는 로직을 master_id로 변경한다.
+                // * 동일 상품을 일정 기간마다 돌려쓰기 위해서. 
+                hasPurchaseHistory = BillingManager.main.GetProductPurchaseCount(productMasterID) > 0 ? true : false; // 구매 내역
                 
                 productDetailJSON = BillingManager.main.GetGameProductItemDetailInfo(productMasterID); // 디테일 
             }            

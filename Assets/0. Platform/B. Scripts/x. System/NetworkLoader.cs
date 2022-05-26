@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BestHTTP;
+
 using LitJson;
-using System.Text;
+using BestHTTP;
 using Toast.Gamebase;
 
 namespace PIERStory
@@ -1157,7 +1158,5 @@ namespace PIERStory
         {
             return main.ListNetwork.Count <= 0;
         }
-
     }
-
 }

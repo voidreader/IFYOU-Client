@@ -145,10 +145,10 @@ namespace PIERStory
             Debug.Log(">> current GamebaseCODE : " + Gamebase.GetDisplayLanguageCode());
             
             // 다시 Gamebase Initialize  ... 언어때문에 
-            InitGamebaseAgain();
+            // InitGamebaseAgain();
             
                         
-            
+            SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
             // SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
 
         }

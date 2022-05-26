@@ -1,8 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 using TMPro;
 using LitJson;
 using Doozy.Runtime.Reactor;
@@ -36,7 +34,6 @@ namespace PIERStory {
         public StatePlayButton stateButton = StatePlayButton.active;
         public EpisodeData currentEpisode;
         bool isResumePlay = false;
-        JsonData projectCurrentJSON = null;
         
         public bool hasPremium = false;
         
@@ -82,7 +79,6 @@ namespace PIERStory {
             
             // 씬 진행도.
             progressor.SetProgressAt(__progressorValue);
-            
         }
         
 
@@ -139,7 +135,7 @@ namespace PIERStory {
                 groupPlay.SetActive(true);
                 
                 textPlay.text = isResumePlay?SystemManager.GetLocalizedText("5005"):SystemManager.GetLocalizedText("5169");
-                
+
                 icon.sprite = spriteActiveIcon;
                 backgroundProgressor.sprite = spriteActiveBackgroundProgressor;
                 foregroundProgressor.sprite = spriteActiveForegroundProgressor;
@@ -159,11 +155,11 @@ namespace PIERStory {
                 
                 break;
             }
-            
+
+            textPlay.rectTransform.anchoredPosition = isResumePlay ? new Vector2(-40, 4) : new Vector2(-50, 4);
+            icon.rectTransform.anchoredPosition = isResumePlay ? new Vector2(115, 0) : new Vector2(105, 0);
+
             icon.SetNativeSize();
-            
         }
-        
-        
     }
 }

@@ -105,6 +105,8 @@ namespace PIERStory
         // 개인정보 보호 정책 및 이용약관 URL
         string privacyURL = string.Empty;
         string termsOfUseURL = string.Empty;
+        public string bundleURL = string.Empty; // 에셋번들 URL
+       
         public string contentsURL = string.Empty; // 리소스 다운로드 URL 
         
         
@@ -149,6 +151,7 @@ namespace PIERStory
         public Sprite spriteStar;       // 60 사이 사이즈 스타
         public Sprite spriteFreepassIcon; // 프리패스 아이콘
         public Sprite spriteInappOriginIcon; // 인앱 구매확정 메일 아이콘        
+        public Sprite spriteAllPassIcon; // 올 패스 아이콘
 
         
         
@@ -344,9 +347,12 @@ namespace PIERStory
             {
                 if (launchingJSON["header"]["isSuccessful"].IsBoolean && bool.Parse(launchingJSON["header"]["isSuccessful"].ToString()) == true)
                 {
-                    // 테스트 서버의 경우 코인샵 변경 
+                    // 테스트 서버의 경우 URL 변경 
                     if(isTestServerAccess) {
-                        coinShopURL =launchingJSON["launching"]["server"]["test_coinshop_url"].ToString();    
+                        coinShopURL = launchingJSON["launching"]["server"]["test_coinshop_url"].ToString();    
+                        privacyURL = launchingJSON["launching"]["server"]["test_privacy_url"].ToString();
+                        termsOfUseURL = launchingJSON["launching"]["server"]["test_terms_url"].ToString();
+                        bundleURL = launchingJSON["launching"]["server"]["test_bundle_url"].ToString();
                     }
                     
                 }
@@ -1347,8 +1353,21 @@ namespace PIERStory
 
             // 타임딜 갱신 
             UserManager.main.RequestUserActiveTimeDeal();
+
+            StartCoroutine(RefreshScreenView());
         }      
         
+
+        /// <summary>
+        /// 화면 갱신
+        /// </summary>
+        IEnumerator RefreshScreenView()
+        {
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+
+            MainProfile.OnRefreshIFYOUAchievement?.Invoke();
+            MainIfyouplay.OnRefreshIfyouplay?.Invoke();
+        }
         
         public void Logout()
         {
@@ -1479,6 +1498,25 @@ namespace PIERStory
 
             
         }
+        
+        public static long GetJsonNodeLong(JsonData __node, string __col) {
+            if (__node == null || !__node.ContainsKey(__col))
+                return 0;
+
+
+            if (__node[__col] == null)
+                return 0;
+            
+            try {    
+                return long.Parse(GetJsonNodeString(__node, __col));
+            }
+            catch (System.Exception e) {
+                return 0;
+            }
+
+            
+        }
+        
         
         /// <summary>
         /// 
@@ -2151,7 +2189,7 @@ namespace PIERStory
             webView.SetFullScreen(); // 풀스크린 
             webView.ScalesPageToFit = true;
             // webView.Style = WebViewStyle.Popup; // 팝업 스타일 테스트
-            webView.LoadURL(URLString.URLWithPath(__url));
+            webView.LoadURL(URLString.URLWithPath(__url + langParam));
             webView.Show();            
             
             SystemManager.main.isWebViewOpened = true; // 오픈할때 true로 변경 
@@ -2206,7 +2244,7 @@ namespace PIERStory
             */
 
             webView = WebView.CreateInstance();
-            WebView.OnHide += OnHideWebview;
+            WebView.OnHide += OnHideCoinShopWebview;
             
             
             Debug.Log(">> OpenCoinShopWebview OPEN");
@@ -2220,6 +2258,33 @@ namespace PIERStory
             SystemManager.main.isWebViewOpened = true; // 오픈할때 true로 변경 
             SetBlockBackButton(true);
         }
+        
+        /// <summary>
+        /// 작품 로비 외에 
+        /// </summary>
+        /// <param name="__view"></param>
+        void OnHideCoinShopWebview(WebView __view) {
+            Debug.Log(">> OnHideCoinShopWebview");
+            
+            
+            SystemManager.main.isWebViewOpened = false;  // 닫힐때 false로 변경 
+            SetBlockBackButton(false);
+            
+            WebView.OnHide -= OnHideCoinShopWebview;
+            __view.gameObject.SetActive(false);
+            
+            Destroy(__view);
+            
+            if (LobbyManager.main != null)
+            {
+                UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
+                NetworkLoader.main.RequestIfyouplayList();
+            }            
+            
+            // 추가로 뱅크 갱신 필요 
+            NetworkLoader.main.RequestUserBaseProperty();
+        }
+        
         
         void OnHideWebview(WebView __view) {
             

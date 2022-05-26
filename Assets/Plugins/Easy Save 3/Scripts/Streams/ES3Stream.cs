@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
 using UnityEngine;
+using System;
 
 namespace ES3Internal
 {
@@ -10,6 +11,9 @@ namespace ES3Internal
 		{
             bool isWriteStream = (fileMode != ES3FileMode.Read);
             Stream stream = null;
+
+            // Check that the path is in a valid format. This will throw an exception if not.
+            new FileInfo(settings.FullPath);
 
             try
             {

@@ -104,18 +104,20 @@ namespace ES3Internal
 			}
 			else
 			{
-				if(ES3Reflection.IsAssignableFrom(typeof(Component), type))
-					es3Type = new ES3ReflectedComponentType(type);
-				else if(ES3Reflection.IsValueType(type))
-					es3Type = new ES3ReflectedValueType(type);
-				else if(ES3Reflection.IsAssignableFrom(typeof(ScriptableObject), type))
-					es3Type = new ES3ReflectedScriptableObjectType(type);
-				else if(ES3Reflection.HasParameterlessConstructor(type) || ES3Reflection.IsAbstract(type) || ES3Reflection.IsInterface(type))
-					es3Type = new ES3ReflectedObjectType(type);
-				else if(throwException)
-					throw new NotSupportedException("Type of "+type+" is not supported as it does not have a parameterless constructor. Only value types, Components or ScriptableObjects are supportable without a parameterless constructor. However, you may be able to create an ES3Type script to add support for it.");
-				else
-					return null;
+                if (ES3Reflection.IsAssignableFrom(typeof(Component), type))
+                    es3Type = new ES3ReflectedComponentType(type);
+                else if (ES3Reflection.IsValueType(type))
+                    es3Type = new ES3ReflectedValueType(type);
+                else if (ES3Reflection.IsAssignableFrom(typeof(ScriptableObject), type))
+                    es3Type = new ES3ReflectedScriptableObjectType(type);
+                else if (ES3Reflection.IsAssignableFrom(typeof(UnityEngine.Object), type))
+                    es3Type = new ES3ReflectedUnityObjectType(type);
+                else if (ES3Reflection.HasParameterlessConstructor(type) || ES3Reflection.IsAbstract(type) || ES3Reflection.IsInterface(type))
+                    es3Type = new ES3ReflectedObjectType(type);
+                else if (throwException)
+                    throw new NotSupportedException("Type of " + type + " is not supported as it does not have a parameterless constructor. Only value types, Components or ScriptableObjects are supportable without a parameterless constructor. However, you may be able to create an ES3Type script to add support for it.");
+                else
+                    return null;
 			}
 
 			if(es3Type.type == null || es3Type.isUnsupported)

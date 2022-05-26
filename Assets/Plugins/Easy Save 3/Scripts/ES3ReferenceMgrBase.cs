@@ -18,7 +18,7 @@ namespace ES3Internal
         private static ES3ReferenceMgrBase _current = null;
         private static HashSet<ES3ReferenceMgrBase> mgrs = new HashSet<ES3ReferenceMgrBase>();
 #if UNITY_EDITOR
-        private const int CollectDependenciesDepth = 5;
+        private const int CollectDependenciesDepth = 3;
         protected static bool isEnteringPlayMode = false;
         static readonly HideFlags[] invalidHideFlags = new HideFlags[] { HideFlags.DontSave, HideFlags.DontSaveInBuild, HideFlags.DontSaveInEditor, HideFlags.HideAndDontSave };
 #endif
@@ -37,25 +37,36 @@ namespace ES3Internal
                 // If the reference manager hasn't been assigned, or we've got a reference to a manager in a different scene which isn't marked as DontDestroyOnLoad, look for this scene's manager.
                 if (_current == null /*|| (_current.gameObject.scene.buildIndex != -1 && _current.gameObject.scene != SceneManager.GetActiveScene())*/)
                 {
-                    var scene = SceneManager.GetActiveScene();
-                    var roots = scene.GetRootGameObjects();
-                    ES3ReferenceMgr mgr = null;
-
-                    // First, look for Easy Save 3 Manager in the top-level.
-                    foreach (var root in roots)
-                        if (root.name == "Easy Save 3 Manager")
-                            mgr = root.GetComponent<ES3ReferenceMgr>();
-
-                    // If the user has moved or renamed the Easy Save 3 Manager, we need to perform a deep search.
-                    if (mgr == null)
-                        foreach (var root in roots)
-                            if ((_current = root.GetComponentInChildren<ES3ReferenceMgr>()) != null)
-                                return _current;
-
-                    mgrs.Add(_current = mgr);
+                    ES3ReferenceMgrBase mgr = GetManagerFromScene(SceneManager.GetActiveScene());
+                    if(mgr != null)
+                        mgrs.Add(_current = mgr);
                 }
                 return _current;
             }
+        }
+
+        public static ES3ReferenceMgrBase GetManagerFromScene(Scene scene)
+        {
+            var roots = scene.GetRootGameObjects();
+            ES3ReferenceMgr mgr = null;
+
+            // First, look for Easy Save 3 Manager in the top-level.
+            foreach (var root in roots)
+            {
+                if (root.name == "Easy Save 3 Manager")
+                {
+                    mgr = root.GetComponent<ES3ReferenceMgr>();
+                    break;
+                }
+            }
+
+            // If the user has moved or renamed the Easy Save 3 Manager, we need to perform a deep search.
+            if (mgr == null)
+                foreach (var root in roots)
+                    if ((mgr = root.GetComponentInChildren<ES3ReferenceMgr>()) != null)
+                        break;
+
+            return mgr;
         }
 
         public bool IsInitialised { get { return idRef.Count > 0; } }
@@ -103,10 +114,7 @@ namespace ES3Internal
                 if (Current != null)
                 {
                     existing.Merge(this);
-                    if (gameObject.name.Contains("Easy Save 3 Manager"))
-                        Destroy(this.gameObject);
-                    else
-                        Destroy(this);
+                    Destroy(this);
                     _current = existing; // Undo the call to Current, which may have set it to NULL.
                 }
             }

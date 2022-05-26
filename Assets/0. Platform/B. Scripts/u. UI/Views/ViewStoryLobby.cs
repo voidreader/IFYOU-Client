@@ -32,7 +32,7 @@ namespace PIERStory
         public static Action<JsonData, ProfileItemElement> OnStickerSetting = null; // 스티커 화면에 띄우기 
         public static Action<JsonData, ProfileItemElement> OnBubbleSetting = null;  // 말풍선 
 
-        public static Action OnPassPurchase = null;
+        
 
         public static bool loadComplete = false;
         
@@ -40,9 +40,10 @@ namespace PIERStory
         
 
         [Header("메인 관련 제어")]
-        public GameObject premiumpassButton;        // 프리미엄 패스 버튼
-        public GameObject premiumpassBadge;         // 프리미엄 패스 뱃지
+        // public GameObject premiumpassButton;        // 프리미엄 패스 버튼
+        // public GameObject premiumpassBadge;         // 프리미엄 패스 뱃지
         public GameObject showDetailButton;         // 꾸미기 자세히 보기 버튼
+        public GameObject objStoryLobbyTop; // 로비 상단
 
         public Image showDetailIcon;
         public Sprite spriteIconEyeOpen;
@@ -127,7 +128,7 @@ namespace PIERStory
             OnBubbleSetting = CreateBubbleElement;
             
             OnInActiveInteractable = ActiveInteractable;
-            OnPassPurchase = SetPremiumPassObject;
+            
         }
 
         private void Start()
@@ -155,6 +156,9 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
 
             StartCoroutine(RoutineBackgroundDetailSetting());
+
+            mainContainer.Show();
+            decoContainer.Hide();
         }
 
 
@@ -458,9 +462,8 @@ namespace PIERStory
             noneBubbleCurrency.SetActive(bubbleListContent.childCount < 1);
 
 
-            // 상단의 프리미엄 패스, 버튼 두개 비활성화
-            premiumpassButton.SetActive(false);
-            premiumpassBadge.SetActive(false);
+            // 상단의 비활성화
+            objStoryLobbyTop.SetActive(false);
             //showDetailButton.SetActive(false);
 
             ActiveInteractable(true);
@@ -475,16 +478,7 @@ namespace PIERStory
         }
         
         
-        /// <summary>
-        /// 프리미엄 패스 관련 오브젝트 설정 
-        /// </summary>
-        void SetPremiumPassObject() {
-            if(!this.gameObject.activeSelf)
-                return;
-                
-            premiumpassButton.SetActive(!UserManager.main.HasProjectFreepass());
-            premiumpassBadge.SetActive(UserManager.main.HasProjectFreepass());
-        }
+
         
 
         /// <summary>
@@ -494,14 +488,15 @@ namespace PIERStory
         {
             if(mainContainer.isVisible)
             {
-                premiumpassButton.SetActive(false);
-                premiumpassBadge.SetActive(false);
+                objStoryLobbyTop.SetActive(false);
+                
                 showDetailIcon.sprite = spriteIconEyeClose;
                 mainContainer.Hide();
             }
             else
             {
-                SetPremiumPassObject();
+                objStoryLobbyTop.SetActive(true);
+                
                 showDetailIcon.sprite = spriteIconEyeOpen;
                 mainContainer.Show();
             }
@@ -690,7 +685,7 @@ namespace PIERStory
 
             currencyElements.Clear();
 
-            SetPremiumPassObject();
+            objStoryLobbyTop.SetActive(true);
             //showDetailButton.SetActive(true);
 
             foreach(GameModelCtrl models in liveModels)

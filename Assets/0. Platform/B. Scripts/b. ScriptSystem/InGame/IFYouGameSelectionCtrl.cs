@@ -177,8 +177,18 @@ namespace PIERStory {
                 if (UserManager.main.HasProjectFreepass())
                 {
                     selectionPrice.SetActive(false);
-                    freepassBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey);
                     freepassBadge.gameObject.SetActive(true);
+                    
+                    // * 2022.05.25 올패스를 위한 체크 추가
+                    if(UserManager.main.HasProjectPremiumPassOnly(StoryManager.main.CurrentProjectID)) {
+                        // 프리미엄 패스 있으면 프리미엄 패스 이미지 사용하고 
+                        freepassBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey);    
+                    }
+                    else {
+                        // 없으면 올패스 이미지를 사용한다.
+                        freepassBadge.GetComponent<Image>().sprite = SystemManager.main.spriteAllPassIcon;
+                    }
+
                 }
                 else
                 {

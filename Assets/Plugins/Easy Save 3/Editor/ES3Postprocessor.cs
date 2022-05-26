@@ -52,10 +52,16 @@ public class ES3Postprocessor : UnityEditor.AssetModificationProcessor
         if (refreshed) // If we've already refreshed, do nothing.
             return;
 
-        if (RefMgr != null && ES3Settings.defaultSettingsScriptableObject.autoUpdateReferences)
+        if (ES3Settings.defaultSettingsScriptableObject.autoUpdateReferences)
         {
-            RefMgr.RefreshDependencies(isEnteringPlayMode);
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                var mgr = (ES3ReferenceMgr)ES3ReferenceMgr.GetManagerFromScene(SceneManager.GetSceneAt(i));
+                if (mgr != null)
+                    mgr.RefreshDependencies(isEnteringPlayMode);
+            }
         }
+
         UpdateAssembliesContainingES3Types();
         refreshed = true;
     }

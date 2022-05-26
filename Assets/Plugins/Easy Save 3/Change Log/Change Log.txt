@@ -1,3 +1,40 @@
+3.4.2
+- Resolved issue where Unity Visual Scripting defines were not present on some versions of Unity.
+
+3.4.1
+- Added support for Particle System Bursts
+- Resolved issue where Auto Save would sometimes save all Components regardless of settings.
+- Resolved issue where Auto Save icon would not highlight when fields are selected.
+- Structs with private properties or fields can now be serialized.
+- Loading a blank string from a spreadsheet now returns a blank string rather than null.
+- The reference manager will only collect references up to 3 levels deep to improve performance.
+- System.Random support has been dropped due to Unity's implementation changing, making it non-serializable.
+- ES3Ref is no longer stored twice for ScriptableObjects.
+- Added support for Numerics.BigInteger.
+- Internal fields of the ES3AutoSave Component are no longer displayed in the Editor.
+- If a reference ID for a Component exists, it now ignores the GameObject ID so that a new GO instance is not created.
+- Added a Get Streaming Assets Path action for Playmaker.
+- Added non-generic versions of the ES3Spreadsheet methods to work around issue with Bolt.
+- Worked around issue with Bolt where it would crash if you have two methods with the same parameters but one is generic.
+- Resolved issue where Components marked as destroyed but not yet destroyed would cause unexpected behaviour.
+- Auto Save will now work for additive scenes.
+- Resolved issue where reference manager wasn't automatically updated when scene was open additively prior to runtime.
+- Support added for Unity Visual Scripting.
+
+3.4.0
+- Caching now works seamlessly between Cloud and Auto Save.
+- Added Save Multiple and Load Multiple actions to enable saving multiple specific variables at once.
+- Added extra overloads to the ES3.LoadString method.
+- Guids are now natively supported.
+- Transform now stores the sibling index.
+- Getting a timestamp for a file in cache which doesn't exist now returns a zero timestamp.
+- Resolved issues where enums would sometiimes not serialize correctly when creating an ES3Type script for a class.
+- Resolved issue where DownloadTimestamp PlayMaker action would download the wrong data.
+- Resolved issue where reflection does not recognise a collection of a nested type as a nested type.
+- Resolved issue where ES3Cloud was merged with the debug branch.
+- Resolved issue where Sprites with atlased Textures would save an incorrect Rect.
+- Resolved issue where ES3Spreadsheet was serializing primitives as objects when using PlayMaker actions.
+
 3.3.2f7
 - Type data is now stored when using ES3.Serialize<object>.
 - Worked around issue where Unity would return an incorrect number of assemblies.

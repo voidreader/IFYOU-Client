@@ -3005,6 +3005,7 @@ namespace PIERStory
                 return false;
 
             // 출석 보충이 필요한 경우 true
+            /*
             if (!SystemManager.GetJsonNodeBool(attendanceMission[LobbyConst.NODE_USER_INFO][0], "is_attendance") || SystemManager.GetJsonNodeInt(attendanceMission[LobbyConst.NODE_USER_INFO][0], "reset_day") > 0)
                 return true;
 
@@ -3015,6 +3016,7 @@ namespace PIERStory
                     && !SystemManager.GetJsonNodeBool(attendanceMission[LobbyConst.NODE_CONTINUOUS_ATTENDANCE][i], "reward_check"))
                     return true;
             }
+            */
 
             // 오늘 아직 출석하지 않았을 때 true
             if (!TodayAttendanceCheck())
@@ -3083,8 +3085,8 @@ namespace PIERStory
         /// <param name="__j"></param>
         public void RefreshIfyouplayJsonData(JsonData __j)
         {
-            userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_USER_INFO] = __j[LobbyConst.NODE_USER_INFO];
-            userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_CONTINUOUS_ATTENDANCE] = __j[LobbyConst.NODE_CONTINUOUS_ATTENDANCE];
+            //userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_USER_INFO] = __j[LobbyConst.NODE_USER_INFO];
+            //userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_CONTINUOUS_ATTENDANCE] = __j[LobbyConst.NODE_CONTINUOUS_ATTENDANCE];
             userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_ATTENDANCE] = __j[LobbyConst.NODE_ATTENDANCE];
 
             ViewMain.OnRefreshIfyouplayNewSign?.Invoke();

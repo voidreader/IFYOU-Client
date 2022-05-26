@@ -63,6 +63,8 @@ namespace PIERStory {
         
         public int passPrice = 0; // 프리미엄 패스 프라이스 
         public float passDiscount = 0.1f; // 프리이엄 패스 진행도에 따른 할인율 
+
+        public bool isNotify = false;       // 작품 푸쉬 알림 설정
         
         public bool isValidData {
             get {
@@ -129,11 +131,11 @@ namespace PIERStory {
             // 프리미엄 패스 가격정보
             passPrice = SystemManager.GetJsonNodeInt(originData, "pass_price");
             passDiscount = SystemManager.GetJsonNodeFloat(originData, "pass_discount");
-            
-            
-            
+
+            isNotify = SystemManager.GetJsonNodeBool(originData, "is_notify");
+
             // 프로젝트 진행율 
-            projectProgress = SystemManager.GetJsonNodeFloat(originData, LobbyConst.STORY_PROJECT_PROGRESS)   ;
+            projectProgress = SystemManager.GetJsonNodeFloat(originData, LobbyConst.STORY_PROJECT_PROGRESS);
             
             // 
             isPlaying = SystemManager.GetJsonNodeBool(originData, LobbyConst.STORY_IS_PLAYING); 

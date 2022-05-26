@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 using TMPro;
-using DG.Tweening;
 using LitJson;
 using BestHTTP;
 
@@ -21,7 +19,11 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textProducer;          // 제작사
         [SerializeField] TextMeshProUGUI textGenre;             // 장르 
         [SerializeField] TextMeshProUGUI textSummary;           // 요약
-        
+
+        public Button buttonAlert;          // 작품 알림 버튼
+        public Sprite spriteAlertOff;       // 작품 알림 버튼 Off Sprite
+        public Sprite spriteAlertOn;        // 작품 알림 버튼 On Sprite
+
         [SerializeField] Button btnLike; // 좋아요 버튼
         [SerializeField] Sprite spriteLikeOff; // 좋아요 버튼 OFF 스프라이트
         [SerializeField] Sprite spriteLikeOn; // 좋아요 버튼 ON 스프라이트        
@@ -70,12 +72,11 @@ namespace PIERStory {
             else 
                 textSerialDay.text = SystemManager.GetLocalizedText("5186"); // 완결 
             
-            
             SetLikeButtonState();
-            
-            
+            SetAlertButtonState();
+
             // 인트로에서 넘어온 경우에 대한 처리 추가 
-            if(SystemListener.main.isIntroduceRecommended) {
+            if (SystemListener.main.isIntroduceRecommended) {
                 
                 textRecommend.text = SystemManager.GetLocalizedText("6289");
                 textRecommend.gameObject.SetActive(true);
@@ -143,8 +144,69 @@ namespace PIERStory {
                 SystemManager.ShowSimpleAlertLocalize("6188");
             else
                 SystemManager.ShowSimpleAlertLocalize("6189");
-        }        
-        
+        }
+
+        #endregion
+
+
+        #region 작품 알림 버튼 관련 메소드
+
+        /// <summary>
+        /// 작품 알림 이미지 세팅
+        /// </summary>
+        void SetAlertButtonState()
+        {
+            buttonAlert.image.sprite = introduceStory.isNotify? spriteAlertOn : spriteAlertOff;
+        }
+
+
+        /// <summary>
+        /// 작품 알림 버튼 클릭
+        /// </summary>
+        public void OnClickAlertButton()
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "setUserProjectNotification";
+            sending[CommonConst.COL_PROJECT_ID] = introduceStory.projectID;
+            sending["is_notify"] = introduceStory.isNotify ? 0 : 1;
+
+            NetworkLoader.main.SendPost(CallbackProjectAlert, sending, true);
+        }
+
+
+        void CallbackProjectAlert(HTTPRequest request, HTTPResponse response)
+        {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
+                return;
+
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            Debug.Log("CallbackProjectAlert : " + JsonMapper.ToStringUnicode(result));
+
+            // 작품 알람 설정값 갱신
+            StoryManager.main.FindProject(introduceStory.projectID).isNotify = SystemManager.GetJsonNodeBool(result, "is_notify");
+            introduceStory.isNotify = SystemManager.GetJsonNodeBool(result, "is_notify");
+
+            SetAlertButtonState();
+
+            // 눌렀을 때만 Alert popup이 뜨도록 수정
+            if (introduceStory.isNotify)
+            {
+                // 작품 기다무, 연재면 다음 연재 알림 등록
+                // 여기 나중에 SystemManager.GetJsonNodeLong으로 수정해야함
+                UserManager.main.RegisterLocalPush(introduceStory.projectID, SystemManager.GetJsonNodeInt(result["projectCurrent"][0], "chapter_number"), long.Parse(SystemManager.GetJsonNodeString(result["projectCurrent"][0], "next_open_tick")));
+
+                SystemManager.ShowSimpleAlertLocalize("6311");
+            }
+            else
+            {
+                // 이 작품에 관련된 예약(스케줄) 모두 취소하기
+                UserManager.main.CancelLocalPush(introduceStory.projectID);
+
+                SystemManager.ShowSimpleAlertLocalize("6312");
+            }
+        }
+
+
         #endregion
     }
 }

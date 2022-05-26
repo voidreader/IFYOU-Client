@@ -60,6 +60,7 @@ namespace PIERStory
         
 
         JsonData totalStoryListJson = null; // 조회로 가져온 모든 작품 리스트(all)
+        JsonData projectAlertJson = null;   // 작품 알림 ID Json
         JsonData likeStoryIdJSON = null; // 좋아요 작품 ID JSON
         JsonData latestPlayStoryJSON = null; // 가장 최근에 플레이한 작품 정보
         public int latestPlayProjectID = -1; 

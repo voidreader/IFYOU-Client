@@ -136,12 +136,6 @@ namespace PIERStory
             camWidth = (2 * Camera.main.orthographicSize) * Camera.main.aspect;
         }
         
-        void Update() {
-            
-        }
-        
-        
-
         public override void OnStartView()
         {
             base.OnStartView();
@@ -169,7 +163,16 @@ namespace PIERStory
             if (UserManager.main.tutorialStep == 1 && !UserManager.main.tutorialClear)
                 UserManager.main.UpdateTutorialStep(1, 0, CallbackStartTutorial);
 
-            
+
+            JsonData projectCurrent = UserManager.main.GetUserProjectRegularEpisodeCurrent();
+
+            DateTime nextOpen = DateTime.ParseExact(SystemManager.GetJsonNodeString(projectCurrent, "next_open_time"), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            DateTime current = DateTime.Now;
+
+            TimeSpan timeDiff = nextOpen - current;
+
+            Debug.Log(string.Format("오픈 예정 시간 = {0}, 현재 시간 = {1}, 시간차이 = {2}", nextOpen, current, timeDiff));
+
             // 리뷰 팝업 위치 
             if(UserManager.main.gameComplete)
             {

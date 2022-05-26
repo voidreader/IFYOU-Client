@@ -62,7 +62,7 @@ namespace PIERStory
             attendanceData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_ATTENDANCE_MISSION);
 
             // 출석 관련 세팅
-            InitContinuousAttendance();
+            //InitContinuousAttendance();
             InitDailyAttendance();
 
             dailyMissionData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_DAILY_MISSION);

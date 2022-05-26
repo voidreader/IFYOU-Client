@@ -165,6 +165,17 @@ namespace PIERStory {
         /// </summary>
         public void OnClickAlertButton()
         {
+
+#if UNITY_IOS
+
+            // ios 유저의 경우에 AuthorizationOption을 체크해서 return시키자
+            if (Unity.Notifications.iOS.iOSNotificationCenter.GetNotificationSettings().AuthorizationStatus == Unity.Notifications.iOS.AuthorizationStatus.Denied)
+            {
+                SystemManager.ShowMessageWithLocalize("6315");
+                return;
+            }
+#endif
+
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "setUserProjectNotification";
             sending[CommonConst.COL_PROJECT_ID] = introduceStory.projectID;
@@ -193,7 +204,7 @@ namespace PIERStory {
             {
                 // 작품 기다무, 연재면 다음 연재 알림 등록
                 // 여기 나중에 SystemManager.GetJsonNodeLong으로 수정해야함
-                UserManager.main.RegisterLocalPush(introduceStory.projectID, SystemManager.GetJsonNodeInt(result["projectCurrent"][0], "chapter_number"), long.Parse(SystemManager.GetJsonNodeString(result["projectCurrent"][0], "next_open_tick")));
+                UserManager.main.RegisterLocalPush(introduceStory.projectID, SystemManager.GetJsonNodeInt(result["projectCurrent"][0], "chapter_number"), SystemManager.GetJsonNodeLong(result["projectCurrent"][0], "next_open_tick"));
 
                 SystemManager.ShowSimpleAlertLocalize("6311");
             }

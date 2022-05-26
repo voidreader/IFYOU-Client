@@ -24,32 +24,32 @@ namespace PIERStory
     public class UserManager : MonoBehaviour
     {
         public static UserManager main = null;
-        
+
         [SerializeField] bool isAdminUser = false; // 슈퍼유저
         public bool isIntroDone = false; // 인트로 수행 여부 
 
         [HideInInspector] public JsonData userJson = null; // 계정정보 (table_account) 
         [HideInInspector] public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)
         [HideInInspector] public JsonData notReceivedMailJson = null;     // 미수신 메일
-        
+
 
         [HideInInspector] public JsonData userIfyouPlayJson = null;         // 이프유플레이 json data
         [HideInInspector] public JsonData userActiveTimeDeal = null; // 유저 활성화 타임딜 목록 
-        
+
         [SerializeField] string debugBankString = string.Empty;
 
         public List<CoinIndicator> ListCoinIndicators = new List<CoinIndicator>(); // 코인 표시기
         public List<GemIndicator> ListGemIndicators = new List<GemIndicator>(); // 젬 표시기
         public List<NicknameIndicator> ListNicknameIndicators = new List<NicknameIndicator>(); // 닉네임 표시기
-        
-        
+
+
         [HideInInspector] public Queue<JsonData> CompleteMissions = new Queue<JsonData>();      // 완료된 미션 목록
 
 
         #region Actions
         public static Action OnCleanUserEpisodeProgress; // 유저 에피소드 씬 진척도 클리어 콜백 
         public static Action<bool> OnRequestEpisodePurchase = null; // 에피소드 구매 콜백처리
-        
+
         public static Action OnFreepassPurchase = null; // 프리패스 구매 콜백처리 
 
         public static Action<int> OnRefreshUnreadMailCount = null; // 미수신 메일 개수 Refresh Action
@@ -63,10 +63,10 @@ namespace PIERStory
         [SerializeField]
         List<string> DebugUserIllusts = new List<string>();
 
-        
 
 
-        
+
+
 
         #endregion
 
@@ -90,17 +90,17 @@ namespace PIERStory
         [HideInInspector] public JsonData currentStorySelectionHistoryJson = null;      // 선택한 프로젝트의 선택지 내역(히스토리)
 
         [HideInInspector] public bool completeReadUserData = false;
-        
-        
+
+
 
         public float prevIllustProgress = -1f;
 
-        
+
         /// <summary>
         /// 사건 기록을 하는 통신을 사용할 것인가?
         /// 엔딩 수집 화면에서 사용할 변수
         /// </summary>
-        public bool useRecord = true;       
+        public bool useRecord = true;
 
         public string userKey = string.Empty;
         public string gamebaseID = string.Empty;
@@ -112,23 +112,23 @@ namespace PIERStory
         public bool isSelectionTutorialClear = false; // 선택지 튜토리얼 초기화 여부 
         public bool isHowToPlayClear = false; // How to play 튜토리얼 초기화 여부 
         public bool gameComplete = false;
-        
+
         public int adCharge = 0;
-        
+
 
         public string nickname = string.Empty;      // 유저 닉네임
         public string accountLink = string.Empty; // 유저 계정 연동 정보 (table_account)
-        
+
         public int gem = 0;
         public int coin = 0;
         public int unreadMailCount = 0; // 미수신 메일 카운트
 
         public TimeSpan dailyMissionTimer;
-        
+
         public long allpassExpireTick = 0; // 올패스 만료일시 tick
         public DateTime allpassExpireDate; // 올패스 만료일시
         TimeSpan allpassTimeDiff;
-        
+
 
         #region 유저 등급 관련 변수
 
@@ -154,7 +154,7 @@ namespace PIERStory
         JsonData resultSceneRecord = null; // 사건ID 기록 통신 결과 
         JsonData resultEpisodeRecord = null; // 에피소드 기록 통신 결과
         JsonData resultEpisodeReset = null; // 에피소드 리셋 통신 결과
-        
+
         JsonData currentStoryMissionJSON = null; // 현재 선택한 스토리의 미션 JSON
         public Dictionary<int, MissionData> DictStoryMission; // 미션 Dictionary
         public Sprite spriteMissionPopup;       // 미션 팝업에서 사용되는 아이콘
@@ -169,28 +169,28 @@ namespace PIERStory
 
         // getUserSelectedStory를 통해 받아온 작품 관련 정보 
 
-        
+
         public const string UN_UNREAD_MAIL_COUNT = "unreadMailCount"; // 미수신 메일 개수
         public const string UN_UNREAD_MAIL_LIST = "mailList"; // 미수신 메일 리스트
 
         const string NODE_TUTORIAL_STEP = "tutorial_step";
         const string NODE_TUTORIAL_CLEAR = "tutorial_clear";
         const string NODE_TUTORIAL_CURRENT = "tutorial_current";
-        
-        
+
+
         public const string NODE_BUBBLE_SET = "bubbleSet"; // 말풍선 세트 정보 
         const string NODE_BUBBLE_SPRITE = "bubbleSprite"; // 말풍선 스프라이트 정보 
-        
+
 
         const string NODE_PROJECT_MISSIONS = "missions";                    // 프로젝트의 모든 미션
-        
+
 
         // 사용자 정보 
         const string NODE_USER_VOICE = "voiceHistory";      // 유저 보이스(더빙) 히스토리 정보
         const string NODE_USER_RAW_VOICE = "rawVoiceHistory"; // 유저 보이스 히스토리 (Raw 타입)
-        
+
         const string NODE_USER_GALLERY_IMAGES = "galleryImages"; // * 유저 갤러리 이미지 (해금 여부 포함됨) - 일반 & 라이브 페어 시스템 
-        
+
 
         public const string NODE_PURCHASE_HIST = "episodePurchase";  //episodePurchase 에피소드 구매 기록
         const string NODE_SCENE_PROGRESS = "sceneProgress"; // 사건ID 진행도. 조건 판정에 사용한다. 
@@ -202,14 +202,14 @@ namespace PIERStory
         const string NODE_EPISODE_PROGRESS = "episodeProgress"; // 에피소드 진행도
         const string NODE_EPISODE_HISTORY = "episodeHistory"; // 에피소드 히스토리 
 
-        
+
         const string NODE_NEXT_EPISODE = "nextEpisodeID"; // 다음 에피소드 정보 
-        
-        
-        
+
+
+
         const string NODE_PROJECT_CURRENT = "projectCurrent"; // 유저의 작품에서의 플레이 위치 
         const string NODE_SELECTION_PROGRESS = "selectionProgress"; // 선택지 프로그레스 
-        
+
 
         const string NODE_SELECTION_PURCHASE = "selectionPurchase";
         const string NODE_SELECTION_HINT_PURCHASE = "selectionHintPurchase";
@@ -236,38 +236,6 @@ namespace PIERStory
             ListGemIndicators.Clear();
             ListNicknameIndicators.Clear();
         }
-
-        /*
-        private void OnApplicationPause(bool pause)
-        {
-            if (Application.isEditor)
-                return;
-
-
-            // 채널 생성
-            AndroidNotificationChannel notificationChannel = new AndroidNotificationChannel(
-                "notification_channel1",
-                "notification_title",
-                "This is a notification",
-                Importance.High);
-
-
-            // 채널 등록
-            AndroidNotificationCenter.RegisterNotificationChannel(notificationChannel);
-
-            DateTime toNotify = DateTime.Now.AddMinutes(1);
-
-            // 푸쉬 알림 설정
-            AndroidNotification notification = new AndroidNotification(
-                "이프유앱 알림",
-                "앱을 멈춘지 1분이 지났습니다",
-                toNotify);
-
-            // 푸쉬 예약
-            AndroidNotificationCenter.SendNotification(notification, "notification_channel1");
-            AndroidNotificationCenter.SendNotificationWithExplicitID(notification, "notification_channel1", 1);
-        }
-        */
 
         /// <summary>
         /// 유저 정보 초기화 
@@ -322,7 +290,7 @@ namespace PIERStory
 
             // 알림 정보 update
             SetNotificationInfo(userJson);
-            
+
             // 유저 정보
             SetUserInfo(userJson);
 
@@ -330,58 +298,62 @@ namespace PIERStory
             // 유저 정보 불러왔으면, Lobby로 진입을 요청합니다. 
             completeReadUserData = true;
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CONNECT_SERVER, string.Empty);
-            
-            
+
+
             Dictionary<string, string> eventValues = new Dictionary<string, string>();
             eventValues.Add(AFInAppEvents.CUSTOMER_USER_ID, userKey);
             AdManager.main.SendAppsFlyerEvent(AFInAppEvents.LOGIN, eventValues);
-            
+
             ViewTitle.ActionTitleLoading("login");
-            
+
             // 서비스 중인 스토리 리스트 조회
             RequestServiceStoryList();
-            
+
             // 푸시 토큰
             SystemManager.main.QueryPushTokenInfo();
         }
-        
+
         /// <summary>
         /// 서비스 중인 작품 리스트 조회하기 
         /// </summary>
-        public void RequestServiceStoryList() {
+        public void RequestServiceStoryList()
+        {
             StoryManager.main.RequestStoryList(OnRequestServiceStoryList);
         }
-        
+
         /// <summary>
         /// callback 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
-        void OnRequestServiceStoryList(HTTPRequest request, HTTPResponse response) {
-            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+        void OnRequestServiceStoryList(HTTPRequest request, HTTPResponse response)
+        {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
+            {
                 return;
             }
-            
+
             Debug.Log(">> OnRequestServiceStoryList : " + response.DataAsText);
-            
+
             // 작품 리스트 받아와서 스토리 매니저에게 전달. 
             StoryManager.main.SetStoryList(JsonMapper.ToObject(response.DataAsText));
-            
+
             // 프로모션, 공지사항, 출석 체크 조회 
             RequestServiceEvents();
         }
-        
+
         /// <summary>
         /// 진행중인 이벤트 정보 조회 
         /// </summary>
-        public void RequestServiceEvents() {
+        public void RequestServiceEvents()
+        {
             NetworkLoader.main.RequestPlatformServiceEvents(); // 공지사항, 프로모션, 장르 조회 
             NetworkLoader.main.RequestIfyouplayList();
             StartCoroutine(RoutineDailyMissionTimer());
-        }        
-        
-        
-        
+        }
+
+
+
 
         /// <summary>
         /// 이전 연동된 계정 교체 처리 
@@ -418,8 +390,8 @@ namespace PIERStory
             }
 
             Debug.Log(string.Format("CallbackChangeAccount: {0}", res.DataAsText));
-            JsonData result = JsonMapper.ToObject(res.DataAsText); 
-            if(result["account"][0]["is_done"].ToString() == "0")
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            if (result["account"][0]["is_done"].ToString() == "0")
             {
                 // 여기 오면... 안되는데 ㅠㅠ
                 // Force 하기전에 미리 체크해야 되나?
@@ -428,18 +400,19 @@ namespace PIERStory
                 return;
             }
 
-            SetRefreshUserInfo(result);            
-            
+            SetRefreshUserInfo(result);
+
         }
-        
-        
+
+
         /// <summary>
         /// userkey및 기타 닉네임, 레벨 정도 설정 
         /// </summary>
         /// <param name="__accountInfo"></param>
-        void SetUserInfo(JsonData __accountInfo) {
+        void SetUserInfo(JsonData __accountInfo)
+        {
             userJson = SystemManager.GetJsonNode(__accountInfo, "account"); // 유저 json 
-            
+
             userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
 
 
@@ -451,36 +424,38 @@ namespace PIERStory
 
             isSelectionTutorialClear = SystemManager.GetJsonNodeBool(userJson, "tutorial_selection"); // 선택지 튜토리얼 
             isHowToPlayClear = SystemManager.GetJsonNodeBool(userJson, "how_to_play"); // 하우 투 플레이 튜토리얼 
-            
+
             accountLink = SystemManager.GetJsonNodeString(userJson, "account_link");
             ViewCommonTop.OnRefreshAccountLink?.Invoke(); // 상단 갱신 (계정연동 보상때문에)
-            
+
             SetNewNickname(SystemManager.GetJsonNodeString(userJson, "nickname"));
-            
-           
-            
+
+
+
             // 슈퍼유저 처리 
             isAdminUser = SystemManager.GetJsonNodeBool(userJson, "admin");
-            
+
             // 인트로 완료 여부
             isIntroDone = SystemManager.GetJsonNodeBool(userJson, "intro_done");
-            
+
             // 올패스 만료 일시에 대한  처리 2022.05.23
             SetAllpassExpire(SystemManager.GetJsonNodeLong(userJson, "allpass_expire_tick"));
         }
-        
+
         /// <summary>
         /// 올 패스 만료시간 세팅 
         /// </summary>
         /// <param name="__expireTick"></param>
-        public void SetAllpassExpire(long __expireTick) {
+        public void SetAllpassExpire(long __expireTick)
+        {
             allpassExpireTick = SystemConst.ConvertServerTimeTick(__expireTick);
             allpassExpireDate = new DateTime(allpassExpireTick);
         }
-        
-        public void SetNewNickname(string __newNickname) {
+
+        public void SetNewNickname(string __newNickname)
+        {
             nickname = __newNickname;
-            
+
             // nickname 컨트롤 리프레시 필요 
             RefreshNicknameIndicators(nickname);
         }
@@ -498,7 +473,7 @@ namespace PIERStory
 
             // 알림 정보 update
             SetNotificationInfo(__j);
-            
+
             SetUserInfo(__j);
 
             // 사용자 UI 정보를 갱신하는 Event 필요함!
@@ -517,8 +492,8 @@ namespace PIERStory
             // 알림 정보 update
             SetNotificationInfo(__j);
         }
-        
-        
+
+
         /// <summary>
         /// 선택한 스토리에서 유저 데이터 분리해서 저장 
         /// </summary>
@@ -530,9 +505,10 @@ namespace PIERStory
             #region 미션 
             currentStoryMissionJSON = GetNodeProjectMissions();
             DictStoryMission = new Dictionary<int, MissionData>();
-            
+
             // 딕셔너리에 정리하기. JSON 쓰기 시러요..!
-            for(int i=0; i<currentStoryMissionJSON.Count;i++) {
+            for (int i = 0; i < currentStoryMissionJSON.Count; i++)
+            {
                 MissionData missionData = new MissionData(currentStoryMissionJSON[i]);
                 DictStoryMission.Add(missionData.missionID, missionData);
             }
@@ -541,7 +517,7 @@ namespace PIERStory
 
             // 능력치            
             SetStoryAbilityDictionary(currentStoryJson[NODE_USER_ABILITY]);
-            
+
             // 선택지 히스토리 
             currentStorySelectionHistoryJson = currentStoryJson["selectionHistory"];
 
@@ -550,21 +526,22 @@ namespace PIERStory
                 return;
 
             DebugProjectIllusts.Clear();
-            
+
 
         }
-        
+
         #region 작품 능력치 
-        
+
         /// <summary>
         /// 스토리 능력치 Dictionary
         /// </summary>
         /// <param name="__abilityData"></param>
-        public void SetStoryAbilityDictionary(JsonData __abilityData) {
+        public void SetStoryAbilityDictionary(JsonData __abilityData)
+        {
             currentStoryAbilityJson = __abilityData;
             DictStoryAbility = new Dictionary<string, List<AbilityData>>();
 
-            foreach(string key in currentStoryAbilityJson.Keys)
+            foreach (string key in currentStoryAbilityJson.Keys)
             {
                 List<AbilityData> abilityDatas = new List<AbilityData>();
 
@@ -575,16 +552,17 @@ namespace PIERStory
                 }
 
                 DictStoryAbility.Add(key, abilityDatas);
-            }            
+            }
         }
-        
+
         /// <summary>
         /// 코인샵 진입전에 호출해주기 
         /// </summary>
-        public void SaveCurrentAbilityDictionary() {
+        public void SaveCurrentAbilityDictionary()
+        {
             // 똑같은 딕셔너리 생성 
             DictOldStoryAbility = new Dictionary<string, List<AbilityData>>();
-            foreach(string key in currentStoryAbilityJson.Keys)
+            foreach (string key in currentStoryAbilityJson.Keys)
             {
                 List<AbilityData> abilityDatas = new List<AbilityData>();
 
@@ -595,33 +573,36 @@ namespace PIERStory
                 }
 
                 DictOldStoryAbility.Add(key, abilityDatas);
-            }  
+            }
         }
-        
+
         /// <summary>
         /// 이전과 비교해서 달라진 능력치 메세지 띄워주기 
         /// </summary>
-        public void NotifyUpdatedAbility() {
-            
-             float gap = 0; 
-            
+        public void NotifyUpdatedAbility()
+        {
+
+            float gap = 0;
+
             // old와 비교해야한다. 
             // key : 화자
-            foreach(string key in DictStoryAbility.Keys) {
-                
+            foreach (string key in DictStoryAbility.Keys)
+            {
+
                 Debug.Log(string.Format("[{0}] : old[{1}] / current[{2}]", key, DictOldStoryAbility[key].Count, DictStoryAbility[key].Count));
-                
-                for(int i=0; i<DictStoryAbility[key].Count;i++) { // 화자별로 능력치 훑는다. 
-                    
+
+                for (int i = 0; i < DictStoryAbility[key].Count; i++)
+                { // 화자별로 능력치 훑는다. 
+
                     // 값이 똑같으면, 일없다. 
-                    if(DictOldStoryAbility[key][i].currentValue == DictStoryAbility[key][i].currentValue)
+                    if (DictOldStoryAbility[key][i].currentValue == DictStoryAbility[key][i].currentValue)
                         continue;
-                        
+
                     // 갭은 현재 능력치 - 이전 능력치다. 
                     gap = DictStoryAbility[key][i].currentValue - DictOldStoryAbility[key][i].currentValue;
-                    
-                    Debug.Log(string.Format("[{0}]/[{1}]/[{2}]",key, DictStoryAbility[key][i].originAbilityName, gap ));
-                    
+
+                    Debug.Log(string.Format("[{0}]/[{1}]/[{2}]", key, DictStoryAbility[key][i].originAbilityName, gap));
+
                     // 능력치 팝업 호출하자. 
                     SystemManager.ShowAbilityPopup(key, DictStoryAbility[key][i].originAbilityName, Mathf.RoundToInt(gap));
                 }
@@ -655,9 +636,9 @@ namespace PIERStory
 
 
 
-        
+
         #endregion
-        
+
 
 
         #region 선택지 관련
@@ -741,7 +722,7 @@ namespace PIERStory
         /// </summary>
         public void SetSelectionHint(JsonData __j)
         {
-            if(!__j.ContainsKey(NODE_SELECTION_HINT_PURCHASE))
+            if (!__j.ContainsKey(NODE_SELECTION_HINT_PURCHASE))
             {
                 Debug.LogError("선택지 힌트 노드가 존재하지 않음!");
                 return;
@@ -777,7 +758,7 @@ namespace PIERStory
 
         #endregion
 
-        
+
 
         #region 작품 미션
 
@@ -805,18 +786,21 @@ namespace PIERStory
         public MissionData GetMissionData(string missionName)
         {
             // origin name을 체크하도록 변경
-            foreach(MissionData missionData in DictStoryMission.Values) {
-                if(missionData.originName == missionName)
+            foreach (MissionData missionData in DictStoryMission.Values)
+            {
+                if (missionData.originName == missionName)
                     return missionData;
             }
-            
+
             return null;
         }
-        
-        public void SetMissionData(int __missionID, MissionData __data) {
-            if(DictStoryMission.ContainsKey(__missionID)) {
+
+        public void SetMissionData(int __missionID, MissionData __data)
+        {
+            if (DictStoryMission.ContainsKey(__missionID))
+            {
                 DictStoryMission[__missionID] = __data;
-                
+
             }
         }
 
@@ -859,7 +843,7 @@ namespace PIERStory
 
 
         #region 튜토리얼 Update 통신
-        
+
         /// <summary>
         /// 튜토리얼 단계 업데이트 함수
         /// </summary>
@@ -876,11 +860,11 @@ namespace PIERStory
 
             NetworkLoader.main.SendPost(callback, sendingData);
         }
-        
+
 
         void CallbackTutorialUpdate(HTTPRequest req, HTTPResponse res)
         {
-            if(!NetworkLoader.CheckResponseValidation(req, res))
+            if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackTutorialUpdate");
                 return;
@@ -893,14 +877,14 @@ namespace PIERStory
             Debug.Log(JsonMapper.ToStringUnicode(result));
 
             // 튜토리얼 완료라면 보상 갱신
-            if(SystemManager.GetJsonNodeBool(result[NODE_TUTORIAL_CURRENT][0], "tutorial_clear"))
+            if (SystemManager.GetJsonNodeBool(result[NODE_TUTORIAL_CURRENT][0], "tutorial_clear"))
             {
                 if (tutorialStep != 2)
                     SetBankInfo(result);
             }
         }
-        
-        
+
+
         /// <summary>
         /// 첫번째 선택지 선택시 호출한다. 선택지 튜토리얼 관련 처리 
         /// </summary>
@@ -912,18 +896,19 @@ namespace PIERStory
 
             NetworkLoader.main.SendPost(CallbackTutorialSelection, sending);
         }
-        
-        void CallbackTutorialSelection(HTTPRequest req, HTTPResponse res) {
+
+        void CallbackTutorialSelection(HTTPRequest req, HTTPResponse res)
+        {
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackTutorialSelection");
                 return;
             }
-            
+
             isSelectionTutorialClear = true; // 따로 데이터 받는거 없이 true 처리 
         }
-        
-        
+
+
         /// <summary>
         /// How to play 튜토리얼 클리어 
         /// </summary>
@@ -935,32 +920,33 @@ namespace PIERStory
 
             NetworkLoader.main.SendPost(CallbackTutorialHowToPlay, sending, true);
         }
-        
-        void CallbackTutorialHowToPlay(HTTPRequest req, HTTPResponse res) {
+
+        void CallbackTutorialHowToPlay(HTTPRequest req, HTTPResponse res)
+        {
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackTutorialSelection");
                 return;
             }
-            
+
             isHowToPlayClear = true; // 따로 데이터 받는거 없이 true 처리
-            
+
             JsonData result = JsonMapper.ToObject(res.DataAsText);
-           
+
             // resource 팝업창 
             string currency = SystemManager.GetJsonNodeString(result["got"], "currency");
             int quantity = SystemManager.GetJsonNodeInt(result["got"], "quantity");
-            
+
             Debug.Log(string.Format("CallbackTutorialHowToPlay [{0}]/[{1}]", currency, quantity));
-            
+
             // 재화 획득 팝업
             SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6202"), quantity, SystemManager.main.GetCurrencyImageURL(currency), SystemManager.main.GetCurrencyImageKey(currency));
-            
+
             SetBankInfo(result);
-            
+
             HowToPlayFloating.RefreshHowToPlayState?.Invoke(); // 플로팅 버튼 리프레시 
-        }        
-        
+        }
+
 
 
         #endregion
@@ -987,7 +973,7 @@ namespace PIERStory
         #endregion
 
         #region 미션(보상)
-        
+
         /// <summary>
         /// 개별 미션 보상 받기
         /// </summary>
@@ -1003,17 +989,18 @@ namespace PIERStory
 
             NetworkLoader.main.SendPost(callback, sending, true);
         }
-        
+
         /// <summary>
         /// 해금되고 보상은 받지않은 미션 개수 가져오기 
         /// </summary>
         /// <returns></returns>        
-        public int GetUnlockStateMissionCount() {
+        public int GetUnlockStateMissionCount()
+        {
 
             if (DictStoryMission == null)
                 return 0;
 
-            return DictStoryMission.Values.Count( mission => mission.missionState == MissionState.unlocked);
+            return DictStoryMission.Values.Count(mission => mission.missionState == MissionState.unlocked);
         }
 
         #endregion
@@ -1043,7 +1030,7 @@ namespace PIERStory
                 return;
 
             ListGemIndicators.Add(__receiver);
-            RefreshGemIndicators(); 
+            RefreshGemIndicators();
         }
 
         public void AddNicknameIndicator(NicknameIndicator __receiver)
@@ -1052,7 +1039,7 @@ namespace PIERStory
                 return;
 
             ListNicknameIndicators.Add(__receiver);
-            RefreshGemIndicators(); 
+            RefreshGemIndicators();
         }
 
         /// <summary>
@@ -1071,9 +1058,9 @@ namespace PIERStory
                 ListNicknameIndicators[i].RefreshNickname(__nick);
             }
         }
-        
 
-        
+
+
 
         /// <summary>
         /// 소모성 재화 세팅 
@@ -1086,15 +1073,16 @@ namespace PIERStory
                 Debug.LogError("No Bank Node");
                 return;
             }
-            
+
             Debug.Log("Refresh BankInfo");
 
             bankJson = __j["bank"];
-            if(bankJson == null) {
+            if (bankJson == null)
+            {
                 Debug.LogError("bank is null...!!");
                 return;
             }
-            
+
             debugBankString = JsonMapper.ToStringUnicode(bankJson);
 
             // 재화 값 갱신
@@ -1102,23 +1090,24 @@ namespace PIERStory
             coin = int.Parse(bankJson[LobbyConst.COIN].ToString());
 
             // 상단 리프레시
-            if(!__refresh)
+            if (!__refresh)
                 return;
 
             // 붙어있는 표시기들 refresh 처리 
             RefreshCoinIndicators();
             RefreshGemIndicators();
         }
-        
-        
+
+
         /// <summary>
         /// 상단 리프레시만. 
         /// </summary>
-        public void RefreshIndicators() {
+        public void RefreshIndicators()
+        {
             RefreshCoinIndicators();
             RefreshGemIndicators();
         }
-        
+
 
         /// <summary>
         /// 확인이 필요한 유저 정보 세팅
@@ -1127,7 +1116,7 @@ namespace PIERStory
         public void SetNotificationInfo(JsonData __j)
         {
             // 미수신 메일 개수 
-            if(__j.ContainsKey(UN_UNREAD_MAIL_COUNT))
+            if (__j.ContainsKey(UN_UNREAD_MAIL_COUNT))
             {
                 unreadMailCount = SystemManager.GetJsonNodeInt(__j, UN_UNREAD_MAIL_COUNT);
                 // 등록된 Action을 통해서 갱신하도록 해줍니다!
@@ -1142,7 +1131,7 @@ namespace PIERStory
         void RefreshCoinIndicators()
         {
             // 씬이 전환되면서 null이 쌓이기 때문에 한번 정리하고 해야한다.
-            for(int i = ListCoinIndicators.Count-1; i>= 0; i--)
+            for (int i = ListCoinIndicators.Count - 1; i >= 0; i--)
             {
                 if (!ListCoinIndicators[i])
                     ListCoinIndicators.RemoveAt(i);
@@ -1214,9 +1203,6 @@ namespace PIERStory
         /// <param name="__projectId">작품 ID</param>
         public void RegisterLocalPush(string __projectId, int chapterNumber, long __ticks)
         {
-            if (Application.isEditor)
-                return;
-
             int projectId = 0;
             StoryData currentStory = StoryManager.main.FindProject(__projectId);
 
@@ -1235,41 +1221,51 @@ namespace PIERStory
             TimeSpan timeDiff = endDate - DateTime.UtcNow;
 
             // 대기 시간이 5시간이 넘어가면 등록하지 않는다
-            if ((timeDiff.Hours >= 5 && timeDiff.Minutes > 0) || timeDiff.Ticks <= 0)
+            if (timeDiff.TotalHours >= 5 || timeDiff.Ticks <= 0)
                 return;
 
             DateTime toNotify = DateTime.Now.AddTicks(timeDiff.Ticks);
 
-            // Android
-            if (Application.platform == RuntimePlatform.Android)
+#if UNITY_ANDROID
+
+            // 채널 생성
+            AndroidNotificationChannel notificationChannel = new AndroidNotificationChannel(
+            PUSH_CHANNEL_ID,
+            "EpisodeOpen_Notification",
+            "Episode open notification push alert",
+            Importance.High);
+
+            // 채널 등록
+            AndroidNotificationCenter.RegisterNotificationChannel(notificationChannel);
+
+            // 푸쉬 알림 설정
+            AndroidNotification notification = new AndroidNotification(
+                SystemManager.GetLocalizedText("5001"),
+                string.Format(SystemManager.GetLocalizedText("6313"), currentStory.title, chapterNumber),    // 작품명, 에피소드 번호
+                toNotify);
+
+            // 푸쉬 예약
+            AndroidNotificationCenter.SendNotificationWithExplicitID(notification, PUSH_CHANNEL_ID, projectId);
+
+#elif UNITY_IOS
+
+            var timeTrigger = new iOSNotificationTimeIntervalTrigger()
             {
-                // 채널 생성
-                AndroidNotificationChannel notificationChannel = new AndroidNotificationChannel(
-                PUSH_CHANNEL_ID,
-                "EpisodeOpen_Notification",
-                "Episode open notification push alert",
-                Importance.High);
+                TimeInterval = new TimeSpan(__ticks),
+                Repeats = false
+            };
 
-                // 채널 등록
-                AndroidNotificationCenter.RegisterNotificationChannel(notificationChannel);
-
-                // 푸쉬 알림 설정
-                AndroidNotification notification = new AndroidNotification(
-                    SystemManager.GetLocalizedText("5001"),
-                    string.Format(SystemManager.GetLocalizedText("6313"), currentStory.title, chapterNumber),    // 작품명, 에피소드 번호
-                    toNotify);
-
-                // 푸쉬 예약
-                AndroidNotificationCenter.SendNotificationWithExplicitID(notification, PUSH_CHANNEL_ID, projectId);
-            }
-
-            // IOS
-            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+            var notificationIOS = new iOSNotification()
             {
+                Identifier = __projectId,
+                Title = SystemManager.GetLocalizedText("5001"),
+                Body = string.Format(SystemManager.GetLocalizedText("6313"), currentStory.title, chapterNumber),
+                ShowInForeground = true,
+                Trigger = timeTrigger
+            };
 
-
-            }
-
+            iOSNotificationCenter.ScheduleNotification(notificationIOS);
+#endif
         }
 
         /// <summary>
@@ -1277,9 +1273,6 @@ namespace PIERStory
         /// </summary>
         public void UpdateLocalPush(string __projectId, int chapterNumber, long __ticks)
         {
-            if (Application.isEditor)
-                return;
-
             int projectId = 0;
             StoryData currentStory = StoryManager.main.FindProject(__projectId);
 
@@ -1291,7 +1284,7 @@ namespace PIERStory
             TimeSpan timeDiff = endDate - DateTime.UtcNow;
 
             // 대기 시간이 5시간이 넘어가면 갱신하지 않음
-            if (timeDiff.Hours >= 5 && timeDiff.Minutes > 0)
+            if (timeDiff.TotalHours >= 5 || timeDiff.Ticks <= 0)
                 return;
 
 
@@ -1300,29 +1293,32 @@ namespace PIERStory
 
             DateTime toNotify = DateTime.Now.AddTicks(timeDiff.Ticks);
 
-            // AOS
-            if (Application.platform == RuntimePlatform.Android)
+#if UNITY_ANDROID
+
+            // 푸시 등록 안된거니까 넘김
+            if (AndroidNotificationCenter.CheckScheduledNotificationStatus(projectId) == NotificationStatus.Unavailable ||
+                AndroidNotificationCenter.CheckScheduledNotificationStatus(projectId) == NotificationStatus.Unknown)
             {
-                // 푸시 등록 안된거니까 넘김
-                if (AndroidNotificationCenter.CheckScheduledNotificationStatus(projectId) == NotificationStatus.Unavailable ||
-                    AndroidNotificationCenter.CheckScheduledNotificationStatus(projectId) == NotificationStatus.Unknown)
-                    return;
-
-
-                // 푸쉬 알림 설정
-                AndroidNotification notification = new AndroidNotification(
-                    SystemManager.GetLocalizedText("5001"),
-                    string.Format(SystemManager.GetLocalizedText("6313"), currentStory.title, chapterNumber),    // 작품명, 에피소드 번호
-                    toNotify);
-
-                // 스케쥴 갱신
-                AndroidNotificationCenter.UpdateScheduledNotification(projectId, notification, PUSH_CHANNEL_ID);
+                RegisterLocalPush(__projectId, chapterNumber, __ticks);
+                return;
             }
-            else if (Application.platform == RuntimePlatform.IPhonePlayer)
-            {
 
 
-            }
+            // 푸쉬 알림 설정
+            AndroidNotification notification = new AndroidNotification(
+                SystemManager.GetLocalizedText("5001"),
+                string.Format(SystemManager.GetLocalizedText("6313"), currentStory.title, chapterNumber),    // 작품명, 에피소드 번호
+                toNotify);
+
+            // 스케쥴 갱신
+            AndroidNotificationCenter.UpdateScheduledNotification(projectId, notification, PUSH_CHANNEL_ID);
+
+#elif UNITY_IOS
+
+            // 아이폰에는 갱신이 없기 때문에 있던거 지우고 재등록
+            CancelLocalPush(__projectId);
+            RegisterLocalPush(__projectId, chapterNumber, __ticks);
+#endif
         }
 
         /// <summary>
@@ -1330,51 +1326,54 @@ namespace PIERStory
         /// </summary>
         public void CancelLocalPush(string __projectId)
         {
-            if (Application.isEditor)
-                return;
-
             int projectId = 0;
 
             if (!int.TryParse(__projectId, out projectId))
                 return;
 
+#if UNITY_ANDROID
 
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                if (AndroidNotificationCenter.CheckScheduledNotificationStatus(projectId) == NotificationStatus.Unavailable ||
+            if (AndroidNotificationCenter.CheckScheduledNotificationStatus(projectId) == NotificationStatus.Unavailable ||
                     AndroidNotificationCenter.CheckScheduledNotificationStatus(projectId) == NotificationStatus.Unknown)
-                    return;
+                return;
 
-                // 예정되어있던 푸시 스케줄 취소
-                AndroidNotificationCenter.CancelScheduledNotification(projectId);
-            }
-            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+            // 예정되어있던 푸시 스케줄 취소
+            AndroidNotificationCenter.CancelScheduledNotification(projectId);
+
+#elif UNITY_IOS
+
+            / 스케줄 된 애들 중에 동일 식별자가 있는지 찾아서 삭제
+            foreach (iOSNotification notifi in iOSNotificationCenter.GetScheduledNotifications())
             {
-
-
+                if (notifi.Identifier == __projectId)
+                {
+                    iOSNotificationCenter.RemoveScheduledNotification(__projectId);
+                    break;
+                }
             }
-
+#endif
         }
 
 
-            #endregion
+        #endregion
 
-            #region 유저 노드 제어 
+        #region 유저 노드 제어 
 
-            /// <summary>
-            /// 계정 연동되어있는지 체크 
-            /// </summary>
-            /// <returns>true : 연동됨</returns>
-            public bool CheckAccountLink() {
-            if(UserManager.main == null)
+        /// <summary>
+        /// 계정 연동되어있는지 체크 
+        /// </summary>
+        /// <returns>true : 연동됨</returns>
+        public bool CheckAccountLink()
+        {
+            if (UserManager.main == null)
                 return false;
-                
-            if(UserManager.main.accountLink == "-")
+
+            if (UserManager.main.accountLink == "-")
                 return false;
-            
+
             return true;
         }
-        
+
         /// <summary>
         /// 유저 계정 노드 
         /// </summary>
@@ -1405,7 +1404,8 @@ namespace PIERStory
             return userJson["pincode"].ToString();
         }
 
-        public void SetAdminUser() {
+        public void SetAdminUser()
+        {
             SystemManager.ShowSimpleAlert("슈퍼유저로 변경되었습니다.");
             isAdminUser = true;
             ViewCommonTop.OnRefreshSuperUser?.Invoke();
@@ -1427,34 +1427,37 @@ namespace PIERStory
         /// <returns></returns>
         public bool HasProjectFreepass()
         {
-            
+
             // 올패스 사용여부를 먼저 체크한다 (2022.05.23)
             allpassTimeDiff = allpassExpireDate - System.DateTime.UtcNow;
-            if(allpassTimeDiff.Ticks > 0) {
+            if (allpassTimeDiff.Ticks > 0)
+            {
                 return true;
             }
-            
-            
+
+
             // 기존 프리미엄 패스 보유 체크 
             if (SystemManager.GetJsonNodeBool(bankJson, "Free" + StoryManager.main.CurrentProjectID))
                 return true;
             else
                 return false;
         }
-        
-        public bool HasProjectFreepass(string __targetProjectID) {
+
+        public bool HasProjectFreepass(string __targetProjectID)
+        {
             // 올패스 사용여부를 먼저 체크한다 (2022.05.23)
             allpassTimeDiff = allpassExpireDate - System.DateTime.UtcNow;
-            if(allpassTimeDiff.Ticks > 0) {
+            if (allpassTimeDiff.Ticks > 0)
+            {
                 return true;
             }
-            
-            
+
+
             // 기존 프리미엄 패스 보유 체크             
             if (SystemManager.GetJsonNodeBool(bankJson, "Free" + __targetProjectID))
                 return true;
             else
-                return false;   
+                return false;
         }
 
         /// <summary>
@@ -1462,11 +1465,12 @@ namespace PIERStory
         /// </summary>
         /// <param name="__targetProjectID"></param>
         /// <returns></returns>        
-        public bool HasProjectPremiumPassOnly(string __targetProjectID) {
+        public bool HasProjectPremiumPassOnly(string __targetProjectID)
+        {
             if (SystemManager.GetJsonNodeBool(bankJson, "Free" + __targetProjectID))
                 return true;
             else
-                return false;   
+                return false;
         }
 
 
@@ -1474,23 +1478,27 @@ namespace PIERStory
         /// 올패스 유효시간 차 주세요 
         /// </summary>
         /// <returns></returns>
-        public string GetAllPassTimeDiff() {
+        public string GetAllPassTimeDiff()
+        {
             allpassTimeDiff = allpassExpireDate - System.DateTime.UtcNow;
-            
-            if(allpassTimeDiff.Ticks <= 0) {
+
+            if (allpassTimeDiff.Ticks <= 0)
+            {
                 return string.Empty;
-            }  
-            
-            if(allpassTimeDiff.TotalHours < 24) {
-                return string.Format ("{0:D2}:{1:D2}:{2:D2}",allpassTimeDiff.Hours ,allpassTimeDiff.Minutes, allpassTimeDiff.Seconds);    
             }
-            else {
-                return string.Format ("{0}d {1:D2}:{2:D2}:{3:D2}",allpassTimeDiff.Days, allpassTimeDiff.Hours, allpassTimeDiff.Minutes, allpassTimeDiff.Seconds);    
+
+            if (allpassTimeDiff.TotalHours < 24)
+            {
+                return string.Format("{0:D2}:{1:D2}:{2:D2}", allpassTimeDiff.Hours, allpassTimeDiff.Minutes, allpassTimeDiff.Seconds);
             }
-            
-            
+            else
+            {
+                return string.Format("{0}d {1:D2}:{2:D2}:{3:D2}", allpassTimeDiff.Days, allpassTimeDiff.Hours, allpassTimeDiff.Minutes, allpassTimeDiff.Seconds);
+            }
+
+
         }
-        
+
 
 
         /// <summary>
@@ -1551,7 +1559,8 @@ namespace PIERStory
         /// 에피소드 클리어 후 미션 해금 체크 
         /// </summary>
         /// <param name="__useQueue"></param>
-        public void ShowCompleteMissionByEpisode(bool __useQueue = true) {
+        public void ShowCompleteMissionByEpisode(bool __useQueue = true)
+        {
             ShowCompleteMission(resultEpisodeRecord[NODE_UNLOCK_MISSION], __useQueue);
         }
 
@@ -1561,8 +1570,9 @@ namespace PIERStory
         public void ShowCompleteMission(JsonData __j, bool __useQueue = true)
         {
             Debug.Log("Check ShowCompleteMission");
-            
-            if(__j == null || __j.Count == 0)  {
+
+            if (__j == null || __j.Count == 0)
+            {
                 Debug.Log("No Clear Mission");
                 return;
             }
@@ -1571,14 +1581,16 @@ namespace PIERStory
             if (GameManager.main != null && PlayerPrefs.GetInt(GameConst.MISSION_POPUP) != 1)
                 return;
 
-            
-            for(int i=0; i<__j.Count;i++) {
+
+            for (int i = 0; i < __j.Count; i++)
+            {
                 CompleteMissions.Enqueue(__j[i]);
             }
-            
+
             // Queue 바닥날때까지 돈다. 
-            while(CompleteMissions.Count > 0) {
-                
+            while (CompleteMissions.Count > 0)
+            {
+
                 // popup 변수를 여러개가 공유할 수 없음. 매번 새로 만들어줘야된다. 
                 PopupBase popUp = PopupManager.main.GetPopup(GameConst.POPUP_ACHIEVEMENT_ILLUST);
                 if (popUp == null)
@@ -1586,12 +1598,12 @@ namespace PIERStory
                     Debug.LogError("No AchieveMission Popup");
                     return;
                 }
-                
+
                 JsonData currentMissionData = CompleteMissions.Dequeue(); // 하나씩 빼서 팝업을 만든다. 
                 Debug.Log("Mission : " + JsonMapper.ToStringUnicode(currentMissionData)); // 체크용도 
-             
-             
-                
+
+
+
                 popUp.Data.SetImagesSprites(spriteMissionPopup);
                 popUp.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("5086"), SystemManager.GetJsonNodeString(currentMissionData, LobbyConst.MISSION_NAME)));
                 PopupManager.main.ShowPopup(popUp, __useQueue, false);
@@ -1611,7 +1623,7 @@ namespace PIERStory
             // 프로젝트 클리어 했는지 체크를 한다
             if (ProjectAllClear())
                 NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
-            
+
         }
 
 
@@ -1635,7 +1647,7 @@ namespace PIERStory
         {
             currentStoryJson[NODE_SCENE_HISTORY] = __j;
         }
-        
+
 
 
         public void SetProjectMissionAllClear(int __v)
@@ -1673,7 +1685,7 @@ namespace PIERStory
         }
 
 
-   
+
         /// <summary>
         /// 프로젝트 도전과제 정보
         /// </summary>
@@ -1688,23 +1700,25 @@ namespace PIERStory
         /// 일반, 라이브 페어 시스템 적용
         /// </summary>
         /// <returns></returns>
-        public JsonData GetUserGalleryImage() {
-            if(currentStoryJson == null || !currentStoryJson.ContainsKey(NODE_USER_GALLERY_IMAGES))
+        public JsonData GetUserGalleryImage()
+        {
+            if (currentStoryJson == null || !currentStoryJson.ContainsKey(NODE_USER_GALLERY_IMAGES))
                 return null;
-            
+
             return currentStoryJson[NODE_USER_GALLERY_IMAGES];
         }
-        
-        
+
+
         /// <summary>
         /// 유저 갤러리 이미지 목록 및 해금 정보 업데이트 
         /// </summary>
         /// <param name="__newData"></param>
-        public void SetNodeUserGalleryImages(JsonData __newData) {
+        public void SetNodeUserGalleryImages(JsonData __newData)
+        {
             currentStoryJson[NODE_USER_GALLERY_IMAGES] = __newData;
         }
 
-        
+
 
         /// <summary>
         /// 유저 에피소드 진행도 
@@ -1714,12 +1728,13 @@ namespace PIERStory
         {
             return currentStoryJson[NODE_EPISODE_PROGRESS];
         }
-        
+
         /// <summary>
         /// 에피소드 진행도에 단일 에피소드 추가 
         /// </summary>
         /// <param name="__playEpisodeID"></param>
-        public void AddUserEpisodeProgress(int __playEpisodeID) {
+        public void AddUserEpisodeProgress(int __playEpisodeID)
+        {
             GetNodeUserEpisodeProgress().Add(__playEpisodeID);
         }
 
@@ -1749,12 +1764,13 @@ namespace PIERStory
         {
             return currentStoryJson[NODE_USER_VOICE];
         }
-        
+
         /// <summary>
         /// VoiceHistory, 화자별로 포장되지 않은 상태
         /// </summary>
         /// <returns></returns>
-        public JsonData GetNodeUserRawVoiceHistory() {
+        public JsonData GetNodeUserRawVoiceHistory()
+        {
             return currentStoryJson[NODE_USER_RAW_VOICE];
         }
 
@@ -1776,14 +1792,15 @@ namespace PIERStory
         {
             currentStoryJson[NODE_EPISODE_HISTORY] = __j;
         }
-        
+
         /// <summary>
         /// 유저 에피소드 히스토리에 에피소드 단일 개체 추가 
         /// </summary>
         /// <param name="__playEpisodeID"></param>
-        public void AddUserEpisodeHistory(int __playEpisodeID) {
+        public void AddUserEpisodeHistory(int __playEpisodeID)
+        {
             GetNodeUserEpisodeHistory().Add(__playEpisodeID);
-            
+
             Debug.Log("AddUserEpisodeHistory : " + JsonMapper.ToStringUnicode(GetNodeUserEpisodeHistory()));
         }
 
@@ -1804,89 +1821,99 @@ namespace PIERStory
 
 
 
-        
+
         /// <summary>
         /// 플레이 위치 노드 저장 
         /// </summary>
         /// <param name="__j"></param>
-        public void SetNodeUserProjectCurrent(JsonData __j) {
+        public void SetNodeUserProjectCurrent(JsonData __j)
+        {
             currentStoryJson[NODE_PROJECT_CURRENT] = __j;
         }
-        
+
         /// <summary>
         /// 유저, 작품별 플레이 위치 찾기. 
         /// 정규 에피소드 용도 
         /// </summary>
         /// <returns></returns>
-        public JsonData GetUserProjectCurrent(string __episodeID) {
-            
-            if(!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
+        public JsonData GetUserProjectCurrent(string __episodeID)
+        {
+
+            if (!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
                 return null;
-                
-            for(int i=0; i<currentStoryJson[NODE_PROJECT_CURRENT].Count; i++) {
-                if(currentStoryJson[NODE_PROJECT_CURRENT][i]["episode_id"].ToString() == __episodeID)
+
+            for (int i = 0; i < currentStoryJson[NODE_PROJECT_CURRENT].Count; i++)
+            {
+                if (currentStoryJson[NODE_PROJECT_CURRENT][i]["episode_id"].ToString() == __episodeID)
                     return currentStoryJson[NODE_PROJECT_CURRENT][i];
-            }            
-            
+            }
+
             // return currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT) ? currentStoryJson[NODE_PROJECT_CURRENT] : null;
-            
+
             return null;
         }
-        
+
         /// <summary>
         /// 정규 에피소드의 Current를 찾는다.
         /// </summary>
         /// <returns></returns>
-        public JsonData GetUserProjectRegularEpisodeCurrent() {
+        public JsonData GetUserProjectRegularEpisodeCurrent()
+        {
             // 얘는 순서에 영향을 받지 않는다. 리스트에서만 사용한다.
-            
-            if(!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT)) {
+
+            if (!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
+            {
                 Debug.LogError("No project current node here");
                 return null;
             }
-                
-            for(int i=0; i<currentStoryJson[NODE_PROJECT_CURRENT].Count; i++) {
-                if(currentStoryJson[NODE_PROJECT_CURRENT][i]["is_special"].ToString() == "0") // is_special 이니?
+
+            for (int i = 0; i < currentStoryJson[NODE_PROJECT_CURRENT].Count; i++)
+            {
+                if (currentStoryJson[NODE_PROJECT_CURRENT][i]["is_special"].ToString() == "0") // is_special 이니?
                     return currentStoryJson[NODE_PROJECT_CURRENT][i];
-            }            
-           
+            }
+
             return null;
-            
+
         }
-        
+
         /// <summary>
         /// 현재 열람중인 작품이 마지막에 도달했는지 체크 (엔딩까지 플레이 완료)
         /// </summary>
         /// <returns></returns>
-        public bool CheckReachFinal() {
+        public bool CheckReachFinal()
+        {
             JsonData current = GetUserProjectRegularEpisodeCurrent();
-            
-            if(current == null)
+
+            if (current == null)
                 return false;
-                
-            if(SystemManager.GetJsonNodeBool(current, "is_final") 
-                && SystemManager.GetJsonNodeBool(current, "is_ending")) {
+
+            if (SystemManager.GetJsonNodeBool(current, "is_final")
+                && SystemManager.GetJsonNodeBool(current, "is_ending"))
+            {
                 return true;
             }
-            
+
             return false;
         }
-        
+
         /// <summary>
         /// 현재 열람중인 작품이 엔딩에 도달했는지 체크 (엔딩 플레이 완료 여부는 관계없음)
         /// </summary>
         /// <returns></returns>
-        public bool CheckReachEnding() { 
+        public bool CheckReachEnding()
+        {
             JsonData current = GetUserProjectRegularEpisodeCurrent();
-            
-            if(current == null)
+
+            if (current == null)
                 return false;
-                
-            if(SystemManager.GetJsonNodeBool(current, "is_ending")) {
+
+            if (SystemManager.GetJsonNodeBool(current, "is_ending"))
+            {
                 return true;
             }
-            
-            return false;            
+
+            return false;
         }
 
         /// <summary>
@@ -1912,151 +1939,161 @@ namespace PIERStory
 
             return false;
         }
-        
-        
+
+
         /// <summary>
         /// 스페셜 에피소드의 Current를 찾는다.
         /// </summary>
         /// <returns></returns>
-        public JsonData GetUserProjectSpecialEpisodeCurrent() {
+        public JsonData GetUserProjectSpecialEpisodeCurrent()
+        {
             // 얘는 순서에 영향을 받지 않는다. 리스트에서만 사용한다.
-            
-            if(!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
-                return null;
-                
-            for(int i=0; i<currentStoryJson[NODE_PROJECT_CURRENT].Count; i++) {
-                if(currentStoryJson[NODE_PROJECT_CURRENT][i]["is_special"].ToString() == "1") // is_special 이니?
-                    return currentStoryJson[NODE_PROJECT_CURRENT][i];
-            }            
-           
-            return null;
-            
-        }
-        
-        
 
-        
+            if (!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
+                return null;
+
+            for (int i = 0; i < currentStoryJson[NODE_PROJECT_CURRENT].Count; i++)
+            {
+                if (currentStoryJson[NODE_PROJECT_CURRENT][i]["is_special"].ToString() == "1") // is_special 이니?
+                    return currentStoryJson[NODE_PROJECT_CURRENT][i];
+            }
+
+            return null;
+
+        }
+
+
+
+
         /// <summary>
         /// 작품 선택지 선택 진행도 노드 저장 
         /// </summary>
         /// <param name="__j"></param>
-        public void SetNodeUserProjectSelectionProgress(JsonData __j) {
+        public void SetNodeUserProjectSelectionProgress(JsonData __j)
+        {
             currentStoryJson[NODE_SELECTION_PROGRESS] = __j;
         }
-        
+
         /// <summary>
         /// 프로젝트 선택지 프로그레스 
         /// Key는 episodeID
         /// </summary>
         /// <returns></returns>
-        public JsonData GetUserProjectSelectionProgress(string __episodeID) {
-            
-            if(!currentStoryJson.ContainsKey(NODE_SELECTION_PROGRESS))
+        public JsonData GetUserProjectSelectionProgress(string __episodeID)
+        {
+
+            if (!currentStoryJson.ContainsKey(NODE_SELECTION_PROGRESS))
                 return null;
-                
-            if(!currentStoryJson[NODE_SELECTION_PROGRESS].ContainsKey(__episodeID))
+
+            if (!currentStoryJson[NODE_SELECTION_PROGRESS].ContainsKey(__episodeID))
                 return null;
-                
+
             return currentStoryJson[NODE_SELECTION_PROGRESS][__episodeID];
         }
-         
+
         /// <summary>
         /// 유저의 작품에서 첫번째 selection 터치 체크 
         /// </summary>
         /// <returns>true : 첫번째다.</returns>
-        public bool IsUserFirstSelection() {
-            if(!currentStoryJson.ContainsKey(NODE_SELECTION_PROGRESS))
+        public bool IsUserFirstSelection()
+        {
+            if (!currentStoryJson.ContainsKey(NODE_SELECTION_PROGRESS))
                 return true;
-                
-            if(currentStoryJson[NODE_SELECTION_PROGRESS].Keys.Count == 0)
+
+            if (currentStoryJson[NODE_SELECTION_PROGRESS].Keys.Count == 0)
                 return true;
-                
+
             return false;
         }
-        
-        
+
+
         /// <summary>
         /// 대상 에피소드에 target_scene_id를 가진 선택지 Progress 체크 
         /// </summary>
         /// <param name="__episodeID"></param>
         /// <param name="__targetSceneID"></param>
         /// <returns></returns>
-        public bool CheckProjectSelectionProgressExists(string __episodeID, string __targetSceneID) {
-            
+        public bool CheckProjectSelectionProgressExists(string __episodeID, string __targetSceneID)
+        {
+
             JsonData targetEpisode = GetUserProjectSelectionProgress(__episodeID);
-            
-            if(targetEpisode == null)
+
+            if (targetEpisode == null)
                 return false;
-            
+
             // 에피소드별 Progress를 체크해서 ... 비교 
             // * 지나갔던 길은 다시 체크하지 않게 수정.
-            for(int i=0; i<targetEpisode.Count; i++) {
-                
-                if(targetEpisode[i]["target_scene_id"].ToString() == __targetSceneID 
-                    && !GameManager.main.CheckResumeSelectionPassed(targetEpisode[i])) {
-                    
+            for (int i = 0; i < targetEpisode.Count; i++)
+            {
+
+                if (targetEpisode[i]["target_scene_id"].ToString() == __targetSceneID
+                    && !GameManager.main.CheckResumeSelectionPassed(targetEpisode[i]))
+                {
+
                     Debug.Log("## Move to __targetSceneID : " + __targetSceneID);
-                    
+
                     // 루트 정보 저장하고 return true
                     GameManager.main.AddResumeSelectionRoute(targetEpisode[i]);
                     return true;
                 }
             }
-            
+
             // "target_scene_id": "1021",
             // "selection_data": "남을 공격하는 힘을 얻어야겠어."
-            
+
             return false;
         }
-        
-        
-        
+
+
+
 
 
         #endregion
 
         #region 통신 콜백 
-        
-        
-        
+
+
+
         /// <summary>
         /// 에피소드 첫 보상 콜백 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
-        public void CallbackEpisodeFirstClearReward(HTTPRequest request, HTTPResponse response) {
+        public void CallbackEpisodeFirstClearReward(HTTPRequest request, HTTPResponse response)
+        {
             if (!NetworkLoader.CheckResponseValidation(request, response))
             {
                 Debug.LogError("CallbackEpisodeFirstClearReward");
                 return;
             }
-            
+
             // bank, reward
             JsonData result = JsonMapper.ToObject(response.DataAsText);
             Debug.Log(">> CallbackEpisodeFirstClearReward :: " + response.DataAsText);
-            
+
             // bank 
             SetBankInfo(result);
-            
+
             // resource 팝업창 
             string currency = SystemManager.GetJsonNodeString(result["reward"], "currency");
             int quantity = SystemManager.GetJsonNodeInt(result["reward"], "quantity");
-            
+
             // 재화 획득 팝업 6201
             SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6201"), quantity, SystemManager.main.GetCurrencyImageURL(currency), SystemManager.main.GetCurrencyImageKey(currency));
-            
-        }
-        
 
-        
-        
+        }
+
+
+
+
         /// <summary>
         /// 프리패스 구매 콜백
         /// </summary>
         /// <param name="req"></param>
         /// <param name="res"></param>
-        public void CallbackPurchaseFreepass(HTTPRequest req, HTTPResponse res) {
-            
+        public void CallbackPurchaseFreepass(HTTPRequest req, HTTPResponse res)
+        {
+
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("CallbackPurchaseFreepass");
@@ -2065,59 +2102,63 @@ namespace PIERStory
 
             JsonData result = JsonMapper.ToObject(res.DataAsText); // 결과 
             Debug.Log(JsonMapper.ToStringUnicode(result));
-            
-            
+
+
             // * bank 
             SetBankInfo(result);
-            
+
             // 작품에 진입한 상태에서만 아래 노드들 갱신처리 
-            if(!string.IsNullOrEmpty(StoryManager.main.CurrentProjectID)) {
-            
+            if (!string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
+            {
+
                 // projectCurrent갱신
-                if(result.ContainsKey(NODE_PROJECT_CURRENT))
+                if (result.ContainsKey(NODE_PROJECT_CURRENT))
                     SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);
-                
+
                 // 에피소드 구매 기록 갱신 
-                if (result.ContainsKey(NODE_PURCHASE_HIST)) {
+                if (result.ContainsKey(NODE_PURCHASE_HIST))
+                {
                     SetNodeEpisodePurchaseHistory(result[NODE_PURCHASE_HIST]);
                     StoryManager.main.RefreshRegularEpisodesPurchaseState();
                 }
             }
-                
-            
+
+
             // 모든 팝업 비활성화 
             PopupManager.main.HideActivePopup();
-            
+
             // * 프리미엄 패스는 구매하면 여기저기 갱신해야될 화면이 많다.. 
-            
+
             // 콜백 처리 (상점)
             OnFreepassPurchase?.Invoke();
-            
+
             // 게임플레이 도중에 구매했다면, EpisodeEndControls 갱신 
-            if(GameManager.main != null) {
+            if (GameManager.main != null)
+            {
                 EpisodeEndControls.OnPassPurchase?.Invoke();
             }
-            
+
             // 게임플레이 도중이 아니라면, ViewStory 쪽 갱신 
-            if(LobbyManager.main != null) {
+            if (LobbyManager.main != null)
+            {
                 StoryLobbyMain.OnPassPurchase?.Invoke();
                 ViewMain.OnRefreshShopNewSign?.Invoke();
 
                 RequestUserGradeInfo(CallbackNewCompleteAchievement);
                 NetworkLoader.main.RequestIfyouplayList();
             }
-            
+
 
             // 이프유업적 프리패스 구매
             NetworkLoader.main.RequestIFYOUAchievement(15, SystemManager.GetJsonNodeInt(result, CommonConst.COL_PROJECT_ID));
-            
+
             // 6306
-            if(string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
+            if (string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
                 SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6306"));
-            else 
+            else
                 SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle));
         }
-        
+
         /// <summary>
         /// 선택지 프로그레스 업데이트 콜백
         /// </summary>
@@ -2143,7 +2184,7 @@ namespace PIERStory
 
         public void CallbackUpdateSelectionCurrent(HTTPRequest req, HTTPResponse res)
         {
-            if(!NetworkLoader.CheckResponseValidation(req, res))
+            if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("CallbackUpdateSelectionCurrent");
                 return;
@@ -2153,8 +2194,8 @@ namespace PIERStory
 
             // 21.12.27 currentStoryJson에는 아직 뭔가 겹치는게 없어서 일단...이렇게 끝
         }
-        
-        
+
+
         /// <summary>
         /// 프로젝트 플레이 위치 저장 콜백!
         /// </summary>
@@ -2174,13 +2215,14 @@ namespace PIERStory
             // 갱신
             currentStoryJson[NODE_PROJECT_CURRENT] = resultProjectCurrent;
         }
-        
+
         /// <summary>
         /// 프로젝트 플레이 위치 저장(시작 시점에!) 콜백
         /// </summary>
         /// <param name="req"></param>
         /// <param name="res"></param>
-        public void CallbackUpdateProjectCurrentWhenStart(HTTPRequest req, HTTPResponse res) {
+        public void CallbackUpdateProjectCurrentWhenStart(HTTPRequest req, HTTPResponse res)
+        {
             // 통신 실패했을 때 갱신하지 않음. 
             if (!NetworkLoader.CheckResponseValidation(req, res, true))
             {
@@ -2193,9 +2235,9 @@ namespace PIERStory
             // 갱신
             currentStoryJson[NODE_PROJECT_CURRENT] = resultProjectCurrent;
         }
-        
-        
-        
+
+
+
 
         /// <summary>
         /// 사건ID 히스토리, 진행도 업데이트 후 갱신 처리 
@@ -2234,25 +2276,26 @@ namespace PIERStory
                 Debug.LogError("CallbackUpdateEpisodeRecord");
                 return;
             }
-            
+
             Debug.Log(">> CallbackUpdateEpisodeRecord : " + res.DataAsText);
-            
+
             // ! 여기에 JSON 따로 저장합니다. 
             resultEpisodeRecord = JsonMapper.ToObject(res.DataAsText);
-            
+
             int playedEpisodeID = SystemManager.GetJsonNodeInt(resultEpisodeRecord, CommonConst.COL_EPISODE_ID);
-            
+
 
             // 노드 저장!
-            if(playedEpisodeID > 0) {
-                
+            if (playedEpisodeID > 0)
+            {
+
                 // 첫 클리어 보상 관련 변수
                 GameManager.main.hasFirstClearReward = !IsCompleteEpisode(playedEpisodeID.ToString());
-                
+
                 AddUserEpisodeHistory(playedEpisodeID); // 히스토리 
                 AddUserEpisodeProgress(playedEpisodeID);  // 진행도 
             }
-            
+
             SetNodeUserProjectCurrent(resultEpisodeRecord[NODE_PROJECT_CURRENT]);
             currentStorySelectionHistoryJson = resultEpisodeRecord["selectionHistory"]; // 선택지 히스토리 
 
@@ -2268,28 +2311,29 @@ namespace PIERStory
             NetworkLoader.main.RequestDailyMission(2);
 
         }
-        
-        
+
+
         /// <summary>
         /// 작품별 타임딜 생성 콜백 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
-        public void CallbackUpdateTimeDeal(HTTPRequest request, HTTPResponse response) {
-            if(!NetworkLoader.CheckResponseValidation(request, response))
+        public void CallbackUpdateTimeDeal(HTTPRequest request, HTTPResponse response)
+        {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
                 return;
-                
+
             JsonData result = JsonMapper.ToObject(response.DataAsText);
-            Debug.Log("### CallbackUpdateTimeDeal : "  + JsonMapper.ToStringUnicode(result));
-            
+            Debug.Log("### CallbackUpdateTimeDeal : " + JsonMapper.ToStringUnicode(result));
+
             userActiveTimeDeal = result["timedeal"];
-    
+
             EpisodeEndControls.OnRefreshUpdateTimeDeal?.Invoke(); // EpisodeEndControl에게 알려준다. 
-            
-            
+
+
             // 타임딜 팝업 노출
             SystemManager.ShowPopupPass(StoryManager.main.CurrentProjectID, false);
-            
+
         }
 
 
@@ -2315,12 +2359,12 @@ namespace PIERStory
             // ! 삭제 대상 아님 
             SetNodeUserEpisodeProgress(resultEpisodeReset[NODE_EPISODE_PROGRESS]); // 에피소드 progress 
             SetNodeStorySceneProgress(resultEpisodeReset[NODE_SCENE_PROGRESS]); // 씬 progress
-            
+
             SetNodeUserProjectCurrent(resultEpisodeReset[NODE_PROJECT_CURRENT]);  // projectCurrent
             SetNodeUserProjectSelectionProgress(resultEpisodeReset[NODE_SELECTION_PROGRESS]); // 선택지 기록 
-            
+
             SetBankInfo(resultEpisodeReset); // 뱅크 정보 업데이트 
-            
+
             UpdateUserAbility(resultEpisodeReset[NODE_USER_ABILITY]); // 능력치 
             UpdateRawStoryAbility(resultEpisodeReset[NODE_RAW_STORY_ABILITY]);
             UserManager.main.SetStoryAbilityDictionary(resultEpisodeReset[NODE_USER_ABILITY]);
@@ -2329,7 +2373,7 @@ namespace PIERStory
             if (NetworkLoader.main.isFirstEpisode)
                 NetworkLoader.main.RequestIFYOUAchievement(16, -1, NetworkLoader.main.resetTargetEpisodeId);
 
-            NetworkLoader.main.RequestIFYOUAchievement(17, - 1, NetworkLoader.main.resetTargetEpisodeId);
+            NetworkLoader.main.RequestIFYOUAchievement(17, -1, NetworkLoader.main.resetTargetEpisodeId);
 
             // 알림 팝업 후 목록화면 갱신처리 
             SystemManager.ShowSystemPopupLocalize("6167", null, null, true, false);
@@ -2337,15 +2381,15 @@ namespace PIERStory
             // * Doozy Nody StoryDetail로 돌아가기 위한 이벤트 생성 
             // * ViewStoryDetail 에서 이 시그널을 Listener를 통해서 받는다. (Inspector)
             // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CLOSE_RESET, string.Empty);
-            
+
             // refresh 플레이 상태 
             StoryManager.main.RefreshRegularEpisodePlayState();
-           
-            
+
+
             // 리셋 콜백
             StoryLobbyMain.OnCallbackReset?.Invoke();
         }
-        
+
         /// <summary>
         /// 처음으로 돌아가기 콜백 
         /// </summary>
@@ -2367,27 +2411,29 @@ namespace PIERStory
             SetNodeStorySceneProgress(resultEpisodeReset[NODE_SCENE_PROGRESS]); // 씬 progress
             SetNodeUserProjectCurrent(resultEpisodeReset[NODE_PROJECT_CURRENT]);  // projectCurrent
             SetNodeUserProjectSelectionProgress(resultEpisodeReset[NODE_SELECTION_PROGRESS]); // 선택지 기록 
-            
+
             UpdateUserAbility(resultEpisodeReset[NODE_USER_ABILITY]); // 능력치 
             UpdateRawStoryAbility(resultEpisodeReset[NODE_RAW_STORY_ABILITY]);
-            
-            
+
+
             // 통신 완료 후 게임매니저 메소드 호출 
             GameManager.main.RetryPlay();
-        }        
-        
-        
+        }
+
+
         /// <summary>
         /// 에피소드 기다리는 시간 감소 콜백 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
-        public void CallbackReduceWaitingTime(HTTPRequest request, HTTPResponse response) {
-            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+        public void CallbackReduceWaitingTime(HTTPRequest request, HTTPResponse response)
+        {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
+            {
                 StoryLobbyMain.CallbackReduceWaitingTimeFail?.Invoke();
                 return;
             }
-            
+
             JsonData result = JsonMapper.ToObject(response.DataAsText);
             Debug.Log(JsonMapper.ToStringUnicode(result));
 
@@ -2395,33 +2441,37 @@ namespace PIERStory
             SystemManager.ShowMessageWithLocalize("6220");
             SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);  // projectCurrent
             SetBankInfo(result); // 뱅크 정보 업데이트             
-            
-            
+
+
             // StoryLobbyMain 리프레시 요청 
             // 게임씬과 로비씬에서 담당 스크립트가 다르다 .
-            if(GameManager.main != null) {
+            if (GameManager.main != null)
+            {
                 EpisodeEndControls.CallbackReduceWaitingTimeSuccess?.Invoke();
             }
-            else {
-                StoryLobbyMain.CallbackReduceWaitingTimeSuccess?.Invoke();    
+            else
+            {
+                StoryLobbyMain.CallbackReduceWaitingTimeSuccess?.Invoke();
             }
-            
-            
+
+
         }
-        
-        
+
+
         /// <summary>
         /// 코인으로 기다무 해금처리에 대한 콜백 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
-        public void CallbackReduceWaitingTimeWithCoin(HTTPRequest request, HTTPResponse response) {
-            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+        public void CallbackReduceWaitingTimeWithCoin(HTTPRequest request, HTTPResponse response)
+        {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
+            {
                 StoryLobbyMain.CallbackReduceWaitingTimeFail?.Invoke();
                 return;
             }
-            
-            
+
+
             // * 코인으로 구매한 경우 서버에서 Permanent로 구매처리를 진행하기 때문에
             // * 아래에서 PurchaseHistory를 다시 받아온다. 
             JsonData result = JsonMapper.ToObject(response.DataAsText);
@@ -2431,7 +2481,7 @@ namespace PIERStory
             SystemManager.ShowMessageWithLocalize("6220");
             SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);  // projectCurrent
             SetBankInfo(result); // 뱅크 정보 업데이트             
-            
+
             //에피소드 구매 기록 
             if (result.ContainsKey(NODE_PURCHASE_HIST))
                 SetNodeEpisodePurchaseHistory(result[NODE_PURCHASE_HIST]);
@@ -2444,14 +2494,16 @@ namespace PIERStory
 
             // StoryLobbyMain 리프레시 요청 
             // 게임씬과 로비씬에서 담당 스크립트가 다르다 .
-            if(GameManager.main != null) {
+            if (GameManager.main != null)
+            {
                 EpisodeEndControls.CallbackReduceWaitingTimeSuccess?.Invoke();
             }
-            else {
-                StoryLobbyMain.CallbackReduceWaitingTimeSuccess?.Invoke();    
+            else
+            {
+                StoryLobbyMain.CallbackReduceWaitingTimeSuccess?.Invoke();
             }
         }
-        
+
 
 
         /// <summary>
@@ -2480,8 +2532,8 @@ namespace PIERStory
             // 에피소드 구매 기록 갱신 
             if (responseData.ContainsKey(NODE_PURCHASE_HIST))
                 SetNodeEpisodePurchaseHistory(responseData[NODE_PURCHASE_HIST]);
-                
-            
+
+
 
             OnRequestEpisodePurchase?.Invoke(true);
 
@@ -2534,7 +2586,7 @@ namespace PIERStory
                 NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
         }
 
-        
+
 
 
         #endregion
@@ -2551,7 +2603,7 @@ namespace PIERStory
         /// <param name="__scene_id"></param>
         public void UpdateSceneIDRecord(string __project_id, string __episode_id, string __scene_id)
         {
-            
+
             // * 여기도, 이어하기를 통해 진입한 경우 통신하지 않음
             // * 마지막 지점에 도착하면 isResumePlay는 false로 변경한다. 
             // 수집 엔딩 보는 중이어도 통신하지 않음
@@ -2559,7 +2611,7 @@ namespace PIERStory
             if(GameManager.isResumePlay || !useRecord)
                 return;
             */
-            
+
             JsonData j = new JsonData();
 
             // j["func"] = NetworkLoader.func;
@@ -2578,13 +2630,13 @@ namespace PIERStory
         {
             // 이미 프로그레스에 있으면 통신할 필요없다. 
             // 스킵에서 또 호출하기 싫으니까!
-            if(UserManager.main.CheckSceneProgress(__scene_id))
+            if (UserManager.main.CheckSceneProgress(__scene_id))
                 return;
-            
+
             UpdateSceneIDRecord(StoryManager.main.CurrentProjectID, StoryManager.main.CurrentEpisodeID, __scene_id);
         }
 
-        
+
 
         /// <summary>
         /// 지정한 사건ID를 Progress에서 제거합니다.
@@ -2626,7 +2678,7 @@ namespace PIERStory
         /// <param name="res"></param>
         void CallbackUpdateCurrentSceneID(HTTPRequest req, HTTPResponse res)
         {
-            if (!NetworkLoader.CheckResponseValidation(req,res))
+            if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("CallbackClearSelectedEpisodeSceneHistory");
                 return;
@@ -2635,11 +2687,11 @@ namespace PIERStory
             string requestData = Encoding.UTF8.GetString(req.RawData);
             Debug.Log(">> CallbackUpdateCurrentSceneID : " + requestData);
             JsonData reqJson = JsonMapper.ToObject(requestData);
-             
+
 
             // 갱신해서 받아온 데이터를 설정 
             SetNodeStorySceneProgress(JsonMapper.ToObject(res.DataAsText));
-            
+
             // 히스토리에 추가한다. 
             AddSceneToUserProjectSceneHistory(reqJson["scene_id"].ToString());
         }
@@ -2674,7 +2726,7 @@ namespace PIERStory
         /// <param name="res"></param>
         void CallbackClearSelectedEpisodeSceneHistory(HTTPRequest req, HTTPResponse res)
         {
-            if(!NetworkLoader.CheckResponseValidation(req, res))
+            if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("CallbackClearSelectedEpisodeSceneHistory");
                 return;
@@ -2701,7 +2753,7 @@ namespace PIERStory
         {
             // Debug.Log(string.Format("CheckEpisodeProgress : [{0}]", __episodeID));
 
-            for(int i=0; i<GetNodeUserEpisodeProgress().Count;i++)
+            for (int i = 0; i < GetNodeUserEpisodeProgress().Count; i++)
             {
                 // 있어!
                 if (GetNodeUserEpisodeProgress()[i].ToString() == __episodeID)
@@ -2725,7 +2777,7 @@ namespace PIERStory
 
             Debug.Log(string.Format("CheckSceneProgress : [{0}]", __scene_id));
 
-            for(int i=0; i<GetNodeStorySceneProgress().Count;i++)
+            for (int i = 0; i < GetNodeStorySceneProgress().Count; i++)
             {
                 if (GetNodeStorySceneProgress()[i].ToString() == __scene_id)
                     return true;
@@ -2746,15 +2798,15 @@ namespace PIERStory
             if(CheckAdminUser())
                 return true; 
             */
-            
-            
+
+
             if (currentStoryJson == null || GetNodeProjectSceneHistory() == null)
             {
                 Debug.Log("<color=orange>GetNodeProjectSceneHistory is empty</color>");
                 return false;
             }
 
-            for(int i=0; i<GetNodeProjectSceneHistory().Count;i++)
+            for (int i = 0; i < GetNodeProjectSceneHistory().Count; i++)
             {
                 if (GetNodeProjectSceneHistory()[i].ToString() == __sceneID)
                     return true;
@@ -2815,19 +2867,19 @@ namespace PIERStory
         /// <param name="__illustID">일러스트 ID</param>
         /// <param name="__illustType">일러스트 타입(illust/live_illust)</param>
         /// <returns></returns>
-        public bool CheckIllustUnlockable(string __illustID, string  __illustType)
+        public bool CheckIllustUnlockable(string __illustID, string __illustType)
         {
             // 노드 루프돌면서 오픈된 기록이 있는지 체크한다.
-            for(int i=0; i< GetUserGalleryImage().Count;i++)
+            for (int i = 0; i < GetUserGalleryImage().Count; i++)
             {
                 if (GetUserGalleryImage()[i]["illust_id"].ToString() == __illustID
                     && GetUserGalleryImage()[i]["illust_type"].ToString() == __illustType
                     && GetUserGalleryImage()[i]["illust_open"].ToString() == "0")
-                    
+
                     // 갤러리 이미지에 목록이 있고, 해금되지 않았다. => 해금 가능하다.
                     return true;
             }
-            
+
             // 목록에 겂거나, 이미 해금되었다. 
             return false;
         }
@@ -2855,8 +2907,9 @@ namespace PIERStory
         }
 
 
-        public float CalcEpisodeGalleryProgress(string __episodeID) {
-            
+        public float CalcEpisodeGalleryProgress(string __episodeID)
+        {
+
             int totalEpisodeImage = 0;
             int openEpisodeImage = 0;
 
@@ -2878,7 +2931,7 @@ namespace PIERStory
 
             if (openEpisodeImage == 0)
                 return 0;
-            
+
             Debug.Log(string.Format("### CalcEpisodeGalleryProgress {0}/{1}", openEpisodeImage, totalEpisodeImage));
             return (float)openEpisodeImage / (float)totalEpisodeImage;
         }
@@ -2893,7 +2946,7 @@ namespace PIERStory
             for (int i = 0; i < GetUserGalleryImage().Count; i++)
             {
                 // 값 있을때.  타입이랑 미니컷 여부까지 맞아야 한다. 
-                if(SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_id") == __galleryId
+                if (SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_id") == __galleryId
                     && SystemManager.GetJsonNodeString(GetUserGalleryImage()[i], "illust_type") == __galleryType
                     && SystemManager.GetJsonNodeBool(GetUserGalleryImage()[i], "illust_open"))
                     return true;
@@ -2952,27 +3005,32 @@ namespace PIERStory
         /// <returns>true면 해금한적 있음, false면 해금한적 없음</returns>
         public bool CheckNewVoice(string soundName)
         {
-            
+
             // 이전의 VoiceHistory는 화자 > 에피소드 까지 3중 키로 포장되어 와서 
             // 있는지 없는지 체크가 너무 어렵다. 
             // 그래서 RawVoiceHistory를 사용하도록 한다! 
-            for(int i=0; i < GetNodeUserRawVoiceHistory().Count;i++) {
-                if(SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], CommonConst.SOUND_NAME) == soundName 
-                    && SystemManager.GetJsonNodeBool(GetNodeUserRawVoiceHistory()[i], CommonConst.IS_OPEN)) {
+            for (int i = 0; i < GetNodeUserRawVoiceHistory().Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], CommonConst.SOUND_NAME) == soundName
+                    && SystemManager.GetJsonNodeBool(GetNodeUserRawVoiceHistory()[i], CommonConst.IS_OPEN))
+                {
                     return true;
                 }
             }
 
             return false;
         }
-        
+
         /// <summary>
         /// 대상 보이스를 해금 처리 
         /// </summary>
         /// <param name="soundName"></param>
-        public void SetVoiceOpen(string soundName) {
-            for(int i=0; i < GetNodeUserRawVoiceHistory().Count;i++) {
-                if(SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], CommonConst.SOUND_NAME) == soundName) {
+        public void SetVoiceOpen(string soundName)
+        {
+            for (int i = 0; i < GetNodeUserRawVoiceHistory().Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(GetNodeUserRawVoiceHistory()[i], CommonConst.SOUND_NAME) == soundName)
+                {
                     GetNodeUserRawVoiceHistory()[i][CommonConst.IS_OPEN] = 1; // 오픈처리
                     return;
                 }
@@ -2981,123 +3039,141 @@ namespace PIERStory
 
         #endregion
 
-        
+
         #region 유저 능력치 관련 메소드 
-        
-        public JsonData GetUserAbility() {
-            if(!currentStoryJson.ContainsKey(NODE_USER_ABILITY)) {
+
+        public JsonData GetUserAbility()
+        {
+            if (!currentStoryJson.ContainsKey(NODE_USER_ABILITY))
+            {
                 return null;
             }
-            
+
             return currentStoryJson[NODE_USER_ABILITY];
         }
-        
-        public JsonData GetRawStoryAbility() {
-            if(!currentStoryJson.ContainsKey(NODE_RAW_STORY_ABILITY)) {
+
+        public JsonData GetRawStoryAbility()
+        {
+            if (!currentStoryJson.ContainsKey(NODE_RAW_STORY_ABILITY))
+            {
                 return null;
             }
-            
+
             return currentStoryJson[NODE_RAW_STORY_ABILITY];
         }
-        
+
         /// <summary>
         /// 유저 능력치 json 갱신 
         /// </summary>
         /// <param name="__newData"></param>
-        public void UpdateUserAbility(JsonData __newData) {
+        public void UpdateUserAbility(JsonData __newData)
+        {
             currentStoryJson[NODE_USER_ABILITY] = __newData;
-            
+
             Debug.Log("###  UpdateUserAbility : " + JsonMapper.ToStringUnicode(currentStoryJson[NODE_USER_ABILITY]));
         }
-        
+
         /// <summary>
         /// 스토리 누적 능력치 갱신 
         /// </summary>
         /// <param name="__newData"></param>
-        public void UpdateRawStoryAbility(JsonData __newData) {
+        public void UpdateRawStoryAbility(JsonData __newData)
+        {
             currentStoryJson[NODE_RAW_STORY_ABILITY] = __newData;
         }
-        
-        
+
+
         /// <summary>
         /// 현재 작품의 화자, 능력치에 해당하는 수치 가져오기 
         /// </summary>
         /// <param name="__speaker"></param>
         /// <param name="__ability"></param>
         /// <returns></returns>
-        public int GetSpeakerAbilityValue (string __speaker, string __ability) {
-            
+        public int GetSpeakerAbilityValue(string __speaker, string __ability)
+        {
+
             // key 체크 
-            if(!GetUserAbility().ContainsKey(__speaker)) {
+            if (!GetUserAbility().ContainsKey(__speaker))
+            {
                 Debug.LogError(string.Format("No match speaker in [{0}/{1}]", __speaker, __ability));
                 return 0;
             }
-            
-            for(int i=0; i<GetUserAbility()[__speaker].Count;i++) {
-                if(GetUserAbility()[__speaker][i]["ability_name"].ToString() == __ability) {
+
+            for (int i = 0; i < GetUserAbility()[__speaker].Count; i++)
+            {
+                if (GetUserAbility()[__speaker][i]["ability_name"].ToString() == __ability)
+                {
                     return SystemManager.GetJsonNodeInt(GetUserAbility()[__speaker][i], "current_value");
                 }
             }
-            
+
             Debug.LogError(string.Format("No match ability in [{0}/{1}]", __speaker, __ability));
             return 0;
-            
+
         }
-        
+
         /// <summary>
         /// 현재 작품의 화자, 능력치에 해당하는 Percentage 가져오기 
         /// </summary>
         /// <param name="__speaker"></param>
         /// <param name="__ability"></param>
         /// <returns></returns>
-        public int GetSpeakerAbilityPercentage (string __speaker, string __ability) {
-            
+        public int GetSpeakerAbilityPercentage(string __speaker, string __ability)
+        {
+
             int currentValue = 0;
             int maxValue = 0;
-            
+
             // key 체크 
-            if(!GetUserAbility().ContainsKey(__speaker)) {
+            if (!GetUserAbility().ContainsKey(__speaker))
+            {
                 Debug.LogError(string.Format("No match speaker in [{0}/{1}]", __speaker, __ability));
                 return 0;
             }
-            
-            for(int i=0; i<GetUserAbility()[__speaker].Count;i++) {
-                if(GetUserAbility()[__speaker][i]["ability_name"].ToString() == __ability) {
+
+            for (int i = 0; i < GetUserAbility()[__speaker].Count; i++)
+            {
+                if (GetUserAbility()[__speaker][i]["ability_name"].ToString() == __ability)
+                {
                     currentValue = SystemManager.GetJsonNodeInt(GetUserAbility()[__speaker][i], "current_value");
                     maxValue = SystemManager.GetJsonNodeInt(GetUserAbility()[__speaker][i], "max_value");
                     break;
                 }
             }
-            
+
             // 백분율 
             return Mathf.RoundToInt((float)currentValue / (float)maxValue * 100f);
-            
-            
+
+
         }
-        
+
         /// <summary>
         /// 화자, 능력치 json 
         /// </summary>
         /// <param name="__speaker"></param>
         /// <param name="__ability"></param>
         /// <returns></returns>
-        public JsonData GetSpeakerAbilityJSON(string __speaker, string __ability) {
+        public JsonData GetSpeakerAbilityJSON(string __speaker, string __ability)
+        {
             // key 체크 
-            if(!GetUserAbility().ContainsKey(__speaker)) {
+            if (!GetUserAbility().ContainsKey(__speaker))
+            {
                 Debug.LogError(string.Format("No match speaker in [{0}/{1}]", __speaker, __ability));
                 return null;
             }
-            
-            for(int i=0; i<GetUserAbility()[__speaker].Count;i++) {
-                if(GetUserAbility()[__speaker][i]["ability_name"].ToString() == __ability) {
+
+            for (int i = 0; i < GetUserAbility()[__speaker].Count; i++)
+            {
+                if (GetUserAbility()[__speaker][i]["ability_name"].ToString() == __ability)
+                {
                     return GetUserAbility()[__speaker][i];
                 }
             }
-            
+
             Debug.LogError(string.Format("No match ability in [{0}/{1}]", __speaker, __ability));
             return null;
         }
-        
+
         /// <summary>
         /// 에피소드, 씬에서 이미 획득한 능력치 정보가 있는지 체크 
         /// </summary>
@@ -3106,39 +3182,43 @@ namespace PIERStory
         /// <param name="__abilityName"></param>
         /// <param name="__value"></param>
         /// <returns></returns>
-        public bool CheckSceneAbilityHistory(string __episode_id, string __scene_id, string __speaker, string __abilityName, int __value) {
-            
-            if(GetRawStoryAbility() == null)
+        public bool CheckSceneAbilityHistory(string __episode_id, string __scene_id, string __speaker, string __abilityName, int __value)
+        {
+
+            if (GetRawStoryAbility() == null)
                 return false;
-                
-            for(int i=0; i<GetRawStoryAbility().Count;i++) {
-                if(SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], CommonConst.COL_EPISODE_ID) == __episode_id
+
+            for (int i = 0; i < GetRawStoryAbility().Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], CommonConst.COL_EPISODE_ID) == __episode_id
                     && SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], GameConst.COL_SCENE_ID) == __scene_id
                     && SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], GameConst.COL_SPEAKER) == __speaker
                     && SystemManager.GetJsonNodeString(GetRawStoryAbility()[i], "ability_name") == __abilityName
-                    && SystemManager.GetJsonNodeInt(GetRawStoryAbility()[i], "add_value") == __value) 
+                    && SystemManager.GetJsonNodeInt(GetRawStoryAbility()[i], "add_value") == __value)
                     return true; // 데이터 있음 
-                    
+
             }
-            
-            
+
+
             return false;
         }
-        
-        
+
+
         /// <summary>
         /// 유저 인트로 수행 여부 처리 
         /// </summary>        
-        public void UpdateIntroComplete() {
+        public void UpdateIntroComplete()
+        {
             JsonData sending = new JsonData();
             sending["func"] = "updateUserIntroDone";
             NetworkLoader.main.SendPost(OnUpdateIntroComplete, sending, false);
         }
-        
-        void OnUpdateIntroComplete (HTTPRequest request, HTTPResponse response) {
-            
+
+        void OnUpdateIntroComplete(HTTPRequest request, HTTPResponse response)
+        {
+
             NetworkLoader.CheckResponseValidation(request, response);
-            
+
             isIntroDone = true; // 그냥 true 처리 
         }
 
@@ -3227,7 +3307,7 @@ namespace PIERStory
 
             dailyMissionTimer = endDate - DateTime.UtcNow;
 
-            if(dailyMissionTimer.Ticks < 0)
+            if (dailyMissionTimer.Ticks < 0)
                 Debug.LogError("시간이 조작되어 정확한 타이머를 제공할 수 없음");
 
             while (true)
@@ -3240,7 +3320,7 @@ namespace PIERStory
                     RequestServiceEvents();
                     break;
                 }
-                    
+
                 yield return null;
                 yield return null;
                 yield return null;
@@ -3345,7 +3425,7 @@ namespace PIERStory
             NetworkLoader.main.SendPost(__cb, sending, isSync);
         }
 
-        
+
         /// <summary>
         /// 통상적 업적 리스트 콜백
         /// </summary>
@@ -3381,9 +3461,9 @@ namespace PIERStory
             }
 
             JsonData result = JsonMapper.ToObject(res.DataAsText);
-            
+
             Debug.Log(JsonMapper.ToStringUnicode(result));
-            
+
             SetSeasonCheck(result);
             SetAchievementList(result);
 
@@ -3401,7 +3481,7 @@ namespace PIERStory
 
             int count = 0;
 
-            for(int i=0;i<listAchievement.Count;i++)
+            for (int i = 0; i < listAchievement.Count; i++)
             {
                 if (listAchievement[i].achievementDegree >= 1f)
                     count++;
@@ -3489,7 +3569,7 @@ namespace PIERStory
 
 
             // 미션 모두 클리어 한건지 체크
-            foreach(int key in DictStoryMission.Keys)
+            foreach (int key in DictStoryMission.Keys)
             {
                 // 미션이 잠긴게 있다면 false 처리
                 if (DictStoryMission[key].missionState == MissionState.locked)
@@ -3522,99 +3602,109 @@ namespace PIERStory
         }
 
         #endregion
-    
+
         #region 유저 타임딜 
-        
+
         /// <summary>
         /// 유저의 활성화된 타임들 목록 요청 
         /// </summary>
-        public void RequestUserActiveTimeDeal() {
+        public void RequestUserActiveTimeDeal()
+        {
             JsonData sendData = new JsonData();
             sendData["func"] = "getUserActiveTimeDeal";
-            
+
             NetworkLoader.main.SendPost(CallbackRequestUserActiveTimeDeal, sendData, false);
-            
+
         }
-        
-        void CallbackRequestUserActiveTimeDeal(HTTPRequest request, HTTPResponse response) {
-            if(!NetworkLoader.CheckResponseValidation(request, response))
+
+        void CallbackRequestUserActiveTimeDeal(HTTPRequest request, HTTPResponse response)
+        {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
                 return;
-                
+
             userActiveTimeDeal = JsonMapper.ToObject(response.DataAsText);
-            
-            if(LobbyManager.main != null) {
+
+            if (LobbyManager.main != null)
+            {
                 ViewMain.OnRefreshShopNewSign?.Invoke();
                 MainShop.OnRefreshPackageShop?.Invoke();
                 MainShop.OnRefreshNormalShop?.Invoke();
             }
         }
-        
+
         /// <summary>
         /// 대상 작품에 활성화된 타임딜 정보 요청 
         /// </summary>
         /// <param name="__projectID"></param>
         /// <returns></returns>
-        public PassTimeDealData GetProjectActiveTimeDeal(string __projectID) {
-            if(userActiveTimeDeal == null)
+        public PassTimeDealData GetProjectActiveTimeDeal(string __projectID)
+        {
+            if (userActiveTimeDeal == null)
                 return null;
-                
-                
-            for(int i=0; i<userActiveTimeDeal.Count;i++) {
-                if(SystemManager.GetJsonNodeString(userActiveTimeDeal[i], "project_id") == __projectID) {
+
+
+            for (int i = 0; i < userActiveTimeDeal.Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(userActiveTimeDeal[i], "project_id") == __projectID)
+                {
                     return new PassTimeDealData(userActiveTimeDeal[i]);
                 }
             }
-            
+
             return null;
         }
-        
+
         /// <summary>
         /// 유효한 타임딜을 갖고 있나?
         /// </summary>
         /// <returns></returns>
-        public bool HasActiveTimeDeal() {
-            
-            if(userActiveTimeDeal == null)
+        public bool HasActiveTimeDeal()
+        {
+
+            if (userActiveTimeDeal == null)
                 return false;
-                
+
             string projectID = string.Empty;
             long endTick = 0;
             TimeSpan timeDiff;
             DateTime endDate;
-        
+
             Debug.Log(">> HasActiveTimeDeal Count :: " + userActiveTimeDeal.Count);
-                
+
             // for문 
-            for(int i=0; i<userActiveTimeDeal.Count;i++) {
+            for (int i = 0; i < userActiveTimeDeal.Count; i++)
+            {
                 projectID = SystemManager.GetJsonNodeString(userActiveTimeDeal[i], "project_id");
                 endTick = long.Parse(SystemManager.GetJsonNodeString(userActiveTimeDeal[i], "end_date_tick"));
-                
-                if(string.IsNullOrEmpty(projectID))
+
+                if (string.IsNullOrEmpty(projectID))
                     continue;
-                    
-                if(HasProjectFreepass(projectID)) { // 프리미엄 패스 보유중이라면 continue
+
+                if (HasProjectFreepass(projectID))
+                { // 프리미엄 패스 보유중이라면 continue
                     Debug.Log(string.Format("alread purchased Timedeal [{0}]", projectID));
                     continue;
                 }
-                
+
                 endTick = SystemConst.ConvertServerTimeTick(endTick);
                 endDate = new DateTime(endTick);
                 timeDiff = endDate - DateTime.UtcNow;
-                
+
                 // 시간 오버했어도 continue
-                if(timeDiff.Ticks <= 0) {
+                if (timeDiff.Ticks <= 0)
+                {
                     Debug.Log(string.Format("Timeover Timedeal [{0}]", projectID));
                     continue;
                 }
-                    
+
                 // 여기까지 통과했으면 return true;
                 return true;
-                
+
             }
-            
+
             return false;
         }
-        
+
         #endregion
     }
 }

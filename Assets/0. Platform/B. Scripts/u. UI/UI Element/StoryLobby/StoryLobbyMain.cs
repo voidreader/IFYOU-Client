@@ -536,7 +536,7 @@ namespace PIERStory {
             
             
             // 에피소드 오픈 시간 처리
-            openDateTick = SystemConst.ConvertServerTimeTick(long.Parse(projectCurrentJSON["next_open_tick"].ToString()));
+            openDateTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(projectCurrentJSON, "next_open_tick"));
             openDate = new DateTime(openDateTick); // 틱으로 오픈 시간 생성 
             
             Debug.Log("## open date : " + openDate.ToString());
@@ -575,7 +575,7 @@ namespace PIERStory {
                     }
                 }
 
-                UserManager.main.UpdateLocalPush(currentStoryData.projectID, SystemManager.GetJsonNodeInt(projectCurrentJSON, "chapter_number"), openDateTick);
+                UserManager.main.UpdateLocalPush(currentStoryData.projectID, SystemManager.GetJsonNodeInt(projectCurrentJSON, "chapter_number"), SystemManager.GetJsonNodeLong(projectCurrentJSON, "next_open_tick"));
 
             } 
             else { // 대기시간 없음 

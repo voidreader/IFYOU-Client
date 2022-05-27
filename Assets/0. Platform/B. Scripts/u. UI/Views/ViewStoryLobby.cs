@@ -33,9 +33,7 @@ namespace PIERStory
         public static Action<JsonData, ProfileItemElement> OnBubbleSetting = null;  // 말풍선 
 
         
-
         public static bool loadComplete = false;
-        
         
         
 
@@ -513,7 +511,6 @@ namespace PIERStory
 
         #endregion
 
-
         #region 작품 꾸미기 모드 
         
 
@@ -695,8 +692,6 @@ namespace PIERStory
 
             ViewCommonTop.OnBackAction = null;
         }
-        
-        
 
 
         /// <summary>
@@ -1041,6 +1036,7 @@ namespace PIERStory
             CheckLoadComplete();
         }
 
+
         IEnumerator RoutineBackgroundDetailSetting()
         {
             yield return new WaitUntil(() => bg != null);
@@ -1079,14 +1075,13 @@ namespace PIERStory
 
             SystemManager.ShowNetworkLoading();
             
-            bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, bgData, BGLoadComplete);
+            bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, bgData, null);
             bgCurrency = SystemManager.GetJsonNodeString(bgData, LobbyConst.NODE_CURRENCY);
             LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(0f, 0f, 0f);
             StartCoroutine(RoutineBackgroundDetailSetting());
 
             for (int i = 0; i < bgListContent.childCount; i++)
                 bgListContent.GetChild(i).GetComponent<ProfileItemElement>().currentCount = 0;
-
 
             ActiveInteractable(false);
 
@@ -1379,6 +1374,7 @@ namespace PIERStory
 
         #endregion
 
+        #region 코인샵 및 Webview
 
         /// <summary>
         /// 프로젝트 코인샵 터치 
@@ -1533,6 +1529,8 @@ namespace PIERStory
             // * 갱신 다했으면 능력치 차이를 구해서 메세지 띄운다.
             UserManager.main.NotifyUpdatedAbility(); 
         }
+
+        #endregion
 
         JsonData SaveCurrentDeco()
         {

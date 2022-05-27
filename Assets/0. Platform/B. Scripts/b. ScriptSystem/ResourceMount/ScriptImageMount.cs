@@ -455,13 +455,13 @@ namespace PIERStory
         void SendFailMessage()
         {
             isMounted = false;
-            OnMountCompleted();
+            OnMountCompleted?.Invoke();
         }
 
         void SendSuccessMessage()
         {
             isMounted = true;
-            OnMountCompleted();
+            OnMountCompleted?.Invoke();
         }
 
         /// <summary>
@@ -472,7 +472,6 @@ namespace PIERStory
         {
             try
             {
-                
                 // 어드레서블은 asyncOperationHandle에서 가져오고 sprite도 생성해놓는다.
                 if(isAddressable && ( template == GameConst.TEMPLATE_BACKGROUND || template == GameConst.TEMPLATE_IMAGE || template == GameConst.TEMPLATE_ILLUST)) {
                     return true;

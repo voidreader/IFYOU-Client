@@ -111,8 +111,18 @@ namespace PIERStory {
                 }
             }
             else if(promotionType == "page") {
+                
+                if(string.IsNullOrEmpty(targetID))
+                    return;
+                    
+                Debug.Log("page target ID : " + targetID);
+                
                 if(targetID == "star") {
                     Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);
+                }
+                else if (targetID == "coin") {
+                    // 웹 코인샵 오픈 
+                    SystemManager.main.OpenCoinShopWebview();
                 }
             }
         }

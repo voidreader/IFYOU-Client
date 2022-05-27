@@ -5,12 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-#if UNITY_ANDROID
-using Unity.Notifications.Android;
-#elif UNITY_IOS
-using Unity.Notifications.iOS;
-#endif
-
 using LitJson;
 using BestHTTP;
 using Doozy.Runtime.Signals;
@@ -1197,164 +1191,6 @@ namespace PIERStory
         }
 
 
-        /// <summary>
-        /// 작품 기다무 알림 등록
-        /// </summary>
-        /// <param name="__projectId">작품 ID</param>
-        public void RegisterLocalPush(string __projectId, int chapterNumber, long __ticks)
-        {
-            int projectId = 0;
-            StoryData currentStory = StoryManager.main.FindProject(__projectId);
-
-            if (string.IsNullOrEmpty(__projectId) || !int.TryParse(__projectId, out projectId))
-            {
-                Debug.LogError("작품 ID가 없거나 잘못되었습니다.");
-                return;
-            }
-
-            // 작품 알림 설정을 안했으니 그만둬!
-            if (!currentStory.isNotify)
-                return;
-
-
-            DateTime endDate = new DateTime(SystemConst.ConvertServerTimeTick(__ticks));
-            TimeSpan timeDiff = endDate - DateTime.UtcNow;
-
-            // 대기 시간이 5시간이 넘어가면 등록하지 않는다
-            if (timeDiff.TotalHours >= 5 || timeDiff.Ticks <= 0)
-                return;
-
-            DateTime toNotify = DateTime.Now.AddTicks(timeDiff.Ticks);
-
-#if UNITY_ANDROID
-
-            // 채널 생성
-            AndroidNotificationChannel notificationChannel = new AndroidNotificationChannel(
-            PUSH_CHANNEL_ID,
-            "EpisodeOpen_Notification",
-            "Episode open notification push alert",
-            Importance.High);
-
-            // 채널 등록
-            AndroidNotificationCenter.RegisterNotificationChannel(notificationChannel);
-
-            // 푸쉬 알림 설정
-            AndroidNotification notification = new AndroidNotification(
-                SystemManager.GetLocalizedText("5001"),
-                string.Format(SystemManager.GetLocalizedText("6313"), currentStory.title, chapterNumber),    // 작품명, 에피소드 번호
-                toNotify);
-
-            // 푸쉬 예약
-            AndroidNotificationCenter.SendNotificationWithExplicitID(notification, PUSH_CHANNEL_ID, projectId);
-
-#elif UNITY_IOS
-
-            var timeTrigger = new iOSNotificationTimeIntervalTrigger()
-            {
-                TimeInterval = new TimeSpan(__ticks),
-                Repeats = false
-            };
-
-            var notificationIOS = new iOSNotification()
-            {
-                Identifier = __projectId,
-                Title = SystemManager.GetLocalizedText("5001"),
-                Body = string.Format(SystemManager.GetLocalizedText("6313"), currentStory.title, chapterNumber),
-                ShowInForeground = true,
-                Trigger = timeTrigger
-            };
-
-            iOSNotificationCenter.ScheduleNotification(notificationIOS);
-#endif
-        }
-
-        /// <summary>
-        /// 푸시 시간 갱신
-        /// </summary>
-        public void UpdateLocalPush(string __projectId, int chapterNumber, long __ticks)
-        {
-            int projectId = 0;
-            StoryData currentStory = StoryManager.main.FindProject(__projectId);
-
-            if (!int.TryParse(__projectId, out projectId) || !currentStory.isNotify)
-                return;
-
-
-            DateTime endDate = new DateTime(SystemConst.ConvertServerTimeTick(__ticks));
-            TimeSpan timeDiff = endDate - DateTime.UtcNow;
-
-            // 대기 시간이 5시간이 넘어가면 갱신하지 않음
-            if (timeDiff.TotalHours >= 5 || timeDiff.Ticks <= 0)
-                return;
-
-
-            if (timeDiff.Ticks <= 0)
-                CancelLocalPush(__projectId);
-
-            DateTime toNotify = DateTime.Now.AddTicks(timeDiff.Ticks);
-
-#if UNITY_ANDROID
-
-            // 푸시 등록 안된거니까 넘김
-            if (AndroidNotificationCenter.CheckScheduledNotificationStatus(projectId) == NotificationStatus.Unavailable ||
-                AndroidNotificationCenter.CheckScheduledNotificationStatus(projectId) == NotificationStatus.Unknown)
-            {
-                RegisterLocalPush(__projectId, chapterNumber, __ticks);
-                return;
-            }
-
-
-            // 푸쉬 알림 설정
-            AndroidNotification notification = new AndroidNotification(
-                SystemManager.GetLocalizedText("5001"),
-                string.Format(SystemManager.GetLocalizedText("6313"), currentStory.title, chapterNumber),    // 작품명, 에피소드 번호
-                toNotify);
-
-            // 스케쥴 갱신
-            AndroidNotificationCenter.UpdateScheduledNotification(projectId, notification, PUSH_CHANNEL_ID);
-
-#elif UNITY_IOS
-
-            // 아이폰에는 갱신이 없기 때문에 있던거 지우고 재등록
-            CancelLocalPush(__projectId);
-            RegisterLocalPush(__projectId, chapterNumber, __ticks);
-#endif
-        }
-
-        /// <summary>
-        /// 작품 알림 등록된것 취소. 이미 푸시된 것에 대해서는 그냥 둠
-        /// </summary>
-        public void CancelLocalPush(string __projectId)
-        {
-            int projectId = 0;
-
-            if (!int.TryParse(__projectId, out projectId))
-                return;
-
-#if UNITY_ANDROID
-
-            if (AndroidNotificationCenter.CheckScheduledNotificationStatus(projectId) == NotificationStatus.Unavailable ||
-                    AndroidNotificationCenter.CheckScheduledNotificationStatus(projectId) == NotificationStatus.Unknown)
-                return;
-
-            // 예정되어있던 푸시 스케줄 취소
-            AndroidNotificationCenter.CancelScheduledNotification(projectId);
-
-#elif UNITY_IOS
-
-            // 스케줄 된 애들 중에 동일 식별자가 있는지 찾아서 삭제
-            foreach (iOSNotification notifi in iOSNotificationCenter.GetScheduledNotifications())
-            {
-                if (notifi.Identifier == __projectId)
-                {
-                    iOSNotificationCenter.RemoveScheduledNotification(__projectId);
-                    break;
-                }
-            }
-#endif
-        }
-
-
         #endregion
 
         #region 유저 노드 제어 
@@ -2288,7 +2124,6 @@ namespace PIERStory
             // 노드 저장!
             if (playedEpisodeID > 0)
             {
-
                 // 첫 클리어 보상 관련 변수
                 GameManager.main.hasFirstClearReward = !IsCompleteEpisode(playedEpisodeID.ToString());
 
@@ -2299,17 +2134,11 @@ namespace PIERStory
             SetNodeUserProjectCurrent(resultEpisodeRecord[NODE_PROJECT_CURRENT]);
             currentStorySelectionHistoryJson = resultEpisodeRecord["selectionHistory"]; // 선택지 히스토리 
 
-            // 클리어 후에는 등록된거 지워주고 다시 새로 등록해준다
-            CancelLocalPush(StoryManager.main.CurrentProjectID);
-            RegisterLocalPush(StoryManager.main.CurrentProjectID, SystemManager.GetJsonNodeInt(resultEpisodeRecord[NODE_PROJECT_CURRENT][0], "chapter_number"), long.Parse(SystemManager.GetJsonNodeString(resultEpisodeRecord[NODE_PROJECT_CURRENT][0], "next_open_tick")));
-
-
             // 현재 플레이한 에피소드가 정규 에피소드인 경우 이프유 업적 통신하기
             if (GameManager.main != null && GameManager.main.currentEpisodeData.episodeType == EpisodeType.Chapter)
                 NetworkLoader.main.RequestIFYOUAchievement(12, -1, int.Parse(StoryManager.main.CurrentEpisodeID));
 
             NetworkLoader.main.RequestDailyMission(2);
-
         }
 
 

@@ -165,16 +165,12 @@ namespace PIERStory {
         /// </summary>
         public void OnClickAlertButton()
         {
-#if UNITY_IOS
-
-            // ios 유저의 경우에 AuthorizationOption을 체크해서 return시키자
-            if (Unity.Notifications.iOS.iOSNotificationCenter.GetNotificationSettings().AuthorizationStatus != Unity.Notifications.iOS.AuthorizationStatus.Authorized)
+            // 푸쉬 알림에 대해 허용해두지 않았다면 팝업 띄워주고 그만둠
+            if(SystemManager.main.pushTokenInfo.agreement.pushEnabled)
             {
                 SystemManager.ShowMessageWithLocalize("6315");
                 return;
             }
-            
-#endif
 
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "setUserProjectNotification";
@@ -202,17 +198,12 @@ namespace PIERStory {
             // 눌렀을 때만 Alert popup이 뜨도록 수정
             if (introduceStory.isNotify)
             {
-                // 작품 기다무, 연재면 다음 연재 알림 등록
-                // 여기 나중에 SystemManager.GetJsonNodeLong으로 수정해야함
-                UserManager.main.RegisterLocalPush(introduceStory.projectID, SystemManager.GetJsonNodeInt(result["projectCurrent"][0], "chapter_number"), SystemManager.GetJsonNodeLong(result["projectCurrent"][0], "next_open_tick"));
-
+                
                 SystemManager.ShowSimpleAlertLocalize("6311");
             }
             else
             {
-                // 이 작품에 관련된 예약(스케줄) 모두 취소하기
-                UserManager.main.CancelLocalPush(introduceStory.projectID);
-
+                
                 SystemManager.ShowSimpleAlertLocalize("6312");
             }
         }

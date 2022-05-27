@@ -54,7 +54,7 @@ namespace PIERStory
 
             achievementSummary = SystemManager.GetJsonNodeString(__j, "summary");
 
-            achievementDegree = (float)currentPoint / (float)achievementPoint;
+            achievementDegree = (float)currentPoint / achievementPoint;
         }
     }
 }

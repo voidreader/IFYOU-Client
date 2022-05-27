@@ -1342,7 +1342,7 @@ namespace PIERStory
 
 #elif UNITY_IOS
 
-            / 스케줄 된 애들 중에 동일 식별자가 있는지 찾아서 삭제
+            // 스케줄 된 애들 중에 동일 식별자가 있는지 찾아서 삭제
             foreach (iOSNotification notifi in iOSNotificationCenter.GetScheduledNotifications())
             {
                 if (notifi.Identifier == __projectId)

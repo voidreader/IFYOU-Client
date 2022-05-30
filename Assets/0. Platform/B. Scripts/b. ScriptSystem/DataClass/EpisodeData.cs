@@ -64,6 +64,7 @@ namespace PIERStory {
         public bool isUnlock = true; // 언락 여부 
         public bool isSerial = false; // 연재 여부 
         public DateTime publishDate;
+        public string debugPublishData = string.Empty;
         
         /// <summary>
         /// 유효한 데이터인지? 
@@ -103,12 +104,14 @@ namespace PIERStory {
             endingType = SystemManager.GetJsonNodeString(episodeJSON, "ending_type");
             dependEpisode = SystemManager.GetJsonNodeString(episodeJSON, "depend_episode");
             
-            nextOpenMin = SystemManager.GetJsonNodeInt(episodeJSON, "next_open_min");
+            nextOpenMin = SystemManager.GetJsonNodeInt(episodeJSON, "next_open_min"); // 이 에피소드가 오픈될때 필요한 대기시간(분)
             isSerial = SystemManager.GetJsonNodeBool(episodeJSON, "is_serial"); // 연재, 아직 연재게시일에 도달하지 않은 경우 true.
             
             // 공개 예정일 
             DateTime.TryParse(SystemManager.GetJsonNodeString(episodeJSON, "publish_date"), out publishDate);
-            
+            if(publishDate != null) {
+                debugPublishData = publishDate.ToString();
+            }
             
             // 에피소드에 등장한는 갤러리 이미지
             

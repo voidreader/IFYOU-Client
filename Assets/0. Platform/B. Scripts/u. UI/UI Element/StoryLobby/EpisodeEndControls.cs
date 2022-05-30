@@ -189,15 +189,15 @@ namespace PIERStory {
             if(!this.gameObject.activeSelf)
                 return;
                         
-            // 프리미엄 패스 오브젝트 추가 
+            // 프리미엄 패스 및 올 패스 오브젝트 추가 
             passButton.gameObject.SetActive(false);
             passBadge.gameObject.SetActive(false);
             allpassTimer.gameObject.SetActive(false);
             
-            hasPremium = UserManager.main.HasProjectFreepass(); // 프리미엄 패스 보유 여부 
+            hasPass = UserManager.main.HasProjectFreepass(); // 패스 보유 여부 
             
-            // 프리미엄 패스 보유 여부에 따른 오브젝트 설정 
-            if(hasPremium) {
+            // 패스 보유 여부에 따른 오브젝트 설정 
+            if(hasPass) {
                 
                 if(UserManager.main.HasProjectPremiumPassOnly(StoryManager.main.CurrentProjectID)) {
                     passBadge.gameObject.SetActive(true);

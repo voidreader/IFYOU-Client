@@ -29,7 +29,7 @@ namespace PIERStory {
         public JsonData projectCurrentJSON = null;
         public string currentEpisodeID = string.Empty; // 현재 순번의 에피소드 ID 
         public EpisodeData currentEpisodeData; // 현재 순번의 에피소드 데이터 
-        public bool hasPremium = false; // 프리미엄 패스 보유 여부 
+        public bool hasPass = false; // 패스 보유 여부 
         public StatePlayButton currentPlayState = StatePlayButton.inactive; // 현재 에피소드 플레이 상태 
         
         public List<FlowElement> ListFlowElements; // Flow 맵 개체들 
@@ -293,7 +293,7 @@ namespace PIERStory {
             currentEpisodeData.SetPurchaseState(); // 구매기록 refresh.
             
             
-            hasPremium = UserManager.main.HasProjectFreepass();
+            hasPass = UserManager.main.HasProjectFreepass();
             
             if(LobbyManager.main != null && CheckResumePossible()) {
                 isEpisodeContinuePlay = true;
@@ -367,16 +367,15 @@ namespace PIERStory {
         void InitFlowMap() {
             
             bool isMatchEpisode = false; // 아래 for문에서 사용 
-
+            int flowIndex = 0;
             
             // 비활성화 시키고 
             for(int i=0; i<ListFlowElements.Count;i++) {
                 ListFlowElements[i].gameObject.SetActive(false);
             }
             
-            int flowIndex = 0;
-            
             // EpisodeData 할당 처리
+            // 최초에 InitFlowElement를 진행하고 대기시간이나 연재일 정보를 설정한다.
             for(int i=0; i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++) {
                 
                 if(flowIndex >= ListFlowElements.Count)
@@ -389,61 +388,57 @@ namespace PIERStory {
                 ListFlowElements[flowIndex++].InitFlowElement(StoryManager.main.ListCurrentProjectEpisodes[i]);
             }
             
-            // 프리미엄 패스 유저는 타이머를 돌리지 않음 
-            if(hasPremium)
-                return; 
-                
-            // 연재작과, 아닌 경우 차이를 둔다 
-            if(!currentStoryData.isSerial) { // * 비연재작
             
-                // 다시 돌리면서 타이머 설정 추가 
-                for(int i=0; i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++) {
-                    if(i >= ListFlowElements.Count)
-                        break;
-                        
-                    if(ListFlowElements[i].currentEpisode.episodeID == currentEpisodeID) {
-                        isMatchEpisode = true;   
-                        ListFlowElements[i].SetOpenTime(openDateTick); // tick 전달한다. 
-                        continue; 
-                    }
-                    
-                    // 연달아 오픈을 위한 추가 처리
-                    if(isMatchEpisode 
-                        && ListFlowElements[i].currentEpisode.episodeType == EpisodeType.Chapter
-                        && ListFlowElements[i].currentEpisode.nextOpenMin == 0) {
-                            
-                            // for문 매칭 이후 next_open_min이 0인 경우에는 동일한 대기시간으로 처리한다.
-                            ListFlowElements[i].SetOpenTime(openDateTick);
-                            
-                    }
-                    
-                    if(isMatchEpisode && ListFlowElements[i].currentEpisode.episodeType == EpisodeType.Chapter
-                        && ListFlowElements[i].currentEpisode.nextOpenMin > 0) {
-                        
-                        // 연달아 오픈이 종료되었다고 판단하고 break
-                        break;        
-                    }
-                } // ? end of initFlow
-                                
-            }
-            else { // * 연재작 
+            TimeSpan diffPublish; // 연재일 시간차 timediff는 대기시간에 대한 시간차 
+            EpisodeData targetEpisode;
             
-                int fIndex  = 0;
+            // 이미 출시된 상태인지 체크 필요하다. 
+            bool isPublished = true; 
+            flowIndex = 0; 
+            
+            // 다시 loop 돌림. 
+            for(int i=0; i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++) {
                 
-                for(int i=0; i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++) {
-                    if(flowIndex>=ListFlowElements.Count)
-                        break;
-                        
-                    // 스페셜 에피소드는 제외. 
-                    if(StoryManager.main.ListCurrentProjectEpisodes[i].episodeType == EpisodeType.Side)
-                        continue;
+                targetEpisode = StoryManager.main.ListCurrentProjectEpisodes[i];
+                diffPublish = targetEpisode.publishDate - DateTime.UtcNow.AddHours(9); // UTC 기준 연재일 구한다. 
+                
+                // 스페셜 에피소드 해당없음 
+                if(targetEpisode.episodeType == EpisodeType.Side)
+                    continue;
                     
-                    ListFlowElements[fIndex++].SetPublishDate(StoryManager.main.ListCurrentProjectEpisodes[i].publishDate);
+                if(targetEpisode.episodeState == EpisodeState.Prev) {
+                    flowIndex++;
+                    continue;
+                }
+                    
+                
+                // diffPublish의 토탈분이 0보다 크면 출시일이 미래다. 
+                if(diffPublish.TotalMinutes > 0) {
+                    isPublished = false; // 출시되지 않은 상태. 
                 }
                 
+                // 현재 상태 
+                if(targetEpisode.episodeState == EpisodeState.Current) {
+                    
+                    if(isPublished) 
+                        ListFlowElements[flowIndex++].SetOpenTime(openDateTick); // tick 전달한다.(대기시간 남은정도에 상관없이)
+                    else 
+                        ListFlowElements[flowIndex++].SetPublishDate(targetEpisode.publishDate); // 출시되지 않은 상태면, 출시일로 전달.
+                }
+                else {
+                    
+                    // 미래 상태에 대한 처리 
+                    // 출시되지 않은 상태일때만 comming soon 처리해준다.
+                    if(!isPublished)
+                        ListFlowElements[flowIndex++].SetPublishDate(targetEpisode.publishDate);
+                    else 
+                        flowIndex++;
+                    
+                }
+                
+                
             }
-
-        }
+        } // ? InitFlowMap 끝. 
         
         #endregion
         
@@ -563,7 +558,7 @@ namespace PIERStory {
                     
                     Debug.Log("<color=cyan>NOT Serial Episode, Future </color>");
                     
-                    if(!hasPremium) { // 비연재, 프리미엄 패스 아님 
+                    if(!hasPass) { // 비연재, 프리미엄 패스 아님 
                          
                         isOpenTimeCountable = true; 
                         currentPlayState = StatePlayButton.inactive;        
@@ -571,14 +566,14 @@ namespace PIERStory {
                     else { // 비연재, 프리미엄 패스 
                         
                         // 상태 처리 
-                        currentPlayState = hasPremium ? StatePlayButton.premium : StatePlayButton.active;        
+                        currentPlayState = hasPass ? StatePlayButton.premium : StatePlayButton.active;        
                     }
                 }
             } 
             else { // 대기시간 없음 
 
                 // 상태 처리 
-                currentPlayState = hasPremium ? StatePlayButton.premium : StatePlayButton.active;
+                currentPlayState = hasPass ? StatePlayButton.premium : StatePlayButton.active;
                 
             }
             
@@ -905,7 +900,7 @@ namespace PIERStory {
             
             
             // * 프리미엄 패스 구매 여부 체크 필요. 
-            if(hasPremium) {
+            if(hasPass) {
                 
                 if(episodePurchaseState != PurchaseState.Permanent) {
                     

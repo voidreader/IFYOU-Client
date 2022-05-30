@@ -12,7 +12,7 @@ namespace PIERStory {
 
     public class FlowElement : MonoBehaviour
     {
-        public EpisodeData currentEpisode;
+        public EpisodeData currentEpisode; // Flow 대상 에피소드 정보 
         
         public RectTransform rectOrigin; 
         public RectTransform rectBody; 
@@ -107,22 +107,24 @@ namespace PIERStory {
         }
         
         /// <summary>
-        /// 
+        /// Flow 초기화 
         /// </summary>
         /// <param name="__episode"></param>
         public void InitFlowElement(EpisodeData __episode) {
             
+            currentEpisode = __episode; // 에피소드 정보 
+            
+            // 컨트롤들 초기화 
             this.gameObject.SetActive(true);
             rectCover.gameObject.SetActive(false);
-            
             textEpisodeTitle.text = string.Empty;
             textCommingSoon.text = string.Empty;
             textPublishDate.text = string.Empty;
             
             
-            isOpenTimeCountable = false;
+            isOpenTimeCountable = false; 
             
-            currentEpisode = __episode;
+            
             
             textEpisodeTitle.text = currentEpisode.episodeTitle;
             textEpisodeNumber.text = currentEpisode.flowPrefix;
@@ -144,11 +146,11 @@ namespace PIERStory {
                 groupIllustProgressor.SetActive(false);
             }
             
-            // 사건 설정 
+            // 사건 게이지 설정 
             sceneProgressor.SetProgressAt(currentEpisode.sceneProgressorValue);
             
             
-
+            // 상태 설정 
             SetState();
             
             // 엔딩의 경우 추가 처리 
@@ -266,10 +268,17 @@ namespace PIERStory {
         
         
         /// <summary>
-        /// 공개 예정일 
+        /// 공개 예정일에 대한 처리
         /// </summary>
         /// <param name="__publishDate"></param>
         public void SetPublishDate(DateTime __publishDate) {
+            
+            // * 나도 까먹어서 적는 연재일 처리 
+            // 엔딩, 스페셜에는 영향을 주지 않는다.
+            // 과거 상태, 이미 연재일이 지난 경우 반영하지 않음
+            // 패스 유무에 관계없이 적용된다. 
+            
+            
             
             // 엔딩 제외
             if(currentEpisode.episodeType == EpisodeType.Ending)
@@ -278,15 +287,17 @@ namespace PIERStory {
             // 과거는 변경하지 않음 
             if(currentEpisode.episodeState == EpisodeState.Prev)
                 return; 
+   
+            
+
+            
+            openDate = __publishDate;
+            timeDiff = openDate - DateTime.UtcNow.AddHours(9);
             
             // 현재이고 이미 오픈된 상태는 return
             if(currentEpisode.episodeState == EpisodeState.Current && timeDiff.Ticks <= 0 ) {
                 return;
-                
-            }
-            
-            openDate = __publishDate;
-            timeDiff = openDate - DateTime.UtcNow.AddHours(9);
+            }            
             
             groupOpenLock.SetActive(false);
             imageIcon.gameObject.SetActive(true);
@@ -328,6 +339,8 @@ namespace PIERStory {
                 isOpenTimeCountable = true; // 카운팅 가능한상태 
             }
             
+            // isOpenTimeCountable의 반대 값을 전달 
+            // 시간 카운팅 = 열리지 않았음
             RefreshOpenTimeState(!isOpenTimeCountable);
            
         }

@@ -238,7 +238,7 @@ namespace PIERStory
         {
             Debug.Log(string.Format("<color=cyan>Init user info [{0}]</color>", __gamebaseID));
             gamebaseID = __gamebaseID;
-            // gamebaseID = "L198PZZ6N96YYDT3";
+            //gamebaseID = "QR3N83MPWR1P94S3";
 
             // 로그인 프로세스를 시작합니다. 
             ConnectServer();

@@ -45,6 +45,7 @@ namespace PIERStory
             string buttonText = SystemManager.GetLocalizedText("6125");
 
             ViewLanguage.OnChangeLanguage?.Invoke(alertText, buttonText, fontAsset, nowLang);
+            PopupLanguage.OnChangeLanguage?.Invoke(alertText, buttonText, fontAsset, nowLang);
         }
 
         public void ToggleOff()

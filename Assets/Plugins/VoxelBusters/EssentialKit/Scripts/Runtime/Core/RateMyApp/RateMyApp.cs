@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using VoxelBusters.CoreLibrary;
 
+
 namespace VoxelBusters.EssentialKit
 {
     /// <summary>
@@ -37,6 +38,18 @@ namespace VoxelBusters.EssentialKit
         #endregion
 
         #region Static methods
+
+        public static void AskForReviewNow(string __title, string __contents, string __okLabel, string __cancelLabel)
+        {
+            // check whether feature is available
+            if (!IsSingletonActive)
+            {
+                DebugLogger.LogError("Feature is not active.");
+                return;
+            }
+
+            Instance.ShowPromptWindow(__title, __contents, __okLabel, __cancelLabel);
+        }
 
         /// <summary>
         /// Immediately prompts user to review. This method ignores IRateMyAppValidator conditions to be satisfied.
@@ -84,6 +97,27 @@ namespace VoxelBusters.EssentialKit
 
         #region Private methods
 
+        void ShowPromptWindow(string __title, string __description, string __okLabel, string __cancelLabel)
+        {
+            // mark that we are showing window
+            m_isShowingPrompt = true;
+
+            // create prompt
+            var dialogSettings = Settings.ConfirmationDialogSettings;
+            var localisationServiceProvider = ExternalServiceProvider.LocalisationServiceProvider;
+            var dialogBuilder = new AlertDialogBuilder()
+                .SetTitle(localisationServiceProvider.GetLocalisedString(key: RateMyAppLocalisationKey.kTitle, __title))
+                .SetMessage(localisationServiceProvider.GetLocalisedString(key: RateMyAppLocalisationKey.kDescription, __description))
+                .AddButton(localisationServiceProvider.GetLocalisedString(key: RateMyAppLocalisationKey.kOkButton, __okLabel), () => OnPromptButtonPressed(PromptButtonType.Ok))
+                .AddCancelButton(localisationServiceProvider.GetLocalisedString(key: RateMyAppLocalisationKey.kCancelButton, __cancelLabel), () => OnPromptButtonPressed(PromptButtonType.Cancel));
+            if (dialogSettings.CanShowRemindMeLaterButton)
+            {
+                dialogBuilder.AddButton(localisationServiceProvider.GetLocalisedString(key: RateMyAppLocalisationKey.kRemindLaterButton, defaultValue: dialogSettings.RemindLaterButtonLabel), () => OnPromptButtonPressed(PromptButtonType.RemindLater));
+            }
+            var newAlertDialog = dialogBuilder.Build();
+            newAlertDialog.Show();
+        }
+
         private void ShowPromptWindow()
         {
             // mark that we are showing window
@@ -124,11 +158,15 @@ namespace VoxelBusters.EssentialKit
 
                 case PromptButtonType.Cancel:
                     m_controller.DidClickOnCancelButton();
+
+                    PlayerPrefs.SetInt("rateCheck", 1);
                     break;
 
                 case PromptButtonType.Ok:
                     m_controller.DidClickOnOkButton();
                     ShowReviewWindow();
+
+                    PlayerPrefs.SetInt("rateCheck", 2);
                     break;
             }
         }

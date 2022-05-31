@@ -34,11 +34,15 @@ namespace PIERStory {
             // 아이콘 이미지 
             currency = SystemManager.GetJsonNodeString(Data.contentJson, LobbyConst.NODE_CURRENCY);
             
+            string currencyName = string.Empty;
+            
             if(currency == LobbyConst.COIN) {
-                iconImage.sprite = SystemManager.main.spriteCoin;
+                iconImage.sprite = SystemManager.main.spriteCoin; // 코인
+                currencyName = SystemManager.GetLocalizedText("2001");
             }
             else {
-                iconImage.sprite = SystemManager.main.spriteStar;
+                iconImage.sprite = SystemManager.main.spriteStar; // 스타 
+                currencyName = SystemManager.GetLocalizedText("2000");
             }
             
             
@@ -46,8 +50,8 @@ namespace PIERStory {
             bonusQuantity = quantity * 5; // 보너스 수량 
             
             // 수량
-            textBaseQuantity.text = quantity.ToString() + " " + SystemManager.GetLocalizedText("6240");
-            textBonusQuantity.text = bonusQuantity.ToString() + " " + SystemManager.GetLocalizedText("6240");
+            textBaseQuantity.text = quantity.ToString() + " " + currencyName;
+            textBonusQuantity.text = bonusQuantity.ToString() + " " + currencyName;
 
         }
         

@@ -422,13 +422,9 @@ namespace PIERStory {
         }
         
         public void OnClickIcon() {
-            
-            // 리셋에 대한 처리다. 
-            if(currentEpisode.episodeState == EpisodeState.Prev || currentEpisode.episodeState == EpisodeState.Block) {
-                SystemManager.ShowFlowResetPopup(currentEpisode); // 리셋 호출.
-            }
+            StoryLobbyMain.SuperUserFlowEpisodeStart?.Invoke(currentEpisode);
         }
-        
+
         /// <summary>
         /// 플로우 자체를 버튼처럼 사용할 수 있게 변경.
         /// </summary>

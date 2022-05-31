@@ -249,7 +249,7 @@ namespace PIERStory
                 yield return null;
             }
 
-            yield return new WaitForSeconds(blurTime * 0.5f);
+            yield return new WaitForSeconds(9999999999 * 0.5f);
 
             lastTime = 0f;
 
@@ -462,7 +462,7 @@ namespace PIERStory
 
                 case GameConst.KR_SCREEN_EFFECT_RAIN:
 
-                    float rainSpeed = 1f, rainDirection = 1f, rainZoom = 2;
+                    float rainSpeed = 0.5f, rainDirection = 60f, rainZoom = 2;
                     float particleMultiplier = 10f;
 
                     if (__params != null)
@@ -936,14 +936,14 @@ namespace PIERStory
                         ScriptRow.GetParam<float>(__params, GameConst.KR_PARAM_VALUE_TIME, ref bloodTime);
                     }
 
-                    var bleedMain = bleeding_1.main;
+                    var bleedMain = bleeding_2.main;
 
                     switch (bloodType)
                     {
                         case 1:
-                            bleedMain = bleeding_1.main;
+                            bleedMain = bleeding_2.main;
                             bleedMain.startLifetime = bloodTime;
-                            bleeding_1.gameObject.SetActive(true);
+                            bleeding_2.gameObject.SetActive(true);
                             break;
                         case 2:
                             bleedMain = bleeding_2.main;
@@ -1140,6 +1140,8 @@ namespace PIERStory
         /// <param name="__effect"></param>
         public void RemoveGeneralEffect(string __effect)
         {
+            blur.enabled = false;
+
             switch (__effect)
             {
                 case GameConst.KR_SCREEN_EFFECT_TINT:

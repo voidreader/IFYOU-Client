@@ -95,7 +95,7 @@ namespace PIERStory {
             foregroundProgressor.gameObject.SetActive(true);
             premiumAura.gameObject.SetActive(false);
             
-            textPlay.text = "PLAY";
+            textPlay.text = "시작하기";
             
             // 그룹으로 나눴다..!
             groupOpen.SetActive(false);

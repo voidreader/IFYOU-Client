@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="com.voxelbusters.android.essentialkitplugin" android:versionCode="1" android:versionName="1.0">
   <application>
     <activity android:name="com.voxelbusters.android.essentialkit.features.webview.WebViewActivity" android:theme="@style/Theme.Transparent" android:hardwareAccelerated="true" />
-    <provider android:name="com.voxelbusters.android.essentialkit.common.FileProviderExtended" android:authorities="pier.make.story.essentialkit.fileprovider" android:exported="false" android:grantUriPermissions="true">
+    <provider android:name="com.voxelbusters.android.essentialkit.common.FileProviderExtended" android:authorities="rabi.make.story.essentialkit.fileprovider" android:exported="false" android:grantUriPermissions="true">
       <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/essential_kit_file_paths" />
     </provider>
   </application>

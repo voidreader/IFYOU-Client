@@ -8,7 +8,6 @@ using LitJson;
 namespace PIERStory {
     public class PopupPass : PopupBase
     {
-        
         public ImageRequireDownload imagePass;
         public GameObject normnalTitle; // 노멀 타이틀 
         public GameObject timedealTitle; // 타임딜 타이틀 

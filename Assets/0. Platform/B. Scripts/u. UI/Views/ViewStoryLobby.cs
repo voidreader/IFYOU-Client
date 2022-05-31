@@ -167,7 +167,15 @@ namespace PIERStory
             // 리뷰 팝업 위치 
             if(UserManager.main.gameComplete)
             {
-                // RateGame.Instance.CanShowRate();
+                int rateCount = PlayerPrefs.HasKey(SystemConst.RATE_PLAY_COUNT) ? PlayerPrefs.GetInt(SystemConst.RATE_PLAY_COUNT) : 0;
+                PlayerPrefs.SetInt(SystemConst.RATE_PLAY_COUNT, rateCount + 1);
+
+                if(!PlayerPrefs.HasKey(SystemConst.RATE_CHECK))
+                    PlayerPrefs.SetInt(SystemConst.RATE_CHECK, 0);
+
+                if (PlayerPrefs.GetInt(SystemConst.RATE_PLAY_COUNT) % 10 == 3 && PlayerPrefs.GetInt(SystemConst.RATE_CHECK) > 0)
+                    RateMyApp.AskForReviewNow(SystemManager.GetLocalizedText("6225"), SystemManager.GetLocalizedText("6226"), SystemManager.GetLocalizedText("5067"), SystemManager.GetLocalizedText("5038"));
+                
                 UserManager.main.gameComplete = false;
             }
             

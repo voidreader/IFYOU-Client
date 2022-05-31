@@ -15,8 +15,9 @@ namespace PIERStory {
         
         public const string IMAGE_KEY = "image_key";
         public const string IMAGE_URL = "image_url";
-        
-        
+
+        public const string RATE_PLAY_COUNT = "ratePlayCount";
+        public const string RATE_CHECK = "rateCheck";
         
         
         public static long ConvertServerTimeTick(long __serverTick) {

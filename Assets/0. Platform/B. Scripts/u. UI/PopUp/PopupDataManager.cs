@@ -4,7 +4,6 @@ using System;
 using UnityEngine;
 
 using TMPro;
-using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {

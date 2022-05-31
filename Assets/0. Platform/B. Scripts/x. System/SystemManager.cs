@@ -1363,10 +1363,14 @@ namespace PIERStory
         /// </summary>
         IEnumerator RefreshScreenView()
         {
+            ShowNetworkLoading();
+
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
 
             MainProfile.OnRefreshIFYOUAchievement?.Invoke();
             MainIfyouplay.OnRefreshIfyouplay?.Invoke();
+
+            HideNetworkLoading();
         }
         
         public void Logout()

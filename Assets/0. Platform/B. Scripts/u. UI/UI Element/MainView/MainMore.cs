@@ -217,8 +217,11 @@ namespace PIERStory {
         /// </summary>
         public void OnClickLanguage()
         {
+            PopupBase p = PopupManager.main.GetPopup("Language");
             Debug.Log(">> OnClickDataManage");
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_LANGUAGE, string.Empty);
+
+            PopupManager.main.ShowPopup(p, true);
+            //Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_LANGUAGE, string.Empty);
         }
 
 
@@ -261,22 +264,6 @@ namespace PIERStory {
         /// </summary>
         public void OnClickNotice()
         {
-            StartCoroutine(RoutineOpenNotice());
-        }
-
-        IEnumerator RoutineOpenNotice()
-        {
-            /*
-            SystemManager.ShowNetworkLoading();
-            //NetworkLoader.main.RequestNoticeList();
-            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
-            yield return null;
-            SystemManager.HideNetworkLoading();
-
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_NOTICE, string.Empty);
-            */
-            yield return null;
-            
             PopupBase p = PopupManager.main.GetPopup("Notice");
             PopupManager.main.ShowPopup(p, true);
         }

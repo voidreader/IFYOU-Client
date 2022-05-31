@@ -2,10 +2,11 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 using TMPro;
+using Toast.Gamebase;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
-using Toast.Gamebase;
 
 namespace PIERStory
 {
@@ -17,7 +18,6 @@ namespace PIERStory
 
         public GameObject changeButton;
         public TextMeshProUGUI buttonLabel;
-        AsyncOperation asyncOperation;
         public bool isChangingScene = false;
 
         void OnEnable() {
@@ -77,7 +77,8 @@ namespace PIERStory
                 return;
                 
             }
-                
+
+            SystemManager.ShowNetworkLoading();
             
             // 현재 toggle이 isOn == true인 element를 찾아서
             foreach (LanguageElement le in langElements)
@@ -149,8 +150,6 @@ namespace PIERStory
             
                         
             SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
-            // SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
-
         }
         
         void InitGamebaseAgain() {

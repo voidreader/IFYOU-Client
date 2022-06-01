@@ -9,7 +9,7 @@ using AppsFlyerSDK;
 
 using LitJson;
 // using Firebase;
-using Facebook.Unity;
+// using Facebook.Unity;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Common;
 
@@ -127,7 +127,7 @@ namespace PIERStory {
             
             InitFirebase();
             
-            InitFacebook();
+            // InitFacebook();
         }
         
         
@@ -764,6 +764,7 @@ namespace PIERStory {
 
         #region 페이스북
         
+        /*
         void InitFacebook() {
             if (!FB.IsInitialized) {
                 // Initialize the Facebook SDK
@@ -790,6 +791,7 @@ namespace PIERStory {
         {
             
         }
+        */
         
         #endregion
 

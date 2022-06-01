@@ -104,7 +104,20 @@ namespace PIERStory {
                 yield return null;   
             }
             
+            while(isOverlayUse && overlay != null && overlay.inTransition)  {
+                yield return null;
+            }
+            
+            while(content.DisableGameObjectWhenHidden && content.gameObject.activeSelf)
+                yield return null;
+            
+            // doozy에서는 hide 애니메이션, instantHide에서도 마지막에 3 frame 정도 delay를 둔다.
             yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
+            
             
             SelfDestroy();
             
@@ -163,7 +176,7 @@ namespace PIERStory {
             if(PopupManager.main != null)
                 PopupManager.main.RemoveActivePopup(this); // remove
             
-            Destroy(gameObject);
+            Destroy(gameObject, 0.1f);
         }
         
         

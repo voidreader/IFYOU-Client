@@ -60,12 +60,11 @@ namespace PIERStory {
         /// 즉시 획득
         /// </summary>
         public void OnClickGet() {
-            Hide();
-            // UserManager.main.RefreshIndicators(); // 상단 갱신만 하면 된다. (이미 재화는 들어온 상태)
             
             // 재화 요청
             NetworkLoader.main.RequestEpisodeFirstClearReward(currency, quantity, false);
             
+            Hide();
         }
 
         /// <summary>
@@ -94,9 +93,6 @@ namespace PIERStory {
                 SystemManager.ShowSimpleAlertLocalize("6094"); // 광고가 끝까지 재생되지 않았습니다.
                 return;
             }
-            
-            // 서버에 2배 보상 요청 
-            //NetworkLoader.main.AddUserProperty(currency, quantity, "first_clear_double", OnDoubleReward);
             
             Debug.Log("### DoubleReward ###");
             

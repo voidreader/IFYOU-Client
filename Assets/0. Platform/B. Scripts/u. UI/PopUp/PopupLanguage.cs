@@ -130,6 +130,8 @@ namespace PIERStory
 
             Debug.Log(">> Changed gamebase language : " + SystemManager.main.currentGamebaseLanguageCode);
             Debug.Log(">> current GamebaseCODE : " + Gamebase.GetDisplayLanguageCode());
+            
+            SystemManager.main.SetMainFont(); // 메인폰트 재설정
 
             SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
         }

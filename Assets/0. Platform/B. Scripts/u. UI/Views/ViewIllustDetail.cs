@@ -176,7 +176,7 @@ namespace PIERStory
 
             
             
-            System.GC.Collect();
+            // System.GC.Collect();
         }
         
         

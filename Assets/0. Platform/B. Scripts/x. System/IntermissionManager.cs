@@ -44,7 +44,7 @@ namespace PIERStory
             yield return new WaitForSeconds(0.2f);
 
             // 수동 호출. 
-            System.GC.Collect();
+            // System.GC.Collect();
             
             
 

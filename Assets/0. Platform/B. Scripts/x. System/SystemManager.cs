@@ -140,7 +140,10 @@ namespace PIERStory
         // * 에셋번들로 받은 폰트
         // * 한글 영어는 같이 씀.         
         public TMP_FontAsset mainAssetFont = null; // 한글
-        public AsyncOperationHandle<TMP_FontAsset> mountedAssetFont; 
+        public TMP_FontAsset jaFont = null; // 일본어 폰트
+        public TMP_FontAsset koFont = null; // 한글, 영어 폰트 
+        public AsyncOperationHandle<TMP_FontAsset> mountedAssetFontJA; 
+        public AsyncOperationHandle<TMP_FontAsset> mountedAssetFontKO; 
         Shader assetFontShader;
 
         #endregion
@@ -1909,61 +1912,102 @@ namespace PIERStory
 
         #region 파일 체크, 파일 다운로드 공용
         
+        IEnumerator LoadingAddressableFont() {
+            
+            // 둘다 불러놓는다. 
+            string KO_addressableKey = "Font/" + "KoPubWorld Dotum Medium SDF.asset"; 
+            string JA_addressableKey = "Font/" + "NotoSansJP-Medium SDF.asset"; 
+            
+            assetFontShader = Shader.Find("TextMeshPro/Mobile/Distance Field"); // 타 프로젝트에서 가져와서 쉐이더 필요.          
+            
+            if(jaFont == null && koFont == null) {
+                // LoadAssetAsync. 
+                // 한글 & 영어 폰트
+                Addressables.LoadAssetAsync<TMP_FontAsset>(KO_addressableKey).Completed += (handle) => {
+                    if(handle.Status == AsyncOperationStatus.Succeeded) { 
+                        // * 성공
+                        mountedAssetFontKO = handle;
+                        koFont = handle.Result;
+                        
+                        // 다른 프로젝트에서 가져오는거라서 Shader처리 해준다.
+                        koFont.material.shader = assetFontShader;
+                        Debug.Log("<color=cyan>Font loaded OK!!!!!</color>");
+                    }
+                    else {
+                        Debug.Log("<color=cyan>Font loaded FAIL....</color>");
+                        NetworkLoader.main.ReportRequestError(handle.OperationException.ToString(), "Fail KO Font LoadAssetAsync");
+                        SystemManager.main.isAddressableCatalogUpdated = false;
+                    }
+                };
+                
+                // 일어폰트
+                Addressables.LoadAssetAsync<TMP_FontAsset>(JA_addressableKey).Completed += (handle) => {
+                    if(handle.Status == AsyncOperationStatus.Succeeded) { 
+                        // * 성공
+                        mountedAssetFontJA = handle;
+                        jaFont = handle.Result;
+                        
+                        // 다른 프로젝트에서 가져오는거라서 Shader처리 해준다.
+                        jaFont.material.shader = assetFontShader;
+                        Debug.Log("<color=cyan>Font loaded OK!!!!!</color>");
+                    }
+                    else {
+                        Debug.Log("<color=cyan>Font loaded FAIL....</color>");
+                        NetworkLoader.main.ReportRequestError(handle.OperationException.ToString(), "Fail JA Font LoadAssetAsync");
+                        SystemManager.main.isAddressableCatalogUpdated = false;
+                    }
+                
+                };                
+            }
+            
+            
+            // 폰트 정보 둘다 불러올때까지 대기 
+            while(jaFont == null || koFont == null) {
+                yield return null;
+                
+                // 둘 중 하나가 fail이 나온 경우 
+                if(!isAddressableCatalogUpdated) {
+                    Debug.Log(string.Format("Initialization failed. error is {0}", "No Font info"));
+                    ShowSystemPopup("Game initialization failed : " + "No Font info", Application.Quit, Application.Quit, false, false);
+                }
+            }
+            
+            // 로딩 다 하고 메인폰트 설정
+            SetMainFont();
+        }
+        
+        /// <summary>
+        /// 언어에 따른 메인 폰트 설정
+        /// </summary>
+        public void SetMainFont() {
+
+            switch(currentAppLanguageCode) {
+                case "KO":    // 한글 영어는 같이 씀 
+                case "EN":
+                mainAssetFont = koFont;
+                break;
+                
+                case "JA":
+                
+                mainAssetFont = jaFont;
+                break;
+                
+                default:
+                break;
+            } 
+        }
+        
         /// <summary>
         /// 에셋번들로 폰트 불러오기 
         /// </summary>
         public void LoadAddressableFont()  {
             
+            Debug.Log(string.Format("<color=yellow> {0} </color>", "LoadAddressableFont"));
+            
             // * 기본폰트는 AppleGothic. 
             // * 모든 UI의 폰트는 AppleGothic으로 설정한다. 
             // * 언어에 따라서 변경. 
-            
-            string addressableKey = string.Empty;
-            
-            // 언어변경 등으로 인해 이미 불러온 정보가 있었다면. 파괴하고 새로 불러온다. 
-            if(mainAssetFont != null) {
-                Addressables.ReleaseInstance(mountedAssetFont);
-            }
-            
-            
-            switch(currentAppLanguageCode) {
-                case "KO":    // 한글 영어는 같이 씀 
-                case "EN":
-                addressableKey = "Font/" + "KoPubWorld Dotum Medium SDF.asset"; 
-                break;
-                
-                case "JA":
-                // mplus-1p-regular SDF
-                addressableKey = "Font/" + "NotoSansJP-Medium SDF.asset"; 
-                break;
-                
-                default:
-                break;
-            }
-            
-            Debug.Log(string.Format("<color=cyan>font addressable key : [{0}] </color>", addressableKey));
-            assetFontShader = Shader.Find("TextMeshPro/Mobile/Distance Field");
-            
-            // LoadAssetAsync. 
-            Addressables.LoadAssetAsync<TMP_FontAsset>(addressableKey).Completed += (handle) => {
-                if(handle.Status == AsyncOperationStatus.Succeeded) { 
-                    // * 성공
-                    mountedAssetFont = handle;
-                    mainAssetFont = handle.Result;
-                    
-                    // 다른 프로젝트에서 가져오는거라서 Shader처리 해준다.
-                    mainAssetFont.material.shader = assetFontShader;
-                    Debug.Log("<color=cyan>Font loaded OK!!!!!</color>");
-                }
-                else {
-                    mainAssetFont = innerFontEN; 
-                    Debug.Log("<color=cyan>Font loaded FAIL....</color>");
-                    
-                    NetworkLoader.main.ReportRequestError(handle.OperationException.ToString(), "Font LoadAssetAsync");
-                    SystemManager.main.isAddressableCatalogUpdated = false;
-                    
-                }
-            };
+            StartCoroutine(LoadingAddressableFont());
         }
         
         

@@ -2469,21 +2469,6 @@ namespace PIERStory
 
 
         /// <summary>
-        /// 지정한 사건ID를 Progress에서 제거합니다.
-        /// </summary>
-        /// <param name="__scene_id"></param>
-        public void DeleteSceneID(string __scene_id, string __project_id)
-        {
-            JsonData j = new JsonData();
-
-            j[CommonConst.FUNC] = NetworkLoader.FUNC_DELETE_EPISODE_SCENE_HISTORY;
-            j["scene_id"] = __scene_id;
-            j["project_id"] = __project_id;
-
-            NetworkLoader.main.SendPost(CallbackUpdateCurrentSceneID, j);
-        }
-
-        /// <summary>
         /// 유저별 프로젝트 기록에 대상 사건ID 추가 
         /// </summary>
         /// <param name="__sceneID"></param>

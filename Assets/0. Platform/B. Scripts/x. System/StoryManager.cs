@@ -530,24 +530,33 @@ namespace PIERStory
             
             
             #region 말풍선 밑작업
+            
+            try {
+            
+                if(ProjectDetailJson.ContainsKey(NODE_BUBBLE_MASTER)) {
+                    // 말풍선의 경우 데이터가 많아서, 버전 관리를 통해서 신규 버전이 있을때만 서버에서 내려받도록 합니다.     
+                    // 말풍선 세트 버전관리 
+                    currentBubbleSetID = SystemManager.GetJsonNodeString(ProjectDetailJson[NODE_BUBBLE_MASTER], "bubbleID"); // 연결된 말풍선 세트 ID
+                    currentBubbleSetVersion = SystemManager.GetJsonNodeInt(ProjectDetailJson[NODE_BUBBLE_MASTER], "bubble_ver"); // 말풍선 버전 
+                    
+                }
 
-            // 말풍선의 경우 데이터가 많아서, 버전 관리를 통해서 신규 버전이 있을때만 서버에서 내려받도록 합니다. 
-            currentBubbleSetID = ProjectDetailJson[NODE_BUBBLE_MASTER]["bubbleID"].ToString(); // 연결된 말풍선 세트 ID 
-            currentBubbleSetVersion = int.Parse(ProjectDetailJson[NODE_BUBBLE_MASTER]["bubble_ver"].ToString()); // 말풍선 버전 
+                // 말풍선 기초정보가 없는 경우, Local의 정보를 불러와서 설정 
+                if (ProjectDetailJson.ContainsKey(UserManager.NODE_BUBBLE_SET))
+                {
+                    // 말풍선 정보 있으면, 로컬에 저장하기
+                    currentBubbleSetJson = ProjectDetailJson[UserManager.NODE_BUBBLE_SET];
 
-            // 말풍선 기초정보가 없는 경우, Local의 정보를 불러와서 설정 
-            if (ProjectDetailJson.ContainsKey(UserManager.NODE_BUBBLE_SET))
-            {
-                // 말풍선 정보 있으면, 로컬에 저장하기
-                currentBubbleSetJson = ProjectDetailJson[UserManager.NODE_BUBBLE_SET];
-
-                // 저장요청 
-                SaveBubbleSetLocalInfo(currentBubbleSetID);
-            }
-            else
-            {
-                // 말풍선 정보 없는 경우는 로컬에서 로드하여 노드에 할당 
-                ProjectDetailJson[UserManager.NODE_BUBBLE_SET] = currentBubbleSetJson;
+                    // 저장요청 
+                    SaveBubbleSetLocalInfo(currentBubbleSetID);
+                }
+                else
+                {
+                    // 말풍선 정보 없는 경우는 로컬에서 로드하여 노드에 할당 
+                    ProjectDetailJson[UserManager.NODE_BUBBLE_SET] = currentBubbleSetJson;
+                }
+            } catch {
+                NetworkLoader.main.ReportRequestError("Error in EnteringStory", string.Format("BubbleSet #1 in [{0}]", CurrentProjectID));
             }
             
             #endregion
@@ -831,6 +840,7 @@ namespace PIERStory
         /// </summary>
         void SetProjectStandard()
         {
+            try {
             // 프로젝트 귀속 이미지들 초기화 
             bgmBannerURL = string.Empty;
             bgmBannerURL = string.Empty;
@@ -858,7 +868,10 @@ namespace PIERStory
             // 프리미엄 패스 뱃지
             freepassBadgeURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, "freepassBadge"), SystemConst.IMAGE_URL);
             freepassBadgeKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, "freepassBadge"), SystemConst.IMAGE_KEY);
-            
+            }
+            catch {
+                NetworkLoader.main.ReportRequestError("Error in EnteringStory", string.Format("SetProjectStandard #1 in [{0}]", CurrentProjectID));
+            }
 
             
         }
@@ -953,7 +966,7 @@ namespace PIERStory
         /// </summary>
         void SetBubbles()
         {
-
+            try {
             bubbleSetJson = UserManager.main.GetNodeBubbleSet(); // 말풍선 세트만 따로 받아온다. 
             bubbleSpriteJson = UserManager.main.GetNodeBubbleSprite(); // 말풍선 스프라이트 정보 
 
@@ -967,6 +980,10 @@ namespace PIERStory
 
 
             CollectBubbleImages();
+            }
+            catch { 
+                NetworkLoader.main.ReportRequestError("Error in EnteringStory", string.Format("BubbleSet #1 in [{0}]", CurrentProjectID));
+            }
         }
         
         void LoadProfileBubbleSprite() {

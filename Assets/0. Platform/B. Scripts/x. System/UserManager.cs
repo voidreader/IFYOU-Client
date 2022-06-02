@@ -21,6 +21,9 @@ namespace PIERStory
 
         [SerializeField] bool isAdminUser = false; // 슈퍼유저
         public bool isIntroDone = false; // 인트로 수행 여부 
+        
+        public int diffRate = 0; //마지막 평가 팝업 뜬 날짜와 현재의 일수 차이 
+        public int rateResult = 0; // 0 : 평가하지 않음, 1 : 평가함 
 
         [HideInInspector] public JsonData userJson = null; // 계정정보 (table_account) 
         [HideInInspector] public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)
@@ -54,13 +57,7 @@ namespace PIERStory
         #region 데이터 검증 체크용 리스트 
         [SerializeField]
         List<string> DebugProjectIllusts = new List<string>();
-        [SerializeField]
-        List<string> DebugUserIllusts = new List<string>();
-
-
-
-
-
+        
 
         #endregion
 
@@ -434,6 +431,10 @@ namespace PIERStory
 
             // 올패스 만료 일시에 대한  처리 2022.05.23
             SetAllpassExpire(SystemManager.GetJsonNodeLong(userJson, "allpass_expire_tick"));
+            
+            // Rate 평가 팝업 관련 변수 추가 2022.06
+            diffRate = SystemManager.GetJsonNodeInt(userJson, "diff_rate");
+            rateResult = SystemManager.GetJsonNodeInt(userJson, "rate_result");
         }
 
         /// <summary>

@@ -43,7 +43,7 @@ namespace Live2D.Cubism.Editor.Inspectors
             EditorGUI.BeginChangeCheck();
 
 
-            controller.MaskTexture = EditorGUILayout.ObjectField("Mask Texture", controller.MaskTexture, typeof(CubismMaskTexture), true) as CubismMaskTexture;
+            // controller.MaskTexture = EditorGUILayout.ObjectField("Mask Texture", controller.MaskTexture, typeof(CubismMaskTexture), true) as CubismMaskTexture;
 
 
             // Apply changes.

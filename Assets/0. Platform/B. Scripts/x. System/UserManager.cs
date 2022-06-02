@@ -3521,5 +3521,38 @@ namespace PIERStory
         }
 
         #endregion
+    
+        #region Rate 평가 팝업
+        
+        /// <summary>
+        /// 평가 팝업 기록 저장하기 
+        /// </summary>
+        public void UpdateRateHistory(int __result)
+        {
+            JsonData sendData = new JsonData();
+            sendData["func"] = "updateRateHistory";
+            sendData["rate_result"] = __result;
+            
+
+            NetworkLoader.main.SendPost(CallbackUpdateRateHistory, sendData, false);
+
+        }
+        
+        /// <summary>
+        /// 평가팝업 콜백 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        void CallbackUpdateRateHistory(HTTPRequest request, HTTPResponse response)
+        {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
+                return;
+
+            diffRate = 0; // 0으로 처리
+            
+        }
+        
+        #endregion
+    
     }
 }

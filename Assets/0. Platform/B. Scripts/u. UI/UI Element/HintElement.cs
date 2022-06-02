@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 using TMPro;
 using LitJson;
 
@@ -24,12 +23,12 @@ namespace PIERStory {
             
             InitControls();
             
-            EpisodeData episodeData = StoryManager.main.FindRegularEpisode(__data["episode_id"].ToString());
+            EpisodeData episodeData = StoryManager.main.FindEpisode(__data["episode_id"].ToString());
             
             if(episodeData == null || !episodeData.isValidData)
                 return;
-         
-            textHint.text = SystemManager.GetLocalizedText("5027") + " " + string.Format("{0:D2}", episodeData.episodeNumber);
+
+            textHint.text = episodeData.episodeType == EpisodeType.Chapter ? string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber) : episodeData.episodeType == EpisodeType.Side ? string.Format("[{0}] {1}", SystemManager.GetLocalizedText("5028"), episodeData.episodeTitle) : string.Format("[{0}] {1}", SystemManager.GetLocalizedText("5025"), episodeData.episodeTitle);
             textHint.text += "      " + SystemManager.GetJsonNodeString(__data, "played") +"/" + SystemManager.GetJsonNodeString(__data, "total");
             
             if(SystemManager.GetJsonNodeString(__data, "played") == SystemManager.GetJsonNodeString(__data, "total")) {
@@ -48,14 +47,12 @@ namespace PIERStory {
             InitControls();
             
             // * 에피소드 데이터 찾아와서 번호 세팅 
-            EpisodeData episodeData = StoryManager.main.FindRegularEpisode(__episodeID);
+            EpisodeData episodeData = StoryManager.main.FindEpisode(__episodeID);
             if(UserManager.main.IsCompleteEpisode(__episodeID)) {
                 imageOn.SetActive(true);    
             }
-            
-            
-            textHint.text = SystemManager.GetLocalizedText("5027") + " " + string.Format("{0:D2}", episodeData.episodeNumber);
-  
+
+            textHint.text = episodeData.episodeType == EpisodeType.Chapter ? string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber) : episodeData.episodeType == EpisodeType.Side ? string.Format("[{0}] {1}", SystemManager.GetLocalizedText("5028"), episodeData.episodeTitle) : string.Format("[{0}] {1}", SystemManager.GetLocalizedText("5025"), episodeData.episodeTitle);
         }
     }
 }

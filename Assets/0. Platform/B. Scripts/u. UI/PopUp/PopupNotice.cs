@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Globalization;
+using System.Collections;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -95,7 +96,7 @@ namespace PIERStory
         void SetNoticeDetail(JsonData detailData, string startDate)
         {
             noticeDetailTitle.text = SystemManager.GetJsonNodeString(detailData, LobbyConst.STORY_TITLE);
-            noticeDate.text = startDate;
+            noticeDate.text = !string.IsNullOrEmpty(startDate) ? string.Format("{0}", DateTime.Parse(startDate).ToString("f", new CultureInfo("en-US"))) : string.Empty;
 
             string textContents = SystemManager.GetJsonNodeString(detailData, "contents");
 

@@ -3106,6 +3106,14 @@ namespace PIERStory
             if (!TodayAttendanceCheck())
                 return true;
 
+
+            if (!dailyMission.ContainsKey("all") || !dailyMission.ContainsKey("single"))
+                return false;
+
+            if (dailyMission["all"][0] == null)
+                return false;
+
+
             // 데일리 미션 전체완료 보상 안받았을 때 true
             if (SystemManager.GetJsonNodeInt(dailyMission["all"][0], "state") == 1)
                 return true;

@@ -2,22 +2,22 @@
     "name": "ScreenTouchEffect",
     "maps": [
         {
-            "name": "Touch",
-            "id": "0cd44384-8397-4e87-b853-1a17bd0f5610",
+            "name": "ScreenTouch",
+            "id": "9f628c1a-1a1c-463a-a766-b6bcf049800d",
             "actions": [
                 {
                     "name": "TouchScreen",
                     "type": "Button",
-                    "id": "897d9e3a-fbbc-46aa-ac32-393f23e959a8",
+                    "id": "120c7fec-a34d-4808-b28f-d29546804d74",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
                 {
-                    "name": "TouchPoistion",
+                    "name": "TouchPosition",
                     "type": "Value",
-                    "id": "9110eafa-c58c-45cc-98bc-d7785481741a",
+                    "id": "c1ba07ee-fc67-442d-9469-4965c97cc22c",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -27,45 +27,45 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "e009e693-dfce-4439-a4a1-efd476c6ccea",
-                    "path": "<Touchscreen>/primaryTouch/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Touch",
-                    "action": "TouchPoistion",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "0724b02b-acc1-4020-adc6-6629b0fa2c3e",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "TouchPoistion",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "28057d6b-8d4f-4208-905e-d0c8e8dfd35a",
+                    "id": "3db47cbc-a8d2-4d9b-aafc-980f636025ec",
                     "path": "<Touchscreen>/Press",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Touch",
+                    "groups": "",
                     "action": "TouchScreen",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "ab0ab2f3-d241-402c-b915-67f54f4f2bd6",
+                    "id": "b32bcca3-1d97-4509-ae55-60a630482fc3",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "",
                     "action": "TouchScreen",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4bd3c266-a3f0-451b-b3d7-d4df891942ce",
+                    "path": "<Touchscreen>/primaryTouch/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35367951-e2e4-4ca1-aa61-78b0a48ee96f",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

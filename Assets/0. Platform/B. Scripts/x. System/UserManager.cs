@@ -978,8 +978,8 @@ namespace PIERStory
             sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
             sending["mission_id"] = missionData.missionID;
             sending[CommonConst.COL_USERKEY] = userKey;
-            sending["reward_currency"] = missionData.rewardCurrency;
-            sending["reward_quantity"] = missionData.rewardQuantity;
+            //sending["reward_currency"] = missionData.rewardCurrency;
+            //sending["reward_quantity"] = missionData.rewardQuantity;
 
             NetworkLoader.main.SendPost(callback, sending, true);
         }

@@ -47,7 +47,9 @@ namespace PIERStory {
             
             // 일반 설정 시작 
             SetPlayState(); // 플레이 및 타이머 설정 
-           
+
+            // 플레이 카운트
+            UserManager.main.episodePlayComplete++;
 
             // 엔딩에 도달한 경우 추가 로직 (엔딩을 플레이 하지는 않았음)
             if (currentEpisodeData.episodeType == EpisodeType.Ending && !UserManager.main.CheckReachFinal()) {

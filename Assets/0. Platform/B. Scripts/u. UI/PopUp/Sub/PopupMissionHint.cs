@@ -43,32 +43,38 @@ namespace PIERStory
 
                     foreach (EpisodeData epiData in StoryManager.main.ListCurrentProjectEpisodes)
                     {
-                        if (string.IsNullOrEmpty(missionData.episodeDetailHint[i]) || string.IsNullOrEmpty(epiData.episodeID))
-                            continue;
-
-                        if (epiData.episodeID == missionData.episodeDetailHint[i])
+                        try
                         {
-                            episodeData = epiData;
-                            break;
+                            if (epiData.episodeID == missionData.episodeDetailHint[i])
+                            {
+                                episodeData = epiData;
+                                break;
+                            }
+                        }
+                        catch
+                        {
+                            if (string.IsNullOrEmpty(epiData.episodeID))
+                                NetworkLoader.main.ReportRequestError("Error in missionHint #1, type Episode", string.Format("Error EpisodeData Episode ID is null, Mission ID = {0}", missionData.missionID));
+                            else if (string.IsNullOrEmpty(missionData.episodeDetailHint[i]))
+                                NetworkLoader.main.ReportRequestError("Error in missionHint #1, type Episode", string.Format("Error MissionData HintEpisode ID is null, Mission ID = {0}", missionData.missionID));
                         }
                     }
 
-                    if (episodeData == null)
-                        continue;
-
-                    if (episodeData.episodeType == EpisodeType.Chapter)
-                        title = string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber);
-                    else
-                        title = episodeData.episodeTitle;
-
-                    amount = UserManager.main.IsCompleteEpisode(episodeData.episodeID) ? "1/1" : "0/1";
-                    hintElement.InitMissionHint(UserManager.main.IsCompleteEpisode(missionData.episodeDetailHint[i]), title, amount);
-
+                    try
+                    {
+                        title = episodeData.episodeType == EpisodeType.Chapter ? string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber) : episodeData.episodeTitle;
+                        amount = UserManager.main.IsCompleteEpisode(episodeData.episodeID) ? "1/1" : "0/1";
+                        hintElement.InitMissionHint(UserManager.main.IsCompleteEpisode(missionData.episodeDetailHint[i]), title, amount);
+                    }
+                    catch
+                    {
+                        NetworkLoader.main.ReportRequestError("Error in missionHint #2, type Episode", string.Format("Error HintEpisode ID = {0}, Mission ID = {1}", missionData.episodeDetailHint[i], missionData.missionID));
+                    }
                 }
             }
 
             // 미션 타입이 사건인 경우
-            else if(missionData.missionType == MissionType.scene)
+            else if (missionData.missionType == MissionType.scene)
             {
                 for (int i = 0; i < missionData.eventDetailHint.Count; i++)
                 {
@@ -77,26 +83,34 @@ namespace PIERStory
 
                     foreach (EpisodeData epiData in StoryManager.main.ListCurrentProjectEpisodes)
                     {
-                        if (string.IsNullOrEmpty(missionData.eventDetailHint[i].episodeId) || string.IsNullOrEmpty(epiData.episodeID))
-                            continue;
-
-                        if (epiData.episodeID == missionData.eventDetailHint[i].episodeId)
+                        try
                         {
-                            episodeData = epiData;
-                            break;
+                            if (epiData.episodeID == missionData.eventDetailHint[i].episodeId)
+                            {
+                                episodeData = epiData;
+                                break;
+                            }
+                        }
+                        catch
+                        {
+                            if (string.IsNullOrEmpty(epiData.episodeID))
+                                NetworkLoader.main.ReportRequestError("Error in missionHint #1, type Scene", string.Format("Error EpisodeData Episode ID is null, Mission ID = {0}", missionData.missionID));
+                            else if (string.IsNullOrEmpty(missionData.eventDetailHint[i].episodeId))
+                                NetworkLoader.main.ReportRequestError("Error in missionHint #1, type Scene", string.Format("Error MissionData HintEpisode ID is null, Mission ID = {0}", missionData.missionID));
                         }
                     }
 
-                    if (episodeData == null)
-                        continue;
 
-                    if (episodeData.episodeType == EpisodeType.Chapter)
-                        title = string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber);
-                    else
-                        title = episodeData.episodeTitle;
-
-                    amount = string.Format("{0}/{1}", missionData.eventDetailHint[i].played, missionData.eventDetailHint[i].total);
-                    hintElement.InitMissionHint(missionData.eventDetailHint[i].played >= missionData.eventDetailHint[i].total, title, amount);
+                    try
+                    {
+                        title = episodeData.episodeType == EpisodeType.Chapter ? string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber) : episodeData.episodeTitle;
+                        amount = string.Format("{0}/{1}", missionData.eventDetailHint[i].played, missionData.eventDetailHint[i].total);
+                        hintElement.InitMissionHint(missionData.eventDetailHint[i].played >= missionData.eventDetailHint[i].total, title, amount);
+                    }
+                    catch
+                    {
+                        NetworkLoader.main.ReportRequestError("Error in missionHint #2, type Scene", string.Format("Error HintEpisode ID = {0}, Mission ID = {1}", missionData.eventDetailHint[i].episodeId, missionData.missionID));
+                    }
 
                 }
             }

@@ -22,6 +22,8 @@ namespace VoxelBusters.EssentialKit
         private     IRateMyAppController        m_controller            = null;
 
         private     bool                        m_isShowingPrompt       = false;
+
+        Action<int> callback = null;
         
         #endregion
 
@@ -39,7 +41,7 @@ namespace VoxelBusters.EssentialKit
 
         #region Static methods
 
-        public static void AskForReviewNow(string __title, string __contents, string __okLabel, string __cancelLabel)
+        public static void AskForReviewNow(string __title, string __contents, string __okLabel, string __cancelLabel, Action<int> __callback)
         {
             // check whether feature is available
             if (!IsSingletonActive)
@@ -48,8 +50,12 @@ namespace VoxelBusters.EssentialKit
                 return;
             }
 
+            Instance.callback = __callback;
+
             Instance.ShowPromptWindow(__title, __contents, __okLabel, __cancelLabel);
         }
+
+
 
         /// <summary>
         /// Immediately prompts user to review. This method ignores IRateMyAppValidator conditions to be satisfied.
@@ -159,14 +165,14 @@ namespace VoxelBusters.EssentialKit
                 case PromptButtonType.Cancel:
                     m_controller.DidClickOnCancelButton();
 
-                    PlayerPrefs.SetInt("rateCheck", 1);
+                    Instance.callback?.Invoke(0);
                     break;
 
                 case PromptButtonType.Ok:
                     m_controller.DidClickOnOkButton();
                     ShowReviewWindow();
 
-                    PlayerPrefs.SetInt("rateCheck", 2);
+                    Instance.callback?.Invoke(1);
                     break;
             }
         }

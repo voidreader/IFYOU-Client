@@ -156,6 +156,15 @@ namespace PIERStory {
         /// </summary>
         void SetAlertButtonState()
         {
+            // 프로젝트 알림설정 기능 사용여부 추가
+            if(!SystemManager.main.useProjectNotify)
+            {
+                buttonAlert.gameObject.SetActive(false);
+                return;
+            }
+
+            buttonAlert.gameObject.SetActive(true);
+
             buttonAlert.image.sprite = introduceStory.isNotify? spriteAlertOn : spriteAlertOff;
         }
 

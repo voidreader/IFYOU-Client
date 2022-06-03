@@ -161,20 +161,18 @@ namespace PIERStory
             if (UserManager.main.tutorialStep == 1 && !UserManager.main.tutorialClear)
                 UserManager.main.UpdateTutorialStep(1, 0, CallbackStartTutorial);
 
-
             JsonData projectCurrent = UserManager.main.GetUserProjectRegularEpisodeCurrent();
 
             // 리뷰 팝업 위치 
             if(UserManager.main.gameComplete)
             {
-                int rateCount = PlayerPrefs.HasKey(SystemConst.RATE_PLAY_COUNT) ? PlayerPrefs.GetInt(SystemConst.RATE_PLAY_COUNT) : 0;
-                PlayerPrefs.SetInt(SystemConst.RATE_PLAY_COUNT, rateCount + 1);
-
-                if(!PlayerPrefs.HasKey(SystemConst.RATE_CHECK))
-                    PlayerPrefs.SetInt(SystemConst.RATE_CHECK, 0);
-
-                if (PlayerPrefs.GetInt(SystemConst.RATE_PLAY_COUNT) % 10 == 3 && PlayerPrefs.GetInt(SystemConst.RATE_CHECK) > 0)
-                    RateMyApp.AskForReviewNow(SystemManager.GetLocalizedText("6225"), SystemManager.GetLocalizedText("6226"), SystemManager.GetLocalizedText("5067"), SystemManager.GetLocalizedText("5038"));
+                // 일단은 에피소드 3회 이상 플레이하고, ratecheck를 한적이 없으면 띄우는걸로 한다
+                if (UserManager.main.rateResult == 0 && UserManager.main.episodePlayComplete >= 3)
+                {
+                    // 취소 했다면 30일 이상 경과한 경우에 다시 물어본다
+                    if (UserManager.main.diffRate >= 30)
+                        RateMyApp.AskForReviewNow(SystemManager.GetLocalizedText("6225"), SystemManager.GetLocalizedText("6226"), SystemManager.GetLocalizedText("5067"), SystemManager.GetLocalizedText("5038"), UserManager.main.UpdateRateHistory);
+                }
                 
                 UserManager.main.gameComplete = false;
             }
@@ -858,7 +856,9 @@ namespace PIERStory
                                     }
                                 }
 
-                                Destroy(model.gameObject);
+                                if (model != null && model.gameObject != null)
+                                    Destroy(model.gameObject);
+
                                 breakPoint = true;
                             }
                             catch(Exception e)

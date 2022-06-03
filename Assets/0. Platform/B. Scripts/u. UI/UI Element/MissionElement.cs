@@ -186,7 +186,9 @@ namespace PIERStory
             }
         }
 
-
+        /// <summary>
+        /// 미션보상 받기
+        /// </summary>
         public void OnClickGetReward()
         {
             // 열려 있는 상태가 아니라면 동작하지 않는다
@@ -262,12 +264,17 @@ namespace PIERStory
 
             // * 성공 했다. => 미션이 해금도 되었고, 보상도 받은 상태가 되는거다. 
             ViewMission.OnRefreshProgressor?.Invoke();
+
             /*
             if(!ViewMission.clickGetAll)
                 SystemManager.ShowSimpleAlertLocalize("6123");
             */
         }
 
+
+        /// <summary>
+        /// 미션 힌트 팝업 띄우기
+        /// </summary>
         public void OnClickOpenMissionHint()
         {
             PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_MISSION_HINT);

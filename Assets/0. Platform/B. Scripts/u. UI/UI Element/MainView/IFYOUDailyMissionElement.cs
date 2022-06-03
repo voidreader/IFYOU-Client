@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
@@ -55,14 +56,6 @@ namespace PIERStory
             if (!interactable)
                 return;
 
-            if (!MainIfyouplay.ScreenSetComplete)
-            {
-                Debug.LogWarning("화면 갱신이 아직 안됨!");
-                return;
-            }
-
-            MainIfyouplay.ScreenSetComplete = false;
-
             UserManager.main.RequestDailyMissionReward(missionNo, CallbackGetMissionReward);
         }
 
@@ -71,7 +64,16 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackGetMissionReward");
-                MainIfyouplay.ScreenSetComplete = true;
+
+                JsonData errordata = JsonMapper.ToObject(res.DataAsText);
+
+                // 이미 받았다고 하면 화면 갱신을 해주자
+                if (SystemManager.GetJsonNodeInt(errordata, "code") == 6123)
+                {
+                    NetworkLoader.main.RequestIfyouplayList();
+                    StartCoroutine(RefreshIfyouplayScreen());
+                }
+
                 return;
             }
 
@@ -80,6 +82,14 @@ namespace PIERStory
             UserManager.main.SetBankInfo(result);
             UserManager.main.userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION] = result[LobbyConst.NODE_ATTENDANCE_MISSION];
             UserManager.main.userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION] = result[LobbyConst.NODE_DAILY_MISSION];
+
+            MainIfyouplay.OnRefreshIfyouplay?.Invoke();
+        }
+
+
+        IEnumerator RefreshIfyouplayScreen()
+        {
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
 
             MainIfyouplay.OnRefreshIfyouplay?.Invoke();
         }

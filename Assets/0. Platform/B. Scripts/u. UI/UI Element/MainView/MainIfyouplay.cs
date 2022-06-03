@@ -13,7 +13,6 @@ namespace PIERStory
     public class MainIfyouplay : MonoBehaviour
     {
         public static Action OnRefreshIfyouplay = null;
-        public static bool ScreenSetComplete = false;
         public ScrollRect scroll;
 
         //[Header("프로모션 파트")][Space(15)]
@@ -71,7 +70,6 @@ namespace PIERStory
 
             ViewMain.OnRefreshIfyouplayNewSign?.Invoke();
 
-            ScreenSetComplete = true;
         }
 
         #region 출석 관련
@@ -232,14 +230,6 @@ namespace PIERStory
                 return;
             }
 
-            if (!ScreenSetComplete)
-            {
-                Debug.LogWarning("화면 갱신이 아직 안됨!");
-                return;
-            }
-
-            ScreenSetComplete = false;
-
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "resetAttendanceMission";
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
@@ -252,7 +242,6 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackChargeAttendanceMission");
-                ScreenSetComplete = true;
                 return;
             }
 

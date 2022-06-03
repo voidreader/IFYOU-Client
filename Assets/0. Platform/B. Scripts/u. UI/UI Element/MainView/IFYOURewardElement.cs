@@ -202,14 +202,6 @@ namespace PIERStory
         /// </summary>
         public void OnClickContinuousAttendanceReward()
         {
-            if (!MainIfyouplay.ScreenSetComplete)
-            {
-                Debug.LogWarning("화면 갱신이 아직 안됨!");
-                return;
-            }
-
-            MainIfyouplay.ScreenSetComplete = false;
-
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "receiveAttendanceMissionReward";
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
@@ -223,7 +215,6 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackReceiveContinuousAttendanceReward");
-                MainIfyouplay.ScreenSetComplete = true;
                 return;
             }
 
@@ -242,14 +233,6 @@ namespace PIERStory
         /// </summary>
         public void OnClickDailyAttendanceReward()
         {
-            if (!MainIfyouplay.ScreenSetComplete)
-            {
-                Debug.LogWarning("화면 갱신이 아직 안됨!");
-                return;
-            }
-
-            MainIfyouplay.ScreenSetComplete = false;
-
             NetworkLoader.main.SendAttendanceReward(attendanceId, daySeq, CallbackAttendanceReward);
         }
 
@@ -258,7 +241,6 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackAttendanceReward");
-                MainIfyouplay.ScreenSetComplete = true;
                 return;
             }
 
@@ -284,14 +266,6 @@ namespace PIERStory
         /// </summary>
         public void OnClickGetTotalMissionReward()
         {
-            if (!MainIfyouplay.ScreenSetComplete)
-            {
-                Debug.LogWarning("화면 갱신이 아직 안됨!");
-                return;
-            }
-
-            MainIfyouplay.ScreenSetComplete = false;
-
             UserManager.main.RequestDailyMissionReward(1, CallbackGetMissionReward);
         }
 
@@ -301,7 +275,6 @@ namespace PIERStory
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("Failed CallbackGetMissionReward");
-                MainIfyouplay.ScreenSetComplete = true;
                 return;
             }
 

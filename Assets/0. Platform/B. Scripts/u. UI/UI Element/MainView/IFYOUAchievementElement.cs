@@ -81,14 +81,6 @@ namespace PIERStory
 
         public void OnClickAchieveClaim()
         {
-            if(!MainProfile.ScreenSetComplete)
-            {
-                Debug.LogWarning("아직 화면 갱신이 이루어지지 않았음!");
-                return;
-            }
-
-            MainProfile.ScreenSetComplete = false;
-
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "updateUserAchievement";
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
@@ -108,7 +100,10 @@ namespace PIERStory
                 if (SystemManager.GetJsonNodeInt(errordata, "code") == 80117)
                     ViewMain.OnReturnLobby?.Invoke();
 
-                MainProfile.ScreenSetComplete = true;
+                // 이미 받은 경우 화면 갱신을 요청한다
+                else if (SystemManager.GetJsonNodeInt(errordata, "code") == 80019)
+                    UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
+
                 return;
             }
 

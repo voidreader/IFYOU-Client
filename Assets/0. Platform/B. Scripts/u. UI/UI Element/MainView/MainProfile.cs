@@ -12,7 +12,6 @@ namespace PIERStory
     {
         public static Action OnRefreshIFYOUAchievement = null;
         public static Action OnSaveVerticalNormalize = null;
-        public static bool ScreenSetComplete = false;           // 화면 세팅 끝났는지 체크
 
         public ScrollRect scroll;
 
@@ -137,8 +136,6 @@ namespace PIERStory
 
             if (gameObject.activeSelf)
                 StartCoroutine(LayoutRebuild());
-
-            ScreenSetComplete = true;
         }
 
         IEnumerator LayoutRebuild()

@@ -21,6 +21,9 @@ namespace PIERStory
 
         [SerializeField] bool isAdminUser = false; // 슈퍼유저
         public bool isIntroDone = false; // 인트로 수행 여부 
+        
+        public int diffRate = 0; //마지막 평가 팝업 뜬 날짜와 현재의 일수 차이 
+        public int rateResult = 0; // 0 : 평가하지 않음, 1 : 평가함 
 
         [HideInInspector] public JsonData userJson = null; // 계정정보 (table_account) 
         [HideInInspector] public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)
@@ -54,13 +57,7 @@ namespace PIERStory
         #region 데이터 검증 체크용 리스트 
         [SerializeField]
         List<string> DebugProjectIllusts = new List<string>();
-        [SerializeField]
-        List<string> DebugUserIllusts = new List<string>();
-
-
-
-
-
+        
 
         #endregion
 
@@ -434,6 +431,10 @@ namespace PIERStory
 
             // 올패스 만료 일시에 대한  처리 2022.05.23
             SetAllpassExpire(SystemManager.GetJsonNodeLong(userJson, "allpass_expire_tick"));
+            
+            // Rate 평가 팝업 관련 변수 추가 2022.06
+            diffRate = SystemManager.GetJsonNodeInt(userJson, "diff_rate");
+            rateResult = SystemManager.GetJsonNodeInt(userJson, "rate_result");
         }
 
         /// <summary>
@@ -2468,21 +2469,6 @@ namespace PIERStory
 
 
         /// <summary>
-        /// 지정한 사건ID를 Progress에서 제거합니다.
-        /// </summary>
-        /// <param name="__scene_id"></param>
-        public void DeleteSceneID(string __scene_id, string __project_id)
-        {
-            JsonData j = new JsonData();
-
-            j[CommonConst.FUNC] = NetworkLoader.FUNC_DELETE_EPISODE_SCENE_HISTORY;
-            j["scene_id"] = __scene_id;
-            j["project_id"] = __project_id;
-
-            NetworkLoader.main.SendPost(CallbackUpdateCurrentSceneID, j);
-        }
-
-        /// <summary>
         /// 유저별 프로젝트 기록에 대상 사건ID 추가 
         /// </summary>
         /// <param name="__sceneID"></param>
@@ -3543,5 +3529,38 @@ namespace PIERStory
         }
 
         #endregion
+    
+        #region Rate 평가 팝업
+        
+        /// <summary>
+        /// 평가 팝업 기록 저장하기 
+        /// </summary>
+        public void UpdateRateHistory(int __result)
+        {
+            JsonData sendData = new JsonData();
+            sendData["func"] = "updateRateHistory";
+            sendData["rate_result"] = __result;
+            
+
+            NetworkLoader.main.SendPost(CallbackUpdateRateHistory, sendData, false);
+
+        }
+        
+        /// <summary>
+        /// 평가팝업 콜백 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        void CallbackUpdateRateHistory(HTTPRequest request, HTTPResponse response)
+        {
+            if (!NetworkLoader.CheckResponseValidation(request, response))
+                return;
+
+            diffRate = 0; // 0으로 처리
+            
+        }
+        
+        #endregion
+    
     }
 }

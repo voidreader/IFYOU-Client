@@ -234,7 +234,7 @@ namespace Live2D.Cubism.Rendering.Masking
 
 
             MaskTexture.RemoveSource(this);
-            MaskTexture.DeleteRenderTexture();
+            // MaskTexture.DeleteRenderTexture();
         }
 
         #endregion

@@ -28,7 +28,7 @@ namespace PIERStory
         public const string FUNC_UPDATE_EPISODE_SCENE_RECORD = "updateUserEpisodeSceneRecord"; // 씬 경험 기록
 
         public const string FUNC_CLEAR_EPISODE_SCENE_HISTORY = "clearUserEpisodeSceneHistory";
-        public const string FUNC_DELETE_EPISODE_SCENE_HISTORY = "deleteUserEpisodeSceneHistory";
+        
         
 
         public const string FUNC_UPDATE_EPISODE_COMPLETE_RECORD = "requestCompleteEpisode"; // 에피소드 플레이 완료 기록 

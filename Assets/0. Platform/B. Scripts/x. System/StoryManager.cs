@@ -532,8 +532,8 @@ namespace PIERStory
             #region 말풍선 밑작업
 
             // 말풍선의 경우 데이터가 많아서, 버전 관리를 통해서 신규 버전이 있을때만 서버에서 내려받도록 합니다. 
-            currentBubbleSetID = ProjectDetailJson[NODE_BUBBLE_MASTER]["bubbleID"].ToString(); // 연결된 말풍선 세트 ID 
-            currentBubbleSetVersion = int.Parse(ProjectDetailJson[NODE_BUBBLE_MASTER]["bubble_ver"].ToString()); // 말풍선 버전 
+            currentBubbleSetID = SystemManager.GetJsonNodeString(ProjectDetailJson[NODE_BUBBLE_MASTER], "bubbleID"); // 연결된 말풍선 세트 ID 
+            currentBubbleSetVersion = SystemManager.GetJsonNodeInt(ProjectDetailJson[NODE_BUBBLE_MASTER], "bubble_ver"); // 말풍선 버전 
 
             // 말풍선 기초정보가 없는 경우, Local의 정보를 불러와서 설정 
             if (ProjectDetailJson.ContainsKey(UserManager.NODE_BUBBLE_SET))
@@ -635,7 +635,6 @@ namespace PIERStory
             regularEpisodeCount = RegularEpisodeList.Count; // 카운팅 
             
             
-            
             #region 에피소드 역순 배열을 위한 작업 
             
             ReverseRegularEpisodeList.Clear();
@@ -668,7 +667,6 @@ namespace PIERStory
 
             // 기초작업 완료 후 View 오픈 요청 
             OpenViewStoryDetail();             
-            
         }
 
         void SetEndingHintData()
@@ -752,6 +750,16 @@ namespace PIERStory
             for(int i=0; i<SideEpisodeList.Count;i++) {
                 if(SideEpisodeList[i].episodeID == __episodeID)
                     return SideEpisodeList[i];
+            }
+
+            for (int i = 0; i < ListCurrentProjectEpisodes.Count; i++)
+            {
+                // 위에서 정규도 사이드도 아니었으니 엔딩이 아니면 스킵
+                if (ListCurrentProjectEpisodes[i].episodeType != EpisodeType.Ending)
+                    continue;
+
+                if (ListCurrentProjectEpisodes[i].episodeID == __episodeID)
+                    return ListCurrentProjectEpisodes[i];
             }
             
             return null;
@@ -1590,6 +1598,8 @@ namespace PIERStory
         /// <param name="__bubbleID"></param>
         void SaveBubbleSetLocalInfo(string __bubbleID)
         {
+            if (string.IsNullOrEmpty(__bubbleID))
+                Debug.LogError("bubbleID가 존재하지 않습니다");
 
             Debug.Log("SaveBubbleSetLocalInfo : " + __bubbleID);
 
@@ -1727,9 +1737,6 @@ namespace PIERStory
         #region 작품 리소스 몰래 내려받기 
 
 
-
-
-        
         /// <summary>
         /// 해당 작품 모든 로딩 화면 다운로드
         /// </summary>
@@ -1742,9 +1749,14 @@ namespace PIERStory
 
             string imageUrl = string.Empty;
             string imageKey = string.Empty;
+
+            if(loadingJson == null)
+            {
+                Debug.LogError("loadingJson이 null입니다.");
+                return;
+            }
             
             Debug.Log("###  DownloadProjectAllEpisodeLoading count : " + loadingJson.Count);
-            
 
             for (int i = 0; i < loadingJson.Count; i++)
             {

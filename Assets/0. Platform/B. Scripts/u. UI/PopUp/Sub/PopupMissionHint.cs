@@ -39,15 +39,22 @@ namespace PIERStory
                 for (int i = 0; i < missionData.episodeDetailHint.Count; i++)
                 {
                     hintElement = Instantiate(missionHintPrefab, scrollContent).GetComponent<MissionHintElement>();
+                    episodeData = null;
 
                     foreach (EpisodeData epiData in StoryManager.main.ListCurrentProjectEpisodes)
                     {
+                        if (string.IsNullOrEmpty(missionData.episodeDetailHint[i]) || string.IsNullOrEmpty(epiData.episodeID))
+                            continue;
+
                         if (epiData.episodeID == missionData.episodeDetailHint[i])
                         {
                             episodeData = epiData;
                             break;
                         }
                     }
+
+                    if (episodeData == null)
+                        continue;
 
                     if (episodeData.episodeType == EpisodeType.Chapter)
                         title = string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber);
@@ -63,18 +70,25 @@ namespace PIERStory
             // 미션 타입이 사건인 경우
             else if(missionData.missionType == MissionType.scene)
             {
-                for(int i=0;i<missionData.eventDetailHint.Count;i++)
+                for (int i = 0; i < missionData.eventDetailHint.Count; i++)
                 {
                     hintElement = Instantiate(missionHintPrefab, scrollContent).GetComponent<MissionHintElement>();
+                    episodeData = null;
 
-                    foreach(EpisodeData epiData in StoryManager.main.ListCurrentProjectEpisodes)
+                    foreach (EpisodeData epiData in StoryManager.main.ListCurrentProjectEpisodes)
                     {
-                        if(epiData.episodeID == missionData.eventDetailHint[i].episodeId)
+                        if (string.IsNullOrEmpty(missionData.eventDetailHint[i].episodeId) || string.IsNullOrEmpty(epiData.episodeID))
+                            continue;
+
+                        if (epiData.episodeID == missionData.eventDetailHint[i].episodeId)
                         {
                             episodeData = epiData;
                             break;
                         }
                     }
+
+                    if (episodeData == null)
+                        continue;
 
                     if (episodeData.episodeType == EpisodeType.Chapter)
                         title = string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber);

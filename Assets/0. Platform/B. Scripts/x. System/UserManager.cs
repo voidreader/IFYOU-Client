@@ -23,8 +23,7 @@ namespace PIERStory
         public bool isIntroDone = false; // 인트로 수행 여부 
         
         public int diffRate = 0; //마지막 평가 팝업 뜬 날짜와 현재의 일수 차이 
-        public int rateResult = 0; // 0 : 평가하지 않음, 1 : 평가함 
-        public int episodePlayComplete = 0;     // 에피소드 완료 횟수
+        public int rateResult = 0; // 0 : 평가하지 않음, 1 : 평가함
 
         [HideInInspector] public JsonData userJson = null; // 계정정보 (table_account) 
         [HideInInspector] public JsonData bankJson = null; // 유저 소모성 재화 정보 (gem, coin)

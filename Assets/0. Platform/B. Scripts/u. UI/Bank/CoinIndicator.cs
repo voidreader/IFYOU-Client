@@ -80,6 +80,7 @@ namespace PIERStory {
         
         public void OnClickCoin() {
             
+            /*
             if(!SystemManager.main.isCoinPrizeUse)
                 return;
                 
@@ -90,7 +91,7 @@ namespace PIERStory {
             string finalURL = SystemManager.main.coinPrizeURL + param;
             
             Debug.Log(finalURL);
-            
+            */
 
         }
     }

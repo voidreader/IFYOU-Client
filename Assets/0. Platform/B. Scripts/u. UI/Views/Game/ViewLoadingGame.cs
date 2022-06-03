@@ -87,8 +87,8 @@ namespace PIERStory
                 textInfo.text = SystemManager.GetJsonNodeString(GameManager.main.loadingDetailJson[loadingTextIndex], KEY_LOADING_TEXT);
             }
             
-            // 로딩 광고 플레이 처리
-            AdManager.main.PlayLoadingAD();
+            // 로딩 광고는 로딩 할때 처리하고, 로딩 완료하고 플레이하는 것으로 변경됨.
+            // AdManager.main.PlayLoadingAD();
             
             while(loadingBar.fillAmount < 1) {
                 yield return new WaitForSeconds(0.05f);

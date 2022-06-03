@@ -605,6 +605,12 @@ namespace PIERStory
             eventValues.Add("project_id", StoryManager.main.CurrentProjectID);
             eventValues.Add("episode_id", StoryManager.main.CurrentEpisodeID);
             AdManager.main.SendAppsFlyerEvent("af_episode_loading", eventValues);            
+            
+            // 이어하기가 아닌 경우 로딩 완료 후 광고 호출 
+            if(!isResumePlay) {
+                AdManager.main.PlayLoadingAD();
+            }
+            
 
             // 모든 라인을, 혹은 종료 명령어를 만날때까지 계속해! 
             while (currentRow != null && isPlaying)

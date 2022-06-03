@@ -460,12 +460,19 @@ namespace PIERStory {
             if(!useLoadingAD)
                 return;
                 
-            Debug.Log(">> PlayLoadingAD : " + SystemManager.main.givenEpisodeData.purchaseState.ToString());
-                
-            // 무료 유저가 아니면 광고 재생 되지 않음
-            if(GameManager.main != null && SystemManager.main.givenEpisodeData.purchaseState != PurchaseState.AD)
+            if(GameManager.main == null)
                 return;
                 
+            if(!GameManager.main.currentEpisodeData.isValidData)
+                return;
+                
+            if(GameManager.main.currentEpisodeData.purchaseState != PurchaseState.AD)
+                return;                
+            
+            if(UserManager.main.HasProjectFreepass()) 
+                return;
+                
+            // Debug.Log(">> PlayLoadingAD : " + SystemManager.main.givenEpisodeData.purchaseState.ToString());
             ShowLoadingAD();
         }
         

@@ -101,6 +101,7 @@ namespace PIERStory
         
         public int episodeOpenPricePer = 0; // 에피소드 시간단축오픈 10분당 코인 가격 
         public int waitingReduceTimeAD = 0; // 광고보고 차감되는 에피소드 열림시간. (분)
+        public int removeAdPrice = 100; // 에피소드 광고 제거 비용 (코인)
         
         
         // 개인정보 보호 정책 및 이용약관 URL
@@ -654,6 +655,8 @@ namespace PIERStory
            
             coinShopURL = GetJsonNodeString(masterInfo, "coinshop_url"); // 코인샵 URL
             firsetResetPrice = GetJsonNodeInt(masterInfo, "first_reset_price"); // 최초 리셋 비용 
+            
+            removeAdPrice = GetJsonNodeInt(masterInfo, "remove_ad_price"); // 에피소드 광고 제거 비용
             
             episodeOpenPricePer = GetJsonNodeInt(masterInfo, "open_price_per"); // 에피소드 시간단축 오픈 10분당 코인 가격
             waitingReduceTimeAD = GetJsonNodeInt(masterInfo, "reduce_waiting_time_ad"); // 광고보고 단축되는 시간 .
@@ -1496,6 +1499,7 @@ namespace PIERStory
                 return int.Parse(GetJsonNodeString(__node, __col));
             }
             catch (System.Exception e) {
+                NetworkLoader.main.ReportRequestError(e.StackTrace, "GetJsonNodeInt : " + __col);
                 return 0;
             }
 
@@ -1514,6 +1518,7 @@ namespace PIERStory
                 return long.Parse(GetJsonNodeString(__node, __col));
             }
             catch (System.Exception e) {
+                NetworkLoader.main.ReportRequestError(e.StackTrace, "GetJsonNodeLong : " + __col);
                 return 0;
             }
 

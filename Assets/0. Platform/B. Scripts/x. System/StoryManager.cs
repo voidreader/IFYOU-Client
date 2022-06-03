@@ -43,7 +43,6 @@ namespace PIERStory
         [HideInInspector] public JsonData SideEpisodeListJson = null; // 사이드 에피소드 리스트 JSON 
         
         public List<EpisodeData> RegularEpisodeList = new List<EpisodeData>();          // chapter(정규)만 따로 빼놓는다.
-        public List<EpisodeData> ReverseRegularEpisodeList = new List<EpisodeData>();   // 정규 에피소드의 역순 
         public List<EpisodeData> SideEpisodeList = new List<EpisodeData>();             // 사이드 에피소드
         public List<EpisodeData> ListCurrentProjectEpisodes = new List<EpisodeData>();  // 현재 선택된 혹은 플레이중인 작품의 EpisodeData의 List.
         public List<EndingHintData> endingHintList = new List<EndingHintData>();        // 현재 선택된 작품의 엔딩 힌트(선택지 힌트)
@@ -555,8 +554,10 @@ namespace PIERStory
                     // 말풍선 정보 없는 경우는 로컬에서 로드하여 노드에 할당 
                     ProjectDetailJson[UserManager.NODE_BUBBLE_SET] = currentBubbleSetJson;
                 }
-            } catch {
-                NetworkLoader.main.ReportRequestError("Error in EnteringStory", string.Format("BubbleSet #1 in [{0}]", CurrentProjectID));
+            }
+            catch(System.Exception e) { 
+                
+                NetworkLoader.main.ReportRequestError(e.StackTrace,  string.Format("Bubble Master [{0}]", CurrentProjectID)); 
             }
             
             #endregion
@@ -643,18 +644,8 @@ namespace PIERStory
             
             regularEpisodeCount = RegularEpisodeList.Count; // 카운팅 
             
-            
-            #region 에피소드 역순 배열을 위한 작업 
-            
-            ReverseRegularEpisodeList.Clear();
-            
-              
-            // * IF YOU 로직 
-            for(int i=RegularEpisodeList.Count-1; i>=0; i--) {
-                ReverseRegularEpisodeList.Add(RegularEpisodeList[i]);
-            }
-            
-            #endregion
+           
+
 
             Debug.Log(string.Format("<color=yellow>[{0}] Episodes are loaded </color>", EpisodeListJson.Count));
             yield return null; 
@@ -680,29 +671,33 @@ namespace PIERStory
 
         void SetEndingHintData()
         {
-            if(ProjectDetailJson == null)
-            {
-                Debug.LogError("작품 정보가 안들어옴");
-                return;
+            try {
+                if(ProjectDetailJson == null)
+                {
+                    Debug.LogError("작품 정보가 안들어옴");
+                    return;
+                }
+
+                JsonData hintData = SystemManager.GetJsonNode(ProjectDetailJson, "endingHint");
+
+                if (hintData == null || hintData.Count == 0)
+                {
+                    Debug.LogWarning("<color=FF0080>### 엔딩 힌트 데이터가 없음</color>");
+                    return;
+                }
+
+                endingHintList = new List<EndingHintData>();
+                EndingHintData endingHint = null;
+
+                for (int i = 0; i < hintData.Count; i++)
+                {
+                    endingHint = new EndingHintData(hintData[i]);
+                    endingHintList.Add(endingHint);
+                }
             }
-
-            JsonData hintData = SystemManager.GetJsonNode(ProjectDetailJson, "endingHint");
-
-            if (hintData == null || hintData.Count == 0)
-            {
-                Debug.LogWarning("<color=FF0080>### 엔딩 힌트 데이터가 없음</color>");
-                return;
-            }
-
-            endingHintList = new List<EndingHintData>();
-            EndingHintData endingHint = null;
-
-            for (int i = 0; i < hintData.Count; i++)
-            {
-                endingHint = new EndingHintData(hintData[i]);
-                endingHintList.Add(endingHint);
-            }
-
+            catch(System.Exception e) { 
+                NetworkLoader.main.ReportRequestError(e.StackTrace,  string.Format("SetEndingHintData [{0}]", CurrentProjectID)); 
+            }     
         }
         
         
@@ -781,26 +776,33 @@ namespace PIERStory
         /// </summary>
         void SetProjectNametag()
         {
-            // 편한접근을 위해서 Dictionary 구성 
-            DictNametag.Clear();
+            try {
             
-            if (!ProjectDetailJson.ContainsKey(NODE_NAMETAG))
-            {
-                Debug.Log("Nametag Info is null");
-                storyNametagJSON = null;
-                return;
+                // 편한접근을 위해서 Dictionary 구성 
+                DictNametag.Clear();
+                
+                if (!ProjectDetailJson.ContainsKey(NODE_NAMETAG))
+                {
+                    Debug.Log("Nametag Info is null");
+                    storyNametagJSON = null;
+                    return;
+                }
+
+                storyNametagJSON = ProjectDetailJson[NODE_NAMETAG];
+
+                // speaker 컬럼별로 분류!
+                string speaker = string.Empty;
+                for (int i = 0; i < storyNametagJSON.Count; i++)
+                {
+                    speaker = SystemManager.GetJsonNodeString(storyNametagJSON[i], GameConst.COL_SPEAKER);
+
+                    if (!DictNametag.ContainsKey(speaker))
+                        DictNametag.Add(speaker, storyNametagJSON[i]);
+                }
             }
-
-            storyNametagJSON = ProjectDetailJson[NODE_NAMETAG];
-
-            // speaker 컬럼별로 분류!
-            string speaker = string.Empty;
-            for (int i = 0; i < storyNametagJSON.Count; i++)
-            {
-                speaker = SystemManager.GetJsonNodeString(storyNametagJSON[i], GameConst.COL_SPEAKER);
-
-                if (!DictNametag.ContainsKey(speaker))
-                    DictNametag.Add(speaker, storyNametagJSON[i]);
+            catch(System.Exception e) { 
+                
+                NetworkLoader.main.ReportRequestError(e.StackTrace,  string.Format("SetProjectNametag [{0}]", CurrentProjectID)); 
             }
         }
 
@@ -849,37 +851,38 @@ namespace PIERStory
         void SetProjectStandard()
         {
             try {
-            // 프로젝트 귀속 이미지들 초기화 
-            bgmBannerURL = string.Empty;
-            bgmBannerURL = string.Empty;
-            
-            
-            illustJson = GetNodeProjectIllusts(); // 일러스트 기본 정보 
-            minicutJSON = GetNodeProjectMinicuts(); // 미니컷 기본정보 
-            
-            dressCodeJson = ProjectDetailJson[NODE_DRESS_CODE]; // 의상 
-            
-            
-            
-            // 상세정보 
-            storyDetailJson = ProjectDetailJson[LobbyConst.NODE_DETAIL][0];
+                // 프로젝트 귀속 이미지들 초기화 
+                bgmBannerURL = string.Empty;
+                bgmBannerURL = string.Empty;
+                
+                
+                illustJson = GetNodeProjectIllusts(); // 일러스트 기본 정보 
+                minicutJSON = GetNodeProjectMinicuts(); // 미니컷 기본정보 
+                
+                dressCodeJson = ProjectDetailJson[NODE_DRESS_CODE]; // 의상 
+                
+                
+                
+                // 상세정보 
+                storyDetailJson = ProjectDetailJson[LobbyConst.NODE_DETAIL][0];
 
-            // * 바보! GetJsonNode와 RequestDownloadImage 메소드에 유효성 검사를 추가하고 여기서는 신경쓰지 않게 한다. 
+                // * 바보! GetJsonNode와 RequestDownloadImage 메소드에 유효성 검사를 추가하고 여기서는 신경쓰지 않게 한다. 
+                
             
-           
-            // 갤러리 
-            bgmBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_URL);
-            bgmBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_KEY);
-            SystemManager.RequestDownloadImage(bgmBannerURL, bgmBannerKey, null);
-            
-            
-            // 프리미엄 패스 뱃지
-            freepassBadgeURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, "freepassBadge"), SystemConst.IMAGE_URL);
-            freepassBadgeKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, "freepassBadge"), SystemConst.IMAGE_KEY);
+                // 갤러리 
+                bgmBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_URL);
+                bgmBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_KEY);
+                SystemManager.RequestDownloadImage(bgmBannerURL, bgmBannerKey, null);
+                
+                
+                // 프리미엄 패스 뱃지
+                freepassBadgeURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, "freepassBadge"), SystemConst.IMAGE_URL);
+                freepassBadgeKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, "freepassBadge"), SystemConst.IMAGE_KEY);
             }
-            catch {
-                NetworkLoader.main.ReportRequestError("Error in EnteringStory", string.Format("SetProjectStandard #1 in [{0}]", CurrentProjectID));
-            }
+            catch(System.Exception e) { 
+   
+                NetworkLoader.main.ReportRequestError(e.StackTrace,  string.Format("SetProjectStandard [{0}]", CurrentProjectID)); 
+            }            
 
             
         }
@@ -889,8 +892,13 @@ namespace PIERStory
         /// </summary>
         void SetProjectLiveObjects()
         {
-            liveObjectJson = ProjectDetailJson[NODE_PROJECT_LIVE_OBJECTS];
-            SetProjectLiveObjectDictionary();
+            try {
+                liveObjectJson = ProjectDetailJson[NODE_PROJECT_LIVE_OBJECTS];
+                SetProjectLiveObjectDictionary();
+            }
+            catch(System.Exception e) { 
+                NetworkLoader.main.ReportRequestError(e.StackTrace,  string.Format("SetProjectLiveObjects [{0}]", CurrentProjectID)); 
+            } 
         }
 
         /// <summary>
@@ -916,9 +924,14 @@ namespace PIERStory
         /// 프로젝트 라이브 일러스트 설정
         /// </summary>
         void SetProjectLiveIllusts()
-        {
+        { 
+            try {
             liveIllustJson = ProjectDetailJson[NODE_PROJECT_LIVE_ILLUSTS];
             SetProjectLiveIllustDictionary();
+            }
+            catch(System.Exception e) { 
+                NetworkLoader.main.ReportRequestError(e.StackTrace,  string.Format("SetProjectLiveIllusts [{0}]", CurrentProjectID)); 
+            } 
         }
 
         /// <summary>
@@ -944,9 +957,14 @@ namespace PIERStory
         /// </summary>
         void SetProjectModels()
         {
-            // 프로젝트 모델 JSON 
-            modelJson = GetNodeProjectModels();
-            SetProjectModelDictionary(); // 모델별로 Dictionary로 정리 
+            try {
+                // 프로젝트 모델 JSON 
+                modelJson = GetNodeProjectModels();
+                SetProjectModelDictionary(); // 모델별로 Dictionary로 정리 
+            }
+            catch(System.Exception e) { 
+               NetworkLoader.main.ReportRequestError(e.StackTrace,  string.Format("SetProjectModels [{0}]", CurrentProjectID)); 
+            }
         }
 
         /// <summary>
@@ -989,8 +1007,9 @@ namespace PIERStory
 
             CollectBubbleImages();
             }
-            catch { 
-                NetworkLoader.main.ReportRequestError("Error in EnteringStory", string.Format("BubbleSet #1 in [{0}]", CurrentProjectID));
+            catch(System.Exception e) { 
+                
+                NetworkLoader.main.ReportRequestError(e.StackTrace,  string.Format("SetBubbles [{0}]", CurrentProjectID)); 
             }
         }
         

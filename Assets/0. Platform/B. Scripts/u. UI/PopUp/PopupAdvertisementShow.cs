@@ -18,6 +18,8 @@ namespace PIERStory {
         
         [SerializeField] GameObject btnClose; // 클로즈 버튼 
         
+        public TextMeshProUGUI textPrice;
+        
         
         
         [SerializeField] float timer = 5;
@@ -31,6 +33,8 @@ namespace PIERStory {
                 return;
             
             base.Show();
+            
+            textPrice.text = SystemManager.main.removeAdPrice.ToString();
             
             StartCoroutine(RoutineTimer());
         }
@@ -59,6 +63,8 @@ namespace PIERStory {
             if(isPurchasePressed)
                 yield break;
             
+            if(isInvoked)
+                yield break;
            
            // 종료 후 광고 노출. 
            this.Hide();
@@ -74,6 +80,8 @@ namespace PIERStory {
             AdManager.OnShowAdvertisement?.Invoke();
             isInvoked = true;
         }
+        
+        
         
         public void OnClickRemoveAD() {
             
@@ -96,7 +104,7 @@ namespace PIERStory {
             // 코인 차감이 되면, 서버에서 차감과 동시에 구매 상태를 AD => Permanent로 변경시킨다. 
             JsonData sendingData = new JsonData();
             sendingData["func"] = "requestRemoveCurrentAD";
-            sendingData["price"] = 20;
+            sendingData["price"] = SystemManager.main.removeAdPrice;
             sendingData["episode_id"] = StoryManager.main.CurrentEpisodeID;
             sendingData["project_id"] = StoryManager.main.CurrentProjectID;
             
@@ -105,8 +113,10 @@ namespace PIERStory {
         }
         
         void OnComplete(HTTPRequest request, HTTPResponse response) {
-            if(!NetworkLoader.CheckResponseValidation(request, response))
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                base.Hide();
                 return;
+            }
                 
             Debug.Log("### Remove current ad");
             

@@ -235,7 +235,7 @@ namespace PIERStory
         {
             Debug.Log(string.Format("<color=cyan>Init user info [{0}]</color>", __gamebaseID));
             gamebaseID = __gamebaseID;
-            //gamebaseID = "QR3N83MPWR1P94S3";
+            //gamebaseID = "QPM9R8Y7Z9GG4NTZ";
 
             // 로그인 프로세스를 시작합니다. 
             ConnectServer();
@@ -853,7 +853,7 @@ namespace PIERStory
 
             OnRequestFinishedDelegate callback = CallbackTutorialUpdate + __cb;
 
-            NetworkLoader.main.SendPost(callback, sendingData);
+            NetworkLoader.main.SendPost(callback, sendingData, true);
         }
 
 

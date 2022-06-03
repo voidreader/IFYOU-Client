@@ -170,8 +170,8 @@ namespace PIERStory
                 if (UserManager.main.rateResult == 0 && PlayerPrefs.HasKey(SystemConst.RATE_PLAY_COUNT) && PlayerPrefs.GetInt(SystemConst.RATE_PLAY_COUNT) >= 3)
                 {
                     // 취소 했다면 30일 이상 경과한 경우에 다시 물어본다
-                    if (UserManager.main.diffRate >= 30)
-                        RateMyApp.AskForReviewNow(SystemManager.GetLocalizedText("6225"), SystemManager.GetLocalizedText("6226"), SystemManager.GetLocalizedText("5067"), SystemManager.GetLocalizedText("5038"), UserManager.main.UpdateRateHistory);
+                    //if (UserManager.main.diffRate >= 30)
+                    //    RateMyApp.AskForReviewNow(SystemManager.GetLocalizedText("6225"), SystemManager.GetLocalizedText("6226"), SystemManager.GetLocalizedText("5067"), SystemManager.GetLocalizedText("5038"), UserManager.main.UpdateRateHistory);
                 }
                 
                 UserManager.main.gameComplete = false;

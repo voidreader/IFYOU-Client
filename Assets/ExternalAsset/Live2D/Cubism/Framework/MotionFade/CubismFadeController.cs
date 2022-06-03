@@ -153,22 +153,15 @@ namespace Live2D.Cubism.Framework.MotionFade
 
                 var playingMotionData = latestPlayingMotion.Motion;
                 var elapsedTime = time - latestPlayingMotion.StartTime;
-                
-                // 여기서 종종 null reference 발생... 
-                try {
-                    for (var j = 0; j < playingMotionData.ParameterFadeInTimes.Length; j++)
+                for (var j = 0; j < playingMotionData.ParameterFadeInTimes.Length; j++)
+                {
+                    if ((elapsedTime <= playingMotionData.FadeInTime) ||
+                        ((0 <= playingMotionData.ParameterFadeInTimes[j]) &&
+                          (elapsedTime <= playingMotionData.ParameterFadeInTimes[j])))
                     {
-                        if ((elapsedTime <= playingMotionData.FadeInTime) ||
-                            ((0 <= playingMotionData.ParameterFadeInTimes[j]) &&
-                            (elapsedTime <= playingMotionData.ParameterFadeInTimes[j])))
-                        {
-                            _isFading[i] = true;
-                            break;
-                        }
+                        _isFading[i] = true;
+                        break;
                     }
-                }
-                catch(System.Exception e) {
-                    return;
                 }
             }
 

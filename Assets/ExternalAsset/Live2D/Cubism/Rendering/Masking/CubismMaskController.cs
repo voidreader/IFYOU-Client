@@ -208,6 +208,8 @@ namespace Live2D.Cubism.Rendering.Masking
             // Get cubism update controller.
             HasUpdateController = (GetComponent<CubismUpdateController>() != null);
         }
+        
+
 
 
         /// <summary>
@@ -221,7 +223,7 @@ namespace Live2D.Cubism.Rendering.Masking
             }
         }
 
-
+    
         /// <summary>
         /// Finalizes instance.
         /// </summary>
@@ -234,7 +236,6 @@ namespace Live2D.Cubism.Rendering.Masking
 
 
             MaskTexture.RemoveSource(this);
-            // MaskTexture.DeleteRenderTexture();
         }
 
         #endregion

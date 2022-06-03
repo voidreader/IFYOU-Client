@@ -90,14 +90,15 @@ namespace PIERStory
         
         JsonData timedealStandard = null; // 타임딜 기준정보 
         [SerializeField] int localVer = 0; // 로컬라이징 텍스트 버전
-        public bool isCoinPrizeUse = false; // 코인 응모권 시스템
-        public string coinPrizeURL = string.Empty; // 코인 응모권 URL
+        
+        public bool useProjectNotify = false; // 프로젝트 알림설정 사용여부 
+        
         public bool allowMissingResource = true; // 에피소드 진입시 없는 리소스 허용 여부 2021.11.08
-        public int maxAdCharge = 0;             // 일일 최대 무료 충전 횟수
+        
         
         public string coinShopURL = string.Empty; // 코인샵 URL
         public int firsetResetPrice = 0; // 최초 리셋 가격
-        int resetIncrementRate = 0; //리셋 증가비율 
+        
         public int episodeOpenPricePer = 0; // 에피소드 시간단축오픈 10분당 코인 가격 
         public int waitingReduceTimeAD = 0; // 광고보고 차감되는 에피소드 열림시간. (분)
         
@@ -646,19 +647,13 @@ namespace PIERStory
             AdManager.main.SetServerAdInfo(adInfo); // 광고 기준정보 세팅 
             
             
-            // 코인 응모권 시스템 관련 (서버에서 받아온다.)
-            isCoinPrizeUse = GetJsonNodeBool(masterInfo, "coin_url_use");
-            coinPrizeURL = GetJsonNodeString(masterInfo, "coin_url"); // URL
             
             // 없는 리소스 허용 여부
             allowMissingResource = GetJsonNodeBool(masterInfo, "allow_missing_resource");
 
-            // 일일 최대 무료충전 횟수 
-            maxAdCharge = int.Parse(GetJsonNodeString(masterInfo, "max_ad_charge"));
-            
+           
             coinShopURL = GetJsonNodeString(masterInfo, "coinshop_url"); // 코인샵 URL
             firsetResetPrice = GetJsonNodeInt(masterInfo, "first_reset_price"); // 최초 리셋 비용 
-            resetIncrementRate = GetJsonNodeInt(masterInfo, "reset_increment_rate"); // 리셋 비용 증가비율 
             
             episodeOpenPricePer = GetJsonNodeInt(masterInfo, "open_price_per"); // 에피소드 시간단축 오픈 10분당 코인 가격
             waitingReduceTimeAD = GetJsonNodeInt(masterInfo, "reduce_waiting_time_ad"); // 광고보고 단축되는 시간 .
@@ -668,6 +663,7 @@ namespace PIERStory
             termsOfUseURL = GetJsonNodeString(masterInfo, "terms_url"); 
             contentsURL = GetJsonNodeString(masterInfo, "contents_url"); 
             
+            useProjectNotify = GetJsonNodeBool(masterInfo, "project_notify"); // 프로젝트 알림설정 사용여부 
            
 
             // 디바이스 정보 불러다놓고, 

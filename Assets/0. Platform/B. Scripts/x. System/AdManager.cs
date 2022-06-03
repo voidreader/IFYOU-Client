@@ -471,9 +471,14 @@ namespace PIERStory {
             
             if(UserManager.main.HasProjectFreepass()) 
                 return;
-                
+            
+            if(UnityEngine.Random.Range(0, 100) < shareSelectionInterstitial)
+                ShowAdvertisementReady(false);
+            else 
+                ShowAdvertisementReady(true);
+            
             // Debug.Log(">> PlayLoadingAD : " + SystemManager.main.givenEpisodeData.purchaseState.ToString());
-            ShowLoadingAD();
+            // ShowLoadingAD();
         }
         
         /// <summary>

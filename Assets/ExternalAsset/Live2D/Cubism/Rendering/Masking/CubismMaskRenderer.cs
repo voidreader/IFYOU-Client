@@ -123,16 +123,20 @@ namespace Live2D.Cubism.Rendering.Masking
             var mainTexture = MainRenderer.MainTexture;
             var mesh = MainRenderer.Mesh;
 
+            try {
+                MaskProperties.SetTexture(CubismShaderVariables.MainTexture, mainTexture);
 
-            MaskProperties.SetTexture(CubismShaderVariables.MainTexture, mainTexture);
 
-
-            // Add command.
-            buffer.DrawMesh(mesh, Matrix4x4.identity,
-                IsCulling
-                    ? MaskCullingMaterial
-                    : MaskMaterial,
-                0, 0, MaskProperties);
+                // Add command.
+                buffer.DrawMesh(mesh, Matrix4x4.identity,
+                    IsCulling
+                        ? MaskCullingMaterial
+                        : MaskMaterial,
+                    0, 0, MaskProperties);
+            }
+            catch {
+                
+            }
         }
 
         #endregion

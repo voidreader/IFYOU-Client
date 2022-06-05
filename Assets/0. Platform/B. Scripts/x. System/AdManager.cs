@@ -8,7 +8,7 @@ using AppsFlyerSDK;
 
 
 using LitJson;
-// using Firebase;
+using Firebase;
 // using Facebook.Unity;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Common;
@@ -35,7 +35,7 @@ namespace PIERStory {
         public static Action<bool> OnCompleteRewardAD = null; // 동영상 광고 보고 콜백
         
         // * Firebase
-        // FirebaseApp app;
+        FirebaseApp app = null;
         
         public bool isPaidSelection = false; // 유료 선택지 선택됨. 
         
@@ -230,7 +230,7 @@ namespace PIERStory {
         
         
         void InitFirebase() {
-            /*
+            
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
                 var dependencyStatus = task.Result;
                 if (dependencyStatus == Firebase.DependencyStatus.Available) {
@@ -246,7 +246,7 @@ namespace PIERStory {
                 // Firebase Unity SDK is not safe to use here.
                 }                
             });
-            */
+            
         }
         
         

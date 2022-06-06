@@ -8,7 +8,7 @@ using AppsFlyerSDK;
 
 
 using LitJson;
-using Firebase;
+// using Firebase;
 // using Facebook.Unity;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Common;
@@ -35,8 +35,9 @@ namespace PIERStory {
         public static Action<bool> OnCompleteRewardAD = null; // 동영상 광고 보고 콜백
         
         // * Firebase
-        FirebaseApp app = null;
-        
+        // FirebaseApp app = null;
+        int updatesBeforeException;
+
         public bool isPaidSelection = false; // 유료 선택지 선택됨. 
         
         // * 광고 도중 터치 막기 위한 변수.
@@ -125,10 +126,18 @@ namespace PIERStory {
 
             InitUnityMediation();
             
-            InitFirebase();
+            // InitFirebase();
             
             // InitFacebook();
+            
+            updatesBeforeException = 0;
         }
+        
+        /*
+        void Update() {
+            // throwExceptionEvery60Updates();
+        }
+        */
         
         
         #region 구글 애드몹 
@@ -231,6 +240,7 @@ namespace PIERStory {
         
         void InitFirebase() {
             
+            /*
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
                 var dependencyStatus = task.Result;
                 if (dependencyStatus == Firebase.DependencyStatus.Available) {
@@ -246,8 +256,24 @@ namespace PIERStory {
                 // Firebase Unity SDK is not safe to use here.
                 }                
             });
+            */
             
         }
+        void throwExceptionEvery60Updates()
+        {
+            if (updatesBeforeException > 0)
+            {
+                updatesBeforeException--;
+            }
+            else
+            {
+                // Set the counter to 60 updates
+                updatesBeforeException = 60;
+
+                // Throw an exception to test your Crashlytics implementation
+                throw new System.Exception("test exception please ignore");
+            }
+        }        
         
         
         /// <summary>

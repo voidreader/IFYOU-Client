@@ -200,14 +200,12 @@ namespace PIERStory
                 
             }
             else {
-                illustImage.SetDownloadURL(SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_KEY), true);
-                
-                if(isMinicut) {
+                if (isMinicut)
                     illustImage.OnDownloadImage = MinicutResize;
-                }
-                else {
+                else
                     illustImage.OnDownloadImage = IllustResize;
-                }
+
+                illustImage.SetDownloadURL(SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(illustData, CommonConst.COL_IMAGE_KEY), true);
             }
         }
         

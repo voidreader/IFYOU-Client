@@ -73,7 +73,7 @@ namespace PIERStory {
             if(productMasterJSON != null) {
                 
                 productMasterID = productMasterJSON["product_master_id"].ToString(); // master_id
-                hasPurchaseHistory = BillingManager.main.GetProductPurchaseCount(productMasterID) > 0 ? true : false; // 구매 내역
+                hasPurchaseHistory = BillingManager.main.CheckProductPurchaseCount(productMasterID) > 0 ? true : false; // 구매 내역
                 
                 productDetailJSON = BillingManager.main.GetGameProductItemDetailInfo(productMasterID); // 디테일 
             }

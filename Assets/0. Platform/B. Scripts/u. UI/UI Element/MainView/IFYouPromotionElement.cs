@@ -88,13 +88,21 @@ namespace PIERStory {
                         break;
                     }                    
                 }
-            
+
                  string startDate = SystemManager.GetJsonNodeString(noticeData, "start_date"); // 시작일자
                  
                  if(noticeDetailData == null) {
                      Debug.LogError(string.Format("Can't find notice detail [{0}]", targetID));
                      return;
                  }
+
+                string urlLink = SystemManager.GetJsonNodeString(noticeDetailData, "url_link");
+
+                if(!string.IsNullOrEmpty(urlLink))
+                {
+                    SystemManager.main.ShowDefaultWebview(urlLink, "NoticeDetail");
+                    return;
+                }
 
                 PopupBase p = PopupManager.main.GetPopup("Notice");
                 PopupManager.main.ShowPopup(p, false);

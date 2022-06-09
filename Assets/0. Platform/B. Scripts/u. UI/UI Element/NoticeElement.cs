@@ -48,7 +48,7 @@ namespace PIERStory
 
         public void OnClickNoticeBanner()
         {
-            PopupNotice.ShowNoticeDetail(detailNotice, startDate);
+            PopupNotice.ShowNoticeDetail?.Invoke(detailNotice, startDate);
         }
     }
 }

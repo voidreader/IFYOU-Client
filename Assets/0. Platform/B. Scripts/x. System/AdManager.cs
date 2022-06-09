@@ -1,17 +1,15 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Services.Mediation;
 using Unity.Services.Core;
-using AppsFlyerSDK;
 
 
 using LitJson;
+using AppsFlyerSDK;
 // using Firebase;
 // using Facebook.Unity;
 using GoogleMobileAds.Api;
-using GoogleMobileAds.Common;
 
 
 #if UNITY_IOS
@@ -575,7 +573,7 @@ namespace PIERStory {
         public void ShowInterstitial() {
             // Ensure the ad has loaded, then show it.
             if (interstitialAd.AdState == AdState.Loaded) {
-                interstitialAd.Show();
+                interstitialAd.ShowAsync();
             }
             else {
                 
@@ -592,7 +590,7 @@ namespace PIERStory {
             interstitialAd.OnShowed += OnInterstitialShown;
             interstitialAd.OnFailedShow += OnInterstitialFailedToShow;
             interstitialAd.OnClosed += OnInterstitialClosed;
-            interstitialAd.Load();
+            interstitialAd.LoadAsync();
         }
         
 
@@ -649,7 +647,7 @@ namespace PIERStory {
             rewardedAd.OnUserRewarded += OnUserRewarded;
             rewardedAd.OnFailedShow += OnRewardedFailedToShow;
             rewardedAd.OnShowed += OnRewardedShow;
-            rewardedAd.Load();
+            rewardedAd.LoadAsync();
         }
         
         /// <summary>
@@ -661,7 +659,7 @@ namespace PIERStory {
             isRewarded = false;
             
             if(rewardedAd.AdState == AdState.Loaded)
-                rewardedAd.Show();
+                rewardedAd.ShowAsync();
             else {
                 SystemManager.ShowSimpleAlertLocalize("6093");
             }
@@ -706,19 +704,19 @@ namespace PIERStory {
             
             // * 유니티 애즈 
             if(rewardedAd.AdState == AdState.Loaded)
-                rewardedAd.Show();
+                rewardedAd.ShowAsync();
             else {
                 SystemManager.ShowSimpleAlertLocalize("6093");
             }
         }
         
-        void OnRewardedShow(object sender, System.EventArgs args) {
+        void OnRewardedShow(object sender, EventArgs args) {
             Debug.Log("OnRewardedShow");
             SetFrontAdStatus(true);
         }
         
         
-        void OnRewardedLoaded(object sender, System.EventArgs args) {
+        void OnRewardedLoaded(object sender, EventArgs args) {
             Debug.Log("OnRewardedLoaded");
         }
         

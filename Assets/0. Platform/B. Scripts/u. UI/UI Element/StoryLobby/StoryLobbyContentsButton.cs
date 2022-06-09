@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 using LitJson;
 
 namespace PIERStory {
@@ -36,8 +35,6 @@ namespace PIERStory {
         public void InitContentsButton() {
             
             try {
-                
-                
                 newSign.SetActive(false); 
                 
                 
@@ -60,7 +57,7 @@ namespace PIERStory {
                     break;
                     
                 }
-            } catch(System.Exception e) {
+            } catch {
                 
             }
             
@@ -165,10 +162,6 @@ namespace PIERStory {
                     return;
                 }
             }
-            
-            
-            
         }
-        
     }
 }

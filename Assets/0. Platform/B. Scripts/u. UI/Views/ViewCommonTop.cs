@@ -1,4 +1,3 @@
-using System.Collections;
 using System;
 using UnityEngine;
 
@@ -47,7 +46,6 @@ namespace PIERStory {
         bool previousTextViewNameShow = false; // 이전 뷰 이름 상태
         string previousViewName = string.Empty; // 이전 뷰 텍스트
         bool previousGroupPropertyShow = false; // 이전 그룹 프로퍼티 상태 
-        [SerializeField] bool previousBackgroundShow = false; // 이전 백그라운드 상태 
         bool previousMailShow = true; // 이전 메일함 버튼 
         
         bool previousLogoShow = false; // 로고 보여주기 

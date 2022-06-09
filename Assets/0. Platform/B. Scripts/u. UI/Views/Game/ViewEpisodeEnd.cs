@@ -101,7 +101,7 @@ namespace PIERStory
                 UserManager.main.gameComplete = true;
                 GameManager.main.EndGame();
             }
-            catch(System.Exception e) {
+            catch {
                 ViewCommonTop.OnBackAction = null; // 액션 초기화 
             }
         }

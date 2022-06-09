@@ -15,9 +15,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 // Live2D
 using Live2D.Cubism.Core;
-using Live2D.Cubism.Viewer;
 using Live2D.Cubism.Rendering;
-using Live2D.Cubism.Framework.Json;
 using Live2D.Cubism.Framework.Motion;
 using Live2D.Cubism.Framework.MotionFade;
 
@@ -133,11 +131,7 @@ namespace PIERStory
         const string KEY_ENCRYPTION = "imageEncrypt_2"; // 암호화 여부 
         
         #region 내장폰트, 에셋번들 폰트
-        [SerializeField] TMP_FontAsset innerFontKO = null;
         [SerializeField] TMP_FontAsset innerFontEN = null;
-        [SerializeField] TMP_FontAsset innerFontJA = null;
-        [SerializeField] TMP_FontAsset innerFontSC = null;
-        [SerializeField] TMP_FontAsset innerFontTC = null;
         
         // * 에셋번들로 받은 폰트
         // * 한글 영어는 같이 씀.         
@@ -163,7 +157,7 @@ namespace PIERStory
         #endregion
         
 
-        // * 비암호화 저장 세팅 (디폴트는 암호화)        
+        // * 비암호화 저장 세팅 (디폴트는 암호화)
         public static ES3Settings noEncryptionSetting;
         
 
@@ -1498,7 +1492,7 @@ namespace PIERStory
             try {    
                 return int.Parse(GetJsonNodeString(__node, __col));
             }
-            catch (System.Exception e) {
+            catch (Exception e) {
                 NetworkLoader.main.ReportRequestError(e.StackTrace, "GetJsonNodeInt : " + __col);
                 return 0;
             }
@@ -1517,7 +1511,7 @@ namespace PIERStory
             try {    
                 return long.Parse(GetJsonNodeString(__node, __col));
             }
-            catch (System.Exception e) {
+            catch (Exception e) {
                 NetworkLoader.main.ReportRequestError(e.StackTrace, "GetJsonNodeLong : " + __col);
                 return 0;
             }
@@ -1543,7 +1537,7 @@ namespace PIERStory
             try {    
                 return float.Parse(GetJsonNodeString(__node, __col));
             }
-            catch (Exception e) {
+            catch {
                 return 0;
             }
         }
@@ -2135,11 +2129,7 @@ namespace PIERStory
             SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
         }
 
-        private void OnApplicationQuit()
-        {
 
-        }
-        
         /// <summary>
         /// OnApplicationPause
         /// </summary>

@@ -989,9 +989,8 @@ namespace PIERStory
                         try { 
                             exceptionMessage = string.Format("{0}-{1} Response Message", response.StatusCode, response.Message);
                         }
-                        catch(System.Exception e) {
+                        catch{
                             exceptionMessage = "finished but response is fail";
-                            
                         }
                         
                         Debug.LogError(string.Format("!!! Download response fail [{0}]", exceptionMessage));

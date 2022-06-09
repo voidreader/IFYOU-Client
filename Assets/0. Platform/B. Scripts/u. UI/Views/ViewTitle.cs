@@ -3,27 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-using LitJson;
-using BestHTTP;
-using Doozy.Runtime.Signals;
-using TMPro;
-using DG.Tweening;
-
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 
+using TMPro;
+using DG.Tweening;
+using Doozy.Runtime.Signals;
+
+
 namespace PIERStory {
     public class ViewTitle : CommonView
     {
-        
         public static Action<string> ActionTitleLoading = null;
         
         public RawImage mainImage; // 다운로드받아서 보여주는 플랫폼 로딩 화면 
         
         [SerializeField] TextMeshProUGUI textLoading;
-        [SerializeField] int totalDownloadingImageCount = 0;
         public string currentStep = string.Empty;
         
         public GameObject downloadProgressParent;
@@ -253,11 +249,6 @@ namespace PIERStory {
         
         
         
-                
-        
-        
-        
-        
         /// <summary>
         /// 로딩 텍스트 변환 
         /// </summary>
@@ -268,11 +259,6 @@ namespace PIERStory {
             
             textLoading.text = loadingText;
         }
-        
-        
-
-  
-   
         
         
 
@@ -364,8 +350,6 @@ namespace PIERStory {
             }
             
             return string.Empty;
-            
-            
         }
     }
 }

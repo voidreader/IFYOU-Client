@@ -37,8 +37,6 @@ namespace PIERStory
         public GameObject normalToggle;
         public GameObject fastToggle;
 
-        bool startHide = true;
-
         public override void Show()
         {
             base.Show();

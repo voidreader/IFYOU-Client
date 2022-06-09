@@ -22,7 +22,7 @@ namespace PIERStory
                     effect = Instantiate(touchEffect, touchOutPos, Quaternion.identity);
                     Destroy(effect, 0.5f);
                 }
-            } catch(System.Exception e) {
+            } catch{
                 
             }
         }

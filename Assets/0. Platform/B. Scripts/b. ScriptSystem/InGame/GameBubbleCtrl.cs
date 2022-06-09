@@ -10,7 +10,7 @@ namespace PIERStory
 {
     public class GameBubbleCtrl : MonoBehaviour
     {
-        static float smallSizeFactor = 0.8f;
+        //static float smallSizeFactor = 0.8f;
 
         #region statics 
         static Vector2 centerPivot = new Vector2(0.5f, 0.5f);

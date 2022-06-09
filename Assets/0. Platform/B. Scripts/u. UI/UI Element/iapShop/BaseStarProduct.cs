@@ -22,7 +22,6 @@ namespace PIERStory {
         
         [SerializeField] int mainGemQuantity = 0; // 메인 젬 수량 
         [SerializeField] int subGemQuantity = 0; // 서브 젬 수량 
-        [SerializeField] int bonusGemQuantity = 0; // 보너스 젬 수량
         [SerializeField] int coinQuantity = 0; // 코인 수량
         [SerializeField] int firstPurchaseBonusGem = 0; // 첫 구매 보너스 젬 
         
@@ -36,19 +35,12 @@ namespace PIERStory {
         [SerializeField] GameObject groupFirstPurchaseBonus; // 첫구매 보너스 그룹 
         
         
-        
-        // Start is called before the first frame update
-        void Start()
-        {
-            
-        }
-
         /// <summary>
         /// 상품 초기화
         /// </summary>
         public void InitProduct() {
             
-            if(!this.gameObject.activeSelf)
+            if(!gameObject.activeSelf)
                 return;
             
             
@@ -72,8 +64,8 @@ namespace PIERStory {
             
             if(productMasterJSON != null) {
                 
-                productMasterID = productMasterJSON["product_master_id"].ToString(); // master_id
-                hasPurchaseHistory = BillingManager.main.CheckProductPurchaseCount(productMasterID) > 0 ? true : false; // 구매 내역
+                productMasterID = SystemManager.GetJsonNodeString(productMasterJSON, "product_master_id"); // master_id
+                hasPurchaseHistory = BillingManager.main.CheckProductPurchaseCount(productMasterID) > 0; // 구매 내역
                 
                 productDetailJSON = BillingManager.main.GetGameProductItemDetailInfo(productMasterID); // 디테일 
             }
@@ -141,7 +133,7 @@ namespace PIERStory {
                     && SystemManager.GetJsonNodeBool(productDetailJSON[i], "is_main")
                     && SystemManager.GetJsonNodeString(productDetailJSON[i], LobbyConst.NODE_CURRENCY) == LobbyConst.GEM) { 
                     
-                    quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], "quantity"));
+                    quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], CommonConst.NODE_QUANTITY));
                 }
             }
             
@@ -160,7 +152,7 @@ namespace PIERStory {
                     && !SystemManager.GetJsonNodeBool(productDetailJSON[i], "is_main")
                     && SystemManager.GetJsonNodeString(productDetailJSON[i], LobbyConst.NODE_CURRENCY) == LobbyConst.GEM) { 
                     
-                    quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], "quantity"));
+                    quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], CommonConst.NODE_QUANTITY));
                 }
             }
             
@@ -194,9 +186,6 @@ namespace PIERStory {
                     else {
                         quantity += int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], CommonConst.NODE_QUANTITY));    
                     }
-                    
-                    
-   
                 }
             }
             
@@ -228,9 +217,7 @@ namespace PIERStory {
                 if(SystemManager.GetJsonNodeString(productDetailJSON[i], LobbyConst.NODE_CURRENCY) == LobbyConst.GEM
                     && SystemManager.GetJsonNodeBool(productDetailJSON[i], "first_purchase")) { 
                         
-                    return SystemManager.GetJsonNodeInt(productDetailJSON[i], "quantity");
- 
-                    // return int.Parse(SystemManager.GetJsonNodeString(productDetailJSON[i], LobbyConst.NODE_CURRENCY));
+                    return SystemManager.GetJsonNodeInt(productDetailJSON[i], CommonConst.NODE_QUANTITY);
                 }
             }
             

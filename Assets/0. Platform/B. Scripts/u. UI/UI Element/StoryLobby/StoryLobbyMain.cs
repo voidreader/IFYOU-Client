@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -97,7 +97,6 @@ namespace PIERStory {
         // 그룹 컨텐츠 변수들 
         public Vector2 posGroupContentsOrigin; // 그룹 컨텐츠 기본 위치 
         public Vector2 posGroupContentsOpen; // 그룹 컨텐츠 열림 위치 
-        bool inTransitionGroupContents; // 그룹 컨텐츠 트랜지션 여부 
         
         bool isGameStarting = false; // 게임 시작했는지 체크, 중복 입력 막기 위해서.
         [SerializeField] protected bool isEpisodeContinuePlay = false; // 에피소드 이어하기 상태? 
@@ -125,8 +124,6 @@ namespace PIERStory {
         
         protected virtual void Update() {
             
-
-            
             // * 기다무 시스템 관련 타이밍 처리 
             if(!isOpenTimeCountable) {
                 return;
@@ -149,7 +146,7 @@ namespace PIERStory {
         void PostPurchasePremiumPass() {
             Debug.Log(">>> PostPurchasePremiumPass <<<");
             
-            if(!this.gameObject.activeSelf)
+            if(!gameObject.activeSelf)
                 return;
             
             InitStoryLobbyControls();
@@ -159,7 +156,6 @@ namespace PIERStory {
         /// 스토리 로비 
         /// </summary>
         public virtual void InitStoryLobbyControls() {
-            
             
             if(UserManager.main == null || !UserManager.main.completeReadUserData)
                 return;
@@ -204,9 +200,6 @@ namespace PIERStory {
             
             for (int i = 0; i < characterStatusContent.childCount; i++)
                 Destroy(characterStatusContent.GetChild(i).gameObject);
-                
-            
-            
         }
 
         
@@ -218,8 +211,6 @@ namespace PIERStory {
             InitBaseInfo();
             SetPlayState();
             InitFlowMap();
-            
-            
 
             int briefIndex = 0;
             
@@ -340,7 +331,7 @@ namespace PIERStory {
                 return;
                 
             if(rectContentsGroup.anchoredPosition.x < -300) { // 열림 
-                rectContentsGroup.DOAnchorPos(posGroupContentsOpen, 0.2f).OnStart(()=>{inTransitionGroupContents = true;}).OnComplete(()=> {inTransitionGroupContents = false;});
+                rectContentsGroup.DOAnchorPos(posGroupContentsOpen, 0.2f);
                 canvasGroupContents.DOFade(1, 0.2f);
                 arrowGroupContetns.localScale = new Vector3(-1, 1, 1);
                 
@@ -348,7 +339,7 @@ namespace PIERStory {
                 
             }
             else { // 닫힘 
-                rectContentsGroup.DOAnchorPos(posGroupContentsOrigin, 0.2f).OnStart(()=>{inTransitionGroupContents = true;}).OnComplete(()=> {inTransitionGroupContents = false;});
+                rectContentsGroup.DOAnchorPos(posGroupContentsOrigin, 0.2f);
                 canvasGroupContents.DOFade(0.8f, 0.2f);
                 arrowGroupContetns.localScale = Vector3.one;
                 
@@ -366,7 +357,6 @@ namespace PIERStory {
         /// </summary>
         void InitFlowMap() {
             
-            bool isMatchEpisode = false; // 아래 for문에서 사용 
             int flowIndex = 0;
             
             // 비활성화 시키고 
@@ -500,9 +490,6 @@ namespace PIERStory {
         }
         
         
-        
-
-
         
         /// <summary>
         /// 상태 및 오픈 타이머 설정 
@@ -775,10 +762,6 @@ namespace PIERStory {
         
  
         
-        
-        
-        
-        
         #region 플레이 버튼 관련 처리 
         
         /// <summary>
@@ -1023,9 +1006,6 @@ namespace PIERStory {
         #endregion
         
         
-        
- 
-        
         /// <summary>
         /// 슈퍼유저 
         /// </summary>
@@ -1035,8 +1015,5 @@ namespace PIERStory {
             SystemManager.ShowNetworkLoading();
             StartGame(true);
         }
-        
-
-        
     }
 }

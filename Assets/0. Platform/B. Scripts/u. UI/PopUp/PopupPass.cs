@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 using TMPro;
-using LitJson;
 
 namespace PIERStory {
     public class PopupPass : PopupBase
@@ -34,9 +32,6 @@ namespace PIERStory {
         [SerializeField] float discountFloat = 0; // 할인율 
         [SerializeField] int discountInt = 0;
         
-        
-        
-        [SerializeField] bool useTimer = false;        
         
         public PassTimeDealData passTimeDeal;
         public int timeDealID = 0;
@@ -130,7 +125,7 @@ namespace PIERStory {
             // Debug.Log("EndDate : " + endDate);
             // Debug.Log("Now : " + DateTime.Now);
             // Debug.Log("UTC : " + DateTime.UtcNow);
-            timeDifference = endDate - System.DateTime.UtcNow;
+            timeDifference = endDate - DateTime.UtcNow;
             
             if(timeDifference.Ticks <= 0) {
                 isCountable = false;
@@ -142,7 +137,7 @@ namespace PIERStory {
             textTimer.text = GetDiffTime(); // 일단 값 넣어주고.
             
             // 할인율 추가 처리 
-            discountFloat += (float)passTimeDeal.discountINT * 0.01f;
+            discountFloat += passTimeDeal.discountINT * 0.01f;
             
         }
         

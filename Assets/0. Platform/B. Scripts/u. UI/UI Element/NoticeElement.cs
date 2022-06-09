@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 using LitJson;
-using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
@@ -11,6 +10,7 @@ namespace PIERStory
 
         JsonData detailNotice = null;
         string startDate = string.Empty;
+        string urlLink = string.Empty;
 
         const string START_DATE = "start_date";
 
@@ -44,11 +44,20 @@ namespace PIERStory
             }
 
             noticeBanner.SetDownloadURL(SystemManager.GetJsonNodeString(detailNotice, LobbyConst.BANNER_URL), SystemManager.GetJsonNodeString(detailNotice, LobbyConst.BANNER_KEY));
+
+            urlLink = SystemManager.GetJsonNodeString(detailNotice, "url_link");
         }
 
         public void OnClickNoticeBanner()
         {
+<<<<<<< Updated upstream
             PopupNotice.ShowNoticeDetail(detailNotice, startDate);
+=======
+            if (string.IsNullOrEmpty(urlLink))
+                PopupNotice.ShowNoticeDetail?.Invoke(detailNotice, startDate);
+            else
+                SystemManager.main.ShowDefaultWebview(urlLink, "NoticeDetail");
+>>>>>>> Stashed changes
         }
     }
 }

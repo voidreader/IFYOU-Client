@@ -50,14 +50,10 @@ namespace PIERStory
 
         public void OnClickNoticeBanner()
         {
-<<<<<<< Updated upstream
-            PopupNotice.ShowNoticeDetail(detailNotice, startDate);
-=======
             if (string.IsNullOrEmpty(urlLink))
                 PopupNotice.ShowNoticeDetail?.Invoke(detailNotice, startDate);
             else
                 SystemManager.main.ShowDefaultWebview(urlLink, "NoticeDetail");
->>>>>>> Stashed changes
         }
     }
 }

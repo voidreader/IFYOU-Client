@@ -96,7 +96,7 @@ namespace PIERStory
         void SetNoticeDetail(JsonData detailData, string startDate)
         {
             noticeDetailTitle.text = SystemManager.GetJsonNodeString(detailData, LobbyConst.STORY_TITLE);
-            noticeDate.text = !string.IsNullOrEmpty(startDate) ? string.Format("{0}", DateTime.Parse(startDate).ToString("f", new CultureInfo("en-US"))) : string.Empty;
+            noticeDate.text = !string.IsNullOrEmpty(startDate) ? string.Format("{0} {1}", DateTime.Parse(startDate, null, DateTimeStyles.RoundtripKind).ToString("f", new CultureInfo("en-US")), DateTime.Parse(startDate, null, DateTimeStyles.RoundtripKind).Kind) : string.Empty;
 
             string textContents = SystemManager.GetJsonNodeString(detailData, "contents");
 

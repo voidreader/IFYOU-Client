@@ -107,7 +107,7 @@ namespace PIERStory {
                 PopupBase p = PopupManager.main.GetPopup("Notice");
                 PopupManager.main.ShowPopup(p, false);
 
-                PopupNotice.ShowNoticeDetail(noticeDetailData, startDate);
+                PopupNotice.ShowNoticeDetail?.Invoke(noticeDetailData, startDate);
             }
             else if(promotionType == "project") { // 프로젝트 소개 페이지 오픈 
                 if(storyData == null) {

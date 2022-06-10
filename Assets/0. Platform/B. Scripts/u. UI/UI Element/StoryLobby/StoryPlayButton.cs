@@ -138,7 +138,7 @@ namespace PIERStory {
                 
                 groupPlay.SetActive(true);
                 
-                textPlay.text = isResumePlay?SystemManager.GetLocalizedText("5005"):SystemManager.GetLocalizedText("5169");
+                textPlay.text = isResumePlay?SystemManager.GetLocalizedText("5005"):SystemManager.GetLocalizedText("8000");
                 
                 icon.sprite = spriteActiveIcon;
                 backgroundProgressor.sprite = spriteActiveBackgroundProgressor;
@@ -150,7 +150,7 @@ namespace PIERStory {
                 
                 groupPlay.SetActive(true);
                 
-                textPlay.text = isResumePlay?SystemManager.GetLocalizedText("5005"):SystemManager.GetLocalizedText("5169");
+                textPlay.text = isResumePlay?SystemManager.GetLocalizedText("5005"):SystemManager.GetLocalizedText("8000");
                 
                 icon.sprite = spritePremuimIcon;
                 backgroundProgressor.sprite = spritePremiumBackgroundProgressor;

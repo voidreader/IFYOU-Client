@@ -138,14 +138,18 @@ namespace PIERStory {
                 case "chapter":
                 episodeType = EpisodeType.Chapter;
                 combinedEpisodeTitle = string.Format(SystemManager.GetLocalizedText("6090"),  episodeNO) + episodeTitle;
-                storyLobbyTitle = string.Format("EP {0}. ", episodeNO) + episodeTitle;
-                flowPrefix = "EP" + string.Format("{0:D2}", episodeNumber);
+                //storyLobbyTitle = string.Format("EP {0}. ", episodeNO) + episodeTitle;
+                storyLobbyTitle = episodeTitle;
+                //flowPrefix = "EP" + string.Format("{0:D2}", episodeNumber);
+                flowPrefix = string.Format("{0:D2}", episodeNumber);
                 break;
                 
                 case "ending":
                 episodeType = EpisodeType.Ending;
                 combinedEpisodeTitle = "Ending. " + episodeTitle;
-                storyLobbyTitle = combinedEpisodeTitle;
+                combinedEpisodeTitle = episodeTitle;
+                //storyLobbyTitle = combinedEpisodeTitle;
+                storyLobbyTitle = episodeTitle;
                 
                 flowPrefix = "Ending";
                 

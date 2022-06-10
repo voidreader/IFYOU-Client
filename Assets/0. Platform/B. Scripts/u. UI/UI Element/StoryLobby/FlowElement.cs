@@ -18,7 +18,8 @@ namespace PIERStory {
         public RectTransform rectBody; 
         public LayoutElement layoutElement;
         
-        public Image imageIcon; // 왼쪽 아이콘 
+        public Image imageIcon; // 왼쪽 아이콘
+        public Image imageBg; //배경
         public Image imageOutline; //아웃라인 
         
         public TextMeshProUGUI textEpisodeNumber;
@@ -57,6 +58,8 @@ namespace PIERStory {
         [Header("Colors")] 
         public Sprite spriteReset; // 리셋 아이콘 
         public Sprite spriteCurrent; // 현재 에피소드 아이콘 
+        public Sprite spritebg; // 현재 에피소드 배경
+
         public Sprite spriteCommingSoon; // 커밍순 아이콘 
         
         public Sprite spriteCurrentOutline; // 현재 활성화 아웃라인 
@@ -125,7 +128,7 @@ namespace PIERStory {
             currentEpisode = __episode;
             
             textEpisodeTitle.text = currentEpisode.episodeTitle;
-            textEpisodeNumber.text = currentEpisode.flowPrefix;
+            textEpisodeNumber.text = currentEpisode.flowPrefix + "화";//여기가 에피소드 이름에 영향이 가긴 함...
             
             // 디테일 관련 처리 
             detailFrame.sizeDelta = sizeDetailOrigin;
@@ -166,7 +169,9 @@ namespace PIERStory {
             groupOpenLock.SetActive(false);
             imageIcon.gameObject.SetActive(false);
             rectCover.gameObject.SetActive(true);
-            
+
+            textEpisodeNumber.text = currentEpisode.flowPrefix + ""; //엔딩에는 화 텍스트가 뜨면 안됨.
+
             // 색상도 변경 
             textEpisodeNumber.color = colorEndingTitle;
             textEpisodeTitle.color = colorGeneralTextColor;
@@ -187,7 +192,7 @@ namespace PIERStory {
                 rectCover.gameObject.SetActive(false);
             }
             else {
-                textEpisodeTitle.text = "????"; // 미해금된 경우 엔딩 제목을 노출하지 않음 
+                textEpisodeTitle.text = "LOCK"; // 미해금된 경우 엔딩 제목을 노출하지 않음 
             }
         }
         
@@ -236,6 +241,7 @@ namespace PIERStory {
                 // icon
                 imageIcon.gameObject.SetActive(true);
                 imageIcon.sprite = spriteCurrent;
+                //imageBg.sprite = spritebg; 에피소드가 다 가려지는 문제가 있음... 왜일까...
                 imageIcon.SetNativeSize();
                 
                 textEpisodeNumber.color = colorCurrentTitle;
@@ -422,7 +428,10 @@ namespace PIERStory {
         }
         
         public void OnClickIcon() {
-            StoryLobbyMain.SuperUserFlowEpisodeStart?.Invoke(currentEpisode);
+            if (currentEpisode.episodeState == EpisodeState.Prev || currentEpisode.episodeState == EpisodeState.Block)
+            {
+                StoryLobbyMain.SuperUserFlowEpisodeStart?.Invoke(currentEpisode);
+            }
         }
 
         /// <summary>

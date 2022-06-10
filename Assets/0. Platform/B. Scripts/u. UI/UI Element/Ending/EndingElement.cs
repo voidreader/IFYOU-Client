@@ -39,8 +39,8 @@ namespace PIERStory
             }
         }
 
-        readonly Vector2 openEndingSize = new Vector2(660, 553);
-        readonly Vector2 lockEndingSize = new Vector2(660, 488);
+        readonly Vector2 openEndingSize = new Vector2(660, 484);
+        readonly Vector2 lockEndingSize = new Vector2(660, 484);
 
         EpisodeData endingData;
 
@@ -59,7 +59,8 @@ namespace PIERStory
             {
                 GetComponent<RectTransform>().sizeDelta = openEndingSize;
                 buttonBox.sprite = LobbyManager.main.spriteEpisodeOpen;
-                buttonBox.rectTransform.anchoredPosition = new Vector2(0, 62);
+                //buttonBox.rectTransform.anchoredPosition = new Vector2(0, 62);
+                buttonBox.rectTransform.anchoredPosition = Vector2.zero;
 
                 newSign.SetActive(!UserManager.main.IsCompleteEpisode(epiData.episodeID));
             }

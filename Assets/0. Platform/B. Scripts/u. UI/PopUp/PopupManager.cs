@@ -57,6 +57,7 @@ namespace PIERStory {
         
         [SerializeField] GameObject popupPackDetail;
         [SerializeField] GameObject popupPremiumPass;
+        public GameObject popupRate;
         [SerializeField] GameObject popupResource; // 리소스 표현  팝업 
 
         public GameObject popupSelectionHint;
@@ -517,7 +518,13 @@ namespace PIERStory {
                 DictPopup["Mail"] = popupMail;
             else 
                 DictPopup.Add("Mail", popupMail);
-                
+
+
+            if (DictPopup.ContainsKey("Rate"))
+                DictPopup["Rate"] = popupRate;
+            else
+                DictPopup.Add("Rate", popupRate);
+
             if(DictPopup.ContainsKey("Resource")) 
                 DictPopup["Resource"] = popupResource;
             else 

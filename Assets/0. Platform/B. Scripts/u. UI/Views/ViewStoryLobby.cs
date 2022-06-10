@@ -169,9 +169,19 @@ namespace PIERStory
                 // 일단은 에피소드 3회 이상 플레이하고, ratecheck를 한적이 없으면 띄우는걸로 한다
                 if (UserManager.main.rateResult == 0 && PlayerPrefs.HasKey(SystemConst.RATE_PLAY_COUNT) && PlayerPrefs.GetInt(SystemConst.RATE_PLAY_COUNT) >= 3)
                 {
-                    // 취소 했다면 30일 이상 경과한 경우에 다시 물어본다
-                    //if (UserManager.main.diffRate >= 30)
-                    //    RateMyApp.AskForReviewNow(SystemManager.GetLocalizedText("6225"), SystemManager.GetLocalizedText("6226"), SystemManager.GetLocalizedText("5067"), SystemManager.GetLocalizedText("5038"), UserManager.main.UpdateRateHistory);
+                    PopupBase p = PopupManager.main.GetPopup("Rate");
+
+                    try
+                    {
+                        // 취소 했다면 30일 이상 경과한 경우에 다시 물어본다
+                        if (UserManager.main.diffRate >= 30)
+                            PopupManager.main.ShowPopup(p, true);
+                            //    RateMyApp.AskForReviewNow(SystemManager.GetLocalizedText("6225"), SystemManager.GetLocalizedText("6226"), SystemManager.GetLocalizedText("5067"), SystemManager.GetLocalizedText("5038"), UserManager.main.UpdateRateHistory);
+                    }
+                    catch
+                    {
+                        Debug.LogError("Rate 팝업이 없습니다");
+                    }
                 }
                 
                 UserManager.main.gameComplete = false;

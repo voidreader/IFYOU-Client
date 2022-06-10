@@ -6,7 +6,6 @@ using BestHTTP;
 
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.ResourceManagement.ResourceLocations;
 
 namespace PIERStory
 {
@@ -141,9 +140,6 @@ namespace PIERStory
                     SetIllustImage(); // 일러스트 처리 
                 break;
             }
-
-            // 일러스트만 예외 처리 
-            // LoadImage();
         }
 
         
@@ -203,8 +199,6 @@ namespace PIERStory
             }
             
             return key;
-            
-            
         }
         
         
@@ -376,7 +370,7 @@ namespace PIERStory
 
             // ! 다운로드 처리. 다운로드 완료 후에도 texture와 sprite를 생성해두지 않는다. 
             var req = new HTTPRequest(new Uri(imageUrl), OnDownloadOnly);
-            req.Timeout = System.TimeSpan.FromSeconds(40);
+            req.Timeout = TimeSpan.FromSeconds(40);
             req.Send();
         }
         
@@ -530,69 +524,6 @@ namespace PIERStory
                 
             sprite = null;
             
-        }
-        
-
-        /// <summary>
-        /// 이미지 사용 종료 신고!
-        /// </summary>
-        public void EndImage()
-        {
-
-            // 이미지, 배경만 해당된다.
-            // 21.09.15 이모티콘 할당도 풀어주기로 했다. 그래서 대화 관련된거 나왔을 때 다 풀어줘야 함
-            
-            // 다 썼다고 판단되면 놔주자.. 
-            /*
-            if (useCount <= 0)
-            {
-                Debug.Log(string.Format("><>< Bye [{0}]", imageName));
-
-                // 게임매니저 Dictionary에서 제거 요청
-                switch (template)
-                {
-                    // IMAGE 사용하지 않도록 변경 2022.01.11
-                    case GameConst.TEMPLATE_IMAGE:
-                        return;
-                    case GameConst.TEMPLATE_BACKGROUND:
-                    case GameConst.TEMPLATE_MOVEIN:
-                        //GameManager.main.RemoveBackgroundFromDicionary(imageName);
-                        break;
-                    case GameConst.TEMPLATE_TALK:
-                    case GameConst.TEMPLATE_SPEECH:
-                    case GameConst.TEMPLATE_WHISPER:
-                    case GameConst.TEMPLATE_YELL:
-                    case GameConst.TEMPLATE_MONOLOGUE:
-                    case GameConst.TEMPLATE_FEELING:
-                        //GameManager.main.RemoveEmoticonFromDictionary(imageName);
-                        break;
-
-                    default:
-                        return;
-                }
-                
-                // 어드레서블은 어드레서블로 release처리. 
-                if(isAddressable) {
-                    sprite = null;
-                    
-                    if(template == GameConst.COL_EMOTICON)
-                        Addressables.Release(mountedSpriteAddressable);
-                    else if (template == GameConst.TEMPLATE_BACKGROUND)
-                        Addressables.Release(mountedAtalsAddressable);
-                    
-                    
-                    return; 
-                }
-
-                // 이 오브젝트 파괴
-                Sprite.Destroy(sprite);
-                Texture2D.Destroy(texture);
-
-                sprite = null;
-                texture = null;
-                
-            }
-            */
         }
     }
 }

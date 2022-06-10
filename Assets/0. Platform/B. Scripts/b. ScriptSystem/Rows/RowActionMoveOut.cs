@@ -91,7 +91,6 @@ namespace PIERStory
             {
                 // Position 돌려준다. 
                 currentBG.transform.position = Vector3.zero;
-                GameManager.main.currentBackgroundMount.EndImage();
                 // 페이드 아웃이 완료되면 화면 연출도 지워준다.
                 ScreenEffectManager.main.RemoveAllScreenEffect();
                 tweenComplete = true;

@@ -1364,9 +1364,6 @@ namespace PIERStory
                 // 최초 등록시에는 key와 value 를 같게 등록한다. 
                 DictModelByDress.Add(currentPage.ListRows[i].speaker, currentPage.ListRows[i].speaker);
             }
-            
-
-
         }
 
         /// <summary>
@@ -1512,8 +1509,6 @@ namespace PIERStory
             }
 
             CleanScreenWithoutBackground();
-            if (currentBG != null && !IsDefaultBG() && currentBG.gameObject.activeSelf && currentBackgroundMount != null)
-                currentBackgroundMount.EndImage();
 
             // 이미지가 없는 경우 
             if (!DictBackgroundMounts.ContainsKey(__imageName) || DictBackgroundMounts[__imageName] == null)
@@ -1641,10 +1636,7 @@ namespace PIERStory
         {
             // 플레이 중이던 것이 있다면 숨기자
             if (currentLiveIllust != null && currentLiveIllust.liveImageController != null && currentLiveIllust.liveImageController.gameObject.activeSelf)
-            {
                 currentLiveIllust.liveImageController.HideModel();
-                currentLiveIllust.EndIllust();
-            }
 
             if (!DictLiveIllusts.ContainsKey(__illustName) || DictLiveIllusts[__illustName] == null)
                 return null;
@@ -1667,14 +1659,6 @@ namespace PIERStory
             Debug.Log("SetGameLiveObj");
 
             currentLiveObj = DictLiveObjs[__objName];
-
-            // 만들어진적이 없으면 생성한다
-            // * 로딩때 생성으로 변경 
-            /*
-            if (currentLiveObj.liveImageController == null)
-                currentLiveObj.InstantiateCubismModel();
-            */
-
             currentLiveObj.DecreaseUseCount();
 
             return currentLiveObj;
@@ -1839,10 +1823,7 @@ namespace PIERStory
 
             // 라이브 일러스트 비활성화
             if (currentLiveIllust != null && currentLiveIllust.liveImageController != null && currentLiveIllust.liveImageController.gameObject.activeSelf)
-            {
                 currentLiveIllust.liveImageController.HideModel();
-                currentLiveIllust.EndIllust();
-            }
 
             // 미니컷 비활성화
             HideImageMinicut();
@@ -1871,7 +1852,6 @@ namespace PIERStory
             if (currentLiveObj != null && currentLiveObj.liveImageController != null)
             {
                 currentLiveObj.liveImageController.HideModel();
-                currentLiveObj.EndIllust();
                 currentLiveObj = null;
             }
         }
@@ -1891,71 +1871,12 @@ namespace PIERStory
             // 기본이미지가 아닌 경우 사용횟수 차감 기록에 따른 Destory 처리
             if (currentMinicut.sprite != defaultImage && currentMinicutMount != null)
             {
-                currentMinicutMount.EndImage();
-
                 // 연결고리를 끊자. 
                 currentMinicutMount = null;
                 currentMinicut.sprite = null;
             }
         }
 
-        /// <summary>
-        /// 다 쓴 배경 제거 
-        /// </summary>
-        public void RemoveBackgroundFromDicionary(string __bgName)
-        {
-            if (!DictBackgroundMounts.ContainsKey(__bgName))
-                return;
-
-            // Page에서 제거!
-            currentPage.RemoveImageMount(DictBackgroundMounts[__bgName]);
-        }
-
-        /// <summary>
-        /// 다쓴 이미지를 Dictionary에서 제거하기
-        /// </summary>
-        public void RemoveImageFromDictionary(string __imageName)
-        {
-            if (!DictMinicutImages.ContainsKey(__imageName))
-                return;
-
-            // Page에서 제거!
-            currentPage.RemoveImageMount(DictMinicutImages[__imageName]);
-
-            // 딕셔너리에서 리무브!
-            // 잘가요!
-            DictMinicutImages.Remove(__imageName);
-        }
-
-        public void RemoveEmoticonFromDictionary(string emoticonExpression)
-        {
-            if (!DictEmoticon.ContainsKey(emoticonExpression))
-                return;
-
-            currentPage.RemoveImageMount(DictEmoticon[emoticonExpression]);
-            DictEmoticon.Remove(emoticonExpression);
-        }
-
-
-        /// <summary>
-        /// 다 쓴 liveObj 제거
-        /// </summary>
-        public void RemoveLiveObjFromDictionary(string liveObjName)
-        {
-            if (!DictLiveObjs.ContainsKey(liveObjName))
-                return;
-
-            currentPage.RemoveLiveObjectMount(DictLiveObjs[liveObjName]);
-            DictLiveObjs.Remove(liveObjName);
-        }
-
-        public void RemoveLiveIllustFromDictionary(string liveIllustName)
-        {
-            if (DictLiveIllusts.ContainsKey(liveIllustName))
-                return;
-
-            DictLiveIllusts.Remove(liveIllustName);
-        }
 
         #endregion
 
@@ -2209,21 +2130,5 @@ namespace PIERStory
 
         #endregion
 
-
-
-        /// <summary>
-        /// 튜토리얼 시작 콜백
-        /// </summary>
-        void CallbackStartTutorial(BestHTTP.HTTPRequest req, BestHTTP.HTTPResponse res)
-        {
-            if(!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("Failed StartTutorial, Tutorial Mission2");
-                return;
-            }
-
-            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MISSION_2);
-            PopupManager.main.ShowPopup(p, false);
-        }
     }
 }

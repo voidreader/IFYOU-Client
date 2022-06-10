@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +7,6 @@ using DG.Tweening;
 using Live2D.Cubism.Core;
 using Live2D.Cubism.Rendering;
 using Live2D.Cubism.Framework.Motion;
-using Live2D.Cubism.Framework.Raycasting;
 
 namespace PIERStory
 {
@@ -498,9 +496,6 @@ namespace PIERStory
         /// <param name="layerName"></param>
         void FadeIn(float posX, string layerName)
         {
-            // 여기에 OnMoveStart 넣으면 오류는 해결되지만, 답답해져서.. 다시 뺌. 
-            // OnMoveStart();                      
-
             // 바꾸려는 레이어와 같지 않은 경우에만 변경한다
             if (!gameObject.layer.Equals(LayerMask.NameToLayer(layerName)))
                 ChangeLayerRecursively(transform, layerName);
@@ -728,20 +723,7 @@ namespace PIERStory
             // 모든 drawables에 boxCollider 추가 
             for (int i = 0; i < model.Drawables.Length; i++)
                 model.Drawables[i].gameObject.AddComponent<BoxCollider>();
-                
-            // ! 컬라이더 붙이고 없애는데 프레임 딜레이 필요하다.
-            
         }
-        
-        IEnumerator DelayRemoveColliders() {
-            yield return new WaitForFixedUpdate();
-            
-            RemoveColliders();
-        }
-        
-        
-        
     }
-
 }
 

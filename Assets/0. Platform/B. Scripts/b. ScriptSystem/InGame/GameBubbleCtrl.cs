@@ -1140,9 +1140,6 @@ namespace PIERStory
         void OnCompletedOffTween()
         {
             gameObject.SetActive(false);
-
-            if (emoticonMount != null)
-                emoticonMount.EndImage();
         }
 
 

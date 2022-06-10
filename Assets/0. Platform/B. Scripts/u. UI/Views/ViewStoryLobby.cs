@@ -582,7 +582,7 @@ namespace PIERStory
                             break;
                         }
 
-                        ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(storyProfile[i], GameConst.COL_MODEL_NAME), CharacterLoadComplete, LobbyManager.main);
+                        ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(storyProfile[i], GameConst.COL_MODEL_NAME), CharacterLoadComplete);
                         character.SetModelDataFromStoryManager(true);
 
                         if (SystemManager.main.hasSafeArea)
@@ -940,7 +940,7 @@ namespace PIERStory
                                 break;
                             }
 
-                            ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(storyProfile[i], GameConst.COL_MODEL_NAME), CharacterLoadComplete, LobbyManager.main);
+                            ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(storyProfile[i], GameConst.COL_MODEL_NAME), CharacterLoadComplete);
                             character.SetModelDataFromStoryManager(true);
 
                             if (SystemManager.main.hasSafeArea)
@@ -1172,7 +1172,7 @@ namespace PIERStory
                 standingElement.currentCount++;
 
                 // 캐릭터 생성
-                ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(__j, GameConst.COL_MODEL_NAME), CharacterInstantComplete, LobbyManager.main);
+                ScriptModelMount character = new ScriptModelMount(SystemManager.GetJsonNodeString(__j, GameConst.COL_MODEL_NAME), CharacterInstantComplete);
                 character.SetModelDataFromStoryManager(true);
 
                 if (SystemManager.main.hasSafeArea)

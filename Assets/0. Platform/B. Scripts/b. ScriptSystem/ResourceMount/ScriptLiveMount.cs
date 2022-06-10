@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections;
+using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 using LitJson;
 using BestHTTP;
@@ -13,8 +15,6 @@ using Live2D.Cubism.Rendering;
 using Live2D.Cubism.Framework.Json;
 using Live2D.Cubism.Framework.Motion;
 
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace PIERStory
 {
@@ -171,7 +171,6 @@ namespace PIERStory
             if (unloadAssetCount == 0)
             {
                 // Serializable은 코루틴을 쓰지 못하니, 엄마한테 부탁한다.
-                // pageParent.StartCoroutine(CheckFileSavedAndStartInitModel());
                 string.Format(" <color=lime>{0} Model files are downloaded</color>", liveName);
                 
                 isLoaded = true; // 다운로드 완료 
@@ -386,49 +385,6 @@ namespace PIERStory
             SetMinusAssetCount();
         }
 
-        /// <summary>
-        /// 파일 다 저장되었는지 확인하고, 모델 생성시작하기.
-        /// </summary>
-        IEnumerator CheckFileSavedAndStartInitModel()
-        {
-            // * 얘 필요없을 것 같은데... 일단 호출부분 제거 
-            
-            string file_key = string.Empty;
-            bool isFilesExist = false;
-
-            yield return new WaitForSeconds(0.2f);
-
-            while (!isFilesExist)
-            {
-                isFilesExist = true;
-
-                for (int i = 0; i < resourceData.Count; i++)
-                {
-                    file_key = SystemManager.GetJsonNodeString(resourceData[i], CommonConst.COL_FILE_KEY);
-
-                    // 파일의 저장이 아직 이루어지지 않았다.
-                    if (!ES3.FileExists(GetCubismRelativePath(file_key)))
-                        isFilesExist = false;
-                }
-
-                // 파일 저장이 이루어지지 않았다면 0.2초씩 대기 
-                if (!isFilesExist)
-                    yield return new WaitForSeconds(0.2f);
-            }
-
-            /*
-            if(GameManager.main != null)
-            {
-                if(isMinicut)
-                    SendSuccessMessage();
-                else
-                    InstantiateCubismModel();
-            }
-            else
-                InstantiateCubismModel();
-            */
-        }
-        
         
         /// <summary>
         /// 모델 인스턴스화 하기 
@@ -537,8 +493,6 @@ namespace PIERStory
                 // * 어드레서블 에셋을 통한 생성인 경우는 Shader 처리 추가 필요. 
                 SystemManager.SetAddressableCubismShader(liveImage);
             }
-            
-            
         }
 
 
@@ -687,23 +641,6 @@ namespace PIERStory
         public void DecreaseUseCount()
         {
             useCount--;
-        }
-
-        public void EndIllust()
-        {
-            // * 잠시 사용하지 않도록 처리 
-            
-            /*
-            if (useCount < 1)
-            {
-                if(isMinicut)
-                    GameManager.main.RemoveLiveIllustFromDictionary(liveName);
-                else
-                    GameManager.main.RemoveLiveObjFromDictionary(liveName);
-
-                liveImageController.DestroySelf();
-            }
-            */
         }
     }
 }

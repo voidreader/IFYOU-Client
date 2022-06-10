@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 using LitJson;
 
@@ -134,8 +134,6 @@ namespace PIERStory
             BeginDownloadLiveObjects(); // 라이브 오브젝트 파일 다운로드
 
             
-            // yield return new WaitForSeconds(0.5f);
-            
             StartCoroutine(RoutineLoadingImage(GameConst.TEMPLATE_BACKGROUND));             // 배경 
             StartCoroutine(RoutineLoadingImage(GameConst.TEMPLATE_ILLUST));                 // 일러스트 
 
@@ -149,10 +147,8 @@ namespace PIERStory
             StartCoroutine(RoutineLoadingSound(COL_SOUND_EFFECT));                          // SE
             
             yield return StartCoroutine(RoutineInstantiateLiveIllustsAndObjects()); 
-            // yield return StartCoroutine(RoutineInstantiateLiveCharacters()); 
-            // yield return new WaitForSeconds(0.5f);
+            
             yield return StartCoroutine(RoutineInstantiateLiveCharacters()); 
-            // yield return StartCoroutine(RoutineInstantiateLiveIllustsAndObjects());             
             
             yield return new WaitUntil(() => GetCurrentLoadingCount() <= 0);
 
@@ -312,29 +308,7 @@ namespace PIERStory
             isPageImagesInitialized = true; // 다 했으면 초기화 했다고 알린다.
 
         }
-
-        /// <summary>
-        /// 라이브 오브젝트 모델 로딩
-        /// </summary>
-        IEnumerator RoutineLoadingLiveObjects()
-        {
-            int checker = 0;
-
-            for (int i = 0; i < ListLiveObjectMount.Count; i++)
-            {
-                checker = pageLiveObjectCount;
-                ListLiveObjectMount[i].SetModelDataFromStoryManager(); // 인스턴스는 시키지 않는다. 
-
-                yield return new WaitUntil(() => checker > pageLiveObjectCount);
-
-                yield return null;
-                yield return null;
-                yield return null;
-
-                if (ListLiveObjectMount[i].isMounted && ListLiveObjectMount[i].liveImageController != null)
-                    ListLiveObjectMount[i].liveImageController.HideModel();
-            }
-        }
+        
         
         void BeginDownloadLiveModels() {
             for(int i=0; i<ListModelMount.Count;i++) {
@@ -397,8 +371,6 @@ namespace PIERStory
         }
         
         
-        
-        
         /// <summary>
         /// 라이브 오브젝트 일러스트 순차 인스턴시에이트
         /// </summary>
@@ -411,7 +383,6 @@ namespace PIERStory
             }
             
             Debug.Log("#### RoutineInstantiateLiveIllustsAndObjects #2");
-            // yield return new WaitForSeconds(1);
             
             for(int i=0; i<ListLiveObjectMount.Count;i++) {
                 if(ListLiveObjectMount[i].isLoaded) {
@@ -443,8 +414,6 @@ namespace PIERStory
             }
             
             Debug.Log("#### RoutineInstantiateLiveIllustsAndObjects END");
-            
-
         }
         
         /// <summary>
@@ -459,7 +428,6 @@ namespace PIERStory
             }
             
             Debug.Log("#### RoutineInstantiateLiveCharacters #2");
-            // yield return new WaitForSeconds(1);
             
             for(int i=0; i<ListModelMount.Count;i++) {
                 if(ListModelMount[i].isLoaded) {
@@ -483,93 +451,11 @@ namespace PIERStory
                     }
                 }
             }
-            
 
             Debug.Log("#### RoutineInstantiateLiveCharacters END");
-            
         }        
+
         
-
-        /// <summary>
-        /// 라이브 일러스트 로딩
-        /// </summary>
-        IEnumerator RoutineLoadingLiveIllusts()
-        {
-            int checker = 0;
-
-            for (int i = 0; i < ListLiveIllustMount.Count; i++)
-            {
-                checker = pageLiveIllustCount;
-                ListLiveIllustMount[i].SetModelDataFromStoryManager();
-
-                yield return new WaitUntil(() => checker > pageLiveIllustCount);
-
-                yield return null;
-                yield return null;
-                yield return null;
-
-                if (ListLiveIllustMount[i].isMounted && ListLiveIllustMount[i].liveImageController != null)
-                    ListLiveIllustMount[i].liveImageController.HideModel();
-
-            }
-        }
-
-        /// <summary>
-        /// 캐릭터 모델 로딩 
-        /// </summary>
-        IEnumerator RoutineLoadingModels()
-        {
-            Debug.Log("### RoutineLoadingModels START");
-            
-            int checker = 0;
-
-            for (int i = 0; i < ListModelMount.Count; i++)
-            {
-                checker = pageModelCount;
-                ListModelMount[i].SetModelDataFromStoryManager();
-
-                // yield return new WaitUntil(() => checker > pageModelCount); // 모델 하나씩.. 
-            }
-            
-            
-            yield return new WaitUntil(()=> pageModelCount > 0);
-            
-
-            yield return null;
-            yield return null;
-            yield return null;
-
-            // 모델들 한테 충돌체 주고 키 체크 
-            Debug.Log("## Model SetBoxColliders ##");
-            
-            for (int i = 0; i < ListModelMount.Count; i++)
-            {
-                if (ListModelMount[i].modelController != null)
-                    ListModelMount[i].modelController.SetBoxColliders();
-            }
-
-            // 잠깐.. 충돌체에게 시간을 주자.. 
-            yield return null;
-            yield return null;
-            yield return null;
-            yield return null;
-            yield return null;
-
-
-            Debug.Log("## Model RemoveColliders ##");
-            /*
-            // 다 했으면, 키 체크 안당한 모델까지 해서 RemoveColliders => 굳이 Colliders를 계속 갖고 있을 이유는 없으니까. 
-            for (int i = 0; i < ListModelMount.Count; i++)
-            {
-                if (ListModelMount[i].modelController != null)
-                    ListModelMount[i].modelController.RemoveColliders();
-            }
-            */
-            
-
-            Debug.Log("Character Model Loading Done");
-        }
-
         /// <summary>
         /// 이미지 로딩하기 (종류별)
         /// </summary>
@@ -589,8 +475,6 @@ namespace PIERStory
                 // 현재 이미지 로딩 완료할때까지 대기. 
                 yield return new WaitUntil(() => checker > pageImageResourceCount);
             }
-
-            // Debug.Log(string.Format("Image [{0}] loading done.", __col));
         }
 
         /// <summary>
@@ -600,7 +484,6 @@ namespace PIERStory
         IEnumerator RoutineLoadingSound(string __col)
         {
             // 이미지랑 거의 유사하다.
-
             int checker = 0;
             JsonData currentData = null;
 
@@ -614,8 +497,6 @@ namespace PIERStory
                 // 현재 사운드 로딩 완료할때까지 대기. 
                 yield return new WaitUntil(() => checker > pageSoundResourceCount);
             }
-
-            // Debug.Log(string.Format("Sound [{0}] loading done.", __col));
         }
 
         /// <summary>
@@ -623,7 +504,6 @@ namespace PIERStory
         /// </summary>
         IEnumerator RoutineLoadingBubble()
         {
-            // Debug.Log("<color=yellow>Collecting Bubble Resources</color>");
             string currentURL = string.Empty;
             string currentKEY = string.Empty;
 
@@ -636,8 +516,6 @@ namespace PIERStory
             }
 
             yield return new WaitUntil(() => pageBubbleResourceCount <= 0);
-
-            // Debug.Log("Bubble loading done");
         }
 
         #region Collect functions
@@ -655,19 +533,8 @@ namespace PIERStory
 
             for (int i = 0; i < ListRows.Count; i++)
             {
-                /*
-                if (string.IsNullOrEmpty(ListRows[i].resource_key))
-                    continue;
-                */
-
                 if (string.IsNullOrEmpty(ListRows[i].template))
                     continue;
-
-                // 모델 리소스 수집 
-                /*
-                if (ListRows[i].IsSpeakable)
-                    CollectDemandedModelResource(ListRows[i]);
-                */
                 
                 // 의상 기준으로 캐릭터 모델 수집
                 if (ListRows[i].IsValidDress)
@@ -690,8 +557,6 @@ namespace PIERStory
                     CollectDemandedModelResource(ListRows[i]);
                 }
             }
-
-            
         }
 
 
@@ -705,23 +570,9 @@ namespace PIERStory
             // 화자의 대표 기본모델만 수집한다.
             if (GameManager.main.AddLoadingModel(__row.speaker))
             {
-                ScriptModelMount mounter = new ScriptModelMount(__row.rowData, OnModelMountInitialized, this);
+                ScriptModelMount mounter = new ScriptModelMount(__row.rowData, OnModelMountInitialized);
                 ListModelMount.Add(mounter);
             }
-        }
-
-        /// <summary>
-        /// 유저 의상 정보 모델이 현재 스크립트에 화자로서 등장하는지 체크 
-        /// </summary>
-        bool CheckDressProgressSpeakerExistsInScript(string __speaker)
-        {
-            for (int i = 0; i < ListModelMount.Count; i++)
-            {
-                if (ListModelMount[i].speaker == __speaker)
-                    return true;
-            }
-
-            return false;
         }
 
 
@@ -751,7 +602,7 @@ namespace PIERStory
             // 중복 로딩을 막기 위해 똑같이 쓴다.
             if (GameManager.main.AddLoadingModel(targetModelName))
             {
-                ScriptModelMount mounter = new ScriptModelMount(targetModelName, speaker, OnModelMountInitialized, this);
+                ScriptModelMount mounter = new ScriptModelMount(targetModelName, speaker, OnModelMountInitialized);
                 ListModelMount.Add(mounter);
             }
         }
@@ -1096,22 +947,6 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 리스트에서 다 쓴 사운드 제거
-        /// </summary>
-        public void RemoveSoundMount(ScriptSoundMount __mount)
-        {
-            ListSoundMount.Remove(__mount);
-        }
-
-        /// <summary>
-        /// 리스트에서 다 쓴 라이브 일러스트 제거
-        /// </summary>
-        public void RemoveLiveIllustMount(ScriptLiveMount __mount)
-        {
-            ListLiveIllustMount.Remove(__mount);
-        }
-
-        /// <summary>
         /// Row 중에서 파라매터로 전달된 scriptNO가 있는지 체크한다.
         /// </summary>
         public bool CheckHasScriptNO(long __scriptNO)
@@ -1140,20 +975,6 @@ namespace PIERStory
             return false;
         }
         
-        
-        /// <summary>
-        /// 마지막 사건 ID가 있는 행 찾기 
-        /// </summary>
-        /// <returns></returns>
-        public ScriptRow FindLastSceneRow() {
-            
-            for(int i=ListRows.Count-1; i>=0; i--) {
-                if(!string.IsNullOrEmpty(ListRows[i].scene_id))
-                    return ListRows[i];
-            }
-            
-            return null;
-        }
     }
 }
 

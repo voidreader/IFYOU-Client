@@ -13,7 +13,6 @@ using Live2D.Cubism.Rendering;
 using Live2D.Cubism.Framework.Json;
 using Live2D.Cubism.Framework.Motion;
 using Live2D.Cubism.Framework.MotionFade;
-using Live2D.Cubism.Framework.Raycasting;
 
 // Addressable
 using UnityEngine.AddressableAssets;
@@ -57,7 +56,6 @@ namespace PIERStory
         int modelVersion = 0; // 저장된 모델 버전.
         int downloadModelVersion = 0; // 다운로드 모델 버전 
 
-        string pathModel = string.Empty;
         List<string> ListMotionPath = new List<string>();
         // 더미와 스탠딩 모두를 소유할 부모 생성.
         // modelCharacter가 GameModelCtrl 스크립트를 포함한다.
@@ -73,7 +71,6 @@ namespace PIERStory
         [SerializeField] int tallGrade = 0; // 키 추가 
 
         // path 설정할때, string path = Application.persistentDataPath + /프로젝트id/ + file_key로 설정해주어야 한다. 
-        MonoBehaviour pageParent = null;
         
         // * Addressable 관련 추가
         public bool isAddressable = false;
@@ -85,12 +82,12 @@ namespace PIERStory
         /// <summary>
         /// ScriptRow 기반으로 모델을 가져온다.
         /// </summary>
-        public ScriptModelMount(JsonData __j, Action __cb, MonoBehaviour __parent)
+        public ScriptModelMount(JsonData __j, Action __cb)
         {
             speaker = SystemManager.GetJsonNodeString(__j, GameConst.COL_SPEAKER);
             originModelName = speaker; // row 기반의 생성은 모델명 = 화자 이다. 
 
-            Initialize(__cb, __parent);
+            Initialize(__cb);
         }
 
         /// <summary>
@@ -99,12 +96,12 @@ namespace PIERStory
         /// <param name="__originModelName">모델의 원본 이름</param>
         /// <param name="__speaker">대표 화자명</param>
         /// <param name="__cb">콜백</param>
-        public ScriptModelMount(string __originModelName, string __speaker, Action __cb, MonoBehaviour __parent)
+        public ScriptModelMount(string __originModelName, string __speaker, Action __cb)
         {
             speaker = __speaker;
             originModelName = __originModelName;
 
-            Initialize(__cb, __parent);
+            Initialize(__cb);
         }
 
         /// <summary>
@@ -113,11 +110,11 @@ namespace PIERStory
         /// <param name="__originModelName"></param>
         /// <param name="__cb"></param>
         /// <param name="__parent"></param>
-        public ScriptModelMount(string __originModelName, Action __cb, MonoBehaviour __parent)
+        public ScriptModelMount(string __originModelName, Action __cb)
         {
             originModelName = __originModelName;
 
-            Initialize(__cb, __parent);
+            Initialize(__cb);
         }
 
 
@@ -125,9 +122,8 @@ namespace PIERStory
         /// 초기화 작업
         /// </summary>
         /// <param name="dressCheck">의상 체크</param>
-        void Initialize(Action __cb, MonoBehaviour __parent)
+        void Initialize(Action __cb)
         {
-            pageParent = __parent;
             OnMountCompleted = __cb;
             DictMotion = new Dictionary<string, AnimationClip>();
 
@@ -174,8 +170,6 @@ namespace PIERStory
                 }
             }
 
-            // 데이터 가져왔으면, 모델 초기화 시작한다. 
-            // InitCubismModel();
             // * InitCubismModel 사용하지 않고 InitAddressableCubismModel 먼저 호출 
             // 2022.02.21
             InitAddressableCubismModel(); 
@@ -219,7 +213,6 @@ namespace PIERStory
 
             if (unloadAssetCount == 0)
             {
-                // pageParent.StartCoroutine(CheckFileSavedAndStartInitModel());
                 Debug.Log(string.Format(" <color=lime>{0} Model files are downloaded</color>", originModelName));
                 isLoaded = true; // 다운로드 완료 
                 
@@ -298,19 +291,6 @@ namespace PIERStory
                 InitCubismModel();
                 return;
                 
-                /*
-                isLegacyAnimation = true;
-                Debug.Log(originModelName +" is legacy animation from asset bundle");
-                
-                if(anim == null) {
-                    anim = model.gameObject.AddComponent<Animation>(); // legacy에서는 애니메이션 추가 
-                }
-                
-                
-                // legacy인 경우 일부 Component 비활성화 한다.
-                cubismFadeController.enabled = false;
-                cubismMotionController.enabled = false; 
-                */
             }  // ? 모션 체크 종료                 
             
             
@@ -378,13 +358,6 @@ namespace PIERStory
             // 마무리 
             isModelCreated = true;
             
-            // boxCollider 처리 => 키 체크
-            /*
-            if(modelController != null) 
-                modelController.SetBoxColliders();
-            */
-                
-            
             // 로딩 완료!
             SendSuccessMessage();            
         } // ? 어드레서블 모델 생성 완료 
@@ -418,8 +391,6 @@ namespace PIERStory
             totalAssetCount = resourceData.Count; // 파일이 몇개인지 체크한다. 
             unloadAssetCount = totalAssetCount;
 
-            // Debug.Log(JsonMapper.ToStringUnicode(resourceData));
-
             // 다운로드 모델 버전 
             downloadModelVersion = int.Parse(SystemManager.GetJsonNodeString(resourceData[0], MODEL_VER));
             Debug.Log(string.Format("InitCubismModel, totalFiles[{0}], ver[{1}], newVer[{2}]", totalAssetCount, modelVersion, downloadModelVersion));
@@ -445,9 +416,9 @@ namespace PIERStory
                 if (!ES3.FileExists(GetCubismRelativePath(file_key)) || modelVersion < downloadModelVersion)
                 {
                     // 파일이 없으면 network로 불러온다.
-                    var req = new HTTPRequest(new System.Uri(file_url), OnModelDownloaded);
+                    var req = new HTTPRequest(new Uri(file_url), OnModelDownloaded);
                     req.Tag = JsonMapper.ToJson(resourceData[i]); // 태그의 데이터로 얘를 넘겨버리자. 
-                    req.Timeout = System.TimeSpan.FromSeconds(40);
+                    req.Timeout = TimeSpan.FromSeconds(40);
                     req.Send();
                 }
                 else
@@ -482,44 +453,6 @@ namespace PIERStory
             SetMinusAssetCount();
         }
 
-        /// <summary>
-        /// 파일 다 저장되었는지 확인하고, 모델 생성시작하기.
-        /// </summary>
-        IEnumerator CheckFileSavedAndStartInitModel()
-        {
-            string file_key = string.Empty;
-            isResourceDownloadComplete = false;
-
-            yield return new WaitForSeconds(0.1f);
-
-            while (!isResourceDownloadComplete)
-            {
-                isResourceDownloadComplete = true;
-
-                for (int i = 0; i < resourceData.Count; i++)
-                {
-                    file_key = SystemManager.GetJsonNodeString(resourceData[i], CommonConst.COL_FILE_KEY);
-
-                    // 파일의 저장이 아직 이루어지지 않았다.
-                    if (!ES3.FileExists(GetCubismRelativePath(file_key)))
-                        isResourceDownloadComplete = false;
-                }
-
-                if (!isResourceDownloadComplete)
-                    yield return null;
-            }
-            
-            isResourceDownloadComplete = true; // 리소스 다운로드 완료 
-            
-            /*
-            // 로드와 동시에 Instantitae.
-            InstantiateCubismModel();
-            
-            // ! 여기서 성공 메세지 
-            SendSuccessMessage();
-            */
-        }
-        
         /// <summary>
         /// 모델 인스턴스화 하기 
         /// </summary>
@@ -574,47 +507,18 @@ namespace PIERStory
 
             // 세팅된 모션 준비하기
             PrepareCubismMotions();
-            // SendSuccessMessage();
-            
             isModelCreated = true;
-            
-            // ! 키 체크를 위해 박스 컬라이더 추가
-            // SetBoxColliders();
-            
-            /*
-            if(modelController != null) {
-                modelController.SetBoxColliders();
-            }
-            */
             
             // 완료 
             SendSuccessMessage();
         }
 
-        /// <summary>
-        /// 키 체크를 위해 충돌체 설정 
-        /// </summary>
-        /*
-        public void SetBoxColliders()
-        {
-            if (model == null) {
-                Debug.Log(this.originModelName + " is not created");
-                return;
-            }
-
-            // 모든 drawables에 boxCollider 추가 
-            for (int i = 0; i < model.Drawables.Length; i++)
-                model.Drawables[i].gameObject.AddComponent<BoxCollider>();
-        }
-        */
 
         /// <summary>
         /// 메인 파일의 모델화 처리 (Live2D)
         /// </summary>
         void CreateCubismModel(string __path)
         {
-            pathModel = GetCubismAbsolutePath(__path);
-
             CubismModel3Json model3Json = CubismModel3Json.LoadAtPath(GetCubismAbsolutePath(__path), CubismViewerIo.LoadAsset);
             model = model3Json.ToModel();
 

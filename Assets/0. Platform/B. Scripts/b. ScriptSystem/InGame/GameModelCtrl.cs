@@ -17,6 +17,7 @@ namespace PIERStory
         public CubismModel model = null;
         
         public bool isAddressable = false; // 어드레서블로 생성 여부 
+        public ScriptRow activeRow; // 활성화된 스크립트 Row 
         public CubismMotionController motionController = null;
         [HideInInspector] public Animation modelAnim;
         [HideInInspector] public Dictionary<string, AnimationClip> DictMotion;
@@ -32,6 +33,7 @@ namespace PIERStory
         SpriteRenderer defaultSprite = null;
         GameObject dummyInfo;
         DefaultCharacterInfo info;
+        
 
         [Header("ScriptModelMount Value")]
         public string direction;
@@ -47,6 +49,8 @@ namespace PIERStory
 
         bool autoPlay = false;                 // 자동진행 값. skip을 사용해도 true로 동일하게 간주한다
         public bool moveComplete = true;      // 등장, 퇴장 연출 완료 = true, 미완 = false
+        
+        public float fadeInAlpha = 1; // 페이드인때의 알파값 - 50% 페이드인에서는 0.5로 설정된다. 2022.06.10
 
 
         [Header("Character tall")]
@@ -191,6 +195,7 @@ namespace PIERStory
 
 
             isModelActivated = true; // true로 처리한다. 한번만 true되면 된다.
+            activeRow = row;
             gameObject.SetActive(true);
         }
 
@@ -203,6 +208,7 @@ namespace PIERStory
         {
             // 더미 캐릭터고 스탠딩 캐릭터고 여기에서 다 관리하기 떄문에 이 스크립트에서 자체적으로 SetActive true/false 해주면 된다. 이동 및 크기 변경도 마찬가지
             Debug.Log(string.Format("PlayCubismAnimation [{0}], [{1}]", __row.speaker, characterPos));
+            activeRow = __row;
             
             if(ViewGame.main.userCall)
             {
@@ -229,6 +235,7 @@ namespace PIERStory
                 // 등장 연출과 퇴장 연출을 미리 받아둔다.
                 in_effect = __row.in_effect;
                 out_effect = __row.out_effect;
+                SetFadeInAlpha();
 
                 EnterTalkingCharacter(characterPos);
             }
@@ -430,8 +437,12 @@ namespace PIERStory
                     else
                         transform.localScale = Vector3.one;
 
-                    // 중앙 등장은 무조건 Fade in
-                    in_effect = GameConst.INOUT_EFFECT_FADEIN;
+                    // 중앙 등장은 무조건 Fade in (진입효과 없었던 경우)
+                    if(string.IsNullOrEmpty(activeRow.in_effect)) {
+                        in_effect = GameConst.INOUT_EFFECT_FADEIN;
+                        SetFadeInAlpha();
+                    }
+                    
                     FadeIn(0f, GameConst.LAYER_MODEL_C);
                 }
                 else
@@ -487,6 +498,13 @@ namespace PIERStory
                     currRenderTexture = ViewGame.main.modelRenders[2];
                     break;
             }
+            
+            if(fadeInAlpha < 1) {
+                currRenderTexture.color = new Color(currRenderTexture.color.r, currRenderTexture.color.g, currRenderTexture.color.b, fadeInAlpha);
+            }
+            else {
+                currRenderTexture.color = new Color(currRenderTexture.color.r, currRenderTexture.color.g, currRenderTexture.color.b, 1);
+            }
         }
 
         /// <summary>
@@ -504,7 +522,7 @@ namespace PIERStory
             transform.localPosition = new Vector3(posX, transform.localPosition.y, 0);
             currRenderTexture.color = new Color(currRenderTexture.color.r, currRenderTexture.color.g, currRenderTexture.color.b, 0);
 
-            currRenderTexture.DOFade(1f, fadeTime).OnComplete(OnMoveCompleted);
+            currRenderTexture.DOFade(fadeInAlpha, fadeTime).OnComplete(OnMoveCompleted);
         }
 
 
@@ -723,6 +741,26 @@ namespace PIERStory
             // 모든 drawables에 boxCollider 추가 
             for (int i = 0; i < model.Drawables.Length; i++)
                 model.Drawables[i].gameObject.AddComponent<BoxCollider>();
+        }
+        
+        IEnumerator DelayRemoveColliders() {
+            yield return new WaitForFixedUpdate();
+            
+            RemoveColliders();
+        }
+        
+        
+        /// <summary>
+        /// 등장 효과에 따른 알파값 조정하기 
+        /// </summary>
+        void SetFadeInAlpha() {
+            if(string.IsNullOrEmpty(in_effect))
+                return;
+                
+            if(in_effect == GameConst.INOUT_EFFECT_FADEIN)
+                fadeInAlpha = 1f;
+            else if(in_effect == GameConst.INOUT_EFFECT_FADEIN50)
+                fadeInAlpha = 0.72f;
         }
     }
 }

@@ -234,6 +234,7 @@ namespace PIERStory
         public const string INOUT_EFFECT_SCALEDOWN = "scaledown";
         public const string INOUT_EFFECT_SHAKE = "shake";
         public const string INOUT_EFFECT_FADEIN = "fadein";
+        public const string INOUT_EFFECT_FADEIN50 = "fadein50"; // 반투명 등장
         public const string INOUT_EFFECT_FADEOUT = "fadeout";
 
         

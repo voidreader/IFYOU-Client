@@ -44,6 +44,7 @@ namespace PIERStory {
         public RectTransform passTimeDealGrid; // 타임딜 그리드 
         
         [Space]
+        [SerializeField] UIToggleGroup toggleGroup;
         [SerializeField] UIToggle packageToggle;
         [SerializeField] UIToggle normalToggle;
         [SerializeField] UIToggle eventToggle;
@@ -60,19 +61,45 @@ namespace PIERStory {
             OnRefreshEventShop = InitEventContainer;
             OnRefreshTopShop = EnterFromMain;
         }
+        
+        void InitToggles() {
+            eventToggle.SetIsOn(false, false);
+            packageToggle.SetIsOn(false, false);
+            normalToggle.SetIsOn(false, false);
+        }
 
         /// <summary>
         /// 메인 하단 탭을 통해서 상점 접근
         /// </summary>
         IEnumerator RoutineEnterFromMain()
         {
-            yield return new WaitForSeconds(0.1f);
-            EnterFromMain();
-            yield return new WaitForSeconds(0.2f);
-            // InitPackContainer();
-            InitEventContainer();
+            InitToggles();
             
-            // packageToggle.SetIsOn(true, true);
+            if(CheckExistsEventTabProduct()) {
+                eventToggle.gameObject.SetActive(true);
+                toggleGroup.FirstToggle = eventToggle;
+                toggleGroup.FirstToggle.SetIsOn(true, true);
+                yield return new WaitForSeconds(0.1f);
+                Debug.Log("Exists Event Product");
+                
+
+                EnterFromMain();
+                yield return new WaitForSeconds(0.2f);
+                InitEventContainer();               
+            }
+            else {
+                eventToggle.gameObject.SetActive(false);
+                toggleGroup.FirstToggle = packageToggle;
+                toggleGroup.FirstToggle.SetIsOn(true, true);
+                yield return new WaitForSeconds(0.1f);
+                Debug.Log("NO Event Product");
+                
+                
+                EnterFromMain();
+                yield return new WaitForSeconds(0.2f);
+                InitPackContainer();
+      
+            }    
         }
 
         public void DelayEnterFromSignal()
@@ -92,13 +119,33 @@ namespace PIERStory {
         /// </summary>
         IEnumerator RoutineEnterFromSignal()
         {
-            yield return new WaitForSeconds(0.1f);
-            EnterFromSignal();
-            yield return new WaitForSeconds(0.2f);
-            // InitPackContainer();
-            InitEventContainer();
+            InitToggles();
             
-            // packageToggle.SetIsOn(true, true);
+            if(CheckExistsEventTabProduct()) {
+                eventToggle.gameObject.SetActive(true);
+                toggleGroup.FirstToggle = eventToggle;
+                toggleGroup.FirstToggle.SetIsOn(true, true);
+                yield return new WaitForSeconds(0.1f);
+                Debug.Log("Exists Event Product");
+                
+
+                EnterFromSignal();
+                yield return new WaitForSeconds(0.2f);
+                InitEventContainer();               
+            }
+            else {
+                eventToggle.gameObject.SetActive(false);
+                toggleGroup.FirstToggle = packageToggle;
+                toggleGroup.FirstToggle.SetIsOn(true, true);
+                yield return new WaitForSeconds(0.1f);
+                Debug.Log("NO Event Product");
+                
+                
+                EnterFromSignal();
+                yield return new WaitForSeconds(0.2f);
+                InitPackContainer();
+      
+            }
         }
 
 
@@ -457,6 +504,29 @@ namespace PIERStory {
             
             AdManager.main.AnalyticsCoinShopOpen("shop");
 
+        }
+        
+        
+        /// <summary>
+        /// 이벤트탭에 들어갈 상품이 있는지 체크 
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckExistsEventTabProduct() {
+            JsonData masterData;
+            
+            // * 
+            for(int i =0; i<BillingManager.main.productMasterJSON.Count;i++) {
+                masterData = BillingManager.main.productMasterJSON[i];
+                
+                // 있음.
+                if(SystemManager.GetJsonNodeString(masterData, "product_type") == "allpass"
+                    || SystemManager.GetJsonNodeString(masterData, "product_type") == "event") {
+                    return true;
+                }
+            }
+            
+            return false;
+            
         }
     }
 }

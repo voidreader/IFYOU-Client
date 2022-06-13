@@ -141,9 +141,19 @@ namespace PIERStory {
 
             // 눌렀을 때만 Alert popup이 뜨도록 수정
             if (StoryManager.main.CheckProjectLike(introduceStory.projectID))
-                SystemManager.ShowSimpleAlertLocalize("6188");
+                SystemManager.ShowMessageWithLocalize("6188");
             else
-                SystemManager.ShowSimpleAlertLocalize("6189");
+                SystemManager.ShowMessageWithLocalize("6189");
+                
+            
+            
+            introduceStory.isNotify = SystemManager.GetJsonNodeBool(result, "is_notify");
+            StoryManager.main.FindProject(introduceStory.projectID).isNotify = introduceStory.isNotify;
+            
+            Debug.Log("Notification Reset : " + introduceStory.isNotify);
+            
+            // 갱신된 알림 버튼 세팅 
+            SetAlertButtonState();
         }
 
         #endregion
@@ -162,6 +172,7 @@ namespace PIERStory {
                 buttonAlert.gameObject.SetActive(false);
                 return;
             }
+            
 
             buttonAlert.gameObject.SetActive(true);
 
@@ -174,17 +185,21 @@ namespace PIERStory {
         /// </summary>
         public void OnClickAlertButton()
         {
+            /*
             if(Application.isEditor) {
                 Debug.LogError("It's not working in editor");
                 return;
             }
+            */
             
             // 푸쉬 알림에 대해 허용해두지 않았다면 팝업 띄워주고 그만둠
-            if(SystemManager.main.pushTokenInfo.agreement.pushEnabled)
+            /*
+            if(!SystemManager.main.pushTokenInfo.agreement.pushEnabled)
             {
                 SystemManager.ShowMessageWithLocalize("6315");
                 return;
             }
+            */
 
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "setUserProjectNotification";
@@ -213,12 +228,12 @@ namespace PIERStory {
             if (introduceStory.isNotify)
             {
                 
-                SystemManager.ShowSimpleAlertLocalize("6311");
+                SystemManager.ShowMessageWithLocalize("6311");
             }
             else
             {
                 
-                SystemManager.ShowSimpleAlertLocalize("6312");
+                SystemManager.ShowMessageWithLocalize("6312");
             }
         }
 

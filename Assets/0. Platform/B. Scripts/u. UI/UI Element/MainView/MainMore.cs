@@ -353,6 +353,10 @@ namespace PIERStory {
             clickLevelCount++;
         }
         
+        public void OnClickCopyright() {
+            SystemManager.main.OpenCopyrightURL();
+        }
+        
         
 
     }

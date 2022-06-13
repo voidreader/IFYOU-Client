@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -743,11 +744,6 @@ namespace PIERStory
                 model.Drawables[i].gameObject.AddComponent<BoxCollider>();
         }
         
-        IEnumerator DelayRemoveColliders() {
-            yield return new WaitForFixedUpdate();
-            
-            RemoveColliders();
-        }
         
         
         /// <summary>

@@ -186,7 +186,7 @@ namespace PIERStory
                 hasSafeArea = true;
             }
             
-            screenRatio = (float)Screen.width / (float)Screen.height;
+            screenRatio = (float)Screen.width / Screen.height;
 
             // 핸드폰을 종료해도 데이터 환경 다운로드 허용에 대한 값을 저장한다
             if (!PlayerPrefs.HasKey(SystemConst.KEY_NETWORK_DOWNLOAD))
@@ -2003,6 +2003,7 @@ namespace PIERStory
             // * 모든 UI의 폰트는 AppleGothic으로 설정한다. 
             // * 언어에 따라서 변경. 
             StartCoroutine(LoadingAddressableFont());
+            
         }
         
         
@@ -2022,12 +2023,9 @@ namespace PIERStory
                     return innerFontEN; 
                 else 
                     return mainAssetFont; // 유지하지 않음 
-                
-                
             }
         }
-        
-        
+
         
         /// <summary>
         /// 파일 로컬 저장 되어있는지 체크 

@@ -108,6 +108,7 @@ namespace PIERStory
         public string bundleURL = string.Empty; // 에셋번들 URL
        
         public string contentsURL = string.Empty; // 리소스 다운로드 URL 
+        string copyrightURL = string.Empty; // 저작권 URL
         
         
         
@@ -659,6 +660,8 @@ namespace PIERStory
             privacyURL = GetJsonNodeString(masterInfo, "privacy_url");
             termsOfUseURL = GetJsonNodeString(masterInfo, "terms_url"); 
             contentsURL = GetJsonNodeString(masterInfo, "contents_url"); 
+            copyrightURL = GetJsonNodeString(masterInfo, "copyright_url"); 
+            
             
             useProjectNotify = GetJsonNodeBool(masterInfo, "project_notify"); // 프로젝트 알림설정 사용여부 
            
@@ -2594,7 +2597,12 @@ namespace PIERStory
             Doozy.Runtime.UIManager.Input.BackButton.blockBackInput = __flag;
         }
         
-        
+        /// <summary>
+        /// 저작권 웹페이지 오픈 
+        /// </summary>
+        public void OpenCopyrightURL() {
+            Application.OpenURL(main.copyrightURL);
+        }
  
     }
 }

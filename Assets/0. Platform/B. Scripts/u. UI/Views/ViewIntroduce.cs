@@ -174,6 +174,11 @@ namespace PIERStory {
         /// </summary>
         public void OnClickAlertButton()
         {
+            if(Application.isEditor) {
+                Debug.LogError("It's not working in editor");
+                return;
+            }
+            
             // 푸쉬 알림에 대해 허용해두지 않았다면 팝업 띄워주고 그만둠
             if(SystemManager.main.pushTokenInfo.agreement.pushEnabled)
             {

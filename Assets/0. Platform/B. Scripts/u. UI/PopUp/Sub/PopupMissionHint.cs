@@ -33,6 +33,12 @@ namespace PIERStory
             MissionHintElement hintElement = null;
             EpisodeData episodeData = null;
 
+            if(missionData == null)
+            {
+                NetworkLoader.main.ReportRequestError("Error in missionHint #0, missionData is null", string.Format("Error missionData Mission ID = {0}", Data.contentValue));
+                return;
+            }
+
             // 미션타입이 에피소드인 경우
             if (missionData.missionType == MissionType.episode)
             {

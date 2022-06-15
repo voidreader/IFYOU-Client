@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 using DG.Tweening;
 using AkilliMum.Standard.D2WeatherEffects;
@@ -51,7 +54,7 @@ namespace PIERStory
         [Tooltip("비")] public ParticleSystem rainParticle;
         [Tooltip("폭설")] public ParticleSystem heavySnowParticle;
         [Tooltip("눈")] public ParticleSystem snow;
-        public ParticleSystem[] snowParticles;
+        public List<ParticleSystem> snowParticles;
         [Tooltip("렌즈플레어1")] public ParticleSystem lensFlare1;
         public ParticleSystem flareGlow1;
         [Tooltip("렌즈플레어2")] public ParticleSystem lensFlare2;
@@ -60,18 +63,20 @@ namespace PIERStory
         public ParticleSystem flareGlow3;
         [Tooltip("렌즈플레어에서 사용되는 빛알갱이")] public ParticleSystem lightDust;
         [Tooltip("집중선")] public ParticleSystem radiLine;
-        public ParticleSystem[] radiLines;                              // 집중선 색 변경을 위한 변수
+        public List<ParticleSystem> radiLines;                              // 집중선 색 변경을 위한 변수
         [Tooltip("출혈 타입1")] public ParticleSystem bleeding_1;
         [Tooltip("출혈 타입2")] public ParticleSystem bleeding_2;
         [Tooltip("출혈 타입3")] public ParticleSystem bleeding_3;
         [Tooltip("둔기 타격")] public ParticleSystem bluntStrike;
         [Tooltip("검 베기")] public ParticleSystem blade;
         [Tooltip("비눗방울")] public ParticleSystem bubble;
-        public ParticleSystem[] bubbles;
+        public List<ParticleSystem> bubbles;
         [Tooltip("회상, 밝음")] public ParticleSystem reminisceLight;
         [Tooltip("신비로운 경계라인")] public ParticleSystem waveLine;
 
         #endregion
+
+        Dictionary<string, int> DictParticle = new Dictionary<string, int>();
 
         // zoom용 float값
         float originY = 0f;
@@ -103,11 +108,6 @@ namespace PIERStory
             reminisce = generalCam.GetComponent<CameraFilterPack_TV_Old_Movie_2>();
             brokenScreen = generalCam.GetComponent<CameraFilterPack_Broken_Screen>();
 
-            glitters = glitter.GetComponentsInChildren<ParticleSystem>();
-
-            bgFogs = bgFog.GetComponentsInChildren<ParticleSystem>();
-            screenFogs = screenFog.GetComponentsInChildren<ParticleSystem>();
-
             dizzy = generalCam.GetComponent<CameraFilterPack_Distortion_Dream2>();
 
             heavySnow = generalCam.GetComponent<CameraFilterPack_3D_Snow>();
@@ -116,6 +116,263 @@ namespace PIERStory
             
 
         }
+
+        public void InitScreenEffect(string __data)
+        {
+            string effect = __data.Contains(GameConst.SPLIT_SCREEN_EFFECT) ? __data.Split(GameConst.SPLIT_SCREEN_EFFECT[0])[0] : __data;
+            string[] __params = __data.Contains(GameConst.SPLIT_SCREEN_EFFECT) && __data.Contains(GameConst.KR_PARAM_VALUE_TYPE) ? __data.Split(GameConst.SPLIT_SCREEN_EFFECT[0])[1].Split(GameConst.SPLIT_SCREEN_EFFECT_V[0]) : null;
+            
+
+            switch (effect)
+            {
+                case GameConst.KR_SCREEN_EFFECT_FIRE:
+                    LoadAddressableEffect("fx_Flame_001", fire, effect);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BLING:
+                    LoadAddressableEffect("fx_Glitter_001", glitter, effect);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_FOCUS:
+                    LoadAddressableEffect("fx_RadiLine_001", radiLine, effect);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT:
+                    
+                    int bokehType = 1;
+
+                    if (__params != null)
+                        ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_TYPE, ref bokehType);
+
+                    if(bokehType == 1)
+                        LoadAddressableEffect("fx_Bokeh_001", bokeh1, effect, false, bokehType);
+                    else
+                        LoadAddressableEffect("fx_Bokeh_002", bokeh2, effect, false, bokehType);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_HEX_LIGHT:
+                    LoadAddressableEffect("HexLightEffect", hexagonLight, effect);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_FOG:
+                    LoadAddressableEffect("fx_Mist_001", bgFog, effect, true);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_SCREEN_FOG:
+                    LoadAddressableEffect("fx_Mist_001", screenFog, effect);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_LENS_FLARE:
+
+                    int flareType = 1;
+
+                    if (__params != null)
+                        ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_TYPE, ref flareType);
+
+                    if(flareType == 1)
+                        LoadAddressableEffect("fx_LensFlare_001", lensFlare1, effect, false, flareType);
+                    else if(flareType == 2)
+                        LoadAddressableEffect("fx_LensFlare_002", lensFlare2, effect, false, flareType);
+                    else
+                        LoadAddressableEffect("fx_LensFlare_003", lensFlare3, effect, false, flareType);
+
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_SNOW:
+                    LoadAddressableEffect("fx_Snow", snow, effect);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BLOOD_HIT:
+
+                    int bloodType = 1;
+
+                    if (__params != null)
+                        ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_TYPE, ref bloodType);
+
+                    if (bloodType == 1)
+                        LoadAddressableEffect("fx_Blood_001", bleeding_1, effect);
+                    else if(bloodType == 2)
+                        LoadAddressableEffect("fx_Blood_002", bleeding_2, effect);
+                    else
+                        LoadAddressableEffect("fx_Blood_003", bleeding_3, effect);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BUBBLES:
+                    LoadAddressableEffect("fx_Bubble_001", bubble, effect);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_DAMAGE:
+
+                    __params = __data.Contains(GameConst.SPLIT_SCREEN_EFFECT) ? __data.Split(GameConst.SPLIT_SCREEN_EFFECT[0]) : null;
+
+                    if (__params == null || __params[1].Contains("둔기"))
+                    {
+                        LoadAddressableEffect("fx_HitStrike_001", bluntStrike, effect, false, 1);
+                        break;
+                    }
+                    else if (__params[1].Contains("검"))
+                    {
+                        LoadAddressableEffect("fx_HitSword_001", blade, effect, false, 2);
+                        break;
+                    }
+                    
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_REMINISCE:
+
+                    if (__data.Contains("밝음"))
+                        LoadAddressableEffect("fx_BoxGlow_001", reminisceLight, effect);
+
+                    break;
+
+
+                case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
+                    LoadAddressableEffect("fx_WaveLine_002", waveLine, effect);
+                    break;
+            }
+        }
+
+        void LoadAddressableEffect(string __key, ParticleSystem __particle, string __effect, bool isDefaultLayer = false, int __type = 1)
+        {
+            string addressableKey = "ScreenEffect/" + __key + ".prefab";
+
+            // 해당 파티클은 이미 생성했음
+            if (DictParticle.ContainsKey(addressableKey))
+                return;
+
+            DictParticle.Add(addressableKey, 1);
+
+            Addressables.InstantiateAsync(addressableKey, Vector3.zero, Quaternion.identity, transform).Completed += (handle) =>
+            {
+                if (handle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    __particle = handle.Result.GetComponent<ParticleSystem>();
+
+                    // 레이어를 모두 파티클로 변경해주기
+                    if (!isDefaultLayer)
+                        ChangeLayerRecursively(__particle.transform);
+
+                    InitCreateEffectAsset(__particle, __effect, __type);
+
+                    // 완료되고는 비활성화
+                    __particle.gameObject.SetActive(false);
+                }
+            };
+        }
+
+        void InitCreateEffectAsset(ParticleSystem ps, string effect, int __type = 1)
+        {
+            switch (effect)
+            {
+                case GameConst.KR_SCREEN_EFFECT_FIRE:
+                    fire = ps;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BLING:
+                    glitter = ps;
+                    glitters = glitter.GetComponentsInChildren<ParticleSystem>();
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_FOCUS:
+                    radiLine = ps;
+
+                    for (int i = 0; i < radiLine.transform.GetChild(0).GetChild(0).childCount; i++)
+                        radiLines.Add(radiLine.transform.GetChild(0).GetChild(0).GetChild(i).GetComponent<ParticleSystem>());
+
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT:
+
+                    if (__type == 1)
+                        bokeh1 = ps;
+                    else
+                        bokeh2 = ps;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_HEX_LIGHT:
+                    hexagonLight = ps;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_FOG:
+                    bgFog = ps;
+                    bgFogs = bgFog.GetComponentsInChildren<ParticleSystem>();
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_SCREEN_FOG:
+                    screenFog = ps;
+                    screenFogs = screenFog.GetComponentsInChildren<ParticleSystem>();
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_LENS_FLARE:
+
+                    if (__type == 1)
+                    {
+                        lensFlare1 = ps;
+                        flareGlow1 = lensFlare1.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystem>();
+                    }
+                    else if (__type == 2)
+                    {
+                        lensFlare2 = ps;
+                        flareGlow2 = lensFlare2.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystem>();
+                    }
+                    else
+                    {
+                        lensFlare3 = ps;
+                        flareGlow3 = lensFlare3.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystem>();
+                    }
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_SNOW:
+                    snow = ps;
+                    for (int i = 1; i < snow.transform.GetChild(0).childCount; i++)
+                        snowParticles.Add(snow.transform.GetChild(0).GetChild(i).GetComponent<ParticleSystem>());
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BLOOD_HIT:
+
+                    if (__type == 1)
+                        bleeding_1 = ps;
+                    else if (__type == 2)
+                        bleeding_2 = ps;
+                    else
+                        bleeding_3 = ps;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BUBBLES:
+                    bubble = ps;
+                    for (int i = 2; i < bubble.transform.GetChild(0).childCount; i++)
+                        bubbles.Add(bubble.transform.GetChild(0).GetChild(i).GetComponent<ParticleSystem>());
+
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_DAMAGE:
+
+                    if (__type == 1)
+                        bluntStrike = ps;
+                    else
+                        blade = ps;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_REMINISCE:
+                    reminisceLight = ps;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
+                    waveLine = ps;
+                    break;
+            }
+        }
+
+        void ChangeLayerRecursively(Transform trans)
+        {
+            trans.gameObject.layer = LayerMask.NameToLayer("Particles");
+            trans.GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Additive");
+            
+            foreach (Transform tr in trans)
+                ChangeLayerRecursively(tr);
+        }
+
+
 
         #region 화면 연출 screen effect
 
@@ -715,15 +972,15 @@ namespace PIERStory
 
                     if(__params !=null)
                     {
-                        ScriptRow.GetParam<string>(__params, "색", ref focusColor);
-                        ScriptRow.GetParam<float>(__params, GameConst.KR_PARAM_VALUE_FORCE, ref focusIntensity);
-                        ScriptRow.GetParam<float>(__params, GameConst.KR_PARAM_VALUE_TIME, ref focusTime);
+                        ScriptRow.GetParam(__params, "색", ref focusColor);
+                        ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_FORCE, ref focusIntensity);
+                        ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_TIME, ref focusTime);
                     }
 
                     Color lineColor = HexCodeChanger.HexToColor(focusColor);
                     lineColor = new Color(lineColor.r, lineColor.g, lineColor.b, focusIntensity);
 
-                    for(int i=0;i<radiLines.Length;i++)
+                    for(int i=0;i<radiLines.Count;i++)
                     {
                         colorMain = radiLines[i].main;
                         colorMain.startColor = lineColor;
@@ -1097,7 +1354,7 @@ namespace PIERStory
         {
             var bubbleMain = bubble.main;
 
-            for (int i = 0; i < bubbles.Length; i++)
+            for (int i = 0; i < bubbles.Count; i++)
             {
                 bubbleMain = bubbles[i].main;
                 bubbleMain.maxParticles = __max;
@@ -1154,56 +1411,73 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BLING:
-                    glitter.gameObject.SetActive(false);
+                    if (glitter != null)
+                        glitter.gameObject.SetActive(false);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_FIRE:
-                    fire.gameObject.SetActive(false);
+                    if (fire != null)
+                        fire.gameObject.SetActive(false);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_FOCUS:
-                    radiLine.gameObject.SetActive(false);
+                    if (radiLine != null)
+                        radiLine.gameObject.SetActive(false);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_LENS_FLARE:
-                    lensFlare1.gameObject.SetActive(false);
-                    lensFlare2.gameObject.SetActive(false);
-                    lensFlare3.gameObject.SetActive(false);
+                    if (lensFlare1 != null)
+                        lensFlare1.gameObject.SetActive(false);
+                    if (lensFlare2 != null)
+                        lensFlare2.gameObject.SetActive(false);
+                    if (lensFlare3 != null)
+                        lensFlare3.gameObject.SetActive(false);
+
                     bloom.enabled = false;
                     lightDust.gameObject.SetActive(false);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_FOG:
-                    bgFog.gameObject.SetActive(false);
+                    if (bgFog != null)
+                        bgFog.gameObject.SetActive(false);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_SCREEN_FOG:
-                    screenFog.gameObject.SetActive(false);
+                    if (screenFog != null)
+                        screenFog.gameObject.SetActive(false);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT:
-                    bokeh1.gameObject.SetActive(false);
-                    bokeh2.gameObject.SetActive(false);
+                    if (bokeh1 != null)
+                        bokeh1.gameObject.SetActive(false);
+                    if (bokeh2 != null)
+                        bokeh2.gameObject.SetActive(false);
                     break;
                 case GameConst.KR_SCREEN_EFFECT_HEX_LIGHT:
-                    hexagonLight.gameObject.SetActive(false);
+                    if (hexagonLight != null)
+                        hexagonLight.gameObject.SetActive(false);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_SNOW:
-                    snow.gameObject.SetActive(false);
+                    if (snow != null)
+                        snow.gameObject.SetActive(false);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BUBBLES:
-                    bubble.gameObject.SetActive(false);
+                    if (bubble != null)
+                        bubble.gameObject.SetActive(false);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_DAMAGE:
-                    bluntStrike.gameObject.SetActive(false);
-                    blade.gameObject.SetActive(false);
+                    if (bluntStrike != null)
+                        bluntStrike.gameObject.SetActive(false);
+                    if (blade != null)
+                        blade.gameObject.SetActive(false);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
-                    waveLine.gameObject.SetActive(false);
+                    if (waveLine != null)
+                        waveLine.gameObject.SetActive(false);
                     break;
             }
         }
@@ -1260,15 +1534,18 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BLOOD_HIT:
-                    bleeding_1.gameObject.SetActive(false);
-                    bleeding_2.gameObject.SetActive(false);
-                    bleeding_3.gameObject.SetActive(false);
+                    if (bleeding_1 != null)
+                        bleeding_1.gameObject.SetActive(false);
+                    if (bleeding_2 != null)
+                        bleeding_2.gameObject.SetActive(false);
+                    if (bleeding_3 != null)
+                        bleeding_3.gameObject.SetActive(false);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_REMINISCE:
                     reminisce.enabled = false;
 
-                    if (reminisceLight.gameObject.activeSelf)
+                    if (reminisceLight != null && reminisceLight.gameObject.activeSelf)
                         reminisceLight.gameObject.SetActive(false);
 
                     break;

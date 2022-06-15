@@ -139,13 +139,14 @@ namespace PIERStory
 
             StartCoroutine(RoutineLoadingBubble());                                         // 말풍선 
             StartCoroutine(RoutineLoadingImage(GameConst.TEMPLATE_IMAGE));                  // 이미지
-            StartCoroutine(RoutineLoadingImage(StoryManager.BUBBLE_VARIATION_EMOTICON));    // 이모티콘 
-
-
+            StartCoroutine(RoutineLoadingImage(StoryManager.BUBBLE_VARIATION_EMOTICON));    // 이모티콘 GameConst.TEMPLATE_BGM));                   
+            
             StartCoroutine(RoutineLoadingSound(GameConst.TEMPLATE_BGM));                    // 배경음
             StartCoroutine(RoutineLoadingSound(GameConst.COL_VOICE));                       // 음성 
             StartCoroutine(RoutineLoadingSound(COL_SOUND_EFFECT));                          // SE
-            
+
+            LoadingScreenEffect();                                                          // 화면연출
+
             yield return StartCoroutine(RoutineInstantiateLiveIllustsAndObjects()); 
             
             yield return StartCoroutine(RoutineInstantiateLiveCharacters()); 
@@ -516,6 +517,24 @@ namespace PIERStory
             }
 
             yield return new WaitUntil(() => pageBubbleResourceCount <= 0);
+        }
+
+
+        void LoadingScreenEffect()
+        {
+            for (int i = 0; i < scriptData.Count; i++)
+            {
+                // 화면연출 템플릿이 아니면 skip
+                if (SystemManager.GetJsonNodeString(scriptData[i], GameConst.COL_TEMPLATE) != GameConst.TEMPLATE_SCREEN_EFFECT)
+                    continue;
+
+                // 틴트 관련 연출이거나 화면연출행의 scriptData가 빈 값이어도 skip
+                if (SystemManager.GetJsonNodeString(scriptData[i], GameConst.COL_SCRIPT_DATA).Contains("틴트") ||
+                    string.IsNullOrEmpty(SystemManager.GetJsonNodeString(scriptData[i], GameConst.COL_SCRIPT_DATA)))
+                    continue;
+
+                ScreenEffectManager.main.InitScreenEffect(SystemManager.GetJsonNodeString(scriptData[i], GameConst.COL_SCRIPT_DATA));
+            }
         }
 
         #region Collect functions

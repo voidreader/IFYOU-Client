@@ -190,11 +190,11 @@ namespace PIERStory
                         ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_TYPE, ref bloodType);
 
                     if (bloodType == 1)
-                        LoadAddressableEffect("fx_Blood_001", bleeding_1, effect);
+                        LoadAddressableEffect("fx_Blood_001", bleeding_1, effect, false, bloodType);
                     else if(bloodType == 2)
-                        LoadAddressableEffect("fx_Blood_002", bleeding_2, effect);
+                        LoadAddressableEffect("fx_Blood_002", bleeding_2, effect, false, bloodType);
                     else
-                        LoadAddressableEffect("fx_Blood_003", bleeding_3, effect);
+                        LoadAddressableEffect("fx_Blood_003", bleeding_3, effect, false, bloodType);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BUBBLES:
@@ -277,7 +277,10 @@ namespace PIERStory
                     radiLine = ps;
 
                     for (int i = 0; i < radiLine.transform.GetChild(0).GetChild(0).childCount; i++)
+                    {
                         radiLines.Add(radiLine.transform.GetChild(0).GetChild(0).GetChild(i).GetComponent<ParticleSystem>());
+                        radiLine.transform.GetChild(0).GetChild(0).GetChild(i).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                    }
 
                     break;
 
@@ -296,11 +299,15 @@ namespace PIERStory
                 case GameConst.KR_SCREEN_EFFECT_FOG:
                     bgFog = ps;
                     bgFogs = bgFog.GetComponentsInChildren<ParticleSystem>();
+                    foreach(ParticleSystem __ps in bgFogs)
+                        __ps.GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_SCREEN_FOG:
                     screenFog = ps;
                     screenFogs = screenFog.GetComponentsInChildren<ParticleSystem>();
+                    foreach (ParticleSystem __ps in screenFogs)
+                        __ps.GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_LENS_FLARE:
@@ -331,11 +338,23 @@ namespace PIERStory
                 case GameConst.KR_SCREEN_EFFECT_BLOOD_HIT:
 
                     if (__type == 1)
+                    {
                         bleeding_1 = ps;
+                        bleeding_1.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                        bleeding_1.transform.GetChild(0).GetChild(1).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                    }
                     else if (__type == 2)
+                    {
                         bleeding_2 = ps;
+                        bleeding_2.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                        bleeding_2.transform.GetChild(0).GetChild(1).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                    }
                     else
+                    {
                         bleeding_3 = ps;
+                        bleeding_3.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                        bleeding_3.transform.GetChild(0).GetChild(1).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                    }
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BUBBLES:
@@ -355,6 +374,7 @@ namespace PIERStory
 
                 case GameConst.KR_SCREEN_EFFECT_REMINISCE:
                     reminisceLight = ps;
+                    reminisceLight.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
@@ -1291,9 +1311,12 @@ namespace PIERStory
         IEnumerator DisableBloodEffect(float lifeTIme)
         {
             yield return new WaitForSeconds(lifeTIme);
-            bleeding_1.gameObject.SetActive(false);
-            bleeding_2.gameObject.SetActive(false);
-            bleeding_3.gameObject.SetActive(false);
+            if (bleeding_1 != null)
+                bleeding_1.gameObject.SetActive(false);
+            if (bleeding_2 != null)
+                bleeding_2.gameObject.SetActive(false);
+            if (bleeding_3 != null)
+                bleeding_3.gameObject.SetActive(false);
         }
 
         /// <summary>

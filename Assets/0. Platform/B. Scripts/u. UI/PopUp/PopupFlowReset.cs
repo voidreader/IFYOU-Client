@@ -1,14 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
+
 using TMPro;
-
-
 
 namespace PIERStory {
     public class PopupFlowReset : PopupBase
     {
+        public static Action OnHidePopup = null;
+
         public GameObject groupDoubleButton; // 프리미엄 패스 미소유 유저 버튼 2개
         public GameObject groupSingleButton; // 프리미엄 패스 소유 유저용 단일 버튼 
         
@@ -43,6 +42,8 @@ namespace PIERStory {
             
             // 가격
             textResetCoinPrice.text = resetPrice.ToString();
+
+            OnHidePopup = Hide;
             
             // 스토리 리셋인 경우 true로 전달됨
             if(Data.isPositive)
@@ -52,11 +53,6 @@ namespace PIERStory {
             // FlowReset에서만 사용 
             textResetEpisode.text = string.Format(SystemManager.GetLocalizedText("6219"), targetEpisode.episodeNO);
             
-        }
-
-        public override void Hide()
-        {
-            base.Hide();
         }
 
 
@@ -80,9 +76,6 @@ namespace PIERStory {
                 SystemManager.ShowLackOfCurrencyPopup(false, "6324", resetPrice);
                 return;
             }
-            
-            
-            base.Hide();
             
             // 유료 리셋 
             NetworkLoader.main.ResetEpisodeProgress(targetEpisode.episodeID, resetPrice, false);

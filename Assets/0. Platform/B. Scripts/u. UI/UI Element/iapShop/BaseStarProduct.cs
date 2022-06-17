@@ -20,10 +20,10 @@ namespace PIERStory {
         [SerializeField] string productMasterID = string.Empty; // 마스터 ID 
         [SerializeField] bool hasPurchaseHistory = false; // 구매 기록 
         
-        [SerializeField] int mainGemQuantity = 0; // 메인 젬 수량 
-        [SerializeField] int subGemQuantity = 0; // 서브 젬 수량 
+        public int mainGemQuantity = 0; // 메인 젬 수량 
+        public int subGemQuantity = 0; // 서브 젬 수량 
         [SerializeField] int coinQuantity = 0; // 코인 수량
-        [SerializeField] int firstPurchaseBonusGem = 0; // 첫 구매 보너스 젬 
+        public int firstPurchaseBonusGem = 0; // 첫 구매 보너스 젬 
         
         
         [SerializeField] TextMeshProUGUI textMainStar; // 스타 재화 
@@ -42,52 +42,56 @@ namespace PIERStory {
             
             if(!gameObject.activeSelf)
                 return;
-            
-            
+
+            InitProduct(productID);
+        }
+
+        public void InitProduct(string __productId)
+        {
             // 게임서버, 게임베이스에서 각각 정보를 가져온다. 
             gamebaseItem = BillingManager.main.GetGamebasePurchaseItem(productID);
-            
-            
+
+
             // 가격 정보 
-            if(gamebaseItem != null) {
+            if (gamebaseItem != null)
+            {
                 Debug.Log("localizedPrice : " + gamebaseItem.localizedPrice);
                 textPrice.text = gamebaseItem.localizedPrice;
             }
-            else {
+            else
+            {
                 Debug.Log("gamebaseItem is Null!!!!!");
             }
 
             // 게임 Product 정보 
             productMasterJSON = BillingManager.main.GetGameProductItemMasterInfo(productID);
-            
-            
-            
-            if(productMasterJSON != null) {
-                
+
+            if (productMasterJSON != null)
+            {
                 productMasterID = SystemManager.GetJsonNodeString(productMasterJSON, "product_master_id"); // master_id
                 hasPurchaseHistory = BillingManager.main.CheckProductPurchaseCount(productMasterID) > 0; // 구매 내역
-                
+
                 productDetailJSON = BillingManager.main.GetGameProductItemDetailInfo(productMasterID); // 디테일 
             }
-            
-           
-            if(productDetailJSON == null) {
-                Debug.Log(string.Format("[{0}] has no info in game server ", productID ));
-                return; 
+
+
+            if (productDetailJSON == null)
+            {
+                Debug.Log(string.Format("[{0}] has no info in game server ", productID));
+                return;
             }
-            
+
             SetMainStarQuantity();
             SetCoinQuantity();
-            
-            if(hasPurchaseHistory) {
+
+            if (hasPurchaseHistory)
+            {
                 groupFirstPurchaseBonus.SetActive(false);
                 return;
             }
-            
-            
+
             // 첫구매 기록이 없는 경우.
             SetFirstPurchaseBonus();
-            
         }
         
         

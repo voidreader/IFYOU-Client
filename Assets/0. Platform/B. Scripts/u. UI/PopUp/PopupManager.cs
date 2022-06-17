@@ -28,7 +28,6 @@ namespace PIERStory {
         public GameObject popupAttendance;
 
         [SerializeField] GameObject popupConfirm;
-        public GameObject popupConnectingShop;
         public GameObject popupCoinStarHistory;
         [SerializeField] GameObject popupCoupon;
 
@@ -45,6 +44,7 @@ namespace PIERStory {
         [SerializeField] GameObject popupGradeExp;
         [SerializeField] GameObject popupGradeUp;
         public GameObject popupHelpBox;             // 도움말 팝업
+        public GameObject popupLackOfCurrency;      // 재화 부족 팝업
         public GameObject popupLanguage;
 
         [SerializeField] GameObject popupMail;
@@ -382,11 +382,6 @@ namespace PIERStory {
             else 
                 DictPopup.Add(LobbyConst.POPUP_COUPON, popupCoupon);
 
-            if (DictPopup.ContainsKey(CommonConst.POPUP_CONNECTING_SHOP))
-                DictPopup[CommonConst.POPUP_CONNECTING_SHOP] = popupConnectingShop;
-            else
-                DictPopup.Add(CommonConst.POPUP_CONNECTING_SHOP, popupConnectingShop);
-
             if (DictPopup.ContainsKey(LobbyConst.POPUP_COIN_STAR_HISTORY))
                 DictPopup[LobbyConst.POPUP_COIN_STAR_HISTORY] = popupCoinStarHistory;
             else
@@ -435,6 +430,10 @@ namespace PIERStory {
             else
                 DictPopup.Add(LobbyConst.POPUP_GRADE_UP, popupGradeUp);
 
+            if (DictPopup.ContainsKey(CommonConst.POPUP_LACK_OF_CURRENCY))
+                DictPopup[CommonConst.POPUP_LACK_OF_CURRENCY] = popupLackOfCurrency;
+            else
+                DictPopup.Add(CommonConst.POPUP_LACK_OF_CURRENCY, popupLackOfCurrency);
 
             if (DictPopup.ContainsKey(GameConst.TEMPLATE_GAME_MESSAGE))
                 DictPopup[GameConst.TEMPLATE_GAME_MESSAGE] = popupGameMessage;

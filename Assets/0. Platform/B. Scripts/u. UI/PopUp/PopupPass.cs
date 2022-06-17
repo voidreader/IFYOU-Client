@@ -180,10 +180,10 @@ namespace PIERStory {
                 NetworkLoader.main.PurchaseProjectPass(timeDealID, passStory.projectID, originFreepassPrice, saleFreepassPrice);
                 return;
             }
-           
-            
+
+
             // 젬 부족시. 
-            SystemManager.ShowMessageWithLocalize("80014");
+            SystemManager.ShowLackOfCurrencyPopup(true, "6323", saleFreepassPrice);
         }
     }
 }

@@ -38,6 +38,15 @@ namespace PIERStory {
         /// 돈내고 플레이 
         /// </summary>
         public void OnClickPlay() {
+
+            // 재화가 부족하면 부족팝업 띄우기
+            if(!UserManager.main.CheckGemProperty(targetEpisode.priceStarPlaySale))
+            {
+                SystemManager.ShowLackOfCurrencyPopup(true, "6322", targetEpisode.priceStarPlaySale);
+                Hide();
+                return;
+            }
+
             UserManager.OnRequestEpisodePurchase = PurchasePostProcess;
             NetworkLoader.main.PurchaseEpisode(targetEpisode.episodeID, PurchaseState.Permanent, targetEpisode.currencyStarPlay, targetEpisode.priceStarPlaySale.ToString());
         }

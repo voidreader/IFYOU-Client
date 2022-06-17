@@ -77,7 +77,7 @@ namespace PIERStory {
             
             // 잔고 체크
             if(!UserManager.main.CheckCoinProperty(resetPrice)) {
-                SystemManager.ShowMessageWithLocalize("80013");
+                SystemManager.ShowLackOfCurrencyPopup(false, "6324", resetPrice);
                 return;
             }
             

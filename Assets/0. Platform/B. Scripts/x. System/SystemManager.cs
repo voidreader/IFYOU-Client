@@ -5,13 +5,14 @@ using System.IO;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Doozy.Runtime.Signals;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
 using TMPro;
 using LitJson;
 using BestHTTP;
 using Toast.Gamebase;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
+using Doozy.Runtime.Signals;
 
 // Live2D
 using Live2D.Cubism.Core;
@@ -822,9 +823,6 @@ namespace PIERStory
         /// </summary>
         public void LoginPlatform(bool isForceGuest = false)
         {
-            
-            // ViewTitle.OnUpdateLoadingText?.Invoke(3);
-            
             
             // 마지막에 진행한 로그인 방법을 가져와서 실행합니다.(GUEST, Google, Apple)
             string lastLoggedInProvider = Gamebase.GetLastLoggedInProvider();
@@ -2168,10 +2166,6 @@ namespace PIERStory
             });
         }
         
-        
-
-
-
 
 
 
@@ -2442,18 +2436,23 @@ namespace PIERStory
         
         
         
-        // ! 여기서부터 static 칱구들 
+        // ! 여기서부터 static 친구들 
         
         /// <summary>
-        /// 상점으로 보내는 팝업 호출
+        /// 재화 부족할 때 띄우는 팝업 호출
         /// </summary>
-        public static void ShowConnectingShopPopup(Sprite __currencyIcon, int __insufficientAmount)
+        /// <param name="isGem">true = 스타 부족, false = 코인 부족</param>
+        /// <param name="commentLocalizingId">타이틀 밑에 들어가는 부가 설명 텍스트가 들어갈 로컬라이징 id값</param>
+        /// <param name="price">필요한 가격</param>
+        public static void ShowLackOfCurrencyPopup(bool isGem, string commentLocalizingId, int price)
         {
-            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_CONNECTING_SHOP);
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_LACK_OF_CURRENCY);
 
-            p.Data.SetLabelsTexts(__insufficientAmount.ToString());
-            p.Data.SetImagesSprites(__currencyIcon);
+            string title = isGem ? GetLocalizedText("6319") : GetLocalizedText("6320");
 
+            p.Data.isPositive = isGem;
+            p.Data.contentValue = price;
+            p.Data.SetLabelsTexts(title, GetLocalizedText(commentLocalizingId));
             PopupManager.main.ShowPopup(p, false);
         }
         

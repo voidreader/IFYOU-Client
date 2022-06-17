@@ -79,7 +79,7 @@ namespace PIERStory
         public const string POPUP_TUTORIAL_MISSION_3 = "TutorialMission3";
 
 
-        public const string POPUP_CONNECTING_SHOP = "ConnectingShop";
+        public const string POPUP_LACK_OF_CURRENCY = "LackOfCurrency";
         public const string POPUP_SPECIAL_EPISODE_BUY = "SpecialEpisodeBuy";
         public const string POPUP_EXPIRE_TOKEN = "ExpireToken";
         public const string POPUP_DEV_JUMP = "DevJump";

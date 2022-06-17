@@ -82,7 +82,7 @@ namespace PIERStory
             // 만약 할인 가격보다 스타가 없다면, 상점 팝업 띄워주기
             if (!UserManager.main.CheckGemProperty(salePrice))
             {
-                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteStar, salePrice - UserManager.main.gem);
+                //SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteStar, salePrice - UserManager.main.gem);
                 return;
             }
 

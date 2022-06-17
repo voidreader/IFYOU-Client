@@ -187,17 +187,6 @@ namespace PIERStory {
         
         public void MainContainerHide()
         {
-            /*
-            int abilityCount = characterStatusContent.childCount;
-            
-            for(int i=abilityCount -1; i>=0; i--) {
-                GameObject obj = characterStatusContent.GetChild(i).gameObject;    
-                abilityBriefScroll.Remove(i);
-                Destroy(obj);
-            }
-            */
-            
-            
             for (int i = 0; i < characterStatusContent.childCount; i++)
                 Destroy(characterStatusContent.GetChild(i).gameObject);
         }
@@ -797,7 +786,7 @@ namespace PIERStory {
             // 필요한 수만큼 가지고 있는지 체크해서 없으면 상점으로 보내는 팝업 띄워주기
             if(!UserManager.main.CheckCoinProperty(GetEpisodeTimeOpenPrice()))
             {
-                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteCoin, GetEpisodeTimeOpenPrice() - UserManager.main.coin);
+                SystemManager.ShowLackOfCurrencyPopup(false, "6324", GetEpisodeTimeOpenPrice());
                 return;
             }
             

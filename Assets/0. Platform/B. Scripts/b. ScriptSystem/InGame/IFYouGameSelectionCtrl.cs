@@ -535,7 +535,7 @@ namespace PIERStory {
             // 프리패스도 아닌데 돈도 없어!
             if (!UserManager.main.HasProjectFreepass() && !UserManager.main.CheckGemProperty(scriptRow.selectionPrice))
             {
-                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteStar, scriptRow.selectionPrice - UserManager.main.gem);
+                SystemManager.ShowLackOfCurrencyPopup(true, "6321", scriptRow.selectionPrice);
 
                 SetState(SelectionState.Idle);
                 SetOtherSelectionState(this, SelectionState.Idle);
@@ -625,7 +625,7 @@ namespace PIERStory {
             // 구매 기록이 없다면 통신 완료 후, 선택지 힌트 팝업을 띄워주는데, 그 전에 코인 갯수를 체크해서 부족하면 상점
             if(!UserManager.main.CheckCoinProperty(SelectionHintPrice()))
             {
-                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteCoin, SelectionHintPrice() - UserManager.main.coin);
+                SystemManager.ShowLackOfCurrencyPopup(false, "6324", SelectionHintPrice());
                 return;
             }
 

@@ -24,11 +24,6 @@ namespace PIERStory {
         [SerializeField] TextMeshProUGUI textStoryResetCount; // 작품 리셋 횟수
         
         
-        void Awake() {
-
-        }
-        
-        
         public override void OnView() {
             base.OnView();
             
@@ -45,8 +40,6 @@ namespace PIERStory {
             
             // 소모가격 세팅 
             textResetCoinPrice.text = currentResetPrice.ToString();
-            
-            
         }
         
         public void OnClickReset() {

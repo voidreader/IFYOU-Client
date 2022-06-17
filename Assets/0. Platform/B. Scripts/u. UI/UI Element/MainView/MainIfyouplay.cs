@@ -226,7 +226,7 @@ namespace PIERStory
             // 코인 부족한거 먼저 체크
             if (!UserManager.main.CheckCoinProperty(chargingDay * 100))
             {
-                SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteCoin, (chargingDay * 100) - UserManager.main.coin);
+                //SystemManager.ShowConnectingShopPopup(SystemManager.main.spriteCoin, (chargingDay * 100) - UserManager.main.coin);
                 return;
             }
 

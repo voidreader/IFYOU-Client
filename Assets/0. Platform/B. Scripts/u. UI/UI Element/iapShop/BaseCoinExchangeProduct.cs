@@ -23,8 +23,8 @@ namespace PIERStory {
         [SerializeField] GameObject btnFreeDisable;
 
         [SerializeField] bool isAvailable = false; // 사용 가능 
-        [SerializeField] int price = 0;
-        [SerializeField] int quantity = 0;
+        public int price = 0;
+        public int quantity = 0;
         
         public int bonusQuantity = 0;
     

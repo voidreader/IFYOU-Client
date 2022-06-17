@@ -122,9 +122,6 @@ namespace PIERStory {
             endDate = new DateTime(end_date_tick); // 틱으로 생성
             
             
-            // Debug.Log("EndDate : " + endDate);
-            // Debug.Log("Now : " + DateTime.Now);
-            // Debug.Log("UTC : " + DateTime.UtcNow);
             timeDifference = endDate - DateTime.UtcNow;
             
             if(timeDifference.Ticks <= 0) {
@@ -184,6 +181,7 @@ namespace PIERStory {
 
             // 젬 부족시. 
             SystemManager.ShowLackOfCurrencyPopup(true, "6323", saleFreepassPrice);
+            Hide();
         }
     }
 }

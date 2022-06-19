@@ -798,8 +798,8 @@ namespace PIERStory
             request.SetHeader("Content-Type", "application/json; charset=UTF-8");
             request.RawData = Encoding.UTF8.GetBytes(JsonMapper.ToJson(__sendingData));
 
-            request.ConnectTimeout = System.TimeSpan.FromSeconds(15);
-            request.Timeout = System.TimeSpan.FromSeconds(30);
+            request.ConnectTimeout = System.TimeSpan.FromSeconds(10);
+            request.Timeout = System.TimeSpan.FromSeconds(15);
             request.Tag = JsonMapper.ToJson(__sendingData);
 
             Debug.Log(">> POST : " + JsonMapper.ToJson(__sendingData));

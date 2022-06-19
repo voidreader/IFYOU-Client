@@ -219,16 +219,7 @@ namespace PIERStory {
             yield return new WaitUntil(() =>SystemManager.main.mainAssetFont != null); // 폰트 불러오길 기다린다. 
             
             Debug.Log("<color=cyan>MoveingNextScene END</color>");
-            
-            // Signal.Send(LobbyConst.STREAM_IFYOU, "moveMain", "open!"); // ViewMain으로 이동한다.
-            
-            // * 2022.04.07 인트로 수행 여부에 따라서 씬 분기 
-            
-            if(UserManager.main.isIntroDone)
-                Signal.Send(LobbyConst.STREAM_IFYOU, "moveMain", "open!"); // ViewMain으로 이동한다.
-            else {
-                Signal.Send(LobbyConst.STREAM_IFYOU, "showIntro", "open!");
-            }
+            Signal.Send(LobbyConst.STREAM_IFYOU, "moveMain", "open!"); // ViewMain으로 이동한다.
             
         }
         

@@ -120,13 +120,12 @@ namespace PIERStory
         #endregion
 
         
-        #region 장르
+        #region getPlatformEvents 에서 가져오는 데이터들         
         public JsonData storyGenreData = null; // 공개된 작품 장르
-        #endregion
-
         public JsonData promotionData = null;       // 프로모션 데이터
         public JsonData noticeData = null;          // 공지사항 데이터 
-
+        public JsonData introData = null; // 인트로 정보 
+        #endregion
 
         
         
@@ -1869,7 +1868,12 @@ namespace PIERStory
 
 
         #region 프로모션, 장르, 카테고리 관련
-
+        
+        /// <summary>
+        /// NetworkLoader.RequestPlatformServiceEvents
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
         public void CallbackPlatformServiceEvent(HTTPRequest req, HTTPResponse res)
         {
             if(!NetworkLoader.CheckResponseValidation(req, res))
@@ -1884,6 +1888,7 @@ namespace PIERStory
             promotionData = result["promotion"];
             noticeData = result["notice"];
             storyGenreData = result["genre"];
+            introData = result["intro"]; 
         }
 
 
@@ -2437,6 +2442,17 @@ namespace PIERStory
         
         
         // ! 여기서부터 static 친구들 
+        
+        /// <summary>
+        /// 인트로 팝업 띄우기 
+        /// </summary>
+        public static void ShowIntroPopup() {
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_INTRO);
+            
+            p.Data.contentJson = main.introData; // 인트로 데이터 전달 
+            
+            PopupManager.main.ShowPopup(p, true);
+        }
         
         /// <summary>
         /// 재화 부족할 때 띄우는 팝업 호출

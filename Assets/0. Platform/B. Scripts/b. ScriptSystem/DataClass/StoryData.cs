@@ -66,6 +66,9 @@ namespace PIERStory {
 
         public bool isNotify = false;       // 작품 푸쉬 알림 설정
         
+        public int hitCount = 0;
+        public int likeCount = 0;
+        
         public bool isValidData {
             get {
                 return originData != null && !string.IsNullOrEmpty(projectID);
@@ -151,6 +154,9 @@ namespace PIERStory {
                 if(i < originData["genre"].Count-1)
                     genre += ",";
             }
+            
+            hitCount  = SystemManager.GetJsonNodeInt(originData, "hit_count");
+            likeCount  = SystemManager.GetJsonNodeInt(originData, "like_count");
             
             
             // 연재일 

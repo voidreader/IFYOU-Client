@@ -681,20 +681,22 @@ namespace DanielLochner.Assets.SimpleScrollSnap
         {
             Add(panel, NumberOfPanels);
         }
-        public void Add(GameObject panel, int index)
+        public GameObject Add(GameObject panel, int index, bool needInstantiate = true)
         {
             if (NumberOfPanels != 0 && (index < 0 || index > NumberOfPanels))
             {
                 Debug.LogError("<b>[SimpleScrollSnap]</b> Index must be an integer from 0 to " + NumberOfPanels + ".", gameObject);
-                return;
+                return null;
             }
             else if (!automaticallyLayout)
             {
                 Debug.LogError("<b>[SimpleScrollSnap]</b> \"Automatic Layout\" must be enabled for content to be dynamically added during runtime.");
-                return;
+                return null;
             }
 
-            panel = Instantiate(panel, Content, false);
+            if(needInstantiate)
+                panel = Instantiate(panel, Content, false);
+                
             panel.transform.SetSiblingIndex(index);
 
             Initialize();
@@ -710,6 +712,8 @@ namespace DanielLochner.Assets.SimpleScrollSnap
                 }
                 Setup();
             }
+            
+            return panel;
         }
 
         public void RemoveFromFront()

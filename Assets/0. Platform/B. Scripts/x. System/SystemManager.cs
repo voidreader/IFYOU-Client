@@ -2031,8 +2031,10 @@ namespace PIERStory
         public TMP_FontAsset getCurrentLangFont(bool __isException) {
             
             switch (currentAppLanguageCode) {
-                case "JA": // 일본어 예외없이 무조건 메인폰트 리턴 
-                return mainAssetFont; 
+                case "JA":  // 일본어 
+                    return jaFont; 
+                case "AR": // 아랍어
+                    return arFont; 
                 
                 default:
                 if(__isException)  // appleGothic 유지 

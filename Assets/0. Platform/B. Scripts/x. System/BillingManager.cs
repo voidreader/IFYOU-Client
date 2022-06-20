@@ -27,7 +27,7 @@ namespace PIERStory {
         
         IEnumerator Start() {
             if(main != null) {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
                 yield break;
             }
             
@@ -205,7 +205,7 @@ namespace PIERStory {
             eventValues.Add(AFInAppEvents.REVENUE, receipt.price.ToString());
             eventValues.Add(AFInAppEvents.ORDER_ID, receipt.gamebaseProductId);
             eventValues.Add(AFInAppEvents.QUANTITY, "1");
-            AppsFlyerSDK.AppsFlyer.sendEvent(AFInAppEvents.PURCHASE, eventValues);
+            AppsFlyer.sendEvent(AFInAppEvents.PURCHASE, eventValues);
             }
             catch {
                 Debug.LogError("Eroor in AppsFlyerSDK");
@@ -363,53 +363,40 @@ namespace PIERStory {
         /// <summary>
         /// 게임 서버 상품 - 마스터정보 가져오기
         /// </summary>
-        /// <param name="__id"></param>
+        /// <param name="__id">product_id 값</param>
         /// <returns></returns>
-        public JsonData GetGameProductItemMasterInfo(string __id) {
+        public JsonData GetGameProductItemMasterInfoWithProductId(string __id) {
             for(int i=0; i<productMasterJSON.Count;i++) {
-                if(productMasterJSON[i]["product_id"].ToString() == __id)
+                if(SystemManager.GetJsonNodeString(productMasterJSON[i], "product_id") == __id)
                     return productMasterJSON[i];
             }
-            
+
             return null;
         }
-        
+
+
+        public JsonData GetGameProductItemMasterInfoWithProductMasterId(string __id)
+        {
+            for (int i = 0; i < productMasterJSON.Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(productMasterJSON[i], "product_master_id") == __id)
+                    return productMasterJSON[i];
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// 게임 서버 상품 - 디테일정보 가져오기
         /// </summary>
         /// <param name="__productMasterID"></param>
         /// <returns></returns>
-        public JsonData GetGameProductItemDetailInfo(string __productMasterID) {
-            if(!productDetailJSON.ContainsKey(__productMasterID))
+        public JsonData GetGameProductItemDetailInfo(string __productMasterID)
+        {
+            if (!productDetailJSON.ContainsKey(__productMasterID))
                 return null;
-            
-            
+
             return productDetailJSON[__productMasterID];
-        }
-        
-        
-        /// <summary>
-        /// 전달받은 ID로 구매 내역이 있는지 체크 (2022.05.24 사용하지 않음 )
-        /// </summary>
-        /// <param name="__productMasterID"></param>
-        /// <returns></returns>
-        bool CheckProductPurchaseHistory(string __product_id) {
-            
-            Debug.Log(">> CheckProductPurchaseHistory : " + __product_id);
-            
-            if(userPurchaseHistoryJSON == null)
-                return false;
-            
-            /*    
-            if(userPurchaseHistoryJSON.ContainsKey(__productMasterID))
-                return true;
-            */
-            for(int i=0; i<userPurchaseHistoryJSON.Count;i++) {
-                if(SystemManager.GetJsonNodeString(userPurchaseHistoryJSON[i], "product_id") == __product_id)
-                    return true;
-            }
-            
-            return false;
         }
         
         
@@ -435,23 +422,6 @@ namespace PIERStory {
         }
         
         
-        /// <summary>
-        /// 구매 횟수
-        /// </summary>
-        /// <param name="__product_id"></param>
-        /// <returns></returns>
-        int GetProductPurchaseCount(string __product_id) {
-            int count = 0;
-            for(int i=0; i<userPurchaseHistoryJSON.Count;i++) {
-                if(SystemManager.GetJsonNodeString(userPurchaseHistoryJSON[i], "product_id") == __product_id)
-                    count++;
-            }
-            
-            return count;
-            
-        }
-        
-       
          
         public JsonData GetCoinExchangeProductInfo(string __productID) {
             if(coinExchangeJSON == null)

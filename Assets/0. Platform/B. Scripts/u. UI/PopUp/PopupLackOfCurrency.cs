@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-using LitJson;
 using Doozy.Runtime.Signals;
 
 namespace PIERStory
@@ -76,9 +75,15 @@ namespace PIERStory
 
                 int n = 0, randomId = 0;
 
+                if(productMasterId.Count < 1)
+                {
+                    Debug.Log("<color=purple>스타 상품 없음!</color>");
+                    return;
+                }
+
                 while(n < 2)
                 {
-                    randomId = int.Parse(productMasterId[Random.Range(0, productMasterId.Count - 1)]);
+                    randomId = int.Parse(productMasterId[Random.Range(0, productMasterId.Count)]);
 
                     // 첫번째꺼랑 상품 똑같으면 다시 돌리기
                     if (n > 0 && starProducts[0].productID == randomId.ToString())
@@ -98,8 +103,14 @@ namespace PIERStory
         {
             List<string> productMasterId = ProductionList("_pack");
 
-            int randomIndexValue = Random.Range(0, productMasterId.Count - 1);
-            packageProduct.InitPackage(productMasterId[randomIndexValue], BillingManager.main.GetGameProductItemMasterInfo(productMasterId[randomIndexValue]));
+            if (productMasterId.Count < 1)
+            {
+                Debug.Log("<color=purple>패키지 상품 없음!</color>");
+                return;
+            }
+
+            int randomIndexValue = Random.Range(0, productMasterId.Count);
+            packageProduct.InitPackage(productMasterId[randomIndexValue], BillingManager.main.GetGameProductItemMasterInfoWithProductMasterId(productMasterId[randomIndexValue]));
         }
 
 

@@ -138,6 +138,11 @@ namespace PIERStory {
             // * ViewMain 활성화될때 유저의 활성화된 타임딜 목록 갱신 (2022.04.19)
             UserManager.main.RequestUserActiveTimeDeal();
             
+            // 인트로 완료 전이라면 인트로 재생시킨다. 
+            if(!UserManager.main.isIntroDone) {
+                SystemManager.ShowIntroPopup();
+            }
+            
         }
 
         public override void OnStartView()

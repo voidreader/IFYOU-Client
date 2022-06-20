@@ -11,6 +11,7 @@ namespace PIERStory {
     {
         public ImageRequireDownload imagePortrait; // 초상화 이미지
         public Image imageTag; // 네임태그 
+        public Image imageTagTriangle; 
         public Image imageBackground; // 백그라운드
         
         public TextMeshProUGUI textCharacterMessage; // 캐릭터 메세지
@@ -33,6 +34,7 @@ namespace PIERStory {
             // 메인 색상 설정 
             ColorUtility.TryParseHtmlString("#" + SystemManager.GetJsonNodeString(__j, "color_rgb"), out mainColor);
             imageTag.color = mainColor;
+            imageTagTriangle.color = mainColor;
             imageBackground.color = mainColor;
             
             // 초상화 이미지 

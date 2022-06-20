@@ -48,6 +48,8 @@ namespace PIERStory {
         [SerializeField] UIToggle packageToggle;
         [SerializeField] UIToggle normalToggle;
         [SerializeField] UIToggle eventToggle;
+        public RectTransform shopTop;
+        public List<RectTransform> productContainers;
 
 
         public void DelayEnterFromMain()
@@ -79,6 +81,11 @@ namespace PIERStory {
                 eventToggle.gameObject.SetActive(true);
                 toggleGroup.FirstToggle = eventToggle;
                 toggleGroup.FirstToggle.SetIsOn(true, true);
+                shopTop.sizeDelta = new Vector2(720, 170);
+
+                foreach (RectTransform rt in productContainers)
+                    rt.offsetMax = new Vector2(0, -170);
+
                 yield return new WaitForSeconds(0.1f);
                 Debug.Log("Exists Event Product");
                 
@@ -91,6 +98,10 @@ namespace PIERStory {
                 eventToggle.gameObject.SetActive(false);
                 toggleGroup.FirstToggle = packageToggle;
                 toggleGroup.FirstToggle.SetIsOn(true, true);
+                shopTop.sizeDelta = new Vector2(720, 0);
+                
+                foreach (RectTransform rt in productContainers)
+                    rt.offsetMax = new Vector2(0, -100);
                 yield return new WaitForSeconds(0.1f);
                 Debug.Log("NO Event Product");
                 
@@ -125,6 +136,11 @@ namespace PIERStory {
                 eventToggle.gameObject.SetActive(true);
                 toggleGroup.FirstToggle = eventToggle;
                 toggleGroup.FirstToggle.SetIsOn(true, true);
+                shopTop.sizeDelta = new Vector2(720, 170);
+
+                foreach (RectTransform rt in productContainers)
+                    rt.offsetMax = new Vector2(0, -170);
+
                 yield return new WaitForSeconds(0.1f);
                 Debug.Log("Exists Event Product");
                 
@@ -137,6 +153,11 @@ namespace PIERStory {
                 eventToggle.gameObject.SetActive(false);
                 toggleGroup.FirstToggle = packageToggle;
                 toggleGroup.FirstToggle.SetIsOn(true, true);
+                shopTop.sizeDelta = new Vector2(720, 0);
+
+                foreach (RectTransform rt in productContainers)
+                    rt.offsetMax = new Vector2(0, -100);
+
                 yield return new WaitForSeconds(0.1f);
                 Debug.Log("NO Event Product");
                 

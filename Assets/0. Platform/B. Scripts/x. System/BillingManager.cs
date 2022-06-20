@@ -180,7 +180,7 @@ namespace PIERStory {
             Debug.Log("##### RequestPurchaseReward ####");
             
             JsonData sendData = new JsonData();
-            sendData["func"] = "userPurchase";
+            sendData["func"] = "purchaseInappProduct"; // userPurchase => purchaseInappProduct
             sendData["product_id"] = receipt.gamebaseProductId;
             sendData["receipt"] = receipt.paymentId;
             sendData["paymentSeq"] = receipt.paymentSeq;
@@ -233,9 +233,9 @@ namespace PIERStory {
             // SystemManager.HideNetworkLoading();
             
             // 받은 데이터 처리
-            // bank, unreadMailCount, userPurchaseHistory
+            // bank, userPurchaseHistory
             JsonData result = JsonMapper.ToObject(response.DataAsText);
-            UserManager.main.SetNotificationInfo(result); // unreadMailCount
+            // UserManager.main.SetNotificationInfo(result); // unreadMailCount 이제 메일로 보내지 않음. 
             
             // 히스토리 갱신 
             if(result.ContainsKey("userPurchaseHistory"))
@@ -245,6 +245,9 @@ namespace PIERStory {
             if(result.ContainsKey("allpass_expire_tick")) {
                 UserManager.main.SetAllpassExpire(SystemManager.GetJsonNodeLong(result, "allpass_expire_tick"));
             }
+            
+            // 재화 바로 지급으로 변경됨(2022.06.20)
+            UserManager.main.SetRefreshInfo(result);
 
             // Shop 리프레시 탭 3개와 상단...
             MainShop.OnRefreshNormalShop?.Invoke();

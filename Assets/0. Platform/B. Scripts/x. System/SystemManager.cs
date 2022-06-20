@@ -139,6 +139,7 @@ namespace PIERStory
         public TMP_FontAsset mainAssetFont = null; // 한글
         public TMP_FontAsset jaFont = null; // 일본어 폰트
         public TMP_FontAsset koFont = null; // 한글, 영어 폰트 
+        public TMP_FontAsset arFont = null; // 아랍 폰트
         public AsyncOperationHandle<TMP_FontAsset> mountedAssetFontJA; 
         public AsyncOperationHandle<TMP_FontAsset> mountedAssetFontKO; 
         Shader assetFontShader;
@@ -783,6 +784,10 @@ namespace PIERStory
                     currentAppLanguageCode = "JA";
                     break;
                     
+                    case SystemLanguage.Arabic:
+                    currentAppLanguageCode = "AR";
+                    break;
+                    
                     default:
                     currentAppLanguageCode = "EN";
                     break;
@@ -805,7 +810,7 @@ namespace PIERStory
                 case "JA":
                 currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Japanese;
                 break;
-                default:
+                default: // 아랍어도 게임베이스 언어는 영어. 
                 currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.English;
                 break;
             }
@@ -1991,6 +1996,11 @@ namespace PIERStory
                 case "JA":
                 
                 mainAssetFont = jaFont;
+                break;
+                
+                
+                case "AR":
+                mainAssetFont = arFont; // 아랍 폰트는 내장됨. 
                 break;
                 
                 default:

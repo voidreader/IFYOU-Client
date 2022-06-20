@@ -189,6 +189,10 @@ namespace PIERStory {
         
         private void Update() {
 
+            if(Input.GetKeyDown(KeyCode.O)) {
+                SystemManager.ShowIntroPopup();
+            }
+
             /*
             if(Input.GetKeyDown(KeyCode.O)) {
                 PopupBase popup = PopupManager.main.GetPopup("AchivementIllust");

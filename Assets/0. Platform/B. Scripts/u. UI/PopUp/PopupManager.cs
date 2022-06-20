@@ -77,6 +77,7 @@ namespace PIERStory {
         public GameObject popupDevRowJump;
         
         [SerializeField] GameObject popupAllPassGuide; // 올패스 가이드
+        [SerializeField] GameObject popupIntro; // 인트로
         
         
         private void Awake() {
@@ -579,6 +580,11 @@ namespace PIERStory {
                 DictPopup[CommonConst.POPUP_ALL_PASS_GUIDE] = popupAllPassGuide;
             else 
                 DictPopup.Add(CommonConst.POPUP_ALL_PASS_GUIDE, popupAllPassGuide);
+                
+            if(DictPopup.ContainsKey(CommonConst.POPUP_INTRO)) 
+                DictPopup[CommonConst.POPUP_INTRO] = popupIntro;
+            else 
+                DictPopup.Add(CommonConst.POPUP_INTRO, popupIntro);
             
         }
         

@@ -15,11 +15,23 @@ namespace PIERStory {
         public string hitCount = string.Empty;
         public string likeCount = string.Empty;
         
+        public List<StoryHashtag> listTags; // 해시태그
+        
+        public TextMeshProUGUI textEye; // 조회수 
+        public TextMeshProUGUI textLike; // 선호작수
+        
+       
+
+        
         /// <summary>
         /// 초기화 하자..
         /// </summary>
         /// <param name="__story"></param>
         public void Init(StoryData __story) {
+            
+            for(int i=0;i<listTags.Count;i++) {
+                listTags[i].gameObject.SetActive(false);
+            }
             
             story = __story;
             // SetData();
@@ -35,8 +47,19 @@ namespace PIERStory {
             textTitle.text = story.title;
             readyImage.SetDownloadURL(story.thumbnailURL, story.thumbnailKey);
             
-            hitCount = AbbrevationUtility.AbbreviateNumber(story.hitCount);
-            likeCount = AbbrevationUtility.AbbreviateNumber(story.likeCount);
+            hitCount = AbbrevationUtility.intToSimple(story.hitCount);
+            likeCount = AbbrevationUtility.intToSimple(story.likeCount);
+            textEye.text = hitCount;
+            textLike.text = likeCount;
+            
+            // 해시태그 지정 
+            for(int i=0; i<story.arrHashtag.Length;i++) {
+                if(i >= listTags.Count)
+                    break;
+                    
+                if(!string.IsNullOrEmpty(story.arrHashtag[i]))
+                    listTags[i].Init(story.arrHashtag[i]);
+            }
         }
         
         public void OnClickPlay() {

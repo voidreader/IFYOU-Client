@@ -68,6 +68,7 @@ namespace PIERStory {
         
         public int hitCount = 0;
         public int likeCount = 0;
+        public string[] arrHashtag; // 해시태그 string array
         
         public bool isValidData {
             get {
@@ -155,8 +156,10 @@ namespace PIERStory {
                     genre += ",";
             }
             
-            hitCount  = SystemManager.GetJsonNodeInt(originData, "hit_count");
-            likeCount  = SystemManager.GetJsonNodeInt(originData, "like_count");
+            hitCount  = SystemManager.GetJsonNodeInt(originData, "hit_count"); // 조회수 카운트 
+            likeCount  = SystemManager.GetJsonNodeInt(originData, "like_count"); // 선호작 카운트
+            
+            arrHashtag = SystemManager.GetJsonNodeString(originData, "hashtags").Split(',');
             
             
             // 연재일 

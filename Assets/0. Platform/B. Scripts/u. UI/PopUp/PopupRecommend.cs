@@ -19,6 +19,9 @@ namespace PIERStory {
         JsonData recommededData = null;
         
         public List<GameObject> panels = new List<GameObject>();
+        
+        public GameObject ButtonRight; 
+        public GameObject ButtonLeft; 
 
         public override void Show()
         {
@@ -29,9 +32,18 @@ namespace PIERStory {
             base.Show();
             recommededData = Data.contentJson;
             
+            InitButton();
+            
             AddStory();
             
             StartCoroutine(SetRecommedStoryData());
+            
+            
+        }
+        
+        void InitButton() {
+            ButtonRight.SetActive(false);
+            ButtonLeft.SetActive(false);
         }
 
         
@@ -70,6 +82,62 @@ namespace PIERStory {
             for(int i=0; i<panels.Count;i++) {
                 panels[i].GetComponent<RecommendStory>().SetData();
             }
+            
+            // 패널이 여러개면 오른쪽 버튼 등장 
+            if(panels.Count > 1)  {
+                ButtonRight.SetActive(true);
+            }
+        }
+        
+        
+        
+        public void OnClickRight() {
+            scrollSnap.GoToNextPanel();
+        }
+        
+        public void OnClickLeft() {
+            scrollSnap.GoToPreviousPanel();
+        }
+        
+        
+        public void OnPanelChanged() {
+            Debug.Log("OnPanelChanged : " + scrollSnap.CurrentPanel);
+            
+            if(scrollSnap.CurrentPanel == 0) {
+                
+                ButtonLeft.SetActive(false);
+                
+                if(scrollSnap.NumberOfPanels > 1) {
+                    ButtonRight.SetActive(true);
+                }
+                else {
+                    ButtonRight.SetActive(false);
+                }
+                
+                return;
+            }
+            
+            
+            
+            // 마지막 패널인 경우 
+            if(scrollSnap.CurrentPanel == scrollSnap.NumberOfPanels - 1) {
+                ButtonRight.SetActive(false);
+                
+                if(scrollSnap.NumberOfPanels > 1) {
+                    ButtonLeft.SetActive(true);
+                }
+                else {
+                    ButtonLeft.SetActive(false);
+                }
+                
+                return;
+            }
+            
+            if(scrollSnap.CurrentPanel > 0 && scrollSnap.CurrentPanel < scrollSnap.NumberOfPanels-1) {
+                ButtonLeft.SetActive(true);
+                ButtonRight.SetActive(true);
+            }
+            
         }
 
 

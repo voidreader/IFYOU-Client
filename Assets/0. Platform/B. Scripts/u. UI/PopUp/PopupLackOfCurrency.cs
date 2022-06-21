@@ -73,7 +73,8 @@ namespace PIERStory
                 // 스타상품 세팅
                 List<string> productIdList = ProductionList("ifyou_star_");
 
-                int n = 0, randomId = 0;
+                int n = 0;
+                string randomId = string.Empty;
 
                 if (productIdList.Count < 1)
                 {
@@ -83,13 +84,13 @@ namespace PIERStory
 
                 while (n < 2)
                 {
-                    randomId = int.Parse(productIdList[Random.Range(0, productIdList.Count)]);
+                    randomId = productIdList[Random.Range(0, productIdList.Count)];
 
                     // 첫번째꺼랑 상품 똑같으면 다시 돌리기
-                    if (n > 0 && starProducts[0].productID == randomId.ToString())
+                    if (n > 0 && starProducts[0].productID == randomId)
                         continue;
 
-                    starProducts[n].InitProduct(randomId.ToString());
+                    starProducts[n].InitProduct(randomId);
                     starProducts[n].gameObject.SetActive(true);
                     n++;
                 }

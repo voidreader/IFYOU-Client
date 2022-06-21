@@ -78,6 +78,7 @@ namespace PIERStory {
         
         [SerializeField] GameObject popupAllPassGuide; // 올패스 가이드
         [SerializeField] GameObject popupIntro; // 인트로
+        [SerializeField] GameObject popupRecommend; // 작품 추천 팝업 
         
         
         private void Awake() {
@@ -586,6 +587,11 @@ namespace PIERStory {
             else 
                 DictPopup.Add(CommonConst.POPUP_INTRO, popupIntro);
             
+            
+            if(DictPopup.ContainsKey(CommonConst.POPUP_RECOMMEND))
+                DictPopup[CommonConst.POPUP_RECOMMEND] = popupRecommend;
+            else 
+                DictPopup.Add(CommonConst.POPUP_RECOMMEND, popupRecommend);
         }
         
         #endregion

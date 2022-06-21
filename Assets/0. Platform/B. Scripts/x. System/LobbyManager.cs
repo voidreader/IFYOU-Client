@@ -188,11 +188,12 @@ namespace PIERStory {
         
         
         private void Update() {
-            /*
+            
             if(Input.GetKeyDown(KeyCode.O)) {
-                SystemManager.ShowIntroPopup();
+                // SystemManager.ShowIntroPopup();
+                NetworkLoader.main.RequestRecommedStory();
             }
-            */
+            
 
             /*
             if(Input.GetKeyDown(KeyCode.O)) {

@@ -85,6 +85,7 @@ namespace PIERStory
         public const string POPUP_DEV_JUMP = "DevJump";
         public const string POPUP_ALL_PASS_GUIDE = "AllPassGuide";
         public const string POPUP_INTRO = "Intro";
+        public const string POPUP_RECOMMEND = "Recommend";
         
         // JSON COLUMN
         public const string JSON_EPISODE_SCENE_HISTORY = "sceneProgress";

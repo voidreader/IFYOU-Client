@@ -150,6 +150,28 @@ namespace PIERStory
 
         #region 기타 통신 RequestGamebaseLaunching, UpdateEpisodeStartRecord, UpdateEpisodeCompleteRecord
         
+        /// <summary>
+        /// 추천 팝업 요청 
+        /// </summary>
+        public void RequestRecommedStory() {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestRecommendProject";
+            SendPost(OnCompleteRequestRecommedStory, sending, true);
+        }
+        
+        void OnCompleteRequestRecommedStory(HTTPRequest request, HTTPResponse response) {
+            if(!CheckResponseValidation(request, response)) {
+                return;
+            }
+            
+            Debug.Log(string.Format("OnCompleteRequestRecommedStory [{0}]", response.DataAsText));
+            
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            
+            SystemManager.ShowRecommendStoryPopup(result["project_id"]);
+            
+        }
+        
         
         /// <summary>
         /// 에피소드 클리어 보상 요청 

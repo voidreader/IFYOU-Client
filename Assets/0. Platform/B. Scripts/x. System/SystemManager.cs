@@ -2460,6 +2460,18 @@ namespace PIERStory
         // ! 여기서부터 static 친구들 
         
         /// <summary>
+        /// 작품 추천 팝업 띄우기 
+        /// </summary>
+        /// <param name="__data"></param>
+        public static void ShowRecommendStoryPopup(JsonData __data) {
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_RECOMMEND);
+            
+            p.Data.contentJson = __data; // 데이터 전달 
+            
+            PopupManager.main.ShowPopup(p, true);
+        }
+        
+        /// <summary>
         /// 인트로 팝업 띄우기 
         /// </summary>
         public static void ShowIntroPopup() {

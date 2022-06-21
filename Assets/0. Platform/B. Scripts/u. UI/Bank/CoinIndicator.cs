@@ -57,11 +57,11 @@ namespace PIERStory {
                 && this.gameObject.activeSelf 
                 && _currentValue != _nextValue
                 && _isInit) {
-                _textCount.DOCounter(_currentValue, _nextValue, 0.2f, true, null);
+                _textCount.DOCounter(_currentValue, _nextValue, 0.5f, true, null);
                 
                 if(_icon != null) {
                     _icon.localScale= Vector3.one; // 크기는 조정해주고 한다. 
-                    _icon.DOScale(1.2f, 0.2f).SetLoops(4, LoopType.Yoyo);
+                    _icon.DOScale(1.2f, 0.2f).SetLoops(6, LoopType.Yoyo);
                 }
                 
             }

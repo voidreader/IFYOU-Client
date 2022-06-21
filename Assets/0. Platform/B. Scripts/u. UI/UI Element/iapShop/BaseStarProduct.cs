@@ -64,7 +64,7 @@ namespace PIERStory {
             }
 
             // 게임 Product 정보 
-            productMasterJSON = BillingManager.main.GetGameProductItemMasterInfoWithProductId(productID);
+            productMasterJSON = BillingManager.main.GetGameProductItemMasterInfo(productID);
 
             if (productMasterJSON != null)
             {

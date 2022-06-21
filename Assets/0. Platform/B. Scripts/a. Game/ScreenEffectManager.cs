@@ -386,7 +386,9 @@ namespace PIERStory
         void ChangeLayerRecursively(Transform trans)
         {
             trans.gameObject.layer = LayerMask.NameToLayer("Particles");
-            trans.GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Additive");
+
+            if (trans.GetComponent<ParticleSystemRenderer>() != null)
+                trans.GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Additive");
             
             foreach (Transform tr in trans)
                 ChangeLayerRecursively(tr);

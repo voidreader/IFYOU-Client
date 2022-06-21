@@ -25,7 +25,7 @@ namespace PIERStory
 
             // isPositive : true면 스타부족, false면 코인부족
             lackOfCurrencyImage.sprite = Data.isPositive ? spriteStar : spriteCoin;
-            
+
             CurrencySetting();
             PackageSetting();
         }
@@ -43,7 +43,7 @@ namespace PIERStory
                     ce.InitExchangeProduct();
 
                 // 필요한 값보다 많아질 때까지 재설정
-                while(coinExchangeProducts[0].quantity < Data.contentValue)
+                while (coinExchangeProducts[0].quantity < Data.contentValue)
                 {
                     foreach (BaseCoinExchangeProduct ce in coinExchangeProducts)
                     {
@@ -71,19 +71,19 @@ namespace PIERStory
             else
             {
                 // 스타상품 세팅
-                List<string> productMasterId = ProductionList("ifyou_star_");
+                List<string> productIdList = ProductionList("ifyou_star_");
 
                 int n = 0, randomId = 0;
 
-                if(productMasterId.Count < 1)
+                if (productIdList.Count < 1)
                 {
                     Debug.Log("<color=purple>스타 상품 없음!</color>");
                     return;
                 }
 
-                while(n < 2)
+                while (n < 2)
                 {
-                    randomId = int.Parse(productMasterId[Random.Range(0, productMasterId.Count)]);
+                    randomId = int.Parse(productIdList[Random.Range(0, productIdList.Count)]);
 
                     // 첫번째꺼랑 상품 똑같으면 다시 돌리기
                     if (n > 0 && starProducts[0].productID == randomId.ToString())
@@ -101,16 +101,16 @@ namespace PIERStory
         /// </summary>
         void PackageSetting()
         {
-            List<string> productMasterId = ProductionList("_pack");
+            List<string> productIdList = ProductionList("_pack");
 
-            if (productMasterId.Count < 1)
+            if (productIdList.Count < 1)
             {
                 Debug.Log("<color=purple>패키지 상품 없음!</color>");
                 return;
             }
 
-            int randomIndexValue = Random.Range(0, productMasterId.Count);
-            packageProduct.InitPackage(productMasterId[randomIndexValue], BillingManager.main.GetGameProductItemMasterInfoWithProductMasterId(productMasterId[randomIndexValue]));
+            int randomIndexValue = Random.Range(0, productIdList.Count);
+            packageProduct.InitPackage(productIdList[randomIndexValue], BillingManager.main.GetGameProductItemMasterInfo(productIdList[randomIndexValue]));
         }
 
 
@@ -130,7 +130,7 @@ namespace PIERStory
         /// <returns></returns>
         string FindStarProductCloseQuantity()
         {
-            List<string> productMasterId = new List<string>();
+            List<string> productIdList = new List<string>();
 
             // 스타상품 모두 찾기
             for (int i = 0; i < BillingManager.main.productMasterJSON.Count; i++)
@@ -141,7 +141,7 @@ namespace PIERStory
 
                 if (SystemManager.GetJsonNodeInt(BillingManager.main.productMasterJSON[i], "max_count") == -1)
                 {
-                    productMasterId.Add(SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_master_id"));
+                    productIdList.Add(SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_id"));
                     continue;
                 }
 
@@ -150,13 +150,13 @@ namespace PIERStory
                     SystemManager.GetJsonNodeInt(BillingManager.main.productMasterJSON[i], "max_count"))
                     continue;
 
-                productMasterId.Add(SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_master_id"));
+                productIdList.Add(SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_id"));
             }
 
             List<BaseStarProduct> allStarProductList = new List<BaseStarProduct>();
-            
+
             // 모든 스타 상품들 리스트에 넣기
-            foreach(string id in productMasterId)
+            foreach (string id in productIdList)
             {
                 BaseStarProduct sp = new BaseStarProduct();
                 sp.InitProduct(id);
@@ -166,7 +166,7 @@ namespace PIERStory
             int minValue = int.MaxValue;
             string closeProductId = string.Empty;
 
-            foreach(BaseStarProduct sp in allStarProductList)
+            foreach (BaseStarProduct sp in allStarProductList)
             {
                 int totalQuantity = sp.mainGemQuantity + sp.subGemQuantity + sp.firstPurchaseBonusGem;
 
@@ -175,7 +175,7 @@ namespace PIERStory
                     continue;
 
                 // 제일 최소값을 계속 갱신해줘서 해당 상품ID를 저장해둔다
-                if(totalQuantity - Data.contentValue < minValue)
+                if (totalQuantity - Data.contentValue < minValue)
                 {
                     minValue = totalQuantity - Data.contentValue;
                     closeProductId = sp.productID;
@@ -192,7 +192,7 @@ namespace PIERStory
         /// <param name="productionType">상품 타입</param>
         List<string> ProductionList(string productionType)
         {
-            List<string> productMasterId = new List<string>();
+            List<string> productIdList = new List<string>();
 
             for (int i = 0; i < BillingManager.main.productMasterJSON.Count; i++)
             {
@@ -204,7 +204,7 @@ namespace PIERStory
                 // 팝업, 모두 공개 중 상시 판매 상품도 리스트에 추가하고 다음 상품 체크
                 if (SystemManager.GetJsonNodeInt(BillingManager.main.productMasterJSON[i], "max_count") == -1)
                 {
-                    productMasterId.Add(SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_master_id"));
+                    productIdList.Add(SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_id"));
                     continue;
                 }
 
@@ -213,10 +213,10 @@ namespace PIERStory
                     SystemManager.GetJsonNodeInt(BillingManager.main.productMasterJSON[i], "max_count"))
                     continue;
 
-                productMasterId.Add(SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_master_id"));
+                productIdList.Add(SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_id"));
             }
 
-            return productMasterId;
+            return productIdList;
         }
     }
 }

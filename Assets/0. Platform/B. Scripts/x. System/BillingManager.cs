@@ -368,7 +368,7 @@ namespace PIERStory {
         /// </summary>
         /// <param name="__id">product_id 값</param>
         /// <returns></returns>
-        public JsonData GetGameProductItemMasterInfoWithProductId(string __id) {
+        public JsonData GetGameProductItemMasterInfo(string __id) {
             for(int i=0; i<productMasterJSON.Count;i++) {
                 if(SystemManager.GetJsonNodeString(productMasterJSON[i], "product_id") == __id)
                     return productMasterJSON[i];
@@ -377,17 +377,6 @@ namespace PIERStory {
             return null;
         }
 
-
-        public JsonData GetGameProductItemMasterInfoWithProductMasterId(string __id)
-        {
-            for (int i = 0; i < productMasterJSON.Count; i++)
-            {
-                if (SystemManager.GetJsonNodeString(productMasterJSON[i], "product_master_id") == __id)
-                    return productMasterJSON[i];
-            }
-
-            return null;
-        }
 
         /// <summary>
         /// 게임 서버 상품 - 디테일정보 가져오기

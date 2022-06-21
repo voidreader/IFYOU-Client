@@ -19,37 +19,48 @@ namespace PIERStory
         public void InitHintAbility(string speaker, string abilityName, string __oper, int value)
         {
             AbilityData data = UserManager.main.GetAbilityData(speaker, abilityName);
-            emoticonImage.SetDownloadURL(data.emoticonDesignUrl, data.emoticonDesignKey);
-            abilityIcon.SetDownloadURL(data.iconDesignUrl, data.iconDesignKey);
 
-            string __operator = string.Empty;
-
-            switch (__oper)
+            try
             {
-                case ">=":
-                    __operator = "≥";
-                    radioButton.SetActive(value <= data.currentValue);
-                    break;
-                case "<=":
-                    __operator = "≤";
-                    radioButton.SetActive(value >= data.currentValue);
-                    break;
-                case ">":
-                    __operator = __oper;
-                    radioButton.SetActive(value < data.currentValue);
-                    break;
-                case "<":
-                    __operator = __oper;
-                    radioButton.SetActive(value > data.currentValue);
-                    break;
-                case "=":
-                    __operator = __oper;
-                    radioButton.SetActive(value == data.currentValue);
-                    break;
+                emoticonImage.SetDownloadURL(data.emoticonDesignUrl, data.emoticonDesignKey);
+                abilityIcon.SetDownloadURL(data.iconDesignUrl, data.iconDesignKey);
+
+                string __operator = string.Empty;
+
+                switch (__oper)
+                {
+                    case ">=":
+                        __operator = "≥";
+                        radioButton.SetActive(value <= data.currentValue);
+                        break;
+                    case "<=":
+                        __operator = "≤";
+                        radioButton.SetActive(value >= data.currentValue);
+                        break;
+                    case ">":
+                        __operator = __oper;
+                        radioButton.SetActive(value < data.currentValue);
+                        break;
+                    case "<":
+                        __operator = __oper;
+                        radioButton.SetActive(value > data.currentValue);
+                        break;
+                    case "=":
+                        __operator = __oper;
+                        radioButton.SetActive(value == data.currentValue);
+                        break;
+                }
+
+                float percent = (float)value / (float)data.maxValue;
+                abilityPercent.text = string.Format("{0}    {1}%", __operator, Math.Round(percent * 100f, 1));
+
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.StackTrace);
+                NetworkLoader.main.ReportRequestError("EndingHint Error", e.StackTrace);
             }
 
-            float percent = (float)value / (float)data.maxValue;
-            abilityPercent.text = string.Format("{0}    {1}%", __operator, Math.Round(percent * 100f, 1));
         }
     }
 }

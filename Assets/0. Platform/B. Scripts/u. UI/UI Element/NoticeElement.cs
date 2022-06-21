@@ -22,7 +22,6 @@ namespace PIERStory
         public void InitNoticeBanner(JsonData __j, bool __fromView = false)
         {
             detailNotice = null;
-            gameObject.SetActive(true);
 
             JsonData detailData = SystemManager.GetJsonNode(__j, LobbyConst.NODE_DETAIL);
             startDate = SystemManager.GetJsonNodeString(__j, START_DATE);
@@ -43,15 +42,21 @@ namespace PIERStory
                 return;
             }
 
-            noticeBanner.SetDownloadURL(SystemManager.GetJsonNodeString(detailNotice, LobbyConst.BANNER_URL), SystemManager.GetJsonNodeString(detailNotice, LobbyConst.BANNER_KEY));
-
             urlLink = SystemManager.GetJsonNodeString(detailNotice, "url_link");
+            
+            noticeBanner.SetDownloadURL(SystemManager.GetJsonNodeString(detailNotice, LobbyConst.BANNER_URL), SystemManager.GetJsonNodeString(detailNotice, LobbyConst.BANNER_KEY));
+            gameObject.SetActive(true);
         }
 
         public void OnClickNoticeBanner()
         {
             if (string.IsNullOrEmpty(urlLink))
-                PopupNotice.ShowNoticeDetail?.Invoke(detailNotice, startDate);
+            {
+                if (detailNotice != null)
+                    PopupNotice.ShowNoticeDetail?.Invoke(detailNotice, startDate);
+                else
+                    SystemManager.ShowMessageAlert("Data error");
+            }
             else
                 SystemManager.main.ShowDefaultWebview(urlLink, "NoticeDetail");
         }

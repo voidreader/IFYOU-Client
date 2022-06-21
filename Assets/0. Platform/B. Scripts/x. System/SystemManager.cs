@@ -1471,6 +1471,10 @@ namespace PIERStory
         /// <param name="__col"></param>
         /// <returns></returns>
         public static JsonData GetJsonNode(JsonData __node, string __col) {
+
+            if (__node == null)
+                return null;
+
             if (!__node.ContainsKey(__col))
                 return null;
                 
@@ -1839,7 +1843,7 @@ namespace PIERStory
 
 
         /// <summary>
-        /// 화면 중앙에 뜨는 긍정적/부정적에 따라 다르게 박스가 입혀지는 팝업
+        /// 화면 중앙에 뜨는 3초뒤 사라지는 팝업
         /// </summary>
         public static void ShowMessageAlert(string __message)
         {

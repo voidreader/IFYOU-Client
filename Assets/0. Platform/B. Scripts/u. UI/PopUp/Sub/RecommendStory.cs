@@ -41,6 +41,7 @@ namespace PIERStory {
         public void SetData() {
             
             Debug.Log("Set Data ");
+            int hashtagIndex = 1;
             
             // 심플 스크롤 스냅과의 연계 떄문에 
             // 데이터 설정은 모두 로드하고 나서 처리
@@ -52,13 +53,21 @@ namespace PIERStory {
             textEye.text = hitCount;
             textLike.text = likeCount;
             
+            listTags[0].Init(story.represenativeGenre); // 대표장르를 첫번째 태그로 설정
+            
+            
+            
+            
             // 해시태그 지정 
             for(int i=0; i<story.arrHashtag.Length;i++) {
                 if(i >= listTags.Count)
                     break;
                     
+                if(hashtagIndex > 2) // 해시태그 3개까지만 설정하고 끝낸다. 
+                    break;
+                    
                 if(!string.IsNullOrEmpty(story.arrHashtag[i]))
-                    listTags[i].Init(story.arrHashtag[i]);
+                    listTags[hashtagIndex++].Init(story.arrHashtag[i]);
             }
         }
         

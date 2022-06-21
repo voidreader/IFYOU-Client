@@ -54,6 +54,7 @@ namespace PIERStory {
         public float projectProgress = 0;
         public bool isPlaying = false; // 플레이중? 
         
+        public string represenativeGenre = string.Empty; // 대표 장르         
         public string genre = string.Empty; // 장르
         public string serialDay = string.Empty; // 연재일 추가 
         
@@ -144,7 +145,14 @@ namespace PIERStory {
             // 
             isPlaying = SystemManager.GetJsonNodeBool(originData, LobbyConst.STORY_IS_PLAYING); 
             
-            //
+            // 대표 장르 설정 
+            JsonData genreData = originData["genre"];
+            if(genreData.Count > 0) {
+                represenativeGenre = genreData[0].ToString();
+            }
+            
+            
+            // 전체 장르 설정 
             genre = SystemManager.GetJsonNodeString(originData, "genre");
             genre = string.Empty;
             

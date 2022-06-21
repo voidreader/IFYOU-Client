@@ -600,17 +600,25 @@ namespace PIERStory
             EpisodeData newEpisodeData = null;
             
             SideEpisodeList.Clear();
-            
-            // * 해금된 사이드 에피소드 개수 구하기 
-            for(int i=0; i<SideEpisodeListJson.Count;i++) {
-                
-                newEpisodeData = new EpisodeData(SideEpisodeListJson[i]);
-                
-                ListCurrentProjectEpisodes.Add(newEpisodeData);  // 모든 에피소드 
-                SideEpisodeList.Add(newEpisodeData); // 사이드만 모아주기 
-                
-                if(SystemManager.GetJsonNodeBool(SideEpisodeListJson[i], CommonConst.IS_OPEN))
-                    unlockSideEpisodeCount++;
+
+            try
+            {
+                // * 해금된 사이드 에피소드 개수 구하기 
+                for (int i = 0; i < SideEpisodeListJson.Count; i++)
+                {
+                    newEpisodeData = new EpisodeData(SideEpisodeListJson[i]);
+
+                    ListCurrentProjectEpisodes.Add(newEpisodeData);  // 모든 에피소드 
+                    SideEpisodeList.Add(newEpisodeData); // 사이드만 모아주기 
+
+                    if (SystemManager.GetJsonNodeBool(SideEpisodeListJson[i], CommonConst.IS_OPEN))
+                        unlockSideEpisodeCount++;
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError(e.StackTrace);
+                NetworkLoader.main.ReportRequestError("SideEpisodeList Error", e.StackTrace);
             }
             
             
@@ -620,32 +628,37 @@ namespace PIERStory
             unlockEndingCount = 0;
             totalEndingCount = 0;
 
-
-            for (int i=0; i<EpisodeListJson.Count;i++) {
-                
-                newEpisodeData = new EpisodeData(EpisodeListJson[i]);
-                
-                ListCurrentProjectEpisodes.Add(newEpisodeData); // 정규+엔딩 모아주기 
-                
-                if (SystemManager.GetJsonNodeBool(EpisodeListJson[i], "ending_open"))
-                        unlockEndingCount++;
-                
-                
-                if (EpisodeListJson[i][LobbyConst.STORY_EPISODE_TYPE].ToString() != CommonConst.COL_CHAPTER)
+            try
+            {
+                for (int i = 0; i < EpisodeListJson.Count; i++)
                 {
-                    totalEndingCount++;
-                    continue;
+                    newEpisodeData = new EpisodeData(EpisodeListJson[i]);
+
+                    ListCurrentProjectEpisodes.Add(newEpisodeData); // 정규+엔딩 모아주기 
+
+                    if (SystemManager.GetJsonNodeBool(EpisodeListJson[i], "ending_open"))
+                        unlockEndingCount++;
+
+
+                    if (SystemManager.GetJsonNodeString(EpisodeListJson[i], LobbyConst.STORY_EPISODE_TYPE) != CommonConst.COL_CHAPTER)
+                    {
+                        totalEndingCount++;
+                        continue;
+                    }
+
+                    RegularEpisodeList.Add(newEpisodeData);
                 }
-                
-                RegularEpisodeList.Add(newEpisodeData);
+
+                regularEpisodeCount = RegularEpisodeList.Count; // 카운팅 
+
+                Debug.Log(string.Format("<color=yellow>[{0}] Episodes are loaded </color>", EpisodeListJson.Count));
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError(e.StackTrace);
+                NetworkLoader.main.ReportRequestError("EpisodeList Error", e.StackTrace);
             }
             
-            regularEpisodeCount = RegularEpisodeList.Count; // 카운팅 
-            
-           
-
-
-            Debug.Log(string.Format("<color=yellow>[{0}] Episodes are loaded </color>", EpisodeListJson.Count));
             yield return null; 
             
             // * 로딩으로 사용할 이미지 다운받는것을 대기 
@@ -673,6 +686,7 @@ namespace PIERStory
                 if(ProjectDetailJson == null)
                 {
                     Debug.LogError("작품 정보가 안들어옴");
+                    NetworkLoader.main.ReportRequestError("SetEpisodeHintData", "ProjectDetailJson is null");
                     return;
                 }
 
@@ -681,6 +695,7 @@ namespace PIERStory
                 if (hintData == null || hintData.Count == 0)
                 {
                     Debug.LogWarning("<color=FF0080>### 엔딩 힌트 데이터가 없음</color>");
+                    NetworkLoader.main.ReportRequestError("SetEpisodeHintData", "hintData is null");
                     return;
                 }
 

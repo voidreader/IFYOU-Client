@@ -1,5 +1,9 @@
+using System.Collections.Generic;
+using System.Collections;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
+
 using TMPro;
 using LitJson;
 
@@ -77,37 +81,47 @@ namespace PIERStory {
                         break;
                     }
                 }
-
-
-
                 return;
             }
             
+            StartCoroutine(RoutinePostEpisodeEnd());
+            
+        }
+        
+        IEnumerator RoutinePostEpisodeEnd() {
+            yield return new WaitForSeconds(0.2f);
             
             // 다음 에피소드가 없으면 더이상 아래 로직을 실행하지 않음 
             if(UserManager.main.CheckReachFinal())
-                return;
+                yield break;
+            
+            // 활성화된 창이 있으면 대기한다. 
+            while(PopupManager.main.GetFrontActivePopup() != null)
+                yield return new WaitForSeconds(0.1f);
+            
+            // 통신 완료되길 기다린다. 
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            yield return new WaitForSeconds(0.1f);
                 
             // 다음 오픈되는 에피소드가 연재작이라 대기해야되는 경우. 
             if(isOpenTimeCountable && currentEpisodeData.isSerial) {
                 NetworkLoader.main.RequestRecommedStory();
-                return;
+                yield break;
             }
                 
                 
             // 대기 중이거나, 연재 작품은 튜토리얼 띄우지 않음. 
             if(!isOpenTimeCountable || currentEpisodeData.isSerial) {
-                return;
+                yield break;
             }
             
             // 2분 후 오픈이면 하지 띄우지 않음. 
             if(timeDiff.Minutes < 2) 
-                return;
+                yield break;
             
             // * 튜토리얼 3번 호출 
             if ((UserManager.main.tutorialStep <= 2 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 3 && !UserManager.main.tutorialClear))
-                UserManager.main.UpdateTutorialStep(3, 0, CallbackStartTutorial);            
-            
+                UserManager.main.UpdateTutorialStep(3, 0, CallbackStartTutorial);                 
         }
         
         

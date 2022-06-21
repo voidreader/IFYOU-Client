@@ -22,6 +22,8 @@ namespace PIERStory {
         
         public GameObject ButtonRight; 
         public GameObject ButtonLeft; 
+        
+        public GameObject ButtonClose;
 
         public override void Show()
         {
@@ -39,6 +41,7 @@ namespace PIERStory {
             StartCoroutine(SetRecommedStoryData());
             
             
+            ButtonClose.SetActive(false); // 닫기 버튼은 처음에 안보이도록 변경 
         }
         
         void InitButton() {
@@ -87,6 +90,10 @@ namespace PIERStory {
             if(panels.Count > 1)  {
                 ButtonRight.SetActive(true);
             }
+            
+            yield return new WaitForSeconds(2);
+            
+            ButtonClose.SetActive(true); // 버튼 등장 
         }
         
         

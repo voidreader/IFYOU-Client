@@ -21,9 +21,14 @@ namespace PIERStory
         public GameObject changeButton;
         public TextMeshProUGUI buttonLabel;
         bool isChangingScene = false;
+        
+        public string originLang = string.Empty;
 
         public override void Show()
         {
+            if(isShow)
+                return;
+            
             base.Show();
 
             changeButton.SetActive(false);
@@ -34,6 +39,20 @@ namespace PIERStory
                 le.InitElement();
 
             isChangingScene = false;
+            
+            originLang = SystemManager.main.currentAppLanguageCode;
+            
+        }
+
+        public override void Hide()
+        {
+            base.Hide();
+            
+            if(isChangingScene)
+                return;
+                
+            // 복구. 
+            SystemManager.main.currentAppLanguageCode = originLang;
         }
 
         void ChangeLanguageAlert(string changeText, string buttonText, TMP_FontAsset fontAsset, bool active)

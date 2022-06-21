@@ -1472,6 +1472,8 @@ namespace PIERStory
             SaveCurrentPlay();
 
             EndGame();
+            
+            SystemManager.isQuitGame = true;
 
         }
 

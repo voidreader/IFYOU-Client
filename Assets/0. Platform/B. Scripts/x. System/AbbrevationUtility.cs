@@ -45,7 +45,7 @@ using System.Linq;
         else if(val > 1000)
             return string.Format("{0:0.00}K", val * 0.001f);
         else
-            return string.Format("{0:0.00}", val);
+            return val.ToString();
     }
  }
  

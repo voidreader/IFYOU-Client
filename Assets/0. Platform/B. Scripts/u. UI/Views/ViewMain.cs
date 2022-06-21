@@ -143,6 +143,13 @@ namespace PIERStory {
                 SystemManager.ShowIntroPopup();
             }
             
+            
+            // 작품추천 (게임을 하다가 중단했다면)
+            if(SystemManager.isQuitGame) {
+                NetworkLoader.main.RequestRecommedStory();  
+                SystemManager.isQuitGame = false;
+            } 
+            
         }
 
         public override void OnStartView()

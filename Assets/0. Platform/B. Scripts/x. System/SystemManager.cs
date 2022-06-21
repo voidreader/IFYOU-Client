@@ -36,6 +36,7 @@ namespace PIERStory
         public static SystemManager main = null;
         public static bool IsGamebaseInit = false; // 게임베이스 초기화 여부 
         public static bool noticePopupExcuted = false; // 한번이라도 공지 팝업이 실행되면 true로 변경됨
+        public static bool isQuitGame = false; // 이전 게임 중단 여부 
         public bool isServerValid = false; // 업데이트 필수, 점검 
         public bool isAddressableCatalogUpdated = false; // 어드레서블 카탈로그 업데이트 여부 
         
@@ -2464,10 +2465,17 @@ namespace PIERStory
         /// </summary>
         /// <param name="__data"></param>
         public static void ShowRecommendStoryPopup(JsonData __data) {
+            
+            if(__data == null || __data.Count == 0) {
+                Debug.Log("No Recommend popup");
+                return;
+            }
+            
             PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_RECOMMEND);
             
             p.Data.contentJson = __data; // 데이터 전달 
             
+            // 팝업 큐 
             PopupManager.main.ShowPopup(p, true);
         }
         

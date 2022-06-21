@@ -83,13 +83,19 @@ namespace PIERStory {
                 return;
             }
             
-            // * 튜토리얼 3번 호출 
-            // 다음 에피소드가 무조건 대기 상태여야한다. 
+            
+            // 다음 에피소드가 없으면 더이상 아래 로직을 실행하지 않음 
             if(UserManager.main.CheckReachFinal())
                 return;
                 
-            // 이번에 볼 작품이 대기 중이니..? 
-            // 연재작은 매우 뒤에 오픈될 수도 있어서. 
+            // 다음 오픈되는 에피소드가 연재작이라 대기해야되는 경우. 
+            if(isOpenTimeCountable && currentEpisodeData.isSerial) {
+                NetworkLoader.main.RequestRecommedStory();
+                return;
+            }
+                
+                
+            // 대기 중이거나, 연재 작품은 튜토리얼 띄우지 않음. 
             if(!isOpenTimeCountable || currentEpisodeData.isSerial) {
                 return;
             }
@@ -98,7 +104,7 @@ namespace PIERStory {
             if(timeDiff.Minutes < 2) 
                 return;
             
-            // 튜토리얼 3 호출
+            // * 튜토리얼 3번 호출 
             if ((UserManager.main.tutorialStep <= 2 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 3 && !UserManager.main.tutorialClear))
                 UserManager.main.UpdateTutorialStep(3, 0, CallbackStartTutorial);            
             

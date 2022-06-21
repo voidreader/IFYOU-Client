@@ -91,6 +91,29 @@ namespace PIERStory {
         
         
         
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnClickPlay() {
+            if(LobbyManager.main != null) { // 로비에서 떴을떄 
+            
+                // RequestStory 호출하기
+                StoryManager.main.RequestStoryInfo(panels[scrollSnap.CurrentPanel].GetComponent<RecommendStory>().story);
+            }
+            else { // 게임에서 떴을때 
+                // givenStory를 바꾼다. 
+                SystemManager.main.givenStoryData = panels[scrollSnap.CurrentPanel].GetComponent<RecommendStory>().story;
+                UserManager.main.gameComplete = true;
+                GameManager.main.EndGame();
+                ViewCommonTop.OnBackAction = null; // 액션 초기화 
+            }
+            
+            Hide();
+            
+        }
+        
+        
+        
         public void OnClickRight() {
             scrollSnap.GoToNextPanel();
         }

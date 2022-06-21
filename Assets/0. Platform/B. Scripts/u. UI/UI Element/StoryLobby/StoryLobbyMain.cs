@@ -938,6 +938,8 @@ namespace PIERStory {
             Debug.Log("Game Start!!!!!");
             
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN, string.Empty);
+            
+            SystemManager.isQuitGame = false; // 변수 초기화 
             IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
             UserManager.main.useRecord = true;
             

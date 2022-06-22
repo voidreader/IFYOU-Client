@@ -258,6 +258,7 @@ namespace PIERStory {
             
             groupProperty.SetActive(previousGroupPropertyShow);
             textViewName.gameObject.SetActive(previousTextViewNameShow);
+
             textViewName.text = previousViewName;
             
             
@@ -331,7 +332,8 @@ namespace PIERStory {
             if(s.hasValue)
             {
                 string viewName = s.GetValueUnsafe<string>();
-                textViewName.text = viewName;
+                
+                SystemManager.SetText(textViewName, viewName);
             }
         }
 

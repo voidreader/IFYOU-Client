@@ -5,6 +5,11 @@ using TMPro;
 using RTLTMPro;
 
 namespace PIERStory {
+    
+    /// <summary>
+    /// 다국어를 처리해야하는 TextMeshPro에서 
+    /// LocalizedText를 직접 설정받는 곳에서만 사용.
+    /// </summary>
     public class TextLangFontChanger : MonoBehaviour
     {
         
@@ -35,6 +40,7 @@ namespace PIERStory {
         void Update() {
             
             // 아랍어일때만. 
+            /*
             if(SystemManager.main.currentAppLanguageCode != CommonConst.COL_AR) 
                 return;
                 
@@ -43,11 +49,15 @@ namespace PIERStory {
                 SetFont();
                 Debug.Log("Update Arabic TEXT : " + this.gameObject.name);
             }
+            */
                 
             
         }
 
         
+        /// <summary>
+        /// 폰트 설정
+        /// </summary>
         void SetFont() {
             if(_text == null) 
                 return;
@@ -60,6 +70,9 @@ namespace PIERStory {
             //     return; 
                
             _text.font = SystemManager.main.getCurrentLangFont(isException); // 폰트 가져오기 
+            
+            
+            /*
             // 아랍어 처리             
             if(SystemManager.main.currentAppLanguageCode == "AR") {
                 
@@ -77,7 +90,19 @@ namespace PIERStory {
             
             // originText에 입력해놓는다. 
             originText = _text.text;
+            */
             
+        }
+        
+        /// <summary>
+        /// 아랍어 정렬처리 
+        /// </summary>
+        public void SetArabicAlignment() {
+            
+            // 정렬 fix가 아니고, 좌측 정렬이었으면 아랍어에서는 우측정렬로 변경한다.
+            if(!isAlignmentFix && _text.horizontalAlignment == HorizontalAlignmentOptions.Left) {
+                _text.horizontalAlignment = HorizontalAlignmentOptions.Right;
+            }
         }
         
         void OnEnable() {

@@ -28,7 +28,6 @@ namespace PIERStory {
             // 설명글 추가 
             textExplain.text = string.Format(SystemManager.GetLocalizedText("6241"), lastLoggedInProvider);
             
-            
         }
         
         

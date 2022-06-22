@@ -43,8 +43,7 @@ namespace PIERStory
                     break;
             }
             
-            benefitDetail.text = benefitText;
-            
+            SystemManager.SetText(benefitDetail, benefitText);
         }
     }
 }

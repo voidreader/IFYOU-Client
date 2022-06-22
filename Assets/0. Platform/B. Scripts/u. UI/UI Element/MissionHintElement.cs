@@ -15,8 +15,8 @@ namespace PIERStory
         {
             radioButton.SetActive(isComplete);
 
-            episodeTitle.text = __title;
-            totalCount.text = __count;
+            SystemManager.SetText(episodeTitle, __title);
+            SystemManager.SetText(totalCount, __count);
         }
     }
 }

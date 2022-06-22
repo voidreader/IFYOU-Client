@@ -42,7 +42,8 @@ namespace PIERStory
             mailType = SystemManager.GetJsonNodeString(__j, "mail_type");
             currency = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
             quantity = SystemManager.GetJsonNodeString(__j, CommonConst.NODE_QUANTITY);
-            mailTitle.text = SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, MAIL_TYPE_TEXTID));
+            SystemManager.SetText(mailTitle, SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, MAIL_TYPE_TEXTID)));
+            
             hour = int.Parse(SystemManager.GetJsonNodeString(__j, REMAIN_HOURS));
             min = int.Parse(SystemManager.GetJsonNodeString(__j, REMAIN_MINS));
             

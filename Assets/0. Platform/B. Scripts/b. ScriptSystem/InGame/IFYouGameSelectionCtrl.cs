@@ -154,7 +154,7 @@ namespace PIERStory {
             if (selectionText.Contains("\\"))
                 selectionText = selectionText.Replace("\\", "");
 
-            textSelection.text = selectionText;
+            SystemManager.SetText(textSelection, selectionText);
 
             // 일러스트(이미지, CG) 획득이 있는지
             if (GameManager.main.CheckNextSceneHasIllust(targetSceneID))

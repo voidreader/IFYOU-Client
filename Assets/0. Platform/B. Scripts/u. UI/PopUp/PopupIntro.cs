@@ -197,7 +197,8 @@ namespace PIERStory {
                if(SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR) {
                    Debug.Log("Arabic Intro");
                    
-                    textArabicBubble.text = SystemManager.GetLocalizedText("6326");
+                    // textArabicBubble.text = SystemManager.GetLocalizedText("6326");
+                    SystemManager.SetLocalizedText(textArabicBubble, "6326");
                     textArabicBubble.color = new Color(textBubble.color.r, textBubble.color.g, textBubble.color.b, 0);
                     textArabicBubble.gameObject.SetActive(true);
                     textArabicBubble.DOFade(1, 1).OnComplete(OnCompleteTypeWrite);

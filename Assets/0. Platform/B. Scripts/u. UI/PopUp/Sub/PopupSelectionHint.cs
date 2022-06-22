@@ -32,8 +32,8 @@ namespace PIERStory
                 else
                     g.GetComponent<Image>().sprite = GameManager.main.spriteSelectionNormalBase;
 
-                texts[0].text = hintData.endingType;
-                texts[1].text = hintData.endingTitle;
+                SystemManager.SetText(texts[0], hintData.endingType);
+                SystemManager.SetText(texts[1], hintData.endingTitle);
             }
 
 

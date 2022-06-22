@@ -25,7 +25,8 @@ namespace PIERStory
             gradeBadgeContents.DOScale(Vector3.one, 0.4f).SetEase(Ease.OutBounce);
             badgeAura.rectTransform.DORotate(new Vector3(0, 0, 360f), 2f, RotateMode.FastBeyond360).SetLoops(-1, LoopType.Incremental).SetEase(Ease.Linear);
 
-            seasonEndText.text = string.Format(SystemManager.GetLocalizedText("6295"), UserManager.main.remainDay);
+            SystemManager.SetText(seasonEndText, string.Format(SystemManager.GetLocalizedText("6295"), UserManager.main.remainDay));
+            
             StartCoroutine(WaitParticleEffect());
         }
 

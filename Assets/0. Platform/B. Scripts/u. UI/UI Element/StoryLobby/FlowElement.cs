@@ -125,8 +125,7 @@ namespace PIERStory {
             isOpenTimeCountable = false; 
             
             
-            
-            textEpisodeTitle.text = currentEpisode.episodeTitle;
+            SystemManager.SetText(textEpisodeTitle, currentEpisode.episodeTitle);
             textEpisodeNumber.text = currentEpisode.flowPrefix;
             
             // 디테일 관련 처리 
@@ -137,7 +136,7 @@ namespace PIERStory {
             layoutElement.minHeight = sizeDetailOrigin.y;
 
             // Summary 및 게이지 처리             
-            textSummary.text = currentEpisode.episodeSummary;
+            SystemManager.SetText(textSummary, currentEpisode.episodeSummary);
             if(currentEpisode.episodeGalleryImageProgressValue > -1) {
                 groupIllustProgressor.SetActive(true);
                 illustProgressor.SetProgressAt(currentEpisode.episodeGalleryImageProgressValue);
@@ -189,7 +188,7 @@ namespace PIERStory {
                 rectCover.gameObject.SetActive(false);
             }
             else {
-                textEpisodeTitle.text = "????"; // 미해금된 경우 엔딩 제목을 노출하지 않음 
+                SystemManager.SetText(textEpisodeTitle, "????"); // 미해금된 경우 엔딩 제목을 노출하지 않음 
             }
         }
         
@@ -306,7 +305,8 @@ namespace PIERStory {
             textEpisodeTitle.text = string.Empty; // 타이틀 없애고 . 
             imageIcon.sprite = spriteCommingSoon;
             
-            textCommingSoon.text = SystemManager.GetLocalizedText("5187");
+            SystemManager.SetLocalizedText(textCommingSoon, "5187");
+            
             textEpisodeNumber.color = colorInactiveTextColor; // 에피소드 번호 색상 회색으로 변경 
             
             

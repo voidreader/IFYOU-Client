@@ -2155,7 +2155,12 @@ namespace PIERStory
             if(__textUI == null)
                 return;
                 
+            if(string.IsNullOrEmpty(__id))
+                return;
+                
             __textUI.text = GetLocalizedText(__id);
+            
+            // 텍스트 설정 후 처리 
             if(main.currentAppLanguageCode == CommonConst.COL_AR) {
                 SetArabicTextUI(__textUI);
             }
@@ -2166,6 +2171,7 @@ namespace PIERStory
         
         /// <summary>
         /// TextMeshPro에 텍스트 저장 
+        /// 텍스트 저장 후 처리까지!
         /// </summary>
         /// <param name="__textUI"></param>
         /// <param name="__text"></param>
@@ -2173,13 +2179,15 @@ namespace PIERStory
             if(__textUI == null)
                 return;
                 
-            __textUI.text = __text;
+            __textUI.text = __text; 
+            
+            // 텍스트 설정 후 처리 
             if(main.currentAppLanguageCode == CommonConst.COL_AR) {
                 SetArabicTextUI(__textUI);
             }
             else {
                 __textUI.isRightToLeftText = false;
-            }                
+            } 
         }
         
         
@@ -2689,14 +2697,17 @@ namespace PIERStory
                 return; // 아랍 텍스트 없으면 진행하지 않음. 
             }
             
-            
-            
             __textUI.isRightToLeftText = true;
             finalText.Clear();
             RTLSupport.FixRTL(originArabicText, finalText, false, true, true);
             finalText.Reverse();
             
             __textUI.text = finalText.ToString();
+            
+            // 정렬에 대한 추가 처리 
+            if(__textUI.GetComponent<TextLangFontChanger>() != null) {
+                __textUI.GetComponent<TextLangFontChanger>().SetArabicAlignment();
+            }
         }
         
         

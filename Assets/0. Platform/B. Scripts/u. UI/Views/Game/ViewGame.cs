@@ -396,7 +396,8 @@ namespace PIERStory
                 boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 80 + (countNewLine * 60));
 
             boxImage.gameObject.SetActive(true);
-            textNarration.text = narrationText;
+            
+            SystemManager.SetText(textNarration, narrationText);
 
             boxImage.DOFade(0.8f, 0.2f);
             textNarration.DOFade(1, 0.2f);
@@ -606,7 +607,7 @@ namespace PIERStory
         /// <param name="text"></param>
         public void SetSelectionInfoText(string __info)
         {
-            selectionInfoText.text = __info;
+            SystemManager.SetText(selectionInfoText, __info);
             selectionInfo.alpha = 0f;
         }
 
@@ -998,7 +999,8 @@ namespace PIERStory
                     // 메신저 알람은 터치 없이 행넘김. string 값만 입력해줌
                     messengerObject = Instantiate(messenger_call, messengerContent.transform);
                     messengerText = messengerObject.GetComponentInChildren<TextMeshProUGUI>();
-                    messengerText.text = row.script_data;
+                    
+                    SystemManager.SetText(messengerText, row.script_data);
                     GameManager.main.isWaitingScreenTouch = false;
                     break;
 
@@ -1132,6 +1134,8 @@ namespace PIERStory
                     messengerText.text = messengerText.text.Insert(messengerText.text.Length, tmp);
                 */
             }
+            
+            SystemManager.SetText(messengerText, messengerText.text);
 
             // 이 또한 대화이므로 게임로그에 데이터를 기입한다.
             CreateTalkLog(row.template, GameManager.main.GetNotationName(row), row.script_data);
@@ -1250,6 +1254,8 @@ namespace PIERStory
 
             // 로그 스크롤을 최하단으로 내리기
             logScrollRect.verticalNormalizedPosition = 0f;
+            
+            SystemManager.SetText(logText, logText.text);
         }
 
         public void CreateNarrationLog(string __data)
@@ -1299,6 +1305,12 @@ namespace PIERStory
         }
 
 
+        /// <summary>
+        /// Log 만들기
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="speaker"></param>
+        /// <param name="__data"></param>
         public void CreateTalkLog(string template, string speaker, string __data)
         {
             if (string.IsNullOrEmpty(__data))
@@ -1364,6 +1376,11 @@ namespace PIERStory
 
             inGameMenuBtn.SetActive(true);
             closeLogBtn.SetActive(false);
+            
+            
+            // 로그를 비활성화할때 썼던 text를 또 쓰기 때문에 다시 한번 호출한다.
+            // 아랍어 역순 배열때문에 사용
+            SystemManager.SetText(logText, logText.text);
         }
 
         #endregion

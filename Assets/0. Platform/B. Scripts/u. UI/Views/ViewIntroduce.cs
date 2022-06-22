@@ -58,19 +58,20 @@ namespace PIERStory {
             mainThumbnail.SetDownloadURL(introduceStory.premiumPassURL, introduceStory.premiumPassKey);
             
             SystemManager.SetText(textTitle, introduceStory.title);
-            // textTitle.text =  introduceStory.title;
-            textAuthor.text = SystemManager.GetLocalizedText("6179") + " / " + introduceStory.original; // 원작
-            textProducer.text = SystemManager.GetLocalizedText("6180") + " / " + introduceStory.writer;
-            textSummary.text = introduceStory.summary; // 요약 
-            textGenre.text = SystemManager.GetLocalizedText("6181") + " / " + introduceStory.genre;
+            
+            SystemManager.SetText(textAuthor, SystemManager.GetLocalizedText("6179") + " / " + introduceStory.original); // 원작
+            SystemManager.SetText(textProducer, SystemManager.GetLocalizedText("6180") + " / " + introduceStory.writer); // 
+            SystemManager.SetText(textSummary, introduceStory.summary); // 요약
+            SystemManager.SetText(textGenre, SystemManager.GetLocalizedText("6181") + " / " + introduceStory.genre); // 장르
+
             
             // serialGroup.SetActive(introduceStory.isSerial);
             serialGroup.SetActive(true);
             
             if(introduceStory.isSerial)
-                textSerialDay.text = string.Format(SystemManager.GetLocalizedText("5184"), introduceStory.GetSeiralDay()); // 연재일 설정..
+                SystemManager.SetText(textSerialDay, string.Format(SystemManager.GetLocalizedText("5184"), introduceStory.GetSeiralDay())); // 연재일 설정..
             else 
-                textSerialDay.text = SystemManager.GetLocalizedText("5186"); // 완결 
+                SystemManager.SetLocalizedText(textSerialDay, "5186");// 완결 
             
             SetLikeButtonState();
             SetAlertButtonState();
@@ -78,7 +79,7 @@ namespace PIERStory {
             // 인트로에서 넘어온 경우에 대한 처리 추가 
             if (SystemListener.main.isIntroduceRecommended) {
                 
-                textRecommend.text = SystemManager.GetLocalizedText("6289");
+                SystemManager.SetLocalizedText(textRecommend, "6289");
                 textRecommend.gameObject.SetActive(true);
                 SystemListener.main.isIntroduceRecommended = false;
             }

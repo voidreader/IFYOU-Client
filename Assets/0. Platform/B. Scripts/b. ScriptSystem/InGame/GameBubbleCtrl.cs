@@ -265,8 +265,7 @@ namespace PIERStory
             alternativeName = row.controlAlternativeName; // 대체이름 
 
             // 텍스트 설정 
-            textContents.SetText(message);
-            SystemManager.SetArabicTextUI(textContents);
+            SystemManager.SetText(textContents, message);
         }
 
         #endregion
@@ -377,8 +376,9 @@ namespace PIERStory
             
             speaker = string.Empty;
             alternativeName = string.Empty;
-            textContents.SetText(message);
-            SystemManager.SetArabicTextUI(textContents);
+            
+            SystemManager.SetText(textContents, message);
+
         }
 
         #endregion
@@ -861,8 +861,7 @@ namespace PIERStory
             nametag.color = HexCodeChanger.HexToColor(tagMainColor);
             textName.color = HexCodeChanger.HexToColor(tagSubColor);
 
-            textName.text = tagText;
-            SystemManager.SetArabicTextUI(textName);
+            SystemManager.SetText(textName, tagText);
                 
         }
 

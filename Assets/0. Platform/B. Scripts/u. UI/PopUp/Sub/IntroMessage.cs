@@ -40,8 +40,8 @@ namespace PIERStory {
             // 초상화 이미지 
             imagePortrait.SetDownloadURL(SystemManager.GetJsonNodeString(__j, "image_url"), SystemManager.GetJsonNodeString(__j, "image_key"));
             
-            textCharacterMessage.text = SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, "character_msg"));
-            textPublicMessage.text = SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, "public_msg"));
+            SystemManager.SetText(textCharacterMessage, SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, "character_msg")));
+            SystemManager.SetText(textPublicMessage, SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, "public_msg")));
             
             connectedProjectID = SystemManager.GetJsonNodeInt(__j, "connected_project_id");
             

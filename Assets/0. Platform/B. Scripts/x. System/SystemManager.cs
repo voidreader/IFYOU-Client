@@ -2146,6 +2146,42 @@ namespace PIERStory
             return localizedTextJSON[__id][main.currentAppLanguageCode.ToUpper()].ToString();
         }
         
+        /// <summary>
+        /// TextMeshPro에 로컬라이즈 텍스트 설정 
+        /// </summary>
+        /// <param name="__textUI"></param>
+        /// <param name="__id"></param>
+        public static void SetLocalizedText(TextMeshProUGUI __textUI, string __id) {
+            if(__textUI == null)
+                return;
+                
+            __textUI.text = GetLocalizedText(__id);
+            if(main.currentAppLanguageCode == CommonConst.COL_AR) {
+                SetArabicTextUI(__textUI);
+            }
+            else {
+                __textUI.isRightToLeftText = false;
+            }
+        }
+        
+        /// <summary>
+        /// TextMeshPro에 텍스트 저장 
+        /// </summary>
+        /// <param name="__textUI"></param>
+        /// <param name="__text"></param>
+        public static void SetText(TextMeshProUGUI __textUI, string __text) {
+            if(__textUI == null)
+                return;
+                
+            __textUI.text = __text;
+            if(main.currentAppLanguageCode == CommonConst.COL_AR) {
+                SetArabicTextUI(__textUI);
+            }
+            else {
+                __textUI.isRightToLeftText = false;
+            }                
+        }
+        
         
         public static void LoadLobbyScene() {
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin");
@@ -2648,9 +2684,11 @@ namespace PIERStory
             
             originArabicText = __textUI.text;
             
+            
             if(!TextUtils.IsRTLInput(originArabicText)) {
                 return; // 아랍 텍스트 없으면 진행하지 않음. 
             }
+            
             
             
             __textUI.isRightToLeftText = true;

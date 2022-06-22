@@ -659,25 +659,35 @@ namespace PIERStory
 
                 if (!string.IsNullOrEmpty(voice))
                     GameManager.main.SoundGroup[1].PlayVoice(voice);
+                    
+                if(SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR) { 
+                    // 아랍어는 타이핑 안한다. 
+                    flowTimeText.color = new Color(flowTimeText.color.r, flowTimeText.color.g, flowTimeText.color.b, 0);
+                    flowTimeText.text = labelText;
+                    flowTimeText.DOFade(1, 2); // 2초 페이드인 
+                    yield return new WaitForSeconds(3); // 3초 대기 
+                }
+                else {
+                    // * 일반언어. 타이핑 된다. 
+                    for (int i = 0; i < labelText.Length; i++)
+                    {
+                        string tmpStr = string.Empty;
 
-                for (int i = 0; i < labelText.Length; i++)
-                {
-                    string tmpStr = string.Empty;
+                        // 다음 문자가 특수문자인 경우 한 글자로 취급한다
+                        if (i + 1 < labelText.Length && System.Text.RegularExpressions.Regex.IsMatch(labelText[i + 1].ToString(), @"[~!@\#$%^&*\()\=+|\\/:;,?""<>']"))
+                            tmpStr = labelText[i + 1].ToString();
 
-                    // 다음 문자가 특수문자인 경우 한 글자로 취급한다
-                    if (i + 1 < labelText.Length && System.Text.RegularExpressions.Regex.IsMatch(labelText[i + 1].ToString(), @"[~!@\#$%^&*\()\=+|\\/:;,?""<>']"))
-                        tmpStr = labelText[i + 1].ToString();
+                        flowTimeText.text += (labelText[i] + tmpStr);
 
-                    flowTimeText.text += (labelText[i] + tmpStr);
+                        if (!string.IsNullOrEmpty(tmpStr))
+                            i++;
 
-                    if (!string.IsNullOrEmpty(tmpStr))
-                        i++;
-
-                    // 영어 텍스트는 길어서 너무 속도가 느리다
-                    if (SystemManager.main.currentAppLanguageCode == CommonConst.COL_EN || SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR)
-                        yield return new WaitForSeconds(0.04f);
-                    else
-                        yield return new WaitForSeconds(0.1f);
+                        // 영어 텍스트는 길어서 너무 속도가 느리다
+                        if (SystemManager.main.currentAppLanguageCode == CommonConst.COL_EN)
+                            yield return new WaitForSeconds(0.04f);
+                        else
+                            yield return new WaitForSeconds(0.1f);
+                    }                    
                 }
 
                 // 21.10.22

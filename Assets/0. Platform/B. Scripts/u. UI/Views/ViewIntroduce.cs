@@ -57,8 +57,8 @@ namespace PIERStory {
             // 이미지를 프리미엄 패스 이미지와 동일한 이미지를 사용한다.
             mainThumbnail.SetDownloadURL(introduceStory.premiumPassURL, introduceStory.premiumPassKey);
             
-            
-            textTitle.text = introduceStory.title;
+            SystemManager.SetText(textTitle, introduceStory.title);
+            // textTitle.text =  introduceStory.title;
             textAuthor.text = SystemManager.GetLocalizedText("6179") + " / " + introduceStory.original; // 원작
             textProducer.text = SystemManager.GetLocalizedText("6180") + " / " + introduceStory.writer;
             textSummary.text = introduceStory.summary; // 요약 

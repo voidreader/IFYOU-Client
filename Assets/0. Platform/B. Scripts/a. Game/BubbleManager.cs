@@ -26,6 +26,15 @@ namespace PIERStory
         {
             main = this;
             
+            // 아랍어 폰트 사이즈 조정.. 2022.06.22
+            if(SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR) {
+                normalFontSize = 24;
+                BigFontSize = 32;
+            }
+            else {
+                normalFontSize = 28;
+                BigFontSize = 36;
+            }
             
         }
 

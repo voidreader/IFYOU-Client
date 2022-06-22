@@ -266,6 +266,7 @@ namespace PIERStory
 
             // 텍스트 설정 
             textContents.SetText(message);
+            SystemManager.SetArabicTextUI(textContents);
         }
 
         #endregion
@@ -377,6 +378,7 @@ namespace PIERStory
             speaker = string.Empty;
             alternativeName = string.Empty;
             textContents.SetText(message);
+            SystemManager.SetArabicTextUI(textContents);
         }
 
         #endregion
@@ -860,6 +862,8 @@ namespace PIERStory
             textName.color = HexCodeChanger.HexToColor(tagSubColor);
 
             textName.text = tagText;
+            SystemManager.SetArabicTextUI(textName);
+                
         }
 
         #endregion

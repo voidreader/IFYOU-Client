@@ -23,6 +23,8 @@ namespace PIERStory {
         [Header("Phase 1")]
         public CanvasGroup imageBubble; // 말풍선 
         public TextMeshProUGUI textBubble; // 말풍선 텍스트
+        public TextMeshProUGUI textArabicBubble; // 아랍 말풍선 텍스트
+        public TextAnimator textAnimator;
         public TextAnimatorPlayer textAnimatorPlayer;  // 말풍선 텍스트 플레이어
         
         [Space]
@@ -111,6 +113,8 @@ namespace PIERStory {
             // Phase 1
             textBubble.gameObject.SetActive(false);
             textBubble.text = string.Empty;
+            textArabicBubble.gameObject.SetActive(false);
+            textArabicBubble.text = string.Empty;
             imageBubble.alpha = 0;
             
             // Phase 2
@@ -141,6 +145,16 @@ namespace PIERStory {
             introduceStory.GetComponent<CanvasGroup>().alpha = 0;
             introduceStory.SetActive(false); 
             
+            
+            // 아랍어에서 추가처리.
+            if(SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR) {
+                // Destroy(textAnimator);
+                // Destroy(textAnimatorPlayer);
+                
+                textAnimator.enabled = false;
+                textAnimatorPlayer.enabled = false;
+            }
+            
         }
         
         /// <summary>
@@ -149,7 +163,9 @@ namespace PIERStory {
         public void OnClickMoveNextPhase() {
             
             if(currentIntroPhase == 0) {
-                textAnimatorPlayer.SkipTypewriter();
+                
+                if(SystemManager.main.currentAppLanguageCode != CommonConst.COL_AR)
+                    textAnimatorPlayer.SkipTypewriter();
             }
             else if(currentIntroPhase == 1) {
                 Debug.Log(" >> currentIntroPhase 1");
@@ -174,11 +190,23 @@ namespace PIERStory {
             
             imageBubble.DOFade(1,1f).OnComplete(()=> {
                 
-                currentIntroPhase = 0;
-                
-               textBubble.gameObject.SetActive (true);
-               textAnimatorPlayer.ShowText(SystemManager.GetLocalizedText("6326"));
-               textAnimatorPlayer.StartShowingText();
+               currentIntroPhase = 0;
+               Debug.Log("StartPhase1 " + SystemManager.main.currentAppLanguageCode);
+               
+               // 아랍어 구분...
+               if(SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR) {
+                   Debug.Log("Arabic Intro");
+                   
+                    textArabicBubble.text = SystemManager.GetLocalizedText("6326");
+                    textArabicBubble.color = new Color(textBubble.color.r, textBubble.color.g, textBubble.color.b, 0);
+                    textArabicBubble.gameObject.SetActive(true);
+                    textArabicBubble.DOFade(1, 1).OnComplete(OnCompleteTypeWrite);
+               }
+               else {
+                    textBubble.gameObject.SetActive (true);
+                    textAnimatorPlayer.ShowText(SystemManager.GetLocalizedText("6326"));
+                    textAnimatorPlayer.StartShowingText();
+               }
             });
         }
         

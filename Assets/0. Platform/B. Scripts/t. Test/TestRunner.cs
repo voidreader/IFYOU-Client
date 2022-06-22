@@ -35,9 +35,17 @@ namespace PIERStory {
                 // textArabic.isRightToLeftText = true;
                 // textArabic.alignment = TextAlignmentOptions.TopRight;
                 // textArabic.text = ArabicFixer.Fix(textArabic.text, false, false);
+                string originalText = textArabic.text;
+                
+                /*
+                if(!TextUtils.IsRTLInput(originalText)) {
+                    Debug.Log("No Arabic TEXT");
+                    return; // 아랍 텍스트 없으면 진행하지 않음. 
+                }
+                */
                 
                 textArabic.isRightToLeftText = true;
-                string originalText = textArabic.text;
+                
                 finalText.Clear();
                 RTLSupport.FixRTL(originalText, finalText, false, true, true);
                 finalText.Reverse();

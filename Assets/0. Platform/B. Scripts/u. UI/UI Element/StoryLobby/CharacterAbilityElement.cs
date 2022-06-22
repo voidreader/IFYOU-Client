@@ -41,6 +41,11 @@ namespace PIERStory
 
             imageThumbnail.SetDownloadURL(__abilityData.backgroundUrl, __abilityData.backgroundKey, true);
             speakerName.text =  StoryManager.main.GetNametagName(__abilityData.speaker);
+            
+            if(SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR) {
+                SystemManager.SetArabicTextUI(speakerName);
+            }
+            
 
             mainAbilityIcon.SetDownloadURL(__abilityData.iconDesignUrl, __abilityData.iconDesignKey);
             mainAbilityName.text = __abilityData.abilityName;

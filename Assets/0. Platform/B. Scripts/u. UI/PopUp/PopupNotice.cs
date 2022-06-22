@@ -97,6 +97,7 @@ namespace PIERStory
         {
             noticeDetailTitle.text = SystemManager.GetJsonNodeString(detailData, LobbyConst.STORY_TITLE);
             noticeDate.text = !string.IsNullOrEmpty(startDate) ? string.Format("{0} {1}", DateTime.Parse(startDate, null, DateTimeStyles.RoundtripKind).ToString("f", new CultureInfo("en-US")), DateTime.Parse(startDate, null, DateTimeStyles.RoundtripKind).Kind) : string.Empty;
+            SystemManager.SetArabicTextUI(noticeDate);
 
             string textContents = SystemManager.GetJsonNodeString(detailData, "contents");
 

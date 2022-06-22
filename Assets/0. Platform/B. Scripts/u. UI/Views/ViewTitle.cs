@@ -33,6 +33,7 @@ namespace PIERStory {
         const string fontAssetBundle = "Font";
         const string effectAssetBundle = "ScreenEffect";
 
+        static string currentAppLang = string.Empty;
 
         private void Awake() {
             textLoading.text = string.Empty;
@@ -317,7 +318,13 @@ namespace PIERStory {
             string loadingText = GetPlatformLoadingText(step);
             Debug.Log(loadingText);
             
+            
+            
             textLoading.text = loadingText;
+            
+            if(currentAppLang == CommonConst.COL_AR) {
+                SystemManager.SetArabicTextUI(textLoading);
+            }
         }
         
         
@@ -352,7 +359,7 @@ namespace PIERStory {
             
             Debug.Log("> GetPlatformLoadingText : " + step);
             
-            string currentAppLang = string.Empty;
+            
             
             // 로컬라이징 정보가 최초 실행시에는 없다.
             if(!ES3.KeyExists(SystemConst.KEY_LANG)) { // 없는 경우 
@@ -366,6 +373,10 @@ namespace PIERStory {
                     
                     case SystemLanguage.Japanese:
                     currentAppLang = "JA";
+                    break;
+                    
+                    case SystemLanguage.Arabic:
+                    currentAppLang = "AR";
                     break;
                     
                     default:
@@ -387,6 +398,8 @@ namespace PIERStory {
                     return "서버에 접속합니다.";
                 else if(currentAppLang == "JA") 
                     return "サーバーに接続します。";
+                else if(currentAppLang == "AR") 
+                    return "الاتصال بالخادم.";
                 else
                     return "Connecting to server.";
                 
@@ -395,6 +408,8 @@ namespace PIERStory {
                     return "플랫폼 정보를 불러오고 있습니다.";
                 else if(currentAppLang == "JA") 
                     return "プラットフォーム情報の要求。";
+                else if(currentAppLang == "AR") 
+                    return "طلب معلومات النظام الأساسي.";
                 else
                     return "Requesting platform information.";
                 
@@ -404,6 +419,8 @@ namespace PIERStory {
                     return "게임에 필요한 데이터를 다운받고 있습니다.";
                 else if(currentAppLang == "JA") 
                     return "ゲームに必要なデータをダウンロードしています。";
+                else if(currentAppLang == "AR") 
+                    return "تنزيل بيانات اللعبة الضرورية.";
                 else
                     return "Downloading necessary game data.";
                 

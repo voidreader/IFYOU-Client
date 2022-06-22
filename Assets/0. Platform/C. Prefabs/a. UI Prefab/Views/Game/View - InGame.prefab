@@ -152,7 +152,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006623011993281}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006623041563930
 GameObject:
   m_ObjectHideFlags: 0
@@ -1041,7 +1042,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006623206679539}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006623225941274
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,7 +1194,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006623225941272}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006623235660950
 GameObject:
   m_ObjectHideFlags: 0
@@ -1345,7 +1348,8 @@ MonoBehaviour:
   _text: {fileID: 226006623235660948}
   _localizedText: 
   isException: 0
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006623311330395
 GameObject:
   m_ObjectHideFlags: 0
@@ -1496,7 +1500,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006623311330393}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006623431971906
 GameObject:
   m_ObjectHideFlags: 0
@@ -2122,7 +2127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006623643072582}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006623655315198
 GameObject:
   m_ObjectHideFlags: 0
@@ -2273,7 +2279,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006623655315196}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006623662102839
 GameObject:
   m_ObjectHideFlags: 0
@@ -2424,7 +2431,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006623662102837}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006623704985278
 GameObject:
   m_ObjectHideFlags: 0
@@ -3030,7 +3038,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006623882599052}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006623930547171
 GameObject:
   m_ObjectHideFlags: 0
@@ -3386,7 +3395,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006624027257068}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006624071101975
 GameObject:
   m_ObjectHideFlags: 0
@@ -3614,7 +3624,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006624152731809}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006624174370768
 GameObject:
   m_ObjectHideFlags: 0
@@ -4026,7 +4037,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006624231423343}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006624243337516
 GameObject:
   m_ObjectHideFlags: 0
@@ -5348,7 +5360,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006624353294921}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006624372124670
 GameObject:
   m_ObjectHideFlags: 0
@@ -5626,7 +5639,6 @@ GameObject:
   - component: {fileID: 226006624556660963}
   - component: {fileID: 226006624556660961}
   - component: {fileID: 226006624556660960}
-  - component: {fileID: 4702672511986712646}
   m_Layer: 5
   m_Name: LOG
   m_TagString: Untagged
@@ -5684,7 +5696,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: LOG
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 3b94b8a95fd106940ac05fb65bdd2d01, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   m_sharedMaterial: {fileID: -4354653047143194263, guid: 3b94b8a95fd106940ac05fb65bdd2d01, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -5748,24 +5760,9 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &4702672511986712646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 226006624556660962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _text: {fileID: 226006624556660960}
-  isException: 1
-  isFontSet: 0
 --- !u!1 &226006624671217273
 GameObject:
   m_ObjectHideFlags: 0
@@ -6409,7 +6406,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 226006624883402470}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &226006624929272362
 GameObject:
   m_ObjectHideFlags: 0
@@ -7144,7 +7142,8 @@ MonoBehaviour:
   _text: {fileID: 274932712925423168}
   _localizedText: 
   isException: 0
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &1292891971737154830
 GameObject:
   m_ObjectHideFlags: 0
@@ -7363,7 +7362,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 3979566353111546838}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &2918029539977492971
 GameObject:
   m_ObjectHideFlags: 0
@@ -8672,7 +8672,8 @@ MonoBehaviour:
   _text: {fileID: 4138796578755891194}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &6010750941932953548
 GameObject:
   m_ObjectHideFlags: 0
@@ -11026,7 +11027,8 @@ MonoBehaviour:
   _text: {fileID: 8187833374024652990}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &8187833374030115053
 GameObject:
   m_ObjectHideFlags: 0
@@ -12264,7 +12266,8 @@ MonoBehaviour:
   _text: {fileID: 8187833374362049307}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &8187833374406609051
 GameObject:
   m_ObjectHideFlags: 0
@@ -12417,7 +12420,8 @@ MonoBehaviour:
   _text: {fileID: 8187833374406609124}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &8187833374470016646
 GameObject:
   m_ObjectHideFlags: 0
@@ -12721,7 +12725,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 8187833374677393715}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &8187833374730884917
 GameObject:
   m_ObjectHideFlags: 0
@@ -12874,7 +12879,8 @@ MonoBehaviour:
   _text: {fileID: 8187833374730884918}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &8187833374789194332
 GameObject:
   m_ObjectHideFlags: 0

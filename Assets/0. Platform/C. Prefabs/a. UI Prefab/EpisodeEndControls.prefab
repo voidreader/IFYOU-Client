@@ -488,7 +488,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 0}
   isException: 1
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &4083747752045647949
 GameObject:
   m_ObjectHideFlags: 0
@@ -774,7 +775,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 0}
   isException: 1
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &6125200692612866328
 GameObject:
   m_ObjectHideFlags: 0
@@ -856,12 +858,17 @@ MonoBehaviour:
     colorCode: 000000
     projectProgress: 0
     isPlaying: 0
+    represenativeGenre: 
     genre: 
     serialDay: 
     isSerial: 0
     listSerialDays: []
     passPrice: 0
     passDiscount: 0.1
+    isNotify: 0
+    hitCount: 0
+    likeCount: 0
+    arrHashtag: []
   currentEpisodeID: 
   currentEpisodeData:
     episodeID: 
@@ -893,7 +900,8 @@ MonoBehaviour:
     unlockStyle: 
     isUnlock: 0
     isSerial: 0
-  hasPremium: 0
+    debugPublishData: 
+  hasPass: 0
   currentPlayState: 0
   ListFlowElements: []
   ListContentsButton: []
@@ -918,7 +926,6 @@ MonoBehaviour:
   canvasGroupContents: {fileID: 0}
   arrowGroupContetns: {fileID: 0}
   groupStoryContentsBlock: {fileID: 0}
-  flowMap: {fileID: 0}
   spriteActiveEpisodeTitleBG: {fileID: 21300000, guid: 27e091c7420558d49a9a4c24192ef992, type: 3}
   spriteInactiveEpisodeTitleBG: {fileID: 21300000, guid: eb382ef3e9d836e4cb6a54df1eefc3ea, type: 3}
   openDateTick: 0
@@ -1166,7 +1173,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 0}
   isException: 1
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &7329009300961477135
 GameObject:
   m_ObjectHideFlags: 0
@@ -1710,26 +1718,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &3934514319498984087 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8641623604004751078, guid: 4b5957abe7a8b5b49b14e1012d7e4682, type: 3}
-  m_PrefabInstance: {fileID: 4717244686311963761}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &868137533641100452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3934514319498984087}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _text: {fileID: 0}
-  isException: 1
-  isFontSet: 0
 --- !u!1 &4561379657490543678 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9095656807943342159, guid: 4b5957abe7a8b5b49b14e1012d7e4682, type: 3}
@@ -1740,7 +1728,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 106233873379480439, guid: 4b5957abe7a8b5b49b14e1012d7e4682, type: 3}
   m_PrefabInstance: {fileID: 4717244686311963761}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3934514319498984087}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
@@ -1778,7 +1766,8 @@ MonoBehaviour:
   _text: {fileID: 6693471272595492776}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1001 &5869572707415388123
 PrefabInstance:
   m_ObjectHideFlags: 0

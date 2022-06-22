@@ -257,9 +257,12 @@ namespace PIERStory
                     
                     if (__params != null)
                         ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_TYPE, ref effectType);
+                        
+                    
 
                     if (effectType == 1)
                     {
+                        Debug.Log("출혈 인스턴시에이트 #1");
                         bleeding_1 = Instantiate(bleeding_1Prefab, transform);
                         ChangeJustLayerRecursively(bleeding_1.transform);
                         bleeding_1.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
@@ -268,6 +271,7 @@ namespace PIERStory
                     }
                     else if (effectType == 2)
                     {
+                        Debug.Log("출혈 인스턴시에이트 #2");
                         bleeding_2 = Instantiate(bleeding_2Prefab, transform);
                         ChangeJustLayerRecursively(bleeding_2.transform);
                         bleeding_2.gameObject.SetActive(false);
@@ -276,6 +280,7 @@ namespace PIERStory
                     }
                     else
                     {
+                        Debug.Log("출혈 인스턴시에이트 #3");
                         bleeding_3 = Instantiate(bleeding_3Prefab, transform);
                         ChangeJustLayerRecursively(bleeding_3.transform);
                         bleeding_3.gameObject.SetActive(false);
@@ -1576,7 +1581,7 @@ namespace PIERStory
                         ScriptRow.GetParam<float>(__params, GameConst.KR_PARAM_VALUE_TIME, ref bloodTime);
                     }
 
-                    var bleedMain = bleeding_1.main;
+                    ParticleSystem.MainModule bleedMain;
 
                     switch (bloodType)
                     {

@@ -533,7 +533,7 @@ namespace PIERStory
                     string.IsNullOrEmpty(SystemManager.GetJsonNodeString(scriptData[i], GameConst.COL_SCRIPT_DATA)))
                     continue;
 
-                ScreenEffectManager.main.InitScreenEffect(SystemManager.GetJsonNodeString(scriptData[i], GameConst.COL_SCRIPT_DATA));
+                ScreenEffectManager.main.InstantiateEffect(SystemManager.GetJsonNodeString(scriptData[i], GameConst.COL_SCRIPT_DATA));
             }
         }
 

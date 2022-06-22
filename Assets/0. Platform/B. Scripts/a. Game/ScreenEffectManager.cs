@@ -41,39 +41,58 @@ namespace PIERStory
 
         [Space(20)]
         [Header("Particle system effect")]
-        [Tooltip("불 파티클")] public ParticleSystem fire;
-        [Tooltip("반짝이 파티클")] public ParticleSystem glitter;
+        [Tooltip("불 파티클")] public ParticleSystem firePrefab;
+        ParticleSystem fire;
+        [Tooltip("반짝이 파티클")] public ParticleSystem glitterPrefab;
+        ParticleSystem glitter;
         ParticleSystem[] glitters;
-        [Tooltip("원형빛1")] public ParticleSystem bokeh1;
-        [Tooltip("원형빛2")] public ParticleSystem bokeh2;
-        [Tooltip("육각형빛")] public ParticleSystem hexagonLight;
-        [Tooltip("배경만 안개")] public ParticleSystem bgFog;
+        [Tooltip("원형빛1")] public ParticleSystem bokeh1Prefab;
+        ParticleSystem bokeh1;
+        [Tooltip("원형빛2")] public ParticleSystem bokeh2Prefab;
+        ParticleSystem bokeh2;
+        [Tooltip("육각형빛")] public ParticleSystem hexagonLightPrefab;
+        ParticleSystem hexagonLight;
+        public ParticleSystem fogPrefab;
+        [Tooltip("배경만 안개")] ParticleSystem bgFog;
         ParticleSystem[] bgFogs;
-        [Tooltip("스크린 안개")] public ParticleSystem screenFog;
+        [Tooltip("스크린 안개")] ParticleSystem screenFog;
         ParticleSystem[] screenFogs;
         [Tooltip("폭우")] public ParticleSystem heavyRainParticle;
         [Tooltip("비")] public ParticleSystem rainParticle;
         [Tooltip("폭설")] public ParticleSystem heavySnowParticle;
-        [Tooltip("눈")] public ParticleSystem snow;
-        public List<ParticleSystem> snowParticles;
-        [Tooltip("렌즈플레어1")] public ParticleSystem lensFlare1;
-        public ParticleSystem flareGlow1;
-        [Tooltip("렌즈플레어2")] public ParticleSystem lensFlare2;
-        public ParticleSystem flareGlow2;
-        [Tooltip("렌즈플레어3")] public ParticleSystem lensFlare3;
-        public ParticleSystem flareGlow3;
+        public ParticleSystem snowPrefab;
+        [Tooltip("눈")] ParticleSystem snow;
+        List<ParticleSystem> snowParticles;
+        [Tooltip("렌즈플레어1")] public ParticleSystem lensFlare1Prefab;
+        ParticleSystem lensFlare1;
+        ParticleSystem flareGlow1;
+        [Tooltip("렌즈플레어2")] public ParticleSystem lensFlare2Prefab;
+        ParticleSystem lensFlare2;
+        ParticleSystem flareGlow2;
+        [Tooltip("렌즈플레어3")] public ParticleSystem lensFlare3Prefab;
+        ParticleSystem lensFlare3;
+        ParticleSystem flareGlow3;
         [Tooltip("렌즈플레어에서 사용되는 빛알갱이")] public ParticleSystem lightDust;
-        [Tooltip("집중선")] public ParticleSystem radiLine;
-        public List<ParticleSystem> radiLines;                              // 집중선 색 변경을 위한 변수
-        [Tooltip("출혈 타입1")] public ParticleSystem bleeding_1;
-        [Tooltip("출혈 타입2")] public ParticleSystem bleeding_2;
-        [Tooltip("출혈 타입3")] public ParticleSystem bleeding_3;
-        [Tooltip("둔기 타격")] public ParticleSystem bluntStrike;
-        [Tooltip("검 베기")] public ParticleSystem blade;
-        [Tooltip("비눗방울")] public ParticleSystem bubble;
-        public List<ParticleSystem> bubbles;
-        [Tooltip("회상, 밝음")] public ParticleSystem reminisceLight;
-        [Tooltip("신비로운 경계라인")] public ParticleSystem waveLine;
+        [Tooltip("집중선")] public ParticleSystem radiLinePrefab;
+        ParticleSystem radiLine;
+        List<ParticleSystem> radiLines;                              // 집중선 색 변경을 위한 변수
+        [Tooltip("출혈 타입1")] public ParticleSystem bleeding_1Prefab;
+        ParticleSystem bleeding_1;
+        [Tooltip("출혈 타입2")] public ParticleSystem bleeding_2Prefab;
+        ParticleSystem bleeding_2;
+        [Tooltip("출혈 타입3")] public ParticleSystem bleeding_3Prefab;
+        ParticleSystem bleeding_3;
+        [Tooltip("둔기 타격")] public ParticleSystem bluntStrikePrefab;
+        ParticleSystem bluntStrike;
+        [Tooltip("검 베기")] public ParticleSystem bladePrefab;
+        ParticleSystem blade;
+        [Tooltip("비눗방울")] public ParticleSystem bubblePrefab;
+        ParticleSystem bubble;
+        List<ParticleSystem> bubbles;
+        [Tooltip("회상, 밝음")] public ParticleSystem reminisceLightPrefab;
+        ParticleSystem reminisceLight;
+        [Tooltip("신비로운 경계라인")] public ParticleSystem waveLinePrefab;
+        ParticleSystem waveLine;
 
         #endregion
 
@@ -114,9 +133,331 @@ namespace PIERStory
             heavySnow = generalCam.GetComponent<CameraFilterPack_3D_Snow>();
             heavyRain = generalCam.GetComponent<CameraFilterPack_Atmosphere_Rain>();
             rain = generalCam.GetComponent<D2RainsPE>();
-
-
         }
+
+        public void InstantiateEffect(string __data)
+        {
+            string effect = __data.Contains(GameConst.SPLIT_SCREEN_EFFECT) ? __data.Split(GameConst.SPLIT_SCREEN_EFFECT[0])[0] : __data;
+            string[] __params = __data.Contains(GameConst.SPLIT_SCREEN_EFFECT) && __data.Contains(GameConst.KR_PARAM_VALUE_TYPE) ? __data.Split(GameConst.SPLIT_SCREEN_EFFECT[0])[1].Split(GameConst.SPLIT_SCREEN_EFFECT_V[0]) : null;
+            int effectType = 1;
+
+            if (!AddInEffectDictionary(__data))
+                return;
+
+            switch (effect)
+            {
+                case GameConst.KR_SCREEN_EFFECT_FIRE:
+                    fire = Instantiate(firePrefab, transform);
+                    ChangeJustLayerRecursively(fire.transform);
+                    fire.gameObject.SetActive(false);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BLING:
+                    glitter = Instantiate(glitterPrefab, transform);
+                    ChangeJustLayerRecursively(glitter.transform);
+                    glitters = glitter.GetComponentsInChildren<ParticleSystem>();
+                    glitter.gameObject.SetActive(false);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_FOCUS:
+                    radiLine = Instantiate(radiLinePrefab, transform);
+                    ChangeJustLayerRecursively(radiLine.transform);
+                    radiLines = new List<ParticleSystem>();
+
+                    for (int i = 0; i < radiLine.transform.GetChild(0).GetChild(0).childCount; i++)
+                    {
+                        radiLines.Add(radiLine.transform.GetChild(0).GetChild(0).GetChild(i).GetComponent<ParticleSystem>());
+                        radiLine.transform.GetChild(0).GetChild(0).GetChild(i).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                    }
+
+                    radiLine.gameObject.SetActive(false);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT:
+
+                    if (__params != null)
+                        ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_TYPE, ref effectType);
+
+                    if (effectType == 1)
+                    {
+                        bokeh1 = Instantiate(bokeh1Prefab, transform);
+                        ChangeJustLayerRecursively(bokeh1.transform);
+                        bokeh1.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        bokeh2 = Instantiate(bokeh2Prefab, transform);
+                        ChangeJustLayerRecursively(bokeh2.transform);
+                        bokeh2.gameObject.SetActive(false);
+                    }
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_HEX_LIGHT:
+                    hexagonLight = Instantiate(hexagonLightPrefab, transform);
+                    ChangeJustLayerRecursively(hexagonLight.transform);
+                    hexagonLight.gameObject.SetActive(false);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_FOG:
+                    bgFog = Instantiate(fogPrefab, transform);
+                    bgFogs = bgFog.GetComponentsInChildren<ParticleSystem>();
+                    foreach (ParticleSystem __ps in bgFogs)
+                        __ps.GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                    bgFog.gameObject.SetActive(false);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_SCREEN_FOG:
+                    screenFog = Instantiate(fogPrefab, transform);
+                    ChangeJustLayerRecursively(screenFog.transform);
+                    screenFogs = screenFog.GetComponentsInChildren<ParticleSystem>();
+                    foreach (ParticleSystem __ps in screenFogs)
+                        __ps.GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                    screenFog.gameObject.SetActive(false);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_LENS_FLARE:
+
+                    if (__params != null)
+                        ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_TYPE, ref effectType);
+
+                    if (effectType == 1)
+                    {
+                        lensFlare1 = Instantiate(lensFlare1Prefab, transform);
+                        ChangeJustLayerRecursively(lensFlare1.transform);
+                        flareGlow1 = lensFlare1.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystem>();
+                        lensFlare1.gameObject.SetActive(false);
+                    }
+                    else if (effectType == 2)
+                    {
+                        lensFlare2 = Instantiate(lensFlare2Prefab, transform);
+                        ChangeJustLayerRecursively(lensFlare2.transform);
+                        flareGlow2 = lensFlare2.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystem>();
+                        lensFlare2.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        lensFlare3 = Instantiate(lensFlare3Prefab, transform);
+                        ChangeJustLayerRecursively(lensFlare3.transform);
+                        flareGlow3 = lensFlare3.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystem>();
+                        lensFlare3.gameObject.SetActive(false);
+                    }
+
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_SNOW:
+                    snow = Instantiate(snowPrefab, transform);
+                    ChangeJustLayerRecursively(snow.transform);
+                    snowParticles = new List<ParticleSystem>();
+                    for (int i = 1; i < snow.transform.GetChild(0).childCount; i++)
+                        snowParticles.Add(snow.transform.GetChild(0).GetChild(i).GetComponent<ParticleSystem>());
+                    snow.gameObject.SetActive(false);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BLOOD_HIT:
+                    
+                    if (__params != null)
+                        ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_TYPE, ref effectType);
+
+                    if (effectType == 1)
+                    {
+                        bleeding_1 = Instantiate(bleeding_1Prefab, transform);
+                        ChangeJustLayerRecursively(bleeding_1.transform);
+                        bleeding_1.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                        bleeding_1.transform.GetChild(0).GetChild(1).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                        bleeding_1.gameObject.SetActive(false);
+                    }
+                    else if (effectType == 2)
+                    {
+                        bleeding_2 = Instantiate(bleeding_2Prefab, transform);
+                        ChangeJustLayerRecursively(bleeding_2.transform);
+                        bleeding_2.gameObject.SetActive(false);
+                        bleeding_2.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                        bleeding_2.transform.GetChild(0).GetChild(1).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                    }
+                    else
+                    {
+                        bleeding_3 = Instantiate(bleeding_3Prefab, transform);
+                        ChangeJustLayerRecursively(bleeding_3.transform);
+                        bleeding_3.gameObject.SetActive(false);
+                        bleeding_3.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                        bleeding_3.transform.GetChild(0).GetChild(1).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                    }
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BUBBLES:
+                    bubble = Instantiate(bubblePrefab, transform);
+                    ChangeJustLayerRecursively(bubble.transform);
+                    bubbles = new List<ParticleSystem>();
+                    for (int i = 2; i < bubble.transform.GetChild(0).childCount; i++)
+                        bubbles.Add(bubble.transform.GetChild(0).GetChild(i).GetComponent<ParticleSystem>());
+                    bubble.gameObject.SetActive(false);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_DAMAGE:
+
+                    __params = __data.Contains(GameConst.SPLIT_SCREEN_EFFECT) ? __data.Split(GameConst.SPLIT_SCREEN_EFFECT[0]) : null;
+
+                    if (__params == null || __params[1].Contains("둔기"))
+                    {
+                        bluntStrike = Instantiate(bluntStrikePrefab, transform);
+                        ChangeJustLayerRecursively(bluntStrike.transform);
+                        bluntStrike.gameObject.SetActive(false);
+                        break;
+                    }
+                    else if (__params[1].Contains("검"))
+                    {
+                        blade = Instantiate(bladePrefab, transform);
+                        ChangeJustLayerRecursively(blade.transform);
+                        blade.gameObject.SetActive(false);
+                        break;
+                    }
+
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_REMINISCE:
+
+                    if (!__data.Contains("밝음"))
+                        break;
+
+                    reminisceLight = Instantiate(reminisceLightPrefab, transform);
+                    ChangeJustLayerRecursively(reminisceLight.transform);
+                    reminisceLight.gameObject.SetActive(false);
+                    reminisceLight.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().material.shader = Shader.Find("Mobile/Particles/Alpha Blended");
+                    reminisceLight.transform.GetChild(0).GetChild(1).GetComponent<SpriteRenderer>().material.shader = Shader.Find("Mobile/Particles/Additive");
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
+                    waveLine = Instantiate(waveLinePrefab, transform);
+                    ChangeJustLayerRecursively(waveLine.transform);
+                    for (int i = 0; i < waveLine.transform.GetChild(0).childCount; i++)
+                    {
+                        for (int j = 0; j < waveLine.transform.GetChild(0).GetChild(i).childCount; j++)
+                            waveLine.transform.GetChild(0).GetChild(i).GetChild(j).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Legacy Shaders/Particles/Additive (Soft)");
+                    }
+
+                    waveLine.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Legacy Shaders/Particles/Additive (Soft)");
+                    waveLine.transform.GetChild(0).GetChild(1).GetComponent<ParticleSystemRenderer>().material.shader = Shader.Find("Legacy Shaders/Particles/Additive (Soft)");
+                    waveLine.transform.GetChild(0).GetChild(2).GetComponent<ParticleSystemRenderer>().material = null;
+                    waveLine.gameObject.SetActive(false);
+                    break;
+            }
+        }
+
+        void ChangeJustLayerRecursively(Transform trans)
+        {
+            trans.gameObject.layer = LayerMask.NameToLayer("Particles");
+
+            foreach (Transform tr in trans)
+                ChangeLayerRecursively(tr);
+        }
+
+        bool AddInEffectDictionary(string __data)
+        {
+            string effect = __data.Contains(GameConst.SPLIT_SCREEN_EFFECT) ? __data.Split(GameConst.SPLIT_SCREEN_EFFECT[0])[0] : __data;
+            string[] __params = __data.Contains(GameConst.SPLIT_SCREEN_EFFECT) && __data.Contains(GameConst.KR_PARAM_VALUE_TYPE) ? __data.Split(GameConst.SPLIT_SCREEN_EFFECT[0])[1].Split(GameConst.SPLIT_SCREEN_EFFECT_V[0]) : null;
+            int effectType = 1;
+            string effectKey = string.Empty;
+
+            switch (effect)
+            {
+                case GameConst.KR_SCREEN_EFFECT_FIRE:
+                    effectKey = effect;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BLING:
+                    effectKey = effect;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_FOCUS:
+                    effectKey = effect;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT:
+
+                    if (__params != null)
+                        ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_TYPE, ref effectType);
+
+                    effectKey = effect + effectType.ToString();
+
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_HEX_LIGHT:
+                    effectKey = effect;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_FOG:
+                    effectKey = effect;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_SCREEN_FOG:
+                    effectKey = effect;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_LENS_FLARE:
+
+                    if (__params != null)
+                        ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_TYPE, ref effectType);
+
+                    effectKey = effect + effectType.ToString();
+
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_SNOW:
+                    effectKey = effect;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BLOOD_HIT:
+
+                    if (__params != null)
+                        ScriptRow.GetParam(__params, GameConst.KR_PARAM_VALUE_TYPE, ref effectType);
+
+                    effectKey = effect + effectType.ToString();
+
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_BUBBLES:
+                    effectKey = effect;
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_DAMAGE:
+
+                    __params = __data.Contains(GameConst.SPLIT_SCREEN_EFFECT) ? __data.Split(GameConst.SPLIT_SCREEN_EFFECT[0]) : null;
+
+                    if (__params == null || __params[1].Contains("둔기"))
+                    {
+                        effectKey = effect + "둔기";
+                        break;
+                    }
+                    else if (__params[1].Contains("검"))
+                    {
+                        effectKey = effect + "검";
+                        break;
+                    }
+
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_REMINISCE:
+                    if (!__data.Contains("밝음"))
+                        return false;
+                    else
+                        effectKey = effect + "밝음";
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
+                    effectKey = effect;
+                    break;
+            }
+
+
+            if (DictParticle.ContainsKey(effectKey))
+                return false;
+
+            DictParticle.Add(effectKey, 1);
+            return true;
+        }
+
+
+        #region 실패한 Addressable....총체적 난국
 
         public void InitScreenEffect(string __data)
         {
@@ -413,8 +754,9 @@ namespace PIERStory
                 ChangeLayerRecursively(tr);
         }
 
+        #endregion
 
-
+        
         #region 화면 연출 screen effect
 
         #region 틴트

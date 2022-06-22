@@ -158,6 +158,7 @@ namespace PIERStory {
             }
 
             // 스크린 이펙트 체크
+            /*
             AsyncOperationHandle<IList<IResourceLocation>>  effectBundleCheckHandle = Addressables.LoadResourceLocationsAsync(effectAssetBundle);
             yield return effectBundleCheckHandle;
 
@@ -183,7 +184,7 @@ namespace PIERStory {
                     Debug.Log("<color=purple> all ScreenEffect bundle is downloaded </color>");
                 }
             }
-
+            */
             
             // 다운로드 할 거 없음 
             if(!hasDownloadableBundle) {
@@ -238,7 +239,7 @@ namespace PIERStory {
                 SystemManager.main.LoadAddressableFont();
             }
 
-
+            /*
             getDownloadSizeHandle = Addressables.GetDownloadSizeAsync(effectAssetBundle);
             yield return getDownloadSizeHandle;
             Debug.Log("### [ScreenEffect] GetDownloadSizeAsync END, size : " + getDownloadSizeHandle.Result);
@@ -269,7 +270,7 @@ namespace PIERStory {
                     yield return null;
                 }
             }
-
+            */
 
             StartCoroutine(MovingNextScene());
         }

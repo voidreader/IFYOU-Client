@@ -67,6 +67,7 @@ namespace PIERStory
                 if(UserManager.main.currentStoryJson["bgms"] == null || UserManager.main.currentStoryJson["bgms"].Count == 0)
                 {
                     SystemManager.ShowMessageWithLocalize("80111");
+                    SystemManager.HideNetworkLoading();
                     return;
                 }
 

@@ -76,6 +76,7 @@ namespace PIERStory
 
         #endregion
 
+        public bool loadParticleComplete = false;
         Dictionary<string, int> DictParticle = new Dictionary<string, int>();
 
         // zoom용 float값
@@ -121,7 +122,6 @@ namespace PIERStory
         {
             string effect = __data.Contains(GameConst.SPLIT_SCREEN_EFFECT) ? __data.Split(GameConst.SPLIT_SCREEN_EFFECT[0])[0] : __data;
             string[] __params = __data.Contains(GameConst.SPLIT_SCREEN_EFFECT) && __data.Contains(GameConst.KR_PARAM_VALUE_TYPE) ? __data.Split(GameConst.SPLIT_SCREEN_EFFECT[0])[1].Split(GameConst.SPLIT_SCREEN_EFFECT_V[0]) : null;
-            
 
             switch (effect)
             {
@@ -256,12 +256,31 @@ namespace PIERStory
 
                     // 완료되고는 비활성화
                     __particle.gameObject.SetActive(false);
+                    loadParticleComplete = true;
+                }
+                else
+                {
+                    loadParticleComplete = true;
+                    Debug.LogError(addressableKey + "InstantiateAsync failed. " + handle.Status);
+#if UNITY_IOS
+                    SystemManager.ShowSystemPopup(addressableKey + "InstantiateAsync failed. " + handle.Status, null, null, false, false);
+#endif
                 }
             };
         }
 
         void InitCreateEffectAsset(ParticleSystem ps, string effect, int __type = 1)
         {
+            if(ps == null)
+            {
+                Debug.LogError("Create particle failed : " + effect);
+#if UNITY_IOS
+                    SystemManager.ShowSystemPopup("Create particle failed : " + effect, null, null, false, false);
+#endif
+                return;
+            }
+
+
             switch (effect)
             {
                 case GameConst.KR_SCREEN_EFFECT_FIRE:
@@ -396,9 +415,9 @@ namespace PIERStory
 
 
 
-        #region 화면 연출 screen effect
+#region 화면 연출 screen effect
 
-        #region 틴트
+#region 틴트
 
         /// <summary>
         /// 화면 전체 틴트
@@ -453,9 +472,9 @@ namespace PIERStory
             __sp.gameObject.SetActive(false);
         }
 
-        #endregion
+#endregion
 
-        #region 흑백 Coroutine
+#region 흑백 Coroutine
 
         IEnumerator GrayScaleEffectAnimation(CameraFilterPack_Color_GrayScale cam, float fadeValue, float __animTime)
         {
@@ -501,9 +520,9 @@ namespace PIERStory
                 StartCoroutine(GrayScaleEffectAnimation(grayScale, 1f, animTime));
         }
 
-        #endregion
+#endregion
 
-        #region 흔들기 Callback
+#region 흔들기 Callback
 
         void OnCompleteShake()
         {
@@ -511,9 +530,9 @@ namespace PIERStory
             mainCam.transform.position = new Vector3(0, 0, -10);
         }
 
-        #endregion
+#endregion
 
-        #region 블러 Coroutine
+#region 블러 Coroutine
 
         IEnumerator BlurAnimation(float blurAmount, float blurTime)
         {
@@ -543,9 +562,9 @@ namespace PIERStory
             blur.enabled = false;
         }
 
-        #endregion
+#endregion
 
-        #region 글리치 function
+#region 글리치 function
 
         void GlitchSetting(CameraFilterPack_TV_Artefact glitch, string[] __params)
         {
@@ -571,9 +590,9 @@ namespace PIERStory
             glitch.enabled = true;
         }
 
-        #endregion
+#endregion
 
-        #region 집중선
+#region 집중선
 
         IEnumerator FocusRemain(float __activeTime)
         {
@@ -582,7 +601,7 @@ namespace PIERStory
             radiLine.gameObject.SetActive(false);
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// 카메라에 연결되는 화면 연출
@@ -761,7 +780,7 @@ namespace PIERStory
 
                 case GameConst.KR_SCREEN_EFFECT_ZOOMIN:
 
-                    #region 줌인
+#region 줌인
                     const float zoomAnimTime = 0.7f;
                     int zoomLevel = 1;
 
@@ -789,7 +808,7 @@ namespace PIERStory
                     }
                     break;
 
-                #endregion
+#endregion
 
                 case GameConst.KR_SCREEN_EFFECT_ZOOMOUT:
 
@@ -1388,7 +1407,7 @@ namespace PIERStory
 
 
 
-        #region 카메라 플래시
+#region 카메라 플래시
 
         /// <summary>
         /// 플래시 이펙트 효과 연출
@@ -1410,11 +1429,11 @@ namespace PIERStory
             flash.OnComplete(() => { ViewGame.main.fadeImage.gameObject.SetActive(false); });
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region 화면연출 제거
+#region 화면연출 제거
 
         /// <summary>
         /// 일반 이펙트 삭제
@@ -1590,6 +1609,6 @@ namespace PIERStory
                 RemoveCameraEffect(RowActionScreenEffect.ListCameraEffect[i]);
         }
 
-        #endregion
+#endregion
     }
 }

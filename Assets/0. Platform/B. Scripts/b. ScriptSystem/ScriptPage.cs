@@ -145,7 +145,7 @@ namespace PIERStory
             StartCoroutine(RoutineLoadingSound(GameConst.COL_VOICE));                       // 음성 
             StartCoroutine(RoutineLoadingSound(COL_SOUND_EFFECT));                          // SE
 
-            LoadingScreenEffect();                                                          // 화면연출
+            StartCoroutine(LoadingScreenEffect());                                                          // 화면연출
 
             yield return StartCoroutine(RoutineInstantiateLiveIllustsAndObjects()); 
             
@@ -520,7 +520,7 @@ namespace PIERStory
         }
 
 
-        void LoadingScreenEffect()
+        IEnumerator LoadingScreenEffect()
         {
             for (int i = 0; i < scriptData.Count; i++)
             {
@@ -533,7 +533,11 @@ namespace PIERStory
                     string.IsNullOrEmpty(SystemManager.GetJsonNodeString(scriptData[i], GameConst.COL_SCRIPT_DATA)))
                     continue;
 
+                ScreenEffectManager.main.loadParticleComplete = false;
                 ScreenEffectManager.main.InitScreenEffect(SystemManager.GetJsonNodeString(scriptData[i], GameConst.COL_SCRIPT_DATA));
+
+                // 하나의 로딩이 끝날 때까지 대기
+                yield return new WaitUntil(() => ScreenEffectManager.main.loadParticleComplete);
             }
         }
 

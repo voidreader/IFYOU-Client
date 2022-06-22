@@ -1710,7 +1710,7 @@ namespace PIERStory
         /// <param name="isScreen">배경만인지? 스크린 전체인지</param>
         void FogSet(int __rateOverTime, bool isScreen)
         {
-            var fogEmission = bgFog.emission;
+            var fogEmission = bgFog != null? bgFog.emission : screenFog.emission;
 
             if (!isScreen)
             {

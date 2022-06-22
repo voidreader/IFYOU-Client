@@ -674,8 +674,8 @@ namespace PIERStory
                         i++;
 
                     // 영어 텍스트는 길어서 너무 속도가 느리다
-                    if (SystemManager.main.currentAppLanguageCode == "EN")
-                        yield return new WaitForSeconds(0.05f);
+                    if (SystemManager.main.currentAppLanguageCode == CommonConst.COL_EN || SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR)
+                        yield return new WaitForSeconds(0.04f);
                     else
                         yield return new WaitForSeconds(0.1f);
                 }
@@ -1216,8 +1216,9 @@ namespace PIERStory
             float animTime = 0.1f;
 
             // 영어권에서는 2배 더 빠르게!
-            if (SystemManager.main.currentAppLanguageCode == "EN")
-                animTime = 0.05f;
+            if (SystemManager.main.currentAppLanguageCode == CommonConst.COL_EN
+                 || SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR)
+                animTime = 0.04f;
 
             placeTag.Append(placeNameText.DOText(placeLabel, placeLabel.Length * animTime).SetEase(Ease.Linear));
             placeTag.Append(placeTextBG.DOFade(0f, 2f).SetDelay(1f)).Join(episodeNum.DOFade(0f, 2f)).Join(placeNameText.DOFade(0f, 2f));

@@ -4,6 +4,9 @@ using UnityEngine;
 using DG.Tweening;
 using LitJson;
 
+using TMPro;
+using RTLTMPro;
+
 namespace PIERStory {
     public class TestRunner : MonoBehaviour
     {
@@ -12,9 +15,11 @@ namespace PIERStory {
         
         public List<IFYouGameSelectionCtrl> ListSelection;
         
+        public TextMeshProUGUI textArabic;
         
         
         RectTransform baseTransform; // 
+        protected readonly FastStringBuilder finalText = new FastStringBuilder(RTLSupport.DefaultBufferSize);
         
         // Start is called before the first frame update
         void Start()
@@ -26,7 +31,21 @@ namespace PIERStory {
         void Update()
         {
             if(Input.GetKeyDown(KeyCode.Q)) {
-                ShowSelectionTEST();
+                // ShowSelectionTEST();
+                // textArabic.isRightToLeftText = true;
+                // textArabic.alignment = TextAlignmentOptions.TopRight;
+                // textArabic.text = ArabicFixer.Fix(textArabic.text, false, false);
+                
+                textArabic.isRightToLeftText = true;
+                string originalText = textArabic.text;
+                finalText.Clear();
+                RTLSupport.FixRTL(originalText, finalText, false, true, true);
+                finalText.Reverse();
+                textArabic.text = finalText.ToString();
+                
+                
+                
+                
             }
             
             if(Input.GetKeyDown(KeyCode.P)) { 

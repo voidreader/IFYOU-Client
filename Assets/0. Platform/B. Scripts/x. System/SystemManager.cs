@@ -23,6 +23,8 @@ using Live2D.Cubism.Framework.MotionFade;
 using VoxelBusters.CoreLibrary;
 using VoxelBusters.EssentialKit;
 
+using RTLTMPro;
+
 namespace PIERStory
 {
 
@@ -162,7 +164,8 @@ namespace PIERStory
 
         // * 비암호화 저장 세팅 (디폴트는 암호화)
         public static ES3Settings noEncryptionSetting;
-        
+        static FastStringBuilder finalText = new FastStringBuilder(RTLSupport.DefaultBufferSize);
+        static string originArabicText = string.Empty;
 
         private void Awake()
         {
@@ -2140,7 +2143,6 @@ namespace PIERStory
             }
             
             
-            
             return localizedTextJSON[__id][main.currentAppLanguageCode.ToUpper()].ToString();
         }
         
@@ -2635,6 +2637,28 @@ namespace PIERStory
             else 
                 PopupManager.main.ShowPopup(p, true, false);
             
+        }
+        
+        
+        /// <summary>
+        /// 아랍 TextMeshPro 설정 
+        /// </summary>
+        /// <param name="__textUI"></param>
+        public static void SetArabicTextUI(TextMeshProUGUI __textUI) {
+            
+            originArabicText = __textUI.text;
+            
+            if(!TextUtils.IsRTLInput(originArabicText)) {
+                return; // 아랍 텍스트 없으면 진행하지 않음. 
+            }
+            
+            
+            __textUI.isRightToLeftText = true;
+            finalText.Clear();
+            RTLSupport.FixRTL(originArabicText, finalText, false, true, true);
+            finalText.Reverse();
+            
+            __textUI.text = finalText.ToString();
         }
         
         

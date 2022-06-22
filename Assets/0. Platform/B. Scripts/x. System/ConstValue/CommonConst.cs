@@ -31,6 +31,7 @@ namespace PIERStory
         public const string COL_EN = "EN";
         public const string COL_JA = "JA";
         public const string COL_ZH = "ZH";
+        public const string COL_AR = "AR";
 
         public const string NONE = "none";
 

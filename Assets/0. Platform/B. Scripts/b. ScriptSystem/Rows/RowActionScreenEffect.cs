@@ -318,7 +318,7 @@ namespace PIERStory
 
                 case GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT:
                 case GameConst.KR_SCREEN_EFFECT_HEX_LIGHT:
-                    ScreenEffectManager.main.StartParticleEffect(command, null);
+                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BLOOD_HIT:

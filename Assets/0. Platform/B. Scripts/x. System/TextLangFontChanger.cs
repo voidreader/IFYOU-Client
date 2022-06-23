@@ -25,7 +25,6 @@ namespace PIERStory {
         // Start is called before the first frame update
         void Awake() {
             
-            
             // 없으면 GetComponent해주지만, Inspector에서 설정해주는게 제일 좋다. 
             if(_text == null) 
                 _text = this.GetComponent<TextMeshProUGUI>();
@@ -39,10 +38,6 @@ namespace PIERStory {
             SetFont();
         }
         
-        void Update() {
-
-        }
-
         
         /// <summary>
         /// 폰트 설정
@@ -59,9 +54,6 @@ namespace PIERStory {
             //     return; 
                
             _text.font = SystemManager.main.getCurrentLangFont(isException); // 폰트 가져오기 
-            
-
-            
         }
         
         
@@ -127,8 +119,6 @@ namespace PIERStory {
         void OnDestroy() {
             // TMPro_EventManager.TEXT_CHANGED_EVENT.Remove(OnTextChanged);
         }
-        
-        
 
     }
 }

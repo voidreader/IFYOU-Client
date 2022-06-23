@@ -98,7 +98,7 @@ namespace PIERStory
             
                         
             string progressText = string.Format(SystemManager.GetLocalizedText("6138"), openIllust, totalIllust);
-            totalCollection.text = progressText;
+            SystemManager.SetText(totalCollection, progressText);
             float illustPrgressPercent = 0;
             
             if(openIllust == 0 || totalIllust == 0) 

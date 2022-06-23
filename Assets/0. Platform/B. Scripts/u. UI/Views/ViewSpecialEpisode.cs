@@ -43,7 +43,7 @@ namespace PIERStory {
             progressor.SetProgressAt(currentProgressValues);
             
             // 수집율 
-            textProgress.text = string.Format(SystemManager.GetLocalizedText("6138"), openSpecialEpisodeCount, totalSpecialEpisodeCount);
+            SystemManager.SetText(textProgress, string.Format(SystemManager.GetLocalizedText("6138"), openSpecialEpisodeCount, totalSpecialEpisodeCount));
         }
         
         public override void OnHideView() {

@@ -259,10 +259,10 @@ RectTransform:
   m_Father: {fileID: 2378434451395380681}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 36.16, y: 0}
-  m_SizeDelta: {x: 292.32, y: 32}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 32.5, y: 0}
+  m_SizeDelta: {x: -65, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7008003445649616194
 CanvasRenderer:
@@ -292,7 +292,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB098\uB9CC\uC758 \uC218\uD638\uAE30\uC0AC\uC640 \uC0AC\uAD50\uD30C\uD2F0"
+  m_text: "\u0627\u0644\u0641\u0627\u0631\u0633 \u0627\u0644\u0648\u0635\u064A \u0627\u0644\u062E\u0627\u0635
+    \u0628\u064A \u0648\u0627\u0644\u062D\u0632\u0628 \u0627\u0644\u0627\u062C\u062A\u0645\u0627\u0639\u064A"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
@@ -319,11 +320,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22
+  m_fontSize: 13.35
   m_fontSizeBase: 22
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 16
+  m_fontSizeMin: 12
   m_fontSizeMax: 22
   m_fontStyle: 1
   m_HorizontalAlignment: 1
@@ -377,6 +378,7 @@ MonoBehaviour:
   isException: 1
   isAlignmentFix: 1
   originText: 
+  originAlign: 0
 --- !u!1 &4861009804271203381
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,8 +491,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 48.41, y: 14.5}
-  m_SizeDelta: {x: 263.18, y: 80}
+  m_AnchoredPosition: {x: 48.03027, y: 22.829}
+  m_SizeDelta: {x: 262.4206, y: 98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5799068471473102745
 CanvasRenderer:
@@ -520,7 +522,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD669\uB140, \uC9C0\uAE08 \uC5B4\uB514\uC5D0 \uC788\uC9C0?"
+  m_text: 'Young lady,
+
+    are you done with your work?'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
@@ -551,7 +555,7 @@ MonoBehaviour:
   m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 20
+  m_fontSizeMin: 18
   m_fontSizeMax: 25
   m_fontStyle: 1
   m_HorizontalAlignment: 1
@@ -559,7 +563,7 @@ MonoBehaviour:
   m_textAlignment: 65535
   m_characterSpacing: -4
   m_wordSpacing: 0
-  m_lineSpacing: 10
+  m_lineSpacing: -12
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -605,6 +609,7 @@ MonoBehaviour:
   isException: 1
   isAlignmentFix: 1
   originText: 
+  originAlign: 0
 --- !u!1 &5072214351343526568
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,7 +20,7 @@ namespace PIERStory {
         
         public string originText = string.Empty;
         
-        HorizontalAlignmentOptions originAlign = HorizontalAlignmentOptions.Center;
+        public HorizontalAlignmentOptions originAlign;
         
         // Start is called before the first frame update
         void Awake() {
@@ -97,7 +97,7 @@ namespace PIERStory {
         
         public void SetNonArabic() {
             _text.isRightToLeftText = false;
-            _text.horizontalAlignment = originAlign;
+            // _text.horizontalAlignment = originAlign;
         }
         
         

@@ -84,7 +84,7 @@ namespace PIERStory
             if (GameManager.main.loadingDetailJson.Count > 0)
             {
                 loadingTextIndex = 0;
-                textInfo.text = SystemManager.GetJsonNodeString(GameManager.main.loadingDetailJson[loadingTextIndex], KEY_LOADING_TEXT);
+                SystemManager.SetText(textInfo, SystemManager.GetJsonNodeString(GameManager.main.loadingDetailJson[loadingTextIndex], KEY_LOADING_TEXT));
             }
             
             // 로딩 광고는 로딩 할때 처리하고, 로딩 완료하고 플레이하는 것으로 변경됨.

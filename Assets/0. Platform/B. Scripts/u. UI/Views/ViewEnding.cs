@@ -54,8 +54,9 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5025"), string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
-
-            collectionText.text = string.Format(SystemManager.GetLocalizedText("6138"), StoryManager.main.unlockEndingCount, StoryManager.main.totalEndingCount);
+            
+            
+            SystemManager.SetText(collectionText, string.Format(SystemManager.GetLocalizedText("6138"), StoryManager.main.unlockEndingCount, StoryManager.main.totalEndingCount));
 
             float percentage = (float)StoryManager.main.unlockEndingCount / (float)StoryManager.main.totalEndingCount;
             collectionGauge.fillAmount = percentage;

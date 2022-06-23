@@ -72,7 +72,7 @@ namespace PIERStory
                 newSign.SetActive(false);
             }
 
-            endingTitle.text = string.Format("{0}\n<size=22>{1}</size>", epiData.episodeTitle, epiData.episodeSummary);
+            SystemManager.SetText(endingTitle, string.Format("{0}\n<size=22>{1}</size>", epiData.episodeTitle, epiData.episodeSummary));
 
             showChoiceButton.SetActive(endingData.endingOpen);
             endingHintButton.SetActive(!endingData.endingOpen && hasEndingHintData);

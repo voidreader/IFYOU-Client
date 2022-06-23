@@ -56,7 +56,7 @@ namespace PIERStory
             achieveThumbnail.SetDownloadURL(achievementData.achievementIconUrl, achievementData.achievementIconKey, true);
             expText.text = string.Format("+{0}", achievementData.experience);
 
-            achieveExplain.text = achievementData.achievementSummary;
+            SystemManager.SetText(achieveExplain, achievementData.achievementSummary);
 
             achievementGauge.fillAmount = achievementData.achievementDegree;
             degreeOfAchievementText.color = Color.white;

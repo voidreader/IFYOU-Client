@@ -20,7 +20,7 @@ namespace PIERStory {
         
         void OnEnable() {
             if(textNickname != null && UserManager.main != null && !string.IsNullOrEmpty(UserManager.main.nickname)) {
-                textNickname.text = UserManager.main.nickname;
+                SystemManager.SetText(textNickname, UserManager.main.nickname);
             }
         }
         

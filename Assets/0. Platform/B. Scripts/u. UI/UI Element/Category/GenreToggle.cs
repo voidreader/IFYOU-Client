@@ -86,7 +86,7 @@ namespace PIERStory {
                 localizedName = SystemManager.GetLocalizedText("5137");
             }
             
-            textGenre.text = localizedName;
+            SystemManager.SetText(textGenre, localizedName);
         }
            
     }

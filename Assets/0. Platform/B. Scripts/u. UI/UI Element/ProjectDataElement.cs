@@ -16,7 +16,7 @@ namespace PIERStory
         {
             storyData = __data;
 
-            projectName.text = __data.title;
+            SystemManager.SetText(projectName, __data.title);
             projectDataSize.text = string.Format("{0:#,0} KB", dataSize / 1024);
 
             if (dataSize / (1024 * 1024) > 0)

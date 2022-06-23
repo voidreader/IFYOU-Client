@@ -2165,7 +2165,9 @@ namespace PIERStory
                 SetArabicTextUI(__textUI);
             }
             else {
-                __textUI.isRightToLeftText = false;
+                if(__textUI.GetComponent<TextLangFontChanger>() != null) {
+                    __textUI.GetComponent<TextLangFontChanger>().SetNonArabic();
+                }
             }
         }
         
@@ -2186,7 +2188,9 @@ namespace PIERStory
                 SetArabicTextUI(__textUI);
             }
             else {
-                __textUI.isRightToLeftText = false;
+                if(__textUI.GetComponent<TextLangFontChanger>() != null) {
+                    __textUI.GetComponent<TextLangFontChanger>().SetNonArabic();
+                }
             } 
         }
         
@@ -2691,13 +2695,7 @@ namespace PIERStory
         public static void SetArabicTextUI(TextMeshProUGUI __textUI) {
             
             originArabicText = __textUI.text;
-            
-            
-            if(!TextUtils.IsRTLInput(originArabicText)) {
-                return; // 아랍 텍스트 없으면 진행하지 않음. 
-            }
-            
-            __textUI.isRightToLeftText = true;
+               __textUI.isRightToLeftText = true;
             finalText.Clear();
             RTLSupport.FixRTL(originArabicText, finalText, false, true, true);
             finalText.Reverse();
@@ -2707,7 +2705,7 @@ namespace PIERStory
             // 정렬에 대한 추가 처리 
             if(__textUI.GetComponent<TextLangFontChanger>() != null) {
                 __textUI.GetComponent<TextLangFontChanger>().SetArabicAlignment();
-            }
+            }            
         }
         
         

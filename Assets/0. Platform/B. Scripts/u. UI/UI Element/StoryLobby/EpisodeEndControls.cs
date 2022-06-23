@@ -198,7 +198,8 @@ namespace PIERStory {
             
             
             isEpisodeContinuePlay = false;
-            textSummary.text = currentEpisodeData.episodeSummary; // 요약정보 추가 
+            
+            SystemManager.SetText(textSummary, currentEpisodeData.episodeSummary); // 요약정보 추가 
             
 
             

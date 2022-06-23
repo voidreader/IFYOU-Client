@@ -23,7 +23,7 @@ namespace PIERStory
         {
             string sign = SystemManager.GetJsonNodeString(__j, KEY_LOG_TYPE).Equals(USE) ? "-" : "+";
 
-            historyContent.text = string.Format("{0} {1} {2}", SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, KEY_LOG_CODE_TEXTID)), SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, KEY_CURRENCY_TEXTID)), SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, KEY_LOG_TYPE_TEXTID)));
+            SystemManager.SetText(historyContent, string.Format("{0} {1} {2}", SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, KEY_LOG_CODE_TEXTID)), SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, KEY_CURRENCY_TEXTID)), SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, KEY_LOG_TYPE_TEXTID))));
             date.text = SystemManager.GetJsonNodeString(__j, KEY_ACTION_DATE);
 
             currencyAmount.text = string.Format("{0}{1}", sign, SystemManager.GetJsonNodeString(__j, KEY_QUANTITY));

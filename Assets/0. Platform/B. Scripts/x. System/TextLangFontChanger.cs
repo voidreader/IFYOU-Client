@@ -29,29 +29,18 @@ namespace PIERStory {
             // 없으면 GetComponent해주지만, Inspector에서 설정해주는게 제일 좋다. 
             if(_text == null) 
                 _text = this.GetComponent<TextMeshProUGUI>();
+                
+            if(_text != null) {
+                originAlign = _text.horizontalAlignment;
+            }
         }
         
         void Start() {
-            originAlign = _text.horizontalAlignment;
-            
             SetFont();
         }
         
         void Update() {
-            
-            // 아랍어일때만. 
-            /*
-            if(SystemManager.main.currentAppLanguageCode != CommonConst.COL_AR) 
-                return;
-                
-            // 텍스트에 변경이 일어났으면? 
-            if(_text.text != originText) {
-                SetFont();
-                Debug.Log("Update Arabic TEXT : " + this.gameObject.name);
-            }
-            */
-                
-            
+
         }
 
         
@@ -71,28 +60,46 @@ namespace PIERStory {
                
             _text.font = SystemManager.main.getCurrentLangFont(isException); // 폰트 가져오기 
             
-            
-            /*
-            // 아랍어 처리             
-            if(SystemManager.main.currentAppLanguageCode == "AR") {
-                
-                SystemManager.SetArabicTextUI(_text);
-                // _text.horizontalAlignment = originAlign;
-                
-                // 좌측정렬이면서 정렬픽스 아닌 경우는 아랍에서 오른쪽 정렬로 변경해준다. 
-                if(!isAlignmentFix && _text.horizontalAlignment == HorizontalAlignmentOptions.Left) {
-                    _text.horizontalAlignment = HorizontalAlignmentOptions.Right;
-                }
-            }
-            else {
-                _text.isRightToLeftText = false;
-            }
-            
-            // originText에 입력해놓는다. 
-            originText = _text.text;
-            */
+
             
         }
+        
+        
+        /// <summary>
+        /// 텍스트 변경시 이벤트 처리 
+        /// </summary>
+        /// <param name="obj"></param>
+        void OnTextChanged(Object obj) {
+            if(obj != _text) {
+                return;
+            }
+            
+            if(SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR) {
+
+                if(!TextUtils.IsRTLInput(_text.text)) {
+                    SetNonArabic();
+                    return;
+                }
+                Debug.Log(">> Arabic OnTextChanged : " + obj.name);
+                
+                
+                // 이벤트 뺐다가 다시 넣어준다. 
+                TMPro_EventManager.TEXT_CHANGED_EVENT.Remove(OnTextChanged);
+                SystemManager.SetArabicTextUI(_text);
+                SetArabicAlignment();
+                TMPro_EventManager.TEXT_CHANGED_EVENT.Add(OnTextChanged);
+            }
+            else {
+                SetNonArabic();
+            }
+            
+        }
+        
+        public void SetNonArabic() {
+            _text.isRightToLeftText = false;
+            _text.horizontalAlignment = originAlign;
+        }
+        
         
         /// <summary>
         /// 아랍어 정렬처리 
@@ -101,13 +108,27 @@ namespace PIERStory {
             
             // 정렬 fix가 아니고, 좌측 정렬이었으면 아랍어에서는 우측정렬로 변경한다.
             if(!isAlignmentFix && _text.horizontalAlignment == HorizontalAlignmentOptions.Left) {
+                Debug.Log(">> Arabic SetArabicAlignment : " + this.gameObject.name);
+                
                 _text.horizontalAlignment = HorizontalAlignmentOptions.Right;
+                // _text.ForceMeshUpdate();
             }
         }
         
         void OnEnable() {
             SetFont();
+            // TMPro_EventManager.TEXT_CHANGED_EVENT.Add(OnTextChanged);
         }
+        
+        void OnDisable() {
+            // TMPro_EventManager.TEXT_CHANGED_EVENT.Remove(OnTextChanged);
+        }
+        
+        void OnDestroy() {
+            // TMPro_EventManager.TEXT_CHANGED_EVENT.Remove(OnTextChanged);
+        }
+        
+        
 
     }
 }

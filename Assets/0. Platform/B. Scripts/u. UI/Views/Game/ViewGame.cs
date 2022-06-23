@@ -940,8 +940,8 @@ namespace PIERStory
         /// </summary>
         public void SetPhoneCallInfo(ScriptRow __row)
         {
-            callName.text = GameManager.main.GetNotationName(__row);
-            calledName.text = GameManager.main.GetNotationName(__row);
+            SystemManager.SetText(callName, GameManager.main.GetNotationName(__row));
+            SystemManager.SetText(calledName, GameManager.main.GetNotationName(__row));
         }
 
         #endregion
@@ -972,7 +972,7 @@ namespace PIERStory
             messageAlert.color = new Color(messageAlert.color.r, messageAlert.color.g, messageAlert.color.b, 0f);
 
             // 발신자 string 값 세팅
-            messageSender.text = speaker;
+            SystemManager.SetText(messageSender, speaker);
 
             Sequence alert = DOTween.Sequence();
             alert.Append(messengerOverlay.DOFade(1f, animTime)).Join(phoneImage.GetComponent<RectTransform>().DOAnchorPosY(0f, animTime).SetEase(Ease.OutBack));

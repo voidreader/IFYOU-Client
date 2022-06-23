@@ -45,7 +45,8 @@ namespace PIERStory {
             
             // 심플 스크롤 스냅과의 연계 떄문에 
             // 데이터 설정은 모두 로드하고 나서 처리
-            textTitle.text = story.title;
+            SystemManager.SetText(textTitle, story.title);
+            
             readyImage.SetDownloadURL(story.thumbnailURL, story.thumbnailKey);
             
             hitCount = AbbrevationUtility.intToSimple(story.hitCount);

@@ -38,7 +38,7 @@ namespace PIERStory {
             
             storyData = __j;
             
-            textTitle.text = storyData.title;
+            SystemManager.SetText(textTitle, storyData.title);
             
             colorCode = storyData.colorCode;
             ColorUtility.TryParseHtmlString("#" + colorCode, out mainColor);

@@ -110,8 +110,8 @@ namespace PIERStory
             
             isShareBonusGet = SystemManager.GetJsonNodeBool(userGalleryData, "share_bonus");
 
-            illustTitle.text = title;
-            illustSummary.text = summary;
+            SystemManager.SetText(illustTitle, title);
+            SystemManager.SetText(illustSummary, summary);
             // buttonIcon.sprite = spriteEyeOpen;
             illustContents.SetActive(true);
             

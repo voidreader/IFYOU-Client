@@ -16,8 +16,8 @@ namespace PIERStory
         /// <param name="selectionData">선택한 선택지</param>
         public void SetCurrentEpisodeSelection(string prevData, string selectionData)
         {
-            prevScript.text = prevData.Replace('\\', ' ');
-            selectionScript.text = selectionData.Replace("\\", " ");
+            SystemManager.SetText(prevScript, prevData.Replace('\\', ' '));
+            SystemManager.SetText(selectionScript, selectionData.Replace("\\", " "));
         }
     }
 }

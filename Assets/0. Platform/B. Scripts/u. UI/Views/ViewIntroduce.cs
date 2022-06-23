@@ -58,10 +58,13 @@ namespace PIERStory {
             mainThumbnail.SetDownloadURL(introduceStory.premiumPassURL, introduceStory.premiumPassKey);
             
             SystemManager.SetText(textTitle, introduceStory.title);
+            // textTitle.text = introduceStory.title;
+            
             
             SystemManager.SetText(textAuthor, SystemManager.GetLocalizedText("6179") + " / " + introduceStory.original); // 원작
             SystemManager.SetText(textProducer, SystemManager.GetLocalizedText("6180") + " / " + introduceStory.writer); // 
             SystemManager.SetText(textSummary, introduceStory.summary); // 요약
+            // textSummary.text = introduceStory.summary;
             SystemManager.SetText(textGenre, SystemManager.GetLocalizedText("6181") + " / " + introduceStory.genre); // 장르
 
             

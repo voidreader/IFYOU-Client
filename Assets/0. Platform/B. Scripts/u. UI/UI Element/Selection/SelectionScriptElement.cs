@@ -19,7 +19,7 @@ namespace PIERStory
         public void SetSelectionScript(Sprite s, string script, Color textColor)
         {
             selectionBox.sprite = s;
-            selectionScript.text = script;
+            SystemManager.SetText(selectionScript, script);
             selectionScript.color = textColor;
 
             selectionBox.SetNativeSize();

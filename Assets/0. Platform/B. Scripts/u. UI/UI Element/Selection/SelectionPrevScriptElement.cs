@@ -14,8 +14,12 @@ namespace PIERStory
         /// <param name="script">선택지 전 대사</param>
         public void SetPrevScript(string script)
         {
-            prevScript.text = script;
-            prevScript.text = prevScript.text.Replace("\\", " ");
+            if(string.IsNullOrEmpty(script)) {
+                prevScript.text = string.Empty;
+                return;
+            }
+            
+            SystemManager.SetText(prevScript, script.Replace("\\", " "));
         }
     }
 }

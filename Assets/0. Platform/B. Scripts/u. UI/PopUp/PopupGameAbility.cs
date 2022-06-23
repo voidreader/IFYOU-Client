@@ -46,8 +46,9 @@ namespace PIERStory {
                 body.sprite = spNegativeBody;
             }
             
-            // 텍스트 처리 
-            textAbility.text = SystemManager.GetLocalizedText(abilityLocalID) + " " + textValue;
+            // 텍스트 처리
+            SystemManager.SetText (textAbility, SystemManager.GetLocalizedText(abilityLocalID) + " " + textValue);
+            // textAbility.text = SystemManager.GetLocalizedText(abilityLocalID) + " " + textValue;
         }
     }
 }

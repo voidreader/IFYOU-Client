@@ -31,7 +31,9 @@ namespace PIERStory {
             targetEpisode = Data.contentEpisode;
             
             textPrice.text = Data.contentEpisode.priceStarPlaySale.ToString();
-            textContents.text = string.Format(SystemManager.GetLocalizedText("6232"), targetEpisode.episodeTitle);
+            
+            SystemManager.SetText(textContents, string.Format(SystemManager.GetLocalizedText("6232"), targetEpisode.episodeTitle));
+            
         }
         
         /// <summary>

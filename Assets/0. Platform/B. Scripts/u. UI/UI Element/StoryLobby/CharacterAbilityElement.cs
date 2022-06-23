@@ -45,7 +45,7 @@ namespace PIERStory
            
 
             mainAbilityIcon.SetDownloadURL(__abilityData.iconDesignUrl, __abilityData.iconDesignKey);
-            mainAbilityName.text = __abilityData.abilityName;
+            SystemManager.SetText(mainAbilityName, __abilityData.abilityName);
             mainAbilityGauge.fillAmount = __abilityData.abilityPercent;
 
             mainAbilityPercent.text = string.Format("{0}%", Math.Truncate(__abilityData.abilityPercent * 100f));
@@ -62,7 +62,7 @@ namespace PIERStory
             subAbility_1.SetActive(true);
 
             subAbilityIcon_1.SetDownloadURL(__subAbilityData.iconDesignUrl, __subAbilityData.iconDesignKey);
-            subAbilityName_1.text = __subAbilityData.abilityName;
+            SystemManager.SetText(subAbilityName_1, __subAbilityData.abilityName);
             subAbilityPercent_1.text = string.Format("{0}%", Math.Truncate(__subAbilityData.abilityPercent * 100f));
         }
 
@@ -71,7 +71,7 @@ namespace PIERStory
             subAbility_2.SetActive(true);
 
             subAbilityIcon_2.SetDownloadURL(__subAbilityData.iconDesignUrl, __subAbilityData.iconDesignKey);
-            subAbilityName_2.text = __subAbilityData.abilityName;
+            SystemManager.SetText(subAbilityName_2, __subAbilityData.abilityName);
             subAbilityPercent_2.text = string.Format("{0}%", Math.Truncate(__subAbilityData.abilityPercent * 100f));
         }
     }

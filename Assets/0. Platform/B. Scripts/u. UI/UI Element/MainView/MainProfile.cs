@@ -116,13 +116,15 @@ namespace PIERStory
 
 
             if(UserManager.main.grade == 1)
-                benefitDetailText.text = string.Format(SystemManager.GetLocalizedText("6296"));
+                SystemManager.SetLocalizedText(benefitDetailText, "6296");
             else
             {
-                benefitDetailText.text = string.Format(SystemManager.GetLocalizedText("6269"), UserManager.main.additionalStarDegree, UserManager.main.additionalStarUse, UserManager.main.additionalStarLimitCount, UserManager.main.waitingSaleDegree);
+                SystemManager.SetText(benefitDetailText, string.Format(SystemManager.GetLocalizedText("6269"), UserManager.main.additionalStarDegree, UserManager.main.additionalStarUse, UserManager.main.additionalStarLimitCount, UserManager.main.waitingSaleDegree));
 
-                if (UserManager.main.canPreview)
-                    benefitDetailText.text += "\n" + SystemManager.GetLocalizedText("6270");
+                if (UserManager.main.canPreview) {
+                    SystemManager.SetText(benefitDetailText, benefitDetailText.text + "\n" + SystemManager.GetLocalizedText("6270"));
+                    // benefitDetailText.text += "\n" + SystemManager.GetLocalizedText("6270");
+                }
             }
 
             // 등급 방어 포인트 바 표기
@@ -132,7 +134,7 @@ namespace PIERStory
             expGauge.fillAmount = (float)UserManager.main.gradeExperience / UserManager.main.upgradeGoalPoint;
             expText.text = string.Format("({0}/{1})", UserManager.main.gradeExperience, UserManager.main.upgradeGoalPoint);
 
-            seasonEndText.text = string.Format(SystemManager.GetLocalizedText("6293"), UserManager.main.remainDay);
+            SystemManager.SetText(seasonEndText, string.Format(SystemManager.GetLocalizedText("6293"), UserManager.main.remainDay));
 
             if (gameObject.activeSelf)
                 StartCoroutine(LayoutRebuild());
@@ -218,23 +220,23 @@ namespace PIERStory
             {
                 case 1:
                     __img.sprite = LobbyManager.main.spriteBronzeBadge;
-                    __text.text = SystemManager.GetLocalizedText("5191");
+                    SystemManager.SetLocalizedText(__text, "5191");
                     break;
                 case 2:
                     __img.sprite = LobbyManager.main.spriteSilverBadge;
-                    __text.text = SystemManager.GetLocalizedText("5192");
+                    SystemManager.SetLocalizedText(__text, "5192");
                     break;
                 case 3:
                     __img.sprite = LobbyManager.main.spriteGoldBadge;
-                    __text.text = SystemManager.GetLocalizedText("5193");
+                    SystemManager.SetLocalizedText(__text, "5193");
                     break;
                 case 4:
                     __img.sprite = LobbyManager.main.spritePlatinumBadge;
-                    __text.text = SystemManager.GetLocalizedText("5194");
+                    SystemManager.SetLocalizedText(__text, "5194");
                     break;
                 case 5:
                     __img.sprite = LobbyManager.main.spriteIFYOUBadge;
-                    __text.text = SystemManager.GetLocalizedText("5195");
+                    SystemManager.SetLocalizedText(__text, "5195");
                     break;
                 default:
                     __img.gameObject.SetActive(false);

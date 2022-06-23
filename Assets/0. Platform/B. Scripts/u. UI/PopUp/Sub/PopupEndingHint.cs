@@ -41,7 +41,7 @@ namespace PIERStory
                 dependEpisodeRadioButton.SetActive(UserManager.main.IsCompleteEpisode(endingHint.dependEpisodeData.episodeID));
             }
             
-            dependsEpisodeText.text = string.Format("{0} {1}", SystemManager.GetLocalizedText("5027"), episodeNum);
+            SystemManager.SetText(dependsEpisodeText, string.Format("{0} {1}", SystemManager.GetLocalizedText("5027"), episodeNum));
 
 
             // 엔딩에 필요한 능력치 계수 세팅

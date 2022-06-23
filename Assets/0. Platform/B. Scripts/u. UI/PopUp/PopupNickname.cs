@@ -23,7 +23,7 @@ namespace PIERStory {
         public void OnClickSubmit() {
             
             if(string.IsNullOrEmpty(inputField.text)) {
-                message.text = SystemManager.GetLocalizedText("6119");
+                SystemManager.SetLocalizedText(message, "6119");
                 return;
             }
             
@@ -49,7 +49,7 @@ namespace PIERStory {
                     // 실패에 대한 처리 
                     result = JsonMapper.ToObject(res.DataAsText);
                     if(result != null && result.ContainsKey("code")) {
-                        message.text = SystemManager.GetLocalizedText(result["code"].ToString());
+                        SystemManager.SetText(message, SystemManager.GetLocalizedText(result["code"].ToString()));
                     }
                     
                 }

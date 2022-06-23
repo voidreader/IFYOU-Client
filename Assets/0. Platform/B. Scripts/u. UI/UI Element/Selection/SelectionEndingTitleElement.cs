@@ -14,7 +14,7 @@ namespace PIERStory
         /// <param name="title"></param>
         public void SetEndingTitle(string title)
         {
-            endingTitle.text = title;
+            SystemManager.SetText(endingTitle, title);
         }
     }
 }

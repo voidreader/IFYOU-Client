@@ -30,7 +30,7 @@ namespace PIERStory {
             
             originName = __j["origin_name"].ToString();
             localizedName = __j["genre_name"].ToString();
-            textGenre.text = localizedName;
+            SystemManager.SetText(textGenre, localizedName);
             
             SetOff();
         }

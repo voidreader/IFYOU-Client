@@ -79,8 +79,7 @@ namespace PIERStory
             
             projectTitle = SystemManager.GetJsonNodeString(__j, "connected_project_title");
 
-            
-            mailContent.text = string.Format(SystemManager.GetLocalizedText("6104"), quantity, currencyName);
+            SystemManager.SetText(mailContent, string.Format(SystemManager.GetLocalizedText("6104"), quantity, currencyName));
             
             // 예외적으로 mail_type inapp_origin은 아이콘 고정 처리 
             if(mailType == "inapp_origin") {
@@ -90,8 +89,8 @@ namespace PIERStory
                 imageBaseCurrencyIcon.SetNativeSize();
                 // currencyIcon.SetTexture2D(SystemManager.main.spriteInappOriginIcon.texture);
                 textBaseCurrencyQuantity.text = string.Empty; 
-                    
-                mailContent.text = SystemManager.GetLocalizedText("80083");
+                
+                SystemManager.SetLocalizedText(mailContent, "80083");
             }
 
             int day = hour / 24, h = hour % 24;

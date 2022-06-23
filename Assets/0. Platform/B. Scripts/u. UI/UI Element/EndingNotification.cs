@@ -24,7 +24,7 @@ namespace PIERStory {
             
             targetEpisode = __target;
             episodeBanner.SetDownloadURL(targetEpisode.popupImageURL, targetEpisode.popupImageKey);
-            textTitle.text = targetEpisode.episodeTitle;
+            SystemManager.SetText(textTitle, targetEpisode.episodeTitle);
             
             OnClick = __click;
         }

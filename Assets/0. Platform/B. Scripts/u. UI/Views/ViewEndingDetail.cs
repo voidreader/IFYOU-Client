@@ -82,11 +82,11 @@ namespace PIERStory
             endingBanner.SetDownloadURL(endingData.popupImageURL, endingData.popupImageKey);
 
             if (endingData.endingType == LobbyConst.COL_HIDDEN)
-                endingType.text = SystemManager.GetLocalizedText("5087");
+                SystemManager.SetLocalizedText(endingType,"5087");
             else
-                endingType.text = SystemManager.GetLocalizedText("5088");
+                SystemManager.SetLocalizedText(endingType, "5088");
 
-            endingTitle.text = string.Format("{0}\n<size=22>{1}</size>", endingData.episodeTitle, endingData.episodeSummary);
+            SystemManager.SetText(endingTitle, string.Format("{0}\n<size=22>{1}</size>", endingData.episodeTitle, endingData.episodeSummary));
 
             endingType.gameObject.SetActive(false);
             endingTitle.gameObject.SetActive(false);

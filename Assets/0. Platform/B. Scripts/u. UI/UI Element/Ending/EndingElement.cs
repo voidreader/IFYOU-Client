@@ -50,9 +50,9 @@ namespace PIERStory
             endingBanner.SetDownloadURL(epiData.popupImageURL, epiData.popupImageKey);
 
             if (epiData.endingType == LobbyConst.COL_HIDDEN)
-                endingType.text = SystemManager.GetLocalizedText("5087");
+                SystemManager.SetText(endingType, SystemManager.GetLocalizedText("5087"));
             else
-                endingType.text = SystemManager.GetLocalizedText("5088");
+                SystemManager.SetText(endingType, SystemManager.GetLocalizedText("5088"));
 
 
             if (endingData.endingOpen)

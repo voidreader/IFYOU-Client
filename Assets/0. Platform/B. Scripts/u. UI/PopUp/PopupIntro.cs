@@ -251,7 +251,7 @@ namespace PIERStory {
                     Handheld.Vibrate(); // 진동 
                     
                     textPhone1BottomMessage.gameObject.SetActive(true);
-                    textPhone1BottomMessage.text = SystemManager.GetLocalizedText("6292");
+                    SystemManager.SetLocalizedText(textPhone1BottomMessage, "6292");
                     textPhone1BottomMessage.transform.DOScale(1.1f, 1).SetLoops(-1, LoopType.Yoyo);
                     
                     // 효과 끝나면 3으로 증가 
@@ -279,7 +279,7 @@ namespace PIERStory {
                 
                 // 폰 아래에서 위로 등장하고, 추가 처리 
                 phone2.DOLocalMoveY(40, 1f).SetDelay(0.5f).SetEase(Ease.OutBack).OnComplete(()=> {
-                    textPhone2BottomMessage.text = SystemManager.GetLocalizedText("6292");
+                    SystemManager.SetLocalizedText(textPhone2BottomMessage, "6292");
                     textPhone2BottomMessage.transform.DOScale(1.1f, 1).SetLoops(-1, LoopType.Yoyo);
                     
                     // 시간차 등장 처리 
@@ -318,11 +318,14 @@ namespace PIERStory {
             
             selectedStory = __story;
             mainThumbnail.SetDownloadURL(__story.premiumPassURL, __story.premiumPassKey);
-            textTitle.text = __story.title;
-            textAuthor.text = SystemManager.GetLocalizedText("6179") + " / " + __story.original; // 원작
-            textProducer.text = SystemManager.GetLocalizedText("6180") + " / " + __story.writer;
-            textSummary.text = __story.summary; // 요약 
-            textGenre.text = SystemManager.GetLocalizedText("6181") + " / " + __story.genre;
+            SystemManager.SetText(textTitle, __story.title);
+            
+            
+            SystemManager.SetText(textAuthor, SystemManager.GetLocalizedText("6179") + " / " + __story.original); // 원작
+            SystemManager.SetText(textProducer, SystemManager.GetLocalizedText("6180") + " / " + __story.writer); // 
+            SystemManager.SetText(textSummary, __story.summary); // 요약
+            SystemManager.SetText(textGenre, SystemManager.GetLocalizedText("6181") + " / " + __story.genre); // 장르            
+            
             
             // 인트로 완료
             UserManager.main.UpdateIntroComplete();

@@ -97,7 +97,7 @@ namespace PIERStory
             if (playSound == null)
                 playSound = GetComponent<AudioSource>();
 
-            title.text = soundTitle;
+            SystemManager.SetText(title, soundTitle);
             titleImage.sprite = null;
             titleImage.sprite = titleSprite;
 
@@ -208,7 +208,7 @@ namespace PIERStory
                         // 일치하는 에피소드 아이디를 찾았다!
                         if (StoryManager.main.ListCurrentProjectEpisodes[i].episodeID.Equals(SystemManager.GetJsonNodeString(soundData[key][0], LobbyConst.STORY_EPISODE_ID)))
                         {
-                            episodeInfo[textIndex].text = StoryManager.main.ListCurrentProjectEpisodes[i].combinedEpisodeTitle;
+                            SystemManager.SetText(episodeInfo[textIndex], StoryManager.main.ListCurrentProjectEpisodes[i].combinedEpisodeTitle);
                             episodeInfo[textIndex].transform.SetParent(voiceContents);
                             textIndex++;
                             break;

@@ -68,7 +68,7 @@ namespace PIERStory
             
             
             Debug.Log("<color=cyan>Script Fetched</color>");
-            textTitle.text = GameManager.main.currentEpisodeData.episodeTitle;
+            SystemManager.SetText(textTitle, GameManager.main.currentEpisodeData.episodeTitle);
             
             StartCoroutine(RoutineDebugLoading());
             
@@ -122,7 +122,7 @@ namespace PIERStory
             if (loadingTextIndex == GameManager.main.loadingDetailJson.Count)
                 loadingTextIndex = 0;
 
-            textInfo.text = SystemManager.GetJsonNodeString(GameManager.main.loadingDetailJson[loadingTextIndex], KEY_LOADING_TEXT);
+            SystemManager.SetText(textInfo, SystemManager.GetJsonNodeString(GameManager.main.loadingDetailJson[loadingTextIndex], KEY_LOADING_TEXT));
         }
     }
 }

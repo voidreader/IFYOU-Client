@@ -54,7 +54,7 @@ namespace PIERStory
             base.OnStartView();
             
             // 타이틀 처리 타입, 순번, 타이틀 조합
-            textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
+            SystemManager.SetText(textTitle, GameManager.main.currentEpisodeData.combinedEpisodeTitle);
 
             // 화면에 상단바가 표출중인 경우 아래로 80만큼 내린다
             if (ViewGame.main.commonTop.isVisible || ViewGame.main.commonTop.isShowing)

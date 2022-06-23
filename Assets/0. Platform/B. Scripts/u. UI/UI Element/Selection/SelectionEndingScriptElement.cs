@@ -16,8 +16,8 @@ namespace PIERStory
         /// <param name="selectionScriptData">사용자가 선택한 선택지</param>
         public void SetSelectionScript(string prevData, string selectionScriptData)
         {
-            prevScript.text = prevData.Replace('\\', ' ');
-            selectionScript.text = selectionScriptData;
+            SystemManager.SetText(prevScript, prevData.Replace('\\', ' '));
+            SystemManager.SetText(selectionScript, selectionScriptData);
         }
     }
 }

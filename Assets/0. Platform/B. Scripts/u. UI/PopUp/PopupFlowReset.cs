@@ -51,7 +51,7 @@ namespace PIERStory {
             
             // 에피소드 {0}으로 돌아가 새로운 이야기를 시작한다네 
             // FlowReset에서만 사용 
-            textResetEpisode.text = string.Format(SystemManager.GetLocalizedText("6219"), targetEpisode.episodeNO);
+            SystemManager.SetText(textResetEpisode, string.Format(SystemManager.GetLocalizedText("6219"), targetEpisode.episodeNO));
             
         }
 

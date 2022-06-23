@@ -50,13 +50,13 @@ namespace PIERStory
         {
             base.Show();
 
-            tutorialMissionText.text = string.Format(SystemManager.GetLocalizedText("5167"), 3);
-            rewardText1.text = string.Format(SystemManager.GetLocalizedText("5168"), Data.contentValue);
+            SystemManager.SetText(tutorialMissionText, string.Format(SystemManager.GetLocalizedText("5167"), 3));
+            SystemManager.SetText(rewardText1, string.Format(SystemManager.GetLocalizedText("5168"), Data.contentValue));
 
             needCoiinAmount.text = string.Format("{0}", Data.contentValue);
-            rewardText2.text = string.Format(SystemManager.GetLocalizedText("5168"), 100);
-
-            rewardText3.text = string.Format(SystemManager.GetLocalizedText("5168"), 100);
+            
+            SystemManager.SetText(rewardText2, string.Format(SystemManager.GetLocalizedText("5168"), 100));
+            SystemManager.SetText(rewardText3, string.Format(SystemManager.GetLocalizedText("5168"), 100));
 
             noneFreepass.SetActive(!UserManager.main.HasProjectFreepass());
             hasFreepass.SetActive(UserManager.main.HasProjectFreepass());

@@ -28,7 +28,7 @@ namespace PIERStory {
             if(episodeData == null || !episodeData.isValidData)
                 return;
 
-            textHint.text = episodeData.episodeType == EpisodeType.Chapter ? string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber) : episodeData.episodeType == EpisodeType.Side ? string.Format("[{0}] {1}", SystemManager.GetLocalizedText("5028"), episodeData.episodeTitle) : string.Format("[{0}] {1}", SystemManager.GetLocalizedText("5025"), episodeData.episodeTitle);
+            SystemManager.SetText(textHint, episodeData.episodeType == EpisodeType.Chapter ? string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber) : episodeData.episodeType == EpisodeType.Side ? string.Format("[{0}] {1}", SystemManager.GetLocalizedText("5028"), episodeData.episodeTitle) : string.Format("[{0}] {1}", SystemManager.GetLocalizedText("5025"), episodeData.episodeTitle));
             textHint.text += "      " + SystemManager.GetJsonNodeString(__data, "played") +"/" + SystemManager.GetJsonNodeString(__data, "total");
             
             if(SystemManager.GetJsonNodeString(__data, "played") == SystemManager.GetJsonNodeString(__data, "total")) {
@@ -52,7 +52,7 @@ namespace PIERStory {
                 imageOn.SetActive(true);    
             }
 
-            textHint.text = episodeData.episodeType == EpisodeType.Chapter ? string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber) : episodeData.episodeType == EpisodeType.Side ? string.Format("[{0}] {1}", SystemManager.GetLocalizedText("5028"), episodeData.episodeTitle) : string.Format("[{0}] {1}", SystemManager.GetLocalizedText("5025"), episodeData.episodeTitle);
+            SystemManager.SetText(textHint, episodeData.episodeType == EpisodeType.Chapter ? string.Format("{0} {1:D2}", SystemManager.GetLocalizedText("5027"), episodeData.episodeNumber) : episodeData.episodeType == EpisodeType.Side ? string.Format("[{0}] {1}", SystemManager.GetLocalizedText("5028"), episodeData.episodeTitle) : string.Format("[{0}] {1}", SystemManager.GetLocalizedText("5025"), episodeData.episodeTitle));
         }
     }
 }

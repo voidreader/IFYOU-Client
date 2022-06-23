@@ -51,7 +51,8 @@ namespace PIERStory
 
             missionThumbnail.SetDownloadURL(missionData.imageURL, missionData.imageKey);
             
-            missionText.text = missionData.missionName;
+            
+            SystemManager.SetText(missionText, missionData.missionName);
 
             expText.text = missionData.rewardExp.ToString();
 
@@ -88,7 +89,7 @@ namespace PIERStory
             missionProgress.SetActive(false);
             rewardButton.gameObject.SetActive(false);
 
-            hiddenText.text = string.Format(SystemManager.GetLocalizedText("6056"), lockCount);
+            SystemManager.SetText(hiddenText, string.Format(SystemManager.GetLocalizedText("6056"), lockCount));
         }
 
         /// <summary>

@@ -38,10 +38,12 @@ namespace PIERStory
 
             if(result.ContainsKey("code"))
             {
-                if(SystemManager.GetJsonNodeString(result, "code").Equals("80058"))
-                    message.text = string.Format("<color=#6284FF>{0}</color>", SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(result, "code")));
-                else
-                    message.text = string.Format("<color=#FF0000>{0}</color>", SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(result, "code")));
+                if(SystemManager.GetJsonNodeString(result, "code").Equals("80058")) {
+                    SystemManager.SetText(message, string.Format("<color=#6284FF>{0}</color>", SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(result, "code"))));
+                }
+                else {
+                    SystemManager.SetText(message, string.Format("<color=#FF0000>{0}</color>", SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(result, "code"))));
+                }
             }
 
             UserManager.main.SetNotificationInfo(result);

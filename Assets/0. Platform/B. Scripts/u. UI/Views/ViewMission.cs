@@ -164,7 +164,7 @@ namespace PIERStory
             
             Debug.Log(string.Format("### SetMissionProgressor [{0}]/[{1}]", completeValue, UserManager.main.DictStoryMission.Count));
 
-            missionProgressText.text = string.Format(SystemManager.GetLocalizedText("5032"), completeValue, UserManager.main.DictStoryMission.Count);
+            SystemManager.SetText(missionProgressText, string.Format(SystemManager.GetLocalizedText("5032"), completeValue, UserManager.main.DictStoryMission.Count));
 
             float percentage = (float)completeValue / (float)UserManager.main.DictStoryMission.Count;
             missionPercent.text = string.Format("{0}%", Mathf.Round(percentage * 100));

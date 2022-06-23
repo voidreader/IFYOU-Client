@@ -1,9 +1,14 @@
 using UnityEngine;
 using TMPro;
-using RTLTMPro;
+
 
 namespace PIERStory {
 
+
+    /// <summary>
+    /// 인스펙터에서 textID를 설정한 상태에서 사용.
+    /// 최초 설정 이후에 텍스트에 변화가 없는 TMPro에서만 사용한다.
+    /// </summary>
     public class TextLocalizedUI : MonoBehaviour
     {
         
@@ -36,23 +41,11 @@ namespace PIERStory {
             SetText();    
         }
         
-        void Update() {
-            
-            // 아랍어일때만. 
-            /*
-            if(SystemManager.main.currentAppLanguageCode != CommonConst.COL_AR) 
-                return;
+     
                 
-            // 텍스트에 변경이 일어났으면? 
-            if(_text.text != originText) {
-                SystemManager.SetArabicTextUI(_text);
-                Debug.Log("Update L-Arabic TEXT");
-                originText = _text.text;
-            }
-            */
-        }        
-        
-
+        /// <summary>
+        /// 텍스트 설정 
+        /// </summary>
         void SetText() {
             if(_text == null)
                 return;
@@ -66,16 +59,13 @@ namespace PIERStory {
             if(!string.IsNullOrEmpty(_localizedText)) {
                 
                 _text.font = SystemManager.main.getCurrentLangFont(isException); // 폰트 가져오기 
-                _text.text = _localizedText;
+                SystemManager.SetText(_text, _localizedText);
             }
+            
             
             
             // 아랍어 처리             
             if(SystemManager.main.currentAppLanguageCode == "AR") {
-
-                SystemManager.SetArabicTextUI(_text);
-                // _text.horizontalAlignment = originAlign;
-                
                 // 좌측정렬이면서 정렬픽스 아닌 경우는 아랍에서 오른쪽 정렬로 변경해준다. 
                 if(!isAlignmentFix && _text.horizontalAlignment == HorizontalAlignmentOptions.Left) {
                     _text.horizontalAlignment = HorizontalAlignmentOptions.Right;
@@ -86,7 +76,7 @@ namespace PIERStory {
             } 
             
             // originText에 입력해놓는다. 
-            originText = _text.text;  
+            // originText = _text.text;  
 
            
         }

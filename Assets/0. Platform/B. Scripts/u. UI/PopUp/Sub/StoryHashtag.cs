@@ -11,7 +11,9 @@ namespace PIERStory {
         public void Init(string __tag) {
             
             this.gameObject.SetActive(true);
-            textTag.text = "#" + __tag;
+            
+            SystemManager.SetText(textTag, "#" + __tag);
+            
         }
     }
 }

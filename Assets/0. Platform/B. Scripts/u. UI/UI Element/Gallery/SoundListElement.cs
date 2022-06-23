@@ -53,7 +53,7 @@ namespace PIERStory
                 voiceTotalCount += __voiceData[i].Count;
             }
 
-            voiceInfo.text = string.Format(SystemManager.GetLocalizedText("6058") + "\n<size=60>{1} / {2}</size>", StoryManager.main.GetNametagName(voiceMaster), unlockCount, voiceTotalCount);
+            SystemManager.SetText(voiceInfo, string.Format(SystemManager.GetLocalizedText("6058") + "\n<size=60>{1} / {2}</size>", StoryManager.main.GetNametagName(voiceMaster), unlockCount, voiceTotalCount));
             gameObject.SetActive(true);
         }
 

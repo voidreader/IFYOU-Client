@@ -46,7 +46,7 @@ namespace PIERStory
                 imageInfo.sprite = spriteLock;
             }
 
-            textTitle.text = string.Format("{0}\n<size=22>{1}</size>", epiData.episodeTitle, epiData.episodeSummary);
+            SystemManager.SetText(textTitle, string.Format("{0}\n<size=22>{1}</size>", epiData.episodeTitle, epiData.episodeSummary));
 
 
             // 구매 상태에 따른 가격 표시 추가

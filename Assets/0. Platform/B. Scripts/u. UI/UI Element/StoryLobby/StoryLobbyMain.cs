@@ -610,7 +610,7 @@ namespace PIERStory {
         /// </summary>
         /// <param name="__text"></param>
         protected void SetEpisodeTitleText(string __text) {
-            textEpisodeTitle.text = __text;
+            SystemManager.SetText(textEpisodeTitle, __text);
         }
         
         /// <summary>
@@ -627,7 +627,7 @@ namespace PIERStory {
             // * 연재중인 작품이고, 정규 에피소드인 경우에 연재 정보 표시로 변환한다.
             if(currentPlayState == StatePlayButton.Serial ) {
                 serialGroup.SetActive(true);
-                textSerialDayInfo.text =  string.Format(SystemManager.GetLocalizedText("5184"), currentStoryData.GetSeiralDay());
+                SystemManager.SetText(textSerialDayInfo, string.Format(SystemManager.GetLocalizedText("5184"), currentStoryData.GetSeiralDay()));
                 
                 int remainDay = GetOpenRemainTimeDay();
                 
@@ -637,7 +637,7 @@ namespace PIERStory {
                 }
                 else {
                     textSerialTimer.gameObject.SetActive(false); 
-                    textCommingSoon.text = string.Format(SystemManager.GetLocalizedText("5188"), (int)timeDiff.Days);
+                    SystemManager.SetText(textCommingSoon, string.Format(SystemManager.GetLocalizedText("5188"), (int)timeDiff.Days));
                 }
                 
                 

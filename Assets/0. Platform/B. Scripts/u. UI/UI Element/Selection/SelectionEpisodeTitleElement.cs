@@ -17,7 +17,7 @@ namespace PIERStory
         public void SetEpisodeTitle(int num, string title)
         {
             episodeNumber.text = string.Format("{0}", num);
-            episodeTitle.text = title;
+            SystemManager.SetText(episodeTitle, title);
         }
     }
 }

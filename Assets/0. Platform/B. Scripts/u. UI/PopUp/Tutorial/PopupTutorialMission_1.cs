@@ -19,9 +19,9 @@ namespace PIERStory
         public override void Show()
         {
             base.Show();
-
-            tutorialMissionText.text = string.Format(SystemManager.GetLocalizedText("5167"), 1);
-            rewardText.text = string.Format(SystemManager.GetLocalizedText("5168"), 100);
+            
+            SystemManager.SetText(tutorialMissionText, string.Format(SystemManager.GetLocalizedText("5167"), 1));
+            SystemManager.SetText(rewardText, string.Format(SystemManager.GetLocalizedText("5168"), 100));
 
             pointerIcon.DOAnchorPosY(-440, 0.5f).SetLoops(-1, LoopType.Yoyo);
         }

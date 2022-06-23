@@ -57,10 +57,11 @@ namespace PIERStory
 
         void ChangeLanguageAlert(string changeText, string buttonText, TMP_FontAsset fontAsset, bool active)
         {
-            appLanguageAlert.text = changeText;
             appLanguageAlert.font = fontAsset;
-            buttonLabel.text = buttonText;
+            SystemManager.SetText(appLanguageAlert, changeText);
+            
             buttonLabel.font = fontAsset;
+            SystemManager.SetText(buttonLabel, buttonText);
             // 현재 앱 설정 언어와 다르면 버튼을 활성화해준다
             changeButton.SetActive(!active);
         }

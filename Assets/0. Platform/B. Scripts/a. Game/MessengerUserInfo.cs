@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-
 using TMPro;
 
 namespace PIERStory
@@ -14,7 +13,7 @@ namespace PIERStory
         public void SetMessengerForm(Sprite profileSprite, string name)
         {
             profileImage.sprite = profileSprite;
-            nickName.text = StoryManager.main.GetNametagName(name);
+            SystemManager.SetText(nickName, StoryManager.main.GetNametagName(name));
         }
     }
 }

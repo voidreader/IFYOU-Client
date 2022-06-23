@@ -38,7 +38,7 @@ namespace PIERStory
             soundData = __j;
             soundNumber = index;
             soundNumText.text = (index + 1).ToString();
-            bgmTitle.text = SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_NAME);
+            SystemManager.SetText(bgmTitle, SystemManager.GetJsonNodeString(__j, CommonConst.SOUND_NAME));
             isBgm = true;
 
             BGMStopMode();
@@ -50,8 +50,8 @@ namespace PIERStory
         {
             soundData = __j;
             soundNumber = index;
-            voiceScriptData.text = SystemManager.GetJsonNodeString(__j, GameConst.COL_SCRIPT_DATA);
-            voiceScriptData.text = voiceScriptData.text.Replace('\\', ' ');
+            SystemManager.SetText(voiceScriptData, SystemManager.GetJsonNodeString(__j, GameConst.COL_SCRIPT_DATA).Replace('\\', ' '));
+            
             isOpen = SystemManager.GetJsonNodeBool(__j, CommonConst.IS_OPEN);
             isBgm = false;
 

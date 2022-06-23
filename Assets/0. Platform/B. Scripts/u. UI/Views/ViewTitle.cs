@@ -322,6 +322,7 @@ namespace PIERStory {
             
             textLoading.text = loadingText;
             
+            // 아랍어 예외처리 
             if(currentAppLang == CommonConst.COL_AR) {
                 SystemManager.SetArabicTextUI(textLoading);
             }

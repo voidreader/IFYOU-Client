@@ -50,7 +50,8 @@ namespace PIERStory {
             if (StoryManager.main.loadingDetailJson.Count > 0)
             {
                 loadingTextIndex = 0;
-                textInfo.text = SystemManager.GetJsonNodeString(StoryManager.main.loadingDetailJson[loadingTextIndex], "loading_text");
+                
+                SystemManager.SetText(textInfo, SystemManager.GetJsonNodeString(StoryManager.main.loadingDetailJson[loadingTextIndex], "loading_text"));
             }
             
         }
@@ -214,7 +215,7 @@ namespace PIERStory {
             if (loadingTextIndex == StoryManager.main.loadingDetailJson.Count)
                 loadingTextIndex = 0;
 
-            textInfo.text = SystemManager.GetJsonNodeString(StoryManager.main.loadingDetailJson[loadingTextIndex], "loading_text");
+            SystemManager.SetText(textInfo, SystemManager.GetJsonNodeString(StoryManager.main.loadingDetailJson[loadingTextIndex], "loading_text"));
             
         }
         

@@ -63,8 +63,7 @@ namespace PIERStory {
                 
                 if(textButton == null) continue;
                 
-                
-                textButton.text = buttonTexts[i];
+                SystemManager.SetText(textButton, buttonTexts[i]);
             }
         }
         
@@ -119,7 +118,7 @@ namespace PIERStory {
                     break;
                 }
                 
-                Labels[i].text = __text[i];
+                SystemManager.SetText(Labels[i], __text[i]);
 
             }
         }

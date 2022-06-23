@@ -96,8 +96,8 @@ namespace PIERStory
         void SetNoticeDetail(JsonData detailData, string startDate)
         {
             SystemManager.SetText(noticeDetailTitle, SystemManager.GetJsonNodeString(detailData, LobbyConst.STORY_TITLE));
-            SystemManager.SetText(noticeDate, !string.IsNullOrEmpty(startDate) ? string.Format("{0} {1}", DateTime.Parse(startDate, null, DateTimeStyles.RoundtripKind).ToString("f", new CultureInfo("en-US")), DateTime.Parse(startDate, null, DateTimeStyles.RoundtripKind).Kind) : string.Empty);
-            // noticeDate.text = !string.IsNullOrEmpty(startDate) ? string.Format("{0} {1}", DateTime.Parse(startDate, null, DateTimeStyles.RoundtripKind).ToString("f", new CultureInfo("en-US")), DateTime.Parse(startDate, null, DateTimeStyles.RoundtripKind).Kind) : string.Empty;
+            //SystemManager.SetText(noticeDate, !string.IsNullOrEmpty(startDate) ? string.Format("{0} {1}", DateTime.Parse(startDate, null, DateTimeStyles.RoundtripKind).ToString("f", new CultureInfo("en-US")), DateTime.Parse(startDate, null, DateTimeStyles.RoundtripKind).Kind) : string.Empty);
+            noticeDate.text = !string.IsNullOrEmpty(startDate) ? string.Format("{0} {1}", DateTime.Parse(startDate, null, DateTimeStyles.RoundtripKind).ToString("f", new CultureInfo("en-US")), DateTime.Parse(startDate, null, DateTimeStyles.RoundtripKind).Kind) : string.Empty;
             // SystemManager.SetArabicTextUI(noticeDate);
 
             string textContents = SystemManager.GetJsonNodeString(detailData, "contents");

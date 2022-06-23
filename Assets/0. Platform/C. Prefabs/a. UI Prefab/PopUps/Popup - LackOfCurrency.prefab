@@ -227,6 +227,12 @@ MonoBehaviour:
     Runners: []
     Event:
       m_PersistentCalls:
+        m_Calls: []
+  OnVisibleCallback:
+    EventName: OnVisibleCallback
+    Runners: []
+    Event:
+      m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 2636468872404813120}
           m_TargetAssemblyTypeName: PIERStory.PopupLackOfCurrency, Assembly-CSharp
@@ -240,12 +246,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  OnVisibleCallback:
-    EventName: OnVisibleCallback
-    Runners: []
-    Event:
-      m_PersistentCalls:
-        m_Calls: []
   OnHideCallback:
     EventName: OnHideCallback
     Runners: []
@@ -1831,7 +1831,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 8574798141756169474}
   isException: 1
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &8574798142065188313
 GameObject:
   m_ObjectHideFlags: 0
@@ -2203,7 +2205,8 @@ MonoBehaviour:
   _text: {fileID: 8574798142667394206}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &8574798142704639553
 GameObject:
   m_ObjectHideFlags: 0
@@ -2493,7 +2496,8 @@ MonoBehaviour:
   _text: {fileID: 8574798142708716116}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &8574798142933008756
 GameObject:
   m_ObjectHideFlags: 0
@@ -2801,7 +2805,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 8574798143003277577}
   isException: 1
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!114 &8574798143003277579
 MonoBehaviour:
   m_ObjectHideFlags: 0

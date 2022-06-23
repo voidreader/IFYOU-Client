@@ -21,6 +21,9 @@ namespace PIERStory
 
         public override void Show()
         {
+            if(isShow)            
+                return;
+                
             base.Show();
 
             // isPositive : true면 스타부족, false면 코인부족

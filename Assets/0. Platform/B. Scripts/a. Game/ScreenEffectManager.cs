@@ -1353,7 +1353,7 @@ namespace PIERStory
 
                 case GameConst.KR_SCREEN_EFFECT_FOCUS:
 
-                    var colorMain = radiLines[0].main;
+                    ParticleSystem.MainModule colorMain;
 
                     string focusColor = string.Empty;
                     float focusIntensity = 1f, focusTime = 2f;
@@ -1479,45 +1479,45 @@ namespace PIERStory
                     lightIntensity = Mathf.Clamp(lightIntensity, 1, 3);
 
                     ParticleSystem currLensFlare = null;
-                    var flareGlow = flareGlow1.main.startColor.color;
+                    ParticleSystem.MinMaxGradient flareGlow;
 
                     // 렌즈 플레어 타입 설정
                     switch (typeValue)
                     {
                         case 1:
                             currLensFlare = lensFlare1;
-                            flareGlow = flareGlow1.main.startColor.color;
+                            flareGlow = flareGlow1.main.startColor;
 
                             // 렌즈플레어 타입에 따른 세기 설정
                             if (lightIntensity == 1)
-                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.01568628f);
+                                flareGlow.color = new Color(flareGlow.color.r, flareGlow.color.g, flareGlow.color.b, 0.01568628f);
                             else if (lightIntensity == 2)
-                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.02745098f);
+                                flareGlow.color = new Color(flareGlow.color.r, flareGlow.color.g, flareGlow.color.b, 0.02745098f);
                             else
-                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.05882353f);
+                                flareGlow.color = new Color(flareGlow.color.r, flareGlow.color.g, flareGlow.color.b, 0.05882353f);
                             break;
                         case 2:
                             currLensFlare = lensFlare2;
-                            flareGlow = flareGlow2.main.startColor.color;
+                            flareGlow = flareGlow2.main.startColor;
 
                             if (lightIntensity == 1)
-                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.1568628f);
+                                flareGlow.color = new Color(flareGlow.color.r, flareGlow.color.g, flareGlow.color.b, 0.1568628f);
                             else if (lightIntensity == 2)
-                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.2352941f);
+                                flareGlow.color = new Color(flareGlow.color.r, flareGlow.color.g, flareGlow.color.b, 0.2352941f);
                             else
-                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.3137255f);
+                                flareGlow.color = new Color(flareGlow.color.r, flareGlow.color.g, flareGlow.color.b, 0.3137255f);
 
                             break;
                         case 3:
                             currLensFlare = lensFlare3;
-                            flareGlow = flareGlow3.main.startColor.color;
-
+                            flareGlow = flareGlow3.main.startColor;
+                            
                             if (lightIntensity == 1)
-                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.01960784f);
+                                flareGlow.color = new Color(flareGlow.color.r, flareGlow.color.g, flareGlow.color.b, 0.01960784f);
                             else if (lightIntensity == 2)
-                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.05882353f);
+                                flareGlow.color = new Color(flareGlow.color.r, flareGlow.color.g, flareGlow.color.b, 0.05882353f);
                             else
-                                flareGlow = new Color(flareGlow.r, flareGlow.g, flareGlow.b, 0.09803922f);
+                                flareGlow.color = new Color(flareGlow.color.r, flareGlow.color.g, flareGlow.color.b, 0.09803922f);
 
                             break;
                     }
@@ -1543,26 +1543,24 @@ namespace PIERStory
 
                     snowLevel = Mathf.Clamp(snowLevel, 1, 3);
 
-                    var snowBackEmission = snowParticles[0].emission;
-                    var snowFront1Emission = snowParticles[1].emission;
-                    var snowFront2Emission = snowParticles[2].emission;
-
+                    ParticleSystem.MinMaxCurve snowBackEmission = snowParticles[0].emission.rateOverTime, snowFront1Emission = snowParticles[1].emission.rateOverTime, snowFront2Emission = snowParticles[2].emission.rateOverTime;
+                    
                     switch (snowLevel)
                     {
                         case 1:
-                            snowBackEmission.rateOverTime = 4;
-                            snowFront1Emission.rateOverTime = 1;
-                            snowFront2Emission.rateOverTime = 1;
+                            snowBackEmission = 4;
+                            snowFront1Emission = 1;
+                            snowFront2Emission = 1;
                             break;
                         case 2:
-                            snowBackEmission.rateOverTime = 8;
-                            snowFront1Emission.rateOverTime = 2;
-                            snowFront2Emission.rateOverTime = 2;
+                            snowBackEmission = 8;
+                            snowFront1Emission = 2;
+                            snowFront2Emission = 2;
                             break;
                         case 3:
-                            snowBackEmission.rateOverTime = 12;
-                            snowFront1Emission.rateOverTime = 4;
-                            snowFront2Emission.rateOverTime = 3;
+                            snowBackEmission = 12;
+                            snowFront1Emission = 4;
+                            snowFront2Emission = 3;
                             break;
                     }
 
@@ -1694,8 +1692,8 @@ namespace PIERStory
         /// <param name="__rateOverTime">시간당 나오는 갯수</param>
         void GlitterSet(int __max, int __rateOverTime)
         {
-            var glitterMain = glitter.main;
-            var glitterEmission = glitter.emission;
+            ParticleSystem.MainModule glitterMain;
+            ParticleSystem.EmissionModule glitterEmission;
 
             for (int i = 2; i < glitters.Length; i++)
             {
@@ -1715,7 +1713,7 @@ namespace PIERStory
         /// <param name="isScreen">배경만인지? 스크린 전체인지</param>
         void FogSet(int __rateOverTime, bool isScreen)
         {
-            var fogEmission = bgFog != null? bgFog.emission : screenFog.emission;
+            ParticleSystem.EmissionModule fogEmission;
 
             if (!isScreen)
             {
@@ -1743,7 +1741,7 @@ namespace PIERStory
         /// <param name="__max"></param>
         void SoapBubbleSet(int __max)
         {
-            var bubbleMain = bubble.main;
+            ParticleSystem.MainModule bubbleMain;
 
             for (int i = 0; i < bubbles.Count; i++)
             {

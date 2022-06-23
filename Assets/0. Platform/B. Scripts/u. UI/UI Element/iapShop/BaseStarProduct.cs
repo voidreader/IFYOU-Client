@@ -94,6 +94,49 @@ namespace PIERStory {
             // 첫구매 기록이 없는 경우.
             SetFirstPurchaseBonus();
         }
+
+        public void InitProductData(string __productId)
+        {
+            productID = __productId;
+            gamebaseItem = BillingManager.main.GetGamebasePurchaseItem(productID);
+
+            // 가격 정보 
+            if (gamebaseItem != null)
+            {
+                Debug.Log("localizedPrice : " + gamebaseItem.localizedPrice);
+                textPrice.text = gamebaseItem.localizedPrice;
+            }
+            else
+                Debug.Log("gamebaseItem is Null!!!!!");
+
+            // 게임 Product 정보 
+            productMasterJSON = BillingManager.main.GetGameProductItemMasterInfo(productID);
+
+            if (productMasterJSON != null)
+            {
+                productMasterID = SystemManager.GetJsonNodeString(productMasterJSON, "product_master_id"); // master_id
+                hasPurchaseHistory = BillingManager.main.CheckProductPurchaseCount(productMasterID) > 0; // 구매 내역
+
+                productDetailJSON = BillingManager.main.GetGameProductItemDetailInfo(productMasterID); // 디테일 
+            }
+
+
+            if (productDetailJSON == null)
+            {
+                Debug.Log(string.Format("[{0}] has no info in game server ", productID));
+                return;
+            }
+
+            mainGemQuantity = getMainStarQuantity();
+            subGemQuantity = getSubStarQuantity();
+            coinQuantity = getCoinQuantity();
+
+            if (hasPurchaseHistory)
+                return;
+
+            // 첫구매 기록이 없는 경우.
+            firstPurchaseBonusGem = getFirstPurchaseStar();
+        }
         
         
         /// <summary>

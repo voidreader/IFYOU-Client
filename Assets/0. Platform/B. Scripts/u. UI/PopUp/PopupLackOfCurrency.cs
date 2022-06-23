@@ -163,25 +163,27 @@ namespace PIERStory
             foreach (string id in productIdList)
             {
                 BaseStarProduct sp = new BaseStarProduct();
-                sp.InitProduct(id);
+                sp.InitProductData(id);
                 allStarProductList.Add(sp);
             }
 
-            int minValue = int.MaxValue;
+            int minValue = int.MaxValue, totalQuantity = 0, calcMin = 0;
             string closeProductId = string.Empty;
 
             foreach (BaseStarProduct sp in allStarProductList)
             {
-                int totalQuantity = sp.mainGemQuantity + sp.subGemQuantity + sp.firstPurchaseBonusGem;
+                totalQuantity = sp.mainGemQuantity + sp.subGemQuantity + sp.firstPurchaseBonusGem;
 
                 // 총합이 필요한 값보다 적으면 이 상품은 아닌거야
-                if (totalQuantity < Data.contentValue)
+                if (totalQuantity < coinExchangeProducts[0].price)
                     continue;
 
+                calcMin = totalQuantity - coinExchangeProducts[0].price;
+
                 // 제일 최소값을 계속 갱신해줘서 해당 상품ID를 저장해둔다
-                if (totalQuantity - Data.contentValue < minValue)
+                if (calcMin < minValue)
                 {
-                    minValue = totalQuantity - Data.contentValue;
+                    minValue = calcMin;
                     closeProductId = sp.productID;
                 }
             }

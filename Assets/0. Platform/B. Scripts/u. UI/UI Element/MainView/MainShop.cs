@@ -54,7 +54,6 @@ namespace PIERStory {
 
         public void DelayEnterFromMain()
         {
-            
             Debug.Log("## DelayEnterFromMain ##");
             
             StartCoroutine(RoutineEnterFromMain());
@@ -115,7 +114,6 @@ namespace PIERStory {
 
         public void DelayEnterFromSignal()
         {
-            
             Debug.Log("## DelayEnterFromSignal ##");
             
             StartCoroutine(RoutineEnterFromSignal());
@@ -229,7 +227,8 @@ namespace PIERStory {
         public void InitNormalContainer()
         {
             Debug.Log(">> InitNormalContainer");
-            
+
+
             if(!normalToggle.isOn)
                 return;
             
@@ -283,7 +282,6 @@ namespace PIERStory {
              if(isNormalContainerSet)
                 return;
             */
-            
             // * container 콜백에서 실행된다. 
             // 기본 스타 상품
             for (int i = 0; i < listBaseStarProducts.Count; i++)

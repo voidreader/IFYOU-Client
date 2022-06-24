@@ -55,10 +55,5 @@ namespace PIERStory {
                 targetImage.SetNativeSize();
             }
         }
-        
-        void OnEnable() {
-            SetImage();
-        }
-
     }
 }

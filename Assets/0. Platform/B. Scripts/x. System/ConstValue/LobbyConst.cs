@@ -110,6 +110,8 @@ namespace PIERStory {
         public const string NODE_ATTENDANCE = "attendance";
         public const string NODE_DAY_SEQ = "day_seq";
         public const string NODE_DAILY_MISSION = "dailyMission";
+        public const string NODE_MISSION_AD_REWARD = "missionAdReward";
+        public const string NODE_TIMER_AD_REWARD = "timerAdReward";
 
 
         public const string NODE_ICON_IMAGE_URL = "icon_image_url";

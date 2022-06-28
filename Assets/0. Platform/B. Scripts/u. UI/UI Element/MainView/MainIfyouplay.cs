@@ -13,6 +13,7 @@ namespace PIERStory
     public class MainIfyouplay : MonoBehaviour
     {
         public static Action OnRefreshIfyouplay = null;
+        public static Action OnCooldownAdEnable = null;
         public ScrollRect scroll;
 
         //[Header("프로모션 파트")][Space(15)]
@@ -49,15 +50,41 @@ namespace PIERStory
 
         JsonData dailyMissionData = null;
 
+
+        [Space(15)][Header("광고 보고 재화얻기")]
+        public TextMeshProUGUI missionAdTitle;
+        public TextMeshProUGUI dailyAdTimerText;
+        public List<TextMeshProUGUI> adRewardAmountTexts;
+        public List<Image> rewardAura;
+        public List<GameObject> adRewardChecks;
+        public TextMeshProUGUI currentAdRewardLevelText;
+        public Image adMissionGauge;
+        public TextMeshProUGUI adMissionProgress;
+        public GameObject showAdMissionButton;
+        public GameObject getAdMissionRewardButton;
+        public GameObject adsMissionComplete;
+
+        JsonData missionAdData = null;
+
+        [Space]
+        public TextMeshProUGUI timerAdTitle;
+        public TextMeshProUGUI timerAdContent;
+        public TextMeshProUGUI rewardAmount;
+        public GameObject showCooldownAdButton;
+        public GameObject cooldownState;
+        public TextMeshProUGUI nextAdCooldown;
+
+        JsonData timerAdData = null;
+
+
         private void Start()
         {
             OnRefreshIfyouplay = EnterIfyouplay;
+            OnCooldownAdEnable = InitCooldownAdButton;
         }
 
         public void EnterIfyouplay()
         {
-            scroll.verticalNormalizedPosition = 1f;
-
             attendanceData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_ATTENDANCE_MISSION);
 
             // 출석 관련 세팅
@@ -68,9 +95,16 @@ namespace PIERStory
 
             InitDailyMission();
 
-            ViewMain.OnRefreshIfyouplayNewSign?.Invoke();
+            InitAdCompensation();
 
+            ViewMain.OnRefreshIfyouplayNewSign?.Invoke();
         }
+
+        public void EnterComplete()
+        {
+            scroll.verticalNormalizedPosition = 1f;
+        }
+
 
         #region 출석 관련
 
@@ -322,16 +356,154 @@ namespace PIERStory
 
 
         /// <summary>
-        /// Daily Mission 남은시간 카운트 다운
+        /// Daily Mission 남은시간 카운트 다운.
+        /// (22.06.27 추가) 오늘의 광고 보상은 Daily Mission과 동일한 시간을 갖는다
         /// </summary>
         IEnumerator CountDownDailyMission()
         {
             while (gameObject.activeSelf && UserManager.main.dailyMissionTimer.Ticks > 0)
             {
                 timerText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", UserManager.main.dailyMissionTimer.Hours, UserManager.main.dailyMissionTimer.Minutes, UserManager.main.dailyMissionTimer.Seconds);
+                dailyAdTimerText.text = timerText.text;
                 yield return null;
             }
         }
+
+        #endregion
+
+        #region 광고 보고 보상받기
+
+        void InitAdCompensation()
+        {
+            missionAdData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_MISSION_AD_REWARD);
+
+            if(missionAdData == null)
+            {
+                Debug.LogError("미션 광고 JsonData 없음!");
+                return;
+            }
+
+            missionAdTitle.text = SystemManager.GetJsonNodeString(missionAdData[0], "name");
+
+            adRewardAmountTexts[0].text = SystemManager.GetJsonNodeString(missionAdData[0], "first_" + CommonConst.NODE_QUANTITY);
+            adRewardAmountTexts[1].text = SystemManager.GetJsonNodeString(missionAdData[0], "second_" + CommonConst.NODE_QUANTITY);
+            adRewardAmountTexts[2].text = SystemManager.GetJsonNodeString(missionAdData[0], "third_" + CommonConst.NODE_QUANTITY);
+
+            adRewardChecks[0].SetActive(SystemManager.GetJsonNodeBool(missionAdData[0], "first_clear"));
+            adRewardChecks[1].SetActive(SystemManager.GetJsonNodeBool(missionAdData[0], "second_clear"));
+            adRewardChecks[2].SetActive(SystemManager.GetJsonNodeBool(missionAdData[0], "third_clear"));
+
+            int currentResult = 0, totalCount = 1, level = 1;
+            
+            level = SystemManager.GetJsonNodeInt(missionAdData[0], "step");
+            currentAdRewardLevelText.text = string.Format("Lv.{0}", level);
+
+            currentResult = SystemManager.GetJsonNodeInt(missionAdData[0], "current_result");
+            totalCount = SystemManager.GetJsonNodeInt(missionAdData[0], "total_count");
+            adMissionProgress.text = string.Format("{0}/{1}", currentResult, totalCount);
+            adMissionGauge.fillAmount = (float)currentResult / totalCount;
+
+            showAdMissionButton.SetActive(currentResult < totalCount);
+            getAdMissionRewardButton.SetActive(currentResult >= totalCount);
+            adsMissionComplete.SetActive(level >= 3 && currentResult >= totalCount && dailyAdTimerText && !string.IsNullOrEmpty(SystemManager.GetJsonNodeString(missionAdData[0], "clear_date")));
+
+            timerAdData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_TIMER_AD_REWARD);
+
+            if (timerAdData == null)
+            {
+                Debug.LogError("쿨타임 광고 JsonData 없음!");
+                return;
+            }
+
+            timerAdTitle.text = SystemManager.GetJsonNodeString(timerAdData[0], "name");
+            timerAdContent.text = SystemManager.GetJsonNodeString(timerAdData[0], "content");
+            rewardAmount.text = SystemManager.GetJsonNodeString(timerAdData[0], "first_" + CommonConst.NODE_QUANTITY);
+
+            InitCooldownAdButton();
+        }
+
+        void InitCooldownAdButton()
+        {
+            showCooldownAdButton.SetActive(UserManager.main.adCoolDownTimer.Ticks <= 0);
+            cooldownState.SetActive(UserManager.main.adCoolDownTimer.Ticks > 0);
+
+            if (cooldownState.activeSelf)
+                StartCoroutine(RoutineNextAdCooldown());
+        }
+
+        
+        /// <summary>
+        /// 광고 시청하기
+        /// </summary>
+        public void OnClickWatchingCommercial(int adNo)
+        {
+            if (adNo == 1)
+                AdManager.main.ShowRewardAdWithCallback(RequestAdMissionAccumulate);
+            else if (adNo == 2)
+                AdManager.main.ShowRewardAdWithCallback(RequestCooldownAdReward);
+        }
+
+        /// <summary>
+        /// 광고 보상 받기
+        /// </summary>
+        public void OnClickGetAdReward()
+        {
+            NetworkLoader.main.RequestAdReward(1);
+        }
+
+
+        /// <summary>
+        /// 광고 미션 누적하기
+        /// </summary>
+        /// <param name="isRewarded"></param>
+        void RequestAdMissionAccumulate(bool isRewarded)
+        {
+            if (!isRewarded)
+                return;
+
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "increaseMissionAdReward";
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+            sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
+
+            NetworkLoader.main.SendPost(CallbackAccumulateAdCount, sending, true);
+        }
+
+        void CallbackAccumulateAdCount(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackAccumulateAdCount");
+                return;
+            }
+
+            UserManager.main.userIfyouPlayJson = JsonMapper.ToObject(res.DataAsText);
+            OnRefreshIfyouplay?.Invoke();
+        }
+
+
+        /// <summary>
+        /// 쿨타임 광고 보상 받기
+        /// </summary>
+        /// <param name="isRewarded"></param>
+        void RequestCooldownAdReward(bool isRewarded)
+        {
+            if (!isRewarded)
+                return;
+
+            NetworkLoader.main.RequestAdReward(2);
+        }
+
+        IEnumerator RoutineNextAdCooldown()
+        {
+            while (gameObject.activeSelf && UserManager.main.adCoolDownTimer.Ticks > 0)
+            {
+                nextAdCooldown.text = string.Format("{0:D2}:{1:D2}", UserManager.main.adCoolDownTimer.Minutes, UserManager.main.adCoolDownTimer.Seconds);
+                yield return null;
+            }
+
+            OnRefreshIfyouplay?.Invoke();
+        }    
 
         #endregion
     }

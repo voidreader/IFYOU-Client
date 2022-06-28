@@ -3191,9 +3191,7 @@ namespace PIERStory
                     break;
                 }
 
-                yield return null;
-                yield return null;
-                yield return null;
+                yield return new WaitForSeconds(0.1f);
             }
         }
 
@@ -3222,7 +3220,7 @@ namespace PIERStory
             while (adCoolDownTimer.Ticks > 0)
             {
                 adCoolDownTimer = endDate - DateTime.UtcNow;
-                yield return null;
+                yield return new WaitForSeconds(0.1f);
             }
 
             MainIfyouplay.OnCooldownAdEnable?.Invoke();

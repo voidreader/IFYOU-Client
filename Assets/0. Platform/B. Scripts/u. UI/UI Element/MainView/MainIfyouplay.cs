@@ -365,7 +365,7 @@ namespace PIERStory
             {
                 timerText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", UserManager.main.dailyMissionTimer.Hours, UserManager.main.dailyMissionTimer.Minutes, UserManager.main.dailyMissionTimer.Seconds);
                 dailyAdTimerText.text = timerText.text;
-                yield return null;
+                yield return new WaitForSeconds(0.1f);
             }
         }
 
@@ -499,7 +499,7 @@ namespace PIERStory
             while (gameObject.activeSelf && UserManager.main.adCoolDownTimer.Ticks > 0)
             {
                 nextAdCooldown.text = string.Format("{0:D2}:{1:D2}", UserManager.main.adCoolDownTimer.Minutes, UserManager.main.adCoolDownTimer.Seconds);
-                yield return null;
+                yield return new WaitForSeconds(0.1f);
             }
 
             OnRefreshIfyouplay?.Invoke();

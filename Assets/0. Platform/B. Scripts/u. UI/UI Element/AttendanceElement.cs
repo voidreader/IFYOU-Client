@@ -12,13 +12,11 @@ namespace PIERStory
     public class AttendanceElement : MonoBehaviour
     {
         public Image dayHighlight;
-        // public GameObject rewardToday;
 
         public ImageRequireDownload currencyIcon;
         public TextMeshProUGUI amountText;
 
         public Image coverOverlay;
-        // public Image checkIcon;
 
         int attendanceId = 7;
         int daySeq = 0;
@@ -67,8 +65,6 @@ namespace PIERStory
                 dayHighlight.gameObject.SetActive(true);
                 dayHighlight.color = new Color(1,1,1, 0);
                 dayHighlight.DOFade(1, 1).SetLoops(-1, LoopType.Yoyo);
-                //rewardToday.SetActive(true);
-                // StartCoroutine(SpriteShiny());
             }
         }
 
@@ -129,13 +125,9 @@ namespace PIERStory
             UserManager.main.RefreshIfyouplayJsonData(result);
 
             dayHighlight.gameObject.SetActive(false);
-            // rewardToday.SetActive(false);
             coverOverlay.color = new Color(1, 1, 1, 0);
-            // checkIcon.color = new Color(1, 1, 1, 0);
             coverOverlay.gameObject.SetActive(true);
             coverOverlay.DOFade(1f, 0.4f);
-            // checkIcon.DOFade(1f, 0.2f).SetDelay(0.2f);
-            // checkIcon.transform.DOPunchScale(Vector3.one * 1.5f, 0.4f).SetDelay(0.3f);
 
 
             // 이프유 업적

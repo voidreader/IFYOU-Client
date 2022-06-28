@@ -1,15 +1,13 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 using LitJson;
-using DanielLochner.Assets.SimpleScrollSnap;
-using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
-using Doozy.Runtime.UIManager.Containers;
-using BestHTTP;
-using System.Linq;
+using DanielLochner.Assets.SimpleScrollSnap;
 
 
 namespace PIERStory {

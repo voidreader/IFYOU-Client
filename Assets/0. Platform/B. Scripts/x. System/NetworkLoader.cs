@@ -714,7 +714,10 @@ namespace PIERStory
 
         #endregion
 
-
+        /// <summary>
+        /// 일일미션 누적 요청
+        /// </summary>
+        /// <param name="missionNo"></param>
         public void RequestDailyMission(int missionNo)
         {
             JsonData sending = new JsonData();
@@ -724,6 +727,18 @@ namespace PIERStory
             sending["mission_no"] = missionNo;
 
             SendPost(UserManager.main.CallbackIfyouplayList, sending);
+        }
+
+
+        public void RequestAdReward(int adNo)
+        {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestAdReward";
+            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
+            sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
+            sending["ad_no"] = adNo;
+
+            SendPost(UserManager.main.CallbackIfyouplayRefresh, sending, true);
         }
 
 

@@ -115,6 +115,7 @@ namespace PIERStory
         public int unreadMailCount = 0; // 미수신 메일 카운트
 
         public TimeSpan dailyMissionTimer;
+        public TimeSpan adCoolDownTimer;
 
         public long allpassExpireTick = 0; // 올패스 만료일시 tick
         public DateTime allpassExpireDate; // 올패스 만료일시
@@ -341,6 +342,7 @@ namespace PIERStory
             NetworkLoader.main.RequestPlatformServiceEvents(); // 공지사항, 프로모션, 장르 조회 
             NetworkLoader.main.RequestIfyouplayList();
             StartCoroutine(RoutineDailyMissionTimer());
+            StartCoroutine(RoutineAdCooldown());
         }
 
 
@@ -3055,6 +3057,23 @@ namespace PIERStory
         }
 
 
+        public void CallbackIfyouplayRefresh(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackIfyouplayList");
+                return;
+            }
+
+            userIfyouPlayJson = JsonMapper.ToObject(res.DataAsText);
+
+            StartCoroutine(RoutineAdCooldown());
+            SystemManager.ShowMessageWithLocalize("6177");
+            
+            MainIfyouplay.OnRefreshIfyouplay?.Invoke();
+        }
+
+
         /// <summary>
         /// 수령가능 보상이 있거나, 출석 보충을 해야하거나 하는 경우 사용되는 함수
         /// </summary>
@@ -3111,6 +3130,31 @@ namespace PIERStory
                     return true;
             }
 
+            JsonData missionAdReward = SystemManager.GetJsonNode(userIfyouPlayJson, "missionAdReward");
+
+            if (missionAdReward == null)
+                return false;
+
+            // clear_date는 3단계 보상까지 다 받으면 null값이 아니며, 보상을 받을 수 있을 때는 총 광고를 본 횟수가 총 봐야하는 광고수 이상이 되면 true를 리턴
+            if (string.IsNullOrEmpty(SystemManager.GetJsonNodeString(missionAdReward[0], "clear_date")) &&
+                SystemManager.GetJsonNodeInt(missionAdReward[0], "current_result") >= SystemManager.GetJsonNodeInt(missionAdReward[0], "total_count"))
+                return true;
+
+            JsonData timerAdReward = SystemManager.GetJsonNode(userIfyouPlayJson, "timerAdReward");
+
+            if (timerAdReward == null)
+                return false;
+
+            long endDateTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(timerAdReward[0], "remain_date_tick"));
+            DateTime endDate = new DateTime(endDateTick);
+
+            adCoolDownTimer = endDate - DateTime.UtcNow;
+
+            // 볼 수 있는 쿨타임 광고가 존재함
+            if (adCoolDownTimer.Ticks <= 0)
+                return true;
+
+
             return false;
         }
 
@@ -3125,13 +3169,16 @@ namespace PIERStory
             if (dailyMissionData == null)
                 yield break;
 
-            long endDateTick = SystemConst.ConvertServerTimeTick(long.Parse(SystemManager.GetJsonNodeString(dailyMissionData["all"][0], "end_date_tick")));
+            long endDateTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(dailyMissionData["all"][0], "end_date_tick"));
             DateTime endDate = new DateTime(endDateTick);
 
             dailyMissionTimer = endDate - DateTime.UtcNow;
 
             if (dailyMissionTimer.Ticks < 0)
-                Debug.LogError("시간이 조작되어 정확한 타이머를 제공할 수 없음");
+            {
+                Debug.LogError("정확한 타이머를 제공할 수 없음");
+                yield break;
+            }
 
             while (true)
             {
@@ -3144,13 +3191,39 @@ namespace PIERStory
                     break;
                 }
 
-                yield return null;
-                yield return null;
-                yield return null;
-                yield return null;
-                yield return null;
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+
+        IEnumerator RoutineAdCooldown()
+        {
+            yield return new WaitUntil(() => userIfyouPlayJson != null);
+
+            JsonData timerAd = SystemManager.GetJsonNode(userIfyouPlayJson, LobbyConst.NODE_TIMER_AD_REWARD);
+
+            if (timerAd == null)
+            {
+                Debug.LogError(LobbyConst.NODE_TIMER_AD_REWARD + " Json data is null");
+                yield break;
             }
 
+            long endDateTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(timerAd[0], "remain_date_tick"));
+            DateTime endDate = new DateTime(endDateTick);
+
+            adCoolDownTimer = endDate - DateTime.UtcNow;
+            MainIfyouplay.OnCooldownAdEnable?.Invoke();
+
+            // 이미 0보다 작음
+            if (adCoolDownTimer.Ticks <= 0)
+                yield break;
+
+            while (adCoolDownTimer.Ticks > 0)
+            {
+                adCoolDownTimer = endDate - DateTime.UtcNow;
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            MainIfyouplay.OnCooldownAdEnable?.Invoke();
         }
 
 
@@ -3158,7 +3231,7 @@ namespace PIERStory
 
 
         /// <summary>
-        /// 이프유플레이 jsonData 갱신
+        /// 이프유플레이 출석 jsonData만 갱신
         /// </summary>
         /// <param name="__j"></param>
         public void RefreshIfyouplayJsonData(JsonData __j)

@@ -1983,6 +1983,7 @@ namespace PIERStory
                 if(!isAddressableCatalogUpdated) {
                     Debug.Log(string.Format("Initialization failed. error is {0}", "No Font info"));
                     ShowSystemPopup("Game initialization failed : " + "No Font info", Application.Quit, Application.Quit, false, false);
+                    yield break;
                 }
             }
             

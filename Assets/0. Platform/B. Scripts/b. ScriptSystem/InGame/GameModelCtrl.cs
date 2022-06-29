@@ -318,6 +318,20 @@ namespace PIERStory
                 modelAnim.CrossFade(motionName, 0.3f);    
             }
            
+        } // End of PlayAnimation
+        
+        
+        /// <summary>
+        /// 현재 캐릭터 모델의 애니메이션 정지시키기 
+        /// </summary>
+        public void StopAnimation() {
+            
+            if(motionController != null) {
+                motionController.StopAllAnimation(); // 모든 애니메이션 정지 
+            }
+            else {
+                modelAnim.Stop();
+            }
         }
         
         /// <summary>

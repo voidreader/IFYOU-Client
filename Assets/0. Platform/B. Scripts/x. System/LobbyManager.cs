@@ -146,7 +146,6 @@ namespace PIERStory {
             #endif
             
             Debug.Log("### InitAddressableCatalog URL ::  " +  catalogURL);
-            
             Addressables.LoadContentCatalogAsync(catalogURL).Completed += (op) => {
             
                 if(op.Status == AsyncOperationStatus.Succeeded) {

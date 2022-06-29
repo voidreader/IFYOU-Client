@@ -213,6 +213,8 @@ namespace PIERStory
             
             
             base.OnHideView();
+            
+            Debug.Log("ViewStoryLobby OnHideView");
 
 
             DestroyPreviousBackground(); // 배경 제거하고.
@@ -231,6 +233,9 @@ namespace PIERStory
                     if (modelCtrl != null)
                     {
                         liveModels.Remove(modelCtrl);
+                        modelCtrl.StopAnimation(); // 애니메이션 스탑처리 .
+                        modelCtrl.gameObject.SetActive(false); // 비활성화 
+                        
 
                         if (modelCtrl.isAddressable)
                         {
@@ -239,11 +244,17 @@ namespace PIERStory
 
                             if (mount != null)
                             {
+                                Debug.Log("Lobby Character DestroyAddressableModel");
                                 listModelMounts.Remove(mount);
                                 mount.DestroyAddressableModel();
                             }
+                            else {
+                                
+                                Debug.Log("Lobby Character Destroy");
+                                Destroy(modelCtrl.gameObject);    
+                            }
 
-                            Destroy(modelCtrl.gameObject);
+                            
                         }
                         else
                         {

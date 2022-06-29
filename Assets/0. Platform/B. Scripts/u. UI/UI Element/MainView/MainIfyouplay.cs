@@ -383,11 +383,11 @@ namespace PIERStory
                 return;
             }
 
-            missionAdTitle.text = SystemManager.GetJsonNodeString(missionAdData[0], "name");
+            SystemManager.SetText(missionAdTitle, SystemManager.GetJsonNodeString(missionAdData[0], "name"));
 
-            adRewardAmountTexts[0].text = SystemManager.GetJsonNodeString(missionAdData[0], "first_" + CommonConst.NODE_QUANTITY);
-            adRewardAmountTexts[1].text = SystemManager.GetJsonNodeString(missionAdData[0], "second_" + CommonConst.NODE_QUANTITY);
-            adRewardAmountTexts[2].text = SystemManager.GetJsonNodeString(missionAdData[0], "third_" + CommonConst.NODE_QUANTITY);
+            SystemManager.SetText(adRewardAmountTexts[0], SystemManager.GetJsonNodeString(missionAdData[0], "first_" + CommonConst.NODE_QUANTITY));
+            SystemManager.SetText(adRewardAmountTexts[1], SystemManager.GetJsonNodeString(missionAdData[0], "second_" + CommonConst.NODE_QUANTITY));
+            SystemManager.SetText(adRewardAmountTexts[2], SystemManager.GetJsonNodeString(missionAdData[0], "third_" + CommonConst.NODE_QUANTITY));
 
             adRewardChecks[0].SetActive(SystemManager.GetJsonNodeBool(missionAdData[0], "first_clear"));
             adRewardChecks[1].SetActive(SystemManager.GetJsonNodeBool(missionAdData[0], "second_clear"));
@@ -415,8 +415,8 @@ namespace PIERStory
                 return;
             }
 
-            timerAdTitle.text = SystemManager.GetJsonNodeString(timerAdData[0], "name");
-            timerAdContent.text = SystemManager.GetJsonNodeString(timerAdData[0], "content");
+            SystemManager.SetText(timerAdTitle, SystemManager.GetJsonNodeString(timerAdData[0], "name"));
+            SystemManager.SetText(timerAdContent, SystemManager.GetJsonNodeString(timerAdData[0], "content"));
             rewardAmount.text = SystemManager.GetJsonNodeString(timerAdData[0], "first_" + CommonConst.NODE_QUANTITY);
 
             InitCooldownAdButton();

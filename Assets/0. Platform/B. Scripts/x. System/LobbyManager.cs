@@ -190,43 +190,20 @@ namespace PIERStory {
         private void Update() {
             
             if(Input.GetKeyDown(KeyCode.O)) {
-                // SystemManager.ShowIntroPopup();
                 NetworkLoader.main.RequestRecommedStory();
             }
             
 
             /*
-            if(Input.GetKeyDown(KeyCode.O)) {
-                PopupBase popup = PopupManager.main.GetPopup("AchivementIllust");
-                popup.Data.SetLabelsTexts("가짜이름");
-                PopupManager.main.ShowPopup(popup, true, false);
-            }
-            if(Input.GetKeyDown(KeyCode.C)) {
-                //SystemManager.ShowConfirmPopUp("TEST", null, null);
-                PopupBase p = PopupManager.main.GetPopup("PremiumPass");
-                
-                PopupManager.main.ShowPopup(p, false, false);
-            }
-            if(Input.GetKeyDown(KeyCode.D)) {
-                SystemManager.ShowAlert("경고 메세지 테스트");
-            }
-            
             if(Input.GetKeyDown(KeyCode.P)) {
                 // AdManager.main.ShowRewardAd();
                 SystemManager.ShowNetworkLoading();
             }
-            else if(Input.GetKeyDown(KeyCode.L)) {
-                SystemManager.HideNetworkLoading();
-            }
             */
             
             
-            if(Input.GetKeyDown(KeyCode.R)) { // 경험치 획득 
-                // // NetworkLoader.main.UpdateUserExp(50, "event", -1);
-                // PopupBase sidePopup = PopupManager.main.GetPopup(GameConst.POPUP_SIDE_ALERT);
-                // PopupManager.main.ShowPopup(sidePopup, true);
-                
-                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showIntro", string.Empty);
+            if(Input.GetKeyDown(KeyCode.R)) { 
+                Signal.Send(LobbyConst.STREAM_IFYOU, "showIntro", string.Empty);
                 
             }
         }
@@ -304,8 +281,7 @@ namespace PIERStory {
             
             currentLiveObject.liveImage.transform.localScale = new Vector3(currentLiveObject.gameScale , currentLiveObject.gameScale, 1);
 
-            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SHOW_ILLUSTDETAIL, string.Empty);
-            //GameEventMessage.SendEvent("EventIllustDetail");
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SHOW_ILLUSTDETAIL, string.Empty);
         }
 
         void OnGalleryLiveIllustMount()
@@ -315,8 +291,7 @@ namespace PIERStory {
 
             currentLiveIllust.liveImage.transform.localScale = new Vector3(scale, scale, 1);
 
-            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SHOW_ILLUSTDETAIL, string.Empty);
-            //GameEventMessage.SendEvent("EventIllustDetail");
+            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SHOW_ILLUSTDETAIL, string.Empty);
         }
         
         

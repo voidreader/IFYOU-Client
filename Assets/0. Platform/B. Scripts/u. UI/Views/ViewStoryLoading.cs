@@ -107,6 +107,9 @@ namespace PIERStory {
                     // 번들 있음
                     hasBundle  = true;
                    Debug.Log("#### This project has bundle!!!! ####");
+                   
+                   
+                   
                 }
                 else {
                     

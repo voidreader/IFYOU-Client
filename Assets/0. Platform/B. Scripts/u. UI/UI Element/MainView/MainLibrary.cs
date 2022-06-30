@@ -11,11 +11,12 @@ namespace PIERStory {
     {
         
         public static Action<string> OnCategoryList = null;
+        public static string SELECTED_GENRE = string.Empty; // 메인화면에서 선택된 장르 
         
         
         // Start is called before the first frame update
-        public List<GenreToggle> ListCategoryToggle; // 토글들
-        public List<LobbyStoryElement> ListCategoryStory; // 카테고리에 생성된 스토리 개체 
+        // public List<GenreToggle> ListCategoryToggle; // 토글들
+        // public List<LobbyStoryElement> ListCategoryStory; // 카테고리에 생성된 스토리 개체 
         public GameObject prefabCategoryStoryElement; // 프리팹 
         public Transform categoryParent; 
     
@@ -27,46 +28,34 @@ namespace PIERStory {
         public GameObject NoLikeIcon;
         public GameObject NoPlayingIcon;
         
+        
+        public List<CustomGenreCheckBox> listGenreCheckBox;
+        
+        
         void Start() {
             OnCategoryList = RequestFilteredStory;
         }
         
-        public void InitLibrary() {
-            
-            // 상단 장르 설정
-            InitCategory();
-        }
-        
         
         /// <summary>
-        /// 상단 장르 설정 
-        /// </summary>        
-        void InitCategory() {
-            
-            firstLeftToggle.SetIsOn(true, false);
-            
-            //
-            for(int i=0; i<ListCategoryToggle.Count;i++) {
-                ListCategoryToggle[i].gameObject.SetActive(false);
+        /// 라이브러리 초기화 
+        /// </summary>
+        public void InitLibrary() {
+            for(int i=0; i<listGenreCheckBox.Count;i++) {
+                listGenreCheckBox[i].gameObject.SetActive(false);
             }
             
-            if(SystemManager.main.storyGenreData == null)
+            if(SystemManager.main.storyGenreData == null) {
                 return;
+            }
             
             for(int i=0; i<SystemManager.main.storyGenreData.Count;i++) {
-                
-                if(ListCategoryToggle.Count <= i)  {
-                    Debug.LogError("Too many genre data");
-                    break;
-                }
-                
-                ListCategoryToggle[i].SetGenre(SystemManager.main.storyGenreData[i]);
-            }            
+               // 장르 세팅  
+            }
             
-            // Init 하고, 조회
-            OnClickLeftToggle(); // 강제 클릭한것처럼 
-            
-        }   
+            // 세팅하고 체크박스 설정한다. 
+        }
+
         
         List<StoryData> GetGenreFilteredStoryList(string __genre) {
             return StoryManager.main.listTotalStory.Where( item => item.genre.Contains(__genre)).ToList<StoryData>();
@@ -88,6 +77,7 @@ namespace PIERStory {
         /// <param name="__genre"></param>
         void RequestFilteredStory(string __genre) {
             
+            /*
             currentGenre = __genre;
             
             // 기존에 생성된 게임오브젝트 제거 후 클리어             
@@ -148,6 +138,7 @@ namespace PIERStory {
                 ListCategoryStory.Add(ns); // 리스트에 추가 
             
             }                              
+            */
         }
     }
 }

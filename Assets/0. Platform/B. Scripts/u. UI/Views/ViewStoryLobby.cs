@@ -232,36 +232,8 @@ namespace PIERStory
                     modelCtrl = g.GetComponent<GameModelCtrl>();
                     if (modelCtrl != null)
                     {
-                        liveModels.Remove(modelCtrl);
-                        modelCtrl.StopAnimation(); // 애니메이션 스탑처리 .
-                        modelCtrl.gameObject.SetActive(false); // 비활성화 
-                        
-
-                        if (modelCtrl.isAddressable)
-                        {
-                            // 캐릭터 모델인데 에셋번들
-                            ScriptModelMount mount = FindModelMount(modelCtrl);
-
-                            if (mount != null)
-                            {
-                                Debug.Log("Lobby Character DestroyAddressableModel");
-                                listModelMounts.Remove(mount);
-                                mount.DestroyAddressableModel();
-                            }
-                            else {
-                                
-                                Debug.Log("Lobby Character Destroy");
-                                Destroy(modelCtrl.gameObject);    
-                            }
-
-                            
-                        }
-                        else
-                        {
-                            // 캐릭터 모델인데 에셋번들 아님
-                            Destroy(g);
-                        }
-                    } // ? 캐릭터 모델 처리 끝 
+                        DestroyStandingCharacter(modelCtrl);
+                    } 
                     else
                     {
                         // 모델이 아닌 친구들
@@ -864,21 +836,7 @@ namespace PIERStory
                             try
                             {
                                 // 서버에 저장해둔 스탠딩이 아닌데 화면에 있다...부순다...
-                                liveModels.Remove(model);
-
-                                if (model.isAddressable)
-                                {
-                                    ScriptModelMount modelMount = FindModelMount(model);
-
-                                    if (modelMount != null)
-                                    {
-                                        listModelMounts.Remove(modelMount);
-                                        modelMount.DestroyAddressableModel();
-                                    }
-                                }
-
-                                if (model != null && model.gameObject != null)
-                                    Destroy(model.gameObject);
+                                DestroyStandingCharacter(model);
 
                                 breakPoint = true;
                             }
@@ -1253,27 +1211,15 @@ namespace PIERStory
 
             // 리스트에서 해당 오브젝트 삭제
             decoObjects.Remove(controlModel.gameObject);
-            liveModels.Remove(controlModel);
+            
+            // 파괴!
+            DestroyStandingCharacter(controlModel); 
+            
             
             
             // 화면에 남은 모델의 SortingOrder를 0으로 만들어준다
             foreach(GameModelCtrl model in liveModels)
                 model.model.GetComponent<CubismRenderController>().SortingOrder = 0;
-
-            // 파괴
-            if (controlModel.isAddressable) {
-                ScriptModelMount mount = FindModelMount(controlModel);
-                
-                if(mount != null) {
-                    
-                    listModelMounts.Remove(mount);
-                    mount.DestroyAddressableModel();
-                }
-                
-                Destroy(controlModel.gameObject);
-            }
-            else
-                Destroy(controlModel.gameObject);
 
             ReturnCharacterList();
         }
@@ -1312,6 +1258,50 @@ namespace PIERStory
             }
             
             return null;
+        }
+        
+        
+        /// <summary>
+        /// 스탠딩 캐릭터 파괴
+        /// </summary>
+        /// <param name="__model"></param>
+        void DestroyStandingCharacter(GameModelCtrl __model) {
+            
+            // 리스트에서 제거. 
+            liveModels.Remove(__model);
+            
+            // 애니메이션 정지 및 캐릭터 비활성화. 
+            __model.StopAnimation();
+            
+            // 비활성화 하지 않고 release 하는 경우 maskTexture에서 오류 생김. 
+            __model.gameObject.SetActive(false);
+           
+            
+            if (__model.isAddressable)
+            {
+                // 캐릭터 모델인데 에셋번들
+                ScriptModelMount mount = FindModelMount(__model);
+
+                if (mount != null)
+                {
+                    Debug.Log("Lobby Character DestroyAddressableModel");
+                    listModelMounts.Remove(mount);
+                    mount.DestroyAddressableModel();
+                }
+                else {
+                    
+                    Debug.Log("Lobby Character Destroy");
+                    Destroy(__model.gameObject);    
+                }
+
+                
+            }
+            else
+            {
+                // 캐릭터 모델인데 에셋번들 아님
+                Destroy(__model.gameObject);
+            }            
+            
         }
 
 

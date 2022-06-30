@@ -186,8 +186,9 @@ namespace PIERStory {
                 if(op.Status == AsyncOperationStatus.Succeeded) {
                     
                     foreach(IResourceLocation loc in op.Result) {
-                        Debug.Log(loc.InternalId);
+                        Debug.Log(loc.InternalId + "/"  + loc.ProviderId + "/" + loc.PrimaryKey);
                     }
+                    
                     
                 }
                 else {
@@ -224,7 +225,7 @@ namespace PIERStory {
                         foreach (var ver in cachedBundleVersions)
                         {
                             Debug.Log(ver.ToString());
-                            Caching.ClearCachedVersion(cachedBundleName, ver);
+                            // Caching.ClearCachedVersion(cachedBundleName, ver);
                         }
                     }
                 }

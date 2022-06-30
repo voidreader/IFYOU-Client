@@ -41,6 +41,7 @@ namespace PIERStory
         public static bool isQuitGame = false; // 이전 게임 중단 여부 
         public bool isServerValid = false; // 업데이트 필수, 점검 
         public bool isAddressableCatalogUpdated = false; // 어드레서블 카탈로그 업데이트 여부 
+
         
         
         public WebView webView = null; // 웹뷰. 

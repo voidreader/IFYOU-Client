@@ -39,6 +39,12 @@ namespace PIERStory
             publicTags[1].SetActive(useFavorite && favoriteCount >= 100);
             publicTags[2].SetActive(TagGroup.activeSelf && !publicTags[0].activeSelf && !publicTags[1].activeSelf);
 
+            if (publicTags[0].activeSelf)
+                FormatNumberSymbolic(hitCount);
+
+            if (publicTags[1].activeSelf)
+                FormatNumberSymbolic(favoriteCount);
+
             SystemManager.SetText(projectTitle, storyData.title);
 
             gameObject.SetActive(true);
@@ -47,6 +53,25 @@ namespace PIERStory
         public void OnClickElement()
         {
             Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, storyData);
+        }
+
+
+        /// <summary>
+        /// 숫자 자리수별 심볼 표기
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        string FormatNumberSymbolic(long num)
+        {
+            // string[] symbols = { "K", "M", "G", "T", "P", "E", "Z" };
+            // 1k = 1000, 10k = 10000, 100k = 100000
+            if (num >= 1000000)
+                return (num / 1000000).ToString("0.#") + "M";
+
+            if (num >= 100)
+                return (num / 100).ToString("0.#") + "K";
+
+            return string.Empty;
         }
     }
 }

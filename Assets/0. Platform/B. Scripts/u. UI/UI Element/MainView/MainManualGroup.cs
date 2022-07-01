@@ -34,24 +34,25 @@ namespace PIERStory
 
             string[] projectList = list.Split(',');
 
-
+            // 최대 3개만 들어가는 유형의 배열을 사용하는 경우
             if (SystemManager.GetJsonNodeString(__j, "array_kind") == "1*N")
             {
                 foreach (LobbyStoryElement se in verticalTypeStoryElements)
                     se.gameObject.SetActive(false);
 
-                for (int i = 0; i < projectList.Length; i++)
+                for (int i = 0; i < verticalTypeStoryElements.Count; i++)
                 {
                     StoryData storyData = StoryManager.main.FindProject(projectList[i]);
                     verticalTypeStoryElements[i].Init(storyData, true, SystemManager.GetJsonNodeBool(__j, "is_favorite"), SystemManager.GetJsonNodeBool(__j, "is_view"));
                 }
             }
+            // 최대 10개가 들어가는 유형의 한 라인에 2개씩 들어가는 배열을 사용하는 경우
             else
             {
                 foreach (LobbyStoryElement se in horizontalTypeStoryElements)
                     se.gameObject.SetActive(false);
 
-                for (int i = 0; i < projectList.Length; i++)
+                for (int i = 0; i < horizontalTypeStoryElements.Count; i++)
                 {
                     if (string.IsNullOrEmpty(projectList[i]))
                         continue;
@@ -67,7 +68,10 @@ namespace PIERStory
             StartCoroutine(ResizeArea());
         }
 
-        
+        /// <summary>
+        /// 화면 재배율
+        /// </summary>
+        /// <returns></returns>
         IEnumerator ResizeArea()
         {
             yield return null;

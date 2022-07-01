@@ -1,13 +1,8 @@
-using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 using TMPro;
 using LitJson;
-using Doozy.Runtime.UIManager.Components;
 using DanielLochner.Assets.SimpleScrollSnap;
 
 
@@ -90,6 +85,7 @@ namespace PIERStory {
             latestPlayStory = StoryManager.main.FindProject(StoryManager.main.latestPlayProjectID.ToString());
             latestStoryBanner.SetDownloadURL(latestPlayStory.thumbnailURL, latestPlayStory.thumbnailKey);
 
+            // 정규 에피소드의 경우 에피소드 + 현재 챕터
             if (SystemManager.GetJsonNodeString(StoryManager.main.latestPlayStoryJSON[0], "episode_type") == "chapter")
                 SystemManager.SetText(episodeText, string.Format("{0}. {1:D2}", SystemManager.GetLocalizedText("5027"), SystemManager.GetJsonNodeString(StoryManager.main.latestPlayStoryJSON[0], "chapter_number")));
             else
@@ -97,6 +93,9 @@ namespace PIERStory {
         }
 
 
+        /// <summary>
+        /// 어드민에서 전달받은 메인 카테고리 리스트대로 세팅
+        /// </summary>
         void InitMainCategoryList()
         {
             if (mainCategoryList.Count > 0)
@@ -112,18 +111,21 @@ namespace PIERStory {
 
             for (int i = 0; i < mainCategoryData.Count; i++)
             {
+                // 수동 설정의 경우
                 if (SystemManager.GetJsonNodeString(mainCategoryData[i], "project_kind") == "manual")
                 {
                     MainManualGroup manualGroup = Instantiate(manualGroupPrefab, recommendWorkList).GetComponent<MainManualGroup>();
                     manualGroup.InitCategoryData(mainCategoryData[i]);
                     mainCategoryList.Add(manualGroup.gameObject);
                 }
+                // 조회수 대로
                 else if (SystemManager.GetJsonNodeString(mainCategoryData[i], "project_kind") == "view")
                 {
                     MainHitsGroup hitsGroup = Instantiate(hitsGroupPrefab, recommendWorkList).GetComponent<MainHitsGroup>();
                     hitsGroup.InitCategoryData(mainCategoryData[i]);
                     mainCategoryList.Add(hitsGroup.gameObject);
                 }
+                // 장르 대로
                 else
                 {
                     MainManualGroup genreGroup = Instantiate(genreGroupPrefab, recommendWorkList).GetComponent<MainManualGroup>();

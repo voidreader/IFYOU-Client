@@ -40,8 +40,15 @@ namespace PIERStory
                 foreach (LobbyStoryElement se in verticalTypeStoryElements)
                     se.gameObject.SetActive(false);
 
-                for (int i = 0; i < verticalTypeStoryElements.Count; i++)
+                for (int i = 0; i < projectList.Length; i++)
                 {
+                    // 3개 초과로 들어가면 멈춰
+                    if (i >= verticalTypeStoryElements.Count)
+                        break;
+
+                    if (string.IsNullOrEmpty(projectList[i]))
+                        continue;
+
                     StoryData storyData = StoryManager.main.FindProject(projectList[i]);
                     verticalTypeStoryElements[i].Init(storyData, true, SystemManager.GetJsonNodeBool(__j, "is_favorite"), SystemManager.GetJsonNodeBool(__j, "is_view"));
                 }
@@ -52,8 +59,12 @@ namespace PIERStory
                 foreach (LobbyStoryElement se in horizontalTypeStoryElements)
                     se.gameObject.SetActive(false);
 
-                for (int i = 0; i < horizontalTypeStoryElements.Count; i++)
+                for (int i = 0; i < projectList.Length; i++)
                 {
+                    // 10개 초과로 들어가면 멈춰!
+                    if (i >= horizontalTypeStoryElements.Count)
+                        break;
+
                     if (string.IsNullOrEmpty(projectList[i]))
                         continue;
 

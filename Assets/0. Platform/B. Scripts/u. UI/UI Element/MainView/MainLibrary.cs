@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Doozy.Runtime.UIManager.Components;
 
 
@@ -20,7 +21,7 @@ namespace PIERStory {
         public GameObject prefabCategoryStoryElement; // 프리팹 
         public Transform categoryParent; 
     
-        public UIToggle firstLeftToggle; // 왼쪽 첫번째 토글(진행중 토글)
+        public Toggle allToggle; // 상단 모두 선택 토글 
         public string currentGenre = "All"; // 현재 선택된 장르
         public bool isPlayingSelected = true; //
         
@@ -35,25 +36,46 @@ namespace PIERStory {
         void Start() {
             OnCategoryList = RequestFilteredStory;
         }
+
         
         
         /// <summary>
         /// 라이브러리 초기화 
         /// </summary>
         public void InitLibrary() {
+            
+            Debug.Log("### InitLibrary ###");
+            
+            int checkboxIndex = 1;
+            
             for(int i=0; i<listGenreCheckBox.Count;i++) {
                 listGenreCheckBox[i].gameObject.SetActive(false);
+                listGenreCheckBox[i].OnSelectedCheckBox = FilterGenre;
             }
             
             if(SystemManager.main.storyGenreData == null) {
                 return;
             }
             
-            for(int i=0; i<SystemManager.main.storyGenreData.Count;i++) {
-               // 장르 세팅  
-            }
+            // 마스터 체크박스는 5137로 (ALL)
+            listGenreCheckBox[0].Init(SystemManager.GetLocalizedText("5137"));
             
             // 세팅하고 체크박스 설정한다. 
+            for(int i=0; i<SystemManager.main.storyGenreData.Count;i++) {
+               // 장르 세팅  
+               listGenreCheckBox[checkboxIndex++].Init(SystemManager.main.storyGenreData[i]);
+               if(checkboxIndex >= SystemManager.main.storyGenreData.Count)
+                    break;
+            }
+            
+            // 메인에서 선택받은 장르가 있는 경우와 아닌 경우로 분리시킨다. 
+            if(!string.IsNullOrEmpty(SELECTED_GENRE)) {
+                
+            }
+            else {
+                
+            }
+
         }
 
         
@@ -61,13 +83,30 @@ namespace PIERStory {
             return StoryManager.main.listTotalStory.Where( item => item.genre.Contains(__genre)).ToList<StoryData>();
         }        
         
+        
         /// <summary>
-        /// 인위적으로 왼쪽 토클 클릭시 처리 
+        /// 장르 필터 처리 
         /// </summary>
-        public void OnClickLeftToggle() {
-            
-            isPlayingSelected = firstLeftToggle.isOn;
-            RequestFilteredStory(currentGenre);
+        /// <param name="__genre"></param>
+        void FilterGenre(string __genre) {
+            // 전체 장르에 대한 처리와 그 외에로 분리 
+            if(__genre == SystemManager.GetLocalizedText("5137")) {
+                Debug.Log("Master checkbox Selected");
+                
+                // 본인외 모두 비선택 처리 
+                for(int i=1; i<listGenreCheckBox.Count;i++) {
+                    listGenreCheckBox[i].Unselect(); 
+                }
+                
+                // 모든장르를 가져오도록 변경 
+            }
+            else { // 그외 
+                
+                listGenreCheckBox[0].Unselect(); // 마스터 체크박스 비활성화 
+                
+                // 선택한 장르들만 가져오도록 변경 
+                
+            }
         }
         
         
@@ -76,6 +115,8 @@ namespace PIERStory {
         /// </summary>
         /// <param name="__genre"></param>
         void RequestFilteredStory(string __genre) {
+            
+            // 삭제 예정 
             
             /*
             currentGenre = __genre;

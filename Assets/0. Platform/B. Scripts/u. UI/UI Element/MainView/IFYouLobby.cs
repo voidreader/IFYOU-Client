@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 using TMPro;
@@ -41,8 +42,10 @@ namespace PIERStory {
             InitPromotionList();
             InitFastPlay();
             InitMainCategoryList();
+
+            StartCoroutine(LayoutRebuild());
         }
-        
+
         
         /// <summary>
         /// 프로모션 초기화
@@ -98,6 +101,7 @@ namespace PIERStory {
         /// </summary>
         void InitMainCategoryList()
         {
+            // 중복 생성 방지
             if (mainCategoryList.Count > 0)
                 return;
 
@@ -135,13 +139,28 @@ namespace PIERStory {
             }
         }
         
+        IEnumerator LayoutRebuild()
+        {
+            yield return new WaitUntil(() => mainCategoryList[0].activeSelf);
+
+            foreach(GameObject g in mainCategoryList)
+            {
+                if (g.GetComponent<MainManualGroup>() == null)
+                    continue;
+
+                g.GetComponent<MainManualGroup>().ResizeArea();
+            }
+            
+            recommendWorkList.gameObject.SetActive(false);
+            yield return null;
+            recommendWorkList.gameObject.SetActive(true);
+        }
         
         /// <summary>
         /// 가장 최근에 플레이 작품 Ready 버튼 클릭 
         /// </summary>
         public void OnClickReady() {
             StoryManager.main.RequestStoryInfo(latestPlayStory);
-            //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, latestPlayStory);
         }
     }
 }

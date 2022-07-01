@@ -46,7 +46,10 @@ namespace PIERStory {
         //* 작은 카테고리 이미지
         public string categoryImageURL = string.Empty;
         public string categoryImageKey = string.Empty;
-        
+
+        // 코인샵 배너에 사용되는 이미지(메인 카테고리에서 가로형 타입에 사용될 예정)
+        public string coinBannerUrl = string.Empty;
+        public string coinBannerKey = string.Empty;
         
         public bool isLock = false; // 잠금
         public string colorCode = "000000"; // 메인 칼라 코드 
@@ -131,7 +134,9 @@ namespace PIERStory {
             // 카테고리 이미지
             categoryImageURL = SystemManager.GetJsonNodeString(originData, "category_thumbnail_url");
             categoryImageKey = SystemManager.GetJsonNodeString(originData, "category_thumbnail_key");
-            
+
+            coinBannerUrl = SystemManager.GetJsonNodeString(originData, "coin_banner_url");
+            coinBannerKey = SystemManager.GetJsonNodeString(originData, "coin_banner_key");
             
             // 프리미엄 패스 가격정보
             passPrice = SystemManager.GetJsonNodeInt(originData, "pass_price");

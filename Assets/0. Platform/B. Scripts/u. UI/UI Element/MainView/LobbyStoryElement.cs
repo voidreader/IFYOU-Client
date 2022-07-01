@@ -30,7 +30,11 @@ namespace PIERStory
         public void Init(StoryData __story, bool isVertical, bool useFavorite, bool useView)
         {
             storyData = __story;
-            bannerImage.SetDownloadURL(storyData.categoryImageURL, storyData.categoryImageKey);
+
+            if (isVertical)
+                bannerImage.SetDownloadURL(storyData.categoryImageURL, storyData.categoryImageKey);
+            else
+                bannerImage.SetDownloadURL(storyData.coinBannerUrl, storyData.coinBannerKey);
 
             int hitCount = storyData.hitCount * 10, favoriteCount = storyData.likeCount * 10;
 
@@ -40,10 +44,10 @@ namespace PIERStory
             publicTags[2].SetActive(TagGroup.activeSelf && !publicTags[0].activeSelf && !publicTags[1].activeSelf);
 
             if (publicTags[0].activeSelf)
-                AbbrevationUtility.FormatNumberFirstDecimalPlace(hitCount);
+                viewCount.text = AbbrevationUtility.FormatNumberFirstDecimalPlace(hitCount);
 
             if (publicTags[1].activeSelf)
-                AbbrevationUtility.FormatNumberFirstDecimalPlace(favoriteCount);
+                likeCount.text = AbbrevationUtility.FormatNumberFirstDecimalPlace(favoriteCount);
 
             SystemManager.SetText(projectTitle, storyData.title);
 

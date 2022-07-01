@@ -21,7 +21,7 @@ namespace PIERStory
 
         public override void Show()
         {
-            if(isShow)            
+            if(isShow)
                 return;
                 
             base.Show();

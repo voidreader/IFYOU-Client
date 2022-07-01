@@ -69,23 +69,20 @@ namespace PIERStory
                         continue;
 
                     StoryData storyData = StoryManager.main.FindProject(projectList[i]);
-                    horizontalTypeStoryElements[i].Init(storyData, true, SystemManager.GetJsonNodeBool(__j, "is_favorite"), SystemManager.GetJsonNodeBool(__j, "is_view"));
+                    horizontalTypeStoryElements[i].Init(storyData, false, SystemManager.GetJsonNodeBool(__j, "is_favorite"), SystemManager.GetJsonNodeBool(__j, "is_view"));
                 }
             }
 
             verticalStyle.gameObject.SetActive(SystemManager.GetJsonNodeString(__j, "array_kind") == "1*N");
             horizontalStyle.gameObject.SetActive(SystemManager.GetJsonNodeString(__j, "array_kind") != "1*N");
-
-            StartCoroutine(ResizeArea());
         }
 
         /// <summary>
         /// 화면 재배율
         /// </summary>
         /// <returns></returns>
-        IEnumerator ResizeArea()
+        public void ResizeArea()
         {
-            yield return null;
             RectTransform groupRect = GetComponent<RectTransform>();
             groupRect.sizeDelta = verticalStyle.gameObject.activeSelf ? new Vector2(720f, 130 + verticalStyle.sizeDelta.y) : new Vector2(720f, 130 + horizontalStyle.sizeDelta.y);
         }

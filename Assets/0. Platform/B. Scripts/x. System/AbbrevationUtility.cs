@@ -56,11 +56,11 @@ using System.Linq;
     public static string FormatNumberFirstDecimalPlace(int val)
     {
 
-        if (val > 1000000000)
+        if (val >= 1000000000)
             return string.Format("{0:0.0}B", val * 0.000000001f);
-        else if (val > 1000000)
+        else if (val >= 1000000)
             return string.Format("{0:0.0}M", val * 0.000001f);
-        else if (val > 1000)
+        else if (val >= 100)
             return string.Format("{0:0.0}K", val * 0.001f);
         else
             return val.ToString();

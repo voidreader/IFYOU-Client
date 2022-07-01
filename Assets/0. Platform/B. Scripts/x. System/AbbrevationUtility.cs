@@ -47,5 +47,23 @@ using System.Linq;
         else
             return val.ToString();
     }
- }
+
+    /// <summary>
+    /// 소수점 1자리 까지 
+    /// </summary>
+    /// <param name="val"></param>
+    /// <returns></returns>
+    public static string FormatNumberFirstDecimalPlace(int val)
+    {
+
+        if (val >= 1000000000)
+            return string.Format("{0:0.0}B", val * 0.000000001f);
+        else if (val >= 1000000)
+            return string.Format("{0:0.0}M", val * 0.000001f);
+        else if (val >= 100)
+            return string.Format("{0:0.0}K", val * 0.001f);
+        else
+            return val.ToString();
+    }
+}
  

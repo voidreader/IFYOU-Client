@@ -144,7 +144,7 @@ namespace PIERStory {
                 ns.transform.localScale = Vector3.one;
         
                 
-                ns.Init(filteredList[i], StoryElementType.category);
+                //ns.Init(filteredList[i], StoryElementType.category);
                 ListCategoryStory.Add(ns); // 리스트에 추가 
             
             }                              

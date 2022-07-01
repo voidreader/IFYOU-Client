@@ -59,8 +59,9 @@ namespace PIERStory
         
 
         JsonData totalStoryListJson = null; // 조회로 가져온 모든 작품 리스트(all)
+        public JsonData mainCategoryListJson = null;
         JsonData likeStoryIdJSON = null; // 좋아요 작품 ID JSON
-        JsonData latestPlayStoryJSON = null; // 가장 최근에 플레이한 작품 정보
+        public JsonData latestPlayStoryJSON = null; // 가장 최근에 플레이한 작품 정보
         public int latestPlayProjectID = -1; 
         public List<string> ListRecommendStoryID = new List<string>(); // 추천 작품 리스트 
         
@@ -280,6 +281,7 @@ namespace PIERStory
         /// <param name="__listJSON"></param>
         public void SetStoryList(JsonData __listJSON) {
             totalStoryListJson = __listJSON["all"];
+            mainCategoryListJson = __listJSON["mainCategory"];
             likeStoryIdJSON = __listJSON["like"]; //  좋아요 클릭한 프로젝트  [52,72,79 ... ]
             latestPlayStoryJSON = __listJSON["latest"]; // [ { "project_id":72 }, {}, {}].. 
             

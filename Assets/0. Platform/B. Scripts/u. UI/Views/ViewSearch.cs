@@ -28,7 +28,7 @@ namespace PIERStory
         public GameObject storyElementPrefab;
         public RectTransform searchResultContent;
         public Transform searchResultElements;
-        List<NewStoryElement> createResults = new List<NewStoryElement>();                  // 검색 결과의 생성 object들을 담아둘 List
+        //List<NewStoryElement> createResults = new List<NewStoryElement>();                  // 검색 결과의 생성 object들을 담아둘 List
 
         [Space(20)]
         public GameObject noneRecordAlert;
@@ -164,20 +164,20 @@ namespace PIERStory
             searchInputField.text = keyword;
 
             // 이전 검색 결과 삭제(파괴)
-            foreach (NewStoryElement nse in createResults)
-                Destroy(nse.gameObject);
+            //foreach (NewStoryElement nse in createResults)
+            //    Destroy(nse.gameObject);
 
             // List 청소
-            createResults.Clear();
+            //createResults.Clear();
 
             for (int i = 0; i < totalProjectList.Count; i++)
             {
                 // 검색어 키워드를 제목에 포함하고 있다면
                 if (totalProjectList[i].title.Contains(keyword))
                 {
-                    NewStoryElement newStory = Instantiate(storyElementPrefab, searchResultElements).GetComponent<NewStoryElement>();
-                    newStory.InitStoryElement(totalProjectList[i]);
-                    createResults.Add(newStory);
+                    //NewStoryElement newStory = Instantiate(storyElementPrefab, searchResultElements).GetComponent<NewStoryElement>();
+                    //newStory.InitStoryElement(totalProjectList[i]);
+                    //createResults.Add(newStory);
                 }
             }
 
@@ -243,7 +243,7 @@ namespace PIERStory
                 for (int i = recordData.Count - 1; i >= 0; i--)
                 {
                     SearchRecordElement recordElement = Instantiate(searchRecordPrefab, searchRecordContent).GetComponent<SearchRecordElement>();
-                    recordElement.InitData(recordData[i].ToString());
+                    recordElement.InitData(recordData[i].ToString());   
                     recordElements.Add(recordElement);
                 }
 

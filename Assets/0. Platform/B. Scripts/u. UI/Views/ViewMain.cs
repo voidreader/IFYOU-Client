@@ -295,6 +295,8 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
             
             MainShop.isMainNavigationShop = false;
+            
+            library.InitLibrary();
         }
 
 

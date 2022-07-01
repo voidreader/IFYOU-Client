@@ -30,7 +30,8 @@ namespace PIERStory {
         public GameObject NoPlayingIcon;
         
         
-        public List<CustomGenreCheckBox> listGenreCheckBox;
+        public List<CustomGenreCheckBox> listGenreCheckBox; // 장르 체크박스 리스트 
+        public List<string> listSelectedGenre = new List<string>();
         
         
         void Start() {
@@ -60,11 +61,13 @@ namespace PIERStory {
             // 마스터 체크박스는 5137로 (ALL)
             listGenreCheckBox[0].Init(SystemManager.GetLocalizedText("5137"));
             
+            Debug.Log("InitLibrary : "  + SystemManager.main.storyGenreData.Count);
+            
             // 세팅하고 체크박스 설정한다. 
             for(int i=0; i<SystemManager.main.storyGenreData.Count;i++) {
                // 장르 세팅  
                listGenreCheckBox[checkboxIndex++].Init(SystemManager.main.storyGenreData[i]);
-               if(checkboxIndex >= SystemManager.main.storyGenreData.Count)
+               if(checkboxIndex > SystemManager.main.storyGenreData.Count)
                     break;
             }
             
@@ -181,5 +184,9 @@ namespace PIERStory {
             }                              
             */
         }
+        
+        void SetFilteredStory() {
+            
+        } 
     }
 }

@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using LitJson;
+using System.Linq;
+
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
+using System.IO;
 
 using TMPro;
 using RTLTMPro;
@@ -25,6 +31,7 @@ namespace PIERStory {
         void Start()
         {
             PopupManager.main.InitPopupManager();
+            InitAddressableCatalog();
         }
 
         // Update is called once per frame
@@ -87,6 +94,141 @@ namespace PIERStory {
             for(int i=0; i<ListSelection.Count; i++) {
                 ListSelection[i].SetSelection(i);
             }
+        }
+        
+        void DeleteOldCache() {
+            
+        }
+        
+        void InitAddressableCatalog() {
+            
+            Debug.Log("#### InitAddressableCatalog ###");
+            string catalogURL = string.Empty;
+            
+           
+            
+            #if UNITY_IOS
+            catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/bundle2021/iOS/catalog_1.json";
+            
+            #else
+            catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/bundle2021/Android/catalog_1.json";
+            
+            #endif
+            
+            Debug.Log("### InitAddressableCatalog URL ::  " +  catalogURL);
+            
+            Addressables.LoadContentCatalogAsync(catalogURL).Completed += (op) => {
+            
+                if(op.Status == AsyncOperationStatus.Succeeded) {
+                    Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
+                    // SystemManager.main.isAddressableCatalogUpdated = true;
+                    
+                    /*
+                    List<string> allCachePath = new List<string>();
+                    Caching.GetAllCachePaths(allCachePath);
+                    for(int i=0; i<allCachePath.Count;i++) {
+                        Debug.Log(allCachePath[0]);
+                    }
+                    
+                    
+                    Debug.Log("GetCachedVersions");
+                    List<Hash128> allHash = new List<Hash128>();
+                    Caching.GetCachedVersions("60", allHash);
+                    
+                    for(int i=0; i<allHash.Count;i++) {
+                        Debug.Log(allHash[i].ToString());
+                    }
+                    */
+                    
+                    // CleanOldAddressable();
+                    CheckCache("57");
+                    
+                    return;
+                }
+                else {
+                    
+                    // 한번더 시도한다. 
+                    Addressables.LoadContentCatalogAsync(catalogURL).Completed += (op) => {
+            
+                        if(op.Status == AsyncOperationStatus.Succeeded) {
+                            Debug.Log("### InitAddressableCatalog #2" +  op.Status.ToString());
+                            // SystemManager.main.isAddressableCatalogUpdated = true;
+                            
+                            return;
+                        }
+                        else {
+                            
+                            NetworkLoader.main.ReportRequestError(op.OperationException.ToString(), "LoadContentCatalogAsync");
+                            SystemManager.main.isAddressableCatalogUpdated = false;
+                            
+                            
+                            //  카탈로그 실패시 접속 할 수 없음. 
+                            // SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
+                            return;
+                            
+                        }
+                        
+                    }; // end of second try
+                    
+                    
+                } // end of else
+                
+            }; // END!!!
+        }
+        
+        
+        
+        void CheckCache(string key) {
+            
+            
+            
+            Addressables.LoadResourceLocationsAsync(key).Completed += (op) => {
+                if(op.Status == AsyncOperationStatus.Succeeded) {
+                    
+                    foreach(IResourceLocation loc in op.Result) {
+                        Debug.Log(loc.InternalId + "/"  + loc.ProviderId + "/" + loc.PrimaryKey);
+                    }
+                    
+                    
+                }
+                else {
+                    Debug.Log("Failed CheckCache");
+                }
+            };
+            
+            // Addressables.ClearDependencyCacheAsync("font");
+            // Addressables.ClearDependencyCacheAsync("101");
+            
+            
+        }
+        
+        
+        void CleanOldAddressable() {
+            List<string> cachePaths = new List<string>();
+            Caching.GetAllCachePaths(cachePaths);
+            var cachedBundles = cachePaths.Where(Directory.Exists).SelectMany(path => Directory.EnumerateFileSystemEntries(path));
+ 
+                foreach (var path in cachedBundles)
+                {
+                    Debug.Log("path : " + path);
+                    var cachedBundleName = Path.GetFileName(path);
+ 
+                    if (!string.IsNullOrEmpty(cachedBundleName))
+                    {
+                        Debug.Log($"[ADDRESSABLES COLLECTOR] cachedBundleName {cachedBundleName}");
+ 
+                        var cachedBundleVersions = new List<Hash128>();
+                        Caching.GetCachedVersions(cachedBundleName, cachedBundleVersions);
+                        
+                        Debug.Log("Count of cachedBundleVersions : " + cachedBundleVersions.Count);
+                     
+                        foreach (var ver in cachedBundleVersions)
+                        {
+                            Debug.Log(ver.ToString());
+                            // Caching.ClearCachedVersion(cachedBundleName, ver);
+                        }
+                    }
+                }
         }
     }
 }

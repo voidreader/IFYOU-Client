@@ -107,6 +107,9 @@ namespace PIERStory {
                     // 번들 있음
                     hasBundle  = true;
                    Debug.Log("#### This project has bundle!!!! ####");
+                   
+                   
+                   
                 }
                 else {
                     
@@ -161,8 +164,12 @@ namespace PIERStory {
                 yield return null;
 
                 FillProgressorOnly();
-                yield break;
+                yield break; // 여기서 종료. 
             }
+            
+            // * 다운로드할 데이터가 있는 경우에 대한 처리 시작!!!
+            // * 2022.06.29 다운로드가 시작되기 전에 이전 버전을 삭제한다.
+            Addressables.ClearDependencyCacheAsync(__projectID);
             
             
             Debug.Log("### Asset bundle download start ###");

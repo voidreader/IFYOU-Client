@@ -128,6 +128,7 @@ namespace PIERStory {
                 yield return null;
                 
             Debug.Log("<color=cyan>## CheckingAssetBundle #1 </color>");
+            yield return new WaitForSeconds(0.1f);
             
             bool hasDownloadableBundle = false;
             
@@ -194,6 +195,8 @@ namespace PIERStory {
             
             }
             
+            
+            
             // * 번들 체크 완료 후 있으면 다운로드 시작 
             AsyncOperationHandle<long> getDownloadSizeHandle = Addressables.GetDownloadSizeAsync(fontAssetBundle);
             yield return getDownloadSizeHandle;
@@ -209,6 +212,9 @@ namespace PIERStory {
             }
             else
             {
+                Addressables.ClearDependencyCacheAsync(fontAssetBundle);
+                yield return new WaitForSeconds(0.1f);
+                
                 Debug.Log("### Asset bundle download start ###");
                 AsyncOperationHandle downloadHandle = Addressables.DownloadDependenciesAsync(fontAssetBundle);
                 downloadHandle.Completed += (op) => {

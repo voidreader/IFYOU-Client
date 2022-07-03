@@ -63,12 +63,13 @@ namespace PIERStory {
         }
         
         public void OnClickGenre() {
-
+            /*
             if (locatedPlace == "Lobby")
                 ;
             //IFYouLobby.OnCategoryList?.Invoke(localizedName);
             else if (locatedPlace == "Library")
                 MainLibrary.OnCategoryList?.Invoke(localizedName);
+            */
         }
         
         void OnEnable() {

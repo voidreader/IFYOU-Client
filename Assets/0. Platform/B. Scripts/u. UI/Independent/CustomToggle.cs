@@ -19,7 +19,12 @@ namespace PIERStory {
         }
         
         public void OnValueChanged(bool __newValue) {
+            
             // 처리 
+            if(__newValue) {
+                Debug.Log(string.Format("Toggle [{0}] is on", textToggle.text));
+                MainLibrary.RefreshLibrary?.Invoke();
+            }
         }
     }
 }

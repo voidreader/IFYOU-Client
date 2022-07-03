@@ -6,6 +6,9 @@ using Toast.Gamebase;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.Reactor.Animators;
 using TMPro;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
 
 namespace PIERStory {
 
@@ -218,7 +221,7 @@ namespace PIERStory {
         public void OnClickLanguage()
         {
             PopupBase p = PopupManager.main.GetPopup("Language");
-            Debug.Log(">> OnClickDataManage");
+            
 
             PopupManager.main.ShowPopup(p, true);
             //Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_LANGUAGE, string.Empty);
@@ -242,10 +245,24 @@ namespace PIERStory {
         /// </summary>
         public void OnClickDataManage()
         {
-            PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_DATA_MANAGER);
+            // PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_DATA_MANAGER);
+            // PopupManager.main.ShowPopup(p, true);
             Debug.Log(">> OnClickDataManage");
-
-            PopupManager.main.ShowPopup(p, true);
+            
+            SystemManager.ShowSystemPopupLocalize("6439", DeleteAsset, null, true);
+        }
+        
+        void DeleteAsset() {
+            
+            Debug.Log("Delete All Asset");
+            
+            for(int i=0;i<StoryManager.main.listTotalStory.Count;i++) {
+                Addressables.ClearDependencyCacheAsync(StoryManager.main.listTotalStory[i].projectID);
+            }
+            
+            
+            SystemManager.ShowMessageWithLocalize("6022");
+            
         }
 
         /// <summary>
@@ -357,7 +374,13 @@ namespace PIERStory {
             SystemManager.main.OpenCopyrightURL();
         }
         
+        public void OnClickWithdraw() {
+            SystemManager.ShowSystemPopupLocalize("6050", Withdraw, null, true);
+        }
         
+        void Withdraw() {
+            SystemManager.main.WithdrawGamebase();
+        }
 
     }
 }

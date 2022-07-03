@@ -9,7 +9,6 @@ namespace PIERStory
 {
     public class MainManualGroup : MonoBehaviour
     {
-        public RectTransform listTitle;
         public TextMeshProUGUI groupNameText;
 
         [Space(15)][Header("VerticalType")]
@@ -19,11 +18,22 @@ namespace PIERStory
         [Header("HorizontalType")]
         public RectTransform horizontalStyle;
         public List<LobbyStoryElement> horizontalTypeStoryElements;
+        
+        public string genre = string.Empty;
 
 
         public void InitCategoryData(JsonData __j)
         {
-            SystemManager.SetText(groupNameText, SystemManager.GetJsonNodeString(__j, "name_text"));
+            genre = SystemManager.GetJsonNodeString(__j, "genre");
+            
+            // 장르인 경우에는 장르가 들어가야한다. 
+            if(!string.IsNullOrEmpty(genre)) {
+                SystemManager.SetText(groupNameText, "#" + genre);
+            }
+            else {
+                SystemManager.SetText(groupNameText, SystemManager.GetJsonNodeString(__j, "name_text"));    
+            }
+            
             string list = SystemManager.GetJsonNodeString(__j, "project_list");
 
             if (string.IsNullOrEmpty(list))
@@ -93,6 +103,11 @@ namespace PIERStory
         /// </summary>
         public void OnClickMoveLibraryTab()
         {
+            if(!string.IsNullOrEmpty(genre))
+                MainLibrary.SELECTED_GENRE = genre;
+                
+            // 라이브러리 탭을 불러온다.
+            ViewMain.OnShowLibrary?.Invoke();
 
         }
     }

@@ -244,9 +244,17 @@ namespace PIERStory {
         /// 첫구매 보너스 설정
         /// </summary>
         void SetFirstPurchaseBonus() {
-            groupFirstPurchaseBonus.SetActive(true);
             
             firstPurchaseBonusGem = getFirstPurchaseStar();
+            
+            // 보너스 없으면 보이지 않도록 처리             
+            if(firstPurchaseBonusGem <= 0) {
+                groupFirstPurchaseBonus.SetActive(false);    
+                return;
+            }
+                
+            
+            groupFirstPurchaseBonus.SetActive(true);
             
             // textFirstPurchaseBonus.text = SystemManager.GetLocalizedText("5018") + string.Format(" <color=#FF59C2>+ {0}</color>", firstPurchaseBonusGem);
             textFirstPurchaseBonus.text = "+" + firstPurchaseBonusGem.ToString();

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using Doozy.Runtime.Signals;
 
@@ -10,7 +12,11 @@ namespace PIERStory
         [Space(15)]
         public Sprite spriteStar;
         public Sprite spriteCoin;
-        public UnityEngine.UI.Image lackOfCurrencyImage;
+        public Image lackOfCurrencyImage;
+        public List<Sprite> coinIconList;
+        public List<Sprite> starIconList;
+        public Image starProduct_1, starProduct_2;
+        public Image coinExchange_1, coinExchange_2;
 
         [Space]
         public List<BaseStarProduct> starProducts;
@@ -61,12 +67,16 @@ namespace PIERStory
                 {
                     starProducts[0].InitProduct(FindStarProductCloseQuantity());
                     starProducts[0].gameObject.SetActive(true);
+                    ChangeCurrencySprite(starProducts[0].productID, starProduct_1);
 
                     coinExchangeProducts[1].exchangeProductID = coinExchangeProducts[0].exchangeProductID;
                     coinExchangeProducts[1].InitExchangeProduct();
                     coinExchangeProducts[1].gameObject.SetActive(true);
                     return;
                 }
+
+                coinExchange_1.sprite = coinIconList[int.Parse(coinExchangeProducts[0].exchangeProductID) - 1];
+                coinExchange_2.sprite = coinIconList[int.Parse(coinExchangeProducts[1].exchangeProductID) - 1];
 
                 foreach (BaseCoinExchangeProduct ce in coinExchangeProducts)
                     ce.gameObject.SetActive(true);
@@ -97,6 +107,9 @@ namespace PIERStory
                     starProducts[n].gameObject.SetActive(true);
                     n++;
                 }
+
+                ChangeCurrencySprite(starProducts[0].productID, starProduct_1);
+                ChangeCurrencySprite(starProducts[1].productID, starProduct_2);
             }
         }
 
@@ -223,6 +236,16 @@ namespace PIERStory
             }
 
             return productIdList;
+        }
+
+
+        /// <summary>
+        /// 상품 재화 아이콘 변경해주기(스타 상품만)
+        /// </summary>
+        void ChangeCurrencySprite(string __productId, Image img)
+        {
+            int id = int.Parse(Regex.Replace(__productId, @"\D", ""));
+            img.sprite = starIconList[id - 1];
         }
     }
 }

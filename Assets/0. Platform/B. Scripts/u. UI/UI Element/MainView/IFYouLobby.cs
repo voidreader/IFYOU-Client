@@ -84,15 +84,27 @@ namespace PIERStory {
                 return;
             }
 
-            fastplayButton.SetActive(true);
-            latestPlayStory = StoryManager.main.FindProject(StoryManager.main.latestPlayProjectID.ToString());
-            latestStoryBanner.SetDownloadURL(latestPlayStory.thumbnailURL, latestPlayStory.thumbnailKey);
+            try {
+                fastplayButton.SetActive(true);
+                latestPlayStory = StoryManager.main.FindProject(StoryManager.main.latestPlayProjectID.ToString());
+                
+                if(!latestPlayStory.isValidData) {
+                    fastplayButton.SetActive(false);
+                    return;
+                }
+                
+                latestStoryBanner.SetDownloadURL(latestPlayStory.thumbnailURL, latestPlayStory.thumbnailKey);
 
-            // 정규 에피소드의 경우 에피소드 + 현재 챕터
-            if (SystemManager.GetJsonNodeString(StoryManager.main.latestPlayStoryJSON[0], "episode_type") == "chapter")
-                SystemManager.SetText(episodeText, string.Format("{0}. {1:D2}", SystemManager.GetLocalizedText("5027"), SystemManager.GetJsonNodeString(StoryManager.main.latestPlayStoryJSON[0], "chapter_number")));
-            else
-                SystemManager.SetText(episodeText, SystemManager.GetLocalizedText("5025"));
+                // 정규 에피소드의 경우 에피소드 + 현재 챕터
+                if (SystemManager.GetJsonNodeString(StoryManager.main.latestPlayStoryJSON[0], "episode_type") == "chapter")
+                    SystemManager.SetText(episodeText, string.Format("{0}. {1:D2}", SystemManager.GetLocalizedText("5027"), SystemManager.GetJsonNodeString(StoryManager.main.latestPlayStoryJSON[0], "chapter_number")));
+                else
+                    SystemManager.SetText(episodeText, SystemManager.GetLocalizedText("5025"));
+            }
+            catch {
+                fastplayButton.SetActive(false);
+                return;
+            }
         }
 
 

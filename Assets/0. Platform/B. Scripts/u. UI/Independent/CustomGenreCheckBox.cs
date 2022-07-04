@@ -69,7 +69,7 @@ namespace PIERStory {
             
             
             // 이벤트 호출. 
-            OnSelectedCheckBox?.Invoke(originText, isSelected);
+            OnSelectedCheckBox?.Invoke(localizedText, isSelected);
             
             // 상태 변경
             SetState(isSelected);

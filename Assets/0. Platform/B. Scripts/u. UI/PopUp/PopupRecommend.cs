@@ -65,13 +65,17 @@ namespace PIERStory {
             for(int i=0; i<recommededData.Count;i++) {
                 string projectID = recommededData[i].ToString();
                 StoryData story = StoryManager.main.FindProject(projectID);
-                
+
                 /*
                 GameObject panel = Instantiate(storyPrefab, Vector3.zero, Quaternion.identity);
                 panel.transform.localScale = Vector3.one;
                 panel.GetComponent<RecommendStory>().Init(story);
                 scrollSnap.Add(panel, scrollSnap.NumberOfPanels, false);
                 */
+
+                // 예외처리
+                if (story == null || string.IsNullOrEmpty(story.projectID))
+                    continue;
                 
                 storyPrefab.GetComponent<RecommendStory>().Init(story);
                 panels.Add(scrollSnap.Add(storyPrefab, scrollSnap.NumberOfPanels));

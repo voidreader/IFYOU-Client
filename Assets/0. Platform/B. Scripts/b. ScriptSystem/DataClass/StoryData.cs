@@ -50,6 +50,10 @@ namespace PIERStory {
         // 코인샵 배너에 사용되는 이미지(메인 카테고리에서 가로형 타입에 사용될 예정)
         public string coinBannerUrl = string.Empty;
         public string coinBannerKey = string.Empty;
+
+        // 메인 화면의 빠른 플레이 배너 이미지
+        public string fastPlayBannerUrl = string.Empty;
+        public string fastPlayBannerKey = string.Empty;
         
         public bool isLock = false; // 잠금
         public string colorCode = "000000"; // 메인 칼라 코드 
@@ -137,7 +141,10 @@ namespace PIERStory {
 
             coinBannerUrl = SystemManager.GetJsonNodeString(originData, "coin_banner_url");
             coinBannerKey = SystemManager.GetJsonNodeString(originData, "coin_banner_key");
-            
+
+            fastPlayBannerUrl = SystemManager.GetJsonNodeString(originData, "fastplay_banner_url");
+            fastPlayBannerKey = SystemManager.GetJsonNodeString(originData, "fastplay_banner_key");
+
             // 프리미엄 패스 가격정보
             passPrice = SystemManager.GetJsonNodeInt(originData, "pass_price");
             passDiscount = SystemManager.GetJsonNodeFloat(originData, "pass_discount");

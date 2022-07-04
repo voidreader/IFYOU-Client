@@ -86,7 +86,7 @@ namespace PIERStory {
 
             fastplayButton.SetActive(true);
             latestPlayStory = StoryManager.main.FindProject(StoryManager.main.latestPlayProjectID.ToString());
-            latestStoryBanner.SetDownloadURL(latestPlayStory.thumbnailURL, latestPlayStory.thumbnailKey);
+            latestStoryBanner.SetDownloadURL(latestPlayStory.fastPlayBannerUrl, latestPlayStory.fastPlayBannerKey);
 
             // 정규 에피소드의 경우 에피소드 + 현재 챕터
             if (SystemManager.GetJsonNodeString(StoryManager.main.latestPlayStoryJSON[0], "episode_type") == "chapter")

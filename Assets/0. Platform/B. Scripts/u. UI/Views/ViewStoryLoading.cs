@@ -94,6 +94,9 @@ namespace PIERStory {
         
         IEnumerator CheckingBundleExists(string __projectID) {
             
+            StoryManager.main.CurrentProject.isPlaying = true;
+            
+            
             AsyncOperationHandle<IList<IResourceLocation>> bundleCheckHandle = Addressables.LoadResourceLocationsAsync(__projectID);
             yield return bundleCheckHandle;
             

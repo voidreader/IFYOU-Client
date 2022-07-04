@@ -191,7 +191,7 @@ namespace PIERStory {
                     filteredStoryData = filteredStoryData.Where(item => StoryManager.main.CheckProjectLike(item.projectID)).ToList<StoryData>();
                 }
                 else if(playingToggle.isOn) { // 진행작품
-                    filteredStoryData = filteredStoryData.Where(item => item.projectProgress > 0).ToList<StoryData>(); 
+                    filteredStoryData = filteredStoryData.Where(item => item.isPlaying ).ToList<StoryData>(); 
                 }
             }
             

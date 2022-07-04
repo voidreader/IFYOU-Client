@@ -407,6 +407,10 @@ namespace PIERStory
             getAdMissionRewardButton.SetActive(currentResult >= totalCount);
             adsMissionComplete.SetActive(level >= 3 && currentResult >= totalCount && dailyAdTimerText && !string.IsNullOrEmpty(SystemManager.GetJsonNodeString(missionAdData[0], "clear_date")));
 
+            // 현재 상황에 따른 Aura처리
+            for (int i = 0; i < rewardAura.Count; i++)
+                rewardAura[i].color = level == i + 1 && !adsMissionComplete.activeSelf ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
+
             timerAdData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_TIMER_AD_REWARD);
 
             if (timerAdData == null)

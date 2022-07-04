@@ -188,7 +188,7 @@ namespace PIERStory {
             
                 // 장르로 분류를 한번하고, 상단 탭으로 또 처리한다.
                 if(likeToggle.isOn) { // 관심작품
-                    filteredStoryData.Where(item => StoryManager.main.CheckProjectLike(item.projectID)).ToList<StoryData>();
+                    filteredStoryData = filteredStoryData.Where(item => StoryManager.main.CheckProjectLike(item.projectID)).ToList<StoryData>();
                 }
                 else if(playingToggle.isOn) { // 진행작품
                     filteredStoryData = filteredStoryData.Where(item => item.projectProgress > 0).ToList<StoryData>(); 

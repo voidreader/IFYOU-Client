@@ -255,10 +255,13 @@ namespace PIERStory {
                     textPhone1BottomMessage.transform.DOScale(1.1f, 1).SetLoops(-1, LoopType.Yoyo);
                     
                     // 효과 끝나면 3으로 증가 
-                    currentIntroPhase = 3;
-                    fingerTimer = 0;
+                    Invoke("OnCompletePhase2", 1);
                 });
             });
+        }
+        void OnCompletePhase2() {
+            currentIntroPhase = 3;
+            fingerTimer = 0;
         }
         
         
@@ -309,6 +312,8 @@ namespace PIERStory {
         }
         
         public void SelectIntroMessage(StoryData __story) {
+            
+            
             
             HidePhase3();
             currentIntroPhase = 6;

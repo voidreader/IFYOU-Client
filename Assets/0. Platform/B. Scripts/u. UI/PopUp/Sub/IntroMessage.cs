@@ -53,6 +53,12 @@ namespace PIERStory {
         /// 메세지 클릭하면? 
         /// </summary>
         public void OnClickMessage() {
+            
+            // 연출이 다 등장하기 전에는 누를 수 없음 
+            if(basePopup.currentIntroPhase < 5) {
+                return;
+            }
+            
             Debug.Log("OnClick IntroMessage : " + connectedProjectID);
             
             StoryData story = StoryManager.main.FindProject(connectedProjectID.ToString());

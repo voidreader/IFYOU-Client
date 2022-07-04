@@ -27,6 +27,7 @@ namespace PIERStory {
         
         
         [SerializeField] TextMeshProUGUI textMainStar; // 스타 재화 
+        [SerializeField] GameObject groupBonusCoin; // 보너스 코인 그룹 
         [SerializeField] TextMeshProUGUI textCoinQuantity; // 코인 재화 수량
         
         [SerializeField] TextMeshProUGUI textPrice; // 가격 
@@ -162,6 +163,7 @@ namespace PIERStory {
             coinQuantity = getCoinQuantity();
             textCoinQuantity.text = "+ " + string.Format("{0:#,0}", coinQuantity); 
             
+            groupBonusCoin.SetActive(coinQuantity > 0);
         }
         
         /// <summary>

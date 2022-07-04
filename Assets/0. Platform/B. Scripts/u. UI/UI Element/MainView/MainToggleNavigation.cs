@@ -25,9 +25,11 @@ namespace PIERStory {
         [SerializeField] MainNavigationType mainNavigationType;
         [SerializeField] GameObject accountBonus;
         
-        public Color colorActive;
-        public Color colorInactive;
+        // public Color colorActive;
+        // public Color colorInactive;
         
+        public Sprite spriteActive;
+        public Sprite spriteInactive;
         
         void Start() {
             if(mainNavigationType != MainNavigationType.More)
@@ -64,8 +66,9 @@ namespace PIERStory {
                 return;
             
             // textName.color = LobbyManager.main.colorNavOff;
-            
-            icon.color = colorInactive;
+            icon.sprite = spriteInactive;
+            // icon.color = colorInactive;
+            // icon.SetNativeSize();
         }
         
         /// <summary>
@@ -77,8 +80,8 @@ namespace PIERStory {
                 return;
 
             // textName.color = LobbyManager.main.colorNavOn;
-            
-            icon.color = colorActive;
+            icon.sprite = spriteActive;
+            // icon.color = colorActive;
         }
         
         

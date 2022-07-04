@@ -11,7 +11,7 @@ namespace PIERStory {
     public class CustomGenreCheckBox : MonoBehaviour
     {
         
-        public Action<string> OnSelectedCheckBox = null;
+        public Action<string, bool> OnSelectedCheckBox = null;
         
         
         public Image bodyImage; 
@@ -56,8 +56,8 @@ namespace PIERStory {
             originText = __j["origin_name"].ToString();
             localizedText = __j["genre_name"].ToString();
             
-            SystemManager.SetText(textUnselected, originText);
-            SystemManager.SetText(textSelected, originText);
+            SystemManager.SetText(textUnselected, localizedText);
+            SystemManager.SetText(textSelected, localizedText);
             
             SetState(isSelected);
             this.gameObject.SetActive(true);
@@ -67,10 +67,9 @@ namespace PIERStory {
         public void OnClickCheckBox() {
             isSelected = !isSelected; // 반대로 설정한다.
             
-            if(isSelected) {
-                // 이벤트 호출. 
-                OnSelectedCheckBox?.Invoke(originText);
-            }
+            
+            // 이벤트 호출. 
+            OnSelectedCheckBox?.Invoke(originText, isSelected);
             
             // 상태 변경
             SetState(isSelected);

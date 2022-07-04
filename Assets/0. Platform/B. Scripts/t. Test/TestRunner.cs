@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 using DG.Tweening;
 using LitJson;
 using System.Linq;
@@ -26,6 +27,10 @@ namespace PIERStory {
         
         RectTransform baseTransform; // 
         protected readonly FastStringBuilder finalText = new FastStringBuilder(RTLSupport.DefaultBufferSize);
+        
+        public AsyncOperationHandle<SpriteAtlas> firstAtlas;
+        
+        public AsyncOperationHandle<SpriteAtlas> secondAtlas;
         
         // Start is called before the first frame update
         void Start()
@@ -141,7 +146,8 @@ namespace PIERStory {
                     */
                     
                     // CleanOldAddressable();
-                    CheckCache("57");
+                    // CheckCache("57");
+                    LoadAssetIndependent();
                     
                     return;
                 }
@@ -174,6 +180,42 @@ namespace PIERStory {
                 } // end of else
                 
             }; // END!!!
+        }
+        
+        
+        void LoadAssetIndependent() {
+            
+            Debug.Log(" >>>>> LoadAssetIndependent");
+            
+            
+            // key = StoryManager.main.CurrentProjectID + middleKey + imageName;
+            // spriteatlas
+            string firstKey = "111/bg/BG00_크루즈전경_노을.spriteatlas";
+            Addressables.LoadResourceLocationsAsync(firstKey).Completed += (op) => {
+                
+                // 에셋번들 있음 
+               if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count > 0)  {
+                   
+                   // 배경은 POT (2의 지수) 이슈로 인해서 SpriteAtals로 불러오도록 처리 
+                   Addressables.LoadAssetAsync<SpriteAtlas>(firstKey).Completed += (handle) => {
+                       if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공!
+                            
+                            firstAtlas = handle; // 메모리 해제를 위한 변수.
+                            // sprite = mountedAtalsAddressable.Result.GetSprite(imageName); // 이미지 이름으로 스프라이트 할당 
+                            Debug.Log("Succeeded LoaddAssetAsync " + firstKey);
+                            
+                       }
+                       else {
+                           
+                           Debug.Log(">> Failed LoadAssetAsync " + firstKey + " / " + handle.OperationException.Message);
+                           
+                       }
+                   }; // end of LoadAssetAsync
+               }
+               else {
+                   Debug.Log(">> Failed LoadResourceLocationsAsync " + firstKey + " / " + op.OperationException.Message);
+               }
+            }; // ? end of LoadResourceLocationsAsync            
         }
         
         

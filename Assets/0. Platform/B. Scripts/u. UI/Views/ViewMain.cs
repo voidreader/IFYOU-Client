@@ -19,6 +19,8 @@ namespace PIERStory {
         public static Action OnRefreshShopNewSign = null;
         public static Action OnReturnLobby = null;
         
+        public static Action OnShowLibrary = null; 
+        
         
         
         [Header("로비")]
@@ -31,6 +33,7 @@ namespace PIERStory {
         
         [Header("내서재")]
         public MainLibrary library;
+        public UIToggle navLibrary; // 라이브러리 네이게이션
         UIContainer libraryContainer;
 
         [Header("이프유플레이")]
@@ -52,14 +55,10 @@ namespace PIERStory {
         public GameObject shopNewSign;
 
         UIContainer currentShowContainer;
+        
+        
+        
 
-        /*
-                [Header("더보기")]
-                public TextMeshProUGUI userPincode;
-                public TextMeshProUGUI mLevelText;      // 더보기 페이지 레벨
-                public TextMeshProUGUI mExpText;        // 더보기 페이지 경험치
-                public Image mExpGauge;                 // 더보기 페이지 경험치바
-        */
 
         private void Awake()
         {
@@ -77,6 +76,8 @@ namespace PIERStory {
             
             OnRefreshViewMain = RefreshMainView;
             OnReturnLobby = ReturnLobby;
+            
+            OnShowLibrary = ForceLibraryTab;
         }
 
         void Update() {
@@ -167,7 +168,7 @@ namespace PIERStory {
             InitLobby();
 
             // 라이브러리 컨테이너 초기화 
-            library.InitLibrary();
+            // library.InitLibrary();
 
             EnableIfyouplayNewSign();
             
@@ -297,6 +298,10 @@ namespace PIERStory {
             MainShop.isMainNavigationShop = false;
             
             library.InitLibrary();
+        }
+        
+        void ForceLibraryTab() {
+            navLibrary.SetIsOn(true, true);
         }
 
 

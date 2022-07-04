@@ -151,7 +151,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 800579000}
   isException: 1
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &1086181641
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,7 +396,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 185.5, y: -111.3}
-  m_SizeDelta: {x: 106, y: 46}
+  m_SizeDelta: {x: 110, y: 46}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &174873667199237839
 CanvasRenderer:
@@ -469,8 +471,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 15, y: 0.2}
-  m_SizeDelta: {x: 65, y: 30}
+  m_AnchoredPosition: {x: 13.5, y: 0.2}
+  m_SizeDelta: {x: 68, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5839028918284216300
 CanvasRenderer:
@@ -530,9 +532,9 @@ MonoBehaviour:
   m_fontSize: 20
   m_fontSizeBase: 20
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 16
+  m_fontSizeMax: 20
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -700,7 +702,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 74.7, y: -111.3}
-  m_SizeDelta: {x: 106, y: 46}
+  m_SizeDelta: {x: 110, y: 46}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8336730653824872049
 CanvasRenderer:
@@ -775,8 +777,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 15, y: 0.2}
-  m_SizeDelta: {x: 65, y: 30}
+  m_AnchoredPosition: {x: 13.5, y: 0.2}
+  m_SizeDelta: {x: 68, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5449508747200961347
 CanvasRenderer:
@@ -836,9 +838,9 @@ MonoBehaviour:
   m_fontSize: 20
   m_fontSizeBase: 20
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 16
+  m_fontSizeMax: 20
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -910,7 +912,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -30, y: 1.8}
+  m_AnchoredPosition: {x: -32, y: 1.8}
   m_SizeDelta: {x: 23, y: 22}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6380413401828765704
@@ -1103,6 +1105,8 @@ MonoBehaviour:
     premiumPassKey: com/82/1648173116359.jpg
     categoryImageURL: https://d2dvrqwa14jiay.cloudfront.net/assets/com/82/1648788177209.jpg
     categoryImageKey: com/82/1648788177209.jpg
+    coinBannerUrl: 
+    coinBannerKey: 
     isLock: 0
     colorCode: FFFFFF
     projectProgress: 0

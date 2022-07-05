@@ -2270,7 +2270,9 @@ namespace PIERStory
             Debug.Log(JsonMapper.ToStringUnicode(result));
 
             // 메세지 띄우고,  projectCurrent, bank 업데이트 
-            SystemManager.ShowMessageWithLocalize("6220");
+            // SystemManager.ShowMessageWithLocalize("6220");
+            SystemManager.ShowSystemPopupLocalize("6220", null, null, true, false);
+            
             SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);  // projectCurrent
             SetBankInfo(result); // 뱅크 정보 업데이트             
 
@@ -3066,11 +3068,16 @@ namespace PIERStory
             }
 
             userIfyouPlayJson = JsonMapper.ToObject(res.DataAsText);
+            
+            // 메일함 리프레시 
+            UserManager.main.SetNotificationInfo(userIfyouPlayJson);
 
             StartCoroutine(RoutineAdCooldown());
             SystemManager.ShowSystemPopupLocalize("6177", null, null, true, false);
             
             MainIfyouplay.OnRefreshIfyouplay?.Invoke();
+            
+            
         }
 
 

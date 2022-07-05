@@ -1791,6 +1791,11 @@ namespace PIERStory
         /// <summary>
         /// Confirm, Submit 버튼을 가지고 있는 앱용 시스템 팝업
         /// </summary>
+        /// <param name="__message">팝업에 들어갈 문구</param>
+        /// <param name="__positive">확인 및 예를 눌렀을 때 동작할 함수</param>
+        /// <param name="__negative">아니오, 닫기 눌렀을 때 동작할 함수</param>
+        /// <param name="isPositive">긍정형인가?</param>
+        /// <param name="isConfirm">예/아니오 팝업인가, 확인만 뜨는 팝업인가(false = Submit)</param>
         public static void ShowSystemPopup(string __message, Action __positive, Action __negative, bool isPositive = true, bool isConfirm = true)
         {
             PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_CONFIRM);

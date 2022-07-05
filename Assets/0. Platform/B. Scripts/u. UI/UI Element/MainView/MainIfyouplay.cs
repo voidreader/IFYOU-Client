@@ -428,10 +428,8 @@ namespace PIERStory
 
         void InitCooldownAdButton()
         {
-            
-            if(!this.gameObject.activeSelf)
+            if(!gameObject.activeSelf)
                 return;
-
             
             showCooldownAdButton.SetActive(UserManager.main.adCoolDownTimer.Ticks <= 0);
             cooldownState.SetActive(UserManager.main.adCoolDownTimer.Ticks > 0);

@@ -236,7 +236,7 @@ namespace PIERStory
         {
             Debug.Log(string.Format("<color=cyan>Init user info [{0}]</color>", __gamebaseID));
             gamebaseID = __gamebaseID;
-            // gamebaseID = "LXGD4NZ6MZR4N4F4"; // 특정 계정으로 로그인하기
+            //gamebaseID = "QZXGP337XY4JDXT7"; // 특정 계정으로 로그인하기
 
             // 로그인 프로세스를 시작합니다. 
             ConnectServer();
@@ -3068,7 +3068,7 @@ namespace PIERStory
             userIfyouPlayJson = JsonMapper.ToObject(res.DataAsText);
 
             StartCoroutine(RoutineAdCooldown());
-            SystemManager.ShowMessageWithLocalize("6177");
+            SystemManager.ShowSystemPopupLocalize("6177", null, null, true, false);
             
             MainIfyouplay.OnRefreshIfyouplay?.Invoke();
         }

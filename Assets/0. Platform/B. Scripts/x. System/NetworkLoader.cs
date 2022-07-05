@@ -730,6 +730,10 @@ namespace PIERStory
         }
 
 
+        /// <summary>
+        /// 광고 보상 요청
+        /// </summary>
+        /// <param name="adNo"></param>
         public void RequestAdReward(int adNo)
         {
             JsonData sending = new JsonData();

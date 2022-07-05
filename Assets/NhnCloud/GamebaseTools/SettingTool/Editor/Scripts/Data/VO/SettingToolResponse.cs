@@ -73,6 +73,7 @@ namespace NhnCloud.GamebaseTools.SettingTool.Data
                 public string url;
                 public string version;
                 public string appKey;
+                public bool isEncoding;
             }
 
             public Version version;

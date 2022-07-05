@@ -3,6 +3,7 @@
     public static class GamebaseEventCategory
     {
         public const string LOGGED_OUT = "loggedOut";
+        public const string IDP_REVOKED = "idPRevoked";
         public const string SERVER_PUSH_APP_KICKOUT = "serverPushAppKickout";
         public const string SERVER_PUSH_APP_KICKOUT_MESSAGE_RECEIVED = "serverPushAppKickoutMessageReceived";
         public const string SERVER_PUSH_TRANSFER_KICKOUT = "serverPushTransferKickout";

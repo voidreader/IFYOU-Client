@@ -21,18 +21,20 @@ namespace Toast.Gamebase.Internal.Single.WebGL
         {
             var callback = GamebaseCallbackHandler.GetCallback<GamebaseCallback.DataDelegate<bool>>(handle);
 
-            UnityWebRequest www = UnityWebRequest.Get(HealthCheckURL());
-            www.SetRequestHeader("X-TCGB-Transaction-Id", Lighthouse.CreateTransactionId().ToString().ToLower());
-            www.timeout = CommunicatorConfiguration.timeout;
-
-            yield return UnityCompatibility.WebRequest.Send(www);
-
-            if (true == UnityCompatibility.WebRequest.IsError(www))
+            using (UnityWebRequest www = UnityWebRequest.Get(HealthCheckURL()))
             {
-                GamebaseLog.Debug(string.Format("error:{0}", www.error), this);
-            }
+                www.SetRequestHeader("X-TCGB-Transaction-Id", Lighthouse.CreateTransactionId().ToString().ToLower());
+                www.timeout = CommunicatorConfiguration.timeout;
 
-            callback(string.IsNullOrEmpty(www.error));
+                yield return UnityCompatibility.WebRequest.Send(www);
+
+                if (true == UnityCompatibility.WebRequest.IsError(www))
+                {
+                    GamebaseLog.Debug(string.Format("error:{0}", www.error), this);
+                }
+
+                callback(string.IsNullOrEmpty(www.error));
+            }
         }
 
         #region healthCheck

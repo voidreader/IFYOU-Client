@@ -12,7 +12,7 @@ namespace NhnCloud.GamebaseTools.SettingTool
 {
     public class SettingTool : IDisposable
     {
-        public const string VERSION = "2.3.0";
+        public const string VERSION = "2.4.0";
         private const string DOMAIN = "SettingTool";
 
         private DataLoader loader;

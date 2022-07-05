@@ -237,6 +237,7 @@ namespace Toast.Gamebase
         /// Add a Gamebase event handler to be called when every events are arrived.
         /// You have to convert the message data to VO below according to the category value.
         ///  - GamebaseEventCategory.LOGGED_OUT : GamebaseEventLoggedOutData
+        ///  - GamebaseEventCategory.IDP_REVOKED : GamebaseEventIdPRevokedData
         ///  - GamebaseEventCategory.SERVER_PUSH_APP_KICKOUT : GamebaseEventServerPushData
         ///  - GamebaseEventCategory.SERVER_PUSH_APP_KICKOUT_MESSAGE_RECEIVED : GamebaseEventServerPushData
         ///  - GamebaseEventCategory.SERVER_PUSH_TRANSFER_KICKOUT : GamebaseEventServerPushData
@@ -279,6 +280,15 @@ namespace Toast.Gamebase
         ///                 {
         ///                     // There was a problem with the access token.
         ///                     // Call login again.
+        ///                 }
+        ///                 break;
+        ///             }
+        ///         case GamebaseEventCategory.IDP_REVOKED:
+        ///             {
+        ///                 GamebaseResponse.Event.GamebaseEventIdPRevokedData idPRevokedData = GamebaseResponse.Event.GamebaseEventIdPRevokedData.From(message.data);
+        ///                 if (idPRevokedData != null)
+        ///                 {
+        ///                     CheckIdpRevoked(idPRevokedData);
         ///                 }
         ///                 break;
         ///             }
@@ -376,6 +386,43 @@ namespace Toast.Gamebase
         ///                 {
         ///                     // When you clicked action button by 'Rich Message'.
         ///                 }
+        ///                 break;
+        ///             }
+        ///     }
+        /// }
+        /// 
+        /// private void CheckIdpRevoked(GamebaseResponse.Event.GamebaseEventIdPRevokedData idPRevokedData)
+        /// {
+        ///     switch (idPRevokedData.code)
+        ///     {
+        ///         case GamebaseIdPRevokedCode.WITHDRAW:
+        ///             {
+        ///                 // Call Withdraw API.
+        ///                 Gamebase.Withdraw((error) => { });
+        ///                 break;
+        ///             }
+        ///         case GamebaseIdPRevokedCode.OVERWRITE_LOGIN_AND_REMOVE_MAPPING:
+        ///             {
+        ///                 // You must call RemoveMapping after calling overwrite login.
+        ///                 foreach (var idp in idPRevokedData.authMappingList)
+        ///                 {
+        ///                     var additional = new Dictionary<string, object>();
+        ///                     additional.Add(GamebaseAuthProviderCredential.IGNORE_ALREADY_LOGGED_IN, true);
+        ///    
+        ///                     Gamebase.Login(idp, additional, (authToken, loginError) =>
+        ///                     {
+        ///                         if (Gamebase.IsSuccess(loginError) == true)
+        ///                         {
+        ///                             Gamebase.RemoveMapping(idPRevokedData.idPType, (mappingError) => { });
+        ///                         }
+        ///                     });
+        ///                 }
+        ///                 break;
+        ///             }
+        ///         case GamebaseIdPRevokedCode.REMOVE_MAPPING:
+        ///             {
+        ///                 // Call RemoveMapping API.
+        ///                 Gamebase.RemoveMapping(idPRevokedData.idPType, (error) => { });
         ///                 break;
         ///             }
         ///     }
@@ -954,7 +1001,6 @@ namespace Toast.Gamebase
         ///         }
         ///         else
         ///         {
-        ///             
         ///             // If you got this error code(AUTH_ADD_MAPPING_ALREADY_MAPPED_TO_OTHER_MEMBER) that means this user already has another account of the AuthProvider.XXX),
         ///             // You can call this method, Gamebase.addMappingForcibly() which can try to map forcibly with the AuthProvider.XXX.
         ///             if (error.code.Equals(GamebaseErrorCode.AUTH_ADD_MAPPING_ALREADY_MAPPED_TO_OTHER_MEMBER) == true)

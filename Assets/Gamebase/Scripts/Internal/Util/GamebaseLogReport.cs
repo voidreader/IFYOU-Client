@@ -384,12 +384,14 @@ namespace Toast.Gamebase.Internal
             var jsonString      = JsonMapper.ToJson(data);
             var encoding        = new UTF8Encoding().GetBytes(jsonString);
 
-            UnityWebRequest www = UnityWebRequest.Put(URL, encoding);
-            www.timeout         = 10;
-            www.method          = "POST";
-            www.SetRequestHeader("Content-Type", "application/json");            
+            using (UnityWebRequest www = UnityWebRequest.Put(URL, encoding))
+            {
+                www.timeout         = 10;
+                www.method          = "POST";
+                www.SetRequestHeader("Content-Type", "application/json");            
 
-            yield return UnityCompatibility.WebRequest.Send(www);
+                yield return UnityCompatibility.WebRequest.Send(www);
+            }
         }
 
         private void CreateBasicData()

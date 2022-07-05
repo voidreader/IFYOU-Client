@@ -79,6 +79,20 @@ namespace Toast.Gamebase
                 }
             }
 
+            public class GamebaseEventIdPRevokedData
+            {
+                public int code;
+                public string idPType;
+                public List<string> authMappingList;
+                public string extras;
+
+                public static GamebaseEventIdPRevokedData From(string jsonString)
+                {
+                    GamebaseEventIdPRevokedData idPRevokedData = JsonMapper.ToObject<GamebaseEventIdPRevokedData>(jsonString);
+                    return idPRevokedData;
+                }
+            }
+            
             public class PurchasableReceipt
             {
                 public long itemSeq;

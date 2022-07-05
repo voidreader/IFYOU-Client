@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+using LitJson;
 
 namespace PIERStory
 {
@@ -21,21 +21,43 @@ namespace PIERStory
         // 서버에서 말풍선 세트로 받아온 이미지들.
         public Dictionary<string, Sprite> DictBubbleSprites = new Dictionary<string, Sprite>();
         public List<Sprite> partnerBubbleSprites = new List<Sprite>();
+        
+        
+        
+        JsonData bubbleMaster = null;
+        public bool isTagColorAffect = false; // 네임태그 색상이 말풍선에 영향을 미침 
+        public string tagAlignType = "center";
+        public int tagTextareaLeft = 0;
+        public int tagTextareaRight = 20;
+        public int tagTextareaTop = -2;
+        public int tagTextareaBottom = -2;
 
         private void Awake()
         {
             main = this;
+        }
+        
+        void Start() {
+            
+            // 말풍선 마스터 처리 추가 2022.07
+            bubbleMaster = StoryManager.main.currentBubbleMasterJson;
+            
+            normalFontSize = SystemManager.GetJsonNodeInt(bubbleMaster, "normal_font_size");
+            BigFontSize = SystemManager.GetJsonNodeInt(bubbleMaster, "big_font_size");
             
             // 아랍어 폰트 사이즈 조정.. 2022.06.22
             if(SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR) {
-                normalFontSize = 24;
-                BigFontSize = 32;
-            }
-            else {
-                normalFontSize = 28;
-                BigFontSize = 36;
+                normalFontSize -= 4;
+                BigFontSize -= 4;
             }
             
+            // 말풍선 마스터 정보 모으기 
+            isTagColorAffect = SystemManager.GetJsonNodeBool(bubbleMaster, "tag_color_affect");
+            tagAlignType = SystemManager.GetJsonNodeString(bubbleMaster, "tag_align_type");
+            tagTextareaLeft = SystemManager.GetJsonNodeInt(bubbleMaster, "tag_textarea_left");
+            tagTextareaRight = SystemManager.GetJsonNodeInt(bubbleMaster, "tag_textarea_right");
+            tagTextareaTop = SystemManager.GetJsonNodeInt(bubbleMaster, "tag_textarea_top");
+            tagTextareaBottom = SystemManager.GetJsonNodeInt(bubbleMaster, "tag_textarea_bottom");
         }
 
 

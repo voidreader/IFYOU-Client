@@ -1044,12 +1044,14 @@ namespace PIERStory
         /// </summary>
         public void OnBubble()
         {
+            /*
             if(needDelayShow && speakerTall < 0) {
                 Debug.Log("<color=white>Bubble Delay Show</color>");
                 // needDelayShow = false;
                 
                 Invoke("DelayOnBubble", 0.1f);
             }
+            */
             
             ActiveInEffect();
         }

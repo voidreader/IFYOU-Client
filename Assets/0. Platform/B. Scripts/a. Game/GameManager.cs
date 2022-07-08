@@ -1926,7 +1926,14 @@ namespace PIERStory
         /// <param name="__nextEpisodeID"></param>
         public void ShowGameEnd(string __nextEpisodeID)
         {
-            Debug.Log("ShowGameEnd :: " + __nextEpisodeID);
+            
+            // 중복 실행을 막는다.
+            if(!isPlaying) {
+                Debug.LogError("duplicate call ShowGameEnd");
+                return;
+            }
+            
+            // Debug.Log("ShowGameEnd :: " + __nextEpisodeID);
 
             // AdManager.main.HideBanner();
 

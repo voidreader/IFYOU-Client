@@ -132,6 +132,10 @@ namespace PIERStory {
                     // 웹 코인샵 오픈 
                     SystemManager.main.OpenCoinShopWebview();
                 }
+                else if(targetID == "ifyou") {
+                    // 이프유 페이지 
+                    // 음... 
+                }
             }
         }
     }

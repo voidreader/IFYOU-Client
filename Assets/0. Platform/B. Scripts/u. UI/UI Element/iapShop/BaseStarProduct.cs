@@ -49,6 +49,11 @@ namespace PIERStory {
 
         public void InitProduct(string __productId)
         {
+            if(string.IsNullOrEmpty(__productId)) {
+                NetworkLoader.main.ReportRequestError("BaseStartProduct InitProduct", "wrong productID");
+                return;
+            }
+            
             // 게임서버, 게임베이스에서 각각 정보를 가져온다. 
             productID = __productId;
             gamebaseItem = BillingManager.main.GetGamebasePurchaseItem(productID);

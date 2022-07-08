@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
-using BestHTTP;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 
 using LitJson;
+using BestHTTP;
 using Toast.Gamebase;
 using Doozy.Runtime.Signals;
 
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.ResourceManagement.ResourceLocations;
 
 namespace PIERStory {
 
@@ -20,14 +19,6 @@ namespace PIERStory {
 
         public static LobbyManager main = null;
 
-        public bool isLobbyManagerInit = false;        
-
-        public ScriptLiveMount currentLiveIllust = null; // Live Illust for Gallery 
-        public ScriptLiveMount currentLiveObject = null; // Live Object for Gallery
-        public TouchEffect touchEffect;                  // 일러스트 상세에서 터치 이펙트 제어용
-        
-        int scaleOffset = 0;
-        string illustName = string.Empty;
 
         [Header("이프유플레이")]
         public Sprite spriteCircleBase;
@@ -44,8 +35,6 @@ namespace PIERStory {
 
 
         [Header("프로필")]
-        public Texture2D textureNoneFrame;
-
         public Sprite spriteBronzeBadge;
         public Sprite spriteSilverBadge;
         public Sprite spriteGoldBadge;
@@ -58,34 +47,6 @@ namespace PIERStory {
         public Sprite spriteLevelTag3;
         public Sprite spriteLevelTag4;
 
-        [Header("작품 로비")]
-        public SpriteRenderer lobbyBackground;
-
-
-        
-        [Header("갤러리 - 사운드 BGMSprite")]
-        public Sprite spriteOpenVoice;
-        public Sprite spriteLockVoice;
-        public Sprite toggleSelected;
-        public Sprite toggleUnselected;
-
-        [Header("미션View Sprite")]
-        public Sprite spriteGetReward;          // 얻을 수 있는 보상 버튼
-        public Sprite spriteGotReward;          // 얻은 보상 버튼
-        
-        [Header("에피소드 관련 Sprite")]
-        public Sprite spriteEpisodeOpen;    // 열린 스페셜, 엔딩 에피소드
-        public Sprite spriteEpisodeLock;    // 잠긴 스페셜, 엔딩 에피소드
-        
-       
-
-        
-        [Header("== 컬러 ==")]
-        
-        public Color colorEndingFutureCover; // 엔딩 미래 커버
-        public Color colorEndingPastCover;  // 엔딩 과거 커버 
-        
-
 
         [Space]
         [SerializeField] NetworkLoadingScreen lobbyNetworkLoadingScreen; 
@@ -94,12 +55,12 @@ namespace PIERStory {
         private void Awake()
         {
             main = this;
+
+            Debug.Log("Initialize LobbyManager");
         }
 
         
         System.Collections.IEnumerator Start() {
-
-
 
             // * 팝업매니저 초기화(로비씬)
             PopupManager.main.InitPopupManager();
@@ -107,9 +68,7 @@ namespace PIERStory {
             yield return null;
             yield return new WaitForSeconds(0.1f);
             
-            if(BubbleManager.main != null) {
-                BubbleManager.main.ShowFakeBubbles(false);
-            }
+            
             
             ViewCommonTop.OnBackAction = null;
             
@@ -118,8 +77,6 @@ namespace PIERStory {
             
             // * 로비씬 시작을 알린다. 
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyPlay"); 
-            
-            isLobbyManagerInit = true;
         }
         
         
@@ -209,13 +166,6 @@ namespace PIERStory {
 
 
 
-        public void SetLiveParent(Transform __model)
-        {
-            __model.SetParent(transform);
-        }
-
-
-
         public void OnClickContactTemp()
         {
             Debug.Log("Open Contact");
@@ -243,56 +193,6 @@ namespace PIERStory {
         {
             return lobbyNetworkLoadingScreen;
         }
-        
-        
-        
-        /// <summary>
-        /// 갤러리의 라이브 일러스트 처리!
-        /// </summary>
-        /// <param name="__name"></param>
-        /// <param name="__scale"></param>
-        public void SetGalleryLiveIllust(string __name, int __scale, bool liveObj)
-        {
-            scaleOffset = __scale;
-            illustName = __name;
-            
-            
-            if(!liveObj) {
-                currentLiveIllust = new ScriptLiveMount(illustName, OnGalleryLiveIllustMount, this, false);
-                currentLiveIllust.SetModelDataFromStoryManager(true);
-
-            }
-            else { // 라이브 오브제 추가 
-                currentLiveObject = new ScriptLiveMount(illustName, OnGalleryLiveObjectMount, this, true);
-                currentLiveObject.SetModelDataFromStoryManager(true);
-            }
-        }
-        
-        /// <summary>
-        /// 갤러리 Live Object 마운트 완료 
-        /// </summary>
-        void OnGalleryLiveObjectMount() {
-            
-            if(currentLiveObject == null || currentLiveObject.liveImage == null) {
-                Debug.LogError("Something wrong in OnGalleryLiveObjectMount");
-                return;
-            }
-            
-            currentLiveObject.liveImage.transform.localScale = new Vector3(currentLiveObject.gameScale , currentLiveObject.gameScale, 1);
-
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SHOW_ILLUSTDETAIL, string.Empty);
-        }
-
-        void OnGalleryLiveIllustMount()
-        {
-            Debug.Log(string.Format("OnGalleryLiveIllustMount gameScale({0})/scaleOffset({1})", currentLiveIllust.gameScale, scaleOffset));
-            float scale = currentLiveIllust.gameScale + scaleOffset;
-
-            currentLiveIllust.liveImage.transform.localScale = new Vector3(scale, scale, 1);
-
-            Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_SHOW_ILLUSTDETAIL, string.Empty);
-        }
-        
         
         
         #region 플랫폼 로딩 화면 처리 

@@ -174,8 +174,8 @@ namespace PIERStory
 
         public void ShowEndingList()
         {
-            endingToggle.sprite = LobbyManager.main.toggleSelected;
-            choiceToggle.sprite = LobbyManager.main.toggleUnselected;
+            endingToggle.sprite = StoryLobbyManager.main.toggleSelected;
+            choiceToggle.sprite = StoryLobbyManager.main.toggleUnselected;
 
             endingListContents.SetActive(true);
             choiceHistoryContents.SetActive(false);
@@ -184,8 +184,8 @@ namespace PIERStory
 
         public void ShowChoiceHistory()
         {
-            endingToggle.sprite = LobbyManager.main.toggleUnselected;
-            choiceToggle.sprite = LobbyManager.main.toggleSelected;
+            endingToggle.sprite = StoryLobbyManager.main.toggleUnselected;
+            choiceToggle.sprite = StoryLobbyManager.main.toggleSelected;
 
             endingListContents.SetActive(false);
             choiceHistoryContents.SetActive(true);

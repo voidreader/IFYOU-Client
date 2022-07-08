@@ -148,7 +148,7 @@ namespace PIERStory
             if (GameManager.main != null)
                 GameManager.main.SetModelParent(modelCharacter.transform);
             else
-                LobbyManager.main.SetLiveParent(modelCharacter.transform);
+                StoryLobbyManager.main.SetLiveParent(modelCharacter.transform);
 
             modelCharacter.transform.localPosition = Vector3.zero;
 

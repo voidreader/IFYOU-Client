@@ -21,7 +21,7 @@ namespace PIERStory {
             yield return null;
             yield return null;
             yield return null;
-            sceneOperation = SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single);
+            sceneOperation = SceneManager.LoadSceneAsync(CommonConst.SCENE_MAIN_LOBBY, LoadSceneMode.Single);
             sceneOperation.allowSceneActivation = true;
             
             circle.DORotate(new Vector3(0,0, -360), 2, RotateMode.FastBeyond360).SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);

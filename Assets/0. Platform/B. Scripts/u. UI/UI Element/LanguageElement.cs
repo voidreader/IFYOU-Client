@@ -53,7 +53,6 @@ namespace PIERStory
             string alertText = SystemManager.GetLocalizedText("6124");
             string buttonText = SystemManager.GetLocalizedText("6125");
 
-            ViewLanguage.OnChangeLanguage?.Invoke(alertText, buttonText, fontAsset, nowLang);
             PopupLanguage.OnChangeLanguage?.Invoke(alertText, buttonText, fontAsset, nowLang);
         }
 

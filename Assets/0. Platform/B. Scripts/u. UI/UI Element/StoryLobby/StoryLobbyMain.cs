@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 using TMPro;
 using LitJson;
@@ -248,7 +247,8 @@ namespace PIERStory {
            
             currentStoryData =  StoryManager.main.CurrentProject; // 현재 작품 
             projectCurrentJSON = UserManager.main.GetUserProjectRegularEpisodeCurrent(); // 작품상에서 현재 위치 
-            
+
+            Debug.Log("<color=white>" + JsonMapper.ToStringUnicode(projectCurrentJSON) + "</color>");
             isEpisodeContinuePlay = false;
             
             storyPlayButton.gameObject.SetActive(true);
@@ -274,10 +274,9 @@ namespace PIERStory {
             
             
             hasPass = UserManager.main.HasProjectFreepass();
-            
-            if(LobbyManager.main != null && CheckResumePossible()) {
+
+            if (StoryLobbyManager.main != null && CheckResumePossible())
                 isEpisodeContinuePlay = true;
-            }
             
         }
         
@@ -743,7 +742,7 @@ namespace PIERStory {
         /// </summary>
         /// <returns></returns>
         bool CheckResumePossible() {
-            if(projectCurrentJSON == null || string.IsNullOrEmpty(projectCurrentJSON["scene_id"].ToString()) || projectCurrentJSON["is_final"].ToString().Equals("1"))
+            if(projectCurrentJSON == null || string.IsNullOrEmpty(SystemManager.GetJsonNodeString(projectCurrentJSON, GameConst.COL_SCENE_ID)) || SystemManager.GetJsonNodeBool(projectCurrentJSON, "is_final"))
                 return false;
                 
             return true;
@@ -939,8 +938,7 @@ namespace PIERStory {
             
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN, string.Empty);
             
-            SystemManager.isQuitGame = false; // 변수 초기화 
-            IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
+            SystemManager.isQuitGame = false; // 변수 초기화
             UserManager.main.useRecord = true;
             
             SystemManager.ShowNetworkLoading(); // 게임시작할때 어색하지 않게, 네트워크 로딩 추가 
@@ -948,10 +946,10 @@ namespace PIERStory {
             // 다음 에피소드 진행 
             // * 2021.09.23 iOS 메모리 이슈를 해결하기 위해 중간 Scene을 거쳐서 실행하도록 처리 
             // * GameScene에서 게임이 시작되는 경우만!
-            if(GameManager.main != null)
-                SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
-            else
-                SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
+            //if(GameManager.main != null)
+            //    SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            //else
+            //    SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
             
             // true로 변경해놓는다.
             isGameStarting = true;
@@ -971,8 +969,8 @@ namespace PIERStory {
             { // 이어하기 가능한 상태.
                 Debug.Log("<color=yellow>CONTINUE PLAY</color>");
             
-                lastPlaySceneID = projectCurrentJSON["scene_id"].ToString();
-                lastPlayScriptNO = long.Parse(projectCurrentJSON["script_no"].ToString());
+                lastPlaySceneID = SystemManager.GetJsonNodeString(projectCurrentJSON, GameConst.COL_SCENE_ID);
+                lastPlayScriptNO = SystemManager.GetJsonNodeLong(projectCurrentJSON, "script_no");
 
                 GameManager.SetResumeGame(lastPlaySceneID, lastPlayScriptNO);
             }
@@ -983,8 +981,6 @@ namespace PIERStory {
 
             // 통신 
             NetworkLoader.main.UpdateUserProjectCurrent(currentEpisodeData.episodeID, lastPlaySceneID, lastPlayScriptNO, true);
-            
-            
             
             Dictionary<string, string> eventValues = new Dictionary<string, string>();
             eventValues.Add("project_id", StoryManager.main.CurrentProjectID);

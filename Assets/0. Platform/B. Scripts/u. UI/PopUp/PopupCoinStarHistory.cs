@@ -14,6 +14,8 @@ namespace PIERStory
         [Header("재화")]
         public Image starButton;
         public Image coinButton;
+        public Sprite spriteToggleSelected;
+        public Sprite spriteToggleUnselected;
 
         public UIToggle starToggle;
         public UIToggle coinToggle;
@@ -67,8 +69,8 @@ namespace PIERStory
         /// </summary>
         public void EnableStarHistory()
         {
-            starButton.sprite = LobbyManager.main.toggleSelected;
-            coinButton.sprite = LobbyManager.main.toggleUnselected;
+            starButton.sprite = spriteToggleSelected;
+            coinButton.sprite = spriteToggleUnselected;
             
             _7dayToggle.isOn = true;
             _30dayToggle.isOn = false;
@@ -82,8 +84,8 @@ namespace PIERStory
         /// </summary>
         public void EnableCoinHistory()
         {
-            starButton.sprite = LobbyManager.main.toggleUnselected;
-            coinButton.sprite = LobbyManager.main.toggleSelected;
+            starButton.sprite = spriteToggleUnselected;
+            coinButton.sprite = spriteToggleSelected;
 
             _7dayToggle.isOn = true;
             _30dayToggle.isOn = false;

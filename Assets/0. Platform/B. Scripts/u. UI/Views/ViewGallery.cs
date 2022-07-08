@@ -157,11 +157,11 @@ namespace PIERStory
 
         public void EnableIllustList()
         {
-            if (LobbyManager.main == null)
+            if (StoryLobbyManager.main == null)
                 return;
 
-            illustToggleBG.sprite = LobbyManager.main.toggleSelected;
-            soundToggleBG.sprite = LobbyManager.main.toggleUnselected;
+            illustToggleBG.sprite = StoryLobbyManager.main.toggleSelected;
+            soundToggleBG.sprite = StoryLobbyManager.main.toggleUnselected;
 
             IllustScroll.SetActive(true);
             soundScroll.SetActive(false);
@@ -169,8 +169,8 @@ namespace PIERStory
 
         public void EnableSoundList()
         {
-            illustToggleBG.sprite = LobbyManager.main.toggleUnselected;
-            soundToggleBG.sprite = LobbyManager.main.toggleSelected;
+            illustToggleBG.sprite = StoryLobbyManager.main.toggleUnselected;
+            soundToggleBG.sprite = StoryLobbyManager.main.toggleSelected;
 
             IllustScroll.SetActive(false);
             soundScroll.SetActive(true);
@@ -188,21 +188,6 @@ namespace PIERStory
                     
                 illustElements[i].illustButton.interactable = __interactable;
             }
-            
-            /*
-            for(int i=0;i<illustData.Count;i++)
-            {
-                
-                if(!SystemManager.GetJsonNodeBool(illustData[i], "valid"))
-                    continue;
-                
-                if (!illustElements[elementIndex].illustOpen)
-                    continue;
-
-                illustElements[i].illustButton.interactable = __interactable;
-            }
-            */
-                
         }
     }
 }

@@ -2,8 +2,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using DG.Tweening;
+
 using TMPro;
+using DG.Tweening;
 
 namespace PIERStory
 {
@@ -41,14 +42,6 @@ namespace PIERStory
             // 커버 이미지 처리 
             Cover.color = new Color(0,0,0,1);
             Cover.gameObject.SetActive(true);
-            
-            // * 페이드 이미지보다 로딩이 빨리 끝나는 경우가 있더라....
-            /*
-            fadeImage.color = new Color(0, 0, 0, 1);
-            fadeImage.gameObject.SetActive(true);
-            */
-
-            // loadingImage.OnDownloadImage = CallbackDownloadLoadingImage;
 
             textTitle.text = string.Empty;
             loadingBar.fillAmount = 0;

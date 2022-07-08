@@ -1076,8 +1076,6 @@ namespace PIERStory
 
             }
             
-            
-            // SystemManager.ShowLobbyPopup(SystemManager.GetLocalizedText("80084"), SystemManager.LoadLobbyScene, null, false);
             return false;
 
         }

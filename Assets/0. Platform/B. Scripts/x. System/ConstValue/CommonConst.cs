@@ -102,7 +102,8 @@ namespace PIERStory
 
 
         // Scene name
-        public const string SCENE_LOBBY = "Lobby";
+        public const string SCENE_MAIN_LOBBY = "MainLobby";
+        public const string SCENE_STORY_LOBBY = "StoryLobby";
         public const string SCENE_GAME = "Game";
         public const string SCENE_INTERMISSION = "Intermission";
     }

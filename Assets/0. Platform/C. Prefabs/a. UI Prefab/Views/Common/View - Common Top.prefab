@@ -2151,7 +2151,7 @@ MonoBehaviour:
           m_Calls: []
   Behaviours:
     Behaviours:
-    - EventName: PointerDown
+    - EventName: PointerClick
       Runners: []
       Event:
         m_PersistentCalls:
@@ -2168,13 +2168,13 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
-      BehaviourName: 2
+      BehaviourName: 4
       Receiver:
         ConnectionMode: 1
         SignalProviderId:
           Type: 0
           Category: Pointer
-          Name: Down
+          Name: Click
         ProviderReference: {fileID: 0}
         StreamId:
           Category: None
@@ -4891,8 +4891,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 520492357193055871}
   isException: 1
-  isFontSet: 0
   isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &8319081896108540591
 GameObject:
   m_ObjectHideFlags: 0

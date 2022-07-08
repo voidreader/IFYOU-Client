@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 using TMPro;
 using Doozy.Runtime.Signals;
-using UnityEngine.SceneManagement;
 
 namespace PIERStory
 {
@@ -162,12 +161,12 @@ namespace PIERStory
             
             
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN, string.Empty);
-            IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
-            
-            if(GameManager.main != null) 
-                SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
-            else 
-                SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
+            //IntermissionManager.isMovingLobby = false; // 게임으로 진입하도록 요청
+            //
+            //if(GameManager.main != null) 
+            //    SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            //else 
+            //    SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
             
             
             GameManager.SetNewGame();

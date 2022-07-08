@@ -207,8 +207,8 @@ namespace PIERStory {
                 
                 // 폰트 부른다. 
                 SystemManager.main.LoadAddressableFont();
-                //FillProgressorOnly();
-                //yield break;
+                FillProgressorOnly();
+                yield break;
             }
             else
             {

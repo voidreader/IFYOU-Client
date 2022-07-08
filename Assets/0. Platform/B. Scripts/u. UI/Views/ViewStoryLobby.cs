@@ -4,12 +4,14 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 
 using LitJson;
 using BestHTTP;
 using DG.Tweening;
 using Live2D.Cubism.Rendering;
+
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Containers;
 using Doozy.Runtime.UIManager.Components;
@@ -126,7 +128,6 @@ namespace PIERStory
             OnBubbleSetting = CreateBubbleElement;
             
             OnInActiveInteractable = ActiveInteractable;
-            
         }
 
         private void Start()
@@ -143,6 +144,7 @@ namespace PIERStory
             
             // 진입시에 백버튼 시그널 추가 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
@@ -204,16 +206,16 @@ namespace PIERStory
 
         public override void OnHideView()
         {
-            
-            if(LobbyManager.main == null || !LobbyManager.main.isLobbyManagerInit)
-                return;
-                
             if(UserManager.main == null || !UserManager.main.completeReadUserData)
+                return;
+
+            if (!mainContainer.isVisible)
                 return;
             
             
             base.OnHideView();
             
+            /*
             Debug.Log("ViewStoryLobby OnHideView");
 
 
@@ -261,11 +263,13 @@ namespace PIERStory
 
             usageStandingControl.SetActive(false);
 
-            LobbyManager.main.lobbyBackground.sprite = null;
+            StoryLobbyManager.main.lobbyBackground.sprite = null;
             loadComplete = false;
+            */
 
-            UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackNewCompleteAchievement);
-            NetworkLoader.main.RequestIfyouplayList();
+
+            //UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackNewCompleteAchievement);
+            //NetworkLoader.main.RequestIfyouplayList()m;
         }
         
         /// <summary>
@@ -276,12 +280,11 @@ namespace PIERStory
             if(bg == null)
                 return;
                 
-            LobbyManager.main.lobbyBackground.sprite = null;
-            
+            StoryLobbyManager.main.lobbyBackground.sprite = null;
+
             // 어드레서블에 대한 처리
-            if(bg.isAddressable) {
+            if (bg.isAddressable)
                 Addressables.Release(bg.mountedAtalsAddressable);
-            }
             
             bg = null;
         }
@@ -472,8 +475,6 @@ namespace PIERStory
         
         
 
-        
-
         /// <summary>
         /// 로비 꾸며놓은거 자세히 보기
         /// </summary>
@@ -506,7 +507,6 @@ namespace PIERStory
             PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MISSION_1);
             PopupManager.main.ShowPopup(p, false);
         }
-
 
         #endregion
 
@@ -722,7 +722,7 @@ namespace PIERStory
                 if (context.started)
                 {
                     startX = cursor.x;
-                    originX = LobbyManager.main.lobbyBackground.transform.localPosition.x;
+                    originX = StoryLobbyManager.main.lobbyBackground.transform.localPosition.x;
                 }
                 else if (context.performed)
                 {
@@ -734,7 +734,7 @@ namespace PIERStory
                     moveX = originX + ((dragX - startX) * (Time.deltaTime * 1f));
 
                     if (moveX > -movableWidth && moveX < movableWidth)
-                        LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(moveX, 0f, 0f);
+                        StoryLobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(moveX, 0f, 0f);
                 }
             }
 
@@ -1032,20 +1032,20 @@ namespace PIERStory
             if (bg.sprite == null)
                 bg.LoadImage();
 
-            LobbyManager.main.lobbyBackground.sprite = bg.sprite;
-            LobbyManager.main.lobbyBackground.transform.localScale = new Vector3(bg.gameScale, bg.gameScale, 1f);
+            StoryLobbyManager.main.lobbyBackground.sprite = bg.sprite;
+            StoryLobbyManager.main.lobbyBackground.transform.localScale = new Vector3(bg.gameScale, bg.gameScale, 1f);
 
             // 위치 조절
             for (int i = 0; i < storyProfile.Count; i++)
             {
                 if (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE) == LobbyConst.NODE_WALLPAPER)
                 {
-                    LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_POS_X), 0, 0);
+                    StoryLobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(SystemManager.GetJsonNodeFloat(storyProfile[i], LobbyConst.NODE_POS_X), 0, 0);
                     break;
                 }
             }
 
-            movableWidth = Mathf.Abs(LobbyManager.main.lobbyBackground.size.x * LobbyManager.main.lobbyBackground.transform.localScale.x - camWidth) * 0.5f;
+            movableWidth = Mathf.Abs(StoryLobbyManager.main.lobbyBackground.size.x * StoryLobbyManager.main.lobbyBackground.transform.localScale.x - camWidth) * 0.5f;
 
             if (decoContainer.isVisible)
                 SystemManager.HideNetworkLoading();
@@ -1064,7 +1064,7 @@ namespace PIERStory
             
             bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, bgData, null);
             bgCurrency = SystemManager.GetJsonNodeString(bgData, LobbyConst.NODE_CURRENCY);
-            LobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(0f, 0f, 0f);
+            StoryLobbyManager.main.lobbyBackground.transform.localPosition = new Vector3(0f, 0f, 0f);
             StartCoroutine(RoutineBackgroundDetailSetting());
 
             for (int i = 0; i < bgListContent.childCount; i++)
@@ -1565,10 +1565,10 @@ namespace PIERStory
             JsonData bgData = new JsonData();
             bgData[LobbyConst.NODE_CURRENCY] = bgCurrency;
             bgData[LobbyConst.NODE_SORTING_ORDER] = sortingOrder;
-            bgData[LobbyConst.NODE_POS_X] = LobbyManager.main.lobbyBackground.transform.localPosition.x;
+            bgData[LobbyConst.NODE_POS_X] = StoryLobbyManager.main.lobbyBackground.transform.localPosition.x;
             bgData[LobbyConst.NODE_POS_Y] = 0f;
-            bgData[LobbyConst.NODE_WIDTH] = LobbyManager.main.lobbyBackground.transform.localScale.x;
-            bgData[LobbyConst.NODE_HEIGHT] = LobbyManager.main.lobbyBackground.transform.localScale.x;
+            bgData[LobbyConst.NODE_WIDTH] = StoryLobbyManager.main.lobbyBackground.transform.localScale.x;
+            bgData[LobbyConst.NODE_HEIGHT] = StoryLobbyManager.main.lobbyBackground.transform.localScale.x;
             bgData[LobbyConst.NODE_ANGLE] = 0f;
 
             sending[LobbyConst.NODE_CURRENCY_LIST].Add(bgData);

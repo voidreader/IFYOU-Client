@@ -115,12 +115,12 @@ namespace PIERStory
             switch (__state)
             {
                 case MissionState.unlocked:
-                    rewardButton.sprite = LobbyManager.main.spriteGetReward;
+                    rewardButton.sprite = StoryLobbyManager.main.spriteGetReward;
                     getRewardText.color = HexCodeChanger.HexToColor("333333");
                     rewardButton.gameObject.SetActive(true);
                     break;
                 case MissionState.finish:
-                    rewardButton.sprite = LobbyManager.main.spriteGetReward;
+                    rewardButton.sprite = StoryLobbyManager.main.spriteGetReward;
                     getRewardText.color = HexCodeChanger.HexToColor("C4C4C4");
                     rewardButton.gameObject.SetActive(true);
                     break;

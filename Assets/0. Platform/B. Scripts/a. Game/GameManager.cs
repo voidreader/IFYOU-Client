@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 using LitJson;
 using Doozy.Runtime.Signals;
@@ -219,17 +218,14 @@ namespace PIERStory
         {
             Debug.Log(">>>>> GameManager Start <<<<<");
 
-            // PopupManager.main.InitPopupManager();
-            
             yield return null;
-            
+
             Signal.Send(LobbyConst.STREAM_COMMON, GameConst.SIGNAL_GAME_PLAY); // 게임씬 시작을 알린다. 
 
             GarbageCollect();
 
             isPlaying = false;
             isScriptFetch = false;
-            
             
 
             // 유저 정보 로그인이 되었는지 체크
@@ -260,9 +256,24 @@ namespace PIERStory
                 Debug.Log("Z");
                 AdManager.main.ShowSelectionAD();
             }
-            
+        }
+
+        private void OnDestroy()
+        {
+            // * 메모리 누수를 알아보기 위해 FindObject 검사 실행. 
+            AudioClip[] audioClips = FindObjectsOfType<AudioClip>(true); // 정리되지 않음
+            Texture2D[] texture2Ds = FindObjectsOfType<Texture2D>(true); // 정리되지 않음
+
+            for (int i = 0; i < audioClips.Length; i++)
+                Destroy(audioClips[i]);
+
+            Debug.Log(string.Format("[{0}] audioClips are destroyed", audioClips.Length));
 
 
+            for (int i = 0; i < texture2Ds.Length; i++)
+                Destroy(texture2Ds[i]);
+
+            Debug.Log(string.Format("[{0}] texture2Ds are destroyed", texture2Ds.Length));
         }
 
 
@@ -1454,13 +1465,13 @@ namespace PIERStory
             Debug.Log("EndGame");
             isPlaying = false;
             
+            SystemManager.ShowNetworkLoading();
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin"); // 노드 제어
             
 
             // 네트워크 창을 띄우고. 로비 씬으로 돌아가야한다.
-            SystemManager.ShowNetworkLoading();
-            IntermissionManager.isMovingLobby = true;
-            SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            //IntermissionManager.isMovingLobby = true;
+            //SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
         }
 
         /// <summary>
@@ -1488,8 +1499,8 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN); // 노드 제어
 
             // 씬 로드 
-            IntermissionManager.isMovingLobby = false;
-            SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            //IntermissionManager.isMovingLobby = false;
+            //SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
         }
 
 

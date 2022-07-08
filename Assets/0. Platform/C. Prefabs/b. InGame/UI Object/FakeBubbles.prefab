@@ -28,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466191513583}
   m_RootOrder: 0
@@ -104,6 +105,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621466410913184}
   - {fileID: 2024621467098775995}
@@ -173,6 +175,7 @@ MonoBehaviour:
   imageBubble: {fileID: 2024621465712255884}
   imageOutline: {fileID: 2024621467098775996}
   nametag: {fileID: 2024621466410913185}
+  nametagRect: {fileID: 2024621466819990189}
   textName: {fileID: 2024621466819990190}
   textContents: {fileID: 2024621465760461667}
   imageTail: {fileID: 2024621467758303178}
@@ -213,6 +216,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466560527969}
   m_RootOrder: 0
@@ -288,6 +292,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621465844972269}
   m_RootOrder: 0
@@ -364,6 +369,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621465712255883}
   m_RootOrder: 2
@@ -484,7 +490,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 2024621465760461667}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &2024621465844972268
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,6 +521,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621465755930057}
   m_Father: {fileID: 2024621466133328842}
@@ -589,6 +598,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466790865507}
   m_RootOrder: 0
@@ -665,6 +675,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621467262063490}
   m_RootOrder: 0
@@ -785,7 +796,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 2024621466042740193}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &2024621466050746430
 GameObject:
   m_ObjectHideFlags: 0
@@ -814,6 +827,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466133328842}
   m_RootOrder: 4
@@ -890,6 +904,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621467262063490}
   - {fileID: 2024621467064610419}
@@ -959,6 +974,7 @@ MonoBehaviour:
   imageBubble: {fileID: 2024621466133328843}
   imageOutline: {fileID: 2024621467064610420}
   nametag: {fileID: 2024621467262063491}
+  nametagRect: {fileID: 2024621466042740192}
   textName: {fileID: 2024621466042740193}
   textContents: {fileID: 2024621466230774425}
   imageTail: {fileID: 2024621465844972270}
@@ -999,6 +1015,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621467431663460}
   m_Father: {fileID: 2024621466133328842}
@@ -1076,6 +1093,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466246160094}
   m_RootOrder: 0
@@ -1196,7 +1214,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 2024621466187193298}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &2024621466191513582
 GameObject:
   m_ObjectHideFlags: 0
@@ -1225,6 +1245,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621465674046764}
   m_Father: {fileID: 2024621466815339376}
@@ -1302,6 +1323,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466133328842}
   m_RootOrder: 2
@@ -1422,7 +1444,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 2024621466230774425}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &2024621466246160093
 GameObject:
   m_ObjectHideFlags: 0
@@ -1451,6 +1475,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621466187193300}
   m_Father: {fileID: 2024621467631289088}
@@ -1527,6 +1552,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466705391765}
   m_RootOrder: 0
@@ -1602,6 +1628,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621467758303177}
   m_RootOrder: 0
@@ -1678,6 +1705,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466815339376}
   m_RootOrder: 2
@@ -1798,7 +1826,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 2024621466334537490}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &2024621466410913199
 GameObject:
   m_ObjectHideFlags: 0
@@ -1827,6 +1857,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621466819990189}
   m_Father: {fileID: 2024621465712255883}
@@ -1903,6 +1934,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466815339376}
   m_RootOrder: 4
@@ -1976,6 +2008,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621465712255883}
   - {fileID: 2024621466815339376}
@@ -2017,6 +2050,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621465740275078}
   m_Father: {fileID: 2024621467631289088}
@@ -2093,6 +2127,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621466776613492}
   m_Father: {fileID: 2024621466815339376}
@@ -2169,6 +2204,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466815339376}
   m_RootOrder: 1
@@ -2244,6 +2280,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621466250339004}
   m_Father: {fileID: 2024621466815339376}
@@ -2321,6 +2358,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466675271700}
   m_RootOrder: 0
@@ -2441,7 +2479,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 2024621466776613493}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &2024621466790865506
 GameObject:
   m_ObjectHideFlags: 0
@@ -2470,6 +2510,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621465949857573}
   m_Father: {fileID: 2024621467631289088}
@@ -2546,6 +2587,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621467631289088}
   m_RootOrder: 1
@@ -2622,6 +2664,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621466675271700}
   - {fileID: 2024621466690184280}
@@ -2691,6 +2734,7 @@ MonoBehaviour:
   imageBubble: {fileID: 2024621466815339377}
   imageOutline: {fileID: 2024621466690184281}
   nametag: {fileID: 2024621466675271701}
+  nametagRect: {fileID: 2024621466776613492}
   textName: {fileID: 2024621466776613493}
   textContents: {fileID: 2024621466334537490}
   imageTail: {fileID: 2024621466191513568}
@@ -2732,6 +2776,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466410913184}
   m_RootOrder: 0
@@ -2852,7 +2897,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 2024621466819990190}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &2024621466853942561
 GameObject:
   m_ObjectHideFlags: 0
@@ -2881,6 +2928,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621467134746638}
   m_Father: {fileID: 2024621465712255883}
@@ -2957,6 +3005,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621467631289088}
   m_RootOrder: 4
@@ -3032,6 +3081,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466133328842}
   m_RootOrder: 1
@@ -3107,6 +3157,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621465712255883}
   m_RootOrder: 1
@@ -3182,6 +3233,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466853942562}
   m_RootOrder: 0
@@ -3258,6 +3310,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621467631289088}
   m_RootOrder: 2
@@ -3378,7 +3431,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 2024621467168339722}
   isException: 0
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &2024621467262063489
 GameObject:
   m_ObjectHideFlags: 0
@@ -3407,6 +3462,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621466042740192}
   m_Father: {fileID: 2024621466133328842}
@@ -3483,6 +3539,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621466149135205}
   m_RootOrder: 0
@@ -3558,6 +3615,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2024621465712255883}
   m_RootOrder: 4
@@ -3634,6 +3692,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621466246160094}
   - {fileID: 2024621466792998657}
@@ -3703,6 +3762,7 @@ MonoBehaviour:
   imageBubble: {fileID: 2024621467631289103}
   imageOutline: {fileID: 2024621466792998671}
   nametag: {fileID: 2024621466246160080}
+  nametagRect: {fileID: 2024621466187193300}
   textName: {fileID: 2024621466187193298}
   textContents: {fileID: 2024621467168339722}
   imageTail: {fileID: 2024621466790865509}
@@ -3743,6 +3803,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024621466276458657}
   m_Father: {fileID: 2024621465712255883}

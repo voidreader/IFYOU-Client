@@ -25,6 +25,7 @@ namespace PIERStory
         
         
         JsonData bubbleMaster = null;
+        public string bubbleType = "body"; // 기본은 body 타입 
         public bool isTagColorAffect = false; // 네임태그 색상이 말풍선에 영향을 미침 
         public string tagAlignType = "center";
         public int tagTextareaLeft = 0;
@@ -58,6 +59,8 @@ namespace PIERStory
             tagTextareaRight = SystemManager.GetJsonNodeInt(bubbleMaster, "tag_textarea_right");
             tagTextareaTop = SystemManager.GetJsonNodeInt(bubbleMaster, "tag_textarea_top");
             tagTextareaBottom = SystemManager.GetJsonNodeInt(bubbleMaster, "tag_textarea_bottom");
+            
+            bubbleType = SystemManager.GetJsonNodeString(bubbleMaster, "bubble_type");
         }
 
 
@@ -150,6 +153,28 @@ namespace PIERStory
 
             return 4;
         }
+        
+        /// <summary>
+        /// 네임태그의 정렬 방법 가져오기 
+        /// </summary>
+        public TMPro.HorizontalAlignmentOptions GetTagAlign() {
+            
+            
+            if(string.IsNullOrEmpty(tagAlignType)) 
+                return TMPro.HorizontalAlignmentOptions.Center;
+            
+            if(tagAlignType == "center")
+                return TMPro.HorizontalAlignmentOptions.Center;
+            else if(tagAlignType == "left")
+                return TMPro.HorizontalAlignmentOptions.Left;
+            else if(tagAlignType == "right")
+                return TMPro.HorizontalAlignmentOptions.Right;
+            
+                
+            
+                
+            return TMPro.HorizontalAlignmentOptions.Center;
+        }
 
 
         /// <summary>
@@ -192,6 +217,7 @@ namespace PIERStory
         {
             main.defaultFeelingPos++;
         }
+        
     }
 }
 

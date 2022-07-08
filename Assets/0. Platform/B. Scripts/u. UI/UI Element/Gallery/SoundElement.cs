@@ -103,13 +103,13 @@ namespace PIERStory
             {
                 if (isOpen)
                 {
-                    voiceButtonBoarderImage.sprite = LobbyManager.main.spriteOpenVoice;
+                    voiceButtonBoarderImage.sprite = StoryLobbyManager.main.spriteOpenVoice;
                     voiceScriptData.gameObject.SetActive(true);
                     lockIcon.SetActive(false);
                 }
                 else
                 {
-                    voiceButtonBoarderImage.sprite = LobbyManager.main.spriteLockVoice;
+                    voiceButtonBoarderImage.sprite = StoryLobbyManager.main.spriteLockVoice;
                     voiceScriptData.gameObject.SetActive(false);
                     lockIcon.SetActive(true);
                 }

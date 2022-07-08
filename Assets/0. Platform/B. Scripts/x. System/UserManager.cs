@@ -92,6 +92,7 @@ namespace PIERStory
         /// 엔딩 수집 화면에서 사용할 변수
         /// </summary>
         public bool useRecord = true;
+        public bool gameComplete = false;
 
         public string userKey = string.Empty;
         public string gamebaseID = string.Empty;
@@ -102,7 +103,6 @@ namespace PIERStory
 
         public bool isSelectionTutorialClear = false; // 선택지 튜토리얼 초기화 여부 
         public bool isHowToPlayClear = false; // How to play 튜토리얼 초기화 여부 
-        public bool gameComplete = false;
 
         public int adCharge = 0;
 
@@ -236,7 +236,7 @@ namespace PIERStory
         {
             Debug.Log(string.Format("<color=cyan>Init user info [{0}]</color>", __gamebaseID));
             gamebaseID = __gamebaseID;
-            //gamebaseID = "QZXGP337XY4JDXT7"; // 특정 계정으로 로그인하기
+            //gamebaseID = "QGM9WZJYGGM6X7F1"; // 특정 계정으로 로그인하기
 
             // 로그인 프로세스를 시작합니다. 
             ConnectServer();
@@ -1708,7 +1708,7 @@ namespace PIERStory
 
             for (int i = 0; i < currentStoryJson[NODE_PROJECT_CURRENT].Count; i++)
             {
-                if (currentStoryJson[NODE_PROJECT_CURRENT][i]["is_special"].ToString() == "0") // is_special 이니?
+                if (!SystemManager.GetJsonNodeBool(currentStoryJson[NODE_PROJECT_CURRENT][i], "is_special")) // is_special 이니?
                     return currentStoryJson[NODE_PROJECT_CURRENT][i];
             }
 
@@ -1748,9 +1748,7 @@ namespace PIERStory
                 return false;
 
             if (SystemManager.GetJsonNodeBool(current, "is_ending"))
-            {
                 return true;
-            }
 
             return false;
         }
@@ -1802,8 +1800,6 @@ namespace PIERStory
         }
 
 
-
-
         /// <summary>
         /// 작품 선택지 선택 진행도 노드 저장 
         /// </summary>
@@ -1820,7 +1816,6 @@ namespace PIERStory
         /// <returns></returns>
         public JsonData GetUserProjectSelectionProgress(string __episodeID)
         {
-
             if (!currentStoryJson.ContainsKey(NODE_SELECTION_PROGRESS))
                 return null;
 
@@ -1854,7 +1849,6 @@ namespace PIERStory
         /// <returns></returns>
         public bool CheckProjectSelectionProgressExists(string __episodeID, string __targetSceneID)
         {
-
             JsonData targetEpisode = GetUserProjectSelectionProgress(__episodeID);
 
             if (targetEpisode == null)
@@ -1864,8 +1858,7 @@ namespace PIERStory
             // * 지나갔던 길은 다시 체크하지 않게 수정.
             for (int i = 0; i < targetEpisode.Count; i++)
             {
-
-                if (targetEpisode[i]["target_scene_id"].ToString() == __targetSceneID
+                if (SystemManager.GetJsonNodeString(targetEpisode[i], "target_scene_id") == __targetSceneID
                     && !GameManager.main.CheckResumeSelectionPassed(targetEpisode[i]))
                 {
 
@@ -1882,8 +1875,6 @@ namespace PIERStory
 
             return false;
         }
-
-
 
 
 

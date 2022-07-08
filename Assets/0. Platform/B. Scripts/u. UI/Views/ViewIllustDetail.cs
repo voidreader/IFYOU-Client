@@ -99,12 +99,12 @@ namespace PIERStory
                 if (isMinicut)
                 {
                     liveRenderTexture.rectTransform.sizeDelta = new Vector2(viewRect.rect.width, viewRect.rect.width);
-                    LobbyManager.main.currentLiveObject.PlayCubismAnimation();
+                    StoryLobbyManager.main.currentLiveObject.PlayCubismAnimation();
                 }
                 else
                 {
                     liveRenderTexture.rectTransform.sizeDelta = new Vector2(viewRect.rect.height, viewRect.rect.height);
-                    LobbyManager.main.currentLiveIllust.PlayCubismAnimation();
+                    StoryLobbyManager.main.currentLiveIllust.PlayCubismAnimation();
                 }
             }
             
@@ -118,7 +118,7 @@ namespace PIERStory
             shareBonus.SetActive(!isShareBonusGet);
             HideShareBox();
 
-            LobbyManager.main.touchEffect.gameObject.SetActive(false);
+            StoryLobbyManager.main.touchEffect.gameObject.SetActive(false);
         }
 
         public override void OnHideView()
@@ -130,7 +130,7 @@ namespace PIERStory
             
             
             // 터치 이펙트 활성화, 
-            LobbyManager.main.touchEffect.gameObject.SetActive(true);
+            StoryLobbyManager.main.touchEffect.gameObject.SetActive(true);
             
             // 이미지 비활성화 
             illustImage.gameObject.SetActive(false);
@@ -149,32 +149,31 @@ namespace PIERStory
             }
             
 
-            if (LobbyManager.main.transform.childCount < 1)
+            if (StoryLobbyManager.main.transform.childCount < 1)
                 return;
 
 
-            if (LobbyManager.main.currentLiveIllust != null && LobbyManager.main.currentLiveIllust.liveImageController != null) {
-                
-                LobbyManager.main.currentLiveIllust.DestroyAddressableModel();
-                LobbyManager.main.currentLiveIllust = null;
+            if (StoryLobbyManager.main.currentLiveIllust != null && StoryLobbyManager.main.currentLiveIllust.liveImageController != null) {
+
+                StoryLobbyManager.main.currentLiveIllust.DestroyAddressableModel();
+                StoryLobbyManager.main.currentLiveIllust = null;
             }
 
-            if (LobbyManager.main.currentLiveObject != null && LobbyManager.main.currentLiveObject.liveImageController != null) {
-                LobbyManager.main.currentLiveObject.DestroyAddressableModel();
-                LobbyManager.main.currentLiveObject = null;
+            if (StoryLobbyManager.main.currentLiveObject != null && StoryLobbyManager.main.currentLiveObject.liveImageController != null) {
+                StoryLobbyManager.main.currentLiveObject.DestroyAddressableModel();
+                StoryLobbyManager.main.currentLiveObject = null;
             }
 
 
             // 연타 클릭되어 생성된 것이 있다면 파괴(혹시 모를 안전장치)
-            if (LobbyManager.main.transform.childCount > 0)
+            if (StoryLobbyManager.main.transform.childCount > 0)
             {
-                GameLiveImageCtrl[] gameLive = LobbyManager.main.GetComponentsInChildren<GameLiveImageCtrl>();
+                GameLiveImageCtrl[] gameLive = StoryLobbyManager.main.GetComponentsInChildren<GameLiveImageCtrl>();
 
                 foreach (GameLiveImageCtrl gl in gameLive)
                     gl.DestroySelf();
             }
 
-            
             
             // System.GC.Collect();
         }
@@ -190,14 +189,11 @@ namespace PIERStory
             if(imageMount.isAddressable && imageMount.isMounted) {
                 image.sprite = imageMount.sprite;
                 image.SetNativeSize();
-                
-                if(isMinicut) {
+
+                if (isMinicut)
                     MinicutResize();
-                }
-                else {
+                else
                     IllustResize();
-                }
-                
             }
             else {
                 if (isMinicut)

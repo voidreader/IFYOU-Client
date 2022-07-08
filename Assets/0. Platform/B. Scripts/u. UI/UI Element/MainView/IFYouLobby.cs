@@ -157,7 +157,7 @@ namespace PIERStory {
 
             foreach(GameObject g in mainCategoryList)
             {
-                if (g.GetComponent<MainManualGroup>() == null)
+                if (g == null || g.GetComponent<MainManualGroup>() == null)
                     continue;
 
                 g.GetComponent<MainManualGroup>().ResizeArea();

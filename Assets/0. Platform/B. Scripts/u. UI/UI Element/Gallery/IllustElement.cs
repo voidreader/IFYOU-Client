@@ -157,7 +157,7 @@ namespace PIERStory
                 if (elementData[0].ContainsKey("scale_offset"))
                     scaleOffset = SystemManager.GetJsonNodeInt(elementData[0], "scale_offset");
 
-                LobbyManager.main.SetGalleryLiveIllust(illustName, scaleOffset, isMinicut);
+                StoryLobbyManager.main.SetGalleryLiveIllust(illustName, scaleOffset, isMinicut);
             }
             else
             {

@@ -34,10 +34,12 @@ namespace Doozy.Runtime.UIManager
     {
         public enum Common
         {
+            EnterLoading,
             EpisodeStart,
             Mail,
             Setting,
             StarShop,
+            SystemLoading,
             Top
         }
 
@@ -51,14 +53,11 @@ namespace Doozy.Runtime.UIManager
         public enum IFYOU
         {
             Ability,
-            AddMenu,
             Beginning,
-            Category,
-            DataManager,
             Ending,
             EndingSelection,
+            EpisodeList,
             Gallery,
-            IfyouPlay,
             IllustDetail,
             Intro,
             Introduce,
@@ -71,7 +70,6 @@ namespace Doozy.Runtime.UIManager
             Shop,
             SoundDetail,
             SpecialEpisode,
-            StoryDetail,
             StoryLoading,
             StoryLobby,
             Title

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 using TMPro;
 using Toast.Gamebase;
@@ -125,7 +124,6 @@ namespace PIERStory
             // 타이틀로 보내버리기
             SystemManager.main.givenStoryData = null; // 목록으로 가는것을 막기 위해 작성
 
-            Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin"); // 시그널 보내서 Nody를 이동시킨다. 
             IntermissionManager.isMovingLobby = true;
 
 
@@ -153,7 +151,9 @@ namespace PIERStory
             
             SystemManager.main.SetMainFont(); // 메인폰트 재설정
 
-            SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            //SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin"); // 시그널 보내서 Nody를 이동시킨다. 
+
         }
     }
 }

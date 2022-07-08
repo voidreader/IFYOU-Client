@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 
 using TMPro;
 using LitJson;
@@ -58,7 +57,7 @@ namespace PIERStory
             if (endingData.endingOpen)
             {
                 GetComponent<RectTransform>().sizeDelta = openEndingSize;
-                buttonBox.sprite = LobbyManager.main.spriteEpisodeOpen;
+                buttonBox.sprite = StoryLobbyManager.main.spriteEpisodeOpen;
                 buttonBox.rectTransform.anchoredPosition = new Vector2(0, 62);
 
                 newSign.SetActive(!UserManager.main.IsCompleteEpisode(epiData.episodeID));
@@ -66,7 +65,7 @@ namespace PIERStory
             else
             {
                 GetComponent<RectTransform>().sizeDelta = lockEndingSize;
-                buttonBox.sprite = LobbyManager.main.spriteEpisodeLock;
+                buttonBox.sprite = StoryLobbyManager.main.spriteEpisodeLock;
                 buttonBox.rectTransform.anchoredPosition = Vector2.zero;
 
                 newSign.SetActive(false);
@@ -114,12 +113,12 @@ namespace PIERStory
             SystemManager.ShowNetworkLoading();
 
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN, string.Empty);
-            IntermissionManager.isMovingLobby = false;  // 게임으로 진입하도록 요청
-
-            if (GameManager.main != null)
-                SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
-            else
-                SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
+            //IntermissionManager.isMovingLobby = false;  // 게임으로 진입하도록 요청
+            //
+            //if (GameManager.main != null)
+            //    SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
+            //else
+            //    SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
 
             GameManager.SetNewGame();
             // 통신 

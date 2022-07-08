@@ -1610,13 +1610,13 @@ namespace PIERStory
             // 각 씬마다 보유하고 있음.
             if (LobbyManager.main != null)
                 main.networkLoadingScreen = LobbyManager.main.GetLobbyNetworkLoadingScreen();
-                
-            if (GameManager.main != null)
-                main.networkLoadingScreen = GameManager.main.GetGameNetworkLoadingScreen();
-                
-            
-                
 
+            if (StoryLobbyManager.main != null)
+                main.networkLoadingScreen = StoryLobbyManager.main.GetLobbyNetworkLoadingScreen();
+
+            if (GameManager.main != null)
+                main.networkLoadingScreen = GameManager.main.GetGameNetworkLoadingScreen();               
+                
             if (main.networkLoadingScreen)
                 main.networkLoadingScreen.ShowNetworkLoading(__isInstant);
         }
@@ -2204,7 +2204,7 @@ namespace PIERStory
         
         public static void LoadLobbyScene() {
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin");
-            SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
+            SceneManager.LoadSceneAsync(CommonConst.SCENE_MAIN_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
         }
 
 
@@ -2310,11 +2310,11 @@ namespace PIERStory
         }
         
         public void OpenPrivacyURL() {
-            ShowDefaultWebview(privacyURL, SystemManager.GetLocalizedText("5050"));
+            ShowDefaultWebview(privacyURL, GetLocalizedText("5050"));
         }
         
         public void OpenTermsURL() {
-            ShowDefaultWebview(termsOfUseURL, SystemManager.GetLocalizedText("5049"));
+            ShowDefaultWebview(termsOfUseURL, GetLocalizedText("5049"));
         }
         
         /// <summary>
@@ -2446,7 +2446,7 @@ namespace PIERStory
             if(baseCurrencyData == null || !baseCurrencyData.ContainsKey(__currency))
                 return string.Empty;
                 
-            return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], CommonConst.COL_IMAGE_URL);
+            return GetJsonNodeString(baseCurrencyData[__currency], CommonConst.COL_IMAGE_URL);
         }
         
         
@@ -2459,7 +2459,7 @@ namespace PIERStory
             if(baseCurrencyData == null || !baseCurrencyData.ContainsKey(__currency))
                 return string.Empty;
                 
-            return SystemManager.GetJsonNodeString(baseCurrencyData[__currency], CommonConst.COL_IMAGE_KEY);
+            return GetJsonNodeString(baseCurrencyData[__currency], CommonConst.COL_IMAGE_KEY);
         }
         
         
@@ -2482,11 +2482,11 @@ namespace PIERStory
             if(__currentEpisode.episodeType == EpisodeType.Chapter) { // * 정규 에피소드에 대한 체크 
                 for(int i=0; i<timedealStandard.Count;i++) {
                     
-                    if(SystemManager.GetJsonNodeBool(timedealStandard[i], "conditions"))
+                    if(GetJsonNodeBool(timedealStandard[i], "conditions"))
                         continue;
                         
                     // 넘어온 number에서 -1 값이랑 동일한 progress가 있는지 체크한다. 
-                    if(SystemManager.GetJsonNodeInt(timedealStandard[i], "episode_progress") == __currentEpisode.episodeNumber - 1) {
+                    if(GetJsonNodeInt(timedealStandard[i], "episode_progress") == __currentEpisode.episodeNumber - 1) {
                         return timedealStandard[i]; // * 찾았다..!
                     }
                     
@@ -2503,7 +2503,7 @@ namespace PIERStory
                     
                     // 컨디션 값 1을 걸 찾는거다. 
                     // 공용 타임딜 정보에는 히든엔딩 관련 row는 하나 밖에 없다. 
-                    if(SystemManager.GetJsonNodeBool(timedealStandard[i], "conditions"))
+                    if(GetJsonNodeBool(timedealStandard[i], "conditions"))
                         return timedealStandard[i];
                 }                
             }

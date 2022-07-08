@@ -66,7 +66,7 @@ namespace PIERStory
                 {
                     // 로비씬으로 이동
                     Debug.Log("From Intermission to Lobby");
-                    SceneManager.LoadSceneAsync(CommonConst.SCENE_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
+                    SceneManager.LoadSceneAsync(CommonConst.SCENE_STORY_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
                 }
                 else
                 {

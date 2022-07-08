@@ -839,7 +839,8 @@ namespace PIERStory
         void SetNametag()
         {
             // 네임태그 안쓰면 할필요 없다.
-            if (!nametag.gameObject.activeSelf)
+            // 네임태그 컬러 영향이 없는 경우만 return
+            if (!nametag.gameObject.activeSelf && !BubbleManager.main.isTagColorAffect)
                 return;
 
 

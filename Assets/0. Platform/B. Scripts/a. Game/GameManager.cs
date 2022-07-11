@@ -1937,7 +1937,14 @@ namespace PIERStory
         /// <param name="__nextEpisodeID"></param>
         public void ShowGameEnd(string __nextEpisodeID)
         {
-            Debug.Log("ShowGameEnd :: " + __nextEpisodeID);
+            
+            // 중복 실행을 막는다.
+            if(!isPlaying) {
+                Debug.LogError("duplicate call ShowGameEnd");
+                return;
+            }
+            
+            // Debug.Log("ShowGameEnd :: " + __nextEpisodeID);
 
             // AdManager.main.HideBanner();
 
@@ -1991,7 +1998,7 @@ namespace PIERStory
                 if (__nextEpisodeID.Contains(GameConst.TAG_TARGET_EPISODE2))
                     __nextEpisodeID = __nextEpisodeID.Replace(GameConst.TAG_TARGET_EPISODE2, "");
 
-                nextEpisodeData = StoryManager.GetNextFollowingEpisodeData(__nextEpisodeID);
+                nextEpisodeData = StoryManager.GetNextFollowingEpisodeData(__nextEpisodeID.Trim());
             }
 
             // scene Id값 갱신하고 통신 완료까지 잠시 대기

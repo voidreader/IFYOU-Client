@@ -65,7 +65,19 @@ namespace PIERStory
                 // 만약 코인 환전할 최소한의 스타마저 없다면?
                 if (!UserManager.main.CheckGemProperty(coinExchangeProducts[0].price))
                 {
-                    starProducts[0].InitProduct(FindStarProductCloseQuantity());
+                    string findedProductID = string.Empty;
+                    
+                    // 변경 2022.07.08
+                    try {
+                        findedProductID = FindStarProductCloseQuantity();
+                    }
+                    catch {
+                        if(string.IsNullOrEmpty(findedProductID)) {
+                            findedProductID = "ifyou_star_2" ; // 없으면 2로 세팅한다. 
+                        }
+                    }
+                    
+                    starProducts[0].InitProduct(findedProductID);
                     starProducts[0].gameObject.SetActive(true);
                     ChangeCurrencySprite(starProducts[0].productID, starProduct_1);
 

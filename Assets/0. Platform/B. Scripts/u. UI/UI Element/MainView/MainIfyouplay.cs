@@ -430,12 +430,22 @@ namespace PIERStory
         {
             if(!gameObject.activeSelf)
                 return;
+                
+            if(UserManager.main.adCoolDownTimer == null)
+                return;
             
-            showCooldownAdButton.SetActive(UserManager.main.adCoolDownTimer.Ticks <= 0);
-            cooldownState.SetActive(UserManager.main.adCoolDownTimer.Ticks > 0);
+            try {
+                showCooldownAdButton.SetActive(UserManager.main.adCoolDownTimer.Ticks <= 0);
+                cooldownState.SetActive(UserManager.main.adCoolDownTimer.Ticks > 0);
+            }
+            catch {
+                NetworkLoader.main.ReportRequestError("adCoolDownTimer check", "Error in InitCooldownAdButton");
+                return;
+            }
 
             if (cooldownState.activeSelf)
                 StartCoroutine(RoutineNextAdCooldown());
+            
         }
 
         

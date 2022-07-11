@@ -2149,8 +2149,15 @@ namespace PIERStory
                 return string.Empty;
             }
             
+            // 여기서 가끔 null이 있어서 exception 생기는 경우가 있다. 
+            try {
+                return localizedTextJSON[__id][main.currentAppLanguageCode.ToUpper()].ToString();
+            }
+            catch {
+                NetworkLoader.main.ReportRequestError(string.Format("[{0}]/[{1}]", __id, main.currentAppLanguageCode), "com_localize is null");
+                return string.Empty;
+            }
             
-            return localizedTextJSON[__id][main.currentAppLanguageCode.ToUpper()].ToString();
         }
         
         /// <summary>

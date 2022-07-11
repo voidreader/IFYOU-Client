@@ -1391,6 +1391,12 @@ namespace PIERStory
         /// <returns></returns>
         public JsonData GetNodeUnlockSide()
         {
+            if(resultEpisodeRecord == null) 
+                return null;
+                
+            if(!resultEpisodeRecord.ContainsKey(NODE_UNLOCK_SIDE))
+                return null;
+            
             return resultEpisodeRecord[NODE_UNLOCK_SIDE];
         }
 

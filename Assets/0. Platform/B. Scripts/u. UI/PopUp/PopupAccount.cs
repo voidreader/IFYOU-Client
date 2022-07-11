@@ -78,10 +78,15 @@ namespace PIERStory {
             
             // 프레임 관련 처리 
             // 연동되지 않은 상태를 기준.
-            frame.sizeDelta = bigSize;
-            frame.localPosition = bigPosition;
-            icon.sprite = iconGuest;
-            icon.SetNativeSize();
+            try {
+                frame.sizeDelta = bigSize;
+                frame.localPosition = bigPosition;
+                icon.sprite = iconGuest;
+                icon.SetNativeSize();
+            }
+            catch(System.Exception e) {
+                NetworkLoader.main.ReportRequestError(e.StackTrace, "ResetVariables");
+            }
             
             groupBonus.SetActive(false);
             groupExplain.SetActive(true);

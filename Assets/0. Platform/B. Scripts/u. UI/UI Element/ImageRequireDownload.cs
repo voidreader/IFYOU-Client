@@ -201,7 +201,7 @@ namespace PIERStory {
         /// 이미지 정상적으로 불러왔을때. 
         /// </summary>
         void OnCompleteLoadImage() {
-            loadingMark.SetActive(false);
+            //loadingMark.SetActive(false);
             isLoadComplete = true; 
         }
         
@@ -222,8 +222,8 @@ namespace PIERStory {
                 downloadedSprite = null;
              }
 
-            loadingMark.SetActive(true);
-            noImageMark.SetActive(false);
+            //loadingMark.SetActive(true);
+            //noImageMark.SetActive(false);
         }
         
         
@@ -242,8 +242,8 @@ namespace PIERStory {
                 downloadedSprite = null;
             }
 
-            loadingMark.SetActive(false);
-            noImageMark.SetActive(true);
+            //loadingMark.SetActive(false);
+            //noImageMark.SetActive(true);
 
             OnDownloadImage?.Invoke();
         }

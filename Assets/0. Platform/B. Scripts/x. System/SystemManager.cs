@@ -100,6 +100,7 @@ namespace PIERStory
         
         
         public string coinShopURL = string.Empty; // 코인샵 URL
+        public string surveyUrl = string.Empty;
         public int firsetResetPrice = 0; // 최초 리셋 가격
         
         public int episodeOpenPricePer = 0; // 에피소드 시간단축오픈 10분당 코인 가격 
@@ -655,6 +656,7 @@ namespace PIERStory
 
            
             coinShopURL = GetJsonNodeString(masterInfo, "coinshop_url"); // 코인샵 URL
+            surveyUrl = GetJsonNodeString(masterInfo, "survey_url");
             firsetResetPrice = GetJsonNodeInt(masterInfo, "first_reset_price"); // 최초 리셋 비용 
             
             removeAdPrice = GetJsonNodeInt(masterInfo, "remove_ad_price"); // 에피소드 광고 제거 비용

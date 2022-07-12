@@ -125,6 +125,8 @@ namespace PIERStory {
                 return;
             }
 
+            mainCategoryList.Clear();
+
             for (int i = 0; i < mainCategoryData.Count; i++)
             {
                 // 수동 설정의 경우
@@ -153,6 +155,10 @@ namespace PIERStory {
         
         IEnumerator LayoutRebuild()
         {
+            yield return new WaitUntil(() => mainCategoryList.Count > 0);
+
+            yield return null;
+
             yield return new WaitUntil(() => mainCategoryList[0].activeSelf);
 
             foreach(GameObject g in mainCategoryList)

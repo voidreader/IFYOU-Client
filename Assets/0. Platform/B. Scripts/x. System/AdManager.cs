@@ -692,7 +692,7 @@ namespace PIERStory {
             isRewarded = false;
             
             // * 애드몹 우선으로 실행 
-            if(admobRewardedAd.IsLoaded()) {
+            if(admobRewardedAd != null && admobRewardedAd.IsLoaded()) {
                admobRewardedAd.Show();  
                return;
             }

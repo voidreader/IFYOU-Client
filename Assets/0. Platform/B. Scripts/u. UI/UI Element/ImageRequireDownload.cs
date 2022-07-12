@@ -1,6 +1,6 @@
-
 using UnityEngine;
 using UnityEngine.UI;
+
 using BestHTTP;
 using DG.Tweening;
 
@@ -29,8 +29,9 @@ namespace PIERStory {
         [SerializeField] RawImage targetRawImage = null;
         public Texture2D downloadedTexture = null;
         public Sprite downloadedSprite = null;
-        
-        
+
+        public GameObject noImageMark;
+        public GameObject loadingMark;
         
         /// <summary>
         /// 텍스쳐 직접 할당 
@@ -163,6 +164,8 @@ namespace PIERStory {
                 if (useNativeSize)
                     targetRawImage.SetNativeSize();
 
+                targetRawImage.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
+
                 // 페이드인 쓸래 말래 처리 
                 if(useFade)
                     targetRawImage.DOFade(1, 0.4f);
@@ -176,6 +179,8 @@ namespace PIERStory {
 
                 if (useNativeSize)
                     targetImage.SetNativeSize();
+
+                targetImage.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
                 
                 if(useFade)
                     targetImage.DOFade(1, 0.4f);
@@ -196,6 +201,7 @@ namespace PIERStory {
         /// 이미지 정상적으로 불러왔을때. 
         /// </summary>
         void OnCompleteLoadImage() {
+            loadingMark.SetActive(false);
             isLoadComplete = true; 
         }
         
@@ -206,15 +212,18 @@ namespace PIERStory {
             isLoadComplete = false;
             
             if(targetRawImage) {
-                targetRawImage.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
+                targetRawImage.color = HexCodeChanger.HexToColor("D9D9D9");
                 targetRawImage.texture = null;
             }
             
             if(targetImage) {
-                targetImage.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
+                targetImage.color = HexCodeChanger.HexToColor("D9D9D9");
                 targetImage.sprite = null;
                 downloadedSprite = null;
              }
+
+            loadingMark.SetActive(true);
+            noImageMark.SetActive(false);
         }
         
         
@@ -224,14 +233,17 @@ namespace PIERStory {
         void SetNoImage() {
             if(targetRawImage != null) {
                 targetRawImage.texture = null;
-                targetRawImage.color = Color.black;
+                targetRawImage.color = HexCodeChanger.HexToColor("FF0080");
             }
             
             if(targetImage != null) {
                 targetImage.sprite = null;
-                targetImage.color = Color.black;
+                targetImage.color = HexCodeChanger.HexToColor("FF0080");
                 downloadedSprite = null;
             }
+
+            loadingMark.SetActive(false);
+            noImageMark.SetActive(true);
 
             OnDownloadImage?.Invoke();
         }

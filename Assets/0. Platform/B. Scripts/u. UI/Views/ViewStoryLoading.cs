@@ -42,19 +42,17 @@ namespace PIERStory {
             loadingBar.fillAmount = 0;
             
             
-            if (StoryManager.main.loadingJson.Count > 0) {
+            if (StoryManager.main.loadingJson != null && StoryManager.main.loadingJson.Count > 0) {
                 loadingImage.SetDownloadURL(SystemManager.GetJsonNodeString(StoryManager.main.loadingJson[0], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(StoryManager.main.loadingJson[0], CommonConst.COL_IMAGE_KEY), true);
             }
             else {
                 loadingImage.SetDownloadURL(string.Empty, string.Empty);
             }
 
-            if (StoryManager.main.loadingDetailJson.Count > 0)
-            {
-                loadingTextIndex = 0;
-                
+            loadingTextIndex = 0;
+
+            if (StoryManager.main.loadingDetailJson != null && StoryManager.main.loadingDetailJson.Count > 0)
                 SystemManager.SetText(textInfo, SystemManager.GetJsonNodeString(StoryManager.main.loadingDetailJson[loadingTextIndex], "loading_text"));
-            }
             
         }
         

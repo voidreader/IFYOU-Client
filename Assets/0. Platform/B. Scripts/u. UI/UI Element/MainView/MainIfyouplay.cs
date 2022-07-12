@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using TMPro;
 using LitJson;
 using BestHTTP;
+using VoxelBusters.CoreLibrary;
+using VoxelBusters.EssentialKit;
 
 namespace PIERStory
 {
@@ -367,6 +369,65 @@ namespace PIERStory
                 dailyAdTimerText.text = timerText.text;
                 yield return new WaitForSeconds(0.1f);
             }
+        }
+
+        #endregion
+
+        #region 설문조사
+
+        public void OnClickOpenSurvey()
+        {
+            if (SystemManager.main.isWebViewOpened)
+                return;
+
+            if (Application.isEditor)
+                return;
+
+            string uidParam = string.Format("?uid={0}", UserManager.main.GetUserPinCode());
+            string langParam = string.Format("&lang={0}", SystemManager.main.currentAppLanguageCode);
+
+            string finalURL = SystemManager.main.surveyUrl + uidParam + langParam;
+            Debug.Log("Survey : " + finalURL);
+
+            SystemManager.main.webView = WebView.CreateInstance();
+            WebView.OnHide += OnHideWebview;
+
+
+            Debug.Log(">> OnHideWebview LoadURL");
+            SystemManager.main.webView.ClearCache();
+            SystemManager.main.webView.SetFullScreen();
+            SystemManager.main.webView.ScalesPageToFit = true;
+            SystemManager.main.webView.LoadURL(URLString.URLWithPath(finalURL));
+            SystemManager.main.webView.Show();
+
+            SystemManager.main.isWebViewOpened = true;
+            SystemManager.SetBlockBackButton(true);
+        }
+
+        void OnHideWebview(WebView __view)
+        {
+            SystemManager.main.isWebViewOpened = false;  // 닫힐때 false로 변경 
+            SystemManager.SetBlockBackButton(false);
+
+            Debug.Log(">> OnHideWebview in IFYouplay");
+            WebView.OnHide -= OnHideWebview;
+
+            __view.gameObject.SetActive(false);
+            Destroy(__view);
+
+            // 신규 메일이 온 것이 있는지 확인확인
+            NetworkLoader.main.RequestUnreadMailList(CallbackCheckUnreadMail);
+        }
+
+        void CallbackCheckUnreadMail(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackCheckUnreadMail");
+                return;
+            }
+
+            UserManager.main.SetNotificationInfo(JsonMapper.ToObject(res.DataAsText));
         }
 
         #endregion

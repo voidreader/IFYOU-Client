@@ -6,6 +6,10 @@ namespace PIERStory
 {
     public class BubbleManager : MonoBehaviour
     {
+        // 말풍선 타입 2종 
+        const string HALF_LINE = "half";
+        const string BODY_LINE = "body";
+        
         public static BubbleManager main = null;
 
         public int normalFontSize = 28; // 대화 폰트 사이즈 
@@ -25,13 +29,14 @@ namespace PIERStory
         
         
         JsonData bubbleMaster = null;
-        public string bubbleType = "body"; // 기본은 body 타입 
+        public string bubbleType = BODY_LINE; // 기본은 body 타입 
         public bool isTagColorAffect = false; // 네임태그 색상이 말풍선에 영향을 미침 
         public string tagAlignType = "center";
         public int tagTextareaLeft = 0;
         public int tagTextareaRight = 20;
         public int tagTextareaTop = -2;
         public int tagTextareaBottom = -2;
+        public Vector3 bubbleInitScale = Vector3.zero;
 
         private void Awake()
         {
@@ -61,6 +66,20 @@ namespace PIERStory
             tagTextareaBottom = SystemManager.GetJsonNodeInt(bubbleMaster, "tag_textarea_bottom");
             
             bubbleType = SystemManager.GetJsonNodeString(bubbleMaster, "bubble_type");
+            
+            // 타입에 따라서 말풍선 초기 크기 지정 
+            if(bubbleType == "half")
+                bubbleInitScale = Vector3.one * 0.85f;
+            else 
+                bubbleInitScale = Vector3.zero;
+        }
+        
+        /// <summary>
+        /// 말풍선 타입이 하프인지 체크 
+        /// </summary>
+        /// <returns></returns>
+        public bool IsHalfBubbleSprite() {
+            return bubbleType == HALF_LINE;
         }
 
 

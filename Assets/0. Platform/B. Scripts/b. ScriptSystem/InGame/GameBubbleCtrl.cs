@@ -1097,7 +1097,9 @@ namespace PIERStory
             // default 처리
             if (string.IsNullOrEmpty(in_effect) || in_effect == CommonConst.NONE)
             {
-                rtransform.localScale = Vector3.zero;
+                // rtransform.localScale = Vector3.zero;
+                rtransform.localScale = BubbleManager.main.bubbleInitScale;
+                
                 this.gameObject.SetActive(true);
                 rtransform.pivot = centerPivot;
 

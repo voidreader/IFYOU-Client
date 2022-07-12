@@ -29,6 +29,10 @@ namespace PIERStory
         Action OnNarraion = delegate { };
         public Sprite typeBlackSprite;
         public Sprite typeWhiteSprite;
+        
+        public Sprite typeHalfBlackSprite;
+        public Sprite typeHalfWhiteSprite;
+        
 
         public Image boxImage;
         public TextMeshProUGUI textNarration;
@@ -221,7 +225,6 @@ namespace PIERStory
 
         public void MakeTalkBubble(ScriptRow __row, Action __cb, int index = -1)
         {
-            // StartCoroutine(MakingTalkBubble(__row, __cb, index));
             if (bubbleIndex >= ListBubbles.Count)
                 bubbleIndex = 0;
 
@@ -241,47 +244,23 @@ namespace PIERStory
 
             // 말풍선 풀에서 하나를 골라 세팅합니다.
             // skip을 사용했거나, 캐릭터 스탠딩이 아닐때
-            if (GameManager.main.useSkip || index < 0)
+            if (GameManager.main.useSkip || index < 0 || BubbleManager.main.IsHalfBubbleSprite())
                 ListBubbles[bubbleIndex++].ShowBubble(__row, __cb);
             else
                 StartCoroutine(RoutineMoveWait(__row, __cb));
         }
         
-        IEnumerator MakingTalkBubble(ScriptRow __row, Action __cb, int index = -1) {
-            
-            yield return new WaitForFixedUpdate(); // physics 대기 
-            
-            if (bubbleIndex >= ListBubbles.Count)
-                bubbleIndex = 0;
 
-            // 아무말도 안넣으면 그냥 종료 
-            if (string.IsNullOrEmpty(__row.script_data))
-            {
-                __cb?.Invoke();
-                yield break;
-            }
-
-            // 말풍선 크기를 판단하기 위해 호출한다.
-            // 크기 지정을 수동으로 해놓은 경우만!
-            // * 추가 설명 : TextMesh 는 실제 화면에서 render 되어야지, TextArea를 오버했는지 안했는지를 알 수 있다.
-            if (__row.bubble_size == 0)
-                BubbleManager.main.SetFakeBubbles(__row);
-
-            // 말풍선 풀에서 하나를 골라 세팅합니다.
-            // skip을 사용했거나, 캐릭터 스탠딩이 아닐때
-            if (GameManager.main.useSkip || index < 0)
-                ListBubbles[bubbleIndex++].ShowBubble(__row, __cb);
-            else
-                StartCoroutine(RoutineMoveWait(__row, __cb));
-        }
-        
 
         /// <summary>
         /// 캐릭터가 무빙 중인 경우는 무빙이 완료될때까지 기다린다. 
         /// </summary>
         IEnumerator RoutineMoveWait(ScriptRow __row, Action __cb)
         {
+            Debug.Log(string.Format("RoutineMoveWait [{0}] #1", string.IsNullOrEmpty(__row.script_data)?"":__row.script_data));
+            
             yield return new WaitUntil(() => GameManager.main.CheckModelMoveComlete());
+            Debug.Log(string.Format("RoutineMoveWait [{0}] #2", string.IsNullOrEmpty(__row.script_data)?"":__row.script_data));
             ListBubbles[bubbleIndex++].ShowBubble(__row, __cb);
         }
 
@@ -352,20 +331,31 @@ namespace PIERStory
 
             if (typeWhite)
             {
-                boxImage.sprite = typeWhiteSprite;
+                if(BubbleManager.main.IsHalfBubbleSprite())
+                    boxImage.sprite = typeHalfWhiteSprite;
+                else
+                    boxImage.sprite = typeWhiteSprite;
+                    
                 ColorUtility.TryParseHtmlString("#3D3D3DFF", out textColor);
             }
             else
             {
-                boxImage.sprite = typeBlackSprite;
+                
+                if(BubbleManager.main.IsHalfBubbleSprite())
+                    boxImage.sprite = typeHalfBlackSprite;
+                else
+                    boxImage.sprite = typeBlackSprite;
+                    
                 textColor = Color.white;
             }
 
             textNarration.color = textColor;
 
-            // color 값 조정
-            boxImage.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
-            textNarration.color = new Color(textNarration.color.r, textNarration.color.b, textNarration.color.g, 0); // 투명하게 만들어준다.
+            // 초기 color 값 조정
+            if(!BubbleManager.main.IsHalfBubbleSprite()) {
+                boxImage.color = CommonConst.COLOR_IMAGE_TRANSPARENT;
+                textNarration.color = new Color(textNarration.color.r, textNarration.color.b, textNarration.color.g, 0); // 투명하게 만들어준다.
+            }
 
             narrationText = __narration.Replace(@"\", "\n");
 
@@ -389,17 +379,25 @@ namespace PIERStory
 
                 countNewLine--;
             }
-
-            if(countNewLine < 2)
-                boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 160);
-            else
-                boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 80 + (countNewLine * 60));
+            
+            // 말풍선 타입에 따른 크기 조정
+            if(countNewLine < 2) {
+                
+                // 하프타입에서는 기본 높이를 200으로 조정 
+                if(BubbleManager.main.IsHalfBubbleSprite())
+                    boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 200);
+                else 
+                    boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 160);
+            }
+            else {
+                boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 120 + (countNewLine * 60));
+            }
 
             boxImage.gameObject.SetActive(true);
             
             SystemManager.SetText(textNarration, narrationText);
 
-            boxImage.DOFade(0.8f, 0.2f);
+            boxImage.DOFade(1f, 0.2f);
             textNarration.DOFade(1, 0.2f);
 
             OnNarraion();

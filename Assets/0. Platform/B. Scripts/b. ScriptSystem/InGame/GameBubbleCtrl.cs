@@ -66,6 +66,7 @@ namespace PIERStory
         public Image imageBubble;           // 몸체 
         public Image imageOutline;          // 외곽
         public Image nametag;               // 이름표 이미지
+        public RectTransform nametagRect;               // 이름표 이미지
         public TextMeshProUGUI textName;    // 이름표 텍스트 
 
 
@@ -163,7 +164,8 @@ namespace PIERStory
         string tagMainColor = "000000FF";
         string tagSubColor = "FFFFFFFF";
         string tagText = string.Empty;
-
+        
+        
 
         #region 초기화 처리
 
@@ -649,6 +651,13 @@ namespace PIERStory
                     // 위치 설정해주기. 
                     nametag.transform.localPosition = new Vector3(tagPosX, tagPosY, 0);
                     nametag.color = Color.cyan; // 임시 컬러
+                    
+                    // 네임태그 추가 설정 2022.07.07
+                    nametagRect.offsetMin = new Vector2(BubbleManager.main.tagTextareaLeft, BubbleManager.main.tagTextareaBottom);
+                    nametagRect.offsetMax = new Vector2(BubbleManager.main.tagTextareaRight, BubbleManager.main.tagTextareaTop);
+                    
+                    textName.horizontalAlignment = BubbleManager.main.GetTagAlign();
+                  
                 }
             }
             else
@@ -830,7 +839,8 @@ namespace PIERStory
         void SetNametag()
         {
             // 네임태그 안쓰면 할필요 없다.
-            if (!nametag.gameObject.activeSelf)
+            // 네임태그 컬러 영향이 없는 경우만 return
+            if (!nametag.gameObject.activeSelf && !BubbleManager.main.isTagColorAffect)
                 return;
 
 
@@ -860,6 +870,11 @@ namespace PIERStory
 
             nametag.color = HexCodeChanger.HexToColor(tagMainColor);
             textName.color = HexCodeChanger.HexToColor(tagSubColor);
+            
+            // 네임태그 칼라가 말풍선에 영향을 주는 경우(outline에 적용)
+            if(BubbleManager.main.isTagColorAffect) {
+                imageOutline.color = nametag.color;
+            }
 
             SystemManager.SetText(textName, tagText);
                 
@@ -1044,12 +1059,14 @@ namespace PIERStory
         /// </summary>
         public void OnBubble()
         {
+            /*
             if(needDelayShow && speakerTall < 0) {
                 Debug.Log("<color=white>Bubble Delay Show</color>");
                 // needDelayShow = false;
                 
                 Invoke("DelayOnBubble", 0.1f);
             }
+            */
             
             ActiveInEffect();
         }
@@ -1080,7 +1097,9 @@ namespace PIERStory
             // default 처리
             if (string.IsNullOrEmpty(in_effect) || in_effect == CommonConst.NONE)
             {
-                rtransform.localScale = Vector3.zero;
+                // rtransform.localScale = Vector3.zero;
+                rtransform.localScale = BubbleManager.main.bubbleInitScale;
+                
                 this.gameObject.SetActive(true);
                 rtransform.pivot = centerPivot;
 

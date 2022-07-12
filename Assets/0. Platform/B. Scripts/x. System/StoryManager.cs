@@ -173,6 +173,7 @@ namespace PIERStory
         [SerializeField] string currentBubbleSetID = string.Empty; // 현재 말풍선 세트 ID 
         [SerializeField] int currentBubbleSetVersion = 0; // 현재 말풍선세트 버전 정보 
         JsonData currentBubbleSetJson = null;
+        public JsonData currentBubbleMasterJson = null; // 선택한 프로젝트 버블 마스터 정보 
 
         #region static, const
 
@@ -535,9 +536,12 @@ namespace PIERStory
                 if(ProjectDetailJson.ContainsKey(NODE_BUBBLE_MASTER)) {
                     // 말풍선의 경우 데이터가 많아서, 버전 관리를 통해서 신규 버전이 있을때만 서버에서 내려받도록 합니다.     
                     // 말풍선 세트 버전관리 
-                    currentBubbleSetID = SystemManager.GetJsonNodeString(ProjectDetailJson[NODE_BUBBLE_MASTER], "bubbleID"); // 연결된 말풍선 세트 ID
-                    currentBubbleSetVersion = SystemManager.GetJsonNodeInt(ProjectDetailJson[NODE_BUBBLE_MASTER], "bubble_ver"); // 말풍선 버전 
                     
+                    // 말풍선 마스터 정보 
+                    currentBubbleMasterJson = ProjectDetailJson[NODE_BUBBLE_MASTER];
+                    
+                    currentBubbleSetID = SystemManager.GetJsonNodeString(currentBubbleMasterJson, "bubbleID"); // 연결된 말풍선 세트 ID
+                    currentBubbleSetVersion = SystemManager.GetJsonNodeInt(currentBubbleMasterJson, "bubble_ver"); // 말풍선 버전 
                 }
 
                 // 말풍선 기초정보가 없는 경우, Local의 정보를 불러와서 설정 

@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+using LitJson;
 
 namespace PIERStory
 {
     public class BubbleManager : MonoBehaviour
     {
+        // 말풍선 타입 2종 
+        const string HALF_LINE = "half";
+        const string BODY_LINE = "body";
+        
         public static BubbleManager main = null;
 
         public int normalFontSize = 28; // 대화 폰트 사이즈 
@@ -21,21 +25,61 @@ namespace PIERStory
         // 서버에서 말풍선 세트로 받아온 이미지들.
         public Dictionary<string, Sprite> DictBubbleSprites = new Dictionary<string, Sprite>();
         public List<Sprite> partnerBubbleSprites = new List<Sprite>();
+        
+        
+        
+        JsonData bubbleMaster = null;
+        public string bubbleType = BODY_LINE; // 기본은 body 타입 
+        public bool isTagColorAffect = false; // 네임태그 색상이 말풍선에 영향을 미침 
+        public string tagAlignType = "center";
+        public int tagTextareaLeft = 0;
+        public int tagTextareaRight = 20;
+        public int tagTextareaTop = -2;
+        public int tagTextareaBottom = -2;
+        public Vector3 bubbleInitScale = Vector3.zero;
 
         private void Awake()
         {
             main = this;
+        }
+        
+        void Start() {
+            
+            // 말풍선 마스터 처리 추가 2022.07
+            bubbleMaster = StoryManager.main.currentBubbleMasterJson;
+            
+            normalFontSize = SystemManager.GetJsonNodeInt(bubbleMaster, "normal_font_size");
+            BigFontSize = SystemManager.GetJsonNodeInt(bubbleMaster, "big_font_size");
             
             // 아랍어 폰트 사이즈 조정.. 2022.06.22
             if(SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR) {
-                normalFontSize = 24;
-                BigFontSize = 32;
-            }
-            else {
-                normalFontSize = 28;
-                BigFontSize = 36;
+                normalFontSize -= 4;
+                BigFontSize -= 4;
             }
             
+            // 말풍선 마스터 정보 모으기 
+            isTagColorAffect = SystemManager.GetJsonNodeBool(bubbleMaster, "tag_color_affect");
+            tagAlignType = SystemManager.GetJsonNodeString(bubbleMaster, "tag_align_type");
+            tagTextareaLeft = SystemManager.GetJsonNodeInt(bubbleMaster, "tag_textarea_left");
+            tagTextareaRight = SystemManager.GetJsonNodeInt(bubbleMaster, "tag_textarea_right");
+            tagTextareaTop = SystemManager.GetJsonNodeInt(bubbleMaster, "tag_textarea_top");
+            tagTextareaBottom = SystemManager.GetJsonNodeInt(bubbleMaster, "tag_textarea_bottom");
+            
+            bubbleType = SystemManager.GetJsonNodeString(bubbleMaster, "bubble_type");
+            
+            // 타입에 따라서 말풍선 초기 크기 지정 
+            if(bubbleType == "half")
+                bubbleInitScale = Vector3.one * 0.85f;
+            else 
+                bubbleInitScale = Vector3.zero;
+        }
+        
+        /// <summary>
+        /// 말풍선 타입이 하프인지 체크 
+        /// </summary>
+        /// <returns></returns>
+        public bool IsHalfBubbleSprite() {
+            return bubbleType == HALF_LINE;
         }
 
 
@@ -128,6 +172,28 @@ namespace PIERStory
 
             return 4;
         }
+        
+        /// <summary>
+        /// 네임태그의 정렬 방법 가져오기 
+        /// </summary>
+        public TMPro.HorizontalAlignmentOptions GetTagAlign() {
+            
+            
+            if(string.IsNullOrEmpty(tagAlignType)) 
+                return TMPro.HorizontalAlignmentOptions.Center;
+            
+            if(tagAlignType == "center")
+                return TMPro.HorizontalAlignmentOptions.Center;
+            else if(tagAlignType == "left")
+                return TMPro.HorizontalAlignmentOptions.Left;
+            else if(tagAlignType == "right")
+                return TMPro.HorizontalAlignmentOptions.Right;
+            
+                
+            
+                
+            return TMPro.HorizontalAlignmentOptions.Center;
+        }
 
 
         /// <summary>
@@ -170,6 +236,7 @@ namespace PIERStory
         {
             main.defaultFeelingPos++;
         }
+        
     }
 }
 

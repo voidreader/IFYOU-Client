@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 
 using TMPro;
@@ -18,9 +17,13 @@ namespace PIERStory
         [Header("HorizontalType")]
         public RectTransform horizontalStyle;
         public List<LobbyStoryElement> horizontalTypeStoryElements;
-        
-        public string genre = string.Empty;
 
+        public string genre = string.Empty;
+        bool useTag = false;
+        int constResizeValue = 0;
+
+        const int useTagValue = 110;        // 태그 사용되는 경우 사이즈
+        const int unUseTagValue = 80;       // 태그 사용되지 않는 경우 사이즈
 
         public void InitCategoryData(JsonData __j)
         {
@@ -83,18 +86,21 @@ namespace PIERStory
                 }
             }
 
+            useTag = SystemManager.GetJsonNodeBool(__j, "is_favorite") || SystemManager.GetJsonNodeBool(__j, "is_view");
+            constResizeValue = useTag ? useTagValue : unUseTagValue;
+
             verticalStyle.gameObject.SetActive(SystemManager.GetJsonNodeString(__j, "array_kind") == "1*N");
             horizontalStyle.gameObject.SetActive(SystemManager.GetJsonNodeString(__j, "array_kind") != "1*N");
         }
 
         /// <summary>
-        /// 화면 재배율
+        /// 영역 재배율
         /// </summary>
         /// <returns></returns>
         public void ResizeArea()
         {
             RectTransform groupRect = GetComponent<RectTransform>();
-            groupRect.sizeDelta = verticalStyle.gameObject.activeSelf ? new Vector2(720f, 130 + verticalStyle.sizeDelta.y) : new Vector2(720f, 130 + horizontalStyle.sizeDelta.y);
+            groupRect.sizeDelta = verticalStyle.gameObject.activeSelf ? new Vector2(720f, constResizeValue + verticalStyle.sizeDelta.y) : new Vector2(720f, constResizeValue + horizontalStyle.sizeDelta.y);
         }
 
 

@@ -62,6 +62,14 @@ namespace PIERStory
             
             Debug.Log("<color=cyan>Script Fetched</color>");
             SystemManager.SetText(textTitle, GameManager.main.currentEpisodeData.episodeTitle);
+
+            // 다른 코루틴 진입하기 전에 여기서 코루틴을 끊어내고 null인 경우 스토리 로비로 돌려보낸다
+            if (GameManager.main.currentPage == null)
+            {
+                NetworkLoader.main.ReportRequestError("GetCurrentPageInitialized failed", "currentPage is null");
+                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_GAME, "gameLoadingFailed", string.Empty);
+                yield break;
+            }
             
             StartCoroutine(RoutineDebugLoading());
             

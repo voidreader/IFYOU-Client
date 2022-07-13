@@ -41,6 +41,17 @@ MonoBehaviour:
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
     CanBeReordered: 0
+  - NodeId: 907cd174-03c3-4c55-829d-4821fa3dfaba
+    PortId: fbfbce29-3071-4e4f-b2d6-8ac04ca12eb3
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 8cf38754-0e15-4caf-b96e-fe01c3adbab6
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Game","Name":"gameLoadingFailed","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
   RunUpdate: 0
   RunFixedUpdate: 0
   RunLateUpdate: 0
@@ -67,7 +78,12 @@ MonoBehaviour:
       Custom: 0
     Mode: 0
   OnExitShowViews: []
-  OnExitHideViews: []
+  OnExitHideViews:
+  - Id:
+      Category: Game
+      Name: InGameLoading
+      Custom: 0
+    Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
 --- !u!114 &-9108271990163937834
@@ -342,17 +358,7 @@ MonoBehaviour:
       Name: InGame
       Custom: 0
     Mode: 0
-  OnEnterHideViews:
-  - Id:
-      Category: Game
-      Name: InGameLoading
-      Custom: 0
-    Mode: 0
-  - Id:
-      Category: Game
-      Name: InGameOption
-      Custom: 1
-    Mode: 0
+  OnEnterHideViews: []
   OnExitShowViews: []
   OnExitHideViews: []
   OnEnterHideAllViews: 0
@@ -448,6 +454,7 @@ MonoBehaviour:
     Connections:
     - f506aa1c-a25d-441c-8592-2e18ccdb9727
     - a3a0beff-8c0b-4032-9f9b-5f47b5921699
+    - fbfbce29-3071-4e4f-b2d6-8ac04ca12eb3
     Value: '{"CanGoBack":false}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -1615,7 +1622,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: 213, y: 138.64996}
+  Position: {x: 213, y: 139}
   Trigger: 1
   SignalPayload:
     StreamId:
@@ -1769,7 +1776,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 2116, y: 1390}
+  Position: {x: 2178.3218, y: 1376.5}
   OnEnterShowViews:
   - Id:
       Category: Common
@@ -1908,8 +1915,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02761efe598a45c98fa1baf4d446c6a7, type: 3}
   m_Name: GlobalFlow
   m_EditorClassIdentifier: 
-  EditorPosition: {x: -210, y: 250, z: 0}
-  EditorScale: {x: 1, y: 1, z: 1}
+  EditorPosition: {x: -1035, y: -386, z: 0}
+  EditorScale: {x: 0.7561437, y: 0.7561437, z: 1}
   Id: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
   GraphName: GlobalFlow
   GraphDescription: 
@@ -2325,7 +2332,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: 213.00003, y: 354.99997}
+  Position: {x: 213, y: 355}
   Trigger: 0
   SignalPayload:
     StreamId:
@@ -3102,7 +3109,7 @@ MonoBehaviour:
   Passthrough: 1
   ClearGraphHistory: 0
   Position: {x: 1967, y: 1428}
-  PivotOrientation: 3
+  PivotOrientation: 1
 --- !u!114 &8453522297394898928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3264,7 +3271,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 1
-  Position: {x: 2399, y: 1316}
+  Position: {x: 2460.0002, y: 1353.0002}
   OnEnterShowViews:
   - Id:
       Category: Game

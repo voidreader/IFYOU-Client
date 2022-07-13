@@ -143,13 +143,16 @@ namespace PIERStory
             int current = 0;
             float percent = 1f;
 
+            // 미션 상태 초기화
+            missionProgressText.text = string.Format(SystemManager.GetLocalizedText("5042") + "(0/1)");
+            missionPercent.text = "0%";
+            missionGauge.fillAmount = 0f;
+
             switch (missionData.missionType)
             {
                 case MissionType.drop:
-                    missionProgressText.text = string.Format(SystemManager.GetLocalizedText("5042") + "(0/1)");
-                    missionPercent.text = "0%";
-                    missionGauge.fillAmount = 0f;
                     break;
+
                 case MissionType.scene:
 
                     if (missionData.eventDetailHint == null)
@@ -179,6 +182,7 @@ namespace PIERStory
                         if (UserManager.main.IsCompleteEpisode(missionData.episodeDetailHint[i]))
                             current++;
                     }
+
                     percent = (float)current / (float)total;
                     missionProgressText.text = string.Format(SystemManager.GetLocalizedText("5042") + "({0}/{1})", current, total);
                     missionPercent.text = string.Format("{0}%", Math.Round(percent * 100f, 0));
@@ -186,6 +190,7 @@ namespace PIERStory
                     break;
             }
         }
+
 
         /// <summary>
         /// 미션보상 받기

@@ -692,7 +692,7 @@ namespace PIERStory
                 if(ProjectDetailJson == null)
                 {
                     Debug.LogError("작품 정보가 안들어옴");
-                    NetworkLoader.main.ReportRequestError("SetEpisodeHintData", "ProjectDetailJson is null");
+                    NetworkLoader.main.ReportRequestError("SetEpisodeHintData", "ProjectDetailJson is null. Selected project is " + CurrentProjectID);
                     return;
                 }
 

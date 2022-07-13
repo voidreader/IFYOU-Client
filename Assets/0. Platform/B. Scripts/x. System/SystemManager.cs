@@ -145,6 +145,7 @@ namespace PIERStory
         public TMP_FontAsset jaFont = null; // 일본어 폰트
         public TMP_FontAsset koFont = null; // 한글, 영어 폰트 
         public TMP_FontAsset arFont = null; // 아랍 폰트
+        public TMP_FontAsset arNormalBubbleFont = null; // 아랍어 일반 말풍선 폰트 
         public AsyncOperationHandle<TMP_FontAsset> mountedAssetFontJA; 
         public AsyncOperationHandle<TMP_FontAsset> mountedAssetFontKO; 
         Shader assetFontShader;
@@ -2051,7 +2052,12 @@ namespace PIERStory
                 case "JA":  // 일본어 
                     return jaFont; 
                 case "AR": // 아랍어
-                    return arFont; 
+                
+                    // 아랍어 폰트 2개로 분리. (말풍선용과 시스템 UI)
+                    if(__isException)
+                        return arFont; // 시스템
+                    else  
+                        return arNormalBubbleFont; // 말풍선
                 
                 default:
                 if(__isException)  // appleGothic 유지 

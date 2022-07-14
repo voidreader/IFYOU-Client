@@ -233,12 +233,12 @@ namespace PIERStory {
         void SetNoImage() {
             if(targetRawImage != null) {
                 targetRawImage.texture = null;
-                targetRawImage.color = HexCodeChanger.HexToColor("FF0080");
+                targetRawImage.color = HexCodeChanger.HexToColor("FFD4EA");
             }
             
             if(targetImage != null) {
                 targetImage.sprite = null;
-                targetImage.color = HexCodeChanger.HexToColor("FF0080");
+                targetImage.color = HexCodeChanger.HexToColor("FFD4EA");
                 downloadedSprite = null;
             }
 

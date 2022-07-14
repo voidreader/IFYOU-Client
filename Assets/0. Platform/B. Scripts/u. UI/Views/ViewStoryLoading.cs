@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
@@ -80,11 +79,8 @@ namespace PIERStory {
         void FillProgressorOnly() {
             
             Debug.Log("### FillProgressorOnly ###");
-            
-            loadingBar.DOFillAmount(1, 3).OnComplete(()=> {
-                Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", "Testing");
-                //SceneManager.LoadSceneAsync(CommonConst.SCENE_STORY_LOBBY, LoadSceneMode.Single).allowSceneActivation = true;
-            });
+
+            loadingBar.DOFillAmount(1, 3);
         }
         
         string GetFillAmountPercentage() {
@@ -111,8 +107,6 @@ namespace PIERStory {
                     hasBundle  = true;
                    Debug.Log("#### This project has bundle!!!! ####");
                    
-                   
-                   
                 }
                 else {
                     
@@ -131,14 +125,11 @@ namespace PIERStory {
                 Debug.Log("어드레서블 번들 없거나 실패하고 말풍선 로딩 끝!");
                 loadingBar.fillAmount = 0.2f;
                 StoryManager.main.SetLobbyBubbleMaster();
+
                 Debug.Log("어드레서블 번들 없거나 실패하고 말풍선 스프라이트 추가 끝!");
-                loadingBar.fillAmount = 0.3f;
-                // 스토리 로비 View에게 장착된 꾸미기 아이템 준비시킨다. 
-                //ViewStoryLobby.OnDecorateSet?.Invoke();
-                //yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
                 loadingBar.fillAmount = 0.4f;
-                Debug.Log("어드레서블 번들 없거나 실패하고 꾸미기형 로비 세팅 끝!");
                 yield return null;
+
                 FillProgressorOnly();
                 yield break;
             }
@@ -159,10 +150,7 @@ namespace PIERStory {
                 loadingBar.fillAmount = 0.2f;
                 StoryManager.main.SetLobbyBubbleMaster();
                 Debug.Log("어드레서블 번들 다운로드 데이터 없고 말풍선 스프라이트 추가 끝!");
-                // 스토리 로비 View에게 장착된 꾸미기 아이템 준비시킨다. 
-                //ViewStoryLobby.OnDecorateSet?.Invoke();
-                //yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
-                Debug.Log("어드레서블 번들 다운로드 데이터 없고 꾸미기형 로비 세팅 끝!");
+                
                 loadingBar.fillAmount = 0.4f;
                 yield return null;
 
@@ -180,7 +168,7 @@ namespace PIERStory {
             AsyncOperationHandle downloadHandle =  Addressables.DownloadDependenciesAsync(__projectID);
             
             downloadHandle.Completed += (op) => {
-                //Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
+                
             };
             
             
@@ -199,16 +187,8 @@ namespace PIERStory {
             Debug.Log("어드레서블 번들 다운 완료하고 말풍선 말풍선 로딩 끝!");
             StoryManager.main.SetLobbyBubbleMaster();
             Debug.Log("어드레서블 번들 다운 완료하고 말풍선 스프라이트 추가 끝!");
-            // 스토리 로비 View에게 장착된 꾸미기 아이템 준비시킨다. 
-            //ViewStoryLobby.OnDecorateSet?.Invoke();
-            //yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
-            Debug.Log("어드레서블 번들 다운 완료하고 꾸미기형 로비 세팅 끝!");
 
             Addressables.Release(downloadHandle);
-
-            yield return new WaitForSeconds(0.1f);
-            
-            Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", "Testing");
             Debug.Log("#### This project bundle download doen! ####");
         }
             

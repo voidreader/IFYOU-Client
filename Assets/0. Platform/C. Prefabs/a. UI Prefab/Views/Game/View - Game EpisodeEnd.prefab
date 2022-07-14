@@ -141,7 +141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -175,6 +175,8 @@ MonoBehaviour:
   targetRawImage: {fileID: 2439771572164081895}
   downloadedTexture: {fileID: 0}
   downloadedSprite: {fileID: 0}
+  noImageMark: {fileID: 0}
+  loadingMark: {fileID: 0}
 --- !u!1 &6865106423977875871
 GameObject:
   m_ObjectHideFlags: 0
@@ -1025,16 +1027,23 @@ MonoBehaviour:
     premiumPassKey: 
     categoryImageURL: 
     categoryImageKey: 
+    coinBannerUrl: 
+    coinBannerKey: 
     isLock: 0
     colorCode: 000000
     projectProgress: 0
     isPlaying: 0
+    represenativeGenre: 
     genre: 
     serialDay: 
     isSerial: 0
     listSerialDays: []
     passPrice: 0
     passDiscount: 0.1
+    isNotify: 0
+    hitCount: 0
+    likeCount: 0
+    arrHashtag: []
   episodeImage: {fileID: 669336049437141916}
   episodeEndControls: {fileID: 280537779323609733}
 --- !u!1 &8657830054245747050

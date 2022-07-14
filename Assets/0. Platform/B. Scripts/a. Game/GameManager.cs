@@ -1,6 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +25,6 @@ namespace PIERStory
         public float updatedEpisodeSceneProgressValue = 0; // 플레이 후에 업데이트된 사건 달성률 2021.12.14
 
         JsonData episodeElement = null;     // 에피소드 구성 및 리소스(script, background, image, illust, emoticon)
-        JsonData scriptJson = null;         // 스크립트 JsonData
         [HideInInspector] public JsonData loadingJson = null;
         [HideInInspector] public JsonData loadingDetailJson = null;
 
@@ -46,7 +45,8 @@ namespace PIERStory
 
         public bool isJustSkipStop = false; // * 막 스킵이 끝났는지 체크 변수 
 
-        public GameMenu inGameMenu;
+        public GameMenu inGameMenu;                 // 인게임 메뉴
+        public EpisodeEndControls endControls;      // 에피소드 종료 컨트롤러
         public string currentSceneId = string.Empty;    // 현재 sceneId(사건ID)
 
         public int episodeDownloadableResourceCount = 0;
@@ -81,16 +81,13 @@ namespace PIERStory
         public Transform modelPillar;           // 캐릭터 모델의 부모 transform.
 
 
-        [Space]
-        [Space]
+        [Space][Space]
         public string targetSelectionSceneID = string.Empty;    // 선택지 선택 후 이동할 사건ID
         public bool isSelectionInputWait = false;               // 선택지 입력 기다리기!
 
 
 
-        [Space]
-        [Space]
-        [Header("리소스 접근을 위한 Dictionary")]
+        [Space][Space][Header("리소스 접근을 위한 Dictionary")]
         public Dictionary<string, GameSpriteCtrl> DictIllusts = new Dictionary<string, GameSpriteCtrl>();                     // 일러스트 Dictionary
         public Dictionary<string, ScriptLiveMount> DictLiveIllusts = new Dictionary<string, ScriptLiveMount>();               // Live illust Dictionary
         public Dictionary<string, ScriptLiveMount> DictLiveObjs = new Dictionary<string, ScriptLiveMount>();                  // Live Object Dictionary
@@ -366,7 +363,6 @@ namespace PIERStory
             isScriptFetch = true; // 데이터 가져왔어요..!
 
             episodeElement = __j;
-            scriptJson = __j[GameConst.NODE_SCRIPT];
 
             // 페이지를 생성하고 넘겨준다. 
             currentPage = Instantiate(prefabScriptPage, this.transform).GetComponent<ScriptPage>();
@@ -1467,11 +1463,6 @@ namespace PIERStory
             
             SystemManager.ShowNetworkLoading();
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin"); // 노드 제어
-            
-
-            // 네트워크 창을 띄우고. 로비 씬으로 돌아가야한다.
-            //IntermissionManager.isMovingLobby = true;
-            //SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
         }
 
         /// <summary>
@@ -1497,10 +1488,6 @@ namespace PIERStory
             isPlaying = false;
             
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN); // 노드 제어
-
-            // 씬 로드 
-            //IntermissionManager.isMovingLobby = false;
-            //SceneManager.LoadSceneAsync(CommonConst.SCENE_INTERMISSION, LoadSceneMode.Single).allowSceneActivation = true;
         }
 
 
@@ -1896,7 +1883,6 @@ namespace PIERStory
 
         #endregion
 
-
         public static void ShowMissingComponent(string __template, string __data)
         {
             // 스킵중에는 플레이 도중에 뜨던 popup이 뜨지 않도록 한다.
@@ -1937,19 +1923,24 @@ namespace PIERStory
         /// <param name="__nextEpisodeID"></param>
         public void ShowGameEnd(string __nextEpisodeID)
         {
-            
             // 중복 실행을 막는다.
             if(!isPlaying) {
                 Debug.LogError("duplicate call ShowGameEnd");
                 return;
             }
-            
-            // Debug.Log("ShowGameEnd :: " + __nextEpisodeID);
-
-            // AdManager.main.HideBanner();
 
             useSkip = false;
             isPlaying = false; // 게임 플레이 정지.
+
+            // 게임 종료되었으면 사운드도 다 종료해주고, 가끔 스킵해도 배경음이 남아있는 경우도 있으니 Mute까지 해준다
+            foreach (GameSoundCtrl sc in SoundGroup)
+            {
+                sc.StopAudioClip();
+                sc.MuteAudioClip();
+            }
+
+            SystemManager.ShowNetworkLoading();
+            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, string.Empty);
 
             // * 통신이 겹치는 문제로 인해서 코루틴으로 변경
             StartCoroutine(RoutineFinishGame(__nextEpisodeID));
@@ -1962,9 +1953,7 @@ namespace PIERStory
             // 안전을 위해..
             yield return new WaitForSeconds(0.1f);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
-            
 
-            
             Dictionary<string, string> eventValues = new Dictionary<string, string>();
             eventValues.Add("project_id", StoryManager.main.CurrentProjectID);
             eventValues.Add("episode_id", StoryManager.main.CurrentEpisodeID);
@@ -2010,18 +1999,12 @@ namespace PIERStory
             NetworkLoader.main.UpdateEpisodeCompleteRecord(nextEpisodeData);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             SystemManager.HideNetworkLoading();
-            
-            
-            // 게임 종료되었으면 사운드도 다 종료해주고, 가끔 스킵해도 배경음이 남아있는 경우도 있으니 Mute까지 해준다
-            foreach (GameSoundCtrl sc in SoundGroup)
-            {
-                sc.StopAudioClip();
-                sc.MuteAudioClip();
-            }            
-            
+
+            endControls.InitStoryLobbyControls();
+            endControls.gameObject.SetActive(true);
+
             // * 여기까지 통신 완료하고 후 처리 진행...!!! 2022.01.27 팝업 순서를 변경한다. 
             // * 사이드 => 엔딩 => 미션 => 첫클리어 보상의 순서. 
-            
             
             // * 1. 에피소드 클리어 후 사이드 해금 체크 
             #region 사이드
@@ -2070,8 +2053,6 @@ namespace PIERStory
                         
             #endregion
             
-            
-
             // * 3. 미션 해금
             UserManager.main.ShowCompleteMissionByEpisode(false);
             
@@ -2097,13 +2078,6 @@ namespace PIERStory
             }
             
             #endregion
-            
-
-            Debug.Log("Signal Send for Episode END !!!!!!");
-
-            // * 엔딩 연출 끝나면 아래 진행 (없으면 그냥 진행)
-            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_NEXT_DATA, nextEpisodeData, string.Empty); // 다음 에피소드 전달 
-            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, currentEpisodeData, string.Empty); // 현재 에피소드 전달
         }
 
         #endregion

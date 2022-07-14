@@ -67,8 +67,13 @@ namespace PIERStory {
             
             yield return null;
             yield return new WaitForSeconds(0.1f);
-            
-            
+
+            if(UserManager.main != null && !string.IsNullOrEmpty(UserManager.main.userKey))
+            {
+                UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackNewCompleteAchievement);
+                NetworkLoader.main.RequestIfyouplayList();
+                yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            }
             
             ViewCommonTop.OnBackAction = null;
             

@@ -46,11 +46,7 @@ namespace PIERStory
 
         
 
-        public const string SIGNAL_EPISODE_END = "episodeEnd";
-        public const string SIGNAL_NEXT_DATA = "nextData";
-        public const string SIGNAL_UPDATE_EPISODE = "updateCurrentData";
-        public const string SIGNAL_NEXT_EPISODE = "nextEpisode";
-
+        public const string SIGNAL_EPISODE_END = "showEpisodeEnd";
         public const string SIGNAL_GAME_PLAY = "GamePlay";
 
         #region 게임 스크립트 관련

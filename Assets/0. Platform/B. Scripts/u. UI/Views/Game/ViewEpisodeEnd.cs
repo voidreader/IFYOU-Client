@@ -23,9 +23,11 @@ namespace PIERStory
                 }
                 
                 
-                if(PopupManager.main.GetFrontActivePopup() != null) {
+                if(PopupManager.main.GetFrontActivePopup() != null)
                     return;
-                }
+
+                if (!episodeEndControls.gameObject.activeSelf)
+                    return;
                 
                 if(CommonView.ListActiveViews.Count == 1 && CommonView.ListActiveViews.Contains(this)  // 1개 활성화, 본인
                     || CommonView.ListActiveViews.Count == 2 && CommonView.ListActiveViews.Contains(this)) {
@@ -52,12 +54,11 @@ namespace PIERStory
             currentStoryData = StoryManager.main.CurrentProject;
             
             // 리뷰 팝업 위치
-            // RateGame.Instance.IncreaseCustomEvents();
             episodeImage.SetDownloadURL(currentStoryData.episodeFinishImageURL, currentStoryData.episodeFinishImageKey); // 종료 이미지 처리 
             
             
             // 관련 컨트롤 초기화
-            episodeEndControls.InitStoryLobbyControls();
+            //episodeEndControls.InitStoryLobbyControls();
             
             Debug.Log("## ViewEpisodeEnd BakcAction Setting");
             ViewCommonTop.OnBackAction = OnClickReturnLobby;

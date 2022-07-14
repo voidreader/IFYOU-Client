@@ -206,70 +206,11 @@ namespace PIERStory
 
         public override void OnHideView()
         {
-            if(UserManager.main == null || !UserManager.main.completeReadUserData)
-                return;
-
             if (!mainContainer.isVisible)
                 return;
             
-            
             base.OnHideView();
             
-            /*
-            Debug.Log("ViewStoryLobby OnHideView");
-
-
-            DestroyPreviousBackground(); // 배경 제거하고.
-
-            // 만든 모든 오브젝트들 파괴
-            try
-            {
-                GameModelCtrl modelCtrl;
-                foreach (GameObject g in decoObjects)
-                {
-                    if (g == null)
-                        continue;
-
-                    // 캐릭터 모델에 대한 추가 처리 
-                    modelCtrl = g.GetComponent<GameModelCtrl>();
-                    if (modelCtrl != null)
-                    {
-                        DestroyStandingCharacter(modelCtrl);
-                    } 
-                    else
-                    {
-                        // 모델이 아닌 친구들
-                        Destroy(g);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e.StackTrace);
-            }
-            finally
-            {
-                decoObjects.Clear();
-                GC.Collect();
-            }
-
-            foreach (GameObject g in currencyElements)
-                Destroy(g);
-
-            currencyElements.Clear();
-
-            liveModels.Clear();
-            listModelMounts.Clear();
-
-            usageStandingControl.SetActive(false);
-
-            StoryLobbyManager.main.lobbyBackground.sprite = null;
-            loadComplete = false;
-            */
-
-
-            //UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackNewCompleteAchievement);
-            //NetworkLoader.main.RequestIfyouplayList()m;
         }
         
         /// <summary>
@@ -334,6 +275,8 @@ namespace PIERStory
                 });
                 
             }
+
+            Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", string.Empty);
         }
         
 

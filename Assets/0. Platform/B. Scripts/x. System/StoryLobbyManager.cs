@@ -54,12 +54,9 @@ namespace PIERStory
 
             ViewStoryLobby.OnDecorateSet?.Invoke();
             yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
+            yield return new WaitForSeconds(0.1f);
 
-            yield return null;
-            yield return null;
-            yield return null;
-
-            Signal.Send(LobbyConst.STREAM_IFYOU, "showStoryLobby", string.Empty);
+            Signal.Send(LobbyConst.STREAM_IFYOU, "storyLobbyLoadComplete", string.Empty);
         }
 
 

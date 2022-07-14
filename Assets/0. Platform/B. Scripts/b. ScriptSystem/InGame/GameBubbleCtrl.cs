@@ -1098,7 +1098,7 @@ namespace PIERStory
             if (string.IsNullOrEmpty(in_effect) || in_effect == CommonConst.NONE)
             {
                 // rtransform.localScale = Vector3.zero;
-                rtransform.localScale = BubbleManager.main.bubbleInitScale;
+                rtransform.localScale = rtransform.localScale * BubbleManager.main.bubbleInitFactor;
                 
                 this.gameObject.SetActive(true);
                 rtransform.pivot = centerPivot;

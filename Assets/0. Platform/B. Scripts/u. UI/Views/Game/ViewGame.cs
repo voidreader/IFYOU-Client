@@ -385,12 +385,16 @@ namespace PIERStory
                 
                 // 하프타입에서는 기본 높이를 200으로 조정 
                 if(BubbleManager.main.IsHalfBubbleSprite())
-                    boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 200);
+                    boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 240);
                 else 
                     boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 160);
             }
             else {
-                boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 120 + (countNewLine * 60));
+                
+                if(BubbleManager.main.IsHalfBubbleSprite())
+                    boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 200 + (countNewLine * 60));
+                else 
+                    boxImage.GetComponent<RectTransform>().sizeDelta = new Vector2(boxImage.GetComponent<RectTransform>().sizeDelta.x, 120 + (countNewLine * 60));
             }
 
             boxImage.gameObject.SetActive(true);

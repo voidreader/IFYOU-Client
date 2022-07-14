@@ -36,7 +36,8 @@ namespace PIERStory
         public int tagTextareaRight = 20;
         public int tagTextareaTop = -2;
         public int tagTextareaBottom = -2;
-        public Vector3 bubbleInitScale = Vector3.zero;
+        
+        public float bubbleInitFactor = 0;
 
         private void Awake()
         {
@@ -69,9 +70,9 @@ namespace PIERStory
             
             // 타입에 따라서 말풍선 초기 크기 지정 
             if(bubbleType == "half")
-                bubbleInitScale = Vector3.one * 0.85f;
+                bubbleInitFactor = 0.85f;
             else 
-                bubbleInitScale = Vector3.zero;
+                bubbleInitFactor = 0f;
         }
         
         /// <summary>

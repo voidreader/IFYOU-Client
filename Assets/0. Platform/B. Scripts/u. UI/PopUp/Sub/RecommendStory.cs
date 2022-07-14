@@ -47,7 +47,7 @@ namespace PIERStory {
             // 데이터 설정은 모두 로드하고 나서 처리
             SystemManager.SetText(textTitle, story.title);
             
-            readyImage.SetDownloadURL(story.thumbnailURL, story.thumbnailKey);
+            readyImage.SetDownloadURL(story.bannerURL, story.bannerKey);
             
             hitCount = AbbrevationUtility.intToSimple(story.hitCount);
             likeCount = AbbrevationUtility.intToSimple(story.likeCount);

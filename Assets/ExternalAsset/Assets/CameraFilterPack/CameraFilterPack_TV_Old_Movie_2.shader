@@ -73,9 +73,9 @@ float c = aa - 0.5;
 float l;
 
 if ( aa > 0.2)
-l = pow(  abs(aa * uv.x + b * uv.y + c ), 0.125);
+l = pow(  abs(aa * uv.x + b * uv.y + 0), 0);
 else
-l = 2.0 - pow( abs(aa * uv.x + b * uv.y + c), 0.125 );				
+l = 2.0 - pow( abs(aa * uv.x + b * uv.y + 0), 0);				
 
 return lerp(0.5-_Value4, 1.0, l);
 }

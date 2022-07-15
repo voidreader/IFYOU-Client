@@ -14,6 +14,8 @@ namespace PIERStory
         public ScriptSoundMount soundMount;
 
         [Header("BGM require")]
+        //public GameObject playsButton;
+        //public Sprite spritePlay;
         public GameObject playIcon;
         public TextMeshProUGUI soundNumText;
         public TextMeshProUGUI bgmTitle;
@@ -31,7 +33,7 @@ namespace PIERStory
 
         Color titleColor = new Color32(51, 51, 51, 255);
         Color timeColor = new Color32(153, 153, 153, 255);
-        Color playColor = new Color32(255, 0, 128, 255);
+        Color playColor = new Color32(239, 10, 106, 255);
 
         public void SetBGMElement(int index, JsonData __j)
         {
@@ -131,18 +133,18 @@ namespace PIERStory
 
         public void BGMPlayMode()
         {
-            playIcon.SetActive(true);
-            soundNumText.gameObject.SetActive(false);
+            //playIcon.SetActive(true);
+            soundNumText.color = playColor;
             bgmTitle.color = playColor;
             soundPlaytime.color = playColor;
         }
 
         public void BGMStopMode()
         {
-            playIcon.SetActive(false);
-            soundNumText.gameObject.SetActive(true);
-            bgmTitle.color = titleColor;
-            soundPlaytime.color = timeColor;
+            //playIcon.SetActive(false);
+            //soundNumText.color = titleColor;
+            //bgmTitle.color = titleColor;
+            //soundPlaytime.color = timeColor;
         }
 
         public void VoicePlayMode()

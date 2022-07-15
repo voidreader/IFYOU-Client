@@ -69,7 +69,7 @@ namespace PIERStory {
             accountBonus.SetActive(!UserManager.main.CheckAccountLink());
             
 
-            textVersion.text = SystemManager.GetLocalizedText("5053") + " " + Application.version;      // 버전
+            textVersion.text = SystemManager.GetLocalizedText("8006") + " " + Application.version;      // 버전
             textUID.text = string.Format("UID : {0}", UserManager.main.GetUserPinCode());               // UID
 
 

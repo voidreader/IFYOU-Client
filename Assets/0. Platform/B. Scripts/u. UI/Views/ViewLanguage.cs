@@ -35,7 +35,7 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5127"), string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("8007"), string.Empty);
 
             OnChangeLanguage = ChangeLanguageAlert;
 
@@ -66,7 +66,7 @@ namespace PIERStory
 
         public void OnClickChangeAppLanguage()
         {
-            SystemManager.ShowSystemPopupLocalize("6126", ChangeAppLanguage, null);
+            SystemManager.ShowSystemPopupLocalize("8034", ChangeAppLanguage, null);
         }
 
         void ChangeAppLanguage()

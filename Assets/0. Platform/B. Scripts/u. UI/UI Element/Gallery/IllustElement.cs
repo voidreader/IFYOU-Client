@@ -93,7 +93,7 @@ namespace PIERStory
                         if(appearEpisodeData.endingType == LobbyConst.COL_HIDDEN) 
                             episodeHintText.text = SystemManager.GetLocalizedText("5087");
                         else 
-                            episodeHintText.text = SystemManager.GetLocalizedText("5088");
+                            episodeHintText.text = SystemManager.GetLocalizedText("8004");
                     }
                     else
                     {

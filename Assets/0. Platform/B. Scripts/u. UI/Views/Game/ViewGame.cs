@@ -157,7 +157,7 @@ namespace PIERStory
                     ) {
                         
                     // 
-                    SystemManager.ShowSystemPopupLocalize("6037", GameManager.main.QuitGame, null, true);
+                    SystemManager.ShowSystemPopupLocalize("8038", GameManager.main.QuitGame, null, true);
                         
                 }
             }
@@ -965,7 +965,7 @@ namespace PIERStory
 
             Sequence alert = DOTween.Sequence();
             alert.Append(messengerOverlay.DOFade(1f, animTime)).Join(phoneImage.GetComponent<RectTransform>().DOAnchorPosY(0f, animTime).SetEase(Ease.OutBack));
-            alert.Join(messengerOverlay.rectTransform.DOAnchorPosY(100f, animTime).SetDelay(animTime * 0.25f));
+            alert.Join(messengerOverlay.rectTransform.DOAnchorPosY(0f, animTime).SetDelay(animTime * 0.25f));
             alert.Join(messengerIcon.DOFade(1f, animTime));
             alert.Join(messageSender.DOFade(1f, animTime));
             alert.Join(messageAlert.DOFade(1f, animTime));

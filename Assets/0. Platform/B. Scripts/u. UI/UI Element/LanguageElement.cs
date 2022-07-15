@@ -13,7 +13,7 @@ namespace PIERStory
         public TextMeshProUGUI languageText;
         public TMP_FontAsset fontAsset;
 
-        Color toggleOnColor = new Color32(243, 140, 161, 255);
+        Color toggleOnColor = new Color32(239, 10, 106, 255);
         Color toggleOffColor = new Color32(153, 153, 153, 255);
 
 
@@ -42,7 +42,7 @@ namespace PIERStory
             SystemManager.main.currentAppLanguageCode = elementLang.ToUpper();
 
             string alertText = SystemManager.GetLocalizedText("6124");
-            string buttonText = SystemManager.GetLocalizedText("6125");
+            string buttonText = SystemManager.GetLocalizedText("8008");
 
             ViewLanguage.OnChangeLanguage?.Invoke(alertText, buttonText, fontAsset, nowLang);
         }

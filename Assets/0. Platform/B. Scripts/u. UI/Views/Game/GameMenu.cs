@@ -22,8 +22,18 @@ namespace PIERStory
         public Image skipButtonIcon;
         public Sprite ableSkip;    // 스킵버튼 사용 가능 sprite
         public Sprite disableSkip;  // 스킵버튼 사용 불가능 sprite
+        public Image skipBg;
+        public Sprite skipBgChans;
+
 
         [Header("AutoPlay")]
+        public Image autoText;
+        public Image autoBg;
+        public Sprite autoBgTrue;
+        public Sprite autoBgFalse;
+        public Sprite textTrue;
+        public Sprite textFalse;
+
         public Image playButton;
         public Image playToggle;
         public UIAnimator autoPlayToggleAnimator;
@@ -32,7 +42,6 @@ namespace PIERStory
         public Sprite spritePlayInactive;
         public Sprite spriteToggleOn;
         public Sprite spriteToggleOff;
-
 
         [Space(10)]
         public TextMeshProUGUI textTitle; // 타이틀 textMesh
@@ -43,7 +52,7 @@ namespace PIERStory
         }
 
         void Update() {
-            if(Input.GetKeyDown(KeyCode.S)) {
+            if (Input.GetKeyDown(KeyCode.S)) {
                 SkipScene();
             }
         }
@@ -52,19 +61,32 @@ namespace PIERStory
         public override void OnStartView()
         {
             base.OnStartView();
-            
+
+            autoBg.sprite = autoBgFalse;
+            autoText.sprite = textFalse;
+            StopAutoPlay();
+
+            //skipButtonIcon.rectTransform.sizeDelta = new Vector2(40, 40);
+
             // 타이틀 처리 타입, 순번, 타이틀 조합
-            textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
+            //textTitle.text = GameManager.main.currentEpisodeData.combinedEpisodeTitle;
+
+            //순서없이 타이틀만 나오도록 하자
+            textTitle.text = GameManager.main.currentEpisodeData.episodeTitle;
 
             // 화면에 상단바가 표출중인 경우 아래로 80만큼 내린다
             if (ViewGame.main.commonTop.isVisible || ViewGame.main.commonTop.isShowing)
                 gameMenuTop.anchoredPosition = new Vector2(0, -80f);
             else
                 gameMenuTop.anchoredPosition = Vector2.zero;
+
         }
         
         public override void OnHideView() {
             base.OnHideView();
+            autoBg.sprite = autoBgFalse;
+            autoText.sprite = textFalse;
+            StopAutoPlay();
         }
         
 
@@ -75,11 +97,14 @@ namespace PIERStory
         public void ChangeSkipIcon(bool skipable)
         {
             if (skipable)
+            {
                 skipButtonIcon.sprite = ableSkip;
+            }
             else
+            {
+                skipBg.sprite = skipBgChans;
                 skipButtonIcon.sprite = disableSkip;
-
-            skipButtonIcon.SetNativeSize();
+            }
         }
 
         #region OnClick Event
@@ -89,6 +114,11 @@ namespace PIERStory
         /// </summary>
         public void OnClickOpenGameOption()
         {
+            //진입할때는 오토모드를 꺼져야 해!
+            autoBg.sprite = autoBgFalse;
+            autoText.sprite = textFalse;
+            StopAutoPlay();
+
             gameOptionPopup = PopupManager.main.GetPopup(GameConst.POPUP_GAME_OPTION);
 
             if(gameOptionPopup == null)
@@ -156,19 +186,26 @@ namespace PIERStory
         public void ExitGameByMenu()
         {
             // QuitGame은 강제종료고 EndGame은 정상종료다.
-            SystemManager.ShowSystemPopupLocalize("6037", GameManager.main.QuitGame, null, false);
+            SystemManager.ShowSystemPopupLocalize("8038", GameManager.main.QuitGame, null, false);
         }
 
         public void OnClickAutoPlay()
         {
-            if(GameManager.main.isAutoPlay)
+            if (GameManager.main.isAutoPlay)
+            {
+                autoBg.sprite = autoBgFalse;
+                autoText.sprite = textFalse;
                 StopAutoPlay();
+            }
             else
             {
+                autoBg.sprite = autoBgTrue;
+                autoText.sprite = textTrue;
                 GameManager.main.isAutoPlay = true;
-                playButton.sprite = spritePlay;
-                playToggle.sprite = spriteToggleOn;
-                autoPlayToggleAnimator.Play();
+
+                //playButton.sprite = spritePlay;
+                //playToggle.sprite = spriteToggleOn;
+                //autoPlayToggleAnimator.Play();
             }
         }
 
@@ -178,7 +215,7 @@ namespace PIERStory
         /// </summary>
         public void OnClickReplay()
         {
-            SystemManager.ShowSystemPopupLocalize("6039", ProceedStartOver, null);
+            SystemManager.ShowSystemPopupLocalize("8039", ProceedStartOver, null);
         }
         
         

@@ -44,8 +44,8 @@ namespace PIERStory {
         }
 
         #region const & readonly
-        static readonly Vector2 originSizeDelta = new Vector2(550, 90); // 기본 크기 
-        static readonly Vector2 focusSizeDelta = new Vector2(590, 96); // 포커스 크기 
+        static readonly Vector2 originSizeDelta = new Vector2(550, 122); // 기본 크기 
+        static readonly Vector2 focusSizeDelta = new Vector2(590, 131); // 포커스 크기 
         const int originPosY = -260; // 기본 첫번재 선택지 높이 250
         const int offsetPosY = 120; // offset  -120
         #endregion
@@ -401,7 +401,7 @@ namespace PIERStory {
                     imageAura.DOFade(1, 0.3f); // 아우라 알파값!
 
                     imageBar.DOKill();
-                    imageBar.DOFillAmount(1, 0.6f).SetEase(Ease.Linear).OnComplete(() => {
+                    imageBar.DOFillAmount(1, 1.5f).SetEase(Ease.Linear).OnComplete(() => {
                         SetState(SelectionState.Select);
                     });
 

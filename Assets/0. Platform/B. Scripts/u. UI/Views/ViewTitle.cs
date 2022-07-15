@@ -17,7 +17,11 @@ using UnityEngine.ResourceManagement.ResourceLocations;
 namespace PIERStory {
     public class ViewTitle : CommonView
     {
-        
+
+        public GameObject imgKO;
+        public GameObject imgJP;
+        public GameObject imgEN;
+
         public static Action<string> ActionTitleLoading = null;
         
         public RawImage mainImage; // 다운로드받아서 보여주는 플랫폼 로딩 화면 
@@ -50,12 +54,63 @@ namespace PIERStory {
             
             ActionTitleLoading = UpdateTitleLoading;
             
-            
             mainImage.gameObject.SetActive(false);
             baseScreen.SetActive(true);
-            
+
+            string currentAppLang = string.Empty;
+
+            if (!ES3.KeyExists(SystemConst.KEY_LANG))
+            { 
+
+                Debug.Log("GetPlatformLoadingText : " + Application.systemLanguage);
+
+                switch (Application.systemLanguage)
+                {
+                    case SystemLanguage.Korean:
+                        currentAppLang = "KO";
+                        break;
+
+                    case SystemLanguage.Japanese:
+                        currentAppLang = "JA";
+                        break;
+
+                    default:
+                        currentAppLang = "EN";
+                        break;
+                }
+
+
+            }
+            else
+            { 
+                currentAppLang = ES3.Load<string>(SystemConst.KEY_LANG);
+                currentAppLang = currentAppLang.ToUpper();
+            }
+
+            if (currentAppLang == "KO")
+            {
+                imgKO.SetActive(true);
+                imgJP.SetActive(false);
+                imgEN.SetActive(false);
+
+            }
+            else if (currentAppLang == "JA")
+            {
+                imgKO.SetActive(false);
+                imgJP.SetActive(true);
+                imgEN.SetActive(false);
+
+            }
+            else if (currentAppLang == "EN")
+            {
+                imgKO.SetActive(false);
+                imgJP.SetActive(false);
+                imgEN.SetActive(true);
+
+            }
         }
-        
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -349,7 +404,7 @@ namespace PIERStory {
                 if(currentAppLang == "KO") 
                     return "플랫폼 정보를 불러오고 있습니다.";
                 else if(currentAppLang == "JA") 
-                    return "プラットフォーム情報の要求。";
+                    return "プラットフォーム情報を読み込んでいます。";
                 else
                     return "Requesting platform information.";
                 

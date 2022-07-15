@@ -1,14 +1,18 @@
 ﻿using UnityEngine.UI;
-
+using UnityEngine;
 using Doozy.Runtime.Signals;
 
 namespace PIERStory
 {
     public class ViewAbility : CommonView
     {
+
         public CharacterAbilityElement[] characterAbilityElements;
         public ScrollRect scroll;
 
+        public GameObject hide1;
+        public GameObject hide2; 
+        public GameObject hide3;
 
         public override void OnStartView()
         {
@@ -18,8 +22,11 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("5162"), string.Empty);
+            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, SystemManager.GetLocalizedText("8005"), string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
+            hide1.SetActive(true);
+            hide2.SetActive(true);
+            hide3.SetActive(true);
 
             scroll.horizontalNormalizedPosition = 0f;
 
@@ -54,6 +61,9 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
+            hide1.SetActive(false);
+            hide2.SetActive(false);
+            hide3.SetActive(false);
         }
     }
 }

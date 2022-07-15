@@ -831,6 +831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 218ca61f8ad9b6f408492be4643bd7b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textPlay: {fileID: 0}
   currentStoryData:
     projectID: 
     title: 
@@ -1182,7 +1183,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3044462356675318978
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1241,7 +1242,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2870057233964650557
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1311,6 +1312,10 @@ PrefabInstance:
     - target: {fileID: 194563895817221097, guid: cf01a1a421aa6c84a97c3a10be719c73, type: 3}
       propertyPath: m_Name
       value: btnPremiumPass
+      objectReference: {fileID: 0}
+    - target: {fileID: 194563895817221097, guid: cf01a1a421aa6c84a97c3a10be719c73, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2499585677478507759, guid: cf01a1a421aa6c84a97c3a10be719c73, type: 3}
       propertyPath: Behaviours.Behaviours.Array.size
@@ -1788,6 +1793,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PremiumPassBadge
       objectReference: {fileID: 0}
+    - target: {fileID: 414562129206578718, guid: 4c4529452432fef4fac059d0014fde3a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3895570541293416964, guid: 4c4529452432fef4fac059d0014fde3a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2037,6 +2046,14 @@ PrefabInstance:
     - target: {fileID: 969660981237968837, guid: ad4ad0be1fbd3e143904e87a39bb7b17, type: 3}
       propertyPath: m_Name
       value: "\uC5F0\uC7AC\uC815\uBCF4"
+      objectReference: {fileID: 0}
+    - target: {fileID: 969660981237968837, guid: ad4ad0be1fbd3e143904e87a39bb7b17, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3505331764614406256, guid: ad4ad0be1fbd3e143904e87a39bb7b17, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7019647420368271846, guid: ad4ad0be1fbd3e143904e87a39bb7b17, type: 3}
       propertyPath: m_Pivot.x

@@ -120,11 +120,12 @@ namespace PIERStory {
                 
                 // 로비에서 사용할때랑 에피소드 종료에서 사용할때랑 다름 
                 if (LobbyManager.main != null) {
-                    groupReset.SetActive(true);
+                    groupPlay.SetActive(true);
+                    textPlay.text = SystemManager.GetLocalizedText("8033");
                 }
                 else {
                     groupPlay.SetActive(true);
-                    textPlay.text = SystemManager.GetLocalizedText("5190");
+                    textPlay.text = SystemManager.GetLocalizedText("8033");
                 }
                 
                 
@@ -138,7 +139,7 @@ namespace PIERStory {
                 
                 groupPlay.SetActive(true);
                 
-                textPlay.text = isResumePlay?SystemManager.GetLocalizedText("5005"):SystemManager.GetLocalizedText("8000");
+                textPlay.text = isResumePlay?SystemManager.GetLocalizedText("8032"):SystemManager.GetLocalizedText("8000");
                 
                 icon.sprite = spriteActiveIcon;
                 backgroundProgressor.sprite = spriteActiveBackgroundProgressor;
@@ -150,7 +151,7 @@ namespace PIERStory {
                 
                 groupPlay.SetActive(true);
                 
-                textPlay.text = isResumePlay?SystemManager.GetLocalizedText("5005"):SystemManager.GetLocalizedText("8000");
+                textPlay.text = isResumePlay?SystemManager.GetLocalizedText("8032") :SystemManager.GetLocalizedText("8000");
                 
                 icon.sprite = spritePremuimIcon;
                 backgroundProgressor.sprite = spritePremiumBackgroundProgressor;

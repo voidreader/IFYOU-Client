@@ -392,8 +392,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uB0B4\uB9BC\uC758 \uC8FD\uC74C \uADF8\uB9AC\uACE0..."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
-  m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b7f003494ccc1174091dc82cb5cde3e5, type: 2}
+  m_sharedMaterial: {fileID: 6560292891585628901, guid: b7f003494ccc1174091dc82cb5cde3e5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -417,7 +417,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
+  m_fontSize: 23.6
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -603,6 +603,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe4fefeab41191b47b06d31386ec7a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lockBg: {fileID: 21300000, guid: be67b0e4961cc4543b2387c66b1d5d35, type: 3}
+  currentBg: {fileID: 21300000, guid: 5bec304e004a856498024922fb9affc4, type: 3}
   currentEpisode:
     episodeID: 
     episodeNO: 
@@ -656,7 +658,7 @@ MonoBehaviour:
   illustProgressor: {fileID: 6589704076130471872}
   sceneProgressor: {fileID: 4726949230863464525}
   spriteReset: {fileID: 21300000, guid: 15d8c9d7c49b11e4ea6b883228af23c2, type: 3}
-  spriteCurrent: {fileID: 21300000, guid: 38e07428028e1d749b8306b60a3c7726, type: 3}
+  spriteCurrent: {fileID: 21300000, guid: 5341f33d6c111d84c9ecbc7c356abf7c, type: 3}
   spritebg: {fileID: 21300000, guid: 617d8ab6e4d62c543a73029316031af6, type: 3}
   spriteCommingSoon: {fileID: 21300000, guid: 882eeb31f2b80e84da47ca033035bb53, type: 3}
   spriteCurrentOutline: {fileID: 21300000, guid: 1e368073b2ba55040a1c9977c8fd7b87, type: 3}
@@ -666,11 +668,13 @@ MonoBehaviour:
   colorCurrentTitle: {r: 0.59607846, g: 0.59607846, b: 0.59607846, a: 1}
   colorGeneralTextColor: {r: 0.59607846, g: 0.59607846, b: 0.59607846, a: 1}
   colorInactiveTextColor: {r: 0.59607846, g: 0.59607846, b: 0.59607846, a: 1}
+  titleNum: {r: 1, g: 1, b: 1, a: 1}
+  titleColor: {r: 1, g: 1, b: 1, a: 1}
   colorPastOutline: {r: 0.76862746, g: 0.76862746, b: 0.76862746, a: 1}
   normalEpisodeNumberPos: {x: 35, y: 25}
   normalEpisodeTitlePos: {x: 35, y: -8}
-  endingEpisodeNumberPos: {x: -6, y: 25}
-  endingEpisodeTitlePos: {x: -6, y: -8}
+  endingEpisodeNumberPos: {x: 35, y: 25}
+  endingEpisodeTitlePos: {x: 35, y: -8}
   sizeNormalText: {x: 255, y: 30}
   sizeEndingText: {x: 240, y: 30}
   sizeNormalBody: {x: 500, y: 130}
@@ -1422,7 +1426,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -152, y: 8}
+  m_AnchoredPosition: {x: -152, y: 6}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &643878378212375278
@@ -2012,7 +2016,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &993840724760007346
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2048,7 +2052,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6257372669965758191}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -2802,8 +2806,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "1\uD654"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
-  m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b7f003494ccc1174091dc82cb5cde3e5, type: 2}
+  m_sharedMaterial: {fileID: 6560292891585628901, guid: b7f003494ccc1174091dc82cb5cde3e5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -4,6 +4,7 @@ using TMPro;
 using LitJson;
 using Doozy.Runtime.Signals;
 using System.Collections;
+using DG.Tweening;
 
 namespace PIERStory
 {
@@ -12,6 +13,9 @@ namespace PIERStory
         public ImageRequireDownload soundThumbnail;
 
         public TextMeshProUGUI voiceInfo;
+
+        public GameObject thumbnail;
+        public GameObject chi;
 
         string image_url = string.Empty;
         string image_key = string.Empty;
@@ -22,6 +26,12 @@ namespace PIERStory
 
         const string BGM_BANNER = "bgmBanner";
         const string SHOW_SOUND_DETAIL = "showSoundDetail";
+
+        public void Start()
+        {
+            thumbnail.transform.DORotate(new Vector3(0, 0, 360), 5.0f, RotateMode.FastBeyond360).SetEase(Ease.Linear).SetLoops(-1);
+            chi.transform.DORotate(new Vector3(0, 0, -5), 2.0f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
+        }
 
         public void SetBGMListElement()
         {

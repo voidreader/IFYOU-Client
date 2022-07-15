@@ -1,0 +1,265 @@
+{
+	"Version": 3,
+	"Parameters": [
+		{
+			"Id": "ParamEyeOpen",
+			"GroupId": "ParamGroup",
+			"Name": "눈 깜빡임"
+		},
+		{
+			"Id": "ParamEyeBallX",
+			"GroupId": "ParamGroup",
+			"Name": "눈 X"
+		},
+		{
+			"Id": "ParamEyeBallY",
+			"GroupId": "ParamGroup",
+			"Name": "눈 Y"
+		},
+		{
+			"Id": "ParamBrowY",
+			"GroupId": "ParamGroup",
+			"Name": "눈썹 상하"
+		},
+		{
+			"Id": "ParamBrowAngle",
+			"GroupId": "ParamGroup",
+			"Name": "눈썹 각도"
+		},
+		{
+			"Id": "ParamHairFrontRotate",
+			"GroupId": "ParamGroup2",
+			"Name": "머리 흔들림 앞"
+		},
+		{
+			"Id": "ParamHairFrontForm",
+			"GroupId": "ParamGroup2",
+			"Name": "머리 변형 앞"
+		},
+		{
+			"Id": "ParamHairBackRotate",
+			"GroupId": "ParamGroup2",
+			"Name": "머리 흔들림 뒤"
+		},
+		{
+			"Id": "ParamHairBackForm",
+			"GroupId": "ParamGroup2",
+			"Name": "머리 변형 뒤"
+		},
+		{
+			"Id": "ParamAngleX",
+			"GroupId": "ParamGroup3",
+			"Name": "얼굴 X"
+		},
+		{
+			"Id": "ParamAngleY",
+			"GroupId": "ParamGroup3",
+			"Name": "얼굴 Y"
+		},
+		{
+			"Id": "ParamAngleZ",
+			"GroupId": "ParamGroup3",
+			"Name": "얼굴 Z"
+		},
+		{
+			"Id": "ParamSkirtRotate",
+			"GroupId": "ParamGroup4",
+			"Name": "치마 회전"
+		},
+		{
+			"Id": "ParamSkirtForm",
+			"GroupId": "ParamGroup4",
+			"Name": "치마 변형"
+		},
+		{
+			"Id": "ParamChestY",
+			"GroupId": "ParamGroup5",
+			"Name": "가슴 상하"
+		},
+		{
+			"Id": "ParamChestForm",
+			"GroupId": "ParamGroup5",
+			"Name": "가슴 변형"
+		},
+		{
+			"Id": "ParamArmRotate",
+			"GroupId": "ParamGroup6",
+			"Name": "팔 회전"
+		},
+		{
+			"Id": "ParamBodyAngleX",
+			"GroupId": "ParamGroup7",
+			"Name": "몸의 회전 X"
+		},
+		{
+			"Id": "ParamBodyAngleY",
+			"GroupId": "ParamGroup7",
+			"Name": "몸의 회전Y"
+		},
+		{
+			"Id": "ParamBodyAngleZ",
+			"GroupId": "ParamGroup7",
+			"Name": "몸의 회전 Z"
+		},
+		{
+			"Id": "ParamBGRotate",
+			"GroupId": "ParamGroup8",
+			"Name": "BG 회전"
+		},
+		{
+			"Id": "ParamBGForm",
+			"GroupId": "ParamGroup8",
+			"Name": "BG 변형"
+		}
+	],
+	"ParameterGroups": [
+		{
+			"Id": "ParamGroup",
+			"GroupId": "",
+			"Name": "눈"
+		},
+		{
+			"Id": "ParamGroup2",
+			"GroupId": "",
+			"Name": "머리카락"
+		},
+		{
+			"Id": "ParamGroup3",
+			"GroupId": "",
+			"Name": "얼굴"
+		},
+		{
+			"Id": "ParamGroup4",
+			"GroupId": "",
+			"Name": "치마"
+		},
+		{
+			"Id": "ParamGroup5",
+			"GroupId": "",
+			"Name": "가슴"
+		},
+		{
+			"Id": "ParamGroup6",
+			"GroupId": "",
+			"Name": "팔"
+		},
+		{
+			"Id": "ParamGroup7",
+			"GroupId": "",
+			"Name": "몸"
+		},
+		{
+			"Id": "ParamGroup8",
+			"GroupId": "",
+			"Name": "BG"
+		}
+	],
+	"Parts": [
+		{
+			"Id": "Part",
+			"Name": "인물"
+		},
+		{
+			"Id": "Part12",
+			"Name": "BG"
+		},
+		{
+			"Id": "HEAD",
+			"Name": "HEAD"
+		},
+		{
+			"Id": "BODY",
+			"Name": "BODY"
+		},
+		{
+			"Id": "Part13",
+			"Name": "머리카락"
+		},
+		{
+			"Id": "Part5",
+			"Name": "이목구비"
+		},
+		{
+			"Id": "Part9",
+			"Name": "허리끈"
+		},
+		{
+			"Id": "Part14",
+			"Name": "몸통"
+		},
+		{
+			"Id": "Part15",
+			"Name": "팔_R"
+		},
+		{
+			"Id": "Part10",
+			"Name": "팔_L"
+		},
+		{
+			"Id": "Part11",
+			"Name": "치마"
+		},
+		{
+			"Id": "Part3",
+			"Name": "앞머리"
+		},
+		{
+			"Id": "Part8",
+			"Name": "뒷머리"
+		},
+		{
+			"Id": "Part6",
+			"Name": "눈_R"
+		},
+		{
+			"Id": "Part7",
+			"Name": "눈_L"
+		},
+		{
+			"Id": "Part2",
+			"Name": "손_R"
+		},
+		{
+			"Id": "Part4",
+			"Name": "머리끈"
+		}
+	],
+	"CombinedParameters": [
+		[
+			"ParamEyeBallX",
+			"ParamEyeBallY"
+		],
+		[
+			"ParamBrowY",
+			"ParamBrowAngle"
+		],
+		[
+			"ParamHairFrontRotate",
+			"ParamHairFrontForm"
+		],
+		[
+			"ParamHairBackRotate",
+			"ParamHairBackForm"
+		],
+		[
+			"ParamAngleX",
+			"ParamAngleY"
+		],
+		[
+			"ParamSkirtRotate",
+			"ParamSkirtForm"
+		],
+		[
+			"ParamChestY",
+			"ParamChestForm"
+		],
+		[
+			"ParamBodyAngleX",
+			"ParamBodyAngleY"
+		],
+		[
+			"ParamBGRotate",
+			"ParamBGForm"
+		]
+	]
+}

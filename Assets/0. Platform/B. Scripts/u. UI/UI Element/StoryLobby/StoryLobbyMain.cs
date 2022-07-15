@@ -14,7 +14,7 @@ namespace PIERStory {
 
     public class StoryLobbyMain : MonoBehaviour
     {
-        
+        public TextMeshProUGUI textPlay;
         public static Action OnCallbackReset = null; // 리셋 콜백
         public static Action CallbackReduceWaitingTimeSuccess = null; // 시간감소 콜백 (성공)
         public static Action CallbackReduceWaitingTimeFail = null; // 시간감소 콜백(실패)
@@ -191,7 +191,7 @@ namespace PIERStory {
             ViewStoryLobby.OnInActiveInteractable?.Invoke(false);
         }
 
-        
+
         public void MainContainerHide()
         {
             /*
@@ -203,13 +203,10 @@ namespace PIERStory {
                 Destroy(obj);
             }
             */
-            
-            
+
             for (int i = 0; i < characterStatusContent.childCount; i++)
                 Destroy(characterStatusContent.GetChild(i).gameObject);
-                
-            
-            
+
         }
 
         
@@ -710,31 +707,21 @@ namespace PIERStory {
              
             // * 여기도 파이널 여부 추가 체크 
             if(isFinal) {
-                imageEpisodeTitle.sprite = spriteActiveEpisodeTitleBG;    
-                textEpisodeTitle.color = Color.black;
-                string endingText = string.Empty;
-                               
-                if(currentEpisodeData.endingType == "hidden") { // 히든
-                    imageEpisodeTitle.color = colorEpisodeTitleHidden;
-                    textEpisodeTitle.color = Color.white;
-                    // endingText = "Hidden Ending";
-                }
-                else if(currentEpisodeData.endingType == "final") { // 해피
-                    imageEpisodeTitle.color = colorEpisodeTitleHappy;
-                    // endingText = "Final Ending";
-                }
-                else if(currentEpisodeData.endingType == "normal") { // 노멀 
-                    imageEpisodeTitle.color = colorEpisodeTitleNormal;
-                    // endingText = "Normal Ending";
-                }
-                else if(currentEpisodeData.endingType == "sad") { // 새드 
-                    imageEpisodeTitle.color = colorEpisodeTitleSad;
-                    // endingText = "Sad Ending";
-                }
-                
-                // textEpisodeTitle.text = endingText;
+                // 타이틀 설정 
                 SetEpisodeTitleText(currentEpisodeData.storyLobbyTitle);
-                
+                imageEpisodeTitle.color = Color.white;
+
+                if (currentPlayState == StatePlayButton.inactive)
+                {
+                    imageEpisodeTitle.sprite = spriteInactiveEpisodeTitleBG;
+                    imageEpisodeTitle.color = Color.white; // 색상 초기화 
+                }
+                else
+                {
+                    imageEpisodeTitle.sprite = spriteActiveEpisodeTitleBG;
+                    textEpisodeTitle.color = Color.black;
+                }
+
             }
             else { // 엔딩 도달하지 않았을 경우 일반 처리 
                 // 타이틀 설정 
@@ -890,6 +877,8 @@ namespace PIERStory {
                 return;
             }
             
+
+            /*
             // * 엔딩까지 모두 보고 마지막에 도달한 경우는 Reset을 띄운다.
             if(storyPlayButton.stateButton == StatePlayButton.End) {
                 
@@ -912,7 +901,7 @@ namespace PIERStory {
                 return;
             } // ? 엔딩 도달한 경우 처리 끝
             
-            
+            */
             
             
             // 에피소드 진입 처리 

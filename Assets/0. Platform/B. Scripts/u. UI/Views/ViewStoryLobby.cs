@@ -471,6 +471,7 @@ namespace PIERStory
             if (totalDecoLoad == 0)
             {
                 loadComplete = true;
+                StartCoroutine(DelayLiveModelAnimation());
                 return;
             }
 

@@ -232,7 +232,6 @@ namespace PIERStory {
                 case 4:     // 프로필
                     break;
                 case 5:     // 더보기
-                    OnAddMore();
                     break;
             }
 
@@ -320,6 +319,7 @@ namespace PIERStory {
         }
 
         #endregion
+        
 
         #region 상점
 
@@ -340,6 +340,7 @@ namespace PIERStory {
         }
         
         #endregion
+
 
         #region 프로필
 
@@ -416,6 +417,8 @@ namespace PIERStory {
 
         void ReturnLobby()
         {
+            mainToggle.SetIsOn(true, true);
+            /*
             profileToggle.isOn = false;
             profileNavigation.OffToggle();
             mainToggle.isOn = true;
@@ -423,38 +426,10 @@ namespace PIERStory {
 
             if (currentShowContainer != lobbyContainer)
                 currentShowContainer.Hide();
+            */
         }
 
         #endregion
          
-
-        #region 더보기
-
-        void OnAddMore()
-        {
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
-            // Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME, "더보기", string.Empty);
-            Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
-        }
-
-
-
-
-        /// <summary>
-        /// pin code 복사
-        /// </summary>
-        public void OnClickCopyUID()
-        {
-            // UniClipboard.SetText(userPincode.text);
-            // SystemManager.ShowSimpleAlertLocalize("6017");
-        }
-
-        
-        #endregion
-
-
     }
 }

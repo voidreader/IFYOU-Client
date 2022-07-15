@@ -69,7 +69,6 @@ namespace PIERStory {
             else if(promotionType == "project") { // 작품일때는 대상 프로젝트 찾기. 
                 storyData = StoryManager.main.FindProject(targetID);
             }
-
         }
         
         public void OnClickPromotion() {
@@ -134,7 +133,7 @@ namespace PIERStory {
                 }
                 else if(targetID == "ifyou") {
                     // 이프유 페이지 
-                    // 음... 
+                    ViewMain.OnShowIfyouplay?.Invoke();
                 }
             }
         }

@@ -19,8 +19,8 @@ namespace PIERStory {
         public static Action OnRefreshShopNewSign = null;
         public static Action OnReturnLobby = null;
         
-        public static Action OnShowLibrary = null; 
-        
+        public static Action OnShowLibrary = null;
+        public static Action OnShowIfyouplay = null;
         
         
         [Header("로비")]
@@ -38,6 +38,7 @@ namespace PIERStory {
 
         [Header("이프유플레이")]
         public MainIfyouplay ifyouplay;
+        public UIToggle navIfyouplay;
         public GameObject ifyouplayNewSign;
         UIContainer ifyouplayContainer;
 
@@ -56,9 +57,6 @@ namespace PIERStory {
 
         UIContainer currentShowContainer;
         
-        
-        
-
 
         private void Awake()
         {
@@ -78,6 +76,7 @@ namespace PIERStory {
             OnReturnLobby = ReturnLobby;
             
             OnShowLibrary = ForceLibraryTab;
+            OnShowIfyouplay = ForceIfyouplayTab;
         }
 
         void Update() {
@@ -315,6 +314,10 @@ namespace PIERStory {
             ifyouplayNewSign.SetActive(UserManager.main.CheckIfyouplayAction());
         }
 
+        void ForceIfyouplayTab()
+        {
+            navIfyouplay.SetIsOn(true, true);
+        }
 
         #endregion
 

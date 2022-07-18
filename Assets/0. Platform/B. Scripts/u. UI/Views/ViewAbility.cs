@@ -12,6 +12,10 @@ namespace PIERStory
 
         public override void OnStartView()
         {
+            
+            // 진입 파이어베이스
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("lobby_character", "project_id", StoryManager.main.CurrentProjectID); 
+            
             base.OnStartView();
 
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, false, string.Empty);

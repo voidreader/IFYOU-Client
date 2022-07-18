@@ -106,6 +106,8 @@ namespace PIERStory {
                     PopupBase p = PopupManager.main.GetPopup("Notice");
                     PopupManager.main.ShowPopup(p, true);
                     SystemManager.noticePopupExcuted = true; // true 로 설정. 이번 실행헤서는 또 뜨지 않게. 
+                    
+                    Firebase.Analytics.FirebaseAnalytics.LogEvent(CommonConst.FIREBASE_NOTICE);
                 }
             }
 
@@ -285,6 +287,8 @@ namespace PIERStory {
             MainShop.isMainNavigationShop = false;
             
             library.InitLibrary();
+            
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("library_open");
         }
         
         void ForceLibraryTab() {
@@ -306,6 +310,8 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
 
             MainShop.isMainNavigationShop = false;
+            
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("ifyouplay_open");
         }
 
         void EnableIfyouplayNewSign()
@@ -337,6 +343,8 @@ namespace PIERStory {
             // MainShop.OnRefreshTopShop?.Invoke();
             
             MainShop.isMainNavigationShop = true;
+            
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("store_open_bottom");
         }
         
         #endregion
@@ -359,6 +367,8 @@ namespace PIERStory {
             currentShowContainer = profileContainer;
 
             MainShop.isMainNavigationShop = false;
+            
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("tier_open");
         }
 
         void EnableNewAchievementSign()

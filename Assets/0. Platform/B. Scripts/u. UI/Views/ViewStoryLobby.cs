@@ -289,6 +289,10 @@ namespace PIERStory
             sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
 
             NetworkLoader.main.SendPost(CallbackDecoMode, sending, true);
+            
+            // 진입 파이어베이스
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("lobby_beauty", "project_id", StoryManager.main.CurrentProjectID); 
+            
         }
 
         void CallbackDecoMode(HTTPRequest req, HTTPResponse res)
@@ -479,6 +483,8 @@ namespace PIERStory
                 switch (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE))
                 {
                     case LobbyConst.NODE_WALLPAPER:     // 배경
+                        Debug.Log("Wallpaper Create #####");
+                    
                         DestroyPreviousBackground();
                         bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, storyProfile[i], BGLoadComplete);
                         bgCurrency = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);
@@ -711,6 +717,8 @@ namespace PIERStory
 
         void EscapeDecoMode()
         {
+            Debug.Log("#### EscapeDecoMode ###");
+            
             // 꾸미기 모드(편집 모드) 중인데 back버튼 입력을 받으면
             if (!mainContainer.isActiveAndEnabled && decoContainer.isActiveAndEnabled)
             {
@@ -963,6 +971,8 @@ namespace PIERStory
                 totalDecoLoad--;
 
             CheckLoadComplete();
+            
+            Debug.Log("BGLoadComplete #####");
         }
 
 

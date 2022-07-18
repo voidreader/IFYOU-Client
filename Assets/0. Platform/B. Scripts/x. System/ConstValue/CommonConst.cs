@@ -106,5 +106,12 @@ namespace PIERStory
         public const string SCENE_STORY_LOBBY = "StoryLobby";
         public const string SCENE_GAME = "Game";
         public const string SCENE_INTERMISSION = "Intermission";
+        
+        
+        
+        
+        // Firebase Event
+        public const string FIREBASE_NOTICE = "notice_popup_open";
+        
     }
 }

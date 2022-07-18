@@ -48,8 +48,14 @@ namespace PIERStory
         // Use this for initialization
         IEnumerator Start()
         {
+            Debug.Log(">> StoryManager Start ");
+            
             yield return null;
             yield return new WaitUntil(() => ViewStoryLoading.assetLoadComplete);
+            
+            yield return new WaitForSeconds(0.5f);
+            
+            Debug.Log(">> StoryManager assetLoadComplete Done");
             
             if (BubbleManager.main != null)
                 BubbleManager.main.ShowFakeBubbles(false);

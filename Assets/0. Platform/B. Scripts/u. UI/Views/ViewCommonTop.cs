@@ -392,6 +392,8 @@ namespace PIERStory {
                 return;
             
             Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("main_coinshop");
+            
         }
         
         public void OnClickShop() {
@@ -403,6 +405,7 @@ namespace PIERStory {
                 return;            
             
             Signal.Send(LobbyConst.STREAM_COMMON, "Shop", string.Empty);
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("main_starshop");
         }
 
 

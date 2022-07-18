@@ -8,6 +8,7 @@ namespace PIERStory
     public class StoryLobbyManager : MonoBehaviour
     {
         public static StoryLobbyManager main = null;
+        
 
         [Header("작품 로비")]
         public SpriteRenderer lobbyBackground;
@@ -47,7 +48,14 @@ namespace PIERStory
         // Use this for initialization
         IEnumerator Start()
         {
+            Debug.Log(">> StoryManager Start ");
+            
             yield return null;
+            yield return new WaitUntil(() => ViewStoryLoading.assetLoadComplete);
+            
+            yield return new WaitForSeconds(0.5f);
+            
+            Debug.Log(">> StoryManager assetLoadComplete Done");
             
             if (BubbleManager.main != null)
                 BubbleManager.main.ShowFakeBubbles(false);
@@ -55,6 +63,7 @@ namespace PIERStory
             ViewStoryLobby.OnDecorateSet?.Invoke();
             yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
             yield return new WaitForSeconds(0.1f);
+            SystemManager.SetBlockBackButton(false);
 
             Signal.Send(LobbyConst.STREAM_IFYOU, "storyLobbyLoadComplete", string.Empty);
         }

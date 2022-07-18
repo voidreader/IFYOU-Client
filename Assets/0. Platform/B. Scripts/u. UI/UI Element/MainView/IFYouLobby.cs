@@ -179,6 +179,9 @@ namespace PIERStory {
         /// </summary>
         public void OnClickReady() {
             StoryManager.main.RequestStoryInfo(latestPlayStory);
+            
+            
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("main_quickstart");
         }
     }
 }

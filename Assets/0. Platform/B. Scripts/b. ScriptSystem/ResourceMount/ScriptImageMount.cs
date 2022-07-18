@@ -31,6 +31,7 @@ namespace PIERStory
         JsonData resourceData = null;
 
         public bool isMounted = false;  // 성공적으로 불러왔는지!
+        public bool loadComplete = false;   // 일단 불러오는건 끝냈는지?
         public int useCount = 0;        // 하나의 에피소드에서 몇번을 사용하는지 체크용도. (image만 일단 먼저 적용 2021.06.04);
 
         // 크기와 위치정보 
@@ -52,8 +53,9 @@ namespace PIERStory
             resourceData = __j;
 
             template = __type;
+            loadComplete = false;
 
-            if(GameManager.main !=null)
+            if (GameManager.main !=null)
             {
                 imageName = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_NAME);
                 imageUrl = SystemManager.GetJsonNodeString(resourceData, CommonConst.COL_IMAGE_URL);
@@ -449,12 +451,14 @@ namespace PIERStory
         void SendFailMessage()
         {
             isMounted = false;
+            loadComplete = true;
             OnMountCompleted?.Invoke();
         }
 
         void SendSuccessMessage()
         {
             isMounted = true;
+            loadComplete = true;
             OnMountCompleted?.Invoke();
         }
 

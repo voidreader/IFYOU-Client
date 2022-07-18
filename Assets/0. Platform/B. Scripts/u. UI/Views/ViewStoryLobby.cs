@@ -61,7 +61,6 @@ namespace PIERStory
         public GameObject stickerObjectPrefab; // 생성시킬 스티커 prefab
         public GameObject bubbleObjectPrefab; // 생성시킬 말풍선 prefab
          
-        
         public List<UIToggle> typeToggles;
         public UIContainer decoListContainer;
         public GameObject coinShopButton;
@@ -147,8 +146,6 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
-
-            StartCoroutine(RoutineBackgroundDetailSetting());
 
             mainContainer.Show();
             decoContainer.Hide();
@@ -292,6 +289,10 @@ namespace PIERStory
             sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID;
 
             NetworkLoader.main.SendPost(CallbackDecoMode, sending, true);
+            
+            // 진입 파이어베이스
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("lobby_beauty", "project_id", StoryManager.main.CurrentProjectID); 
+            
         }
 
         void CallbackDecoMode(HTTPRequest req, HTTPResponse res)
@@ -482,6 +483,8 @@ namespace PIERStory
                 switch (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE))
                 {
                     case LobbyConst.NODE_WALLPAPER:     // 배경
+                        Debug.Log("Wallpaper Create #####");
+                    
                         DestroyPreviousBackground();
                         bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, storyProfile[i], BGLoadComplete);
                         bgCurrency = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);
@@ -529,6 +532,8 @@ namespace PIERStory
             }
 
             #endregion
+
+            StartCoroutine(RoutineBackgroundDetailSetting());
         }
 
         /// <summary>
@@ -712,6 +717,8 @@ namespace PIERStory
 
         void EscapeDecoMode()
         {
+            Debug.Log("#### EscapeDecoMode ###");
+            
             // 꾸미기 모드(편집 모드) 중인데 back버튼 입력을 받으면
             if (!mainContainer.isActiveAndEnabled && decoContainer.isActiveAndEnabled)
             {
@@ -964,12 +971,16 @@ namespace PIERStory
                 totalDecoLoad--;
 
             CheckLoadComplete();
+            
+            Debug.Log("BGLoadComplete #####");
         }
 
 
         IEnumerator RoutineBackgroundDetailSetting()
         {
             yield return new WaitUntil(() => bg != null);
+
+            yield return new WaitUntil(() => bg.loadComplete);
 
             // 어드레서블에 없는 경우 이전 방식을 사용해서 다운만 받기 떄문에 LoadImage를 해서 생성도 해줘야함
             if (bg.sprite == null)

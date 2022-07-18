@@ -7,6 +7,8 @@ namespace PIERStory
     public class NoticeElement : MonoBehaviour
     {
         public ImageRequireDownload noticeBanner;
+        
+        public int noticeIndex = 0;
 
         JsonData detailNotice = null;
         string startDate = string.Empty;
@@ -19,9 +21,10 @@ namespace PIERStory
         /// </summary>
         /// <param name="__j"></param>
         /// <param name="__fromView"></param>
-        public void InitNoticeBanner(JsonData __j, bool __fromView = false)
+        public void InitNoticeBanner(JsonData __j, int __index, bool __fromView = false)
         {
             detailNotice = null;
+            noticeIndex = __index + 1;
 
             JsonData detailData = SystemManager.GetJsonNode(__j, LobbyConst.NODE_DETAIL);
             startDate = SystemManager.GetJsonNodeString(__j, START_DATE);
@@ -50,6 +53,10 @@ namespace PIERStory
 
         public void OnClickNoticeBanner()
         {
+            // 파이어베이스
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("notice_banner" + noticeIndex.ToString());
+            
+            
             if (string.IsNullOrEmpty(urlLink))
             {
                 if (detailNotice != null)

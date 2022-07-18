@@ -16,6 +16,7 @@ namespace PIERStory {
     public class ViewStoryLoading : CommonView, IPointerClickHandler
     {
         public ImageRequireDownload loadingImage;
+        public static bool assetLoadComplete = false;
         
         [SerializeField] bool hasBundle = false;
         
@@ -32,7 +33,8 @@ namespace PIERStory {
             base.OnStartView();
             
             SystemManager.HideNetworkLoading();
-            
+            assetLoadComplete = false;
+
             hasBundle = false;
             
             textTitle.text = string.Empty;
@@ -79,7 +81,7 @@ namespace PIERStory {
         void FillProgressorOnly() {
             
             Debug.Log("### FillProgressorOnly ###");
-
+            assetLoadComplete = true;
             loadingBar.DOFillAmount(1, 3);
         }
         
@@ -91,8 +93,7 @@ namespace PIERStory {
         IEnumerator CheckingBundleExists(string __projectID) {
             
             StoryManager.main.CurrentProject.isPlaying = true;
-            
-            
+
             AsyncOperationHandle<IList<IResourceLocation>> bundleCheckHandle = Addressables.LoadResourceLocationsAsync(__projectID);
             yield return bundleCheckHandle;
             
@@ -190,6 +191,7 @@ namespace PIERStory {
 
             Addressables.Release(downloadHandle);
             Debug.Log("#### This project bundle download doen! ####");
+            assetLoadComplete = true;
         }
             
 

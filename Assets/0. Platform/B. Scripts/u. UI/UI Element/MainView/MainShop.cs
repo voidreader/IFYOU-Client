@@ -76,6 +76,9 @@ namespace PIERStory {
         {
             InitToggles();
             
+            
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("store_open");
+            
             if(CheckExistsEventTabProduct()) {
                 eventToggle.gameObject.SetActive(true);
                 toggleGroup.FirstToggle = eventToggle;
@@ -130,6 +133,8 @@ namespace PIERStory {
         {
             InitToggles();
             
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("store_open");
+            
             if(CheckExistsEventTabProduct()) {
                 eventToggle.gameObject.SetActive(true);
                 toggleGroup.FirstToggle = eventToggle;
@@ -179,6 +184,9 @@ namespace PIERStory {
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
+            
+            
+            
         }
 
 

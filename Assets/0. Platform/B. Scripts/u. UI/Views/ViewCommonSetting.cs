@@ -16,6 +16,8 @@ namespace PIERStory {
         
         public override void OnView() {
             base.OnView();
+            
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("menu_setting");
 
         }
         

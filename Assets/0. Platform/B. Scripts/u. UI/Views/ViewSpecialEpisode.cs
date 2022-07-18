@@ -16,6 +16,10 @@ namespace PIERStory {
         public float currentProgressValues = 0;
         
         public override void OnStartView() {
+            
+            //파이어베이스
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("lobby_special", "project_id", StoryManager.main.CurrentProjectID); 
+            
             base.OnStartView();
             
             // 상단 처리

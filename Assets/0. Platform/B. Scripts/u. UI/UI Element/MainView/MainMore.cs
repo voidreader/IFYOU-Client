@@ -10,6 +10,8 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 
+using Firebase.Analytics;
+
 namespace PIERStory {
 
     public class MainMore : MonoBehaviour
@@ -281,6 +283,9 @@ namespace PIERStory {
         /// </summary>
         public void OnClickNotice()
         {
+            FirebaseAnalytics.LogEvent("menu_notice");
+            
+            
             PopupBase p = PopupManager.main.GetPopup("Notice");
             PopupManager.main.ShowPopup(p, true);
         }

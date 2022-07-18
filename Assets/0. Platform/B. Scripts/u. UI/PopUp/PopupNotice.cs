@@ -48,7 +48,7 @@ namespace PIERStory
             JsonData noticeList = SystemManager.main.noticeData;
 
             for (int i = 0; i < noticeList.Count; i++)
-                noticeElements[i].InitNoticeBanner(noticeList[i]);
+                noticeElements[i].InitNoticeBanner(noticeList[i], i);
                 
             SystemManager.noticePopupExcuted = true;
         }
@@ -86,6 +86,9 @@ namespace PIERStory
         /// </summary>
         public void OnClickDonotOpen()
         {
+            // 파이어베이스
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("notice_not_open");
+            
             PlayerPrefs.SetString("noticeOneday", DateTime.Today.ToString());
             Hide();
         }

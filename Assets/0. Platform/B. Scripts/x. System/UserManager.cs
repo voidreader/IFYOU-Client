@@ -104,7 +104,7 @@ namespace PIERStory
         public bool isSelectionTutorialClear = false; // 선택지 튜토리얼 초기화 여부 
         public bool isHowToPlayClear = false; // How to play 튜토리얼 초기화 여부 
 
-        public int adCharge = 0;
+        public int ifyouPassDay = 0;        // 이프유패스 일수
 
 
         public string nickname = string.Empty;      // 유저 닉네임
@@ -424,7 +424,6 @@ namespace PIERStory
             SetNewNickname(SystemManager.GetJsonNodeString(userJson, "nickname"));
 
 
-
             // 슈퍼유저 처리 
             isAdminUser = SystemManager.GetJsonNodeBool(userJson, "admin");
 
@@ -437,6 +436,9 @@ namespace PIERStory
             // Rate 평가 팝업 관련 변수 추가 2022.06
             diffRate = SystemManager.GetJsonNodeInt(userJson, "diff_rate");
             rateResult = SystemManager.GetJsonNodeInt(userJson, "rate_result");
+
+            // 이프유 패스 관련 변수 추가 2022.07.18
+            ifyouPassDay = SystemManager.GetJsonNodeInt(userJson, "ifyou_pass_day");
         }
 
         /// <summary>

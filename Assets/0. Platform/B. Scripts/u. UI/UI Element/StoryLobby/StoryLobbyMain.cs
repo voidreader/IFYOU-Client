@@ -821,20 +821,6 @@ namespace PIERStory {
                 
                 // 오픈 메뉴 띄운다. 
                 menuReduceWaitingTime.SetActive(true);
-                
-                // int openPrice = GetEpisodeTimeOpenPrice();
-                
-                // SystemManager.ShowResourceConfirm(SystemManager.GetLocalizedText("6221"), GetEpisodeTimeOpenPrice(), )
-                /*
-                SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6221"), openPrice)
-                                , openPrice
-                                , SystemManager.main.GetCurrencyImageURL("coin")
-                                , SystemManager.main.GetCurrencyImageKey("coin")
-                                , OnClickReduceWaitingTimeCoin
-                                , SystemManager.GetLocalizedText("5041")
-                                , SystemManager.GetLocalizedText("5040"));
-                */
-                // OnClickReduceWaitingTimeCoin();
                 return;
             }
             
@@ -859,8 +845,6 @@ namespace PIERStory {
                 SystemManager.ShowStoryResetPopup(firstEpisode);
                 return;
             } // ? 엔딩 도달한 경우 처리 끝
-            
-            
             
             
             // 에피소드 진입 처리 

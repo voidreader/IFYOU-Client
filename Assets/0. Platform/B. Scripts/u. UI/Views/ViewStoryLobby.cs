@@ -61,7 +61,6 @@ namespace PIERStory
         public GameObject stickerObjectPrefab; // 생성시킬 스티커 prefab
         public GameObject bubbleObjectPrefab; // 생성시킬 말풍선 prefab
          
-        
         public List<UIToggle> typeToggles;
         public UIContainer decoListContainer;
         public GameObject coinShopButton;
@@ -147,8 +146,6 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
-
-            StartCoroutine(RoutineBackgroundDetailSetting());
 
             mainContainer.Show();
             decoContainer.Hide();
@@ -529,6 +526,8 @@ namespace PIERStory
             }
 
             #endregion
+
+            StartCoroutine(RoutineBackgroundDetailSetting());
         }
 
         /// <summary>
@@ -970,6 +969,8 @@ namespace PIERStory
         IEnumerator RoutineBackgroundDetailSetting()
         {
             yield return new WaitUntil(() => bg != null);
+
+            yield return new WaitUntil(() => bg.loadComplete);
 
             // 어드레서블에 없는 경우 이전 방식을 사용해서 다운만 받기 떄문에 LoadImage를 해서 생성도 해줘야함
             if (bg.sprite == null)

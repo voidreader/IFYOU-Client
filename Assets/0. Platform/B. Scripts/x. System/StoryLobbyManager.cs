@@ -8,6 +8,7 @@ namespace PIERStory
     public class StoryLobbyManager : MonoBehaviour
     {
         public static StoryLobbyManager main = null;
+        
 
         [Header("작품 로비")]
         public SpriteRenderer lobbyBackground;
@@ -48,6 +49,7 @@ namespace PIERStory
         IEnumerator Start()
         {
             yield return null;
+            yield return new WaitUntil(() => ViewStoryLoading.assetLoadComplete);
             
             if (BubbleManager.main != null)
                 BubbleManager.main.ShowFakeBubbles(false);

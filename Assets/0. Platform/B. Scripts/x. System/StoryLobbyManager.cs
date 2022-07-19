@@ -52,7 +52,9 @@ namespace PIERStory
             
             yield return null;
             yield return new WaitUntil(() => ViewStoryLoading.assetLoadComplete);
-            
+
+            StoryManager.main.SetLobbyBubbleMaster();
+
             yield return new WaitForSeconds(0.5f);
             
             Debug.Log(">> StoryManager assetLoadComplete Done");

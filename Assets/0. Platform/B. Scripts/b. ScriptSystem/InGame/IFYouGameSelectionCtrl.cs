@@ -305,8 +305,9 @@ namespace PIERStory {
                 return;
 
             // 22.07.18 프리미엄 패스 유저의 경우 선택지 힌트를 무료로 제공함
+            // 22.07.19 원데이 패스 유저도 선택지 힌트를 무료로 제공함
             hintPrice.text = string.Format("{0}", SelectionHintPrice());
-            coinBox.SetActive(!UserManager.main.IsPurchaseSelectionHint(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no) && !UserManager.main.HasProjectFreepass());
+            coinBox.SetActive(!UserManager.main.IsPurchaseSelectionHint(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no) && !UserManager.main.HasProjectFreepass() && !StoryManager.main.CurrentProject.IsValidOnedayPass());
         }
 
 

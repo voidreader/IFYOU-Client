@@ -25,7 +25,7 @@ namespace PIERStory {
             targetEpisode = SystemListener.main.resetTargetEpisode; // 시스템 리스너에서 대상 에피소드 보유 중. 
             resetPrice = SystemManager.main.firsetResetPrice; // 리셋 가격 시스탬 매니저에서 가져오기 
             
-            hasPremiumPass = UserManager.main.HasProjectFreepass();
+            hasPremiumPass = UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass();
             
             // 프리미엄 패스 보유여부에 따라서 버튼 뜨는게 다르다. 
             groupDoubleButton.SetActive(!hasPremiumPass);

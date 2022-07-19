@@ -205,6 +205,9 @@ namespace PIERStory {
                         if (UserManager.main.ifyouPassDay > 0)
                             saleSelectionPrice = (int)(scriptRow.selectionPrice * 0.7f);
 
+                        if(StoryManager.main.CurrentProject.IsValidOnedayPass())
+                            saleSelectionPrice = (int)(scriptRow.selectionPrice * 0.5f);
+
                         priceText.text = string.Format("{0}", saleSelectionPrice);
                     }
                 }
@@ -624,7 +627,8 @@ namespace PIERStory {
         {
             // 힌트를 구매한적 있는지 체크하고, 구매한 적 있으면 바로 팝업 띄워주고
             // 22.07.18 프리미엄 패스 유저는 힌트가 무료임
-            if (UserManager.main.HasProjectFreepass() || UserManager.main.IsPurchaseSelectionHint(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no))
+            // 22.07.19 원데이 패스 유저도 힌트가 무료임
+            if (UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass() || UserManager.main.IsPurchaseSelectionHint(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no))
             {
                 ShowSelectionHintPopup();
                 return;

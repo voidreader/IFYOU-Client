@@ -272,8 +272,7 @@ namespace PIERStory {
 
             currentEpisodeData.SetPurchaseState(); // 구매기록 refresh.
             
-            
-            hasPass = UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass();
+            hasPass = UserManager.main.HasProjectFreepass();
 
             if (StoryLobbyManager.main != null && CheckResumePossible())
                 isEpisodeContinuePlay = true;
@@ -536,12 +535,12 @@ namespace PIERStory {
                     if(!hasPass) { // 비연재, 프리미엄 패스 아님 
                          
                         isOpenTimeCountable = true; 
-                        currentPlayState = StatePlayButton.inactive;        
+                        currentPlayState = currentStoryData.IsValidOnedayPass() || UserManager.main.ifyouPassDay > 0 ? StatePlayButton.active : StatePlayButton.inactive;
                     }
                     else { // 비연재, 프리미엄 패스 
                         
                         // 상태 처리 
-                        currentPlayState = hasPass ? StatePlayButton.premium : StatePlayButton.active;        
+                        currentPlayState = hasPass ? StatePlayButton.premium : StatePlayButton.active;
                     }
                 }
             } 

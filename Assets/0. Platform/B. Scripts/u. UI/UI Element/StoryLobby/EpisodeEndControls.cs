@@ -218,7 +218,7 @@ namespace PIERStory {
             passBadge.gameObject.SetActive(false);
             allpassTimer.gameObject.SetActive(false);
             
-            hasPass = UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass(); // 패스 보유 여부 
+            hasPass = UserManager.main.HasProjectFreepass(); // 패스 보유 여부 
             
             // 패스 보유 여부에 따른 오브젝트 설정 
             if(hasPass) {
@@ -235,7 +235,6 @@ namespace PIERStory {
                 
             }
             else {
-                
                 
                 passButton.gameObject.SetActive(true);
                 passButton.SetPremiumPass();

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,29 +7,59 @@ using TMPro;
 using LitJson;
 using BestHTTP;
 
-
 namespace PIERStory {
     public class ViewIntroduce : CommonView
     {
         public Doozy.Runtime.UIManager.Containers.UIContainer container;
-        
-        [SerializeField] ImageRequireDownload mainThumbnail;    // 썸네일 
-        [SerializeField] TextMeshProUGUI textRecommend; // 추천 작 안내 
-        
-        [SerializeField] TextMeshProUGUI textTitle;             // 타이틀
-        [SerializeField] TextMeshProUGUI textAuthor;            // 원작자
-        [SerializeField] TextMeshProUGUI textProducer;          // 제작사
-        [SerializeField] TextMeshProUGUI textGenre;             // 장르 
-        [SerializeField] TextMeshProUGUI textSummary;           // 요약
+
+        [Space(15)]
+        public GameObject onedayPass;       // 원데이패스 관련 묶음 Object
+        public GameObject onedayPurchaseButton;
+        public GameObject onedayBadgeButton;
+
+        public ImageRequireDownload premiumPurchaseButon;
+        public ImageRequireDownload premiumBadgeButton;
 
         public Button buttonAlert;          // 작품 알림 버튼
         public Sprite spriteAlertOff;       // 작품 알림 버튼 Off Sprite
         public Sprite spriteAlertOn;        // 작품 알림 버튼 On Sprite
 
-        [SerializeField] Button btnLike; // 좋아요 버튼
-        [SerializeField] Sprite spriteLikeOff; // 좋아요 버튼 OFF 스프라이트
-        [SerializeField] Sprite spriteLikeOn; // 좋아요 버튼 ON 스프라이트        
-        
+        public Button btnLike;              // 좋아요 버튼
+        public Sprite spriteLikeOff;        // 좋아요 버튼 OFF 스프라이트
+        public Sprite spriteLikeOn;         // 좋아요 버튼 ON 스프라이트
+
+        [SerializeField] TextMeshProUGUI textRecommend;     // 추천 작 안내
+
+        [Header("소개 메인")][Space(15)]
+        public ImageRequireDownload mainThumbnail;          // 메인 썸네일
+        public GameObject viewCountTag;
+        public TextMeshProUGUI viewCountText;
+        public GameObject likeCountTag;
+        public TextMeshProUGUI likeCountText;
+        public GameObject newTag;
+
+        public TextMeshProUGUI textTitle;               // 타이틀
+        public TextMeshProUGUI productInfo;             // 작품 제작 정보
+
+
+        [Header("작품 소개 상세")][Space(15)]
+        public ImageRequireDownload introduceThumbnail;     // 서브 섬네일
+
+        public GameObject completeStoryTag;
+        public GameObject updateStateGroup;
+        public GameObject updateDate_1;
+        public TextMeshProUGUI updateDateText_1;
+        public GameObject updateDate_2;
+        public TextMeshProUGUI updateDateText_2;
+        public TextMeshProUGUI totalChapterCountText;
+
+
+        public TextMeshProUGUI introduceStoryTitleText;
+        public TextMeshProUGUI storySummaryText;
+        public Transform hashTagsParent;
+        public GameObject hashTagPrefab;
+        List<GameObject> createdHashtag = new List<GameObject>();
+
         public GameObject serialGroup; // 연재 관련 오브젝트 
         public TextMeshProUGUI textSerialDay; // 연재 정보 
         
@@ -35,6 +67,8 @@ namespace PIERStory {
         
         public override void OnView() {
             base.OnView();
+
+
         }
         
         public override void OnStartView() {
@@ -45,39 +79,76 @@ namespace PIERStory {
             SetInfo();            
             
         }
-        
+
         void SetInfo() {
             
             if(string.IsNullOrEmpty(SystemListener.main.introduceStory.projectID))
                 return;
             
             introduceStory = SystemListener.main.introduceStory;
-             
+
+            SetLikeButtonState();
+            SetAlertButtonState();
 
             // 이미지를 프리미엄 패스 이미지와 동일한 이미지를 사용한다.
             mainThumbnail.SetDownloadURL(introduceStory.premiumPassURL, introduceStory.premiumPassKey);
-            
-            SystemManager.SetText(textTitle, introduceStory.title);
-            // textTitle.text = introduceStory.title;
-            
-            
-            SystemManager.SetText(textAuthor, SystemManager.GetLocalizedText("6179") + " / " + introduceStory.original); // 원작
-            SystemManager.SetText(textProducer, SystemManager.GetLocalizedText("6180") + " / " + introduceStory.writer); // 
-            SystemManager.SetText(textSummary, introduceStory.summary); // 요약
-            // textSummary.text = introduceStory.summary;
-            SystemManager.SetText(textGenre, SystemManager.GetLocalizedText("6181") + " / " + introduceStory.genre); // 장르
 
-            
+            int viewCount = introduceStory.hitCount * 10, likeCount = introduceStory.likeCount * 10;
+
+            viewCountTag.SetActive(viewCount >= 100);
+            likeCountTag.SetActive(likeCount >= 100);
+            newTag.SetActive(!viewCountTag.activeSelf && !likeCountTag.activeSelf);
+
+            if (viewCountTag.activeSelf)
+                viewCountText.text = AbbrevationUtility.FormatNumberFirstDecimalPlace(viewCount);
+
+            if(likeCountTag.activeSelf)
+                likeCountText.text = AbbrevationUtility.FormatNumberFirstDecimalPlace(likeCount);
+
+            SystemManager.SetText(textTitle, introduceStory.title);
+
+            string originText = SystemManager.GetLocalizedText("6179") + " / " + introduceStory.original;
+            string productText = SystemManager.GetLocalizedText("6180") + " / " + introduceStory.writer;
+            string translateText = string.Empty;
+            string productInfoText = string.IsNullOrEmpty(translateText) ? string.Format("{0}\n{1}", originText, productText) : string.Format("{0}\n{1}\n{2}", originText, productText, translateText);
+
+            productInfo.rectTransform.sizeDelta = string.IsNullOrEmpty(translateText) ? new Vector2(productInfo.rectTransform.sizeDelta.x, 60) : new Vector2(productInfo.rectTransform.sizeDelta.x, 90);
+            SystemManager.SetText(productInfo, productInfoText);
+
+            //SystemManager.SetText(textSummary, introduceStory.summary); // 요약
+
+            //SystemManager.SetText(textGenre, SystemManager.GetLocalizedText("6181") + " / " + introduceStory.genre); // 장르
+
+
             // serialGroup.SetActive(introduceStory.isSerial);
+            /*
             serialGroup.SetActive(true);
             
             if(introduceStory.isSerial)
                 SystemManager.SetText(textSerialDay, string.Format(SystemManager.GetLocalizedText("5184"), introduceStory.GetSeiralDay())); // 연재일 설정..
             else 
                 SystemManager.SetLocalizedText(textSerialDay, "5186");// 완결 
-            
-            SetLikeButtonState();
-            SetAlertButtonState();
+            */
+
+
+            // 작품 세부 정보
+            introduceThumbnail.SetDownloadURL(introduceStory.premiumPassURL, introduceStory.premiumPassKey);
+            SystemManager.SetText(introduceStoryTitleText, introduceStory.title);
+            SystemManager.SetText(storySummaryText, introduceStory.summary);
+
+            // list 초기화
+            foreach (GameObject g in createdHashtag)
+                Destroy(g);
+
+            createdHashtag.Clear();
+
+            // 작품 해시 태그
+            for (int i = 0; i < introduceStory.arrHashtag.Length; i++)
+            {
+                StoryHashtag hashtag = Instantiate(hashTagPrefab, hashTagsParent).GetComponent<StoryHashtag>();
+                hashtag.Init(introduceStory.arrHashtag[i]);
+                createdHashtag.Add(hashtag.gameObject);
+            }
 
             // 인트로에서 넘어온 경우에 대한 처리 추가 
             if (SystemListener.main.isIntroduceRecommended) {
@@ -86,6 +157,21 @@ namespace PIERStory {
                 textRecommend.gameObject.SetActive(true);
                 SystemListener.main.isIntroduceRecommended = false;
             }
+
+            StartCoroutine(LayoutRebuild());
+        }
+
+        IEnumerator LayoutRebuild()
+        {
+            yield return null;
+            viewCountTag.SetActive(false);
+            likeCountTag.SetActive(false);
+            hashTagsParent.gameObject.SetActive(false);
+            yield return null;
+            viewCountTag.SetActive(true);
+            likeCountTag.SetActive(true);
+            hashTagsParent.gameObject.SetActive(true);
+
         }
         
         

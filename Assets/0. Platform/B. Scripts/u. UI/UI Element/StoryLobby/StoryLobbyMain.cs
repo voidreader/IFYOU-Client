@@ -854,7 +854,8 @@ namespace PIERStory {
             
             
             // * 프리미엄 패스 구매 여부 체크 필요. 
-            if(hasPass) {
+            // 22.07.19 원데이 패스, 이프유패스 작품 광고 제거
+            if(hasPass || currentStoryData.IsValidOnedayPass() || UserManager.main.ifyouPassDay > 0) {
                 
                 if(episodePurchaseState != PurchaseState.Permanent) {
                     

@@ -273,7 +273,7 @@ namespace PIERStory {
             currentEpisodeData.SetPurchaseState(); // 구매기록 refresh.
             
             
-            hasPass = UserManager.main.HasProjectFreepass();
+            hasPass = UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass();
 
             if (StoryLobbyManager.main != null && CheckResumePossible())
                 isEpisodeContinuePlay = true;

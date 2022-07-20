@@ -116,6 +116,7 @@ namespace PIERStory
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_FOG);
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_SCREEN_FOG);
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_FIRE);
+            ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_FIRE_BG);
 
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_FOCUS);
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_HEAVYSNOW);
@@ -141,6 +142,7 @@ namespace PIERStory
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_TINT_CH);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_BLING);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_FIRE);
+            ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_FIRE_BG);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_LENS_FLARE);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_HEX_LIGHT);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_CIRCLE_LIGHT);
@@ -270,6 +272,10 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_FIRE:
+                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_FIRE_BG:
                     ScreenEffectManager.main.StartParticleEffect(command, paramArray);
                     break;
 

@@ -185,7 +185,9 @@ namespace PIERStory
         public const string KR_SCREEN_EFFECT_HEAVYRAIN = "폭우";
         public const string KR_SCREEN_EFFECT_RAIN = "비";
         public const string KR_SCREEN_EFFECT_FLOWER = "꽃잎";
+
         public const string KR_SCREEN_EFFECT_FIRE = "불";
+        public const string KR_SCREEN_EFFECT_FIRE_BG = "불배경";
 
         public const string KR_SCREEN_EFFECT_BLOOD_HIT = "출혈";
 

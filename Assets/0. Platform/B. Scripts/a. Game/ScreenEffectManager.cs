@@ -657,7 +657,6 @@ namespace PIERStory
             switch (__effect)
             {
                 case GameConst.KR_SCREEN_EFFECT_FIRE:
-
                     int fireLevel = 1;
 
                     if (__params != null)
@@ -668,7 +667,43 @@ namespace PIERStory
                     switch (fireLevel)
                     {
                         case 1:
-                            //fire.gameObject.transform.position = new Vector3(1, -6, 1);
+                            fireTop.gameObject.transform.position = new Vector3(0, 5, 68.76364f);
+                            fireBottom.gameObject.transform.position = new Vector3(0, -5, 68.76364f);
+                            fireLeft.gameObject.transform.position = new Vector3(-1, 5, 68.76364f);
+                            fireRight.gameObject.transform.position = new Vector3(1, 5, 68.76364f);
+                            break;
+
+                        case 2:
+                            fireTop.gameObject.transform.position = new Vector3(0, 3, 68.76364f);
+                            fireBottom.gameObject.transform.position = new Vector3(0, -3, 68.76364f);
+                            fireLeft.gameObject.transform.position = new Vector3(0, 5, 68.76364f);
+                            fireRight.gameObject.transform.position = new Vector3(0, 5, 68.76364f);
+                            break;
+
+                        case 3:
+                            fireTop.gameObject.transform.position = new Vector3(0, 0, 68.76364f);
+                            fireBottom.gameObject.transform.position = new Vector3(0, 0, 68.76364f);
+                            fireLeft.gameObject.transform.position = new Vector3(2, 5, 68.76364f);
+                            fireRight.gameObject.transform.position = new Vector3(-2, 5, 68.76364f);
+                            break;
+                    }
+
+                    fire.gameObject.SetActive(true);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_FIRE_BG:
+                    foreach (Transform child in fire.GetComponentsInChildren<Transform>())  
+                        child.gameObject.layer = LayerMask.NameToLayer ("Default");
+
+                    fireLevel = 1;
+
+                    if (__params != null)
+                        ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_DISTRIBUTION, ref fireLevel);
+                    fireLevel = Mathf.Clamp(fireLevel, 1, 3);
+
+                    switch (fireLevel)
+                    {
+                        case 1:
                             fireTop.gameObject.transform.position = new Vector3(0, 5, 68.76364f);
                             fireBottom.gameObject.transform.position = new Vector3(0, -5, 68.76364f);
                             fireLeft.gameObject.transform.position = new Vector3(-1, 5, 68.76364f);

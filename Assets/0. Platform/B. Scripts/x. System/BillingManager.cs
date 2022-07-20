@@ -390,8 +390,8 @@ namespace PIERStory {
 
             return productDetailJSON[__productMasterID];
         }
-        
-        
+
+
         /// <summary>
         /// 마스터ID에 해당하는 상품의 구매 횟수 가져오기 
         /// </summary>
@@ -413,7 +413,6 @@ namespace PIERStory {
             return purchaseCount;
         }
         
-        
          
         public JsonData GetCoinExchangeProductInfo(string __productID) {
             if(coinExchangeJSON == null)
@@ -427,8 +426,53 @@ namespace PIERStory {
             
             return null;
         }
-        
-        
+
+
+        /// <summary>
+        /// 이프유 패스 선택지 할인율
+        /// </summary>
+        /// <returns></returns>
+        public float GetIfyouPassSelectionSale()
+        {
+            string productMasterId = string.Empty;
+
+            for (int i = 0; i < productMasterJSON.Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(productMasterJSON[i], "product_type") == "ifyou_pass")
+                {
+                    productMasterId = SystemManager.GetJsonNodeString(productMasterJSON[i], "product_master_id");
+                    break;
+                }
+            }
+
+            JsonData ifyouPassData = GetGameProductItemDetailInfo(productMasterId);
+
+            return SystemManager.GetJsonNodeInt(ifyouPassData[0], "selection_sale") * 0.01f;
+        }
+
+        /// <summary>
+        /// 원데이 패스 선택지 할인율
+        /// </summary>
+        /// <returns></returns>
+        public float GetOnedayPassSelectionSale()
+        {
+            string productMasterId = string.Empty;
+
+            for (int i = 0; i < productMasterJSON.Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(productMasterJSON[i], "product_type") == "oneday_pass")
+                {
+                    productMasterId = SystemManager.GetJsonNodeString(productMasterJSON[i], "product_master_id");
+                    break;
+                }
+            }
+
+            JsonData onedayPassData = GetGameProductItemDetailInfo(productMasterId);
+
+            return SystemManager.GetJsonNodeInt(onedayPassData[0], "selection_sale") * 0.01f;
+        }
+
+
         /// <summary>
         /// 환전 고고 
         /// </summary>

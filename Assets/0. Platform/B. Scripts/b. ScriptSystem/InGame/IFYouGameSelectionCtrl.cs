@@ -67,6 +67,7 @@ namespace PIERStory {
         public GameObject selectionPrice;
         public TextMeshProUGUI priceText;
         public ImageRequireDownload freepassBadge;
+        int saleSelectionPrice = 0;
 
         [SerializeField] bool isLock = false;       // 잠금 여부 
         [SerializeField] bool isFilling = false;    // 채워짐 
@@ -200,7 +201,14 @@ namespace PIERStory {
                     else
                     {
                         isPurchaseSelection = true;
-                        priceText.text = scriptRow.selectionPrice.ToString();
+
+                        if (UserManager.main.ifyouPassDay > 0)
+                            saleSelectionPrice = (int)(scriptRow.selectionPrice * (1f - BillingManager.main.GetIfyouPassSelectionSale()));
+
+                        if(StoryManager.main.CurrentProject.IsValidOnedayPass())
+                            saleSelectionPrice = (int)(scriptRow.selectionPrice * (1f - BillingManager.main.GetOnedayPassSelectionSale()));
+
+                        priceText.text = string.Format("{0}", saleSelectionPrice);
                     }
                 }
             }
@@ -296,8 +304,10 @@ namespace PIERStory {
             if (!hasSelectionHint)
                 return;
 
+            // 22.07.18 프리미엄 패스 유저의 경우 선택지 힌트를 무료로 제공함
+            // 22.07.19 원데이 패스 유저도 선택지 힌트를 무료로 제공함
             hintPrice.text = string.Format("{0}", SelectionHintPrice());
-            coinBox.SetActive(!UserManager.main.IsPurchaseSelectionHint(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no));
+            coinBox.SetActive(!UserManager.main.IsPurchaseSelectionHint(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no) && !UserManager.main.HasProjectFreepass() && !StoryManager.main.CurrentProject.IsValidOnedayPass());
         }
 
 
@@ -533,25 +543,26 @@ namespace PIERStory {
         void SelectionProcess()
         {
             // 프리패스도 아닌데 돈도 없어!
-            if (!UserManager.main.HasProjectFreepass() && !UserManager.main.CheckGemProperty(scriptRow.selectionPrice))
+            if (!UserManager.main.HasProjectFreepass() && !UserManager.main.CheckGemProperty(saleSelectionPrice))
             {
-                SystemManager.ShowLackOfCurrencyPopup(true, "6321", scriptRow.selectionPrice);
+                SystemManager.ShowLackOfCurrencyPopup(true, "6321", saleSelectionPrice);
 
                 SetState(SelectionState.Idle);
                 SetOtherSelectionState(this, SelectionState.Idle);
                 return;
             }
 
+
             // 프리패스 이용자이면 가격을 0원 처리 한다
             if (UserManager.main.HasProjectFreepass())
-                scriptRow.selectionPrice = 0;
+                saleSelectionPrice = 0;
 
             // 이중 처리 방지
             if (selectionPurchaseStart)
                 return;
 
             selectionPurchaseStart = true;
-            UserManager.main.PurchaseSelection(scriptRow.selection_group, scriptRow.selection_no, scriptRow.selectionPrice, CallbackPurchaseSelection);
+            UserManager.main.PurchaseSelection(scriptRow.selection_group, scriptRow.selection_no, saleSelectionPrice, CallbackPurchaseSelection);
         }
 
         /// <summary>
@@ -616,7 +627,9 @@ namespace PIERStory {
         public void OnClickSelectionHint()
         {
             // 힌트를 구매한적 있는지 체크하고, 구매한 적 있으면 바로 팝업 띄워주고
-            if (UserManager.main.IsPurchaseSelectionHint(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no))
+            // 22.07.18 프리미엄 패스 유저는 힌트가 무료임
+            // 22.07.19 원데이 패스 유저도 힌트가 무료임
+            if (UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass() || UserManager.main.IsPurchaseSelectionHint(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no))
             {
                 ShowSelectionHintPopup();
                 return;

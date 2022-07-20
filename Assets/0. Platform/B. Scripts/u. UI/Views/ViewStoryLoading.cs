@@ -124,10 +124,6 @@ namespace PIERStory {
                 
                 yield return new WaitUntil(() => StoryManager.main.LoadingBubbleCount <= 0); // 대화 템플릿 말풍선 로딩 체크 추가
                 Debug.Log("어드레서블 번들 없거나 실패하고 말풍선 로딩 끝!");
-                loadingBar.fillAmount = 0.2f;
-                StoryManager.main.SetLobbyBubbleMaster();
-
-                Debug.Log("어드레서블 번들 없거나 실패하고 말풍선 스프라이트 추가 끝!");
                 loadingBar.fillAmount = 0.4f;
                 yield return null;
 
@@ -148,10 +144,6 @@ namespace PIERStory {
                 
                 yield return new WaitUntil(() => StoryManager.main.LoadingBubbleCount <= 0); // 대화 템플릿 말풍선 로딩 체크 추가
                 Debug.Log("어드레서블 번들 다운로드 데이터 없고 말풍선 말풍선 로딩 끝!");
-                loadingBar.fillAmount = 0.2f;
-                StoryManager.main.SetLobbyBubbleMaster();
-                Debug.Log("어드레서블 번들 다운로드 데이터 없고 말풍선 스프라이트 추가 끝!");
-                
                 loadingBar.fillAmount = 0.4f;
                 yield return null;
 
@@ -186,8 +178,6 @@ namespace PIERStory {
 
             yield return new WaitUntil(() => StoryManager.main.LoadingBubbleCount <= 0); // 대화 템플릿 말풍선 로딩 체크 추가
             Debug.Log("어드레서블 번들 다운 완료하고 말풍선 말풍선 로딩 끝!");
-            StoryManager.main.SetLobbyBubbleMaster();
-            Debug.Log("어드레서블 번들 다운 완료하고 말풍선 스프라이트 추가 끝!");
 
             Addressables.Release(downloadHandle);
             Debug.Log("#### This project bundle download doen! ####");

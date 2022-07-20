@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+
 using LitJson;
 
 namespace PIERStory {
@@ -73,6 +73,9 @@ namespace PIERStory {
         public int hitCount = 0;
         public int likeCount = 0;
         public string[] arrHashtag; // 해시태그 string array
+
+        public string onedayExpireDate = string.Empty;
+        public long onedayPassTick = 0;
         
         public bool isValidData {
             get {
@@ -215,7 +218,9 @@ namespace PIERStory {
                     }
                 }
             }
-   
+
+            onedayExpireDate = SystemManager.GetJsonNodeString(originData, "oneday_pass_expire");
+            onedayPassTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(originData, "oneday_pass_expire_tick"));
         } // ? END
         
         
@@ -234,6 +239,36 @@ namespace PIERStory {
             }
             
             return allSerailDay;
+        }
+
+        /// <summary>
+        /// 유효한 원데이패스인가?
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValidOnedayPass()
+        {
+            DateTime endDate = new DateTime(onedayPassTick);
+            TimeSpan lastTime = endDate - DateTime.UtcNow;
+
+            // 만료됨
+            if (lastTime.Ticks <= 0)
+                return false;
+
+
+            if(lastTime.Ticks >0)
+            {
+                // 구매한 적이 없는데, tick이 0보다 크다?
+                if (string.IsNullOrEmpty(onedayExpireDate))
+                {
+                    // 철컹철컹
+                    NetworkLoader.main.ReportRequestError("Oneday pass error", "Invalid onedaypass");
+                    return false;
+                }
+                else
+                    return true;
+            }
+
+            return false;
         }
     }
 }

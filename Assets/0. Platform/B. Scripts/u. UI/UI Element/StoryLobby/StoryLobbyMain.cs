@@ -272,7 +272,6 @@ namespace PIERStory {
 
             currentEpisodeData.SetPurchaseState(); // 구매기록 refresh.
             
-            
             hasPass = UserManager.main.HasProjectFreepass();
 
             if (StoryLobbyManager.main != null && CheckResumePossible())
@@ -536,12 +535,12 @@ namespace PIERStory {
                     if(!hasPass) { // 비연재, 프리미엄 패스 아님 
                          
                         isOpenTimeCountable = true; 
-                        currentPlayState = StatePlayButton.inactive;        
+                        currentPlayState = currentStoryData.IsValidOnedayPass() || UserManager.main.ifyouPassDay > 0 ? StatePlayButton.active : StatePlayButton.inactive;
                     }
                     else { // 비연재, 프리미엄 패스 
                         
                         // 상태 처리 
-                        currentPlayState = hasPass ? StatePlayButton.premium : StatePlayButton.active;        
+                        currentPlayState = hasPass ? StatePlayButton.premium : StatePlayButton.active;
                     }
                 }
             } 
@@ -821,20 +820,6 @@ namespace PIERStory {
                 
                 // 오픈 메뉴 띄운다. 
                 menuReduceWaitingTime.SetActive(true);
-                
-                // int openPrice = GetEpisodeTimeOpenPrice();
-                
-                // SystemManager.ShowResourceConfirm(SystemManager.GetLocalizedText("6221"), GetEpisodeTimeOpenPrice(), )
-                /*
-                SystemManager.ShowResourceConfirm(string.Format(SystemManager.GetLocalizedText("6221"), openPrice)
-                                , openPrice
-                                , SystemManager.main.GetCurrencyImageURL("coin")
-                                , SystemManager.main.GetCurrencyImageKey("coin")
-                                , OnClickReduceWaitingTimeCoin
-                                , SystemManager.GetLocalizedText("5041")
-                                , SystemManager.GetLocalizedText("5040"));
-                */
-                // OnClickReduceWaitingTimeCoin();
                 return;
             }
             
@@ -861,8 +846,6 @@ namespace PIERStory {
             } // ? 엔딩 도달한 경우 처리 끝
             
             
-            
-            
             // 에피소드 진입 처리 
             SystemManager.main.givenEpisodeData = currentEpisodeData;
             SystemManager.ShowNetworkLoading(true); 
@@ -871,7 +854,8 @@ namespace PIERStory {
             
             
             // * 프리미엄 패스 구매 여부 체크 필요. 
-            if(hasPass) {
+            // 22.07.19 원데이 패스, 이프유패스 작품 광고 제거
+            if(hasPass || currentStoryData.IsValidOnedayPass() || UserManager.main.ifyouPassDay > 0) {
                 
                 if(episodePurchaseState != PurchaseState.Permanent) {
                     

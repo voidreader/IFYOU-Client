@@ -236,7 +236,6 @@ namespace PIERStory {
             }
             else {
                 
-                
                 passButton.gameObject.SetActive(true);
                 passButton.SetPremiumPass();
             }

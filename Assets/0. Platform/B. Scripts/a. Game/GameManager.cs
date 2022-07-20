@@ -261,12 +261,11 @@ namespace PIERStory
             AudioClip[] audioClips = FindObjectsOfType<AudioClip>(true); // 정리되지 않음
             Texture2D[] texture2Ds = FindObjectsOfType<Texture2D>(true); // 정리되지 않음
 
-            for (int i = 0; i < audioClips.Length; i++)
-                Destroy(audioClips[i]);
+            for (int i = 0; i < SoundGroup.Length; i++)
+                SoundGroup[i].DestroyAudioClip();
 
-            Debug.Log(string.Format("[{0}] audioClips are destroyed", audioClips.Length));
-
-
+            Debug.Log(string.Format("[{0}] audioClips are destroyed?", audioClips.Length));
+            
             for (int i = 0; i < texture2Ds.Length; i++)
                 Destroy(texture2Ds[i]);
 

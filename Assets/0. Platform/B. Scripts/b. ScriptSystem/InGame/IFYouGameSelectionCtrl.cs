@@ -202,6 +202,8 @@ namespace PIERStory {
                     {
                         isPurchaseSelection = true;
 
+                        saleSelectionPrice = scriptRow.selectionPrice;
+
                         if (UserManager.main.ifyouPassDay > 0)
                             saleSelectionPrice = (int)(scriptRow.selectionPrice * (1f - BillingManager.main.GetIfyouPassSelectionSale()));
 

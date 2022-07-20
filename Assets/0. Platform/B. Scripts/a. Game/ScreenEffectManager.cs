@@ -44,6 +44,10 @@ namespace PIERStory
         [Space(20)]
         [Header("Particle system effect")]
         [Tooltip("불 파티클")] public ParticleSystem fire;
+        [Tooltip("불 파티클 상")] public ParticleSystem fireTop;
+        [Tooltip("불 파티클 하")] public ParticleSystem fireBottom;
+        [Tooltip("불 파티클 좌")] public ParticleSystem fireLeft;
+        [Tooltip("불 파티클 우")] public ParticleSystem fireRight;
         [Tooltip("반짝이 파티클")] public ParticleSystem glitter;
         ParticleSystem[] glitters;
         [Tooltip("원형빛1")] public ParticleSystem bokeh1;
@@ -654,38 +658,39 @@ namespace PIERStory
             {
                 case GameConst.KR_SCREEN_EFFECT_FIRE:
 
-                    int fireLevel = 3;
+                    int fireLevel = 1;
 
                     if (__params != null)
                         ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_DISTRIBUTION, ref fireLevel);
 
-                    fireLevel = Mathf.Clamp(fireLevel, 1, 5);
+                    fireLevel = Mathf.Clamp(fireLevel, 1, 3);
 
                     switch (fireLevel)
                     {
                         case 1:
-                            fire.gameObject.transform.position = new Vector3(1, -6, 1);
+                            //fire.gameObject.transform.position = new Vector3(1, -6, 1);
+                            fireTop.gameObject.transform.position = new Vector3(0, 5, 68.76364f);
+                            fireBottom.gameObject.transform.position = new Vector3(0, -5, 68.76364f);
+                            fireLeft.gameObject.transform.position = new Vector3(-1, 5, 68.76364f);
+                            fireRight.gameObject.transform.position = new Vector3(1, 5, 68.76364f);
                             break;
 
                         case 2:
-                            fire.gameObject.transform.position = new Vector3(1, -5, 1);
+                            fireTop.gameObject.transform.position = new Vector3(0, 3, 68.76364f);
+                            fireBottom.gameObject.transform.position = new Vector3(0, -3, 68.76364f);
+                            fireLeft.gameObject.transform.position = new Vector3(0, 5, 68.76364f);
+                            fireRight.gameObject.transform.position = new Vector3(0, 5, 68.76364f);
                             break;
 
                         case 3:
-                            fire.gameObject.transform.position = new Vector3(1, -4, 1);
-                            break;
-
-                        case 4:
-                            fire.gameObject.transform.position = new Vector3(1, -2, 1);
-                            break;
-
-                        case 5:
-                            fire.gameObject.transform.position = new Vector3(1, 0, 1);
+                            fireTop.gameObject.transform.position = new Vector3(0, 0, 68.76364f);
+                            fireBottom.gameObject.transform.position = new Vector3(0, 0, 68.76364f);
+                            fireLeft.gameObject.transform.position = new Vector3(2, 5, 68.76364f);
+                            fireRight.gameObject.transform.position = new Vector3(-2, 5, 68.76364f);
                             break;
                     }
 
                     fire.gameObject.SetActive(true);
-
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BLING:

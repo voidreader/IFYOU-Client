@@ -17,7 +17,6 @@ namespace PIERStory
         public const string NODE_SCRIPT = "script";
         #endregion
 
-
         #region 게임씬 플레이 관련
 
         // 팝업
@@ -194,7 +193,10 @@ namespace PIERStory
         public const string KR_SCREEN_EFFECT_GLITCH_SCREEN = "글리치스크린";
 
         public const string KR_SCREEN_EFFECT_REMINISCE = "회상";
+        public const string KR_SCREEN_EFFECT_REMINISCE3 = "회상배경";
+
         public const string KR_SCREEN_EFFECT_REMINISCE2 = "회상필름";
+        public const string KR_SCREEN_EFFECT_REMINISCE4 = "회상필름배경";
 
         public const string KR_SCREEN_EFFECT_FOG = "안개";
         public const string KR_SCREEN_EFFECT_SCREEN_FOG = "스크린안개";
@@ -215,8 +217,7 @@ namespace PIERStory
         
         public const string KR_SCREEN_EFFECT_BUBBLES = "비눗방울";
         public const string KR_SCREEN_EFFECT_HIT = "타격";
-        public const string KR_SCREEN_EFFECT_BLADE = "검";
-        public const string KR_SCREEN_EFFECT_BLADE2 = "검충돌";
+
         public const string KR_SCREEN_EFFECT_WAVE_LINE = "웨이브라인";
 
         // 화면 연출 파라미터 설정값
@@ -237,7 +238,6 @@ namespace PIERStory
         public const string INOUT_EFFECT_SHAKE = "shake";
         public const string INOUT_EFFECT_FADEIN = "fadein";
         public const string INOUT_EFFECT_FADEOUT = "fadeout";
-
         
 
         // 말풍선 세트 컬럼

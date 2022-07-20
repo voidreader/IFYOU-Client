@@ -17,7 +17,6 @@ namespace PIERStory
 
         public Camera generalCam;
 
-
         #region 카메라 오브젝트 component에 스크립트로 제어하는 연출
 
         CameraFilterPack_Color_GrayScale bgGrayScale, screenGrayScale;
@@ -28,6 +27,9 @@ namespace PIERStory
         CameraFilterPack_TV_Old_Movie_2 reminisce;
         CameraFilterPack_TV_Noise reminisce2;
         CameraFilterPack_OldFilm_Cutting1 reminisce3;
+        CameraFilterPack_TV_Old_Movie_2 reminisce4;
+        CameraFilterPack_TV_Noise reminisce5;
+        CameraFilterPack_OldFilm_Cutting1 reminisce6;
         CameraFilterPack_TV_BrokenGlass broken;
         CameraFilterPack_TV_BrokenGlass brokenScreen;
         CameraFilterPack_Distortion_Dream2 dizzy;
@@ -109,9 +111,16 @@ namespace PIERStory
             screenGlitch2 = generalCam.GetComponent<CameraFilterPack_FX_Glitch2>();
 
             bloom = generalCam.GetComponent<CameraFilterPack_Blur_Bloom>();
+            
             reminisce = generalCam.GetComponent<CameraFilterPack_TV_Old_Movie_2>();
             reminisce2 = generalCam.GetComponent<CameraFilterPack_TV_Noise>();
             reminisce3 = generalCam.GetComponent<CameraFilterPack_OldFilm_Cutting1>();
+
+            reminisce4 = mainCam.GetComponent<CameraFilterPack_TV_Old_Movie_2>();
+            reminisce5 = mainCam.GetComponent<CameraFilterPack_TV_Noise>();
+
+            reminisce6 = mainCam.GetComponent<CameraFilterPack_OldFilm_Cutting1>();
+
             broken = mainCam.GetComponent<CameraFilterPack_TV_BrokenGlass>();
             brokenScreen = generalCam.GetComponent<CameraFilterPack_TV_BrokenGlass>();
 
@@ -125,8 +134,6 @@ namespace PIERStory
             heavySnow = generalCam.GetComponent<CameraFilterPack_3D_Snow>();
             heavyRain = generalCam.GetComponent<CameraFilterPack_Atmosphere_Rain>();
             rain = generalCam.GetComponent<D2RainsPE>();
-
-
         }
 
         #region 화면 연출 screen effect
@@ -171,7 +178,6 @@ namespace PIERStory
             if (__activeTime > 0)
                 StartCoroutine(RoutineStayTintState(__activeTime));
         }
-
 
         IEnumerator RoutineStayTintState(float __activeTime)
         {
@@ -559,6 +565,10 @@ namespace PIERStory
                     reminisce3.enabled = true;
                     break;
 
+                case GameConst.KR_SCREEN_EFFECT_REMINISCE4:
+                    reminisce6.enabled = true;
+                    break;
+
                 case GameConst.KR_SCREEN_EFFECT_REMINISCE:
 
                     int reminisceForce = 1;
@@ -591,6 +601,41 @@ namespace PIERStory
 
                     reminisce.enabled = true;
                     reminisce2.enabled = true;
+
+                    break;
+
+                    case GameConst.KR_SCREEN_EFFECT_REMINISCE3:
+
+                    reminisceForce = 1;
+
+                    if (__params != null)
+                    {
+                        ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_LEVEL, ref reminisceForce);
+
+                        if (__params[0].Contains("밝음"))
+                        {
+                            reminisceLight.gameObject.SetActive(true);
+                            reminisceLight.Play(true);
+                            break;
+                        }
+                    }
+
+                    switch (reminisceForce)
+                    {
+                        case 1:
+                            reminisce4.FramePerSecond = 15f;
+                            break;
+                        case 2:
+                        default:
+                            reminisce4.FramePerSecond = 20f;
+                            break;
+                        case 3:
+                            reminisce4.FramePerSecond = 25f;
+                            break;
+                    }
+
+                    reminisce4.enabled = true;
+                    reminisce5.enabled = true;
 
                     break;
             }
@@ -745,25 +790,28 @@ namespace PIERStory
                     hexagonLight.gameObject.SetActive(true);
                     break;
                 
-                
                 //안개 배경
                 case GameConst.KR_SCREEN_EFFECT_FOG:
-                    var colorMainFog = bgFogs[0].main;
-                    string colorFog = string.Empty;
+                    string transColorBg = "80";
+
+                    focusColor = "ffffff";
+                    
+                    colorMain = bgFogs[0].main;
+                    colorMain.startColor = new Color(255, 255, 255, 128);
 
                     if (__params != null)
                     {
-                        ScriptRow.GetParam<string>(__params, "색", ref colorFog);
+                        ScriptRow.GetParam<string>(__params, "색", ref focusColor);
                         ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_DISTRIBUTION, ref fogLevel);
                     }
 
-                    Color FogColor = HexCodeChanger.HexToColor(colorFog);
-                    FogColor = new Color(FogColor.r, FogColor.g, FogColor.b, FogColor.a);
-
+                    lineColor = HexCodeChanger.HexToColor(focusColor + transColorBg);
+                    lineColor = new Color(lineColor.r, lineColor.g, lineColor.b, lineColor.a);
+                    
                     for (int i = 0; i < bgFogs.Length; i++)
                     {
-                        colorMainFog = bgFogs[i].main;
-                        colorMainFog.startColor = FogColor;
+                        colorMain = bgFogs[i].main;
+                        colorMain.startColor = lineColor;
                     }
 
                     fogLevel = Mathf.Clamp(fogLevel, 1, 5);
@@ -771,19 +819,19 @@ namespace PIERStory
                     switch (fogLevel)
                     {
                         case 1:
-                            FogSet(1, false);
+                            FogSet(1.0f, true);
                             break;
                         case 2:
-                            FogSet(2, false);
+                            FogSet(2.0f, true);
                             break;
                         case 3:
-                            FogSet(3, false);
+                            FogSet(3.0f, true);
                             break;
                         case 4:
-                            FogSet(4, false);
+                            FogSet(4.0f, true);
                             break;
                         case 5:
-                            FogSet(5, false);
+                            FogSet(5.0f, true);
                             break;
                     }
 
@@ -792,42 +840,47 @@ namespace PIERStory
 
                 //안개 스크린
                 case GameConst.KR_SCREEN_EFFECT_SCREEN_FOG:
-                    var colorMainFog2 = screenFogs[0].main;
-                    string colorFog2 = string.Empty;
+                    string transColorScreen = "80";
+
+                    focusColor = "ffffff";
+
+                    colorMain = screenFogs[0].main;
+                    colorMain.startColor = new Color(255, 255, 255, 128);
 
                     if (__params != null)
                     {
-                        ScriptRow.GetParam<string>(__params, "색", ref colorFog2);
+                        ScriptRow.GetParam<string>(__params, "색", ref focusColor);
                         ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_DISTRIBUTION, ref fogLevel);
                     }
 
-                    Color FogColor2 = HexCodeChanger.HexToColor(colorFog2);
-                    FogColor2 = new Color(FogColor2.r, FogColor2.g, FogColor2.b, FogColor2.a);
-
+                    lineColor = HexCodeChanger.HexToColor(focusColor + transColorScreen);
+                    lineColor = new Color(lineColor.r, lineColor.g, lineColor.b, lineColor.a);
+                    
                     for (int i = 0; i < screenFogs.Length; i++)
                     {
-                        colorMainFog2 = screenFogs[i].main;
-                        colorMainFog2.startColor = FogColor2;
+                        colorMain = screenFogs[i].main;
+                        colorMain.startColor = lineColor;
                     }
+                    
 
                     fogLevel = Mathf.Clamp(fogLevel, 1, 5);
 
                     switch (fogLevel)
                     {
                         case 1:
-                            FogSet(1, true);
+                            FogSet(1.0f, true);
                             break;
                         case 2:
-                            FogSet(2, true);
+                            FogSet(2.0f, true);
                             break;
                         case 3:
-                            FogSet(3, true);
+                            FogSet(3.0f, true);
                             break;
                         case 4:
-                            FogSet(4, true);
+                            FogSet(4.0f, true);
                             break;
                         case 5:
-                            FogSet(5, true);
+                            FogSet(5.0f, true);
                             break;
                     }
 
@@ -974,7 +1027,6 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BUBBLES:
-
                     int bubbleLevel = 2;
 
                     if (__params != null)
@@ -999,54 +1051,61 @@ namespace PIERStory
                     bubble.Play(true);
                     break;
 
+                //여기서부터 타격.
                 case GameConst.KR_SCREEN_EFFECT_HIT:
-                    colorMain = hits[0].main;
-                    focusColor = string.Empty;
-
-                    if (__params != null)
+                    if (__params == null || __params[0] == "타격" || __params[0] == "둔기")
                     {
-                        ScriptRow.GetParam<string>(__params, "색", ref focusColor);
+                        colorMain = hits[0].main;
+                        focusColor = "ffffff";
+
+                        if (__params != null)
+                        {
+                            ScriptRow.GetParam<string>(__params, "색", ref focusColor);
+                        }
+
+                        lineColor = HexCodeChanger.HexToColor(focusColor);
+                        lineColor = new Color(lineColor.r, lineColor.g, lineColor.b, lineColor.a);
+
+                        for (int i = 0; i < hits.Length; i++)
+                        {
+                            colorMain = hits[i].main;
+                            colorMain.startColor = lineColor;
+                        }
+
+                        bluntStrike.gameObject.SetActive(true);
+                        bluntStrike.Play(true);
                     }
-
-                    lineColor = HexCodeChanger.HexToColor(focusColor);
-                    lineColor = new Color(lineColor.r, lineColor.g, lineColor.b, lineColor.a);
-
-                    for (int i = 0; i < hits.Length; i++)
+                    
+                    else if (__params[0] == "검")
                     {
-                        colorMain = hits[i].main;
-                        colorMain.startColor = lineColor;
-                    }
+                        colorMain = blades[0].main;
+                        focusColor = "ffffff";
 
-                    bluntStrike.gameObject.SetActive(true);
-                    bluntStrike.Play(true);
+                        if (__params != null)
+                        {
+                            ScriptRow.GetParam<string>(__params, "색", ref focusColor);
+                        }
+
+                        lineColor = HexCodeChanger.HexToColor(focusColor);
+                        lineColor = new Color(lineColor.r, lineColor.g, lineColor.b, lineColor.a);
+
+                        for (int i = 0; i < blades.Length; i++)
+                        {
+                            colorMain = blades[i].main;
+                            colorMain.startColor = lineColor;
+                        }
+
+                        blade.gameObject.SetActive(true);
+                        blade.Play(true);
+                    }
+                    
+                    else if (__params[0].Substring(1) == "충돌")
+                    {
+                        blade2.gameObject.SetActive(true);
+                        blade2.Play(true);
+                    }
                     break;
-
-                case GameConst.KR_SCREEN_EFFECT_BLADE:
-                    colorMain = blades[0].main;
-                    focusColor = string.Empty;
-
-                    if (__params != null)
-                    {
-                        ScriptRow.GetParam<string>(__params, "색", ref focusColor);
-                    }
-
-                    lineColor = HexCodeChanger.HexToColor(focusColor);
-                    lineColor = new Color(lineColor.r, lineColor.g, lineColor.b, lineColor.a);
-
-                    for (int i = 0; i < blades.Length; i++)
-                    {
-                        colorMain = blades[i].main;
-                        colorMain.startColor = lineColor;
-                    }
-
-                    blade.gameObject.SetActive(true);
-                    blade.Play(true);
-                    break;
-
-                case GameConst.KR_SCREEN_EFFECT_BLADE2:
-                    blade2.gameObject.SetActive(true);
-                    blade2.Play(true);
-                    break;
+                //타격 종료.
 
                 case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
 
@@ -1106,13 +1165,13 @@ namespace PIERStory
         /// </summary>
         /// <param name="__rateOverTime">시간당 갯수</param>
         /// <param name="isScreen">배경만인지? 스크린 전체인지</param>
-        void FogSet(int __rateOverTime, bool isScreen)
+        void FogSet(float __rateOverTime, bool isScreen)
         {
             var fogEmission = bgFog.emission;
 
             if (!isScreen)
             {
-                for (int i = 2; i < bgFogs.Length; i++)
+                for (int i = 1; i < bgFogs.Length; i++)
                 {
                     fogEmission = bgFogs[i].emission;
                     fogEmission.rateOverTime = __rateOverTime;
@@ -1120,15 +1179,13 @@ namespace PIERStory
             }
             else
             {
-                for (int i = 2; i < screenFogs.Length; i++)
+                for (int i = 1; i < screenFogs.Length; i++)
                 {
                     fogEmission = screenFogs[i].emission;
                     fogEmission.rateOverTime = __rateOverTime;
                 }
             }
         }
-
-
 
         /// <summary>
         /// 비눗방울 단계 조절
@@ -1144,8 +1201,6 @@ namespace PIERStory
                 bubbleMain.maxParticles = __max;
             }
         }
-
-
 
         #region 카메라 플래시
 
@@ -1243,13 +1298,7 @@ namespace PIERStory
 
                 case GameConst.KR_SCREEN_EFFECT_HIT:
                     bluntStrike.gameObject.SetActive(false);
-                    break;
-
-                case GameConst.KR_SCREEN_EFFECT_BLADE:
                     blade.gameObject.SetActive(false);
-                    break;
-
-                case GameConst.KR_SCREEN_EFFECT_BLADE2:
                     blade2.gameObject.SetActive(false);
                     break;
 
@@ -1325,6 +1374,10 @@ namespace PIERStory
                     reminisce3.enabled = false;
                     break;
 
+                case GameConst.KR_SCREEN_EFFECT_REMINISCE4:
+                    reminisce6.enabled = false;
+                    break;
+
                 case GameConst.KR_SCREEN_EFFECT_REMINISCE:
                     reminisce.enabled = false;
                     reminisce2.enabled = false;
@@ -1333,9 +1386,17 @@ namespace PIERStory
                         reminisceLight.gameObject.SetActive(false);
 
                     break;
+                    
+                case GameConst.KR_SCREEN_EFFECT_REMINISCE3:
+                    reminisce4.enabled = false;
+                    reminisce5.enabled = false;
+
+                    if (reminisceLight.gameObject.activeSelf)
+                        reminisceLight.gameObject.SetActive(false);
+
+                    break;
             }
         }
-
 
         /// <summary>
         /// 모든 화면 연출 제거

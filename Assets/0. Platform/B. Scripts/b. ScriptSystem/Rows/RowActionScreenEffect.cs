@@ -109,6 +109,8 @@ namespace PIERStory
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_GLITCH_SCREEN);
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_REMINISCE);
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_REMINISCE2);
+            ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_REMINISCE3);
+            ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_REMINISCE4);
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_SHAKE);
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_BLING);
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_FOG);
@@ -131,8 +133,6 @@ namespace PIERStory
 
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_BUBBLES);
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_HIT);
-            ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_BLADE);
-            ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_BLADE2);
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_WAVE_LINE);
 
             // 일반 이펙트 명령어 
@@ -153,8 +153,6 @@ namespace PIERStory
 
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_BUBBLES);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_HIT);
-            ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_BLADE);
-            ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_BLADE2);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_WAVE_LINE);
 
             // 카메라 이펙트 명령어 
@@ -179,6 +177,8 @@ namespace PIERStory
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_GLITCH_SCREEN);
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_REMINISCE);
             ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_REMINISCE2);
+            ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_REMINISCE3);
+            ListCameraEffect.Add(GameConst.KR_SCREEN_EFFECT_REMINISCE4);
         }
 
         /// <summary>
@@ -358,6 +358,14 @@ namespace PIERStory
                     ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
                     break;
 
+                case GameConst.KR_SCREEN_EFFECT_REMINISCE3:
+                    ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_REMINISCE4:
+                    ScreenEffectManager.main.StartScreenEffectCamera(command, paramArray);
+                    break;
+
                 case GameConst.KR_SCREEN_EFFECT_CAMERA_FLASH:
                     ScreenEffectManager.main.DirectiveFlash(paramArray);
                     break;
@@ -367,14 +375,6 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_HIT:
-                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
-                    break;
-
-                case GameConst.KR_SCREEN_EFFECT_BLADE:
-                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
-                    break;
-
-                case GameConst.KR_SCREEN_EFFECT_BLADE2:
                     ScreenEffectManager.main.StartParticleEffect(command, paramArray);
                     break;
 

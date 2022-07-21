@@ -78,7 +78,6 @@ namespace PIERStory
             OnSoundLoadCheck = SoundSetCompleteCheck;
         }
 
-
         public static void SetSoundDetail(bool isBGM, JsonData __j, Sprite s, string __title)
         {
             playBGM = isBGM;
@@ -86,7 +85,6 @@ namespace PIERStory
             titleSprite = s;
             soundTitle = __title;
         }
-
 
         public override void OnStartView()
         {

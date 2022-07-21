@@ -467,8 +467,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Illustration
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
-  m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -954,6 +954,7 @@ GameObject:
   - component: {fileID: 8270838431678617905}
   - component: {fileID: 5368147723547115242}
   - component: {fileID: 9080377517924688185}
+  - component: {fileID: 838559258688782782}
   m_Layer: 5
   m_Name: View - IFYOU Gallery
   m_TagString: Untagged
@@ -1869,6 +1870,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &838559258688782782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3658588131953736958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd634895deedd194aa3e8edb4034ee3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainBgmControl: {fileID: 0}
+  check: {fileID: 0}
 --- !u!1 &3658588131978850480
 GameObject:
   m_ObjectHideFlags: 0
@@ -2508,8 +2523,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "BGM \uC7AC\uC0DD\uBAA9\uB85D"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
-  m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4318,8 +4333,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Sound
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
-  m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4794,6 +4809,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -5435,6 +5458,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -5548,6 +5579,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -5661,6 +5700,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6038,6 +6085,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6547,6 +6602,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6660,6 +6723,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7150,6 +7221,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7395,6 +7474,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7904,6 +7991,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -8413,6 +8508,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -8526,6 +8629,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -9167,6 +9278,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -9280,6 +9399,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -9393,6 +9520,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VoiceMasterElement (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3025602111688897227, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5831005489700152590, guid: c4c1e207a82198146b30e51f6c609eb0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

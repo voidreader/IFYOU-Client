@@ -22,7 +22,6 @@ namespace PIERStory
         CameraFilterPack_Color_GrayScale bgGrayScale, screenGrayScale;
         CameraFilterPack_Blur_Blurry blur;
         CameraFilterPack_FX_Glitch1 glitch, screenGlitch;
-        CameraFilterPack_FX_Glitch2 glitch2, screenGlitch2;
         CameraFilterPack_Blur_Bloom bloom;
         CameraFilterPack_TV_Old_Movie_2 reminisce;
         CameraFilterPack_TV_Noise reminisce2;
@@ -110,9 +109,7 @@ namespace PIERStory
             blur = generalCam.GetComponent<CameraFilterPack_Blur_Blurry>();
 
             glitch = mainCam.GetComponent<CameraFilterPack_FX_Glitch1>();
-            glitch2 = mainCam.GetComponent<CameraFilterPack_FX_Glitch2>();
             screenGlitch = generalCam.GetComponent<CameraFilterPack_FX_Glitch1>();
-            screenGlitch2 = generalCam.GetComponent<CameraFilterPack_FX_Glitch2>();
 
             bloom = generalCam.GetComponent<CameraFilterPack_Blur_Bloom>();
             
@@ -556,13 +553,15 @@ namespace PIERStory
                     break;
                 
                 case GameConst.KR_SCREEN_EFFECT_GLITCH:
+                    reminisce5.Fade = 0.3f;
+                    reminisce5.enabled = true;
                     glitch.enabled = true;
-                    glitch2.enabled = true;
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_GLITCH_SCREEN:
+                    reminisce2.Fade = 0.3f;
+                    reminisce2.enabled = true;
                     screenGlitch.enabled = true;
-                    screenGlitch2.enabled = true;
                     break;
                 
                 case GameConst.KR_SCREEN_EFFECT_REMINISCE2:
@@ -1396,13 +1395,13 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_GLITCH:
+                    reminisce5.enabled = false;
                     glitch.enabled = false;
-                    glitch2.enabled = false;
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_GLITCH_SCREEN:
+                    reminisce2.enabled = false;
                     screenGlitch.enabled = false;
-                    screenGlitch2.enabled = false;
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_BLOOD_HIT:

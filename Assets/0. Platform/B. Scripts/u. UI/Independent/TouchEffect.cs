@@ -10,7 +10,6 @@ namespace PIERStory
         Vector2 touchInPos = Vector2.one;
         Vector3 touchOutPos = Vector3.one;
 
-
         public void OnTouchScreen(InputAction.CallbackContext context)
         {
             try {
@@ -22,8 +21,7 @@ namespace PIERStory
                     effect = Instantiate(touchEffect, touchOutPos, Quaternion.identity);
                     Destroy(effect, 0.5f);
                 }
-            } catch(System.Exception e) {
-                
+            } catch {
             }
         }
 
@@ -33,4 +31,3 @@ namespace PIERStory
         }
     }
 }
-

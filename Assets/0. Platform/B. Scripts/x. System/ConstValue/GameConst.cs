@@ -219,6 +219,8 @@ namespace PIERStory
         
         public const string KR_SCREEN_EFFECT_BUBBLES = "비눗방울";
         public const string KR_SCREEN_EFFECT_HIT = "타격";
+        public const string KR_SCREEN_EFFECT_CAMERA_ROTATE = "캐릭터회전";
+        
 
         public const string KR_SCREEN_EFFECT_WAVE_LINE = "웨이브라인";
 

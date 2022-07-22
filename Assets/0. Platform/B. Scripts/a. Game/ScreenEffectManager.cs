@@ -1146,6 +1146,28 @@ namespace PIERStory
                     break;
                 //타격 종료.
 
+                case GameConst.KR_SCREEN_EFFECT_CAMERA_ROTATE:
+                    if(__params == null || __params[0].Contains("캐릭터회전"))
+                    {
+                        modelRenderCamC.transform.DORotate(new Vector3(0, 0, 180), 0);
+                        modelRenderCamL.transform.DORotate(new Vector3(0, 0, 180), 0);
+                        modelRenderCamR.transform.DORotate(new Vector3(0, 0, 180), 0);
+                    }
+
+                    else if (__params[0].Contains("반전"))
+                    {
+                        modelRenderCamC.transform.DORotate(new Vector3(0, 0, 180), 0);
+                        modelRenderCamL.transform.DORotate(new Vector3(0, 0, 180), 0);
+                        modelRenderCamR.transform.DORotate(new Vector3(0, 0, 180), 0);
+                        modelRenderCamC.ResetProjectionMatrix();
+                        modelRenderCamL.ResetProjectionMatrix();
+                        modelRenderCamR.ResetProjectionMatrix();
+                        modelRenderCamC.projectionMatrix = modelRenderCamC.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
+                        modelRenderCamL.projectionMatrix = modelRenderCamL.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
+                        modelRenderCamR.projectionMatrix = modelRenderCamR.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
+                    }
+                    break;
+
                 case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
 
                     float waveAngle = 0f, waveY = 1f;
@@ -1339,6 +1361,15 @@ namespace PIERStory
                     bluntStrike.gameObject.SetActive(false);
                     blade.gameObject.SetActive(false);
                     blade2.gameObject.SetActive(false);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_CAMERA_ROTATE:
+                    modelRenderCamC.transform.DORotate(new Vector3(0, 0, 0), 0);
+                    modelRenderCamL.transform.DORotate(new Vector3(0, 0, 0), 0);
+                    modelRenderCamR.transform.DORotate(new Vector3(0, 0, 0), 0);
+                    modelRenderCamC.projectionMatrix = modelRenderCamC.projectionMatrix * Matrix4x4.Scale(new Vector3(1, 1, 1));
+                    modelRenderCamL.projectionMatrix = modelRenderCamL.projectionMatrix * Matrix4x4.Scale(new Vector3(1, 1, 1));
+                    modelRenderCamR.projectionMatrix = modelRenderCamR.projectionMatrix * Matrix4x4.Scale(new Vector3(1, 1, 1));
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:

@@ -134,6 +134,7 @@ namespace PIERStory
 
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_BUBBLES);
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_HIT);
+            ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_CAMERA_ROTATE);
             ListAllCommands.Add(GameConst.KR_SCREEN_EFFECT_WAVE_LINE);
 
             // 일반 이펙트 명령어 
@@ -155,6 +156,7 @@ namespace PIERStory
 
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_BUBBLES);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_HIT);
+            ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_CAMERA_ROTATE);
             ListGeneralEffect.Add(GameConst.KR_SCREEN_EFFECT_WAVE_LINE);
 
             // 카메라 이펙트 명령어 
@@ -381,6 +383,10 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_HIT:
+                    ScreenEffectManager.main.StartParticleEffect(command, paramArray);
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_CAMERA_ROTATE:
                     ScreenEffectManager.main.StartParticleEffect(command, paramArray);
                     break;
 

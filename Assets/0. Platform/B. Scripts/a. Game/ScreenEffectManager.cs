@@ -1159,12 +1159,11 @@ namespace PIERStory
                         modelRenderCamC.transform.DORotate(new Vector3(0, 0, 180), 0);
                         modelRenderCamL.transform.DORotate(new Vector3(0, 0, 180), 0);
                         modelRenderCamR.transform.DORotate(new Vector3(0, 0, 180), 0);
-                        modelRenderCamC.ResetProjectionMatrix();
-                        modelRenderCamL.ResetProjectionMatrix();
-                        modelRenderCamR.ResetProjectionMatrix();
-                        modelRenderCamC.projectionMatrix = modelRenderCamC.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
-                        modelRenderCamL.projectionMatrix = modelRenderCamL.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
-                        modelRenderCamR.projectionMatrix = modelRenderCamR.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
+
+                        //카메라 반전 효과인데.. 줌인 연출이랑 충돌 나는 것 같음...
+                        //modelRenderCamC.projectionMatrix = modelRenderCamC.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
+                        //modelRenderCamL.projectionMatrix = modelRenderCamL.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
+                        //modelRenderCamR.projectionMatrix = modelRenderCamR.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
                     }
                     break;
 
@@ -1367,9 +1366,6 @@ namespace PIERStory
                     modelRenderCamC.transform.DORotate(new Vector3(0, 0, 0), 0);
                     modelRenderCamL.transform.DORotate(new Vector3(0, 0, 0), 0);
                     modelRenderCamR.transform.DORotate(new Vector3(0, 0, 0), 0);
-                    modelRenderCamC.projectionMatrix = modelRenderCamC.projectionMatrix * Matrix4x4.Scale(new Vector3(1, 1, 1));
-                    modelRenderCamL.projectionMatrix = modelRenderCamL.projectionMatrix * Matrix4x4.Scale(new Vector3(1, 1, 1));
-                    modelRenderCamR.projectionMatrix = modelRenderCamR.projectionMatrix * Matrix4x4.Scale(new Vector3(1, 1, 1));
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:

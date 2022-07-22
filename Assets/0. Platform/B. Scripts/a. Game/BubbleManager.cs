@@ -9,7 +9,7 @@ namespace PIERStory
         public static BubbleManager main = null;
 
         public int normalFontSize = 28; // 대화 폰트 사이즈 
-        public int BigFontSize = 36;    // 큰 폰트 사이즈
+        public int BigFontSize = 34;    // 큰 폰트 사이즈
 
         public int defaultTalkPos = 1;      // default 대화, 속삭임 포지션 (1부터 9)
         public int defaultFeelingPos = 4;   // default 속마음, 외침 포지션 

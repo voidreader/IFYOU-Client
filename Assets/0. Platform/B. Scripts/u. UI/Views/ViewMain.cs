@@ -113,9 +113,6 @@ namespace PIERStory {
 
             LobbyManager.main.RequestPlatformLoadingImages(); // 플랫폼 로딩 이미지 다운로드 처리 
             
-            UserManager.main.SetNewNickname(UserManager.main.nickname);
-            
-            
             mainToggle.SetIsOn(true); // '메인' 네이게이션이 언제나 선택된 상태 
             
             
@@ -174,7 +171,6 @@ namespace PIERStory {
         /// 계정연동 등의 상황에서 메인 뷰 리프레시 
         /// </summary>
         void RefreshMainView() {
-            UserManager.main.SetNewNickname(UserManager.main.nickname);
             
             InitLobby();
 

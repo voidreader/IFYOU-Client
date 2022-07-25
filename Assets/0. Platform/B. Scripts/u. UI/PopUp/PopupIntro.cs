@@ -1,10 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+using TMPro;
 using Febucci.UI;
 using DG.Tweening;
-using TMPro;
 
 
 namespace PIERStory {
@@ -17,7 +17,8 @@ namespace PIERStory {
         public float fingerTimer = 0;
         
         public StoryData selectedStory;
-        
+
+        public GameObject skipButton;
         
         [Space]
         [Header("Phase 1")]
@@ -41,14 +42,10 @@ namespace PIERStory {
         
         [Space]
         [Header("Phase 4")]
-        
         [SerializeField] GameObject introduceStory;
-        [SerializeField] ImageRequireDownload mainThumbnail;    // 썸네일 
-        [SerializeField] TextMeshProUGUI textTitle;             // 타이틀
-        [SerializeField] TextMeshProUGUI textAuthor;            // 원작자
-        [SerializeField] TextMeshProUGUI textProducer;          // 제작사
-        [SerializeField] TextMeshProUGUI textGenre;             // 장르 
-        [SerializeField] TextMeshProUGUI textSummary;           // 요약
+        public ViewIntroduce introduceBox;
+        public GameObject homeButton;
+
         
         public override void Show()
         {
@@ -187,7 +184,8 @@ namespace PIERStory {
         /// </summary>
         public void StartPhase1() {
             Debug.Log("Intro StartPhase1");
-            
+            skipButton.SetActive(true);
+
             imageBubble.DOFade(1,1f).OnComplete(()=> {
                 
                currentIntroPhase = 0;
@@ -313,8 +311,6 @@ namespace PIERStory {
         
         public void SelectIntroMessage(StoryData __story) {
             
-            
-            
             HidePhase3();
             currentIntroPhase = 6;
             
@@ -322,16 +318,11 @@ namespace PIERStory {
             introduceStory.GetComponent<CanvasGroup>().DOFade(1, 1f);
             
             selectedStory = __story;
-            mainThumbnail.SetDownloadURL(__story.premiumPassURL, __story.premiumPassKey);
-            SystemManager.SetText(textTitle, __story.title);
-            
-            
-            SystemManager.SetText(textAuthor, SystemManager.GetLocalizedText("6179") + " / " + __story.original); // 원작
-            SystemManager.SetText(textProducer, SystemManager.GetLocalizedText("6180") + " / " + __story.writer); // 
-            SystemManager.SetText(textSummary, __story.summary); // 요약
-            SystemManager.SetText(textGenre, SystemManager.GetLocalizedText("6181") + " / " + __story.genre); // 장르            
-            
-            
+            introduceBox.SetInfo(__story);
+
+            skipButton.SetActive(false);
+            homeButton.SetActive(true);
+
             // 인트로 완료
             UserManager.main.UpdateIntroComplete();
         }

@@ -37,7 +37,6 @@ namespace PIERStory
 
         public List<CoinIndicator> ListCoinIndicators = new List<CoinIndicator>(); // 코인 표시기
         public List<GemIndicator> ListGemIndicators = new List<GemIndicator>(); // 젬 표시기
-        public List<NicknameIndicator> ListNicknameIndicators = new List<NicknameIndicator>(); // 닉네임 표시기
 
 
         [HideInInspector] public Queue<JsonData> CompleteMissions = new Queue<JsonData>();      // 완료된 미션 목록
@@ -226,7 +225,6 @@ namespace PIERStory
 
             ListCoinIndicators.Clear();
             ListGemIndicators.Clear();
-            ListNicknameIndicators.Clear();
         }
 
         /// <summary>
@@ -421,8 +419,7 @@ namespace PIERStory
             accountLink = SystemManager.GetJsonNodeString(userJson, "account_link");
             ViewCommonTop.OnRefreshAccountLink?.Invoke(); // 상단 갱신 (계정연동 보상때문에)
 
-            SetNewNickname(SystemManager.GetJsonNodeString(userJson, "nickname"));
-
+            nickname = SystemManager.GetJsonNodeString(userJson, "nickname");
 
             // 슈퍼유저 처리 
             isAdminUser = SystemManager.GetJsonNodeBool(userJson, "admin");
@@ -451,14 +448,6 @@ namespace PIERStory
             allpassExpireDate = new DateTime(allpassExpireTick);
         }
 
-        public void SetNewNickname(string __newNickname)
-        {
-            nickname = __newNickname;
-
-            // nickname 컨트롤 리프레시 필요 
-            RefreshNicknameIndicators(nickname);
-        }
-
 
         /// <summary>
         /// 갱신된 유저 정보 설정. 
@@ -466,7 +455,6 @@ namespace PIERStory
         /// <param name="__j"></param>
         public void SetRefreshUserInfo(JsonData __j)
         {
-
             // 소모성 재화 정보 update
             SetBankInfo(__j);
 
@@ -1031,34 +1019,6 @@ namespace PIERStory
             ListGemIndicators.Add(__receiver);
             RefreshGemIndicators();
         }
-
-        public void AddNicknameIndicator(NicknameIndicator __receiver)
-        {
-            if (ListNicknameIndicators.Contains(__receiver))
-                return;
-
-            ListNicknameIndicators.Add(__receiver);
-            RefreshGemIndicators();
-        }
-
-        /// <summary>
-        /// 닉네임 표시 업데이트 
-        /// </summary>
-        void RefreshNicknameIndicators(string __nick)
-        {
-            for (int i = ListNicknameIndicators.Count - 1; i >= 0; i--)
-            {
-                if (!ListNicknameIndicators[i])
-                    ListNicknameIndicators.RemoveAt(i);
-            }
-
-            for (int i = 0; i < ListNicknameIndicators.Count; i++)
-            {
-                ListNicknameIndicators[i].RefreshNickname(__nick);
-            }
-        }
-
-
 
 
         /// <summary>
@@ -3071,10 +3031,10 @@ namespace PIERStory
             // 메일함 리프레시 
             UserManager.main.SetNotificationInfo(userIfyouPlayJson);
 
-            StartCoroutine(RoutineAdCooldown());
             SystemManager.ShowSystemPopupLocalize("6177", null, null, true, false);
             
             MainIfyouplay.OnRefreshIfyouplay?.Invoke();
+            StartCoroutine(RoutineAdCooldown());
             
             
         }

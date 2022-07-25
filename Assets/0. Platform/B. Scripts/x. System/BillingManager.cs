@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
-using Toast.Gamebase;
+
 using LitJson;
 using BestHTTP;
 using AppsFlyerSDK;
+using Toast.Gamebase;
 
 namespace PIERStory {
     public class BillingManager : MonoBehaviour
@@ -121,7 +121,7 @@ namespace PIERStory {
         /// 게임베이스 구매 처리 
         /// </summary>
         /// <param name="gamebaseProductId"></param>
-        public void RequestPurchaseGamebase(string gamebaseProductId) {
+        public void RequestPurchaseGamebase(string gamebaseProductId, string projectId = "") {
             Debug.Log(string.Format("RequestPurchase Called [{0}]", gamebaseProductId));
             
             if(string.IsNullOrEmpty(gamebaseProductId)) {
@@ -153,7 +153,7 @@ namespace PIERStory {
                     Debug.Log(logMessage);
                     */
                     
-                    RequestPurchaseReward(purchasableReceipt);
+                    RequestPurchaseReward(purchasableReceipt, projectId);
                 }
                 else
                 {
@@ -175,7 +175,7 @@ namespace PIERStory {
         /// 인앱 결제 완료 후 요청
         /// </summary>
         /// <param name="receipt"></param>
-        void RequestPurchaseReward(GamebaseResponse.Purchase.PurchasableReceipt receipt) {
+        void RequestPurchaseReward(GamebaseResponse.Purchase.PurchasableReceipt receipt, string projectId = "") {
             
             Debug.Log("##### RequestPurchaseReward ####");
             
@@ -194,6 +194,9 @@ namespace PIERStory {
             }
             
             sendData["currency"] = receipt.currency;
+
+            if (!string.IsNullOrEmpty(projectId))
+                sendData[CommonConst.COL_PROJECT_ID] = projectId;
             
             NetworkLoader.main.SendPost(OnRequestPurchaseReward, sendData, true);
             
@@ -230,7 +233,6 @@ namespace PIERStory {
             }
             
             Debug.Log(response.DataAsText);
-            // SystemManager.HideNetworkLoading();
             
             // 받은 데이터 처리
             // bank, userPurchaseHistory
@@ -292,6 +294,13 @@ namespace PIERStory {
                     StoryLobbyMain.OnPassPurchase?.Invoke();
                 }
                 
+                yield break;
+            }
+
+            // 원데이 패스 구매 완료
+            if(__productID == "oneday_pass")
+            {
+
                 yield break;
             }
             

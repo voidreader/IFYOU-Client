@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 using TMPro;
 using LitJson;
 
@@ -62,12 +61,6 @@ namespace PIERStory {
             Debug.Log("OnClick IntroMessage : " + connectedProjectID);
             
             StoryData story = StoryManager.main.FindProject(connectedProjectID.ToString());
-            // Doozy.Runtime.Signals.Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_INTRODUCE, story, "recommend");
-            
-            
-
-            
-            // PopupManager.main.HideActivePopup();
             
             // 선택 완료
             basePopup.SelectIntroMessage(story);

@@ -16,8 +16,9 @@ namespace PIERStory {
         public GameObject onedayPass;       // 원데이패스 관련 묶음 Object
         public GameObject onedayPurchaseButton;
         public GameObject onedayBadgeButton;
+        public TextMeshProUGUI onedayPassTimer;
 
-        public ImageRequireDownload premiumPurchaseButon;
+        public GameObject premiumPurchaseButton;
         public ImageRequireDownload premiumBadgeButton;
 
         public Button buttonAlert;          // 작품 알림 버튼
@@ -67,25 +68,22 @@ namespace PIERStory {
         
         public override void OnView() {
             base.OnView();
-
-
         }
         
         public override void OnStartView() {
             base.OnStartView();
         
-        
             textRecommend.gameObject.SetActive(false);    
-            SetInfo();            
-            
+            SetInfo();
+            InitOnedayPass();
         }
 
-        void SetInfo() {
+        public void SetInfo(StoryData introduceStoryData = null) {
             
-            if(string.IsNullOrEmpty(SystemListener.main.introduceStory.projectID))
+            introduceStory = introduceStoryData == null ? SystemListener.main.introduceStory : introduceStoryData;
+            
+            if(string.IsNullOrEmpty(introduceStory.projectID))
                 return;
-            
-            introduceStory = SystemListener.main.introduceStory;
 
             SetLikeButtonState();
             SetAlertButtonState();
@@ -129,6 +127,12 @@ namespace PIERStory {
             else 
                 SystemManager.SetLocalizedText(textSerialDay, "5186");// 완결 
             */
+
+            completeStoryTag.SetActive(!introduceStory.isSerial);
+            updateStateGroup.SetActive(introduceStory.isSerial);
+
+            if (introduceStory.isSerial)
+                SystemManager.SetText(updateDateText_1, introduceStory.GetSeiralDay());
 
 
             // 작품 세부 정보
@@ -189,9 +193,38 @@ namespace PIERStory {
             StoryManager.main.RequestStoryInfo(introduceStory);
             
         }
-        
+
+        #region 원데이 패스 관련
+
+        void InitOnedayPass()
+        {
+            onedayPurchaseButton.SetActive(string.IsNullOrEmpty(introduceStory.onedayExpireDate));
+            onedayBadgeButton.SetActive(!string.IsNullOrEmpty(introduceStory.onedayExpireDate) && introduceStory.IsValidOnedayPass());
+            onedayPass.SetActive(onedayPurchaseButton.activeSelf || onedayBadgeButton.activeSelf);
+        }
+
+
+        public void OpenOnedayPassPopup()
+        {
+
+        }
+
+
+        #endregion
+
+        #region 프리미엄 패스 관련
+
+        public void OpenPremiumPassPopup()
+        {
+
+        }
+
+
+        #endregion
+
+
         #region 좋아요 버튼 관련 메소드
-        
+
         /// <summary>
         /// 좋아요 버튼 세팅
         /// </summary>

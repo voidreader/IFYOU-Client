@@ -163,9 +163,9 @@ namespace PIERStory {
             */
             
             
-            if(Input.GetKeyDown(KeyCode.R)) { 
-                Signal.Send(LobbyConst.STREAM_IFYOU, "showIntro", string.Empty);
-                
+            if(Input.GetKeyDown(KeyCode.R)) {
+                //Signal.Send(LobbyConst.STREAM_IFYOU, "showIntro", string.Empty);
+                SystemManager.ShowIntroPopup();
             }
         }
 

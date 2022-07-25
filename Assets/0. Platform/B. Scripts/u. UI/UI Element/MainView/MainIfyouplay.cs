@@ -234,7 +234,15 @@ namespace PIERStory
         void InitDailyAttendance()
         {
             JsonData dailyData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION], LobbyConst.NODE_ATTENDANCE);
-            string attendanceKey = dailyData[LobbyConst.NODE_ATTENDANCE][0].ToString();
+            string attendanceKey = dailyData != null ? dailyData[LobbyConst.NODE_ATTENDANCE][0].ToString() : string.Empty;
+
+            if(string.IsNullOrEmpty(attendanceKey))
+            {
+                SystemManager.ShowMessageAlert("System Error");
+                NetworkLoader.main.ReportRequestError("Daily attendance error", JsonMapper.ToStringUnicode(dailyData) + "\nattendanceKey = " + attendanceKey);
+                return;
+            }
+
             dailyData = SystemManager.GetJsonNode(dailyData, attendanceKey);
 
             for(int i=0;i < dailyAttendanceRewards.Length;i++)
@@ -492,7 +500,7 @@ namespace PIERStory
             if(!gameObject.activeSelf)
                 return;
                 
-            if(UserManager.main.adCoolDownTimer == null)
+            if(UserManager.main == null || UserManager.main.adCoolDownTimer == null)
                 return;
             
             try {
@@ -506,7 +514,6 @@ namespace PIERStory
 
             if (cooldownState.activeSelf)
                 StartCoroutine(RoutineNextAdCooldown());
-            
         }
 
         

@@ -64,9 +64,9 @@ namespace PIERStory {
             result = JsonMapper.ToObject(res.DataAsText);
             // result["nickname"]
 
-            
+
             // 닉네임 변경 호출
-            UserManager.main.SetNewNickname(result["nickname"].ToString());
+            MainMore.OnUpdateNickname?.Invoke(SystemManager.GetJsonNodeString(result, "nickname"));
             
             Hide(); // 성공 후 닫는다.
             SystemManager.ShowSimpleAlertLocalize("6118");

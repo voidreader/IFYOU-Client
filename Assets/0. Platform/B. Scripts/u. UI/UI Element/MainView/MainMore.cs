@@ -1,14 +1,10 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-
-using Toast.Gamebase;
-using Doozy.Runtime.Signals;
-using Doozy.Runtime.Reactor.Animators;
-using TMPro;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.ResourceManagement.ResourceLocations;
+
+using TMPro;
+using Toast.Gamebase;
+using Doozy.Runtime.Reactor.Animators;
 
 using Firebase.Analytics;
 
@@ -17,10 +13,12 @@ namespace PIERStory {
     public class MainMore : MonoBehaviour
     {
         public static System.Action OnRefreshMore = null;
+        public static System.Action<string> OnUpdateNickname = null;
 
         [SerializeField] GameObject accountBonus;
         [SerializeField] GameObject couponButton; // 쿠폰 버튼 (iOS에서 비활성)
         [SerializeField] RectTransform usermenuRect; // 유저 메뉴 Rect
+        public TextMeshProUGUI useNicknameText;     // 유저 닉네임
         [SerializeField] TextMeshProUGUI textUID;
 
         public Image pushAlert;                 // 푸쉬 알림
@@ -43,12 +41,13 @@ namespace PIERStory {
         void Start()
         {
             OnRefreshMore = RefreshScreen;
-            
+            OnUpdateNickname = UpdateUserNickname;
+
             // iOS에서는 쿠폰 제거 
-            #if UNITY_IOS
+#if UNITY_IOS
             couponButton.SetActive(false);
             usermenuRect.sizeDelta = new Vector2(720, 300);
-            #endif
+#endif
         }
 
         private void OnEnable()
@@ -59,7 +58,6 @@ namespace PIERStory {
 
         void RefreshScreen()
         {
-            
             clickLevelCount = 0;
             clickVersionCount = 0;
             
@@ -70,13 +68,12 @@ namespace PIERStory {
                 
             Debug.Log("#### RefreshScreen");
 
-            
             accountBonus.SetActive(!UserManager.main.CheckAccountLink());
             
 
             textVersion.text = SystemManager.GetLocalizedText("5053") + " " + Application.version;      // 버전
             textUID.text = string.Format("UID : {0}", UserManager.main.GetUserPinCode());               // UID
-
+            SystemManager.SetText(useNicknameText, UserManager.main.nickname);
 
 
             #region 게임베이스 push
@@ -129,6 +126,12 @@ namespace PIERStory {
             
             #endregion
 
+        }
+
+        void UpdateUserNickname(string nickname)
+        {
+            UserManager.main.nickname = nickname;
+            SystemManager.SetText(useNicknameText, nickname);
         }
         
 
@@ -226,7 +229,6 @@ namespace PIERStory {
             
 
             PopupManager.main.ShowPopup(p, true);
-            //Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_LANGUAGE, string.Empty);
         }
 
 

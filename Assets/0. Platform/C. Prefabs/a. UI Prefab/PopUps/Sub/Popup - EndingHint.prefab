@@ -2098,7 +2098,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 3976885722007137615}
   isException: 1
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &3976885722111320844
 GameObject:
   m_ObjectHideFlags: 0
@@ -2447,7 +2449,6 @@ GameObject:
   - component: {fileID: 3976885722364502786}
   - component: {fileID: 3976885722364502799}
   - component: {fileID: 3976885722364502796}
-  - component: {fileID: 3976885722364502797}
   - component: {fileID: 5110322817913997393}
   m_Layer: 5
   m_Name: EndingUnlockCondition
@@ -2573,23 +2574,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &3976885722364502797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3976885722364502787}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _textID: 
-  _text: {fileID: 3976885722364502796}
-  _localizedText: 
-  isException: 1
-  isTextSet: 0
 --- !u!114 &5110322817913997393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2606,7 +2590,8 @@ MonoBehaviour:
   _text: {fileID: 3976885722364502796}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1001 &3976885722088776697
 PrefabInstance:
   m_ObjectHideFlags: 0

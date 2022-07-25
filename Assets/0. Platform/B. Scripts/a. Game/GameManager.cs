@@ -1449,7 +1449,7 @@ namespace PIERStory
                 return;
             }
 
-            NetworkLoader.main.UpdateUserProjectCurrent(StoryManager.main.CurrentEpisodeID, currentSceneId, currentRow.script_no);
+            NetworkLoader.main.UpdateUserProjectCurrent(StoryManager.main.CurrentEpisodeID, currentSceneId, currentRow.script_no, false, "GameManager.SaveCurrentPlay");
         }
 
         /// <summary>

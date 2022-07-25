@@ -171,7 +171,7 @@ namespace PIERStory
             
             GameManager.SetNewGame();
             // 통신 
-            NetworkLoader.main.UpdateUserProjectCurrent(specialEpisode.episodeID, null, 0);
+            NetworkLoader.main.UpdateUserProjectCurrent(specialEpisode.episodeID, null, 0, false, "StartSpecialEpisode");
             
             Dictionary<string, string> eventValues = new Dictionary<string, string>();
             eventValues.Add("project_id", StoryManager.main.CurrentProjectID);

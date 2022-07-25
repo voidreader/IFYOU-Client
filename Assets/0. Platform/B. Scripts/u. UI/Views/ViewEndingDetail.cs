@@ -149,7 +149,7 @@ namespace PIERStory
             //    SceneManager.LoadSceneAsync(CommonConst.SCENE_GAME, LoadSceneMode.Single).allowSceneActivation = true;
 
             GameManager.SetNewGame();
-            NetworkLoader.main.UpdateUserProjectCurrent(endingData.episodeID, null, 0);
+            NetworkLoader.main.UpdateUserProjectCurrent(endingData.episodeID, null, 0, false, "ViewEndingDetail.OnClickStartEnding");
         }
     }
 }

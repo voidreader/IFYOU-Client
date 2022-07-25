@@ -122,7 +122,7 @@ namespace PIERStory
 
             GameManager.SetNewGame();
             // 통신 
-            NetworkLoader.main.UpdateUserProjectCurrent(endingData.episodeID, null, 0);
+            NetworkLoader.main.UpdateUserProjectCurrent(endingData.episodeID, null, 0, false, "OnClickStartEnding");
         }
 
         /// <summary>

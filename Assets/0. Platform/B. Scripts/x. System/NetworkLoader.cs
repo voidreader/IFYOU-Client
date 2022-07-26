@@ -339,7 +339,7 @@ namespace PIERStory
         /// <param name="__sceneID">사건 ID</param>
         /// <param name="__scriptNO">Script NO</param>
         /// <param name="__isStarting">시작시점에서의 호출인지 여부 </param>
-        public void UpdateUserProjectCurrent(string __episodeID, string __sceneID, long __scriptNO, bool __isStarting = false) 
+        public void UpdateUserProjectCurrent(string __episodeID, string __sceneID, long __scriptNO, bool __isStarting = false, string __callby = "default") 
         {
             if (!UserManager.main.useRecord)
                 return;
@@ -350,6 +350,7 @@ namespace PIERStory
             sending["scene_id"] = __sceneID;
             sending["script_no"] = __scriptNO;
             sending[CommonConst.FUNC] = "updateUserProjectCurrent"; // func 지정 
+            sending["callby"]  = __callby; // 호출지점
             
             // 에피소드 시작시점과, 플레이 도중일때 콜백을 다르게 분리했다. 
             if(__isStarting) 

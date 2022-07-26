@@ -964,7 +964,7 @@ namespace PIERStory {
             }
 
             // 통신 
-            NetworkLoader.main.UpdateUserProjectCurrent(currentEpisodeData.episodeID, lastPlaySceneID, lastPlayScriptNO);
+            NetworkLoader.main.UpdateUserProjectCurrent(currentEpisodeData.episodeID, lastPlaySceneID, lastPlayScriptNO, false, "StartGame");
             
             Dictionary<string, string> eventValues = new Dictionary<string, string>();
             eventValues.Add("project_id", StoryManager.main.CurrentProjectID);

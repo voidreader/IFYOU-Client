@@ -480,7 +480,7 @@ namespace PIERStory
                 // isResumePlay가 해제되기 전까지는 통신을 보내지 않는다
                 // 이어하기로 들어온 경우 skip을 통해서 마지막 저장된 위치까지 플레이하기 때문에 또 통신을 할 필요가 없음. 
                 if (!GameManager.isResumePlay)
-                    NetworkLoader.main.UpdateUserProjectCurrent(StoryManager.main.CurrentEpisodeID, scene_id, script_no);
+                    NetworkLoader.main.UpdateUserProjectCurrent(StoryManager.main.CurrentEpisodeID, scene_id, script_no, false, "ProcessRowAction");
             }
 
 

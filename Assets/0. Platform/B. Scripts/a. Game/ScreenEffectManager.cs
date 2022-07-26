@@ -83,7 +83,7 @@ namespace PIERStory
         [Tooltip("엔딩크레딧")] public ParticleSystem endingCredit;
         public GameObject endingGroup;
         public GameObject endingCond;
-        public GameManager endingSet;
+        private GameManager endingSet;
 
         #endregion
 

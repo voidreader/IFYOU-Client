@@ -9,13 +9,11 @@ namespace PIERStory
     public class ScreenEffectManager : MonoBehaviour
     {
         public static ScreenEffectManager main = null;
-
         public Camera mainCam;
+        public Camera generalCam;
         public Camera modelRenderCamC; // 모델용 중앙 카메라 
         public Camera modelRenderCamL; // 모델용 L 카메라 
         public Camera modelRenderCamR; // 모델용 R 카메라 
-
-        public Camera generalCam;
 
         #region 카메라 오브젝트 component에 스크립트로 제어하는 연출
 
@@ -82,12 +80,19 @@ namespace PIERStory
         public ParticleSystem[] bubbles;
         [Tooltip("회상, 밝음")] public ParticleSystem reminisceLight;
         [Tooltip("신비로운 경계라인")] public ParticleSystem waveLine;
+        [Tooltip("엔딩크레딧")] public ParticleSystem endingCredit;
+        public GameObject endingGroup;
+        public GameObject endingCond;
+        public GameManager endingSet;
 
         #endregion
 
         // zoom용 float값
         float originY = 0f;
         float mainCamOriginSize = 0f, modelCamOriginSize = 0f;
+
+        // 크레딧 엔딩 Y값
+        float endingGroupMove = 50f;
 
         [Space(20)]
         public SpriteRenderer bgTint;
@@ -96,6 +101,16 @@ namespace PIERStory
         private void Awake()
         {
             main = this;
+        }
+
+        public void Update()
+        {
+            if(endingGroup.transform.position.y >= endingGroupMove)
+            {
+                endingCredit.gameObject.SetActive(false);
+                endingSet.isWaitingScreenTouch = false;
+                endingSet.isThreadHold = false;
+            }
         }
 
         private void Start()
@@ -1165,6 +1180,19 @@ namespace PIERStory
                         //modelRenderCamL.projectionMatrix = modelRenderCamL.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
                         //modelRenderCamR.projectionMatrix = modelRenderCamR.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
                     }
+                    break;
+
+                case GameConst.KR_SCREEN_EFFECT_ENDING_CREDIT:
+                    endingSet = endingCond.gameObject.GetComponent<GameManager>(); //게임 매니저를 불러온다.
+                    endingSet.isWaitingScreenTouch = true; // 엔딩 크레딧이 나오는 동안에는 게임이 종료되지 않는다.
+
+                    if(endingSet.skipable == true) // 스킵이 가능하니?
+                        endingSet.isThreadHold = false; // 처음이 아니니까 터치 허용할래.
+                    else
+                        endingSet.isThreadHold = true; // 처음이니까 터치 막아야 해.
+                        
+                    endingCredit.gameObject.SetActive(true);
+                    endingGroup.transform.DOMove(new Vector3(0, endingGroupMove), 60f).SetEase(Ease.Linear);
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:

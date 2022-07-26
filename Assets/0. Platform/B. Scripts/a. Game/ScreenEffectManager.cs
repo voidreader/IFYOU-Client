@@ -606,16 +606,52 @@ namespace PIERStory
                     break;
                 
                 case GameConst.KR_SCREEN_EFFECT_REMINISCE2:
+                    int reminisceForce = 1;
+
+                    if (__params != null)
+                        ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_LEVEL, ref reminisceForce);
+
+                    switch (reminisceForce)
+                    {
+                        case 1:
+                            reminisce3.Luminosity = 0.4f;
+                            break;
+                        case 2:
+                            reminisce3.Luminosity = 0.6f;
+                            break;
+                        case 3:
+                            reminisce3.Luminosity = 0.8f;
+                            break;
+                    }
+
                     reminisce3.enabled = true;
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_REMINISCE4:
+                    reminisceForce = 1;
+
+                    if (__params != null)
+                        ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_LEVEL, ref reminisceForce);
+
+                    switch (reminisceForce)
+                    {
+                        case 1:
+                            reminisce6.Luminosity = 0.4f;
+                            break;
+                        case 2:
+                            reminisce6.Luminosity = 0.6f;
+                            break;
+                        case 3:
+                            reminisce6.Luminosity = 0.8f;
+                            break;
+                    }
+
                     reminisce6.enabled = true;
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_REMINISCE:
 
-                    int reminisceForce = 1;
+                    reminisceForce = 1;
 
                     if (__params != null)
                     {

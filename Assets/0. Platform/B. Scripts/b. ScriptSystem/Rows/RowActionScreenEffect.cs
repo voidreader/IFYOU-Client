@@ -387,6 +387,7 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_HIT:
+                    ScreenEffectManager.main.StartScreenEffectHit(effectColor, paramArray); //임시
                     ScreenEffectManager.main.StartParticleEffect(command, paramArray);
                     break;
 

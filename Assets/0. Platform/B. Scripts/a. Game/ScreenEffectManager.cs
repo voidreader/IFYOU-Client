@@ -195,6 +195,32 @@ namespace PIERStory
                 StartCoroutine(RoutineStayTintState(__activeTime));
         }
 
+        /// <summary>
+        /// 타격 단독 색 변경
+        /// </summary>
+        public void StartScreenEffectHit(Color __color, string[] __params)
+        {
+            var colorMain = hits[0].main;
+            string focusColor = "ffffff";
+
+            if (__params != null)
+            {
+                ScriptRow.GetParam<string>(__params, "색", ref focusColor);
+            }
+
+            Color lineColor = HexCodeChanger.HexToColor(focusColor);
+            lineColor = new Color(lineColor.r, lineColor.g, lineColor.b, lineColor.a);
+
+            for (int i = 0; i < hits.Length; i++)
+            {
+                colorMain = hits[i].main;
+                colorMain.startColor = lineColor;
+            }
+
+            bluntStrike.gameObject.SetActive(true);
+            bluntStrike.Play(true);
+        }
+
         IEnumerator RoutineStayTintState(float __activeTime)
         {
             yield return new WaitForSeconds(__activeTime);
@@ -1132,6 +1158,10 @@ namespace PIERStory
                     
                     else if (__params[0] == "검")
                     {
+                        //타격이랑 같이 켜지므로 끄자.
+                        bluntStrike.gameObject.SetActive(false); 
+                        bluntStrike.Play(false);
+
                         colorMain = blades[0].main;
                         focusColor = "ffffff";
 
@@ -1155,6 +1185,12 @@ namespace PIERStory
                     
                     else if (__params[0].Substring(1) == "충돌")
                     {
+                        //타격이랑 같이 켜지므로 끄자.
+                        bluntStrike.gameObject.SetActive(false); 
+                        bluntStrike.Play(false);
+                        blade.gameObject.SetActive(false);
+                        blade.Play(false);
+
                         blade2.gameObject.SetActive(true);
                         blade2.Play(true);
                     }

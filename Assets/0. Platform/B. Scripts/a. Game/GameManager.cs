@@ -2051,7 +2051,7 @@ namespace PIERStory
             #endregion
             
             // * 3. 미션 해금
-            UserManager.main.ShowCompleteMissionByEpisode(false);
+            UserManager.main.ShowCompleteMissionByEpisode(StoryManager.main.CurrentEpisodeID);
             
             yield return null;
             

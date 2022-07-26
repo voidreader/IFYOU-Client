@@ -39,7 +39,8 @@ namespace PIERStory
         public List<GemIndicator> ListGemIndicators = new List<GemIndicator>(); // 젬 표시기
 
 
-        [HideInInspector] public Queue<JsonData> CompleteMissions = new Queue<JsonData>();      // 완료된 미션 목록
+        
+        Queue<MissionData> unlockMissionQueue = new Queue<MissionData>(); // 해금되는 미션 리스트 
 
 
         #region Actions
@@ -53,12 +54,6 @@ namespace PIERStory
         #endregion
 
 
-        #region 데이터 검증 체크용 리스트 
-        [SerializeField]
-        List<string> DebugProjectIllusts = new List<string>();
-        
-
-        #endregion
 
         /// <summary>
         /// 아래의 정보가 포함된다
@@ -512,7 +507,6 @@ namespace PIERStory
             if (!Application.isEditor)
                 return;
 
-            DebugProjectIllusts.Clear();
 
 
         }
@@ -750,22 +744,6 @@ namespace PIERStory
         #region 작품 미션
 
 
-        /// <summary>
-        /// 완료된 미션이었는지 체크한다
-        /// </summary>
-        /// <returns>true를 리턴하면 완료한 미션, false를 return하면 아직 미완료한 미션</returns>
-        public bool CheckCompleteMission(string missionName)
-        {
-            foreach (MissionData missionData in DictStoryMission.Values)
-            {
-                if (missionData.originName == missionName && missionData.missionState != MissionState.locked)
-                    return true;
-                else if (missionData.originName == missionName && missionData.missionState == MissionState.locked)
-                    return false;
-            }
-
-            return false;
-        }
 
         /// <summary>
         /// 미션 이름을 비교하여 mission Id를 반환한다
@@ -1329,6 +1307,24 @@ namespace PIERStory
         {
             currentStoryJson[NODE_SCENE_PROGRESS] = __j;
         }
+        
+        /// <summary>
+        /// SceneProgress 입력하기 
+        /// </summary>
+        /// <param name="__sceneID"></param>
+        public void AddSceneProgress(string __sceneID) {
+            
+            if(currentStoryJson == null || !currentStoryJson.ContainsKey(NODE_SCENE_PROGRESS))
+                return;
+            
+            
+            if(CheckSceneProgress(__sceneID))
+                return;
+                
+            currentStoryJson[NODE_SCENE_PROGRESS].Add(__sceneID);
+            Debug.Log(JsonMapper.ToJson(currentStoryJson[NODE_SCENE_PROGRESS]));
+        }
+        
 
         /// <summary>
         /// 에피소드 플레이 저장 기록 jsonData
@@ -1366,72 +1362,108 @@ namespace PIERStory
         /// 에피소드 클리어 후 미션 해금 체크 
         /// </summary>
         /// <param name="__useQueue"></param>
-        public void ShowCompleteMissionByEpisode(bool __useQueue = true)
+        public void ShowCompleteMissionByEpisode(string __episodeID)
         {
-            ShowCompleteMission(resultEpisodeRecord[NODE_UNLOCK_MISSION], __useQueue);
+            foreach(int key in DictStoryMission.Keys) {
+                
+                // 해금되지 않은 미션 정보 조회 
+                if(DictStoryMission[key].missionState != MissionState.locked)
+                    continue;
+                    
+                // scene type만 
+                if(DictStoryMission[key].missionType != MissionType.episode)
+                    continue;
+                
+                // 조건 체크 
+                // 대상씬이 조건에 있는 경우만 진행한다.
+                if(!DictStoryMission[key].CheckExistsCondition(__episodeID))
+                    continue;
+                    
+
+                // 유저 기록과 대조해서 체크 시작 
+                if(DictStoryMission[key].CheckUserHist()) {
+                    // 해금조건이 맞다! 
+                    // 팝업을 오픈하자!
+                    ShowMissionUnlockPopup(DictStoryMission[key]);
+                }
+                
+                    
+            } //  ? end of foreach
         }
-
+        
         /// <summary>
-        /// 완료된 미션 리스트 큐에 추가
+        /// 씬 정보 업데이트 후 미션 해금 체크 
         /// </summary>
-        public void ShowCompleteMission(JsonData __j, bool __useQueue = true)
-        {
-            Debug.Log("Check ShowCompleteMission");
+        /// <param name="__useQueue"></param>
+        public void ShowCompleteMissionByScene(string __sceneID) {
+            foreach(int key in DictStoryMission.Keys) {
+                
+                // 해금되지 않은 미션 정보 조회 
+                if(DictStoryMission[key].missionState != MissionState.locked)
+                    continue;
+                    
+                // scene type만 
+                if(DictStoryMission[key].missionType != MissionType.scene)
+                    continue;
+                
+                // 조건 체크 
+                // 대상씬이 조건에 있는 경우만 진행한다.
+                if(!DictStoryMission[key].CheckExistsCondition(__sceneID))
+                    continue;
+                    
 
-            if (__j == null || __j.Count == 0)
-            {
-                Debug.Log("No Clear Mission");
-                return;
-            }
-
+                // 유저 기록과 대조해서 체크 시작 
+                if(DictStoryMission[key].CheckUserHist()) {
+                    // 해금조건이 맞다! 
+                    // 팝업을 오픈하자!
+                    ShowMissionUnlockPopup(DictStoryMission[key]);
+                }
+                
+                    
+            } //  ? end of foreach
+        }
+        
+        
+        /// <summary>
+        /// 미션 해금 팝업 오픈 
+        /// </summary>
+        /// <param name="__missionData"></param>
+        public void ShowMissionUnlockPopup(MissionData __missionData) {
             // 게임 화면에서 미션팝업을 꺼뒀으면 여길 타지말자
-            if (GameManager.main != null && PlayerPrefs.GetInt(GameConst.MISSION_POPUP) != 1)
+            if (GameManager.main != null && PlayerPrefs.GetInt(GameConst.MISSION_POPUP) != 1) {
+                Debug.Log("OFF mission popup");
                 return;
-
-
-            for (int i = 0; i < __j.Count; i++)
-            {
-                CompleteMissions.Enqueue(__j[i]);
             }
-
-            // Queue 바닥날때까지 돈다. 
-            while (CompleteMissions.Count > 0)
-            {
-
-                // popup 변수를 여러개가 공유할 수 없음. 매번 새로 만들어줘야된다. 
-                PopupBase popUp = PopupManager.main.GetPopup(GameConst.POPUP_ACHIEVEMENT_ILLUST);
-                if (popUp == null)
-                {
-                    Debug.LogError("No AchieveMission Popup");
-                    return;
-                }
-
-                JsonData currentMissionData = CompleteMissions.Dequeue(); // 하나씩 빼서 팝업을 만든다. 
-                Debug.Log("Mission : " + JsonMapper.ToStringUnicode(currentMissionData)); // 체크용도 
-
-
-
-                popUp.Data.SetImagesSprites(spriteMissionPopup);
-                popUp.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("5086"), SystemManager.GetJsonNodeString(currentMissionData, LobbyConst.MISSION_NAME)));
-                PopupManager.main.ShowPopup(popUp, __useQueue, false);
-                Debug.Log("Show Mission Popup");
-
-                foreach (int key in DictStoryMission.Keys)
-                {
-                    // 해금된 미션을 unlock상태로 만들어주고
-                    if (DictStoryMission[key].missionID == SystemManager.GetJsonNodeInt(currentMissionData, "mission_id"))
-                    {
-                        DictStoryMission[key].missionState = MissionState.unlocked;
-                        break;
-                    }
-                }
+            
+            
+            if(!DictStoryMission.ContainsKey(__missionData.missionID)) {
+                Debug.LogError("ShowMissionUnlockPopup No mission data : " + __missionData.missionName);
+                return;
             }
-
-            // 프로젝트 클리어 했는지 체크를 한다
+            
+            PopupBase popUp = PopupManager.main.GetPopup(GameConst.POPUP_ACHIEVEMENT_ILLUST);
+            if (popUp == null)
+            {
+                Debug.LogError("No AchieveMission Popup");
+                return;
+            }
+            
+            
+            popUp.Data.SetImagesSprites(spriteMissionPopup);
+            popUp.Data.SetLabelsTexts(string.Format(SystemManager.GetLocalizedText("5086"), __missionData.missionName));
+            PopupManager.main.ShowPopup(popUp, true, false);
+            
+            // 갱신 
+            DictStoryMission[__missionData.missionID].missionState = MissionState.unlocked;
+            
+            
+            // 프로젝트 클리어 했는지 체크
             if (ProjectAllClear())
                 NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
-
         }
+        
+
+
 
 
         /// <summary>
@@ -1453,6 +1485,16 @@ namespace PIERStory
         public void SetNodeProjectSceneHistory(JsonData __j)
         {
             currentStoryJson[NODE_SCENE_HISTORY] = __j;
+        }
+        
+        // sceneID를 작품 scene hist 에 입력하기 
+        public void AddUserProjectSceneHist(string __sceneID) {
+            if(currentStoryJson == null || !currentStoryJson.ContainsKey(NODE_SCENE_HISTORY))
+                return;
+                
+            // 없으면 입력하기 
+            if(!CheckSceneHistory(__sceneID))
+                currentStoryJson[NODE_SCENE_HISTORY].Add(__sceneID);
         }
 
 
@@ -2037,29 +2079,7 @@ namespace PIERStory
 
 
 
-        /// <summary>
-        /// 사건ID 히스토리, 진행도 업데이트 후 갱신 처리 
-        /// </summary>
-        /// <param name="req"></param>
-        /// <param name="res"></param>
-        void CallbackUpdateSceneRecord(HTTPRequest req, HTTPResponse res)
-        {
-            // 통신 실패했을 때 갱신하지 않음. 
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("CallbackUpdateSceneRecord");
-                return;
-            }
 
-            resultSceneRecord = JsonMapper.ToObject(res.DataAsText); // 결과 
-
-            // 갱신해서 받아온 데이터 설정
-            SetNodeProjectSceneHistory(resultSceneRecord[NODE_SCENE_HISTORY]);
-            SetNodeStorySceneProgress(resultSceneRecord[NODE_SCENE_PROGRESS]);
-
-            // 완료된 미션이 있다면 큐에 넣기
-            ShowCompleteMission(resultSceneRecord[NODE_UNLOCK_MISSION]);
-        }
 
         /// <summary>
         /// 유저 에피소드 기록 업데이트 콜백
@@ -2382,16 +2402,21 @@ namespace PIERStory
 
             JsonData j = new JsonData();
 
-            // j["func"] = NetworkLoader.func;
-            // UserManager.main.UpdateCurrentSceneID(StoryManager.main.CurrentProjectID, StoryManager.main.CurrentEpisodeID, scene_id);
-
             j[CommonConst.FUNC] = NetworkLoader.FUNC_UPDATE_EPISODE_SCENE_RECORD;
             j[CommonConst.COL_USERKEY] = userKey;
             j[CommonConst.COL_PROJECT_ID] = __project_id;
             j[CommonConst.COL_EPISODE_ID] = __episode_id;
             j[GameConst.COL_SCENE_ID] = __scene_id;
 
-            NetworkLoader.main.SendPost(CallbackUpdateSceneRecord, j);
+            NetworkLoader.main.SendPost(null, j);
+            
+            
+            // 통신 응답을 기다리지 않고 바로 노드에 입력해준다. 
+            AddUserProjectSceneHist(__scene_id);
+            AddSceneProgress(__scene_id);
+            
+            ShowCompleteMissionByScene(__scene_id); // 미션 해금 처리 
+            // 사이드 해금 처리
         }
 
         public void UpdateSceneIDRecord(string __scene_id)
@@ -2526,6 +2551,9 @@ namespace PIERStory
         public bool CheckSceneProgress(string __scene_id)
         {
             if (currentStoryJson == null)
+                return false;
+                
+            if(!currentStoryJson.ContainsKey(NODE_SCENE_PROGRESS))
                 return false;
 
             Debug.Log(string.Format("CheckSceneProgress : [{0}]", __scene_id));

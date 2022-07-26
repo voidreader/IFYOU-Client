@@ -115,7 +115,7 @@ namespace PIERStory {
                 foregroundProgressor.gameObject.SetActive(false);
                 
                 // 로비에서 사용할때랑 에피소드 종료에서 사용할때랑 다름 
-                if (LobbyManager.main != null) {
+                if (StoryLobbyManager.main != null) {
                     groupReset.SetActive(true);
                 }
                 else {

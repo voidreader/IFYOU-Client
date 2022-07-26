@@ -486,10 +486,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _text: {fileID: 0}
+  _text: {fileID: 6028901425407787790}
   isException: 1
   isAlignmentFix: 1
   originText: 
+  originAlign: 0
 --- !u!1 &4083747752045647949
 GameObject:
   m_ObjectHideFlags: 0
@@ -773,10 +774,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _text: {fileID: 0}
+  _text: {fileID: 4804579899932538824}
   isException: 1
   isAlignmentFix: 1
   originText: 
+  originAlign: 0
 --- !u!1 &6125200692612866328
 GameObject:
   m_ObjectHideFlags: 0
@@ -787,6 +789,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6125200692612866329}
   - component: {fileID: 1648575309184780550}
+  - component: {fileID: 7196264743018705931}
   m_Layer: 5
   m_Name: EpisodeEndControls
   m_TagString: Untagged
@@ -854,6 +857,8 @@ MonoBehaviour:
     premiumPassKey: 
     categoryImageURL: 
     categoryImageKey: 
+    coinBannerUrl: 
+    coinBannerKey: 
     isLock: 0
     colorCode: 000000
     projectProgress: 0
@@ -869,6 +874,8 @@ MonoBehaviour:
     hitCount: 0
     likeCount: 0
     arrHashtag: []
+    onedayExpireDate: 
+    onedayPassTick: 0
   currentEpisodeID: 
   currentEpisodeData:
     episodeID: 
@@ -942,9 +949,22 @@ MonoBehaviour:
   colorEpisodeTitleSad: {r: 0.30588236, g: 0.7411765, b: 0.79607844, a: 0.8}
   textSummary: {fileID: 5752463417553871313}
   endingNotification: {fileID: 8514957539750899809}
+  canvasGroup: {fileID: 7196264743018705931}
   passButton: {fileID: 6481274057996561122}
   passBadge: {fileID: 3225865270266198050}
   allpassTimer: {fileID: 125211135323459978}
+--- !u!225 &7196264743018705931
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6125200692612866328}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6566544288108162251
 GameObject:
   m_ObjectHideFlags: 0
@@ -1171,10 +1191,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _text: {fileID: 0}
+  _text: {fileID: 5752463417553871313}
   isException: 1
   isAlignmentFix: 1
   originText: 
+  originAlign: 0
 --- !u!1 &7329009300961477135
 GameObject:
   m_ObjectHideFlags: 0
@@ -1567,7 +1588,8 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6875928496034277476, guid: 26c80189329f390458237d2ac14997ba, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 26c80189329f390458237d2ac14997ba, type: 3}
 --- !u!224 &5661502188191245434 stripped
 RectTransform:

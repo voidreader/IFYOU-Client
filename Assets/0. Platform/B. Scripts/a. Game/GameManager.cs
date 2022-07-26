@@ -1997,10 +1997,8 @@ namespace PIERStory
             // 에피소드 완료까지 통신 대기
             NetworkLoader.main.UpdateEpisodeCompleteRecord(nextEpisodeData);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
-            SystemManager.HideNetworkLoading();
-
+            
             endControls.InitStoryLobbyControls();
-            endControls.gameObject.SetActive(true);
 
             // * 여기까지 통신 완료하고 후 처리 진행...!!! 2022.01.27 팝업 순서를 변경한다. 
             // * 사이드 => 엔딩 => 미션 => 첫클리어 보상의 순서. 

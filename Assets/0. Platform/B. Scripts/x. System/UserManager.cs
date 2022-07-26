@@ -234,7 +234,7 @@ namespace PIERStory
         {
             Debug.Log(string.Format("<color=cyan>Init user info [{0}]</color>", __gamebaseID));
             gamebaseID = __gamebaseID;
-            //gamebaseID = "QGM9WZJYGGM6X7F1"; // 특정 계정으로 로그인하기
+            //gamebaseID = "QPM97Z9DKJGRN8B3"; // 특정 계정으로 로그인하기
 
             // 로그인 프로세스를 시작합니다. 
             ConnectServer();
@@ -2102,31 +2102,6 @@ namespace PIERStory
 
             NetworkLoader.main.RequestDailyMission(2);
         }
-
-
-        /// <summary>
-        /// 작품별 타임딜 생성 콜백 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="response"></param>
-        public void CallbackUpdateTimeDeal(HTTPRequest request, HTTPResponse response)
-        {
-            if (!NetworkLoader.CheckResponseValidation(request, response))
-                return;
-
-            JsonData result = JsonMapper.ToObject(response.DataAsText);
-            Debug.Log("### CallbackUpdateTimeDeal : " + JsonMapper.ToStringUnicode(result));
-
-            userActiveTimeDeal = result["timedeal"];
-
-            EpisodeEndControls.OnRefreshUpdateTimeDeal?.Invoke(); // EpisodeEndControl에게 알려준다. 
-
-
-            // 타임딜 팝업 노출
-            SystemManager.ShowPopupPass(StoryManager.main.CurrentProjectID, false);
-
-        }
-
 
 
         /// <summary>

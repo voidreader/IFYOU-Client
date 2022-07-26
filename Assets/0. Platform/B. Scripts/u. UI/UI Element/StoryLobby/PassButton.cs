@@ -84,10 +84,8 @@ namespace PIERStory {
             this.gameObject.SetActive(true);
             
             passStory = StoryManager.main.CurrentProject;
-            
-            
-            
            
+
             // 타임딜 정보 가져오기 
             passTimeDeal = UserManager.main.GetProjectActiveTimeDeal(passStory.projectID);
             
@@ -101,7 +99,6 @@ namespace PIERStory {
             else {
                 iconButton.sprite = spriteTimedeal;
                 groupTimedeal.SetActive(true);
-                
                 
                 // * 타임딜
                 SetTimedeal();
@@ -122,8 +119,6 @@ namespace PIERStory {
         void SetTimedeal() {
             
             // 유저 타임딜
-            
-            
             timeDealID = passTimeDeal.timedealID;
             
            

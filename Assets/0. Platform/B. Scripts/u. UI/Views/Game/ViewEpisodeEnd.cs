@@ -22,11 +22,10 @@ namespace PIERStory
                     return;
                 }
                 
-                
                 if(PopupManager.main.GetFrontActivePopup() != null)
                     return;
 
-                if (!episodeEndControls.gameObject.activeSelf)
+                if (episodeEndControls.canvasGroup.alpha < 1f)
                     return;
                 
                 if(CommonView.ListActiveViews.Count == 1 && CommonView.ListActiveViews.Contains(this)  // 1개 활성화, 본인

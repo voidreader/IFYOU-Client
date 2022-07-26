@@ -39,9 +39,6 @@ namespace PIERStory
         public List<GemIndicator> ListGemIndicators = new List<GemIndicator>(); // 젬 표시기
 
 
-        
-        Queue<MissionData> unlockMissionQueue = new Queue<MissionData>(); // 해금되는 미션 리스트 
-
 
         #region Actions
         public static Action OnCleanUserEpisodeProgress; // 유저 에피소드 씬 진척도 클리어 콜백 
@@ -2427,51 +2424,6 @@ namespace PIERStory
                 return;
 
             UpdateSceneIDRecord(StoryManager.main.CurrentProjectID, StoryManager.main.CurrentEpisodeID, __scene_id);
-        }
-
-
-
-        /// <summary>
-        /// 유저별 프로젝트 기록에 대상 사건ID 추가 
-        /// </summary>
-        /// <param name="__sceneID"></param>
-        public void AddSceneToUserProjectSceneHistory(string __sceneID)
-        {
-            Debug.Log(">> AddSceneToUserProjectSceneHistory : " + __sceneID);
-
-            if (!CheckSceneHistory(__sceneID))
-            {
-                GetNodeProjectSceneHistory().Add(__sceneID);
-
-            }
-
-            Debug.Log(JsonMapper.ToStringUnicode(GetNodeProjectSceneHistory()));
-        }
-
-
-        /// <summary>
-        /// 지정한 사건ID의 업데이트 후 갱신합니다. 
-        /// </summary>
-        /// <param name="req"></param>
-        /// <param name="res"></param>
-        void CallbackUpdateCurrentSceneID(HTTPRequest req, HTTPResponse res)
-        {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("CallbackClearSelectedEpisodeSceneHistory");
-                return;
-            }
-
-            string requestData = Encoding.UTF8.GetString(req.RawData);
-            Debug.Log(">> CallbackUpdateCurrentSceneID : " + requestData);
-            JsonData reqJson = JsonMapper.ToObject(requestData);
-
-
-            // 갱신해서 받아온 데이터를 설정 
-            SetNodeStorySceneProgress(JsonMapper.ToObject(res.DataAsText));
-
-            // 히스토리에 추가한다. 
-            AddSceneToUserProjectSceneHistory(reqJson["scene_id"].ToString());
         }
 
 

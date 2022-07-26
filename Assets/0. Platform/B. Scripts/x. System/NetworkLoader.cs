@@ -548,9 +548,7 @@ namespace PIERStory
 
 
             SendPost(UserManager.main.CallbackUpdateEpisodeRecord, sending);
-            
-            // 에피소드 완료 기록을 하면서 현재 선택지 기록을 갱신한다
-            // UserManager.main.SetCurrentStorySelectionList(StoryManager.main.CurrentProjectID);
+
         }
         
         /// <summary>

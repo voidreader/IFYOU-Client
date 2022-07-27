@@ -1467,6 +1467,8 @@ namespace PIERStory
             isPlaying = false;
             
             SystemManager.ShowNetworkLoading();
+            
+            ViewSystemLoading.needRefreshStory = true;
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin"); // 노드 제어
         }
 

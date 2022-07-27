@@ -79,7 +79,7 @@ namespace PIERStory
         [Tooltip("비눗방울")] public ParticleSystem bubble;
         public ParticleSystem[] bubbles;
         [Tooltip("회상, 밝음")] public ParticleSystem reminisceLight;
-        [Tooltip("신비로운 경계라인")] public ParticleSystem waveLine;
+        //[Tooltip("신비로운 경계라인")] public ParticleSystem waveLine;
         [Tooltip("엔딩크레딧")] public ParticleSystem endingCredit;
         public GameObject endingGroup;
         public GameObject endingCond;
@@ -1266,7 +1266,7 @@ namespace PIERStory
                     endingCredit.gameObject.SetActive(true);
                     endingGroup.transform.DOMove(new Vector3(0, endingGroupMove), 60f).SetEase(Ease.Linear);
                     break;
-
+                /*
                 case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
 
                     float waveAngle = 0f, waveY = 1f;
@@ -1286,6 +1286,7 @@ namespace PIERStory
                     waveLine.gameObject.SetActive(true);
                     waveLine.Play(true);
                     break;
+                */
             }
         }
 
@@ -1467,10 +1468,11 @@ namespace PIERStory
                     modelRenderCamL.transform.DORotate(new Vector3(0, 0, 0), 0);
                     modelRenderCamR.transform.DORotate(new Vector3(0, 0, 0), 0);
                     break;
-
+                /*
                 case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:
                     waveLine.gameObject.SetActive(false);
                     break;
+                */
             }
         }
 

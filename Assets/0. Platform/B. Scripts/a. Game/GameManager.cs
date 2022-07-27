@@ -761,7 +761,7 @@ namespace PIERStory
                     ShowGameEnd(null);
                 else
                 {
-                    NetworkLoader.main.UpdateEpisodeCompleteRecord(null);
+                    NetworkLoader.main.RequestCompleteEpisode(null);
                     SystemManager.ShowSystemPopupLocalize("6203", RetryPlay, EndGame);
                 }
             }
@@ -790,15 +790,21 @@ namespace PIERStory
             // 조건이 있을때. 
             if (!string.IsNullOrEmpty(__row.requisite))
             {
-                if (ScriptExpressionParser.main.ParseScriptExpression(__row.requisite))
+                if (ScriptExpressionParser.main.ParseScriptExpression(__row.requisite)) {
+                    
+                    Debug.Log(string.Format("<color=yellow>조건 충족! {0}</color>", __row.requisite));
                     MoveToTargetSceneID(__row.target_scene_id);
+                    return;
+                }
                 else
                 {
-                    Debug.Log(string.Format("<color=yellow>조건불충분 {0}</color>", __row.requisite));
+                    Debug.Log(string.Format("<color=yellow>조건 미충족! {0}</color>", __row.requisite));
                     return;
                 }
             }
-
+            
+            
+            Debug.Log("<color=yellow>바로 이동! {0}</color>");    
             MoveToTargetSceneID(__row.target_scene_id);
         }
         
@@ -1947,16 +1953,20 @@ namespace PIERStory
 
         IEnumerator RoutineFinishGame(string __nextEpisodeID)
         {
+            Debug.Log("RoutineFinishGame START");
+            
             hasFirstClearReward = false;
                 
             // 안전을 위해..
             yield return new WaitForSeconds(0.1f);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
 
+            /*
             Dictionary<string, string> eventValues = new Dictionary<string, string>();
             eventValues.Add("project_id", StoryManager.main.CurrentProjectID);
             eventValues.Add("episode_id", StoryManager.main.CurrentEpisodeID);
             AdManager.main.SendAppsFlyerEvent("af_episode_end", eventValues);            
+            */
 
 
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터
@@ -1974,6 +1984,9 @@ namespace PIERStory
 
                     if (nextEpisodeData != null && nextEpisodeData.isValidData)
                         __nextEpisodeID = nextEpisodeData.episodeID;
+                        
+                        
+                    Debug.Log(string.Format("RoutineFinishGame #1 : [{0}]", __nextEpisodeID));
                 }
             }
             else
@@ -1982,78 +1995,43 @@ namespace PIERStory
                 // #, @이 붙은 경우에 대한 처리 
                 if (__nextEpisodeID.Contains(GameConst.TAG_TARGET_EPISODE))
                     __nextEpisodeID = __nextEpisodeID.Replace(GameConst.TAG_TARGET_EPISODE, "");
-
-                if (__nextEpisodeID.Contains(GameConst.TAG_TARGET_EPISODE2))
+                else if (__nextEpisodeID.Contains(GameConst.TAG_TARGET_EPISODE2))
                     __nextEpisodeID = __nextEpisodeID.Replace(GameConst.TAG_TARGET_EPISODE2, "");
 
                 nextEpisodeData = StoryManager.GetNextFollowingEpisodeData(__nextEpisodeID.Trim());
+                
+                Debug.Log(string.Format("RoutineFinishGame #2 : [{0}]", __nextEpisodeID));
+                
             }
 
             // scene Id값 갱신하고 통신 완료까지 잠시 대기
             UserManager.main.UpdateSceneIDRecord(currentSceneId);
-            SystemManager.ShowNetworkLoading();
-            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            yield return new WaitForSeconds(0.1f);
+            
+            
+            
+            Debug.Log("RoutineFinishGame Before RequestCompleteEpisode");
 
             // 에피소드 완료까지 통신 대기
-            NetworkLoader.main.UpdateEpisodeCompleteRecord(nextEpisodeData);
+            NetworkLoader.main.RequestCompleteEpisode(nextEpisodeData);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
+            // 종료화면에 대한 제거 
             endControls.InitStoryLobbyControls();
 
-            // * 여기까지 통신 완료하고 후 처리 진행...!!! 2022.01.27 팝업 순서를 변경한다. 
-            // * 사이드 => 엔딩 => 미션 => 첫클리어 보상의 순서. 
+            // * 스페셜 에피소드 => 엔딩 => 미션 => 첫클리어 보상의 순서. 
             
-            // * 1. 에피소드 클리어 후 사이드 해금 체크 
-            #region 사이드
+            // * 1. 에피소드 클리어 후 스페셜 에피소드  해금 체크 
+            #region 스페셜 에피소드
             
-            Debug.Log("### 사이드 에피소드 오픈 체크 시작 ###");
-            
-            JsonData sideData = UserManager.main.GetNodeUnlockSide();
-            
-            if(sideData != null) 
-                Debug.Log(JsonMapper.ToStringUnicode(sideData));
-            
-            // 사이드 해금이 있는 경우
-            if (sideData != null && sideData.Count > 0)
-            {
-                Debug.Log("### 해금된 사이드 에피소드 존재함!! :: " + sideData.Count);
-                
-                PopupBase sidePopup = PopupManager.main.GetPopup(GameConst.POPUP_SIDE_ALERT);
-
-                for (int i = 0; i < sideData.Count; i++)
-                {
-                    string unlockSideID = SystemManager.GetJsonNodeString(sideData[i], CommonConst.COL_EPISODE_ID);
-                    Debug.Log("### unlockSideID : " + unlockSideID);
-
-                    for (int j = 0; j < StoryManager.main.SideEpisodeList.Count; j++)
-                    {
-                        if (StoryManager.main.SideEpisodeList[j].episodeID == unlockSideID)
-                        {
-                            sidePopup.Data.SetLabelsTexts(SystemManager.GetLocalizedText("6234"), StoryManager.main.SideEpisodeList[j].episodeTitle);
-                            sidePopup.Data.imageURL = StoryManager.main.SideEpisodeList[j].popupImageURL;
-                            sidePopup.Data.imageKey = StoryManager.main.SideEpisodeList[j].popupImageKey;
-                            StoryManager.main.SideEpisodeList[j].isUnlock = true;
-                            PopupManager.main.ShowPopup(sidePopup, true, false);
-                            yield return new WaitForSeconds(1f); // 딜레이 주기 
-                            break;
-                        }
-                    }
-                }
-
-                if (UserManager.main.ProjectAllClear())
-                    NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
-                
-                yield return new WaitForSeconds(0.1f);
-            }
-            
-            Debug.Log("### 사이드 에피소드 오픈 체크 종료 ###");
-                        
+            Debug.Log("### 스페셜 에피소드 오픈 체크 시작 ###");
+            UserManager.main.ShowCompleteSpecialEpisodeByEpisode(StoryManager.main.CurrentEpisodeID);
+            yield return new WaitForSeconds(0.1f);
             #endregion
             
             // * 3. 미션 해금
-            UserManager.main.ShowCompleteMissionByEpisode(StoryManager.main.CurrentEpisodeID);
-            
-            yield return null;
+            UserManager.main.CompleteMissionByEpisode(StoryManager.main.CurrentEpisodeID);
+            yield return new WaitForSeconds(0.1f);
             
             // * 첫 클리어 보상 
             #region 첫 클리어 보상 
@@ -2075,7 +2053,7 @@ namespace PIERStory
             }
             
             #endregion
-        }
+        } // ? RoutineFinishGame
 
         #endregion
         

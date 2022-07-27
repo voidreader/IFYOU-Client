@@ -31,7 +31,7 @@ namespace PIERStory
         
         
 
-        public const string FUNC_UPDATE_EPISODE_COMPLETE_RECORD = "requestCompleteEpisode"; // 에피소드 플레이 완료 기록 
+        public const string FUNC_UPDATE_EPISODE_COMPLETE_RECORD = "requestCompleteEpisodeType2"; // 에피소드 플레이 완료 기록 
 
 
         public const string FUNC_RESET_EPISODE_PROGRESS_TYPE2 = "resetUserEpisodeProgressType2"; // 에피소드 진행도 리셋 신규 15버전 2022.02.28 
@@ -189,6 +189,32 @@ namespace PIERStory
             SendPost(UserManager.main.CallbackEpisodeFirstClearReward, sending, true);
         }
         
+        
+        /// <summary>
+        /// 스페셜 에피소드 해금 
+        /// </summary>
+        /// <param name="__special"></param>
+        public void RequestUnlockSpecialEpisode(EpisodeData __special) {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestUnlockSpecialEpisode";
+            sending["episode_id"] = __special.episodeID;
+            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            
+            SendPost(null, sending, false, false);
+        }
+        
+        /// <summary>
+        /// 미션 해금 
+        /// </summary>
+        /// <param name="__mission"></param>
+        public void RequestUnlockMission(MissionData __mission) {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestUnlockMission";
+            sending["mission_id"] = __mission.missionID;
+            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            
+            SendPost(null, sending, false, false);
+        }
         
         /// <summary>
         /// 광고 기록 
@@ -528,12 +554,11 @@ namespace PIERStory
 
 
         /// <summary>
-        /// 에피소드 완료 기록 저장하기 
+        /// 에피소드 클리어 처리 
         /// </summary>
-        /// <param name="nextEpisodeID">다음 에피소드 ID</param>
-        public void UpdateEpisodeCompleteRecord(EpisodeData nextEpisode)
+        /// <param name="nextEpisode">다음 에피소드</param>
+        public void RequestCompleteEpisode(EpisodeData nextEpisode)
         {
-            // Progress와 History 둘 다 저장이 된다. (progress는 is_clear가 업데이트)
             JsonData sending = new JsonData();
             sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
             sending["episodeID"] = StoryManager.main.CurrentEpisodeID; // 현재 프로젝트 ID 
@@ -547,7 +572,7 @@ namespace PIERStory
             sending["useRecord"] = UserManager.main.useRecord;
 
 
-            SendPost(UserManager.main.CallbackUpdateEpisodeRecord, sending);
+            SendPost(UserManager.main.CallbackRequestCompleteEpisode, sending);
 
         }
         
@@ -815,7 +840,7 @@ namespace PIERStory
         /// </summary>
         /// <param name="__cb"></param>
         /// <param name="__sendingData"></param>
-        public void SendPost(OnRequestFinishedDelegate __cb, JsonData __sendingData, bool __isSync = false)
+        public void SendPost(OnRequestFinishedDelegate __cb, JsonData __sendingData, bool __isSync = false, bool __addList = true)
         {
             _requestURL = _url + CommonConst.CLIENT_URL; // 두개 더합니다. 
 
@@ -826,12 +851,14 @@ namespace PIERStory
            
 
             // func 동작에 대한 List ADD
-            if (__sendingData.ContainsKey(CommonConst.FUNC))
+            if (__sendingData.ContainsKey(CommonConst.FUNC) && __addList)
                 ListNetwork.Add(__sendingData[CommonConst.FUNC].ToString());
 
             // 동기 통신에 대한 처리
             if(__isSync)
                 SystemManager.ShowNetworkLoading(); // 동기 통신의 경우는 꼭 얘를 띄워주자.
+            else
+                SystemManager.HideNetworkLoading();
 
 
             // 콜백 전달해준다. 

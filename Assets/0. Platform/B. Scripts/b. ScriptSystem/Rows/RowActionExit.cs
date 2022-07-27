@@ -39,7 +39,7 @@ namespace PIERStory
                 GameManager.main.ShowGameEnd(targetSceneID);
             else
             {
-                NetworkLoader.main.UpdateEpisodeCompleteRecord(null);
+                NetworkLoader.main.RequestCompleteEpisode(null);
                 SystemManager.ShowSystemPopupLocalize("6203", GameManager.main.RetryPlay, GameManager.main.EndGame);
             }
         }

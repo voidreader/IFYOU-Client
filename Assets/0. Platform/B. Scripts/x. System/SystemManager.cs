@@ -1511,6 +1511,7 @@ namespace PIERStory
             }
             catch (Exception e) {
                 NetworkLoader.main.ReportRequestError(e.StackTrace, "GetJsonNodeInt : " + __col);
+                Debug.LogError(e.StackTrace);
                 return 0;
             }
 

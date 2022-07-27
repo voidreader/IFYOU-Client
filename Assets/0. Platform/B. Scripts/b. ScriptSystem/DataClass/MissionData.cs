@@ -159,7 +159,7 @@ namespace PIERStory
         /// <returns></returns>
         public bool CheckExistsCondition(string __ID) {
             if (arrCondition == null)
-                return true;
+                return false;
                 
                 
             for(int i=0;i<arrCondition.Length;i++) {

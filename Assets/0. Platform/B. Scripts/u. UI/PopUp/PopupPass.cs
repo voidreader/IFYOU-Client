@@ -83,21 +83,10 @@ namespace PIERStory {
             discountFloat = passStory.passDiscount;
             
             
-            // 타임딜 정보 가져오기 
-            passTimeDeal = UserManager.main.GetProjectActiveTimeDeal(passStory.projectID);
-            
             // 이미지 
             imagePass.SetDownloadURL(passStory.premiumPassURL, passStory.premiumPassKey);
-            
-            
-            
-            if(passTimeDeal != null && passTimeDeal.isValidData) {// 타임딜 
-                timedealTitle.SetActive(true);
-                SetTimedeal();
-            }
-            else { // 일반!
-                normnalTitle.SetActive(true);
-            }
+
+            normnalTitle.SetActive(true);
             
             
             // 최종 할인율을 통해서 할인 가격 구한다. 

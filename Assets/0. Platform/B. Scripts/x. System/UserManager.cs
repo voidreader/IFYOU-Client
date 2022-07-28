@@ -31,7 +31,7 @@ namespace PIERStory
 
 
         [HideInInspector] public JsonData userIfyouPlayJson = null;         // 이프유플레이 json data
-        [HideInInspector] public JsonData userActiveTimeDeal = null; // 유저 활성화 타임딜 목록 
+        
 
         [SerializeField] string debugBankString = string.Empty;
 
@@ -3503,110 +3503,6 @@ namespace PIERStory
             }
 
             return true;
-        }
-
-        #endregion
-
-        #region 유저 타임딜 
-
-        /// <summary>
-        /// 유저의 활성화된 타임들 목록 요청 
-        /// </summary>
-        public void RequestUserActiveTimeDeal()
-        {
-            JsonData sendData = new JsonData();
-            sendData["func"] = "getUserActiveTimeDeal";
-
-            NetworkLoader.main.SendPost(CallbackRequestUserActiveTimeDeal, sendData, false);
-
-        }
-
-        void CallbackRequestUserActiveTimeDeal(HTTPRequest request, HTTPResponse response)
-        {
-            if (!NetworkLoader.CheckResponseValidation(request, response))
-                return;
-
-            userActiveTimeDeal = JsonMapper.ToObject(response.DataAsText);
-
-            if (LobbyManager.main != null)
-            {
-                ViewMain.OnRefreshShopNewSign?.Invoke();
-                MainShop.OnRefreshPackageShop?.Invoke();
-                MainShop.OnRefreshNormalShop?.Invoke();
-            }
-        }
-
-        /// <summary>
-        /// 대상 작품에 활성화된 타임딜 정보 요청 
-        /// </summary>
-        /// <param name="__projectID"></param>
-        /// <returns></returns>
-        public PassTimeDealData GetProjectActiveTimeDeal(string __projectID)
-        {
-            if (userActiveTimeDeal == null)
-                return null;
-
-
-            for (int i = 0; i < userActiveTimeDeal.Count; i++)
-            {
-                if (SystemManager.GetJsonNodeString(userActiveTimeDeal[i], "project_id") == __projectID)
-                {
-                    return new PassTimeDealData(userActiveTimeDeal[i]);
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// 유효한 타임딜을 갖고 있나?
-        /// </summary>
-        /// <returns></returns>
-        public bool HasActiveTimeDeal()
-        {
-
-            if (userActiveTimeDeal == null)
-                return false;
-
-            string projectID = string.Empty;
-            long endTick = 0;
-            TimeSpan timeDiff;
-            DateTime endDate;
-
-            Debug.Log(">> HasActiveTimeDeal Count :: " + userActiveTimeDeal.Count);
-
-            // for문 
-            for (int i = 0; i < userActiveTimeDeal.Count; i++)
-            {
-                projectID = SystemManager.GetJsonNodeString(userActiveTimeDeal[i], "project_id");
-                endTick = long.Parse(SystemManager.GetJsonNodeString(userActiveTimeDeal[i], "end_date_tick"));
-
-                if (string.IsNullOrEmpty(projectID))
-                    continue;
-
-                if (HasProjectFreepass(projectID))
-                { // 프리미엄 패스 보유중이라면 continue
-                    Debug.Log(string.Format("alread purchased Timedeal [{0}]", projectID));
-                    continue;
-                }
-
-                endTick = SystemConst.ConvertServerTimeTick(endTick);
-                endDate = new DateTime(endTick);
-                timeDiff = endDate - DateTime.UtcNow;
-
-                // 시간 오버했어도 continue
-                if (timeDiff.Ticks <= 0)
-                {
-                    Debug.Log(string.Format("Timeover Timedeal [{0}]", projectID));
-                    continue;
-                }
-
-                // 여기까지 통과했으면 return true;
-                return true;
-
-            }
-
-            return false;
         }
 
         #endregion

@@ -1360,8 +1360,6 @@ namespace PIERStory
 
             NetworkLoader.main.RequestIfyouplayList();
 
-            // 타임딜 갱신 
-            UserManager.main.RequestUserActiveTimeDeal();
 
             StartCoroutine(RefreshScreenView());
         }      

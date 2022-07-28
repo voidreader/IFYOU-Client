@@ -87,24 +87,13 @@ namespace PIERStory {
            
 
             // 타임딜 정보 가져오기 
-            passTimeDeal = UserManager.main.GetProjectActiveTimeDeal(passStory.projectID);
+            iconButton.sprite = spriteTimedeal;
+            groupTimedeal.SetActive(true);
             
-            if(passTimeDeal == null || !passTimeDeal.isValidData) { // 일반 (타임딜 X)
-                // Debug.Log("No Freepass User >> Normal Product");
-                groupTimedeal.SetActive(false);
-                iconButton.sprite = spriteNoTime;
-                
-                loopScaleEffect.enabled = false;
-            }
-            else {
-                iconButton.sprite = spriteTimedeal;
-                groupTimedeal.SetActive(true);
-                
-                // * 타임딜
-                SetTimedeal();
-                
-                loopScaleEffect.enabled = true;
-            }
+            // * 타임딜
+            SetTimedeal();
+            
+            loopScaleEffect.enabled = true;
             
             
             iconButton.SetNativeSize();

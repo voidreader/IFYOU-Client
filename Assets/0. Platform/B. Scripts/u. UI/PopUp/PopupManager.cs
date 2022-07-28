@@ -80,6 +80,9 @@ namespace PIERStory {
         [SerializeField] GameObject popupIntro; // 인트로
         [SerializeField] GameObject popupRecommend; // 작품 추천 팝업 
         
+        [SerializeField] GameObject popupIFyouPass; // 이프유 패스
+        [SerializeField] GameObject popupOnedayPass; // 원데이 패스
+        
         
         private void Awake() {
             if(main != null) {
@@ -592,6 +595,16 @@ namespace PIERStory {
                 DictPopup[CommonConst.POPUP_RECOMMEND] = popupRecommend;
             else 
                 DictPopup.Add(CommonConst.POPUP_RECOMMEND, popupRecommend);
+                
+            if(DictPopup.ContainsKey(CommonConst.POPUP_IFYOU_PASS))
+                DictPopup[CommonConst.POPUP_IFYOU_PASS] = popupIFyouPass;
+            else 
+                DictPopup.Add(CommonConst.POPUP_IFYOU_PASS, popupIFyouPass);
+                
+            if(DictPopup.ContainsKey(CommonConst.POPUP_ONEDAY_PASS))
+                DictPopup[CommonConst.POPUP_ONEDAY_PASS] = popupOnedayPass;
+            else 
+                DictPopup.Add(CommonConst.POPUP_ONEDAY_PASS, popupOnedayPass);
         }
         
         #endregion

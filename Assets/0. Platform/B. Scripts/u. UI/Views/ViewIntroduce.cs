@@ -77,6 +77,26 @@ namespace PIERStory {
             SetInfo();
             InitOnedayPass();
         }
+        
+        
+        void Update() {
+            if(!onedayBadgeButton.activeSelf)
+                return;
+                
+            if(Time.frameCount % 5 != 0) {
+                return;
+            }
+            
+            
+            // 원데이패스 타이머 
+            onedayPassTimer.text = introduceStory.GetOnedayRemainTime();
+            
+            if(string.IsNullOrEmpty(onedayPassTimer.text)) {
+                // 끝나면 뱃지 없앤다.
+                onedayBadgeButton.SetActive(false);
+            }
+        }
+        
 
         public void SetInfo(StoryData introduceStoryData = null) {
             
@@ -89,7 +109,7 @@ namespace PIERStory {
             SetAlertButtonState();
 
             // 이미지를 프리미엄 패스 이미지와 동일한 이미지를 사용한다.
-            mainThumbnail.SetDownloadURL(introduceStory.premiumPassURL, introduceStory.premiumPassKey);
+            mainThumbnail.SetDownloadURL(introduceStory.introduceFullImageURL, introduceStory.introduceFullImageKey);
 
             int viewCount = introduceStory.hitCount * 10, likeCount = introduceStory.likeCount * 10;
 
@@ -108,6 +128,11 @@ namespace PIERStory {
             string originText = SystemManager.GetLocalizedText("6179") + " / " + introduceStory.original;
             string productText = SystemManager.GetLocalizedText("6180") + " / " + introduceStory.writer;
             string translateText = string.Empty;
+            
+            if(!string.IsNullOrEmpty(introduceStory.translator)) {
+                translateText = SystemManager.GetLocalizedText("6450") + " / " + introduceStory.translator;
+            }
+            
             string productInfoText = string.IsNullOrEmpty(translateText) ? string.Format("{0}\n{1}", originText, productText) : string.Format("{0}\n{1}\n{2}", originText, productText, translateText);
 
             productInfo.rectTransform.sizeDelta = string.IsNullOrEmpty(translateText) ? new Vector2(productInfo.rectTransform.sizeDelta.x, 60) : new Vector2(productInfo.rectTransform.sizeDelta.x, 90);
@@ -123,16 +148,26 @@ namespace PIERStory {
             serialGroup.SetActive(true);
             
             if(introduceStory.isSerial)
-                SystemManager.SetText(textSerialDay, string.Format(SystemManager.GetLocalizedText("5184"), introduceStory.GetSeiralDay())); // 연재일 설정..
-            else 
+                SystemManager.SetText(textSerialDay, string.Format(SystemManager.GetLocalizedText("5184"), introduceStory.GetSeiralDay())); // 연재일 설정..            else 
                 SystemManager.SetLocalizedText(textSerialDay, "5186");// 완결 
             */
 
             completeStoryTag.SetActive(!introduceStory.isSerial);
             updateStateGroup.SetActive(introduceStory.isSerial);
 
-            if (introduceStory.isSerial)
-                SystemManager.SetText(updateDateText_1, introduceStory.GetSeiralDay());
+            if (introduceStory.isSerial) {
+                
+                Debug.Log(">> introduceStory.isSerial : " + introduceStory.listSerialDays.Count);
+                
+                SystemManager.SetText(textSerialDay, string.Format(SystemManager.GetLocalizedText("5184"), introduceStory.GetSeiralDay()));
+                
+                if(introduceStory.listSerialDays.Count > 0)
+                    SystemManager.SetText(updateDateText_1, introduceStory.listSerialDays[0]);
+                
+                if(introduceStory.listSerialDays.Count > 1)
+                    SystemManager.SetText(updateDateText_2, introduceStory.listSerialDays[1]);
+                
+            }
 
 
             // 작품 세부 정보

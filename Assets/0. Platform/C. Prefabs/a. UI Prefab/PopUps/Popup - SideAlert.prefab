@@ -98,6 +98,8 @@ MonoBehaviour:
   targetRawImage: {fileID: 0}
   downloadedTexture: {fileID: 0}
   downloadedSprite: {fileID: 0}
+  noImageMark: {fileID: 0}
+  loadingMark: {fileID: 0}
 --- !u!1 &1084265161
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,38 +270,7 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
   Behaviours:
-    Behaviours:
-    - EventName: PointerClick
-      Runners: []
-      Event:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: PIERStory.SpecialEpisodeElement, Assembly-CSharp
-            m_MethodName: OnClickStartSpecialEpisode
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-      BehaviourName: 4
-      Receiver:
-        ConnectionMode: 1
-        SignalProviderId:
-          Type: 0
-          Category: Pointer
-          Name: Click
-        ProviderReference: {fileID: 0}
-        StreamId:
-          Category: None
-          Name: None
-          Custom: 0
-      Cooldown: 0
-      Selectable: {fileID: 1084265165}
+    Behaviours: []
     SignalSource: {fileID: 1084265161}
     Selectable: {fileID: 1084265165}
   Id:
@@ -325,7 +296,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1084265161}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca817101ee6c409fb4e92db226cd172b, type: 3}
   m_Name: 
@@ -1720,7 +1691,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 330, y: -40}
-  m_SizeDelta: {x: 600, y: 80}
+  m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1314089216
 CanvasRenderer:
@@ -1833,7 +1804,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 1314089215}
   isException: 1
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 2
 --- !u!1 &1110636695321382261
 GameObject:
   m_ObjectHideFlags: 0
@@ -2858,7 +2831,8 @@ MonoBehaviour:
   _text: {fileID: 5990105608137279327}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &6961113601254770293
 GameObject:
   m_ObjectHideFlags: 0
@@ -2893,8 +2867,8 @@ RectTransform:
   m_Children:
   - {fileID: 4526357153140186096}
   - {fileID: 5111859992229002730}
-  m_Father: {fileID: 7219009871429771917}
-  m_RootOrder: 2
+  m_Father: {fileID: 7219009871168862850}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -3166,7 +3140,8 @@ MonoBehaviour:
   _text: {fileID: 7219009871063109542}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &7219009871168862851
 GameObject:
   m_ObjectHideFlags: 0
@@ -3203,6 +3178,7 @@ RectTransform:
   - {fileID: 634850812}
   - {fileID: 1084265162}
   - {fileID: 1837110814734435997}
+  - {fileID: 4861645926447707044}
   m_Father: {fileID: 7219009871429771917}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3913,7 +3889,6 @@ RectTransform:
   m_Children:
   - {fileID: 8951085288910842457}
   - {fileID: 7219009871168862850}
-  - {fileID: 4861645926447707044}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3971,6 +3946,11 @@ MonoBehaviour:
       unlockStyle: 
       isUnlock: 0
       isSerial: 0
+      debugPublishData: 
+      unlockEpisodes: 
+      unlockScenes: 
+      arrUnlockEpisode: []
+      arrUnlockScene: []
     imageURL: 
     imageKey: 
     isConfirm: 1
@@ -4148,7 +4128,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 7653804117319579214}
   isException: 1
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!114 &7653804117319579214 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7653804117650758277, guid: 5f8eb330ccce884419e54e6e6ea5e322, type: 3}

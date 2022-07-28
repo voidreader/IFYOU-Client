@@ -3642,6 +3642,31 @@ namespace PIERStory
         }
         
         #endregion
-    
+        
+        /// <summary>
+        /// 이프유 패스 사용중인지 체크 
+        /// </summary>
+        /// <returns></returns>    
+        public bool CheckIFyouPassUsing() {
+            return ifyouPassDay > 0;
+        }
+        
+        /// <summary>
+        /// 이프유 패스 만료 메세지 
+        /// </summary>
+        /// <returns></returns>
+        public string GetIFyouPassExpireMessage() {
+            if (ifyouPassDay <= 0)
+                return string.Empty;
+                
+            if(ifyouPassDay >= 30) {
+                // 오늘 만료! 메세지 표시 
+                return SystemManager.GetLocalizedText("6458");
+            }
+            else {
+                // 몇일 후 만료
+                return string.Format(SystemManager.GetLocalizedText("6457"), (30 - ifyouPassDay).ToString());
+            }
+        }
     }
 }

@@ -24,6 +24,12 @@ namespace PIERStory {
         const string NODE_PRODUCT_MASTER = "productMaster";
         const string NODE_PRODUCT_DETAIL = "productDetail";
         
+        [Header("이프유 패스")]
+        public int ifyouPassDirectStar = 0;  // 즉시 지급 스타 
+        public int ifyouPassDailyStar = 0;  // 매일 지급 스타
+        public int ifyouPassChoiceSale = 0;
+        public float ifyouPassChoiceSaleFloat = 0; // 선택지 할인율 
+        
         
         IEnumerator Start() {
             if(main != null) {
@@ -197,6 +203,14 @@ namespace PIERStory {
 
             if (!string.IsNullOrEmpty(projectId))
                 sendData[CommonConst.COL_PROJECT_ID] = projectId;
+                
+            // 이프유 패스에서는 다른 메소드 사용 
+            if(receipt.gamebaseProductId == "ifyou_pass") {
+                sendData["func"] = "purchaseInappProductByMail";
+            }
+                
+            
+            
             
             NetworkLoader.main.SendPost(OnRequestPurchaseReward, sendData, true);
             
@@ -275,6 +289,8 @@ namespace PIERStory {
             
             yield return new WaitForSeconds(0.1f);
             
+            // 구매 상품에 따라 각자 다른 메세지. 
+            
             if(__productID == "pre_reward_pack") {
                 SystemManager.ShowSystemPopupLocalize("6300", null, null, true, false); // 사전예약보상
                 yield break;
@@ -301,12 +317,18 @@ namespace PIERStory {
             if(__productID == "oneday_pass")
             {
 
-                yield break;
             }
-            
-            
-            SystemManager.ShowSystemPopupLocalize("6113", null, null, true, false);  // 일반구매 
-            
+            else if (__productID == "ifyou_pass") {
+                // 이프유 패스에 대한 메세지 
+                UserManager.main.ifyouPassDay = 1; // 1일차 시작으로 한다.
+                // 6441
+                // 이프유 패스를 구매했어요!
+                SystemManager.ShowSystemPopupLocalize("6441", null, null, true, false); 
+            }
+            else { // 일반 구매 
+                SystemManager.ShowSystemPopupLocalize("6113", null, null, true, false);  // 일반구매     
+            }
+
         }
         
         
@@ -342,7 +364,39 @@ namespace PIERStory {
             productMasterJSON = result[NODE_PRODUCT_MASTER];
             productDetailJSON = result[NODE_PRODUCT_DETAIL];
             
+            
+            InitIfyouPass();
         }
+        
+        /// <summary>
+        /// 이프유 패스 정보 설정 
+        /// </summary>
+        void InitIfyouPass() {
+            string productMasterId = string.Empty;
+            for (int i = 0; i < productMasterJSON.Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(productMasterJSON[i], "product_type") == "ifyou_pass")
+                {
+                    productMasterId = SystemManager.GetJsonNodeString(productMasterJSON[i], "product_master_id");
+                    break;
+                }
+            }
+            JsonData ifyouPassData = GetGameProductItemDetailInfo(productMasterId);
+            
+            if(ifyouPassData != null && ifyouPassData.Count > 0)
+                ifyouPassData = ifyouPassData[0];
+                
+            if(ifyouPassData == null)
+                return;
+            
+            // 이프유 패스 정보 설정 
+            ifyouPassDirectStar = SystemManager.GetJsonNodeInt(ifyouPassData, "star_directly_count");
+            ifyouPassDailyStar = SystemManager.GetJsonNodeInt(ifyouPassData, "star_daily_count");
+            ifyouPassChoiceSale = SystemManager.GetJsonNodeInt(ifyouPassData, "selection_sale");
+            ifyouPassChoiceSaleFloat = ifyouPassChoiceSale * 0.01f;
+            
+        }
+        
         
         public void OnRequestCoinExchangeProductList(HTTPRequest request, HTTPResponse response) {
             if(!NetworkLoader.CheckResponseValidation(request, response)) {

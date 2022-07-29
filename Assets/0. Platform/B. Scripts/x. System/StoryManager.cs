@@ -136,10 +136,6 @@ namespace PIERStory
 
 
         
-        // BGM 배너 URL & KEY
-        [SerializeField] string bgmBannerURL = string.Empty; 
-        [SerializeField] string bgmBannerKey = string.Empty;
-        
         // 프리패스 뱃지 정보 
         public string freepassBadgeURL = string.Empty;
         public string freepassBadgeKey = string.Empty;
@@ -174,6 +170,12 @@ namespace PIERStory
         [SerializeField] int currentBubbleSetVersion = 0; // 현재 말풍선세트 버전 정보 
         JsonData currentBubbleSetJson = null;
         public JsonData currentBubbleMasterJson = null; // 선택한 프로젝트 버블 마스터 정보 
+        
+        [Header("프리미엄 패스")]
+        JsonData jsonPremiumPassMaster = null; // 프리미엄 패스 마스터 JSON
+        JsonData jsonPremiumPassDetail = null; // 프리미엄 패스 디테일 JSON
+        
+        public List<ChallengeData> listChallenges = new List<ChallengeData>(); // 프리미엄패스 챌린지 리스트 
 
         #region static, const
 
@@ -593,6 +595,9 @@ namespace PIERStory
             // 프로젝트 기준정보 설정 
             SetProjectStandard();
             
+            // 프로젝트 프리미엄 패스 정보 설정 
+            SetProjectPremiumPass();
+            
             // 현재 작품의 EpisodeData 클리어 . 
             ListCurrentProjectEpisodes.Clear();
             
@@ -870,9 +875,7 @@ namespace PIERStory
         void SetProjectStandard()
         {
             try {
-                // 프로젝트 귀속 이미지들 초기화 
-                bgmBannerURL = string.Empty;
-                bgmBannerURL = string.Empty;
+                
                 
                 
                 illustJson = GetNodeProjectIllusts(); // 일러스트 기본 정보 
@@ -884,19 +887,12 @@ namespace PIERStory
                 
                 // 상세정보 
                 storyDetailJson = ProjectDetailJson[LobbyConst.NODE_DETAIL][0];
-
-                // * 바보! GetJsonNode와 RequestDownloadImage 메소드에 유효성 검사를 추가하고 여기서는 신경쓰지 않게 한다. 
-                
-            
-                // 갤러리 
-                bgmBannerURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_URL);
-                bgmBannerKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson,NODE_BGM_BANNER), SystemConst.IMAGE_KEY);
-                SystemManager.RequestDownloadImage(bgmBannerURL, bgmBannerKey, null);
-                
                 
                 // 프리미엄 패스 뱃지
                 freepassBadgeURL = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, "freepassBadge"), SystemConst.IMAGE_URL);
                 freepassBadgeKey = SystemManager.GetJsonNodeString(SystemManager.GetJsonNode(ProjectDetailJson, "freepassBadge"), SystemConst.IMAGE_KEY);
+                
+                
             }
             catch(System.Exception e) { 
    
@@ -1002,6 +998,27 @@ namespace PIERStory
                 DictProjectModel.Add(key, modelJson[key]);
                 DictProjectModelDebug.Add(key, JsonMapper.ToStringUnicode(modelJson[key]));
             }
+        }
+        
+        /// <summary>
+        /// 프로젝트 프리미엄 패스 정보. 
+        /// </summary>
+        void SetProjectPremiumPass() {
+            
+            listChallenges.Clear();
+            
+            if(ProjectDetailJson.ContainsKey("premiumMaster"))
+                jsonPremiumPassMaster = ProjectDetailJson["premiumMaster"];
+            
+            if(ProjectDetailJson.ContainsKey("premiumDetail"))
+                jsonPremiumPassDetail = ProjectDetailJson["premiumDetail"];
+                
+            // 디테일 정보를 기반으로 프리미엄 챌린지 정보 생성 
+            foreach(string key in jsonPremiumPassDetail.Keys) {
+                ChallengeData challenge = new ChallengeData(jsonPremiumPassDetail[key], key);
+                listChallenges.Add(challenge); // 리스트에 추가 
+            }
+            
         }
 
 
@@ -1843,35 +1860,6 @@ namespace PIERStory
         
         #endregion
     
-
-        #region 갤러리 리소스 
-        
-
-        
-        /// <summary>
-        /// 갤러리의 작품별 BGM 배너 주세요 
-        /// </summary>
-        /// <returns></returns>
-        public Texture2D GetGalleryBgmBanner()  {
-            if(string.IsNullOrEmpty(bgmBannerKey))
-                return null;
-            
-            if(!ES3.FileExists(bgmBannerKey))
-                return null;
-                
-            try {
-                
-                return SystemManager.GetLocalTexture2D(bgmBannerKey);
-                
-            }
-            catch(System.Exception e) {
-                Debug.Log(e.StackTrace);
-                return null;
-            }
-        }
-        
-        
-        #endregion
         
         #region 프리미엄 패스 친구들
         

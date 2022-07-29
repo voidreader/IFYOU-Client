@@ -19,7 +19,7 @@ namespace PIERStory {
         JsonData productDetailJSON;
         JsonData coinExchangeJSON; // 코인 환전 
         
-        JsonData userPurchaseHistoryJSON = null;
+        JsonData userPurchaseHistoryJSON = null; // 유저 구매내역(일반)
     
         const string NODE_PRODUCT_MASTER = "productMaster";
         const string NODE_PRODUCT_DETAIL = "productDetail";
@@ -360,6 +360,11 @@ namespace PIERStory {
             
             // userPurchaseHistory
             userPurchaseHistoryJSON = JsonMapper.ToObject(response.DataAsText);
+            
+            // 일반 내역만 받아서 쓴다. 
+            if(userPurchaseHistoryJSON.ContainsKey("normal"))
+                userPurchaseHistoryJSON = userPurchaseHistoryJSON["normal"];
+            
         }
         
         

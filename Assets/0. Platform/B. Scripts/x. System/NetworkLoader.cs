@@ -117,7 +117,7 @@ namespace PIERStory
         /// </summary>
         public void RequestUserPurchaseHistory() {
             JsonData sending = new JsonData();
-            sending["func"] = "getUserPurchaseList";
+            sending["func"] = "getUserPurchaseListVer2";
             
             SendPost(BillingManager.main.OnRequestUserPurchaseHistory, sending);
         }

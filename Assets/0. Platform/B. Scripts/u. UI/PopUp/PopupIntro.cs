@@ -318,6 +318,7 @@ namespace PIERStory {
             introduceStory.GetComponent<CanvasGroup>().DOFade(1, 1f);
             
             selectedStory = __story;
+            SystemListener.main.introduceStory = __story;
             introduceBox.SetInfo(__story);
 
             skipButton.SetActive(false);

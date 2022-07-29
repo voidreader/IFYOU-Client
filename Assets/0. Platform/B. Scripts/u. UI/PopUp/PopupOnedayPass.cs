@@ -15,6 +15,11 @@ namespace PIERStory {
         public TextMeshProUGUI textTitle; // 타이틀 
         
         
+        public ImageRequireDownload storyImage;
+        
+        public StoryData currentStory;
+        
+        
         
         
         
@@ -29,39 +34,46 @@ namespace PIERStory {
             
             
             // 게임베이스 아이템 정보 
-            gamebaseItem = BillingManager.main.GetGamebasePurchaseItem("oneday_pass");
-            
+            try {
+                gamebaseItem = BillingManager.main.GetGamebasePurchaseItem("oneday_pass");
+                textPrice.text = gamebaseItem.localizedPrice;
+            }
+            catch {
+                Debug.Log("Windows standalone?");
+            }
             
             // 텍스트 세팅 
             
             Debug.Log(string.Format(SystemManager.GetLocalizedText("6455"), BillingManager.main.ifyouPassChoiceSale));
             SystemManager.SetText(textChoicesSaleText, string.Format(SystemManager.GetLocalizedText("6455"), BillingManager.main.ifyouPassChoiceSale.ToString()));
-            textChoicesOff.text = BillingManager.main.ifyouPassChoiceSale.ToString() +"%\n<size=12>OFF</size>" ;
+            textChoicesOff.text = BillingManager.main.onedayPassChoiceSale.ToString() +"%\n<size=12>OFF</size>" ;
+            textChoicesOff2.text = BillingManager.main.onedayPassChoiceSaleFloat.ToString() +"%\n<size=12>OFF</size>" ;
+            
+            currentStory = SystemListener.main.introduceStory; // 리스너에서 받아온다. 
+            
+            SystemManager.SetText(textTitle, currentStory.title); // 타이틀 
             
             
+            storyImage.SetDownloadURL(currentStory.coinBannerUrl, currentStory.coinBannerKey);
             
-            // 이프유 패스 사용중일때, 아닐때의 분류하기. 
-            /*
-            if(UserManager.main.CheckIFyouPassUsing()) {
-                textPrice.text = UserManager.main.GetIFyouPassExpireMessage();
-                if(UserManager.main.ifyouPassDay >= 30) // 마지막날은 재구매 가능함. 
-                    isPurchasable = true;
-                else
-                    isPurchasable = false;
+           
+            // 원데이 패스 사용중일때, 아닐때의 분류하기. 
+            if(currentStory.IsValidOnedayPass()) { // 사용중 
+                isPurchasable = false; 
+                
+                
             }
-            else {
-                // Price 표시
-                textPrice.text = gamebaseItem.localizedPrice;
-                isPurchasable = true;
+            else { // 사용중이지 않음. (구매가능)
+                isPurchasable= true;
             }
-            */
+            
             
         }
         
         public void OnClickPurchase() {
             
             if(!isPurchasable) {
-                //Debug.LogError("It's not purchasable : " + UserManager.main.ifyouPassDay);
+                Debug.LogError("It's not purchasable oneday pass");
                 return;
             }
             

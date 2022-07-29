@@ -13,13 +13,6 @@ namespace PIERStory {
         public Doozy.Runtime.UIManager.Containers.UIContainer container;
 
         [Space(15)]
-        public GameObject onedayPass;       // 원데이패스 관련 묶음 Object
-        public GameObject onedayPurchaseButton;
-        public GameObject onedayBadgeButton;
-        public TextMeshProUGUI onedayPassTimer;
-
-        public GameObject premiumPurchaseButton;
-        public ImageRequireDownload premiumBadgeButton;
 
         public Button buttonAlert;          // 작품 알림 버튼
         public Sprite spriteAlertOff;       // 작품 알림 버튼 Off Sprite
@@ -64,6 +57,12 @@ namespace PIERStory {
         public GameObject serialGroup; // 연재 관련 오브젝트 
         public TextMeshProUGUI textSerialDay; // 연재 정보 
         
+        [Space]
+        [Header("PASS")]
+        [SerializeField] PremiumPassButton premiumPassButton;
+        [SerializeField] OnedayPassButton onedayPassButton;
+        
+        [Space]
         public StoryData introduceStory;
         
         public override void OnView() {
@@ -75,28 +74,16 @@ namespace PIERStory {
         
             textRecommend.gameObject.SetActive(false);    
             SetInfo();
-            InitOnedayPass();
+            
+            InitPass();
         }
-        
         
         void Update() {
-            if(!onedayBadgeButton.activeSelf)
-                return;
-                
-            if(Time.frameCount % 5 != 0) {
-                return;
-            }
-            
-            
-            // 원데이패스 타이머 
-            onedayPassTimer.text = introduceStory.GetOnedayRemainTime();
-            
-            if(string.IsNullOrEmpty(onedayPassTimer.text)) {
-                // 끝나면 뱃지 없앤다.
-                onedayBadgeButton.SetActive(false);
+            if(Input.GetKeyDown(KeyCode.H)) {
+                SystemListener.main.introduceStory.hasPremiumPass = true;
             }
         }
-        
+
 
         public void SetInfo(StoryData introduceStoryData = null) {
             
@@ -228,34 +215,15 @@ namespace PIERStory {
             StoryManager.main.RequestStoryInfo(introduceStory);
             
         }
-
-        #region 원데이 패스 관련
-
-        void InitOnedayPass()
-        {
-            onedayPurchaseButton.SetActive(string.IsNullOrEmpty(introduceStory.onedayExpireDate));
-            onedayBadgeButton.SetActive(!string.IsNullOrEmpty(introduceStory.onedayExpireDate) && introduceStory.IsValidOnedayPass());
-            onedayPass.SetActive(onedayPurchaseButton.activeSelf || onedayBadgeButton.activeSelf);
+        
+        
+        /// <summary>
+        /// 소개페이지의 프리미엄 패스, 원데이 패스 설정하기 
+        /// </summary>
+        void InitPass() {
+            premiumPassButton.SetPass(SystemListener.main.introduceStory);
+            onedayPassButton.SetPass(SystemListener.main.introduceStory);
         }
-
-
-        public void OpenOnedayPassPopup()
-        {
-
-        }
-
-
-        #endregion
-
-        #region 프리미엄 패스 관련
-
-        public void OpenPremiumPassPopup()
-        {
-
-        }
-
-
-        #endregion
 
 
         #region 좋아요 버튼 관련 메소드

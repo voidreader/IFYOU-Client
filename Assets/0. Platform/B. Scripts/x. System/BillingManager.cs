@@ -30,6 +30,12 @@ namespace PIERStory {
         public int ifyouPassChoiceSale = 0;
         public float ifyouPassChoiceSaleFloat = 0; // 선택지 할인율 
         
+        [Header("원데이 패스")]
+        public int onedayPassChoiceSale = 0;
+        public float onedayPassChoiceSaleFloat = 0; // 선택지 할인율 
+        
+        
+        
         
         IEnumerator Start() {
             if(main != null) {
@@ -262,6 +268,12 @@ namespace PIERStory {
                 UserManager.main.SetAllpassExpire(SystemManager.GetJsonNodeLong(result, "allpass_expire_tick"));
             }
             
+            // * 2022.07.29 원데이 패스
+            if(result.ContainsKey("oneday_pass_expire_tick") && result.ContainsKey("oneday_pass_expire")) {
+                // 하나만 고치면 연결된 나머지도 갱신이 되는걸까? 
+                SystemListener.main.introduceStory.SetOnedayPassTick(SystemManager.GetJsonNodeString(result, "oneday_pass_expire"),  SystemManager.GetJsonNodeLong(result, "oneday_pass_expire_tick"));
+            }
+            
             // 재화 바로 지급으로 변경됨(2022.06.20)
             UserManager.main.SetRefreshInfo(result);
 
@@ -316,7 +328,9 @@ namespace PIERStory {
             // 원데이 패스 구매 완료
             if(__productID == "oneday_pass")
             {
-
+                SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6444"), SystemListener.main.introduceStory.title), null, null, true, false);
+                
+                // 원데이 패스 refresh 처리 
             }
             else if (__productID == "ifyou_pass") {
                 // 이프유 패스에 대한 메세지 
@@ -366,6 +380,7 @@ namespace PIERStory {
             
             
             InitIfyouPass();
+            InitOnedayPass();
         }
         
         /// <summary>
@@ -395,6 +410,33 @@ namespace PIERStory {
             ifyouPassChoiceSale = SystemManager.GetJsonNodeInt(ifyouPassData, "selection_sale");
             ifyouPassChoiceSaleFloat = ifyouPassChoiceSale * 0.01f;
             
+            
+        }
+        
+        /// <summary>
+        /// 원데이 패스 정보 설정
+        /// </summary>
+        void InitOnedayPass() {
+            string productMasterId = string.Empty;
+            for (int i = 0; i < productMasterJSON.Count; i++)
+            {
+                if (SystemManager.GetJsonNodeString(productMasterJSON[i], "product_type") == "oneday_pass")
+                {
+                    productMasterId = SystemManager.GetJsonNodeString(productMasterJSON[i], "product_master_id");
+                    break;
+                }
+            }
+            JsonData onedayPassData = GetGameProductItemDetailInfo(productMasterId);
+            
+            if(onedayPassData != null && onedayPassData.Count > 0)
+                onedayPassData = onedayPassData[0];
+                
+            if(onedayPassData == null)
+                return;
+            
+            
+            onedayPassChoiceSale = SystemManager.GetJsonNodeInt(onedayPassData, "selection_sale");
+            onedayPassChoiceSaleFloat = onedayPassChoiceSale * 0.01f;
         }
         
         
@@ -491,49 +533,8 @@ namespace PIERStory {
         }
 
 
-        /// <summary>
-        /// 이프유 패스 선택지 할인율
-        /// </summary>
-        /// <returns></returns>
-        public float GetIfyouPassSelectionSale()
-        {
-            string productMasterId = string.Empty;
 
-            for (int i = 0; i < productMasterJSON.Count; i++)
-            {
-                if (SystemManager.GetJsonNodeString(productMasterJSON[i], "product_type") == "ifyou_pass")
-                {
-                    productMasterId = SystemManager.GetJsonNodeString(productMasterJSON[i], "product_master_id");
-                    break;
-                }
-            }
 
-            JsonData ifyouPassData = GetGameProductItemDetailInfo(productMasterId);
-
-            return SystemManager.GetJsonNodeInt(ifyouPassData[0], "selection_sale") * 0.01f;
-        }
-
-        /// <summary>
-        /// 원데이 패스 선택지 할인율
-        /// </summary>
-        /// <returns></returns>
-        public float GetOnedayPassSelectionSale()
-        {
-            string productMasterId = string.Empty;
-
-            for (int i = 0; i < productMasterJSON.Count; i++)
-            {
-                if (SystemManager.GetJsonNodeString(productMasterJSON[i], "product_type") == "oneday_pass")
-                {
-                    productMasterId = SystemManager.GetJsonNodeString(productMasterJSON[i], "product_master_id");
-                    break;
-                }
-            }
-
-            JsonData onedayPassData = GetGameProductItemDetailInfo(productMasterId);
-
-            return SystemManager.GetJsonNodeInt(onedayPassData[0], "selection_sale") * 0.01f;
-        }
 
 
         /// <summary>

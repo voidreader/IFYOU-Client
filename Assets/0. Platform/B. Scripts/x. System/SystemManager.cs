@@ -1648,6 +1648,14 @@ namespace PIERStory
 
 
         #region 시스템(앱) 팝업
+
+        /// <summary>
+        /// 원데이 패스 팝업 오픈 
+        /// </summary>        
+        public static void ShowOnedayPassPopup() {
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_ONEDAY_PASS);
+            PopupManager.main.ShowPopup(p, false);
+        }
         
         
         /// <summary>

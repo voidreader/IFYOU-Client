@@ -83,6 +83,9 @@ namespace PIERStory {
         public DateTime onedayExpireDateTime; // 원데이 만료 일시 DateTime
         public TimeSpan diffOnedayExpire; // 원데이 시간계산용 timespan.
         
+        
+        public bool hasPremiumPass = false; // 프리미엄 패스 보유 여부 
+        
         public bool isValidData {
             get {
                 return originData != null && !string.IsNullOrEmpty(projectID);
@@ -228,12 +231,28 @@ namespace PIERStory {
                 }
             }
 
+
+            // 원데이 처리 
             onedayExpireDate = SystemManager.GetJsonNodeString(originData, "oneday_pass_expire");
             onedayPassTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(originData, "oneday_pass_expire_tick"));
             
             onedayExpireDateTime = new DateTime(onedayPassTick);
             
+            hasPremiumPass = SystemManager.GetJsonNodeBool(originData, "premium_pass_exist"); // 프리미엄 패스 처리
+            
         } // ? END
+        
+        /// <summary>
+        /// 원데이패스 정보 리프레시용도 
+        /// </summary>
+        /// <param name="__expireInfo"></param>
+        /// <param name="__tick"></param>
+        public void SetOnedayPassTick(string __expireInfo, long __tick) {
+            onedayExpireDate = __expireInfo;
+            onedayPassTick = SystemConst.ConvertServerTimeTick(__tick);
+            
+            onedayExpireDateTime = new DateTime(onedayPassTick);
+        }
         
         
         

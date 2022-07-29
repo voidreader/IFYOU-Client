@@ -203,7 +203,7 @@ GameObject:
   - component: {fileID: 6800907577603261580}
   - component: {fileID: 2761657572310319546}
   - component: {fileID: 902012852690302675}
-  - component: {fileID: 6792817572976777447}
+  - component: {fileID: 4299550662551847551}
   m_Layer: 5
   m_Name: textTitle
   m_TagString: Untagged
@@ -259,7 +259,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Up to 500 Stars + Various Benefits
+  m_text: "\uD0C0\uC774\uD2C0 \uC790\uB9AC"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   m_sharedMaterial: {fileID: 9028284658620151228, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
@@ -328,7 +328,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &6792817572976777447
+--- !u!114 &4299550662551847551
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -337,15 +337,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1223156973549361453}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 6459
   _text: {fileID: 902012852690302675}
-  _localizedText: 
   isException: 1
   isAlignmentFix: 1
   originText: 
+  originAlign: 1
 --- !u!1 &1249656084294575978
 GameObject:
   m_ObjectHideFlags: 0
@@ -1470,7 +1469,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 6533534397386387027}
         m_TargetAssemblyTypeName: PIERStory.PopupBase, Assembly-CSharp
         m_MethodName: Hide
         m_Mode: 1
@@ -2167,8 +2166,8 @@ MonoBehaviour:
       Event:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: PIERStory.PopupIFyouPass, Assembly-CSharp
+          - m_Target: {fileID: 6533534397386387027}
+            m_TargetAssemblyTypeName: PIERStory.PopupOnedayPass, Assembly-CSharp
             m_MethodName: OnClickPurchase
             m_Mode: 1
             m_Arguments:
@@ -5617,7 +5616,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 6533534397386387027}
         m_TargetAssemblyTypeName: PIERStory.PopupBase, Assembly-CSharp
         m_MethodName: Hide
         m_Mode: 1
@@ -6482,7 +6481,7 @@ MonoBehaviour:
   content: {fileID: 8717818625094492480}
   popupName: 
   autoDestroyTime: 0
-  isOverlayUse: 0
+  isOverlayUse: 1
   addQueue: 0
   mainCanvasGroup: {fileID: 0}
   isShow: 0
@@ -6493,4 +6492,48 @@ MonoBehaviour:
   textChoicesOff: {fileID: 6526129154229591175}
   textChoicesOff2: {fileID: 519368149656021257}
   textTitle: {fileID: 902012852690302675}
+  storyImage: {fileID: 1785573904595484860}
+  currentStory:
+    projectID: 
+    title: 
+    writer: 
+    summary: 
+    original: 
+    translator: 
+    sortKey: 0
+    bubbleSetID: 
+    isCredit: 0
+    bannerURL: 
+    bannerKey: 
+    thumbnailURL: 
+    thumbnailKey: 
+    circleImageURL: 
+    circleImageKey: 
+    episodeFinishImageURL: 
+    episodeFinishImageKey: 
+    premiumPassURL: 
+    premiumPassKey: 
+    categoryImageURL: 
+    categoryImageKey: 
+    coinBannerUrl: 
+    coinBannerKey: 
+    introduceFullImageURL: 
+    introduceFullImageKey: 
+    isLock: 0
+    colorCode: 000000
+    projectProgress: 0
+    isPlaying: 0
+    represenativeGenre: 
+    genre: 
+    serialDay: 
+    isSerial: 0
+    listSerialDays: []
+    passPrice: 0
+    passDiscount: 0.1
+    isNotify: 0
+    hitCount: 0
+    likeCount: 0
+    arrHashtag: []
+    onedayExpireDate: 
+    onedayPassTick: 0
   isPurchasable: 0

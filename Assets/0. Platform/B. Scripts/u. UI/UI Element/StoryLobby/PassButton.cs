@@ -91,7 +91,7 @@ namespace PIERStory {
             groupTimedeal.SetActive(true);
             
             // * 타임딜
-            SetTimedeal();
+            // SetTimedeal();
             
             loopScaleEffect.enabled = true;
             

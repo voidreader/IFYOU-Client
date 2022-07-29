@@ -20,9 +20,8 @@ namespace PIERStory {
         public CanvasGroup canvasGroup;
         
         [Space]
-        public PassButton passButton; // 패스 버튼
-        public ImageRequireDownload passBadge; // 패스 뱃지 
-        public AllPassTimer allpassTimer; // 올패스 타이머 
+        public PremiumPassButton premiumPassButton; // 프리미엄 패스 
+        public OnedayPassButton onedayPassButton; // 원데이 패스 
         
         private void Start() {
             OnPassPurchase = PostPurchasePremiumPass; 
@@ -140,7 +139,7 @@ namespace PIERStory {
             SetEpisodeTitleText(string.Empty);
             
             // 프리미엄 관련 처리 
-            SetPremiumPassObject();
+            SetPasses();
             
             if(projectCurrentJSON == null) {
                 SystemManager.ShowSimpleAlert("Invalid Episode State. Please contact to help center");
@@ -158,33 +157,16 @@ namespace PIERStory {
         }
         
         /// <summary>
-        /// 프리미엄 패스 오브젝트 설정 
+        /// 패스 오브젝트 설정 
         /// </summary>
-        void SetPremiumPassObject() {
-             
-            // 프리미엄 패스 및 올 패스 오브젝트 추가 
-            passButton.gameObject.SetActive(false);
-            passBadge.gameObject.SetActive(false);
-            allpassTimer.gameObject.SetActive(false);
+        void SetPasses() {
+             // 패스 버튼을 처리한다.
+            premiumPassButton.gameObject.SetActive(false);
+            onedayPassButton.gameObject.SetActive(false);
             
-            hasPass = UserManager.main.HasProjectFreepass(); // 패스 보유 여부 
-            
-            // 패스 보유 여부에 따른 오브젝트 설정 
-            if(hasPass) {
-                
-                if(UserManager.main.HasProjectPremiumPassOnly(StoryManager.main.CurrentProjectID)) {
-                    passBadge.gameObject.SetActive(true);
-                    passBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey, true);    
-                }
-                else {
-                    // 올패스 처리 
-                    allpassTimer.InitAllPassTimer();
-                }
-            }
-            else {
-                passButton.gameObject.SetActive(true);
-                passButton.SetPremiumPass();
-            }
+            premiumPassButton.SetPass(StoryManager.main.CurrentProject);
+            onedayPassButton.SetPass(StoryManager.main.CurrentProject);
+
         }
         
         /// <summary>

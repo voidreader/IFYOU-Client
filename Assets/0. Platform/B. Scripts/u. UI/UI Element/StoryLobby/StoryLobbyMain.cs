@@ -21,7 +21,7 @@ namespace PIERStory {
         public static Action OnInitializeContentGroup = null;
         public static Action OnEpisodePlay = null; 
         
-        public static Action OnPassPurchase = null;  // 프리미엄패스 구매 콜백 
+        public static Action OnPassPurchase = null;  // 여러 패스 구매 콜백 
         
         
         public StoryData currentStoryData;

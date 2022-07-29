@@ -7,10 +7,12 @@ namespace PIERStory {
     {
         public static Action OnInitializeStoryLobbyTop = null;
         
-        public PassButton passButton; // 프리미엄 패스 구매 버튼
-        public ImageRequireDownload passBadge; // 프리미엄 패스 뱃지 
+        // public PassButton passButton; // 프리미엄 패스 구매 버튼
+        // public ImageRequireDownload passBadge; // 프리미엄 패스 뱃지 
         
         public AllPassTimer allpassTimer; // 올패스 타이머 
+        public PremiumPassButton premiumPassButton; // 프리미엄 패스 
+        public OnedayPassButton onedayPassButton; // 원데이 패스 
         
         
         // Start is called before the first frame update
@@ -25,38 +27,14 @@ namespace PIERStory {
         /// </summary>
         void InitStoryLobbyTop()
         {
-            // * 프리미엄패스 vs 올패스는 프리미엄패스가 우선한다. 
-            if(UserManager.main.HasProjectPremiumPassOnly(StoryManager.main.CurrentProjectID)) {
-                
-                // 올패스랑 패스버튼 비활성화
-                allpassTimer.gameObject.SetActive(false);
-                passButton.gameObject.SetActive(false);
-                
-                // 뱃지 세팅 
-                passBadge.SetDownloadURL(StoryManager.main.freepassBadgeURL, StoryManager.main.freepassBadgeKey, true);
-                passBadge.gameObject.SetActive(true);    
-                
-                return;
-            }
+            // 패스 버튼을 처리한다.
+            premiumPassButton.gameObject.SetActive(false);
+            onedayPassButton.gameObject.SetActive(false);
             
+            premiumPassButton.SetPass(StoryManager.main.CurrentProject);
+            onedayPassButton.SetPass(StoryManager.main.CurrentProject);
             
-            // 유효시간이 남은 올패스 존재 
-            if(!string.IsNullOrEmpty(UserManager.main.GetAllPassTimeDiff())) {
-                
-                passButton.gameObject.SetActive(false);
-                passBadge.gameObject.SetActive(false);
-                
-                allpassTimer.InitAllPassTimer();
-                return;
-            }
-            
-            // 프리미엄 패스도 없고 올패스도 없다. 
-            // 프리미엄 패스 버튼 세팅하기 
-            passButton.gameObject.SetActive(true);
-            passButton.SetPremiumPass();
-            
-            allpassTimer.gameObject.SetActive(false);
-            passBadge.gameObject.SetActive(false);
+
         }
     }
 }

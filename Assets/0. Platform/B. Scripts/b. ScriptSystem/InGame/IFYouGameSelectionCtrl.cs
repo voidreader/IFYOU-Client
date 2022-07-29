@@ -205,10 +205,10 @@ namespace PIERStory {
                         saleSelectionPrice = scriptRow.selectionPrice;
 
                         if (UserManager.main.ifyouPassDay > 0)
-                            saleSelectionPrice = (int)(scriptRow.selectionPrice * (1f - BillingManager.main.GetIfyouPassSelectionSale()));
+                            saleSelectionPrice = (int)(scriptRow.selectionPrice * (1f - BillingManager.main.ifyouPassChoiceSaleFloat));
 
                         if(StoryManager.main.CurrentProject.IsValidOnedayPass())
-                            saleSelectionPrice = (int)(scriptRow.selectionPrice * (1f - BillingManager.main.GetOnedayPassSelectionSale()));
+                            saleSelectionPrice = (int)(scriptRow.selectionPrice * (1f - BillingManager.main.onedayPassChoiceSaleFloat));
 
                         priceText.text = string.Format("{0}", saleSelectionPrice);
                     }

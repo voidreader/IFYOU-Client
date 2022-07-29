@@ -1360,8 +1360,6 @@ namespace PIERStory
 
             NetworkLoader.main.RequestIfyouplayList();
 
-            // 타임딜 갱신 
-            UserManager.main.RequestUserActiveTimeDeal();
 
             StartCoroutine(RefreshScreenView());
         }      
@@ -1511,6 +1509,7 @@ namespace PIERStory
             }
             catch (Exception e) {
                 NetworkLoader.main.ReportRequestError(e.StackTrace, "GetJsonNodeInt : " + __col);
+                Debug.LogError(e.StackTrace);
                 return 0;
             }
 

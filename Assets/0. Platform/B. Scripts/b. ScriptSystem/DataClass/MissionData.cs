@@ -52,6 +52,8 @@ namespace PIERStory
         public string imageURL = string.Empty;
         public string imageKey = string.Empty;
         public MissionState missionState; // 미션 상태
+        public string idCondition = string.Empty;
+        public string[] arrCondition; // id_condition 배열 타입 
 
         public bool detailHint = false;
         public List<string> episodeDetailHint;      // 미션이 에피소드 타입일 때, 들어올 미션 힌트
@@ -67,10 +69,10 @@ namespace PIERStory
 
         public MissionData(JsonData __j)
         {
-            SetEpisodeData(__j);
+            SetMissionData(__j);
         }
 
-        public void SetEpisodeData(JsonData __j)
+        public void SetMissionData(JsonData __j)
         {
             missionJSON = __j;
             InitData();
@@ -133,10 +135,77 @@ namespace PIERStory
             }
 
             detailHint = SystemManager.GetJsonNodeBool(missionJSON, "detail_hint");
+            
+            
+            // id_condition 추가
+            idCondition = SystemManager.GetJsonNodeString(missionJSON, "id_condition");
+            
+            try {
+                arrCondition = idCondition.Split(',');
+            }
+            catch {
+                arrCondition = new string[]{};
+            }
 
             SetDetailHint();
         }
+        
+        
+        /// <summary>
+        /// id_condition에 대상 ID가 있는지 체크한다.
+        /// scene_id 일수도 있고, episode_id 일수도 있다.
+        /// </summary>
+        /// <param name="__ID"></param>
+        /// <returns></returns>
+        public bool CheckExistsCondition(string __ID) {
+            if (arrCondition == null)
+                return false;
+                
+                
+            for(int i=0;i<arrCondition.Length;i++) {
+                if(arrCondition[i] == __ID)
+                    return true; // 있어!
+            }
+            
+            
+            return false; // 없어!
+        }
+        
+        
+        /// <summary>
+        /// 미션타입 기반으로 유저 정보를 체크해서 해금을 체크한다.
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckUserHist() {
+            
+            // * 씬과 에피소드 타입으로 분리 
+            
+            if(missionType == MissionType.scene) {
+                
+                for(int i=0; i<arrCondition.Length;i++) {
+                    // 하나라도 없는게 있으면 안된다. 
+                    if(!UserManager.main.CheckSceneHistory(arrCondition[i])) 
+                        return false;
+                }
+                
+            }
+            else if (missionType == MissionType.episode) {
+                
+                for(int i=0; i<arrCondition.Length;i++) {
+                    
+                    if(!UserManager.main.IsCompleteEpisode(arrCondition[i])) 
+                        return false;
+                }
+                
+            }
+            
+            return true; // 전부 통과한 경우 
+        }
 
+
+        /// <summary>
+        /// 힌트 설정 
+        /// </summary>
         void SetDetailHint()
         {
             if (missionType != MissionType.episode && missionType != MissionType.scene)
@@ -169,6 +238,6 @@ namespace PIERStory
                     eventDetailHint.Add(eventHintData);
                 }
             }
-        }
+        } // ? SetDetailHint
     }
 }

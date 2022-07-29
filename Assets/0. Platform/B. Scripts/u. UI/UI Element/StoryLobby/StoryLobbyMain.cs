@@ -711,7 +711,7 @@ namespace PIERStory {
         protected string GetOpenRemainTime() {
             timeDiff = openDate - DateTime.UtcNow;
             
-            if(timeDiff.Ticks < 0) {
+            if(timeDiff.Ticks <= 0) {
                 SetPlayState(); // 오픈시간이된 경우 리프레시
                 return string.Empty;
             }

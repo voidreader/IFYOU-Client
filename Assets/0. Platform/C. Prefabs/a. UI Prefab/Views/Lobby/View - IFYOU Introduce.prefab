@@ -398,7 +398,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5799180398227819441}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -493,7 +493,7 @@ MonoBehaviour:
   MultiplayerInfo: {fileID: 0}
   IsOn: 0
   CurrentUISelectionState: 0
-  DeselectAfterPress: 1
+  DeselectAfterPress: 0
   OnSelectionStateChangedCallback:
     m_PersistentCalls:
       m_Calls: []
@@ -501,7 +501,7 @@ MonoBehaviour:
   NormalState:
     StateType: 0
     StateEvent:
-      EventName: Unnamed
+      EventName: Normal State
       Runners: []
       Event:
         m_PersistentCalls:
@@ -521,7 +521,19 @@ MonoBehaviour:
       Runners: []
       Event:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 4016334423476339848}
+            m_TargetAssemblyTypeName: PIERStory.ViewIntroduce, Assembly-CSharp
+            m_MethodName: OnClickStart
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
   SelectedState:
     StateType: 3
     StateEvent:
@@ -539,38 +551,7 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
   Behaviours:
-    Behaviours:
-    - EventName: PointerClick
-      Runners: []
-      Event:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 4016334423476339848}
-            m_TargetAssemblyTypeName: PIERStory.ViewIntroduce, Assembly-CSharp
-            m_MethodName: OnClickStart
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-      BehaviourName: 4
-      Receiver:
-        ConnectionMode: 1
-        SignalProviderId:
-          Type: 0
-          Category: Pointer
-          Name: Click
-        ProviderReference: {fileID: 0}
-        StreamId:
-          Category: None
-          Name: None
-          Custom: 0
-      Cooldown: 0
-      Selectable: {fileID: 6932414871630481823}
+    Behaviours: []
     SignalSource: {fileID: 5799180398227819441}
     Selectable: {fileID: 6932414871630481823}
   Id:
@@ -668,12 +649,12 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {x: -0.000015258789, y: 0, z: 0}
-      ToValue: {x: -0.000015258789, y: 0, z: 0}
+      FromValue: {x: 0, y: -570, z: 0}
+      ToValue: {x: 0, y: -570, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
       Enabled: 1
       AnimationType: 5
-      StartPosition: {x: -0.000015258789, y: 0, z: 0}
+      StartPosition: {x: 0, y: -570, z: 0}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {x: 0, y: 0, z: 0}
@@ -938,12 +919,12 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {x: -0.000015258789, y: 0, z: 0}
-      ToValue: {x: -0.000015258789, y: 2, z: 0}
-      CurrentValue: {x: 0, y: 0, z: 0}
+      FromValue: {x: 0, y: -570, z: 0}
+      ToValue: {x: 0, y: -568, z: 0}
+      CurrentValue: {x: 0, y: -570, z: 0}
       Enabled: 0
       AnimationType: 6
-      StartPosition: {x: -0.000015258789, y: 0, z: 0}
+      StartPosition: {x: 0, y: -570, z: 0}
       FromReferenceValue: 0
       ToReferenceValue: 0
       FromCustomValue: {x: 0, y: 0, z: 0}
@@ -1071,7 +1052,7 @@ MonoBehaviour:
         FadeOutShake: 0
       FromValue: {x: 1, y: 1, z: 1}
       ToValue: {x: 1.2, y: 1.2, z: 1}
-      CurrentValue: {x: 1.3000001, y: 1.3000001, z: 1}
+      CurrentValue: {x: 1, y: 1, z: 1}
       Enabled: 0
       StartScale: {x: 1, y: 1, z: 1}
       FromReferenceValue: 1
@@ -1208,12 +1189,12 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {x: -0.000015258789, y: 0, z: 0}
-      ToValue: {x: -0.000015258789, y: 8, z: 0}
-      CurrentValue: {x: 0, y: 0, z: 0}
+      FromValue: {x: 0, y: -570, z: 0}
+      ToValue: {x: 0, y: -562, z: 0}
+      CurrentValue: {x: 0, y: -570, z: 0}
       Enabled: 0
       AnimationType: 6
-      StartPosition: {x: -0.000015258789, y: 0, z: 0}
+      StartPosition: {x: 0, y: -570, z: 0}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {x: 0, y: 0, z: 0}
@@ -1341,7 +1322,7 @@ MonoBehaviour:
         FadeOutShake: 0
       FromValue: {x: 1, y: 1, z: 1}
       ToValue: {x: 0.9, y: 0.9, z: 1}
-      CurrentValue: {x: 1.0209981, y: 1.0209981, z: 1}
+      CurrentValue: {x: 0.9, y: 0.9, z: 1}
       Enabled: 1
       StartScale: {x: 1, y: 1, z: 1}
       FromReferenceValue: 0
@@ -1478,12 +1459,12 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {x: -0.000015258789, y: 0, z: 0}
-      ToValue: {x: -0.000015258789, y: 2, z: 0}
-      CurrentValue: {x: 0, y: 0, z: 0}
+      FromValue: {x: 0, y: -570, z: 0}
+      ToValue: {x: 0, y: -568, z: 0}
+      CurrentValue: {x: 0, y: -570, z: 0}
       Enabled: 0
       AnimationType: 4
-      StartPosition: {x: -0.000015258789, y: 0, z: 0}
+      StartPosition: {x: 0, y: -570, z: 0}
       FromReferenceValue: 0
       ToReferenceValue: 0
       FromCustomValue: {x: 0, y: 0, z: 0}
@@ -1611,7 +1592,7 @@ MonoBehaviour:
         FadeOutShake: 0
       FromValue: {x: 1, y: 1, z: 1}
       ToValue: {x: 1.1, y: 1.1, z: 1}
-      CurrentValue: {x: 1.2, y: 1.2, z: 1}
+      CurrentValue: {x: 1, y: 1, z: 1}
       Enabled: 0
       StartScale: {x: 1, y: 1, z: 1}
       FromReferenceValue: 1
@@ -1748,12 +1729,12 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {x: -0.000015258789, y: 0, z: 0}
-      ToValue: {x: -0.000015258789, y: 0, z: 0}
+      FromValue: {x: 0, y: -570, z: 0}
+      ToValue: {x: 0, y: -570, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
       Enabled: 1
       AnimationType: 5
-      StartPosition: {x: -0.000015258789, y: 0, z: 0}
+      StartPosition: {x: 0, y: -570, z: 0}
       FromReferenceValue: 1
       ToReferenceValue: 0
       FromCustomValue: {x: 0, y: 0, z: 0}
@@ -2879,20 +2860,21 @@ MonoBehaviour:
   updateDate_1: {fileID: 450052783770781563}
   updateDateText_1: {fileID: 7295129228368789833}
   updateDate_2: {fileID: 6675237926165560570}
-  updateDateText_2: {fileID: 7295129228368789833}
+  updateDateText_2: {fileID: 7899993883882603398}
   totalChapterCountText: {fileID: 3610408580539426633}
   introduceStoryTitleText: {fileID: 2499495053107737463}
   storySummaryText: {fileID: 6682047232220161741}
   hashTagsParent: {fileID: 738031113188905487}
   hashTagPrefab: {fileID: 4562072194148348826, guid: 8a21b50d51ebfc449a9c7b2e2fede5f4, type: 3}
   serialGroup: {fileID: 0}
-  textSerialDay: {fileID: 0}
+  textSerialDay: {fileID: 2817038311669962827}
   introduceStory:
     projectID: 
     title: 
     writer: 
     summary: 
     original: 
+    translator: 
     sortKey: 0
     bubbleSetID: 
     isCredit: 0
@@ -2910,6 +2892,8 @@ MonoBehaviour:
     categoryImageKey: 
     coinBannerUrl: 
     coinBannerKey: 
+    introduceFullImageURL: 
+    introduceFullImageKey: 
     isLock: 0
     colorCode: 000000
     projectProgress: 0
@@ -3132,7 +3116,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3381796534861171448, guid: 229064303698079459f35e51cb463757, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 117
+      value: 133
       objectReference: {fileID: 0}
     - target: {fileID: 3381796534861171448, guid: 229064303698079459f35e51cb463757, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3546,6 +3530,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2817038311669962827 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3388888642799938477, guid: 229064303698079459f35e51cb463757, type: 3}
+  m_PrefabInstance: {fileID: 585434041528038374}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2979589985642767921 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2397674661040051671, guid: 229064303698079459f35e51cb463757, type: 3}
@@ -3677,6 +3672,17 @@ MonoBehaviour:
 --- !u!114 &7295129228368789833 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7863953767934128815, guid: 229064303698079459f35e51cb463757, type: 3}
+  m_PrefabInstance: {fileID: 585434041528038374}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7899993883882603398 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7331169409813704800, guid: 229064303698079459f35e51cb463757, type: 3}
   m_PrefabInstance: {fileID: 585434041528038374}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

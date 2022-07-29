@@ -51,6 +51,7 @@ namespace PIERStory
             Debug.Log(">> StoryManager Start ");
             
             yield return null;
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             yield return new WaitUntil(() => ViewStoryLoading.assetLoadComplete);
 
             StoryManager.main.SetLobbyBubbleMaster();

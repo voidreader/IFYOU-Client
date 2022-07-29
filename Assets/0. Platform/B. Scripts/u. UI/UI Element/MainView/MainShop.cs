@@ -24,6 +24,10 @@ namespace PIERStory {
         
         
         // 용도 나누자 
+        
+        [Header("이프유 패스 패키지")]
+        public GeneralPackProduct ifyouPassPackage; // 이프유 패스 패키지 
+        
         [Header("노멀탭 패키지")]
         public List<GeneralPackProduct> listNormalTabPackages; // 노멀탭의 패키지 상품 (상단 노출)
         
@@ -38,11 +42,7 @@ namespace PIERStory {
         [Space]
         public List<BaseCoinExchangeProduct> listCoinExchangeProducts; // 코인 환전 상품
         
-        [Space]
-        public List<ShopPassTimeDeal> listPassTimeDeal; // 패스 타임딜 최대 6개
-        public GameObject passTimeDealTitle; // 타임딜 타이틀 
-        public RectTransform passTimeDealGrid; // 타임딜 그리드 
-        
+                
         [Space]
         [SerializeField] UIToggleGroup toggleGroup;
         [SerializeField] UIToggle packageToggle;
@@ -330,6 +330,7 @@ namespace PIERStory {
                 Debug.Log("## BillingManager is not inited");
                 return;
             }
+            
              
              // 기간한정 팩
              for(int i=0; i<listLimitPackProducts.Count;i++) {
@@ -341,13 +342,8 @@ namespace PIERStory {
                  listGeneralPackProducts[i].gameObject.SetActive(false);
              }
              
-             // 타임딜 
-             passTimeDealTitle.SetActive(false);
-             passTimeDealGrid.gameObject.SetActive(false);
-             for(int i=0; i<listPassTimeDeal.Count;i++) {
-                 listPassTimeDeal[i].gameObject.SetActive(false);
-             }
              
+
             int packIndex = 0;
             int eventPackIndex = 0;
             JsonData masterData;
@@ -356,49 +352,10 @@ namespace PIERStory {
             string productID = string.Empty;
             string productMasterID = string.Empty;
             int maxCount = 0;
-            int activePassTimeDealCount = 0; // 활성화 타임딜 카운트 
+            
             string productType = string.Empty; // 제품 타입 
             
-            // 타임딜 설정
-            try {
-                
-                if(UserManager.main.userActiveTimeDeal != null) {
-                    Debug.Log(string.Format("### userActiveTimeDeal : [{0}]", UserManager.main.userActiveTimeDeal.Count));
-                    for(int i=0; i<UserManager.main.userActiveTimeDeal.Count; i++) {
-                        
-                        // 최대 6개
-                        if(i > 5)
-                            break;
-                        
-                        listPassTimeDeal[i].Init(new PassTimeDealData(UserManager.main.userActiveTimeDeal[i]));
-                        
-                        if(listPassTimeDeal[i].gameObject.activeSelf)
-                            activePassTimeDealCount++;
-                    }
-                    
-                    // 활성 타임딜에 따라서 그리드 높이 조정
-                    if(activePassTimeDealCount > 0) {
-                        passTimeDealTitle.SetActive(true); // 타이틀 보여주고 
-                        passTimeDealGrid.gameObject.SetActive(true);
-                        
-                        if(activePassTimeDealCount <= 2)
-                            passTimeDealGrid.sizeDelta = new Vector2(660, 300);
-                        else if(activePassTimeDealCount > 2 && activePassTimeDealCount <= 4) 
-                            passTimeDealGrid.sizeDelta = new Vector2(660, 600);
-                        else
-                            passTimeDealGrid.sizeDelta = new Vector2(660, 930);
-                        
-                    }
-                    // ? 타임딜 설정 종료                     
-                }
-                else {
-                    Debug.Log("### No Active Time Deal");
-                }
-            }
-            catch {
-                NetworkLoader.main.ReportRequestError("InitPackContainer #2", "InitPackContainer #2");
-                return;
-            } // ? 프리미엄패스 타임딜 처리 종료 
+
             
             
             // 패키지 초기화 
@@ -416,6 +373,12 @@ namespace PIERStory {
                     // 사전 예약 패키지 제거 
                     if(productID.Contains("pre_reward_pack"))
                         continue;
+                        
+                    // 이프유 패스 패키지 처리 
+                    if(productID.Contains("ifyou_pass")) {
+                        ifyouPassPackage.InitPackage(productID, masterData);
+                        continue;
+                    }
                     
                     // 기간한정과 일반 상품으로 분리시킨다. 
                     if(productType == "limited") {

@@ -40,9 +40,9 @@ namespace PIERStory
 
         public const string AUTO_PLAY = "autoplay";
 
-        public const float fastDelay = 2f;
-        public const float normalDelay = 3f;
-        public const float slowDelay = 5f;
+        public const float fastDelay = 0.5f;
+        public const float normalDelay = 2f;
+        public const float slowDelay = 3f;
 
         
 

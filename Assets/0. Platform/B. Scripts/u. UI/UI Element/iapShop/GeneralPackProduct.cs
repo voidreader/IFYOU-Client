@@ -108,26 +108,34 @@ namespace PIERStory
             
             if(productMasterJSON == null || productDetailJSON == null)
                 return;
-            
-            PopupBase p = PopupManager.main.GetPopup("PackDetail");
-            if (p == null)
-            {
-                Debug.LogError("No PackDetail popup");
-                return;
+                
+            // 이프유 패스 
+            if(productID == "ifyou_pass") {
+                // 이프유 패스는 다른 팝업을 쓴다. 
+                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_IFYOU_PASS);
+                PopupManager.main.ShowPopup(p, false); // 이프유 패스 팝업을 오픈한다.
             }
-            
-            // 데이터 세팅 
-            p.Data.SetLabelsTexts(textPrice.text);
-            p.Data.targetData = productID;
-            p.Data.imageURL = detailURL;
-            p.Data.imageKey = detailKey;
-            
-            // 열기
-            PopupManager.main.ShowPopup(p, false);
-            
-            // BillingManager.main.RequestPurchaseGamebase(productID);
-            
-            AdManager.main.AnalyticsPackageButtonClick(productID);
+            else {
+                PopupBase p = PopupManager.main.GetPopup("PackDetail");
+                if (p == null)
+                {
+                    Debug.LogError("No PackDetail popup");
+                    return;
+                }
+                
+                // 데이터 세팅 
+                p.Data.SetLabelsTexts(textPrice.text);
+                p.Data.targetData = productID;
+                p.Data.imageURL = detailURL;
+                p.Data.imageKey = detailKey;
+                
+                // 열기
+                PopupManager.main.ShowPopup(p, false);
+                
+                // BillingManager.main.RequestPurchaseGamebase(productID);
+                
+                AdManager.main.AnalyticsPackageButtonClick(productID);
+            }
         }
     }
     

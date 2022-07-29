@@ -20,6 +20,7 @@ namespace PIERStory {
         public string summary = string.Empty; // 요약 
         
         public string original = string.Empty; // 원작 
+        public string translator = string.Empty; // 번역
         
         public int sortKey = 0; //  정렬 순서 
         public string bubbleSetID =  string.Empty; // 말풍선 세트 ID 
@@ -51,6 +52,9 @@ namespace PIERStory {
         public string coinBannerUrl = string.Empty;
         public string coinBannerKey = string.Empty;
         
+        public string introduceFullImageURL = string.Empty;
+        public string introduceFullImageKey = string.Empty;
+        
         public bool isLock = false; // 잠금
         public string colorCode = "000000"; // 메인 칼라 코드 
         
@@ -76,6 +80,8 @@ namespace PIERStory {
 
         public string onedayExpireDate = string.Empty;
         public long onedayPassTick = 0;
+        public DateTime onedayExpireDateTime; // 원데이 만료 일시 DateTime
+        public TimeSpan diffOnedayExpire; // 원데이 시간계산용 timespan.
         
         public bool isValidData {
             get {
@@ -140,6 +146,9 @@ namespace PIERStory {
 
             coinBannerUrl = SystemManager.GetJsonNodeString(originData, "coin_banner_url");
             coinBannerKey = SystemManager.GetJsonNodeString(originData, "coin_banner_key");
+            
+            introduceFullImageURL = SystemManager.GetJsonNodeString(originData, "introduce_image_url");
+            introduceFullImageKey = SystemManager.GetJsonNodeString(originData, "introduce_image_key");
 
             // 프리미엄 패스 가격정보
             passPrice = SystemManager.GetJsonNodeInt(originData, "pass_price");
@@ -221,6 +230,9 @@ namespace PIERStory {
 
             onedayExpireDate = SystemManager.GetJsonNodeString(originData, "oneday_pass_expire");
             onedayPassTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(originData, "oneday_pass_expire_tick"));
+            
+            onedayExpireDateTime = new DateTime(onedayPassTick);
+            
         } // ? END
         
         
@@ -247,15 +259,14 @@ namespace PIERStory {
         /// <returns></returns>
         public bool IsValidOnedayPass()
         {
-            DateTime endDate = new DateTime(onedayPassTick);
-            TimeSpan lastTime = endDate - DateTime.UtcNow;
+            diffOnedayExpire = onedayExpireDateTime - DateTime.UtcNow;
 
             // 만료됨
-            if (lastTime.Ticks <= 0)
+            if (diffOnedayExpire.Ticks <= 0)
                 return false;
 
 
-            if(lastTime.Ticks >0)
+            if(diffOnedayExpire.Ticks >0)
             {
                 // 구매한 적이 없는데, tick이 0보다 크다?
                 if (string.IsNullOrEmpty(onedayExpireDate))
@@ -269,6 +280,23 @@ namespace PIERStory {
             }
 
             return false;
+        }
+        
+        /// <summary>
+        /// 원데이패스 남은시간구하기 
+        /// </summary>
+        /// <returns></returns>
+        public string GetOnedayRemainTime() {
+            
+            if (string.IsNullOrEmpty(onedayExpireDate))
+                return string.Empty;
+            
+            diffOnedayExpire = onedayExpireDateTime - DateTime.UtcNow;
+            if(diffOnedayExpire.Ticks <= 0) {
+                return string.Empty;
+            }
+            
+            return string.Format ("{0:D2}:{1:D2}:{2:D2}",diffOnedayExpire.Hours ,diffOnedayExpire.Minutes, diffOnedayExpire.Seconds);
         }
     }
 }

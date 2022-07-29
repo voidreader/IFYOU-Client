@@ -66,6 +66,16 @@ namespace PIERStory {
         public DateTime publishDate;
         public string debugPublishData = string.Empty;
         
+        
+        // 해금 조건에 대한 값 추가
+        public string unlockEpisodes = string.Empty;
+        public string unlockScenes = string.Empty;
+        
+        public string[] arrUnlockEpisode;
+        public string[] arrUnlockScene;
+        
+        
+        
         /// <summary>
         /// 유효한 데이터인지? 
         /// </summary>
@@ -166,6 +176,12 @@ namespace PIERStory {
             }
             // 언락 스타일 
             unlockStyle = SystemManager.GetJsonNodeString(episodeJSON, "unlock_style");
+            unlockEpisodes = SystemManager.GetJsonNodeString(episodeJSON, "unlock_episodes");
+            unlockScenes = SystemManager.GetJsonNodeString(episodeJSON, "unlock_scenes");
+            
+            arrUnlockEpisode = unlockEpisodes.Split(',');
+            arrUnlockScene = unlockScenes.Split(',');
+            
             
             // 사이드 에피소드 힌트 
             if(episodeJSON.ContainsKey("side_hint")) {
@@ -269,6 +285,64 @@ namespace PIERStory {
         public bool CheckExistsPurchaseData() {
             return purchaseData != null;
         }
+        
+        
+        /// <summary>
+        /// 조건 체크 
+        /// </summary>
+        /// <param name="__ID"></param>
+        /// <returns></returns>
+        public bool CheckExistsUnlockCondition(string __ID) {
+            if(string.IsNullOrEmpty(unlockStyle) || unlockStyle == "none" )
+                return false;
+                
+                
+            if(unlockStyle == "episode") { // 에피소드 기반
+                
+                for(int i=0; i<arrUnlockEpisode.Length;i++) {
+                    if(arrUnlockEpisode[i] == __ID)
+                        return true;
+                }
+                
+            }
+            else if(unlockStyle == "event") { // 사건 ID 기반 
+            
+                for(int i=0; i<arrUnlockScene.Length;i++) {
+                    if(arrUnlockScene[i] == __ID)
+                        return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        
+        public bool CheckUserHist() {
+            
+            if(string.IsNullOrEmpty(unlockStyle) || unlockStyle == "none" )
+                return false;
+            
+            if(unlockStyle == "episode") { // 에피소드 기반
+                
+                for(int i=0; i<arrUnlockEpisode.Length;i++) {
+                    // 유저 에피소드 기록 체크 
+                    if(!UserManager.main.IsCompleteEpisode(arrUnlockEpisode[i]))
+                        return false;
+                }
+                
+                
+            }
+            else if(unlockStyle == "event") { // 사건 ID 기반 
+                for(int i=0; i<arrUnlockScene.Length;i++) {
+                    if(!UserManager.main.CheckSceneHistory(arrUnlockScene[i]))
+                        return false;
+                }            
+            }
+            
+            
+            return true; // 전부 통과한 경우 
+        }
+        
         
     }   
 

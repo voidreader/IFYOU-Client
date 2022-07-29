@@ -36,7 +36,6 @@ namespace PIERStory
         
         public static bool loadComplete = false;
         
-        
 
         [Header("메인 관련 제어")]
         // public GameObject premiumpassButton;        // 프리미엄 패스 버튼
@@ -174,7 +173,6 @@ namespace PIERStory
                         // 취소 했다면 30일 이상 경과한 경우에 다시 물어본다
                         if (UserManager.main.diffRate >= 30)
                             PopupManager.main.ShowPopup(p, true);
-                            //    RateMyApp.AskForReviewNow(SystemManager.GetLocalizedText("6225"), SystemManager.GetLocalizedText("6226"), SystemManager.GetLocalizedText("5067"), SystemManager.GetLocalizedText("5038"), UserManager.main.UpdateRateHistory);
                     }
                     catch
                     {
@@ -250,6 +248,7 @@ namespace PIERStory
                     if (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY) != gm.currencyName)
                         continue;
 
+                    // 저장한 배치의 순서가 되도록 정렬값에 차이를 준다
                     if (SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_SORTING_ORDER) == 1)
                         gm.model.GetComponent<CubismRenderController>().SortingOrder = 0;
                     else if (SystemManager.GetJsonNodeInt(storyProfile[i], LobbyConst.NODE_SORTING_ORDER) == 2)
@@ -483,8 +482,6 @@ namespace PIERStory
                 switch (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY_TYPE))
                 {
                     case LobbyConst.NODE_WALLPAPER:     // 배경
-                        Debug.Log("Wallpaper Create #####");
-                    
                         DestroyPreviousBackground();
                         bg = new ScriptImageMount(GameConst.TEMPLATE_BACKGROUND, storyProfile[i], BGLoadComplete);
                         bgCurrency = SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY);
@@ -497,7 +494,6 @@ namespace PIERStory
                         break;
 
                     case LobbyConst.NODE_STICKER:       // 스티커
-
                         StickerElement sticker = Instantiate(stickerObjectPrefab, bubbleStickerParent).GetComponent<StickerElement>();
                         sticker.SetStickerElement(storyProfile[i], StickerLoadComplete);
                         decoObjects.Add(sticker.gameObject);
@@ -537,7 +533,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 스크롤의 리스트에 생성하기
+        /// 스크롤의 리스트에 꾸미기 아이템 생성하기
         /// </summary>
         /// <param name="key">json key값</param>
         /// <param name="listObject">list prefab</param>
@@ -787,7 +783,6 @@ namespace PIERStory
                             {
                                 // 서버에 저장해둔 스탠딩이 아닌데 화면에 있다...부순다...
                                 DestroyStandingCharacter(model);
-
                                 breakPoint = true;
                             }
                             catch(Exception e)
@@ -796,7 +791,7 @@ namespace PIERStory
                             }
                         }
 
-                        // 서버와 동일한 모델일 원복해줬으니 모델쪽 반복문을 빠져나간다 
+                        // 서버와 동일한 모델을 원복해줬으니 모델쪽 반복문을 빠져나간다 
                         if (breakPoint)
                         {
                             breakPoint = false;
@@ -843,6 +838,7 @@ namespace PIERStory
 
                         case LobbyConst.NODE_STANDING:      // 스탠딩 캐릭터
 
+                            // 화면에 떠 있는 것은 불러올 재생성할 캐릭터에서 제외한다
                             foreach (GameModelCtrl liveModel in liveModels)
                             {
                                 if (SystemManager.GetJsonNodeString(storyProfile[i], LobbyConst.NODE_CURRENCY) == liveModel.currencyName)
@@ -853,6 +849,7 @@ namespace PIERStory
                                 }
                             }
 
+                            // 해당 스탠딩 캐릭터는 화면에 존재하므로 switch - case 문을 넘어간다
                             if (breakPoint)
                             {
                                 breakPoint = false;
@@ -976,6 +973,10 @@ namespace PIERStory
         }
 
 
+        /// <summary>
+        /// 배경이 생성된 이후, 배경을 드래그하여 이동시켰을 수 있으니 이동시킨 위치로 position 값을 변경해준다
+        /// </summary>
+        /// <returns></returns>
         IEnumerator RoutineBackgroundDetailSetting()
         {
             yield return new WaitUntil(() => bg != null);
@@ -1247,15 +1248,12 @@ namespace PIERStory
                     Debug.Log("Lobby Character Destroy");
                     Destroy(__model.gameObject);    
                 }
-
-                
             }
             else
             {
                 // 캐릭터 모델인데 에셋번들 아님
                 Destroy(__model.gameObject);
             }            
-            
         }
 
 
@@ -1307,8 +1305,6 @@ namespace PIERStory
         /// <param name="__interactable"></param>
         void ActiveInteractable(bool __interactable)
         {
-            // Debug.Log("##### ActiveInteractable :: " + __interactable );
-            
             for (int i = 0; i < bubbleStickerParent.childCount; i++)
                 bubbleStickerParent.GetChild(i).GetComponent<Image>().raycastTarget = __interactable;
         }

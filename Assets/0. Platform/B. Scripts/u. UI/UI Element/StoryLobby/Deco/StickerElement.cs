@@ -142,11 +142,6 @@ namespace PIERStory
             return data;
         }
 
-        float CalcMovePos(float origin, float drag, float start)
-        {
-            return origin + ((drag - start));
-        }
-
         bool IsRectInsideSceen()
         {
             bool isInside = false;

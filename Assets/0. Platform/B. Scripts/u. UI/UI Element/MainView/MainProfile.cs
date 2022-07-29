@@ -105,26 +105,24 @@ namespace PIERStory
                     break;
             }
 
-            SetBadgeSprite(gradeBadge, gradeTitle, UserManager.main.grade);
-            SetBadgeSprite(downgradeBadge, downgradeTitle, UserManager.main.grade - 1);
-            SetBadgeSprite(nextGradeBadge, nextGradeTitle, UserManager.main.nextGrade + 1);
+            SetBadgeSprite(gradeBadge, gradeTitle, UserManager.main.grade);                         // 현재 등급
+            SetBadgeSprite(downgradeBadge, downgradeTitle, UserManager.main.grade - 1);             // 하향 당하는 등급
+            SetBadgeSprite(nextGradeBadge, nextGradeTitle, UserManager.main.nextGrade + 1);         // 다음 시즌 등급
 
             badgeGlitter.SetActive(UserManager.main.grade > 3);
-            downgradeBadge.gameObject.SetActive(UserManager.main.gradeExperience < UserManager.main.keepPoint);
-            downgradeTitle.gameObject.SetActive(UserManager.main.gradeExperience < UserManager.main.keepPoint);
-            expMinimumBar.gameObject.SetActive(UserManager.main.gradeExperience < UserManager.main.keepPoint);
+            downgradeBadge.gameObject.SetActive(UserManager.main.gradeExperience < UserManager.main.keepPoint);         // 하향 당하는 등급 뱃지
+            downgradeTitle.gameObject.SetActive(UserManager.main.gradeExperience < UserManager.main.keepPoint);         // 하향 당하는 등급 명칭
+            expMinimumBar.gameObject.SetActive(UserManager.main.gradeExperience < UserManager.main.keepPoint);          // 하향 방지 최소컷 표시
 
-
-            if(UserManager.main.grade == 1)
+            // 브론즈 등급은 혜택이 없다
+            if (UserManager.main.grade == 1)
                 SystemManager.SetLocalizedText(benefitDetailText, "6296");
             else
             {
                 SystemManager.SetText(benefitDetailText, string.Format(SystemManager.GetLocalizedText("6269"), UserManager.main.additionalStarDegree, UserManager.main.additionalStarUse, UserManager.main.additionalStarLimitCount, UserManager.main.waitingSaleDegree));
 
-                if (UserManager.main.canPreview) {
+                if (UserManager.main.canPreview)
                     SystemManager.SetText(benefitDetailText, benefitDetailText.text + "\n" + SystemManager.GetLocalizedText("6270"));
-                    // benefitDetailText.text += "\n" + SystemManager.GetLocalizedText("6270");
-                }
             }
 
             // 등급 방어 포인트 바 표기
@@ -140,10 +138,15 @@ namespace PIERStory
                 StartCoroutine(LayoutRebuild());
         }
 
+        /// <summary>
+        /// Instantiate 하기 때문에 화면 재구성을 해준다
+        /// </summary>
+        /// <returns></returns>
         IEnumerator LayoutRebuild()
         {
             yield return null;
 
+            // 높이(Y)값 조절
             newbieAchievements.sizeDelta = new Vector2(newbieAchievements.sizeDelta.x,
                 newbieAchievements.GetChild(0).GetComponent<RectTransform>().sizeDelta.y + newbieAchievementContents.GetComponent<RectTransform>().sizeDelta.y);
             IFYOUAchievements.sizeDelta = new Vector2(IFYOUAchievements.sizeDelta.x,
@@ -152,11 +155,13 @@ namespace PIERStory
             newbieAchievements.gameObject.SetActive(false);
             IFYOUAchievements.gameObject.SetActive(false);
             yield return null;
+            // 초심자 업적은 모두 클리어한 경우 보이지 않아도 됨
             newbieAchievements.gameObject.SetActive(newbieAchievementContents.childCount > 0);
             IFYOUAchievements.gameObject.SetActive(IFYOUAchievementContents.childCount > 0);
 
             yield return null;
 
+            // 저장해둔 스크롤(Y) 위치로 보내기
             if (postVerticalNormalize < 0f)
                 scroll.verticalNormalizedPosition = 1f;
             else
@@ -211,6 +216,12 @@ namespace PIERStory
             EnterProfile();
         }
 
+        /// <summary>
+        /// 등급에 따른 뱃지 sprite와 명칭을 변경해준다
+        /// </summary>
+        /// <param name="__img"></param>
+        /// <param name="__text"></param>
+        /// <param name="__grade"></param>
         void SetBadgeSprite(Image __img, TextMeshProUGUI __text, int __grade)
         {
             __img.gameObject.SetActive(true);

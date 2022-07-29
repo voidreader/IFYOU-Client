@@ -30,12 +30,19 @@ namespace PIERStory
         public GameObject iconBadgeTag;
         public Image tagAchievementIcon;
 
+        /// <summary>
+        /// 초심자 업적 생성
+        /// </summary>
+        /// <param name="__achievementData"></param>
         public void InitNewbieAcheivement(AchievementData __achievementData)
         {
             CommonInitialize(__achievementData);
         }
 
-
+        /// <summary>
+        /// 기본 이프유 업적 생성
+        /// </summary>
+        /// <param name="__achievementData"></param>
         public void InitIFYouAchievement(AchievementData __achievementData)
         {
             CommonInitialize(__achievementData);
@@ -97,6 +104,7 @@ namespace PIERStory
 
                 JsonData errordata = JsonMapper.ToObject(res.DataAsText);
 
+                // 시즌 정산중인 경우 로비로 돌려보낸다
                 if (SystemManager.GetJsonNodeInt(errordata, "code") == 80117)
                     ViewMain.OnReturnLobby?.Invoke();
 

@@ -163,11 +163,10 @@ namespace PIERStory {
             return data;
         }
 
-        float CalcMovePos(float origin, float drag, float start)
-        {
-            return origin + ((drag - start));
-        }
-
+        /// <summary>
+        /// 사각박스가 액정(화면) 밖으로 나가는지 체크해주는 함수
+        /// </summary>
+        /// <returns></returns>
         bool IsRectInsideSceen()
         {
             bool isInside = false;

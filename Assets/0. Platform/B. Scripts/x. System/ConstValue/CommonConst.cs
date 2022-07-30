@@ -89,6 +89,8 @@ namespace PIERStory
         public const string POPUP_RECOMMEND = "Recommend";
         public const string POPUP_IFYOU_PASS = "ifyou_pass";
         public const string POPUP_ONEDAY_PASS = "oneday_pass";
+        public const string POPUP_PREMIUM_PASS = "premium_pass_new";
+        public const string POPUP_PREMIUM_CHALLENGE = "premium_challenge";
         
         // JSON COLUMN
         public const string JSON_EPISODE_SCENE_HISTORY = "sceneProgress";

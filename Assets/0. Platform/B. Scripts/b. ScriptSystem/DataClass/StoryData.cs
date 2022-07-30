@@ -85,6 +85,8 @@ namespace PIERStory {
         
         
         public bool hasPremiumPass = false; // 프리미엄 패스 보유 여부 
+        public string premiumProductID = string.Empty; // 연결된 프리미엄 패스 상품ID
+        public string premiumSaleID = string.Empty;// 연결된 프리미엄 패스 할인상품 ID
         
         public bool isValidData {
             get {
@@ -238,7 +240,12 @@ namespace PIERStory {
             
             onedayExpireDateTime = new DateTime(onedayPassTick);
             
+            
+            // 프리미엄 패스
             hasPremiumPass = SystemManager.GetJsonNodeBool(originData, "premium_pass_exist"); // 프리미엄 패스 처리
+            premiumProductID = SystemManager.GetJsonNodeString(originData, "premium_product_id"); // 프리미엄 패스 상품 ID 
+            premiumSaleID = SystemManager.GetJsonNodeString(originData, "premium_sale_id"); 
+            
             
         } // ? END
         

@@ -18,7 +18,7 @@ namespace PIERStory {
                 
         public bool isPurchasable = false; // 구매가능 상태 
         GamebaseResponse.Purchase.PurchasableItem gamebaseItem = null; // 게임베이스 기준정보 
-        public StoryData currentStory;        
+        public StoryData currentStory;
         
        public override void Show() {
             if(isShow)
@@ -27,22 +27,28 @@ namespace PIERStory {
             base.Show();
             
             
-            // 게임베이스 아이템 정보 
-            try {
-                gamebaseItem = BillingManager.main.GetGamebasePurchaseItem("oneday_pass");
-                textPrice.text = gamebaseItem.localizedPrice;
-            }
-            catch {
-                Debug.Log("Windows standalone?");
-            }
+            
             
             // 텍스트 세팅 
             
             
-            currentStory = SystemListener.main.introduceStory; // 리스너에서 받아온다. 
+            currentStory = StoryManager.main.CurrentProject;
             
             SystemManager.SetText(textTitle, currentStory.title); // 타이틀      
-            storyImage.SetDownloadURL(currentStory.coinBannerUrl, currentStory.coinBannerKey);
+            storyImage.SetDownloadURL(currentStory.coinBannerUrl, currentStory.coinBannerKey); // 이미지 처리
+            
+            // 게임베이스 아이템 정보 
+            try {
+                gamebaseItem = BillingManager.main.GetGamebasePurchaseItem(currentStory.premiumSaleID); // 연결된 상품ID로 조회한다. 
+                textPrice.text = gamebaseItem.localizedPrice;
+            }
+            catch {
+                isPurchasable = false;
+                textPrice.text = "ERROR";
+                Debug.Log("Windows standalone?");
+            }
+            
+            
             
            
             // 원데이 패스 사용중일때, 아닐때의 분류하기. 
@@ -55,6 +61,13 @@ namespace PIERStory {
             //     isPurchasable= true;
             // }
             
+            
+        }
+        
+        /// <summary>
+        /// 챌린지 초기화 
+        /// </summary>
+        void InitChallenge() {
             
         }
                 

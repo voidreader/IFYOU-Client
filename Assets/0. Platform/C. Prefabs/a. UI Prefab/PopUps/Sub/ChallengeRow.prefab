@@ -301,6 +301,7 @@ GameObject:
   - component: {fileID: 6796736214793133743}
   - component: {fileID: 3618165604497916209}
   - component: {fileID: 7645934147699967612}
+  - component: {fileID: 3455031741899726301}
   m_Layer: 5
   m_Name: NormalCol
   m_TagString: Untagged
@@ -383,6 +384,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 20
   image: {fileID: 3618165604497916209}
+--- !u!114 &3455031741899726301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600830053517026386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7bc1f5d7750e4429d5048eb332c60d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  challengeData:
+    chapterNumber: 0
+    detailNo: 0
+    freeCurrency: 
+    freeQuantity: 0
+    isFreeReceived: 0
+    premiumCurrency: 
+    premiumQuantity: 0
+    isPremiumReceived: 0
+  isPremium: 0
+  quantity: 0
+  currency: 
+  isReceived: 0
+  spriteStar: {fileID: 21300000, guid: 1d43ddc3cecfdce42adf5562d65f92e8, type: 3}
+  spriteCoin: {fileID: 21300000, guid: 55ad893499617334aa471972f4eaec26, type: 3}
+  lockFrame: {fileID: 2859867337320420826}
+  clearCover: {fileID: 6122439707639893306}
+  clearCheck: {fileID: 8924966786366625475}
+  currencyIcon: {fileID: 307092400913441598}
+  textCurrencyQuantity: {fileID: 7966217670474238899}
 --- !u!1 &2036709349701272862
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,6 +792,7 @@ GameObject:
   - component: {fileID: 4546342534331057145}
   - component: {fileID: 4803355511130635455}
   - component: {fileID: 2251181848256113745}
+  - component: {fileID: 2279515576307833140}
   m_Layer: 5
   m_Name: ChallengeRow
   m_TagString: Untagged
@@ -810,7 +844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7971698, b: 0.7971698, a: 0.43137255}
+  m_Color: {r: 1, g: 0.7971698, b: 0.7971698, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -827,6 +861,32 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2279515576307833140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3237470668600410893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa452c862c9449f40b35afb41ccd5785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  challengeData:
+    chapterNumber: 0
+    detailNo: 0
+    freeCurrency: 
+    freeQuantity: 0
+    isFreeReceived: 0
+    premiumCurrency: 
+    premiumQuantity: 0
+    isPremiumReceived: 0
+  clearEpisodeBG: {fileID: 7427901738096190677}
+  textEpisode: {fileID: 7002072519902091392}
+  textClearEpisode: {fileID: 6919555943366728409}
+  basicCol: {fileID: 3455031741899726301}
+  premiumCol: {fileID: 5433007304951701716}
 --- !u!1 &4327793877618031869
 GameObject:
   m_ObjectHideFlags: 0
@@ -916,6 +976,7 @@ GameObject:
   - component: {fileID: 978064616710366918}
   - component: {fileID: 2186875504745775673}
   - component: {fileID: 5128939563325110574}
+  - component: {fileID: 5433007304951701716}
   m_Layer: 5
   m_Name: PremiumCol
   m_TagString: Untagged
@@ -998,6 +1059,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 20
   image: {fileID: 2186875504745775673}
+--- !u!114 &5433007304951701716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5161614666799200394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7bc1f5d7750e4429d5048eb332c60d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  challengeData:
+    chapterNumber: 0
+    detailNo: 0
+    freeCurrency: 
+    freeQuantity: 0
+    isFreeReceived: 0
+    premiumCurrency: 
+    premiumQuantity: 0
+    isPremiumReceived: 0
+  isPremium: 0
+  quantity: 0
+  currency: 
+  isReceived: 0
+  spriteStar: {fileID: 21300000, guid: 1d43ddc3cecfdce42adf5562d65f92e8, type: 3}
+  spriteCoin: {fileID: 21300000, guid: 55ad893499617334aa471972f4eaec26, type: 3}
+  lockFrame: {fileID: 2179860830578660315}
+  clearCover: {fileID: 598352395897651863}
+  clearCheck: {fileID: 2019777855818381103}
+  currencyIcon: {fileID: 8956805432115428005}
+  textCurrencyQuantity: {fileID: 4646567409087344444}
 --- !u!1 &6370210468201370675
 GameObject:
   m_ObjectHideFlags: 0

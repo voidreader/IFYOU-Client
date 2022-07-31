@@ -74,6 +74,8 @@ namespace PIERStory {
         public string[] arrUnlockEpisode;
         public string[] arrUnlockScene;
         
+        [Header("에피소드 한번이라도 클리어 여부")]
+        public bool isClear = false;
         
         
         /// <summary>
@@ -122,6 +124,8 @@ namespace PIERStory {
             if(publishDate != null) {
                 debugPublishData = publishDate.ToString();
             }
+            
+            isClear = SystemManager.GetJsonNodeBool(episodeJSON, "is_clear"); // 클리어 여부 
             
             // 에피소드에 등장한는 갤러리 이미지
             

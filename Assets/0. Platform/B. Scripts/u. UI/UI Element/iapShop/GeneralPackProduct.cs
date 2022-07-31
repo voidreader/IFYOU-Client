@@ -112,8 +112,7 @@ namespace PIERStory
             // 이프유 패스 
             if(productID == "ifyou_pass") {
                 // 이프유 패스는 다른 팝업을 쓴다. 
-                PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_IFYOU_PASS);
-                PopupManager.main.ShowPopup(p, false); // 이프유 패스 팝업을 오픈한다.
+                SystemManager.ShowNoDataPopup(CommonConst.POPUP_IFYOU_PASS);
             }
             else {
                 PopupBase p = PopupManager.main.GetPopup("PackDetail");

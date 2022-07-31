@@ -219,16 +219,8 @@ namespace PIERStory {
                 Debug.LogError("Failed CallbackOpenMail");
                 return;
             }
-
-            PopupBase p = PopupManager.main.GetPopup("Mail");
-
-            if(p == null)
-            {
-                Debug.LogError("No Popup");
-                return;
-            }
-
-            PopupManager.main.ShowPopup(p, false);
+            
+            SystemManager.ShowNoDataPopup("Mail");
         }
         
         /// <summary>

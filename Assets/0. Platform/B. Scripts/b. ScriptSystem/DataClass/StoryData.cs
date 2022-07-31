@@ -43,6 +43,8 @@ namespace PIERStory {
         //* 프리미엄 패스 및 소개 이미지 
         public string premiumPassURL = string.Empty;
         public string premiumPassKey = string.Empty;
+        public string premiumBadgeURL = string.Empty;
+        public string premiumBadgeKey = string.Empty;
         
         //* 작은 카테고리 이미지
         public string categoryImageURL = string.Empty;
@@ -144,6 +146,8 @@ namespace PIERStory {
             // 프리미엄 패스 이미지
             premiumPassURL = SystemManager.GetJsonNodeString(originData, "premium_pass_url");
             premiumPassKey = SystemManager.GetJsonNodeString(originData, "premium_pass_key");
+            premiumBadgeURL = SystemManager.GetJsonNodeString(originData, "premium_badge_url");
+            premiumBadgeKey = SystemManager.GetJsonNodeString(originData, "premium_badge_key");
             
             // 카테고리 이미지
             categoryImageURL = SystemManager.GetJsonNodeString(originData, "category_thumbnail_url");

@@ -1202,6 +1202,7 @@ namespace PIERStory
         /// <returns></returns>
         public bool HasProjectFreepass()
         {
+            // * 현재 진입한 작품기준으로 검색한다. 
 
             // 올패스 사용여부를 먼저 체크한다 (2022.05.23)
             allpassTimeDiff = allpassExpireDate - System.DateTime.UtcNow;
@@ -1209,30 +1210,32 @@ namespace PIERStory
             {
                 return true;
             }
+            
+            return StoryManager.main.CurrentProject.hasPremiumPass;
 
-
-            // 기존 프리미엄 패스 보유 체크 
-            if (SystemManager.GetJsonNodeBool(bankJson, "Free" + StoryManager.main.CurrentProjectID))
-                return true;
-            else
-                return false;
         }
 
         public bool HasProjectFreepass(string __targetProjectID)
         {
+            if(string.IsNullOrEmpty(__targetProjectID)) {
+                Debug.LogError("Null parameter inHasProjectFreepass ");
+                return false;
+            }
+            
             // 올패스 사용여부를 먼저 체크한다 (2022.05.23)
             allpassTimeDiff = allpassExpireDate - System.DateTime.UtcNow;
             if (allpassTimeDiff.Ticks > 0)
             {
                 return true;
             }
-
-
-            // 기존 프리미엄 패스 보유 체크             
-            if (SystemManager.GetJsonNodeBool(bankJson, "Free" + __targetProjectID))
-                return true;
-            else
+            
+            try {
+                return StoryManager.main.FindProject(__targetProjectID).hasPremiumPass;
+            }
+            catch {
+                Debug.LogError("Can't find project in HasProjectFreePass : " + __targetProjectID );
                 return false;
+            }
         }
 
         /// <summary>
@@ -1242,10 +1245,18 @@ namespace PIERStory
         /// <returns></returns>        
         public bool HasProjectPremiumPassOnly(string __targetProjectID)
         {
-            if (SystemManager.GetJsonNodeBool(bankJson, "Free" + __targetProjectID))
-                return true;
-            else
+            if(string.IsNullOrEmpty(__targetProjectID)) {
+                Debug.LogError("Null parameter HasProjectPremiumPassOnly ");
                 return false;
+            }
+            
+            try {
+                return StoryManager.main.FindProject(__targetProjectID).hasPremiumPass;
+            }
+            catch {
+                Debug.LogError("Can't find project in HasProjectFreePass : " + __targetProjectID );
+                return false;
+            }
         }
 
 
@@ -2190,6 +2201,8 @@ namespace PIERStory
 
                 AddUserEpisodeHistory(playedEpisodeID); // 히스토리 
                 AddUserEpisodeProgress(playedEpisodeID);  // 진행도 
+                
+                GameManager.main.currentEpisodeData.isClear = true;
             }
 
             SetNodeUserProjectCurrent(resultEpisodeRecord[NODE_PROJECT_CURRENT]);

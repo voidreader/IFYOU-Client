@@ -174,15 +174,7 @@ namespace PIERStory
 
         public void OnClickOpenGradeBenefit()
         {
-            PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_GRADE_BENEFIT_INFO);
-
-            if(p == null)
-            {
-                Debug.LogError("혜택 안내 팝업 존재 안함");
-                return;
-            }
-
-            PopupManager.main.ShowPopup(p, false);
+            SystemManager.ShowNoDataPopup(LobbyConst.POPUP_GRADE_BENEFIT_INFO);
         }
 
         void RefreshAchievementList()

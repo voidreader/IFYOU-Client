@@ -445,9 +445,8 @@ namespace PIERStory
                 Debug.LogError("Failed CallbackStartTutorial");
                 return;
             }
-
-            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MISSION_1);
-            PopupManager.main.ShowPopup(p, false);
+            
+            SystemManager.ShowNoDataPopup(CommonConst.POPUP_TUTORIAL_MISSION_1);
         }
 
         #endregion

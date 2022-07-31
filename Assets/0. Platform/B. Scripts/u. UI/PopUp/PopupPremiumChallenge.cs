@@ -17,7 +17,13 @@ namespace PIERStory {
         public ImageRequireDownload storyImage;
                 
         public bool isPurchasable = false; // 구매가능 상태 
+        public bool hasPremiumPass = false; // 프리미엄 패스 보유 여부 
         GamebaseResponse.Purchase.PurchasableItem gamebaseItem = null; // 게임베이스 기준정보 
+        
+        [Header("챌린지")]
+        public List<ChallengeRow> listRows;
+        
+        [Header("대상 작품 ")]
         public StoryData currentStory;
         
        public override void Show() {
@@ -25,17 +31,16 @@ namespace PIERStory {
                 return;
             
             base.Show();
-            
-            
-            
-            
-            // 텍스트 세팅 
+        
             
             
             currentStory = StoryManager.main.CurrentProject;
             
             SystemManager.SetText(textTitle, currentStory.title); // 타이틀      
             storyImage.SetDownloadURL(currentStory.coinBannerUrl, currentStory.coinBannerKey); // 이미지 처리
+            
+            // 챌린지 세팅 
+            InitChallenge();
             
             // 게임베이스 아이템 정보 
             try {
@@ -46,29 +51,30 @@ namespace PIERStory {
                 isPurchasable = false;
                 textPrice.text = "ERROR";
                 Debug.Log("Windows standalone?");
+                
+                return;
             }
             
+            // 구매 가능여부에 대한 체크 
+            hasPremiumPass = currentStory.hasPremiumPass;
+            isPurchasable = !hasPremiumPass;
             
-            
-           
-            // 원데이 패스 사용중일때, 아닐때의 분류하기. 
-            // if(currentStory.IsValidOnedayPass()) { // 사용중 
-            //     isPurchasable = false; 
-                
-                
-            // }
-            // else { // 사용중이지 않음. (구매가능)
-            //     isPurchasable= true;
-            // }
-            
-            
+            if(!isPurchasable) {
+                SystemManager.SetText(textPrice, SystemManager.GetLocalizedText("6464"));
+            }
         }
         
         /// <summary>
         /// 챌린지 초기화 
         /// </summary>
         void InitChallenge() {
+            for(int i=0; i<listRows.Count; i++) {
+                listRows[i].gameObject.SetActive(false);
+            }
             
+            for(int i=0; i<StoryManager.main.listChallenges.Count; i++) {
+                listRows[i].SetChallengeRow(StoryManager.main.listChallenges[i]);
+            }
         }
                 
         public void OnClickPurchase() {
@@ -78,7 +84,7 @@ namespace PIERStory {
                 return;
             }
             
-            // BillingManager.main.RequestPurchaseGamebase("oneday_pass", StoryManager.main.CurrentProjectID);
+            BillingManager.main.RequestPurchaseGamebase(currentStory.premiumSaleID, StoryManager.main.CurrentProjectID);
         }
         
         

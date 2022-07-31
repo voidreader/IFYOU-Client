@@ -60,7 +60,7 @@ namespace PIERStory {
             // 원데이 패스 사용중일때, 아닐때의 분류하기. 
             if(currentStory.IsValidOnedayPass()) { // 사용중 
                 isPurchasable = false; 
-                
+                SystemManager.SetText(textPrice, SystemManager.GetLocalizedText("6464"));
                 
             }
             else { // 사용중이지 않음. (구매가능)

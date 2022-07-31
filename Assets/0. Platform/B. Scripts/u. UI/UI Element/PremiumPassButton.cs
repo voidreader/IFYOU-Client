@@ -24,14 +24,44 @@ namespace PIERStory {
         /// <param name="__story"></param>
         public void SetPass(StoryData __story) {
             story = __story;
-            
             notificationObject.SetActive(false);
+            
+            
+            // 프리미엄 패스 보유 여부 
+            if(story.hasPremiumPass) {
+                SetBadge();
+                ticketObject.SetActive(false);
+            }
+            else {
+                badgeImage.gameObject.SetActive(false);
+                ticketObject.SetActive(true);
+            }
+            
+            SetNotificationInfo();
+        }
+        
+        void SetBadge() {
+            badgeImage.gameObject.SetActive(true);
+            badgeImage.SetDownloadURL(story.premiumBadgeURL, story.premiumBadgeKey);
+        }
+        
+        void SetNotificationInfo() {
+            if(isOutSide)
+                return;
+            
+            // 조건이 충족하는 챌린지가 있는지 체크한다. 
         }
         
         
-        
         public void OnClickButton() {
+            // 작품 진입 전인지 아닌지 체크로 서로 다른 팝업을 오픈한다.
             
+            if(isOutSide) {
+                SystemManager.ShowNoDataPopup(CommonConst.POPUP_PREMIUM_PASS);
+            }
+            else {
+                SystemManager.ShowNoDataPopup(CommonConst.POPUP_PREMIUM_CHALLENGE);
+            }
         }
     }
 }

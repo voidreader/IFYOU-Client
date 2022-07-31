@@ -1765,6 +1765,22 @@ namespace PIERStory
         }
         
         /// <summary>
+        /// 순번으로 정규 에피소드 찾기 
+        /// </summary>
+        /// <param name="__chapter"></param>
+        /// <returns></returns>
+        public static EpisodeData GetRegularEpisodeByNumber(int __chapter) {
+            for(int i=0; i<main.ListCurrentProjectEpisodes.Count; i++) {
+                if(main.ListCurrentProjectEpisodes[i].episodeType == EpisodeType.Chapter 
+                    && main.ListCurrentProjectEpisodes[i].episodeNumber == __chapter )
+                    
+                    return main.ListCurrentProjectEpisodes[i];
+            }
+            
+            return null;
+        }
+        
+        /// <summary>
         /// 정규 에피소드의 다음 순서 에피소드 찾기 
         /// </summary>
         /// <param name="currentEpisodeData"></param>

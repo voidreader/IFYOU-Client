@@ -103,8 +103,8 @@ namespace PIERStory {
                     return;
                 }
 
-                PopupBase p = PopupManager.main.GetPopup("Notice");
-                PopupManager.main.ShowPopup(p, false);
+                
+                SystemManager.ShowNoDataPopup("Notice");
 
                 PopupNotice.ShowNoticeDetail?.Invoke(noticeDetailData, startDate);
             }

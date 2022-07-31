@@ -902,7 +902,8 @@ namespace PIERStory
                         || error.code == GamebaseErrorCode.AUTH_TOKEN_LOGIN_INVALID_LAST_LOGGED_IN_IDP 
                         || error.code == GamebaseErrorCode.AUTH_TOKEN_LOGIN_INVALID_TOKEN_INFO
                         || error.code == GamebaseErrorCode.AUTH_IDP_LOGIN_FAILED) {
-                            ShowAuthExpireTokenPopup();
+                            
+                            SystemManager.ShowNoDataPopup(CommonConst.POPUP_EXPIRE_TOKEN);
                             return;
                         }
                         
@@ -1597,7 +1598,10 @@ namespace PIERStory
                 return false;
             }
             
-            return __node[__col].ToString() == "1" ? true : false;
+            if(string.IsNullOrEmpty(__node[__col].ToString()) ||  __node[__col].ToString() == "0")
+                return false;
+            
+            return true;
         }
 
         #endregion
@@ -1649,13 +1653,7 @@ namespace PIERStory
 
         #region 시스템(앱) 팝업
 
-        /// <summary>
-        /// 원데이 패스 팝업 오픈 
-        /// </summary>        
-        public static void ShowOnedayPassPopup() {
-            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_ONEDAY_PASS);
-            PopupManager.main.ShowPopup(p, false);
-        }
+        
         
         
         /// <summary>
@@ -2586,14 +2584,23 @@ namespace PIERStory
             p.Data.SetLabelsTexts(title, GetLocalizedText(commentLocalizingId));
             PopupManager.main.ShowPopup(p, false);
         }
+
+        
         
         /// <summary>
-        /// 로그인 인증 토큰 만료 안내 팝업 
+        /// 생성시 데이터가 없는 팝업 
         /// </summary>
-        public static void ShowAuthExpireTokenPopup()
-        {
-            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_EXPIRE_TOKEN);
-            PopupManager.main.ShowPopup(p, false);
+        /// <param name="__popupName"></param>
+        public static void ShowNoDataPopup(string __popupName, bool __Queue = false) {
+            PopupBase p = PopupManager.main.GetPopup(__popupName);
+            
+            if(p == null) {
+                Debug.LogError("There is No Popup : " + __popupName);
+                NetworkLoader.main.ReportRequestError(__popupName, "No PopupBase");
+                return;
+            }
+            
+            PopupManager.main.ShowPopup(p, __Queue);
         }
         
         /// <summary>

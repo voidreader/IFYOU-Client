@@ -55,7 +55,8 @@ namespace PIERStory {
         
         
         public void OnClickButton() {
-            SystemManager.ShowOnedayPassPopup();
+            
+            SystemManager.ShowNoDataPopup(CommonConst.POPUP_ONEDAY_PASS);
         }
         
     }

@@ -4,16 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using BestHTTP;
 
 namespace PIERStory {
     public class ChallengeCol : MonoBehaviour
     {
         public ChallengeData challengeData;
+        public EpisodeData episodeData;
+        
         public bool isPremium = false;
         
         public int quantity = 0;
         public string currency = string.Empty;
-        public bool isReceived = false;
+        public bool isReceived = false; //  보상 수신 여부
+        public bool isRewardable = false;  // 보상을 받을 수 있는 조건에 도달했는지?
         
         
         [Header("Sprites")]
@@ -32,8 +36,11 @@ namespace PIERStory {
         /// 데이터 세팅 
         /// </summary>
         /// <param name="__data"></param>
-        public void SetChallenge(ChallengeData __data) {
+        public void SetChallenge(ChallengeData __data, EpisodeData __episode, bool __isPremium = false) {
+            isPremium = __isPremium;
+            
             challengeData = __data;
+            episodeData = __episode;
             Refresh();
         }
         
@@ -41,6 +48,9 @@ namespace PIERStory {
         /// 리프레시
         /// </summary>
         public void Refresh() {
+            
+            isRewardable = false; 
+            
             // 종류에 따라 다른 정보 받아오고 
             if(isPremium) {
                 currency = challengeData.premiumCurrency;
@@ -71,13 +81,48 @@ namespace PIERStory {
                 clearCover.gameObject.SetActive(true);
             }
             else {
+                // 아직 보상을 받지 않은 경우에 대한 처리
+                if(episodeData.isClear) { // 에피소드 플레이 기록 있음 
+                    lockFrame.SetActive(false);
+                    
+                    // 프리미엄 컬럼은 프리미엄 패스 보유까지 체크한다.
+                    if(isPremium ) {
+                        
+                        isRewardable = UserManager.main.HasProjectPremiumPassOnly(StoryManager.main.CurrentProjectID);
+                        
+                    }
+                    else {
+                        isRewardable = true;
+                    }
+                    
+                    
+                    
+                }
+                else { // 플레이 기록 없음 
+                    lockFrame.SetActive(true);
+                }
                 
-                // 보상을 받지 않은 경우 챌린지 조건이 충족되었는지 여부로 체크 
-                // 클리어했던적이 있는 에피소드.. 기준으로 체크를 해야하는데..? 
+            }
+        } // end of refresh
+        
+        public void OnClickCol() {
+            // 보상 받을 수 없는 상태 
+            if(!isRewardable) {
+                
+                if(isPremium) {
+                    
+                }
+                else {
+                    
+                }
+                
+                return;
             }
             
+            
+            // 실제 보상 수신 처리 
         }
         
         
-    }
+    } // end of class
 }

@@ -24,6 +24,10 @@ namespace PIERStory {
         /// <param name="__story"></param>
         public void SetPass(StoryData __story) {
             story = __story;
+            
+            this.gameObject.SetActive(true);
+            
+            
             notificationObject.SetActive(false);
             
             

@@ -33,11 +33,16 @@ namespace PIERStory {
                 Debug.LogError("Wrong challenge chapter");
                 return;
             }
+            //  "EP" + string.Format("{0:D2}", episodeNumber);
+            textEpisode.text = "EP\n" + string.Format("{0:D2}", targetEpisode.episodeNumber);
+            textClearEpisode.text = textEpisode.text;
             
             basicCol.SetChallenge(__data, targetEpisode);
             premiumCol.SetChallenge(__data, targetEpisode, true);
             
             this.gameObject.SetActive(true);
+            clearEpisodeBG.gameObject.SetActive(targetEpisode.isClear);
+            
         }
         
         

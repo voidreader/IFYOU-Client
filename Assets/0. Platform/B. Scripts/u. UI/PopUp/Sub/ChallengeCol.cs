@@ -81,6 +81,8 @@ namespace PIERStory {
                 clearCover.gameObject.SetActive(true);
             }
             else {
+                clearCover.gameObject.SetActive(false);
+                
                 // 아직 보상을 받지 않은 경우에 대한 처리
                 if(episodeData.isClear) { // 에피소드 플레이 기록 있음 
                     lockFrame.SetActive(false);

@@ -75,6 +75,8 @@ MonoBehaviour:
     episodeFinishImageKey: 
     premiumPassURL: 
     premiumPassKey: 
+    premiumBadgeURL: 
+    premiumBadgeKey: 
     categoryImageURL: 
     categoryImageKey: 
     coinBannerUrl: 
@@ -98,9 +100,13 @@ MonoBehaviour:
     arrHashtag: []
     onedayExpireDate: 
     onedayPassTick: 0
+    hasPremiumPass: 0
+    premiumProductID: 
+    premiumSaleID: 
   notificationObject: {fileID: 5359122285016501845}
   badgeImage: {fileID: 2586572758249308498}
   ticketObject: {fileID: 5134572968205719889}
+  isPurchasable: 0
 --- !u!114 &3048121735667599684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -437,7 +443,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca817101ee6c409fb4e92db226cd172b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Controller: {fileID: 0}
+  Controller: {fileID: 3048121735667599684}
   IsOn: 0
   ToggleCommand: 2
   NormalAnimation:
@@ -1900,7 +1906,7 @@ PrefabInstance:
     - target: {fileID: 7000583086201278110, guid: 1fd7f43ed8ad88a48b79ee5c0a50c3ce, type: 3}
       propertyPath: Controller
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3048121735667599684}
     - target: {fileID: 7000583086201278110, guid: 1fd7f43ed8ad88a48b79ee5c0a50c3ce, type: 3}
       propertyPath: SelectedAnimation.Scale.FromValue.x
       value: 1

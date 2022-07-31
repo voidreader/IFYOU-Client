@@ -68,6 +68,9 @@ namespace PIERStory {
         /// 챌린지 초기화 
         /// </summary>
         void InitChallenge() {
+            
+            Debug.Log(">> InitChallenge");
+            
             for(int i=0; i<listRows.Count; i++) {
                 listRows[i].gameObject.SetActive(false);
             }

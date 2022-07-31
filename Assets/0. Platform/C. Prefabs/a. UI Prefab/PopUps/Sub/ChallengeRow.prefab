@@ -405,10 +405,47 @@ MonoBehaviour:
     premiumCurrency: 
     premiumQuantity: 0
     isPremiumReceived: 0
+  episodeData:
+    episodeID: 
+    episodeNO: 
+    episodeNumber: 0
+    episodeTypeString: 
+    episodeType: 0
+    episodeTitle: 
+    episodeSummary: 
+    combinedEpisodeTitle: 
+    storyLobbyTitle: 
+    flowPrefix: 
+    endingType: 
+    dependEpisode: 
+    endingOpen: 0
+    nextOpenMin: 0
+    totalSceneCount: 0
+    playedSceneCount: 0
+    sceneProgressorValue: 0
+    episodeGalleryImageProgressValue: 0
+    popupImageURL: 
+    popupImageKey: 
+    episodeState: 0
+    purchaseState: 0
+    priceStarPlaySale: 0
+    priceStarPlay: 0
+    currencyStarPlay: 
+    priceOneTime: 0
+    unlockStyle: 
+    isUnlock: 0
+    isSerial: 0
+    debugPublishData: 
+    unlockEpisodes: 
+    unlockScenes: 
+    arrUnlockEpisode: []
+    arrUnlockScene: []
+    isClear: 0
   isPremium: 0
   quantity: 0
   currency: 
   isReceived: 0
+  isRewardable: 0
   spriteStar: {fileID: 21300000, guid: 1d43ddc3cecfdce42adf5562d65f92e8, type: 3}
   spriteCoin: {fileID: 21300000, guid: 55ad893499617334aa471972f4eaec26, type: 3}
   lockFrame: {fileID: 2859867337320420826}
@@ -793,6 +830,7 @@ GameObject:
   - component: {fileID: 4803355511130635455}
   - component: {fileID: 2251181848256113745}
   - component: {fileID: 2279515576307833140}
+  - component: {fileID: 4567978776987510766}
   m_Layer: 5
   m_Name: ChallengeRow
   m_TagString: Untagged
@@ -882,11 +920,67 @@ MonoBehaviour:
     premiumCurrency: 
     premiumQuantity: 0
     isPremiumReceived: 0
+  targetEpisode:
+    episodeID: 
+    episodeNO: 
+    episodeNumber: 0
+    episodeTypeString: 
+    episodeType: 0
+    episodeTitle: 
+    episodeSummary: 
+    combinedEpisodeTitle: 
+    storyLobbyTitle: 
+    flowPrefix: 
+    endingType: 
+    dependEpisode: 
+    endingOpen: 0
+    nextOpenMin: 0
+    totalSceneCount: 0
+    playedSceneCount: 0
+    sceneProgressorValue: 0
+    episodeGalleryImageProgressValue: 0
+    popupImageURL: 
+    popupImageKey: 
+    episodeState: 0
+    purchaseState: 0
+    priceStarPlaySale: 0
+    priceStarPlay: 0
+    currencyStarPlay: 
+    priceOneTime: 0
+    unlockStyle: 
+    isUnlock: 0
+    isSerial: 0
+    debugPublishData: 
+    unlockEpisodes: 
+    unlockScenes: 
+    arrUnlockEpisode: []
+    arrUnlockScene: []
+    isClear: 0
   clearEpisodeBG: {fileID: 7427901738096190677}
   textEpisode: {fileID: 7002072519902091392}
   textClearEpisode: {fileID: 6919555943366728409}
   basicCol: {fileID: 3455031741899726301}
   premiumCol: {fileID: 5433007304951701716}
+--- !u!114 &4567978776987510766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3237470668600410893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: 160
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &4327793877618031869
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,10 +1174,47 @@ MonoBehaviour:
     premiumCurrency: 
     premiumQuantity: 0
     isPremiumReceived: 0
+  episodeData:
+    episodeID: 
+    episodeNO: 
+    episodeNumber: 0
+    episodeTypeString: 
+    episodeType: 0
+    episodeTitle: 
+    episodeSummary: 
+    combinedEpisodeTitle: 
+    storyLobbyTitle: 
+    flowPrefix: 
+    endingType: 
+    dependEpisode: 
+    endingOpen: 0
+    nextOpenMin: 0
+    totalSceneCount: 0
+    playedSceneCount: 0
+    sceneProgressorValue: 0
+    episodeGalleryImageProgressValue: 0
+    popupImageURL: 
+    popupImageKey: 
+    episodeState: 0
+    purchaseState: 0
+    priceStarPlaySale: 0
+    priceStarPlay: 0
+    currencyStarPlay: 
+    priceOneTime: 0
+    unlockStyle: 
+    isUnlock: 0
+    isSerial: 0
+    debugPublishData: 
+    unlockEpisodes: 
+    unlockScenes: 
+    arrUnlockEpisode: []
+    arrUnlockScene: []
+    isClear: 0
   isPremium: 0
   quantity: 0
   currency: 
   isReceived: 0
+  isRewardable: 0
   spriteStar: {fileID: 21300000, guid: 1d43ddc3cecfdce42adf5562d65f92e8, type: 3}
   spriteCoin: {fileID: 21300000, guid: 55ad893499617334aa471972f4eaec26, type: 3}
   lockFrame: {fileID: 2179860830578660315}

@@ -2884,6 +2884,8 @@ MonoBehaviour:
     episodeFinishImageKey: 
     premiumPassURL: 
     premiumPassKey: 
+    premiumBadgeURL: 
+    premiumBadgeKey: 
     categoryImageURL: 
     categoryImageKey: 
     coinBannerUrl: 
@@ -2907,6 +2909,9 @@ MonoBehaviour:
     arrHashtag: []
     onedayExpireDate: 
     onedayPassTick: 0
+    hasPremiumPass: 0
+    premiumProductID: 
+    premiumSaleID: 
 --- !u!1001 &585434041528038374
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3172,7 +3177,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3381796534861171448, guid: 229064303698079459f35e51cb463757, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 142
       objectReference: {fileID: 0}
     - target: {fileID: 3381796534861171448, guid: 229064303698079459f35e51cb463757, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3558,6 +3563,10 @@ PrefabInstance:
       propertyPath: pagination
       value: 
       objectReference: {fileID: 6128155964422476110}
+    - target: {fileID: 7656362487429013183, guid: 229064303698079459f35e51cb463757, type: 3}
+      propertyPath: isOutSide
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7950941378097379861, guid: 229064303698079459f35e51cb463757, type: 3}
       propertyPath: m_Material
       value: 

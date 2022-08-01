@@ -25,8 +25,13 @@ namespace PIERStory {
         public void SetPass(StoryData __story) {
             story = __story;
             
-            this.gameObject.SetActive(true);
+            if(!story.isValidData) {
+                Debug.LogError("PremiumPAss SetPass is not valid");
+                return;
+            }            
             
+            this.gameObject.SetActive(true);
+            Debug.Log("PremiumPAss SetPass : " + __story.title +" / " + story.hasPremiumPass);
             
             notificationObject.SetActive(false);
             
@@ -54,6 +59,7 @@ namespace PIERStory {
                 return;
             
             // 조건이 충족하는 챌린지가 있는지 체크한다. 
+            notificationObject.SetActive(StoryManager.main.CheckRewardableChallenge());
         }
         
         

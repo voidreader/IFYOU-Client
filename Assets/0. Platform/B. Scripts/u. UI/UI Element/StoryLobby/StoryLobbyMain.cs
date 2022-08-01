@@ -272,7 +272,7 @@ namespace PIERStory {
 
             currentEpisodeData.SetPurchaseState(); // 구매기록 refresh.
             
-            hasPass = UserManager.main.HasProjectFreepass();
+            hasPass = UserManager.main.HasProjectFreepass() || currentStoryData.IsValidOnedayPass() || UserManager.main.ifyouPassDay > 0;
 
             if (StoryLobbyManager.main != null && CheckResumePossible())
                 isEpisodeContinuePlay = true;
@@ -517,7 +517,7 @@ namespace PIERStory {
             isOpenTimeCountable = false; // false로 초기화해놓고 시작한다. 
             
             
-            if(timeDiff.Ticks > 0) {
+            if(timeDiff.Ticks > 0) { // 대기시간 있음. 
                 
                 // 연재의 경우. 
                 if(currentStoryData.isSerial && currentEpisodeData.isSerial) {

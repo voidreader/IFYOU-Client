@@ -691,6 +691,11 @@ namespace PIERStory
             OpenViewStoryDetail();             
         }
 
+
+
+        /// <summary>
+        /// 엔딩 힌트 설정하기 
+        /// </summary>
         void SetEndingHintData()
         {
             try {
@@ -724,6 +729,59 @@ namespace PIERStory
             }     
         }
         
+        /// <summary>
+        /// 현재 진입한 작품에서 받을 수 있는 챌린지가 있는지 체크한다. 
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckRewardableChallenge() {
+            
+            // 일반 먼저 체크한다. 
+            for(int i=0; i<listChallenges.Count;i++) {
+                if(listChallenges[i].isFreeReceived) // 안받은것만..!
+                    continue;
+                    
+                // 대상 챕터를 클리어했는지를 체크한다. 
+                // 클리어했는데 안받은게 있다..!
+                if(CheckTargetEpisodeClearByChater(listChallenges[i].chapterNumber)) {
+                    return true;
+                }
+                
+            }
+            
+            // 프리미엄 패스 체크 (프리미엄 보유한 경우만!)
+            if(CurrentProject.hasPremiumPass) {
+                
+                // loop
+                for(int i=0; i<listChallenges.Count;i++) {
+                    if(listChallenges[i].isPremiumReceived) // 안받은것만..!
+                        continue;
+                        
+                    // 대상 챕터를 클리어했는지를 체크한다. 
+                    // 클리어했는데 안받은게 있다..!
+                    if(CheckTargetEpisodeClearByChater(listChallenges[i].chapterNumber)) {
+                        return true;
+                    }
+                    
+                }
+            }
+            
+            return false;
+        } // ? CheckRewardableChallenge
+        
+        bool CheckTargetEpisodeClearByChater(int __chapter) {
+            for(int i=0; i<RegularEpisodeList.Count;i++) {
+                if(RegularEpisodeList[i].episodeType == EpisodeType.Ending)
+                    continue;
+                    
+                // 클리어 목록에 있음 
+                if(RegularEpisodeList[i].episodeNumber == __chapter && RegularEpisodeList[i].isClear)
+                    return true;
+                    
+            }
+            
+            return false;
+        }
+        
         
         /// <summary>
         /// 스토리 상세화면으로 진입하도록 이벤트 봬기. 
@@ -739,15 +797,7 @@ namespace PIERStory
         }
         
         
-        /// <summary>
-        /// 선택된 프로젝트의 정규 에피소드 데이터 리프레시 
-        /// </summary>
-        public void UpdateRegularEpisodeData() {
-            for(int i=0; i<ListCurrentProjectEpisodes.Count;i++) {
-                ListCurrentProjectEpisodes[i].SetEpisodePlayState();
-            }    
-        }
-        
+
         /// <summary>
         /// 정규 에피소드 찾기 
         /// </summary>
@@ -837,6 +887,10 @@ namespace PIERStory
         /// <returns></returns>
         public string GetNametagName(string __speaker)
         {
+            if(string.IsNullOrEmpty(__speaker)) {
+                return string.Empty;
+            }
+            
             // 네임태그에 이름이 없으면 그냥 받은 파라매터 그대로 준다. 
             if (!DictNametag.ContainsKey(__speaker))
                 return __speaker;
@@ -857,6 +911,11 @@ namespace PIERStory
         /// <returns></returns>
         public string GetNametagColor(string __speaker, bool __isMainColor = true)
         {
+            
+            if(string.IsNullOrEmpty(__speaker)) {
+                return string.Empty;
+            }            
+            
             if (!DictNametag.ContainsKey(__speaker))
                 return GameConst.COLOR_BLACK_RGB;
 
@@ -1516,39 +1575,7 @@ namespace PIERStory
 
         #region 의장 정보 컨트롤 
 
-        /// <summary>
-        /// 작품 의상 기준정보 데이터 
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetNodeDressCode()
-        {
-            return dressCodeJson;
-        }
 
-
-        /// <summary>
-        /// 화자+의상ID로 일치하는 모델 이름 찾기
-        /// </summary>
-        /// <param name="__speaker"></param>
-        /// <param name="__dressID"></param>
-        /// <returns></returns>
-        public string GetTargetDressModelNameByDressID(string __speaker, string __dressID) 
-        {
-            if (dressCodeJson == null)
-                return null;
-
-            for(int i=0; i<dressCodeJson.Count;i++)
-            {
-                // 일치하는 모델 찾음!
-                if (dressCodeJson[i][GameConst.COL_DRESSMODEL_NAME].ToString() == __speaker
-                        && dressCodeJson[i][GameConst.COL_DRESS_ID].ToString() == __dressID)
-                {
-                    return dressCodeJson[i][GameConst.COL_MODEL_NAME].ToString();
-                }
-            }
-
-            return null;
-        }
 
 
         /// <summary>
@@ -1942,6 +1969,8 @@ namespace PIERStory
                 RegularEpisodeList[i].SetEpisodePlayState();
             }            
         }
+        
+        
         
         #endregion
     }

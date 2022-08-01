@@ -44,10 +44,10 @@ namespace PIERStory {
             
             // 텍스트 세팅 
             
-            Debug.Log(string.Format(SystemManager.GetLocalizedText("6455"), BillingManager.main.ifyouPassChoiceSale));
-            SystemManager.SetText(textChoicesSaleText, string.Format(SystemManager.GetLocalizedText("6455"), BillingManager.main.ifyouPassChoiceSale.ToString()));
+            Debug.Log(string.Format(SystemManager.GetLocalizedText("6455"), BillingManager.main.onedayPassChoiceSale));
+            SystemManager.SetText(textChoicesSaleText, string.Format(SystemManager.GetLocalizedText("6455"), BillingManager.main.onedayPassChoiceSale.ToString()));
             textChoicesOff.text = BillingManager.main.onedayPassChoiceSale.ToString() +"%\n<size=12>OFF</size>" ;
-            textChoicesOff2.text = BillingManager.main.onedayPassChoiceSaleFloat.ToString() +"%\n<size=12>OFF</size>" ;
+            textChoicesOff2.text = BillingManager.main.onedayPassChoiceSale.ToString() +"%\n<size=12>OFF</size>" ;
             
             currentStory = SystemListener.main.introduceStory; // 리스너에서 받아온다. 
             
@@ -77,7 +77,7 @@ namespace PIERStory {
                 return;
             }
             
-            BillingManager.main.RequestPurchaseGamebase("oneday_pass", StoryManager.main.CurrentProjectID);
+            BillingManager.main.RequestPurchaseGamebase("oneday_pass", currentStory.projectID);
         }
     }
 }

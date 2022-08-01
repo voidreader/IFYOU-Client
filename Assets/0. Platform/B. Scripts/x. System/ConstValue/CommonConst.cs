@@ -112,6 +112,8 @@ namespace PIERStory
         public const string SCENE_INTERMISSION = "Intermission";
         
         
+        public const string KEY_LAST_ONEDAY_PASS_PROJECT = "LastOnedayPassProjectID";
+        public const string KEY_LAST_PREMIUM_PASS_PROJECT = "LastPremiumPassProjectID";
         
         
         // Firebase Event

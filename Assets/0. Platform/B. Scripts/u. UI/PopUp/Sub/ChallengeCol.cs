@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using BestHTTP;
+using LitJson;
 
 namespace PIERStory {
     public class ChallengeCol : MonoBehaviour
@@ -85,16 +86,19 @@ namespace PIERStory {
                 
                 // 아직 보상을 받지 않은 경우에 대한 처리
                 if(episodeData.isClear) { // 에피소드 플레이 기록 있음 
-                    lockFrame.SetActive(false);
+                    
                     
                     // 프리미엄 컬럼은 프리미엄 패스 보유까지 체크한다.
                     if(isPremium ) {
                         
                         isRewardable = UserManager.main.HasProjectPremiumPassOnly(StoryManager.main.CurrentProjectID);
                         
+                        lockFrame.SetActive(!isRewardable);
+                        
                     }
                     else {
                         isRewardable = true;
+                        lockFrame.SetActive(false);
                     }
                     
                     
@@ -108,21 +112,94 @@ namespace PIERStory {
         } // end of refresh
         
         public void OnClickCol() {
+            
+            if(isReceived) {
+                Debug.Log("It's already received");
+                return;
+            }
+            
             // 보상 받을 수 없는 상태 
             if(!isRewardable) {
                 
                 if(isPremium) {
                     
+                    if(UserManager.main.HasProjectPremiumPassOnly(StoryManager.main.CurrentProjectID))
+                        SystemManager.ShowMessageWithLocalize("6473");
+                    else 
+                        SystemManager.ShowMessageWithLocalize("6472");
+                    
                 }
                 else {
-                    
+                    SystemManager.ShowMessageWithLocalize("6473");   
                 }
                 
                 return;
             }
             
+            Debug.Log("isRewardable");
             
             // 실제 보상 수신 처리 
+            JsonData sending = new JsonData();
+            sending["func"] = "getPremiumReward";
+            sending["project_id"] = StoryManager.main.CurrentProjectID;
+            sending["premium_id"] = challengeData.premiumID;
+            sending["chapter_number"] = challengeData.chapterNumber;
+            
+            if(isPremium)
+                sending["kind"] = 1;
+            else 
+                sending["kind"] = 0;
+            
+            NetworkLoader.main.SendPost(OnReceiveReward, sending, true);
+            
+            
+        }
+        
+        void OnReceiveReward(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                Debug.LogError("OnReceiveReward");
+                // NetworkLoader.main.ReportRequestError(request.)
+                return;
+            }
+            
+            // 
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            
+            Debug.Log(string.Format("OnReceiveReward [{0}]", response.DataAsText));
+            
+            
+            // unreadMailCount
+            // 현재 컬럼에 대한 갱신 처리
+            if(isPremium) {
+                challengeData.isPremiumReceived = true;
+                challengeData.premiumRewardDate = System.DateTime.UtcNow.ToString();
+            }
+            else {
+                challengeData.isFreeReceived = true;
+                challengeData.freeRewardDate = System.DateTime.UtcNow.ToString();
+            }
+            
+            SystemManager.ShowMessageWithLocalize("6474");
+            
+            // 현재 컬럼 연출처리
+            ActivateEffect();
+            
+        } // ? OnReceiveReward
+        
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        void ActivateEffect() {
+            clearCover.color = new Color(1,1,1,0); // 투명하게 만들어놓고
+            clearCheck.gameObject.SetActive(false); // 체크 비활성화
+            
+            
+            clearCover.gameObject.SetActive(true);
+            clearCover.DOFade(0.6f, 1);
+            clearCheck.localScale = new Vector3(1.5f, 1.5f, 1);
+            clearCheck.gameObject.SetActive(true);
+            clearCheck.DOScale(1, 0.5f);
         }
         
         

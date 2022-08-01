@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
@@ -10,6 +11,9 @@ using BestHTTP;
 namespace PIERStory {
     public class ViewIntroduce : CommonView
     {
+        
+        public static Action OnPassPurchase = null;
+        
         public Doozy.Runtime.UIManager.Containers.UIContainer container;
 
         [Space(15)]
@@ -64,6 +68,10 @@ namespace PIERStory {
         
         [Space]
         public StoryData introduceStory;
+        
+        private void Start() {
+            OnPassPurchase = InitPass;
+        }
         
         public override void OnView() {
             base.OnView();
@@ -221,8 +229,16 @@ namespace PIERStory {
         /// 소개페이지의 프리미엄 패스, 원데이 패스 설정하기 
         /// </summary>
         void InitPass() {
+            
+            if(this.gameObject == null || !this.gameObject.activeSelf)
+                return;
+            
             premiumPassButton.SetPass(SystemListener.main.introduceStory);
             onedayPassButton.SetPass(SystemListener.main.introduceStory);
+            
+            // 프리미엄 패스를 구매한 경우 원데이 패스 버튼을 보여줄 필요가 없다. 
+            if( !introduceStory.IsValidOnedayPass() && introduceStory.hasPremiumPass )
+                onedayPassButton.gameObject.SetActive(false);
         }
 
 

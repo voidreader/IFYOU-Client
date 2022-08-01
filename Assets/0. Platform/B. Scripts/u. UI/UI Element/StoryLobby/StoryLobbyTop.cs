@@ -27,6 +27,9 @@ namespace PIERStory {
         /// </summary>
         void InitStoryLobbyTop()
         {
+            
+            Debug.Log("#### InitStoryLobbyTop ####");
+            
             // 패스 버튼을 처리한다.
             premiumPassButton.gameObject.SetActive(false);
             onedayPassButton.gameObject.SetActive(false);
@@ -34,6 +37,9 @@ namespace PIERStory {
             premiumPassButton.SetPass(StoryManager.main.CurrentProject);
             onedayPassButton.SetPass(StoryManager.main.CurrentProject);
             
+            // 프리미엄 패스를 구매한 경우 원데이 패스 버튼을 보여줄 필요가 없다. 
+            if( !StoryManager.main.CurrentProject.IsValidOnedayPass() && StoryManager.main.CurrentProject.hasPremiumPass )
+                onedayPassButton.gameObject.SetActive(false);            
 
         }
     }

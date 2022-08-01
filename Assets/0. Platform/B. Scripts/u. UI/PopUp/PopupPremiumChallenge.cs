@@ -82,17 +82,34 @@ namespace PIERStory {
                 
         public void OnClickPurchase() {
             
+            Debug.Log("OnClickPurchase Premium Challenge #1 :: " + currentStory.premiumSaleID);
+            
             if(!isPurchasable) {
-                Debug.LogError("It's not purchasable oneday pass");
+                Debug.LogError("It's not purchasable premium pass");
                 return;
             }
+            Debug.Log("OnClickPurchase Premium Challenge #2 :: " + currentStory.premiumSaleID);
             
             BillingManager.main.RequestPurchaseGamebase(currentStory.premiumSaleID, StoryManager.main.CurrentProjectID);
         }
         
         
         public void OnClickBenefit() { 
+            SystemManager.ShowNoDataPopup(CommonConst.POPUP_PREMIUM_PASS);
+        }
+
+        public override void Hide()
+        {
+            base.Hide();
             
+            // 닫힐때 refresh. 
+            if(StoryLobbyManager.main != null) {
+                StoryLobbyTop.OnInitializeStoryLobbyTop?.Invoke();
+            }
+            
+            if(GameManager.main != null) {
+                EpisodeEndControls.OnRefreshPassButton?.Invoke();
+            }
         }
     }
 }

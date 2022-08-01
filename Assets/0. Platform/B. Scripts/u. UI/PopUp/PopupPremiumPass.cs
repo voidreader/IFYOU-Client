@@ -27,35 +27,30 @@ namespace PIERStory {
             base.Show();
             
             
+
+            
+            // 텍스트 세팅 
+          
+            currentStory = SystemListener.main.introduceStory; // 리스너에서 받아온다. 
             // 게임베이스 아이템 정보 
             try {
-                gamebaseItem = BillingManager.main.GetGamebasePurchaseItem("oneday_pass");
+                gamebaseItem = BillingManager.main.GetGamebasePurchaseItem(currentStory.premiumSaleID); // 연결된 상품ID로 조회한다. 
                 textPrice.text = gamebaseItem.localizedPrice;
             }
             catch {
                 Debug.Log("Windows standalone?");
-            }
+            }            
             
-            // 텍스트 세팅 
-            
-            
-            currentStory = SystemListener.main.introduceStory; // 리스너에서 받아온다. 
             
             SystemManager.SetText(textTitle, currentStory.title); // 타이틀      
             storyImage.SetDownloadURL(currentStory.coinBannerUrl, currentStory.coinBannerKey);
             
-           
-            // 원데이 패스 사용중일때, 아닐때의 분류하기. 
-            // if(currentStory.IsValidOnedayPass()) { // 사용중 
-            //     isPurchasable = false; 
-                
-                
-            // }
-            // else { // 사용중이지 않음. (구매가능)
-            //     isPurchasable= true;
-            // }
+            isPurchasable = !UserManager.main.HasProjectPremiumPassOnly(currentStory.projectID);
             
-            
+            if(!isPurchasable) {
+                SystemManager.SetText(textPrice, SystemManager.GetLocalizedText("6464"));
+            }
+
         }
                 
         public void OnClickPurchase() {

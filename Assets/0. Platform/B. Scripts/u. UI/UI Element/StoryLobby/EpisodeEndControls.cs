@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace PIERStory {
 
     public class EpisodeEndControls : StoryLobbyMain
     {
+        public static Action OnRefreshPassButton = null;
         
         [Space]
         public TextMeshProUGUI textSummary;
@@ -25,6 +27,7 @@ namespace PIERStory {
         
         private void Start() {
             OnPassPurchase = PostPurchasePremiumPass; 
+            OnRefreshPassButton = SetPasses;
         }
 
         protected override void Update() {
@@ -150,6 +153,7 @@ namespace PIERStory {
             currentEpisodeData = StoryManager.GetRegularEpisodeByID(currentEpisodeID); // 다음번 플레이될 차례의 에피소드 데이터 
             currentEpisodeData.SetPurchaseState(); // 구매기록 refresh.
             
+            hasPass = UserManager.main.HasProjectFreepass() || currentStoryData.IsValidOnedayPass() || UserManager.main.ifyouPassDay > 0;
 
             isEpisodeContinuePlay = false;
             
@@ -166,7 +170,10 @@ namespace PIERStory {
             
             premiumPassButton.SetPass(StoryManager.main.CurrentProject);
             onedayPassButton.SetPass(StoryManager.main.CurrentProject);
-
+            
+            // 프리미엄 패스를 구매한 경우 원데이 패스 버튼을 보여줄 필요가 없다. 
+            if( !StoryManager.main.CurrentProject.IsValidOnedayPass() && StoryManager.main.CurrentProject.hasPremiumPass )
+                onedayPassButton.gameObject.SetActive(false);    
         }
         
         /// <summary>

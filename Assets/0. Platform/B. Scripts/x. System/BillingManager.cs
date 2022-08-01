@@ -209,14 +209,39 @@ namespace PIERStory {
 
             if (!string.IsNullOrEmpty(projectId))
                 sendData[CommonConst.COL_PROJECT_ID] = projectId;
-                
+            
+           
+            
+               
             // 이프유 패스에서는 다른 메소드 사용 
             if(receipt.gamebaseProductId == "ifyou_pass") {
                 sendData["func"] = "purchaseInappProductByMail";
             }
+            
+            // 결제 실패 대비
+            if(receipt.gamebaseProductId == "oneday_pass") {
                 
-            
-            
+                if(string.IsNullOrEmpty(projectId) || projectId == "-1") {
+                    projectId = PlayerPrefs.GetString(CommonConst.KEY_LAST_ONEDAY_PASS_PROJECT, "-1");
+                    sendData[CommonConst.COL_PROJECT_ID] = projectId;
+                }
+                else {               
+                    PlayerPrefs.SetString(CommonConst.KEY_LAST_ONEDAY_PASS_PROJECT, projectId);
+                    PlayerPrefs.Save();
+                }
+            }
+            else if(receipt.gamebaseProductId.Contains("story_pack")) {
+                
+                if(string.IsNullOrEmpty(projectId) || projectId == "-1") {
+                    projectId = PlayerPrefs.GetString(CommonConst.KEY_LAST_PREMIUM_PASS_PROJECT, "-1");
+                    sendData[CommonConst.COL_PROJECT_ID] = projectId;
+                }
+                else {               
+                    PlayerPrefs.SetString(CommonConst.KEY_LAST_PREMIUM_PASS_PROJECT, projectId);
+                    PlayerPrefs.Save();
+                }                
+            }
+
             
             NetworkLoader.main.SendPost(OnRequestPurchaseReward, sendData, true);
             
@@ -252,6 +277,7 @@ namespace PIERStory {
                 return;
             }
             
+            Debug.Log("[OnRequestPurchaseReward]");
             Debug.Log(response.DataAsText);
             
             // 받은 데이터 처리
@@ -302,6 +328,7 @@ namespace PIERStory {
             yield return new WaitForSeconds(0.1f);
             
             // 구매 상품에 따라 각자 다른 메세지. 
+            Debug.Log(">>>>>>>>>>>>>>> DelayShowBillingCompletePopup : " + __productID);
             
             if(__productID == "pre_reward_pack") {
                 SystemManager.ShowSystemPopupLocalize("6300", null, null, true, false); // 사전예약보상
@@ -318,7 +345,7 @@ namespace PIERStory {
                     EpisodeEndControls.OnPassPurchase?.Invoke();
                 }
                 
-                if(LobbyManager.main != null) {
+                if(StoryLobbyManager.main != null) {
                     StoryLobbyMain.OnPassPurchase?.Invoke();
                 }
                 
@@ -328,16 +355,49 @@ namespace PIERStory {
             // 원데이 패스 구매 완료
             if(__productID == "oneday_pass")
             {
+                Debug.Log("Oneday purchased <<<<<< ");
+                
                 SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6444"), SystemListener.main.introduceStory.title), null, null, true, false);
                 
                 // 원데이 패스 refresh 처리 
+                if(GameManager.main != null) {
+                    EpisodeEndControls.OnPassPurchase?.Invoke();
+                }
+                
+                if(StoryLobbyManager.main != null) {
+                    StoryLobbyMain.OnPassPurchase?.Invoke();
+                }
             }
             else if (__productID == "ifyou_pass") {
+                
+                Debug.Log("ifyou_pass purchased <<<<<< ");
+                
                 // 이프유 패스에 대한 메세지 
                 UserManager.main.ifyouPassDay = 1; // 1일차 시작으로 한다.
                 // 6441
                 // 이프유 패스를 구매했어요!
                 SystemManager.ShowSystemPopupLocalize("6441", null, null, true, false); 
+            }
+            else if (__productID.Contains("story_pack")) {
+                
+                Debug.Log("Premiumpass purchased <<<<<< ");
+                
+                Debug.Log(string.Format("Introduce : [{0}], Current : [{1}]", SystemListener.main.introduceStory.projectID, StoryManager.main.CurrentProject.projectID));
+                
+
+                SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6445"), SystemListener.main.introduceStory.title), null, null, true, false);
+                
+                // 프리미엄 패스 보유중으로 변경 
+                SystemListener.main.introduceStory.hasPremiumPass = true;
+                
+                
+                if(GameManager.main != null) {
+                    EpisodeEndControls.OnPassPurchase?.Invoke();
+                }
+                
+                if(StoryLobbyManager.main != null) {
+                    StoryLobbyMain.OnPassPurchase?.Invoke();
+                }
             }
             else { // 일반 구매 
                 SystemManager.ShowSystemPopupLocalize("6113", null, null, true, false);  // 일반구매     

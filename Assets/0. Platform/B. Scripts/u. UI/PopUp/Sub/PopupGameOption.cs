@@ -163,8 +163,10 @@ namespace PIERStory
                 slowToggle.SetActive(false);
                 normalToggle.SetActive(false);
                 fastToggle.SetActive(true);
-
-                PlayerPrefs.SetFloat(GameConst.AUTO_PLAY, GameConst.fastDelay);
+                if(SystemManager.main.isTestServerAccess)
+                    PlayerPrefs.SetFloat(GameConst.AUTO_PLAY, 0.1f);
+                else 
+                    PlayerPrefs.SetFloat(GameConst.AUTO_PLAY, GameConst.fastDelay);
             }
         }
 

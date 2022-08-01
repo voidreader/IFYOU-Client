@@ -66,6 +66,7 @@ namespace PIERStory {
         public Image lockIcon;
         public GameObject selectionPrice;
         public TextMeshProUGUI priceText;
+        public TextMeshProUGUI salePriceText; // 세일 가격 
         public ImageRequireDownload freepassBadge;
         int saleSelectionPrice = 0;
 
@@ -87,6 +88,17 @@ namespace PIERStory {
         public GameObject selectionHint;
         public GameObject coinBox;
         public TextMeshProUGUI hintPrice;
+        
+        
+        [Space][Header("할인 관련")]
+        public Image imageOff;
+        public TextMeshProUGUI textOff;
+        public GameObject offLine;
+        
+        public Sprite spriteIFyouCircle;
+        public Sprite spriteOnedayCircle;
+        
+    
 
         #region static methods
 
@@ -195,22 +207,50 @@ namespace PIERStory {
                 {
                     selectionPrice.SetActive(true);
 
-                    // 선택지를 구매한 적이 있다면 0으로 표기해줄거야
+                    // 선택지를 구매한 적이 있다면 가격을 표시하지 않음
                     if (UserManager.main.IsPurchaseSelection(StoryManager.main.CurrentEpisodeID, scriptRow.selection_group, scriptRow.selection_no))
-                        priceText.text = "0";
+                        priceText.text = string.Empty;
                     else
                     {
                         isPurchaseSelection = true;
 
                         saleSelectionPrice = scriptRow.selectionPrice;
+                        priceText.text = string.Format("{0}", saleSelectionPrice); // 원 가격 설정 
+                        
 
-                        if (UserManager.main.ifyouPassDay > 0)
+                        if (UserManager.main.ifyouPassDay > 0) {
+                            
+                            // 스프라이트, 텍스트 처리 
+                            imageOff.sprite = spriteIFyouCircle;
+                            textOff.text = BillingManager.main.ifyouPassChoiceSale.ToString() + "\n<size=16>OFF</size>";
+                            
+                            // 할인 가격 설정 
                             saleSelectionPrice = (int)(scriptRow.selectionPrice * (1f - BillingManager.main.ifyouPassChoiceSaleFloat));
+                        }
 
-                        if(StoryManager.main.CurrentProject.IsValidOnedayPass())
+                        // 원데이 패스의 할인율이 더 크다 
+                        if(StoryManager.main.CurrentProject.IsValidOnedayPass()) {
+                            
+                            imageOff.sprite = spriteOnedayCircle;
+                            textOff.text = BillingManager.main.onedayPassChoiceSale.ToString() + "\n<size=16>OFF</size>";
+                            
+                            
                             saleSelectionPrice = (int)(scriptRow.selectionPrice * (1f - BillingManager.main.onedayPassChoiceSaleFloat));
+                        }
+                        
+                        
+                        if(UserManager.main.ifyouPassDay > 0 || StoryManager.main.CurrentProject.IsValidOnedayPass()) {
+                            imageOff.gameObject.SetActive(true);
+                            offLine.SetActive(true);
+                            priceText.color = new Color(priceText.color.r, priceText.color.g, priceText.color.b, 0.7f);
+                            
+                            offLine.SetActive(true);
+                            salePriceText.gameObject.SetActive(true);
+                            
+                            salePriceText.text = string.Format("{0}", saleSelectionPrice);;
+                        }                        
 
-                        priceText.text = string.Format("{0}", saleSelectionPrice);
+                        
                     }
                 }
             }
@@ -251,7 +291,11 @@ namespace PIERStory {
             imageSelection.rectTransform.sizeDelta = originSizeDelta;
             imageAura.color = new Color(1, 1, 1, 0); // 투명하게. 
             imageAura.gameObject.SetActive(true);
-
+            
+            imageOff.gameObject.SetActive(false);
+            offLine.SetActive(false);
+            salePriceText.gameObject.SetActive(false); 
+            priceText.color = new Color(priceText.color.r, priceText.color.g, priceText.color.b, 1);
 
             // 변수들 초기화 
             isLock = false;

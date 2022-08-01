@@ -10,14 +10,19 @@ namespace PIERStory {
     {
         public JsonData jsonData;
         
+        public int premiumID = 0;
         public int chapterNumber = 0;
         public int detailNo = 9;
         public string freeCurrency = string.Empty;
         public int freeQuantity = 0;
+        public string freeRewardDate = string.Empty;
         public bool isFreeReceived = false;
         
         public string premiumCurrency = string.Empty;
         public int premiumQuantity = 0;
+        public string premiumRewardDate = string.Empty;
+        
+        
         
         public bool isPremiumReceived = false;
         
@@ -40,15 +45,20 @@ namespace PIERStory {
             
             int.TryParse(__chapterNumber, out chapterNumber);
             
+            premiumID = SystemManager.GetJsonNodeInt(jsonData, "premium_id");
+            
             freeQuantity = SystemManager.GetJsonNodeInt(jsonData, "free_quantity");
             premiumQuantity = SystemManager.GetJsonNodeInt(jsonData, "premium_quantity");
             
             freeCurrency = SystemManager.GetJsonNodeString(jsonData, "free_currency");
             premiumCurrency = SystemManager.GetJsonNodeString(jsonData, "premium_currency");
             
+            freeRewardDate = SystemManager.GetJsonNodeString(jsonData, "free_reward_date");
+            premiumRewardDate = SystemManager.GetJsonNodeString(jsonData, "premium_reward_date");
+            
             // 미션 수신 여부 
-            isFreeReceived = !string.IsNullOrEmpty(SystemManager.GetJsonNodeString(jsonData, "free_reward_date"));
-            isPremiumReceived = !string.IsNullOrEmpty(SystemManager.GetJsonNodeString(jsonData, "premium_reward_date"));
+            isFreeReceived = !string.IsNullOrEmpty(freeRewardDate);
+            isPremiumReceived = !string.IsNullOrEmpty(premiumRewardDate);
         }
     }
 }

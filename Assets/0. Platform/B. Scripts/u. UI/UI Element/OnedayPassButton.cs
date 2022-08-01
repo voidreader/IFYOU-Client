@@ -43,6 +43,15 @@ namespace PIERStory {
         public void SetPass(StoryData __story) {
             story = __story;
             
+            if(!story.isValidData) {
+                Debug.LogError("OnedayPass SetPass is not valid");
+                return;
+            }
+            
+            
+            Debug.Log("OnedayPass SetPass : " + __story.title);
+            Debug.Log("OnedayPass Valid : " + story.IsValidOnedayPass());
+            
             // 원데이 패스 구매내역, 유효기간을 체크한다.
             ticketObject.SetActive(string.IsNullOrEmpty(story.onedayExpireDate));
             badgeObject.SetActive(!string.IsNullOrEmpty(story.onedayExpireDate) && story.IsValidOnedayPass());

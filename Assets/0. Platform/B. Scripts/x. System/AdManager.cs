@@ -238,24 +238,7 @@ namespace PIERStory {
         
         void InitFirebase() {
             
-            /*
-            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
-                var dependencyStatus = task.Result;
-                if (dependencyStatus == Firebase.DependencyStatus.Available) {
-                // Create and hold a reference to your FirebaseApp,
-                // where app is a Firebase.FirebaseApp property of your application class.
-                    app = Firebase.FirebaseApp.DefaultInstance;
-                    Debug.Log("### Firebase Init done");
 
-                // Set a flag here to indicate whether Firebase is ready to use by your app.
-                } else {
-                UnityEngine.Debug.LogError(System.String.Format(
-                    "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
-                // Firebase Unity SDK is not safe to use here.
-                }                
-            });
-            */
-            
         }
         void throwExceptionEvery60Updates()
         {
@@ -703,9 +686,11 @@ namespace PIERStory {
             
             
             // * 유니티 애즈 
-            if(rewardedAd.AdState == AdState.Loaded)
+            if(rewardedAd != null && rewardedAd.AdState == AdState.Loaded)
                 rewardedAd.ShowAsync();
             else {
+                // 유니티 애즈
+                CreateRewardAd();
                 SystemManager.ShowSimpleAlertLocalize("6093");
             }
         }

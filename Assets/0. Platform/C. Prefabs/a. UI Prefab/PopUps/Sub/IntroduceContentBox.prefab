@@ -625,7 +625,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 45}
+  m_AnchoredPosition: {x: 0, y: 65}
   m_SizeDelta: {x: 56, y: 58}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &4294392176147616616
@@ -709,7 +709,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 979972095708936438}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: PIERStory.ViewIntroduce, Assembly-CSharp
+        m_MethodName: OnClickAlertButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4695582024217124090
 GameObject:
   m_ObjectHideFlags: 0
@@ -1129,7 +1141,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9095524037627855083}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -1386,7 +1398,7 @@ RectTransform:
   - {fileID: 4789345277367512690}
   - {fileID: 2700072476631859144}
   m_Father: {fileID: 1584277193794683288}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -3927,7 +3939,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -80, y: 45}
+  m_AnchoredPosition: {x: -80, y: 65}
   m_SizeDelta: {x: 59, y: 53}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &6093955167038145550
@@ -4011,7 +4023,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2684219177662717251}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: PIERStory.ViewIntroduce, Assembly-CSharp
+        m_MethodName: OnClickLikeButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &2776446496145271081
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4019,6 +4043,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5577241454657580870}
     m_Modifications:
+    - target: {fileID: 2241365292688868128, guid: 1fd7f43ed8ad88a48b79ee5c0a50c3ce, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2241365292688868128, guid: 1fd7f43ed8ad88a48b79ee5c0a50c3ce, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -4255,6 +4283,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5793058160716201368, guid: f2390f89bdee1794b9c2610c441f9067, type: 3}
+      propertyPath: isOutSide
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2390f89bdee1794b9c2610c441f9067, type: 3}
 --- !u!224 &1002099792829389665 stripped
@@ -4271,15 +4303,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2241365292688868128, guid: 1fd7f43ed8ad88a48b79ee5c0a50c3ce, type: 3}
       propertyPath: m_Color.b
-      value: 0.6462264
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2241365292688868128, guid: 1fd7f43ed8ad88a48b79ee5c0a50c3ce, type: 3}
       propertyPath: m_Color.g
-      value: 0.6462264
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2241365292688868128, guid: 1fd7f43ed8ad88a48b79ee5c0a50c3ce, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2241365292688868128, guid: 1fd7f43ed8ad88a48b79ee5c0a50c3ce, type: 3}
       propertyPath: m_Material

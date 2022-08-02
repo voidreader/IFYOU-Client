@@ -735,7 +735,13 @@ namespace PIERStory
 
                 #region 스탠딩 정리
 
-                JsonData standingList = currencyList[LobbyConst.NODE_STANDING];
+                JsonData standingList = null;
+                if(currencyList.ContainsKey(LobbyConst.NODE_STANDING)) 
+                    standingList = currencyList[LobbyConst.NODE_STANDING];
+                else 
+                    standingList = JsonMapper.ToObject("[]");
+                    
+                    
                 bool breakPoint = false;
 
                 for (int i = 0; i < standingList.Count; i++)

@@ -25,7 +25,7 @@ namespace Live2D.Cubism.Rendering.Masking
         /// <summary>
         /// <see cref="MaskTexture"/> backing field.
         /// </summary>
-        [SerializeField, HideInInspector]
+        // [SerializeField, HideInInspector]
         private CubismMaskTexture _maskTexture;
 
         /// <summary>
@@ -237,6 +237,16 @@ namespace Live2D.Cubism.Rendering.Masking
 
             MaskTexture.RemoveSource(this);
         }
+        
+        private void OnDestroy() {
+            if (MaskTexture == null)
+            {
+                return;
+            }
+
+            MaskTexture.RemoveSource(this);
+            MaskTexture.DeleteRenderTexture();
+        }        
 
         #endregion
 

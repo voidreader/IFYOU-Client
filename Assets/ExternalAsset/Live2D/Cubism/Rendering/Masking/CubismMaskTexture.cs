@@ -302,6 +302,9 @@ namespace Live2D.Cubism.Rendering.Masking
         {
             CubismMaskCommandBuffer.RemoveSource(this);
         }
+        public void DeleteRenderTexture() {
+            DestroyImmediate(_renderTexture);
+        }        
 
         #endregion
 

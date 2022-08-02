@@ -324,6 +324,8 @@ namespace PIERStory
             
             rtransform.anchoredPosition = new Vector2(0, 0); // 위치 0으로 고정 
             
+            SetProfileNametag();
+            
             // 프로필에서는 네임태그 안쓴다.
             if(nametag.gameObject.activeSelf)
                 nametag.gameObject.SetActive(false);
@@ -879,6 +881,23 @@ namespace PIERStory
             SystemManager.SetText(textName, tagText);
                 
         }
+        
+        void SetProfileNametag() {
+            if (!nametag.gameObject.activeSelf)
+                return;
+
+            if(!BubbleManager.main.isTagColorAffect)
+                return;
+
+            tagMainColor = StoryManager.main.GetNametagColor(GameConst.COL_DEFAULT);
+
+            if(string.IsNullOrEmpty(tagMainColor)) {
+                return;
+            }
+
+
+            imageOutline.color = HexCodeChanger.HexToColor(tagMainColor);
+        }        
 
         #endregion
 

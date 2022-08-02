@@ -38,6 +38,11 @@ namespace PIERStory {
 
             bubbleCtrl.SetProfileBubble(SystemManager.GetJsonNodeString(currencyData, "bubble_text"));
             elementRect.sizeDelta = new Vector2(bubbleCtrl.rtransform.sizeDelta.x + 80, bubbleCtrl.rtransform.sizeDelta.y + 80);
+            
+            if(BubbleManager.main.bubbleType == "half")
+                transform.localScale = Vector3.one * 0.9f;            
+            else 
+                transform.localScale = Vector3.one;            
         }
 
         /// <summary>
@@ -66,6 +71,12 @@ namespace PIERStory {
 
             bubbleCtrl.rtransform.Rotate(new Vector3(0, angle, 0));
             bubbleCtrl.textContents.transform.Rotate(new Vector3(0, angle, 0));
+            
+            if(BubbleManager.main.bubbleType == "half")
+                transform.localScale = Vector3.one * 0.9f;            
+            else 
+                transform.localScale = Vector3.one;             
+            
         }
   
 

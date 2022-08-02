@@ -360,13 +360,7 @@ namespace PIERStory {
                 SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6444"), SystemListener.main.introduceStory.title), null, null, true, false);
                 
                 // 원데이 패스 refresh 처리 
-                if(GameManager.main != null) {
-                    EpisodeEndControls.OnPassPurchase?.Invoke();
-                }
-                
-                if(StoryLobbyManager.main != null) {
-                    StoryLobbyMain.OnPassPurchase?.Invoke();
-                }
+                CallPassButtonsRefresh();
             }
             else if (__productID == "ifyou_pass") {
                 
@@ -377,6 +371,9 @@ namespace PIERStory {
                 // 6441
                 // 이프유 패스를 구매했어요!
                 SystemManager.ShowSystemPopupLocalize("6441", null, null, true, false); 
+                
+                CallPassButtonsRefresh();
+                
             }
             else if (__productID.Contains("story_pack")) {
                 
@@ -390,19 +387,28 @@ namespace PIERStory {
                 // 프리미엄 패스 보유중으로 변경 
                 SystemListener.main.introduceStory.hasPremiumPass = true;
                 
-                
-                if(GameManager.main != null) {
-                    EpisodeEndControls.OnPassPurchase?.Invoke();
-                }
-                
-                if(StoryLobbyManager.main != null) {
-                    StoryLobbyMain.OnPassPurchase?.Invoke();
-                }
+                CallPassButtonsRefresh();
+
             }
             else { // 일반 구매 
                 SystemManager.ShowSystemPopupLocalize("6113", null, null, true, false);  // 일반구매     
             }
 
+        }
+        
+        void CallPassButtonsRefresh() {
+            
+            Debug.Log("CallPassButtonsRefresh");
+            
+            if(GameManager.main != null) {
+                EpisodeEndControls.OnPassPurchase?.Invoke();
+            }
+            
+            if(StoryLobbyManager.main != null) {
+                StoryLobbyMain.OnPassPurchase?.Invoke();
+            }
+            
+            ViewIntroduce.OnPassPurchase?.Invoke();
         }
         
         

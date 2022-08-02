@@ -119,6 +119,7 @@ namespace PIERStory {
             summary = SystemManager.GetJsonNodeString(originData, LobbyConst.SUMMARY);
             writer = SystemManager.GetJsonNodeString(originData, LobbyConst.WRITER); 
             original = SystemManager.GetJsonNodeString(originData, LobbyConst.ORIGINAL); 
+            translator = SystemManager.GetJsonNodeString(originData, "translator"); 
             
             sortKey = SystemManager.GetJsonNodeInt(originData, LobbyConst.SORTKEY); 
             bubbleSetID = SystemManager.GetJsonNodeString(originData, LobbyConst.STORY_BUBBLE_ID); 

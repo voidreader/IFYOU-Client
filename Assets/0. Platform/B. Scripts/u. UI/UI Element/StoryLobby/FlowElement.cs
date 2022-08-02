@@ -339,6 +339,10 @@ namespace PIERStory {
                 isOpenTimeCountable = true; // 카운팅 가능한상태 
             }
             
+            // 패스 보유 중인지 체크한다.
+            if(UserManager.main.ifyouPassDay > 0 || StoryManager.main.CurrentProject.hasPremiumPass || StoryManager.main.CurrentProject.IsValidOnedayPass())
+                isOpenTimeCountable = false; // 대기시간 없다.
+            
             // isOpenTimeCountable의 반대 값을 전달 
             // 시간 카운팅 = 열리지 않았음
             RefreshOpenTimeState(!isOpenTimeCountable);

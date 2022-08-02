@@ -12,32 +12,32 @@ namespace PIERStory
     {
         
         public string productID = string.Empty; // 마켓 등록 ID
-        GamebaseResponse.Purchase.PurchasableItem gamebaseItem = null; // 게임베이스 기준정보 
+        public GamebaseResponse.Purchase.PurchasableItem gamebaseItem = null; // 게임베이스 기준정보 
         
         [SerializeField] ImageRequireDownload bannerImage; // 배너 이미지 
         [SerializeField] GameObject soldOut; // 판매완료 (한정품목)
         JsonData productMasterJSON; // 마스터 
         JsonData productDetailJSON; // 디테일
         
-        [SerializeField] TextMeshProUGUI textPrice; // 가격 
-        [SerializeField] string productMasterID = string.Empty; // 마스터 ID
-        [SerializeField] bool hasPurchaseHistory = false; // 구매 기록 
+        public TextMeshProUGUI textPrice; // 가격 
+        public string productMasterID = string.Empty; // 마스터 ID
+        public bool hasPurchaseHistory = false; // 구매 기록 
         
-        [SerializeField] string bannerURL = string.Empty; // 배너 URL
-        [SerializeField] string bannerKey = string.Empty; // 배너 Key
+        public string bannerURL = string.Empty; // 배너 URL
+        public string bannerKey = string.Empty; // 배너 Key
         
-        [SerializeField] string detailURL = string.Empty; // 디테일 이미지 
-        [SerializeField] string detailKey = string.Empty; // 
+        public string detailURL = string.Empty; // 디테일 이미지 
+        public string detailKey = string.Empty; // 
         
-        [SerializeField] int maxCount = 0; // 구매 가능 횟수
-        [SerializeField] int currentPurchaseCount = 0; // 현재 패키지 구매 횟수
+        public int maxCount = 0; // 구매 가능 횟수
+        public int currentPurchaseCount = 0; // 현재 패키지 구매 횟수
         
         
         /// <summary>
         /// 패키지 초기화
         /// </summary>
         /// <param name="__productID"></param>        
-        public void InitPackage(string __productID, JsonData __productMasterJSON) {
+        public virtual void InitPackage(string __productID, JsonData __productMasterJSON) {
             this.gameObject.SetActive(true);
             
             soldOut.SetActive(false);

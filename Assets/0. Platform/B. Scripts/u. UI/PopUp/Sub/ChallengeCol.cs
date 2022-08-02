@@ -184,6 +184,8 @@ namespace PIERStory {
             // 현재 컬럼 연출처리
             ActivateEffect();
             
+            UserManager.main.SetRefreshInfo(result);
+            
         } // ? OnReceiveReward
         
         

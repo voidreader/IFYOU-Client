@@ -68,7 +68,9 @@ namespace PIERStory {
         public TextMeshProUGUI priceText;
         public TextMeshProUGUI salePriceText; // 세일 가격 
         public ImageRequireDownload freepassBadge;
-        int saleSelectionPrice = 0;
+        
+        [SerializeField] int originPrice = 0;
+        [SerializeField] int saleSelectionPrice = 0;
 
         [SerializeField] bool isLock = false;       // 잠금 여부 
         [SerializeField] bool isFilling = false;    // 채워짐 
@@ -163,6 +165,7 @@ namespace PIERStory {
             selectionText = scriptRow.script_data;
             requisite = scriptRow.requisite;
             targetSceneID = scriptRow.target_scene_id;
+            originPrice = scriptRow.selectionPrice;
 
             if (selectionText.Contains("\\"))
                 selectionText = selectionText.Replace("\\", "");
@@ -189,6 +192,8 @@ namespace PIERStory {
                 // 프리패스 보유 여부
                 if (UserManager.main.HasProjectFreepass())
                 {
+                    Debug.Log("## PremiumPass Setting in IFYouGameSelectionCtrl");
+                    
                     selectionPrice.SetActive(false);
                     freepassBadge.gameObject.SetActive(true);
                     

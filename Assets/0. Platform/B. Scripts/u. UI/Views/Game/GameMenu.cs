@@ -74,10 +74,18 @@ namespace PIERStory
         /// <param name="skipable">스킵이 가능한지의 여부</param>
         public void ChangeSkipIcon(bool skipable)
         {
-            if (skipable)
+            
+            if(UserManager.main.HasProjectFreepass()) {
                 skipButtonIcon.sprite = ableSkip;
-            else
-                skipButtonIcon.sprite = disableSkip;
+            }
+            else {
+                if (skipable)
+                    skipButtonIcon.sprite = ableSkip;
+                else
+                    skipButtonIcon.sprite = disableSkip;    
+            }
+            
+            
 
             skipButtonIcon.SetNativeSize();
         }
@@ -108,9 +116,14 @@ namespace PIERStory
         {
             // 스킵이 가능하지 않으면 아무것도 실행하지 않는다.
             // 어드민 유저도 아니고 스킵도 가능하지 않으면 return. 
-            if (!GameManager.main.skipable && !UserManager.main.CheckAdminUser() ) {
-                // OnClickBlockSkip();
-                return;
+            
+            // 2022.08.01 프리미엄 패스 유저는 자유로운 스킵이 가능.
+            if(!UserManager.main.HasProjectFreepass()) {
+            
+                if (!GameManager.main.skipable && !UserManager.main.CheckAdminUser() ) {
+                    // OnClickBlockSkip();
+                    return;
+                }
             }
 
 

@@ -1012,6 +1012,7 @@ MonoBehaviour:
     writer: 
     summary: 
     original: 
+    translator: 
     sortKey: 0
     bubbleSetID: 
     isCredit: 0
@@ -1025,10 +1026,14 @@ MonoBehaviour:
     episodeFinishImageKey: 
     premiumPassURL: 
     premiumPassKey: 
+    premiumBadgeURL: 
+    premiumBadgeKey: 
     categoryImageURL: 
     categoryImageKey: 
     coinBannerUrl: 
     coinBannerKey: 
+    introduceFullImageURL: 
+    introduceFullImageKey: 
     isLock: 0
     colorCode: 000000
     projectProgress: 0
@@ -1046,6 +1051,9 @@ MonoBehaviour:
     arrHashtag: []
     onedayExpireDate: 
     onedayPassTick: 0
+    hasPremiumPass: 0
+    premiumProductID: 
+    premiumSaleID: 
   episodeImage: {fileID: 669336049437141916}
   episodeEndControls: {fileID: 280537779323609733}
 --- !u!1 &8657830054245747050
@@ -1131,13 +1139,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3427907369738015405}
     m_Modifications:
+    - target: {fileID: 2268345309633913264, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4133412268086808709, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6125200692612866328, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
       propertyPath: m_Name
       value: EpisodeEndControls
-      objectReference: {fileID: 0}
-    - target: {fileID: 6125200692612866328, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6125200692612866329, guid: 4c82535f34cf48447b5e9998d862e692, type: 3}
       propertyPath: m_Pivot.x

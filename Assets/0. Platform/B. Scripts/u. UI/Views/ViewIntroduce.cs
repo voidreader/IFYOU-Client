@@ -125,7 +125,7 @@ namespace PIERStory {
             string translateText = string.Empty;
             
             if(!string.IsNullOrEmpty(introduceStory.translator)) {
-                translateText = SystemManager.GetLocalizedText("6450") + " / " + introduceStory.translator;
+                translateText = SystemManager.GetLocalizedText("6450") + " : " + introduceStory.translator;
             }
             
             string productInfoText = string.IsNullOrEmpty(translateText) ? string.Format("{0}\n{1}", originText, productText) : string.Format("{0}\n{1}\n{2}", originText, productText, translateText);

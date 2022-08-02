@@ -56,11 +56,11 @@ namespace PIERStory {
         public void OnClickPurchase() {
             
             if(!isPurchasable) {
-                Debug.LogError("It's not purchasable oneday pass");
+                Debug.LogError("It's not purchasable Premium pass");
                 return;
             }
             
-            // BillingManager.main.RequestPurchaseGamebase("oneday_pass", StoryManager.main.CurrentProjectID);
+            BillingManager.main.RequestPurchaseGamebase(currentStory.premiumSaleID, currentStory.projectID);
         }
     }
 }

@@ -45,6 +45,7 @@ namespace PIERStory {
         [SerializeField] GameObject introduceStory;
         public ViewIntroduce introduceBox;
         public GameObject homeButton;
+        public GameObject passGroup;
 
         
         public override void Show()
@@ -323,6 +324,8 @@ namespace PIERStory {
 
             skipButton.SetActive(false);
             homeButton.SetActive(true);
+            
+            passGroup.SetActive(false);
 
             // 인트로 완료
             UserManager.main.UpdateIntroComplete();

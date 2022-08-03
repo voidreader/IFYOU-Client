@@ -258,13 +258,13 @@ namespace PIERStory
         private void OnDestroy()
         {
             // * 메모리 누수를 알아보기 위해 FindObject 검사 실행. 
-            AudioClip[] audioClips = FindObjectsOfType<AudioClip>(true); // 정리되지 않음
+            // AudioClip[] audioClips = FindObjectsOfType<AudioClip>(true); // 정리되지 않음
             Texture2D[] texture2Ds = FindObjectsOfType<Texture2D>(true); // 정리되지 않음
 
             for (int i = 0; i < SoundGroup.Length; i++)
                 SoundGroup[i].DestroyAudioClip();
 
-            Debug.Log(string.Format("[{0}] audioClips are destroyed?", audioClips.Length));
+            // Debug.Log(string.Format("[{0}] audioClips are destroyed?", audioClips.Length));
             
             for (int i = 0; i < texture2Ds.Length; i++)
                 Destroy(texture2Ds[i]);

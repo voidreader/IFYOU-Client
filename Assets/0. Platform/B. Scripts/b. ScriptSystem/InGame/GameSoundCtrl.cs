@@ -153,8 +153,13 @@ namespace PIERStory
             if (DictSound.Count == 0)
                 return;
 
-            foreach (string key in DictSound.Keys)
-                DestroyImmediate(DictSound[key].audioClip, true);
+            foreach (string key in DictSound.Keys) {
+                
+                if(DictSound[key].isAddressable)
+                    DictSound[key].ReleaseClip();
+                else    
+                    DestroyImmediate(DictSound[key].audioClip, true);
+            }
 
             DictSound.Clear();
         }

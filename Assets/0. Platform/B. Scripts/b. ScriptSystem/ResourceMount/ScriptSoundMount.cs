@@ -214,6 +214,18 @@ namespace PIERStory
             isMounted = true;
             OnMountCompleted();
         }
+        
+        public void ReleaseClip() {
+            try {
+                if(isAddressable && audioClip != null) {
+                    Addressables.Release(mountedAddressable);
+                }
+            }
+            catch {
+                return;
+            }
+            
+        }
     }
 
 }

@@ -51,6 +51,11 @@ namespace PIERStory {
             
             currentStory = SystemListener.main.introduceStory; // 리스너에서 받아온다. 
             
+            if(StoryLobbyManager.main != null || GameManager.main != null) 
+                currentStory = StoryManager.main.CurrentProject;
+            
+            
+            
             SystemManager.SetText(textTitle, currentStory.title); // 타이틀 
             
             

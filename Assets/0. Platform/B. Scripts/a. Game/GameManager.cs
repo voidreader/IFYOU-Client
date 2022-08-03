@@ -2032,13 +2032,15 @@ namespace PIERStory
             #endregion
             
             // * 3. 미션 해금
+            Debug.Log("### 미션 해금 체크 시작 ###");
             UserManager.main.CompleteMissionByEpisode(StoryManager.main.CurrentEpisodeID);
             yield return new WaitForSeconds(0.1f);
             
             // * 첫 클리어 보상 
             #region 첫 클리어 보상 
-            
+            Debug.Log("### 첫 클리어 보상 체크 시작 ###");
             if(hasFirstClearReward) {
+                
                 // 최초 보상 있으면 팝업 호출
                 Debug.Log(">> First Reward exists : " + JsonMapper.ToStringUnicode(UserManager.main.GetNodeFirstClearResult()));
                 

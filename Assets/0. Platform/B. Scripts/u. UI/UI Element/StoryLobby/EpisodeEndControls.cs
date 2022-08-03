@@ -53,6 +53,7 @@ namespace PIERStory {
 
             // 엔딩에 도달한 경우 추가 로직 (엔딩을 플레이 하지는 않았음)
             if (currentEpisodeData.episodeType == EpisodeType.Ending && !UserManager.main.CheckReachFinal()) {
+                Debug.Log("엔딩에 도달한 경우 추가 로직 (엔딩을 플레이 하지는 않았음)");
                 SetEndingNotification();
 
                 // 다음으로 이어질 화가 히든엔딩이고, 이번에 해금되는 것이라면? 업적 통신!
@@ -76,7 +77,7 @@ namespace PIERStory {
                         break;
                     }
                 }
-                return;
+                // return;
             }
             
             StartCoroutine(RoutinePostEpisodeEnd());
@@ -85,25 +86,36 @@ namespace PIERStory {
         }
         
         IEnumerator RoutinePostEpisodeEnd() {
+            
+            Debug.Log("RoutinePostEpisodeEnd #1");
+            
             yield return new WaitForSeconds(0.2f);
             
             // 다음 에피소드가 없으면 더이상 아래 로직을 실행하지 않음 
             if(UserManager.main.CheckReachFinal())
                 yield break;
             
+            Debug.Log("RoutinePostEpisodeEnd #2");
+            
             // 활성화된 창이 있으면 대기한다. 
             while(PopupManager.main.GetFrontActivePopup() != null)
                 yield return new WaitForSeconds(0.1f);
+                
+            Debug.Log("RoutinePostEpisodeEnd #3");
             
             // 통신 완료되길 기다린다. 
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             yield return new WaitForSeconds(0.1f);
+            
+            Debug.Log("RoutinePostEpisodeEnd #4");
                 
             // 다음 오픈되는 에피소드가 연재작이라 대기해야되는 경우. 
             if(isOpenTimeCountable && currentEpisodeData.isSerial) {
                 NetworkLoader.main.RequestRecommedStory();
                 yield break;
             }
+            
+            Debug.Log("RoutinePostEpisodeEnd #5");
                 
                 
             // 대기 중이거나, 연재 작품은 튜토리얼 띄우지 않음. 

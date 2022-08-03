@@ -32,6 +32,9 @@ namespace PIERStory {
             // 텍스트 세팅 
           
             currentStory = SystemListener.main.introduceStory; // 리스너에서 받아온다. 
+            if(StoryLobbyManager.main != null || GameManager.main != null) 
+                currentStory = StoryManager.main.CurrentProject;            
+            
             // 게임베이스 아이템 정보 
             try {
                 gamebaseItem = BillingManager.main.GetGamebasePurchaseItem(currentStory.premiumSaleID); // 연결된 상품ID로 조회한다. 

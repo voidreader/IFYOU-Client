@@ -20,6 +20,7 @@ namespace PIERStory
         [SerializeField] string currencyName = string.Empty;
         [SerializeField] string currencyURL = string.Empty;
         [SerializeField] string currencyKey = string.Empty;
+        [SerializeField] string contents = string.Empty; // 컨텐츠 
         [SerializeField] string projectTitle = string.Empty; // 연결 프로젝트 타이틀
         
         
@@ -42,6 +43,9 @@ namespace PIERStory
             mailType = SystemManager.GetJsonNodeString(__j, "mail_type");
             currency = SystemManager.GetJsonNodeString(__j, LobbyConst.NODE_CURRENCY);
             quantity = SystemManager.GetJsonNodeString(__j, CommonConst.NODE_QUANTITY);
+            contents = SystemManager.GetJsonNodeString(__j, "contents");
+            
+            
             SystemManager.SetText(mailTitle, SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, MAIL_TYPE_TEXTID)));
             
             hour = int.Parse(SystemManager.GetJsonNodeString(__j, REMAIN_HOURS));
@@ -92,6 +96,10 @@ namespace PIERStory
                 
                 SystemManager.SetLocalizedText(mailContent, "80083");
             }
+            else if(mailType == "daily_ifyou_pass") {
+                SystemManager.SetText(mailTitle, string.Format(SystemManager.GetLocalizedText(SystemManager.GetJsonNodeString(__j, MAIL_TYPE_TEXTID)), contents));
+            }
+            
 
             int day = hour / 24, h = hour % 24;
 

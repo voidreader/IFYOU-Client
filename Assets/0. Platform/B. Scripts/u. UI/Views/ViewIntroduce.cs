@@ -70,7 +70,7 @@ namespace PIERStory {
         public StoryData introduceStory;
         
         private void Start() {
-            OnPassPurchase = InitPass;
+            
         }
         
         public override void OnView() {
@@ -79,7 +79,9 @@ namespace PIERStory {
         
         public override void OnStartView() {
             base.OnStartView();
-        
+            OnPassPurchase = InitPass;
+            
+            
             textRecommend.gameObject.SetActive(false);    
             SetInfo();
             
@@ -230,15 +232,21 @@ namespace PIERStory {
         /// </summary>
         void InitPass() {
             
-            if(this.gameObject == null || !this.gameObject.activeSelf)
-                return;
-            
-            premiumPassButton.SetPass(SystemListener.main.introduceStory);
-            onedayPassButton.SetPass(SystemListener.main.introduceStory);
-            
-            // 프리미엄 패스를 구매한 경우 원데이 패스 버튼을 보여줄 필요가 없다. 
-            if( !introduceStory.IsValidOnedayPass() && introduceStory.hasPremiumPass )
-                onedayPassButton.gameObject.SetActive(false);
+            try {
+                if(this.gameObject == null || !this.gameObject.activeSelf)
+                    return;
+                
+                premiumPassButton.SetPass(SystemListener.main.introduceStory);
+                onedayPassButton.SetPass(SystemListener.main.introduceStory);
+                
+                // 프리미엄 패스를 구매한 경우 원데이 패스 버튼을 보여줄 필요가 없다. 
+                if( !introduceStory.IsValidOnedayPass() && introduceStory.hasPremiumPass )
+                    onedayPassButton.gameObject.SetActive(false);
+            }
+            catch(System.Exception e) {
+                Debug.LogError(e.StackTrace);
+                NetworkLoader.main.ReportRequestError(e.StackTrace, "ViewIntroduce.InitPass");
+            }
         }
 
 

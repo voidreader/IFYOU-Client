@@ -20,6 +20,8 @@ namespace PIERStory {
                 
         public void SetEndingNotification(EpisodeData __target, Action __click) {
             
+            Debug.Log("SetEndingNotification : " + __target.episodeTitle);
+            
             this.gameObject.SetActive(true);
             
             targetEpisode = __target;

@@ -227,6 +227,9 @@ namespace PIERStory
 
             for (int i = 0; i < BillingManager.main.productMasterJSON.Count; i++)
             {
+                if(SystemManager.GetJsonNodeInt(BillingManager.main.productMasterJSON[i], "is_public") == 4)
+                    continue;
+                
                 // 상품이 상점만 공개면 넘어가고, 해당 상품이 아니어도 넘어간다
                 if (SystemManager.GetJsonNodeInt(BillingManager.main.productMasterJSON[i], "is_public") == 1 ||
                     !SystemManager.GetJsonNodeString(BillingManager.main.productMasterJSON[i], "product_id").Contains(productionType))

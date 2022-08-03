@@ -289,6 +289,10 @@ namespace PIERStory {
             if(result.ContainsKey("userPurchaseHistory"))
                 userPurchaseHistoryJSON = result["userPurchaseHistory"];
                 
+            // 일반 내역만 받아서 쓴다. 
+            if(userPurchaseHistoryJSON != null && userPurchaseHistoryJSON.ContainsKey("normal"))
+                userPurchaseHistoryJSON = userPurchaseHistoryJSON["normal"];                
+                
             // * 2022.05.24 allpass_expire_tick 올패스 만료시간 갱신 
             if(result.ContainsKey("allpass_expire_tick")) {
                 UserManager.main.SetAllpassExpire(SystemManager.GetJsonNodeLong(result, "allpass_expire_tick"));
@@ -580,10 +584,20 @@ namespace PIERStory {
             if(userPurchaseHistoryJSON == null)
                 return 0;
             
-            for(int i=0; i<userPurchaseHistoryJSON.Count;i++) {
-                if(SystemManager.GetJsonNodeString(userPurchaseHistoryJSON[i], "product_master_id") == __masterID)
-                    purchaseCount++;
-                    
+            
+            try {
+                for(int i=0; i<userPurchaseHistoryJSON.Count;i++) {
+                    if(SystemManager.GetJsonNodeString(userPurchaseHistoryJSON[i], "product_master_id") == __masterID)
+                        purchaseCount++;
+                        
+                }
+            }
+            catch {
+                
+                NetworkLoader.main.ReportRequestError(__masterID, "CheckProductPurchaseCount");
+                purchaseCount = 0;
+                
+                Debug.LogError("Error in CheckProductPurchaseCount : " + __masterID);
             }
             
             return purchaseCount;

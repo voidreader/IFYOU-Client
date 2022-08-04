@@ -158,7 +158,7 @@ namespace PIERStory
             if (UserManager.main.tutorialStep == 1 && !UserManager.main.tutorialClear)
                 UserManager.main.UpdateTutorialStep(1, 0, CallbackStartTutorial);
 
-            JsonData projectCurrent = UserManager.main.GetUserProjectRegularEpisodeCurrent();
+            
 
             // 리뷰 팝업 위치 
             if(UserManager.main.gameComplete)
@@ -460,6 +460,8 @@ namespace PIERStory
         /// </summary>
         void DecorateSetting()
         {
+            Debug.Log("******* DecorateSetting *******");
+            
             liveModels.Clear();
             listModelMounts.Clear();
 
@@ -487,6 +489,7 @@ namespace PIERStory
                         break;
 
                     case LobbyConst.NODE_BUBBLE:         // 대사
+                        Debug.Log("** DecorateSetting Bubble");
                         BubbleElement bubble = Instantiate(bubbleObjectPrefab, bubbleStickerParent).GetComponent<BubbleElement>();
                         bubble.SetBubbleElement(storyProfile[i], BubbleLoadComplete);
                         decoObjects.Add(bubble.gameObject);

@@ -156,13 +156,20 @@ namespace PIERStory {
                 
                 Debug.Log(">> introduceStory.isSerial : " + introduceStory.listSerialDays.Count);
                 
+                updateDate_1.SetActive(false);
+                updateDate_2.SetActive(false);
+                
                 SystemManager.SetText(textSerialDay, string.Format(SystemManager.GetLocalizedText("5184"), introduceStory.GetSeiralDay()));
                 
-                if(introduceStory.listSerialDays.Count > 0)
+                if(introduceStory.listSerialDays.Count > 0) {
+                    updateDate_1.SetActive(true);
                     SystemManager.SetText(updateDateText_1, introduceStory.listSerialDays[0]);
+                }
                 
-                if(introduceStory.listSerialDays.Count > 1)
+                if(introduceStory.listSerialDays.Count > 1) {
+                    updateDate_2.SetActive(true);
                     SystemManager.SetText(updateDateText_2, introduceStory.listSerialDays[1]);
+                }
                 
             }
 

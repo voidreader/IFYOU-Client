@@ -483,6 +483,9 @@ namespace PIERStory
             CurrentProject = __storyData;
             CurrentProjectID = CurrentProject.projectID;
             CurrentProjectTitle = CurrentProject.title;
+            
+            if(SystemListener.main != null)
+                SystemListener.main.introduceStory = CurrentProject;
 
 
             // 말풍선 세트 ID 

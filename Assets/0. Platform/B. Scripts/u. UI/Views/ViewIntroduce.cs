@@ -97,7 +97,7 @@ namespace PIERStory {
 
         public void SetInfo(StoryData introduceStoryData = null) {
             
-            introduceStory = introduceStoryData == null ? SystemListener.main.introduceStory : introduceStoryData;
+            introduceStory = introduceStoryData == null || !introduceStoryData.isValidData ? SystemListener.main.introduceStory : introduceStoryData;
             
             if(string.IsNullOrEmpty(introduceStory.projectID))
                 return;

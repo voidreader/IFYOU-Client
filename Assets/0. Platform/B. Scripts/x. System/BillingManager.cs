@@ -301,7 +301,13 @@ namespace PIERStory {
             // * 2022.07.29 원데이 패스
             if(result.ContainsKey("oneday_pass_expire_tick") && result.ContainsKey("oneday_pass_expire")) {
                 // 하나만 고치면 연결된 나머지도 갱신이 되는걸까? 
-                SystemListener.main.introduceStory.SetOnedayPassTick(SystemManager.GetJsonNodeString(result, "oneday_pass_expire"),  SystemManager.GetJsonNodeLong(result, "oneday_pass_expire_tick"));
+                if(GameManager.main != null || StoryLobbyManager.main != null) {
+                    StoryManager.main.CurrentProject.SetOnedayPassTick(SystemManager.GetJsonNodeString(result, "oneday_pass_expire"),  SystemManager.GetJsonNodeLong(result, "oneday_pass_expire_tick"));
+                }
+                else { // 메인에서 구매 
+                    SystemListener.main.introduceStory.SetOnedayPassTick(SystemManager.GetJsonNodeString(result, "oneday_pass_expire"),  SystemManager.GetJsonNodeLong(result, "oneday_pass_expire_tick"));
+                }                
+                
             }
             
             // 재화 바로 지급으로 변경됨(2022.06.20)
@@ -319,7 +325,7 @@ namespace PIERStory {
             
             // 구매한 상품 ID
             string purchasedProductID = SystemManager.GetJsonNodeString(result, "product_id");
-
+            
             StartCoroutine(DelayShowBillingCompletePopup(purchasedProductID));
         }
         
@@ -361,7 +367,14 @@ namespace PIERStory {
             {
                 Debug.Log("Oneday purchased <<<<<< ");
                 
-                SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6444"), SystemListener.main.introduceStory.title), null, null, true, false);
+                if(GameManager.main != null || StoryLobbyManager.main != null) {
+                    SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6444"), StoryManager.main.CurrentProject.title), null, null, true, false);    
+                }
+                else { // 메인에서 구매 
+                    SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6444"), SystemListener.main.introduceStory.title), null, null, true, false);
+                }
+                
+                
                 
                 // 원데이 패스 refresh 처리 
                 CallPassButtonsRefresh();
@@ -383,13 +396,17 @@ namespace PIERStory {
                 
                 Debug.Log("Premiumpass purchased <<<<<< ");
                 
-                Debug.Log(string.Format("Introduce : [{0}], Current : [{1}]", SystemListener.main.introduceStory.projectID, StoryManager.main.CurrentProject.projectID));
-                
-
-                SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6445"), SystemListener.main.introduceStory.title), null, null, true, false);
-                
-                // 프리미엄 패스 보유중으로 변경 
-                SystemListener.main.introduceStory.hasPremiumPass = true;
+                // Debug.Log(string.Format("Introduce : [{0}], Current : [{1}]", SystemListener.main.introduceStory.projectID, StoryManager.main.CurrentProject.projectID));
+                // 여기 수정!! 
+                // 프리미엄 패스 보유중으로 변경                 
+                if(GameManager.main != null || StoryLobbyManager.main != null) {
+                    SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6445"), StoryManager.main.CurrentProject.title), null, null, true, false);    
+                    StoryManager.main.CurrentProject.hasPremiumPass = true;
+                }
+                else { // 메인에서 구매 
+                    SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6445"), SystemListener.main.introduceStory.title), null, null, true, false);    
+                    SystemListener.main.introduceStory.hasPremiumPass = true;
+                }
                 
                 CallPassButtonsRefresh();
 
@@ -412,7 +429,8 @@ namespace PIERStory {
                 StoryLobbyMain.OnPassPurchase?.Invoke();
             }
             
-            ViewIntroduce.OnPassPurchase?.Invoke();
+            if(LobbyManager.main != null)
+                ViewIntroduce.OnPassPurchase?.Invoke();
         }
         
         

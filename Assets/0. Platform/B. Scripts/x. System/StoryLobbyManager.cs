@@ -69,6 +69,7 @@ namespace PIERStory
             SystemManager.SetBlockBackButton(false);
 
             Signal.Send(LobbyConst.STREAM_IFYOU, "storyLobbyLoadComplete", string.Empty);
+
         }
 
 

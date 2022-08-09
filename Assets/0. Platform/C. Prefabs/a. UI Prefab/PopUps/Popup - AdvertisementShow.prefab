@@ -1617,6 +1617,11 @@ MonoBehaviour:
       isUnlock: 0
       isSerial: 0
       debugPublishData: 
+      unlockEpisodes: 
+      unlockScenes: 
+      arrUnlockEpisode: []
+      arrUnlockScene: []
+      isClear: 0
     imageURL: 
     imageKey: 
     isConfirm: 1
@@ -2089,7 +2094,8 @@ MonoBehaviour:
   _text: {fileID: 3163246231526795628}
   _localizedText: 
   isException: 0
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &4529824834235098703
 GameObject:
   m_ObjectHideFlags: 0
@@ -2318,7 +2324,8 @@ MonoBehaviour:
   _text: {fileID: 4126624781814531818}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &5756404171391605376
 GameObject:
   m_ObjectHideFlags: 0
@@ -2882,7 +2889,8 @@ MonoBehaviour:
   _text: {fileID: 6666238703334338101}
   _localizedText: 
   isException: 0
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1001 &6625089177828199327
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3385,7 +3393,8 @@ MonoBehaviour:
   _text: {fileID: 3844834692136465109}
   _localizedText: 
   isException: 0
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!114 &7102740589127654681 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4135161452532061830, guid: 90532f85fbf13d843b09c54d8d7e9acd, type: 3}
@@ -3508,6 +3517,10 @@ PrefabInstance:
     - target: {fileID: 4135161452532061830, guid: 90532f85fbf13d843b09c54d8d7e9acd, type: 3}
       propertyPath: Behaviours.Behaviours.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4135161452532061830, guid: 90532f85fbf13d843b09c54d8d7e9acd, type: 3}
+      propertyPath: NormalState.StateEvent.EventName
+      value: Normal State
       objectReference: {fileID: 0}
     - target: {fileID: 4135161452532061830, guid: 90532f85fbf13d843b09c54d8d7e9acd, type: 3}
       propertyPath: Behaviours.Behaviours.Array.data[0].Enabled
@@ -3707,4 +3720,5 @@ MonoBehaviour:
   _text: {fileID: 1019632929251377835}
   _localizedText: 
   isException: 0
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 

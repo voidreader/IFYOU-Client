@@ -90,7 +90,7 @@ namespace PIERStory {
             
             
             // 코인 부족
-            if(!UserManager.main.CheckCoinProperty(20)) {
+            if(!UserManager.main.CheckCoinProperty(SystemManager.main.removeAdPrice)) {
                 
                 // SystemManager.ShowLobbySubmitPopup(SystemManager.GetLocalizedText("80013"));
                 SystemManager.ShowSimpleAlertLocalize("80013");

@@ -71,7 +71,8 @@ namespace PIERStory {
         public List<string> listSerialDays = new List<string>();
         
         
-        public int passPrice = 0; // 프리미엄 패스 프라이스 
+        public int passPrice = 0; // 프리미엄 패스 프라이스  (원가격)
+        public int discountPassPrice = 0; // 할인 패스 가격 
         public float passDiscount = 0.1f; // 프리이엄 패스 진행도에 따른 할인율 
 
         public bool isNotify = false;       // 작품 푸쉬 알림 설정
@@ -162,6 +163,7 @@ namespace PIERStory {
 
             // 프리미엄 패스 가격정보
             passPrice = SystemManager.GetJsonNodeInt(originData, "pass_price");
+            discountPassPrice = SystemManager.GetJsonNodeInt(originData, "discount_pass_price");
             passDiscount = SystemManager.GetJsonNodeFloat(originData, "pass_discount");
 
             isNotify = SystemManager.GetJsonNodeBool(originData, "is_notify");

@@ -297,7 +297,7 @@ namespace PIERStory
         
         
         /// <summary>
-        /// 프리패스 구매 처리 
+        /// 프리패스 구매 처리 (legacy 사용하지 않음)
         /// </summary>
         /// <param name="__freepassNo">timedeal ID</param>
         /// <param name="__originPrice">원 가격</param>
@@ -315,6 +315,21 @@ namespace PIERStory
                 sending["salePrice"] = __salePrice;
             
             sending["timedeal_id"] = __timeDealID;
+            sending[CommonConst.FUNC] = "purchasePremiumPass"; //  purchaseFreepass > purchasePremiumPass 변경 
+            
+            SendPost(UserManager.main.CallbackPurchaseFreepass, sending);
+        }
+        
+        /// <summary>
+        /// 프리미엄 패스 스타로 구매하기
+        /// </summary>
+        /// <param name="__projectID"></param>
+        /// <param name="__currentPrice"></param>
+        public void PurchasePremiumPassByStar(string __projectID, int __currentPrice) {
+            JsonData sending = new JsonData();
+            
+            sending[CommonConst.COL_PROJECT_ID] = __projectID;
+            sending["price"] = __currentPrice;
             sending[CommonConst.FUNC] = "purchasePremiumPass"; //  purchaseFreepass > purchasePremiumPass 변경 
             
             SendPost(UserManager.main.CallbackPurchaseFreepass, sending);

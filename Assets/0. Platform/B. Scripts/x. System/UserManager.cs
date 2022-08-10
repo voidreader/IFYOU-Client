@@ -2023,63 +2023,26 @@ namespace PIERStory
         /// <param name="res"></param>
         public void CallbackPurchaseFreepass(HTTPRequest req, HTTPResponse res)
         {
-
             if (!NetworkLoader.CheckResponseValidation(req, res))
             {
                 Debug.LogError("CallbackPurchaseFreepass");
                 return;
             }
-
+            
+            Debug.Log(string.Format("CallbackPurchaseFreepass [{0}]", res.DataAsText));
             JsonData result = JsonMapper.ToObject(res.DataAsText); // 결과 
-            Debug.Log(JsonMapper.ToStringUnicode(result));
+            // Debug.Log(JsonMapper.ToStringUnicode(result));
 
 
             // * bank 
             SetBankInfo(result);
 
-            // 작품에 진입한 상태에서만 아래 노드들 갱신처리 
-            if (!string.IsNullOrEmpty(StoryManager.main.CurrentProjectID))
-            {
-
-                // projectCurrent갱신
-                if (result.ContainsKey(NODE_PROJECT_CURRENT))
-                    SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);
-
-                // 에피소드 구매 기록 갱신 
-                if (result.ContainsKey(NODE_PURCHASE_HIST))
-                {
-                    SetNodeEpisodePurchaseHistory(result[NODE_PURCHASE_HIST]);
-                    StoryManager.main.RefreshRegularEpisodesPurchaseState();
-                }
-            }
-
-
             // 모든 팝업 비활성화 
             PopupManager.main.HideActivePopup();
 
-            // * 프리미엄 패스는 구매하면 여기저기 갱신해야될 화면이 많다.. 
-
-            // 콜백 처리 (상점)
-            OnFreepassPurchase?.Invoke();
-
-            // 게임플레이 도중에 구매했다면, EpisodeEndControls 갱신 
-            if (GameManager.main != null)
-            {
-                EpisodeEndControls.OnPassPurchase?.Invoke();
-            }
-
-            // 게임플레이 도중이 아니라면, ViewStory 쪽 갱신 
-            if (LobbyManager.main != null)
-            {
-                StoryLobbyMain.OnPassPurchase?.Invoke();
-                ViewMain.OnRefreshShopNewSign?.Invoke();
-
-                RequestUserGradeInfo(CallbackNewCompleteAchievement);
-                NetworkLoader.main.RequestIfyouplayList();
-            }
-
 
             // 이프유업적 프리패스 구매
+            /*
             NetworkLoader.main.RequestIFYOUAchievement(15, SystemManager.GetJsonNodeInt(result, CommonConst.COL_PROJECT_ID));
 
             // 6306
@@ -2087,6 +2050,31 @@ namespace PIERStory
                 SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6306"));
             else
                 SystemManager.ShowMessageAlert(string.Format(SystemManager.GetLocalizedText("80061"), StoryManager.main.CurrentProjectTitle));
+            */
+            
+            StartCoroutine(DelayRefreshPremiumPassStarPurchase());
+        }
+        
+        /// <summary>
+        /// 딜레이 갱신. 
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator DelayRefreshPremiumPassStarPurchase() {
+            yield return null;
+            yield return null;
+            yield return null;
+            
+            yield return new WaitForSeconds(0.1f);
+            if(GameManager.main != null || StoryLobbyManager.main != null) {
+                SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6445"), StoryManager.main.CurrentProject.title), null, null, true, false);    
+                StoryManager.main.CurrentProject.hasPremiumPass = true;
+            }
+            else { // 메인에서 구매 
+                SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6445"), SystemListener.main.introduceStory.title), null, null, true, false);    
+                SystemListener.main.introduceStory.hasPremiumPass = true;
+            }
+            
+            BillingManager.main.CallPassButtonsRefresh();            
         }
 
         /// <summary>

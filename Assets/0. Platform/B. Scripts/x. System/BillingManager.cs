@@ -417,7 +417,7 @@ namespace PIERStory {
 
         }
         
-        void CallPassButtonsRefresh() {
+        public void CallPassButtonsRefresh() {
             
             Debug.Log("CallPassButtonsRefresh");
             

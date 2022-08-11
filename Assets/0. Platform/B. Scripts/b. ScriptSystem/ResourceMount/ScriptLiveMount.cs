@@ -424,6 +424,11 @@ namespace PIERStory
             Debug.Log(">> ## InstantiateDownloadedCubismModel : " + liveName);
             
             string file_key = string.Empty;
+            
+            if(resourceData == null) {
+                SendFailMessage();
+                return;
+            }
 
             for (int i = 0; i < resourceData.Count; i++)
             {

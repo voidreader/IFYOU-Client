@@ -10,6 +10,9 @@ namespace PIERStory {
     {
         public TextMeshProUGUI textPrice;
         
+        public TextMeshProUGUI textOriginStarPrice; // 스타 판매 원가격
+        public TextMeshProUGUI textDiscountStarPrice; // 스타 판매 할인가격
+        public GameObject btnStarPurchase;
         
         public TextMeshProUGUI textTitle; // 타이틀 
         
@@ -44,6 +47,11 @@ namespace PIERStory {
             
             // 게임베이스 아이템 정보 
             try {
+                
+                // 스타 판매 가격 설정 
+                textOriginStarPrice.text = currentStory.passPrice.ToString();
+                textDiscountStarPrice.text = currentStory.discountPassPrice.ToString();
+                
                 gamebaseItem = BillingManager.main.GetGamebasePurchaseItem(currentStory.premiumSaleID); // 연결된 상품ID로 조회한다. 
                 textPrice.text = gamebaseItem.localizedPrice;
             }
@@ -52,7 +60,7 @@ namespace PIERStory {
                 textPrice.text = "ERROR";
                 Debug.Log("Windows standalone?");
                 
-                return;
+                // return;
             }
             
             // 구매 가능여부에 대한 체크 
@@ -62,6 +70,9 @@ namespace PIERStory {
             if(!isPurchasable) {
                 SystemManager.SetText(textPrice, SystemManager.GetLocalizedText("6464"));
             }
+            
+            
+            btnStarPurchase.SetActive(isPurchasable);
         }
         
         /// <summary>
@@ -91,6 +102,29 @@ namespace PIERStory {
             Debug.Log("OnClickPurchase Premium Challenge #2 :: " + currentStory.premiumSaleID);
             
             BillingManager.main.RequestPurchaseGamebase(currentStory.premiumSaleID, StoryManager.main.CurrentProjectID);
+        }
+        
+        /// <summary>
+        /// 스타로 구매 
+        /// </summary>
+        public void OnClickStarPurchase() {
+            
+            // 젬 보유 체크 
+            if(!UserManager.main.CheckGemProperty(currentStory.discountPassPrice)) {
+                
+                SystemManager.ShowLackOfCurrencyPopup(true, "6323", currentStory.discountPassPrice); // 부족하면 팝업 띄운다.
+                return;
+            }
+            
+            // SystemManager.ShowResourceConfirm(SystemManager.GetLocalizedText("6477"), )
+            // 물어보고 진행한다. 
+            SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6477"), currentStory.discountPassPrice), PurchasePremiumPassByStar, null);
+           
+        }
+        
+        void PurchasePremiumPassByStar() {
+            // 통신 처리 
+            NetworkLoader.main.PurchasePremiumPassByStar(currentStory.projectID, currentStory.discountPassPrice);
         }
         
         

@@ -932,7 +932,7 @@ namespace PIERStory
 
             while(isVibrate)
             {
-                Handheld.Vibrate();
+                // Handheld.Vibrate();
                 yield return new WaitForSeconds(1.2f);
             }    
         }

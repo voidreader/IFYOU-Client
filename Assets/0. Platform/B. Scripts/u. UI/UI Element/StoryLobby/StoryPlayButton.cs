@@ -91,7 +91,7 @@ namespace PIERStory {
             foregroundProgressor.gameObject.SetActive(true);
             premiumAura.gameObject.SetActive(false);
             
-            textPlay.text = "PLAY";
+            SystemManager.SetText(textPlay, "PLAY");
             
             // 그룹으로 나눴다..!
             groupOpen.SetActive(false);
@@ -120,7 +120,7 @@ namespace PIERStory {
                 }
                 else {
                     groupPlay.SetActive(true);
-                    textPlay.text = SystemManager.GetLocalizedText("5190");
+                    SystemManager.SetText(textPlay, SystemManager.GetLocalizedText("5190"));
                 }
                 
                 
@@ -134,7 +134,7 @@ namespace PIERStory {
                 
                 groupPlay.SetActive(true);
                 
-                textPlay.text = isResumePlay?SystemManager.GetLocalizedText("5005"):SystemManager.GetLocalizedText("5169");
+                SystemManager.SetText(textPlay, isResumePlay?SystemManager.GetLocalizedText("5005"):SystemManager.GetLocalizedText("5169"));
 
                 icon.sprite = spriteActiveIcon;
                 backgroundProgressor.sprite = spriteActiveBackgroundProgressor;
@@ -146,7 +146,7 @@ namespace PIERStory {
                 
                 groupPlay.SetActive(true);
                 
-                textPlay.text = isResumePlay?SystemManager.GetLocalizedText("5005"):SystemManager.GetLocalizedText("5169");
+                SystemManager.SetText(textPlay, isResumePlay?SystemManager.GetLocalizedText("5005"):SystemManager.GetLocalizedText("5169"));
                 
                 icon.sprite = spritePremuimIcon;
                 backgroundProgressor.sprite = spritePremiumBackgroundProgressor;

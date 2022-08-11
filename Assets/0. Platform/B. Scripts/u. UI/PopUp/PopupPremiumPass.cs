@@ -7,6 +7,8 @@ using TMPro;
 namespace PIERStory {
     public class PopupPremiumPass : PopupBase
     {
+        public GameObject btnStarPurchase;
+        
         public TextMeshProUGUI textPrice; // 인앱상품 가격
         public TextMeshProUGUI textOriginStarPrice; // 스타 판매 원가격
         public TextMeshProUGUI textDiscountStarPrice; // 스타 판매 할인가격
@@ -40,6 +42,7 @@ namespace PIERStory {
             // 게임베이스 아이템 정보 
             try {
                 gamebaseItem = BillingManager.main.GetGamebasePurchaseItem(currentStory.premiumSaleID); // 연결된 상품ID로 조회한다. 
+                // SystemManager.SetText(textPrice, gamebaseItem.localizedPrice);
                 textPrice.text = gamebaseItem.localizedPrice;
             }
             catch {
@@ -59,6 +62,8 @@ namespace PIERStory {
             if(!isPurchasable) {
                 SystemManager.SetText(textPrice, SystemManager.GetLocalizedText("6464"));
             }
+            
+            btnStarPurchase.SetActive(isPurchasable);
 
         }
                 
@@ -87,6 +92,11 @@ namespace PIERStory {
                 return;
             }
             
+            // 통신 처리 
+            SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6477"), currentStory.discountPassPrice), PurchasePremiumPassByStar, null);
+        }
+        
+        void PurchasePremiumPassByStar() {
             // 통신 처리 
             NetworkLoader.main.PurchasePremiumPassByStar(currentStory.projectID, currentStory.discountPassPrice);
         }

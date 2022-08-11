@@ -247,7 +247,7 @@ namespace PIERStory {
                 phone1.DOLocalMoveY(40, 1f).SetDelay(0.5f).SetEase(Ease.OutBack).OnComplete(()=> {
                     phone1MessageEffect.DOFade(1, 1f).SetLoops(-1, LoopType.Yoyo);
                     
-                    Handheld.Vibrate(); // 진동 
+                    // Handheld.Vibrate(); // 진동 
                     
                     textPhone1BottomMessage.gameObject.SetActive(true);
                     SystemManager.SetLocalizedText(textPhone1BottomMessage, "6292");

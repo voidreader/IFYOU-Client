@@ -1236,7 +1236,6 @@ GameObject:
   - component: {fileID: 6650770441661551094}
   - component: {fileID: 695592857587807121}
   - component: {fileID: 9142444036039977570}
-  - component: {fileID: 5434274755079852958}
   m_Layer: 5
   m_Name: textDiscountPrice
   m_TagString: Untagged
@@ -1286,7 +1285,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1361,23 +1360,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &5434274755079852958
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1383863505763034066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _text: {fileID: 9142444036039977570}
-  isException: 1
-  isAlignmentFix: 1
-  originText: 
-  originAlign: 2
 --- !u!1 &1489004797218385886
 GameObject:
   m_ObjectHideFlags: 0
@@ -3669,7 +3651,6 @@ GameObject:
   - component: {fileID: 6809562564753228063}
   - component: {fileID: 8075826265187946224}
   - component: {fileID: 106134303225158495}
-  - component: {fileID: 5335152209637009557}
   m_Layer: 5
   m_Name: textOriginPrice
   m_TagString: Untagged
@@ -3720,7 +3701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3795,23 +3776,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &5335152209637009557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6618906261358785195}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _text: {fileID: 106134303225158495}
-  isException: 1
-  isAlignmentFix: 1
-  originText: 
-  originAlign: 2
 --- !u!1 &6644386842130949348
 GameObject:
   m_ObjectHideFlags: 0
@@ -5895,7 +5859,7 @@ MonoBehaviour:
           m_Calls:
           - m_Target: {fileID: 7944519200829092869}
             m_TargetAssemblyTypeName: PIERStory.PopupPremiumPass, Assembly-CSharp
-            m_MethodName: OnClickPurchase
+            m_MethodName: OnClickStarPurchase
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
@@ -7439,7 +7403,10 @@ MonoBehaviour:
   isShow: 0
   isOnShow: 0
   isBlockBackButton: 0
+  btnStarPurchase: {fileID: 7320236462056203533}
   textPrice: {fileID: 6072029783677120280}
+  textOriginStarPrice: {fileID: 106134303225158495}
+  textDiscountStarPrice: {fileID: 9142444036039977570}
   textTitle: {fileID: 1754640980999971337}
   textRefund: {fileID: 7403820256035585270}
   storyImage: {fileID: 872160405419889766}

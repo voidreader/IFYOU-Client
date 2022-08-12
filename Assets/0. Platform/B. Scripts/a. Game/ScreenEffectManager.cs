@@ -92,7 +92,6 @@ namespace PIERStory
         float mainCamOriginSize = 0f, modelCamOriginSize = 0f;
 
         // 크레딧 엔딩 Y값
-        float endingGroupMove = 50f;
 
         [Space(20)]
         public SpriteRenderer bgTint;
@@ -105,6 +104,14 @@ namespace PIERStory
 
         public void Update()
         {
+            float winHeight = Screen.height;
+            float endingGroupMove;
+
+            if(winHeight <= 2000f)
+                endingGroupMove = 190f;
+            else
+                endingGroupMove = 160f;
+
             if(endingGroup.transform.position.y >= endingGroupMove)
             {
                 endingCredit.gameObject.SetActive(false);
@@ -1255,6 +1262,8 @@ namespace PIERStory
                     break;
 
                 case GameConst.KR_SCREEN_EFFECT_ENDING_CREDIT:
+                    float winHeight = Screen.height;
+
                     endingSet = endingCond.gameObject.GetComponent<GameManager>(); //게임 매니저를 불러온다.
                     endingSet.isWaitingScreenTouch = true; // 엔딩 크레딧이 나오는 동안에는 게임이 종료되지 않는다.
 
@@ -1264,7 +1273,12 @@ namespace PIERStory
                         endingSet.isThreadHold = true; // 처음이니까 터치 막아야 해.
                         
                     endingCredit.gameObject.SetActive(true);
-                    endingGroup.transform.DOMove(new Vector3(0, endingGroupMove), 60f).SetEase(Ease.Linear);
+
+                    if(winHeight <= 2000f)
+                        endingGroup.transform.DOMove(new Vector3(0, 190f), 128f).SetEase(Ease.Linear);
+                    else
+                        endingGroup.transform.DOMove(new Vector3(0, 160f), 128f).SetEase(Ease.Linear);
+                    
                     break;
                 /*
                 case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:

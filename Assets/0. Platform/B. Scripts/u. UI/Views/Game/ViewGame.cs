@@ -666,7 +666,7 @@ namespace PIERStory
                 if(SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR) { 
                     // 아랍어는 타이핑 안한다. 
                     flowTimeText.color = new Color(flowTimeText.color.r, flowTimeText.color.g, flowTimeText.color.b, 0);
-                    flowTimeText.text = labelText;
+                    SystemManager.SetText(flowTimeText, labelText);
                     flowTimeText.DOFade(1, 2); // 2초 페이드인 
                     yield return new WaitForSeconds(3); // 3초 대기 
                 }
@@ -1216,7 +1216,7 @@ namespace PIERStory
             // 투명도 0으로 만들어서 안보이게 하기
             placeTextBG.color = new Color(placeTextBG.color.r, placeTextBG.color.g, placeTextBG.color.b, 0f);
             episodeNum.color = new Color(episodeNum.color.r, episodeNum.color.g, episodeNum.color.b, 1f);
-            placeNameText.color = new Color(placeNameText.color.r, placeNameText.color.g, placeNameText.color.b, 1f);
+            placeNameText.color = new Color(placeNameText.color.r, placeNameText.color.g, placeNameText.color.b, 0);
 
 
             // 스킵인 경우 여길 아예 타지 맙시다
@@ -1229,14 +1229,15 @@ namespace PIERStory
             }));
 
             // 동일한 속도로 글자 타이핑 애니메이션
-            float animTime = 0.1f;
-
-            // 영어권에서는 2배 더 빠르게!
-            if (SystemManager.main.currentAppLanguageCode == CommonConst.COL_EN
-                 || SystemManager.main.currentAppLanguageCode == CommonConst.COL_AR)
-                animTime = 0.04f;
-
-            placeTag.Append(placeNameText.DOText(placeLabel, placeLabel.Length * animTime).SetEase(Ease.Linear));
+            // float animTime = 0.1f;
+              
+                
+            // 텍스트 할당하고 
+            SystemManager.SetText(placeNameText, placeLabel);
+            
+            // 2022.08.12 타이핑 로직 제거 
+            // placeTag.Append(placeNameText.DOText(placeLabel, placeLabel.Length * animTime).SetEase(Ease.Linear));    
+            
             placeTag.Append(placeTextBG.DOFade(0f, 2f).SetDelay(1f)).Join(episodeNum.DOFade(0f, 2f)).Join(placeNameText.DOFade(0f, 2f));
         }
 

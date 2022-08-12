@@ -219,12 +219,6 @@ namespace PIERStory {
                 Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
                 Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
 
-                // 게임 튜토리얼 도중에 나온거니까 다시 팝업 On
-                if (((UserManager.main.tutorialStep == 1 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 2 && !UserManager.main.tutorialClear)))
-                {
-                    PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TUTORIAL_MISSION_2);
-                    PopupManager.main.ShowPopup(p, false);
-                }
             }
         }
 

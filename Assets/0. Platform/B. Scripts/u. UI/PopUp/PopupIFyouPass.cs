@@ -21,39 +21,53 @@ namespace PIERStory {
         GamebaseResponse.Purchase.PurchasableItem gamebaseItem = null; // 게임베이스 기준정보 
         
         public override void Show() {
+            
+            
             if(isShow)
                 return;
             
             base.Show();
             
             
-            // 게임베이스 아이템 정보 
-            gamebaseItem = BillingManager.main.GetGamebasePurchaseItem("ifyou_pass");
+            try {
             
-            
-            // 텍스트 세팅 
-            textDirectStarQuantity.text = BillingManager.main.ifyouPassDirectStar.ToString();
-            textDailyStarQuantity.text = BillingManager.main.ifyouPassDailyStar.ToString();
-            
-            Debug.Log(string.Format(SystemManager.GetLocalizedText("6455"), BillingManager.main.ifyouPassChoiceSale));
-            
-            SystemManager.SetText(textChoicesSaleText, string.Format(SystemManager.GetLocalizedText("6455"), BillingManager.main.ifyouPassChoiceSale.ToString()));
-            textChoicesOff.text = BillingManager.main.ifyouPassChoiceSale.ToString() +"%\n<size=12>OFF</size>" ;
-            
-            
-            
-            // 이프유 패스 사용중일때, 아닐때의 분류하기. 
-            if(UserManager.main.CheckIFyouPassUsing()) {
-                textPrice.text = UserManager.main.GetIFyouPassExpireMessage();
-                if(UserManager.main.ifyouPassDay >= 30) // 마지막날은 재구매 가능함. 
-                    isPurchasable = true;
-                else
-                    isPurchasable = false;
+                // 게임베이스 아이템 정보 
+                gamebaseItem = BillingManager.main.GetGamebasePurchaseItem("ifyou_pass");
+                
+                
+                // 텍스트 세팅 
+                textDirectStarQuantity.text = BillingManager.main.ifyouPassDirectStar.ToString();
+                textDailyStarQuantity.text = BillingManager.main.ifyouPassDailyStar.ToString();
+                
+                Debug.Log(string.Format(SystemManager.GetLocalizedText("6455"), BillingManager.main.ifyouPassChoiceSale));
+                
+                SystemManager.SetText(textChoicesSaleText, string.Format(SystemManager.GetLocalizedText("6455"), BillingManager.main.ifyouPassChoiceSale.ToString()));
+                textChoicesOff.text = BillingManager.main.ifyouPassChoiceSale.ToString() +"%\n<size=12>OFF</size>" ;
             }
-            else {
-                // Price 표시
-                textPrice.text = gamebaseItem.localizedPrice;
-                isPurchasable = true;
+            catch (System.Exception e) {
+                NetworkLoader.main.ReportRequestError(e.StackTrace, "IFyouPass #1");
+                Debug.LogError(e.StackTrace);
+            }
+            
+            
+            try {
+                // 이프유 패스 사용중일때, 아닐때의 분류하기. 
+                if(UserManager.main.CheckIFyouPassUsing()) {
+                    textPrice.text = UserManager.main.GetIFyouPassExpireMessage();
+                    if(UserManager.main.ifyouPassDay >= 30) // 마지막날은 재구매 가능함. 
+                        isPurchasable = true;
+                    else
+                        isPurchasable = false;
+                }
+                else {
+                    // Price 표시
+                    textPrice.text = gamebaseItem.localizedPrice;
+                    isPurchasable = true;
+                }
+            }
+            catch (System.Exception e) {
+                NetworkLoader.main.ReportRequestError(e.StackTrace, "IFyouPass #2");
+                Debug.LogError(e.StackTrace);
             }
             
         }

@@ -497,23 +497,30 @@ namespace PIERStory
 
         void InitCooldownAdButton()
         {
-            if(!gameObject.activeSelf)
-                return;
-                
-            if(UserManager.main == null || UserManager.main.adCoolDownTimer == null)
-                return;
-            
             try {
+                if(this.gameObject == null)
+                    return;
+                
+                if(!this.gameObject.activeSelf)
+                    return;
+                    
+                    
+                    
+                if(UserManager.main == null || UserManager.main.adCoolDownTimer == null)
+                    return;
+                
+                
                 showCooldownAdButton.SetActive(UserManager.main.adCoolDownTimer.Ticks <= 0);
                 cooldownState.SetActive(UserManager.main.adCoolDownTimer.Ticks > 0);
+                
+
+                if (cooldownState.activeSelf)
+                    StartCoroutine(RoutineNextAdCooldown());
             }
-            catch {
-                NetworkLoader.main.ReportRequestError("adCoolDownTimer check", "Error in InitCooldownAdButton");
+            catch (System.Exception e){
+                NetworkLoader.main.ReportRequestError(e.StackTrace, "InitCooldownAdButton");
                 return;
             }
-
-            if (cooldownState.activeSelf)
-                StartCoroutine(RoutineNextAdCooldown());
         }
 
         

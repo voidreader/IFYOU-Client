@@ -76,7 +76,6 @@ namespace PIERStory
 
 
         public const string POPUP_TUTORIAL_MISSION_1 = "TutorialMission1";
-        public const string POPUP_TUTORIAL_MISSION_2 = "TutorialMission2";
         public const string POPUP_TUTORIAL_MISSION_3 = "TutorialMission3";
 
 

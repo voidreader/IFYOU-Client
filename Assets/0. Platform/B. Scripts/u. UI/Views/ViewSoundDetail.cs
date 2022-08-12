@@ -81,8 +81,15 @@ namespace PIERStory
 
         public static void SetSoundDetail(bool isBGM, JsonData __j, Sprite s, string __title)
         {
+            Debug.Log("SetSoundDetail : " + isBGM);
+            
             playBGM = isBGM;
             soundData = __j;
+            
+            if(soundData != null)  {
+                Debug.Log(JsonMapper.ToJson(soundData));
+            }
+            
             titleSprite = s;
             soundTitle = __title;
         }
@@ -179,6 +186,8 @@ namespace PIERStory
 
         void SoundDetailPageSetting(int __voiceTotal = -1)
         {
+            Debug.Log(">> SoundDetailPageSetting : " + __voiceTotal.ToString());
+            
             bgmList.SetActive(false);
             voiceList.SetActive(false);
 
@@ -188,8 +197,15 @@ namespace PIERStory
             // 배경음을 재생하는지, 보이스를 재생하는지에 따라 이후 세팅이 다름
             if (playBGM)
             {
-                for (int i = 0; i < soundData.Count; i++)
+                Debug.Log(string.Format("bgm element [{0}] / soundData [{1}]", BGMElements.Length, soundData.Count));
+                
+                for (int i = 0; i < soundData.Count; i++) {
+                    
+                    if(i >= BGMElements.Length)
+                        return;
+                    
                     BGMElements[i].SetBGMElement(i, soundData[i]);
+                }
 
                 bgmList.SetActive(true);
                 bgmScroll.verticalNormalizedPosition = 1f;

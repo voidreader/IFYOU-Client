@@ -70,7 +70,7 @@ namespace PIERStory {
 
         // 튜토리얼 팝업 모음
         public GameObject popupTutorial1;
-        public GameObject popupTutorial2;
+        
         public GameObject popupTutorial3;
         
         
@@ -193,8 +193,10 @@ namespace PIERStory {
         /// <param name="popupName"></param>
         /// <returns></returns>
         public PopupBase GetPopup(string popupName) {
-            if(!DictPopup.ContainsKey(popupName))
+            if(!DictPopup.ContainsKey(popupName)) {
+                NetworkLoader.main.ReportRequestError(string.Format("Wrong popupName Called [{0}]", popupName), "NoPopUp");
                 return null;
+            }
                 
             // 생성될 캔버스 처리 
             if(!popupCanvas) {
@@ -493,10 +495,6 @@ namespace PIERStory {
             else
                 DictPopup.Add(CommonConst.POPUP_TUTORIAL_MISSION_1, popupTutorial1);
 
-            if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_MISSION_2))
-                DictPopup[CommonConst.POPUP_TUTORIAL_MISSION_2] = popupTutorial2;
-            else
-                DictPopup.Add(CommonConst.POPUP_TUTORIAL_MISSION_2, popupTutorial2);
 
             if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_MISSION_3))
                 DictPopup[CommonConst.POPUP_TUTORIAL_MISSION_3] = popupTutorial3;

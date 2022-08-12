@@ -17,8 +17,8 @@ namespace PIERStory
         string image_key = string.Empty;
 
         JsonData voiceData = null;
-        string voiceMaster = string.Empty;
-        int voiceTotalCount = 0;
+        public string voiceMaster = string.Empty;
+        public int voiceTotalCount = 0;
 
         const string BGM_BANNER = "bgmBanner";
         const string SHOW_SOUND_DETAIL = "showSoundDetail";
@@ -70,11 +70,15 @@ namespace PIERStory
                     SystemManager.HideNetworkLoading();
                     return;
                 }
+                
+                Debug.Log("BGM Detail List");
 
                 ViewSoundDetail.SetSoundDetail(true, SystemManager.GetJsonNode(UserManager.main.currentStoryJson, "bgms"), soundThumbnail.downloadedSprite, SystemManager.GetLocalizedText("6139"));
             }
-            else
+            else {
+                Debug.Log("Voice Detail List");
                 ViewSoundDetail.SetSoundDetail(false, voiceData, soundThumbnail.downloadedSprite, string.Format(SystemManager.GetLocalizedText("6058"), StoryManager.main.GetNametagName(voiceMaster)));
+            }
 
             StartCoroutine(MoveToSoundDetail());
         }

@@ -1215,17 +1215,25 @@ namespace PIERStory
             
             // 투명도 0으로 만들어서 안보이게 하기
             placeTextBG.color = new Color(placeTextBG.color.r, placeTextBG.color.g, placeTextBG.color.b, 0f);
-            episodeNum.color = new Color(episodeNum.color.r, episodeNum.color.g, episodeNum.color.b, 1f);
+            episodeNum.color = new Color(episodeNum.color.r, episodeNum.color.g, episodeNum.color.b, 0);
             placeNameText.color = new Color(placeNameText.color.r, placeNameText.color.g, placeNameText.color.b, 0);
 
 
             // 스킵인 경우 여길 아예 타지 맙시다
             if (GameManager.main.useSkip)
                 return;
+                
+            Debug.Log(">> PlaceNameAnim");
+            placeTextBG.gameObject.SetActive(true);
 
             placeTag.Join(placeTextBG.DOFade(1f, 1f).SetDelay(1f).OnStart(() =>
             {
-                placeTextBG.gameObject.SetActive(true);
+                placeNameText.gameObject.SetActive(true);
+                placeNameText.DOFade(1, 1f);
+                
+                episodeNum.gameObject.SetActive(true);
+                episodeNum.DOFade(1, 1f);
+                
             }));
 
             // 동일한 속도로 글자 타이핑 애니메이션
@@ -1237,7 +1245,7 @@ namespace PIERStory
             
             // 2022.08.12 타이핑 로직 제거 
             // placeTag.Append(placeNameText.DOText(placeLabel, placeLabel.Length * animTime).SetEase(Ease.Linear));    
-            
+
             placeTag.Append(placeTextBG.DOFade(0f, 2f).SetDelay(1f)).Join(episodeNum.DOFade(0f, 2f)).Join(placeNameText.DOFade(0f, 2f));
         }
 

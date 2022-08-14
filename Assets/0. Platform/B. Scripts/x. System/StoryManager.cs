@@ -1817,22 +1817,19 @@ namespace PIERStory
         /// <returns></returns>
         public static EpisodeData GetNextRegularEpisodeData(EpisodeData currentEpisodeData) {
             
-            bool isFound = false;
+            int nextEpisodeNumber = currentEpisodeData.episodeNumber + 1;
             
+            // 현재 에피소드가 엔딩이나 스페셜이면 null 리턴한다. 
             if(currentEpisodeData.episodeType == EpisodeType.Ending || currentEpisodeData.episodeType == EpisodeType.Side)
                 return null;
-                
-            for(int i=0; i<main.RegularEpisodeList.Count;i++) {
-                
-                // 찾았으면 다음행이 다음 순번이다.
-                if(isFound)
-                    return main.RegularEpisodeList[i];
-                
-                if(main.RegularEpisodeList[i] == currentEpisodeData) {
-                    isFound = true;
-                }
-            } // 없으면 null;
             
+            // 다음 순번을 찾는다. 
+            for(int i=0; i<main.RegularEpisodeList.Count; i++) {
+                if(main.RegularEpisodeList[i].episodeNumber == nextEpisodeNumber)
+                    return main.RegularEpisodeList[i];
+            }
+            
+            // 못찾았으면 null
             return null;
         }
         

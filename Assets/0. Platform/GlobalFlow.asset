@@ -446,7 +446,7 @@ MonoBehaviour:
     Direction: 1
     Capacity: 0
     Connections:
-    - 0bdd20ee-15a1-46ef-9b05-6831e958fc35
+    - e814ba95-1bd5-46d1-9a52-de3551ddb685
     Value: '{"Trigger":0,"TimeDelay":0.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -1474,6 +1474,67 @@ MonoBehaviour:
     Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
+--- !u!114 &-1731421828094195002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87c43f2597bc48340b6a8f2909b66d09, type: 3}
+  m_Name: Signal
+  m_EditorClassIdentifier: 
+  FlowGraphId: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
+  NodeId: 31a5c10a-48a1-48a9-8ef2-4feb16a698f8
+  NodeType: 0
+  NodeName: Signal
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 31a5c10a-48a1-48a9-8ef2-4feb16a698f8
+    PortId: e814ba95-1bd5-46d1-9a52-de3551ddb685
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - f3db0bdc-0cf1-4161-9976-94c789ff2de5
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 31a5c10a-48a1-48a9-8ef2-4feb16a698f8
+    PortId: 620ae4b8-5bd9-4b71-abbe-620f6c7738c5
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 0bdd20ee-15a1-46ef-9b05-6831e958fc35
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 2512, y: 782}
+  Payload:
+    StreamId:
+      Category: IFYOU
+      Name: moveStoryLoading
+      Custom: 0
+    SignalValueType: 0
+    IntegerValue: 0
+    BooleanValue: 0
+    FloatValue: 0
+    StringValue: 
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+    Vector4Value: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &-1696560947312704860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1881,8 +1942,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02761efe598a45c98fa1baf4d446c6a7, type: 3}
   m_Name: GlobalFlow
   m_EditorClassIdentifier: 
-  EditorPosition: {x: -1405, y: -129, z: 0}
-  EditorScale: {x: 0.8695652, y: 0.8695652, z: 1}
+  EditorPosition: {x: -1645, y: -579, z: 0}
+  EditorScale: {x: 1, y: 1, z: 1}
   Id: 3574fb00-7d22-42ce-a5f0-7e3cedf31c8b
   GraphName: GlobalFlow
   GraphDescription: 
@@ -1944,6 +2005,7 @@ MonoBehaviour:
   - {fileID: -8410292742672923968}
   - {fileID: 7078559064439966849}
   - {fileID: 1429621782649923378}
+  - {fileID: -1731421828094195002}
   RootNode: {fileID: 3282273850073061226}
   ActiveNode: {fileID: 0}
 --- !u!114 &314016154523122154
@@ -2139,7 +2201,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: 423.0001, y: -71}
+  Position: {x: 423, y: -71}
   GetSceneBy: 0
   LoadSceneMode: 1
   AllowSceneActivation: 1
@@ -3225,7 +3287,7 @@ MonoBehaviour:
     Direction: 0
     Capacity: 1
     Connections:
-    - f3db0bdc-0cf1-4161-9976-94c789ff2de5
+    - 620ae4b8-5bd9-4b71-abbe-620f6c7738c5
     Value: 
     ValueTypeQualifiedName: 
     CanBeDeleted: 0

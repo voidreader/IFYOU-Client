@@ -333,6 +333,29 @@ namespace PIERStory
             StartCoroutine(RoutineDailyMissionTimer());
             StartCoroutine(RoutineAdCooldown());
         }
+        
+        
+        
+        /// <summary>
+        /// 게임플레이 종료 후 씬 전환전 리프레시 처리 
+        /// </summary>
+        public void RefreshAfterGamePlay() {
+            Debug.Log("### RefreshAfterGamePlay ###");
+            
+            StoryManager.main.RequestStoryList(OnRequestStoryList);
+            StoryManager.main.RequestStoryInfo(SystemManager.main.givenStoryData);
+        }
+        
+        void OnRequestStoryList(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                return;
+            }
+            
+            Debug.Log(">> OnRequestStoryList : " + response.DataAsText);
+            
+            // 작품 리스트 받아와서 스토리 매니저에게 전달. 
+            StoryManager.main.SetStoryList(JsonMapper.ToObject(response.DataAsText));
+        }
 
 
 

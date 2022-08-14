@@ -22,7 +22,7 @@ namespace PIERStory {
                 Signal.Send("IFYOU", "moveTitle", "open!");
             }
             else {
-                Debug.Log("Go Detail From Begining");
+                Debug.Log("##### Go Detail From Begining");
                 
                 StoryManager.main.RequestStoryInfo(SystemManager.main.givenStoryData);
                 

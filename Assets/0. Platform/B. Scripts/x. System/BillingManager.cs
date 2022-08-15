@@ -318,15 +318,39 @@ namespace PIERStory {
             MainShop.OnRefreshPackageShop?.Invoke();
             MainShop.OnRefreshEventShop?.Invoke();
             MainShop.OnRefreshTopShop?.Invoke();
+            
+            // 이프유 패스, 프리미엄 패스 데이터 선행 처리 
+            string purchasedProductID = SystemManager.GetJsonNodeString(result, "product_id");
+            SetPassPurchaseResultData(purchasedProductID);
 
             // 모든 활성 팝업 제거
             PopupManager.main.HideActivePopup();
             
-            
-            // 구매한 상품 ID
-            string purchasedProductID = SystemManager.GetJsonNodeString(result, "product_id");
-            
+            // 메세지 처리             
             StartCoroutine(DelayShowBillingCompletePopup(purchasedProductID));
+        }
+        
+        /// <summary>
+        /// 데이터 일부 처리 먼저하고, 메세지 처리는 코루틴에서 한다. 
+        /// </summary>
+        /// <param name="__productID"></param>
+        void SetPassPurchaseResultData(string __productID) {
+            
+            // 이프유 패스랑 프리미엄 패스에 대한 처리 
+            // HideActivePopup때문에 꼬이는 경우가 있어서 사용한다. 
+            if (__productID == "ifyou_pass") {
+                // 이프유 패스에 대한 메세지 
+                UserManager.main.ifyouPassDay = 1; // 1일차 시작으로 한다.
+            }
+            else if (__productID.Contains("story_pack")) {
+                // 프리미엄 패스 보유중으로 변경                 
+                if(GameManager.main != null || StoryLobbyManager.main != null) {
+                    StoryManager.main.CurrentProject.hasPremiumPass = true;
+                }
+                else { // 메인에서 구매 
+                    SystemListener.main.introduceStory.hasPremiumPass = true;
+                }
+            }
         }
         
         IEnumerator DelayShowBillingCompletePopup(string __productID) {

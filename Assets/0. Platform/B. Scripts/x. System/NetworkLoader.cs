@@ -326,6 +326,9 @@ namespace PIERStory
         /// <param name="__projectID"></param>
         /// <param name="__currentPrice"></param>
         public void PurchasePremiumPassByStar(string __projectID, int __currentPrice) {
+            
+            Debug.Log(string.Format("## PurchasePremiumPassByStar [{0}]/[{1}] ", __projectID, __currentPrice));
+            
             JsonData sending = new JsonData();
             
             sending[CommonConst.COL_PROJECT_ID] = __projectID;

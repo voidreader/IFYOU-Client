@@ -2059,10 +2059,18 @@ namespace PIERStory
 
             // * bank 
             SetBankInfo(result);
+            
+            // 데이터 처리 선행             
+            if(GameManager.main != null || StoryLobbyManager.main != null) {
+                StoryManager.main.CurrentProject.hasPremiumPass = true;
+            }
+            else { // 메인에서 구매 
+                SystemListener.main.introduceStory.hasPremiumPass = true;
+            }            
+
 
             // 모든 팝업 비활성화 
             PopupManager.main.HideActivePopup();
-
 
             // 이프유업적 프리패스 구매
             /*
@@ -2083,19 +2091,29 @@ namespace PIERStory
         /// </summary>
         /// <returns></returns>
         IEnumerator DelayRefreshPremiumPassStarPurchase() {
+            
+            Debug.Log("### DelayRefreshPremiumPassStarPurchase");
+            
             yield return null;
             yield return null;
             yield return null;
             
             yield return new WaitForSeconds(0.1f);
+            
+            // 메세지 처리 
             if(GameManager.main != null || StoryLobbyManager.main != null) {
+                Debug.Log("### DelayRefreshPremiumPassStarPurchase Current Story Target");
                 SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6445"), StoryManager.main.CurrentProject.title), null, null, true, false);    
                 StoryManager.main.CurrentProject.hasPremiumPass = true;
             }
             else { // 메인에서 구매 
+            
+            Debug.Log("### DelayRefreshPremiumPassStarPurchase Introduce Story Target");
                 SystemManager.ShowSystemPopup(string.Format(SystemManager.GetLocalizedText("6445"), SystemListener.main.introduceStory.title), null, null, true, false);    
                 SystemListener.main.introduceStory.hasPremiumPass = true;
             }
+            
+            
             
             BillingManager.main.CallPassButtonsRefresh();            
         }

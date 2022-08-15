@@ -766,6 +766,7 @@ MonoBehaviour:
     writer: 
     summary: 
     original: 
+    translator: 
     sortKey: 0
     bubbleSetID: 
     isCredit: 0
@@ -779,10 +780,14 @@ MonoBehaviour:
     episodeFinishImageKey: 
     premiumPassURL: 
     premiumPassKey: 
+    premiumBadgeURL: 
+    premiumBadgeKey: 
     categoryImageURL: 
     categoryImageKey: 
     coinBannerUrl: 
     coinBannerKey: 
+    introduceFullImageURL: 
+    introduceFullImageKey: 
     isLock: 0
     colorCode: 000000
     projectProgress: 0
@@ -793,11 +798,17 @@ MonoBehaviour:
     isSerial: 0
     listSerialDays: []
     passPrice: 0
+    discountPassPrice: 0
     passDiscount: 0.1
     isNotify: 0
     hitCount: 0
     likeCount: 0
     arrHashtag: []
+    onedayExpireDate: 
+    onedayPassTick: 0
+    hasPremiumPass: 0
+    premiumProductID: 
+    premiumSaleID: 
   latestStoryBanner: {fileID: 2246035456457259237}
   recommendWorkList: {fileID: 8197045299237145272}
   manualGroupPrefab: {fileID: 3716753574534982760, guid: 74d5e4d1917c9e4488e7d60c96a873ae, type: 3}
@@ -1716,7 +1727,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8197045299898059788
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2045,7 +2056,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -129, y: 45.5}
+  m_AnchoredPosition: {x: -129, y: 65}
   m_SizeDelta: {x: 172.2, y: 58.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8197045300836655714

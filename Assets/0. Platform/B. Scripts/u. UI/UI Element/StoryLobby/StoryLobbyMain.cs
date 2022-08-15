@@ -344,6 +344,8 @@ namespace PIERStory {
         /// </summary>
         void InitFlowMap() {
             
+            Debug.Log("####### InitFlowMap ########### ");
+            
             int flowIndex = 0;
             
             // 비활성화 시키고 

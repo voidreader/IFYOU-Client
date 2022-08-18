@@ -159,34 +159,7 @@ namespace PIERStory {
                 }
             }
 
-            // 스크린 이펙트 체크
-            /*
-            AsyncOperationHandle<IList<IResourceLocation>>  effectBundleCheckHandle = Addressables.LoadResourceLocationsAsync(effectAssetBundle);
-            yield return effectBundleCheckHandle;
 
-            if(effectBundleCheckHandle.Status != AsyncOperationStatus.Succeeded)
-            {
-                Debug.Log("<color=purple>## No ScreenEffect bundle </color>");
-                hasDownloadableBundle = false;
-
-                NetworkLoader.main.ReportRequestError(fontBundleCheckHandle.OperationException.ToString(), "ScreenEffect LoadResourceLocationsAsync");
-            }
-            else
-            {
-                if(effectBundleCheckHandle.Result.Count > 0)
-                {
-                    hasDownloadableBundle = true;
-                    Debug.Log("<color=purple>## ScreenEffect bundle is downloading </color>");
-                }
-                else
-                {   
-                    // 폰트에서 다운 받을게 있었다면 계속 true로 둔다
-                    hasDownloadableBundle = hasDownloadableBundle ? true : false;
-
-                    Debug.Log("<color=purple> all ScreenEffect bundle is downloaded </color>");
-                }
-            }
-            */
             
             // 다운로드 할 거 없음 
             if(!hasDownloadableBundle) {
@@ -245,39 +218,6 @@ namespace PIERStory {
                 // 폰트 부른다. 
                 SystemManager.main.LoadAddressableFont();
             }
-
-            /*
-            getDownloadSizeHandle = Addressables.GetDownloadSizeAsync(effectAssetBundle);
-            yield return getDownloadSizeHandle;
-            Debug.Log("### [ScreenEffect] GetDownloadSizeAsync END, size : " + getDownloadSizeHandle.Result);
-
-            // 다운로드 할 스크린 이펙트 없음
-            if (getDownloadSizeHandle.Result <= 0)
-            {
-                FillProgressorOnly();
-                yield break;
-            }
-            else
-            {
-                AsyncOperationHandle downloadHandle = Addressables.DownloadDependenciesAsync(effectAssetBundle);
-                downloadHandle.Completed += (op) => {
-
-                    // 다운로드 실패
-                    if (op.Status != AsyncOperationStatus.Succeeded)
-                        NetworkLoader.main.ReportRequestError(effectBundleCheckHandle.OperationException.ToString(), "ScreenEffect DownloadDependenciesAsync");
-                };
-
-                DownloadStatus downloadStatus;
-
-                // 게이지 채우기 
-                while (!downloadHandle.IsDone)
-                {
-                    downloadStatus = downloadHandle.GetDownloadStatus();
-                    downloadProgressBar.fillAmount = downloadStatus.Percent;
-                    yield return null;
-                }
-            }
-            */
 
             StartCoroutine(MovingNextScene());
         }

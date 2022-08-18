@@ -225,10 +225,11 @@ namespace PIERStory
         {
             Debug.Log(string.Format("<color=cyan>Init user info [{0}]</color>", __gamebaseID));
             gamebaseID = __gamebaseID;
-            //gamebaseID = "QPM97Z9DKJGRN8B3"; // 특정 계정으로 로그인하기
+            // gamebaseID = "QZXG8JYD768M97TX"; // 특정 계정으로 로그인하기
 
             // 로그인 프로세스를 시작합니다. 
             ConnectServer();
+            
         }
 
         /// <summary>
@@ -3272,8 +3273,9 @@ namespace PIERStory
                 adCoolDownTimer = endDate - DateTime.UtcNow;
                 yield return new WaitForSeconds(0.1f);
             }
-
-            MainIfyouplay.OnCooldownAdEnable?.Invoke();
+            
+            if(LobbyManager.main != null)
+               MainIfyouplay.OnCooldownAdEnable?.Invoke();
         }
 
 

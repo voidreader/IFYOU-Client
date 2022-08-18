@@ -62,6 +62,15 @@ dependencies {
 	// Firebase Messaging
     implementation 'com.google.firebase:firebase-messaging:23.0.4'
 
+	constraints {
+	   implementation('androidx.work:work-runtime:2.7.0') {
+		 because '''androidx.work:work-runtime:2.1.0 pulled from
+		play-services-ads has a bug using PendingIntent without
+		FLAG_IMMUTABLE or FLAG_MUTABLE and will fail in Apps
+		targeting S+.'''
+	   }
+	  }	
+
 **DEPS**}
 
 // Android Resolver Exclusions Start

@@ -371,10 +371,16 @@ namespace PIERStory
             }
 
             // ! 다운로드 처리. 다운로드 완료 후에도 texture와 sprite를 생성해두지 않는다. 
-            Debug.Log("scriptImageMount : " + imageUrl);
-            var req = new HTTPRequest(new Uri(imageUrl), OnDownloadOnly);
-            req.Timeout = TimeSpan.FromSeconds(40);
-            req.Send();
+            try {
+                Debug.Log("scriptImageMount : " + imageUrl);
+                var req = new HTTPRequest(new Uri(imageUrl), OnDownloadOnly);
+                req.Timeout = TimeSpan.FromSeconds(40);
+                req.Send();
+                } 
+            catch {
+                NetworkLoader.main.ReportRequestError(string.Format("[{0}]/[{1}]", template, imageName), "DownloadImage Error");
+                SendFailMessage();
+            }
         }
         
         

@@ -114,6 +114,8 @@ namespace PIERStory
         public const string KEY_LAST_ONEDAY_PASS_PROJECT = "LastOnedayPassProjectID";
         public const string KEY_LAST_PREMIUM_PASS_PROJECT = "LastPremiumPassProjectID";
         
+        public const string KEY_ADDRESSABLE_VERSION = "KeyAddressableVersion"; 
+        
         
         // Firebase Event
         public const string FIREBASE_NOTICE = "notice_popup_open";

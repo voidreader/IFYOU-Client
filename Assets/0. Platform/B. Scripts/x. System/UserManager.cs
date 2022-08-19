@@ -218,25 +218,17 @@ namespace PIERStory
             ListGemIndicators.Clear();
         }
 
-        /// <summary>
-        /// 유저 정보 초기화 
-        /// </summary>
-        public void InitUser(string __gamebaseID)
-        {
-            Debug.Log(string.Format("<color=cyan>Init user info [{0}]</color>", __gamebaseID));
-            gamebaseID = __gamebaseID;
-            // gamebaseID = "QZXG8JYD768M97TX"; // 특정 계정으로 로그인하기
-
-            // 로그인 프로세스를 시작합니다. 
-            ConnectServer();
-            
-        }
+        
 
         /// <summary>
         /// 서버에 접속을 시작합니다. 
         /// </summary>
-        void ConnectServer()
+        public void ConnectGameServer(string __gamebaseID)
         {
+            
+            Debug.Log(string.Format("<color=cyan>ConnectServer [{0}]</color>", __gamebaseID));
+            gamebaseID = __gamebaseID;
+            
             JsonData sendingData = new JsonData(); // 서버 전송 데이터 
             sendingData[CommonConst.FUNC] = NetworkLoader.FUNC_LOGIN_CLIENT;
             sendingData["deviceid"] = SystemInfo.deviceUniqueIdentifier;
@@ -286,7 +278,6 @@ namespace PIERStory
             eventValues.Add(AFInAppEvents.CUSTOMER_USER_ID, userKey);
             AdManager.main.SendAppsFlyerEvent(AFInAppEvents.LOGIN, eventValues);
 
-            ViewTitle.ActionTitleLoading("login");
 
             // 서비스 중인 스토리 리스트 조회
             RequestServiceStoryList();

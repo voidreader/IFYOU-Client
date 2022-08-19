@@ -77,8 +77,6 @@ namespace PIERStory {
             
             ViewCommonTop.OnBackAction = null;
             
-            // 어드레서블 카탈로그 로드 
-            InitAddressableCatalog();
             
             // * 로비씬 시작을 알린다. 
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyPlay"); 
@@ -86,66 +84,7 @@ namespace PIERStory {
         
         
         
-        /// <summary>
-        /// 
-        /// </summary>
-        void InitAddressableCatalog() {
-            
-            Debug.Log("#### InitAddressableCatalog ###");
-            string catalogURL = string.Empty;
-            
-            // 테스트용
-            // Addressables.ClearDependencyCacheAsync("Font");
-            
-            
-            #if UNITY_IOS
-            catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/bundle2021/iOS/catalog_1.json";
-            
-            #else
-            catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/bundle2021/Android/catalog_1.json";
-            // catalogURL = "https://d2dvrqwa14jiay.cloudfront.net/test_bundle/Android/catalog_1.json";
-            
-            #endif
-            
-            Debug.Log("### InitAddressableCatalog URL ::  " +  catalogURL);
-            Addressables.LoadContentCatalogAsync(catalogURL).Completed += (op) => {
-            
-                if(op.Status == AsyncOperationStatus.Succeeded) {
-                    Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
-                    SystemManager.main.isAddressableCatalogUpdated = true;
-                    return;
-                }
-                else {
-                    
-                    // 한번더 시도한다. 
-                    Addressables.LoadContentCatalogAsync(catalogURL).Completed += (op) => {
-            
-                        if(op.Status == AsyncOperationStatus.Succeeded) {
-                            Debug.Log("### InitAddressableCatalog #2" +  op.Status.ToString());
-                            SystemManager.main.isAddressableCatalogUpdated = true;
-                            
-                            return;
-                        }
-                        else {
-                            
-                            NetworkLoader.main.ReportRequestError(op.OperationException.ToString(), "LoadContentCatalogAsync");
-                            SystemManager.main.isAddressableCatalogUpdated = false;
-                            
-                            
-                            //  카탈로그 실패시 접속 할 수 없음. 
-                            SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
-                            return;
-                            
-                        }
-                        
-                    }; // end of second try
-                    
-                    
-                } // end of else
-                
-            }; // END!!!
-        }
-        
+
         
         
         private void Update() {

@@ -117,7 +117,9 @@ namespace PIERStory
         string copyrightURL = string.Empty; // 저작권 URL
         
         
-        
+        // * 어드레서블 정보 
+        public string addressable_version = "0";
+        public string addressable_url = string.Empty;
         
         
         static JsonData localizedTextJSON = null; // 로컬라이징 텍스트 JSON
@@ -274,7 +276,7 @@ namespace PIERStory
              */
              
              // 게임베이스 초기화
-            GameBaseInitialize();
+            // GameBaseInitialize();
           
             // 디바이스 스펙에 따른 그래픽 퀄리티 설정             
             ChangeQuality();
@@ -361,6 +363,13 @@ namespace PIERStory
                         privacyURL = launchingJSON["launching"]["server"]["test_privacy_url"].ToString();
                         termsOfUseURL = launchingJSON["launching"]["server"]["test_terms_url"].ToString();
                         bundleURL = launchingJSON["launching"]["server"]["test_bundle_url"].ToString();
+                        
+                        addressable_url = launchingJSON["launching"]["server"]["test_addressable"].ToString();
+                        addressable_version = launchingJSON["launching"]["server"]["test_addressable_version"].ToString();
+                    }
+                    else {
+                        addressable_url = launchingJSON["launching"]["server"]["addressable"].ToString();
+                        addressable_version = launchingJSON["launching"]["server"]["addressable_version"].ToString();
                     }
                     
                 }
@@ -383,7 +392,7 @@ namespace PIERStory
         /// <summary>
         /// 게임베이스 초기화 
         /// </summary>
-        void GameBaseInitialize()
+        public void GameBaseInitialize()
         {
             Debug.Log("<color=white>GameBaseInitialize</color>");
 
@@ -453,8 +462,6 @@ namespace PIERStory
             
             // * 여기서 부터 초기화 이후 로직.
             Debug.Log("Gamebase Initialization succeeded.");
-            // ViewTitle.OnUpdateLoadingText?.Invoke(2);
-            // ViewTitle.ActionTitleLoading("gamebase");
             
             IsGamebaseInit = true; // 초기화 완료 
             Gamebase.AddEventHandler(GamebaseObserverHandler);
@@ -825,6 +832,73 @@ namespace PIERStory
 
         }
         
+        /// <summary>
+        /// 어드레서블 카탈로그 처리 
+        /// </summary>
+        public void InitAddressableCatalog() {
+            
+            
+            Debug.Log("#### InitAddressableCatalog START ###");
+            
+            // 로컬에 저장된 어드레서블 키를 불러온다. 
+            string currentAddressableVersion = ES3.LoadString(CommonConst.KEY_ADDRESSABLE_VERSION, "0");
+            
+            // 비교해서 버전이 안맞으면, clear cache를 한다. 
+            // 어드레서블에서 큰 변경이 있는 경우만 버전 업.
+            if(addressable_version != currentAddressableVersion) {
+                
+                Debug.Log("#### InitAddressableCatalog diff version, clear cache ###");
+                ES3.Save<string>(CommonConst.KEY_ADDRESSABLE_VERSION, addressable_version); // 저장 
+                
+            }
+            
+            // URL 완성하기 
+            #if UNITY_IOS
+            addressable_url += "iOS/catalog_1.json";
+            #else
+            addressable_url += "Android/catalog_1.json";
+            #endif            
+            
+            Debug.Log(string.Format("Addressable URL : [{0}]", addressable_url));
+            Addressables.LoadContentCatalogAsync(addressable_url).Completed += (op) => {
+            
+                if(op.Status == AsyncOperationStatus.Succeeded) {
+                    Debug.Log("### InitAddressableCatalog " +  op.Status.ToString());
+                    isAddressableCatalogUpdated = true; // 카탈로그 로딩 완료 처리 
+                    return;
+                }
+                else {
+                    
+                    // 한번더 시도한다. 
+                    Addressables.LoadContentCatalogAsync(addressable_url).Completed += (op) => {
+            
+                        if(op.Status == AsyncOperationStatus.Succeeded) {
+                            Debug.Log("### InitAddressableCatalog #2" +  op.Status.ToString());
+                            isAddressableCatalogUpdated = true; // 카탈로그 로딩 완료 처리 
+                            
+                            return;
+                        }
+                        else {
+                            
+                            NetworkLoader.main.ReportRequestError(op.OperationException.ToString(), "LoadContentCatalogAsync");
+                            isAddressableCatalogUpdated = false;
+                            
+                            
+                            //  카탈로그 실패시 접속 할 수 없음. 
+                            SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
+                            return;
+                            
+                        }
+                        
+                    }; // end of second try
+                    
+                    
+                } // end of else
+                
+            }; // END!!!            
+            
+        }
+        
         
         
         #endregion
@@ -924,7 +998,7 @@ namespace PIERStory
 
             // 서버 로그인을 진행합니다. (게임베이스 ID를 기준으로 로그인처리)
             // 이후 UserManager에서 PIER 서버 접속을 처리하게 되며, 로그인 완료시에 Lobby 진입 이벤트 호출(UserManager.CallbackConnectServer)
-            UserManager.main.InitUser(gamebaseID);
+            UserManager.main.ConnectGameServer(gamebaseID);
         }
 
         void GamebaseObserverHandler(GamebaseResponse.Event.GamebaseEventMessage message)
@@ -1309,7 +1383,7 @@ namespace PIERStory
             Debug.Log("#### RoutineLoadingConnectedAccount :: " + Gamebase.GetUserID());
             
              // ! 연결된 계정 다시 로드 
-            UserManager.main.InitUser(Gamebase.GetUserID());
+            UserManager.main.ConnectGameServer(Gamebase.GetUserID());
             
             
             // 여기 여러 통신이 체인처럼 연쇄적으로 하기때문에 여러개 넣었다.

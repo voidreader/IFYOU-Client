@@ -15,25 +15,27 @@ using Doozy.Runtime.Signals;
 namespace PIERStory {
     public class ViewTitle : CommonView
     {
-        public static Action<string> ActionTitleLoading = null;
         
         public RawImage mainImage; // 다운로드받아서 보여주는 플랫폼 로딩 화면 
         
         [SerializeField] TextMeshProUGUI textLoading;
         public string currentStep = string.Empty;
         
+        public GameObject circleLoading;
         public GameObject downloadProgressParent;
         [SerializeField] Image downloadProgressBar; // 에셋번들 다운로드 게이지 
         
-        public Doozy.Runtime.Reactor.Progressor progressor; //  접속 로딩 게이지 
+        
         public bool isCheckingAssetBundle = false; 
         
         
         [SerializeField] GameObject baseScreen; // 기본 스크린 
         const string fontAssetBundle = "Font";
-        const string effectAssetBundle = "ScreenEffect";
+        
 
         static string currentAppLang = string.Empty;
+        
+        // 타이틀 진입 => 게임베이스 Initialize 대기, 로그인, 초기 에셋번들 다운로드 필요하다. 
 
         private void Awake() {
             textLoading.text = string.Empty;
@@ -43,11 +45,6 @@ namespace PIERStory {
             // 다운로드 프로그레서는 비활성화 해놓고 시작한다.
             downloadProgressParent.SetActive(false);
             downloadProgressBar.fillAmount = 0;
-            
-            // 접속 프로그레서 활성화 
-            progressor.gameObject.SetActive(true);
-            
-            ActionTitleLoading = UpdateTitleLoading;
             
             
             mainImage.gameObject.SetActive(false);
@@ -71,156 +68,122 @@ namespace PIERStory {
             base.OnView();
             
             Debug.Log("<color=cyan>ViewTitle OnView</color>");
-            // AdManager.main.AnalyticsEnter("titleEnter");
-            
-            // 언어변경등으로 강제로 씬로딩이 진행될때. 
-            if(SystemManager.IsGamebaseInit && UserManager.main.completeReadUserData && string.IsNullOrEmpty(currentStep)) {
-                UpdateTitleLoading("login");
-            }
+            StartCoroutine(LaunchingApplication()); // 첫 진입 코루틴 시작 
             
         }
         
         
         /// <summary>
-        /// 타이틀 로딩 처리 
+        /// 앱 진입 시작 
         /// </summary>
-        /// <param name="__step"></param>        
-        void UpdateTitleLoading(string __step) {
+        /// <returns></returns>
+        IEnumerator LaunchingApplication() {
+            DownloadStatus downloadStatus;
             
-            Debug.Log(string.Format("<color=cyan>## UpdateTitleLoading [{0}] </color>", __step));
+            circleLoading.SetActive(true);
             
-            switch(__step) {
-                case "gamebase": 
-                // progressor.SetProgressAt(0.5f);
-                progressor.PlayToProgress(0.5f);
-                break;
+            
+            yield return null;
+            
+            Debug.Log("LaunchingApplication #1");
+            
+            // 게임베이스 초기화 시작 
+            // 1단계. 서버에 접속합니다. 
+            SystemManager.main.GameBaseInitialize();
+            
+            // 유저 정보를 불러올때까지 대기 (게임서버 접속 후 true로 변경)
+            while(!UserManager.main.completeReadUserData)
+                yield return null;
                 
-                case "login": // 게임 서버 로그인 완료 
-                UpdateLoadingText(2);
-                // progressor.SetProgressAt(1f);
-                progressor.PlayToProgress(1);
-                break;
-            }
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="__v"></param>
-        public void OnProgressChanged(float __v) {
-            if(__v >= 1 && !isCheckingAssetBundle) {
-                StartCoroutine(CheckingAssetBundle());
-                isCheckingAssetBundle = true; // 혹시 여러번 돌릴까봐...
+            
+            circleLoading.SetActive(false); // 원형 로딩은 바이바이 
+            
+            // ----------------------------------------------------------------
                 
-                downloadProgressParent.SetActive(true);
-                progressor.gameObject.SetActive(false); 
-            }
-        }
-        
-        IEnumerator CheckingAssetBundle() {
+            // 2단계 폰트 에셋번들을 불러온다.
+            // 게이지 보여주기 시작한다. 
+            UpdateLoadingText(2); // 플랫폼 정보를 불러오고 있습니다.
+            SystemManager.main.InitAddressableCatalog();  // 카탈로그 업데이트 
+            downloadProgressBar.fillAmount = 0;
+            downloadProgressParent.SetActive(true); // 게이지 활성화
             
-            Debug.Log("<color=cyan>## CheckingAssetBundle START</color>");
-            
-            UpdateLoadingText(3);
-            
-            // 카탈로그 업데이트까지 대기한다. 
+            // 카탈로그 업데이트가 완료될때까지 대기 
             while(!SystemManager.main.isAddressableCatalogUpdated)
                 yield return null;
                 
-            Debug.Log("<color=cyan>## CheckingAssetBundle #1 </color>");
-            yield return new WaitForSeconds(0.1f);
+                
+            // 어드레서블 카탈로그 업데이트 후, 기본 어드레서블 다운로드 시작 
             
-            bool hasDownloadableBundle = false;
             
+            // 기본 폰트 어드레서블을 다운로드 시작한다. 
             AsyncOperationHandle<IList<IResourceLocation>> fontBundleCheckHandle = Addressables.LoadResourceLocationsAsync(fontAssetBundle);
             yield return fontBundleCheckHandle;
             
             if(fontBundleCheckHandle.Status != AsyncOperationStatus.Succeeded) { // 실패
-                    Debug.Log("<color=cyan>## No Font bundle </color>");
-                    hasDownloadableBundle = false;
-                    
-                    // Font 에셋번들 다운받지 받지 못하면 게임에 접속 할 수 없음
-                    SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
-                    NetworkLoader.main.ReportRequestError(fontBundleCheckHandle.OperationException.ToString(), "Font LoadResourceLocationsAsync");
-                    yield break;
-            }
-            else { // 성공이지만 
-                if(fontBundleCheckHandle.Result.Count > 0) {
-                    // 번들 있음
-                    hasDownloadableBundle  = true;
-                   Debug.Log("<color=cyan>## Font bundle is downloading </color>");
-                }
-                else {
-                    
-                    Debug.Log("<color=cyan> all font bundle is downloaded </color>");
-                    
-                    // 번들 없음 
-                    hasDownloadableBundle = false;
-                }
-            }
-
-
-            
-            // 다운로드 할 거 없음 
-            if(!hasDownloadableBundle) {
+                Debug.Log("<color=cyan>## No Font bundle </color>");
                 
-                FillProgressorOnly();
-            
-            }
-            
-            
-            
-            // * 번들 체크 완료 후 있으면 다운로드 시작 
-            AsyncOperationHandle<long> getDownloadSizeHandle = Addressables.GetDownloadSizeAsync(fontAssetBundle);
-            yield return getDownloadSizeHandle;
-            Debug.Log("### [Font] GetDownloadSizeAsync END, size : " + getDownloadSizeHandle.Result);
-
-            // 다운로드 할 폰트 데이터 없음 
-            if(getDownloadSizeHandle.Result <= 0) {
-                
-                // 폰트 부른다. 
-                SystemManager.main.LoadAddressableFont();
-                FillProgressorOnly();
+                // Font 에셋번들 다운받지 받지 못하면 게임에 접속 할 수 없음
+                SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
+                NetworkLoader.main.ReportRequestError(fontBundleCheckHandle.OperationException.ToString(), "Font LoadResourceLocationsAsync");
                 yield break;
             }
-            else
-            {
-                Addressables.ClearDependencyCacheAsync(fontAssetBundle);
-                yield return new WaitForSeconds(0.1f);
+            
+            
+            // 폰트 다운로드 사이즈 체크 
+            AsyncOperationHandle<long> getFontDownloadSizeHandle = Addressables.GetDownloadSizeAsync(fontAssetBundle);
+            yield return getFontDownloadSizeHandle;
+            Debug.Log("### [Font] GetDownloadFontSizeAsync END, size : " + getFontDownloadSizeHandle.Result);
+            
+            
+            // 이미 다운로드 받았음 
+            if(getFontDownloadSizeHandle.Result <= 0) {
+                FillProgressorOnly(); // 게이지 자동 채워지고 진입 완료 처리 
+                SystemManager.main.LoadAddressableFont(); // 폰트 로드.
                 
-                Debug.Log("### Asset bundle download start ###");
-                AsyncOperationHandle downloadHandle = Addressables.DownloadDependenciesAsync(fontAssetBundle);
-                downloadHandle.Completed += (op) => {
-
-                    if (op.Status != AsyncOperationStatus.Succeeded)
-                    {
-                        // 다운로드 실패!?
-                        SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
-                        NetworkLoader.main.ReportRequestError(fontBundleCheckHandle.OperationException.ToString(), "Font DownloadDependenciesAsync");
-                    }
-                };
-
-                DownloadStatus downloadStatus;
-
-                // 게이지 채우기 
-                while (!downloadHandle.IsDone)
-                {
-                    downloadStatus = downloadHandle.GetDownloadStatus();
-                    downloadProgressBar.fillAmount = downloadStatus.Percent;
-                    yield return null;
-                }
-
-                // 다운로드 완료됨 
-                Debug.Log("<color=cyan>font bundle downloading is done!!!</color>");
-
-                yield return null;
-
-                // 폰트 부른다. 
-                SystemManager.main.LoadAddressableFont();
+                yield break; // 코루틴 종료 
             }
+            
+            
+            // 폰트 다운로드 필요함!! 
+            AsyncOperationHandle fontDownloadHandle = Addressables.DownloadDependenciesAsync(fontAssetBundle);
+            fontDownloadHandle.Completed += (op) => {
 
+                if (op.Status != AsyncOperationStatus.Succeeded)
+                {
+                    // 다운로드 실패!?
+                    SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
+                    NetworkLoader.main.ReportRequestError(fontBundleCheckHandle.OperationException.ToString(), "Font DownloadDependenciesAsync");
+                }
+            };
+            
+            
+
+            // 게이지 채우기 
+            UpdateLoadingText(3); //  다운로드 받고 있습니다.
+            while (!fontDownloadHandle.IsDone)
+            {
+                downloadStatus = fontDownloadHandle.GetDownloadStatus();
+                downloadProgressBar.fillAmount = downloadStatus.Percent;
+                yield return null;
+            }
+            
+            Debug.Log("<color=cyan>font bundle downloading is done!!!</color>");
+            yield return null;
+
+            // 폰트 로드 처리. 
+            SystemManager.main.LoadAddressableFont();
+            
+            // ----------------------------------------------------------------
+            
+            // 3 단계 
+            // ----------------------------------------------------------------
+            
+            
+            // 완료 진입 완료 처리 
             StartCoroutine(MovingNextScene());
         }
+        
+
         
         
         /// <summary>
@@ -249,7 +212,7 @@ namespace PIERStory {
                 
                 Debug.Log("### FillProgressorOnly ###");
                 
-                downloadProgressBar.DOFillAmount(1, 3).OnComplete(()=> {
+                downloadProgressBar.DOFillAmount(1, 2).OnComplete(()=> {
                     StartCoroutine(MovingNextScene());
                 });
         }
@@ -257,21 +220,12 @@ namespace PIERStory {
         
         
         /// <summary>
-        /// 로딩 텍스트 변환 
+        /// 타이틀 화면 텍스트 설정
         /// </summary>
         /// <param name="step"></param>
         void UpdateLoadingText(int step) {
             string loadingText = GetPlatformLoadingText(step);
-            Debug.Log(loadingText);
-            
-            
-            
-            textLoading.text = loadingText;
-            
-            // 아랍어 예외처리 
-            if(currentAppLang == CommonConst.COL_AR) {
-                SystemManager.SetArabicTextUI(textLoading);
-            }
+            SystemManager.SetText(textLoading, loadingText);
         }
         
         
@@ -361,7 +315,7 @@ namespace PIERStory {
                     return "Requesting platform information.";
                 
                 case 3: // 에셋번들 다운로드
-                Debug.Log("33333333333333333");
+                // Debug.Log("33333333333333333");
                 if(currentAppLang == "KO") 
                     return "게임에 필요한 데이터를 다운받고 있습니다.";
                 else if(currentAppLang == "JA") 

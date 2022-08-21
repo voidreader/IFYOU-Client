@@ -117,6 +117,9 @@ namespace PIERStory {
             
             
             // 기본 폰트 어드레서블을 다운로드 시작한다. 
+            UpdateLoadingText(3); //  레이블 처리
+            
+            
             AsyncOperationHandle<IList<IResourceLocation>> fontBundleCheckHandle = Addressables.LoadResourceLocationsAsync(fontAssetBundle);
             yield return fontBundleCheckHandle;
             
@@ -133,50 +136,52 @@ namespace PIERStory {
             // 폰트 다운로드 사이즈 체크 
             AsyncOperationHandle<long> getFontDownloadSizeHandle = Addressables.GetDownloadSizeAsync(fontAssetBundle);
             yield return getFontDownloadSizeHandle;
-            Debug.Log("### [Font] GetDownloadFontSizeAsync END, size : " + getFontDownloadSizeHandle.Result);
+            
             
             
             // 이미 다운로드 받았음 
             if(getFontDownloadSizeHandle.Result <= 0) {
-                FillProgressorOnly(); // 게이지 자동 채워지고 진입 완료 처리 
+                Debug.Log("### [Font] GetDownloadFontSizeAsync END, size : " + getFontDownloadSizeHandle.Result);    
                 SystemManager.main.LoadAddressableFont(); // 폰트 로드.
+            }
+            else {
+                Debug.Log("### [Font] Download START");
                 
-                yield break; // 코루틴 종료 
-            }
-            
-            
-            // 폰트 다운로드 필요함!! 
-            AsyncOperationHandle fontDownloadHandle = Addressables.DownloadDependenciesAsync(fontAssetBundle);
-            fontDownloadHandle.Completed += (op) => {
+                // 폰트 다운로드 필요함!! 
+                AsyncOperationHandle fontDownloadHandle = Addressables.DownloadDependenciesAsync(fontAssetBundle);
+                fontDownloadHandle.Completed += (op) => {
 
-                if (op.Status != AsyncOperationStatus.Succeeded)
+                    if (op.Status != AsyncOperationStatus.Succeeded)
+                    {
+                        // 다운로드 실패!?
+                        SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
+                        NetworkLoader.main.ReportRequestError(fontBundleCheckHandle.OperationException.ToString(), "Font DownloadDependenciesAsync");
+                    }
+                };
+                
+
+                // 게이지 채우기 
+                while (!fontDownloadHandle.IsDone)
                 {
-                    // 다운로드 실패!?
-                    SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
-                    NetworkLoader.main.ReportRequestError(fontBundleCheckHandle.OperationException.ToString(), "Font DownloadDependenciesAsync");
+                    downloadStatus = fontDownloadHandle.GetDownloadStatus();
+                    downloadProgressBar.fillAmount = downloadStatus.Percent;
+                    yield return null;
                 }
-            };
-            
-            
-
-            // 게이지 채우기 
-            UpdateLoadingText(3); //  다운로드 받고 있습니다.
-            while (!fontDownloadHandle.IsDone)
-            {
-                downloadStatus = fontDownloadHandle.GetDownloadStatus();
-                downloadProgressBar.fillAmount = downloadStatus.Percent;
+                
+                Debug.Log("<color=cyan>font bundle downloading is done!!!</color>");
                 yield return null;
-            }
-            
-            Debug.Log("<color=cyan>font bundle downloading is done!!!</color>");
-            yield return null;
 
-            // 폰트 로드 처리. 
-            SystemManager.main.LoadAddressableFont();
+                // 폰트 로드 처리. 
+                SystemManager.main.LoadAddressableFont();                
+            }
             
             // ----------------------------------------------------------------
             
             // 3 단계 말풍선 이미지 다운로드 처리 
+            Debug.Log("<color=cyan>Start Bubble Font Process!!!</color>");
+            downloadProgressBar.fillAmount = 0;
+            UpdateLoadingText(4); //  레이블 처리
+            
             // 기본 말풍선 어드레서블을 다운로드 시작한다. 
             // ! 말풍선 어드레서블은 신규 말풍선 이미지가 있으면 어드레서블에 이미지를 추가한다. 
             AsyncOperationHandle<IList<IResourceLocation>> bubbleBundleCheckHandle = Addressables.LoadResourceLocationsAsync(bubbleAssetBundle);
@@ -186,8 +191,6 @@ namespace PIERStory {
                 Debug.Log("<color=cyan>## Fail Get Bubble bundle </color>");
                 FillProgressorOnly();
                 // ! 말풍선 에셋번들은 다운로드를 받지 못해도 게임진입이 가능하다. 
-                // SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
-                // NetworkLoader.main.ReportRequestError(bubbleBundleCheckHandle.OperationException.ToString(), "Bubble LoadResourceLocationsAsync");
                 yield break;
             }
             
@@ -195,15 +198,38 @@ namespace PIERStory {
             // 말풍선  다운로드 사이즈 체크 
             AsyncOperationHandle<long> getBubbleDownloadSizeHandle = Addressables.GetDownloadSizeAsync(bubbleAssetBundle);
             yield return getBubbleDownloadSizeHandle;
-            Debug.Log("### [Font] GetDownloadBubbleSizeAsync END, size : " + getBubbleDownloadSizeHandle.Result);
+            Debug.Log("### [Bubble] GetDownloadBubbleSizeAsync END, size : " + getBubbleDownloadSizeHandle.Result);
             
             
             // 이미 다운로드 받았음 
             if(getBubbleDownloadSizeHandle.Result <= 0) {
                 FillProgressorOnly(); // 게이지 자동 채워지고 진입 완료 처리 
-                
                 yield break; // 코루틴 종료 
             }
+            
+            // 말풍선 다운로드 필요함!! 
+            AsyncOperationHandle bubbleDownloadHandle = Addressables.DownloadDependenciesAsync(bubbleAssetBundle);
+            bubbleDownloadHandle.Completed += (op) => {
+
+                if (op.Status != AsyncOperationStatus.Succeeded)
+                {
+                    // 다운로드 실패!?
+                    SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
+                    NetworkLoader.main.ReportRequestError(bubbleDownloadHandle.OperationException.ToString(), "Bubble DownloadDependenciesAsync");
+                }
+            };
+            
+            // 게이지 채우기 
+            while (!bubbleDownloadHandle.IsDone)
+            {
+                downloadStatus = bubbleDownloadHandle.GetDownloadStatus();
+                downloadProgressBar.fillAmount = downloadStatus.Percent;
+                yield return null;
+            }
+            
+            Debug.Log("<color=cyan>Bubble bundle downloading is done!!!</color>");
+            yield return null;
+            
             // ----------------------------------------------------------------
             
             
@@ -342,16 +368,25 @@ namespace PIERStory {
                 else
                     return "Requesting platform information.";
                 
-                case 3: // 에셋번들 다운로드
-                // Debug.Log("33333333333333333");
+                case 3: // 폰트 에셋번들 다운로드
                 if(currentAppLang == "KO") 
-                    return "게임에 필요한 데이터를 다운받고 있습니다.";
+                    return "게임에 필요한 데이터를 다운받고 있습니다. [1/2]";
                 else if(currentAppLang == "JA") 
-                    return "ゲームに必要なデータをダウンロードしています。";
+                    return "ゲームに必要なデータをダウンロードしています [1/2]";
                 else if(currentAppLang == "AR") 
-                    return "تنزيل بيانات اللعبة الضرورية.";
+                    return "تنزيل بيانات اللعبة الضرورية [1/2]";
                 else
-                    return "Downloading necessary game data.";
+                    return "Downloading necessary game data. [1/2]";
+                    
+                case 4: // 말풍선 에셋번들 다운로드
+                if(currentAppLang == "KO") 
+                    return "게임에 필요한 데이터를 다운받고 있습니다. [2/2]";
+                else if(currentAppLang == "JA") 
+                    return "ゲームに必要なデータをダウンロードしています [2/2]";
+                else if(currentAppLang == "AR") 
+                    return "تنزيل بيانات اللعبة الضرورية [2/2]";
+                else
+                    return "Downloading necessary game data. [2/2]";
                 
             }
             

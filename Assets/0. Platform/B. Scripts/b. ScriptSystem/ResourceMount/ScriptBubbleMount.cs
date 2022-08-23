@@ -4,6 +4,9 @@ using UnityEngine;
 using LitJson;
 using BestHTTP;
 
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
 namespace PIERStory
 {
     [Serializable]
@@ -33,6 +36,10 @@ namespace PIERStory
         float border_right = 0;
         float border_top = 0;
         float border_bottom = 0;
+        
+        public bool isAddressable = false; // 어드레서블 에셋인지 아닌지. (2022.02.11)
+        public string addressableKey = string.Empty;
+        public AsyncOperationHandle<Sprite> mountedSpriteAddressable; // 스프라이트 어드레서블
 
         public ScriptBubbleMount(string __id, string __url, string __key, Action __cb)
         {
@@ -64,7 +71,7 @@ namespace PIERStory
             }
 
             // 이미지 불러온다
-            LoadImage();
+            SetBubbleImage();
         }
 
         /// <summary>
@@ -150,6 +157,64 @@ namespace PIERStory
             }
 
             return null;
+        }
+        
+        void SetAddressableKey() {
+            
+            string exct = ".png";
+            
+            addressableKey = "Bubble/" + spriteId;
+            
+            if(imageKey.Contains(".jpg")) {
+                exct = ".jpg";
+            }
+            else if(imageKey.Contains(".png")) {
+                exct = ".png";
+            } 
+            else 
+                exct = string.Empty;
+                
+            addressableKey += exct;
+            
+        }
+        
+        
+        /// <summary>
+        /// 말풍선 이미지 
+        /// </summary>
+        void SetBubbleImage() {
+            
+            SetAddressableKey();
+            
+            // 어드레서블부터 체크 
+            Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
+                
+                if(op.Status == AsyncOperationStatus.Succeeded && op.Result.Count >0) {
+                    
+                   // 미니컷도 POT (2의 지수) 이슈로 인해서 SpriteAtals로 불러오도록 처리 
+                   Addressables.LoadAssetAsync<Sprite>(addressableKey).Completed += (handle) => {
+                       if(handle.Status == AsyncOperationStatus.Succeeded) { // * 성공!
+                            
+                            isAddressable = true; // 어드레서블을 사용합니다. 
+                            mountedSpriteAddressable = handle; // 메모리 해제를 위한 변수.
+                            sprite = handle.Result;
+                            
+                            
+                            SendSuccessMessage(); // 성공처리 
+                       }
+                       else {
+                           
+                           Debug.Log(">> Failed LoadAssetAsync " + spriteId + " / " + handle.OperationException.Message);
+                           LoadImage();
+                       }
+                   }; // end of LoadAssetAsync                    
+                    
+                }
+                else {
+                    LoadImage();
+                }
+                
+            };
         }
     }
 }

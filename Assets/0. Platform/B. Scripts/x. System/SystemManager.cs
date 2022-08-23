@@ -848,6 +848,7 @@ namespace PIERStory
             if(addressable_version != currentAddressableVersion) {
                 
                 Debug.Log("#### InitAddressableCatalog diff version, clear cache ###");
+                Caching.ClearCache();
                 ES3.Save<string>(CommonConst.KEY_ADDRESSABLE_VERSION, addressable_version); // 저장 
                 
             }

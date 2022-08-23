@@ -15,6 +15,11 @@ using DG.Tweening;
 namespace PIERStory {
     public class ViewStoryLoading : CommonView, IPointerClickHandler
     {
+        
+        // public AsyncOperationHandle<IList<IResourceLocation>> bundleCheckHandle;
+        public AsyncOperationHandle<long> downloadSizeHandle;
+        public AsyncOperationHandle downloadHandle;
+        
         public ImageRequireDownload loadingImage;
         public static bool assetLoadComplete = false;
         
@@ -184,6 +189,192 @@ namespace PIERStory {
             assetLoadComplete = true;
         }
             
+        
+        /// <summary>
+        /// 어드레서블 다운로드 
+        /// </summary>
+        /// <param name="__projectID"></param>
+        /// <returns></returns>
+        IEnumerator DownloadingAddressable(string __projectID) {
+            
+            
+            
+            // 하나의 프로젝트는 아래 5개의 어드레서블 그룹으로 나누어져 있다. 
+            string voiceBundle = __projectID + "_voice";
+            string imageBundle = __projectID + "_image";
+            string modelBundle = __projectID + "_model";
+            string soundBundle = __projectID + "_sound";
+            string liveBundle = __projectID + "_live";
+            
+            bool hasDownloadBundle = false;
+            
+            StoryManager.main.CurrentProject.isPlaying = true; // 현재 프로젝트 플레이 처리 
+            
+            yield return null;
+            
+            // 하나씩 다운받기 시작한다. 
+            // * 캐릭터 모델부터 받는다. 
+            downloadSizeHandle = Addressables.GetDownloadSizeAsync(modelBundle);
+            yield return downloadSizeHandle;
+            
+            // 성공 및 Result가 0보다 클때만. 
+            if(downloadSizeHandle.Status == AsyncOperationStatus.Succeeded && downloadSizeHandle.Result > 0) {
+                hasDownloadBundle = true; // 다운받을것이 있음. 
+                Debug.Log(modelBundle + "need to be downloaded ###");
+                
+                loadingBar.fillAmount = 0;
+                // 텍스트 변경 처리 및 로딩 게이지 처리 
+
+                downloadHandle = Addressables.DownloadDependenciesAsync(modelBundle);
+                while(downloadHandle.Status == AsyncOperationStatus.None) {
+                    loadingBar.fillAmount = downloadHandle.GetDownloadStatus().Percent;
+                    yield return null;
+                }
+                
+                if(downloadHandle.Status != AsyncOperationStatus.Succeeded) { // 다운로드 실패에 대한 처리 
+                    // 메세지 알림 후, 
+                    // 다시 처음부터.. 진행해야하나? 
+                    Debug.LogError(string.Format("[{0}] : [{1}]", downloadHandle.Status.ToString(), downloadHandle.OperationException.Message));
+                }
+                
+                Addressables.Release(downloadHandle);
+                
+                
+            } 
+            else {
+                Debug.Log(string.Format("[{0}] : [{1}]", downloadHandle.Status.ToString(), downloadHandle.OperationException.Message));
+            }
+            // * 캐릭터 모델 처리 종료
+            
+            
+            // * 이미지 그룹 다운로드
+            downloadSizeHandle = Addressables.GetDownloadSizeAsync(imageBundle);
+            yield return downloadSizeHandle;
+            
+            // 성공 및 Result가 0보다 클때만. 
+            if(downloadSizeHandle.Status == AsyncOperationStatus.Succeeded && downloadSizeHandle.Result > 0) {
+                hasDownloadBundle = true; // 다운받을것이 있음. 
+                Debug.Log(imageBundle + "need to be downloaded ###");
+                
+                loadingBar.fillAmount = 0;
+                // 텍스트 변경 처리 및 로딩 게이지 처리 
+
+                downloadHandle = Addressables.DownloadDependenciesAsync(imageBundle);
+                while(downloadHandle.Status == AsyncOperationStatus.None) {
+                    loadingBar.fillAmount = downloadHandle.GetDownloadStatus().Percent;
+                    yield return null;
+                }
+                
+                if(downloadHandle.Status != AsyncOperationStatus.Succeeded) { // 다운로드 실패에 대한 처리 
+                    // 메세지 알림 후, 
+                    // 다시 처음부터.. 진행해야하나? 
+                    Debug.LogError(string.Format("[{0}] : [{1}]", downloadHandle.Status.ToString(), downloadHandle.OperationException.Message));
+                }
+                
+                Addressables.Release(downloadHandle);
+            } 
+            else {
+                Debug.Log(string.Format("[{0}] : [{1}]", downloadHandle.Status.ToString(), downloadHandle.OperationException.Message));
+            }
+            // * 이미지 그룹 처리 종료            
+
+
+            // * 라이브 그룹 다운로드
+            downloadSizeHandle = Addressables.GetDownloadSizeAsync(liveBundle);
+            yield return downloadSizeHandle;
+            
+            // 성공 및 Result가 0보다 클때만. 
+            if(downloadSizeHandle.Status == AsyncOperationStatus.Succeeded && downloadSizeHandle.Result > 0) {
+                hasDownloadBundle = true; // 다운받을것이 있음. 
+                Debug.Log(liveBundle + "need to be downloaded ###");
+                
+                loadingBar.fillAmount = 0;
+                // 텍스트 변경 처리 및 로딩 게이지 처리 
+
+                downloadHandle = Addressables.DownloadDependenciesAsync(liveBundle);
+                while(downloadHandle.Status == AsyncOperationStatus.None) {
+                    loadingBar.fillAmount = downloadHandle.GetDownloadStatus().Percent;
+                    yield return null;
+                }
+                
+                if(downloadHandle.Status != AsyncOperationStatus.Succeeded) { // 다운로드 실패에 대한 처리 
+                    // 메세지 알림 후, 
+                    // 다시 처음부터.. 진행해야하나? 
+                    Debug.LogError(string.Format("[{0}] : [{1}]", downloadHandle.Status.ToString(), downloadHandle.OperationException.Message));
+                }
+                
+                Addressables.Release(downloadHandle);
+            } 
+            else {
+                Debug.Log(string.Format("[{0}] : [{1}]", downloadHandle.Status.ToString(), downloadHandle.OperationException.Message));
+            }
+            // * 라이브 그룹 처리 종료      
+            
+
+
+            // * 사운드 그룹 다운로드
+            downloadSizeHandle = Addressables.GetDownloadSizeAsync(soundBundle);
+            yield return downloadSizeHandle;
+            
+            // 성공 및 Result가 0보다 클때만. 
+            if(downloadSizeHandle.Status == AsyncOperationStatus.Succeeded && downloadSizeHandle.Result > 0) {
+                hasDownloadBundle = true; // 다운받을것이 있음. 
+                Debug.Log(soundBundle + "need to be downloaded ###");
+                
+                loadingBar.fillAmount = 0;
+                // 텍스트 변경 처리 및 로딩 게이지 처리 
+
+                downloadHandle = Addressables.DownloadDependenciesAsync(soundBundle);
+                while(downloadHandle.Status == AsyncOperationStatus.None) {
+                    loadingBar.fillAmount = downloadHandle.GetDownloadStatus().Percent;
+                    yield return null;
+                }
+                
+                if(downloadHandle.Status != AsyncOperationStatus.Succeeded) { // 다운로드 실패에 대한 처리 
+                    // 메세지 알림 후, 
+                    // 다시 처음부터.. 진행해야하나? 
+                    Debug.LogError(string.Format("[{0}] : [{1}]", downloadHandle.Status.ToString(), downloadHandle.OperationException.Message));
+                }
+                
+                Addressables.Release(downloadHandle);
+            } 
+            else {
+                Debug.Log(string.Format("[{0}] : [{1}]", downloadHandle.Status.ToString(), downloadHandle.OperationException.Message));
+            }
+            // * 사운드 그룹 처리 종료
+            
+
+            // * 보이스 그룹 다운로드
+            downloadSizeHandle = Addressables.GetDownloadSizeAsync(voiceBundle);
+            yield return downloadSizeHandle;
+            
+            // 성공 및 Result가 0보다 클때만. 
+            if(downloadSizeHandle.Status == AsyncOperationStatus.Succeeded && downloadSizeHandle.Result > 0) {
+                hasDownloadBundle = true; // 다운받을것이 있음. 
+                Debug.Log(voiceBundle + "need to be downloaded ###");
+                
+                loadingBar.fillAmount = 0;
+                // 텍스트 변경 처리 및 로딩 게이지 처리 
+
+                downloadHandle = Addressables.DownloadDependenciesAsync(voiceBundle);
+                while(downloadHandle.Status == AsyncOperationStatus.None) {
+                    loadingBar.fillAmount = downloadHandle.GetDownloadStatus().Percent;
+                    yield return null;
+                }
+                
+                if(downloadHandle.Status != AsyncOperationStatus.Succeeded) { // 다운로드 실패에 대한 처리 
+                    // 메세지 알림 후, 
+                    // 다시 처음부터.. 진행해야하나? 
+                    Debug.LogError(string.Format("[{0}] : [{1}]", downloadHandle.Status.ToString(), downloadHandle.OperationException.Message));
+                }
+                
+                Addressables.Release(downloadHandle);
+            } 
+            else {
+                Debug.Log(string.Format("[{0}] : [{1}]", downloadHandle.Status.ToString(), downloadHandle.OperationException.Message));
+            }
+            // * 보이스 그룹 처리 종료            
+        }
 
         public void OnPointerClick(PointerEventData eventData)
         {

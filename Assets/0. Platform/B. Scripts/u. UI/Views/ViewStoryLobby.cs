@@ -460,7 +460,15 @@ namespace PIERStory
         /// </summary>
         void DecorateSetting()
         {
+            if(this.gameObject == null || !this.gameObject.activeSelf)
+                return;
+                
+            if(UserManager.main.currentStoryJson == null)
+                return;
+            
             Debug.Log("******* DecorateSetting *******");
+            
+            // Exception이 계속 잡혀서 try 처리로 
             
             liveModels.Clear();
             listModelMounts.Clear();

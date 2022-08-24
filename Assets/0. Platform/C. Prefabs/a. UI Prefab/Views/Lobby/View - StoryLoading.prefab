@@ -87,9 +87,9 @@ GameObject:
   - component: {fileID: 3938856119321959797}
   - component: {fileID: 3938856119321959803}
   - component: {fileID: 3938856119321959796}
-  - component: {fileID: 1506326667924962802}
+  - component: {fileID: 2187845593389604071}
   m_Layer: 5
-  m_Name: LoadingText
+  m_Name: DownloadText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -212,7 +212,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &1506326667924962802
+--- !u!114 &2187845593389604071
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -221,15 +221,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 3938856119321959798}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 185efb5e8935c594684c0b2c3d9f5563, type: 3}
+  m_Script: {fileID: 11500000, guid: 305d73031cbc4d84a8ffb03360ec6290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textID: 6215
   _text: {fileID: 3938856119321959796}
-  _localizedText: 
   isException: 1
   isAlignmentFix: 1
   originText: 
+  originAlign: 2
 --- !u!1 &3938856119432405018
 GameObject:
   m_ObjectHideFlags: 0
@@ -987,12 +986,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3137c67e99a29554782e582b40f257c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasDownloadBundle: 0
+  isCompleteCurrentDownload: 0
   loadingImage: {fileID: 3938856120044742838}
-  hasBundle: 0
   loadingBar: {fileID: 3938856119527662229}
-  textPercentage: {fileID: 3938856121334139859}
   textTitle: {fileID: 3938856119770362536}
   textInfo: {fileID: 3938856120531305575}
+  textAddressable: {fileID: 3938856119321959796}
+  textPercentage: {fileID: 3938856121334139859}
 --- !u!222 &2633306495896876798
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1436,6 +1437,8 @@ MonoBehaviour:
   targetRawImage: {fileID: 0}
   downloadedTexture: {fileID: 0}
   downloadedSprite: {fileID: 0}
+  noImageMark: {fileID: 0}
+  loadingMark: {fileID: 0}
 --- !u!1 &3938856120531305569
 GameObject:
   m_ObjectHideFlags: 0

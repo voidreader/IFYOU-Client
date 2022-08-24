@@ -117,6 +117,16 @@ namespace PIERStory
         public const string KEY_ADDRESSABLE_VERSION = "KeyAddressableVersion"; 
         
         
+        /// <summary>
+        /// 어드레서블 관련 문자열
+        /// </summary>
+        public const string POSTFIX_MODEL_BUNDLE = "_model";
+        public const string POSTFIX_LIVE_BUNDLE = "_live";
+        public const string POSTFIX_IMAGE_BUNDLE = "_image";
+        public const string POSTFIX_SOUND_BUNDLE = "_sound";
+        public const string POSTFIX_VOICE_BUNDLE = "_voice";
+        
+        
         // Firebase Event
         public const string FIREBASE_NOTICE = "notice_popup_open";
         

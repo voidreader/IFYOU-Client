@@ -89,7 +89,7 @@ namespace PIERStory
         
     
         [SerializeField] bool isServerInfoReceived = false; // 서버 기준 정보 전달받았는지 체크 한다. (2021.08.31)
-        [SerializeField] bool isAppCommonResourcesReceived = false; // 앱 공용 리소스 통신 완료했는지 체크 (2021.09.14)
+        
         
         JsonData timedealStandard = null; // 타임딜 기준정보 
         [SerializeField] int localVer = 0; // 로컬라이징 텍스트 버전
@@ -269,26 +269,20 @@ namespace PIERStory
         /// </summary>
         void Start()
         {
-            /* TOAST 게임베이스 초기화. 아래의 순서로 진행됩니다. 
-             * 1. Gamebase 초기화 (TOAST 서버와 통신합니다.)
-             * 2. Gamebase 로그인 (Gamebase에서 유저별 고유 ID를 받습니다.)
-             * 3. Gamebase ID로 PIER 서버 로그인 
-             */
-             
-             // 게임베이스 초기화
-            // GameBaseInitialize();
+            // * 게임베이스 초기화는 ViewTitle에서 시작한다. 
           
             // 디바이스 스펙에 따른 그래픽 퀄리티 설정             
             ChangeQuality();
-            
+
+            // 암호화하지 않는 EasySave 세팅             
             noEncryptionSetting = new ES3Settings(ES3.EncryptionType.None, "password");
-            
-            
-            // BestHTTP.PlatformSupport.Memory.BufferPool.IsEnabled = false;
+
         }
         
         void Update() {
-            if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.S)) {
+            
+            // 테스트 로직 
+            if(Application.isEditor && Input.GetKeyDown(KeyCode.S)) {
                 UserManager.main.SetAdminUser();
             }
         }
@@ -364,6 +358,7 @@ namespace PIERStory
                         termsOfUseURL = launchingJSON["launching"]["server"]["test_terms_url"].ToString();
                         bundleURL = launchingJSON["launching"]["server"]["test_bundle_url"].ToString();
                         
+                        // 어드레서블 카탈로그 URL 및 버전 
                         addressable_url = launchingJSON["launching"]["server"]["test_addressable"].ToString();
                         addressable_version = launchingJSON["launching"]["server"]["test_addressable_version"].ToString();
                     }
@@ -443,8 +438,6 @@ namespace PIERStory
         /// <param name="error"></param>
         void OnGamebaseInitialize(GamebaseResponse.Launching.LaunchingInfo launchingInfo, GamebaseError error) {
             
-           
-            
             // 초기화 실패했을 경우에 대한 처리. 
             if (!Gamebase.IsSuccess(error))
             {
@@ -495,12 +488,11 @@ namespace PIERStory
             // * 로컬라이징, 서버 기준 정보를 먼저 받아온다. 
             // * 폰트 에셋 번들도 이 시점에서 받아야 한다. 
             RequestGameServerInfo();
-            RequestAppCommonResources();
             
             isTestServerAccess = false; 
         
             // 통신 완료까지 대기 
-            while(!isServerInfoReceived || !isAppCommonResourcesReceived)
+            while(!isServerInfoReceived)
                 yield return null;      
                 
             
@@ -574,45 +566,7 @@ namespace PIERStory
         // 로컬라이징 텍스트 추가 (2021.08.31)
         
         
-        /// <summary>
-        /// 앱 공용 리소스 다운받기 
-        /// </summary>
-        void RequestAppCommonResources() {
-            
-            isAppCommonResourcesReceived = false;
-            
-            JsonData reqData  = new JsonData();
-            reqData[CommonConst.FUNC] = "getAppCommonResources";
-            
-            NetworkLoader.main.SendPost(OnRequestAppCommonResources, reqData, false);
-        }
-        
-        void OnRequestAppCommonResources(HTTPRequest request, HTTPResponse response ) {
-            if(!NetworkLoader.CheckResponseValidation(request, response)) {
-                return;
-            }
-            
-            
-            appComonResourceData = JsonMapper.ToObject(response.DataAsText);
-            
-            // 레벨 기준정보 데이터 추가 
-            baseCurrencyData = appComonResourceData[LobbyConst.NODE_CURRENCY];
-            
-            Debug.Log("### " + JsonMapper.ToStringUnicode(baseCurrencyData));
-            
-            // 코인, 젬 미리 다운로드 시켜놓기. 
-            if(baseCurrencyData != null && baseCurrencyData.ContainsKey(LobbyConst.COIN)) {
-                RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData[LobbyConst.COIN], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(baseCurrencyData[LobbyConst.COIN], CommonConst.COL_IMAGE_KEY), null);
-            }
-            if(baseCurrencyData != null && baseCurrencyData.ContainsKey(LobbyConst.GEM)) {
-                RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData[LobbyConst.GEM], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(baseCurrencyData[LobbyConst.GEM], CommonConst.COL_IMAGE_KEY), null);
-            }
-            
-            
-            
-            isAppCommonResourcesReceived = true;
-        }
-        
+       
     
         /// <summary>
         /// 게임서버 기준정보 받아오기 
@@ -657,6 +611,17 @@ namespace PIERStory
             
             AdManager.main.SetServerAdInfo(adInfo); // 광고 기준정보 세팅 
             
+            
+            // 기본 재화 정보 
+            // 코인, 젬 미리 다운로드 시켜놓기. 
+            baseCurrencyData = result["baseCurrency"]; 
+            
+            if(baseCurrencyData != null && baseCurrencyData.ContainsKey(LobbyConst.COIN)) {
+                RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData[LobbyConst.COIN], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(baseCurrencyData[LobbyConst.COIN], CommonConst.COL_IMAGE_KEY), null);
+            }
+            if(baseCurrencyData != null && baseCurrencyData.ContainsKey(LobbyConst.GEM)) {
+                RequestDownloadImage(SystemManager.GetJsonNodeString(baseCurrencyData[LobbyConst.GEM], CommonConst.COL_IMAGE_URL), SystemManager.GetJsonNodeString(baseCurrencyData[LobbyConst.GEM], CommonConst.COL_IMAGE_KEY), null);
+            }
             
             
             // 없는 리소스 허용 여부

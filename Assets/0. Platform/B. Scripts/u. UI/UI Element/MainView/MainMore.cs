@@ -176,26 +176,43 @@ namespace PIERStory {
             // 애니메이션 중이어도 막는다
             if (pushAlertAnimator.animation.isPlaying || nightAlertAnimator.animation.isPlaying)
                 return;
+                
+            try {
+                
+                // 푸쉬 토글이 On이 아니면 팝업만 띄우고 막는다
+                if (!SystemManager.main.pushTokenInfo.agreement.adAgreement)
+                {
+                    SystemManager.ShowSimpleAlertLocalize("6033");
+                    return;
+                }
 
-            // 푸쉬 토글이 On이 아니면 팝업만 띄우고 막는다
-            if (!SystemManager.main.pushTokenInfo.agreement.adAgreement)
-            {
-                SystemManager.ShowSimpleAlertLocalize("6033");
-                return;
+                // 야간 알림이 On이면
+                if (SystemManager.main.pushTokenInfo.agreement.adAgreementNight)
+                {
+                    SystemManager.main.PushRegister(true, false);
+                    nightPushAlert.sprite = spriteToggleOff;
+                    nightAlertAnimator.Play(true);
+                }
+                else
+                {
+                    SystemManager.main.PushRegister(true, true);
+                    nightPushAlert.sprite = spriteToggleOn;
+                    nightAlertAnimator.Play();
+                }
             }
-
-            // 야간 알림이 On이면
-            if (SystemManager.main.pushTokenInfo.agreement.adAgreementNight)
-            {
-                SystemManager.main.PushRegister(true, false);
-                nightPushAlert.sprite = spriteToggleOff;
-                nightAlertAnimator.Play(true);
-            }
-            else
-            {
-                SystemManager.main.PushRegister(true, true);
-                nightPushAlert.sprite = spriteToggleOn;
-                nightAlertAnimator.Play();
+            catch {
+                
+                
+                // 여기서 iOS에서 자꾸 오류가 난다.
+                if(nightPushAlert.sprite == spriteToggleOff) {
+                    nightPushAlert.sprite = spriteToggleOn;
+                    nightAlertAnimator.Play();
+                }
+                else {
+                    nightPushAlert.sprite = spriteToggleOff;
+                    nightAlertAnimator.Play(true);
+                }
+                
             }
         }
 

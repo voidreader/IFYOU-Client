@@ -64,8 +64,13 @@ namespace PIERStory {
         /// 팝업 컨트롤 개체
         /// </summary>
         void RefreshPopup() {
-            ResetVariables();
-            InitAuthMappingList();
+            try {
+                ResetVariables();
+                InitAuthMappingList();
+            }
+            catch (System.Exception e) {
+                NetworkLoader.main.ReportRequestError(e.StackTrace, "ResetVariables #1");
+            }
         }
         
         
@@ -85,7 +90,7 @@ namespace PIERStory {
                 icon.SetNativeSize();
             }
             catch(System.Exception e) {
-                NetworkLoader.main.ReportRequestError(e.StackTrace, "ResetVariables");
+                NetworkLoader.main.ReportRequestError(e.StackTrace, "ResetVariables #2");
             }
             
             groupBonus.SetActive(false);

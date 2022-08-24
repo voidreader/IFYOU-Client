@@ -100,6 +100,12 @@ namespace PIERStory {
         
         IEnumerator RoutineHide() {
             
+            if(content == null)                 {
+                yield break;
+            }
+            
+                
+            
             while(content.inTransition) {
                 yield return null;   
             }
@@ -129,18 +135,22 @@ namespace PIERStory {
         /// </summary>
         public virtual void Hide() {
 
+            try {
             
-            
-            // 중복 호출을 막음. 
-            if(content.inTransition)
-                return;
-            
-            
-            if(isOverlayUse && overlay != null)
-                overlay.Hide();
+                // 중복 호출을 막음. 
+                if(content.inTransition)
+                    return;
                 
                 
-            content.Hide();
+                if(isOverlayUse && overlay != null)
+                    overlay.Hide();
+                    
+                    
+                content.Hide();
+            }
+            catch {
+                return;   
+            }
             
             StartCoroutine(RoutineHide());
         }

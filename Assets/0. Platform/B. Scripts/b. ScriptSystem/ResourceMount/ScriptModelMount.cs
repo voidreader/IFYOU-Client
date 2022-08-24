@@ -637,7 +637,7 @@ namespace PIERStory
         /// </summary>
         /// <returns></returns>
         string GetAddressableKey() {
-            string key = StoryManager.main.CurrentProjectID + "/model/" + originModelName + ".prefab";
+            string key = StoryManager.main.CurrentProjectID + CommonConst.POSTFIX_MODEL_BUNDLE + "/model/" + originModelName + ".prefab";
 
             return key;
         }

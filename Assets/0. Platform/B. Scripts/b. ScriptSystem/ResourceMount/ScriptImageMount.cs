@@ -179,7 +179,7 @@ namespace PIERStory
                 return string.Empty;
             }
             
-            key = StoryManager.main.CurrentProjectID + middleKey + imageName;
+            key = StoryManager.main.CurrentProjectID + CommonConst.POSTFIX_IMAGE_BUNDLE + middleKey + imageName;
             
             
             // 배경과 미니컷(image), 일러스트는 spriteatlas 사용 

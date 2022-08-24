@@ -91,36 +91,41 @@ namespace PIERStory {
         {
             if(UserManager.main == null || !UserManager.main.completeReadUserData)
                 return;            
+                
+            if(SystemManager.main == null || StoryManager.main == null || LobbyManager.main == null)
+                return;
             
             base.OnView();
-            
-
-            // 앱 첫실행 시에만 출석보상 체크하고 띄워!
-            if (!StoryManager.enterGameScene && !PlayerPrefs.HasKey("noticeOneday") && SystemManager.main.noticeData.Count > 0)
-            {   
-                Debug.Log("<color=yellow> Notice Call </color>");
-                
-                // 실행당 한번만 오픈. 오늘 더이상 보지 않기에 대한 key가 없을때(하루가 지나거나, 설정하지 않은 경우)  
-                // 인트로 완료한 경우만 추가.               
-                if(!SystemManager.noticePopupExcuted && !PlayerPrefs.HasKey("noticeOneday") && UserManager.main.isIntroDone) {
-                    PopupBase p = PopupManager.main.GetPopup("Notice");
-                    PopupManager.main.ShowPopup(p, true);
-                    SystemManager.noticePopupExcuted = true; // true 로 설정. 이번 실행헤서는 또 뜨지 않게. 
-                    
-                    Firebase.Analytics.FirebaseAnalytics.LogEvent(CommonConst.FIREBASE_NOTICE);
-                }
-            }
 
             LobbyManager.main.RequestPlatformLoadingImages(); // 플랫폼 로딩 이미지 다운로드 처리 
             
-            mainToggle.SetIsOn(true); // '메인' 네이게이션이 언제나 선택된 상태 
+            mainToggle.SetIsOn(true); // '메인' 네이게이션이 언제나 선택된 상태             
+
+            // 앱실행 시점에 공지사항 팝업 띄우기 
+            try {
+                if (!StoryManager.enterGameScene && !PlayerPrefs.HasKey("noticeOneday") && SystemManager.main.noticeData != null && SystemManager.main.noticeData.Count > 0)
+                {   
+                    Debug.Log("<color=yellow> Notice Call </color>");
+                    
+                    // 실행당 한번만 오픈. 오늘 더이상 보지 않기에 대한 key가 없을때(하루가 지나거나, 설정하지 않은 경우)  
+                    // 인트로 완료한 경우만 추가.               
+                    if(!SystemManager.noticePopupExcuted && !PlayerPrefs.HasKey("noticeOneday") && UserManager.main.isIntroDone) {
+                        PopupBase p = PopupManager.main.GetPopup("Notice");
+                        PopupManager.main.ShowPopup(p, true);
+                        SystemManager.noticePopupExcuted = true; // true 로 설정. 이번 실행헤서는 또 뜨지 않게. 
+                        
+                        Firebase.Analytics.FirebaseAnalytics.LogEvent(CommonConst.FIREBASE_NOTICE);
+                    }
+                }
+            }
+            catch(Exception e) {
+                Debug.LogError(e.StackTrace);
+                NetworkLoader.main.ReportRequestError(e.StackTrace, "ViewMain.OnView.공지사항");
+            }
+
+
             
-            
-            // AFInAppEvents.
-            Dictionary<string, string> eventValues = new Dictionary<string, string>();
-            eventValues.Add(AFInAppEvents.CUSTOMER_USER_ID, UserManager.main.userKey);
-            AdManager.main.SendAppsFlyerEvent("af_main_enter", eventValues);
-            
+           
             
             
             // 인트로 완료 전이라면 인트로 재생시킨다. 

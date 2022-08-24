@@ -81,14 +81,17 @@ namespace PIERStory
             // 보이스, 배경음, 효과음
             switch(__template) {
                 case GameConst.COL_VOICE:
+                key = StoryManager.main.CurrentProjectID + CommonConst.POSTFIX_VOICE_BUNDLE;
                 middleKey = "/voice/";
                 break;
                 
                 case GameConst.TEMPLATE_BGM:
+                key = StoryManager.main.CurrentProjectID + CommonConst.POSTFIX_SOUND_BUNDLE;
                 middleKey = "/bgm/";
                 break;
                 
                 case ScriptPage.COL_SOUND_EFFECT:
+                key = StoryManager.main.CurrentProjectID + CommonConst.POSTFIX_SOUND_BUNDLE;
                 middleKey = "/se/";
                 break;
             }
@@ -98,7 +101,7 @@ namespace PIERStory
                 return string.Empty;
             }
             
-            key = StoryManager.main.CurrentProjectID + middleKey + sound_name;
+            key = key + middleKey + sound_name;
             
             if(sound_key.Contains(".mp3")) {
                 key += ".mp3";

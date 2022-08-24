@@ -190,9 +190,9 @@ namespace PIERStory
             
             // 라이브 오브젝트와 일러스트 분리 
             if(isMinicut) 
-                key = StoryManager.main.CurrentProjectID + "/live_object/" + liveName + ".prefab";
+                key = StoryManager.main.CurrentProjectID + CommonConst.POSTFIX_LIVE_BUNDLE + "/live_object/" + liveName + ".prefab";
             else 
-                key = StoryManager.main.CurrentProjectID + "/live_illust/" + liveName + ".prefab";
+                key = StoryManager.main.CurrentProjectID + CommonConst.POSTFIX_LIVE_BUNDLE + "/live_illust/" + liveName + ".prefab";
             
 
             return key;

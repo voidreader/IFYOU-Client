@@ -81,7 +81,7 @@ namespace PIERStory
         public JsonData launchingJSON = null; // 게임베이스 런칭 
         public StoryData givenStoryData = null; // 선택된 스토리 JSON 데이터 (프로젝트)
         public EpisodeData givenEpisodeData = null; // 로비에서 전달받은 에피소드 데이터 (에피소드)
-        public JsonData appComonResourceData = null; // 앱 공용 리소스 데이터 (2021.09.14)
+        
         JsonData baseCurrencyData = null; // 기본 재화 데이터 
 
         
@@ -158,7 +158,6 @@ namespace PIERStory
         [Space][Header("공용 스프라이트")]
         public Sprite spriteCoin;       // 60 사이즈 코인
         public Sprite spriteStar;       // 60 사이 사이즈 스타
-        public Sprite spriteFreepassIcon; // 프리패스 아이콘
         public Sprite spriteInappOriginIcon; // 인앱 구매확정 메일 아이콘        
         public Sprite spriteAllPassIcon; // 올 패스 아이콘
 

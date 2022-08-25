@@ -75,7 +75,7 @@ namespace PIERStory
 
 
 
-        public float prevIllustProgress = -1f;
+        
 
 
         /// <summary>
@@ -134,7 +134,6 @@ namespace PIERStory
 
         JsonData resultProjectCurrent = null; // 플레이 위치 
 
-        JsonData resultSceneRecord = null; // 사건ID 기록 통신 결과 
         JsonData resultEpisodeRecord = null; // 에피소드 기록 통신 결과
         JsonData resultEpisodeReset = null; // 에피소드 리셋 통신 결과
 
@@ -154,7 +153,7 @@ namespace PIERStory
 
 
         public const string UN_UNREAD_MAIL_COUNT = "unreadMailCount"; // 미수신 메일 개수
-        public const string UN_UNREAD_MAIL_LIST = "mailList"; // 미수신 메일 리스트
+        
 
         const string NODE_TUTORIAL_STEP = "tutorial_step";
         const string NODE_TUTORIAL_CLEAR = "tutorial_clear";
@@ -199,7 +198,7 @@ namespace PIERStory
         public const string NODE_USER_ABILITY = "ability"; // 포장된 유저 능력치
         public const string NODE_RAW_STORY_ABILITY = "rawStoryAbility"; // 스토리 누적 능력치 RAW 데이터 
 
-        const string PUSH_CHANNEL_ID = "EpisodeOpenWaiting";
+        
 
         #endregion
 

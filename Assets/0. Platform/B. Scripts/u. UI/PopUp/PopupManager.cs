@@ -71,7 +71,7 @@ namespace PIERStory {
         // 튜토리얼 팝업 모음
         public GameObject popupTutorial1;
         
-        public GameObject popupTutorial3;
+        // public GameObject popupTutorial3;
         
         
         public GameObject popupDevRowJump;
@@ -495,11 +495,12 @@ namespace PIERStory {
             else
                 DictPopup.Add(CommonConst.POPUP_TUTORIAL_MISSION_1, popupTutorial1);
 
-
+            /*
             if (DictPopup.ContainsKey(CommonConst.POPUP_TUTORIAL_MISSION_3))
                 DictPopup[CommonConst.POPUP_TUTORIAL_MISSION_3] = popupTutorial3;
             else
                 DictPopup.Add(CommonConst.POPUP_TUTORIAL_MISSION_3, popupTutorial3);
+            */
 
 
             if (DictPopup.ContainsKey("Nickname")) 

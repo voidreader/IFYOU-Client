@@ -128,8 +128,11 @@ namespace PIERStory {
                 yield break;
             
             // * 튜토리얼 3번 호출 
+            // 팝업 순서 문제로 튜토리얼 3번 호출 막았음 2022.08.25
+            /*
             if ((UserManager.main.tutorialStep <= 2 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 3 && !UserManager.main.tutorialClear))
                 UserManager.main.UpdateTutorialStep(3, 0, CallbackStartTutorial);                 
+            */
         }
         
 

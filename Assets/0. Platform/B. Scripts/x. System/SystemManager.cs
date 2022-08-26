@@ -366,6 +366,12 @@ namespace PIERStory
                         addressable_version = launchingJSON["launching"]["server"]["addressable_version"].ToString();
                     }
                     
+                    // 어드레서블 URL 완성하기 (OS별로 구분된다)
+                    #if UNITY_IOS
+                    addressable_url += "iOS/catalog_1.json";
+                    #else
+                    addressable_url += "Android/catalog_1.json";
+                    #endif                       
                 }
                 else
                 {
@@ -817,12 +823,7 @@ namespace PIERStory
                 
             }
             
-            // URL 완성하기 
-            #if UNITY_IOS
-            addressable_url += "iOS/catalog_1.json";
-            #else
-            addressable_url += "Android/catalog_1.json";
-            #endif            
+         
             
             Debug.Log(string.Format("Addressable URL : [{0}]", addressable_url));
             Addressables.LoadContentCatalogAsync(addressable_url).Completed += (op) => {

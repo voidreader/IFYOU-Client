@@ -1457,10 +1457,47 @@ namespace PIERStory
         
         
         /// <summary>
+        /// 작품 진입시에 미해금된 미션 체크 
+        /// </summary>
+        public void CheckUnlockedMission() {
+            
+            bool hasNewMission = false;
+            
+            // 에피소드 해금과 씬 해금을 모두 체크해야한다. 
+            if(DictStoryMission == null)
+                return;
+                
+            
+            foreach(int key in DictStoryMission.Keys) {
+                if(DictStoryMission[key].missionState != MissionState.locked)
+                    continue;
+                    
+                // 에피소드와 씬 타입만 체크한다. 
+                if(DictStoryMission[key].missionType == MissionType.episode || DictStoryMission[key].missionType == MissionType.scene) {
+                    
+                    // 조건에 충족하는 경우 
+                    if(DictStoryMission[key].CheckUserHist()) {
+                        // 대상 미션 오픈 처리 
+                        ShowMissionUnlockPopup(DictStoryMission[key], false);
+                        hasNewMission = true;
+                    }
+                    
+                }
+                    
+            }
+            
+            if(hasNewMission) {
+                StoryLobbyMain.OnInitializeContentGroup?.Invoke();
+            }
+            
+        }
+        
+        
+        /// <summary>
         /// 미션 해금 팝업 오픈 
         /// </summary>
         /// <param name="__missionData"></param>
-        public void ShowMissionUnlockPopup(MissionData __missionData) {
+        public void ShowMissionUnlockPopup(MissionData __missionData, bool __needPopup = true) {
             
             if(!DictStoryMission.ContainsKey(__missionData.missionID)) {
                 Debug.LogError("ShowMissionUnlockPopup No mission data : " + __missionData.missionName);
@@ -1477,6 +1514,13 @@ namespace PIERStory
                 NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));            
             
             NetworkLoader.main.RequestUnlockMission(__missionData);
+            
+            
+            Debug.Log("Mission Clear :: "+ __missionData.missionName);
+            
+            if(!__needPopup) {
+                return;
+            }
             
             
             // 게임 화면에서 미션팝업을 꺼뒀으면 여길 타지말자
@@ -1499,6 +1543,8 @@ namespace PIERStory
             
 
         }
+        
+        
         
         
         

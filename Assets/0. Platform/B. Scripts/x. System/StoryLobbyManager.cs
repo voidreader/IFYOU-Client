@@ -69,6 +69,8 @@ namespace PIERStory
             SystemManager.SetBlockBackButton(false);
 
             Signal.Send(LobbyConst.STREAM_IFYOU, "storyLobbyLoadComplete", string.Empty);
+            
+            UserManager.main.CheckUnlockedMission(); // 미션 해금 체크 
 
         }
 

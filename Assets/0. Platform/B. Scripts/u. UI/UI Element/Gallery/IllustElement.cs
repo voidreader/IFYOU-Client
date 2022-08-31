@@ -98,7 +98,8 @@ namespace PIERStory
                     else
                     {
                         // 정규 에피소드인 경우
-                        episodeHintText.text = string.Format(SystemManager.GetLocalizedText("5027") + " {0}", appearEpisodeData.episodeNO);
+                        //episodeHintText.text = string.Format(SystemManager.GetLocalizedText("5027") + " {0}", appearEpisodeData.episodeNO);
+                        episodeHintText.text = string.Format(SystemManager.GetLocalizedText("5027"));
                     }
                 }
             }

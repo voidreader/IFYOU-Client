@@ -107,7 +107,9 @@ namespace PIERStory
             float winHeight = Screen.height;
             float endingGroupMove;
 
-            if(winHeight <= 2000f)
+            if(winHeight <= 2640)
+                endingGroupMove = 150f;
+            else if(winHeight <= 2000f)
                 endingGroupMove = 190f;
             else
                 endingGroupMove = 160f;
@@ -1274,11 +1276,12 @@ namespace PIERStory
                         
                     endingCredit.gameObject.SetActive(true);
 
-                    if(winHeight <= 2000f)
+                    if(winHeight <= 2640)
+                        endingGroup.transform.DOMove(new Vector3(0, 150f), 128f).SetEase(Ease.Linear);
+                    else if(winHeight <= 2000f)
                         endingGroup.transform.DOMove(new Vector3(0, 190f), 128f).SetEase(Ease.Linear);
                     else
                         endingGroup.transform.DOMove(new Vector3(0, 160f), 128f).SetEase(Ease.Linear);
-                    
                     break;
                 /*
                 case GameConst.KR_SCREEN_EFFECT_WAVE_LINE:

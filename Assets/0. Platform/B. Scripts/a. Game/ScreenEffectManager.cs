@@ -1203,6 +1203,8 @@ namespace PIERStory
                         ScriptRow.GetParam<int>(__params, GameConst.KR_PARAM_VALUE_LEVEL, ref blurLevel);
                         ScriptRow.GetParam<float>(__params, GameConst.KR_PARAM_VALUE_TIME, ref blurTime);
                     }
+                    
+                    Debug.Log(string.Format("Blur : {0}/{1}", blurLevel, blurTime));
 
                     switch (blurLevel)
                     {

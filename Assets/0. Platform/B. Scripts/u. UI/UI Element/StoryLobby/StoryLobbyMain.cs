@@ -878,7 +878,10 @@ namespace PIERStory {
                 if(episodePurchaseState != PurchaseState.Permanent && currentEpisodeData.nextOpenMin > 0) {
                     
                     UserManager.OnRequestEpisodePurchase = PurchasePostProcess;
-                    NetworkLoader.main.PurchaseEpisode(currentEpisodeID, PurchaseState.AD, "none", "0");
+                    // 2022.09 BM 변경으로 AD 타입으로 구매하지 않음
+                    // NetworkLoader.main.PurchaseEpisode(currentEpisodeID, PurchaseState.AD, "none", "0");
+                    
+                    NetworkLoader.main.PurchaseEpisode(currentEpisodeID, PurchaseState.Permanent, "none", "0");
                 }
                 else { // 영구적인 상태라면 그냥 바로 진행
                     PurchasePostProcess(true); // 그냥 진행 

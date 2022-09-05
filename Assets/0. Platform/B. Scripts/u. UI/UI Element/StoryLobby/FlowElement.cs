@@ -1,4 +1,4 @@
-
+/*
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -502,8 +502,9 @@ namespace PIERStory {
 
     }
 }
+*/
 //개발이 전부 끝나면 이 코드로 전체 교체하자.
-/*
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1007,7 +1008,5 @@ namespace PIERStory {
             // 바로 시작 
                 StoryLobbyMain.SuperUserFlowEpisodeStart?.Invoke(currentEpisode);
         }
-
     }
 }
-*/

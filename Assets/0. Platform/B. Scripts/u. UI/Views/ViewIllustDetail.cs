@@ -117,7 +117,8 @@ namespace PIERStory
             // buttonIcon.sprite = spriteEyeOpen;
             illustContents.SetActive(true);
             
-            shareBonus.SetActive(!isShareBonusGet);
+            // 2021.3.9  유니티 이슈로 사용하지 않도록 변경 
+            // shareBonus.SetActive(!isShareBonusGet);
             HideShareBox();
 
             StoryLobbyManager.main.touchEffect.gameObject.SetActive(false);

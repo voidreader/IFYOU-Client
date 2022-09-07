@@ -14,7 +14,7 @@
 
 const NSString* kUserInfoKey = @"user_info";
 
-NPBINDING DONTSTRIP IntPtr NPNotificationRequestCreate(const char* id, IntPtr contentPtr, IntPtr triggerPtr)
+NPBINDING DONTSTRIP NPIntPtr NPNotificationRequestCreate(const char* id, NPIntPtr contentPtr, NPIntPtr triggerPtr)
 {
     // create notification request
     UNNotificationContent*     content                  = (__bridge UNNotificationContent*)contentPtr;
@@ -25,38 +25,38 @@ NPBINDING DONTSTRIP IntPtr NPNotificationRequestCreate(const char* id, IntPtr co
     return NPRetainWithOwnershipTransfer(notificationRequest);
 }
 
-NPBINDING DONTSTRIP const char* NPNotificationRequestGetId(IntPtr requestPtr)
+NPBINDING DONTSTRIP const char* NPNotificationRequestGetId(NPIntPtr requestPtr)
 {
     UNNotificationRequest*              request     = (__bridge UNNotificationRequest*)requestPtr;
     return NPCreateCStringCopyFromNSString(request.identifier);
 }
 
-NPBINDING DONTSTRIP UNNotificationTriggerType NPNotificationRequestGetTriggerType(IntPtr requestPtr)
+NPBINDING DONTSTRIP UNNotificationTriggerType NPNotificationRequestGetTriggerType(NPIntPtr requestPtr)
 {
     UNNotificationRequest*              request     = (__bridge UNNotificationRequest*)requestPtr;
     return [request triggerType];
 }
 
-NPBINDING DONTSTRIP IntPtr NPNotificationRequestGetContent(IntPtr requestPtr)
+NPBINDING DONTSTRIP NPIntPtr NPNotificationRequestGetContent(NPIntPtr requestPtr)
 {
     UNNotificationRequest*              request     = (__bridge UNNotificationRequest*)requestPtr;
     return NPRetainWithOwnershipTransfer(request.content);
 }
 
-NPBINDING DONTSTRIP IntPtr NPNotificationRequestGetTrigger(IntPtr requestPtr)
+NPBINDING DONTSTRIP NPIntPtr NPNotificationRequestGetTrigger(NPIntPtr requestPtr)
 {
     UNNotificationRequest*              request     = (__bridge UNNotificationRequest*)requestPtr;
     UNNotificationTrigger*              trigger     = request.trigger;
     return trigger ? NPRetainWithOwnershipTransfer(trigger) : nil;
 }
 
-NPBINDING DONTSTRIP IntPtr NPNotificationContentCreate()
+NPBINDING DONTSTRIP NPIntPtr NPNotificationContentCreate()
 {
     UNMutableNotificationContent*       content     = [[UNMutableNotificationContent alloc] init];
     return NPRetainWithOwnershipTransfer(content);
 }
 
-NPBINDING DONTSTRIP const char* NPNotificationContentGetTitle(IntPtr contentPtr)
+NPBINDING DONTSTRIP const char* NPNotificationContentGetTitle(NPIntPtr contentPtr)
 {
 #if !TARGET_OS_TV
     UNNotificationContent*              content     = (__bridge UNNotificationContent*)contentPtr;
@@ -66,7 +66,7 @@ NPBINDING DONTSTRIP const char* NPNotificationContentGetTitle(IntPtr contentPtr)
 #endif
 }
 
-NPBINDING DONTSTRIP void NPNotificationContentSetTitle(IntPtr contentPtr, const char* value)
+NPBINDING DONTSTRIP void NPNotificationContentSetTitle(NPIntPtr contentPtr, const char* value)
 {
 #if !TARGET_OS_TV
     UNMutableNotificationContent*       content     = (__bridge UNMutableNotificationContent*)contentPtr;
@@ -74,7 +74,7 @@ NPBINDING DONTSTRIP void NPNotificationContentSetTitle(IntPtr contentPtr, const 
 #endif
 }
 
-NPBINDING DONTSTRIP const char* NPNotificationContentGetSubtitle(IntPtr contentPtr)
+NPBINDING DONTSTRIP const char* NPNotificationContentGetSubtitle(NPIntPtr contentPtr)
 {
 #if !TARGET_OS_TV
     UNNotificationContent*              content     = (__bridge UNNotificationContent*)contentPtr;
@@ -84,7 +84,7 @@ NPBINDING DONTSTRIP const char* NPNotificationContentGetSubtitle(IntPtr contentP
 #endif
 }
 
-NPBINDING DONTSTRIP void NPNotificationContentSetSubtitle(IntPtr contentPtr, const char* value)
+NPBINDING DONTSTRIP void NPNotificationContentSetSubtitle(NPIntPtr contentPtr, const char* value)
 {
 #if !TARGET_OS_TV
     UNMutableNotificationContent*       content     = (__bridge UNMutableNotificationContent*)contentPtr;
@@ -92,7 +92,7 @@ NPBINDING DONTSTRIP void NPNotificationContentSetSubtitle(IntPtr contentPtr, con
 #endif
 }
 
-NPBINDING DONTSTRIP const char* NPNotificationContentGetBody(IntPtr contentPtr)
+NPBINDING DONTSTRIP const char* NPNotificationContentGetBody(NPIntPtr contentPtr)
 {
 #if !TARGET_OS_TV
     UNNotificationContent*              content     = (__bridge UNNotificationContent*)contentPtr;
@@ -102,7 +102,7 @@ NPBINDING DONTSTRIP const char* NPNotificationContentGetBody(IntPtr contentPtr)
 #endif
 }
 
-NPBINDING DONTSTRIP void NPNotificationContentSetBody(IntPtr contentPtr, const char* value)
+NPBINDING DONTSTRIP void NPNotificationContentSetBody(NPIntPtr contentPtr, const char* value)
 {
 #if !TARGET_OS_TV
     UNMutableNotificationContent*       content     = (__bridge UNMutableNotificationContent*)contentPtr;
@@ -110,19 +110,19 @@ NPBINDING DONTSTRIP void NPNotificationContentSetBody(IntPtr contentPtr, const c
 #endif
 }
 
-NPBINDING DONTSTRIP int NPNotificationContentGetBadge(IntPtr contentPtr)
+NPBINDING DONTSTRIP int NPNotificationContentGetBadge(NPIntPtr contentPtr)
 {
     UNNotificationContent*              content     = (__bridge UNNotificationContent*)contentPtr;
     return (int)[content.badge integerValue];
 }
 
-NPBINDING DONTSTRIP void NPNotificationContentSetBadge(IntPtr contentPtr, int value)
+NPBINDING DONTSTRIP void NPNotificationContentSetBadge(NPIntPtr contentPtr, int value)
 {
     UNMutableNotificationContent*       content     = (__bridge UNMutableNotificationContent*)contentPtr;
     [content setBadge:[NSNumber numberWithInteger:value]];
 }
 
-NPBINDING DONTSTRIP const char* NPNotificationContentGetUserInfo(IntPtr contentPtr)
+NPBINDING DONTSTRIP const char* NPNotificationContentGetUserInfo(NPIntPtr contentPtr)
 {
     UNNotificationContent*              content     = (__bridge UNNotificationContent*)contentPtr;
     NSError*                            error;
@@ -130,7 +130,7 @@ NPBINDING DONTSTRIP const char* NPNotificationContentGetUserInfo(IntPtr contentP
     return NPCreateCStringCopyFromNSString(jsonStr);
 }
 
-NPBINDING DONTSTRIP void NPNotificationContentSetUserInfo(IntPtr contentPtr, const char* jsonStr)
+NPBINDING DONTSTRIP void NPNotificationContentSetUserInfo(NPIntPtr contentPtr, const char* jsonStr)
 {
     UNMutableNotificationContent*       content     = (__bridge UNMutableNotificationContent*)contentPtr;
     NSError*                            error;
@@ -138,13 +138,13 @@ NPBINDING DONTSTRIP void NPNotificationContentSetUserInfo(IntPtr contentPtr, con
     [content setUserInfo:NPFromJson(NPCreateNSStringFromCString(jsonStr), &error)];
 }
 
-NPBINDING DONTSTRIP void NPNotificationContentSetSoundName(IntPtr contentPtr, const char* soundName)
+NPBINDING DONTSTRIP void NPNotificationContentSetSoundName(NPIntPtr contentPtr, const char* soundName)
 {
     UNMutableNotificationContent*       content     = (__bridge UNMutableNotificationContent*)contentPtr;
     [content setSound:[UNNotificationSound soundNamed:NPCreateNSStringFromCString(soundName)]];
 }
 
-NPBINDING DONTSTRIP const char* NPNotificationContentGetLaunchImageName(IntPtr contentPtr)
+NPBINDING DONTSTRIP const char* NPNotificationContentGetLaunchImageName(NPIntPtr contentPtr)
 {
 #if !TARGET_OS_OSX || !TARGET_OS_TV
     UNNotificationContent*              content     = (__bridge UNNotificationContent*)contentPtr;
@@ -154,7 +154,7 @@ NPBINDING DONTSTRIP const char* NPNotificationContentGetLaunchImageName(IntPtr c
 #endif
 }
 
-NPBINDING DONTSTRIP void NPNotificationContentSetLaunchImageName(IntPtr contentPtr, const char* value)
+NPBINDING DONTSTRIP void NPNotificationContentSetLaunchImageName(NPIntPtr contentPtr, const char* value)
 {
 #if !TARGET_OS_OSX || !TARGET_OS_TV
     UNMutableNotificationContent*       content     = (__bridge UNMutableNotificationContent*)contentPtr;
@@ -162,7 +162,7 @@ NPBINDING DONTSTRIP void NPNotificationContentSetLaunchImageName(IntPtr contentP
 #endif
 }
 
-NPBINDING DONTSTRIP const char* NPNotificationContentGetCategoryId(IntPtr contentPtr)
+NPBINDING DONTSTRIP const char* NPNotificationContentGetCategoryId(NPIntPtr contentPtr)
 {
 #if !TARGET_OS_TV
     UNNotificationContent*              content     = (__bridge UNNotificationContent*)contentPtr;
@@ -172,19 +172,19 @@ NPBINDING DONTSTRIP const char* NPNotificationContentGetCategoryId(IntPtr conten
 #endif
 }
 
-NPBINDING DONTSTRIP bool NPNotificationTriggerGetRepeats(IntPtr triggerPtr)
+NPBINDING DONTSTRIP bool NPNotificationTriggerGetRepeats(NPIntPtr triggerPtr)
 {
     UNNotificationTrigger*              trigger     = (__bridge UNNotificationTrigger*)triggerPtr;
     return trigger.repeats;
 }
 
-NPBINDING DONTSTRIP IntPtr NPTimeIntervalNotificationTriggerCreate(double interval, bool repeats)
+NPBINDING DONTSTRIP NPIntPtr NPTimeIntervalNotificationTriggerCreate(double interval, bool repeats)
 {
     UNTimeIntervalNotificationTrigger*  trigger     = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:interval repeats:repeats];
     return NPRetainWithOwnershipTransfer(trigger);
 }
 
-NPBINDING DONTSTRIP void NPTimeIntervalNotificationTriggerGetProperties(IntPtr triggerPtr, double* timeInterval, char* nextTriggerDate, bool* repeats)
+NPBINDING DONTSTRIP void NPTimeIntervalNotificationTriggerGetProperties(NPIntPtr triggerPtr, double* timeInterval, char* nextTriggerDate, bool* repeats)
 {
     UNTimeIntervalNotificationTrigger*  trigger     = (__bridge UNTimeIntervalNotificationTrigger*)triggerPtr;
     
@@ -194,7 +194,7 @@ NPBINDING DONTSTRIP void NPTimeIntervalNotificationTriggerGetProperties(IntPtr t
     *repeats        = trigger.repeats;
 }
 
-NPBINDING DONTSTRIP IntPtr NPCalendarNotificationTriggerCreate(NPUnityDateComponents dateComponents, bool repeats)
+NPBINDING DONTSTRIP NPIntPtr NPCalendarNotificationTriggerCreate(NPUnityDateComponents dateComponents, bool repeats)
 {
     // create date component
     NSDateComponents*                   components  = dateComponents.ToNSDateComponents();
@@ -204,7 +204,7 @@ NPBINDING DONTSTRIP IntPtr NPCalendarNotificationTriggerCreate(NPUnityDateCompon
     return NPRetainWithOwnershipTransfer(trigger);
 }
 
-NPBINDING DONTSTRIP void NPCalendarNotificationTriggerGetProperties(IntPtr triggerPtr, NPUnityDateComponents* dateComponents, char* nextTriggerDate, bool* repeats)
+NPBINDING DONTSTRIP void NPCalendarNotificationTriggerGetProperties(NPIntPtr triggerPtr, NPUnityDateComponents* dateComponents, char* nextTriggerDate, bool* repeats)
 {
     UNCalendarNotificationTrigger*      trigger     = (__bridge UNCalendarNotificationTrigger*)triggerPtr;
     
@@ -214,7 +214,7 @@ NPBINDING DONTSTRIP void NPCalendarNotificationTriggerGetProperties(IntPtr trigg
     *repeats        = trigger.repeats;
 }
 
-NPBINDING DONTSTRIP IntPtr NPLocationNotificationTriggerCreate(NPUnityCircularRegion regionData, bool notifyOnEntry, bool notifyOnExit, bool repeats)
+NPBINDING DONTSTRIP NPIntPtr NPLocationNotificationTriggerCreate(NPUnityCircularRegion regionData, bool notifyOnEntry, bool notifyOnExit, bool repeats)
 {
 #if NATIVE_PLUGINS_USES_CORE_LOCATION
     // set region info
@@ -233,7 +233,7 @@ NPBINDING DONTSTRIP IntPtr NPLocationNotificationTriggerCreate(NPUnityCircularRe
 #endif
 }
 
-NPBINDING DONTSTRIP void NPLocationNotificationTriggerGetProperties(IntPtr triggerPtr, NPUnityCircularRegion* regionData, bool* notifyOnEntry, bool* notifyOnExit, bool* repeats)
+NPBINDING DONTSTRIP void NPLocationNotificationTriggerGetProperties(NPIntPtr triggerPtr, NPUnityCircularRegion* regionData, bool* notifyOnEntry, bool* notifyOnExit, bool* repeats)
 {
 #if NATIVE_PLUGINS_USES_CORE_LOCATION
     UNLocationNotificationTrigger*      trigger     = (__bridge UNLocationNotificationTrigger*)triggerPtr;

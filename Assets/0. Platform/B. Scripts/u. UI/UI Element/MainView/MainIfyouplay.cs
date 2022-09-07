@@ -530,9 +530,9 @@ namespace PIERStory
         public void OnClickWatchingCommercial(int adNo)
         {
             if (adNo == 1)
-                AdManager.main.ShowRewardAdWithCallback(RequestAdMissionAccumulate);
+                AdManager.main.ShowRewardAdWithCallback(RequestAdMissionAccumulate); // 미션 광고 보상
             else if (adNo == 2)
-                AdManager.main.ShowRewardAdWithCallback(RequestCooldownAdReward);
+                AdManager.main.ShowRewardAdWithCallback(RequestCooldownAdReward); // 시간 광고 보상 
         }
 
         /// <summary>

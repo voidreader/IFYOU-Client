@@ -9,48 +9,41 @@ using System.Text;
 using VoxelBusters.CoreLibrary.NativePlugins;
 using UnityEditor.Build.Reporting;
 using System.Linq;
+using UnityEditor.Build;
 
 namespace VoxelBusters.EssentialKit.Editor.Android
 {
-    [InitializeOnLoad]
-    public class AndroidBuildProcess 
+    public class AndroidBuildProcess : IActiveBuildTargetChanged, IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
-#region Static fields
+        #region Static fields
 
         private static EssentialKitSettings s_settings;
 
-#endregion
+        #endregion
 
-#region Constructors
+        #region IActiveBuildTargetChanged implementation
 
-        static AndroidBuildProcess()
-        {
-            // unregister from events
-            BuildProcessReporter.OnBuildTargetChange   -= OnBuildTargetChange;
-            BuildProcessReporter.OnPreprocessBuild     -= OnPreprocessBuild;
-            BuildProcessReporter.OnPostprocessBuild    -= OnPostprocessBuild;
+        public int callbackOrder => 99;
 
-            // register for events
-            BuildProcessReporter.OnBuildTargetChange   += OnBuildTargetChange;
-            BuildProcessReporter.OnPreprocessBuild     += OnPreprocessBuild;
-            BuildProcessReporter.OnPostprocessBuild    += OnPostprocessBuild;
-        }
-
-#endregion
-
-#region Static methods
-
-        public static void OnBuildTargetChange(BuildTarget previousTarget, BuildTarget newTarget)
+        public void OnActiveBuildTargetChanged(BuildTarget previousTarget, BuildTarget newTarget)
         {
             BuildForTarget(newTarget);
         }
-    
-        public static void OnPreprocessBuild(BuildReport report)
+
+        #endregion
+
+        #region IPreprocessBuildWithReport implementation
+
+        public void OnPreprocessBuild(BuildReport report)
         {
             BuildForTarget(report.summary.platform);
         }
 
-        public static void OnPostprocessBuild(BuildReport report)
+        #endregion
+
+        #region IPostprocessBuildWithReport implementation
+
+        public void OnPostprocessBuild(BuildReport report)
         {
             // check whether target platform is android
             if (report.summary.platform != BuildTarget.Android)
@@ -59,9 +52,9 @@ namespace VoxelBusters.EssentialKit.Editor.Android
             }
         }
 
-#endregion
+        #endregion
 
-#region Private methods
+        #region Private methods
 
         private static void BuildForTarget(BuildTarget target)
         {
@@ -279,7 +272,7 @@ namespace VoxelBusters.EssentialKit.Editor.Android
 
             if (s_settings.GameServicesSettings.IsEnabled)
             {
-                config.Add("GAME_SERVICES_SERVER_CLIENT_ID", s_settings.GameServicesSettings.AndroidProperties.ServerClientId.Trim());
+                config.Add("GAME_SERVICES_SERVER_CLIENT_ID", s_settings.GameServicesSettings.AndroidProperties.ServerClientId?.Trim());
                 config.Add("GAME_SERVICES_SHOW_ERROR_DIALOGS", s_settings.GameServicesSettings.AndroidProperties.ShowErrorDialogs ? "true" : "false");
                 config.Add("GAME_SERVICES_NEEDS_POPUPS_AT_TOP", s_settings.GameServicesSettings.AndroidProperties.DisplayPopupsAtTop ? "true" : "false");
                 config.Add("GAME_SERVICES_NEEDS_PROFILE_SCOPE", s_settings.GameServicesSettings.AndroidProperties.NeedsProfileScope ? "true" : "false");
@@ -339,7 +332,7 @@ namespace VoxelBusters.EssentialKit.Editor.Android
             }
         }
 
-#endregion
+        #endregion
     }
 }
 #endif

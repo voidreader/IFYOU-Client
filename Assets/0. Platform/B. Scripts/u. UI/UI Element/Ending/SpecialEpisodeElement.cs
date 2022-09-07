@@ -173,10 +173,6 @@ namespace PIERStory
             // 통신 
             NetworkLoader.main.UpdateUserProjectCurrent(specialEpisode.episodeID, null, 0, false, "StartSpecialEpisode");
             
-            Dictionary<string, string> eventValues = new Dictionary<string, string>();
-            eventValues.Add("project_id", StoryManager.main.CurrentProjectID);
-            eventValues.Add("episode_id", specialEpisode.episodeID);
-            AdManager.main.SendAppsFlyerEvent("af_special_episode_start", eventValues);
         }
 
         #endregion

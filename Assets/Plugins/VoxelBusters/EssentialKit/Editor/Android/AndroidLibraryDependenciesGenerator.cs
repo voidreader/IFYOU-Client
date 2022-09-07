@@ -20,14 +20,14 @@ namespace VoxelBusters.EssentialKit.Editor.Android
 		private static readonly string DependencyName = "CrossPlatformEssentialKitDependencies.xml";
 
 		
-		private static readonly string BillingClientVersionString		= "4.0.0+";
-		private static readonly string PlayServicesVersionString		= "21.0.0+";
+		private static readonly string BillingClientVersionString		= "4.1.0+";
+		private static readonly string PlayServicesVersionString		= "22.0.1+";
 		private static readonly string PlayServicesNearByVersionString	= "17.0.0+";
-		private static readonly string PlayServicesAuthVersionString	= "18.1.0+";
-		private static readonly string AndroidXCoreVersionString		= "1.3.2+";
+		private static readonly string PlayServicesAuthVersionString	= "20.1.0+";
+		private static readonly string AndroidXCoreVersionString		= "1.7.0+";
 		private static readonly string ExifInterfaceVersionString		= "1.3.0+";
-        private static readonly string FCMVersionString					= "20.2.4+";
-		private static readonly string PlayCoreVersionString			= "1.9.0";
+        private static readonly string FCMVersionString					= "23.0.2+";
+		private static readonly string PlayCoreVersionString			= "1.10.3+";
 
 		/// <summary>
 		/// Initializes static members of the <see cref="AndroidLibraryDependenciesGenerator"/> class.
@@ -41,7 +41,7 @@ namespace VoxelBusters.EssentialKit.Editor.Android
 
 		public static bool CreateLibraryDependencies()
         {
-			return CreateLibraryDependenciesInternal(IOServices.CombinePath(EssentialKitPackageLayout.EditorExtrasPath, DependencyName));
+		    return CreateLibraryDependenciesInternal(IOServices.CombinePath($"{EssentialKitPackageLayout.EditorExtrasPath}",$"{DependencyName}"));
 		}
 
 		private static void Update()

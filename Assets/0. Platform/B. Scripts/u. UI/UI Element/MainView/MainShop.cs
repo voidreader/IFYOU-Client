@@ -179,14 +179,16 @@ namespace PIERStory {
         /// </summary>
         void EnterFromMain()
         {
+            
+            // 메인로비에서만 사용하기 때문에 다른 화면에서는 호출되면 안된다. 
+            if(StoryLobbyManager.main != null || GameManager.main != null)
+                return;
+            
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACKGROUND, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_PROPERTY_GROUP, true, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_SHOW_BACK_BUTTON, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_VIEW_NAME_EXIST, false, string.Empty);
             Signal.Send(LobbyConst.STREAM_TOP, LobbyConst.TOP_SIGNAL_ATTENDANCE, false, string.Empty);
-            
-            
-            
         }
 
 
@@ -486,7 +488,7 @@ namespace PIERStory {
             
             SystemManager.main.OpenCoinShopWebview();
             
-            AdManager.main.AnalyticsCoinShopOpen("shop");
+            
 
         }
         

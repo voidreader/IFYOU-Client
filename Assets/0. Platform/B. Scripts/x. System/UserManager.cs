@@ -273,10 +273,6 @@ namespace PIERStory
             Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_CONNECT_SERVER, string.Empty);
 
 
-            Dictionary<string, string> eventValues = new Dictionary<string, string>();
-            eventValues.Add(AFInAppEvents.CUSTOMER_USER_ID, userKey);
-            AdManager.main.SendAppsFlyerEvent(AFInAppEvents.LOGIN, eventValues);
-
 
             // 서비스 중인 스토리 리스트 조회
             RequestServiceStoryList();

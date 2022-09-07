@@ -23,39 +23,33 @@ namespace VoxelBusters.EssentialKit.Editor
         {
             var     targetPackages  = new string[]
             {
-                UnityPackageUtility.GetPackagePath(CoreLibrarySettings.PackageName) + "/PackageResources/Essentials.unitypackage",
-                UnityPackageUtility.GetPackagePath(NativePluginsSettings.PackageName) + "/PackageResources/Essentials.unitypackage",
-                UnityPackageUtility.GetPackagePath(EssentialKitSettings.PackageName) + "/PackageResources/Essentials.unitypackage",
+                $"{CoreLibrarySettings.Package.GetPackageResourcesPath()}/PackageResources/Essentials.unitypackage",
+                $"{EssentialKitSettings.Package.GetPackageResourcesPath()}/PackageResources/Essentials.unitypackage",
             };
-
-            var     addOperation    = new AddPackageOperation(
-                package: "com.voxelbusters.parser",
-                callback: () =>
-                {
-                    RegisterForImportPackageCallbacks();
-                    foreach (var package in targetPackages)
-                    {
-                        AssetDatabase.ImportPackage(package, false);
-                    }
-                    UnregisterFromImportPackageCallbacks();
-                });
-            addOperation.Start();
+            ImportPackages(targetPackages);
         }
 
+        public static bool CanMigratePackagesToUPM()
+        {
+            return EssentialKitSettings.Package.IsInstalledWithinAssets();
+        }
+
+        public static void MigratePackagesToUPM()
+        {
+            CoreLibrarySettings.Package.MigrateToUPM();
+            EssentialKitSettings.Package.MigrateToUPM();
+        }
+
+        /*
         public static void ImportExtraResources()
         {
             var     targetPackages  = new string[]
             {
-                UnityPackageUtility.GetPackagePath(EssentialKitSettings.PackageName) + "/PackageResources/Extras.unitypackage"
+                $"{EssentialKitSettings.Package.GetPackageResourcesPath()}/PackageResources/Extras.unitypackage",
             };
-
-            RegisterForImportPackageCallbacks();
-            foreach (var package in targetPackages)
-            {
-                AssetDatabase.ImportPackage(package, false);
-            }
-            UnregisterFromImportPackageCallbacks();
+            ImportPackages(targetPackages);
         }
+        */
 
         #endregion
 
@@ -75,6 +69,16 @@ namespace VoxelBusters.EssentialKit.Editor
             AssetDatabase.importPackageCompleted   -= OnImportPackageCompleted;
             AssetDatabase.importPackageCancelled   -= OnImportPackageCancelled;
             AssetDatabase.importPackageFailed      -= OnImportPackageFailed;
+        }
+
+        private static void ImportPackages(string[] packages)
+        {
+            RegisterForImportPackageCallbacks();
+            foreach (var package in packages)
+            {
+                AssetDatabase.ImportPackage(package, false);
+            }
+            UnregisterFromImportPackageCallbacks();
         }
 
         private static bool IsFileStructureOutdated()

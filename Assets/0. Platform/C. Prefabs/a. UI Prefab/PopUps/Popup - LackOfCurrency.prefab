@@ -103,6 +103,11 @@ MonoBehaviour:
       isUnlock: 0
       isSerial: 0
       debugPublishData: 
+      unlockEpisodes: 
+      unlockScenes: 
+      arrUnlockEpisode: []
+      arrUnlockScene: []
+      isClear: 0
     imageURL: 
     imageKey: 
     isConfirm: 1
@@ -923,7 +928,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.6}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4081,6 +4086,10 @@ PrefabInstance:
     - target: {fileID: 4195052926464584088, guid: 808fcb7c555e400458ae4f3319cc650c, type: 3}
       propertyPath: m_Name
       value: GeneralPackage
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775228687118979797, guid: 808fcb7c555e400458ae4f3319cc650c, type: 3}
+      propertyPath: m_Material
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6500835548946522899, guid: 808fcb7c555e400458ae4f3319cc650c, type: 3}
       propertyPath: m_MinWidth

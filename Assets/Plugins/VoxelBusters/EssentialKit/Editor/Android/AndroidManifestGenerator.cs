@@ -1,18 +1,19 @@
 ﻿#if UNITY_ANDROID
 using System.Xml;
 using VoxelBusters.CoreLibrary;
+using VoxelBusters.CoreLibrary.Editor.NativePlugins.Build.Android;
 
 namespace VoxelBusters.EssentialKit.Editor.Android
 {
     public class AndroidManifestGenerator
     {
-#region Static fields
+        #region Static fields
 
         private static string s_androidLibraryRootPackageName = "com.voxelbusters.android.essentialkit";
 
-#endregion
+        #endregion
 
-#region Public methods
+        #region Public methods
 
         public static void GenerateManifest(EssentialKitSettings settings, bool addQueries = false, string savePath = null)
         {
@@ -63,9 +64,9 @@ namespace VoxelBusters.EssentialKit.Editor.Android
             xmlDocument.Save(savePath == null ? IOServices.CombinePath(EssentialKitPackageLayout.AndroidProjectPath, "AndroidManifest.xml") : savePath);
         }
 
-#endregion
+        #endregion
 
-#region Private methods
+        #region Private methods
 
         private static void AddQueries(Manifest manifest, EssentialKitSettings settings)
         {
@@ -433,7 +434,7 @@ namespace VoxelBusters.EssentialKit.Editor.Android
             return intentFilter;
         }
 
-#endregion
+        #endregion
     }
 }
 #endif

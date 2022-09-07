@@ -126,6 +126,9 @@ static  WebViewURLSchemeMatchFoundNativeCallback    _urlSchemeMatchFoundCallback
     webView.navigationDelegate  = self;
     webView.opaque              = false;
     [webView setTranslatesAutoresizingMaskIntoConstraints: NO];
+    if (@available(iOS 11.0, *)) {
+        [webView.scrollView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
+    }
     
     return webView;
 }

@@ -26,27 +26,27 @@ NPBINDING DONTSTRIP void NPWebViewRegisterCallbacks(WebViewNativeCallback onShow
     [NPWebView setURLSchemeMatchFoundCallback:urlMatchFoundCallback];
 }
 
-NPBINDING DONTSTRIP IntPtr NPWebViewCreate()
+NPBINDING DONTSTRIP NPIntPtr NPWebViewCreate()
 {
     NPWebView*  webView     = [[NPWebView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     [webView setHidden:YES];
     return NPRetainWithOwnershipTransfer(webView);
 }
 
-NPBINDING DONTSTRIP const char* NPWebViewGetURL(IntPtr nativePtr)
+NPBINDING DONTSTRIP const char* NPWebViewGetURL(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     NSString*   urlString   = [webView urlString];
     return NPCreateCStringCopyFromNSString(urlString);
 }
 
-NPBINDING DONTSTRIP const char* NPWebViewGetTitle(IntPtr nativePtr)
+NPBINDING DONTSTRIP const char* NPWebViewGetTitle(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     return NPCreateCStringCopyFromNSString([webView title]);
 }
 
-NPBINDING DONTSTRIP NPUnityRect NPWebViewGetNormalizedRect(IntPtr nativePtr)
+NPBINDING DONTSTRIP NPUnityRect NPWebViewGetNormalizedRect(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     CGRect      cgRect      = [webView normalisedRect];
@@ -56,109 +56,109 @@ NPBINDING DONTSTRIP NPUnityRect NPWebViewGetNormalizedRect(IntPtr nativePtr)
     return rect;
 }
 
-NPBINDING DONTSTRIP void NPWebViewSetNormalizedRect(IntPtr nativePtr, NPUnityRect rect)
+NPBINDING DONTSTRIP void NPWebViewSetNormalizedRect(NPIntPtr nativePtr, NPUnityRect rect)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     [webView setNormalisedRect:CGRectMake(rect.x, rect.y, rect.width, rect.height)];
 }
 
-NPBINDING DONTSTRIP NPWebViewStyle NPWebViewGetStyle(IntPtr nativePtr)
+NPBINDING DONTSTRIP NPWebViewStyle NPWebViewGetStyle(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     return [webView style];
 }
 
-NPBINDING DONTSTRIP void NPWebViewSetStyle(IntPtr nativePtr, NPWebViewStyle style)
+NPBINDING DONTSTRIP void NPWebViewSetStyle(NPIntPtr nativePtr, NPWebViewStyle style)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     return [webView setStyle:style];
 }
 
-NPBINDING DONTSTRIP bool NPWebViewGetScalesPageToFit(IntPtr nativePtr)
+NPBINDING DONTSTRIP bool NPWebViewGetScalesPageToFit(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     return [webView scalesPageToFit];
 }
 
-NPBINDING DONTSTRIP void NPWebViewSetScalesPageToFit(IntPtr nativePtr, bool value)
+NPBINDING DONTSTRIP void NPWebViewSetScalesPageToFit(NPIntPtr nativePtr, bool value)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     [webView setScalesPageToFit:value];
 }
 
-NPBINDING DONTSTRIP bool NPWebViewGetCanBounce(IntPtr nativePtr)
+NPBINDING DONTSTRIP bool NPWebViewGetCanBounce(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     return [webView canBounce];
 }
 
-NPBINDING DONTSTRIP void NPWebViewSetCanBounce(IntPtr nativePtr, bool value)
+NPBINDING DONTSTRIP void NPWebViewSetCanBounce(NPIntPtr nativePtr, bool value)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     [webView setCanBounce:value];
 }
 
-NPBINDING DONTSTRIP NPUnityColor NPWebViewGetBackgroundColor(IntPtr nativePtr)
+NPBINDING DONTSTRIP NPUnityColor NPWebViewGetBackgroundColor(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     return NPColorCreateFromUIColor([webView color]);
 }
 
-NPBINDING DONTSTRIP void NPWebViewSetBackgroundColor(IntPtr nativePtr, NPUnityColor color)
+NPBINDING DONTSTRIP void NPWebViewSetBackgroundColor(NPIntPtr nativePtr, NPUnityColor color)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     [webView setColor:[UIColor colorWithRed:color.r green:color.g blue:color.b alpha:color.a]];
 }
 
-NPBINDING DONTSTRIP double NPWebViewGetProgress(IntPtr nativePtr)
+NPBINDING DONTSTRIP double NPWebViewGetProgress(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     return [webView progress];
 }
 
-NPBINDING DONTSTRIP bool NPWebViewGetIsLoading(IntPtr nativePtr)
+NPBINDING DONTSTRIP bool NPWebViewGetIsLoading(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     return [webView isLoading];
 }
 
-NPBINDING DONTSTRIP bool NPWebViewGetJavaScriptEnabled(IntPtr nativePtr)
+NPBINDING DONTSTRIP bool NPWebViewGetJavaScriptEnabled(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     return [webView javaScriptEnabled];
 }
 
-NPBINDING DONTSTRIP void NPWebViewSetJavaScriptEnabled(IntPtr nativePtr, bool enabled)
+NPBINDING DONTSTRIP void NPWebViewSetJavaScriptEnabled(NPIntPtr nativePtr, bool enabled)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     return [webView setJavaScriptEnabled:enabled];
 }
 
-NPBINDING DONTSTRIP void NPWebViewShow(IntPtr nativePtr)
+NPBINDING DONTSTRIP void NPWebViewShow(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     [webView showInView:UnityGetGLView()];
 }
 
-NPBINDING DONTSTRIP void NPWebViewHide(IntPtr nativePtr)
+NPBINDING DONTSTRIP void NPWebViewHide(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     [webView dismiss];
 }
 
-NPBINDING DONTSTRIP void NPWebViewLoadURL(IntPtr nativePtr, const char* urlStr)
+NPBINDING DONTSTRIP void NPWebViewLoadURL(NPIntPtr nativePtr, const char* urlStr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     [webView loadURL:NPCreateNSURLFromCString(urlStr)];
 }
 
-NPBINDING DONTSTRIP void NPWebViewLoadHtmlString(IntPtr nativePtr, const char* htmlStr, const char* baseUrl)
+NPBINDING DONTSTRIP void NPWebViewLoadHtmlString(NPIntPtr nativePtr, const char* htmlStr, const char* baseUrl)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     [webView loadHTMLString:NPCreateNSStringFromCString(htmlStr) baseURL:NPCreateNSURLFromCString(baseUrl)];
 }
 
-NPBINDING DONTSTRIP void NPWebViewLoadData(IntPtr nativePtr, NPUnityAttachment attachmentData, const char* encodingName, const char* baseUrl)
+NPBINDING DONTSTRIP void NPWebViewLoadData(NPIntPtr nativePtr, NPUnityAttachment attachmentData, const char* encodingName, const char* baseUrl)
 {
     NSData*     data        = [NSData dataWithBytes:attachmentData.dataArrayPtr length:attachmentData.dataArrayLength];
     NSString*   mimeType    = NPCreateNSStringFromCString((const char*)attachmentData.mimeTypePtr);
@@ -169,25 +169,25 @@ characterEncodingName:NPGetTextEncodingName(NPCreateNSStringFromCString(encoding
               baseURL:NPCreateNSURLFromCString(baseUrl)];
 }
 
-NPBINDING DONTSTRIP void NPWebViewReload(IntPtr nativePtr)
+NPBINDING DONTSTRIP void NPWebViewReload(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     [webView reload];
 }
 
-NPBINDING DONTSTRIP void NPWebViewStopLoading(IntPtr nativePtr)
+NPBINDING DONTSTRIP void NPWebViewStopLoading(NPIntPtr nativePtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     [webView stopLoading];
 }
 
-NPBINDING DONTSTRIP void NPWebViewRunJavaScript(IntPtr nativePtr, const char* script, IntPtr tagPtr)
+NPBINDING DONTSTRIP void NPWebViewRunJavaScript(NPIntPtr nativePtr, const char* script, NPIntPtr tagPtr)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     [webView runJavaScript:NPCreateNSStringFromCString(script) withRequestTag:tagPtr];
 }
 
-NPBINDING DONTSTRIP void NPWebViewAddURLScheme(IntPtr nativePtr, const char* scheme)
+NPBINDING DONTSTRIP void NPWebViewAddURLScheme(NPIntPtr nativePtr, const char* scheme)
 {
     NPWebView*  webView     = (__bridge NPWebView*)nativePtr;
     [webView addURLScheme:NPCreateNSStringFromCString(scheme)];

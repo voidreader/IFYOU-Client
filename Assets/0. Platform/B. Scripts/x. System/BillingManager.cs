@@ -4,7 +4,7 @@ using UnityEngine;
 
 using LitJson;
 using BestHTTP;
-using AppsFlyerSDK;
+
 using Toast.Gamebase;
 
 namespace PIERStory {
@@ -244,22 +244,6 @@ namespace PIERStory {
 
             
             NetworkLoader.main.SendPost(OnRequestPurchaseReward, sendData, true);
-            
-            
-            // 통합 인앱결제
-            try {
-            Dictionary<string, string> eventValues = new Dictionary<string, string>();
-            eventValues.Add(AFInAppEvents.CURRENCY, receipt.currency);
-            eventValues.Add(AFInAppEvents.REVENUE, receipt.price.ToString());
-            eventValues.Add(AFInAppEvents.ORDER_ID, receipt.gamebaseProductId);
-            eventValues.Add(AFInAppEvents.QUANTITY, "1");
-            AppsFlyer.sendEvent(AFInAppEvents.PURCHASE, eventValues);
-            }
-            catch {
-                Debug.LogError("Eroor in AppsFlyerSDK");
-            }
-            
-  
         }
         
         /// <summary>
@@ -312,16 +296,20 @@ namespace PIERStory {
             
             // 재화 바로 지급으로 변경됨(2022.06.20)
             UserManager.main.SetRefreshInfo(result);
-
-            // Shop 리프레시 탭 3개와 상단...
-            MainShop.OnRefreshNormalShop?.Invoke();
-            MainShop.OnRefreshPackageShop?.Invoke();
-            MainShop.OnRefreshEventShop?.Invoke();
-            MainShop.OnRefreshTopShop?.Invoke();
             
             // 이프유 패스, 프리미엄 패스 데이터 선행 처리 
             string purchasedProductID = SystemManager.GetJsonNodeString(result, "product_id");
-            SetPassPurchaseResultData(purchasedProductID);
+            if(checkPassProduct(purchasedProductID)) {
+                SetPassPurchaseResultData(purchasedProductID);    
+            }
+            else {
+                // Shop 리프레시 탭 3개와 상단...
+                MainShop.OnRefreshNormalShop?.Invoke();
+                MainShop.OnRefreshPackageShop?.Invoke();
+                MainShop.OnRefreshEventShop?.Invoke();
+                MainShop.OnRefreshTopShop?.Invoke();
+            }
+            
 
             // 모든 활성 팝업 제거
             PopupManager.main.HideActivePopup();
@@ -351,6 +339,20 @@ namespace PIERStory {
                     SystemListener.main.introduceStory.hasPremiumPass = true;
                 }
             }
+        }
+        
+        /// <summary>
+        /// 패스 상품인지 체크한다.
+        /// </summary>
+        /// <param name="__productID"></param>
+        /// <returns></returns>
+        bool checkPassProduct(string __productID) {
+            
+            if(__productID == "ifyou_pass" || __productID.Contains("story_pack"))
+                return true;
+            
+            
+            return false;   
         }
         
         IEnumerator DelayShowBillingCompletePopup(string __productID) {

@@ -9,11 +9,18 @@ using VoxelBusters.CoreLibrary;
 
 namespace VoxelBusters.EssentialKit.Editor
 {
+    [InitializeOnLoad]
     public static class EssentialKitSettingsEditorUtility
     {
+        #region Constants
+
+        private     const       string                      kLocalPathInProjectSettings     = "Project/Voxel Busters/Essential Kit";
+
+        #endregion
+
         #region Static fields
 
-        private     static      EssentialKitSettings        s_defaultSettings       = null;
+        private     static      EssentialKitSettings        s_defaultSettings;
 
         #endregion
 
@@ -25,10 +32,12 @@ namespace VoxelBusters.EssentialKit.Editor
             {
                 if (s_defaultSettings == null)
                 {
-                    s_defaultSettings = LoadDefaultSettings(throwError: false);
-
-                    if(s_defaultSettings == null)
-                        s_defaultSettings = CreateDefaultSettings();
+                    var     instance    = LoadDefaultSettingsObject(throwError: false);
+                    if (null == instance)
+                    {
+                        instance        = CreateDefaultSettingsObject();
+                    }
+                    s_defaultSettings   = instance;
                 }
                 return s_defaultSettings;
             }
@@ -47,10 +56,19 @@ namespace VoxelBusters.EssentialKit.Editor
             {
                 if (s_defaultSettings == null)
                 {
-                    s_defaultSettings   = LoadDefaultSettings();
+                    s_defaultSettings   = LoadDefaultSettingsObject(throwError: false);
                 }
                 return (s_defaultSettings != null);
             }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        static EssentialKitSettingsEditorUtility()
+        {
+            AddGlobalDefines();
         }
 
         #endregion
@@ -65,39 +83,53 @@ namespace VoxelBusters.EssentialKit.Editor
                 ok: "Ok");
         }
 
+        public static void AddGlobalDefines()
+        {
+            ScriptingDefinesManager.AddDefine("ENABLE_VOXELBUSTERS_ESSENTIAL_KIT");
+        }
+        
+        public static void RemoveGlobalDefines()
+        {
+            ScriptingDefinesManager.RemoveDefine("ENABLE_VOXELBUSTERS_ESSENTIAL_KIT");
+        }
+
+        public static void OpenInProjectSettings()
+        {
+            if (!SettingsExists)
+            {
+                CreateDefaultSettingsObject();
+            }
+            Selection.activeObject  = null;
+            SettingsService.OpenProjectSettings(kLocalPathInProjectSettings);
+        }
+
+        [SettingsProvider]
+        private static SettingsProvider CreateSettingsProvider()
+        {
+            return SettingsProviderZ.Create(
+                settingsObject: DefaultSettings,
+                path: kLocalPathInProjectSettings,
+                scopes: SettingsScope.Project);
+        }
+
         #endregion
 
         #region Private static methods
 
-        private static EssentialKitSettings CreateDefaultSettings()
+        private static EssentialKitSettings CreateDefaultSettingsObject()
         {
-            string  filePath    = EssentialKitSettings.DefaultSettingsAssetPath;
-            var     settings    = ScriptableObject.CreateInstance<EssentialKitSettings>();
-            SetDefaultProperties(settings);
-
-            // create file
-            AssetDatabaseUtility.CreateAssetAtPath(settings, filePath);
-            AssetDatabase.Refresh();
-
-            return settings;
+            return AssetDatabaseUtility.CreateScriptableObject<EssentialKitSettings>(
+                assetPath: EssentialKitSettings.DefaultSettingsAssetPath,
+                onInit: (instance)  => SetDefaultProperties(instance));
         }
 
-        private static EssentialKitSettings LoadDefaultSettings(bool throwError = true)
+        private static EssentialKitSettings LoadDefaultSettingsObject(bool throwError = true)
         {
-            string  filePath    = EssentialKitSettings.DefaultSettingsAssetPath;
-            var     settings    = AssetDatabase.LoadAssetAtPath<EssentialKitSettings>(filePath);
-            if (settings)
-            {
-                SetDefaultProperties(settings);
-                return settings;
-            }
-
-            if (throwError)
-            {
-                throw Diagnostics.PluginNotConfiguredException();
-            }
-
-            return null;
+            var     throwErrorFunc      = throwError ? () => Diagnostics.PluginNotConfiguredException() : (System.Func<System.Exception>)null;
+            return AssetDatabaseUtility.LoadScriptableObject<EssentialKitSettings>(
+                assetPath: EssentialKitSettings.DefaultSettingsAssetPath,
+                onLoad: (instance)  => SetDefaultProperties(instance),
+                throwErrorFunc: throwErrorFunc);
         }
 
         private static void SetDefaultProperties(EssentialKitSettings settings)

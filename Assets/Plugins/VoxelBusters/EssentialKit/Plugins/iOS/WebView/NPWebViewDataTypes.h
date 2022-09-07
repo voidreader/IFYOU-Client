@@ -9,8 +9,8 @@
 #import "NPDefines.h"
 
 // callback signatures
-typedef void (*WebViewNativeCallback)(IntPtr nativePtr, const char* error);
+typedef void (*WebViewNativeCallback)(NPIntPtr nativePtr, const char* error);
 
-typedef void (*WebViewRunJavaScriptNativeCallback)(IntPtr nativePtr, const char* result, const char* error, IntPtr tagPtr);
+typedef void (*WebViewRunJavaScriptNativeCallback)(NPIntPtr nativePtr, const char* result, const char* error, NPIntPtr tagPtr);
 
-typedef void (*WebViewURLSchemeMatchFoundNativeCallback)(IntPtr nativePtr, const char* url);
+typedef void (*WebViewURLSchemeMatchFoundNativeCallback)(NPIntPtr nativePtr, const char* url);

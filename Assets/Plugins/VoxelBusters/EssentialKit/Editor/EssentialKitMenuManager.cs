@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEditor;
-using VoxelBusters.CoreLibrary.Editor.NativePlugins;
+using VoxelBusters.CoreLibrary;
+using VoxelBusters.CoreLibrary.Editor;
 
 namespace VoxelBusters.EssentialKit.Editor
 {
@@ -20,8 +21,7 @@ namespace VoxelBusters.EssentialKit.Editor
         [MenuItem(kMenuItemPath + "/Open Settings")]
         public static void OpenSettings()
         {
-            Selection.activeObject  = null;
-            SettingsService.OpenProjectSettings("Project/Voxel Busters/Essential Kit");
+            EssentialKitSettingsEditorUtility.OpenInProjectSettings();
         }
 
         [MenuItem(kMenuItemPath + "/Import Settings")]
@@ -36,6 +36,18 @@ namespace VoxelBusters.EssentialKit.Editor
             // ping this object
             Selection.activeObject  = settings;
             EditorGUIUtility.PingObject(settings);
+        }
+
+        [MenuItem(kMenuItemPath + "/Migrate To UPM")]
+        public static void MigrateToUPM()
+        {
+            EssentialKitEditorUtility.MigratePackagesToUPM();
+        }
+
+        [MenuItem(kMenuItemPath + "/Migrate To UPM", isValidateFunction: true)]
+        private static bool ValidateMigrateToUPM()
+        {
+            return EssentialKitEditorUtility.CanMigratePackagesToUPM();
         }
 
         [MenuItem(kMenuItemPath + "/Uninstall")]

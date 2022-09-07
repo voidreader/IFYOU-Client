@@ -44,7 +44,7 @@ NPBINDING DONTSTRIP void NPNotificationCenterRegisterCallbacks(RequestAuthorizat
     __weak NPAppDelegateListener*   delegateListener    = [NPAppDelegateListener sharedListener];
     [delegateListener setNotificationRecievedCompletionHandler:^(UNNotification *notification, BOOL isLaunchNotification) {
             // send callback
-            void*   notificationRequestPtr  = (__bridge IntPtr)notification.request;
+            void*   notificationRequestPtr  = (__bridge NPIntPtr)notification.request;
             _notificationReceivedCallback(notificationRequestPtr, isLaunchNotification);
     }];
 }
@@ -54,7 +54,7 @@ NPBINDING DONTSTRIP void NPNotificationCenterInit(UNNotificationPresentationOpti
     [[NPAppDelegateListener sharedListener] setPresentationOptions:presentationOptions];
 }
 
-NPBINDING DONTSTRIP void NPNotificationCenterRequestAuthorization(UNAuthorizationOptions options, IntPtr tagPtr)
+NPBINDING DONTSTRIP void NPNotificationCenterRequestAuthorization(UNAuthorizationOptions options, NPIntPtr tagPtr)
 {
     [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:options
                                                                         completionHandler:^(BOOL granted, NSError * _Nullable error) {
@@ -66,7 +66,7 @@ NPBINDING DONTSTRIP void NPNotificationCenterRequestAuthorization(UNAuthorizatio
     }];
 }
 
-NPBINDING DONTSTRIP void NPNotificationCenterGetSettings(IntPtr tagPtr)
+NPBINDING DONTSTRIP void NPNotificationCenterGetSettings(NPIntPtr tagPtr)
 {
     [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings* _Nonnull settings) {
         // send callback
@@ -75,7 +75,7 @@ NPBINDING DONTSTRIP void NPNotificationCenterGetSettings(IntPtr tagPtr)
     }];
 }
 
-NPBINDING DONTSTRIP void NPNotificationCenterScheduleLocalNotification(IntPtr notificationRequestPtr, IntPtr tagPtr)
+NPBINDING DONTSTRIP void NPNotificationCenterScheduleLocalNotification(NPIntPtr notificationRequestPtr, NPIntPtr tagPtr)
 {
     UNNotificationRequest*     notificationRequest      = (__bridge UNNotificationRequest*)notificationRequestPtr;
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:notificationRequest withCompletionHandler:^(NSError* _Nullable error) {
@@ -84,7 +84,7 @@ NPBINDING DONTSTRIP void NPNotificationCenterScheduleLocalNotification(IntPtr no
     }];
 }
 
-NPBINDING DONTSTRIP void NPNotificationCenterGetScheduledNotifications(IntPtr tagPtr)
+NPBINDING DONTSTRIP void NPNotificationCenterGetScheduledNotifications(NPIntPtr tagPtr)
 {
     [[UNUserNotificationCenter currentNotificationCenter] getPendingNotificationRequestsWithCompletionHandler:^(NSArray<UNNotificationRequest*>* _Nonnull requests) {
         // create c array
@@ -113,7 +113,7 @@ NPBINDING DONTSTRIP void NPNotificationCenterRemoveAllDeliveredNotifications()
     [[UNUserNotificationCenter currentNotificationCenter] removeAllDeliveredNotifications];
 }
 
-NPBINDING DONTSTRIP void NPNotificationCenterGetDeliveredNotifications(IntPtr tagPtr)
+NPBINDING DONTSTRIP void NPNotificationCenterGetDeliveredNotifications(NPIntPtr tagPtr)
 {
     [[UNUserNotificationCenter currentNotificationCenter] getDeliveredNotificationsWithCompletionHandler:^(NSArray<UNNotification*>* _Nonnull notifications) {
         // create array of notification requests
@@ -134,7 +134,7 @@ NPBINDING DONTSTRIP void NPNotificationCenterGetDeliveredNotifications(IntPtr ta
     }];
 }
 
-NPBINDING DONTSTRIP void NPNotificationCenterRegisterForRemoteNotifications(IntPtr tagPtr)
+NPBINDING DONTSTRIP void NPNotificationCenterRegisterForRemoteNotifications(NPIntPtr tagPtr)
 {
     __weak NPAppDelegateListener*  delegateListener    = [NPAppDelegateListener sharedListener];
     [delegateListener setRegisterForRemoteNotificationsCompletionHandler:^(NSString* deviceToken, NSError* error) {

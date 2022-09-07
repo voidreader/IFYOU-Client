@@ -605,14 +605,7 @@ namespace PIERStory
             InitSelectionProgressRoute();
             CheckResumePlayValidation();
 
-            // ! 띠배너 광고 
-            // AdManager.main.LoadBanner();
             
-            // AFInAppEvents.
-            Dictionary<string, string> eventValues = new Dictionary<string, string>();
-            eventValues.Add("project_id", StoryManager.main.CurrentProjectID);
-            eventValues.Add("episode_id", StoryManager.main.CurrentEpisodeID);
-            AdManager.main.SendAppsFlyerEvent("af_episode_loading", eventValues);            
             
             // 이어하기가 아닌 경우 로딩 완료 후 광고 호출 
             if(!isResumePlay) {

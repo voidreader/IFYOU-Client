@@ -34,16 +34,16 @@ typedef struct
 } NPUnityNotificationSettings;
 
 // callback signatures
-typedef void (*RequestAuthorizationNativeCallback)(UNAuthorizationStatus status, const string error, IntPtr tagPtr);
+typedef void (*RequestAuthorizationNativeCallback)(UNAuthorizationStatus status, const NPString error, NPIntPtr tagPtr);
 
-typedef void (*GetSettingsNativeCallback)(NPUnityNotificationSettings* settingsData, IntPtr tagPtr);
+typedef void (*GetSettingsNativeCallback)(NPUnityNotificationSettings* settingsData, NPIntPtr tagPtr);
 
-typedef void (*ScheduleLocalNotificationNativeCallback)(const string error, IntPtr tagPtr);
+typedef void (*ScheduleLocalNotificationNativeCallback)(const NPString error, NPIntPtr tagPtr);
 
-typedef void (*GetScheduledNotificationsNativeCallback)(NPArray* arrayPtr, const string error, IntPtr tagPtr);
+typedef void (*GetScheduledNotificationsNativeCallback)(NPArray* arrayPtr, const NPString error, NPIntPtr tagPtr);
 
-typedef void (*GetDeliveredNotificationsNativeCallback)(NPArray* arrayPtr, const string error, IntPtr tagPtr);
+typedef void (*GetDeliveredNotificationsNativeCallback)(NPArray* arrayPtr, const NPString error, NPIntPtr tagPtr);
 
-typedef void (*RegisterForRemoteNotificationsNativeCallback)(const string deviceToken, const string error, IntPtr tagPtr);
+typedef void (*RegisterForRemoteNotificationsNativeCallback)(const NPString deviceToken, const NPString error, NPIntPtr tagPtr);
 
-typedef void (*NotificationReceivedNativeCallback)(IntPtr nativePtr, bool isLaunchNotification);
+typedef void (*NotificationReceivedNativeCallback)(NPIntPtr nativePtr, bool isLaunchNotification);

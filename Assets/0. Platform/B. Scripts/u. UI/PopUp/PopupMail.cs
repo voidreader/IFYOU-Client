@@ -82,7 +82,7 @@ namespace PIERStory
         public void OnClickCoinShop()
         {
             SystemManager.main.OpenCoinShopWebview();
-            AdManager.main.AnalyticsCoinShopOpen("top");
+            
         }
     }
 }

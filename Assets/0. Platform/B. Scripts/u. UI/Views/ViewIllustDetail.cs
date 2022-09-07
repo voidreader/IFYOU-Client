@@ -22,6 +22,8 @@ namespace PIERStory
         static bool isLive = false;
         static bool isMinicut = false;
 
+        public Camera captureCamera; // 스크린 캡쳐에 사용되는 카메라 
+
         public RectTransform viewRect;
         
         public ImageRequireDownload illustImage;
@@ -332,10 +334,23 @@ namespace PIERStory
             HideUpperUI();
             HideShareBox();
             
-            // 위에서 시그널 처리가 있어서 프레임 3회 대기 
+            
             yield return null;
             yield return null;
             yield return null;
+            yield return new WaitForEndOfFrame();
+            
+            Texture2D screenTexture = new Texture2D(Screen.width, Screen.height);
+            Rect screenArea = new Rect(0, 0, Screen.width, Screen.height);
+            screenTexture.ReadPixels(screenArea, 0, 0);
+            byte[] screenByteArray = screenTexture.EncodeToPNG();
+            
+
+            
+            
+            yield return new WaitForEndOfFrame();
+            yield return null;
+            
             
             // * 페이스북, 트위터 
             if(shareType != SocialShareComposerType.WhatsApp) {
@@ -345,7 +360,13 @@ namespace PIERStory
                 if(shareType == SocialShareComposerType.Twitter)                
                     composer.SetText("#IFyou #Episode #StoryGame\nDownload right now! : http://onelink.to/g9ja38");
                 
-                composer.AddScreenshot();
+                if(screenByteArray != null)  {
+                    Debug.Log("Byte check : " + screenByteArray.Length);
+                    composer.AddImage(screenByteArray);
+                }
+                else 
+                    Debug.Log("Byte is null");                
+                    
                 composer.SetCompletionCallback((result, error) => {
                     Debug.Log("Social Share Composer was closed. Result code: " + result.ResultCode);
                     
@@ -356,6 +377,8 @@ namespace PIERStory
                     if(!isShareBonusGet) {
                         RequestShareBonus();   
                     }
+                    
+                    Destroy(screenTexture);
                     
                     
                 });

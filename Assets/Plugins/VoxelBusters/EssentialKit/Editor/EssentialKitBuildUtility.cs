@@ -26,7 +26,7 @@ namespace VoxelBusters.EssentialKit.Editor
 
             // generate stripping file
             var     settings            = EssentialKitSettingsEditorUtility.DefaultSettings;
-            var     strippingWriter     = new LinkerStrippingSettingsWriter(path: EssentialKitPackageLayout.ExtrasPath + "/link.xml");
+            var     strippingWriter     = new LinkerStrippingSettingsWriter(path: $"{EssentialKitPackageLayout.ExtrasPath}/link.xml");
             var     availableFeatures   = settings.GetAvailableFeatureNames();
             var     usedFeatures        = settings.GetUsedFeatureNames();
             if (IsReleaseBuild() && usedFeatures.Length > 0)
@@ -34,7 +34,7 @@ namespace VoxelBusters.EssentialKit.Editor
                 var     platform        = EditorApplicationUtility.ConvertBuildTargetToRuntimePlatform(buildTarget);
                 foreach (string feature in availableFeatures)
                 {
-                    var     featureConfiguration    = ImplementationBlueprint.GetFeatureConfiguration(feature);
+                    var     featureConfiguration    = ImplementationBlueprint.GetRuntimeConfiguration(feature);
                     if (!Array.Exists(usedFeatures, (item) => string.Equals(feature, item)))
                     {
                         continue;

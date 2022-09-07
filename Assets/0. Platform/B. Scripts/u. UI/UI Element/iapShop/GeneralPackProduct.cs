@@ -131,9 +131,7 @@ namespace PIERStory
                 // 열기
                 PopupManager.main.ShowPopup(p, false);
                 
-                // BillingManager.main.RequestPurchaseGamebase(productID);
                 
-                AdManager.main.AnalyticsPackageButtonClick(productID);
             }
         }
     }

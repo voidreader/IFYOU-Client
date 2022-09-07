@@ -1,31 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VoxelBusters.CoreLibrary;
 using VoxelBusters.CoreLibrary.Editor;
 
 namespace VoxelBusters.EssentialKit.Editor
 {
     internal static class EssentialKitPackageLayout
     {
-        public static string ExtrasPath { get { return "Assets/Plugins/VoxelBusters/EssentialKit"; } }
+        public static string ExtrasPath => "Assets/Plugins/VoxelBusters/EssentialKit/Essentials";
 
-        public static string EditorExtrasPath { get { return ExtrasPath + "/Editor"; } }
+        public static string EditorExtrasPath => $"{ExtrasPath}/Editor";
 
-        public static string IosPluginPath { get { return ExtrasPath + "/Plugins/iOS"; } }
+        public static string IosPluginPath => $"{ExtrasPath}/Plugins/iOS";
 
-        public static string AndroidPluginPath { get { return "Assets/Plugins/Android"; } }
-
-        public static string EditorResourcesPath { get { return ExtrasPath + "/EditorResources"; } }
+        public static string AndroidPluginPath => $"Assets/Plugins/Android";
 
         // android
-        public static string AndroidEditorSourcePath { get { return ExtrasPath + "/Editor" + "/Android"; } }
-        public static string AndroidProjectFolderName { get { return "com.voxelbusters.essentialkit.androidlib"; } }
-        public static string AndroidProjectPath { get { return AndroidPluginPath + "/" + AndroidProjectFolderName; } }
-        public static string AndroidProjectAllLibsPath { get { return AndroidProjectPath + "/all_libs"; } }
-        public static string AndroidProjectLibsPath { get { return AndroidProjectPath + "/libs"; } }
-        public static string AndroidProjectResPath { get { return AndroidProjectPath + "/res"; } }
-        public static string AndroidProjectResDrawablePath { get { return AndroidProjectResPath + "/drawable"; } }
-        public static string AndroidProjectResValuesPath { get { return AndroidProjectResPath + "/values"; } }
-        public static string AndroidProjectResValuesStringsPath { get { return AndroidProjectResValuesPath + "/essential_kit_strings.xml"; } }
+        public static string AndroidEditorSourcePath => $"{EssentialKitSettings.Package.GetEditorScriptsPath()}/Android";
+
+        public static string AndroidProjectFolderName => $"com.voxelbusters.essentialkit.androidlib";
+
+        public static string AndroidProjectPath => $"{AndroidPluginPath}/{AndroidProjectFolderName}";
+
+        public static string AndroidProjectAllLibsPath => AndroidProjectPath + "/all_libs";
+
+        public static string AndroidProjectLibsPath => AndroidProjectPath + "/libs";
+
+        public static string AndroidProjectResPath => AndroidProjectPath + "/res";
+
+        public static string AndroidProjectResDrawablePath => AndroidProjectResPath + "/drawable";
+
+        public static string AndroidProjectResValuesPath => AndroidProjectResPath + "/values";
+
+        public static string AndroidProjectResValuesStringsPath => AndroidProjectResValuesPath + "/essential_kit_strings.xml";
     }
 }

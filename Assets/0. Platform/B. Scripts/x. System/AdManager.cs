@@ -6,7 +6,7 @@ using Unity.Services.Core;
 
 
 using LitJson;
-using AppsFlyerSDK;
+
 // using Firebase;
 // using Facebook.Unity;
 using GoogleMobileAds.Api;
@@ -746,42 +746,6 @@ namespace PIERStory {
         
         
 
-        #region 앱 이벤트 기록하기 
-        
-        public void SendAppsFlyerEvent(string __eventName, Dictionary<string, string> __eventValues) {
-            AppsFlyer.sendEvent(__eventName, __eventValues);
-        }
-
-        /// <summary>
-        /// 패키지 버튼 클릭
-        /// </summary>
-        /// <param name="_packageName"></param>
-        public void AnalyticsPackageButtonClick(string _packageName) {
-            
-            Dictionary<string, string> eventValues = new Dictionary<string, string>();
-            eventValues.Add("product_id", _packageName);
-            AdManager.main.SendAppsFlyerEvent("af_open_package", eventValues);
-            
-        }
-        
-        /// <summary>
-        /// 코인샵 오픈 
-        /// </summary>
-        /// <param name="__openPosition"></param>
-        public void AnalyticsCoinShopOpen(string __openPosition) {
-            
-            
-            Dictionary<string, string> eventValues = new Dictionary<string, string>();
-            eventValues.Add("position", __openPosition);
-            AdManager.main.SendAppsFlyerEvent("af_open_coin_shop", eventValues);
-
-            
-        }
-        
-
-         
-        
-        #endregion
 
         #region 페이스북
         

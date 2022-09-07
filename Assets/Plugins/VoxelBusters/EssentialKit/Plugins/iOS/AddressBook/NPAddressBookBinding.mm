@@ -24,12 +24,12 @@ NPBINDING DONTSTRIP CNAuthorizationStatus NPAddressBookGetAuthorizationStatus()
     return [NativePluginsContactsWrapper getAuthorizationStatus];
 }
 
-NPBINDING DONTSTRIP void NPAddressBookRequestContactsAccess(IntPtr tagPtr)
+NPBINDING DONTSTRIP void NPAddressBookRequestContactsAccess(NPIntPtr tagPtr)
 {
     [NativePluginsContactsWrapper requestContactsAccess:tagPtr];
 }
 
-NPBINDING DONTSTRIP void NPAddressBookReadContacts(IntPtr tagPtr)
+NPBINDING DONTSTRIP void NPAddressBookReadContacts(NPIntPtr tagPtr)
 {
     [NativePluginsContactsWrapper readContacts:tagPtr];
 }

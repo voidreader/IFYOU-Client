@@ -7,11 +7,11 @@ namespace Toast.Gamebase.Internal.Single.Communicator
     {
         public enum ZoneType
         {
-            [EnumMember(Value = "wss://alpha-gamebase-lh.cloud.toast.com:11443/lh")]
+            [EnumMember(Value = "wss://gslb-gamebase.alpha-nhncloudservice.com:11443/lh")]
             ALPHA,
-            [EnumMember(Value = "wss://beta-gamebase-lh.cloud.toast.com:11443/lh")]
+            [EnumMember(Value = "wss://gslb-gamebase.beta-nhncloudservice.com:11443/lh")]
             BETA,
-            [EnumMember(Value = "wss://gslb-gamebase-lh.cloud.toast.com:11443/lh")]
+            [EnumMember(Value = "wss://gslb-gamebase.nhncloudservice.com:11443/lh")]
             REAL
         }
         

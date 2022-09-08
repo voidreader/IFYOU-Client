@@ -338,6 +338,7 @@ namespace PIERStory
 
             if (req.State != HTTPRequestStates.Finished)
             {
+                SetDefaultLaunchingInfo();
                 launchingJSON = null;
                 return;
             }
@@ -382,8 +383,24 @@ namespace PIERStory
             {
                 Debug.Log(e.StackTrace);
                 launchingJSON = null;
+                
+                SetDefaultLaunchingInfo();
+                
             }
         } // ? CallbackGamebaseLaunching
+        
+        
+        /// <summary>
+        /// 런칭이 제대로 동작하지 않았을때를 대비한 처리 
+        /// </summary>
+        void SetDefaultLaunchingInfo() {
+            addressable_url = "https://d2dvrqwa14jiay.cloudfront.net/bundle/";
+            #if UNITY_IOS
+            addressable_url += "iOS/catalog_1.json";
+            #else
+            addressable_url += "Android/catalog_1.json";
+            #endif      
+        }
 
         #endregion
 

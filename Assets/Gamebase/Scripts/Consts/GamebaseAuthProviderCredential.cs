@@ -9,5 +9,7 @@
         public const string THIRD_IDP_CODE = "thirdIdPCode";
         public const string GAMEBASE_ACCESS_TOKEN = "gamebase_access_token";
         public const string IGNORE_ALREADY_LOGGED_IN = "ignore_already_logged_in";
+        public const string SUB_CODE = "sub_code";
+        public const string LINE_CHANNEL_REGION = "sub_code";
     }
 }

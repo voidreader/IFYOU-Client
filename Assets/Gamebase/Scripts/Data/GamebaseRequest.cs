@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Toast.Gamebase.Internal;
 
@@ -14,15 +14,15 @@ namespace Toast.Gamebase
             /// <summary>
             /// Project ID registered in TOAST.
             /// </summary>
-            public string   appID;
+            public string appID;
 
             /// <summary>
             /// Client version registered in TOAST.
             /// </summary>
-            public string   appVersion;
+            public string appVersion;
 
             [Obsolete("Do not use this member variable.")]
-            public string   zoneType;
+            public string zoneType;
 
             /// <summary>
             /// The display language on the Gamebase UI and SystemDialog can be changed into another language, which is not set on a device, as the user wants.
@@ -30,7 +30,7 @@ namespace Toast.Gamebase
             /// With DisplayLanguage, messages are displayed in an appropriate language for the language code (ISO-639) set by the user.
             /// Each language code is defined in <see cref="GamebaseDisplayLanguageCode"/>.
             /// </summary>
-            public string   displayLanguageCode;
+            public string displayLanguageCode;
 
             /// <summary>
             /// When a game user cannot play games due to system maintenance or banned from use, reasons need to be displayed by pop-ups.
@@ -81,14 +81,14 @@ namespace Toast.Gamebase
             /// Unity Standalone only
             /// Set whether or not to log in to WebView on a (Standalone) platform.
             /// </summary>
-            public bool useWebViewLogin;
+            public bool useWebViewLogin = false;
 
             /// <summary>
             /// Android only
             /// Set the type of push.
             /// </summary>
             public string pushType;
-        }        
+        }
 
         public static class Auth
         {
@@ -111,8 +111,14 @@ namespace Toast.Gamebase
                 private string renewalModeType = string.Empty;
                 private RenewalTargetType renewalTargetType;
                 private string accountId = string.Empty;
-                private string accountPassword = string.Empty;                               
+                private string accountPassword = string.Empty;
 
+                /// <summary>
+                /// Manually renews the issued TransferAccountInfo information.
+                /// </summary>
+                /// <param name="accountId">The account ID to change.</param>
+                /// <param name="accountPassword">The account password to change.</param>
+                /// <returns></returns>
                 public static TransferAccountRenewConfiguration MakeManualRenewConfiguration(string accountId, string accountPassword)
                 {
                     TransferAccountRenewConfiguration renewTransferAccount = new TransferAccountRenewConfiguration
@@ -126,6 +132,11 @@ namespace Toast.Gamebase
                     return renewTransferAccount;
                 }
 
+                /// <summary>
+                /// Manually renews the issued TransferAccountInfo information.
+                /// </summary>
+                /// <param name="accountPassword">The account password to change.</param>
+                /// <returns></returns>
                 public static TransferAccountRenewConfiguration MakeManualRenewConfiguration(string accountPassword)
                 {
                     TransferAccountRenewConfiguration renewTransferAccount = new TransferAccountRenewConfiguration
@@ -138,6 +149,11 @@ namespace Toast.Gamebase
                     return renewTransferAccount;
                 }
 
+                /// <summary>
+                /// Automatically renews the issued TransferAccountInfo information.
+                /// </summary>
+                /// <param name="type"><see cref="RenewalTargetType"/> to change</param>
+                /// <returns></returns>
                 public static TransferAccountRenewConfiguration MakeAutoRenewConfiguration(RenewalTargetType type)
                 {
                     TransferAccountRenewConfiguration renewTransferAccount = new TransferAccountRenewConfiguration
@@ -291,42 +307,42 @@ namespace Toast.Gamebase
                 /// <summary>
                 /// Orientation is defined in <see cref="GamebaseScreenOrientation"/>.
                 /// </summary>
-                public int orientation;
+                public int orientation = GamebaseScreenOrientation.UNSPECIFIED;
 
                 /// <summary>
                 /// Color of Navigation Bar: Red
                 /// </summary>
-                public int colorR;
+                public int colorR = 18;
 
                 /// <summary>
                 /// Color of Navigation Bar: Green
                 /// </summary>
-                public int colorG;
+                public int colorG = 93;
 
                 /// <summary>
                 /// Color of Navigation Bar: Blue
                 /// </summary>
-                public int colorB;
+                public int colorB = 230;
 
                 /// <summary>
                 /// Color of Navigation Bar: Alpha
                 /// </summary>
-                public int colorA;
+                public int colorA = 255;
 
                 /// <summary>
                 /// Height of Navigation Bar
                 /// </summary>
-                public int barHeight;
+                public int barHeight = -1;
 
                 /// <summary>
                 /// Activate/Deactivate Go Back Button
                 /// </summary>
-                public bool isBackButtonVisible;
+                public bool isBackButtonVisible = true;
 
                 /// <summary>
                 /// Activate/Deactivate Navigation Bar
                 /// </summary>
-                public bool isNavigationBarVisible;
+                public bool isNavigationBarVisible = true;
 
                 /// <summary>
                 /// Image of Go Back Button
@@ -351,6 +367,7 @@ namespace Toast.Gamebase
                 /// This method fixes the font size.
                 /// <para/>Default: false
                 /// </summary>
+                [Obsolete("Do not use this member variable.")]
                 public bool enableFixedFontSize;
             }
         }
@@ -359,9 +376,24 @@ namespace Toast.Gamebase
         {
             public class GameUserData
             {
+                /// <summary>
+                /// Describes the level of game user.
+                /// </summary>
                 public int userLevel = 0;
+
+                /// <summary>
+                /// Describes the channel.
+                /// </summary>
                 public string channelId = null;
+
+                /// <summary>
+                /// Describes the name of character.
+                /// </summary>
                 public string characterId = null;
+
+                /// <summary>
+                /// Describes the occupation.
+                /// </summary>
                 public string characterClassId = null;
 
                 public GameUserData(int userLevel)
@@ -372,7 +404,14 @@ namespace Toast.Gamebase
 
             public class LevelUpData
             {
+                /// <summary>
+                /// Describes the level of game user.
+                /// </summary>
                 public int userLevel = 0;
+
+                /// <summary>
+                /// Enter Epoch Time in millisecond.
+                /// </summary>
                 public long levelUpTime = -1;
 
                 public LevelUpData(int userLevel, long levelUpTime)
@@ -380,11 +419,11 @@ namespace Toast.Gamebase
                     this.userLevel = userLevel;
                     this.levelUpTime = levelUpTime;
 
-                    if(this.levelUpTime < 0)
+                    if (this.levelUpTime < 0)
                     {
                         GamebaseLog.Warn("levelUpTime parameter can not be negative.", this);
                     }
-                }                
+                }
             }
         }
 
@@ -414,7 +453,7 @@ namespace Toast.Gamebase
                 public bool enableCrashErrorLog = false;
 
                 /// <summary>
-                /// TOAST Cloud service zone (e.g. REAL or ALPHA)
+                /// NHN Cloud service zone (e.g. REAL or ALPHA)
                 /// <para/>Default: REAL
                 /// </summary>
                 public string serviceZone = "REAL";
@@ -536,5 +575,5 @@ namespace Toast.Gamebase
                 public List<Content> contents;
             }
         }
-    }    
+    }
 }

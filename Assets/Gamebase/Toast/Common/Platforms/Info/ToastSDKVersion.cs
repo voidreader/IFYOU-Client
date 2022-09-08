@@ -2,6 +2,6 @@ namespace Toast.Internal
 {
     public static class ToastSDKVersion
     {
-        public const string version = "0.25.6";
+        public const string version = "0.26.1";
     }
 }

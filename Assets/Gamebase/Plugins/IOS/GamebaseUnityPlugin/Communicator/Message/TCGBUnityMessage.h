@@ -10,4 +10,3 @@
 @property (nonatomic, strong) NSString* responseMethodName;
 
 @end
-

@@ -66,17 +66,7 @@ namespace Toast.Gamebase.Internal.Mobile
             {
                 public string providerName;
             }
-
-            public class IssueTransferKey
-            {
-                public long expiresIn;
-            }
-
-            public class RequestTransfer
-            {
-                public string transferKey;
-            }
-
+            
             public class TransferAccount
             {
                 public string accountId;

@@ -16,7 +16,6 @@
 
 @interface NSArray (JSON)
 - (NSString *)JSONString;
-- (NSString *)JSONStringForUnity;
 - (NSString *)JSONStringFromArray;
 @end
 

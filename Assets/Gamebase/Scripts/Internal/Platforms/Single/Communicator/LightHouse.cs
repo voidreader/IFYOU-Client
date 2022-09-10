@@ -7,11 +7,11 @@ namespace Toast.Gamebase.Internal.Single.Communicator
     {
         public enum ZoneType
         {
-            [EnumMember(Value = "wss://alpha-gamebase-lh.cloud.toast.com:11443/lh")]
+            [EnumMember(Value = "wss://gslb-gamebase.alpha-nhncloudservice.com:11443/lh")]
             ALPHA,
-            [EnumMember(Value = "wss://beta-gamebase-lh.cloud.toast.com:11443/lh")]
+            [EnumMember(Value = "wss://gslb-gamebase.beta-nhncloudservice.com:11443/lh")]
             BETA,
-            [EnumMember(Value = "wss://gslb-gamebase-lh.cloud.toast.com:11443/lh")]
+            [EnumMember(Value = "wss://gslb-gamebase.nhncloudservice.com:11443/lh")]
             REAL
         }
         
@@ -57,10 +57,11 @@ namespace Toast.Gamebase.Internal.Single.Communicator
                     public const string GET_IMAGE_NOTICES = "getImageNotices";
                 }
             }
-
+            
             public class Gateway
             {
                 public const string PRODUCT_ID = "gateway";
+                public const string PRODUCT_ID_TOS = "tos";
 
                 public class ID
                 {
@@ -74,6 +75,9 @@ namespace Toast.Gamebase.Internal.Single.Communicator
                     public const string ADD_MAPPING = "addMapping";
                     public const string ISSUE_SHORT_TERM_TICKET = "issueShortTermTicket";
                     public const string INTROSPECT_ACCESS_TOKEN = "introspectAccessToken";
+
+                    public const string QUERY_TERMS = "queryTerms";
+                    public const string UPDATE_TERMS = "updateTerms";
 
                     /// <summary>
                     /// HEALTH_CHECK is used only to check the Internet connection status on the WebGL platform.

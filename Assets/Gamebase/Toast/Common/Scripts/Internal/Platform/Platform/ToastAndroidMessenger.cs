@@ -7,7 +7,7 @@ namespace Toast.Internal
 {
     public class ToastAndroidMessenger : IToastPlatformMessenger
     {
-        private const string ToastUnityClassFullName = "com.toast.android.unity.core.ToastUnity";
+        private const string ToastUnityClassFullName = "com.nhncloud.android.unity.core.NhnCloudUnity";
 
         private AndroidJavaObject _androidPlugin;
 

@@ -3,6 +3,7 @@ using NhnCloud.GamebaseTools.SettingTool.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Xml;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -250,6 +251,7 @@ namespace NhnCloud.GamebaseTools.SettingTool.Data
             {
                 if (SettingTool.IsSuccess(error) == true)
                 {
+                    DecodingAppKey();
                     LoadLaunchingData(callback);
                 }
                 else
@@ -257,6 +259,29 @@ namespace NhnCloud.GamebaseTools.SettingTool.Data
                     callback(new SettingToolError(SettingToolErrorCode.FAILED_TO_LOAD_MASTER_FILE, DOMAIN, string.Empty, error));
                 }
             });
+        }
+
+        private void DecodingAppKey()
+        {
+            var masterData = DataManager.GetData<SettingToolResponse.Master>(DataKey.MASTER);
+            if (masterData.launching.isEncoding == false)
+            {
+                return;
+            }
+
+            masterData.launching.appKey = DecodingString(masterData.launching.appKey);
+            DataManager.SetData(DataKey.MASTER, masterData);
+        }
+
+        private string DecodingString(string str)
+        {
+            if (string.IsNullOrEmpty(str) == true)
+            {
+                return string.Empty;
+            }
+
+            var bytes = Convert.FromBase64String(str);
+            return Encoding.UTF8.GetString(bytes);
         }
 
         private void LoadLaunchingData(SettingToolCallback.ErrorDelegate callback)

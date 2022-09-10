@@ -1,7 +1,7 @@
 
 {
-    "useAndroid" : false,
-    "useIOS"     : true,
+    "useAndroid" : true,
+    "useIOS"     : false,
     "unity"      : {
         "fileName" : "sdk/gamebase-sdk",
         "authentication" : {
@@ -53,7 +53,7 @@
                 },
                 {
                     "name" : "Google",
-                    "used" : false,
+                    "used" : true,
                     "canOnlyChooseEitherUnityOrNative" : false,
                     "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-auth-google"
                 },
@@ -101,15 +101,21 @@
             "adapters"                         : [
                 {
                     "name" : "IapGoogle",
-                    "used" : false,
+                    "used" : true,
                     "canOnlyChooseEitherUnityOrNative" : false,
                     "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-purchase-google"
                 },
                 {
-                    "name" : "IapOnsStore",
+                    "name" : "IapOnestore",
                     "used" : false,
                     "canOnlyChooseEitherUnityOrNative" : false,
                     "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-purchase-onestore"
+                },
+                {
+                    "name" : "IapOnestoreExternal",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-purchase-onestore-external"
                 },
                 {
                     "name" : "IapGalaxy",
@@ -133,13 +139,19 @@
         },
         "push"           : {
             "name" : "push",
-            "onlyOneCanBeSelectedFromCategory" : true,
+            "onlyOneCanBeSelectedFromCategory" : false,
             "adapters"                         : [
                 {
                     "name" : "FCM",
-                    "used" : false,
+                    "used" : true,
                     "canOnlyChooseEitherUnityOrNative" : false,
                     "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-push-fcm"
+                },
+                {
+                    "name" : "ADM",
+                    "used" : false,
+                    "canOnlyChooseEitherUnityOrNative" : false,
+                    "fileName"                         : "com.toast.android.gamebase:gamebase-adapter-push-adm"
                 }
             ]
         },
@@ -163,7 +175,7 @@
                 },
                 {
                     "name" : "Google",
-                    "used" : true,
+                    "used" : false,
                     "canOnlyChooseEitherUnityOrNative" : false,
                     "fileName"                         : "GamebaseAuthGoogleAdapter"
                 },
@@ -193,7 +205,7 @@
                 },
                 {
                     "name" : "AppleId",
-                    "used" : true,
+                    "used" : false,
                     "canOnlyChooseEitherUnityOrNative" : false,
                     "fileName"                         : "GamebaseAuthAppleidAdapter"
                 },
@@ -217,7 +229,7 @@
             "adapters"                         : [
                 {
                     "name" : "IapAppStore",
-                    "used" : true,
+                    "used" : false,
                     "canOnlyChooseEitherUnityOrNative" : false,
                     "fileName"                         : "GamebasePurchaseIAPAdapter"
                 }
@@ -229,7 +241,7 @@
             "adapters"                         : [
                 {
                     "name" : "APNS",
-                    "used" : true,
+                    "used" : false,
                     "canOnlyChooseEitherUnityOrNative" : false,
                     "fileName"                         : "GamebasePushAdapter"
                 }

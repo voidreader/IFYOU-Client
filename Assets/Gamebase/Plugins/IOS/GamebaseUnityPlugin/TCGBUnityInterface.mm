@@ -1,10 +1,22 @@
 #import "TCGBUnityInterface.h"
+#import "TCGBUnityPluginDelegate.h"
 #import <Gamebase/Gamebase.h>
 #import <GamebasePlugin/GamebasePlugin.h>
+#import <objc/runtime.h>
+
+@interface TCGBUnityInterface()
+
+@property (atomic, strong) NSMutableDictionary<NSString *, id<TCGBUnityPluginDelegate>>* adapterInstance;
+
+@end
 
 @implementation TCGBUnityInterface
 
 static bool _startUnityScheduled = false;
+
++ (void)load {
+    UnityRegisterAppDelegateListener([TCGBUnityInterface sharedUnityInterface]);
+}
 
 + (TCGBUnityInterface *)sharedUnityInterface {
     static dispatch_once_t onceToken;
@@ -15,8 +27,25 @@ static bool _startUnityScheduled = false;
     return instance;
 }
 
-+ (void)load {
-    UnityRegisterAppDelegateListener([TCGBUnityInterface sharedUnityInterface]);
+- (void)addUnityPluginAdapter:(NSString *)type {
+    if ([_adapterInstance objectForKey:type] != nil) {
+        return;
+    }
+    
+    id<TCGBUnityPluginDelegate> adapterInstance = [[NSClassFromString(type) alloc] init];
+    [_adapterInstance setObject:adapterInstance forKey:type];
+    
+    if ([[adapterInstance class] respondsToSelector:@selector(versionString)] == YES) {
+        NSString *adapterVersion = [[adapterInstance class] versionString];
+        [TCGBUtil logDebugWithFormat:@"[TCGB][Plugin][TCGBUnityInterface] Add unity plugin adapter. (type= %@, version= %@)", type, adapterVersion];
+    }
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _adapterInstance = [NSMutableDictionary dictionary];
+    }
+    return self;
 }
 
 - (void)setupViewController {
@@ -27,6 +56,13 @@ static bool _startUnityScheduled = false;
 #pragma mark - LifeCycleListener
 - (void)didFinishLaunching:(NSNotification*)notification {
     [TCGBGamebase application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:[notification userInfo]];
+    
+    for (NSString* adapterName in _adapterInstance) {
+        id<TCGBUnityPluginDelegate> adapter = [_adapterInstance objectForKey:adapterName];
+        if ([adapter respondsToSelector:@selector(didFinishLaunching)] == YES) {
+            [adapter didFinishLaunching];
+        }
+    }
 }
 
 - (void)didBecomeActive:(NSNotification*)notification {

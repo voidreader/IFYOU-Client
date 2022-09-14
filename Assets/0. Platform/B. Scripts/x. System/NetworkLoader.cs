@@ -32,6 +32,7 @@ namespace PIERStory
         
 
         public const string FUNC_UPDATE_EPISODE_COMPLETE_RECORD = "requestCompleteEpisodeType2"; // 에피소드 플레이 완료 기록 
+        public const string FUNC_EPISODE_COMPLETE = "requestCompleteEpisodeOptimized"; // 에피소드 플레이 완료 기록 
 
 
         public const string FUNC_RESET_EPISODE_PROGRESS_TYPE2 = "resetUserEpisodeProgressType2"; // 에피소드 진행도 리셋 신규 15버전 2022.02.28 
@@ -593,6 +594,35 @@ namespace PIERStory
             SendPost(UserManager.main.CallbackRequestCompleteEpisode, sending);
 
         }
+        
+        
+        /// <summary>
+        /// 2022.09.14 
+        /// 에피소드 클리어 처리 최적화 버전
+        /// </summary>
+        /// <param name="nextEpisode">다음 회차</param>
+        /// <param name="lastSceneID">마지막 씬 ID</param>
+        public void RequestCompleteEpisodeType2(EpisodeData nextEpisode, string lastSceneID) {
+            JsonData sending = new JsonData();
+            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
+            sending["episodeID"] = StoryManager.main.CurrentEpisodeID; // 현재 프로젝트 ID 
+            sending["episode_id"] = StoryManager.main.CurrentEpisodeID; 
+
+            
+            if(nextEpisode != null && nextEpisode.isValidData && !string.IsNullOrEmpty(nextEpisode.episodeID))
+                sending["nextEpisodeID"] = nextEpisode.episodeID; // 다음 에피소드 ID 있을때만
+                
+            // 마지막 플레이 scene_id 추가
+            sending["scene_id"] = lastSceneID;
+
+            sending["func"] = FUNC_EPISODE_COMPLETE; // 
+            sending["ver"] = 42; // 버전 2022.01.24
+            sending["useRecord"] = UserManager.main.useRecord;
+
+
+            SendPost(UserManager.main.CallbackRequestCompleteEpisode, sending);
+        }
+        
         
         /// <summary>
         /// 에피소드 진행도 리셋 

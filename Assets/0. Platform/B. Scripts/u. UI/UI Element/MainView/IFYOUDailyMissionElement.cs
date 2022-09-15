@@ -74,35 +74,10 @@ namespace PIERStory
             if (!interactable)
                 return;
 
-            UserManager.main.RequestDailyMissionReward(missionNo, CallbackGetMissionReward);
+            UserManager.main.RequestDailyMissionReward(missionNo);
         }
 
-        void CallbackGetMissionReward(HTTPRequest req, HTTPResponse res)
-        {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("Failed CallbackGetMissionReward");
 
-                JsonData errordata = JsonMapper.ToObject(res.DataAsText);
-
-                // 이미 받았다고 하면 화면 갱신을 해주자
-                if (SystemManager.GetJsonNodeInt(errordata, "code") == 6123)
-                {
-                    NetworkLoader.main.RequestIfyouplayList();
-                    StartCoroutine(RefreshIfyouplayScreen());
-                }
-
-                return;
-            }
-
-            JsonData result = JsonMapper.ToObject(res.DataAsText);
-
-            UserManager.main.SetBankInfo(result);
-            UserManager.main.userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION] = result[LobbyConst.NODE_ATTENDANCE_MISSION];
-            UserManager.main.userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION] = result[LobbyConst.NODE_DAILY_MISSION];
-
-            MainIfyouplay.OnRefreshIfyouplay?.Invoke();
-        }
 
 
         IEnumerator RefreshIfyouplayScreen()

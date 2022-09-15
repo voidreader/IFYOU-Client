@@ -235,30 +235,9 @@ namespace PIERStory
         /// </summary>
         public void OnClickGetTotalMissionReward()
         {
-            UserManager.main.RequestDailyMissionReward(1, CallbackGetMissionReward);
+            UserManager.main.RequestDailyMissionReward(1);
         }
 
-        /// <summary>
-        /// 데일리 일반 미션 수신 콜백
-        /// </summary>
-        /// <param name="req"></param>
-        /// <param name="res"></param>
-        void CallbackGetMissionReward(HTTPRequest req, HTTPResponse res)
-        {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("Failed CallbackGetMissionReward");
-                return;
-            }
-
-            JsonData result = JsonMapper.ToObject(res.DataAsText);
-
-            UserManager.main.SetBankInfo(result);
-            UserManager.main.userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION] = result[LobbyConst.NODE_ATTENDANCE_MISSION];
-            UserManager.main.userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION] = result[LobbyConst.NODE_DAILY_MISSION];
-
-            MainIfyouplay.OnRefreshIfyouplay?.Invoke();
-        }
 
 
 

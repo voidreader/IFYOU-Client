@@ -14,7 +14,8 @@ namespace PIERStory
 {
     public class MainIfyouplay : MonoBehaviour
     {
-        public static Action OnRefreshIfyouplay = null;
+        public static Action OnRefreshIfyouplay = null; // 이프유 플레이 페이지 전체 리프레시
+        public static Action OnRefreshDailyMissionPart = null; // 데일리 미션 부분 리프레시 
         public static Action OnCooldownAdEnable = null;
         public ScrollRect scroll;
 
@@ -66,6 +67,7 @@ namespace PIERStory
         {
             OnRefreshIfyouplay = EnterIfyouplay;
             OnCooldownAdEnable = InitCooldownAdButton;
+            OnRefreshDailyMissionPart = InitDailyMission;
         }
         
         
@@ -96,8 +98,6 @@ namespace PIERStory
             // 출석 관련 세팅
             //InitContinuousAttendance();
             InitDailyAttendance();
-
-            
 
             InitDailyMission();
 

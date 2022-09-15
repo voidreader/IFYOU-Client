@@ -3426,7 +3426,7 @@ namespace PIERStory
         /// </summary>
         /// <param name="missionNo">미션 번호</param>
         /// <param name="__callback"></param>
-        public void RequestDailyMissionReward(int missionNo, OnRequestFinishedDelegate __callback)
+        public void RequestDailyMissionReward(int missionNo)
         {
             JsonData sending = new JsonData();
             //sending[CommonConst.FUNC] = "requestDailyMissionReward";
@@ -3435,8 +3435,48 @@ namespace PIERStory
             sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
             sending["mission_no"] = missionNo;
 
-            NetworkLoader.main.SendPost(__callback, sending, true);
+            NetworkLoader.main.SendPost(CallbackGetMissionReward, sending, true);
         }
+        
+        public void CallbackGetMissionReward(HTTPRequest req, HTTPResponse res)
+        {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackGetMissionReward");
+                return;
+            }
+
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            bool isSuccess = SystemManager.GetJsonNodeBool(result, "result"); // 성공여부 
+            
+            
+            // 실패시 
+            if(!isSuccess) {
+                string failMessage = SystemManager.GetJsonNodeString(result, "message");
+                Debug.LogError("CallbackGetMissionReward Error : " + failMessage);
+                
+                if(failMessage == "received") { // 이미 받은 상태. 
+                    SystemManager.ShowMessageWithLocalize("80025");
+                }
+                else if(failMessage == "no data") {
+                    SystemManager.ShowMessageWithLocalize("80019");
+                }
+                
+                
+                return;
+            }
+            
+            
+            // 리소스 팝업을 띄워줍시다.
+            
+
+            SetBankInfo(result);
+            
+            if(result.ContainsKey(LobbyConst.NODE_DAILY_MISSION) && UserManager.main.userIfyouPlayJson != null)
+                UserManager.main.userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION] = result[LobbyConst.NODE_DAILY_MISSION];
+
+            MainIfyouplay.OnRefreshDailyMissionPart?.Invoke();
+        }        
 
         #endregion
 

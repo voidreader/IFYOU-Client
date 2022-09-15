@@ -317,8 +317,8 @@ namespace PIERStory
         {
             NetworkLoader.main.RequestPlatformServiceEvents(); // 공지사항, 프로모션, 장르 조회 
             NetworkLoader.main.RequestIfyouplayList();
-            StartCoroutine(RoutineDailyMissionTimer());
-            StartCoroutine(RoutineAdCooldown());
+            // StartCoroutine(RoutineDailyMissionTimer());
+            // StartCoroutine(RoutineAdCooldown());
         }
         
         
@@ -2233,52 +2233,6 @@ namespace PIERStory
 
 
 
-        /// <summary>
-        /// 유저 에피소드 클리어 콜백
-        /// </summary>
-        /// <param name="req"></param>
-        /// <param name="res"></param>
-        public void CallbackRequestCompleteEpisode(HTTPRequest req, HTTPResponse res)
-        {
-            // 통신 실패했을 때 갱신하지 않음. 
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("CallbackRequestCompleteEpisode");
-                return;
-            }
-
-            Debug.Log(">> CallbackRequestCompleteEpisode : " + res.DataAsText);
-
-            // ! 여기에 JSON 따로 저장합니다. 
-            resultEpisodeRecord = JsonMapper.ToObject(res.DataAsText);
-
-            int playedEpisodeID = SystemManager.GetJsonNodeInt(resultEpisodeRecord, CommonConst.COL_EPISODE_ID);
-
-
-            // 노드 저장!
-            if (playedEpisodeID > 0)
-            {
-                // 첫 클리어 보상 관련 변수
-                GameManager.main.hasFirstClearReward = !IsCompleteEpisode(playedEpisodeID.ToString());
-
-                AddUserEpisodeHistory(playedEpisodeID); // 히스토리 
-                AddUserEpisodeProgress(playedEpisodeID);  // 진행도 
-                
-                GameManager.main.currentEpisodeData.isClear = true;
-            }
-
-            SetNodeUserProjectCurrent(resultEpisodeRecord[NODE_PROJECT_CURRENT]);
-            
-            // * 에피소드 관련 미션과 첫클리어 보상에 대한 처리는 GameManager에서 진행한다. 2022.07.27
-            
-            // currentStorySelectionHistoryJson = resultEpisodeRecord["selectionHistory"]; // 선택지 히스토리 
-
-            // 현재 플레이한 에피소드가 정규 에피소드인 경우 이프유 업적 통신하기
-            if (GameManager.main != null && GameManager.main.currentEpisodeData.episodeType == EpisodeType.Chapter)
-                NetworkLoader.main.RequestIFYOUAchievement(12, -1, int.Parse(StoryManager.main.CurrentEpisodeID));
-
-            NetworkLoader.main.RequestDailyMission(2);
-        }
 
 
         /// <summary>
@@ -2537,7 +2491,7 @@ namespace PIERStory
         #endregion
 
         #region 사용자 에피소드 관련 메소드
-
+            
 
         /// <summary>
         /// 현재의 사건 ID를 기록에 추가한다. 
@@ -2587,6 +2541,99 @@ namespace PIERStory
 
             UpdateSceneIDRecord(StoryManager.main.CurrentProjectID, StoryManager.main.CurrentEpisodeID, __scene_id);
         }
+        
+        
+        /// <summary>
+        /// 2022.09.14 
+        /// 에피소드 클리어 처리 최적화 버전
+        /// </summary>
+        /// <param name="nextEpisode">다음 회차</param>
+        /// <param name="lastSceneID">마지막 씬 ID</param>
+        public void RequestCompleteEpisodeOptimized(EpisodeData nextEpisode, string lastSceneID) {
+            JsonData sending = new JsonData();
+            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
+            sending["episodeID"] = StoryManager.main.CurrentEpisodeID; // 현재 프로젝트 ID 
+            sending["episode_id"] = StoryManager.main.CurrentEpisodeID; 
+
+            
+            // 진행할 다음화가 있다면 다음화의 episode id 와 엔딩 여부를 추가해준다.
+            if(nextEpisode != null && nextEpisode.isValidData && !string.IsNullOrEmpty(nextEpisode.episodeID)) {
+                sending["nextEpisodeID"] = nextEpisode.episodeID; // 다음 에피소드 ID 있을때만
+                
+                // 다음화가 엔딩인 경우에 대한 처리
+                if(nextEpisode.episodeType == EpisodeType.Ending) 
+                    sending["is_next_ending"] = 1;
+                else
+                    sending["is_next_ending"] = 0;
+                
+            }
+            
+            // 마지막 플레이 사건ID 처리
+            if(!string.IsNullOrEmpty(lastSceneID)) {
+                // 마지막 플레이 scene_id 추가
+                sending["scene_id"] = lastSceneID;    
+                // 통신 응답을 기다리지 않고 바로 노드에 입력해준다. 
+                AddUserProjectSceneHist(lastSceneID);
+                AddSceneProgress(lastSceneID);
+                
+                CompleteMissionByScene(lastSceneID); // 미션 해금 처리 
+                ShowCompleteSpecialEpisodeByScene(lastSceneID); // 스페셜 에피소드 해금 처리
+            }
+
+            sending["func"] = NetworkLoader.FUNC_EPISODE_COMPLETE; // 
+            sending["ver"] = 42; // 버전 2022.01.24
+            sending["useRecord"] = UserManager.main.useRecord;
+
+
+            NetworkLoader.main.SendPost(UserManager.main.CallbackRequestCompleteEpisode, sending);
+        }
+        
+        /// <summary>
+        /// 유저 에피소드 클리어 콜백
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackRequestCompleteEpisode(HTTPRequest req, HTTPResponse res)
+        {
+            // 통신 실패했을 때 갱신하지 않음. 
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("CallbackRequestCompleteEpisode");
+                return;
+            }
+
+            Debug.Log(">> CallbackRequestCompleteEpisode : " + res.DataAsText);
+
+            // ! 여기에 JSON 따로 저장합니다. 
+            resultEpisodeRecord = JsonMapper.ToObject(res.DataAsText);
+
+            int playedEpisodeID = SystemManager.GetJsonNodeInt(resultEpisodeRecord, CommonConst.COL_EPISODE_ID);
+
+
+            // 노드 저장!
+            if (playedEpisodeID > 0)
+            {
+                // 첫 클리어 보상 관련 변수
+                GameManager.main.hasFirstClearReward = !IsCompleteEpisode(playedEpisodeID.ToString());
+
+                AddUserEpisodeHistory(playedEpisodeID); // 히스토리 
+                AddUserEpisodeProgress(playedEpisodeID);  // 진행도 
+                
+                GameManager.main.currentEpisodeData.isClear = true;
+            }
+
+            SetNodeUserProjectCurrent(resultEpisodeRecord[NODE_PROJECT_CURRENT]);
+            
+            // * 에피소드 관련 미션과 첫클리어 보상에 대한 처리는 GameManager에서 진행한다. 2022.07.27
+
+            // 현재 플레이한 에피소드가 정규 에피소드인 경우 이프유 업적 통신하기
+            if (GameManager.main != null && GameManager.main.currentEpisodeData.episodeType == EpisodeType.Chapter)
+                NetworkLoader.main.RequestIFYOUAchievement(12, -1, int.Parse(StoryManager.main.CurrentEpisodeID));
+
+            NetworkLoader.main.IncreaseDailyMissionCount(2);
+        }
+
+        
 
 
 
@@ -3122,7 +3169,33 @@ namespace PIERStory
         #endregion
 
         #region 이프유플레이 관련
-
+        
+        /// <summary>
+        /// 일일 미션 카운트 추가 콜백 2022.09
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackIncreaseDailyMissionCount(HTTPRequest req, HTTPResponse res) {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackIfyouplayList");
+                return;
+            }
+            
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            
+            // userIfyouPlayJson 노드 갱신. 
+            if(userIfyouPlayJson != null && result.ContainsKey(LobbyConst.NODE_DAILY_MISSION)) {
+                userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION] = result[LobbyConst.NODE_DAILY_MISSION];
+            }
+            
+        }
+        
+        /// <summary>
+        /// 이프유 페이지 전체 데이터 받아오기 콜백 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
         public void CallbackIfyouplayList(HTTPRequest req, HTTPResponse res)
         {
             if (!NetworkLoader.CheckResponseValidation(req, res))
@@ -3155,6 +3228,32 @@ namespace PIERStory
             
             
         }
+        
+        
+        /// <summary>
+        /// 수령할 수 있는 데일리 미션 체크 
+        /// </summary>
+        /// <returns></returns>
+        bool CheckReceivableDailyMission() {
+            if(userIfyouPlayJson == null || !userIfyouPlayJson.ContainsKey(LobbyConst.NODE_DAILY_MISSION)) {
+                return false;
+            }
+            
+            if(userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION].Count == 0)
+                return false;
+                
+            for(int i=0; i<userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION].Count;i++) {
+                
+                // 리미트 카운트 이상 달성했으면, 받을 수 있다. 
+                if(SystemManager.GetJsonNodeInt(userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION][i], "current_result") >=
+                 SystemManager.GetJsonNodeInt(userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION][i], "limit_count")) {
+                    return true;
+                }
+                
+            }
+            
+            return false;
+        }
 
 
         /// <summary>
@@ -3171,47 +3270,15 @@ namespace PIERStory
             if (attendanceMission == null)
                 return false;
 
-            JsonData dailyMission = SystemManager.GetJsonNode(userIfyouPlayJson, LobbyConst.NODE_DAILY_MISSION);
-
-            if (dailyMission == null)
-                return false;
-
-            // 출석 보충이 필요한 경우 true
-            /*
-            if (!SystemManager.GetJsonNodeBool(attendanceMission[LobbyConst.NODE_USER_INFO][0], "is_attendance") || SystemManager.GetJsonNodeInt(attendanceMission[LobbyConst.NODE_USER_INFO][0], "reset_day") > 0)
-                return true;
-
-            // 연속 출석 보상 수령가능한 것이 있을 때 true
-            for (int i = 0; i < attendanceMission[LobbyConst.NODE_CONTINUOUS_ATTENDANCE].Count; i++)
-            {
-                if (SystemManager.GetJsonNodeInt(attendanceMission[LobbyConst.NODE_CONTINUOUS_ATTENDANCE][i], LobbyConst.NODE_DAY_SEQ) <= SystemManager.GetJsonNodeInt(attendanceMission[LobbyConst.NODE_USER_INFO][0], "attendance_day")
-                    && !SystemManager.GetJsonNodeBool(attendanceMission[LobbyConst.NODE_CONTINUOUS_ATTENDANCE][i], "reward_check"))
-                    return true;
-            }
-            */
 
             // 오늘 아직 출석하지 않았을 때 true
             if (!TodayAttendanceCheck())
                 return true;
 
-
-            if (!dailyMission.ContainsKey("all") || !dailyMission.ContainsKey("single"))
-                return false;
-
-            if (dailyMission["all"][0] == null)
-                return false;
-
-
-            // 데일리 미션 전체완료 보상 안받았을 때 true
-            if (SystemManager.GetJsonNodeInt(dailyMission["all"][0], "state") == 1)
+            // 데일리 미션 체크 
+            if(CheckReceivableDailyMission())
                 return true;
-
-            // 데일리 미션 보상 안받은게 있을 떄
-            for (int i = 0; i < dailyMission["single"].Count; i++)
-            {
-                if (SystemManager.GetJsonNodeInt(dailyMission["single"][i], "state") == 1)
-                    return true;
-            }
+               
 
             JsonData missionAdReward = SystemManager.GetJsonNode(userIfyouPlayJson, "missionAdReward");
 
@@ -3362,7 +3429,8 @@ namespace PIERStory
         public void RequestDailyMissionReward(int missionNo, OnRequestFinishedDelegate __callback)
         {
             JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "requestDailyMissionReward";
+            //sending[CommonConst.FUNC] = "requestDailyMissionReward";
+            sending[CommonConst.FUNC] = "requestDailyMissionRewardOptimized";
             sending[CommonConst.COL_USERKEY] = userKey;
             sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
             sending["mission_no"] = missionNo;

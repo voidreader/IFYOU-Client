@@ -569,60 +569,7 @@ namespace PIERStory
                 RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
         }
 
-
-
-
-        /// <summary>
-        /// 에피소드 클리어 처리 
-        /// </summary>
-        /// <param name="nextEpisode">다음 에피소드</param>
-        public void RequestCompleteEpisode(EpisodeData nextEpisode)
-        {
-            JsonData sending = new JsonData();
-            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
-            sending["episodeID"] = StoryManager.main.CurrentEpisodeID; // 현재 프로젝트 ID 
-
-            
-            if(nextEpisode != null && nextEpisode.isValidData && !string.IsNullOrEmpty(nextEpisode.episodeID))
-                sending["nextEpisodeID"] = nextEpisode.episodeID; // 다음 에피소드 ID 있을때만
-
-            sending["func"] = FUNC_UPDATE_EPISODE_COMPLETE_RECORD;
-            sending["ver"] = 10; // 버전 2022.01.24
-            sending["useRecord"] = UserManager.main.useRecord;
-
-
-            SendPost(UserManager.main.CallbackRequestCompleteEpisode, sending);
-
-        }
-        
-        
-        /// <summary>
-        /// 2022.09.14 
-        /// 에피소드 클리어 처리 최적화 버전
-        /// </summary>
-        /// <param name="nextEpisode">다음 회차</param>
-        /// <param name="lastSceneID">마지막 씬 ID</param>
-        public void RequestCompleteEpisodeType2(EpisodeData nextEpisode, string lastSceneID) {
-            JsonData sending = new JsonData();
-            sending["project_id"] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 ID 
-            sending["episodeID"] = StoryManager.main.CurrentEpisodeID; // 현재 프로젝트 ID 
-            sending["episode_id"] = StoryManager.main.CurrentEpisodeID; 
-
-            
-            if(nextEpisode != null && nextEpisode.isValidData && !string.IsNullOrEmpty(nextEpisode.episodeID))
-                sending["nextEpisodeID"] = nextEpisode.episodeID; // 다음 에피소드 ID 있을때만
-                
-            // 마지막 플레이 scene_id 추가
-            sending["scene_id"] = lastSceneID;
-
-            sending["func"] = FUNC_EPISODE_COMPLETE; // 
-            sending["ver"] = 42; // 버전 2022.01.24
-            sending["useRecord"] = UserManager.main.useRecord;
-
-
-            SendPost(UserManager.main.CallbackRequestCompleteEpisode, sending);
-        }
-        
+       
         
         /// <summary>
         /// 에피소드 진행도 리셋 
@@ -754,11 +701,14 @@ namespace PIERStory
 
         /// <summary>
         /// 이프유 플레이 페이지에 들어가는 모든 정보 리스트
+        /// 2022.09.15 변경 
         /// </summary>
         public void RequestIfyouplayList()
         {
             JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "requestIfyouPlayList";
+            
+            // 수정된 메소드 호출한다. 
+            sending[CommonConst.FUNC] = "requestIfyouPlayListOptimized";
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
 
@@ -787,19 +737,20 @@ namespace PIERStory
 
         #endregion
 
+
         /// <summary>
-        /// 일일미션 누적 요청
+        /// 일일미션 누적 요청 (1씩 카운트 쌓기)
+        /// 전체 일일미션 클리어하기, 광고, 에피소드 클리어 까지 3개의 미션에서 사용 (mission_no : 1,2,3)
         /// </summary>
-        /// <param name="missionNo"></param>
-        public void RequestDailyMission(int missionNo)
-        {
+        /// <param name="missionNO"></param>
+        public void IncreaseDailyMissionCount(int missionNO) {
             JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "requestDailyMissionCount";
+            sending[CommonConst.FUNC] = "increaseDailyMissionCount";
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
-            sending["mission_no"] = missionNo;
+            sending["mission_no"] = missionNO;
 
-            SendPost(UserManager.main.CallbackIfyouplayList, sending);
+            SendPost(UserManager.main.CallbackIncreaseDailyMissionCount, sending);
         }
 
 

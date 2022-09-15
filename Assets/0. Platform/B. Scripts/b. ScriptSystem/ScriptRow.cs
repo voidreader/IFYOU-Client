@@ -278,7 +278,7 @@ namespace PIERStory
             // 라이브 오브제 지속시간 관련 (유지=2)
             GetParam<string>(controlParams, GameConst.ROW_CONTROL_MAINTAIN, ref controlAlternativeName);
 
-            // 나레이션, 배경 관련 (반전=배경)
+            // 나레이션, 배경 관련 (반전=좌우)
             GetParam<string>(controlParams, GameConst.ROW_CONTROL_REVERSAL, ref controlAlternativeName);
             
             // 립싱크 관련 (입=닫아)

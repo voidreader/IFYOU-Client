@@ -18,12 +18,25 @@ namespace PIERStory
 
         int missionNo = 2;
         bool interactable = false;
+        
+        public int currentResult = 0;
+        public int limitCount = 0;
+        public int received = 0; 
 
+        /// <summary>
+        /// 이프유 데일리 미션 초기화
+        /// </summary>
+        /// <param name="__j"></param>
         public void InitDailyMission(JsonData __j)
         {
             missionNo = SystemManager.GetJsonNodeInt(__j, "mission_no");
             SystemManager.SetText(missionText, string.Format("{0} ({1}/{2})", SystemManager.GetJsonNodeString(__j, "content"), SystemManager.GetJsonNodeInt(__j, "current_result"), SystemManager.GetJsonNodeInt(__j, "limit_count")));
             rewardCurrency.InitDailyMissionReward(__j);
+            
+            
+            currentResult = SystemManager.GetJsonNodeInt(__j, "current_result");
+            limitCount = SystemManager.GetJsonNodeInt(__j, "limit_count");
+            received = SystemManager.GetJsonNodeInt(__j, "received");
 
             switch (SystemManager.GetJsonNodeInt(__j, "state"))
             {
@@ -44,7 +57,12 @@ namespace PIERStory
                     break;
             }
 
-            interactable = SystemManager.GetJsonNodeInt(__j, "state") == 1 ? true : false;
+            // interactable = SystemManager.GetJsonNodeInt(__j, "state") == 1 ? true : false;
+            
+            if(currentResult >= limitCount && received == 0)
+                interactable = true;
+            else    
+                interactable = false;
         }
 
 

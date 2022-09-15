@@ -756,7 +756,7 @@ namespace PIERStory
                     ShowGameEnd(null);
                 else
                 {
-                    NetworkLoader.main.RequestCompleteEpisode(null);
+                    UserManager.main.RequestCompleteEpisodeOptimized(null, null);
                     SystemManager.ShowSystemPopupLocalize("6203", RetryPlay, EndGame);
                 }
             }
@@ -1959,14 +1959,6 @@ namespace PIERStory
             yield return new WaitForSeconds(0.1f);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
 
-            /*
-            Dictionary<string, string> eventValues = new Dictionary<string, string>();
-            eventValues.Add("project_id", StoryManager.main.CurrentProjectID);
-            eventValues.Add("episode_id", StoryManager.main.CurrentEpisodeID);
-            AdManager.main.SendAppsFlyerEvent("af_episode_end", eventValues);            
-            */
-
-
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터
 
             // * 이동 컬럼에 아무 데이이터가 없는 경우와, 있는 경우 
@@ -2002,16 +1994,11 @@ namespace PIERStory
                 
             }
 
-            // scene Id값 갱신하고 통신 완료까지 잠시 대기
-            UserManager.main.UpdateSceneIDRecord(currentSceneId);
-            yield return new WaitForSeconds(0.1f);
-            
-            
-            
+           
             Debug.Log("RoutineFinishGame Before RequestCompleteEpisode");
 
             // 에피소드 완료까지 통신 대기
-            NetworkLoader.main.RequestCompleteEpisode(nextEpisodeData);
+            UserManager.main.RequestCompleteEpisodeOptimized(nextEpisodeData, currentSceneId);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
             // 종료화면에 대한 제거 

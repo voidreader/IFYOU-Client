@@ -16,7 +16,8 @@ namespace PIERStory
     {
         public static Action OnRefreshIfyouplay = null; // 이프유 플레이 페이지 전체 리프레시
         public static Action OnRefreshDailyMissionPart = null; // 데일리 미션 부분 리프레시 
-        public static Action OnCooldownAdEnable = null;
+        public static Action OnRefreshTimerAdvertisementPart = null; 
+        public static Action OnRefreshMissionAdvertisementPart = null;
         public ScrollRect scroll;
 
         
@@ -66,8 +67,12 @@ namespace PIERStory
         private void Start()
         {
             OnRefreshIfyouplay = EnterIfyouplay;
-            OnCooldownAdEnable = InitCooldownAdButton;
+                        
             OnRefreshDailyMissionPart = InitDailyMission;
+            
+            OnRefreshMissionAdvertisementPart = InitMissionAdvertisementPart;
+            OnRefreshTimerAdvertisementPart = InitTimerAdvertisementPart;
+            
         }
         
         
@@ -80,15 +85,49 @@ namespace PIERStory
                 
             // Daily mission 남은시간 카운트 다운 처리 
             // 10프레임마다 체크하자.
-            if(Time.frameCount % 10 == 0
-                &&  UserManager.main.dailyMissionTimer != null 
-                &&  UserManager.main.dailyMissionTimer.Ticks > 0) {
-                
-                timerText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", UserManager.main.dailyMissionTimer.Hours, UserManager.main.dailyMissionTimer.Minutes, UserManager.main.dailyMissionTimer.Seconds);
-                dailyAdTimerText.text = timerText.text;
-                
+            if(Time.frameCount % 10 == 0) {
+                TimerDailyMission();
+                TimerAdvertisement();
             }
         }
+        
+        
+        /// <summary>
+        /// 일일 미션 타이머 처리 
+        /// </summary>
+        void TimerDailyMission() {
+            Debug.Log("TimerDailyMission #1");
+            
+            if(UserManager.main.dailyMissionTimer == null || UserManager.main.dailyMissionTimer.Ticks <= 0)
+                return;
+            
+            Debug.Log("TimerDailyMission #2");
+            
+            timerText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", UserManager.main.dailyMissionTimer.Hours, UserManager.main.dailyMissionTimer.Minutes, UserManager.main.dailyMissionTimer.Seconds);
+            dailyAdTimerText.text = timerText.text;
+        }
+        
+        
+        /// <summary>
+        /// 광고 타이머 처리 
+        /// </summary>
+        void TimerAdvertisement() {
+            if(UserManager.main.adCoolDownTimer == null)
+                return;
+                
+            //  || UserManager.main.adCoolDownTimer.Ticks <= 0
+            
+            showCooldownAdButton.SetActive(UserManager.main.adCoolDownTimer.Ticks <= 0);
+            cooldownState.SetActive(UserManager.main.adCoolDownTimer.Ticks > 0);
+            
+            if(UserManager.main.adCoolDownTimer.Ticks <= 0) {
+                nextAdCooldown.text = string.Empty;
+                return;
+            }
+                
+            nextAdCooldown.text = string.Format("{0:D2}:{1:D2}", UserManager.main.adCoolDownTimer.Minutes, UserManager.main.adCoolDownTimer.Seconds);
+        }
+        
         
 
         public void EnterIfyouplay()
@@ -101,7 +140,8 @@ namespace PIERStory
 
             InitDailyMission();
 
-            InitAdCompensation();
+            InitMissionAdvertisementPart();
+            InitTimerAdvertisementPart();
 
             ViewMain.OnRefreshIfyouplayNewSign?.Invoke();
         }
@@ -287,7 +327,10 @@ namespace PIERStory
 
         #region 광고 보고 보상받기
 
-        void InitAdCompensation()
+        /// <summary>
+        /// 미션 광고 부분 초기화 
+        /// </summary>
+        void InitMissionAdvertisementPart()
         {
             missionAdData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_MISSION_AD_REWARD);
 
@@ -325,6 +368,14 @@ namespace PIERStory
             for (int i = 0; i < rewardAura.Count; i++)
                 rewardAura[i].color = level == i + 1 && !adsMissionComplete.activeSelf ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
 
+            
+
+        }
+        
+        /// <summary>
+        /// 타이머 광고 리워드 부분 수정 
+        /// </summary>
+        void InitTimerAdvertisementPart() {
             timerAdData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_TIMER_AD_REWARD);
 
             if (timerAdData == null)
@@ -336,37 +387,9 @@ namespace PIERStory
             SystemManager.SetText(timerAdTitle, SystemManager.GetJsonNodeString(timerAdData[0], "name"));
             SystemManager.SetText(timerAdContent, SystemManager.GetJsonNodeString(timerAdData[0], "content"));
             rewardAmount.text = SystemManager.GetJsonNodeString(timerAdData[0], "first_" + CommonConst.NODE_QUANTITY);
-
-            InitCooldownAdButton();
         }
 
-        void InitCooldownAdButton()
-        {
-            try {
-                if(this.gameObject == null)
-                    return;
-                
-                if(!this.gameObject.activeSelf)
-                    return;
-                    
-                    
-                    
-                if(UserManager.main == null || UserManager.main.adCoolDownTimer == null)
-                    return;
-                
-                
-                showCooldownAdButton.SetActive(UserManager.main.adCoolDownTimer.Ticks <= 0);
-                cooldownState.SetActive(UserManager.main.adCoolDownTimer.Ticks > 0);
-                
 
-                if (cooldownState.activeSelf)
-                    StartCoroutine(RoutineNextAdCooldown());
-            }
-            catch (System.Exception e){
-                NetworkLoader.main.ReportRequestError(e.StackTrace, "InitCooldownAdButton");
-                return;
-            }
-        }
 
         
         /// <summary>
@@ -399,7 +422,7 @@ namespace PIERStory
                 return;
 
             JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "increaseMissionAdReward";
+            sending[CommonConst.FUNC] = "increaseMissionAdRewardOptimized";
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
 
@@ -413,9 +436,18 @@ namespace PIERStory
                 Debug.LogError("Failed CallbackAccumulateAdCount");
                 return;
             }
+            
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            
+            if(UserManager.main.userIfyouPlayJson == null || !result.ContainsKey(LobbyConst.NODE_MISSION_AD_REWARD)) {
+                Debug.LogError("Wrong response in CallbackAccumulateAdCount");
+                return;
+            }
+                
 
-            UserManager.main.userIfyouPlayJson = JsonMapper.ToObject(res.DataAsText);
-            OnRefreshIfyouplay?.Invoke();
+            UserManager.main.userIfyouPlayJson[LobbyConst.NODE_MISSION_AD_REWARD] = result[LobbyConst.NODE_MISSION_AD_REWARD];
+            
+            OnRefreshMissionAdvertisementPart?.Invoke();
         }
 
 
@@ -431,16 +463,6 @@ namespace PIERStory
             NetworkLoader.main.RequestAdReward(2);
         }
 
-        IEnumerator RoutineNextAdCooldown()
-        {
-            while (gameObject.activeSelf && UserManager.main.adCoolDownTimer.Ticks > 0)
-            {
-                nextAdCooldown.text = string.Format("{0:D2}:{1:D2}", UserManager.main.adCoolDownTimer.Minutes, UserManager.main.adCoolDownTimer.Seconds);
-                yield return new WaitForSeconds(0.1f);
-            }
-
-            OnRefreshIfyouplay?.Invoke();
-        }    
 
         #endregion
     }

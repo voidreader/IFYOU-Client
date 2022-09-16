@@ -761,12 +761,12 @@ namespace PIERStory
         public void RequestAdReward(int adNo)
         {
             JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "requestAdReward";
+            sending[CommonConst.FUNC] = "requestAdRewardOptimized";
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
             sending["ad_no"] = adNo;
 
-            SendPost(UserManager.main.CallbackIfyouplayRefresh, sending, true);
+            SendPost(UserManager.main.CallbackIfyouPlayAdReward, sending, true);
         }
 
 

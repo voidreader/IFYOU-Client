@@ -3205,9 +3205,12 @@ namespace PIERStory
             }
 
             userIfyouPlayJson = JsonMapper.ToObject(res.DataAsText);
+            
+            SetDailyMissionTimer();
+            SetIFyouPlayAdCoolTime();
         }
 
-
+        
         public void CallbackIfyouplayRefresh(HTTPRequest req, HTTPResponse res)
         {
             if (!NetworkLoader.CheckResponseValidation(req, res))
@@ -3224,10 +3227,70 @@ namespace PIERStory
             SystemManager.ShowSystemPopupLocalize("6177", null, null, true, false);
             
             MainIfyouplay.OnRefreshIfyouplay?.Invoke();
-            StartCoroutine(RoutineAdCooldown());
+            
+            SetDailyMissionTimer();
+            SetIFyouPlayAdCoolTime();
+            
+        }
+        
+        
+        /// <summary>
+        /// 이프유 플레이 광고 보상 요청 콜백 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="res"></param>
+        public void CallbackIfyouPlayAdReward(HTTPRequest req, HTTPResponse res) {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackIfyouPlayAdReward");
+                return;
+            }
+            
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            bool isSuccess = SystemManager.GetJsonNodeBool(result, "result"); // 성공여부 
+            
+            // 실패시 
+            if(!isSuccess) {
+                string failMessage = SystemManager.GetJsonNodeString(result, "message");
+                Debug.LogError("CallbackGetMissionReward Error : " + failMessage);
+                
+                if(failMessage == "received") { // 이미 받은 상태. 
+                    SystemManager.ShowMessageWithLocalize("80025");
+                }
+                else if(failMessage == "no data") {
+                    SystemManager.ShowMessageWithLocalize("80019");
+                }
+                
+                
+                return;
+                
+            }
+            
+            // 재화 획득 메세지 
+            SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6488"), SystemManager.GetJsonNodeString(result, "currency"),SystemManager.GetJsonNodeInt(result, "quantity"));
+            
+            // 재화 갱신 
+            SetBankInfo(result);
+            
+            
+            // 노드 갱신 
+            if(result.ContainsKey(LobbyConst.NODE_TIMER_AD_REWARD) && UserManager.main.userIfyouPlayJson != null) {
+                UserManager.main.userIfyouPlayJson[LobbyConst.NODE_TIMER_AD_REWARD] = result[LobbyConst.NODE_TIMER_AD_REWARD];
+                SetIFyouPlayAdCoolTime(); // 쿨타임 설정 
+                
+                MainIfyouplay.OnRefreshTimerAdvertisementPart?.Invoke();
+            }
+            else if(result.ContainsKey(LobbyConst.NODE_MISSION_AD_REWARD) && UserManager.main.userIfyouPlayJson != null) {
+                UserManager.main.userIfyouPlayJson[LobbyConst.NODE_MISSION_AD_REWARD] = result[LobbyConst.NODE_MISSION_AD_REWARD];
+                MainIfyouplay.OnRefreshMissionAdvertisementPart?.Invoke();
+            }
+            
+
+            
             
             
         }
+        
         
         
         /// <summary>
@@ -3307,76 +3370,44 @@ namespace PIERStory
 
             return false;
         }
-
-
-        IEnumerator RoutineDailyMissionTimer()
-        {
-            // 이프유플레이 데이터를 받아올 때까지 대기
-            yield return new WaitUntil(() => userIfyouPlayJson != null);
-
-            JsonData dailyMissionData = SystemManager.GetJsonNode(userIfyouPlayJson, LobbyConst.NODE_DAILY_MISSION);
-
-            if (dailyMissionData == null)
-                yield break;
-
-            long endDateTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(dailyMissionData["all"][0], "end_date_tick"));
+        
+        /// <summary>
+        /// 데일리 미션 타이머 세팅 
+        /// </summary>
+        void SetDailyMissionTimer() {
+            if(userIfyouPlayJson == null || !userIfyouPlayJson.ContainsKey(LobbyConst.NODE_DAILY_MISSION))
+                return;
+                
+            JsonData dailyMissionData = userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION];
+            
+            if(dailyMissionData.Count == 0)
+                return;
+                
+            long endDateTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(dailyMissionData[0], "end_date_tick"));
             DateTime endDate = new DateTime(endDateTick);
 
             dailyMissionTimer = endDate - DateTime.UtcNow;
-
-            if (dailyMissionTimer.Ticks < 0)
-            {
-                Debug.LogError("정확한 타이머를 제공할 수 없음");
-                yield break;
-            }
-
-            while (true)
-            {
-                dailyMissionTimer = endDate - DateTime.UtcNow;
-
-                // 타이머가 끝나면 전체리스트 갱신을 해준다
-                if (dailyMissionTimer.Ticks <= 0)
-                {
-                    RequestServiceEvents();
-                    break;
-                }
-
-                yield return new WaitForSeconds(0.1f);
-            }
+                
         }
 
-        IEnumerator RoutineAdCooldown()
-        {
-            yield return new WaitUntil(() => userIfyouPlayJson != null);
 
+
+        /// <summary>
+        ///  이프유 플레이 광고 쿨타임 설정 
+        /// </summary>
+        void SetIFyouPlayAdCoolTime() {
+            if(userIfyouPlayJson == null || !userIfyouPlayJson.ContainsKey(LobbyConst.NODE_TIMER_AD_REWARD))
+                return;
+                
             JsonData timerAd = SystemManager.GetJsonNode(userIfyouPlayJson, LobbyConst.NODE_TIMER_AD_REWARD);
-
-            if (timerAd == null)
-            {
-                Debug.LogError(LobbyConst.NODE_TIMER_AD_REWARD + " Json data is null");
-                yield break;
-            }
-
+                
             long endDateTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(timerAd[0], "remain_date_tick"));
             DateTime endDate = new DateTime(endDateTick);
 
             adCoolDownTimer = endDate - DateTime.UtcNow;
-            MainIfyouplay.OnCooldownAdEnable?.Invoke();
-
-            // 이미 0보다 작음
-            if (adCoolDownTimer.Ticks <= 0)
-                yield break;
-
-            while (adCoolDownTimer.Ticks > 0)
-            {
-                adCoolDownTimer = endDate - DateTime.UtcNow;
-                yield return new WaitForSeconds(0.1f);
-            }
             
-            if(LobbyManager.main != null)
-               MainIfyouplay.OnCooldownAdEnable?.Invoke();
         }
-
+        
 
         #region 출석
 
@@ -3468,12 +3499,16 @@ namespace PIERStory
             
             
             // 리소스 팝업을 띄워줍시다.
+            // 미션 보상을 받았습니다 메세지. 
+            SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6123"), SystemManager.GetJsonNodeString(result, "currency"),SystemManager.GetJsonNodeInt(result, "quantity"));
             
 
             SetBankInfo(result);
             
-            if(result.ContainsKey(LobbyConst.NODE_DAILY_MISSION) && UserManager.main.userIfyouPlayJson != null)
+            if(result.ContainsKey(LobbyConst.NODE_DAILY_MISSION) && UserManager.main.userIfyouPlayJson != null) {
                 UserManager.main.userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION] = result[LobbyConst.NODE_DAILY_MISSION];
+                SetDailyMissionTimer();
+            }
 
             MainIfyouplay.OnRefreshDailyMissionPart?.Invoke();
         }        

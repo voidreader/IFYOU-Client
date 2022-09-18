@@ -408,6 +408,9 @@ namespace PIERStory
         /// </summary>
         public StoryData FindProject(string __projectId)
         {
+            if(listTotalStory == null)
+                return null;
+            
             if (listTotalStory.Count < 1)
                 return null;
 

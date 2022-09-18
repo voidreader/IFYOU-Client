@@ -105,8 +105,12 @@ namespace PIERStory
         public int coin = 0;
         public int unreadMailCount = 0; // 미수신 메일 카운트
 
-        public TimeSpan dailyMissionTimer;
-        public TimeSpan adCoolDownTimer;
+        
+        public TimeSpan dailyMissionTimer; // 00시를 기준으로 하는 타이머 
+        DateTime dateDailyMission;
+        public TimeSpan adCoolDownTimer; // 광고 쿨타임용 타이머 
+        DateTime dateAdCoolDown; 
+        long tickParam; // 틱 계산용 변수 
 
         public long allpassExpireTick = 0; // 올패스 만료일시 tick
         public DateTime allpassExpireDate; // 올패스 만료일시
@@ -3221,16 +3225,11 @@ namespace PIERStory
 
             userIfyouPlayJson = JsonMapper.ToObject(res.DataAsText);
             
-            // 메일함 리프레시 
-            UserManager.main.SetNotificationInfo(userIfyouPlayJson);
-
-            SystemManager.ShowSystemPopupLocalize("6177", null, null, true, false);
-            
-            MainIfyouplay.OnRefreshIfyouplay?.Invoke();
-            
             SetDailyMissionTimer();
             SetIFyouPlayAdCoolTime();
             
+            MainIfyouplay.OnRefreshIfyouplay?.Invoke();
+
         }
         
         
@@ -3384,10 +3383,40 @@ namespace PIERStory
                 return;
                 
             long endDateTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(dailyMissionData[0], "end_date_tick"));
-            DateTime endDate = new DateTime(endDateTick);
+            dateDailyMission = new DateTime(endDateTick);
 
-            dailyMissionTimer = endDate - DateTime.UtcNow;
+            dailyMissionTimer = dateDailyMission - DateTime.UtcNow;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetDailyMissionRefreshTimeText() {
+            
+            try {
+                if(dateDailyMission == null)
+                    return string.Empty;
                 
+                dailyMissionTimer = dateDailyMission - System.DateTime.UtcNow;
+            }
+            catch {
+                return string.Empty;
+            }
+
+            if (dailyMissionTimer.Ticks <= 0)
+            {
+                return string.Empty;
+            }
+
+            if (dailyMissionTimer.TotalHours < 24)
+            {
+                return string.Format("{0:D2}:{1:D2}:{2:D2}", dailyMissionTimer.Hours, dailyMissionTimer.Minutes, dailyMissionTimer.Seconds);
+            }
+            else
+            {
+                return string.Format("{0}d {1:D2}:{2:D2}:{3:D2}", dailyMissionTimer.Days, dailyMissionTimer.Hours, dailyMissionTimer.Minutes, dailyMissionTimer.Seconds);
+            }
         }
 
 
@@ -3402,11 +3431,41 @@ namespace PIERStory
             JsonData timerAd = SystemManager.GetJsonNode(userIfyouPlayJson, LobbyConst.NODE_TIMER_AD_REWARD);
                 
             long endDateTick = SystemConst.ConvertServerTimeTick(SystemManager.GetJsonNodeLong(timerAd[0], "remain_date_tick"));
-            DateTime endDate = new DateTime(endDateTick);
+            dateAdCoolDown = new DateTime(endDateTick);
 
-            adCoolDownTimer = endDate - DateTime.UtcNow;
+            adCoolDownTimer = dateAdCoolDown - DateTime.UtcNow;
             
         }
+        
+        /// <summary>
+        /// 타이머 광고 남은 쿨타임 텍스트 
+        /// </summary>
+        /// <returns></returns>
+        public string GetIFyouPlayAdRefreshTimeText() {
+            
+            try {
+                if(dateAdCoolDown == null)
+                    return string.Empty;
+                
+            
+                adCoolDownTimer = dateAdCoolDown - System.DateTime.UtcNow;
+            }
+            catch {
+                return string.Empty;
+
+            }
+            
+
+            if (adCoolDownTimer.Ticks <= 0)
+            {
+                return string.Empty;
+            }
+            
+            return string.Format("{0:D2}:{1:D2}", adCoolDownTimer.Minutes, adCoolDownTimer.Seconds);
+
+            
+        }
+        
         
 
         #region 출석

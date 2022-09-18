@@ -57,10 +57,25 @@ namespace PIERStory {
             if(basePopup.currentIntroPhase < 5) {
                 return;
             }
+            StoryData story;
             
-            Debug.Log("OnClick IntroMessage : " + connectedProjectID);
+            try {
+                story = StoryManager.main.FindProject(connectedProjectID.ToString());
+            }
+            catch {
+                NetworkLoader.main.ReportRequestError("IntroMessage.OnClickMessage", "IntroMessage Error_1");
+                basePopup.Hide();
+                return;
+            }
             
-            StoryData story = StoryManager.main.FindProject(connectedProjectID.ToString());
+            // 올바르지 않은 데이터 
+            if(story == null || string.IsNullOrEmpty(story.projectID) || !story.isValidData ) {
+                // 올바르지 않은 데이터 
+                NetworkLoader.main.ReportRequestError("IntroMessage.OnClickMessage", "IntroMessage Error_2");
+                basePopup.Hide();
+                return;
+            }
+            
             
             // 선택 완료
             basePopup.SelectIntroMessage(story);

@@ -703,7 +703,7 @@ namespace PIERStory
         /// 이프유 플레이 페이지에 들어가는 모든 정보 리스트
         /// 2022.09.15 변경 
         /// </summary>
-        public void RequestIfyouplayList()
+        public void RequestIfyouplayList(bool __needSync = false)
         {
             JsonData sending = new JsonData();
             
@@ -712,7 +712,15 @@ namespace PIERStory
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             sending[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
 
-            SendPost(UserManager.main.CallbackIfyouplayList, sending);
+            
+            // 
+            if(__needSync) {
+                SendPost(UserManager.main.CallbackIfyouplayRefresh, sending, __needSync);    
+            }
+            else {
+                SendPost(UserManager.main.CallbackIfyouplayList, sending, __needSync);
+            }
+            
         }
 
 

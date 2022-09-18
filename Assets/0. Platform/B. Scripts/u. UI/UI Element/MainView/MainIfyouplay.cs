@@ -60,6 +60,8 @@ namespace PIERStory
         public GameObject showCooldownAdButton;
         public GameObject cooldownState;
         public TextMeshProUGUI nextAdCooldown;
+        
+        public GameObject buttonIFyouRefresh; // 이프유 플레이 리프레시 버튼 
 
         JsonData timerAdData = null;
 
@@ -96,15 +98,15 @@ namespace PIERStory
         /// 일일 미션 타이머 처리 
         /// </summary>
         void TimerDailyMission() {
-            Debug.Log("TimerDailyMission #1");
-            
-            if(UserManager.main.dailyMissionTimer == null || UserManager.main.dailyMissionTimer.Ticks <= 0)
+           
+            if(UserManager.main.dailyMissionTimer == null)
                 return;
             
-            Debug.Log("TimerDailyMission #2");
-            
-            timerText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", UserManager.main.dailyMissionTimer.Hours, UserManager.main.dailyMissionTimer.Minutes, UserManager.main.dailyMissionTimer.Seconds);
+            timerText.text = UserManager.main.GetDailyMissionRefreshTimeText();
             dailyAdTimerText.text = timerText.text;
+            
+            // 시간이 다 흐른 경우에는 리프레시 버튼을 보이게 한다. 
+            buttonIFyouRefresh.SetActive(string.IsNullOrEmpty(timerText.text));
         }
         
         
@@ -116,20 +118,24 @@ namespace PIERStory
                 return;
                 
             //  || UserManager.main.adCoolDownTimer.Ticks <= 0
+            nextAdCooldown.text = UserManager.main.GetIFyouPlayAdRefreshTimeText();
             
-            showCooldownAdButton.SetActive(UserManager.main.adCoolDownTimer.Ticks <= 0);
-            cooldownState.SetActive(UserManager.main.adCoolDownTimer.Ticks > 0);
-            
-            if(UserManager.main.adCoolDownTimer.Ticks <= 0) {
-                nextAdCooldown.text = string.Empty;
-                return;
-            }
+            if(string.IsNullOrEmpty(nextAdCooldown.text)) {
                 
-            nextAdCooldown.text = string.Format("{0:D2}:{1:D2}", UserManager.main.adCoolDownTimer.Minutes, UserManager.main.adCoolDownTimer.Seconds);
+            }
+            
+            // 광고 재생 버튼 
+            showCooldownAdButton.SetActive(string.IsNullOrEmpty(nextAdCooldown.text));
+            
+            // 타이머 돌아갈때
+            cooldownState.SetActive(!string.IsNullOrEmpty(nextAdCooldown.text));
+            
         }
         
         
-
+        /// <summary>
+        /// 이프유 플레이 진입시 호출 
+        /// </summary>
         public void EnterIfyouplay()
         {
             attendanceData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_ATTENDANCE_MISSION);
@@ -149,6 +155,14 @@ namespace PIERStory
         public void EnterComplete()
         {
             scroll.verticalNormalizedPosition = 1f;
+        }
+        
+        
+        /// <summary>
+        /// 이프유 플레이 페이지 리프레시 
+        /// </summary>
+        public void OnClickRefreshIFyouPlay() {
+            NetworkLoader.main.RequestIfyouplayList(true);
         }
 
 

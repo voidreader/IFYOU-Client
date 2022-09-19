@@ -61,8 +61,9 @@ namespace PIERStory {
         
         [Space]
         [Header("Google Admob")]
-        GoogleMobileAds.Api.RewardedAd admobRewardedAd; 
-        
+        GoogleMobileAds.Api.RewardedAd admobRewardedAd; // 보상형광고 
+        GoogleMobileAds.Api.InterstitialAd interstitial; // 전면광고 
+
         
         [SerializeField] string admobRewardID = string.Empty;  // 애드몹 보상형 광고 ID 
         [SerializeField] string admobBannerID = string.Empty; // 애드몹 배너 광고 ID 
@@ -160,6 +161,7 @@ namespace PIERStory {
             MobileAds.Initialize(initStatus => {
                 Debug.Log("Google Admob Init : " + initStatus.ToString());
                 InitAdmobRewardedAd();
+                RequestInterstitial();
             });
         }
         
@@ -229,6 +231,66 @@ namespace PIERStory {
             OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
             NetworkLoader.main.IncreaseDailyMissionCount(3);
         }
+        
+        
+        
+        /// <summary>
+        /// 전면광고 생성 및 로드
+        /// </summary>
+        private void RequestInterstitial()
+        {
+            
+            // Initialize an InterstitialAd.
+            this.interstitial = new GoogleMobileAds.Api.InterstitialAd(admobInterstitialID);
+            this.interstitial.OnAdClosed += HandleOnAdClosed;
+            this.interstitial.OnAdLoaded += HandleOnAdLoaded;
+            
+            // Create an empty ad request.
+            AdRequest request = new AdRequest.Builder().Build();
+            // Load the interstitial with the request.
+            this.interstitial.LoadAd(request);
+            
+
+        }
+        
+        /// <summary>
+        /// 애드몹 전면광고. 화면 전환시에만 사용한다. 
+        /// </summary>
+        public void ShowAdmobInterstitial() {
+           
+            if(UserManager.main.ifyouPassDay > 0)
+                return; // 이프유 패스 보유자
+                
+            
+            // 게임플레이 도중일때, 원데이패스나 프리미엄패스 사용자는 광고 뜨지 않음 
+            if(GameManager.main != null && StoryManager.main != null && (UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass() ))
+                return;
+           
+            if(this.interstitial.IsLoaded()) {
+                this.interstitial.Show();
+            }
+            else {
+                RequestInterstitial();
+            }
+        }
+        
+        
+        public void HandleOnAdLoaded(object sender, EventArgs args)
+        {
+            Debug.Log("Interstitial HandleOnAdClosed");
+        }
+
+        
+        void HandleOnAdClosed(object sender, EventArgs args) {
+            Debug.Log("Interstitial HandleOnAdClosed");
+            this.interstitial.Destroy();
+            this.interstitial = null;
+            
+            RequestInterstitial();
+        }
+
+        
+        
 
         
         
@@ -404,7 +466,7 @@ namespace PIERStory {
                     return;
                 }
                 
-                OnShowAdvertisement = ShowInterstitial;
+                OnShowAdvertisement = ShowUnityAdsInterstitial;
             }
                 
             
@@ -493,11 +555,15 @@ namespace PIERStory {
         /// </summary>
         void ShowLoadingAD() {
             
+            ShowRewardAd();
+            
             // 여기서도 점유율에 따라서, 처리 
+            /*
             if(UnityEngine.Random.Range(0, 100) < shareLoadingInterstitial)
                 ShowInterstitial();
             else 
-                ShowRewardAd();
+            */
+                
         }        
         #endregion
         
@@ -553,7 +619,7 @@ namespace PIERStory {
         /// <summary>
         /// 전면광고 보기
         /// </summary>
-        public void ShowInterstitial() {
+        public void ShowUnityAdsInterstitial() {
             // Ensure the ad has loaded, then show it.
             if (interstitialAd.AdState == AdState.Loaded) {
                 interstitialAd.ShowAsync();

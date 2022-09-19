@@ -143,5 +143,18 @@ namespace PIERStory {
                 image.SetNativeSize();
             }
         }
+        
+        /// <summary>
+        /// 단일 정사각형 타입의 커스텀 크기 스프라이트 설정하기 
+        /// </summary>
+        /// <param name="__sprite"></param>
+        /// <param name="__customSize"></param>
+        public void SetSingleSquareImageSprites(Sprite __sprite, int __customSize) {
+            if(__sprite == null)
+                return;
+                
+            Images[0].sprite = __sprite;
+            Images[0].rectTransform.sizeDelta = new Vector2(__customSize, __customSize);
+        }
     }
 }

@@ -3284,6 +3284,8 @@ namespace PIERStory
                 MainIfyouplay.OnRefreshMissionAdvertisementPart?.Invoke();
             }
             
+            
+            ViewMain.OnRefreshIfyouplayNewSign?.Invoke();
 
             
             
@@ -3475,14 +3477,21 @@ namespace PIERStory
         /// 이프유플레이 출석 jsonData만 갱신
         /// </summary>
         /// <param name="__j"></param>
-        public void RefreshIfyouplayJsonData(JsonData __j)
+        public void UpdateIFyouPlayAttendance(JsonData __j)
         {
-            //userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_USER_INFO] = __j[LobbyConst.NODE_USER_INFO];
-            //userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_CONTINUOUS_ATTENDANCE] = __j[LobbyConst.NODE_CONTINUOUS_ATTENDANCE];
+            if(__j == null || !__j.ContainsKey(LobbyConst.NODE_ATTENDANCE))
+                return;
+            
+            if(userIfyouPlayJson == null || !userIfyouPlayJson.ContainsKey(LobbyConst.NODE_ATTENDANCE_MISSION))
+                return;
+            
+            
             userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION][LobbyConst.NODE_ATTENDANCE] = __j[LobbyConst.NODE_ATTENDANCE];
 
             ViewMain.OnRefreshIfyouplayNewSign?.Invoke();
         }
+        
+        
 
         /// <summary>
         /// 오늘의 출석체크 보상을 받았는지 체크합니다
@@ -3570,6 +3579,7 @@ namespace PIERStory
             }
 
             MainIfyouplay.OnRefreshDailyMissionPart?.Invoke();
+            ViewMain.OnRefreshIfyouplayNewSign?.Invoke();
         }        
 
         #endregion

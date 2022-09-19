@@ -1958,6 +1958,10 @@ namespace PIERStory
             // 안전을 위해..
             yield return new WaitForSeconds(0.1f);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            
+            // 전면광고 추가한다.
+            AdManager.main.ShowAdmobInterstitial();
+            
 
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터
 

@@ -734,7 +734,7 @@ namespace PIERStory
         public void SendAttendanceReward(int attendanceId, int daySeq, OnRequestFinishedDelegate callback)
         {
             JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "sendAttendanceReward";
+            sending[CommonConst.FUNC] = "sendAttendanceRewardOptimized";
             sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             sending["attendance_id"] = attendanceId;
             sending[LobbyConst.NODE_DAY_SEQ] = daySeq;

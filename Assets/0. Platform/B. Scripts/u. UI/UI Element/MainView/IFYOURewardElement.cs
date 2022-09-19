@@ -190,7 +190,7 @@ namespace PIERStory
             JsonData result = JsonMapper.ToObject(res.DataAsText);
 
             // 연속출석 미션 보상 받고 난 후, 이프유플레이 JsonData를 갱신해준다
-            UserManager.main.RefreshIfyouplayJsonData(result);
+            // UserManager.main.RefreshIfyouplayJsonData(result);
             SystemManager.ShowSimpleAlertLocalize("6177", false);
 
             // 이프유플레이 화면 갱신이 필요함
@@ -214,19 +214,42 @@ namespace PIERStory
             }
 
             JsonData result = JsonMapper.ToObject(res.DataAsText);
-
-            // 보상을 받았으니 리스트를 갱신해주자
-            UserManager.main.SetNotificationInfo(result);
-            UserManager.main.RefreshIfyouplayJsonData(result);
+            
+            // result, message 처리
+            bool isSuccess = SystemManager.GetJsonNodeBool(result, "result"); // 성공여부 
+            
+            
+            // 실패시 
+            if(!isSuccess) {
+                string failMessage = SystemManager.GetJsonNodeString(result, "message");
+                Debug.LogError("CallbackGetMissionReward Error : " + failMessage);
+                
+                if(failMessage == "received") { // 이미 받은 상태. 
+                    SystemManager.ShowMessageWithLocalize("80025");
+                }
+                else if(failMessage == "no data") {
+                    SystemManager.ShowMessageWithLocalize("80019");
+                }
+                
+                
+                return;
+            }
+            
+            
+            // 데이터 업데이트 
+            UserManager.main.UpdateIFyouPlayAttendance(result);
+                
 
             // 이프유 업적
             NetworkLoader.main.RequestIFYOUAchievement(2);
 
             NetworkLoader.main.RequestIFYOUAchievement(7);
 
-            SystemManager.ShowSimpleAlertLocalize("6177", false);
 
-            MainIfyouplay.OnRefreshIfyouplay?.Invoke();
+            MainIfyouplay.OnRefreshAttendance?.Invoke();
+            
+            // 메세지 팝업 추가 
+            SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6489"), SystemManager.GetJsonNodeString(result, "currency"),SystemManager.GetJsonNodeInt(result, "quantity"));
         }
 
 

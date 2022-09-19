@@ -122,7 +122,7 @@ namespace PIERStory
 
             // 보상을 받았으니 리스트를 갱신해주자
             UserManager.main.SetNotificationInfo(result);
-            UserManager.main.RefreshIfyouplayJsonData(result);
+            // UserManager.main.RefreshIfyouplayJsonData(result);
 
             dayHighlight.gameObject.SetActive(false);
             coverOverlay.color = new Color(1, 1, 1, 0);
@@ -135,7 +135,7 @@ namespace PIERStory
 
             NetworkLoader.main.RequestIFYOUAchievement(7);
 
-            SystemManager.ShowSimpleAlertLocalize("6177", false);
+            SystemManager.ShowSimpleAlertLocalize("5013", false);
             MainIfyouplay.OnRefreshIfyouplay?.Invoke();
         }
         

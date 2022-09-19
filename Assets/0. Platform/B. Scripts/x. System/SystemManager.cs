@@ -1806,9 +1806,11 @@ namespace PIERStory
             
             if(__currency == LobbyConst.GEM) {
                 p.Data.SetImagesSprites(SystemManager.main.spriteStar);
+                p.Data.contentValue = 100;
             }
             else if(__currency == LobbyConst.COIN) {
                 p.Data.SetImagesSprites(SystemManager.main.spriteCoin);
+                p.Data.contentValue = 100;
             }
             
             p.Data.SetLabelsTexts(__message, __quantity.ToString()); // 메세지, 개수 

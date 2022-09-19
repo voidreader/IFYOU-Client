@@ -31,6 +31,12 @@ namespace PIERStory {
                 // 아이콘 처리
                 icon.SetDownloadURL(Data.imageURL, Data.imageKey);
             }
+            else {
+                // 사이즈 커스텀 
+                if(Data.contentValue > 0) {
+                    icon.GetComponent<RectTransform>().sizeDelta = new Vector2(Data.contentValue, Data.contentValue);
+                }
+            }
             
             // 수량과 메세지는 앞단에서 처리됨 
             

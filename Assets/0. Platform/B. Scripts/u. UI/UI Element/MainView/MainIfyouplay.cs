@@ -15,6 +15,8 @@ namespace PIERStory
     public class MainIfyouplay : MonoBehaviour
     {
         public static Action OnRefreshIfyouplay = null; // 이프유 플레이 페이지 전체 리프레시
+        
+        public static Action OnRefreshAttendance = null; // 출석체크 부분 
         public static Action OnRefreshDailyMissionPart = null; // 데일리 미션 부분 리프레시 
         public static Action OnRefreshTimerAdvertisementPart = null; 
         public static Action OnRefreshMissionAdvertisementPart = null;
@@ -70,6 +72,7 @@ namespace PIERStory
         {
             OnRefreshIfyouplay = EnterIfyouplay;
                         
+            OnRefreshAttendance = InitDailyAttendance;
             OnRefreshDailyMissionPart = InitDailyMission;
             
             OnRefreshMissionAdvertisementPart = InitMissionAdvertisementPart;
@@ -138,7 +141,7 @@ namespace PIERStory
         /// </summary>
         public void EnterIfyouplay()
         {
-            attendanceData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_ATTENDANCE_MISSION);
+            
 
             // 출석 관련 세팅
             //InitContinuousAttendance();
@@ -176,6 +179,8 @@ namespace PIERStory
         /// </summary>
         void InitDailyAttendance()
         {
+            attendanceData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson, LobbyConst.NODE_ATTENDANCE_MISSION);
+            
             JsonData dailyData = SystemManager.GetJsonNode(UserManager.main.userIfyouPlayJson[LobbyConst.NODE_ATTENDANCE_MISSION], LobbyConst.NODE_ATTENDANCE);
             string attendanceKey = dailyData != null ? dailyData[LobbyConst.NODE_ATTENDANCE][0].ToString() : string.Empty;
 

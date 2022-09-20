@@ -155,8 +155,11 @@ namespace PIERStory
         {
             base.OnView();
 
+            
+            /*
             if (UserManager.main.tutorialStep == 1 && !UserManager.main.tutorialClear)
                 UserManager.main.UpdateTutorialStep(1, 0, CallbackStartTutorial);
+            */
 
             
 

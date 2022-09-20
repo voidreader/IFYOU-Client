@@ -139,6 +139,7 @@ namespace PIERStory
         const string KEY_ENCRYPTION = "imageEncrypt_2"; // 암호화 여부 
         
         #region 내장폰트, 에셋번들 폰트
+        public bool isApplicationFontAvailable = false;
         [SerializeField] TMP_FontAsset innerFontEN = null;
         
         // * 에셋번들로 받은 폰트
@@ -863,6 +864,7 @@ namespace PIERStory
                         }
                         else {
                             
+                           
                             NetworkLoader.main.ReportRequestError(op.OperationException.ToString(), "LoadContentCatalogAsync");
                             isAddressableCatalogUpdated = false;
                             
@@ -2018,7 +2020,7 @@ namespace PIERStory
                         
                         // 다른 프로젝트에서 가져오는거라서 Shader처리 해준다.
                         koFont.material.shader = assetFontShader;
-                        Debug.Log("<color=cyan>Font loaded OK!!!!!</color>");
+                        // Debug.Log("<color=cyan>Font loaded OK!!!!!</color>");
                     }
                     else {
                         Debug.Log("<color=cyan>Font loaded FAIL....</color>");
@@ -2036,7 +2038,7 @@ namespace PIERStory
                         
                         // 다른 프로젝트에서 가져오는거라서 Shader처리 해준다.
                         jaFont.material.shader = assetFontShader;
-                        Debug.Log("<color=cyan>Font loaded OK!!!!!</color>");
+                        // Debug.Log("<color=cyan>Font loaded OK!!!!!</color>");
                     }
                     else {
                         Debug.Log("<color=cyan>Font loaded FAIL....</color>");
@@ -2087,7 +2089,10 @@ namespace PIERStory
                 
                 default:
                 break;
-            } 
+            }
+            
+            // 폰트 로드 완료 처리 
+            isApplicationFontAvailable = true; 
         }
         
         /// <summary>

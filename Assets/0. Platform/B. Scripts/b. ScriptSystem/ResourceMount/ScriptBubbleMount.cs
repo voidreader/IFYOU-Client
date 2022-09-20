@@ -178,6 +178,16 @@ namespace PIERStory
             
         }
         
+        public void DestroyAddressable() {
+            if(!isAddressable || !isMounted) {
+                return;
+            }
+            
+            sprite = null;
+            
+            Addressables.Release(mountedSpriteAddressable);
+        }
+        
         
         /// <summary>
         /// 말풍선 이미지 

@@ -218,10 +218,18 @@ namespace PIERStory
             OnMountCompleted();
         }
         
-        public void ReleaseClip() {
+        public void DestroyAddressable() {
             try {
+                
+                if(!isMounted)
+                    return;
+                
                 if(isAddressable && audioClip != null) {
+                    audioClip = null;
                     Addressables.Release(mountedAddressable);
+                }
+                else {
+                    GameObject.Destroy(audioClip);
                 }
             }
             catch {

@@ -119,6 +119,39 @@ namespace PIERStory
             // 합산하기!
             pageResourceCount = pageImageResourceCount + pageModelCount + pageLiveIllustCount + pageLiveObjectCount + pageBubbleResourceCount + pageSoundResourceCount;
         }
+        
+        
+        /// <summary>
+        /// 페이지 리소스 릴리즈(어드레서블 때문에)
+        /// </summary>
+        public void ReleasePageResources() {
+            for(int i=0; i<ListModelMount.Count;i++) {
+                ListModelMount[i].DestroyAddressableModel();
+            }
+            
+            for(int i=0; i<ListLiveIllustMount.Count;i++) {
+                ListLiveIllustMount[i].DestroyAddressableModel();
+            }
+            
+            for(int i=0; i<ListLiveObjectMount.Count;i++) {
+                ListLiveObjectMount[i].DestroyAddressableModel();
+            }
+            
+            for(int i=0; i<ListImageMount.Count;i++) {
+                ListImageMount[i].DestroyAddressable();
+            }
+            
+            
+            for(int i=0; i<ListBubbleMount.Count;i++) {
+                ListBubbleMount[i].DestroyAddressable();
+            }
+            
+            for(int i=0; i<ListSoundMount.Count;i++) {
+                ListSoundMount[i].DestroyAddressable();
+            }
+            
+        }
+        
 
         /// <summary>
         /// 리소스 로딩 시작 
@@ -993,6 +1026,9 @@ namespace PIERStory
 
             return false;
         }
+        
+        
+        
         
     }
 }

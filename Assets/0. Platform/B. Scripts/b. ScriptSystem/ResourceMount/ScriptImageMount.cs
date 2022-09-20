@@ -212,6 +212,7 @@ namespace PIERStory
             
             addressableKey = GetAddressableKey(template);
             
+            
             Addressables.LoadResourceLocationsAsync(addressableKey).Completed += (op) => {
                 
                 // 에셋번들 있음 
@@ -369,6 +370,13 @@ namespace PIERStory
                 SendSuccessMessage();
                 return;
             }
+            
+            if(string.IsNullOrEmpty(imageName) || string.IsNullOrEmpty(imageUrl)) {
+                SendFailMessage();
+                return;
+            }
+            
+            
 
             // ! 다운로드 처리. 다운로드 완료 후에도 texture와 sprite를 생성해두지 않는다. 
             try {
@@ -528,12 +536,14 @@ namespace PIERStory
                 return;
             }
             
-            if(template == GameConst.COL_EMOTICON) 
-                Addressables.ReleaseInstance(mountedSpriteAddressable);
-            else 
-                Addressables.ReleaseInstance(mountedAtalsAddressable);
-                
             sprite = null;
+            
+            if(template == GameConst.COL_EMOTICON) 
+                Addressables.Release(mountedSpriteAddressable);
+            else 
+                Addressables.Release(mountedAtalsAddressable);
+                
+            
             
         }
     }

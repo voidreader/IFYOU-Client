@@ -255,24 +255,6 @@ namespace PIERStory
             }
         }
 
-        private void OnDestroy()
-        {
-            // * 메모리 누수를 알아보기 위해 FindObject 검사 실행. 
-            // AudioClip[] audioClips = FindObjectsOfType<AudioClip>(true); // 정리되지 않음
-            // Texture2D[] texture2Ds = FindObjectsOfType<Texture2D>(true); // 정리되지 않음
-
-            for (int i = 0; i < SoundGroup.Length; i++)
-                SoundGroup[i].DestroyAudioClip();
-
-            // Debug.Log(string.Format("[{0}] audioClips are destroyed?", audioClips.Length));
-            
-            /*            
-            for (int i = 0; i < texture2Ds.Length; i++)
-                Destroy(texture2Ds[i]);
-
-            Debug.Log(string.Format("[{0}] texture2Ds are destroyed", texture2Ds.Length));
-            */
-        }
 
 
         /// <summary>
@@ -1961,6 +1943,9 @@ namespace PIERStory
             
             // 전면광고 추가한다.
             AdManager.main.ShowAdmobInterstitial();
+            
+            // 게임씬 정리
+            currentPage.ReleasePageResources();
             
 
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터

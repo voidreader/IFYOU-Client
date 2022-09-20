@@ -144,24 +144,6 @@ namespace PIERStory
 
         public bool GetIsPlaying { get { return audioSource.isPlaying; } }
 
-        /// <summary>
-        /// 오디오 메모리 정리
-        /// </summary>
-        public void DestroyAudioClip()
-        {
-            // 없으면 사용 안한거니까 넘기기(보이스의 경우 백망되, 허블만 사용하고 있기 떄문에)
-            if (DictSound.Count == 0)
-                return;
 
-            foreach (string key in DictSound.Keys) {
-                
-                if(DictSound[key].isAddressable)
-                    DictSound[key].ReleaseClip();
-                else    
-                    DestroyImmediate(DictSound[key].audioClip, true);
-            }
-
-            DictSound.Clear();
-        }
     }
 }

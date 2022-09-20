@@ -112,15 +112,14 @@ namespace PIERStory {
             while(!SystemManager.main.isAddressableCatalogUpdated)
                 yield return null;
                 
+            yield return null;
                 
             // 어드레서블 카탈로그 업데이트 후, 기본 어드레서블 다운로드 시작 
+            // 다운받아야되는 내용들 있는지 체크시작 
             
             
-            // 기본 폰트 어드레서블을 다운로드 시작한다. 
-            UpdateLoadingText(3); //  레이블 처리
-            
-            
-            AsyncOperationHandle<IList<IResourceLocation>> fontBundleCheckHandle = Addressables.LoadResourceLocationsAsync(fontAssetBundle);
+            // * 폰트 어드레서블 정보 가져오기 
+            AsyncOperationHandle<IList<IResourceLocation>> fontBundleCheckHandle = Addressables.LoadResourceLocationsAsync(fontAssetBundle); //
             yield return fontBundleCheckHandle;
             
             if(fontBundleCheckHandle.Status != AsyncOperationStatus.Succeeded) { // 실패
@@ -136,16 +135,61 @@ namespace PIERStory {
             // 폰트 다운로드 사이즈 체크 
             AsyncOperationHandle<long> getFontDownloadSizeHandle = Addressables.GetDownloadSizeAsync(fontAssetBundle);
             yield return getFontDownloadSizeHandle;
+            Debug.Log("### [Font] GetDownloadFontSizeAsync END, size : " + getFontDownloadSizeHandle.Result);    
+
             
+            // ! 말풍선 어드레서블은 신규 말풍선 이미지가 있으면 어드레서블에 이미지를 추가해야한다!
+            // 말풍선 어드레서블 체크 시작 
+            AsyncOperationHandle<IList<IResourceLocation>> bubbleBundleCheckHandle = Addressables.LoadResourceLocationsAsync(bubbleAssetBundle);
+            yield return bubbleBundleCheckHandle;
             
-            
-            // 이미 다운로드 받았음 
-            if(getFontDownloadSizeHandle.Result <= 0) {
-                Debug.Log("### [Font] GetDownloadFontSizeAsync END, size : " + getFontDownloadSizeHandle.Result);    
-                SystemManager.main.LoadAddressableFont(); // 폰트 로드.
+            if(bubbleBundleCheckHandle.Status != AsyncOperationStatus.Succeeded) { // 실패
+                Debug.Log("<color=cyan>## Fail Get Bubble bundle </color>");
+                // FillProgressorOnly();
+                SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
+                NetworkLoader.main.ReportRequestError(fontBundleCheckHandle.OperationException.ToString(), "Bubble LoadResourceLocationsAsync");
+                yield break;
             }
-            else {
+            
+            
+            // 말풍선  다운로드 사이즈 체크 
+            AsyncOperationHandle<long> getBubbleDownloadSizeHandle = Addressables.GetDownloadSizeAsync(bubbleAssetBundle);
+            yield return getBubbleDownloadSizeHandle;
+            Debug.Log("### [Bubble] GetDownloadBubbleSizeAsync END, size : " + getBubbleDownloadSizeHandle.Result);                        
+            
+            // 체크 종료 ///////////////////////////////////
+            
+            
+            // 다운받아야하는 내용이 없는 경우.
+            if(getBubbleDownloadSizeHandle.Result <= 0 && getFontDownloadSizeHandle.Result <= 0) {
+                Debug.Log("<color=yellow>No download need</color>");
+                
+                
+                
+                SystemManager.main.LoadAddressableFont();
+                
+                Addressables.Release(fontBundleCheckHandle);
+                Addressables.Release(bubbleBundleCheckHandle);
+                Addressables.Release(getBubbleDownloadSizeHandle);
+                Addressables.Release(getFontDownloadSizeHandle);
+                
+                // 타이틀 종료 및 다음으로 이동 
+                FillProgressorOnly();
+                yield break;
+            } // ! 끝. 
+            
+            
+            
+            // * 여기서부터 하나라도 다운받을 내용이 있는 경우 시작.
+            if(getFontDownloadSizeHandle.Result > 0) { // 폰트 다운받아야 한다. 
+                // 기본 폰트 어드레서블을 다운로드 시작한다. 
+                downloadProgressBar.fillAmount = 0;
+                UpdateLoadingText(3); //  레이블 처리
+             
                 Debug.Log("### [Font] Download START");
+                Addressables.ClearDependencyCacheAsync(bubbleAssetBundle);
+                yield return null;
+                
                 
                 // 폰트 다운로드 필요함!! 
                 AsyncOperationHandle fontDownloadHandle = Addressables.DownloadDependenciesAsync(fontAssetBundle);
@@ -172,66 +216,67 @@ namespace PIERStory {
                 yield return null;
 
                 // 폰트 로드 처리. 
-                SystemManager.main.LoadAddressableFont();                
+                SystemManager.main.LoadAddressableFont();      
+                                    
             }
+            else {
+                // 다운받은 상태, 폰트 바로 로드.
+                SystemManager.main.LoadAddressableFont(); // 폰트 바로 로드.
+            }
+            
+            
             
             // ----------------------------------------------------------------
             
-            // 3 단계 말풍선 이미지 다운로드 처리 
-            Debug.Log("<color=cyan>Start Bubble Font Process!!!</color>");
-            downloadProgressBar.fillAmount = 0;
-            UpdateLoadingText(4); //  레이블 처리
             
-            // 기본 말풍선 어드레서블을 다운로드 시작한다. 
-            // ! 말풍선 어드레서블은 신규 말풍선 이미지가 있으면 어드레서블에 이미지를 추가한다. 
-            AsyncOperationHandle<IList<IResourceLocation>> bubbleBundleCheckHandle = Addressables.LoadResourceLocationsAsync(bubbleAssetBundle);
-            yield return bubbleBundleCheckHandle;
-            
-            if(bubbleBundleCheckHandle.Status != AsyncOperationStatus.Succeeded) { // 실패
-                Debug.Log("<color=cyan>## Fail Get Bubble bundle </color>");
-                FillProgressorOnly();
-                // ! 말풍선 에셋번들은 다운로드를 받지 못해도 게임진입이 가능하다. 
-                yield break;
-            }
-            
-            
-            // 말풍선  다운로드 사이즈 체크 
-            AsyncOperationHandle<long> getBubbleDownloadSizeHandle = Addressables.GetDownloadSizeAsync(bubbleAssetBundle);
-            yield return getBubbleDownloadSizeHandle;
-            Debug.Log("### [Bubble] GetDownloadBubbleSizeAsync END, size : " + getBubbleDownloadSizeHandle.Result);
-            
-            
-            // 이미 다운로드 받았음 
-            if(getBubbleDownloadSizeHandle.Result <= 0) {
-                FillProgressorOnly(); // 게이지 자동 채워지고 진입 완료 처리 
-                yield break; // 코루틴 종료 
-            }
-            
-            // 말풍선 다운로드 필요함!! 
-            AsyncOperationHandle bubbleDownloadHandle = Addressables.DownloadDependenciesAsync(bubbleAssetBundle);
-            bubbleDownloadHandle.Completed += (op) => {
-
-                if (op.Status != AsyncOperationStatus.Succeeded)
-                {
-                    // 다운로드 실패!?
-                    SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
-                    NetworkLoader.main.ReportRequestError(bubbleDownloadHandle.OperationException.ToString(), "Bubble DownloadDependenciesAsync");
-                }
-            };
-            
-            // 게이지 채우기 
-            while (!bubbleDownloadHandle.IsDone)
-            {
-                downloadStatus = bubbleDownloadHandle.GetDownloadStatus();
-                downloadProgressBar.fillAmount = downloadStatus.Percent;
+            // 말풍선 이미지 다운로드 필요함. 
+            if(getBubbleDownloadSizeHandle.Result > 0) {
+                Debug.Log("<color=cyan>Start Bubble Font Process!!!</color>");
+                UpdateLoadingText(4); //  레이블 처리        
+                downloadProgressBar.fillAmount = 0;
+                
+                Addressables.ClearDependencyCacheAsync(bubbleAssetBundle);
                 yield return null;
-            }
-            
-            Debug.Log("<color=cyan>Bubble bundle downloading is done!!!</color>");
-            yield return null;
+                
+
+                AsyncOperationHandle bubbleDownloadHandle = Addressables.DownloadDependenciesAsync(bubbleAssetBundle);
+                bubbleDownloadHandle.Completed += (op) => {
+
+                    if (op.Status != AsyncOperationStatus.Succeeded)
+                    {
+                        // 다운로드 실패!?
+                        SystemManager.ShowSystemPopup(SystemManager.GetDefaultServerErrorMessage(), NetworkLoader.OnFailedServer, NetworkLoader.OnFailedServer, false, false);
+                        NetworkLoader.main.ReportRequestError(bubbleDownloadHandle.OperationException.ToString(), "Bubble DownloadDependenciesAsync");
+                    }
+                };
+                
+                // 게이지 채우기 
+                while (!bubbleDownloadHandle.IsDone)
+                {
+                    downloadStatus = bubbleDownloadHandle.GetDownloadStatus();
+                    downloadProgressBar.fillAmount = downloadStatus.Percent;
+                    yield return null;
+                }
+                
+                Debug.Log("<color=cyan>Bubble bundle downloading is done!!!</color>");
+                yield return null;  
+                
+                Addressables.Release(bubbleDownloadHandle);
+                
+  
+            } // 다운로드 시작 
+
+
             
             // ----------------------------------------------------------------
             
+            
+            Addressables.Release(fontBundleCheckHandle);
+            Addressables.Release(bubbleBundleCheckHandle);
+            Addressables.Release(getBubbleDownloadSizeHandle);
+            Addressables.Release(getFontDownloadSizeHandle);
+            
+                
             
             // 완료 진입 완료 처리 
             StartCoroutine(MovingNextScene());
@@ -246,10 +291,13 @@ namespace PIERStory {
         /// <returns></returns>
         IEnumerator MovingNextScene() {
             Debug.Log("<color=cyan>MoveingNextScene START</color>");
+            
+            yield return new WaitUntil(() => SystemManager.main.isApplicationFontAvailable); // 폰트 다 불러오기를 기다린다.
+            
 
             UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork()); // 서버 통신 종료되길 기다린다. 
-            yield return new WaitUntil(() =>SystemManager.main.mainAssetFont != null); // 폰트 불러오길 기다린다. 
+            // yield return new WaitUntil(() =>SystemManager.main.mainAssetFont != null); // 폰트 불러오길 기다린다. 
             
             Debug.Log("<color=cyan>MoveingNextScene END</color>");
             Signal.Send(LobbyConst.STREAM_IFYOU, "moveMain", "open!"); // ViewMain으로 이동한다.

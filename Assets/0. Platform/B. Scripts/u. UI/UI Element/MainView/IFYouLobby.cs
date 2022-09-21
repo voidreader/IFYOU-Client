@@ -30,6 +30,7 @@ namespace PIERStory {
         public GameObject manualGroupPrefab;
         public GameObject hitsGroupPrefab;
         public GameObject genreGroupPrefab;
+        public GameObject ifyouLogoPrefab;
         List<GameObject> mainCategoryList = new List<GameObject>();
         
 
@@ -153,6 +154,10 @@ namespace PIERStory {
                     mainCategoryList.Add(genreGroup.gameObject);
                 }
             }
+            
+            // 마지막에 IFyou 로고 추가
+            GameObject ifyouLogo = Instantiate(ifyouLogoPrefab, recommendWorkList);
+            
         }
         
         IEnumerator LayoutRebuild()

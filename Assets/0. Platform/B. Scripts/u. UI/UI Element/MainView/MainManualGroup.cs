@@ -31,7 +31,7 @@ namespace PIERStory
             
             // 장르인 경우에는 장르가 들어가야한다. 
             if(!string.IsNullOrEmpty(genre)) {
-                SystemManager.SetText(groupNameText, "#" + genre);
+                SystemManager.SetText(groupNameText, genre);
             }
             else {
                 SystemManager.SetText(groupNameText, SystemManager.GetJsonNodeString(__j, "name_text"));    

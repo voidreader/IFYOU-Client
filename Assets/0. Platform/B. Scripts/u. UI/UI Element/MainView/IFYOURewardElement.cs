@@ -239,17 +239,19 @@ namespace PIERStory
             // 데이터 업데이트 
             UserManager.main.UpdateIFyouPlayAttendance(result);
                 
-
-            // 이프유 업적
-            NetworkLoader.main.RequestIFYOUAchievement(2);
-
-            NetworkLoader.main.RequestIFYOUAchievement(7);
-
-
             MainIfyouplay.OnRefreshAttendance?.Invoke();
             
             // 메세지 팝업 추가 
             SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6489"), SystemManager.GetJsonNodeString(result, "currency"),SystemManager.GetJsonNodeInt(result, "quantity"));
+            
+            // 뱅크..
+            UserManager.main.SetBankInfo(result);
+            
+                        // 이프유 업적
+            NetworkLoader.main.RequestIFYOUAchievement(2);
+
+            NetworkLoader.main.RequestIFYOUAchievement(7);
+            
         }
 
 

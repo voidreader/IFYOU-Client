@@ -2343,7 +2343,7 @@ namespace PIERStory
             SystemManager.ShowSystemPopupLocalize("6220", null, null, true, false);
             
             SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);  // projectCurrent
-            SetBankInfo(result); // 뱅크 정보 업데이트             
+            // SetBankInfo(result); // 뱅크 정보 업데이트             
 
 
             // StoryLobbyMain 리프레시 요청 

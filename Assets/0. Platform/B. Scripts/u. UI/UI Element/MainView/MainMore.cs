@@ -143,6 +143,15 @@ namespace PIERStory {
         {
             if (pushAlertAnimator.animation.isPlaying || nightAlertAnimator.animation.isPlaying)
                 return;
+                
+            if(SystemManager.main.pushTokenInfo == null)
+                return;
+                
+            // 푸시 동의를 하지 않으면 진행되지 않음 .
+            if(!SystemManager.main.pushTokenInfo.agreement.pushEnabled) {
+                SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6485"));
+                return;
+            }                
 
             // 푸쉬 토글이 On이면
             if(SystemManager.main.pushTokenInfo.agreement.adAgreement)
@@ -176,6 +185,15 @@ namespace PIERStory {
             // 애니메이션 중이어도 막는다
             if (pushAlertAnimator.animation.isPlaying || nightAlertAnimator.animation.isPlaying)
                 return;
+                
+            if(SystemManager.main.pushTokenInfo == null)
+                return;
+                
+            // 푸시 동의를 하지 않으면 진행되지 않음 .
+            if(!SystemManager.main.pushTokenInfo.agreement.pushEnabled) {
+                SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6485"));
+                return;
+            }
                 
             try {
                 

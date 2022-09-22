@@ -368,12 +368,20 @@ namespace PIERStory
         /// </summary>
         public void DestroyAddressableModel() {
             
-            if(!isAddressable && !isMounted)
+            if(!isMounted)
                 return;
             
             modelController = null;
-            bool result = Addressables.ReleaseInstance(mountedModelAddressable);
-            Debug.Log("DestroyAddressableModel :: " + originModelName + " / " + result);
+            
+            try {            
+                if(isAddressable) {
+                    bool result = Addressables.ReleaseInstance(mountedModelAddressable);
+                    Debug.Log("DestroyAddressableModel :: " + originModelName + " / " + result);
+                }
+            }
+            catch {
+                
+            }
             
         }
 

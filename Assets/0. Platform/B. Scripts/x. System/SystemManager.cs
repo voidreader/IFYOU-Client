@@ -1033,22 +1033,32 @@ namespace PIERStory
 
             if (Application.isEditor)
                 return;
+                
+            if(pushTokenInfo != null)
+                return;
 
             Gamebase.Push.QueryTokenInfo((data, error) =>
             {
                 if (Gamebase.IsSuccess(error))
                 {
                     pushTokenInfo = data; // 데이터 설정 
+                    if(!pushTokenInfo.agreement.pushEnabled) {
+                        Debug.Log("Push is disable");
+                        return;
+                    }
+                    
+                    // 토큰 만료때문에 호출때마다 pushRegister 등록해준다. 
+                    PushRegister(data.agreement.adAgreement, data.agreement.adAgreementNight);
                     Debug.Log(string.Format("### Push TokenInfo = pushAlert : {0}, nightPush : {1}", data.agreement.adAgreement, data.agreement.adAgreementNight));
                 }
                 else
                 {
                     Debug.LogError(string.Format("### QueryToken response failed. Error : {0}", error));
-                    PushRegister(true, true);
+                    
                 }
 
 
-                // MainMore.OnRefreshMore?.Invoke();
+                
             });
 
         }
@@ -1079,8 +1089,8 @@ namespace PIERStory
                     if(pushConfiguration != null)
                     {
                         Debug.Log("이용약관 success 후 pushConfiguration = " + pushConfiguration);
-                        // Register 처리 .
-                        PushRegister(pushConfiguration.adAgreement, pushConfiguration.adAgreementNight);
+                        if(pushConfiguration.pushEnabled) // Register 처리 .
+                            PushRegister(pushConfiguration.adAgreement, pushConfiguration.adAgreementNight);
                     }
                 }
                 else
@@ -1156,10 +1166,6 @@ namespace PIERStory
                 if (Gamebase.IsSuccess(error))
                 {
                     Debug.Log("RegisterPush succeeded.");
-
-
-                    QueryPushTokenInfo();
-
                 }
                 else
                 {
@@ -1948,7 +1954,7 @@ namespace PIERStory
 
         public void ShowMissingFunction(string __message)
         {
-
+            ShowMessageAlert(__message);
         }
 
         #endregion

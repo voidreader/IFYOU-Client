@@ -224,8 +224,6 @@ namespace PIERStory {
         {
             Debug.Log("HandleUserEarnedReward event received");
             
-            // 광고 기록
-            NetworkLoader.main.LogAdvertisement("rewarded");
             
             isRewarded = true; // true로 변경! 다 봤다!
             OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
@@ -676,7 +674,6 @@ namespace PIERStory {
             CreateInterstitial();
             
             // 광고 기록 
-            NetworkLoader.main.LogAdvertisement("interstitial");
             NetworkLoader.main.IncreaseDailyMissionCount(3);
         }
    
@@ -792,8 +789,6 @@ namespace PIERStory {
             // Execute logic for rewarding the user.
             
             
-            // 광고 기록
-            NetworkLoader.main.LogAdvertisement("rewarded");
             
             isRewarded = true; // true로 변경! 다 봤다!
             OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출

@@ -18,9 +18,16 @@ namespace PIERStory
             callback = __actionCallback;
 
             // 화자가 없는 경우, 데이터가 없는 경우가 있을때 멈추는것 방지
-            if (string.IsNullOrEmpty(scriptRow.speaker))
+            // 잘못된 입력 
+            if (string.IsNullOrEmpty(scriptRow.speaker)) {
                 scriptRow.speaker = string.Empty;
-
+                
+                SystemManager.main.ShowMissingFunction(string.Format("[{0}], 화자 입력되지 않았음", scriptRow.script_data));
+                callback?.Invoke();
+                return;
+            }
+            
+            // 대화 로그 생성
             ViewGame.main.CreateTalkLog(scriptRow.template, GameManager.main.GetNotationName(scriptRow), scriptRow.script_data);
 
             if (__isInstant && GameManager.main.RenderingPass())
@@ -28,7 +35,8 @@ namespace PIERStory
                 callback();
                 return;
             }
-
+            
+            // 캐릭터 대화 처리 시작 
             GameManager.main.SetTalkProcess(scriptRow, callback);
         }
 

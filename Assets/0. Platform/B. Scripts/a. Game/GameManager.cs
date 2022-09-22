@@ -978,12 +978,15 @@ namespace PIERStory
                             if( i == 1)
                                 continue;
                                 
-                            if(characterModels[i].speaker == __row.speaker) { // 같은 캐릭터다!
+                            if(characterModels[i].speaker == __row.speaker) { // 같은 캐릭터가 존재한다. 
                                 isExistsSameSpeaker = true;
                                 
+                                
                                 characterModels[characterIndex] = characterModels[i]; // 중앙으로 변경. 
+                                standingSpeaker = GetConnectedModelMount(__row.speaker); // standing 갱신.
+                                
                                 characterModels[characterIndex].PlayCubismAnimation(__row, characterIndex); // 플레이 
-                                characterModels[i] = null;
+                                characterModels[i] = null; // 비워준다. 
                             }
                             else {
                                 

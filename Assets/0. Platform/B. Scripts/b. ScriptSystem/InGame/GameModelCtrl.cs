@@ -163,7 +163,7 @@ namespace PIERStory
         }
 
         /// <summary>
-        /// 모델 활성화 
+        /// 캐릭터 모델 활성화 
         /// </summary>
         void ActivateModel(ScriptRow row, bool __instant = false)
         {
@@ -204,13 +204,15 @@ namespace PIERStory
         /// 캐릭터 애니메이션 재생 
         /// </summary>
         /// <param name="__row"></param>
-        /// <param name="characterPos"></param>
+        /// <param name="characterPos">캐릭터 위치(중앙, 좌우</param>
         public void PlayCubismAnimation(ScriptRow __row, int characterPos)
         {
+            
             // 더미 캐릭터고 스탠딩 캐릭터고 여기에서 다 관리하기 떄문에 이 스크립트에서 자체적으로 SetActive true/false 해주면 된다. 이동 및 크기 변경도 마찬가지
             Debug.Log(string.Format("PlayCubismAnimation [{0}], [{1}]", __row.speaker, characterPos));
             activeRow = __row;
             
+            // 스탠딩 등장시, 전화 상태 해제 
             if(ViewGame.main.userCall)
             {
                 ViewGame.main.userCall = false;
@@ -225,7 +227,6 @@ namespace PIERStory
             #endregion
 
             // 모델이 비활성 상태일때 활성화가 되면 페이드인 처리를 한다. 
-            // * 22.01.10 조건 추가합니다. 최초 로딩시점에 모델을 생성하지 않기 때문에 
             // * isModelActivated bool 변수를 통해서 한번이라도 활성화 되었었는지를 체크합니다. 
             if (!gameObject.activeSelf || !isModelActivated)
             {
@@ -236,19 +237,31 @@ namespace PIERStory
                 // 등장 연출과 퇴장 연출을 미리 받아둔다.
                 in_effect = __row.in_effect;
                 out_effect = __row.out_effect;
+                
                 SetFadeInAlpha();
-
                 EnterTalkingCharacter(characterPos);
             }
             else // 모델이 이미 화면에 나와있는 상태
             {
                 // 2인 스탠딩중이면 talker니까 z 포지션을 앞으로 옮겨준다
                 if (characterPos != 1)
-                {
-                    if (transform.localScale.x < 0f)
-                        transform.DOScale(new Vector3(-1f, 1f, 1f) * talkerScale, animTime);
-                    else
-                        transform.DOScale(Vector3.one * talkerScale, animTime);
+                {   
+                    // 스킵일때와 아닐때 구분 필요. 
+                    if(GameManager.main.useSkip) {
+                        // 방향 유지한다. 
+                        if(transform.localScale.x < 0f) 
+                            transform.localScale = new Vector3(-1f, 1f, 1f) * talkerScale;
+                        else 
+                            transform.localScale = Vector3.one * talkerScale;
+                    }
+                    else {
+                        if (transform.localScale.x < 0f)
+                            transform.DOScale(new Vector3(-1f, 1f, 1f) * talkerScale, animTime);
+                        else
+                            transform.DOScale(Vector3.one * talkerScale, animTime);
+                    }
+                    
+                    // 
                     SetTalker();
                 }
                 else
@@ -258,7 +271,12 @@ namespace PIERStory
                     if (GameManager.main.useSkip)
                     {
                         transform.localPosition = Vector3.zero;
-                        transform.localScale = Vector3.one;
+                        
+                        if(transform.localScale.x < 0f) 
+                            transform.localScale = new Vector3(-1, 1, 1);
+                        else
+                            transform.localScale = Vector3.one; 
+                        
                     }
                     else
                     {
@@ -277,11 +295,11 @@ namespace PIERStory
             } // 화면 '등장'에 대한 처리 종료 
 
             // * 모션 처리 시작 
-            
             // 모션 없으면 진행하지 않음 
             if (DictMotion != null && !DictMotion.ContainsKey(__row.character_expression))
             {
-                Debug.Log(string.Format("WARNING! : {0} doesn't exists in {1}", __row.character_expression, __row.speaker));
+                // Debug.Log(string.Format("WARNING! : {0} doesn't exists in {1}", __row.character_expression, __row.speaker));
+                SystemManager.main.ShowMissingFunction(string.Format("WARNING! : {0} doesn't exists in {1}", __row.character_expression, __row.speaker));
                 return;
             }
 
@@ -442,38 +460,46 @@ namespace PIERStory
                     else
                         transform.localScale = Vector3.one * talkerScale;
                 }
+                
+                return;
+                
+            } // 자동진행 및 스킵에 대한 처리 종료
+            
+            
+            
+            // 일반적인 처리 
+            if(string.IsNullOrEmpty(__dir)) // 중앙 등장. 
+            {
+                /*
+                if(transform.localScale.x < 0f)
+                    transform.localScale = new Vector3(-1f, 1f, 1f);
+                else
+                    transform.localScale = Vector3.one;
+                */
+                
+                transform.localScale = Vector3.one; // 스케일 1로 초기화 
+
+                // 중앙등장은 진입효과가 지정되지 않았으면 페이드인으로 처리 
+                if(string.IsNullOrEmpty(activeRow.in_effect)) {
+                    in_effect = GameConst.INOUT_EFFECT_FADEIN;
+                    SetFadeInAlpha();
+                }
+                
+                FadeIn(0f, GameConst.LAYER_MODEL_C);
             }
             else
             {
-                if(string.IsNullOrEmpty(__dir))
-                {
-                    if(transform.localScale.x < 0f)
-                        transform.localScale = new Vector3(-1f, 1f, 1f);
-                    else
-                        transform.localScale = Vector3.one;
-
-                    // 중앙 등장은 무조건 Fade in (진입효과 없었던 경우)
-                    if(string.IsNullOrEmpty(activeRow.in_effect)) {
-                        in_effect = GameConst.INOUT_EFFECT_FADEIN;
-                        SetFadeInAlpha();
-                    }
-                    
-                    FadeIn(0f, GameConst.LAYER_MODEL_C);
-                }
+                // 시선 방향과 위치가 동향이면 뒤집기
+                if (direction.Equals(__dir))
+                    transform.localScale = new Vector3(-1f, 1f, 1f) * talkerScale;
                 else
-                {
-                    // 시선 방향과 위치가 동향이면 뒤집기
-                    if (direction.Equals(__dir))
-                        transform.localScale = new Vector3(-1f, 1f, 1f) * talkerScale;
-                    else
-                        transform.localScale = Vector3.one * talkerScale;
+                    transform.localScale = Vector3.one * talkerScale;
 
-                    // 2인 스탠딩으로 등장 연출
-                    if (posX < 0f)
-                        EnterCharacterDirection(-width, posX, GameConst.LAYER_MODEL_L);
-                    else
-                        EnterCharacterDirection(width, posX, GameConst.LAYER_MODEL_R);
-                }
+                // 2인 스탠딩으로 등장 연출
+                if (posX < 0f)
+                    EnterCharacterDirection(-width, posX, GameConst.LAYER_MODEL_L);
+                else
+                    EnterCharacterDirection(width, posX, GameConst.LAYER_MODEL_R);
             }
         }
 

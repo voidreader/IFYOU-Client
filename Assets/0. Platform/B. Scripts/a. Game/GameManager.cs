@@ -855,51 +855,60 @@ namespace PIERStory
         /// </summary>
         public void SetTalkProcess(ScriptRow __row, Action __cb)
         {
-            // 유효한 화자가 아니면 아래 코드는 작동X
-            if (!__row.IsValidSpeaker)
-            {
-                ShowMissingComponent(__row.template, "잘못된 화자 입력");
-                __cb?.Invoke();
-                return;
-            }
-
             // 스탠딩 표현이 없거나 화자 리소스가 존재하지 않으면 말풍선만 띄워주고 넘김
             if (string.IsNullOrEmpty(__row.character_expression) || !CheckModelResourceExists(__row.speaker))
             {
-                ViewGame.main.MakeTalkBubble(__row, __cb);
+                ViewGame.main.MakeTalkBubble(__row, __cb); // * 말풍선 생성해주세요!
+                
+                // 캐릭터 모션이 입력되지 않았으면 경고 메세지 
+                if(string.IsNullOrEmpty(__row.character_expression)) {
+                    //SystemManager.main.ShowMissingFunction(string.Format("[{0}}]/[{1}] No motion has been input!", __row.speaker == null?"":__row.speaker, __row.script_data == null?"":__row.script_data));
+                }
+                
+                // 캐릭터 이름이 잘못되어 있으면 경고 메세지
+                if(!CheckModelResourceExists(__row.speaker)) {
+                    // SystemManager.main.ShowMissingFunction(string.Format("[{0}] Speaker name is wrong", __row.speaker));
+                }
+                
                 return;
-            }
+            } // ? 스탠딩이나 모션이 없는 경우에 대한 처리 끝 
+
 
             #region 스탠딩 캐릭터 모델 처리
+            
             // * 캐릭터 모델 처리를 시작.. 
             // speaker로 판단. 생성된 캐릭터 모델이 있고, 캐릭터 표현 있음
             int characterIndex = -1;     //캐릭터 모델 index 0:왼쪽, 1:중앙, 2:오른쪽
             int characterCount = CheckModelStanding(); // 현재 화면에 서있는 모델의 개수
             bool isSameTalker = CompareWithCurrentSpeaker(__row.speaker);  // 전의 화자와 같은지 체크, 의상이 변경되도 다른 화자로 인식
 
+            Debug.Log(string.Format("SetTalkProcess start [{0}] / [{1}]", __row.direction, __row.speaker));
+            
+            // 방향에 따른 index 처리 
+            if(__row.direction == GameConst.POS_LEFT) 
+                characterIndex = 0;
+            else if(__row.direction == GameConst.POS_RIGHT)
+                characterIndex = 2;
+            else 
+                characterIndex = 1;
+            
+            
+            
             // 화자에 등장 방향이 지정된 경우와 아닌 경우가 있다. 
             // 케일:L or 케일:R 이런식으로 지정되었을 때에 대한 처리 구분될 필요 있음.
-            switch (__row.direction)
+            switch (__row.direction) // 
             {
-                case GameConst.POS_LEFT:
+                case GameConst.POS_LEFT: // 현재 등장 캐릭터가 방향을 가지고 있는 경우.
                 case GameConst.POS_RIGHT:
-
-                    if (__row.direction.Equals(GameConst.POS_LEFT))
-                        characterIndex = 0;
-                    else
-                        characterIndex = 2;
-
-                    Debug.Log(string.Format("SetTalkProcess start [{0}] / [{1}]", __row.direction, __row.speaker));
-
+                
                     // 동일한 사이드 캐릭터가 계속 말하는중
                     if (isSameTalker)
                     {
-                        // 화면에 아직 1명 뿐인데 L or R이 들어오면 센터로
-                        // * 같은 캐릭터이고 화면에 캐릭터가 혼자인경우, 방향 지정이 되어있으면, 무시하고 그냥 중앙에서 진행. 
+                        // * 같은 캐릭터이고 화면에 캐릭터가 혼자인경우, 방향 지정이 되어있어도 무시하고 그냥 중앙에서 진행. 
                         if (characterCount < 2)
                             characterIndex = 1;
 
-                        // 애니메이션 
+                        // 이미 같은 캐릭터가 화면에 서있으니 SetCharacterReady 필요없음. 애니메이션 플레이 
                         characterModels[characterIndex].PlayCubismAnimation(__row, characterIndex);
                     }
                     else // ! 다른 화자 등장!
@@ -911,17 +920,15 @@ namespace PIERStory
                             if (characterCount < 1)
                             {
                                 // 방향 지정을 무시하고 위치는 센터로 fix한다. 
-                                characterIndex = 1;
-
                                 // 밀어낼 캐릭터가 없으니까 아무것도 하지 않는다.
-
+                                characterIndex = 1;
                             }
                             else
                             { // * 다른 캐릭터 1명이 있었다. 
 
                                 // 서있던 캐릭터 친구를 오른쪽 혹은 왼쪽으로 밀어낸다.
-                                // 새등장 위치가 왼쪽이면 오른쪽으로 밀고, 새등장 위치가 오른쪽이면 왼쪽으로 민다.
-                                PushFromCenter(characterIndex == 0 ? 2 : 0);
+                                // 새 등장 위치가 왼쪽이면 중앙캐를 오른쪽으로 밀고, 새 등장 위치가 오른쪽이면 중앙캐를 왼쪽으로 민다.
+                                PushOutOfCenter(characterIndex == 0 ? 2 : 0);
                                 Debug.Log("Push Previous Character <<<<<");
 
                             }
@@ -942,71 +949,80 @@ namespace PIERStory
                     break; // ? 방향 지정 처리 끝. 
 
                 default: // * 방향 지정이 되어있지 않은 경우에 대한 처리 시작.
-
-                    // center index fix. 
-                    characterIndex = 1;
-
-
-                    // 2인 스탠딩 중이었을때.
-                    // 새로운 화자가 등장했으면 나머지 2인은 퇴장시킨다. 
-                    // 2인 스탠딩 중 하나의 캐릭터라면, 중앙으로 옮겨준다. (나머지 한명은 퇴장)
-                    if (characterCount > 1)
-                    {
-                        // 이전 화자와 같지 않으면 전부 hide(퇴장)
-                        for (int i = 0; i < characterModels.Length; i++)
-                        {
+                
+                    // characterIndex는 1이다. 
+                
+                    // 화면에 0~1명의 스탠딩이 서있을때와 2인 스탠딩 중일때의 처리 분기
+                    if(characterCount == 1) { // * 화면에 1인 스탠딩이 있음. 
+                        if(isSameTalker) 
+                            characterModels[characterIndex].PlayCubismAnimation(__row, characterIndex);
+                        else {
+                            
+                            if(characterModels[characterIndex] != null)
+                                characterModels[characterIndex].HideModel(characterIndex, useSkip);
+                                
+                            SetCharacterReady(__row.speaker, characterIndex);
+                            characterModels[characterIndex].PlayCubismAnimation(__row, characterIndex);
+                        }
+                        
+                    } 
+                    else if(characterCount > 1) { // 화면에 2인 있음 
+                        // 새로운 화자가 등장했으면 나머지 2인은 모두 퇴장
+                        // 2인 스탠딩 중 하나의 캐릭터라면 중앙으로 옮겨줄것. 
+                        bool isExistsSameSpeaker = false;
+                        
+                        for(int i=0; i<characterModels.Length;i++) {
                             if (characterModels[i] == null)
                                 continue;
-
-                            // 중앙에 쓸건데 중앙은 건들지 말자
-                            // 조건을 걸어주지 않으면 아래 로직에서 기껏 중앙으로 옮겨놨는데 옮겨놓은 중앙까지 null처리 해버린다
-                            if (i == 1)
+                                
+                            if( i == 1)
                                 continue;
-
-                            // 현재 화자가 2인스탠딩에서 좌,우 중 한곳에 이미 배치되어있는 경우
-                            // 중앙 index로 옮겨주고, 있던 사이드 위치는 null 로 비워준다. 
-                            if (characterModels[i].speaker.Equals(__row.speaker))
-                            {
-                                characterModels[characterIndex] = characterModels[i];
+                                
+                            if(characterModels[i].speaker == __row.speaker) { // 같은 캐릭터다!
+                                isExistsSameSpeaker = true;
+                                
+                                characterModels[characterIndex] = characterModels[i]; // 중앙으로 변경. 
+                                characterModels[characterIndex].PlayCubismAnimation(__row, characterIndex); // 플레이 
                                 characterModels[i] = null;
                             }
-                            else // 다른 화자들은 모두 hide 처리. 
-                            {
-
+                            else {
+                                
+                                // 다른 캐릭터는 hide 
                                 if (useSkip || __row.autoplay_row > 0)
                                     characterModels[i].HideModel(i, true);
                                 else
                                     characterModels[i].HideModel(i, false);
-
-                                // skip 사용 중에는 아예 바로 null 처리, skip 아닌 경우에는 퇴장을 기다린다. 
+                                    
+                                 // skip 사용 중에는 아예 바로 null 처리, skip 아닌 경우에는 퇴장을 기다린다. 
                                 if (useSkip)
                                     characterModels[i] = null;
                                 else
                                     StartCoroutine(RoutineWaitCharacterOut(i));
+                                    
                             }
-
-                        } // ? end of for
-                    } // ? end of characterCount > 0
-
-                    // 동일 화자가 아닐때에 대한 추가 처리. 
-                    if (!isSameTalker)
-                    {
-                        // 중앙에 한명만 있을 때, 이전 화자가 다르면 hide
-                        // 위의 로직을 그대로 사용하면 중앙에 왔을 때 건너 뛰어버려서 1인 스탠딩 hide가 실행이 안됨
-                        // if (characterCount > 0 && characterCount < 2) // 이건 그냥... 1이자나? 
-                        if (characterCount == 1)
-                            characterModels[characterIndex].HideModel(characterIndex, useSkip);
-
-                        // 동일한 화자가 아니라면 캐릭터 세팅
+                                
+                        } // ? end of for(int i=0; i<characterModels.Length;i++) {
+                            
+                        // 같은 캐릭터가 없었으면, 새 캐릭터 등장 처리 
+                        if(!isExistsSameSpeaker) {
+                            SetCharacterReady(__row.speaker, characterIndex);
+                            characterModels[characterIndex].PlayCubismAnimation(__row, characterIndex);
+                        }
+                        
+                    } // 2인 스탠딩 처리 종료 
+                    else { // 화면에 아무도 없었다. 
+                    
+                        // 캐릭터 세팅 
                         SetCharacterReady(__row.speaker, characterIndex);
+                        characterModels[characterIndex].PlayCubismAnimation(__row, characterIndex);
                     }
 
-                    characterModels[characterIndex].PlayCubismAnimation(__row, characterIndex);
                     break;
-            }
+            } // ? end of switch (__row.direction)
 
             #endregion
 
+            // 말풍선 생성
             ViewGame.main.MakeTalkBubble(__row, __cb, characterIndex);
         }
 
@@ -1030,13 +1046,6 @@ namespace PIERStory
         {
             standingSpeaker = GetConnectedModelMount(speaker);
 
-            // * 모델 생성전이면 생성하고 처리 
-            /*
-            if (!standingSpeaker.isModelCreated)
-            {
-                standingSpeaker.InstantiateDownloadedCubismModel();
-            }
-            */
 
             // 모델 컨트롤러 할당
             characterModels[index] = standingSpeaker.modelController;
@@ -1063,13 +1072,23 @@ namespace PIERStory
 
             return true;
         }
-
-        void PushFromCenter(int index)
+        
+        
+        /// <summary>
+        /// 중앙에 서있는 캐릭터를 지정된 위치(좌우)로 밀어낸다. 
+        /// </summary>
+        /// <param name="index"></param>
+        void PushOutOfCenter(int index)
         {
+            
+            // 1위치(중앙) 캐릭터를 지정된 index로 변경시킨다. 
             if (characterModels[1] != null)
                 characterModels[index] = characterModels[1];
 
+
+            // 중앙 캐릭터 null 로 비워두고, 
             characterModels[1] = null;
+            // 중앙에 서있던 캐릭터를 사이드로 밀어낸다. 
             characterModels[index].PushListenerToSide(index, useSkip || isJustSkipStop);
         }
 
@@ -1082,8 +1101,9 @@ namespace PIERStory
         {
             // 남아있는 캐릭터 index
             int remainSpeakerIndex = 0;
-            // * 왼쪽 혹은 오른쪽에 신규 캐릭터가 들어오면, 어차피 남아있는 index는 그 반대편 index 아닌가? 
-            // 왼쪽이면 2, 오른쪽이면 0 
+            
+            // 새로 등장하는 캐릭터 위치에 있던 캐릭터가 교체된다. 
+            // 그래서 남아있는 캐릭터는 신규 등장이 왼쪽이면 2,  신규 등장이 오른쪽이면 0 
             remainSpeakerIndex = newSpeakerIndex == 0 ? 2 : 0;
 
 
@@ -1874,7 +1894,7 @@ namespace PIERStory
             if (main.useSkip)
                 return;
 
-            if(UserManager.main.CheckAdminUser())
+            // if(UserManager.main.CheckAdminUser())
                 SystemManager.ShowMessageAlert(string.Format("{0} : {1}", __template, __data));
         }
 

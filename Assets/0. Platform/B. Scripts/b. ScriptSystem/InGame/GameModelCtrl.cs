@@ -413,11 +413,12 @@ namespace PIERStory
         /// <param name="characterPosIndex">0은 왼쪽, 1은 중앙, 2는 오른쪽</param>
         void EnterTalkingCharacter(int characterPosIndex)
         {
+            
+            Debug.Log(string.Format("EnterTalkingCharacter [{0}]/[{1}]", activeRow.speaker, characterPosIndex));
+            
             // 스킵이나 자동진행이 아니면 무조건 연출을 시작한다고 생각한다
             if (!autoPlay)
                 OnMoveStart();
-
-            SetTalker();
 
             // 캐릭터 위치(L,C,R)에 따른 위치 및 크기 조정
             switch (characterPosIndex)
@@ -446,6 +447,8 @@ namespace PIERStory
             // 자동진행 or skip처리
             if (autoPlay)
             {
+                SetTalker(); // 화자로 변경한다. 
+                
                 if(string.IsNullOrEmpty(__dir))
                 {
                     transform.localPosition = Vector3.zero;
@@ -560,6 +563,8 @@ namespace PIERStory
                 ChangeLayerRecursively(transform, layerName);
 
             SetCurRenderTexture(layerName);
+            SetTalker(); // 여기로 옮겼다. 화자 처리 
+            
             transform.localPosition = new Vector3(posX, transform.localPosition.y, 0);
             currRenderTexture.color = new Color(currRenderTexture.color.r, currRenderTexture.color.g, currRenderTexture.color.b, 0);
 
@@ -582,6 +587,7 @@ namespace PIERStory
                 ChangeLayerRecursively(transform, layerName);
 
             SetCurRenderTexture(layerName);
+            SetTalker();
 
             transform.localPosition = new Vector3(posX, transform.localPosition.y, 0);
             transform.DOMoveX(moveX, slideTime).OnComplete(OnMoveCompleted);
@@ -613,6 +619,7 @@ namespace PIERStory
         /// </summary>
         public void SetListener()
         {
+            
             currRenderTexture.transform.SetParent(ViewGame.main.modelRenderParents[1]);
 
             // 리스터는 살짝 작은 스케일로 조정해준다. 

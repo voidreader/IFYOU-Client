@@ -84,7 +84,7 @@ namespace PIERStory {
             // 푸시 토글 세팅 
             if (SystemManager.main.pushTokenInfo == null)
             {
-                SystemManager.main.QueryPushTokenInfo(RefreshScreen);
+                // SystemManager.main.QueryPushTokenInfo(RefreshScreen);
             }
             else
             {
@@ -116,24 +116,29 @@ namespace PIERStory {
         /// </summary>
         public void OnClickPushAlert()
         {
+            Debug.Log("OnClickPushAlert");
             
             if(Application.isEditor) {
                 Debug.Log("It's Editor");
                 return;
             }
             
-            if(SystemManager.main.pushTokenInfo == null)
+            if(SystemManager.main.pushTokenInfo == null) {
+                Debug.Log("Push token is null");
+                SystemManager.main.QueryPushTokenInfo(OnClickPushAlert);
                 return;
+            }
                 
                 
             // 푸시 동의를 하지 않으면 진행되지 않음 .
             if(!SystemManager.main.pushTokenInfo.agreement.pushEnabled) {
+                Debug.Log("Push is disable");
                 SystemManager.ShowMessageAlert(SystemManager.GetLocalizedText("6485"));
                 return;
             }                
 
             // 푸쉬 토글이 On이면 Off로 변경 
-            if(SystemManager.main.pushTokenInfo.agreement.adAgreement)
+            if(pushAlert.sprite == spriteToggleOn)
             {
                 SystemManager.main.PushRegister(false, false);
                 pushAlert.sprite = spriteToggleOff;

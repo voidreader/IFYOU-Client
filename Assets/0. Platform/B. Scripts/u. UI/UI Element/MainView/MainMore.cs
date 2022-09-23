@@ -84,7 +84,8 @@ namespace PIERStory {
             // 푸시 토글 세팅 
             if (SystemManager.main.pushTokenInfo == null)
             {
-                // SystemManager.main.QueryPushTokenInfo(RefreshScreen);
+                pushAlert.sprite = spriteToggleOff;
+                toggleIconPos.anchoredPosition = toggleOffPosition;
             }
             else
             {
@@ -140,13 +141,21 @@ namespace PIERStory {
             // 푸쉬 토글이 On이면 Off로 변경 
             if(pushAlert.sprite == spriteToggleOn)
             {
-                SystemManager.main.PushRegister(false, false);
+                Debug.Log("Push is ON => OFF");
+                SystemManager.main.pushTokenInfo.agreement.adAgreement = false;
+                SystemManager.main.pushTokenInfo.agreement.adAgreementNight = false;
+                
+                SystemManager.main.PushRegister(SystemManager.main.pushTokenInfo.agreement);
                 pushAlert.sprite = spriteToggleOff;
                 toggleIconPos.anchoredPosition = toggleOffPosition;
             }
             else
             {
-                SystemManager.main.PushRegister(true, true);
+                Debug.Log("Push is OFF => ON");
+                SystemManager.main.pushTokenInfo.agreement.adAgreement = true;
+                SystemManager.main.pushTokenInfo.agreement.adAgreementNight = true;
+                
+                SystemManager.main.PushRegister(SystemManager.main.pushTokenInfo.agreement);
                 pushAlert.sprite = spriteToggleOn;
                 toggleIconPos.anchoredPosition = toggleOnPosition;
                 

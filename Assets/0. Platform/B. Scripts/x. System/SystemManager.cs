@@ -1053,18 +1053,15 @@ namespace PIERStory
                     __callback?.Invoke();
                     
                     
-                    if(!pushTokenInfo.agreement.pushEnabled) {
-                        Debug.Log("Push is disable");
-                        return;
-                    }
                     
                     // 토큰 만료때문에 호출때마다 pushRegister 등록해준다. 
-                    PushRegister(data.agreement.adAgreement, data.agreement.adAgreementNight);
+                    PushRegister(pushTokenInfo.agreement);
                     Debug.Log(string.Format("### Push TokenInfo = pushAlert : {0}, nightPush : {1}", data.agreement.adAgreement, data.agreement.adAgreementNight));
                     MainMore.OnRefreshMore?.Invoke();
                 }
                 else
                 {
+                    pushTokenInfo = null;
                     Debug.LogError(string.Format("### QueryToken response failed. Error : {0}", error));
                     
                 }
@@ -1102,7 +1099,8 @@ namespace PIERStory
                     {
                         Debug.Log("이용약관 success 후 pushConfiguration = " + pushConfiguration);
                         if(pushConfiguration.pushEnabled) // Register 처리 .
-                            PushRegister(pushConfiguration.adAgreement, pushConfiguration.adAgreementNight);
+                            PushRegister(pushConfiguration);
+                        
                     }
                 }
                 else
@@ -1150,6 +1148,15 @@ namespace PIERStory
                 }
             });
         }
+        
+        public void PushRegister(GamebaseResponse.Push.Agreement pushConfiguration) {
+            GamebaseResponse.Push.PushConfiguration req = new GamebaseResponse.Push.PushConfiguration();
+            req.pushEnabled = pushConfiguration.pushEnabled;
+            req.adAgreement = pushConfiguration.adAgreement;
+            req.adAgreementNight = pushConfiguration.adAgreementNight;
+            
+            PushRegister(req);
+        }
 
 
         /// <summary>
@@ -1157,15 +1164,18 @@ namespace PIERStory
         /// </summary>
         /// <param name="adPush">주간 광고성 푸시</param>
         /// <param name="nightAdPush">야간 광고성 푸시</param>
-        public void PushRegister(bool adPush, bool nightAdPush)
+        public void PushRegister(GamebaseResponse.Push.PushConfiguration pushConfiguration)
         {
-            Debug.Log(string.Format("PushRegister : ad[{0}], night[{1}]", adPush, nightAdPush));
             
-            GamebaseRequest.Push.PushConfiguration pushConfiguration = new GamebaseRequest.Push.PushConfiguration();
-            pushConfiguration.pushEnabled = true;
-            pushConfiguration.adAgreement = adPush;
-            pushConfiguration.adAgreementNight = nightAdPush;
-
+            // Debug.Log(string.Format("PushRegister : ad[{0}], night[{1}]", adPush, nightAdPush));
+            Debug.Log(">>>> PushRegister");
+            
+            GamebaseRequest.Push.PushConfiguration req = new GamebaseRequest.Push.PushConfiguration();
+            req.pushEnabled = pushConfiguration.pushEnabled;
+            req.adAgreement = pushConfiguration.adAgreement;
+            req.adAgreementNight = pushConfiguration.adAgreementNight;
+            
+                        
             var notificationOptions = new GamebaseRequest.Push.NotificationOptions
             {
                 foregroundEnabled = true, // 앱 실행중에도 푸시 메세지 노출
@@ -1173,12 +1183,18 @@ namespace PIERStory
             };
 
             // 토큰 등록 진행 
-            Gamebase.Push.RegisterPush(pushConfiguration, notificationOptions, (error) =>
+            Gamebase.Push.RegisterPush(req, notificationOptions, (error) =>
             {
                 if (Gamebase.IsSuccess(error))
                 {
                     Debug.Log("RegisterPush succeeded.");
-                    QueryPushTokenInfo(null);
+                    if(pushTokenInfo == null) 
+                        QueryPushTokenInfo(null);
+                    else  {
+                        pushTokenInfo.agreement.pushEnabled = pushConfiguration.pushEnabled;
+                        pushTokenInfo.agreement.adAgreement = pushConfiguration.adAgreement;
+                        pushTokenInfo.agreement.adAgreementNight = pushConfiguration.adAgreementNight;
+                    }
                 }
                 else
                 {

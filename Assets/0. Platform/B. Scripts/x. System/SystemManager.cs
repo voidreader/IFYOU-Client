@@ -1030,17 +1030,24 @@ namespace PIERStory
         /// </summary>
         public void QueryPushTokenInfo(Action __callback)
         {
+            Debug.Log("QueryPushTokenInfo #1");
 
             if (Application.isEditor)
                 return;
                 
-            if(pushTokenInfo != null)
-                return;
+            // if(pushTokenInfo != null)
+            //     return;
+                
+                
+            Debug.Log("QueryPushTokenInfo #2");
 
             Gamebase.Push.QueryTokenInfo((data, error) =>
             {
                 if (Gamebase.IsSuccess(error))
                 {
+                    
+                    Debug.Log("QueryPushTokenInfo #3");
+                    
                     pushTokenInfo = data; // 데이터 설정 
                     
                     __callback?.Invoke();

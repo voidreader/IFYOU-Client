@@ -1062,7 +1062,17 @@ namespace PIERStory
                 else
                 {
                     pushTokenInfo = null;
-                    Debug.LogError(string.Format("### QueryToken response failed. Error : {0}", error));
+                    // Debug.LogError(string.Format("### QueryToken response failed. Error : {0}", error));
+                    Debug.Log(string.Format("code:{0}, message:{1}", error.code, error.message));
+
+                    GamebaseError moduleError = error.error; // GamebaseError.error object from external module
+                    if (null != moduleError)
+                    {
+                        int moduleErrorCode = moduleError.code;
+                        string moduleErrorMessage = moduleError.message;
+
+                        Debug.Log(string.Format("moduleErrorCode:{0}, moduleErrorMessage:{1}", moduleErrorCode, moduleErrorMessage));
+                    }
                     
                 }
 

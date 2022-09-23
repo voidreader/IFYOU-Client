@@ -89,7 +89,7 @@ namespace PIERStory {
             }
             else
             {
-                if(!SystemManager.main.pushTokenInfo.agreement.pushEnabled || SystemManager.main.pushTokenInfo.agreement.adAgreement) {
+                if(!SystemManager.main.pushTokenInfo.agreement.pushEnabled || !SystemManager.main.pushTokenInfo.agreement.adAgreement) {
                     pushAlert.sprite = spriteToggleOff;
                     toggleIconPos.anchoredPosition = toggleOffPosition;
                 }

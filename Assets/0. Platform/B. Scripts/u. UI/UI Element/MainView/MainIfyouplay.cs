@@ -466,7 +466,13 @@ namespace PIERStory
 
             UserManager.main.userIfyouPlayJson[LobbyConst.NODE_MISSION_AD_REWARD] = result[LobbyConst.NODE_MISSION_AD_REWARD];
             
+            // 데일리 미션도 업데이트 해준다. 
+            if(result.ContainsKey(LobbyConst.NODE_DAILY_MISSION)) 
+                UserManager.main.userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION] = result[LobbyConst.NODE_DAILY_MISSION];
+            
             OnRefreshMissionAdvertisementPart?.Invoke();
+            OnRefreshDailyMissionPart?.Invoke();
+            ViewMain.OnRefreshIfyouplayNewSign?.Invoke();
         }
 
 

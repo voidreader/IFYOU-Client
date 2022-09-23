@@ -1028,7 +1028,7 @@ namespace PIERStory
         /// <summary>
         /// 푸시 토큰 정보 불러오기 
         /// </summary>
-        public void QueryPushTokenInfo()
+        public void QueryPushTokenInfo(Action __callback)
         {
 
             if (Application.isEditor)
@@ -1042,6 +1042,10 @@ namespace PIERStory
                 if (Gamebase.IsSuccess(error))
                 {
                     pushTokenInfo = data; // 데이터 설정 
+                    
+                    __callback?.Invoke();
+                    
+                    
                     if(!pushTokenInfo.agreement.pushEnabled) {
                         Debug.Log("Push is disable");
                         return;

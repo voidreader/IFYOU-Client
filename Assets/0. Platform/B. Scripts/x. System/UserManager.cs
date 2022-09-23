@@ -282,7 +282,7 @@ namespace PIERStory
             RequestServiceStoryList();
 
             // 푸시 토큰
-            SystemManager.main.QueryPushTokenInfo();
+            SystemManager.main.QueryPushTokenInfo(null);
         }
 
         /// <summary>
@@ -3282,6 +3282,12 @@ namespace PIERStory
             else if(result.ContainsKey(LobbyConst.NODE_MISSION_AD_REWARD) && UserManager.main.userIfyouPlayJson != null) {
                 UserManager.main.userIfyouPlayJson[LobbyConst.NODE_MISSION_AD_REWARD] = result[LobbyConst.NODE_MISSION_AD_REWARD];
                 MainIfyouplay.OnRefreshMissionAdvertisementPart?.Invoke();
+            }
+            
+            
+            if(result.ContainsKey(LobbyConst.NODE_DAILY_MISSION)) {
+                UserManager.main.userIfyouPlayJson[LobbyConst.NODE_DAILY_MISSION] = result[LobbyConst.NODE_DAILY_MISSION];
+                MainIfyouplay.OnRefreshDailyMissionPart?.Invoke();
             }
             
             

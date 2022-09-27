@@ -4,7 +4,7 @@ using UnityEngine;
 
 using LitJson;
 using BestHTTP;
-using Sirenix.OdinInspector;
+
 using Doozy.Runtime.Signals;
 
 
@@ -106,15 +106,15 @@ namespace PIERStory
         #region 선택한 작품의 캐릭터 모델 데이터 
         JsonData modelJson = null; // 프로젝트 모델 JSON 
         Dictionary<string, JsonData> DictProjectModel; // 프로젝트 모델의 Dictionary (캐릭터이름 - Json 조합)
-        [ShowInInspector] Dictionary<string, string> DictProjectModelDebug; // Debug 
+        
 
         JsonData liveIllustJson = null; // 프로젝트 라이브 일러스트 JSON
         Dictionary<string, JsonData> DictProjectLiveIllust; // 라이브 일러스트 Dictionary 일러스트이름 - JSON 조합
-        [ShowInInspector] Dictionary<string, string> DictProjectLiveIllustDebug; // Debug 
+        
 
         JsonData liveObjectJson = null; // 프로젝트 라이브 오브젝트 JSON 
         Dictionary<string, JsonData> DictProjectLiveObject; // 라이브 오브젝트 Dictionary 오브젝트이름 - JSON 조합
-        [ShowInInspector] Dictionary<string, string> DictProjectLiveObjectDebug; // Debug 
+        
 
         #endregion
 
@@ -987,7 +987,7 @@ namespace PIERStory
         void SetProjectLiveObjectDictionary()
         {
             DictProjectLiveObject = new Dictionary<string, JsonData>();
-            DictProjectLiveObjectDebug = new Dictionary<string, string>();
+            
 
             Debug.Log("liveObjectJson count : " + liveObjectJson.Count); // 카운트 체크 
 
@@ -995,7 +995,7 @@ namespace PIERStory
             foreach (string key in liveObjectJson.Keys)
             {
                 DictProjectLiveObject.Add(key, liveObjectJson[key]);
-                DictProjectLiveObjectDebug.Add(key, JsonMapper.ToStringUnicode(liveObjectJson[key]));
+                
             }
         }
 
@@ -1020,7 +1020,7 @@ namespace PIERStory
         void SetProjectLiveIllustDictionary()
         {
             DictProjectLiveIllust = new Dictionary<string, JsonData>();
-            DictProjectLiveIllustDebug = new Dictionary<string, string>();
+            
 
             Debug.Log("liveIllustJson count : " + liveIllustJson.Count); // 카운트 체크 
 
@@ -1028,7 +1028,7 @@ namespace PIERStory
             foreach (string key in liveIllustJson.Keys)
             {
                 DictProjectLiveIllust.Add(key, liveIllustJson[key]);
-                DictProjectLiveIllustDebug.Add(key, JsonMapper.ToStringUnicode(liveIllustJson[key]));
+                
             }
         }
 
@@ -1053,7 +1053,7 @@ namespace PIERStory
         void SetProjectModelDictionary()
         {
             DictProjectModel = new Dictionary<string, JsonData>();
-            DictProjectModelDebug = new Dictionary<string, string>();
+            
 
             Debug.Log("modelJson count : " + modelJson.Count); // 카운트 체크 
 
@@ -1061,7 +1061,7 @@ namespace PIERStory
             foreach (string key in modelJson.Keys)
             {
                 DictProjectModel.Add(key, modelJson[key]);
-                DictProjectModelDebug.Add(key, JsonMapper.ToStringUnicode(modelJson[key]));
+                
             }
         }
         

@@ -661,9 +661,9 @@ namespace PIERStory {
             AdManager.main.isPaidSelection = true; // 유료 선택지 선택됨
 
             // 22.04.06 과금 선택지 5회 업적 클리어에 대한 조건문 추가하기
-            NetworkLoader.main.RequestIFYOUAchievement(5);
+            // NetworkLoader.main.RequestIFYOUAchievement(5);
 
-            NetworkLoader.main.RequestIFYOUAchievement(20);
+            // NetworkLoader.main.RequestIFYOUAchievement(20);
 
             selectionPurchaseStart = false;
 

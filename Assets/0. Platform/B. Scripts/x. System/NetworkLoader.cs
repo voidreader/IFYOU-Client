@@ -539,8 +539,8 @@ namespace PIERStory
             // UserManager에 갱신해준다. 
             UserManager.main.SetVoiceOpen(response.DataAsText);
 
-            if (UserManager.main.ProjectAllClear())
-                RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
+            // if (UserManager.main.ProjectAllClear())
+            //     RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
         }
 
        
@@ -767,10 +767,10 @@ namespace PIERStory
 
 
         /// <summary>
-        /// 이프유 업적 통신
+        /// 이프유 업적 통신 (2022.09.27 사용하지 않음)
         /// </summary>
         /// <param name="__achievementType"></param>
-        public void RequestIFYOUAchievement(int __achievementType, int __projectId = -1, int __episodeId = -1)
+        void RequestIFYOUAchievement__legacy(int __achievementType, int __projectId = -1, int __episodeId = -1)
         {
             JsonData sending = new JsonData();
             sending[CommonConst.FUNC] = "requestAchievementMain";

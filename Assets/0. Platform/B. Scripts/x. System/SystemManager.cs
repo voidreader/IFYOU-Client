@@ -1352,7 +1352,7 @@ namespace PIERStory
             UserManager.main.accountLink = "link";
 
             // 22.04.06 첫 계정 연동을 했으므로 초심자 업적 업데이트 호출도 해준다
-            NetworkLoader.main.RequestIFYOUAchievement(1);
+            // NetworkLoader.main.RequestIFYOUAchievement(1);
 
             // Refresh 처리 
             PopupAccount.OnRefresh?.Invoke();
@@ -1429,7 +1429,7 @@ namespace PIERStory
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
             Debug.Log(string.Format("#### RoutineLoadingConnectedAccount Load user done [{0}]", UserManager.main.userKey));
-            NetworkLoader.main.RequestIFYOUAchievement(1);
+            // NetworkLoader.main.RequestIFYOUAchievement(1);
 
             // 연동이 완료되었습니다.
             ShowSystemPopupLocalize("6112", null, null, true, false);

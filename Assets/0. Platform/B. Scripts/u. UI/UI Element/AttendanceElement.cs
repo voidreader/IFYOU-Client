@@ -131,9 +131,9 @@ namespace PIERStory
 
 
             // 이프유 업적
-            NetworkLoader.main.RequestIFYOUAchievement(2);
+            // NetworkLoader.main.RequestIFYOUAchievement(2);
 
-            NetworkLoader.main.RequestIFYOUAchievement(7);
+            // NetworkLoader.main.RequestIFYOUAchievement(7);
 
             SystemManager.ShowSimpleAlertLocalize("5013", false);
             MainIfyouplay.OnRefreshIfyouplay?.Invoke();

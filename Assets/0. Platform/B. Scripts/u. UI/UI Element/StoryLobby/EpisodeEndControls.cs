@@ -57,8 +57,8 @@ namespace PIERStory {
                 SetEndingNotification();
 
                 // 다음으로 이어질 화가 히든엔딩이고, 이번에 해금되는 것이라면? 업적 통신!
-                if (currentEpisodeData.endingType == LobbyConst.COL_HIDDEN && !currentEpisodeData.endingOpen)
-                    NetworkLoader.main.RequestIFYOUAchievement(9);
+                // if (currentEpisodeData.endingType == LobbyConst.COL_HIDDEN && !currentEpisodeData.endingOpen)
+                //     NetworkLoader.main.RequestIFYOUAchievement(9);
 
                 // 다음화의 EpisodeData의 엔딩 해금을 true로 만들어준다
                 for(int i=0;i<StoryManager.main.ListCurrentProjectEpisodes.Count;i++)
@@ -71,8 +71,8 @@ namespace PIERStory {
                         StoryManager.main.ListCurrentProjectEpisodes[i].endingOpen = true;
 
                         // 엔딩 해금을 true로 변경해준 뒤에 allClear 체크를 해서 통신한다
-                        if (UserManager.main.ProjectAllClear())
-                            NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
+                        // if (UserManager.main.ProjectAllClear())
+                        //     NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
 
                         break;
                     }

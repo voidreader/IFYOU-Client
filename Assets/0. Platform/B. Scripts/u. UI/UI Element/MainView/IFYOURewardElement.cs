@@ -247,10 +247,10 @@ namespace PIERStory
             // 뱅크..
             UserManager.main.SetBankInfo(result);
             
-                        // 이프유 업적
-            NetworkLoader.main.RequestIFYOUAchievement(2);
+            // 이프유 업적
+            // NetworkLoader.main.RequestIFYOUAchievement(2);
 
-            NetworkLoader.main.RequestIFYOUAchievement(7);
+            // NetworkLoader.main.RequestIFYOUAchievement(7);
             
         }
 

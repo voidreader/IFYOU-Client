@@ -1510,8 +1510,8 @@ namespace PIERStory
             
             
             // 프로젝트 클리어 했는지 체크
-            if (ProjectAllClear())
-                NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));            
+            // if (ProjectAllClear())
+            //     NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));            
             
             NetworkLoader.main.RequestUnlockMission(__missionData);
             
@@ -2175,7 +2175,7 @@ namespace PIERStory
             currentStoryJson[NODE_SELECTION_PROGRESS] = result;
 
             // 업적용 선택지 고른 횟수 체크
-            NetworkLoader.main.RequestIFYOUAchievement(13);
+            // NetworkLoader.main.RequestIFYOUAchievement(13);
         }
 
         public void CallbackUpdateSelectionCurrent(HTTPRequest req, HTTPResponse res)
@@ -2271,10 +2271,10 @@ namespace PIERStory
             UserManager.main.SetStoryAbilityDictionary(resultEpisodeReset[NODE_USER_ABILITY]);
 
             // 첫화로 에피소드 리셋하는 경우 호출하는 이프유 업적
-            if (NetworkLoader.main.isFirstEpisode)
-                NetworkLoader.main.RequestIFYOUAchievement(16, -1, NetworkLoader.main.resetTargetEpisodeId);
+            // if (NetworkLoader.main.isFirstEpisode)
+            //     NetworkLoader.main.RequestIFYOUAchievement(16, -1, NetworkLoader.main.resetTargetEpisodeId);
 
-            NetworkLoader.main.RequestIFYOUAchievement(17, -1, NetworkLoader.main.resetTargetEpisodeId);
+            // NetworkLoader.main.RequestIFYOUAchievement(17, -1, NetworkLoader.main.resetTargetEpisodeId);
 
             // 알림 팝업 후 목록화면 갱신처리 
             SystemManager.ShowSystemPopupLocalize("6167", null, null, true, false);
@@ -2391,9 +2391,9 @@ namespace PIERStory
 
 
             // 22.04.06 기다무 시간 단축 초심자 클리어 했는지 체크도 해야함
-            NetworkLoader.main.RequestIFYOUAchievement(6);
+            // NetworkLoader.main.RequestIFYOUAchievement(6);
 
-            NetworkLoader.main.RequestIFYOUAchievement(14);
+            // NetworkLoader.main.RequestIFYOUAchievement(14);
 
             // StoryLobbyMain 리프레시 요청 
             // 게임씬과 로비씬에서 담당 스크립트가 다르다 .
@@ -2464,8 +2464,8 @@ namespace PIERStory
             SetNodeUserGalleryImages(responseData[NODE_USER_GALLERY_IMAGES]);
 
             // 이프유 업적(8.완벽주의자) 통신하기
-            if (ProjectAllClear())
-                NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
+            // if (ProjectAllClear())
+            //     NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
         }
 
         /// <summary>
@@ -2485,8 +2485,8 @@ namespace PIERStory
             // Node 갱신
             SetNodeUserGalleryImages(responseData[NODE_USER_GALLERY_IMAGES]);
 
-            if (ProjectAllClear())
-                NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
+            // if (ProjectAllClear())
+            //     NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
         }
 
 
@@ -2631,8 +2631,8 @@ namespace PIERStory
             // * 에피소드 관련 미션과 첫클리어 보상에 대한 처리는 GameManager에서 진행한다. 2022.07.27
 
             // 현재 플레이한 에피소드가 정규 에피소드인 경우 이프유 업적 통신하기
-            if (GameManager.main != null && GameManager.main.currentEpisodeData.episodeType == EpisodeType.Chapter)
-                NetworkLoader.main.RequestIFYOUAchievement(12, -1, int.Parse(StoryManager.main.CurrentEpisodeID));
+            // if (GameManager.main != null && GameManager.main.currentEpisodeData.episodeType == EpisodeType.Chapter)
+            //     NetworkLoader.main.RequestIFYOUAchievement(12, -1, int.Parse(StoryManager.main.CurrentEpisodeID));
 
             NetworkLoader.main.IncreaseDailyMissionCount(2);
         }
@@ -3740,10 +3740,10 @@ namespace PIERStory
 
 
         /// <summary>
-        /// 작품의 갤러리, 미션, 스페셜, 엔딩 모두 오픈했는지 체크
+        /// 작품의 갤러리, 미션, 스페셜, 엔딩 모두 오픈했는지 체크 (2022.09.27 사용하지 않음)
         /// </summary>
         /// <returns></returns>
-        public bool ProjectAllClear()
+        bool ProjectAllClear__legacy()
         {
             // 갤러리 모두 획득했는지 체크
             for (int i = 0; i < currentStoryJson[NODE_USER_GALLERY_IMAGES].Count; i++)

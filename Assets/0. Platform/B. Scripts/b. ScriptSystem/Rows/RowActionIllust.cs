@@ -65,7 +65,7 @@ namespace PIERStory
                 id = data[0]["live_illust_id"].ToString();
 
                 // 22.04.06 초심자에서 첫 라이브 일러스트 오픈인지 체크를 해야 하므로 조건문이 하나 붙어야 함
-                NetworkLoader.main.RequestIFYOUAchievement(4);
+                // NetworkLoader.main.RequestIFYOUAchievement(4);
             }
             
 

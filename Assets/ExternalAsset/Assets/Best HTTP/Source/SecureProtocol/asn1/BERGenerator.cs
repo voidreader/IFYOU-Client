@@ -6,7 +6,7 @@ using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.IO;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 {
-    public class BerGenerator
+    public abstract class BerGenerator
         : Asn1Generator
     {
         private bool      _tagged = false;
@@ -19,7 +19,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
         {
         }
 
-        public BerGenerator(
+        protected BerGenerator(
             Stream outStream,
             int tagNo,
             bool isExplicit)
@@ -30,13 +30,17 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
             _tagNo = tagNo;
         }
 
-		public override void AddObject(
-			Asn1Encodable obj)
+		public override void AddObject(Asn1Encodable obj)
 		{
-			new BerOutputStream(Out).WriteObject(obj);
+            obj.EncodeTo(Out);
 		}
 
-		public override Stream GetRawOutputStream()
+        public override void AddObject(Asn1Object obj)
+        {
+            obj.EncodeTo(Out);
+        }
+
+        public override Stream GetRawOutputStream()
         {
             return Out;
         }
@@ -58,7 +62,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
         {
             if (_tagged)
             {
-                int tagNum = _tagNo | Asn1Tags.Tagged;
+                int tagNum = _tagNo | Asn1Tags.ContextSpecific;
 
                 if (_isExplicit)
                 {

@@ -10,9 +10,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Digests
     * base implementation of MD4 family style digest as outlined in
     * "Handbook of Applied Cryptography", pages 344 - 347.
     */
-    [BestHTTP.PlatformSupport.IL2CPP.Il2CppSetOption(BestHTTP.PlatformSupport.IL2CPP.Option.NullChecks, false)]
-    [BestHTTP.PlatformSupport.IL2CPP.Il2CppSetOption(BestHTTP.PlatformSupport.IL2CPP.Option.ArrayBoundsChecks, false)]
-    [BestHTTP.PlatformSupport.IL2CPP.Il2CppSetOption(BestHTTP.PlatformSupport.IL2CPP.Option.DivideByZeroChecks, false)]
+    
+    
+    
     [BestHTTP.PlatformSupport.IL2CPP.Il2CppEagerStaticClassConstructionAttribute]
     public abstract class GeneralDigest
 		: IDigest, IMemoable
@@ -104,11 +104,6 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Digests
                 while (i < length)
                     pxBuf[xBufOff++] = pinput[inOff + i++];
             }
-
-            //int len = length - i;
-            //Array.Copy(input, inOff + i, xBuf, xBufOff, len);
-            //xBufOff += len;
-            //i += len;
 
             byteCount += length;
         }

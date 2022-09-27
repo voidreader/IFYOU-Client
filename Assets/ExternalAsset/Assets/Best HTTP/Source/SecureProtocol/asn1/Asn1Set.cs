@@ -281,7 +281,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
             byte[][] keys = new byte[count][];
             for (int i = 0; i < count; ++i)
             {
-                keys[i] = elements[i].GetEncoded(Asn1Encodable.Der);
+                keys[i] = elements[i].GetEncoded(Der);
             }
             Array.Sort(keys, elements, new DerComparer());
 #endif

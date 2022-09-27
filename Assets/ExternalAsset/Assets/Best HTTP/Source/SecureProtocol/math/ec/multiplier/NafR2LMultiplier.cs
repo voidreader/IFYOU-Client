@@ -1,10 +1,13 @@
 #if !BESTHTTP_DISABLE_ALTERNATE_SSL && (!UNITY_WEBGL || UNITY_EDITOR)
 #pragma warning disable
+using System;
+
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Multiplier
 {
     /**
      * Class implementing the NAF (Non-Adjacent Form) multiplication algorithm (right-to-left).
      */
+
     public class NafR2LMultiplier 
         : AbstractECMultiplier
     {

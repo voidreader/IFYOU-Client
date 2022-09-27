@@ -2,85 +2,95 @@
 #pragma warning disable
 using System;
 using System.Collections;
-using System.Diagnostics;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 {
-	internal class LazyDerSequence
-		: DerSequence
-	{
-		private byte[] encoded;
+    internal class LazyDerSequence
+        : DerSequence
+    {
+        private byte[] encoded;
 
-        internal LazyDerSequence(
-			byte[] encoded)
-		{
-			this.encoded = encoded;
-		}
+        internal LazyDerSequence(byte[] encoded)
+            : base()
+        {
+            if (null == encoded)
+                throw new ArgumentNullException("encoded");
 
-		private void Parse()
-		{
-			lock (this)
-			{
+            this.encoded = encoded;
+        }
+
+        private void Parse()
+        {
+            lock (this)
+            {
                 if (null != encoded)
                 {
-                    Asn1EncodableVector v = new Asn1EncodableVector();
                     Asn1InputStream e = new LazyAsn1InputStream(encoded);
-
-                    Asn1Object o;
-                    while ((o = e.ReadObject()) != null)
-                    {
-                        v.Add(o);
-                    }
+                    Asn1EncodableVector v = e.ReadVector();
 
                     this.elements = v.TakeElements();
                     this.encoded = null;
                 }
-			}
-		}
+            }
+        }
 
-		public override Asn1Encodable this[int index]
-		{
-			get
-			{
-				Parse();
+        public override Asn1Encodable this[int index]
+        {
+            get
+            {
+                Parse();
 
-				return base[index];
-			}
-		}
+                return base[index];
+            }
+        }
 
-		public override IEnumerator GetEnumerator()
-		{
-			Parse();
+        public override IEnumerator GetEnumerator()
+        {
+            Parse();
 
-			return base.GetEnumerator();
-		}
+            return base.GetEnumerator();
+        }
 
-		public override int Count
-		{
-			get
-			{
-				Parse();
+        public override int Count
+        {
+            get
+            {
+                Parse();
 
-				return base.Count;
-			}
-		}
+                return base.Count;
+            }
+        }
 
-		internal override void Encode(
-			DerOutputStream derOut)
-		{
-			lock (this)
-			{
-				if (encoded == null)
-				{
-					base.Encode(derOut);
-				}
-				else
-				{
-					derOut.WriteEncoded(Asn1Tags.Sequence | Asn1Tags.Constructed, encoded);
-				}
-			}
-		}
-	}
+        internal override int EncodedLength(bool withID)
+        {
+            lock (this)
+            {
+                if (encoded == null)
+                {
+                    return base.EncodedLength(withID);
+                }
+                else
+                {
+                    return Asn1OutputStream.GetLengthOfEncodingDL(withID, encoded.Length);
+                }
+            }
+        }
+
+        internal override void Encode(Asn1OutputStream asn1Out, bool withID)
+        {
+            lock (this)
+            {
+                if (encoded == null)
+                {
+                    base.Encode(asn1Out, withID);
+                }
+                else
+                {
+                    asn1Out.WriteEncodingDL(withID, Asn1Tags.Constructed | Asn1Tags.Sequence, encoded);
+                }
+            }
+        }
+    }
 }
 #pragma warning restore
 #endif

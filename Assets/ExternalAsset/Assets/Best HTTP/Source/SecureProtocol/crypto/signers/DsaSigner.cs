@@ -2,10 +2,10 @@
 #pragma warning disable
 using System;
 
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Digests;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Security;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Signers
 {
@@ -106,7 +106,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Signers
 
             BigInteger r = parameters.G.ModPow(k, parameters.P).Mod(q);
 
-            k = k.ModInverse(q).Multiply(m.Add(x.Multiply(r)));
+            k = BigIntegers.ModOddInverse(q, k).Multiply(m.Add(x.Multiply(r)));
 
             BigInteger s = k.Mod(q);
 
@@ -134,7 +134,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Signers
                 return false;
             }
 
-            BigInteger w = s.ModInverse(q);
+            BigInteger w = BigIntegers.ModOddInverseVar(q, s);
 
             BigInteger u1 = m.Multiply(w).Mod(q);
             BigInteger u2 = r.Multiply(w).Mod(q);

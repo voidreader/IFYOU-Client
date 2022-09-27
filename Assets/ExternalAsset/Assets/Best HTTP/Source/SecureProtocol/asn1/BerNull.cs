@@ -7,31 +7,16 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1
 	/**
 	 * A BER Null object.
 	 */
+
 	public class BerNull
 		: DerNull
 	{
-		public static new readonly BerNull Instance = new BerNull(0);
 
+        public static new readonly BerNull Instance = new BerNull();
 
-		public BerNull()
+		private BerNull()
+            : base()
 		{
-		}
-
-		private BerNull(int dummy) : base(dummy)
-		{
-		}
-
-		internal override void Encode(
-			DerOutputStream  derOut)
-		{
-			if (derOut is Asn1OutputStream || derOut is BerOutputStream)
-			{
-				derOut.WriteByte(Asn1Tags.Null);
-			}
-			else
-			{
-				base.Encode(derOut);
-			}
 		}
 	}
 }

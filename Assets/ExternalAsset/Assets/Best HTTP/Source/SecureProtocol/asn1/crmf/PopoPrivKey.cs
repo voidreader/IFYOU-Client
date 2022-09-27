@@ -46,7 +46,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Crmf
 
         public static PopoPrivKey GetInstance(Asn1TaggedObject tagged, bool isExplicit)
         {
-            return new PopoPrivKey(Asn1TaggedObject.GetInstance(tagged.GetObject()));
+            return new PopoPrivKey(Asn1TaggedObject.GetInstance(tagged, true));
         }
 
         public PopoPrivKey(SubsequentMessage msg)

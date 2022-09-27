@@ -3,20 +3,22 @@
 using System;
 using System.Diagnostics;
 
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Utilities;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.Raw;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Security;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.GM
 {
     internal class SM2P256V1Field
     {
         // 2^256 - 2^224 - 2^96 + 2^64 - 1
-        internal static readonly uint[] P = new uint[]{ 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-            0xFFFFFFFF, 0xFFFFFFFE };
-        internal static readonly uint[] PExt = new uint[]{ 00000001, 0x00000000, 0xFFFFFFFE, 0x00000001, 0x00000001,
+        internal static readonly uint[] P = new uint[]{ 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF,
+            0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFE };
+        private static readonly uint[] PExt = new uint[]{ 00000001, 0x00000000, 0xFFFFFFFE, 0x00000001, 0x00000001,
             0xFFFFFFFE, 0x00000000, 0x00000002, 0xFFFFFFFE, 0xFFFFFFFD, 0x00000003, 0xFFFFFFFE, 0xFFFFFFFF, 0xFFFFFFFF,
             0x00000000, 0xFFFFFFFE };
-        internal const uint P7 = 0xFFFFFFFE;
-        internal const uint PExt15 = 0xFFFFFFFE;
+        private const uint P7 = 0xFFFFFFFE;
+        private const uint PExt15 = 0xFFFFFFFE;
 
         public static void Add(uint[] x, uint[] y, uint[] z)
         {
@@ -47,12 +49,17 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.GM
 
         public static uint[] FromBigInteger(BigInteger x)
         {
-            uint[] z = Nat256.FromBigInteger(x);
+            uint[] z = Nat.FromBigInteger(256, x);
             if (z[7] >= P7 && Nat256.Gte(z, P))
             {
                 Nat256.SubFrom(P, z);
             }
             return z;
+        }
+
+        public static void Inv(uint[] x, uint[] z)
+        {
+            Mod.CheckedModOddInverse(P, x, z);
         }
 
         public static void Half(uint[] x, uint[] z)
@@ -66,6 +73,17 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.GM
                 uint c = Nat256.Add(x, P, z);
                 Nat.ShiftDownBit(8, z, c);
             }
+        }
+
+        public static int IsZero(uint[] x)
+        {
+            uint d = 0;
+            for (int i = 0; i < 8; ++i)
+            {
+                d |= x[i];
+            }
+            d = (d >> 1) | (d & 1);
+            return ((int)d - 1) >> 31;
         }
 
         public static void Multiply(uint[] x, uint[] y, uint[] z)
@@ -86,14 +104,34 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC.Custom.GM
 
         public static void Negate(uint[] x, uint[] z)
         {
-            if (Nat256.IsZero(x))
+            if (0 != IsZero(x))
             {
-                Nat256.Zero(z);
+                Nat256.Sub(P, P, z);
             }
             else
             {
                 Nat256.Sub(P, x, z);
             }
+        }
+
+        public static void Random(SecureRandom r, uint[] z)
+        {
+            byte[] bb = new byte[8 * 4];
+            do
+            {
+                r.NextBytes(bb);
+                Pack.LE_To_UInt32(bb, 0, z, 0, 8);
+            }
+            while (0 == Nat.LessThan(8, z, P));
+        }
+
+        public static void RandomMult(SecureRandom r, uint[] z)
+        {
+            do
+            {
+                Random(r, z);
+            }
+            while (0 != IsZero(z));
         }
 
         public static void Reduce(uint[] xx, uint[] z)

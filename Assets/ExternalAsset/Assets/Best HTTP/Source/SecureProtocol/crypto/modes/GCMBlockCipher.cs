@@ -15,9 +15,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Modes
     /// Implements the Galois/Counter mode (GCM) detailed in
     /// NIST Special Publication 800-38D.
     /// </summary>
-    [BestHTTP.PlatformSupport.IL2CPP.Il2CppSetOption(BestHTTP.PlatformSupport.IL2CPP.Option.NullChecks, false)]
-    [BestHTTP.PlatformSupport.IL2CPP.Il2CppSetOption(BestHTTP.PlatformSupport.IL2CPP.Option.ArrayBoundsChecks, false)]
-    [BestHTTP.PlatformSupport.IL2CPP.Il2CppSetOption(BestHTTP.PlatformSupport.IL2CPP.Option.DivideByZeroChecks, false)]
+    
+    
+    
     [BestHTTP.PlatformSupport.IL2CPP.Il2CppEagerStaticClassConstructionAttribute]
     public sealed class GcmBlockCipher
         : IAeadBlockCipher
@@ -52,11 +52,21 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Modes
         private ulong       atLength;
         private ulong       atLengthPre;
 
-        public GcmBlockCipher(IBlockCipher	c)
+        public GcmBlockCipher(
+            IBlockCipher c)
+            : this(c, null)
+        {
+        }
+
+        public GcmBlockCipher(
+            IBlockCipher	c,
+            IGcmMultiplier	m)
         {
             if (c.GetBlockSize() != BlockSize)
                 throw new ArgumentException("cipher required with a block size of " + BlockSize + ".");
 
+			if (m != null)
+				throw new NotImplementedException("IGcmMultiplier");
             this.cipher = c;
         }
 

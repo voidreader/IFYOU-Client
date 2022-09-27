@@ -3,6 +3,7 @@
 using System;
 
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Cms;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X509;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Cms;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto;
@@ -10,32 +11,22 @@ using BestHTTP.SecureProtocol.Org.BouncyCastle.X509;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Operators
 {
+    /// <deprecated>Use KeyTransRecipientInfoGenerator</deprecated>
     public class CmsKeyTransRecipientInfoGenerator
         : KeyTransRecipientInfoGenerator
     {
-        private readonly IKeyWrapper keyWrapper;
-
         public CmsKeyTransRecipientInfoGenerator(X509Certificate recipCert, IKeyWrapper keyWrapper)
-            : base(new Asn1.Cms.IssuerAndSerialNumber(recipCert.IssuerDN, new DerInteger(recipCert.SerialNumber)))
+            : base(new Asn1.Cms.IssuerAndSerialNumber(recipCert.IssuerDN, new DerInteger(recipCert.SerialNumber)), keyWrapper)
         {
-            this.keyWrapper = keyWrapper;
-            this.RecipientCert = recipCert;
-            this.RecipientPublicKey = recipCert.GetPublicKey();
         }
 
-        public CmsKeyTransRecipientInfoGenerator(byte[] subjectKeyID, IKeyWrapper keyWrapper) : base(subjectKeyID)
+        public CmsKeyTransRecipientInfoGenerator(IssuerAndSerialNumber issuerAndSerial, IKeyWrapper keyWrapper)
+            : base(issuerAndSerial, keyWrapper)
         {
-            this.keyWrapper = keyWrapper;
         }
 
-        protected override AlgorithmIdentifier AlgorithmDetails
+        public CmsKeyTransRecipientInfoGenerator(byte[] subjectKeyID, IKeyWrapper keyWrapper) : base(subjectKeyID, keyWrapper)
         {
-            get { return (AlgorithmIdentifier)keyWrapper.AlgorithmDetails; }
-        }
-
-        protected override byte[] GenerateWrappedKey(Crypto.Parameters.KeyParameter contentKey)
-        {
-            return keyWrapper.Wrap(contentKey.GetKey()).Collect();
         }
     }
 }

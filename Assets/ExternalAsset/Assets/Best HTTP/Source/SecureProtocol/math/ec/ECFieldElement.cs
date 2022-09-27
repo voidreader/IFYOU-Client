@@ -3,7 +3,6 @@
 using System;
 using System.Diagnostics;
 
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Math.Raw;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC
@@ -436,13 +435,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Math.EC
 
         protected virtual BigInteger ModInverse(BigInteger x)
         {
-            int bits = FieldSize;
-            int len = (bits + 31) >> 5;
-            uint[] p = Nat.FromBigInteger(bits, q);
-            uint[] n = Nat.FromBigInteger(bits, x);
-            uint[] z = Nat.Create(len);
-            Mod.Invert(p, n, z);
-            return Nat.ToBigInteger(len, z);
+            return BigIntegers.ModOddInverse(q, x);
         }
 
         protected virtual BigInteger ModMult(BigInteger x1, BigInteger x2)

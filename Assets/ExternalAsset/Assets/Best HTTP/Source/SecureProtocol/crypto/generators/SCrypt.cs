@@ -7,6 +7,7 @@ using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Digests;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Engines;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Utilities;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
 
 namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Generators
 {
@@ -66,11 +67,22 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Generators
 
 				Pack.LE_To_UInt32(bytes, 0, B);
 
+                /*
+                 * Chunk memory allocations; We choose 'd' so that there will be 2**d chunks, each not
+                 * larger than 32KiB, except that the minimum chunk size is 2 * r * 32.
+                 */
+                int d = 0, total = N * r;
+                while ((N - d) > 2 && total > (1 << 10))
+                {
+                    ++d;
+                    total >>= 1;
+                }
+
 				int MFLenWords = MFLenBytes >> 2;
 				for (int BOff = 0; BOff < BLen; BOff += MFLenWords)
 				{
 					// TODO These can be done in parallel threads
-					SMix(B, BOff, N, r);
+                    SMix(B, BOff, N, d, r);
 				}
 
 				Pack.UInt32_To_LE(B, bytes, 0);
@@ -91,8 +103,12 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Generators
 			return key.GetKey();
 		}
 
-		private static void SMix(uint[] B, int BOff, int N, int r)
+		private static void SMix(uint[] B, int BOff, int N, int d, int r)
 		{
+            int powN = Integers.NumberOfTrailingZeros(N);
+            int blocksPerChunk = N >> d;
+            int chunkCount = 1 << d, chunkMask = blocksPerChunk - 1, chunkPow = powN - d;
+
 			int BCount = r * 32;
 
 			uint[] blockX1 = new uint[16];
@@ -100,14 +116,19 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Generators
 			uint[] blockY = new uint[BCount];
 
 			uint[] X = new uint[BCount];
-            uint[] V = new uint[N * BCount];
+            uint[][] VV = new uint[chunkCount][];
 
 			try
 			{
 				Array.Copy(B, BOff, X, 0, BCount);
 
+                for (int c = 0; c < chunkCount; ++c)
+                {
+                    uint[] V = new uint[blocksPerChunk * BCount];
+                    VV[c] = V;
+
                 int off = 0;
-                for (int i = 0; i < N; i += 2)
+                    for (int i = 0; i < blocksPerChunk; i += 2)
                 {
                     Array.Copy(X, 0, V, off, BCount);
                     off += BCount;
@@ -116,12 +137,15 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Generators
                     off += BCount;
                     BlockMix(blockY, blockX1, blockX2, X, r);
                 }
+                }
 
 				uint mask = (uint)N - 1;
 				for (int i = 0; i < N; ++i)
 				{
 					int j = (int)(X[BCount - 16] & mask);
-                    Array.Copy(V, j * BCount, blockY, 0, BCount);
+                    uint[] V = VV[j >> chunkPow];
+                    int VOff = (j & chunkMask) * BCount;
+                    Array.Copy(V, VOff, blockY, 0, BCount);
                     Xor(blockY, X, 0, blockY);
                     BlockMix(blockY, blockX1, blockX2, X, r);
                 }
@@ -130,7 +154,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Generators
 			}
 			finally
 			{
-				Clear(V);
+				ClearAll(VV);
 				ClearAll(X, blockX1, blockX2, blockY);
 			}
 		}

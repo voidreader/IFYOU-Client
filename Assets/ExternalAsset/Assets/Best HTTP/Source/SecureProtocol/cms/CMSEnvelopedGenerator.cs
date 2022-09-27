@@ -12,6 +12,7 @@ using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Pkcs;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X509;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X9;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Operators;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Security;
 using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
@@ -134,10 +135,9 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 		public void AddKeyTransRecipient(
 			X509Certificate cert)
 		{
-			KeyTransRecipientInfoGenerator ktrig = new KeyTransRecipientInfoGenerator();
-			ktrig.RecipientCert = cert;
-
-			recipientInfoGenerators.Add(ktrig);
+			TbsCertificateStructure recipientTbsCert = CmsUtilities.GetTbsCertificateStructure(cert);
+			SubjectPublicKeyInfo info = recipientTbsCert.SubjectPublicKeyInfo;
+			this.AddRecipientInfoGenerator(new KeyTransRecipientInfoGenerator(cert, new Asn1KeyWrapper(info.AlgorithmID.Algorithm, info.AlgorithmID.Parameters, cert)));
 		}
 
 		/**
@@ -151,11 +151,8 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Cms
 			AsymmetricKeyParameter	pubKey,
 			byte[]					subKeyId)
 		{
-			KeyTransRecipientInfoGenerator ktrig = new KeyTransRecipientInfoGenerator();
-			ktrig.RecipientPublicKey = pubKey;
-			ktrig.SubjectKeyIdentifier = new DerOctetString(subKeyId);
-
-			recipientInfoGenerators.Add(ktrig);
+			SubjectPublicKeyInfo info = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(pubKey);
+			this.AddRecipientInfoGenerator(new KeyTransRecipientInfoGenerator(subKeyId, new Asn1KeyWrapper(info.AlgorithmID.Algorithm, info.AlgorithmID.Parameters, pubKey)));
 		}
 
 		/**

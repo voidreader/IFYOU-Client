@@ -226,7 +226,7 @@ namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Encodings
              * Now the padding check, check for no 0 byte in the padding
              */
             int plen = encoded.Length - (
-                      pLen /* Lenght of the PMS */
+                      pLen /* Length of the PMS */
                     +  1 /* Final 0-byte before PMS */
             );
 

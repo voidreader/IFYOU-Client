@@ -23,7 +23,7 @@ namespace PIERStory
         public const string FUNC_LOGIN_CLIENT = "loginClient";
         public const string FUNC_SELECTED_STORY_INFO = "getUserSelectedStory";
         
-        public const string FUNC_SELECT_LOBBY_PROJECT_LIST = "getIfYouProjectList";
+        public const string FUNC_SELECT_LOBBY_PROJECT_LIST = "requestPlatformProjectList"; // 플랫폼 리스트 
         
         public const string FUNC_UPDATE_EPISODE_SCENE_RECORD = "updateUserProjectSceneHist"; // 씬 경험 기록
 
@@ -69,6 +69,7 @@ namespace PIERStory
         
         const string COL_COUNTRY = "country";
         const string COL_OS = "os";
+        const string COL_CULTURE = "culture";
 
 
         [SerializeField] int failCount = 0; // 통신 실패 카운트 
@@ -809,6 +810,7 @@ namespace PIERStory
             __j[COL_BUILD] = Application.identifier;
             __j[COL_COUNTRY] = Gamebase.GetCountryCodeOfDevice();
             __j[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
+            __j[COL_CULTURE] = UserManager.main.culture;
             __j[COL_OS] = 0;
             
             #if UNITY_IOS

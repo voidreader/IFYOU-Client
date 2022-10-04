@@ -15,6 +15,7 @@ namespace PIERStory
 
         public const string FUNC = "func";
         public const string COL_USERKEY = "userkey";
+        public const string COL_CULTURE = "current_culture";
 
         public const string COL_PROJECT_ID = "project_id";
         public const string COL_EPISODE_ID = "episode_id";

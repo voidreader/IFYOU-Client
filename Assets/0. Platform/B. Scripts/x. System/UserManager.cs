@@ -87,6 +87,7 @@ namespace PIERStory
 
         public string userKey = string.Empty;
         public string gamebaseID = string.Empty;
+        public string culture = string.Empty; // 유저 문화권 정보 2022.10.03
 
         // 튜토리얼 관련 정보
         public int tutorialStep = 1;
@@ -410,8 +411,6 @@ namespace PIERStory
             userJson = SystemManager.GetJsonNode(__accountInfo, "account"); // 유저 json 
 
             userKey = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_USERKEY);
-
-
             if (__accountInfo["tutorial"].Count > 0)
             {
                 tutorialStep = SystemManager.GetJsonNodeInt(__accountInfo["tutorial"][0], NODE_TUTORIAL_STEP);
@@ -441,6 +440,9 @@ namespace PIERStory
 
             // 이프유 패스 관련 변수 추가 2022.07.18
             ifyouPassDay = SystemManager.GetJsonNodeInt(userJson, "ifyou_pass_day");
+            
+            // 문화권 정보 
+            culture = SystemManager.GetJsonNodeString(userJson, CommonConst.COL_CULTURE); 
         }
 
         /// <summary>

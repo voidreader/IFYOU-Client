@@ -51,19 +51,17 @@ MonoBehaviour:
   debugBankString: 
   ListCoinIndicators: []
   ListGemIndicators: []
-  ListNicknameIndicators: []
-  DebugProjectIllusts: []
   completeReadUserData: 0
-  prevIllustProgress: -1
   useRecord: 1
   gameComplete: 0
   userKey: 
   gamebaseID: 
+  culture: 
   tutorialStep: 1
   tutorialClear: 0
   isSelectionTutorialClear: 0
   isHowToPlayClear: 0
-  adCharge: 0
+  ifyouPassDay: 0
   nickname: 
   accountLink: 
   gem: 0
@@ -138,6 +136,7 @@ MonoBehaviour:
   gamebaseLogger_ID: 
   currentGamebaseLanguageCode: en
   currentAppLanguageCode: EN
+  currentCountryCode: ZZ
   networkLoadingScreen: {fileID: 0}
   clientStatus: 200
   clientStatusString: 
@@ -156,6 +155,7 @@ MonoBehaviour:
     writer: 
     summary: 
     original: 
+    translator: 
     sortKey: 0
     bubbleSetID: 
     isCredit: 0
@@ -169,10 +169,14 @@ MonoBehaviour:
     episodeFinishImageKey: 
     premiumPassURL: 
     premiumPassKey: 
+    premiumBadgeURL: 
+    premiumBadgeKey: 
     categoryImageURL: 
     categoryImageKey: 
     coinBannerUrl: 
     coinBannerKey: 
+    introduceFullImageURL: 
+    introduceFullImageKey: 
     isLock: 0
     colorCode: 000000
     projectProgress: 0
@@ -183,11 +187,17 @@ MonoBehaviour:
     isSerial: 0
     listSerialDays: []
     passPrice: 0
+    discountPassPrice: 0
     passDiscount: 0.1
     isNotify: 0
     hitCount: 0
     likeCount: 0
     arrHashtag: []
+    onedayExpireDate: 
+    onedayPassTick: 0
+    hasPremiumPass: 0
+    premiumProductID: 
+    premiumSaleID: 
   givenEpisodeData:
     episodeID: 
     episodeNO: 
@@ -219,8 +229,12 @@ MonoBehaviour:
     isUnlock: 0
     isSerial: 0
     debugPublishData: 
+    unlockEpisodes: 
+    unlockScenes: 
+    arrUnlockEpisode: []
+    arrUnlockScene: []
+    isClear: 0
   isServerInfoReceived: 0
-  isAppCommonResourcesReceived: 0
   localVer: 0
   useProjectNotify: 0
   allowMissingResource: 1
@@ -232,14 +246,17 @@ MonoBehaviour:
   removeAdPrice: 100
   bundleURL: 
   contentsURL: 
+  addressable_version: 0
+  addressable_url: 
+  isApplicationFontAvailable: 0
   innerFontEN: {fileID: 11400000, guid: 44c966d58b971d949859c4d8f1d81378, type: 2}
   mainAssetFont: {fileID: 0}
   jaFont: {fileID: 0}
   koFont: {fileID: 0}
   arFont: {fileID: 11400000, guid: 0e3bf4d55d727034abeddb37306bc1fa, type: 2}
+  notoSansFont: {fileID: 11400000, guid: f62122bbd5de0ef48b803e1ae32474d5, type: 2}
   arNormalBubbleFont: {fileID: 11400000, guid: 310e8b959564244458fb09f843fe32e2, type: 2}
   spriteCoin: {fileID: 21300000, guid: 591d4e35bb9ad13489906320bf92e7bf, type: 3}
   spriteStar: {fileID: 21300000, guid: fecc9413d07148d41ad038a8aa5ee740, type: 3}
-  spriteFreepassIcon: {fileID: 0}
   spriteInappOriginIcon: {fileID: 21300000, guid: 1f2e9af76e72b95408c8ffc2aad64ad6, type: 3}
   spriteAllPassIcon: {fileID: 21300000, guid: ab49113d7278a3942b445b1a170628f1, type: 3}

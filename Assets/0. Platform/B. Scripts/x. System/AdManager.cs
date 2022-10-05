@@ -31,12 +31,13 @@ namespace PIERStory {
         public static Action OnShowAdvertisement;
         
         public static Action<bool> OnCompleteRewardAD = null; // 동영상 광고 보고 콜백
+        public bool isPaidSelection = false;
         
         // * Firebase
         // FirebaseApp app = null;
         int updatesBeforeException;
 
-        public bool isPaidSelection = false; // 유료 선택지 선택됨. 
+        
         
         // * 광고 도중 터치 막기 위한 변수.
         public bool isAdShowing = false; // 현재 광고가 보여지고 있다.
@@ -63,11 +64,14 @@ namespace PIERStory {
         [Header("Google Admob")]
         GoogleMobileAds.Api.RewardedAd admobRewardedAd; // 보상형광고 
         GoogleMobileAds.Api.InterstitialAd interstitial; // 전면광고 
+        GoogleMobileAds.Api.RewardedInterstitialAd rewardInterstitial; // 보상형 전면광고 
 
         
         [SerializeField] string admobRewardID = string.Empty;  // 애드몹 보상형 광고 ID 
         [SerializeField] string admobBannerID = string.Empty; // 애드몹 배너 광고 ID 
         [SerializeField] string admobInterstitialID = string.Empty; // 애드몹 전면 광고 ID
+        
+        [SerializeField] string admobRewardInterstitialID = string.Empty; // 애드몹 보상형 전면 광고 ID
         
         // 아래 플랫폼별 ID 인스펙터에서 초기화 
         [SerializeField] string admobRewardID_Anroid = string.Empty;
@@ -78,6 +82,8 @@ namespace PIERStory {
         
         [SerializeField] string admobInterstitialID_Anroid = string.Empty;
         [SerializeField] string admobInterstitialID_iOS = string.Empty;
+        [SerializeField] string admobRewardInterstitialID_Anroid = string.Empty;
+        [SerializeField] string admobRewardInterstitialID_iOS = string.Empty;
         
         #endregion
         
@@ -95,6 +101,8 @@ namespace PIERStory {
         [SerializeField] int sharePlayRewarded = 0; // 게임플레이 동영상 광고 점유율
         [SerializeField] int ratePlayAD = 0; // 플레이 광고 재생 확률
         [SerializeField] int lineOfPlayAD = 0; // 플레이 광고 실행에 필요한 스크립트 라인 수
+        
+        public bool isFirstSelectionAdPlayed = false; // 첫번째 선택지 광고가 플레이 되었는지? 
         
         public bool useSelectionAD = false; // 선택지 광고 사용여부
         int shareSelectionInterstitial = 0; // 선택지 전면광고 점유율
@@ -145,16 +153,17 @@ namespace PIERStory {
         /// </summary>
         void InitAdmob() {
             // 플랫폼에 따른 ID 값 설정
-                        
             #if UNITY_IOS
             admobRewardID = admobRewardID_iOS;
             admobInterstitialID = admobInterstitialID_iOS;
             admobBannerID = aadmobBannerID_iOS;
+            admobRewardInterstitialID = admobRewardInterstitialID_iOS;
                         
             #else
             admobRewardID = admobRewardID_Anroid;
             admobInterstitialID = admobInterstitialID_Anroid;
             admobBannerID = aadmobBannerID_Anroid;
+            admobRewardInterstitialID = admobRewardInterstitialID_Anroid;
             #endif
             
             // 초기화 시작 
@@ -164,6 +173,48 @@ namespace PIERStory {
                 RequestInterstitial();
             });
         }
+        
+        
+        /// <summary>
+        /// 애드몹 보상형 전면광고 초기화 
+        /// </summary>
+        void InitAdmobRewardInterstitial() {
+            AdRequest request = new AdRequest.Builder().Build();
+            RewardedInterstitialAd.LoadAd(admobRewardInterstitialID, request, rewardInterstitialLoadCallback);
+
+        }
+        private void rewardInterstitialLoadCallback(RewardedInterstitialAd ad, AdFailedToLoadEventArgs error) {
+            if (error == null)
+            {
+                rewardInterstitial = ad;
+                rewardInterstitial.OnAdDidDismissFullScreenContent += HandleAdDidDismiss;
+                
+            }
+        }
+        
+        private void HandleAdDidDismiss(object sender, EventArgs args) {
+            InitAdmobRewardInterstitial();
+        }
+        // 애드몹 보상형 전면광고 종료 
+
+        public void ShowRewardInterstitial() {
+            if(rewardInterstitial != null) {
+                rewardInterstitial.Show(earnRewardInterstitial);
+            }
+            else {
+                InitAdmobRewardInterstitial();
+            }
+        }
+        
+        void earnRewardInterstitial(Reward reward) {
+            // 보상 받음 
+            OnCompleteRewardAD?.Invoke(true);
+            isRewarded = false;
+            
+        }
+        
+        
+        
         
         /// <summary>
         /// 애드몹 보상형 광고 초기화 
@@ -264,7 +315,22 @@ namespace PIERStory {
             if(GameManager.main != null && StoryManager.main != null && (UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass() ))
                 return;
            
-            if(this.interstitial.IsLoaded()) {
+            if(this.interstitial != null && this.interstitial.IsLoaded()) {
+                this.interstitial.Show();
+            }
+            else {
+                RequestInterstitial();
+            }
+        }
+        
+        /// <summary>
+        /// 인게임 인터스티셜
+        /// </summary>
+        public void ShowInGameInterstitial() {
+            
+            
+            
+            if(this.interstitial != null && this.interstitial.IsLoaded()) {
                 this.interstitial.Show();
             }
             else {
@@ -485,20 +551,41 @@ namespace PIERStory {
         /// </summary>
         public void PlaySelectionAD() {
             
-            // 유료선택지에서 광고를 안뜨게 하려고. 
-            if(isPaidSelection) {
-                isPaidSelection = false;
-                return;
+            if(this.interstitial == null || !this.interstitial.IsLoaded()) {
+                RequestInterstitial();
+                return; 
             }
             
+            // 유료 선택지에서는 뜨지 않음 
+            if(isPaidSelection)
+                return; 
             
             if(!useSelectionAD) 
                 return;
                 
-            // 무료 유저가 아니면 광고 재생 되지 않음
-            if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState != PurchaseState.AD)
-                return;
+            // 패스 유저인 경우 광고 등장하지 않음.
+            try {
+                // 1화에서는 등장하지 않음
+                // 정규에피소드에서만 등장
+                if(GameManager.main.currentEpisodeData.episodeType != EpisodeType.Chapter)
+                    return;
+                    
+                if(GameManager.main.currentEpisodeData.episodeNumber < 2)
+                    return;
                 
+                
+                // 한번이라도 광고재생 되었으면, gamePlayRowCount 100 미만이면 재생하지 않음(너무 많은 재생을 막기 위함)
+                if(isFirstSelectionAdPlayed && gamePlayRowCount < lineOfPlayAD)
+                    return;
+                
+                
+                if(UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass() || UserManager.main.ifyouPassDay > 0)
+                    return;
+            }
+            catch {
+                return;
+            }
+
                 
             ShowSelectionAD();
         }
@@ -508,13 +595,28 @@ namespace PIERStory {
         /// 선택지 선택 후 광고 보여주기 
         /// </summary>
         public void ShowSelectionAD() {
-            if(UnityEngine.Random.Range(0, 100) < shareSelectionInterstitial)
-                ShowAdvertisementReady(false);
-            else 
-                ShowAdvertisementReady(true);
-                
+            
+            isPaidSelection = false;
+            
+            PopupBase p = PopupManager.main.GetPopup("AdvertisementShow");
+            if(p == null) {
+                Debug.LogError("AdvertisementShow ");
+            }
+            
+            PopupManager.main.ShowPopup(p, false, false);
+            
+            isFirstSelectionAdPlayed = true; // 재생되었음. 
             InitGamePlayRowCount(); // 선택지 선택하면 플레이 카운트 초기화
         }
+        
+        /// <summary>
+        /// 보상형 전면광고 동의 팝업. 
+        /// </summary>
+        void ShowAdvertisementAgreement() {
+            
+        }
+        
+        
         
         #endregion
         
@@ -577,6 +679,7 @@ namespace PIERStory {
         /// 스크립트 Row 마다 추가
         /// </summary>
         public void AddGameRowCount() {
+            gamePlayRowCount++;
             
             // Play AD 사용하지 않으면 끝!
             if(!usePlayAD)
@@ -586,7 +689,7 @@ namespace PIERStory {
             if(GameManager.main != null && GameManager.main.currentEpisodeData.purchaseState != PurchaseState.AD)
                 return;
             
-            gamePlayRowCount++;
+            
             
             // 정해진 라인까지 그냥 증가.
             if(gamePlayRowCount >= lineOfPlayAD) {

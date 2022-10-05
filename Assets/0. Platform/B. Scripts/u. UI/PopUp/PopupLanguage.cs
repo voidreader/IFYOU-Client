@@ -138,6 +138,16 @@ namespace PIERStory
                 case "JA":
                     SystemManager.main.currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Japanese;
                     break;
+                case "MS":
+                    SystemManager.main.currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Malay;
+                    break;
+                case "ES":
+                    SystemManager.main.currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Spanish;
+                    break;
+                case "RU":
+                    SystemManager.main.currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Russian;
+                    break;
+                    
                 default:
                     SystemManager.main.currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.English;
                     break;

@@ -118,6 +118,7 @@ namespace PIERStory
 
             // 거리에 따라 트윈 시간 설정 
             tweenTime = GameManager.main.CalcMoveBGAnimTime(ref moveDistance);
+            Debug.Log("### MoveIn : " + moveDistance);
 
             // Action에서 사용할 여러 변수들을 처리합니다. 
             // 시작 위치 및 도착 위치 설정 

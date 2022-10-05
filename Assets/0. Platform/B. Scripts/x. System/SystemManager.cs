@@ -48,6 +48,7 @@ namespace PIERStory
         public bool isWebViewOpened = false; // 웹뷰가 현재 보여지고 있는지 체크 
         
         public static float screenRatio = 0;
+        
         public bool isTestServerAccess = false; // 테스트 서버로 연결 여부 
         public string gamebaseAPP_ID = ""; // 6swpd3Jp (피어), qtV3HLW5(코원)
         public string gamebaseLogger_ID = ""; // 6WMxzJjo6i5Z5iXm(피어)
@@ -56,6 +57,7 @@ namespace PIERStory
         // 언어 코드 추가 
         public string currentGamebaseLanguageCode = "en"; // 게임베이스 언어코드
         public string currentAppLanguageCode = "EN"; // 앱, 서버 사용하는 언어코드 (게임베이스와 살짝 다르기 때문에 컨버팅 필요)
+        public string currentCountryCode = "ZZ"; // 국가코드 
 
 
 
@@ -127,7 +129,7 @@ namespace PIERStory
         #endregion
 
         
-        #region getPlatformEvents 에서 가져오는 데이터들         
+        #region getPlatformNoticePromotion 에서 가져오는 데이터들         
         public JsonData storyGenreData = null; // 공개된 작품 장르
         public JsonData promotionData = null;       // 프로모션 데이터
         public JsonData noticeData = null;          // 공지사항 데이터 
@@ -148,6 +150,9 @@ namespace PIERStory
         public TMP_FontAsset jaFont = null; // 일본어 폰트
         public TMP_FontAsset koFont = null; // 한글, 영어 폰트 
         public TMP_FontAsset arFont = null; // 아랍 폰트
+        
+        public TMP_FontAsset notoSansFont = null; // 라틴, 그리스, 키릴 문자 
+        
         public TMP_FontAsset arNormalBubbleFont = null; // 아랍어 일반 말풍선 폰트 
         public AsyncOperationHandle<TMP_FontAsset> mountedAssetFontJA; 
         public AsyncOperationHandle<TMP_FontAsset> mountedAssetFontKO; 
@@ -765,11 +770,19 @@ namespace PIERStory
             
             return result;
         }
+
+        
         
         /// <summary>
         /// 언어정보 세팅하기.
         /// </summary>
         public void SetCurrentLanguageCode() {
+            
+            
+            currentCountryCode = Gamebase.GetCountryCode(); // 국가코드 
+            
+            Debug.Log("## SetCurrentLanguageCode : " + currentCountryCode);
+            
             
             // 저장된 언어정보가 없을때. 
             if(!ES3.KeyExists(SystemConst.KEY_LANG)) {
@@ -791,8 +804,29 @@ namespace PIERStory
                     currentAppLanguageCode = "AR";
                     break;
                     
-                    default:
+                    case SystemLanguage.Spanish:
+                    currentAppLanguageCode = "ES";
+                    break;
+                    
+                    case SystemLanguage.Russian:
+                    currentAppLanguageCode = "RU";
+                    break;
+                    
+                    // case SystemLanguage.Indonesian:
+                    // currentAppLanguageCode = "MS";
+                    // break;
+                    
+                    
+                    default: // 기본은 영어인데, 추가 조건 체크한다. 
                     currentAppLanguageCode = "EN";
+                    
+                    // 국가코드가 말레이시아나 브루나이의 경우는 말레이어로 변경한다.
+                    // SystemLanguage에서 말레이어가 없다.... 
+                    if(currentCountryCode == "MY" || currentCountryCode == "BN") { // 말레이시아 , 브루나이 처리 
+                        currentAppLanguageCode = "MS"; // 말레이어로 처리한다. 
+                    }
+                    
+                    
                     break;
                 } // ? end of switch
                 
@@ -813,6 +847,20 @@ namespace PIERStory
                 case "JA":
                 currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Japanese;
                 break;
+                
+                case "MS": // 말레이어 
+                currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Malay;
+                break;
+                
+                case "ES": // 스페인어 
+                currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Spanish;
+                break;
+                
+                
+                case "RU": // 러시아어 
+                currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.Russian;
+                break;
+                
                 default: // 아랍어도 게임베이스 언어는 영어. 
                 currentGamebaseLanguageCode = GamebaseDisplayLanguageCode.English;
                 break;
@@ -2132,6 +2180,12 @@ namespace PIERStory
                 mainAssetFont = arFont; // 아랍 폰트는 내장됨. 
                 break;
                 
+                case "MS":
+                case "ES":
+                case "RU":
+                mainAssetFont = notoSansFont;
+                break;
+                
                 default:
                 break;
             }
@@ -2172,6 +2226,12 @@ namespace PIERStory
                         return arFont; // 시스템
                     else  
                         return arNormalBubbleFont; // 말풍선
+                
+                case "ES":
+                case "MS":
+                case "RU":
+                    return mainAssetFont;
+                
                 
                 default:
                 if(__isException)  // appleGothic 유지 

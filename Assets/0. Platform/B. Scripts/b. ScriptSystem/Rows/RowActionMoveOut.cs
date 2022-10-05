@@ -62,6 +62,8 @@ namespace PIERStory
 
             // 거리에 따라 트윈 시간 설정 
             tweenTime = GameManager.main.CalcMoveBGAnimTime(ref moveDistance);
+            
+            Debug.Log("### MoveOut : " + moveDistance);
 
             // 화면 연출을 제외한 이미지 리소스, 캐릭터, 말풍선을 지워준다
             GameManager.main.HideImageResources();

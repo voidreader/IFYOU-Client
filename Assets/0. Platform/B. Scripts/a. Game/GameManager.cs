@@ -551,6 +551,7 @@ namespace PIERStory
             }
 
             Debug.Log("<color=yellow> RoutineEpisodePlay </color>");
+            AdManager.main.isFirstSelectionAdPlayed = false;
             AdManager.main.InitGamePlayRowCount(); // 광고 Row 초기화 
 
             // 첫 실행히 page가 생성되어 있지 않다면 기다려준다.
@@ -1145,10 +1146,24 @@ namespace PIERStory
         public float CalcMoveBGAnimTime(ref float movableWidth)
         {
             float cameraHeight = 2 * Camera.main.orthographicSize;
-            float cameraWidth = cameraHeight * Camera.main.aspect;
+            float cameraWidth = 0;
+            
+            // 레터박스 사용할때, 안할때 구분해서 계산해줘야한다. 2022.10.05            
+            if(ScissorCtrl.isLetterBoxUse) {
+                cameraWidth = cameraHeight * 0.5625f;
+            }
+            else {
+                cameraWidth = cameraHeight * Camera.main.aspect;
+            }
+            
+            Debug.Log(string.Format("CalcMoveBGAnimTime cameraHeight/camearaWidth/Camera.main.aspect : [{0}]/[{1}]/[{2}] ", cameraHeight, cameraWidth, Camera.main.aspect));
 
             // 스케일 조정되는 배경에 대한 처리 추가 
             movableWidth = Mathf.Abs(currentBG.spriteRenderer.size.x * currentBG.gameScale - cameraWidth) * 0.5f;
+            
+            Debug.Log(string.Format("CalcMoveBGAnimTime spriteRenderer.size.x/gameScale/cameraWidth : [{0}]/[{1}]/[{2}] ", currentBG.spriteRenderer.size.x, currentBG.gameScale, cameraWidth));
+            
+            
             float distanceProportion = 1f; // 거리에 다른 트윈 시간 비율
 
             if (movableWidth <= 0)

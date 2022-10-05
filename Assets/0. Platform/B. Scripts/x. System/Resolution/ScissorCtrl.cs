@@ -8,6 +8,8 @@ public class ScissorCtrl : MonoBehaviour {
 
     [SerializeField]
     bool _needChange = true;
+    
+    public static bool isLetterBoxUse = false;
 
 
     // Use this for initialization
@@ -18,8 +20,10 @@ public class ScissorCtrl : MonoBehaviour {
 
         Debug.Log("★★★ ScissorCtrl currentAspectRatio :: " + currentAspectRatio);
 
-        if (currentAspectRatio > 0.57f) 
+        if (currentAspectRatio > 0.57f)  {
             _needChange = true;
+            isLetterBoxUse = true;
+        }
         else
             _needChange = false;
 

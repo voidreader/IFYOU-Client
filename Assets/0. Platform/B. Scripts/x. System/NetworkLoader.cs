@@ -761,7 +761,7 @@ namespace PIERStory
         /// </summary>
         public void RequestPlatformServiceEvents() {
             JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "getPlatformEvents";
+            sending[CommonConst.FUNC] = "getPlatformNoticePromotion";
 
             SendPost(SystemManager.main.CallbackPlatformServiceEvent, sending);
         }
@@ -808,7 +808,7 @@ namespace PIERStory
         void SetBaseParams(JsonData __j) {
             __j[CommonConst.COL_USERKEY] = UserManager.main.userKey;
             __j[COL_BUILD] = Application.identifier;
-            __j[COL_COUNTRY] = Gamebase.GetCountryCodeOfDevice();
+            __j[COL_COUNTRY] = SystemManager.main.currentCountryCode;
             __j[LobbyConst.COL_LANG] = SystemManager.main.currentAppLanguageCode;
             __j[COL_CULTURE] = UserManager.main.culture;
             __j[COL_OS] = 0;

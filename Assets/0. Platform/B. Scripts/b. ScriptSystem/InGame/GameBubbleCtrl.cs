@@ -281,7 +281,8 @@ namespace PIERStory
         public void SetFakeBubble(ScriptRow __row, int __size)
         {
             isFakeBubble = true;
-
+            
+            InitTransform();
             SetParams(__row, null);
 
             bubbleSize = __size; // fake 는 지정한 size로 수동 변경 

@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
 using LitJson;
 using BestHTTP;
@@ -21,6 +23,8 @@ namespace PIERStory {
         
         public static Action OnShowLibrary = null;
         public static Action OnShowIfyouplay = null;
+
+        
         
         
         [Header("로비")]
@@ -136,7 +140,7 @@ namespace PIERStory {
             
             // 작품추천 (게임을 하다가 중단했다면)
             if(SystemManager.isQuitGame) {
-                NetworkLoader.main.RequestRecommedStory();  
+                // NetworkLoader.main.RequestRecmomedStory();  
                 SystemManager.isQuitGame = false;
             } 
             
@@ -148,6 +152,9 @@ namespace PIERStory {
             base.OnStartView();
             
             Debug.Log("<color=cyan>ViewMain OnStartView </color>");
+            
+
+            
             
             // ViewMain 돌아왔을때 스토리매니저 변수 초기화
             StoryManager.main.CurrentProjectID = string.Empty;
@@ -162,7 +169,7 @@ namespace PIERStory {
             EnableIfyouplayNewSign();
             
             // 신규 업적이 있을때 표시
-            EnableNewAchievementSign();
+            // EnableNewAchievementSign();
             
             RefreshShopNewSign();
 

@@ -138,6 +138,8 @@ namespace PIERStory
 
         public void SetFakeBubbles(ScriptRow __row)
         {
+            // Debug.Log("SetFakeBubbles");
+            
             // 크기 1부터 4까지 할당한다.
             for (int i = 0; i < FakeBubbles.Count; i++)
             {

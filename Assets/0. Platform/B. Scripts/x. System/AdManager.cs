@@ -306,17 +306,18 @@ namespace PIERStory {
         /// 애드몹 전면광고. 화면 전환시에만 사용한다. 
         /// </summary>
         public void ShowAdmobInterstitial() {
+            
            
             if(UserManager.main.ifyouPassDay > 0)
                 return; // 이프유 패스 보유자
                 
             
-            // 게임플레이 도중일때, 원데이패스나 프리미엄패스 사용자는 광고 뜨지 않음 
+            // 게임씬에서만 동작한다.  원데이패스나 프리미엄패스 사용자는 광고 뜨지 않음 
             if(GameManager.main != null && StoryManager.main != null && (UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass() ))
                 return;
            
             if(this.interstitial != null && this.interstitial.IsLoaded()) {
-                this.interstitial.Show();
+            this.interstitial.Show();
             }
             else {
                 RequestInterstitial();

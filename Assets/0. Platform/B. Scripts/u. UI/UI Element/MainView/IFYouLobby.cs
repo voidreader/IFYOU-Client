@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-
+using UnityEngine.UI;
+using DG.Tweening;
 using TMPro;
 using LitJson;
 using DanielLochner.Assets.SimpleScrollSnap;
@@ -12,6 +13,8 @@ namespace PIERStory {
     public class IFYouLobby : MonoBehaviour
     {
         JsonData promotionList = null;
+        public Image cover; // 자연스러운 화면 연출을 위한 커버 이미지 
+        
         [Header("프로모션")]
         public SimpleScrollSnap promotionScroll;
         public Transform promotionContent;
@@ -39,6 +42,12 @@ namespace PIERStory {
         /// 로비 탭 컨테이너 초기화..
         /// </summary>
         public void InitLobby() {
+            
+            
+            // 커버 준비 
+            cover.color = new Color(0,0,0, 1);
+            cover.gameObject.SetActive(true);
+            
             
             InitPromotionList();
             InitFastPlay();
@@ -160,11 +169,15 @@ namespace PIERStory {
             
         }
         
+        /// <summary>
+        /// 화면 영역 리프레시 
+        /// </summary>
+        /// <returns></returns>
         IEnumerator LayoutRebuild()
         {
             yield return new WaitUntil(() => mainCategoryList.Count > 0);
 
-            yield return null;
+            // yield return null;
 
             yield return new WaitUntil(() => mainCategoryList[0].activeSelf);
 
@@ -179,6 +192,13 @@ namespace PIERStory {
             recommendWorkList.gameObject.SetActive(false);
             yield return null;
             recommendWorkList.gameObject.SetActive(true);
+            
+            
+            
+            // 화면 정리 끝나고 커버 날리기 
+            cover.DOFade(0, 1.5f).OnComplete(()=> {
+               cover.gameObject.SetActive(false); 
+            });
         }
         
         /// <summary>

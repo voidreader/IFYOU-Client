@@ -257,10 +257,10 @@ namespace PIERStory
         /// </summary>
         IEnumerator RoutineMoveWait(ScriptRow __row, Action __cb)
         {
-            Debug.Log(string.Format("RoutineMoveWait [{0}] #1", string.IsNullOrEmpty(__row.script_data)?"":__row.script_data));
+            // Debug.Log(string.Format("RoutineMoveWait [{0}] #1", string.IsNullOrEmpty(__row.script_data)?"":__row.script_data));
             
             yield return new WaitUntil(() => GameManager.main.CheckModelMoveComlete());
-            Debug.Log(string.Format("RoutineMoveWait [{0}] #2", string.IsNullOrEmpty(__row.script_data)?"":__row.script_data));
+            // Debug.Log(string.Format("RoutineMoveWait [{0}] #2", string.IsNullOrEmpty(__row.script_data)?"":__row.script_data));
             ListBubbles[bubbleIndex++].ShowBubble(__row, __cb);
         }
 

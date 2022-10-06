@@ -735,9 +735,9 @@ namespace PIERStory
 
             if (isPlaying)
             {
-                if (UserManager.main.useRecord)
+                if (UserManager.main.useRecord) // 일반 플레이 
                     ShowGameEnd(null);
-                else
+                else // 스페셜 에피소드나 엔딩 메뉴를 통해서 플레이 한 경우.
                 {
                     UserManager.main.RequestCompleteEpisodeOptimized(null, null);
                     SystemManager.ShowSystemPopupLocalize("6203", RetryPlay, EndGame);
@@ -859,6 +859,7 @@ namespace PIERStory
             // 스탠딩 표현이 없거나 화자 리소스가 존재하지 않으면 말풍선만 띄워주고 넘김
             if (string.IsNullOrEmpty(__row.character_expression) || !CheckModelResourceExists(__row.speaker))
             {
+                // Debug.Log("Talk No character_expression or speaker");
                 ViewGame.main.MakeTalkBubble(__row, __cb); // * 말풍선 생성해주세요!
                 
                 // 캐릭터 모션이 입력되지 않았으면 경고 메세지 
@@ -1027,6 +1028,7 @@ namespace PIERStory
             #endregion
 
             // 말풍선 생성
+            // Debug.Log("Talk Standing");
             ViewGame.main.MakeTalkBubble(__row, __cb, characterIndex);
         }
 
@@ -1884,7 +1886,7 @@ namespace PIERStory
         /// </summary>
         public void HideImageMinicut()
         {
-            Debug.Log("Hide Image Called");
+            // Debug.Log("Hide Image Called");
             currentMinicut.gameObject.SetActive(false);
 
             currentMinicut.color = new Color(currentMinicut.color.r, currentMinicut.color.g, currentMinicut.color.b, 1f);
@@ -1962,8 +1964,7 @@ namespace PIERStory
                 sc.MuteAudioClip();
             }
 
-            SystemManager.ShowNetworkLoading();
-            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, string.Empty);
+            
 
             // * 통신이 겹치는 문제로 인해서 코루틴으로 변경
             StartCoroutine(RoutineFinishGame(__nextEpisodeID));
@@ -1974,21 +1975,10 @@ namespace PIERStory
             Debug.Log("RoutineFinishGame START");
             
             hasFirstClearReward = false;
-                
-            // 안전을 위해..
-            yield return new WaitForSeconds(0.1f);
-            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
-            
-            // 전면광고 추가한다.
-            AdManager.main.ShowAdmobInterstitial();
-            
-            // 게임씬 정리
-            currentPage.ReleasePageResources();
-            
-
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터
 
-            // * 이동 컬럼에 아무 데이이터가 없는 경우와, 있는 경우 
+            #region 다음 에피소드 데이터 
+            // * 이동 컬럼에 아무 데이이터가 없는 경우와, 있는 경우 분리
             if (string.IsNullOrEmpty(__nextEpisodeID))
             {
                 // 이동컬럼에 아무것도 없는 경우는 리스트상의 다음 에피소드를 지정한다. 
@@ -2009,7 +1999,8 @@ namespace PIERStory
             else
             { // 이동 컬럼 데이터 있음
 
-                // #, @이 붙은 경우에 대한 처리 
+                // #, @이 붙은 경우에 대한 처리 (똑같은 기능이다.)
+                // #이 편집툴에서 이상하게 보여서 @을 추가한것. 
                 if (__nextEpisodeID.Contains(GameConst.TAG_TARGET_EPISODE))
                     __nextEpisodeID = __nextEpisodeID.Replace(GameConst.TAG_TARGET_EPISODE, "");
                 else if (__nextEpisodeID.Contains(GameConst.TAG_TARGET_EPISODE2))
@@ -2019,16 +2010,33 @@ namespace PIERStory
                 
                 Debug.Log(string.Format("RoutineFinishGame #2 : [{0}]", __nextEpisodeID));
                 
-            }
-
-           
+            }            
+            #endregion
+            
+            // 다음화 안내 화면전환을 시작한다. 2022.10.06
+            SystemManager.ShowToBeContinue(nextEpisodeData);
+            yield return new WaitUntil(() => PopupManager.main.GetFrontActivePopup() != null);
+            Debug.Log("Done To be Continue PopUP");
+            
+                
+            // 안전을 위해..
+            yield return new WaitForSeconds(0.1f);
+            yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
+            
+            // 에피소드 종료화면 오픈 
+            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, string.Empty);
+            
+            // 게임씬 정리
+            currentPage.ReleasePageResources();            
+          
             Debug.Log("RoutineFinishGame Before RequestCompleteEpisode");
 
             // 에피소드 완료까지 통신 대기
             UserManager.main.RequestCompleteEpisodeOptimized(nextEpisodeData, currentSceneId);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
-            // 종료화면에 대한 제거 
+            // 종료화면에 대한 초기화 설정 
+            yield return null;
             endControls.InitStoryLobbyControls();
 
             // * 스페셜 에피소드 => 엔딩 => 미션 => 첫클리어 보상의 순서. 
@@ -2052,7 +2060,7 @@ namespace PIERStory
             if(hasFirstClearReward) {
                 
                 // 최초 보상 있으면 팝업 호출
-                Debug.Log(">> First Reward exists : " + JsonMapper.ToStringUnicode(UserManager.main.GetNodeFirstClearResult()));
+                // Debug.Log(">> First Reward exists : " + JsonMapper.ToStringUnicode(UserManager.main.GetNodeFirstClearResult()));
                 
                 PopupBase p = PopupManager.main.GetPopup(GameConst.POPUP_EPISODE_FIRST_REWARD);
                 if(p == null) {

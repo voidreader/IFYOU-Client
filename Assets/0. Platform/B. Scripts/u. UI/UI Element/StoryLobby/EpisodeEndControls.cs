@@ -38,6 +38,7 @@ namespace PIERStory {
         public override void InitStoryLobbyControls() {
             
             Debug.Log("## EpisodeEndControls.InitStoryLobbyControls ");
+            canvasGroup.alpha = 0;
             CallbackReduceWaitingTimeSuccess = RefreshAfterReduceWaitingTime; 
             CallbackReduceWaitingTimeFail = FailReduceWaitingTime;
             OnEpisodePlay = OnClickPlay;
@@ -54,7 +55,7 @@ namespace PIERStory {
             // 엔딩에 도달한 경우 추가 로직 (엔딩을 플레이 하지는 않았음)
             if (currentEpisodeData.episodeType == EpisodeType.Ending && !UserManager.main.CheckReachFinal()) {
                 Debug.Log("엔딩에 도달한 경우 추가 로직 (엔딩을 플레이 하지는 않았음)");
-                SetEndingNotification();
+                // SetEndingNotification();
 
                 // 다음으로 이어질 화가 히든엔딩이고, 이번에 해금되는 것이라면? 업적 통신!
                 // if (currentEpisodeData.endingType == LobbyConst.COL_HIDDEN && !currentEpisodeData.endingOpen)
@@ -69,11 +70,6 @@ namespace PIERStory {
                     if (StoryManager.main.ListCurrentProjectEpisodes[i].episodeID == currentEpisodeData.episodeID)
                     {
                         StoryManager.main.ListCurrentProjectEpisodes[i].endingOpen = true;
-
-                        // 엔딩 해금을 true로 변경해준 뒤에 allClear 체크를 해서 통신한다
-                        // if (UserManager.main.ProjectAllClear())
-                        //     NetworkLoader.main.RequestIFYOUAchievement(8, int.Parse(StoryManager.main.CurrentProjectID));
-
                         break;
                     }
                 }
@@ -81,6 +77,7 @@ namespace PIERStory {
             }
             
             StartCoroutine(RoutinePostEpisodeEnd());
+            
             SystemManager.HideNetworkLoading();
             canvasGroup.DOFade(1f, 0.5f);
         }
@@ -111,28 +108,12 @@ namespace PIERStory {
                 
             // 다음 오픈되는 에피소드가 연재작이라 대기해야되는 경우. 
             if(isOpenTimeCountable && currentEpisodeData.isSerial) {
-                NetworkLoader.main.RequestRecommedStory();
+                // NetworkLoader.main.RequestRecommedStory();
                 yield break;
             }
             
             Debug.Log("RoutinePostEpisodeEnd #5");
-                
-                
-            // 대기 중이거나, 연재 작품은 튜토리얼 띄우지 않음. 
-            if(!isOpenTimeCountable || currentEpisodeData.isSerial) {
-                yield break;
-            }
-            
-            // 2분 후 오픈이면 하지 띄우지 않음. 
-            if(timeDiff.Minutes < 2) 
-                yield break;
-            
-            // * 튜토리얼 3번 호출 
-            // 팝업 순서 문제로 튜토리얼 3번 호출 막았음 2022.08.25
-            /*
-            if ((UserManager.main.tutorialStep <= 2 && UserManager.main.tutorialClear) || (UserManager.main.tutorialStep == 3 && !UserManager.main.tutorialClear))
-                UserManager.main.UpdateTutorialStep(3, 0, CallbackStartTutorial);                 
-            */
+
         }
         
 

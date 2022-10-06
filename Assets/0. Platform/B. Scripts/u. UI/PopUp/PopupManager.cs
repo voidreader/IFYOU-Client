@@ -84,6 +84,8 @@ namespace PIERStory {
         [SerializeField] GameObject popupOnedayPass; // 원데이 패스
         [SerializeField] GameObject popupPremiumChallenge; // 프리미엄 챌린지 패스
         
+        [SerializeField] GameObject popupToBeContinue; // 다음화 안내 팝업 
+        
         
         private void Awake() {
             if(main != null) {
@@ -161,8 +163,6 @@ namespace PIERStory {
             
             while(true) {
                 
-                yield return null;
-                
                 // * 현재 보여지고 있는 큐 팝업이 있으면, 대기 
                 while(CurrentQueuePopup != null && CurrentQueuePopup.gameObject.activeSelf) {
                     yield return null;
@@ -181,6 +181,9 @@ namespace PIERStory {
                     
                     CurrentQueuePopup.Show(); // 보여주기 
                 }
+                
+                yield return null;
+                               
             }
             
             // Debug.Log(">> PopupQueueRoutine END");
@@ -615,6 +618,11 @@ namespace PIERStory {
                 DictPopup[CommonConst.POPUP_PREMIUM_CHALLENGE] = popupPremiumChallenge;
             else 
                 DictPopup.Add(CommonConst.POPUP_PREMIUM_CHALLENGE, popupPremiumChallenge);
+                
+            if(DictPopup.ContainsKey(CommonConst.POPUP_TO_BE_CONTINUE))
+                DictPopup[CommonConst.POPUP_TO_BE_CONTINUE] = popupToBeContinue;
+            else 
+                DictPopup.Add(CommonConst.POPUP_TO_BE_CONTINUE, popupToBeContinue);
         }
         
         #endregion

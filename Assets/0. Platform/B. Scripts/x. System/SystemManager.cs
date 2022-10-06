@@ -2870,6 +2870,53 @@ namespace PIERStory
         }
         
         
+        /// <summary>
+        /// 다음화로 이어짐 안내 팝업 
+        /// </summary>
+        public static void ShowToBeContinue(EpisodeData nextEpisode) {
+            
+            string contentsText = string.Empty;
+            
+            // 현재 플레이한 에피소드가 엔딩이 아님에도, 다음 에피소드 정보가 없을때. 
+            if(GameManager.main.currentEpisodeData.episodeType != EpisodeType.Ending && (nextEpisode == null || !nextEpisode.isValidData || string.IsNullOrEmpty(nextEpisode.episodeID))) {
+                
+                NetworkLoader.main.ReportRequestError(GameManager.main.currentEpisodeData.episodeID, "ShowToBeContinue nextEpisode data is wrong");
+                Debug.LogError("ShowToBeContinue nextEpisode data is wrong");
+                return;
+            }
+                
+                
+            
+            PopupBase p = PopupManager.main.GetPopup(CommonConst.POPUP_TO_BE_CONTINUE);
+            
+            if(p == null) {
+                Debug.LogError("No ToBeContinue popup");
+                return;
+            }
+            
+            // 현재 플레이 에피소드가 엔딩인 경우 
+            if(GameManager.main.currentEpisodeData.episodeType == EpisodeType.Ending) {
+                contentsText = SystemManager.GetLocalizedText("6010");    
+            }
+            else {
+                // 다음 에피소드가 챕터나, 엔딩이냐에 따라서 다른 처리. 
+                if(nextEpisode.episodeType == EpisodeType.Ending) {
+                    contentsText = string.Format(SystemManager.GetLocalizedText("6493"), nextEpisode.episodeTitle);    
+                }
+                else {
+                    contentsText = string.Format(SystemManager.GetLocalizedText("6492"), nextEpisode.episodeNO);
+                }
+            
+            }
+            
+            Debug.Log(">> ShowToBeContinue >> ");
+
+            p.Data.SetLabelsTexts(contentsText);
+            
+            PopupManager.main.ShowPopup(p, true, false);
+        }
+        
+        
         public static void ShowPopupPass(string __projectID, bool __isIndependant = false) {
             
             PopupBase p = PopupManager.main.GetPopup("PremiumPass");

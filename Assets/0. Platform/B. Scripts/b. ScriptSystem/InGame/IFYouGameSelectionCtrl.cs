@@ -617,7 +617,7 @@ namespace PIERStory {
         }
 
         /// <summary>
-        /// 선택지 선택 완료됨
+        /// 무료 선택지 선택 완료됨
         /// </summary>
         void SelectionSelected()
         {

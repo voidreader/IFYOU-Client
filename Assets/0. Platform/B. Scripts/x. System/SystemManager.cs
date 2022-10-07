@@ -2230,7 +2230,7 @@ namespace PIERStory
                 case "ES":
                 case "MS":
                 case "RU":
-                    return mainAssetFont;
+                    return notoSansFont; 
                 
                 
                 default:

@@ -1387,6 +1387,7 @@ namespace PIERStory
                 return;
             }
             
+
             ShowMissionUnlockPopup(missionData); // 미션 팝업 호출 
         }
 
@@ -1499,7 +1500,7 @@ namespace PIERStory
         /// 미션 해금 팝업 오픈 
         /// </summary>
         /// <param name="__missionData"></param>
-        public void ShowMissionUnlockPopup(MissionData __missionData, bool __needPopup = true) {
+        public void ShowMissionUnlockPopup(MissionData __missionData, bool __needPopup = true, bool __addQueue = true) {
             
             if(!DictStoryMission.ContainsKey(__missionData.missionID)) {
                 Debug.LogError("ShowMissionUnlockPopup No mission data : " + __missionData.missionName);

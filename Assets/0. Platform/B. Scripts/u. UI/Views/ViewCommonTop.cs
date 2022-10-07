@@ -293,6 +293,8 @@ namespace PIERStory {
             logo.SetActive(!isShow);
             settingButton.SetActive(!isShow);
             
+            if(!isShow && GameManager.main != null)
+                settingButton.SetActive(false); // 게임씬에서는 안보이게 한다. 
             
         }
         

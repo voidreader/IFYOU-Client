@@ -88,6 +88,11 @@ MonoBehaviour:
       isUnlock: 0
       isSerial: 0
       debugPublishData: 
+      unlockEpisodes: 
+      unlockScenes: 
+      arrUnlockEpisode: []
+      arrUnlockScene: []
+      isClear: 0
     imageURL: 
     imageKey: 
     isConfirm: 1
@@ -1135,7 +1140,7 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: {x: -720.00006, y: 0, z: 0}
+      FromValue: {x: 0, y: -50, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
       Enabled: 1
@@ -1143,7 +1148,7 @@ MonoBehaviour:
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
       ToReferenceValue: 2
-      FromCustomValue: {x: 0, y: -10, z: 0}
+      FromCustomValue: {x: 0, y: -50, z: 0}
       ToCustomValue: {x: 0, y: 0, z: 0}
       FromOffset: {x: 0, y: 0, z: 0}
       ToOffset: {x: 0, y: 0, z: 0}
@@ -1204,7 +1209,7 @@ MonoBehaviour:
         FadeOutShake: 0
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
-      CurrentValue: {x: 0, y: 0, z: 0}
+      CurrentValue: {x: -0, y: 0, z: 0}
       Enabled: 0
       StartRotation: {x: -0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -1268,7 +1273,7 @@ MonoBehaviour:
         FadeOutShake: 0
       FromValue: {x: 1, y: 1, z: 1}
       ToValue: {x: 1, y: 1, z: 1}
-      CurrentValue: {x: 0, y: 0, z: 0}
+      CurrentValue: {x: 1, y: 1, z: 1}
       Enabled: 0
       StartScale: {x: 1, y: 1, z: 1}
       FromReferenceValue: 0
@@ -1330,14 +1335,14 @@ MonoBehaviour:
         Vibration: 8
         Elasticity: 1
         FadeOutShake: 0
-      FromValue: 1
+      FromValue: 0
       ToValue: 1
-      CurrentValue: 0
-      Enabled: 0
+      CurrentValue: 1
+      Enabled: 1
       StartAlpha: 1
-      FromReferenceValue: 0
-      ToReferenceValue: 0
-      FromCustomValue: 1
+      FromReferenceValue: 2
+      ToReferenceValue: 2
+      FromCustomValue: 0
       ToCustomValue: 1
       FromOffset: 0
       ToOffset: 0
@@ -1406,8 +1411,8 @@ MonoBehaviour:
         Elasticity: 1
         FadeOutShake: 0
       FromValue: {x: 0, y: 0, z: 0}
-      ToValue: {x: 720.00006, y: 0, z: 0}
-      CurrentValue: {x: 0, y: 0, z: 0}
+      ToValue: {x: 0, y: -10, z: 0}
+      CurrentValue: {x: 0, y: -10, z: 0}
       Enabled: 1
       AnimationType: 1
       StartPosition: {x: 0, y: 0, z: 0}
@@ -1474,7 +1479,7 @@ MonoBehaviour:
         FadeOutShake: 0
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
-      CurrentValue: {x: 0, y: 0, z: 0}
+      CurrentValue: {x: -0, y: 0, z: 0}
       Enabled: 0
       StartRotation: {x: -0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -1538,7 +1543,7 @@ MonoBehaviour:
         FadeOutShake: 0
       FromValue: {x: 1, y: 1, z: 1}
       ToValue: {x: 1, y: 1, z: 1}
-      CurrentValue: {x: 0, y: 0, z: 0}
+      CurrentValue: {x: 1, y: 1, z: 1}
       Enabled: 0
       StartScale: {x: 1, y: 1, z: 1}
       FromReferenceValue: 0
@@ -1601,7 +1606,7 @@ MonoBehaviour:
         Elasticity: 1
         FadeOutShake: 0
       FromValue: 1
-      ToValue: 1
+      ToValue: 0
       CurrentValue: 0
       Enabled: 1
       StartAlpha: 1
@@ -1974,7 +1979,8 @@ MonoBehaviour:
   _text: {fileID: 1351948299868772401}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!114 &4065289630053078985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2360,8 +2366,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600, y: 550}
+  m_AnchoredPosition: {x: 0, y: 100}
+  m_SizeDelta: {x: 560, y: 520}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1351948299950425352
 CanvasRenderer:
@@ -2686,7 +2692,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 1351948300307707941}
   isException: 1
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &1351948300393837624
 GameObject:
   m_ObjectHideFlags: 0
@@ -2840,7 +2848,8 @@ MonoBehaviour:
   _text: {fileID: 1351948300393837631}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &1351948300409116312
 GameObject:
   m_ObjectHideFlags: 0
@@ -2991,7 +3000,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 1351948300409116318}
   isException: 1
-  isFontSet: 0
+  isAlignmentFix: 1
+  originText: 
+  originAlign: 0
 --- !u!1 &4528312638443717612
 GameObject:
   m_ObjectHideFlags: 0

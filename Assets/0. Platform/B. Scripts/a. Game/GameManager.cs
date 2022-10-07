@@ -675,7 +675,8 @@ namespace PIERStory
                             }
 
                             // 보이스를 사용한다면 보이스가 다 재생될 때까지 기다리고
-                            if (SoundGroup[1].GetIsPlaying)
+                            // 테스트 서버에서는 그냥 무시한다.
+                            if (SoundGroup[1].GetIsPlaying && !SystemManager.main.isTestServerAccess)
                             {
                                 while (SoundGroup[1].GetIsPlaying && isWaitingScreenTouch)
                                     yield return null;
@@ -1974,6 +1975,9 @@ namespace PIERStory
         {
             Debug.Log("RoutineFinishGame START");
             
+            // 일러스트 획득, 미션 해금 등 여러 알림들이 사라질때까지 기다린다.
+            yield return new WaitUntil(() => PopupManager.main.GetFrontActivePopup() == null);
+            
             hasFirstClearReward = false;
             EpisodeData nextEpisodeData = null; // 다음 에피소드 데이터
 
@@ -2014,7 +2018,11 @@ namespace PIERStory
             #endregion
             
             // 다음화 안내 화면전환을 시작한다. 2022.10.06
+            yield return null;
             SystemManager.ShowToBeContinue(nextEpisodeData);
+            
+            // 여기서 가끔 씹히는 경우가 있어서 아래 yield 추가했음. 
+            yield return null;
             yield return new WaitUntil(() => PopupManager.main.GetFrontActivePopup() != null);
             Debug.Log("Done To be Continue PopUP");
             
@@ -2026,8 +2034,7 @@ namespace PIERStory
             // 에피소드 종료화면 오픈 
             Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, string.Empty);
             
-            // 게임씬 정리
-            currentPage.ReleasePageResources();            
+            
           
             Debug.Log("RoutineFinishGame Before RequestCompleteEpisode");
 
@@ -2073,6 +2080,10 @@ namespace PIERStory
                 
                 yield return new WaitForSeconds(0.1f);
             }
+            
+            
+            // 게임씬 정리
+            currentPage.ReleasePageResources();                        
             
             #endregion
         } // ? RoutineFinishGame

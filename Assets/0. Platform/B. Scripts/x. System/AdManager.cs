@@ -558,8 +558,10 @@ namespace PIERStory {
             }
             
             // 유료 선택지에서는 뜨지 않음 
-            if(isPaidSelection)
+            if(isPaidSelection) {
+                isPaidSelection = false; // 한번 걸렸으면 다시 false로 돌린다. 
                 return; 
+            }
             
             if(!useSelectionAD) 
                 return;

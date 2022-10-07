@@ -185,6 +185,10 @@ namespace PIERStory {
             
             if(PopupManager.main != null)
                 PopupManager.main.RemoveActivePopup(this); // remove
+                
+            if(PopupManager.main.CurrentQueuePopup == this) {
+                PopupManager.main.CurrentQueuePopup = null;
+            }
             
             Destroy(gameObject, 0.1f);
         }

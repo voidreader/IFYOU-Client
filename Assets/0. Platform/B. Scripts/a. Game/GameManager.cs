@@ -1976,6 +1976,7 @@ namespace PIERStory
             Debug.Log("RoutineFinishGame START");
             
             // 일러스트 획득, 미션 해금 등 여러 알림들이 사라질때까지 기다린다.
+            yield return null;
             yield return new WaitUntil(() => PopupManager.main.GetFrontActivePopup() == null);
             
             hasFirstClearReward = false;
@@ -2023,7 +2024,12 @@ namespace PIERStory
             
             // 여기서 가끔 씹히는 경우가 있어서 아래 yield 추가했음. 
             yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
             yield return new WaitUntil(() => PopupManager.main.GetFrontActivePopup() != null);
+            yield return null;
             Debug.Log("Done To be Continue PopUP");
             
                 

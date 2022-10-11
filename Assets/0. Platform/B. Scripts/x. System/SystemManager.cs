@@ -2914,6 +2914,7 @@ namespace PIERStory
             p.Data.SetLabelsTexts(contentsText);
             
             PopupManager.main.ShowPopup(p, true, false);
+            PopupToBeContinue.isShowingToBeContinue = true; // 팝업 뜰때 true로 처리한다.
         }
         
         

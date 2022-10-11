@@ -2754,6 +2754,12 @@ namespace PIERStory
                 Debug.Log("<color=orange>GetNodeProjectSceneHistory is empty</color>");
                 return false;
             }
+            
+            // 프리미엄 패스 유저는 무조건 true 
+            if(UserManager.main.HasProjectFreepass()) {
+                return true;
+            }
+            
 
             for (int i = 0; i < GetNodeProjectSceneHistory().Count; i++)
             {

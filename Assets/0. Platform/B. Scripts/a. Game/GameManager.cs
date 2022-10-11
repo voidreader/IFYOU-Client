@@ -552,6 +552,7 @@ namespace PIERStory
 
             Debug.Log("<color=yellow> RoutineEpisodePlay </color>");
             AdManager.main.isFirstSelectionAdPlayed = false;
+            PopupToBeContinue.isShowingToBeContinue = false;
             AdManager.main.InitGamePlayRowCount(); // 광고 Row 초기화 
 
             // 첫 실행히 page가 생성되어 있지 않다면 기다려준다.
@@ -2021,20 +2022,19 @@ namespace PIERStory
             // 다음화 안내 화면전환을 시작한다. 2022.10.06
             yield return null;
             SystemManager.ShowToBeContinue(nextEpisodeData);
+            yield return null;
+            
+            yield return new WaitUntil(() => !PopupToBeContinue.isShowingToBeContinue);
             
             // 여기서 가끔 씹히는 경우가 있어서 아래 yield 추가했음. 
-            yield return null;
-            yield return null;
-            yield return null;
-            yield return null;
-            yield return null;
-            yield return new WaitUntil(() => PopupManager.main.GetFrontActivePopup() != null);
-            yield return null;
+            // yield return null;
+            // yield return new WaitUntil(() => PopupManager.main.GetFrontActivePopup() == null);
+            // yield return null;
             Debug.Log("Done To be Continue PopUP");
             
                 
             // 안전을 위해..
-            yield return new WaitForSeconds(0.1f);
+            // yield return new WaitForSeconds(0.1f);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
             // 에피소드 종료화면 오픈 
@@ -2081,6 +2081,7 @@ namespace PIERStory
                 }
                 else {
                     p.Data.SetContentJson(UserManager.main.GetNodeFirstClearResult()); // 서버에서 받아온 첫 결제 보상
+                    yield return new WaitUntil(() => PopupManager.main.GetFrontActivePopup() == null);
                     PopupManager.main.ShowPopup(p, true, false); // 보여주기.  (queue 사용으로 변경)                    
                 }
                 

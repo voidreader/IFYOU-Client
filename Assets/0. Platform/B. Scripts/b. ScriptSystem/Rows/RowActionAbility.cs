@@ -56,7 +56,7 @@ namespace PIERStory
             callback = __actionCallback;
             GameManager.main.isWaitingScreenTouch = false; // 터치할 필요 없음.
             
-            if(__isInstant || !UserManager.main.useRecord || GameManager.isResumePlay) {
+            if(!UserManager.main.useRecord || GameManager.isResumePlay) {
                 callback?.Invoke();
                 return;
             }

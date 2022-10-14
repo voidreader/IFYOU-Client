@@ -162,7 +162,11 @@ namespace ES3Types
                         instance.SetActive(reader.Read<bool>(ES3Type_bool.Instance));
                         break;
                     case "children":
-                        reader.Read<GameObject[]>();
+                        var children = reader.Read<GameObject[]>();
+                        var parent = instance.transform;
+                        // Set the parent of each child to this Transform in case the reference ID of the parent has changed.
+                        foreach (var child in children)
+                            child.transform.parent = parent;
                         break;
                     case "components":
                         ReadComponents(reader, instance);

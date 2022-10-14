@@ -28,8 +28,6 @@ namespace ES3Types
 			writer.WriteProperty("constraints", instance.constraints);
 			writer.WriteProperty("collisionDetectionMode", instance.collisionDetectionMode);
 			writer.WriteProperty("centerOfMass", instance.centerOfMass, ES3Type_Vector3.Instance);
-			writer.WriteProperty("inertiaTensorRotation", instance.inertiaTensorRotation, ES3Type_Quaternion.Instance);
-			writer.WriteProperty("inertiaTensor", instance.inertiaTensor, ES3Type_Vector3.Instance);
 			writer.WriteProperty("detectCollisions", instance.detectCollisions, ES3Type_bool.Instance);
 			writer.WriteProperty("position", instance.position, ES3Type_Vector3.Instance);
 			writer.WriteProperty("rotation", instance.rotation, ES3Type_Quaternion.Instance);
@@ -88,7 +86,10 @@ namespace ES3Types
 						instance.inertiaTensorRotation = reader.Read<UnityEngine.Quaternion>(ES3Type_Quaternion.Instance);
 						break;
 					case "inertiaTensor":
-						instance.inertiaTensor = reader.Read<UnityEngine.Vector3>(ES3Type_Vector3.Instance);
+                        var inertiaTensor = reader.Read<UnityEngine.Vector3>(ES3Type_Vector3.Instance);
+                        // Check that the inertia tensor isn't zero, as it will throw an error if we try to set it.
+                        if(inertiaTensor != Vector3.zero)
+                            instance.inertiaTensor = inertiaTensor;
 						break;
 					case "detectCollisions":
 						instance.detectCollisions = reader.Read<System.Boolean>(ES3Type_bool.Instance);

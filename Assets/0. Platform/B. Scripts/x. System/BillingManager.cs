@@ -192,11 +192,16 @@ namespace PIERStory {
             Debug.Log("##### RequestPurchaseReward ####");
             
             JsonData sendData = new JsonData();
-            sendData["func"] = "purchaseInappProduct"; // userPurchase => purchaseInappProduct
+            sendData["func"] = "requestInappProduct"; // purchaseInappProduct => requestInappProduct
             sendData["product_id"] = receipt.gamebaseProductId;
+            sendData["product_master_id"] = GetProductMasterID(receipt.gamebaseProductId);
             sendData["receipt"] = receipt.paymentId;
             sendData["paymentSeq"] = receipt.paymentSeq;
             sendData["purchaseToken"] = receipt.purchaseToken;
+            sendData["is_test"] = receipt.isTestPurchase; // 테스트 구매 여부 포함 
+            
+            
+            
             
             try {
                 sendData["price"] = System.Math.Round(receipt.price, 2);
@@ -256,10 +261,12 @@ namespace PIERStory {
             SystemManager.HideNetworkLoading();
             
             if(!NetworkLoader.CheckResponseValidation(request, response)) {
-                
                 // 결제 보상 지급 실패. 메세지 안내처리 
                 return;
             }
+            
+            
+            
             
             Debug.Log("[OnRequestPurchaseReward]");
             Debug.Log(response.DataAsText);
@@ -267,7 +274,14 @@ namespace PIERStory {
             // 받은 데이터 처리
             // bank, userPurchaseHistory
             JsonData result = JsonMapper.ToObject(response.DataAsText);
-            // UserManager.main.SetNotificationInfo(result); // unreadMailCount 이제 메일로 보내지 않음. 
+            bool IsSuccess = SystemManager.GetJsonNodeBool(result, "result");
+            
+            // 실패 처리 
+            if(!IsSuccess) {
+                SystemManager.ShowMessageWithLocalize(SystemManager.GetJsonNodeString(result, "messageID"));
+                return;
+            }
+            
             
             // 히스토리 갱신 
             if(result.ContainsKey("userPurchaseHistory"))
@@ -315,7 +329,7 @@ namespace PIERStory {
             PopupManager.main.HideActivePopup();
             
             // 메세지 처리             
-            StartCoroutine(DelayShowBillingCompletePopup(purchasedProductID));
+            StartCoroutine(DelayShowBillingCompletePopup(purchasedProductID, result));
         }
         
         /// <summary>
@@ -355,7 +369,14 @@ namespace PIERStory {
             return false;   
         }
         
-        IEnumerator DelayShowBillingCompletePopup(string __productID) {
+        
+        /// <summary>
+        /// 결제 후 메세지 처리 
+        /// </summary>
+        /// <param name="__productID"></param>
+        /// <param name="__result"></param>
+        /// <returns></returns>
+        IEnumerator DelayShowBillingCompletePopup(string __productID, JsonData __result) {
             
             yield return null;
             yield return null;
@@ -438,7 +459,30 @@ namespace PIERStory {
 
             }
             else { // 일반 구매 
-                SystemManager.ShowSystemPopupLocalize("6113", null, null, true, false);  // 일반구매     
+            
+                // 재화 뭐뭐 받는지 체크한다 .
+                int totalGem = SystemManager.GetJsonNodeInt(__result, "totalGem");
+                int totalCoin = SystemManager.GetJsonNodeInt(__result, "totalCoin");
+                
+                if(totalGem > 0 && totalCoin > 0) {
+                    
+                    // 두개 다 줬을때.
+                    SystemManager.ShowMultiResourcePopup(SystemManager.GetLocalizedText("6113"), totalGem, totalCoin);
+                    
+                }
+                else if (totalGem > 0 && totalCoin <= 0) {
+                    SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6113"), "gem", totalGem);
+                }
+                else if (totalCoin > 0 && totalGem <= 0) {
+                    SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6113"), "coin", totalCoin);
+                }
+                else {
+                    SystemManager.ShowSystemPopupLocalize("6113", null, null, true, false);  // 일반구매         
+                }
+                
+                
+            
+                
             }
 
         }
@@ -613,6 +657,20 @@ namespace PIERStory {
                 return null;
 
             return productDetailJSON[__productMasterID];
+        }
+        
+        
+        /// <summary>
+        /// 상품 ID에 연결된 마스터 ID 가져오기 
+        /// </summary>
+        /// <param name="__productID"></param>
+        /// <returns></returns>
+        public int GetProductMasterID(string __productID) {
+            JsonData masterJSON = GetGameProductItemMasterInfo(__productID);
+            if(masterJSON == null)
+                return 0;
+                
+            return SystemManager.GetJsonNodeInt(masterJSON, "product_master_id");
         }
 
 

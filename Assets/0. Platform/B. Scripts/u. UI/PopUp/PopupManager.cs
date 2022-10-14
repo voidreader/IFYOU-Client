@@ -40,9 +40,7 @@ namespace PIERStory {
         [SerializeField] GameObject popupGameAbility; // 게임 능력치 증감 안내 메세지 
         public GameObject popupGameMessage;
         public GameObject popupGameOption;
-        public GameObject popupGradeBenefitInfo;
-        [SerializeField] GameObject popupGradeExp;
-        [SerializeField] GameObject popupGradeUp;
+
         public GameObject popupHelpBox;             // 도움말 팝업
         public GameObject popupLackOfCurrency;      // 재화 부족 팝업
         public GameObject popupLanguage;
@@ -59,6 +57,7 @@ namespace PIERStory {
         [SerializeField] GameObject popupPremiumPass;
         public GameObject popupRate;
         [SerializeField] GameObject popupResource; // 리소스 표현  팝업 
+        [SerializeField] GameObject popupMultiResource; // 멀티 리소스 표현  팝업 
 
         public GameObject popupSelectionHint;
         [SerializeField] GameObject popupSideAlert;
@@ -426,20 +425,7 @@ namespace PIERStory {
             else 
                 DictPopup.Add(GameConst.POPUP_EPISODE_FIRST_REWARD, popupEpisodeClearReward);
 
-            if (DictPopup.ContainsKey(LobbyConst.POPUP_GRADE_BENEFIT_INFO))
-                DictPopup[LobbyConst.POPUP_GRADE_BENEFIT_INFO] = popupGradeBenefitInfo;
-            else
-                DictPopup.Add(LobbyConst.POPUP_GRADE_BENEFIT_INFO, popupGradeBenefitInfo);
 
-            if(DictPopup.ContainsKey(LobbyConst.POPUP_GRADE_EXP)) 
-                DictPopup[LobbyConst.POPUP_GRADE_EXP] = popupGradeExp;
-            else 
-                DictPopup.Add(LobbyConst.POPUP_GRADE_EXP, popupGradeExp);
-
-            if (DictPopup.ContainsKey(LobbyConst.POPUP_GRADE_UP))
-                DictPopup[LobbyConst.POPUP_GRADE_UP] = popupGradeUp;
-            else
-                DictPopup.Add(LobbyConst.POPUP_GRADE_UP, popupGradeUp);
 
             if (DictPopup.ContainsKey(CommonConst.POPUP_LACK_OF_CURRENCY))
                 DictPopup[CommonConst.POPUP_LACK_OF_CURRENCY] = popupLackOfCurrency;
@@ -536,6 +522,11 @@ namespace PIERStory {
                 DictPopup["Resource"] = popupResource;
             else 
                 DictPopup.Add("Resource", popupResource);
+                
+            if(DictPopup.ContainsKey("MultiResource")) 
+                DictPopup["MultiResource"] = popupMultiResource;
+            else 
+                DictPopup.Add("MultiResource", popupMultiResource);
                 
                 
             if(DictPopup.ContainsKey("HelpBox")) 

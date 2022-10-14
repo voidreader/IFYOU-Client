@@ -56,9 +56,13 @@ public class ES3Postprocessor : UnityEditor.AssetModificationProcessor
         {
             for (int i = 0; i < SceneManager.sceneCount; i++)
             {
-                var mgr = (ES3ReferenceMgr)ES3ReferenceMgr.GetManagerFromScene(SceneManager.GetSceneAt(i));
-                if (mgr != null)
-                    mgr.RefreshDependencies(isEnteringPlayMode);
+                var scene = SceneManager.GetSceneAt(i);
+                if (scene.isLoaded)
+                {
+                    var mgr = (ES3ReferenceMgr)ES3ReferenceMgr.GetManagerFromScene(SceneManager.GetSceneAt(i));
+                    if (mgr != null)
+                        mgr.RefreshDependencies(isEnteringPlayMode);
+                }
             }
         }
 

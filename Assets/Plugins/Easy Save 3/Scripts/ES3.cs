@@ -37,7 +37,7 @@ public class ES3
     /// <summary>Saves the value to a file with the given key.</summary>
     /// <param name="key">The key we want to use to identify our value in the file.</param>
     /// <param name="value">The value we want to save.</param>
-    /// <param name="filepath">The relative or absolute path of the file we want to store our value to.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to store our value to.</param>
     public static void Save(string key, object value, string filePath)
     {
         Save<object>(key, value, new ES3Settings(filePath));
@@ -46,7 +46,7 @@ public class ES3
     /// <summary>Saves the value to a file with the given key.</summary>
     /// <param name="key">The key we want to use to identify our value in the file.</param>
     /// <param name="value">The value we want to save.</param>
-    /// <param name="filepath">The relative or absolute path of the file we want to store our value to.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to store our value to.</param>
     /// <param name="settings">The settings we want to use to override the default settings.</param>
     public static void Save(string key, object value, string filePath, ES3Settings settings)
     {
@@ -75,7 +75,7 @@ public class ES3
     /// <param name="T">The type of the data that we want to save.</param>
     /// <param name="key">The key we want to use to identify our value in the file.</param>
     /// <param name="value">The value we want to save.</param>
-    /// <param name="filepath">The relative or absolute path of the file we want to store our value to.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to store our value to.</param>
     public static void Save<T>(string key, T value, string filePath)
     {
         Save<T>(key, value, new ES3Settings(filePath));
@@ -85,7 +85,7 @@ public class ES3
     /// <param name="T">The type of the data that we want to save.</param>
     /// <param name="key">The key we want to use to identify our value in the file.</param>
     /// <param name="value">The value we want to save.</param>
-    /// <param name="filepath">The relative or absolute path of the file we want to store our value to.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to store our value to.</param>
     /// <param name="settings">The settings we want to use to override the default settings.</param>
     public static void Save<T>(string key, T value, string filePath, ES3Settings settings)
     {
@@ -121,7 +121,7 @@ public class ES3
 
     /// <summary>Creates or overwrites a file with the specified raw bytes.</summary>
     /// <param name="bytes">The bytes we want to store.</param>
-    /// <param name="filepath">The relative or absolute path of the file we want to store our bytes to.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to store our bytes to.</param>
     public static void SaveRaw(byte[] bytes, string filePath)
     {
         SaveRaw(bytes, new ES3Settings(filePath));
@@ -129,7 +129,7 @@ public class ES3
 
     /// <summary>Creates or overwrites a file with the specified raw bytes.</summary>
     /// <param name="bytes">The bytes we want to store.</param>
-    /// <param name="filepath">The relative or absolute path of the file we want to store our bytes to.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to store our bytes to.</param>
     /// <param name="settings">The settings we want to use to override the default settings.</param>
     public static void SaveRaw(byte[] bytes, string filePath, ES3Settings settings)
     {
@@ -163,7 +163,7 @@ public class ES3
 
     /// <summary>Creates or overwrites the default file with the specified raw bytes.</summary>
     /// <param name="str">The string we want to store.</param>
-    /// <param name="filepath">The relative or absolute path of the file we want to store our bytes to.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to store our bytes to.</param>
     public static void SaveRaw(string str, string filePath)
     {
         SaveRaw(str, new ES3Settings(filePath));
@@ -171,7 +171,7 @@ public class ES3
 
     /// <summary>Creates or overwrites a file with the specified raw bytes.</summary>
     /// <param name="str">The string we want to store.</param>
-    /// <param name="filepath">The relative or absolute path of the file we want to store our bytes to.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to store our bytes to.</param>
     /// <param name="settings">The settings we want to use to override the default settings.</param>
     public static void SaveRaw(string str, string filePath, ES3Settings settings)
     {
@@ -222,24 +222,32 @@ public class ES3
             stream.Write(bytes, 0, bytes.Length);
     }
 
-    /// <summary>Creates or appends the specified bytes to the default file.</summary>
-    /// <param name="bytes">The bytes we want to append.</param>
+    /// <summary>Creates or appends the specified string to the default file.</summary>
+    /// <param name="str">The string we want to append.</param>
     public static void AppendRaw(string str)
     {
         AppendRaw(str, new ES3Settings());
     }
 
-    /// <summary>Creates or appends the specified bytes to a file.</summary>
-    /// <param name="bytes">The bytes we want to append.</param>
-    /// <param name="filepath">The relative or absolute path of the file we want to append our bytes to.</param>
+    /// <summary>Creates or appends the specified string to the default file.</summary>
+    /// <param name="str">The string we want to append.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to append our string to.</param>
+    public static void AppendRaw(string str, string filePath)
+    {
+        AppendRaw(str, new ES3Settings(filePath));
+    }
+
+    /// <summary>Creates or appends the specified string to the default file.</summary>
+    /// <param name="str">The string we want to append.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to append our string to.</param>
     /// <param name="settings">The settings we want to use to override the default settings.</param>
     public static void AppendRaw(string str, string filePath, ES3Settings settings)
     {
         AppendRaw(str, new ES3Settings(filePath, settings));
     }
 
-    /// <summary>Creates or appends the specified bytes to a file.</summary>
-    /// <param name="bytes">The bytes we want to append.</param>
+    /// <summary>Creates or appends the specified string to the default file.</summary>
+    /// <param name="str">The string we want to append.</param>
     /// <param name="settings">The settings we want to use to override the default settings.</param>
     public static void AppendRaw(string str, ES3Settings settings)
     {
@@ -260,7 +268,7 @@ public class ES3
 
     /// <summary>Saves a Texture2D as a PNG or JPG, depending on the file extension used for the filePath.</summary>
     /// <param name="texture">The Texture2D we want to save as a JPG or PNG.</param>
-    /// <param name="filePath">The relative or absolute path of the PNG or JPG file we want to create.</param>
+    /// <param name="imagePath">The relative or absolute path of the PNG or JPG file we want to create.</param>
     public static void SaveImage(Texture2D texture, string imagePath)
     {
         SaveImage(texture, new ES3Settings(imagePath));
@@ -268,7 +276,7 @@ public class ES3
 
     /// <summary>Saves a Texture2D as a PNG or JPG, depending on the file extension used for the filePath.</summary>
     /// <param name="texture">The Texture2D we want to save as a JPG or PNG.</param>
-    /// <param name="filePath">The relative or absolute path of the PNG or JPG file we want to create.</param>
+    /// <param name="imagePath">The relative or absolute path of the PNG or JPG file we want to create.</param>
     public static void SaveImage(Texture2D texture, string imagePath, ES3Settings settings)
     {
         SaveImage(texture, new ES3Settings(imagePath, settings));
@@ -284,7 +292,7 @@ public class ES3
 
     /// <summary>Saves a Texture2D as a PNG or JPG, depending on the file extension used for the filePath.</summary>
     /// <param name="texture">The Texture2D we want to save as a JPG or PNG.</param>
-    /// <param name="filePath">The relative or absolute path of the PNG or JPG file we want to create.</param>
+    /// <param name="imagePath">The relative or absolute path of the PNG or JPG file we want to create.</param>
     public static void SaveImage(Texture2D texture, int quality, string imagePath)
     {
         SaveImage(texture, new ES3Settings(imagePath));
@@ -292,7 +300,7 @@ public class ES3
 
     /// <summary>Saves a Texture2D as a PNG or JPG, depending on the file extension used for the filePath.</summary>
     /// <param name="texture">The Texture2D we want to save as a JPG or PNG.</param>
-    /// <param name="filePath">The relative or absolute path of the PNG or JPG file we want to create.</param>
+    /// <param name="imagePath">The relative or absolute path of the PNG or JPG file we want to create.</param>
     public static void SaveImage(Texture2D texture, int quality, string imagePath, ES3Settings settings)
     {
         SaveImage(texture, quality, new ES3Settings(imagePath, settings));
@@ -893,12 +901,56 @@ public class ES3
 
     public static string EncryptString(string str, string password=null)
     {
-        return ES3Settings.defaultSettings.encoding.GetString(EncryptBytes(ES3Settings.defaultSettings.encoding.GetBytes(str), password));
+        return Convert.ToBase64String(EncryptBytes(ES3Settings.defaultSettings.encoding.GetBytes(str), password));
     }
 
     public static string DecryptString(string str, string password=null)
     {
-        return ES3Settings.defaultSettings.encoding.GetString(DecryptBytes(ES3Settings.defaultSettings.encoding.GetBytes(str), password));
+        return ES3Settings.defaultSettings.encoding.GetString(DecryptBytes(Convert.FromBase64String(str), password));
+    }
+
+    public static byte[] CompressBytes(byte[] bytes)
+    {
+        using (var ms = new System.IO.MemoryStream())
+        {
+            var settings = new ES3Settings();
+            settings.location = ES3.Location.InternalMS;
+            settings.compressionType = ES3.CompressionType.Gzip;
+            settings.encryptionType = EncryptionType.None;
+
+            using (var stream = ES3Stream.CreateStream(ms, settings, ES3FileMode.Write))
+                stream.Write(bytes, 0, bytes.Length);
+
+            return ms.ToArray();
+        }
+    }
+
+    public static byte[] DecompressBytes(byte[] bytes)
+    {
+        using (var ms = new System.IO.MemoryStream(bytes))
+        {
+            var settings = new ES3Settings();
+            settings.location = ES3.Location.InternalMS;
+            settings.compressionType = ES3.CompressionType.Gzip;
+            settings.encryptionType = EncryptionType.None;
+
+            using (var output = new System.IO.MemoryStream())
+            {
+                using (var input = ES3Stream.CreateStream(ms, settings, ES3FileMode.Read))
+                    ES3Stream.CopyTo(input, output);
+                return output.ToArray();
+            }
+        }
+    }
+
+    public static string CompressString(string str)
+    {
+        return Convert.ToBase64String(CompressBytes(ES3Settings.defaultSettings.encoding.GetBytes(str)));
+    }
+
+    public static string DecompressString(string str)
+    {
+        return ES3Settings.defaultSettings.encoding.GetString(DecompressBytes(Convert.FromBase64String(str)));
     }
 
     /// <summary>Deletes the default file.</summary>

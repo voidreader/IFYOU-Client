@@ -236,20 +236,9 @@ namespace PIERStory
             // Singleton
             main = this;
             
-            // * 코원, 피어 프로젝트 분기하기. 
-            // Debug.Log("IDENTIFIER : " + Application.identifier);
-            if(Application.identifier.Contains("cowon")) {
-                // 코원 프로젝트 
-                gamebaseAPP_ID = "qtV3HLW5";
-                gamebaseLogger_ID = "7eGOB7zE5dQx4yTC";
-                
-            }
-            else { 
-                // 피어 프로젝트 
-                gamebaseAPP_ID = "6swpd3Jp";
-                gamebaseLogger_ID = "6WMxzJjo6i5Z5iXm";
-                
-            }
+            // 게임베이스 
+            gamebaseAPP_ID = "6swpd3Jp";
+            gamebaseLogger_ID = "6WMxzJjo6i5Z5iXm";
             
             
             // * 2021.11.25 보안 처리 추가 
@@ -1407,7 +1396,7 @@ namespace PIERStory
             MainToggleNavigation.OnToggleAccountBonus?.Invoke();
             MainMore.OnRefreshMore?.Invoke();
 
-            UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
+            
             NetworkLoader.main.RequestIfyouplayList();
         }
                 
@@ -1508,8 +1497,7 @@ namespace PIERStory
             // 코인 환전 상품 정보 가져오기
             NetworkLoader.main.RequestCoinExchangeProductList();
 
-            // 업적 리스트 갱신
-            UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
+            
 
             NetworkLoader.main.RequestIfyouplayList();
 
@@ -1911,6 +1899,28 @@ namespace PIERStory
             p.Data.SetLabelsTexts(__message, __quantity.ToString()); // 메세지, 개수 
             
             PopupManager.main.ShowPopup(p, false);
+        }
+        
+        
+        /// <summary>
+        /// 스타, 코인 두개 사용할때에 대한 팝업 
+        /// </summary>
+        /// <param name="__message"></param>
+        /// <param name="__gemCount"></param>
+        /// <param name="__coinCount"></param>
+        public static void ShowMultiResourcePopup(string __message, int __gemCount, int __coinCount) {
+            PopupBase p = PopupManager.main.GetPopup("MultiResource");
+            
+            if (p == null)
+            {
+                Debug.LogError(">> No MultiResource Popup");
+                return;
+            }
+            
+            p.Data.arrayContentString = new string[] {"star", "coin"};
+            p.Data.arrayContentValue = new int[] {__gemCount, __coinCount};
+            p.Data.SetLabelsTexts(__message);
+            PopupManager.main.ShowPopup(p, true);
         }
         
         
@@ -2487,7 +2497,7 @@ namespace PIERStory
             WebView.OnHide += OnHideWebview;
             
             Debug.Log(">> OnHideWebview LoadURL");
-            webView.ClearCache();
+            // webView.ClearCache();
             webView.SetFullScreen(); // 풀스크린 
             webView.ScalesPageToFit = true;
             // webView.Style = WebViewStyle.Popup; // 팝업 스타일 테스트
@@ -2550,7 +2560,7 @@ namespace PIERStory
             
             
             Debug.Log(">> OpenCoinShopWebview OPEN");
-            webView.ClearCache();
+            // webView.ClearCache();
             webView.SetFullScreen(); // 풀스크린 
             webView.ScalesPageToFit = true;
             // webView.Style = WebViewStyle.Browser; // 브라우저 스타일 
@@ -2579,7 +2589,6 @@ namespace PIERStory
             
             if (LobbyManager.main != null)
             {
-                UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
                 NetworkLoader.main.RequestIfyouplayList();
             }            
             
@@ -2603,7 +2612,6 @@ namespace PIERStory
 
             if (LobbyManager.main != null)
             {
-                UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
                 NetworkLoader.main.RequestIfyouplayList();
             }
         }

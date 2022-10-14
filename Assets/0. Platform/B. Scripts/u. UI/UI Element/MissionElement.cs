@@ -31,7 +31,7 @@ namespace PIERStory
         
         public ImageRequireDownload currencyIcon;
         public TextMeshProUGUI currencyAmount;
-        public TextMeshProUGUI expText;
+        
 
         public Image rewardButton;
         public TextMeshProUGUI getRewardText;
@@ -54,7 +54,7 @@ namespace PIERStory
             
             SystemManager.SetText(missionText, missionData.missionName);
 
-            expText.text = missionData.rewardExp.ToString();
+            
 
             SetCurrencyIcon(missionData.rewardQuantity);
             SetMissionState(missionData.missionState);
@@ -231,42 +231,6 @@ namespace PIERStory
             missionData.missionState = MissionState.finish; 
             UserManager.main.SetMissionData(missionData.missionID, missionData);
 
-            // 경험치 획득 팝업 출현
-            PopupBase p = PopupManager.main.GetPopup(LobbyConst.POPUP_GRADE_EXP);
-
-            if (p == null)
-            {
-                Debug.LogError("등급 경험치 획득 팝업 없음!");
-                return;
-            }
-
-            Sprite s = null;
-
-            switch (UserManager.main.nextGrade + 1)
-            {
-                case 1:
-                    s = LobbyManager.main.spriteBronzeBadge;
-                    break;
-                case 2:
-                    s = LobbyManager.main.spriteSilverBadge;
-                    break;
-                case 3:
-                    s = LobbyManager.main.spriteGoldBadge;
-                    break;
-                case 4:
-                    s = LobbyManager.main.spritePlatinumBadge;
-                    break;
-                case 5:
-                    s = LobbyManager.main.spriteIFYOUBadge;
-                    break;
-            }
-
-            p.Data.SetImagesSprites(s);
-            p.isOverlayUse = false;
-            p.Data.SetLabelsTexts(string.Format("+{0}", missionData.rewardExp), string.Format("/{0}", UserManager.main.upgradeGoalPoint));
-            p.Data.contentJson = resposeData;
-            p.Data.contentValue = missionData.rewardExp;
-            PopupManager.main.ShowPopup(p, false);
 
             // * 성공 했다. => 미션이 해금도 되었고, 보상도 받은 상태가 되는거다. 
             ViewMission.OnRefreshProgressor?.Invoke();

@@ -17,7 +17,7 @@ namespace PIERStory {
         public static Action OnMoveStarShop = null;
         public static Action OnRefreshViewMain = null;
         public static Action OnRefreshIfyouplayNewSign = null;      // 이프유플레이 N 갱신
-        public static Action OnRefreshProfileNewSign = null;        // 프로필 N 갱신
+        
         public static Action OnRefreshShopNewSign = null;
         public static Action OnReturnLobby = null;
         
@@ -73,7 +73,7 @@ namespace PIERStory {
             currentShowContainer = lobbyContainer;
 
             OnRefreshIfyouplayNewSign = EnableIfyouplayNewSign;
-            OnRefreshProfileNewSign = EnableNewAchievementSign;
+            
             OnRefreshShopNewSign = RefreshShopNewSign;
             
             OnRefreshViewMain = RefreshMainView;
@@ -187,7 +187,7 @@ namespace PIERStory {
             library.InitLibrary();
 
             EnableIfyouplayNewSign();
-            EnableNewAchievementSign();
+            
         }
         
 
@@ -376,10 +376,7 @@ namespace PIERStory {
             Firebase.Analytics.FirebaseAnalytics.LogEvent("tier_open");
         }
 
-        void EnableNewAchievementSign()
-        {
-            achievementNewSign.SetActive(UserManager.main.CountClearAchievement() > 0);
-        }
+        
         
         void RefreshShopNewSign() {
             Debug.Log("RefreshShopNewSign");
@@ -394,41 +391,10 @@ namespace PIERStory {
                 return;
 
             currentShowContainer.Show();
-            UserManager.main.RequestUserGradeInfo(CallbackUserGreadeInfo, true);
+            // UserManager.main.RequestUserGradeInfo(CallbackUserGreadeInfo, true);
         }
 
-        /// <summary>
-        /// 통상적 업적 리스트 콜백
-        /// </summary>
-        public void CallbackUserGreadeInfo(HTTPRequest req, HTTPResponse res)
-        {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("Failed CallbackUserGreadeInfo");
-                return;
-            }
 
-            JsonData result = JsonMapper.ToObject(res.DataAsText);
-
-            // 시즌 정산중인지 체크
-            UserManager.main.SetSeasonCheck(result);
-
-            // 정산중인 경우 팝업 띄워주고, 프로필의 접근을 막는다
-            if(NetworkLoader.main.seasonCalculating)
-            {
-                SystemManager.ShowMessageWithLocalize("80118");
-                ReturnLobby();
-                return;
-            }
-
-            // grade key값에 대한 정보 세팅
-            UserManager.main.SetUserGradeInfo(result);
-
-            // 업적 리스트 세팅
-            UserManager.main.SetAchievementList(result);
-            OnProfile();
-
-        }
 
         void ReturnLobby()
         {

@@ -74,16 +74,16 @@ namespace PIERStory
 
         void SetAchievementLevel()
         {
-            achievementLevelText.text = string.Format("{0} LV", achievementData.currentLevel);
+            // achievementLevelText.text = string.Format("{0} LV", achievementData.currentLevel);
 
-            if (achievementData.currentLevel >= 1 && achievementData.currentLevel < 30)
-                levelTagBackground.sprite = LobbyManager.main.spriteLevelTag1;
-            else if (achievementData.currentLevel >= 30 && achievementData.currentLevel < 50)
-                levelTagBackground.sprite = LobbyManager.main.spriteLevelTag2;
-            else if (achievementData.currentLevel >= 50 && achievementData.currentLevel < 100)
-                levelTagBackground.sprite = LobbyManager.main.spriteLevelTag3;
-            else if (achievementData.currentLevel >= 100)
-                levelTagBackground.sprite = LobbyManager.main.spriteLevelTag4;
+            // if (achievementData.currentLevel >= 1 && achievementData.currentLevel < 30)
+            //     levelTagBackground.sprite = LobbyManager.main.spriteLevelTag1;
+            // else if (achievementData.currentLevel >= 30 && achievementData.currentLevel < 50)
+            //     levelTagBackground.sprite = LobbyManager.main.spriteLevelTag2;
+            // else if (achievementData.currentLevel >= 50 && achievementData.currentLevel < 100)
+            //     levelTagBackground.sprite = LobbyManager.main.spriteLevelTag3;
+            // else if (achievementData.currentLevel >= 100)
+            //     levelTagBackground.sprite = LobbyManager.main.spriteLevelTag4;
         }
 
         public void OnClickAchieveClaim()
@@ -109,8 +109,8 @@ namespace PIERStory
                     ViewMain.OnReturnLobby?.Invoke();
 
                 // 이미 받은 경우 화면 갱신을 요청한다
-                else if (SystemManager.GetJsonNodeInt(errordata, "code") == 80019)
-                    UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
+                // else if (SystemManager.GetJsonNodeInt(errordata, "code") == 80019)
+                //     UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackUserGreadeInfo);
 
                 return;
             }
@@ -129,24 +129,24 @@ namespace PIERStory
 
             Sprite s = null;
 
-            switch(UserManager.main.nextGrade + 1)
-            {
-                case 1:
-                    s = LobbyManager.main.spriteBronzeBadge;
-                    break;
-                case 2:
-                    s = LobbyManager.main.spriteSilverBadge;
-                    break;
-                case 3:
-                    s = LobbyManager.main.spriteGoldBadge;
-                    break;
-                case 4:
-                    s = LobbyManager.main.spritePlatinumBadge;
-                    break;
-                case 5:
-                    s = LobbyManager.main.spriteIFYOUBadge;
-                    break;
-            }
+            // switch(UserManager.main.nextGrade + 1)
+            // {
+            //     case 1:
+            //         s = LobbyManager.main.spriteBronzeBadge;
+            //         break;
+            //     case 2:
+            //         s = LobbyManager.main.spriteSilverBadge;
+            //         break;
+            //     case 3:
+            //         s = LobbyManager.main.spriteGoldBadge;
+            //         break;
+            //     case 4:
+            //         s = LobbyManager.main.spritePlatinumBadge;
+            //         break;
+            //     case 5:
+            //         s = LobbyManager.main.spriteIFYOUBadge;
+            //         break;
+            // }
 
             p.Data.SetImagesSprites(s);
             p.Data.SetLabelsTexts(string.Format("+{0}", achievementData.experience), string.Format("/{0}", UserManager.main.upgradeGoalPoint));
@@ -154,7 +154,7 @@ namespace PIERStory
             p.Data.contentJson = result["list"]; // 전달 주고 
             PopupManager.main.ShowPopup(p, false);
 
-            UserManager.main.SetSeasonCheck(result["list"]);
+            // UserManager.main.SetSeasonCheck(result["list"]);
         }
     }
 }

@@ -80,20 +80,22 @@ namespace ES3Internal
 			else if(ES3Reflection.IsGenericType(type) && ES3Reflection.ImplementsInterface(type, typeof(IEnumerable)))
 			{
 				Type genericType = ES3Reflection.GetGenericTypeDefinition(type);
-				if(genericType == typeof(List<>))
-					es3Type = new ES3ListType(type);
-				else if(genericType == typeof(Dictionary<,>))
-					es3Type = new ES3DictionaryType(type);
-				else if(genericType == typeof(Queue<>))
-					es3Type = new ES3QueueType(type);
-				else if(genericType == typeof(Stack<>))
-					es3Type = new ES3StackType(type);
-				else if(genericType == typeof(HashSet<>))
-					es3Type = new ES3HashSetType(type);
-				else if(throwException)
-					throw new NotSupportedException("Generic type \""+type.ToString()+"\" is not supported by Easy Save.");
-				else
-					return null;
+                if (typeof(List<>).IsAssignableFrom(genericType))
+                    es3Type = new ES3ListType(type);
+                else if (typeof(IDictionary).IsAssignableFrom(genericType))
+                    es3Type = new ES3DictionaryType(type);
+                else if (genericType == typeof(Queue<>))
+                    es3Type = new ES3QueueType(type);
+                else if (genericType == typeof(Stack<>))
+                    es3Type = new ES3StackType(type);
+                else if (genericType == typeof(HashSet<>))
+                    es3Type = new ES3HashSetType(type);
+                else if (genericType == typeof(Unity.Collections.NativeArray<>))
+                    es3Type = new ES3NativeArrayType(type);
+                else if (throwException)
+                    throw new NotSupportedException("Generic type \"" + type.ToString() + "\" is not supported by Easy Save.");
+                else
+                    return null;
 			}
 			else if(ES3Reflection.IsPrimitive(type)) // ERROR: We should not have to create an ES3Type for a primitive.
 			{
@@ -112,13 +114,15 @@ namespace ES3Internal
                     es3Type = new ES3ReflectedScriptableObjectType(type);
                 else if (ES3Reflection.IsAssignableFrom(typeof(UnityEngine.Object), type))
                     es3Type = new ES3ReflectedUnityObjectType(type);
-                else if (ES3Reflection.HasParameterlessConstructor(type) || ES3Reflection.IsAbstract(type) || ES3Reflection.IsInterface(type))
-                    es3Type = new ES3ReflectedObjectType(type);
-                else if (throwException)
-                    throw new NotSupportedException("Type of " + type + " is not supported as it does not have a parameterless constructor. Only value types, Components or ScriptableObjects are supportable without a parameterless constructor. However, you may be able to create an ES3Type script to add support for it.");
+                /*else if (ES3Reflection.HasParameterlessConstructor(type) || ES3Reflection.IsAbstract(type) || ES3Reflection.IsInterface(type))
+                    es3Type = new ES3ReflectedObjectType(type);*/
+                else if (type.Name.StartsWith("Tuple`"))
+                    es3Type = new ES3TupleType(type);
+                /*else if (throwException)
+                    throw new NotSupportedException("Type of " + type + " is not supported as it does not have a parameterless constructor. Only value types, Components or ScriptableObjects are supportable without a parameterless constructor. However, you may be able to create an ES3Type script to add support for it.");*/
                 else
-                    return null;
-			}
+                    es3Type = new ES3ReflectedObjectType(type);
+            }
 
 			if(es3Type.type == null || es3Type.isUnsupported)
 			{

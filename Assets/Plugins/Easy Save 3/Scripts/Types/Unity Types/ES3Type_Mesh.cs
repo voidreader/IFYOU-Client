@@ -42,6 +42,29 @@ namespace ES3Types
 			writer.WriteProperty("subMeshCount", instance.subMeshCount, ES3Type_int.Instance);
 			for(int i=0; i<instance.subMeshCount; i++)
 				writer.WriteProperty("subMesh"+i, instance.GetTriangles(i), ES3Type_intArray.Instance);
+
+            // Blend shapes.
+            writer.WriteProperty("blendShapeCount", instance.blendShapeCount);
+
+            for (int blendShapeIndex=0; blendShapeIndex<instance.blendShapeCount; blendShapeIndex++)
+            {
+                writer.WriteProperty("GetBlendShapeName" + blendShapeIndex, instance.GetBlendShapeName(blendShapeIndex));
+                writer.WriteProperty("GetBlendShapeFrameCount" + blendShapeIndex, instance.GetBlendShapeFrameCount(blendShapeIndex));
+
+                for (int frameIndex = 0; frameIndex < instance.GetBlendShapeFrameCount(blendShapeIndex); frameIndex++)
+                {
+                    var deltaVertices = new Vector3[instance.vertexCount];
+                    var deltaNormals = new Vector3[instance.vertexCount];
+                    var deltaTangents = new Vector3[instance.vertexCount];
+
+                    instance.GetBlendShapeFrameVertices(blendShapeIndex, frameIndex, deltaVertices, deltaNormals, deltaTangents);
+
+                    writer.WriteProperty("blendShapeDeltaVertices" + blendShapeIndex + "_" + frameIndex, deltaVertices);
+                    writer.WriteProperty("blendShapeDeltaNormals" + blendShapeIndex + "_" + frameIndex, deltaNormals);
+                    writer.WriteProperty("blendShapeDeltaTangents" + blendShapeIndex + "_" + frameIndex, deltaTangents);
+                    writer.WriteProperty("blendShapeFrameWeight" + blendShapeIndex + "_" + frameIndex, instance.GetBlendShapeFrameWeight(blendShapeIndex, frameIndex));
+                }
+            }
 		}
 
 		protected override object ReadUnityObject<T>(ES3Reader reader)
@@ -117,7 +140,26 @@ namespace ES3Types
 						for(int i=0; i<instance.subMeshCount; i++)
 							instance.SetTriangles(reader.ReadProperty<int[]>(ES3Type_intArray.Instance), i);
 						break;
-					default:
+                    case "blendShapeCount":
+                        instance.ClearBlendShapes();
+                        var blendShapeCount = reader.Read<System.Int32>(ES3Type_int.Instance);
+                        for (int blendShapeIndex = 0; blendShapeIndex < blendShapeCount; blendShapeIndex++)
+                        {
+                            var shapeName = reader.ReadProperty<string>();
+                            var frameCount = reader.ReadProperty<int>();
+                            
+                            for (int frameIndex = 0; frameIndex < frameCount; frameIndex++)
+                            {
+                                var deltaVertices = reader.ReadProperty<Vector3[]>();
+                                var deltaNormals = reader.ReadProperty<Vector3[]>();
+                                var deltaTangents = reader.ReadProperty<Vector3[]>();
+                                var frameWeight = reader.ReadProperty<float>();
+
+                                instance.AddBlendShapeFrame(shapeName, frameWeight, deltaVertices, deltaNormals, deltaTangents);
+                            }
+                        }
+                        break;
+                    default:
 						reader.Skip();
 						break;
 				}

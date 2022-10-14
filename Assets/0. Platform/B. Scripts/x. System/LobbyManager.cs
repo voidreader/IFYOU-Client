@@ -34,18 +34,18 @@ namespace PIERStory {
         public Sprite spriteDailyMissionFinish;
 
 
-        [Header("프로필")]
-        public Sprite spriteBronzeBadge;
-        public Sprite spriteSilverBadge;
-        public Sprite spriteGoldBadge;
-        public Sprite spritePlatinumBadge;
-        public Sprite spriteIFYOUBadge;
+        // [Header("프로필")]
+        // public Sprite spriteBronzeBadge;
+        // public Sprite spriteSilverBadge;
+        // public Sprite spriteGoldBadge;
+        // public Sprite spritePlatinumBadge;
+        // public Sprite spriteIFYOUBadge;
 
-        [Space]
-        public Sprite spriteLevelTag1;
-        public Sprite spriteLevelTag2;
-        public Sprite spriteLevelTag3;
-        public Sprite spriteLevelTag4;
+        // [Space]
+        // public Sprite spriteLevelTag1;
+        // public Sprite spriteLevelTag2;
+        // public Sprite spriteLevelTag3;
+        // public Sprite spriteLevelTag4;
 
 
         [Space]
@@ -70,7 +70,7 @@ namespace PIERStory {
 
             if(UserManager.main != null && !string.IsNullOrEmpty(UserManager.main.userKey))
             {
-                UserManager.main.RequestUserGradeInfo(UserManager.main.CallbackNewCompleteAchievement);
+                
                 NetworkLoader.main.RequestIfyouplayList();
                 yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             }

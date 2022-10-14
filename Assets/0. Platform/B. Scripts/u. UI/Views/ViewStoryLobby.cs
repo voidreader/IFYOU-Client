@@ -1454,7 +1454,7 @@ namespace PIERStory
 
 
             Debug.Log(">> OnHideWebview LoadURL");
-            SystemManager.main.webView.ClearCache();
+            // SystemManager.main.webView.ClearCache();
             SystemManager.main.webView.SetFullScreen(); // 풀스크린 
             SystemManager.main.webView.ScalesPageToFit = true;
             SystemManager.main.webView.LoadURL(URLString.URLWithPath(finalURL));

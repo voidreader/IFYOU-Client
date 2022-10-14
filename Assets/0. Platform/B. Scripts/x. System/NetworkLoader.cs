@@ -767,23 +767,7 @@ namespace PIERStory
         }
 
 
-        /// <summary>
-        /// 이프유 업적 통신 (2022.09.27 사용하지 않음)
-        /// </summary>
-        /// <param name="__achievementType"></param>
-        void RequestIFYOUAchievement__legacy(int __achievementType, int __projectId = -1, int __episodeId = -1)
-        {
-            JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "requestAchievementMain";
-            sending[CommonConst.COL_USERKEY] = UserManager.main.userKey;
-            sending["achievement_id"] = __achievementType;
-            sending[CommonConst.COL_PROJECT_ID] = __projectId;
-            sending[CommonConst.COL_EPISODE_ID] = __episodeId;
-
-            SendPost(UserManager.main.CallbackRequestAchievement, sending);
-        }
-
-
+  
 
 
         #region 카테고리

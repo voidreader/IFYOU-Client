@@ -11,7 +11,7 @@ using System.Linq;
 public class ES3File
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    internal static Dictionary<string, ES3File> cachedFiles = new Dictionary<string, ES3File>();
+    public static Dictionary<string, ES3File> cachedFiles = new Dictionary<string, ES3File>();
 
     public ES3Settings settings;
     private Dictionary<string, ES3Data> cache = new Dictionary<string, ES3Data>();
@@ -104,10 +104,11 @@ public class ES3File
         if (settings == null)
             settings = new ES3Settings();
 
-        ES3.DeleteFile(settings);
-
         if (cache.Count == 0)
+        {
+            ES3.DeleteFile(settings);
             return;
+        }
 
         using (var baseWriter = ES3Writer.Create(settings, true, !syncWithFile, false))
         {

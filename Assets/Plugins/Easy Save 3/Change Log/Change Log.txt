@@ -1,3 +1,24 @@
+3.5.1
+- Reverted changes to LoadRaw methods when using Cache as it caused regression issues.
+
+3.5.0
+- Added support for NativeArray.
+- Managed case where ES3.EncryptBytes/DecryptBytes encountered an encoding issue.
+- Worked around Unity bug where invalid assembly list would cause issues when exceptions are disabled.
+- Worked around bug at Unity's end where unloaded scenes are returned by their methods.
+- Resolved issue where scripting define symbols were overwritten on older versions of Unity.
+- Worked around bug where inertia tensor value is rejected even when set as it's default upon loading.
+- Most Material properties can now be saved, including custom properties.
+- When saving a parent GameObject, children automatically have their parent set to the parent GameObject rather than loading this value by reference.
+- Support added for Tuples.
+- Added overload for AppendRaw which accepts a string and a filename.
+- Worked around Unity bug where EventType.Layout isn't called when moving tabs for first time, causing Types pane recent types to be uninitialised.
+- Worked around Unity bug which infrequently prevented Auto Save changes from persisting.
+- Added ES3.Compress and ES3.Decompress methods.
+- Performing 'Add Reference(s) to Manager' for a Texture2D will also add it's Sprite if one is present.
+- Classes without parameterless constructors can now be serialised (note that their constructor will not be called).
+- Resolved issue where an unloaded scene warning was thrown when scene is open but manually marked as unloaded in the Editor.
+
 3.4.2
 - Resolved issue where Unity Visual Scripting defines were not present on some versions of Unity.
 

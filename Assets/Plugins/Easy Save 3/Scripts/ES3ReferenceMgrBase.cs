@@ -47,7 +47,20 @@ namespace ES3Internal
 
         public static ES3ReferenceMgrBase GetManagerFromScene(Scene scene)
         {
-            var roots = scene.GetRootGameObjects();
+            // This has been removed as isLoaded is false during the initial Awake().
+            /*if (!scene.isLoaded)
+                return null;*/
+
+            GameObject[] roots;
+            try
+            {
+                roots = scene.GetRootGameObjects();
+            }
+            catch
+            {
+                return null;
+            }
+
             ES3ReferenceMgr mgr = null;
 
             // First, look for Easy Save 3 Manager in the top-level.
@@ -125,6 +138,8 @@ namespace ES3Internal
 
         private void OnDestroy()
         {
+            if (_current == this)
+                _current = null;
             mgrs.Remove(this);
         }
 
@@ -440,8 +455,16 @@ namespace ES3Internal
             {
                 // SerializedObject is expensive, so for known classes we manually gather references.
 
-                if (type == typeof(Animator) || obj is Transform || type == typeof(CanvasRenderer) || type == typeof(Mesh) || type == typeof(AudioClip) || type == typeof(Rigidbody) || obj is Texture || obj is HorizontalOrVerticalLayoutGroup)
+                if (type == typeof(Animator) || obj is Transform || type == typeof(CanvasRenderer) || type == typeof(Mesh) || type == typeof(AudioClip) || type == typeof(Rigidbody) || obj is HorizontalOrVerticalLayoutGroup)
                     return;
+
+                if(obj is Texture)
+                {
+                    // This ensures that Sprites which are children of the Texture are also added. In the Editor you would otherwise need to expand the Texture to add the Sprite.
+                    foreach(var dependency in UnityEditor.AssetDatabase.LoadAllAssetsAtPath(UnityEditor.AssetDatabase.GetAssetPath(obj)))
+                        if (dependency != obj)
+                            dependencies.Add(dependency);
+                }
 
                 if (obj is Graphic)
                 {
@@ -472,7 +495,19 @@ namespace ES3Internal
 
                 if (type == typeof(Material))
                 {
-                    dependencies.Add(((Material)obj).shader);
+                    var material = (Material)obj;
+                    var shader = material.shader;
+                    if (shader != null)
+                    {
+                        dependencies.Add(material.shader);
+
+#if UNITY_2019_3_OR_NEWER
+                        for (int i = 0; i < shader.GetPropertyCount(); i++)
+                            if (shader.GetPropertyType(i) == UnityEngine.Rendering.ShaderPropertyType.Texture)
+                                dependencies.Add(material.GetTexture(shader.GetPropertyName(i)));
+                    }
+#endif
+
                     return;
                 }
 
@@ -507,7 +542,9 @@ namespace ES3Internal
 
                 if (obj is Renderer)
                 {
-                    dependencies.UnionWith(((Renderer)obj).sharedMaterials);
+                    var renderer = (Renderer)obj;
+                    foreach (var material in renderer.sharedMaterials)
+                        CollectDependenciesFromFields(material, dependencies, depth - 1);
                     return;
                 }
             }

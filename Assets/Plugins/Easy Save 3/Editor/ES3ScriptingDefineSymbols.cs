@@ -8,32 +8,19 @@ using System.Linq;
 using System;
 
 [InitializeOnLoad]
-public class ES3ScriptingDefineSymbols : IActiveBuildTargetChanged
+public class ES3ScriptingDefineSymbols
 {
     static ES3ScriptingDefineSymbols()
     {
         SetDefineSymbols();
     }
 
-
-    public int callbackOrder { get { return 0; } }
-    public void OnActiveBuildTargetChanged(BuildTarget previousTarget, BuildTarget newTarget)
-    {
-        SetDefineSymbols();
-    }
-
     static void SetDefineSymbols() 
     {
-        foreach (var assembly in CompilationPipeline.GetAssemblies())
-        {
-            if (assembly.name.Contains("VisualScripting"))
-            {
-                SetDefineSymbol("UNITY_VISUAL_SCRIPTING");
-                break;
-            }
-        }
+        if (Type.GetType("Unity.VisualScripting.IncludeInSettingsAttribute, Unity.VisualScripting.Core") != null)
+            SetDefineSymbol("UNITY_VISUAL_SCRIPTING");
 
-        if (Type.GetType("Bolt.Break, Bolt.Flow.Runtime") != null)
+        if (Type.GetType("Ludiq.IncludeInSettingsAttribute, Ludiq.Core.Runtime") != null)
             SetDefineSymbol("BOLT_VISUAL_SCRIPTING");
     }
 
@@ -45,7 +32,10 @@ public class ES3ScriptingDefineSymbols : IActiveBuildTargetChanged
             string[] defines;
             PlayerSettings.GetScriptingDefineSymbols(target, out defines);
             if(!defines.Contains(symbol))
-                PlayerSettings.SetScriptingDefineSymbols(target, symbol);
+            {
+                ArrayUtility.Add(ref defines, symbol);
+                PlayerSettings.SetScriptingDefineSymbols(target, defines);
+            }
         }
 #else
         string definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
@@ -54,13 +44,6 @@ public class ES3ScriptingDefineSymbols : IActiveBuildTargetChanged
             PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, string.Join(";", allDefines.Concat(new string[] { symbol }).ToArray()));
 #endif
             return;
-    }
-
-    static int GetCurrentUnixTimestamp()
-    {
-        DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        TimeSpan diff = DateTime.Now.ToUniversalTime() - origin;
-        return (int)Math.Floor(diff.TotalSeconds);
     }
 
 #if UNITY_2021_2_OR_NEWER

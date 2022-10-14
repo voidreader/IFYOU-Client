@@ -42,6 +42,8 @@ namespace PIERStory {
         public bool isPositive = true;      // 팝업의 타입이 긍정타입인지 부정타입인지
         
         public int contentValue = 0;
+        public string[] arrayContentString;
+        public int[] arrayContentValue;
 
         /// <summary>
         /// 버튼 텍스트 처리 
@@ -100,6 +102,14 @@ namespace PIERStory {
         /// <param name="__action"></param>
         public void SetNegativeButtonCallback(Action __action) {
             negativeButtonCallback = __action;
+        }
+        
+        public void SetArrayString(params string[] __string) {
+            arrayContentString = __string;
+        }
+        
+        public void SetArrayValue(params int[] __values) {
+            arrayContentValue = __values;
         }
         
         

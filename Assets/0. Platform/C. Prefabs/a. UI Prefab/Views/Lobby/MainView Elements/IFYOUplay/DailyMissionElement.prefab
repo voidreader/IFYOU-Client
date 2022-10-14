@@ -179,7 +179,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6843481550039310789}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -249,6 +249,9 @@ MonoBehaviour:
   missionText: {fileID: 6843481551109315634}
   buttonImage: {fileID: 6843481551424888198}
   buttonLabel: {fileID: 6843481549536537101}
+  currentResult: 0
+  limitCount: 0
+  received: 0
 --- !u!1 &6843481551109315633
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,8 +288,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 130, y: 0}
-  m_SizeDelta: {x: 385.9, y: 70}
+  m_AnchoredPosition: {x: 115, y: 0}
+  m_SizeDelta: {x: 380, y: 70}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &6843481551109315789
 CanvasRenderer:
@@ -439,8 +442,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -27, y: 0}
-  m_SizeDelta: {x: 130, y: 54}
+  m_AnchoredPosition: {x: -25, y: 0}
+  m_SizeDelta: {x: 140, y: 54}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &6843481551424888193
 CanvasRenderer:
@@ -543,6 +546,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6843481550039310788}
     m_Modifications:
+    - target: {fileID: 7089520780472758452, guid: d014a6eab71fdb14ca63db48c70f1e79, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7089520780472758454, guid: d014a6eab71fdb14ca63db48c70f1e79, type: 3}
       propertyPath: m_IsActive
       value: 0

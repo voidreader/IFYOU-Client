@@ -203,7 +203,7 @@ namespace PIERStory
                 }
             }
 
-            ViewMain.OnRefreshProfileNewSign?.Invoke();
+            // ViewMain.OnRefreshProfileNewSign?.Invoke();
 
             EnterProfile();
         }
@@ -216,36 +216,36 @@ namespace PIERStory
         /// <param name="__grade"></param>
         void SetBadgeSprite(Image __img, TextMeshProUGUI __text, int __grade)
         {
-            __img.gameObject.SetActive(true);
-            __text.gameObject.SetActive(true);
+            // __img.gameObject.SetActive(true);
+            // __text.gameObject.SetActive(true);
 
-            switch (__grade)
-            {
-                case 1:
-                    __img.sprite = LobbyManager.main.spriteBronzeBadge;
-                    SystemManager.SetLocalizedText(__text, "5191");
-                    break;
-                case 2:
-                    __img.sprite = LobbyManager.main.spriteSilverBadge;
-                    SystemManager.SetLocalizedText(__text, "5192");
-                    break;
-                case 3:
-                    __img.sprite = LobbyManager.main.spriteGoldBadge;
-                    SystemManager.SetLocalizedText(__text, "5193");
-                    break;
-                case 4:
-                    __img.sprite = LobbyManager.main.spritePlatinumBadge;
-                    SystemManager.SetLocalizedText(__text, "5194");
-                    break;
-                case 5:
-                    __img.sprite = LobbyManager.main.spriteIFYOUBadge;
-                    SystemManager.SetLocalizedText(__text, "5195");
-                    break;
-                default:
-                    __img.gameObject.SetActive(false);
-                    __text.gameObject.SetActive(false);
-                    break;
-            }
+            // switch (__grade)
+            // {
+            //     case 1:
+            //         __img.sprite = LobbyManager.main.spriteBronzeBadge;
+            //         SystemManager.SetLocalizedText(__text, "5191");
+            //         break;
+            //     case 2:
+            //         __img.sprite = LobbyManager.main.spriteSilverBadge;
+            //         SystemManager.SetLocalizedText(__text, "5192");
+            //         break;
+            //     case 3:
+            //         __img.sprite = LobbyManager.main.spriteGoldBadge;
+            //         SystemManager.SetLocalizedText(__text, "5193");
+            //         break;
+            //     case 4:
+            //         __img.sprite = LobbyManager.main.spritePlatinumBadge;
+            //         SystemManager.SetLocalizedText(__text, "5194");
+            //         break;
+            //     case 5:
+            //         __img.sprite = LobbyManager.main.spriteIFYOUBadge;
+            //         SystemManager.SetLocalizedText(__text, "5195");
+            //         break;
+            //     default:
+            //         __img.gameObject.SetActive(false);
+            //         __text.gameObject.SetActive(false);
+            //         break;
+            // }
         }
 
         void SetVerticalNormalize()

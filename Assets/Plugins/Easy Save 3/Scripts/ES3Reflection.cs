@@ -30,11 +30,14 @@ namespace ES3Internal
         {
             get
             {
+
                 if (_assemblies == null)
                 {
                     var assemblyNames = new ES3Settings().assemblyNames;
                     var assemblyList = new List<Assembly>();
 
+                    /* We only use a try/catch block for UWP because exceptions can be disabled on some other platforms (e.g. WebGL), but the non-try/catch method doesn't work on UWP */
+#if NETFX_CORE
                     for (int i = 0; i < assemblyNames.Length; i++)
                     {
                         try
@@ -45,6 +48,13 @@ namespace ES3Internal
                         }
                         catch { }
                     }
+
+#else
+                    var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                    foreach (var assembly in assemblies)
+                        if (assemblyNames.Contains(assembly.GetName().Name))
+                            assemblyList.Add(assembly);
+#endif
                     _assemblies = assemblyList.ToArray();
                 }
                 return _assemblies;
@@ -240,8 +250,8 @@ namespace ES3Internal
                 if (!TypeIsSerializable(genericArgs[i]))
                     return false;
 
-            if (HasParameterlessConstructor(type))
-                return true;
+            /*if (HasParameterlessConstructor(type))
+                return true;*/
             return false;
         }
 
@@ -251,7 +261,16 @@ namespace ES3Internal
                 return ES3ComponentType.CreateComponent(type);
             else if (IsAssignableFrom(typeof(ScriptableObject), type))
                 return ScriptableObject.CreateInstance(type);
-            return Activator.CreateInstance(type);
+            else if (ES3Reflection.HasParameterlessConstructor(type))
+                return Activator.CreateInstance(type);
+            else
+            {
+#if NETFX_CORE
+                throw new NotSupportedException($"Cannot create an instance of {type} because it does not have a parameterless constructor, which is required on Universal Windows platform.");
+#else
+                return System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type);
+#endif
+            }
         }
 
         public static System.Object CreateInstance(Type type, params object[] args)
@@ -309,7 +328,7 @@ namespace ES3Internal
 
         /*
 		 * 	Finds all classes of a specific type, and then returns an instance of each.
-		 * 	Ignores classes which can't be instantiated (i.e. abstract classes).
+		 * 	Ignores classes which can't be instantiated (i.e. abstract classes, those without parameterless constructors).
 		 */
         public static IList<T> GetInstances<T>()
         {
@@ -400,23 +419,15 @@ namespace ES3Internal
 
 		public static bool HasParameterlessConstructor(Type type)
 		{
-		foreach (var cInfo in type.GetTypeInfo().DeclaredConstructors)
-		{
-		if (!cInfo.IsFamily && !cInfo.IsStatic && cInfo.GetParameters().Length == 0)
-		return true;
-		}
-		return false;
-
+		    return GetParameterlessConstructor(type) != null;
 		}
 
 		public static ConstructorInfo GetParameterlessConstructor(Type type)
 		{
-		foreach (var cInfo in type.GetTypeInfo().DeclaredConstructors)
-		{
-		if (!cInfo.IsFamily && cInfo.GetParameters().Length == 0)
-		return cInfo;
-		}
-		return null;
+		    foreach (var cInfo in type.GetTypeInfo().DeclaredConstructors)
+		        if (!cInfo.IsStatic && cInfo.GetParameters().Length == 0)
+		            return cInfo;
+		    return null;
 		}
 
 		public static string GetShortAssemblyQualifiedName(Type type)
@@ -502,12 +513,19 @@ namespace ES3Internal
 
         public static bool HasParameterlessConstructor(Type type)
         {
-            return type.GetConstructor(Type.EmptyTypes) != null || IsValueType(type);
+            if (IsValueType(type) || GetParameterlessConstructor(type) != null)
+                return true;
+            return false;
         }
 
         public static ConstructorInfo GetParameterlessConstructor(Type type)
         {
-            return type.GetConstructor(Type.EmptyTypes);
+            var constructors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            foreach (var constructor in constructors)
+                if (constructor.GetParameters().Length == 0)
+                    return constructor;
+            return null;
         }
 
         public static string GetShortAssemblyQualifiedName(Type type)

@@ -1917,7 +1917,7 @@ namespace PIERStory
                 return;
             }
             
-            p.Data.arrayContentString = new string[] {"star", "coin"};
+            p.Data.arrayContentString = new string[] {"gem", "coin"};
             p.Data.arrayContentValue = new int[] {__gemCount, __coinCount};
             p.Data.SetLabelsTexts(__message);
             PopupManager.main.ShowPopup(p, true);

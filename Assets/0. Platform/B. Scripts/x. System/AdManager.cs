@@ -10,6 +10,7 @@ using LitJson;
 // using Firebase;
 // using Facebook.Unity;
 using GoogleMobileAds.Api;
+using GoogleMobileAds.Common;
 
 
 #if UNITY_IOS
@@ -166,13 +167,40 @@ namespace PIERStory {
             admobRewardInterstitialID = admobRewardInterstitialID_Anroid;
             #endif
             
+            
             // 초기화 시작 
-            MobileAds.Initialize(initStatus => {
-                Debug.Log("Google Admob Init : " + initStatus.ToString());
+            MobileAds.Initialize(HandleInitCompleteAction);
+            
+        }
+        
+        /// <summary>
+        /// 애드몹 초기호 콜백
+        /// </summary>
+        /// <param name="initstatus"></param>
+        private void HandleInitCompleteAction(InitializationStatus initstatus) {
+            Debug.Log("Google Admob Initialization complete.");
+            
+            // Callbacks from GoogleMobileAds are not guaranteed to be called on
+            // the main thread.
+            // In this example we use MobileAdsEventExecutor to schedule these calls on
+            // the next Update() loop.
+            MobileAdsEventExecutor.ExecuteInUpdate(() =>
+            {
                 InitAdmobRewardedAd();
                 RequestInterstitial();
+
             });
-        }
+        }        
+        
+        /// <summary>
+        /// 애드몹 AdRequest 생성 헬퍼 
+        /// </summary>
+        /// <returns></returns>
+        private AdRequest CreateAdRequest()
+        {
+            return new AdRequest.Builder().Build();
+        }        
+        
         
         
         /// <summary>
@@ -220,6 +248,10 @@ namespace PIERStory {
         /// 애드몹 보상형 광고 초기화 
         /// </summary>
         void InitAdmobRewardedAd() {
+            
+            if(this.admobRewardedAd != null)
+                this.admobRewardedAd.Destroy();
+            
             this.admobRewardedAd = new GoogleMobileAds.Api.RewardedAd(admobRewardID);
                     // Called when an ad request has successfully loaded.
             this.admobRewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
@@ -235,9 +267,9 @@ namespace PIERStory {
             // Called when the ad is closed.
             this.admobRewardedAd.OnAdClosed += HandleRewardedAdClosed;
 
-            AdRequest request = new AdRequest.Builder().Build();
+            
             // Load the rewarded ad with the request.
-            this.admobRewardedAd.LoadAd(request);
+            this.admobRewardedAd.LoadAd(CreateAdRequest());
 
         }
         
@@ -266,19 +298,25 @@ namespace PIERStory {
         public void HandleRewardedAdClosed(object sender, EventArgs args)
         {
             Debug.Log("HandleRewardedAdClosed event received");
-            InitAdmobRewardedAd(); // 광고 닫히고, 생성 
             
-            SetFrontAdStatus(false);
+            MobileAdsEventExecutor.ExecuteInUpdate(()=>{
+                
+                InitAdmobRewardedAd(); // 광고 닫히고, 생성 
+                SetFrontAdStatus(false);    
+                
+                OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
+                
+                if(isRewarded)
+                    NetworkLoader.main.IncreaseDailyMissionCount(3);
+            });
+            
+            
         }
 
         public void HandleUserEarnedReward(object sender, GoogleMobileAds.Api.Reward __reward)
         {
             Debug.Log("HandleUserEarnedReward event received");
-            
-            
             isRewarded = true; // true로 변경! 다 봤다!
-            OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
-            NetworkLoader.main.IncreaseDailyMissionCount(3);
         }
         
         
@@ -289,15 +327,19 @@ namespace PIERStory {
         private void RequestInterstitial()
         {
             
+            // Clean up interstitial before using it
+            if(this.interstitial != null) {
+                this.interstitial.Destroy();
+            }
+            
             // Initialize an InterstitialAd.
             this.interstitial = new GoogleMobileAds.Api.InterstitialAd(admobInterstitialID);
             this.interstitial.OnAdClosed += HandleOnAdClosed;
             this.interstitial.OnAdLoaded += HandleOnAdLoaded;
             
-            // Create an empty ad request.
-            AdRequest request = new AdRequest.Builder().Build();
+
             // Load the interstitial with the request.
-            this.interstitial.LoadAd(request);
+            this.interstitial.LoadAd(CreateAdRequest());
             
 
         }
@@ -317,7 +359,7 @@ namespace PIERStory {
                 return;
            
             if(this.interstitial != null && this.interstitial.IsLoaded()) {
-            this.interstitial.Show();
+                this.interstitial.Show();
             }
             else {
                 RequestInterstitial();
@@ -348,10 +390,11 @@ namespace PIERStory {
         
         void HandleOnAdClosed(object sender, EventArgs args) {
             Debug.Log("Interstitial HandleOnAdClosed");
-            this.interstitial.Destroy();
-            this.interstitial = null;
             
-            RequestInterstitial();
+            MobileAdsEventExecutor.ExecuteInUpdate(() => {
+                RequestInterstitial();    
+            });
+  
         }
 
         
@@ -823,8 +866,22 @@ namespace PIERStory {
         /// <returns></returns>
         public bool CheckRewardedAdPossible() {
             
-            if(admobRewardedAd == null || rewardedAd == null)
+            // 애드몹과 유니티 미디에이션 체크한다.
+            if((admobRewardedAd == null || !admobRewardedAd.IsLoaded()) || (rewardedAd == null || rewardedAd.AdState != AdState.Loaded)) {
+              
+                // 없으면 생성해주자. 
+                // 애드몹  
+                if(admobRewardedAd == null || !admobRewardedAd.IsLoaded())
+                    InitAdmobRewardedAd();
+                    
+                // 유니티 미디에이션 
+                if(rewardedAd == null || rewardedAd.AdState != AdState.Loaded)
+                    CreateRewardAd();
+                    
+                
                 return false;
+            }
+            
                 
             if(admobRewardedAd.IsLoaded() || rewardedAd.AdState == AdState.Loaded)
                 return true;
@@ -860,6 +917,8 @@ namespace PIERStory {
             else {
                 // 유니티 애즈
                 CreateRewardAd();
+                
+                // 유니티 애즈도 없으면.. ㅠ
                 SystemManager.ShowSimpleAlertLocalize("6093");
             }
         }

@@ -220,7 +220,7 @@ namespace PIERStory {
                
             // 이프유 패스에서는 다른 메소드 사용 
             if(receipt.gamebaseProductId == "ifyou_pass") {
-                sendData["func"] = "purchaseInappProductByMail";
+                sendData["func"] = "requestIfYouPass";
             }
             
             // 결제 실패 대비

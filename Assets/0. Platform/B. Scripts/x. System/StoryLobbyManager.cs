@@ -60,8 +60,8 @@ namespace PIERStory
             
             Debug.Log(">> StoryManager assetLoadComplete Done");
             
-            if (BubbleManager.main != null)
-                BubbleManager.main.ShowFakeBubbles(false);
+            // if (BubbleManager.main != null)
+            //     BubbleManager.main.ShowFakeBubbles(false);
 
             ViewStoryLobby.OnDecorateSet?.Invoke();
             yield return new WaitUntil(() => ViewStoryLobby.loadComplete);

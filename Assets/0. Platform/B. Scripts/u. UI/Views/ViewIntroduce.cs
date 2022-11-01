@@ -242,13 +242,14 @@ namespace PIERStory {
             try {
                 if(this.gameObject == null || !this.gameObject.activeSelf)
                     return;
-                
+                    
+                onedayPassButton.gameObject.SetActive(false);
                 premiumPassButton.SetPass(SystemListener.main.introduceStory);
-                onedayPassButton.SetPass(SystemListener.main.introduceStory);
+                // onedayPassButton.SetPass(SystemListener.main.introduceStory);
                 
                 // 프리미엄 패스를 구매한 경우 원데이 패스 버튼을 보여줄 필요가 없다. 
-                if( !introduceStory.IsValidOnedayPass() && introduceStory.hasPremiumPass )
-                    onedayPassButton.gameObject.SetActive(false);
+                // if( !introduceStory.IsValidOnedayPass() && introduceStory.hasPremiumPass )
+                //     onedayPassButton.gameObject.SetActive(false);
             }
             catch(System.Exception e) {
                 Debug.LogError(e.StackTrace);

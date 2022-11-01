@@ -167,12 +167,12 @@ namespace PIERStory {
             ifyouPassButton.gameObject.SetActive(false);
             
             premiumPassButton.SetPass(StoryManager.main.CurrentProject);
-            onedayPassButton.SetPass(StoryManager.main.CurrentProject);
+            // onedayPassButton.SetPass(StoryManager.main.CurrentProject);
             ifyouPassButton.SetPass();
             
             // 프리미엄 패스를 구매한 경우 원데이 패스 버튼을 보여줄 필요가 없다. 
-            if( !StoryManager.main.CurrentProject.IsValidOnedayPass() && StoryManager.main.CurrentProject.hasPremiumPass )
-                onedayPassButton.gameObject.SetActive(false);    
+            // if( !StoryManager.main.CurrentProject.IsValidOnedayPass() && StoryManager.main.CurrentProject.hasPremiumPass )
+            //     onedayPassButton.gameObject.SetActive(false);    
         }
         
         /// <summary>

@@ -233,7 +233,8 @@ MonoBehaviour:
   _text: {fileID: 4788114817891047988}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &929121239141737218
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,9 +332,9 @@ MonoBehaviour:
   m_fontSize: 24
   m_fontSizeBase: 24
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 20
+  m_fontSizeMax: 24
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -386,7 +387,8 @@ MonoBehaviour:
   _text: {fileID: 7549329217343321703}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &1082004626509802775
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,9 +621,9 @@ MonoBehaviour:
   m_fontSize: 30
   m_fontSizeBase: 30
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 22
+  m_fontSizeMax: 30
   m_fontStyle: 3
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -674,7 +676,8 @@ MonoBehaviour:
   _text: {fileID: 289619908096767006}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &2386886339661226243
 GameObject:
   m_ObjectHideFlags: 0
@@ -827,7 +830,8 @@ MonoBehaviour:
   _text: {fileID: 3662246089820331800}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &2390598311719339756
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,7 +945,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 33.6, y: 0}
+  m_AnchoredPosition: {x: 44.8, y: 0}
   m_SizeDelta: {x: 48, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3634720431319732093
@@ -1082,11 +1086,19 @@ MonoBehaviour:
       unlockStyle: 
       isUnlock: 0
       isSerial: 0
+      debugPublishData: 
+      unlockEpisodes: 
+      unlockScenes: 
+      arrUnlockEpisode: []
+      arrUnlockScene: []
+      isClear: 0
     imageURL: 
     imageKey: 
     isConfirm: 1
     isPositive: 1
     contentValue: 0
+    arrayContentString: []
+    arrayContentValue: 
   overlay: {fileID: 4523062763029856748}
   content: {fileID: 4523062761568411491}
   popupName: 
@@ -1131,6 +1143,12 @@ MonoBehaviour:
     unlockStyle: 
     isUnlock: 0
     isSerial: 0
+    debugPublishData: 
+    unlockEpisodes: 
+    unlockScenes: 
+    arrUnlockEpisode: []
+    arrUnlockScene: []
+    isClear: 0
   textResetCoinPrice: {fileID: 8108807662379302988}
   textResetEpisode: {fileID: 241032573054702261}
 --- !u!1 &4523062761568411551
@@ -1964,7 +1982,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 140}
-  m_SizeDelta: {x: 490, y: 40}
+  m_SizeDelta: {x: 520, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4523062762262796713
 CanvasRenderer:
@@ -2024,9 +2042,9 @@ MonoBehaviour:
   m_fontSize: 32
   m_fontSizeBase: 32
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 22
+  m_fontSizeMax: 32
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -2079,7 +2097,8 @@ MonoBehaviour:
   _text: {fileID: 4523062762262796714}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &4523062762282501875
 GameObject:
   m_ObjectHideFlags: 0
@@ -2251,8 +2270,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -48, y: 0}
-  m_SizeDelta: {x: -110.03, y: 0}
+  m_AnchoredPosition: {x: -51.508, y: 0}
+  m_SizeDelta: {x: -103.01, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4523062762443664112
 CanvasRenderer:
@@ -2309,17 +2328,17 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
+  m_fontSize: 32
   m_fontSizeBase: 30
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 3
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 20
+  m_fontSizeMax: 32
+  m_fontStyle: 2
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: -4
+  m_characterSpacing: -2
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2367,7 +2386,8 @@ MonoBehaviour:
   _text: {fileID: 4523062762443664113}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &4523062762503070196
 GameObject:
   m_ObjectHideFlags: 0
@@ -3454,9 +3474,9 @@ MonoBehaviour:
   m_fontSize: 30
   m_fontSizeBase: 30
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 22
+  m_fontSizeMax: 30
   m_fontStyle: 3
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -4403,8 +4423,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 63.48, y: 1}
-  m_SizeDelta: {x: 70.95, y: 40}
+  m_AnchoredPosition: {x: 120.244644, y: 1}
+  m_SizeDelta: {x: 184.4793, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6682690049108231255
 CanvasRenderer:
@@ -4539,8 +4559,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -4}
-  m_SizeDelta: {x: 550, y: 120}
+  m_AnchoredPosition: {x: 0, y: -6.2005005}
+  m_SizeDelta: {x: 550, y: 193.599}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1807905760502616001
 CanvasRenderer:
@@ -4607,9 +4627,9 @@ MonoBehaviour:
   m_fontSize: 26
   m_fontSizeBase: 26
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 22
+  m_fontSizeMax: 26
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -4662,7 +4682,8 @@ MonoBehaviour:
   _text: {fileID: 241032573054702261}
   _localizedText: 
   isException: 1
-  isTextSet: 0
+  isAlignmentFix: 1
+  originText: 
 --- !u!1 &5814758857388343053
 GameObject:
   m_ObjectHideFlags: 0
@@ -4947,7 +4968,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 61.71, y: 0}
+  m_AnchoredPosition: {x: 56.9, y: 0}
   m_SizeDelta: {x: 19.91, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5338338684304048417
@@ -5400,6 +5421,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4523062763029856745}
     m_Modifications:
+    - target: {fileID: 1451679703675519724, guid: 9b0ed3b3737c7a6428cfb08bc12e391d, type: 3}
+      propertyPath: m_fontSize
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 1451679703675519724, guid: 9b0ed3b3737c7a6428cfb08bc12e391d, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 1451679703675519724, guid: 9b0ed3b3737c7a6428cfb08bc12e391d, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 1451679703675519724, guid: 9b0ed3b3737c7a6428cfb08bc12e391d, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8526236852388594177, guid: 9b0ed3b3737c7a6428cfb08bc12e391d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

@@ -22,9 +22,11 @@ using Unity.Advertisement.IosSupport;
 
 
 
-
 namespace PIERStory {
-
+    
+    /// <summary>
+    /// ! 광고 모듈이 관리되는 곳!
+    /// </summary>
     public class AdManager : MonoBehaviour
     {
         public static AdManager main = null;
@@ -32,17 +34,16 @@ namespace PIERStory {
         public static Action OnShowAdvertisement;
         
         public static Action<bool> OnCompleteRewardAD = null; // 동영상 광고 보고 콜백
+        public bool isAdManagerInit = false;
         public bool isPaidSelection = false;
         
-        // * Firebase
-        // FirebaseApp app = null;
-        int updatesBeforeException;
+        
 
         
         
         // * 광고 도중 터치 막기 위한 변수.
         public bool isAdShowing = false; // 현재 광고가 보여지고 있다.
-
+        
         
         [SerializeField] int gamePlayRowCount = 0;
         [SerializeField] bool isRewarded = false; // 영상광고 끝까지 재생되었는지. 
@@ -88,6 +89,20 @@ namespace PIERStory {
         
         #endregion
         
+        #region IronSource
+        [Space]
+        [Header("IronSource")]
+        
+        [SerializeField] string ironSourceAppKey = string.Empty;
+        [SerializeField] string ironSourceAppKey_Android = string.Empty;
+        [SerializeField] string ironSourceAppKey_iOS = string.Empty;
+        
+        public bool isIronSourceInited = false;
+        public bool isIronSourceBannerLoaded = false; // 아이언소스 배너 로드 되었는지? 
+        
+        
+        
+        #endregion
         
         #region 서버 광고 기준정보
         [Space]
@@ -127,6 +142,9 @@ namespace PIERStory {
         // Start is called before the first frame update
         void Start()
         {
+            if(isAdManagerInit)
+                return;
+            
             // iOS 추적 권한 요청 
             RequestAuthorizationTracking(); 
             
@@ -134,11 +152,14 @@ namespace PIERStory {
 
             InitUnityMediation();
             
+            InitIronSource();
+            
             // InitFirebase();
             
             // InitFacebook();
             
-            updatesBeforeException = 0;
+                        
+            isAdManagerInit = true;
         }
         
         /*
@@ -146,6 +167,137 @@ namespace PIERStory {
             // throwExceptionEvery60Updates();
         }
         */
+        
+        private void OnApplicationPause(bool pauseStatus) {
+            IronSource.Agent.onApplicationPause (pauseStatus);
+        }
+        
+        
+        /// <summary>
+        /// 하단 배너 표시
+        /// </summary>
+        public void PlayBottomBanner() {
+            
+            // 게임플레이 도중에만 표시되고, 각종패스 구매자는 사용하지 않는다.
+
+            if(UserManager.main.ifyouPassDay > 0)
+                return; // 이프유 패스 보유자
+                
+            
+            // 게임씬에서만 동작한다.  원데이패스나 프리미엄패스 사용자는 광고 뜨지 않음 
+            if(GameManager.main != null && StoryManager.main != null && (UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass() ))
+                return;
+                       
+            // 로드 되었으면 보여주는것으로 처리 
+            if(isIronSourceBannerLoaded) {
+                IronSource.Agent.displayBanner(); 
+            }
+            else { // 첫 호출시에는 로드 
+                LoadIronSourceBanner();
+            }
+        }
+        
+        
+        #region 아이언소스
+        
+        void InitIronSource() {
+            #if UNITY_ANDROID
+            ironSourceAppKey = ironSourceAppKey_Android;
+            ironSourceAppKey = ironSourceAppKey_iOS;
+            #elif UNITY_IOS
+            ironSourceAppKey = ironSourceAppKey_iOS;
+            #else
+            ironSourceAppKey = "unexpected_platform";
+            #endif
+            
+            Debug.Log ("unity-script: InitIronSource Start called");
+
+            //Dynamic config example
+            IronSourceConfig.Instance.setClientSideCallbacks (true); // 클라리언스 타이트 콜백. 
+
+            string id = IronSource.Agent.getAdvertiserId ();
+            Debug.Log ("unity-script: IronSource.Agent.getAdvertiserId : " + id);
+            Debug.Log ("unity-script: IronSource.Agent.validateIntegration");
+            IronSource.Agent.validateIntegration ();
+
+            Debug.Log ("unity-script: unity version" + IronSource.unityVersion ());
+
+ 
+            // SDK init
+            Debug.Log ("unity-script: IronSource.Agent.init");
+            IronSourceEvents.onSdkInitializationCompletedEvent += IronSourceInitCompletedEvent;
+            IronSource.Agent.init (ironSourceAppKey);
+   
+        }
+        
+        void IronSourceInitCompletedEvent() {
+            
+            Debug.Log ("unity-script: IronSource.Agent.init Completed");
+            isIronSourceInited = true;
+        }
+        
+        
+        
+        
+        public void LoadIronSourceBanner() {
+            
+            // IronSource.Agent.int
+            
+            // Add Banner Events
+            IronSourceEvents.onBannerAdLoadedEvent += IronSourceBannerAdLoadedEvent;
+            IronSourceEvents.onBannerAdLoadFailedEvent += IronSourceBannerAdLoadFailedEvent;		
+            IronSourceEvents.onBannerAdClickedEvent += IronSourceBannerAdClickedEvent; 
+            IronSourceEvents.onBannerAdScreenPresentedEvent += IronSourceBannerAdScreenPresentedEvent; 
+            IronSourceEvents.onBannerAdScreenDismissedEvent += IronSourceBannerAdScreenDismissedEvent;
+            IronSourceEvents.onBannerAdLeftApplicationEvent += IronSourceBannerAdLeftApplicationEvent;
+            
+            IronSource.Agent.loadBanner (IronSourceBannerSize.BANNER, IronSourceBannerPosition.BOTTOM);
+        }
+        
+        /// <summary>
+        /// 하단 배너 감추기
+        /// </summary>
+        public void HideIronSourceBanner() {
+            
+            if(!isIronSourceInited || !isIronSourceBannerLoaded)
+                return;
+            
+            IronSource.Agent.hideBanner();
+        }
+        
+        void IronSourceBannerAdLoadedEvent ()
+        {
+            Debug.Log ("unity-script: I got BannerAdLoadedEvent");
+            isIronSourceBannerLoaded = true;
+        }
+        
+        void IronSourceBannerAdLoadFailedEvent (IronSourceError error)
+        {
+            Debug.Log ("unity-script: I got BannerAdLoadFailedEvent, code: " + error.getCode () + ", description : " + error.getDescription ());
+        }
+        
+        void IronSourceBannerAdClickedEvent ()
+        {
+            Debug.Log ("unity-script: I got BannerAdClickedEvent");
+        }
+        
+        void IronSourceBannerAdScreenPresentedEvent ()
+        {
+            Debug.Log ("unity-script: I got BannerAdScreenPresentedEvent");
+        }
+        
+        void IronSourceBannerAdScreenDismissedEvent ()
+        {
+            Debug.Log ("unity-script: I got BannerAdScreenDismissedEvent");
+        }
+        
+        void IronSourceBannerAdLeftApplicationEvent ()
+        {
+            Debug.Log ("unity-script: I got BannerAdLeftApplicationEvent");
+        }        
+        
+        #endregion
+        
         
         
         #region 구글 애드몹 
@@ -405,26 +557,6 @@ namespace PIERStory {
         #endregion
         // ? 애드몹 종료 
         
-        
-        void InitFirebase() {
-            
-
-        }
-        void throwExceptionEvery60Updates()
-        {
-            if (updatesBeforeException > 0)
-            {
-                updatesBeforeException--;
-            }
-            else
-            {
-                // Set the counter to 60 updates
-                updatesBeforeException = 60;
-
-                // Throw an exception to test your Crashlytics implementation
-                throw new System.Exception("test exception please ignore");
-            }
-        }        
         
         
         /// <summary>

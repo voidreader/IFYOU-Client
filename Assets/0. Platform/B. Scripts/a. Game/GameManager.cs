@@ -568,11 +568,6 @@ namespace PIERStory
             ScriptRow currentRow = currentPage.GetNextRow();
             isPlaying = true; // 플레이 시작함!
 
-            // 시작 기록 업데이트를 호출한다.
-            // NetworkLoader.main.UpdateEpisodeStartRecord();
-            // yield return new WaitUntil(() => NetworkLoader.CheckServerWork()); // 통신 완료까지 대기.
-
-            Debug.Log("<<< UpdateEpisodeStartRecord done >>>");
 
             // * 2021.08.27 이어하기에 대한 처리. isResumePlay.... 
             // 1. 단순 스킵 useSkip = true
@@ -595,6 +590,9 @@ namespace PIERStory
             if(!isResumePlay) {
                 AdManager.main.PlayLoadingAD();
             }
+            
+            // 하단 배너 광고 처리 2022.11.02
+            AdManager.main.PlayBottomBanner();
             
 
             // 모든 라인을, 혹은 종료 명령어를 만날때까지 계속해! 
@@ -2031,6 +2029,9 @@ namespace PIERStory
             // yield return new WaitUntil(() => PopupManager.main.GetFrontActivePopup() == null);
             // yield return null;
             Debug.Log("Done To be Continue PopUP");
+            
+            // 하단 배너 숨긴다.
+            AdManager.main.HideIronSourceBanner();
             
                 
             // 안전을 위해..

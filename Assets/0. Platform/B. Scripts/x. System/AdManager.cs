@@ -52,11 +52,17 @@ namespace PIERStory {
 
 
         #region Unity Mediation
-        public string rewardedAdUnitId = "Rewarded_Android";
-        public string interstitialAdUnitId = "Interstitial_Android";
+        [Space]
+        [Header("Unity Mediation")]
+        public string unityRewardedAdUnitId = "Rewarded_Android";
+        public string unityInterstitialAdUnitId = "Interstitial_Android";
+        public string unityBannerUnitID = string.Empty;
         
-        IRewardedAd rewardedAd;
-        IInterstitialAd interstitialAd;
+        IRewardedAd unityRewardedAd;
+        IInterstitialAd unityInterstitialAd;
+        
+        IBannerAd unityBannerAd = null;
+        public bool isUnityBannerLoaded = false; // 유니티 배너 로드 되었는지?
         #endregion
         
         
@@ -189,12 +195,21 @@ namespace PIERStory {
                 return;
                        
             // 로드 되었으면 보여주는것으로 처리 
+            if(MediationService.InitializationState != InitializationState.Initialized)
+                return;
+                
+            CreateUnityBanner();
+            
+            
+            
+            /*
             if(isIronSourceBannerLoaded) {
                 IronSource.Agent.displayBanner(); 
             }
             else { // 첫 호출시에는 로드 
                 LoadIronSourceBanner();
             }
+            */
         }
         
         
@@ -631,26 +646,57 @@ namespace PIERStory {
         /// </summary>
         /// <returns></returns>
         async void InitUnityMediation() {
-            // Initialize package to access API
-            await UnityServices.InitializeAsync();
-            
-            
-            
-            // 스테이트 체크 
-            Debug.Log(UnityServices.State);
 
             #if UNITY_ANDROID
-            rewardedAdUnitId = "Rewarded_Android";
-            interstitialAdUnitId = "Interstitial_Android";
+            unityRewardedAdUnitId = "Rewarded_Android";
+            unityInterstitialAdUnitId = "Interstitial_Android";
+            unityBannerUnitID = "Banner_Android";
             #else
             rewardedAdUnitId = "Rewarded_iOS";
             interstitialAdUnitId = "Interstitial_iOS";            
-            #endif            
+            unityBannerUnitID = "Banner_iOS";
+            #endif               
+            
+            // Initialize package to access API
+            await UnityServices.InitializeAsync();
+            
+            try
+            {
+				Debug.Log("Unity Mediation Initializing...");
+                await UnityServices.InitializeAsync(); 
+				Debug.Log("Unity Mediation Initialized!"); 
+                UnityMediationInitCompleted();
+			}
+            catch (Exception e)
+            {
+                UnityMediationInitFailed(e);
+			}            
+            
+            // 스테이트 체크 
+            // Debug.Log(UnityServices.State);
+         
             
 
+            
+        }
+        
+        void UnityMediationInitCompleted() {
+            
             CreateRewardAd();
             CreateInterstitial();
         }
+        
+        
+        void UnityMediationInitFailed(Exception error)
+        {
+            var initializationError = SdkInitializationError.Unknown;
+            if (error is InitializeFailedException initializeFailedException)
+            {
+				  initializationError = initializeFailedException.initializationError;
+			}
+			Debug.Log($"Unity Mediation Initialization Failed: {initializationError}:{error.Message}");
+        }        
+        
         
         /// <summary>
         /// 서버 기준정보 세팅하기
@@ -691,7 +737,7 @@ namespace PIERStory {
             if(__isRewarded) {
                 
                 // 광고 준비되었는지 체크 추가
-                if(rewardedAd == null || rewardedAd.AdState != AdState.Loaded) {
+                if(unityRewardedAd == null || unityRewardedAd.AdState != AdState.Loaded) {
                     CreateRewardAd();
                     return;
                 }
@@ -701,7 +747,7 @@ namespace PIERStory {
             else {
                 
                 // 광고 준비되었는지 체크 추가
-                if(interstitialAd == null || interstitialAd.AdState != AdState.Loaded) {
+                if(unityInterstitialAd == null || unityInterstitialAd.AdState != AdState.Loaded) {
                     CreateInterstitial();
                     return;
                 }
@@ -900,8 +946,8 @@ namespace PIERStory {
         /// </summary>
         public void ShowUnityAdsInterstitial() {
             // Ensure the ad has loaded, then show it.
-            if (interstitialAd.AdState == AdState.Loaded) {
-                interstitialAd.ShowAsync();
+            if (unityInterstitialAd.AdState == AdState.Loaded) {
+                unityInterstitialAd.ShowAsync();
             }
             else {
                 
@@ -909,16 +955,16 @@ namespace PIERStory {
         }     
         
         void CreateInterstitial() {
-            interstitialAd = MediationService.Instance.CreateInterstitialAd(interstitialAdUnitId);
+            unityInterstitialAd = MediationService.Instance.CreateInterstitialAd(unityInterstitialAdUnitId);
             // Subscribe callback methods to load events:
-            interstitialAd.OnLoaded += OnInterstitialLoaded;
-            interstitialAd.OnFailedLoad += OnInterstitialFailedToLoad;
+            unityInterstitialAd.OnLoaded += OnInterstitialLoaded;
+            unityInterstitialAd.OnFailedLoad += OnInterstitialFailedToLoad;
 
             // Subscribe callback methods to show events:
-            interstitialAd.OnShowed += OnInterstitialShown;
-            interstitialAd.OnFailedShow += OnInterstitialFailedToShow;
-            interstitialAd.OnClosed += OnInterstitialClosed;
-            interstitialAd.LoadAsync();
+            unityInterstitialAd.OnShowed += OnInterstitialShown;
+            unityInterstitialAd.OnFailedShow += OnInterstitialFailedToShow;
+            unityInterstitialAd.OnClosed += OnInterstitialClosed;
+            unityInterstitialAd.LoadAsync();
         }
         
 
@@ -963,18 +1009,66 @@ namespace PIERStory {
         #endregion
         
         
-        #region 동영상 광고 
+        #region 유니티 미디에이션
+        
+        void CreateUnityBanner() {
+            
+            isUnityBannerLoaded = false;
+            
+            BannerAdSize bannerSize = new BannerAdSize(BannerAdPredefinedSize.Banner);
+            unityBannerAd = MediationService.Instance.CreateBannerAd(unityBannerUnitID, bannerSize, BannerAdAnchor.BottomCenter, Vector2.zero);
+                   
+            LoadUnityBanner();
+        }
+        
+        async void LoadUnityBanner() {
+           
+            try
+            {
+				  await unityBannerAd.LoadAsync();
+				  AdLoaded();
+            }
+            catch (LoadFailedException e)
+            {
+				  AdFailedLoad(e);
+			}            
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void HideUnityBanner() {
+            if(!isUnityBannerLoaded)   
+                return;
+                
+            unityBannerAd.Dispose();
+        }
+        
+        void AdLoaded()
+        {
+			Debug.Log("Ad loaded");
+            isUnityBannerLoaded = true;
+            
+  		}
+
+        void AdFailedLoad(LoadFailedException e)
+        {
+			Debug.Log("Failed to load ad");
+			Debug.Log(e.Message);
+            isUnityBannerLoaded = false;
+  		}        
+        
         
         void CreateRewardAd() {
-            rewardedAd = MediationService.Instance.CreateRewardedAd(rewardedAdUnitId);
+            unityRewardedAd = MediationService.Instance.CreateRewardedAd(unityRewardedAdUnitId);
             
-            rewardedAd.OnLoaded += OnRewardedLoaded;
-            rewardedAd.OnFailedLoad += OnRewardedFailedLoad;
-            rewardedAd.OnClosed += OnRewardedClosed;
-            rewardedAd.OnUserRewarded += OnUserRewarded;
-            rewardedAd.OnFailedShow += OnRewardedFailedToShow;
-            rewardedAd.OnShowed += OnRewardedShow;
-            rewardedAd.LoadAsync();
+            unityRewardedAd.OnLoaded += OnRewardedLoaded;
+            unityRewardedAd.OnFailedLoad += OnRewardedFailedLoad;
+            unityRewardedAd.OnClosed += OnRewardedClosed;
+            unityRewardedAd.OnUserRewarded += OnUserRewarded;
+            unityRewardedAd.OnFailedShow += OnRewardedFailedToShow;
+            unityRewardedAd.OnShowed += OnRewardedShow;
+            unityRewardedAd.LoadAsync();
         }
         
         /// <summary>
@@ -985,8 +1079,8 @@ namespace PIERStory {
             OnCompleteRewardAD = null;
             isRewarded = false;
             
-            if(rewardedAd.AdState == AdState.Loaded)
-                rewardedAd.ShowAsync();
+            if(unityRewardedAd.AdState == AdState.Loaded)
+                unityRewardedAd.ShowAsync();
             else {
                 SystemManager.ShowSimpleAlertLocalize("6093");
             }
@@ -999,7 +1093,7 @@ namespace PIERStory {
         public bool CheckRewardedAdPossible() {
             
             // 애드몹과 유니티 미디에이션 체크한다.
-            if((admobRewardedAd == null || !admobRewardedAd.IsLoaded()) || (rewardedAd == null || rewardedAd.AdState != AdState.Loaded)) {
+            if((admobRewardedAd == null || !admobRewardedAd.IsLoaded()) || (unityRewardedAd == null || unityRewardedAd.AdState != AdState.Loaded)) {
               
                 // 없으면 생성해주자. 
                 // 애드몹  
@@ -1007,7 +1101,7 @@ namespace PIERStory {
                     InitAdmobRewardedAd();
                     
                 // 유니티 미디에이션 
-                if(rewardedAd == null || rewardedAd.AdState != AdState.Loaded)
+                if(unityRewardedAd == null || unityRewardedAd.AdState != AdState.Loaded)
                     CreateRewardAd();
                     
                 
@@ -1015,7 +1109,7 @@ namespace PIERStory {
             }
             
                 
-            if(admobRewardedAd.IsLoaded() || rewardedAd.AdState == AdState.Loaded)
+            if(admobRewardedAd.IsLoaded() || unityRewardedAd.AdState == AdState.Loaded)
                 return true;
                 
             return false;
@@ -1044,8 +1138,8 @@ namespace PIERStory {
             
             
             // * 유니티 애즈 
-            if(rewardedAd != null && rewardedAd.AdState == AdState.Loaded)
-                rewardedAd.ShowAsync();
+            if(unityRewardedAd != null && unityRewardedAd.AdState == AdState.Loaded)
+                unityRewardedAd.ShowAsync();
             else {
                 // 유니티 애즈
                 CreateRewardAd();

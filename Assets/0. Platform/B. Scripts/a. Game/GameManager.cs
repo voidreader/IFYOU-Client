@@ -2031,7 +2031,8 @@ namespace PIERStory
             Debug.Log("Done To be Continue PopUP");
             
             // 하단 배너 숨긴다.
-            AdManager.main.HideIronSourceBanner();
+            // AdManager.main.HideIronSourceBanner();
+            AdManager.main.HideUnityBanner();
             
                 
             // 안전을 위해..

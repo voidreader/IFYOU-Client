@@ -1294,10 +1294,10 @@ namespace PIERStory
             if(bubblePos >= 7) {
                 
                 // 추가 -100
-                if (SystemManager.screenRatio < 0.56f)
-                    adjustmentPosY -= 100; // 길어지면 -100
+                // if (SystemManager.screenRatio < 0.56f)
+                //     adjustmentPosY -= 100; // 길어지면 -100
                     
-                if(SystemManager.screenRatio > 0.7f) 
+                if(SystemManager.screenRatio > 0.56f) 
                     adjustmentPosY += 100; // 4:3 비율은 100 더한다. 
                         
                 

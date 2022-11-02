@@ -21,7 +21,7 @@ namespace PIERStory {
                 return;
             }
                 
-            starBonus.SetActive(!UserManager.main.isHowToPlayClear);
+            // starBonus.SetActive(!UserManager.main.isHowToPlayClear);
         }
     }
 }

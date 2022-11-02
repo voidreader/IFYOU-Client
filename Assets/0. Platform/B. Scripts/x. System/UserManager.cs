@@ -94,7 +94,7 @@ namespace PIERStory
         public bool tutorialClear = false;
 
         public bool isSelectionTutorialClear = false; // 선택지 튜토리얼 초기화 여부 
-        public bool isHowToPlayClear = false; // How to play 튜토리얼 초기화 여부 
+        
 
         public int ifyouPassDay = 0;        // 이프유패스 일수
 
@@ -418,7 +418,7 @@ namespace PIERStory
             }
 
             isSelectionTutorialClear = SystemManager.GetJsonNodeBool(userJson, "tutorial_selection"); // 선택지 튜토리얼 
-            isHowToPlayClear = SystemManager.GetJsonNodeBool(userJson, "how_to_play"); // 하우 투 플레이 튜토리얼 
+            
 
             accountLink = SystemManager.GetJsonNodeString(userJson, "account_link");
             ViewCommonTop.OnRefreshAccountLink?.Invoke(); // 상단 갱신 (계정연동 보상때문에)
@@ -886,43 +886,6 @@ namespace PIERStory
         }
 
 
-        /// <summary>
-        /// How to play 튜토리얼 클리어 
-        /// </summary>
-        public void RequestHowToPlayTutorialClear()
-        {
-            JsonData sending = new JsonData();
-            sending[CommonConst.FUNC] = "updateTutorialHowToPlay";
-            sending[CommonConst.COL_USERKEY] = userKey;
-
-            NetworkLoader.main.SendPost(CallbackTutorialHowToPlay, sending, true);
-        }
-
-        void CallbackTutorialHowToPlay(HTTPRequest req, HTTPResponse res)
-        {
-            if (!NetworkLoader.CheckResponseValidation(req, res))
-            {
-                Debug.LogError("Failed CallbackTutorialSelection");
-                return;
-            }
-
-            isHowToPlayClear = true; // 따로 데이터 받는거 없이 true 처리
-
-            JsonData result = JsonMapper.ToObject(res.DataAsText);
-
-            // resource 팝업창 
-            string currency = SystemManager.GetJsonNodeString(result["got"], "currency");
-            int quantity = SystemManager.GetJsonNodeInt(result["got"], "quantity");
-
-            Debug.Log(string.Format("CallbackTutorialHowToPlay [{0}]/[{1}]", currency, quantity));
-
-            // 재화 획득 팝업
-            SystemManager.ShowResourcePopup(SystemManager.GetLocalizedText("6202"), quantity, SystemManager.main.GetCurrencyImageURL(currency), SystemManager.main.GetCurrencyImageKey(currency));
-
-            SetBankInfo(result);
-
-            HowToPlayFloating.RefreshHowToPlayState?.Invoke(); // 플로팅 버튼 리프레시 
-        }
 
 
 

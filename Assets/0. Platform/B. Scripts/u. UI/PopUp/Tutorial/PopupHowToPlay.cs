@@ -15,7 +15,13 @@ namespace PIERStory {
         {
             base.Show();
             
-            
+    //             <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
+    // <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
+    // <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
+    // <type fullname="UnityEngine.ResourceManagement.ResourceProviders.LegacyResourcesProvider" preserve="all" />
+    // <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+    // <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+            // UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle
             
         }
 
@@ -25,8 +31,8 @@ namespace PIERStory {
         public void RequestClearReward() {
             
             // 이미 보상 받았으면 return
-            if(UserManager.main.isHowToPlayClear)
-                return;
+            // if(UserManager.main.isHowToPlayClear)
+            //     return;
                 
             // 3개 모두 활성화  상태여야 한다. 
             if(!freeCheck.activeSelf || !starCheck.activeSelf || !premiumCheck.activeSelf)
@@ -34,7 +40,7 @@ namespace PIERStory {
             
             
             // 통신 
-            UserManager.main.RequestHowToPlayTutorialClear();
+            // UserManager.main.RequestHowToPlayTutorialClear();
         }
     }
 }

@@ -1485,7 +1485,7 @@ namespace PIERStory
             
             SystemManager.ShowNetworkLoading();
             UserManager.main.RefreshAfterGamePlay();
-            
+            AdManager.main.HideUnityBanner();
             
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin"); // 노드 제어
         }

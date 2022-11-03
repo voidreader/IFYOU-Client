@@ -501,6 +501,11 @@ namespace PIERStory {
             
             if(LobbyManager.main != null)
                 ViewIntroduce.OnPassPurchase?.Invoke();
+                
+                
+            if(AdManager.main != null) {
+                AdManager.main.HideUnityBanner();
+            }
         }
         
         

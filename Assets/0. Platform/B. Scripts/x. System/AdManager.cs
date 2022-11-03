@@ -1030,9 +1030,16 @@ namespace PIERStory {
             
             BannerAdSize bannerSize = new BannerAdSize(BannerAdPredefinedSize.Banner);
             unityBannerAd = MediationService.Instance.CreateBannerAd(unityBannerUnitID, bannerSize, BannerAdAnchor.BottomCenter, Vector2.zero);
-                   
+            
             LoadUnityBanner();
         }
+        
+        void UnityBannerRefreshed(object sender, LoadErrorEventArgs args) {
+            // Execute logic for when a banner refreshes.
+            // Debug.Log(args.Message)
+            
+        }
+        
         
         async void LoadUnityBanner() {
            
@@ -1051,16 +1058,28 @@ namespace PIERStory {
         /// 
         /// </summary>
         public void HideUnityBanner() {
-            if(!isUnityBannerLoaded)   
-                return;
+            try {
+                if(GameManager.main == null)
+                    return;
                 
-            unityBannerAd.Dispose();
+                if(!isUnityBannerLoaded)   
+                    return;
+                    
+                if(unityBannerAd == null)
+                    return;
+                    
+                unityBannerAd.Dispose();
+            }
+            catch(System.Exception e) {
+                NetworkLoader.main.ReportRequestError("HideUnityBanner", e.StackTrace);
+            }
         }
         
         void AdLoaded()
         {
 			Debug.Log("Ad loaded");
             isUnityBannerLoaded = true;
+            unityBannerAd.OnRefreshed += UnityBannerRefreshed;
             
   		}
 

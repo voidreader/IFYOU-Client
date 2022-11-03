@@ -183,20 +183,33 @@ namespace PIERStory {
         /// 하단 배너 표시
         /// </summary>
         public void PlayBottomBanner() {
+ 
+            if(!useBannerAD)
+                return;
             
             // 게임플레이 도중에만 표시되고, 각종패스 구매자는 사용하지 않는다.
-
-            if(UserManager.main.ifyouPassDay > 0)
-                return; // 이프유 패스 보유자
+            try {
                 
-            
-            // 게임씬에서만 동작한다.  원데이패스나 프리미엄패스 사용자는 광고 뜨지 않음 
-            if(GameManager.main != null && StoryManager.main != null && (UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass() ))
+                // 1화는 등장하지 않음
+                if(GameManager.main.currentEpisodeData.episodeType == EpisodeType.Chapter && GameManager.main.currentEpisodeData.episodeNumber < 2)
+                    return;
+                
+                if(UserManager.main.ifyouPassDay > 0)
+                    return; // 이프유 패스 보유자
+                    
+                
+                // 게임씬에서만 동작한다.  원데이패스나 프리미엄패스 사용자는 광고 뜨지 않음 
+                if(GameManager.main != null && StoryManager.main != null && (UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass() ))
+                    return;
+                        
+                // 로드 되었으면 보여주는것으로 처리 
+                if(MediationService.InitializationState != InitializationState.Initialized)
+                    return;
+            }
+            catch {
+                NetworkLoader.main.ReportRequestError("PlayBottomBanner", "Error");
                 return;
-                       
-            // 로드 되었으면 보여주는것으로 처리 
-            if(MediationService.InitializationState != InitializationState.Initialized)
-                return;
+            }
                 
             CreateUnityBanner();
             

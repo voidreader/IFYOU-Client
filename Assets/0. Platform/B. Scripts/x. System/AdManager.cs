@@ -652,8 +652,8 @@ namespace PIERStory {
             unityInterstitialAdUnitId = "Interstitial_Android";
             unityBannerUnitID = "Banner_Android";
             #else
-            rewardedAdUnitId = "Rewarded_iOS";
-            interstitialAdUnitId = "Interstitial_iOS";            
+            unityRewardedAdUnitId = "Rewarded_iOS";
+            unityInterstitialAdUnitId = "Interstitial_iOS";            
             unityBannerUnitID = "Banner_iOS";
             #endif               
             

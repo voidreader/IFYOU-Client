@@ -3,7 +3,6 @@ allprojects {
         repositories {**ARTIFACTORYREPOSITORY**
             google()
 			mavenCentral()
-            jcenter()
         }
 
         dependencies {
@@ -22,7 +21,6 @@ allprojects {
         flatDir {
             dirs "${project(':unityLibrary').projectDir}/libs"
         }
-		jcenter()
     }
 }
 

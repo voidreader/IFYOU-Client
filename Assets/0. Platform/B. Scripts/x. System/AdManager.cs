@@ -231,7 +231,6 @@ namespace PIERStory {
         void InitIronSource() {
             #if UNITY_ANDROID
             ironSourceAppKey = ironSourceAppKey_Android;
-            ironSourceAppKey = ironSourceAppKey_iOS;
             #elif UNITY_IOS
             ironSourceAppKey = ironSourceAppKey_iOS;
             #else

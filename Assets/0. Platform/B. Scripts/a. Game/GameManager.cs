@@ -323,6 +323,9 @@ namespace PIERStory
             StoryManager.main.SetCurrentEpisodeJson(currentEpisodeData);
 
             Debug.Log(string.Format("SelectEpisode [{0}]", StoryManager.main.CurrentEpisodeID));
+            if(string.IsNullOrEmpty(StoryManager.main.CurrentEpisodeID)) {
+                NetworkLoader.main.ReportRequestError("GameManager SelectEpisode currentEpisodeID is empty", "StoryManager.main.CurrentEpisodeID");
+            }
 
 
             // 새로 진입할때, 대상 에피소드의 상황ID 클리어 진척도를 초기화한다.

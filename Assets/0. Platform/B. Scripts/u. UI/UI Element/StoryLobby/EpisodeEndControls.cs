@@ -147,6 +147,11 @@ namespace PIERStory {
             }
             
             currentEpisodeID = SystemManager.GetJsonNodeString(projectCurrentJSON, LobbyConst.STORY_EPISODE_ID);
+            if(string.IsNullOrEmpty(currentEpisodeID)) {
+                NetworkLoader.main.ReportRequestError("EpisodeEndControl InitBaseInfo currentEpisodeID is empty", "StoryManager.main.CurrentEpisodeID");
+            }
+            
+            
             currentEpisodeData = StoryManager.GetRegularEpisodeByID(currentEpisodeID); // 다음번 플레이될 차례의 에피소드 데이터 
             currentEpisodeData.SetPurchaseState(); // 구매기록 refresh.
             

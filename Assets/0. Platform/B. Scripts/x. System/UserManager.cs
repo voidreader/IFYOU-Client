@@ -1774,15 +1774,6 @@ namespace PIERStory
             return currentStoryJson["episodePurchase"];
         }
 
-        /// <summary>
-        /// 다음 에피소드 정보 갱신
-        /// </summary>
-        /// <param name="__j"></param>
-        public void SetNodeUserNextEpisode(JsonData __j)
-        {
-            currentStoryJson[NODE_NEXT_EPISODE] = __j;
-            string.Format("SetNodeUserNextEpisode [{0}]", JsonMapper.ToStringUnicode(__j));
-        }
 
 
 
@@ -1791,32 +1782,20 @@ namespace PIERStory
         /// 플레이 위치 노드 저장 
         /// </summary>
         /// <param name="__j"></param>
-        public void SetNodeUserProjectCurrent(JsonData __j)
+        public void SetNodeUserProjectCurrent(JsonData __j, string __callby)
         {
+            
+            if(__j == null || !__j.IsArray || __j.Count == 0) {
+                NetworkLoader.main.ReportRequestError(__callby, "SetNodeUserProjectCurrent is empty");
+            }
+            
+            if(__j != null)
+                Debug.Log("### SetNodeUserProjectCurrent : " + JsonMapper.ToStringUnicode(__j));
+            
             currentStoryJson[NODE_PROJECT_CURRENT] = __j;
         }
 
-        /// <summary>
-        /// 유저, 작품별 플레이 위치 찾기. 
-        /// 정규 에피소드 용도 
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetUserProjectCurrent(string __episodeID)
-        {
 
-            if (!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
-                return null;
-
-            for (int i = 0; i < currentStoryJson[NODE_PROJECT_CURRENT].Count; i++)
-            {
-                if (currentStoryJson[NODE_PROJECT_CURRENT][i]["episode_id"].ToString() == __episodeID)
-                    return currentStoryJson[NODE_PROJECT_CURRENT][i];
-            }
-
-            // return currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT) ? currentStoryJson[NODE_PROJECT_CURRENT] : null;
-
-            return null;
-        }
 
         /// <summary>
         /// 정규 에피소드의 Current를 찾는다.
@@ -1879,51 +1858,6 @@ namespace PIERStory
             return false;
         }
 
-        /// <summary>
-        /// 정규 에피소드 끝났니?  (다음 에피소드가 엔딩인 경우)
-        /// </summary>
-        /// <returns></returns>
-        public bool CheckUserProjectRegularEpisodeFinal()
-        {
-            if (!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
-                return false;
-
-            // 
-            for (int i = 0; i < currentStoryJson[NODE_PROJECT_CURRENT].Count; i++)
-            {
-
-                // 정규 에피소드, 다음에피소드가 엔딩인지.  
-                if (!SystemManager.GetJsonNodeBool(currentStoryJson[NODE_PROJECT_CURRENT][i], "is_special")
-                    && SystemManager.GetJsonNodeBool(currentStoryJson[NODE_PROJECT_CURRENT][i], "is_ending"))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-
-        /// <summary>
-        /// 스페셜 에피소드의 Current를 찾는다.
-        /// </summary>
-        /// <returns></returns>
-        public JsonData GetUserProjectSpecialEpisodeCurrent()
-        {
-            // 얘는 순서에 영향을 받지 않는다. 리스트에서만 사용한다.
-
-            if (!currentStoryJson.ContainsKey(NODE_PROJECT_CURRENT))
-                return null;
-
-            for (int i = 0; i < currentStoryJson[NODE_PROJECT_CURRENT].Count; i++)
-            {
-                if (currentStoryJson[NODE_PROJECT_CURRENT][i]["is_special"].ToString() == "1") // is_special 이니?
-                    return currentStoryJson[NODE_PROJECT_CURRENT][i];
-            }
-
-            return null;
-
-        }
 
 
         /// <summary>
@@ -1949,21 +1883,6 @@ namespace PIERStory
                 return null;
 
             return currentStoryJson[NODE_SELECTION_PROGRESS][__episodeID];
-        }
-
-        /// <summary>
-        /// 유저의 작품에서 첫번째 selection 터치 체크 
-        /// </summary>
-        /// <returns>true : 첫번째다.</returns>
-        public bool IsUserFirstSelection()
-        {
-            if (!currentStoryJson.ContainsKey(NODE_SELECTION_PROGRESS))
-                return true;
-
-            if (currentStoryJson[NODE_SELECTION_PROGRESS].Keys.Count == 0)
-                return true;
-
-            return false;
         }
 
 
@@ -2175,7 +2094,7 @@ namespace PIERStory
             resultProjectCurrent = JsonMapper.ToObject(res.DataAsText); // 결과 
 
             // 갱신
-            currentStoryJson[NODE_PROJECT_CURRENT] = resultProjectCurrent;
+            SetNodeUserProjectCurrent(resultProjectCurrent, "CallbackUpdateProjectCurrent");
         }
 
         /// <summary>
@@ -2195,7 +2114,7 @@ namespace PIERStory
             resultProjectCurrent = JsonMapper.ToObject(res.DataAsText); // 결과 
 
             // 갱신
-            currentStoryJson[NODE_PROJECT_CURRENT] = resultProjectCurrent;
+            SetNodeUserProjectCurrent(resultProjectCurrent, "CallbackUpdateProjectCurrentWhenStart");
         }
 
 
@@ -2227,7 +2146,7 @@ namespace PIERStory
             SetNodeUserEpisodeProgress(resultEpisodeReset[NODE_EPISODE_PROGRESS]); // 에피소드 progress 
             SetNodeStorySceneProgress(resultEpisodeReset[NODE_SCENE_PROGRESS]); // 씬 progress
 
-            SetNodeUserProjectCurrent(resultEpisodeReset[NODE_PROJECT_CURRENT]);  // projectCurrent
+            SetNodeUserProjectCurrent(resultEpisodeReset[NODE_PROJECT_CURRENT], "CallbackResetEpisodeProgress");  // projectCurrent
             SetNodeUserProjectSelectionProgress(resultEpisodeReset[NODE_SELECTION_PROGRESS]); // 선택지 기록 
 
             SetBankInfo(resultEpisodeReset); // 뱅크 정보 업데이트 
@@ -2276,7 +2195,7 @@ namespace PIERStory
 
 
             SetNodeStorySceneProgress(resultEpisodeReset[NODE_SCENE_PROGRESS]); // 씬 progress
-            SetNodeUserProjectCurrent(resultEpisodeReset[NODE_PROJECT_CURRENT]);  // projectCurrent
+            SetNodeUserProjectCurrent(resultEpisodeReset[NODE_PROJECT_CURRENT], "CallbackStartOverEpisode");  // projectCurrent
             SetNodeUserProjectSelectionProgress(resultEpisodeReset[NODE_SELECTION_PROGRESS]); // 선택지 기록 
 
             UpdateUserAbility(resultEpisodeReset[NODE_USER_ABILITY]); // 능력치 
@@ -2308,7 +2227,7 @@ namespace PIERStory
             // SystemManager.ShowMessageWithLocalize("6220");
             SystemManager.ShowSystemPopupLocalize("6220", null, null, true, false);
             
-            SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);  // projectCurrent
+            SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT], "CallbackReduceWaitingTime");  // projectCurrent
             // SetBankInfo(result); // 뱅크 정보 업데이트             
 
 
@@ -2348,7 +2267,7 @@ namespace PIERStory
 
             // 메세지 띄우고,  projectCurrent, bank 업데이트 
             SystemManager.ShowMessageWithLocalize("6220");
-            SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT]);  // projectCurrent
+            SetNodeUserProjectCurrent(result[NODE_PROJECT_CURRENT], "CallbackReduceWaitingTimeWithCoin");  // projectCurrent
             SetBankInfo(result); // 뱅크 정보 업데이트             
 
             //에피소드 구매 기록 
@@ -2592,7 +2511,7 @@ namespace PIERStory
                 GameManager.main.currentEpisodeData.isClear = true;
             }
 
-            SetNodeUserProjectCurrent(resultEpisodeRecord[NODE_PROJECT_CURRENT]);
+            SetNodeUserProjectCurrent(resultEpisodeRecord[NODE_PROJECT_CURRENT], "CallbackRequestCompleteEpisode");
             
             // * 에피소드 관련 미션과 첫클리어 보상에 대한 처리는 GameManager에서 진행한다. 2022.07.27
 

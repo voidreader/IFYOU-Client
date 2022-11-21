@@ -31,7 +31,7 @@ namespace PIERStory
         
         
 
-        public const string FUNC_UPDATE_EPISODE_COMPLETE_RECORD = "requestCompleteEpisodeType2"; // 에피소드 플레이 완료 기록 
+        
         public const string FUNC_EPISODE_COMPLETE = "requestCompleteEpisodeOptimized"; // 에피소드 플레이 완료 기록 
 
 

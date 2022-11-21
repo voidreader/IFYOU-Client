@@ -262,6 +262,9 @@ namespace PIERStory {
             }
             
             currentEpisodeID = SystemManager.GetJsonNodeString(projectCurrentJSON, "episode_id");
+            if(string.IsNullOrEmpty(currentEpisodeID))
+                NetworkLoader.main.ReportRequestError("StoryLobbyMain InitBaseInfo currentEpisodeID is empty", "StoryManager.main.CurrentEpisodeID");
+            
             currentEpisodeData = StoryManager.GetRegularEpisodeByID(currentEpisodeID);
 
             if(currentEpisodeData == null || !currentEpisodeData.isValidData) {

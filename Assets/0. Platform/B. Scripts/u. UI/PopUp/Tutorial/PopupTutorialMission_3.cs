@@ -118,7 +118,7 @@ namespace PIERStory
             JsonData result = JsonMapper.ToObject(res.DataAsText);
             
             SystemManager.ShowMessageWithLocalize("6220");
-            UserManager.main.SetNodeUserProjectCurrent(result["projectCurrent"]);
+            UserManager.main.SetNodeUserProjectCurrent(result["projectCurrent"], "CallbackTutroialRewardFreeReduce");
             UserManager.main.SetBankInfo(result);   
 
             //에피소드 구매 기록 

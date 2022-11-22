@@ -235,7 +235,7 @@ namespace PIERStory
         IEnumerator DelayLiveModelAnimation() {
             
             // 0.1초 간격준다. 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
 
             for (int i = 0; i < storyProfile.Count; i++)
             {
@@ -824,7 +824,7 @@ namespace PIERStory
 
                 totalDecoLoad = storyProfile.Count;
 
-                if (totalDecoLoad == 0)
+                if (totalDecoLoad <= 0)
                 {
                     loadComplete = true;
                     return;

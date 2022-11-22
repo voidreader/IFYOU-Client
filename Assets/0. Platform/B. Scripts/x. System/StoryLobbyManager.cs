@@ -48,16 +48,14 @@ namespace PIERStory
         // Use this for initialization
         IEnumerator Start()
         {
-            Debug.Log(">> StoryManager Start ");
+            Debug.Log(string.Format(">> StoryManager Start [{0}]/[{1}]", NetworkLoader.CheckServerWork(), ViewStoryLoading.assetLoadComplete));
+            ViewStoryLobby.loadComplete = false; // ViewStoryLobby가 활성화되면서, 완료되면 true로 변경된다. 
+            StoryManager.main.SetLobbyBubbleMaster();
             
             yield return null;
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             yield return new WaitUntil(() => ViewStoryLoading.assetLoadComplete);
-
-            StoryManager.main.SetLobbyBubbleMaster();
-
-            yield return new WaitForSeconds(0.5f);
-            
+            // yield return new WaitForSeconds(0.5f);
             Debug.Log(">> StoryManager assetLoadComplete Done");
             
             // if (BubbleManager.main != null)
@@ -68,7 +66,7 @@ namespace PIERStory
             yield return new WaitForSeconds(0.2f);
             SystemManager.SetBlockBackButton(false);
 
-            Signal.Send(LobbyConst.STREAM_IFYOU, "storyLobbyLoadComplete", string.Empty);
+            // Signal.Send(LobbyConst.STREAM_IFYOU, "storyLobbyLoadComplete", string.Empty); // 필요없음. 
             
             UserManager.main.CheckUnlockedMission(); // 미션 해금 체크 
 

@@ -694,7 +694,7 @@ namespace PIERStory
         
 
             // 기초작업 완료 후 View 오픈 요청 
-            OpenViewStoryDetail();             
+            OpenStoryLoading();             
         }
 
 
@@ -793,10 +793,9 @@ namespace PIERStory
         /// 스토리 상세화면으로 진입하도록 이벤트 봬기. 
         /// 로비에서 진입시 이 부분에서 View 이동
         /// </summary>
-        void OpenViewStoryDetail()
+        void OpenStoryLoading()
         {
             Debug.Log("### Open StoryLoading");
-            // Signal.Send(LobbyConst.STREAM_IFYOU, LobbyConst.SIGNAL_MOVE_STORY_DETAIL, "open!");
 
             // 로딩으로 진입하도록 처리 
             Signal.Send(LobbyConst.STREAM_IFYOU, "moveStoryLoading", "open!");

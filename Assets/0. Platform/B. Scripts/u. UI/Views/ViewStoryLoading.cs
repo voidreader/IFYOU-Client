@@ -9,7 +9,7 @@ using UnityEngine.ResourceManagement.ResourceLocations;
 
 using TMPro;
 using DG.Tweening;
-
+using Doozy.Runtime.Signals;
 
 
 namespace PIERStory {
@@ -96,7 +96,10 @@ namespace PIERStory {
         
         void FillProgressorOnly() {
             Debug.Log("### FillProgressorOnly ###");
-            loadingBar.DOFillAmount(1, 1);
+            loadingBar.fillAmount = 0;
+            loadingBar.DOFillAmount(1, 1).OnComplete(()=> {
+                
+            });
         }
         
         string GetFillAmountPercentage() {
@@ -177,6 +180,7 @@ namespace PIERStory {
             
             Debug.Log("#### Addressable Check donn! ####");
             assetLoadComplete = true; // 
+            Signal.Send(LobbyConst.STREAM_IFYOU, "storyLobbyLoadComplete", string.Empty);
             
         }
 

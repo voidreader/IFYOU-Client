@@ -65,7 +65,7 @@ namespace PIERStory
 
             ViewStoryLobby.OnDecorateSet?.Invoke();
             yield return new WaitUntil(() => ViewStoryLobby.loadComplete);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
             SystemManager.SetBlockBackButton(false);
 
             Signal.Send(LobbyConst.STREAM_IFYOU, "storyLobbyLoadComplete", string.Empty);

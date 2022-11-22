@@ -254,7 +254,8 @@ namespace PIERStory {
             try {
                 if(isIronSourceBannerLoaded) 
                     HideIronSourceBanner();
-                else if(isAdmobBannerLoaded)    
+                    
+                if(isAdmobBannerLoaded)    
                     HideBannerAdmob();
             }
             catch {
@@ -330,14 +331,16 @@ namespace PIERStory {
             if(!isIronSourceInited || !isIronSourceBannerLoaded)
                 return;
             
-            IronSource.Agent.hideBanner();
-            isIronSourceBannerLoaded = false;
+
             
             try {
                 IronSource.Agent.destroyBanner();
+                IronSource.Agent.hideBanner();
+                isIronSourceBannerLoaded = false;
             } 
             catch {
                 Debug.LogError("Error in HideIronSourceBanner");
+                isIronSourceBannerLoaded = false;
             }
         }
         

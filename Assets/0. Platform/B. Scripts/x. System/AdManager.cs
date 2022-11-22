@@ -71,15 +71,19 @@ namespace PIERStory {
         [Space]
         [Header("Google Admob")]
         GoogleMobileAds.Api.RewardedAd admobRewardedAd; // 보상형광고 
-        GoogleMobileAds.Api.InterstitialAd interstitial; // 전면광고 
-        GoogleMobileAds.Api.RewardedInterstitialAd rewardInterstitial; // 보상형 전면광고 
+        GoogleMobileAds.Api.InterstitialAd admobInterstitial; // 전면광고 
+        BannerView admobBanner; // 애드몹 배너 
+        
+
+        public bool isAdmobInit = false; // 애드몹 초기화 여부 
+        public bool isAdmobBannerLoaded = false; // 애드몹 배너 활성화 여부 
 
         
         [SerializeField] string admobRewardID = string.Empty;  // 애드몹 보상형 광고 ID 
         [SerializeField] string admobBannerID = string.Empty; // 애드몹 배너 광고 ID 
         [SerializeField] string admobInterstitialID = string.Empty; // 애드몹 전면 광고 ID
         
-        [SerializeField] string admobRewardInterstitialID = string.Empty; // 애드몹 보상형 전면 광고 ID
+        
         
         // 아래 플랫폼별 ID 인스펙터에서 초기화 
         [SerializeField] string admobRewardID_Anroid = string.Empty;
@@ -90,8 +94,7 @@ namespace PIERStory {
         
         [SerializeField] string admobInterstitialID_Anroid = string.Empty;
         [SerializeField] string admobInterstitialID_iOS = string.Empty;
-        [SerializeField] string admobRewardInterstitialID_Anroid = string.Empty;
-        [SerializeField] string admobRewardInterstitialID_iOS = string.Empty;
+        
         
         #endregion
         
@@ -179,16 +182,28 @@ namespace PIERStory {
         }
         
         
+        
+        
         /// <summary>
         /// 하단 배너 표시
         /// </summary>
-        public void PlayBottomBanner() {
+        public void ShowBottomBanner() {
+ 
+            int portion = UnityEngine.Random.Range(0, 100);
  
             if(!useBannerAD)
                 return;
+                
+            
             
             // 게임플레이 도중에만 표시되고, 각종패스 구매자는 사용하지 않는다.
+            if(GameManager.main == null)
+                return;
+                
+            Debug.Log("### ShowBottomBanner #1");
+            
             try {
+                
                 
                 // 1화는 등장하지 않음
                 if(GameManager.main.currentEpisodeData.episodeType == EpisodeType.Chapter && GameManager.main.currentEpisodeData.episodeNumber < 2)
@@ -199,36 +214,60 @@ namespace PIERStory {
                     
                 
                 // 게임씬에서만 동작한다.  원데이패스나 프리미엄패스 사용자는 광고 뜨지 않음 
-                if(GameManager.main != null && StoryManager.main != null && (UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass() ))
+                if(UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass())
                     return;
                         
-                // 로드 되었으면 보여주는것으로 처리 
-                if(MediationService.InitializationState != InitializationState.Initialized)
-                    return;
             }
             catch {
-                NetworkLoader.main.ReportRequestError("PlayBottomBanner", "Error");
+                NetworkLoader.main.ReportRequestError("ShowBottomBanner", "Error");
                 return;
             }
                 
-            CreateUnityBanner();
-            
-            
-            
-            /*
-            if(isIronSourceBannerLoaded) {
-                IronSource.Agent.displayBanner(); 
+            // 아이언소스, 구글애드몹 배너 두개 사용한다.
+            if(isIronSourceInited && isAdmobInit) {
+                Debug.Log("Both Banners are active");
+                if(portion < 50) {
+                    LoadIronSourceBanner();
+                }
+                else {
+                    InitAdmobBanner();
+                }
+                
+                return;
             }
-            else { // 첫 호출시에는 로드 
+            
+            
+            if(isAdManagerInit) {
+                InitAdmobBanner();
+                return;
+            }
+            
+            
+            if(isIronSourceInited) {
                 LoadIronSourceBanner();
             }
-            */
-        }
+        
+        } // ? End of ShowBottomBanner
+        
+        public void HideBottomBanner() {
+            
+            try {
+                if(isIronSourceBannerLoaded) 
+                    HideIronSourceBanner();
+                else if(isAdmobBannerLoaded)    
+                    HideBannerAdmob();
+            }
+            catch {
+                
+            }
+            
+        }        
         
         
         #region 아이언소스
         
         void InitIronSource() {
+            
             #if UNITY_ANDROID
             ironSourceAppKey = ironSourceAppKey_Android;
             #elif UNITY_IOS
@@ -237,7 +276,7 @@ namespace PIERStory {
             ironSourceAppKey = "unexpected_platform";
             #endif
             
-            Debug.Log ("unity-script: InitIronSource Start called");
+            Debug.Log ("unity-script: InitIronSource Start called : " + ironSourceAppKey);
 
             //Dynamic config example
             IronSourceConfig.Instance.setClientSideCallbacks (true); // 클라리언스 타이트 콜백. 
@@ -253,7 +292,8 @@ namespace PIERStory {
             // SDK init
             Debug.Log ("unity-script: IronSource.Agent.init");
             IronSourceEvents.onSdkInitializationCompletedEvent += IronSourceInitCompletedEvent;
-            IronSource.Agent.init (ironSourceAppKey);
+            // IronSource.Agent.init (ironSourceAppKey);
+            IronSource.Agent.init (ironSourceAppKey, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
    
         }
         
@@ -268,6 +308,7 @@ namespace PIERStory {
         
         public void LoadIronSourceBanner() {
             
+            Debug.Log("Start LoadIronSourceBanner ###");
             // IronSource.Agent.int
             
             // Add Banner Events
@@ -290,6 +331,14 @@ namespace PIERStory {
                 return;
             
             IronSource.Agent.hideBanner();
+            isIronSourceBannerLoaded = false;
+            
+            try {
+                IronSource.Agent.destroyBanner();
+            } 
+            catch {
+                Debug.LogError("Error in HideIronSourceBanner");
+            }
         }
         
         void IronSourceBannerAdLoadedEvent ()
@@ -301,6 +350,11 @@ namespace PIERStory {
         void IronSourceBannerAdLoadFailedEvent (IronSourceError error)
         {
             Debug.Log ("unity-script: I got BannerAdLoadFailedEvent, code: " + error.getCode () + ", description : " + error.getDescription ());
+            
+            if(isAdmobInit) {
+                Debug.Log("### alternative call. admob banner");
+                InitAdmobBanner();
+            }
         }
         
         void IronSourceBannerAdClickedEvent ()
@@ -337,13 +391,13 @@ namespace PIERStory {
             admobRewardID = admobRewardID_iOS;
             admobInterstitialID = admobInterstitialID_iOS;
             admobBannerID = aadmobBannerID_iOS;
-            admobRewardInterstitialID = admobRewardInterstitialID_iOS;
+            
                         
             #else
             admobRewardID = admobRewardID_Anroid;
             admobInterstitialID = admobInterstitialID_Anroid;
             admobBannerID = aadmobBannerID_Anroid;
-            admobRewardInterstitialID = admobRewardInterstitialID_Anroid;
+            
             #endif
             
             
@@ -358,6 +412,7 @@ namespace PIERStory {
         /// <param name="initstatus"></param>
         private void HandleInitCompleteAction(InitializationStatus initstatus) {
             Debug.Log("Google Admob Initialization complete.");
+            isAdmobInit = true;
             
             // Callbacks from GoogleMobileAds are not guaranteed to be called on
             // the main thread.
@@ -366,7 +421,7 @@ namespace PIERStory {
             MobileAdsEventExecutor.ExecuteInUpdate(() =>
             {
                 InitAdmobRewardedAd();
-                RequestInterstitial();
+                InitAdmobInterstitial();
 
             });
         }        
@@ -381,46 +436,7 @@ namespace PIERStory {
         }        
         
         
-        
-        /// <summary>
-        /// 애드몹 보상형 전면광고 초기화 
-        /// </summary>
-        void InitAdmobRewardInterstitial() {
-            AdRequest request = new AdRequest.Builder().Build();
-            RewardedInterstitialAd.LoadAd(admobRewardInterstitialID, request, rewardInterstitialLoadCallback);
-
-        }
-        private void rewardInterstitialLoadCallback(RewardedInterstitialAd ad, AdFailedToLoadEventArgs error) {
-            if (error == null)
-            {
-                rewardInterstitial = ad;
-                rewardInterstitial.OnAdDidDismissFullScreenContent += HandleAdDidDismiss;
-                
-            }
-        }
-        
-        private void HandleAdDidDismiss(object sender, EventArgs args) {
-            InitAdmobRewardInterstitial();
-        }
-        // 애드몹 보상형 전면광고 종료 
-
-        public void ShowRewardInterstitial() {
-            if(rewardInterstitial != null) {
-                rewardInterstitial.Show(earnRewardInterstitial);
-            }
-            else {
-                InitAdmobRewardInterstitial();
-            }
-        }
-        
-        void earnRewardInterstitial(Reward reward) {
-            // 보상 받음 
-            OnCompleteRewardAD?.Invoke(true);
-            isRewarded = false;
-            
-        }
-        
-        
+      
         
         
         /// <summary>
@@ -501,24 +517,24 @@ namespace PIERStory {
         
         
         /// <summary>
-        /// 전면광고 생성 및 로드
+        /// 애드몹 전면광고 생성 및 로드
         /// </summary>
-        private void RequestInterstitial()
+        private void InitAdmobInterstitial()
         {
             
             // Clean up interstitial before using it
-            if(this.interstitial != null) {
-                this.interstitial.Destroy();
+            if(this.admobInterstitial != null) {
+                this.admobInterstitial.Destroy();
             }
             
             // Initialize an InterstitialAd.
-            this.interstitial = new GoogleMobileAds.Api.InterstitialAd(admobInterstitialID);
-            this.interstitial.OnAdClosed += HandleOnAdClosed;
-            this.interstitial.OnAdLoaded += HandleOnAdLoaded;
+            this.admobInterstitial = new GoogleMobileAds.Api.InterstitialAd(admobInterstitialID);
+            this.admobInterstitial.OnAdClosed += HandleOnAdClosed;
+            this.admobInterstitial.OnAdLoaded += HandleOnAdLoaded;
             
 
             // Load the interstitial with the request.
-            this.interstitial.LoadAd(CreateAdRequest());
+            this.admobInterstitial.LoadAd(CreateAdRequest());
             
 
         }
@@ -537,11 +553,11 @@ namespace PIERStory {
             if(GameManager.main != null && StoryManager.main != null && (UserManager.main.HasProjectFreepass() || StoryManager.main.CurrentProject.IsValidOnedayPass() ))
                 return;
            
-            if(this.interstitial != null && this.interstitial.IsLoaded()) {
-                this.interstitial.Show();
+            if(this.admobInterstitial != null && this.admobInterstitial.IsLoaded()) {
+                this.admobInterstitial.Show();
             }
             else {
-                RequestInterstitial();
+                InitAdmobInterstitial();
             }
         }
         
@@ -552,11 +568,11 @@ namespace PIERStory {
             
             
             
-            if(this.interstitial != null && this.interstitial.IsLoaded()) {
-                this.interstitial.Show();
+            if(this.admobInterstitial != null && this.admobInterstitial.IsLoaded()) {
+                this.admobInterstitial.Show();
             }
             else {
-                RequestInterstitial();
+                InitAdmobInterstitial();
             }
         }
         
@@ -571,13 +587,78 @@ namespace PIERStory {
             Debug.Log("Interstitial HandleOnAdClosed");
             
             MobileAdsEventExecutor.ExecuteInUpdate(() => {
-                RequestInterstitial();    
+                InitAdmobInterstitial();    
             });
   
         }
 
         
+        /// <summary>
+        /// 애드몹 배너 생성 
+        /// </summary>
+        public void InitAdmobBanner() {
+            
+                        
+            Debug.Log("### RequestBannerAdmob : " + admobBannerID);
+            
+            this.admobBanner = new BannerView(admobBannerID, AdSize.Banner, AdPosition.Bottom);
+            
+            // Called when an ad request has successfully loaded.
+            this.admobBanner.OnAdLoaded += this.OnAdmobBannerHandleOnAdLoaded;
+            // Called when an ad request failed to load.
+            this.admobBanner.OnAdFailedToLoad += this.OnAdmobBannerHandleOnAdFailedToLoad;
+            // Called when an ad is clicked.
+            this.admobBanner.OnAdOpening += this.OnAdmobBannerHandleOnAdOpened;
+            // Called when the user returned from the app after an ad click.
+            this.admobBanner.OnAdClosed += this.OnAdmobBannerHandleOnAdClosed;
+            
+            // Create an empty ad request.
+            AdRequest request = new AdRequest.Builder().Build();
+
+            // Load the banner with the request.
+            this.admobBanner.LoadAd(request);
+            
+        }        
+
+        void HideBannerAdmob() {
+            
+            if(this.admobBanner != null && isAdmobBannerLoaded)
+                this.admobBanner.Hide();
+                
+            isAdmobBannerLoaded = false;
+            
+            try {
+                this.admobBanner.Destroy();
+            }
+            catch {
+                Debug.LogError("HideBannerAdmob Error");
+            }
+        }
         
+        public void OnAdmobBannerHandleOnAdLoaded(object sender, EventArgs args)
+        {
+            MonoBehaviour.print("HandleAdLoaded event received");
+            isAdmobBannerLoaded = true;
+        }
+
+        public void OnAdmobBannerHandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+        {
+            MonoBehaviour.print("HandleFailedToReceiveAd event received with message: "
+                                + args.LoadAdError.GetMessage());
+                                
+            isAdmobBannerLoaded = false;
+        }
+
+        public void OnAdmobBannerHandleOnAdOpened(object sender, EventArgs args)
+        {
+            MonoBehaviour.print("HandleAdOpened event received");
+        }
+
+        public void OnAdmobBannerHandleOnAdClosed(object sender, EventArgs args)
+        {
+            MonoBehaviour.print("HandleAdClosed event received");
+        }
+                
 
         
         
@@ -785,8 +866,8 @@ namespace PIERStory {
         /// </summary>
         public void PlaySelectionAD() {
             
-            if(this.interstitial == null || !this.interstitial.IsLoaded()) {
-                RequestInterstitial();
+            if(this.admobInterstitial == null || !this.admobInterstitial.IsLoaded()) {
+                InitAdmobInterstitial();
                 return; 
             }
             
@@ -1023,71 +1104,8 @@ namespace PIERStory {
         
         #region 유니티 미디에이션
         
-        void CreateUnityBanner() {
-            
-            isUnityBannerLoaded = false;
-            
-            BannerAdSize bannerSize = new BannerAdSize(BannerAdPredefinedSize.Banner);
-            unityBannerAd = MediationService.Instance.CreateBannerAd(unityBannerUnitID, bannerSize, BannerAdAnchor.BottomCenter, Vector2.zero);
-            
-            LoadUnityBanner();
-        }
-        
-        void UnityBannerRefreshed(object sender, LoadErrorEventArgs args) {
-            // Execute logic for when a banner refreshes.
-            // Debug.Log(args.Message)
-            
-        }
-        
-        
-        async void LoadUnityBanner() {
-           
-            try
-            {
-				  await unityBannerAd.LoadAsync();
-				  AdLoaded();
-            }
-            catch (LoadFailedException e)
-            {
-				  AdFailedLoad(e);
-			}            
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public void HideUnityBanner() {
-            try {
-                if(GameManager.main == null)
-                    return;
-                
-                if(!isUnityBannerLoaded)   
-                    return;
-                    
-                if(unityBannerAd == null)
-                    return;
-                    
-                unityBannerAd.Dispose();
-            }
-            catch(System.Exception e) {
-                NetworkLoader.main.ReportRequestError("HideUnityBanner", e.StackTrace);
-            }
-        }
-        
-        void AdLoaded()
-        {
-			Debug.Log("Ad loaded");
-            isUnityBannerLoaded = true;
-            unityBannerAd.OnRefreshed += UnityBannerRefreshed;
-            
-  		}
 
-        void AdFailedLoad(LoadFailedException e)
-        {
-			Debug.Log("Failed to load ad");
-			Debug.Log(e.Message);
-            isUnityBannerLoaded = false;
-  		}        
+
         
         
         void CreateRewardAd() {

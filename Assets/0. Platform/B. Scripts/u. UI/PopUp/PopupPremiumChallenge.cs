@@ -8,8 +8,12 @@ namespace PIERStory {
 
     public class PopupPremiumChallenge : PopupBase
     {
-        public TextMeshProUGUI textPrice;
+        public TextMeshProUGUI textInAppNoSale;
+        public GameObject groupDiscountInApp; // 할인 그룹 
+        public TextMeshProUGUI textInAppNoSale2; // 인앱상품 일반 가격
+        public TextMeshProUGUI textInappDiscountPrice; // 인앱상품 할인가격
         
+        [Space]
         public TextMeshProUGUI textOriginStarPrice; // 스타 판매 원가격
         public TextMeshProUGUI textDiscountStarPrice; // 스타 판매 할인가격
         public GameObject btnStarPurchase;
@@ -21,7 +25,8 @@ namespace PIERStory {
                 
         public bool isPurchasable = false; // 구매가능 상태 
         public bool hasPremiumPass = false; // 프리미엄 패스 보유 여부 
-        GamebaseResponse.Purchase.PurchasableItem gamebaseItem = null; // 게임베이스 기준정보 
+        GamebaseResponse.Purchase.PurchasableItem gamebaseItemNoDiscount = null; // 게임베이스 기준정보 
+        GamebaseResponse.Purchase.PurchasableItem gamebaseItemDiscount = null; 
         
         [Header("챌린지")]
         public List<ChallengeRow> listRows;
@@ -52,23 +57,40 @@ namespace PIERStory {
                 textOriginStarPrice.text = currentStory.passPrice.ToString();
                 textDiscountStarPrice.text = currentStory.discountPassPrice.ToString();
                 
-                gamebaseItem = BillingManager.main.GetGamebasePurchaseItem(currentStory.premiumSaleID); // 연결된 상품ID로 조회한다. 
-                textPrice.text = gamebaseItem.localizedPrice;
+                gamebaseItemDiscount = BillingManager.main.GetGamebasePurchaseItem(currentStory.premiumSaleID);  // 할인 인앱 
+                gamebaseItemNoDiscount = BillingManager.main.GetGamebasePurchaseItem(currentStory.premiumProductID); // 미할인 인앱 
+                
+                
+                textInAppNoSale.text = gamebaseItemNoDiscount.localizedPrice;
+                textInAppNoSale2.text = gamebaseItemNoDiscount.localizedPrice;
+                textInappDiscountPrice.text = gamebaseItemDiscount.localizedPrice;
             }
             catch {
                 isPurchasable = false;
-                textPrice.text = "ERROR";
+                textInAppNoSale.text = "ERROR";
                 Debug.Log("Windows standalone?");
-                
                 // return;
             }
+            
+            // 할인 설정된 경우에 대한 처리
+            if(currentStory.premiumProductID == currentStory.premiumSaleID) { // 같은 경우는 할인중이 아님 
+                textInAppNoSale.gameObject.SetActive(true);
+                groupDiscountInApp.SetActive(false);
+            }
+            else { // 다른 경우 (할인중)
+                textInAppNoSale.gameObject.SetActive(false);
+                groupDiscountInApp.SetActive(true);
+            }            
             
             // 구매 가능여부에 대한 체크 
             hasPremiumPass = currentStory.hasPremiumPass;
             isPurchasable = !hasPremiumPass;
             
             if(!isPurchasable) {
-                SystemManager.SetText(textPrice, SystemManager.GetLocalizedText("6464"));
+                SystemManager.SetText(textInAppNoSale, SystemManager.GetLocalizedText("6464"));
+                // 구매 가능하지 않은 경우는 group 비활성화 
+                textInAppNoSale.gameObject.SetActive(true);
+                groupDiscountInApp.SetActive(false);
             }
             
             

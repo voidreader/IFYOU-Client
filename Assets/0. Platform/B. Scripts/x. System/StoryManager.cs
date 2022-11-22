@@ -156,7 +156,7 @@ namespace PIERStory
 
         
         public static bool enterGameScene = false;          // Game scene으로 진입했는지?
-        public static bool playSideEpisode = false;         // speical episode를 플레이했는지
+        
 
 
         public string CurrentProjectID = string.Empty;      // 선택한 프로젝트 ID 
@@ -1569,13 +1569,7 @@ namespace PIERStory
             CurrentEpisodeData = __data;
             CurrentEpisodeID = CurrentEpisodeData.episodeID;
             CurrentEpisodeTitle = CurrentEpisodeData.episodeTitle;
-
-            // 진입한 에피소드가 사이드인 경우
-            if(CurrentEpisodeData.episodeType == EpisodeType.Side)
-                playSideEpisode = true;
-            else 
-                playSideEpisode = false;
-            
+          
         }
 
 

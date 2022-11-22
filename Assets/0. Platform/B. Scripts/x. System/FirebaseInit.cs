@@ -1,5 +1,6 @@
 using UnityEngine;
 using Firebase;
+using CodeStage.AntiCheat.Genuine.CodeHash;
 
 public class FirebaseInit : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class FirebaseInit : MonoBehaviour
                 // Firebase Unity SDK is not safe to use here.
             }
         });
+        
+        CodeHashGenerator.AddToSceneOrGetExisting();
         
         DontDestroyOnLoad(this.gameObject);
     }

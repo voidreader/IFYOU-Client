@@ -24,6 +24,7 @@ using VoxelBusters.CoreLibrary;
 using VoxelBusters.EssentialKit;
 
 using RTLTMPro;
+using CodeStage.AntiCheat.Genuine.CodeHash;
 
 namespace PIERStory
 {
@@ -270,7 +271,18 @@ namespace PIERStory
 
             // 암호화하지 않는 EasySave 세팅             
             noEncryptionSetting = new ES3Settings(ES3.EncryptionType.None, "password");
-
+            
+            // Debug.Log("Code Hash!");
+            
+            // CodeHashGenerator.AddToSceneOrGetExisting();
+            // Debug.Log(CodeHashGenerator.Instance.LastResult.SummaryHash);
+            if(CodeHashGenerator.Instance != null) {
+                // Debug.Log(CodeHashGenerator.Instance.LastResult.SummaryHash);
+                // CodeHashGenerator.Instance.LastResult == null
+            }
+            else {
+                Debug.Log("CodeHashGenerator is null");
+            }
         }
         
         void Update() {
@@ -2884,6 +2896,11 @@ namespace PIERStory
         public static void ShowToBeContinue(EpisodeData nextEpisode) {
             
             string contentsText = string.Empty;
+            
+            //  스페셜(사이드) 에피소드는 없음 
+            if(GameManager.main.currentEpisodeData.episodeType == EpisodeType.Side) {
+                return;
+            }
             
             // 현재 플레이한 에피소드가 엔딩이 아님에도, 다음 에피소드 정보가 없을때. 
             if(GameManager.main.currentEpisodeData.episodeType != EpisodeType.Ending && (nextEpisode == null || !nextEpisode.isValidData || string.IsNullOrEmpty(nextEpisode.episodeID))) {

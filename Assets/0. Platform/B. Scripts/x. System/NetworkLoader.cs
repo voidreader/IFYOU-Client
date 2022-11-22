@@ -366,6 +366,12 @@ namespace PIERStory
 
             JsonData sending = new JsonData();
             sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProjectID; // 현재 프로젝트 
+            
+            if(string.IsNullOrEmpty(__episodeID)) {
+                NetworkLoader.main.ReportRequestError("UpdateUserProjectCurrent episodeID empty : " + __callby, "UpdateUserProjectCurrent");
+                __episodeID = SystemManager.main.givenEpisodeData.episodeID; // 대체..?
+            }
+            
             sending["episodeID"] = __episodeID;
             sending["scene_id"] = __sceneID;
             sending["script_no"] = __scriptNO;

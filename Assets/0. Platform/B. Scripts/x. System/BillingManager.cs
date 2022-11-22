@@ -504,7 +504,7 @@ namespace PIERStory {
                 
                 
             if(AdManager.main != null) {
-                AdManager.main.HideUnityBanner();
+                AdManager.main.HideBottomBanner();
             }
         }
         

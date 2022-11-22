@@ -24,6 +24,7 @@ namespace PIERStory
         [SerializeField] string inequation = string.Empty; // 부등식 수식 
         
         const string prefixAbility = "@";
+        const string prefixAbility2 = "*";
         
         
         
@@ -139,7 +140,7 @@ namespace PIERStory
             
             // * 2022.03 
             // * 능력치 조건 추가 
-            if(exp.Contains(prefixAbility)) {
+            if(exp.Contains(prefixAbility)||exp.Contains(prefixAbility2)) {
 
                 Debug.Log("### It's ability expression");
 
@@ -174,7 +175,11 @@ namespace PIERStory
                     return true; // 일단 true로 준다.
                 } // ? END 부등식 체크 종료
                 
-                exp = exp.Replace(prefixAbility, ""); // 골뱅이제거
+                if(exp.Contains(prefixAbility))
+                    exp = exp.Replace(prefixAbility, ""); // 골뱅이제거
+                else if(exp.Contains(prefixAbility2))
+                    exp = exp.Replace(prefixAbility2, ""); // * 제거
+                
                 spliteExp = exp.Split('_'); // 화자 추출 
                 speaker = spliteExp[0]; 
                 

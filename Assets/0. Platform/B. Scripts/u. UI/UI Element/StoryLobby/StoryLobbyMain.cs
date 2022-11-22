@@ -161,7 +161,7 @@ namespace PIERStory {
             
             
             // 기본정보 
-            InitBaseInfo();
+            InitBaseInfo("InitStoryLobbyControls");
 
             SetPlayState(); // 플레이 및 타이머 설정 
             
@@ -196,7 +196,7 @@ namespace PIERStory {
         /// </summary>
         void RefreshAfterReset() {
             Debug.Log(" >> RefreshAfterReset");
-            InitBaseInfo();
+            InitBaseInfo("RefreshAfterReset");
             SetPlayState();
             InitFlowMap();
 
@@ -225,7 +225,7 @@ namespace PIERStory {
             
             Debug.Log(" >> RefreshAfterReduceWaitingTime");
             
-            InitBaseInfo();
+            InitBaseInfo("RefreshAfterReduceWaitingTime");
             SetPlayState();
             
             isWaitingResponse = false;
@@ -242,7 +242,7 @@ namespace PIERStory {
         /// <summary>
         /// 기본정보 처리
         /// </summary>
-        void InitBaseInfo() {
+        void InitBaseInfo(string __callby) {
             textReduceWaitingTime.text = SystemManager.main.waitingReduceTimeAD.ToString() +" min"; // 광고보고 차감되는 시간 SysteManager..
            
             currentStoryData =  StoryManager.main.CurrentProject; // 현재 작품 
@@ -262,13 +262,16 @@ namespace PIERStory {
             }
             
             currentEpisodeID = SystemManager.GetJsonNodeString(projectCurrentJSON, "episode_id");
-            if(string.IsNullOrEmpty(currentEpisodeID))
-                NetworkLoader.main.ReportRequestError("StoryLobbyMain InitBaseInfo currentEpisodeID is empty", "StoryManager.main.CurrentEpisodeID");
+            if(string.IsNullOrEmpty(currentEpisodeID)) {
+                NetworkLoader.main.ReportRequestError("StoryLobbyMain InitBaseInfo currentEpisodeID is empty : "  + __callby, "StoryManager.main.CurrentEpisodeID");
+                Debug.LogError("StoryLobbyMain InitBaseInfo currentEpisodeID is empty : " + __callby);
+            }
             
             currentEpisodeData = StoryManager.GetRegularEpisodeByID(currentEpisodeID);
 
-            if(currentEpisodeData == null || !currentEpisodeData.isValidData) {
-                SystemManager.ShowMessageAlert("개발팀에 문의해주세요");
+            if(currentEpisodeData == null || string.IsNullOrEmpty(currentEpisodeData.episodeID) || !currentEpisodeData.isValidData) {
+                SystemManager.ShowMessageAlert("Wrong Project Data! Please contact to Customer Service");
+                // NetworkLoader.main.ReportRequestError()
                 return;
             }
 

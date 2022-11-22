@@ -595,7 +595,7 @@ namespace PIERStory
             }
             
             // 하단 배너 광고 처리 2022.11.02
-            AdManager.main.PlayBottomBanner();
+            AdManager.main.ShowBottomBanner();
             
 
             // 모든 라인을, 혹은 종료 명령어를 만날때까지 계속해! 
@@ -1488,7 +1488,7 @@ namespace PIERStory
             
             SystemManager.ShowNetworkLoading();
             UserManager.main.RefreshAfterGamePlay();
-            AdManager.main.HideUnityBanner();
+            AdManager.main.HideBottomBanner();
             
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyBegin"); // 노드 제어
         }
@@ -1514,6 +1514,8 @@ namespace PIERStory
         {
             Debug.Log("RetryPlay");
             isPlaying = false;
+            
+            AdManager.main.HideBottomBanner();
             
             Signal.Send(LobbyConst.STREAM_COMMON, LobbyConst.SIGNAL_GAME_BEGIN); // 노드 제어
         }
@@ -2035,7 +2037,7 @@ namespace PIERStory
             
             // 하단 배너 숨긴다.
             // AdManager.main.HideIronSourceBanner();
-            AdManager.main.HideUnityBanner();
+            AdManager.main.HideBottomBanner();
             
                 
             // 안전을 위해..

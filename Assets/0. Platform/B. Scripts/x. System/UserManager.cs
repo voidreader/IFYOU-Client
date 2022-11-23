@@ -236,8 +236,8 @@ namespace PIERStory
             JsonData sendingData = new JsonData(); // 서버 전송 데이터 
             sendingData[CommonConst.FUNC] = NetworkLoader.FUNC_LOGIN_CLIENT;
             sendingData["deviceid"] = SystemInfo.deviceUniqueIdentifier;
-            // sendingData["gamebaseid"] = gamebaseID;
-            sendingData["gamebaseid"] = "LNG9DG7DNYD3R6CZ";
+            sendingData["gamebaseid"] = gamebaseID;
+            // sendingData["gamebaseid"] = "LNG9DG7DNYD3R6CZ";
 
             if (NetworkLoader.main == null)
                 return;

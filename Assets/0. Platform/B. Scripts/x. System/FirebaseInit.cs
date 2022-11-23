@@ -1,6 +1,6 @@
 using UnityEngine;
 using Firebase;
-using CodeStage.AntiCheat.Genuine.CodeHash;
+// using CodeStage.AntiCheat.Genuine.CodeHash;
 
 public class FirebaseInit : MonoBehaviour
 {
@@ -32,7 +32,7 @@ public class FirebaseInit : MonoBehaviour
             }
         });
         
-        CodeHashGenerator.AddToSceneOrGetExisting();
+        //CodeHashGenerator.AddToSceneOrGetExisting();
         
         DontDestroyOnLoad(this.gameObject);
     }

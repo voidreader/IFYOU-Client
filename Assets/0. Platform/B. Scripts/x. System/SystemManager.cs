@@ -24,7 +24,7 @@ using VoxelBusters.CoreLibrary;
 using VoxelBusters.EssentialKit;
 
 using RTLTMPro;
-using CodeStage.AntiCheat.Genuine.CodeHash;
+// using CodeStage.AntiCheat.Genuine.CodeHash;
 
 namespace PIERStory
 {
@@ -276,13 +276,7 @@ namespace PIERStory
             
             // CodeHashGenerator.AddToSceneOrGetExisting();
             // Debug.Log(CodeHashGenerator.Instance.LastResult.SummaryHash);
-            if(CodeHashGenerator.Instance != null) {
-                // Debug.Log(CodeHashGenerator.Instance.LastResult.SummaryHash);
-                // CodeHashGenerator.Instance.LastResult == null
-            }
-            else {
-                Debug.Log("CodeHashGenerator is null");
-            }
+
         }
         
         void Update() {

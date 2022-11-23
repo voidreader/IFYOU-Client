@@ -20,6 +20,7 @@ namespace PIERStory
         #region CONST
         const string HEADER_RETRY = "X-retry";
 
+
         public const string FUNC_LOGIN_CLIENT = "loginClient";
         public const string FUNC_SELECTED_STORY_INFO = "getUserSelectedStory";
         

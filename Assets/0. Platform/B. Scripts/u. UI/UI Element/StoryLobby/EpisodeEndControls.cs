@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using UnityEngine;
-
+using LitJson;
 using TMPro;
 using DG.Tweening;
+using BestHTTP;
 
 namespace PIERStory {
 
@@ -76,7 +77,7 @@ namespace PIERStory {
                 // return;
             }
             
-            StartCoroutine(RoutinePostEpisodeEnd());
+            // StartCoroutine(RoutinePostEpisodeEnd());
             
             SystemManager.HideNetworkLoading();
             canvasGroup.DOFade(1f, 0.5f);
@@ -142,6 +143,7 @@ namespace PIERStory {
             SetPasses();
             
             if(projectCurrentJSON == null) {
+                NetworkLoader.main.ReportRequestError("EpisodeEndControl InitBaseInfo Project Current is null", "StoryManager.main.CurrentEpisodeID");
                 SystemManager.ShowSimpleAlert("Invalid Episode State. Please contact to help center");
                 return;
             }
@@ -149,6 +151,10 @@ namespace PIERStory {
             currentEpisodeID = SystemManager.GetJsonNodeString(projectCurrentJSON, LobbyConst.STORY_EPISODE_ID);
             if(string.IsNullOrEmpty(currentEpisodeID)) {
                 NetworkLoader.main.ReportRequestError("EpisodeEndControl InitBaseInfo currentEpisodeID is empty", "StoryManager.main.CurrentEpisodeID");
+                
+                // 갱신 데이터 가져온다.
+                NetworkLoader.main.RequestUserProjectCurrent(this.OnRefreshUserProjectCurrent);
+                return;
             }
             
             
@@ -161,6 +167,37 @@ namespace PIERStory {
             
             SystemManager.SetText(textSummary, currentEpisodeData.episodeSummary); // 요약정보 추가 
         }
+        
+        
+        public override void OnRefreshUserProjectCurrent(HTTPRequest request, HTTPResponse response) {
+            if(!NetworkLoader.CheckResponseValidation(request, response)) {
+                return;
+            } 
+            
+            JsonData result = JsonMapper.ToObject(response.DataAsText);
+            
+            // 저장 
+            UserManager.main.SetNodeUserProjectCurrent(result, "requestRecommendProject");
+            
+            projectCurrentJSON = UserManager.main.GetUserProjectRegularEpisodeCurrent(); // 작품상에서 현재 위치 
+            currentEpisodeID = SystemManager.GetJsonNodeString(projectCurrentJSON, LobbyConst.STORY_EPISODE_ID);
+            
+            // 이렇게 해도 없어..?!
+            if(string.IsNullOrEmpty(currentEpisodeID)) {
+                NetworkLoader.main.ReportRequestError("EpisodeEndControl RequestUserProjectCurrent currentEpisodeID is empty", "StoryManager.main.CurrentEpisodeID");
+                
+                // 갱신 데이터 가져온다.
+                // NetworkLoader.main.RequestUserProjectCurrent(this.OnRefreshUserProjectCurrent);
+                return;
+            }            
+            
+            currentEpisodeData = StoryManager.GetRegularEpisodeByID(currentEpisodeID); // 다음번 플레이될 차례의 에피소드 데이터 
+            currentEpisodeData.SetPurchaseState(); // 구매기록 refresh.
+            hasPass = UserManager.main.HasProjectFreepass() || currentStoryData.IsValidOnedayPass() || UserManager.main.ifyouPassDay > 0;
+            isEpisodeContinuePlay = false;
+            SystemManager.SetText(textSummary, currentEpisodeData.episodeSummary); // 요약정보 추가             
+        }
+        
         
         /// <summary>
         /// 패스 오브젝트 설정 

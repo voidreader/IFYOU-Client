@@ -154,6 +154,17 @@ namespace PIERStory
         #region 기타 통신 RequestGamebaseLaunching, UpdateEpisodeStartRecord, UpdateEpisodeCompleteRecord
         
         /// <summary>
+        /// 유저 작품 현재 위치 정보 가져오기 
+        /// </summary>
+        /// <param name="__cb"></param>
+        public void RequestUserProjectCurrent(OnRequestFinishedDelegate __cb) {
+            JsonData sending = new JsonData();
+            sending[CommonConst.FUNC] = "requestUserProjectCurrent";
+            sending[CommonConst.COL_PROJECT_ID] = StoryManager.main.CurrentProject.projectID;
+            SendPost(__cb, sending, true);
+        }
+        
+        /// <summary>
         /// 추천 팝업 요청 
         /// </summary>
         public void RequestRecommedStory() {

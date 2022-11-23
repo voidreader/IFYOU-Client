@@ -269,6 +269,18 @@ namespace PIERStory {
         
         void InitIronSource() {
             
+            int portion = UnityEngine.Random.Range(0, 100);
+            
+            if(portion < 50) {
+                ironSourceAppKey_Android = "171e4d785";
+                ironSourceAppKey_iOS = "171e5110d";
+            }
+            else {
+                ironSourceAppKey_Android = "171e30b45";
+                ironSourceAppKey_iOS = "171e344cd";
+            }
+            
+            
             #if UNITY_ANDROID
             ironSourceAppKey = ironSourceAppKey_Android;
             #elif UNITY_IOS

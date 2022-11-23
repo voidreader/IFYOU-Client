@@ -113,6 +113,8 @@ MonoBehaviour:
     isConfirm: 1
     isPositive: 1
     contentValue: 0
+    arrayContentString: []
+    arrayContentValue: 
   overlay: {fileID: 2636468874018547574}
   content: {fileID: 2636468872757901817}
   popupName: 
@@ -3252,7 +3254,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 20}
+  m_AnchoredPosition: {x: 0, y: 30}
   m_SizeDelta: {x: 670, y: 950}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8574798143136929222
@@ -3509,6 +3511,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8574798143136929221}
     m_Modifications:
+    - target: {fileID: 1014233340966335749, guid: 9b0ed3b3737c7a6428cfb08bc12e391d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8526236852388594177, guid: 9b0ed3b3737c7a6428cfb08bc12e391d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

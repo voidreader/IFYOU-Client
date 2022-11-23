@@ -7,7 +7,7 @@ using TMPro;
 using LitJson;
 using DG.Tweening;
 using Doozy.Runtime.Signals;
-
+using BestHTTP;
 
 namespace PIERStory {
 
@@ -282,6 +282,10 @@ namespace PIERStory {
 
             if (StoryLobbyManager.main != null && CheckResumePossible())
                 isEpisodeContinuePlay = true;
+            
+        }
+        
+        public virtual void OnRefreshUserProjectCurrent(HTTPRequest request, HTTPResponse response) {
             
         }
         
@@ -852,6 +856,14 @@ namespace PIERStory {
                 SystemManager.ShowStoryResetPopup(firstEpisode);
                 return;
             } // ? 엔딩 도달한 경우 처리 끝
+            
+            
+            // ! 검증 2022.11.23
+            if(currentEpisodeData == null || string.IsNullOrEmpty(currentEpisodeData.episodeID)) {
+                // 없으면 경고 
+                SystemManager.ShowSimpleAlertLocalize("6513");
+                return;
+            }
             
             
             // 에피소드 진입 처리 

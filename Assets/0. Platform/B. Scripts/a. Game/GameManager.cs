@@ -2044,18 +2044,20 @@ namespace PIERStory
             // yield return new WaitForSeconds(0.1f);
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
-            // 에피소드 종료화면 오픈 
-            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, string.Empty);
-            
-            
           
             Debug.Log("RoutineFinishGame Before RequestCompleteEpisode");
 
             // 에피소드 완료까지 통신 대기
             UserManager.main.RequestCompleteEpisodeOptimized(nextEpisodeData, currentSceneId);
+            yield return null;
             yield return new WaitUntil(() => NetworkLoader.CheckServerWork());
             
+            // 에피소드 종료화면 오픈 
+            Signal.Send(LobbyConst.STREAM_GAME, GameConst.SIGNAL_EPISODE_END, string.Empty);
+            
             // 종료화면에 대한 초기화 설정 
+            yield return null;
+            yield return null;
             yield return null;
             endControls.InitStoryLobbyControls();
 

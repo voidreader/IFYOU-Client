@@ -1565,6 +1565,7 @@ namespace PIERStory
         /// <param name="__j"></param>
         public void SetCurrentEpisodeJson(EpisodeData __data)
         {
+            
             CurrentEpisodeData = __data;
             CurrentEpisodeID = CurrentEpisodeData.episodeID;
             CurrentEpisodeTitle = CurrentEpisodeData.episodeTitle;

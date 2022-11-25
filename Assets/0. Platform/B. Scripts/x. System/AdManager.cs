@@ -34,6 +34,13 @@ namespace PIERStory {
         public static Action OnShowAdvertisement;
         
         public static Action<bool> OnCompleteRewardAD = null; // 동영상 광고 보고 콜백
+        
+        
+        TimeSpan pauseDiff;
+        DateTime datePause;
+        DateTime dateResume;
+        
+        
         public bool isAdManagerInit = false;
         public bool isPaidSelection = false;
         
@@ -178,7 +185,30 @@ namespace PIERStory {
         */
         
         private void OnApplicationPause(bool pauseStatus) {
+            
+            if(!isIronSourceInited)
+                return;
+            
             IronSource.Agent.onApplicationPause (pauseStatus);
+            
+            if(pauseStatus) {
+                datePause = DateTime.Now;
+            }
+            else {
+                if(datePause == null) 
+                    return;
+                
+                dateResume = DateTime.Now;
+                pauseDiff = dateResume - datePause;
+                
+                if(pauseDiff.Minutes >= 1) {
+                    Debug.Log("pauseDiff Min : " + pauseDiff.Minutes);
+                    CheckOfferwallCredit();
+                }
+                
+                
+                
+            }
         }
         
         
@@ -305,8 +335,36 @@ namespace PIERStory {
             // SDK init
             Debug.Log ("unity-script: IronSource.Agent.init");
             IronSourceEvents.onSdkInitializationCompletedEvent += IronSourceInitCompletedEvent;
+            
+            
+            // Banner Event
+            IronSourceEvents.onBannerAdLoadedEvent += IronSourceBannerAdLoadedEvent;
+            IronSourceEvents.onBannerAdLoadFailedEvent += IronSourceBannerAdLoadFailedEvent;		
+            IronSourceEvents.onBannerAdClickedEvent += IronSourceBannerAdClickedEvent; 
+            IronSourceEvents.onBannerAdScreenPresentedEvent += IronSourceBannerAdScreenPresentedEvent; 
+            IronSourceEvents.onBannerAdScreenDismissedEvent += IronSourceBannerAdScreenDismissedEvent;
+            IronSourceEvents.onBannerAdLeftApplicationEvent += IronSourceBannerAdLeftApplicationEvent; 
+            
+            
+            // Reward Event
+            IronSourceEvents.onRewardedVideoAdOpenedEvent += RewardedVideoOnAdOpenedEvent;
+            IronSourceEvents.onRewardedVideoAdClickedEvent += RewardedVideoOnAdClickedEvent;
+            IronSourceEvents.onRewardedVideoAdClosedEvent += RewardedVideoOnAdClosedEvent; 
+            IronSourceEvents.onRewardedVideoAvailabilityChangedEvent += RewardedVideoAvailabilityChangedEvent;
+            IronSourceEvents.onRewardedVideoAdRewardedEvent += RewardedVideoOnAdRewardedEvent; 
+            IronSourceEvents.onRewardedVideoAdShowFailedEvent += RewardedVideoOnAdShowFailedEvent;            
+            
+            
+            // Offerwall
+            IronSourceEvents.onOfferwallClosedEvent += OfferwallClosedEvent;
+            IronSourceEvents.onOfferwallOpenedEvent += OfferwallOpenedEvent;
+            IronSourceEvents.onOfferwallShowFailedEvent += OfferwallShowFailedEvent;
+            IronSourceEvents.onOfferwallAdCreditedEvent += OfferwallAdCreditedEvent;
+            IronSourceEvents.onGetOfferwallCreditsFailedEvent += GetOfferwallCreditsFailedEvent;
+            IronSourceEvents.onOfferwallAvailableEvent += OfferwallAvailableEvent;            
+            
             // IronSource.Agent.init (ironSourceAppKey);
-            IronSource.Agent.init (ironSourceAppKey, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
+            IronSource.Agent.init (ironSourceAppKey);
    
         }
         
@@ -318,19 +376,158 @@ namespace PIERStory {
         
         
         
+        /// <summary>
+        /// 오퍼월 오픈 
+        /// </summary>
+        public void ShowIronSourceOfferwall() {
+            
+            if(!isIronSourceInited)
+                return;
+            
+            if(!IronSource.Agent.isOfferwallAvailable()) {
+                Debug.Log("IronSource offerwall is not available");
+                return;
+            }
+            
+            IronSource.Agent.showOfferwall();
+        }
+        
+        /// <summary>
+        /// 오퍼월 크레딧 체크 
+        /// </summary>
+        public void CheckOfferwallCredit() {
+            IronSource.Agent.getOfferwallCredits();
+        }
+        
+        /**
+        * Invoked when there is a change in the Offerwall availability status.
+        * @param - available - value will change to YES when Offerwall are available. 
+        * You can then show the video by calling showOfferwall(). Value will change to NO when Offerwall isn't available.
+        */
+        void OfferwallAvailableEvent(bool canShowOfferwall) {
+            Debug.Log("IronSource OfferwallAvailableEvent : " + canShowOfferwall);
+        }
+        /**
+        * Invoked when the Offerwall successfully loads for the user.
+        */ 
+        void OfferwallOpenedEvent() {
+            Debug.Log("IronSource OfferwallAvailableEvent");
+        }
+        /**
+        * Invoked when the method 'showOfferWall' is called and the OfferWall fails to load.  
+        *@param desc - A string which represents the reason of the failure.
+        */
+        void OfferwallShowFailedEvent(IronSourceError error) {
+            Debug.Log("IronSource OfferwallAvailableEvent");
+        }
+        /**
+        * Invoked each time the user completes an offer.
+        * Award the user with the credit amount corresponding to the value of the ‘credits’ 
+        * parameter.
+        * @param dict - A dictionary which holds the credits and the total credits.   
+        */
+        void OfferwallAdCreditedEvent(Dictionary<string,object> dict){
+            Debug.Log("IronSource OfferwallAvailableEvent");
+            // Debug.Log ("I got OfferwallAdCreditedEvent, current credits = "dict["credits"] + "totalCredits = " + dict["totalCredits"]);
+            
+            foreach(string key in dict.Keys) {
+                Debug.Log("key : " +  dict[key].ToString());
+            }
+            
+        }
+        /**
+        * Invoked when the method 'getOfferWallCredits' fails to retrieve 
+        * the user's credit balance info.
+        * @param desc -string object that represents the reason of the  failure. 
+        */
+        void GetOfferwallCreditsFailedEvent(IronSourceError error) {
+            Debug.Log("IronSource OfferwallAvailableEvent : " + error.getDescription());
+        }
+        /**
+        * Invoked when the user is about to return to the application after closing 
+        * the Offerwall.
+        */
+        void OfferwallClosedEvent() {
+            Debug.Log("IronSource OfferwallAvailableEvent");
+        }
+                
+        
+        
+        
+        
+        /// <summary>
+        /// 아이언소스 동영상 광고
+        /// </summary>
+        void ShowIronSourceRewardAD() {
+            
+            if(!IronSource.Agent.isRewardedVideoAvailable())
+                return;
+            
+            Debug.Log ("unity-script: ShowIronSourceRewardAD");
+            IronSource.Agent.showRewardedVideo();
+        }
+        
+
+
+        /************* RewardedVideo AdInfo Delegates *************/
+        // Indicates that there’s an available ad.
+        // The adInfo object includes information about the ad that was loaded successfully
+        // This replaces the RewardedVideoAvailabilityChangedEvent(true) event
+        void RewardedVideoAvailabilityChangedEvent(bool __flag) {
+            Debug.Log("IronSource RewardedVideoAvailabilityChangedEvent : " + __flag);
+        }
+        // Indicates that no ads are available to be displayed
+        // This replaces the RewardedVideoAvailabilityChangedEvent(false) event
+
+        // The Rewarded Video ad view has opened. Your activity will loose focus.
+        void RewardedVideoOnAdOpenedEvent(){
+            Debug.Log("IronSource RewardedVideoOnAdOpenedEvent");
+            SetFrontAdStatus(true);
+        }
+        // The Rewarded Video ad view is about to be closed. Your activity will regain its focus.
+        void RewardedVideoOnAdClosedEvent(){
+            
+            Debug.Log("IronSource RewardedVideoOnAdClosedEvent");
+            SetFrontAdStatus(false);    
+                
+            if(isRewarded) {
+                Debug.Log("IronSource RewardedVideoOnAdClosedEvent Reward");
+                OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
+                NetworkLoader.main.IncreaseDailyMissionCount(3);
+            }
+            
+        }
+        // The user completed to watch the video, and should be rewarded.
+        // The placement parameter will include the reward data.
+        // When using server-to-server callbacks, you may ignore this event and wait for the ironSource server callback.
+        void RewardedVideoOnAdRewardedEvent(IronSourcePlacement placement){
+            
+            Debug.Log("IronSource RewardedVideoOnAdRewardedEvent");
+            isRewarded = true; // true로 변경! 다 봤다!
+            
+        }
+        // The rewarded video ad was failed to show.
+        void RewardedVideoOnAdShowFailedEvent(IronSourceError error){
+            Debug.Log("IronSource RewardedVideoOnAdShowFailedEvent");
+        }
+        // Invoked when the video ad was clicked.
+        // This callback is not supported by all networks, and we recommend using it only if
+        // it’s supported by all networks you included in your build.
+        void RewardedVideoOnAdClickedEvent(IronSourcePlacement placement){
+            Debug.Log("IronSource RewardedVideoOnAdClickedEvent");
+        }
+
+        
+        
+        
+        
         
         public void LoadIronSourceBanner() {
             
             Debug.Log("Start LoadIronSourceBanner ###");
             // IronSource.Agent.int
             
-            // Add Banner Events
-            IronSourceEvents.onBannerAdLoadedEvent += IronSourceBannerAdLoadedEvent;
-            IronSourceEvents.onBannerAdLoadFailedEvent += IronSourceBannerAdLoadFailedEvent;		
-            IronSourceEvents.onBannerAdClickedEvent += IronSourceBannerAdClickedEvent; 
-            IronSourceEvents.onBannerAdScreenPresentedEvent += IronSourceBannerAdScreenPresentedEvent; 
-            IronSourceEvents.onBannerAdScreenDismissedEvent += IronSourceBannerAdScreenDismissedEvent;
-            IronSourceEvents.onBannerAdLeftApplicationEvent += IronSourceBannerAdLeftApplicationEvent;
+
             
             IronSource.Agent.loadBanner (IronSourceBannerSize.BANNER, IronSourceBannerPosition.BOTTOM);
         }
@@ -514,10 +711,10 @@ namespace PIERStory {
                 InitAdmobRewardedAd(); // 광고 닫히고, 생성 
                 SetFrontAdStatus(false);    
                 
-                OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
-                
-                if(isRewarded)
+                if(isRewarded) {
+                    OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
                     NetworkLoader.main.IncreaseDailyMissionCount(3);
+                }
             });
             
             
@@ -1191,6 +1388,13 @@ namespace PIERStory {
             isRewarded = false;
             
             // * 애드몹 우선으로 실행 
+
+            
+            // IronSource 처리 
+            if(isIronSourceInited && IronSource.Agent.isRewardedVideoAvailable()) {
+                ShowIronSourceRewardAD();
+            }
+            
             if(admobRewardedAd != null && admobRewardedAd.IsLoaded()) {
                admobRewardedAd.Show();  
                return;
@@ -1198,7 +1402,7 @@ namespace PIERStory {
             else {
                 // 애드몹 로딩이 완료되지 않았으면 로딩처리 지시하고, 유니티 애즈로 넘어간다.
                 InitAdmobRewardedAd();
-            }
+            }            
             
             
             // * 유니티 애즈 

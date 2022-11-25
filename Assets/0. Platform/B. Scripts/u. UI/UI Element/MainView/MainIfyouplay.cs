@@ -429,6 +429,10 @@ namespace PIERStory
         {
             NetworkLoader.main.RequestAdReward(1);
         }
+        
+        public void OnClickOfferwall() {
+            AdManager.main.ShowIronSourceOfferwall();
+        }
 
 
         /// <summary>

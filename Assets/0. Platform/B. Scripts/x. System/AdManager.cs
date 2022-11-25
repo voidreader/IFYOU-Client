@@ -1415,12 +1415,6 @@ namespace PIERStory {
             OnCompleteRewardAD = callback;
             isRewarded = false;
             
-            // IronSource 처리 
-            if(isIronSourceInited && IronSource.Agent.isRewardedVideoAvailable()) {
-                ShowIronSourceRewardAD();
-                return;
-            }
-                        
             
             // * 애드몹 우선으로 실행 
             if(admobRewardedAd != null && admobRewardedAd.IsLoaded()) {
@@ -1430,8 +1424,15 @@ namespace PIERStory {
             else {
                 // 애드몹 로딩이 완료되지 않았으면 로딩처리 지시하고, 유니티 애즈로 넘어간다.
                 InitAdmobRewardedAd();
-            }   
+            }               
             
+            
+            // IronSource 처리 
+            if(isIronSourceInited && IronSource.Agent.isRewardedVideoAvailable()) {
+                ShowIronSourceRewardAD();
+                return;
+            }
+                        
 
             // * 유니티 애즈 
             if(unityRewardedAd != null && unityRewardedAd.AdState == AdState.Loaded)

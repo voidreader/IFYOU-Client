@@ -71,6 +71,7 @@ namespace PIERStory
             UserManager.main.CheckUnlockedMission(); // 미션 해금 체크 
             
             AdManager.main.CheckOfferwallCredit();
+           
         }
 
 

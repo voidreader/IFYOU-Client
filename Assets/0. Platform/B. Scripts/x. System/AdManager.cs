@@ -191,6 +191,7 @@ namespace PIERStory {
             
             IronSource.Agent.onApplicationPause (pauseStatus);
             
+            /*
             if(pauseStatus) {
                 datePause = DateTime.Now;
             }
@@ -209,6 +210,7 @@ namespace PIERStory {
                 
                 
             }
+            */
         }
         
         
@@ -388,6 +390,7 @@ namespace PIERStory {
             
             if(!IronSource.Agent.isOfferwallAvailable()) {
                 Debug.Log("IronSource offerwall is not available");
+                SystemManager.ShowSimpleAlertLocalize("6093");
                 return;
             }
             

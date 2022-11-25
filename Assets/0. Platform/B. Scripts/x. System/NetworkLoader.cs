@@ -154,6 +154,16 @@ namespace PIERStory
         #region 기타 통신 RequestGamebaseLaunching, UpdateEpisodeStartRecord, UpdateEpisodeCompleteRecord
         
         /// <summary>
+        /// 오퍼월 상품 요청 
+        /// </summary>
+        public void RequestOfferwallCredit(int __credit) {
+            JsonData sending = new JsonData();
+            sending["func"] = "requestOfferwallCredit";
+            sending["credit"] = __credit;
+            SendPost(UserManager.main.CallbackOfferwallCredit, sending, false, false);
+        }
+        
+        /// <summary>
         /// 유저 작품 현재 위치 정보 가져오기 
         /// </summary>
         /// <param name="__cb"></param>

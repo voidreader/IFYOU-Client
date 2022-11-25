@@ -80,6 +80,7 @@ namespace PIERStory {
             
             // * 로비씬 시작을 알린다. 
             Signal.Send(LobbyConst.STREAM_COMMON, "LobbyPlay"); 
+            
         }
         
         

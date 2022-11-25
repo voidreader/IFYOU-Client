@@ -69,7 +69,8 @@ namespace PIERStory
             // Signal.Send(LobbyConst.STREAM_IFYOU, "storyLobbyLoadComplete", string.Empty); // 필요없음. 
             
             UserManager.main.CheckUnlockedMission(); // 미션 해금 체크 
-
+            
+            AdManager.main.CheckOfferwallCredit();
         }
 
 

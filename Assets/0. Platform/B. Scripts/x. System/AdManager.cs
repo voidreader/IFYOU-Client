@@ -201,7 +201,7 @@ namespace PIERStory {
                 dateResume = DateTime.Now;
                 pauseDiff = dateResume - datePause;
                 
-                if(pauseDiff.Minutes >= 1) {
+                if(pauseDiff.Minutes >= 3) {
                     Debug.Log("pauseDiff Min : " + pauseDiff.Minutes);
                     CheckOfferwallCredit();
                 }
@@ -299,6 +299,7 @@ namespace PIERStory {
         
         void InitIronSource() {
             
+            /*
             int portion = UnityEngine.Random.Range(0, 100);
             
             if(portion < 50) {
@@ -309,6 +310,7 @@ namespace PIERStory {
                 ironSourceAppKey_Android = "171e30b45";
                 ironSourceAppKey_iOS = "171e344cd";
             }
+            */
             
             
             #if UNITY_ANDROID
@@ -396,6 +398,9 @@ namespace PIERStory {
         /// 오퍼월 크레딧 체크 
         /// </summary>
         public void CheckOfferwallCredit() {
+            if(!isIronSourceInited)
+                return;
+                
             IronSource.Agent.getOfferwallCredits();
         }
         
@@ -406,6 +411,10 @@ namespace PIERStory {
         */
         void OfferwallAvailableEvent(bool canShowOfferwall) {
             Debug.Log("IronSource OfferwallAvailableEvent : " + canShowOfferwall);
+            
+            // if(canShowOfferwall) {
+            //     CheckOfferwallCredit();
+            // }
         }
         /**
         * Invoked when the Offerwall successfully loads for the user.
@@ -427,11 +436,28 @@ namespace PIERStory {
         * @param dict - A dictionary which holds the credits and the total credits.   
         */
         void OfferwallAdCreditedEvent(Dictionary<string,object> dict){
-            Debug.Log("IronSource OfferwallAvailableEvent");
-            // Debug.Log ("I got OfferwallAdCreditedEvent, current credits = "dict["credits"] + "totalCredits = " + dict["totalCredits"]);
             
-            foreach(string key in dict.Keys) {
-                Debug.Log("key : " +  dict[key].ToString());
+            
+            try {
+                Debug.Log("IronSource OfferwallAdCreditedEvent");
+                // Debug.Log ("I got OfferwallAdCreditedEvent, current credits = "dict["credits"] + "totalCredits = " + dict["totalCredits"]);
+                
+                foreach(string key in dict.Keys) {
+                    Debug.Log("IronSource credit [" + key + "] : " +  dict[key].ToString());
+                    // 2022-11-25 17:40:35.835 32214 4114 Info Unity IronSource credit [credits] : 0
+
+                    if(key == "credits") {
+                        int credit = 0;
+                        int.TryParse(dict[key].ToString(), out credit);
+                        
+                        if(credit > 0) {
+                            NetworkLoader.main.RequestOfferwallCredit(credit);
+                        }
+                    }
+                }
+            }
+            catch (Exception e) {
+                NetworkLoader.main.ReportRequestError(e.Message, "OfferwallAdCreditedEvent");
             }
             
         }
@@ -490,11 +516,7 @@ namespace PIERStory {
             Debug.Log("IronSource RewardedVideoOnAdClosedEvent");
             SetFrontAdStatus(false);    
                 
-            if(isRewarded) {
-                Debug.Log("IronSource RewardedVideoOnAdClosedEvent Reward");
-                OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
-                NetworkLoader.main.IncreaseDailyMissionCount(3);
-            }
+
             
         }
         // The user completed to watch the video, and should be rewarded.
@@ -504,6 +526,12 @@ namespace PIERStory {
             
             Debug.Log("IronSource RewardedVideoOnAdRewardedEvent");
             isRewarded = true; // true로 변경! 다 봤다!
+
+            if(isRewarded) {
+                Debug.Log("IronSource RewardedVideoOnAdClosedEvent Reward");
+                OnCompleteRewardAD?.Invoke(isRewarded); // 콜백 호출
+                NetworkLoader.main.IncreaseDailyMissionCount(3);
+            }            
             
         }
         // The rewarded video ad was failed to show.
@@ -1387,14 +1415,14 @@ namespace PIERStory {
             OnCompleteRewardAD = callback;
             isRewarded = false;
             
-            // * 애드몹 우선으로 실행 
-
-            
             // IronSource 처리 
             if(isIronSourceInited && IronSource.Agent.isRewardedVideoAvailable()) {
                 ShowIronSourceRewardAD();
+                return;
             }
+                        
             
+            // * 애드몹 우선으로 실행 
             if(admobRewardedAd != null && admobRewardedAd.IsLoaded()) {
                admobRewardedAd.Show();  
                return;
@@ -1402,9 +1430,9 @@ namespace PIERStory {
             else {
                 // 애드몹 로딩이 완료되지 않았으면 로딩처리 지시하고, 유니티 애즈로 넘어간다.
                 InitAdmobRewardedAd();
-            }            
+            }   
             
-            
+
             // * 유니티 애즈 
             if(unityRewardedAd != null && unityRewardedAd.AdState == AdState.Loaded)
                 unityRewardedAd.ShowAsync();

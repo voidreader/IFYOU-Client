@@ -141,7 +141,7 @@ namespace PIERStory
         /// </summary>
         public void EnterIfyouplay()
         {
-            
+            AdManager.main.CheckOfferwallCredit();
 
             // 출석 관련 세팅
             //InitContinuousAttendance();

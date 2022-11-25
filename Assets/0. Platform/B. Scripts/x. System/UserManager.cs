@@ -893,6 +893,20 @@ namespace PIERStory
         #endregion
 
         #region 메일(우편함)
+        
+        public void CallbackOfferwallCredit(HTTPRequest req, HTTPResponse res) {
+            if (!NetworkLoader.CheckResponseValidation(req, res))
+            {
+                Debug.LogError("Failed CallbackOfferwallCredit");
+                return;
+            }
+            
+            Debug.Log("CallbackOfferwallCredit : " + res.DataAsText);
+            
+            
+            JsonData result = JsonMapper.ToObject(res.DataAsText);
+            SetNotificationInfo(result);
+        }
 
         /// <summary>
         /// 미수신 우편 리스트 호출
@@ -1028,6 +1042,9 @@ namespace PIERStory
         /// <param name="__j"></param>
         public void SetNotificationInfo(JsonData __j)
         {
+            if(__j == null)
+                return;
+            
             // 미수신 메일 개수 
             if (__j.ContainsKey(UN_UNREAD_MAIL_COUNT))
             {

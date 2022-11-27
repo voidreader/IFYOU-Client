@@ -401,10 +401,14 @@ namespace PIERStory {
         /// 오퍼월 크레딧 체크 
         /// </summary>
         public void CheckOfferwallCredit() {
-            if(!isIronSourceInited)
+            if(!isIronSourceInited) {
+                Debug.LogError("IronSource CheckOfferwallCredit not Inited");    
                 return;
+            }
                 
+            Debug.Log("IronSource CheckOfferwallCredit");
             IronSource.Agent.getOfferwallCredits();
+            
         }
         
         /**
@@ -470,7 +474,9 @@ namespace PIERStory {
         * @param desc -string object that represents the reason of the  failure. 
         */
         void GetOfferwallCreditsFailedEvent(IronSourceError error) {
-            Debug.Log("IronSource OfferwallAvailableEvent : " + error.getDescription());
+            // Debug.Log("IronSource OfferwallAvailableEvent : " + error.getDescription());
+            NetworkLoader.main.ReportRequestError("Offerwall Credit Fail, code :  " + error.getCode() + ", description : " + error.getDescription(), "GetOfferwallCreditsFailedEvent");
+            // SystemManager.ShowMessageAlert("Offerwall Credit Fail, code :  " + error.getCode() + ", description : " + error.getDescription());
         }
         /**
         * Invoked when the user is about to return to the application after closing 

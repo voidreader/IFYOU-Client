@@ -278,6 +278,7 @@ namespace PIERStory {
                     yield return null;
                 }
                 
+                
                 if(downloadHandle.Status == AsyncOperationStatus.Succeeded) { // 다운로드 실패에 대한 처리 
                     isCompleteCurrentDownload = true;  // 정상적으로 다운로드 받음 
                 }

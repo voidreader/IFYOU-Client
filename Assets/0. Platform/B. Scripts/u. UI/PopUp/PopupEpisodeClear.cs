@@ -102,26 +102,7 @@ namespace PIERStory {
             NetworkLoader.main.RequestEpisodeFirstClearReward(currency, quantity, true);
         }
         
-        /// <summary>
-        /// 2배 받기 통신 완료
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="response"></param>
-        void OnDoubleReward(HTTPRequest request, HTTPResponse response) {
-            if(!NetworkLoader.CheckResponseValidation(request, response)) {
-                return;
-            }
-            
-            JsonData result = JsonMapper.ToObject(response.DataAsText);
-            
-            // 뱅크 
-            UserManager.main.SetBankInfo(result);
-            
-            // 팝업 끝.
-            base.InstanteHide();
-            
-            SystemManager.ShowMessageWithLocalize("6190");
-        }
+
         
     }
 }

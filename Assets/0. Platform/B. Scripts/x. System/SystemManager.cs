@@ -2338,7 +2338,7 @@ namespace PIERStory
             }
             
             if(string.IsNullOrEmpty(__id)) {
-                Debug.LogError("id is null or empty");
+                Debug.LogError("text id is null or empty");
                 return string.Empty;
             }
                 
@@ -2346,6 +2346,11 @@ namespace PIERStory
                 Debug.LogError(string.Format("TEXT ID : [{0}] is missing", __id));
                 return string.Empty;
             }
+            
+            
+            // 
+            Debug.Log(string.Format("GetLocalizedText : [{0}]", __id));
+            
             
             // 여기서 가끔 null이 있어서 exception 생기는 경우가 있다. 
             try {
